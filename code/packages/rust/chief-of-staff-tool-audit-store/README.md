@@ -176,6 +176,11 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose host-decision route targets
   for scheduler, follow-up, drift-investigation, integrity-investigation,
   triage, and no-route queues
+- supervisor drain reports and summaries expose stable host-decision queue keys
+  for grouping decision kind, lane, route, priority, and readiness in one host
+  action key
+- supervisor drain run summaries flatten host-decision queue-key integrity flags
+  so host logs can verify each key component against the typed decision
 - supervisor drain reports and summaries expose aggregate host-decision and
   host-routing classifier label-integrity flags for payload-free dashboards
 - inventory, write, replay, checkpoint replay, checkpoint status, and planned

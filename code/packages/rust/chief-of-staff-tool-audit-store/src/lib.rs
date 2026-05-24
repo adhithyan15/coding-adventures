@@ -3462,6 +3462,116 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_decision_route().is_investigation()
     }
 
+    /// Return the composite queue key for the host decision.
+    pub fn host_decision_queue_key(&self) -> ToolAuditSupervisorDrainHostDecisionQueueKey {
+        ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+            self.host_decision_kind(),
+            self.host_decision_lane(),
+            self.host_decision_route(),
+            self.host_decision_priority(),
+            self.host_decision_readiness(),
+        )
+    }
+
+    /// Return the stable host-decision queue-key label.
+    pub fn host_decision_queue_key_label(&self) -> String {
+        self.host_decision_queue_key().label()
+    }
+
+    /// Return whether the host-decision queue-key label parses back to the typed key.
+    pub fn host_decision_queue_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHostDecisionQueueKey::from_label(
+            &self.host_decision_queue_key_label(),
+        ) == Some(self.host_decision_queue_key())
+    }
+
+    /// Return the sortable host-decision queue-key priority rank.
+    pub fn host_decision_queue_key_priority_rank(&self) -> u8 {
+        self.host_decision_queue_key().priority_rank()
+    }
+
+    /// Return whether the host-decision queue key is settled.
+    pub fn host_decision_queue_key_is_settled(&self) -> bool {
+        self.host_decision_queue_key().is_settled()
+    }
+
+    /// Return whether the host-decision queue key should enter an action queue.
+    pub fn host_decision_queue_key_is_actionable(&self) -> bool {
+        self.host_decision_queue_key().is_actionable()
+    }
+
+    /// Return whether the host-decision queue key can be routed automatically.
+    pub fn host_decision_queue_key_is_auto_routable(&self) -> bool {
+        self.host_decision_queue_key().is_auto_routable()
+    }
+
+    /// Return whether the host-decision queue key needs manual review.
+    pub fn host_decision_queue_key_requires_manual_review(&self) -> bool {
+        self.host_decision_queue_key().requires_manual_review()
+    }
+
+    /// Return whether the host-decision queue key needs investigation.
+    pub fn host_decision_queue_key_requires_investigation(&self) -> bool {
+        self.host_decision_queue_key().requires_investigation()
+    }
+
+    /// Return whether the host-decision queue key needs host-log integrity investigation.
+    pub fn host_decision_queue_key_requires_integrity_investigation(&self) -> bool {
+        self.host_decision_queue_key()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the host-decision queue key needs triage.
+    pub fn host_decision_queue_key_requires_triage(&self) -> bool {
+        self.host_decision_queue_key().requires_triage()
+    }
+
+    /// Return whether the queue-key decision matches the typed host decision.
+    pub fn host_decision_queue_key_decision_matches_kind(&self) -> bool {
+        self.host_decision_queue_key()
+            .decision_matches(self.host_decision_kind())
+    }
+
+    /// Return whether the queue-key lane matches the typed host-decision lane.
+    pub fn host_decision_queue_key_lane_matches_lane(&self) -> bool {
+        self.host_decision_queue_key()
+            .lane_matches(self.host_decision_lane())
+    }
+
+    /// Return whether the queue-key route matches the typed host-decision route.
+    pub fn host_decision_queue_key_route_matches_route(&self) -> bool {
+        self.host_decision_queue_key()
+            .route_matches(self.host_decision_route())
+    }
+
+    /// Return whether the queue-key priority matches the typed host-decision priority.
+    pub fn host_decision_queue_key_priority_matches_priority(&self) -> bool {
+        self.host_decision_queue_key()
+            .priority_matches(self.host_decision_priority())
+    }
+
+    /// Return whether the queue-key readiness matches the typed host-decision readiness.
+    pub fn host_decision_queue_key_readiness_matches_readiness(&self) -> bool {
+        self.host_decision_queue_key()
+            .readiness_matches(self.host_decision_readiness())
+    }
+
+    /// Return whether every queue-key component matches the host-decision classifiers.
+    pub fn host_decision_queue_key_parts_match_decision(&self) -> bool {
+        self.host_decision_queue_key().parts_match(
+            self.host_decision_kind(),
+            self.host_decision_lane(),
+            self.host_decision_route(),
+            self.host_decision_priority(),
+            self.host_decision_readiness(),
+        )
+    }
+
+    /// Return whether any host-decision queue-key component drifted.
+    pub fn has_host_decision_queue_key_integrity_drift(&self) -> bool {
+        !self.host_decision_queue_key_parts_match_decision()
+    }
+
     /// Return whether all host-decision classifier labels parse back to their typed values.
     pub fn host_decision_classifier_labels_match(&self) -> bool {
         self.host_decision_label_matches_kind()
@@ -3469,6 +3579,7 @@ impl ToolAuditSupervisorDrainRunReport {
             && self.host_decision_priority_label_matches_kind()
             && self.host_decision_readiness_label_matches_kind()
             && self.host_decision_route_label_matches_kind()
+            && self.host_decision_queue_key_label_matches_key()
     }
 
     /// Return whether any host-decision classifier label drifted from its typed value.
@@ -4078,6 +4189,36 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_decision_routes_to_integrity_investigation(),
             host_decision_routes_to_triage: self.host_decision_routes_to_triage(),
             host_decision_routes_to_investigation: self.host_decision_routes_to_investigation(),
+            host_decision_queue_key: self.host_decision_queue_key(),
+            host_decision_queue_key_label: self.host_decision_queue_key_label(),
+            host_decision_queue_key_label_matches_key: self
+                .host_decision_queue_key_label_matches_key(),
+            host_decision_queue_key_priority_rank: self.host_decision_queue_key_priority_rank(),
+            host_decision_queue_key_is_settled: self.host_decision_queue_key_is_settled(),
+            host_decision_queue_key_is_actionable: self.host_decision_queue_key_is_actionable(),
+            host_decision_queue_key_is_auto_routable: self
+                .host_decision_queue_key_is_auto_routable(),
+            host_decision_queue_key_requires_manual_review: self
+                .host_decision_queue_key_requires_manual_review(),
+            host_decision_queue_key_requires_investigation: self
+                .host_decision_queue_key_requires_investigation(),
+            host_decision_queue_key_requires_integrity_investigation: self
+                .host_decision_queue_key_requires_integrity_investigation(),
+            host_decision_queue_key_requires_triage: self.host_decision_queue_key_requires_triage(),
+            host_decision_queue_key_decision_matches_kind: self
+                .host_decision_queue_key_decision_matches_kind(),
+            host_decision_queue_key_lane_matches_lane: self
+                .host_decision_queue_key_lane_matches_lane(),
+            host_decision_queue_key_route_matches_route: self
+                .host_decision_queue_key_route_matches_route(),
+            host_decision_queue_key_priority_matches_priority: self
+                .host_decision_queue_key_priority_matches_priority(),
+            host_decision_queue_key_readiness_matches_readiness: self
+                .host_decision_queue_key_readiness_matches_readiness(),
+            host_decision_queue_key_parts_match_decision: self
+                .host_decision_queue_key_parts_match_decision(),
+            has_host_decision_queue_key_integrity_drift: self
+                .has_host_decision_queue_key_integrity_drift(),
             host_decision_classifier_labels_match: self.host_decision_classifier_labels_match(),
             has_host_decision_label_integrity_drift: self.has_host_decision_label_integrity_drift(),
             host_routing_classifier_labels_match: self.host_routing_classifier_labels_match(),
@@ -5165,6 +5306,42 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_decision_routes_to_triage: bool,
     /// Whether the host decision routes to any investigation queue.
     pub host_decision_routes_to_investigation: bool,
+    /// Composite queue key for the host decision.
+    pub host_decision_queue_key: ToolAuditSupervisorDrainHostDecisionQueueKey,
+    /// Stable composite host-decision queue-key label.
+    pub host_decision_queue_key_label: String,
+    /// Whether the host-decision queue-key label parses back to the typed key.
+    pub host_decision_queue_key_label_matches_key: bool,
+    /// Sortable host-decision queue-key priority rank.
+    pub host_decision_queue_key_priority_rank: u8,
+    /// Whether the host-decision queue key is settled.
+    pub host_decision_queue_key_is_settled: bool,
+    /// Whether the host-decision queue key should enter an action queue.
+    pub host_decision_queue_key_is_actionable: bool,
+    /// Whether the host-decision queue key can be routed automatically.
+    pub host_decision_queue_key_is_auto_routable: bool,
+    /// Whether the host-decision queue key needs manual review.
+    pub host_decision_queue_key_requires_manual_review: bool,
+    /// Whether the host-decision queue key needs investigation.
+    pub host_decision_queue_key_requires_investigation: bool,
+    /// Whether the host-decision queue key needs host-log integrity investigation.
+    pub host_decision_queue_key_requires_integrity_investigation: bool,
+    /// Whether the host-decision queue key needs triage.
+    pub host_decision_queue_key_requires_triage: bool,
+    /// Whether the queue-key decision matches the typed host decision.
+    pub host_decision_queue_key_decision_matches_kind: bool,
+    /// Whether the queue-key lane matches the host-decision lane.
+    pub host_decision_queue_key_lane_matches_lane: bool,
+    /// Whether the queue-key route matches the host-decision route.
+    pub host_decision_queue_key_route_matches_route: bool,
+    /// Whether the queue-key priority matches the host-decision priority.
+    pub host_decision_queue_key_priority_matches_priority: bool,
+    /// Whether the queue-key readiness matches the host-decision readiness.
+    pub host_decision_queue_key_readiness_matches_readiness: bool,
+    /// Whether every queue-key component matches the host-decision classifiers.
+    pub host_decision_queue_key_parts_match_decision: bool,
+    /// Whether any host-decision queue-key component drifted.
+    pub has_host_decision_queue_key_integrity_drift: bool,
     /// Whether all host-decision classifier labels parse back to their typed values.
     pub host_decision_classifier_labels_match: bool,
     /// Whether any host-decision classifier label drifted from its typed value.
@@ -6857,6 +7034,96 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the host decision routes to any investigation queue.
     pub fn host_decision_routes_to_investigation(&self) -> bool {
         self.host_decision_routes_to_investigation
+    }
+
+    /// Return the composite queue key for the host decision.
+    pub fn host_decision_queue_key(&self) -> ToolAuditSupervisorDrainHostDecisionQueueKey {
+        self.host_decision_queue_key
+    }
+
+    /// Return the stable composite host-decision queue-key label.
+    pub fn host_decision_queue_key_label(&self) -> &str {
+        &self.host_decision_queue_key_label
+    }
+
+    /// Return whether the host-decision queue-key label parses back to the typed key.
+    pub fn host_decision_queue_key_label_matches_key(&self) -> bool {
+        self.host_decision_queue_key_label_matches_key
+    }
+
+    /// Return the sortable host-decision queue-key priority rank.
+    pub fn host_decision_queue_key_priority_rank(&self) -> u8 {
+        self.host_decision_queue_key_priority_rank
+    }
+
+    /// Return whether the host-decision queue key is settled.
+    pub fn host_decision_queue_key_is_settled(&self) -> bool {
+        self.host_decision_queue_key_is_settled
+    }
+
+    /// Return whether the host-decision queue key should enter an action queue.
+    pub fn host_decision_queue_key_is_actionable(&self) -> bool {
+        self.host_decision_queue_key_is_actionable
+    }
+
+    /// Return whether the host-decision queue key can be routed automatically.
+    pub fn host_decision_queue_key_is_auto_routable(&self) -> bool {
+        self.host_decision_queue_key_is_auto_routable
+    }
+
+    /// Return whether the host-decision queue key needs manual review.
+    pub fn host_decision_queue_key_requires_manual_review(&self) -> bool {
+        self.host_decision_queue_key_requires_manual_review
+    }
+
+    /// Return whether the host-decision queue key needs investigation.
+    pub fn host_decision_queue_key_requires_investigation(&self) -> bool {
+        self.host_decision_queue_key_requires_investigation
+    }
+
+    /// Return whether the host-decision queue key needs host-log integrity investigation.
+    pub fn host_decision_queue_key_requires_integrity_investigation(&self) -> bool {
+        self.host_decision_queue_key_requires_integrity_investigation
+    }
+
+    /// Return whether the host-decision queue key needs triage.
+    pub fn host_decision_queue_key_requires_triage(&self) -> bool {
+        self.host_decision_queue_key_requires_triage
+    }
+
+    /// Return whether the queue-key decision matches the typed host decision.
+    pub fn host_decision_queue_key_decision_matches_kind(&self) -> bool {
+        self.host_decision_queue_key_decision_matches_kind
+    }
+
+    /// Return whether the queue-key lane matches the typed host-decision lane.
+    pub fn host_decision_queue_key_lane_matches_lane(&self) -> bool {
+        self.host_decision_queue_key_lane_matches_lane
+    }
+
+    /// Return whether the queue-key route matches the typed host-decision route.
+    pub fn host_decision_queue_key_route_matches_route(&self) -> bool {
+        self.host_decision_queue_key_route_matches_route
+    }
+
+    /// Return whether the queue-key priority matches the typed host-decision priority.
+    pub fn host_decision_queue_key_priority_matches_priority(&self) -> bool {
+        self.host_decision_queue_key_priority_matches_priority
+    }
+
+    /// Return whether the queue-key readiness matches the typed host-decision readiness.
+    pub fn host_decision_queue_key_readiness_matches_readiness(&self) -> bool {
+        self.host_decision_queue_key_readiness_matches_readiness
+    }
+
+    /// Return whether every queue-key component matches the host-decision classifiers.
+    pub fn host_decision_queue_key_parts_match_decision(&self) -> bool {
+        self.host_decision_queue_key_parts_match_decision
+    }
+
+    /// Return whether any host-decision queue-key component drifted.
+    pub fn has_host_decision_queue_key_integrity_drift(&self) -> bool {
+        self.has_host_decision_queue_key_integrity_drift
     }
 
     /// Return whether all host-decision classifier labels parse back to their typed values.
@@ -8829,6 +9096,185 @@ impl ToolAuditSupervisorDrainHostDecisionRoute {
 impl Display for ToolAuditSupervisorDrainHostDecisionRoute {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
+    }
+}
+
+/// Stable composite queue key for host drain decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostDecisionQueueKey {
+    decision: ToolAuditSupervisorDrainHostDecisionKind,
+    lane: ToolAuditSupervisorDrainHostDecisionLane,
+    route: ToolAuditSupervisorDrainHostDecisionRoute,
+    priority: ToolAuditSupervisorDrainHostDecisionPriority,
+    readiness: ToolAuditSupervisorDrainHostDecisionReadiness,
+}
+
+impl ToolAuditSupervisorDrainHostDecisionQueueKey {
+    /// Create a stable host-decision queue key from typed classifier values.
+    pub fn new(
+        decision: ToolAuditSupervisorDrainHostDecisionKind,
+        lane: ToolAuditSupervisorDrainHostDecisionLane,
+        route: ToolAuditSupervisorDrainHostDecisionRoute,
+        priority: ToolAuditSupervisorDrainHostDecisionPriority,
+        readiness: ToolAuditSupervisorDrainHostDecisionReadiness,
+    ) -> Self {
+        Self {
+            decision,
+            lane,
+            route,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Parse a stable host-decision queue-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let mut parts = label.split(':');
+        let decision = ToolAuditSupervisorDrainHostDecisionKind::from_label(parts.next()?)?;
+        let lane = ToolAuditSupervisorDrainHostDecisionLane::from_label(parts.next()?)?;
+        let route = ToolAuditSupervisorDrainHostDecisionRoute::from_label(parts.next()?)?;
+        let priority = ToolAuditSupervisorDrainHostDecisionPriority::from_label(parts.next()?)?;
+        let readiness = ToolAuditSupervisorDrainHostDecisionReadiness::from_label(parts.next()?)?;
+        if parts.next().is_some() {
+            return None;
+        }
+        Some(Self::new(decision, lane, route, priority, readiness))
+    }
+
+    /// Return the host-decision classifier.
+    pub fn decision(self) -> ToolAuditSupervisorDrainHostDecisionKind {
+        self.decision
+    }
+
+    /// Return the host-decision dashboard lane.
+    pub fn lane(self) -> ToolAuditSupervisorDrainHostDecisionLane {
+        self.lane
+    }
+
+    /// Return the host-decision queue route.
+    pub fn route(self) -> ToolAuditSupervisorDrainHostDecisionRoute {
+        self.route
+    }
+
+    /// Return the host-decision dashboard priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainHostDecisionPriority {
+        self.priority
+    }
+
+    /// Return the host-decision queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostDecisionReadiness {
+        self.readiness
+    }
+
+    /// Return a stable composite label for host decision queue grouping.
+    pub fn label(self) -> String {
+        format!(
+            "{}:{}:{}:{}:{}",
+            self.decision.as_str(),
+            self.lane.as_str(),
+            self.route.as_str(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this queue-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return the sortable priority rank for this queue key.
+    pub fn priority_rank(self) -> u8 {
+        self.priority.rank()
+    }
+
+    /// Return whether this queue key represents a terminal-ready host decision.
+    pub fn is_settled(self) -> bool {
+        self.decision.is_terminal_ready()
+            && self.lane.is_terminal()
+            && !self.route.has_route()
+            && self.priority.is_settled()
+            && self.readiness.is_settled()
+    }
+
+    /// Return whether this queue key should appear in a host action queue.
+    pub fn is_actionable(self) -> bool {
+        self.readiness.is_actionable()
+    }
+
+    /// Return whether this queue key can be routed without investigation triage.
+    pub fn is_auto_routable(self) -> bool {
+        self.readiness.is_auto_routable()
+    }
+
+    /// Return whether this queue key needs manual host review before routing.
+    pub fn requires_manual_review(self) -> bool {
+        self.readiness.requires_manual_review()
+    }
+
+    /// Return whether this queue key is already routed to an investigation queue.
+    pub fn requires_investigation(self) -> bool {
+        self.readiness.requires_investigation()
+    }
+
+    /// Return whether this queue key is routed to host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.readiness.requires_integrity_investigation()
+    }
+
+    /// Return whether this queue key needs human triage.
+    pub fn requires_triage(self) -> bool {
+        self.readiness.requires_triage()
+    }
+
+    /// Return whether this queue key's decision matches the supplied decision.
+    pub fn decision_matches(self, decision: ToolAuditSupervisorDrainHostDecisionKind) -> bool {
+        self.decision == decision
+    }
+
+    /// Return whether this queue key's lane matches the supplied lane.
+    pub fn lane_matches(self, lane: ToolAuditSupervisorDrainHostDecisionLane) -> bool {
+        self.lane == lane
+    }
+
+    /// Return whether this queue key's route matches the supplied route.
+    pub fn route_matches(self, route: ToolAuditSupervisorDrainHostDecisionRoute) -> bool {
+        self.route == route
+    }
+
+    /// Return whether this queue key's priority matches the supplied priority.
+    pub fn priority_matches(self, priority: ToolAuditSupervisorDrainHostDecisionPriority) -> bool {
+        self.priority == priority
+    }
+
+    /// Return whether this queue key's readiness matches the supplied readiness.
+    pub fn readiness_matches(
+        self,
+        readiness: ToolAuditSupervisorDrainHostDecisionReadiness,
+    ) -> bool {
+        self.readiness == readiness
+    }
+
+    /// Return whether every queue-key component matches the supplied host-decision classifiers.
+    pub fn parts_match(
+        self,
+        decision: ToolAuditSupervisorDrainHostDecisionKind,
+        lane: ToolAuditSupervisorDrainHostDecisionLane,
+        route: ToolAuditSupervisorDrainHostDecisionRoute,
+        priority: ToolAuditSupervisorDrainHostDecisionPriority,
+        readiness: ToolAuditSupervisorDrainHostDecisionReadiness,
+    ) -> bool {
+        self.decision_matches(decision)
+            && self.lane_matches(lane)
+            && self.route_matches(route)
+            && self.priority_matches(priority)
+            && self.readiness_matches(readiness)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostDecisionQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
     }
 }
 
@@ -13926,6 +14372,218 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_decision_queue_keys_are_stable_for_queues() {
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+                ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+                ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+                ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+                "terminal_ready:terminal:no_route:settled:settled",
+                0,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                ToolAuditSupervisorDrainHostDecisionLane::Scheduler,
+                ToolAuditSupervisorDrainHostDecisionRoute::Scheduler,
+                ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction,
+                ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady,
+                "schedule_continuation:scheduler:scheduler:routine_action:routine_ready",
+                10,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::RouteFollowUp,
+                ToolAuditSupervisorDrainHostDecisionLane::FollowUp,
+                ToolAuditSupervisorDrainHostDecisionRoute::FollowUp,
+                ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction,
+                ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady,
+                "route_follow_up:follow_up:follow_up:routine_action:routine_ready",
+                10,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigatePlanDrift,
+                ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+                ToolAuditSupervisorDrainHostDecisionRoute::DriftInvestigation,
+                ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation,
+                ToolAuditSupervisorDrainHostDecisionReadiness::DriftInvestigationReady,
+                "investigate_plan_drift:investigation:drift_investigation:drift_investigation:drift_investigation_ready",
+                50,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateCountDrift,
+                ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+                ToolAuditSupervisorDrainHostDecisionRoute::DriftInvestigation,
+                ToolAuditSupervisorDrainHostDecisionPriority::DriftInvestigation,
+                ToolAuditSupervisorDrainHostDecisionReadiness::DriftInvestigationReady,
+                "investigate_count_drift:investigation:drift_investigation:drift_investigation:drift_investigation_ready",
+                50,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+                ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+                ToolAuditSupervisorDrainHostDecisionRoute::IntegrityInvestigation,
+                ToolAuditSupervisorDrainHostDecisionPriority::IntegrityInvestigation,
+                ToolAuditSupervisorDrainHostDecisionReadiness::IntegrityInvestigationReady,
+                "investigate_run_integrity:investigation:integrity_investigation:integrity_investigation:integrity_investigation_ready",
+                80,
+                false,
+                true,
+                false,
+                true,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                ToolAuditSupervisorDrainHostDecisionLane::Mixed,
+                ToolAuditSupervisorDrainHostDecisionRoute::Triage,
+                ToolAuditSupervisorDrainHostDecisionPriority::MixedAction,
+                ToolAuditSupervisorDrainHostDecisionReadiness::TriageRequired,
+                "multiple_actions:mixed:triage:mixed_action:triage_required",
+                90,
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            decision,
+            lane,
+            route,
+            priority,
+            readiness,
+            label,
+            priority_rank,
+            is_settled,
+            is_actionable,
+            is_auto_routable,
+            requires_manual_review,
+            requires_investigation,
+            requires_integrity_investigation,
+            requires_triage,
+        ) in cases
+        {
+            let key = ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+                decision, lane, route, priority, readiness,
+            );
+
+            assert_eq!(key.decision(), decision);
+            assert_eq!(key.lane(), lane);
+            assert_eq!(key.route(), route);
+            assert_eq!(key.priority(), priority);
+            assert_eq!(key.readiness(), readiness);
+            assert_eq!(key.label(), label);
+            assert_eq!(key.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostDecisionQueueKey::from_label(label),
+                Some(key)
+            );
+            assert!(key.label_matches_key());
+            assert!(key.decision_matches(decision));
+            assert!(key.lane_matches(lane));
+            assert!(key.route_matches(route));
+            assert!(key.priority_matches(priority));
+            assert!(key.readiness_matches(readiness));
+            assert!(key.parts_match(decision, lane, route, priority, readiness));
+            assert_eq!(key.priority_rank(), priority_rank);
+            assert_eq!(key.is_settled(), is_settled);
+            assert_eq!(key.is_actionable(), is_actionable);
+            assert_eq!(key.is_auto_routable(), is_auto_routable);
+            assert_eq!(key.requires_manual_review(), requires_manual_review);
+            assert_eq!(key.requires_investigation(), requires_investigation);
+            assert_eq!(
+                key.requires_integrity_investigation(),
+                requires_integrity_investigation
+            );
+            assert_eq!(key.requires_triage(), requires_triage);
+        }
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionQueueKey::from_label("terminal_ready:terminal"),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionQueueKey::from_label(
+                "terminal_ready:terminal:no_route:settled:settled:extra"
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostDecisionQueueKey::from_label(
+                "terminal_ready:unknown:no_route:settled:settled"
+            ),
+            None
+        );
+
+        let settled = ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+            ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+        );
+        assert!(!settled
+            .decision_matches(ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation));
+        assert!(!settled.lane_matches(ToolAuditSupervisorDrainHostDecisionLane::Scheduler));
+        assert!(!settled.route_matches(ToolAuditSupervisorDrainHostDecisionRoute::Scheduler));
+        assert!(
+            !settled.priority_matches(ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction)
+        );
+        assert!(
+            !settled.readiness_matches(ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady)
+        );
+        assert!(!settled.parts_match(
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+            ToolAuditSupervisorDrainHostDecisionRoute::Scheduler,
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+        ));
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -15936,6 +16594,208 @@ mod tests {
         integrity_summary.host_decision_route_label = "elsewhere";
         integrity_summary.host_decision_route_label_matches_kind = false;
         assert!(!integrity_summary.host_decision_route_label_matches_kind());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_host_decision_queue_key_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.host_decision_queue_key(),
+            ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+                ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+                ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+                ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_report.host_decision_queue_key_label(),
+            "terminal_ready:terminal:no_route:settled:settled"
+        );
+        assert!(idle_report.host_decision_queue_key_label_matches_key());
+        assert_eq!(idle_report.host_decision_queue_key_priority_rank(), 0);
+        assert!(idle_report.host_decision_queue_key_is_settled());
+        assert!(!idle_report.host_decision_queue_key_is_actionable());
+        assert!(!idle_report.host_decision_queue_key_is_auto_routable());
+        assert!(!idle_report.host_decision_queue_key_requires_manual_review());
+        assert!(!idle_report.host_decision_queue_key_requires_investigation());
+        assert!(!idle_report.host_decision_queue_key_requires_integrity_investigation());
+        assert!(!idle_report.host_decision_queue_key_requires_triage());
+        assert!(idle_report.host_decision_queue_key_decision_matches_kind());
+        assert!(idle_report.host_decision_queue_key_lane_matches_lane());
+        assert!(idle_report.host_decision_queue_key_route_matches_route());
+        assert!(idle_report.host_decision_queue_key_priority_matches_priority());
+        assert!(idle_report.host_decision_queue_key_readiness_matches_readiness());
+        assert!(idle_report.host_decision_queue_key_parts_match_decision());
+        assert!(!idle_report.has_host_decision_queue_key_integrity_drift());
+
+        assert_eq!(
+            idle_summary.host_decision_queue_key,
+            ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+                ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+                ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+                ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_summary.host_decision_queue_key(),
+            ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+                ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+                ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+                ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+                ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+                ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_summary.host_decision_queue_key_label,
+            "terminal_ready:terminal:no_route:settled:settled"
+        );
+        assert_eq!(
+            idle_summary.host_decision_queue_key_label(),
+            "terminal_ready:terminal:no_route:settled:settled"
+        );
+        assert!(idle_summary.host_decision_queue_key_label_matches_key);
+        assert!(idle_summary.host_decision_queue_key_label_matches_key());
+        assert_eq!(idle_summary.host_decision_queue_key_priority_rank, 0);
+        assert_eq!(idle_summary.host_decision_queue_key_priority_rank(), 0);
+        assert!(idle_summary.host_decision_queue_key_is_settled);
+        assert!(idle_summary.host_decision_queue_key_is_settled());
+        assert!(!idle_summary.host_decision_queue_key_is_actionable);
+        assert!(!idle_summary.host_decision_queue_key_is_actionable());
+        assert!(!idle_summary.host_decision_queue_key_is_auto_routable);
+        assert!(!idle_summary.host_decision_queue_key_is_auto_routable());
+        assert!(!idle_summary.host_decision_queue_key_requires_manual_review);
+        assert!(!idle_summary.host_decision_queue_key_requires_manual_review());
+        assert!(!idle_summary.host_decision_queue_key_requires_investigation);
+        assert!(!idle_summary.host_decision_queue_key_requires_investigation());
+        assert!(!idle_summary.host_decision_queue_key_requires_integrity_investigation);
+        assert!(!idle_summary.host_decision_queue_key_requires_integrity_investigation());
+        assert!(!idle_summary.host_decision_queue_key_requires_triage);
+        assert!(!idle_summary.host_decision_queue_key_requires_triage());
+        assert!(idle_summary.host_decision_queue_key_decision_matches_kind);
+        assert!(idle_summary.host_decision_queue_key_decision_matches_kind());
+        assert!(idle_summary.host_decision_queue_key_lane_matches_lane);
+        assert!(idle_summary.host_decision_queue_key_lane_matches_lane());
+        assert!(idle_summary.host_decision_queue_key_route_matches_route);
+        assert!(idle_summary.host_decision_queue_key_route_matches_route());
+        assert!(idle_summary.host_decision_queue_key_priority_matches_priority);
+        assert!(idle_summary.host_decision_queue_key_priority_matches_priority());
+        assert!(idle_summary.host_decision_queue_key_readiness_matches_readiness);
+        assert!(idle_summary.host_decision_queue_key_readiness_matches_readiness());
+        assert!(idle_summary.host_decision_queue_key_parts_match_decision);
+        assert!(idle_summary.host_decision_queue_key_parts_match_decision());
+        assert!(!idle_summary.has_host_decision_queue_key_integrity_drift);
+        assert!(!idle_summary.has_host_decision_queue_key_integrity_drift());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+
+        assert_eq!(
+            continuation_report.host_decision_queue_key(),
+            ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+                ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+                ToolAuditSupervisorDrainHostDecisionLane::Scheduler,
+                ToolAuditSupervisorDrainHostDecisionRoute::Scheduler,
+                ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction,
+                ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady,
+            )
+        );
+        assert_eq!(
+            continuation_summary.host_decision_queue_key_label(),
+            "schedule_continuation:scheduler:scheduler:routine_action:routine_ready"
+        );
+        assert_eq!(
+            continuation_summary.host_decision_queue_key_priority_rank(),
+            10
+        );
+        assert!(continuation_summary.host_decision_queue_key_is_actionable());
+        assert!(continuation_summary.host_decision_queue_key_is_auto_routable());
+        assert!(!continuation_summary.host_decision_queue_key_requires_manual_review());
+        assert!(continuation_summary.host_decision_queue_key_parts_match_decision());
+        assert!(!continuation_summary.has_host_decision_queue_key_integrity_drift());
+
+        let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(follow_up_store
+            .record_audit_batch(vec![failed_record("call_1")])
+            .completed_without_failures());
+        let mut follow_up_sink = InMemoryToolAuditSink::new();
+        let follow_up_summary = follow_up_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut follow_up_sink)
+            .unwrap()
+            .summary();
+        assert_eq!(
+            follow_up_summary.host_decision_queue_key_label(),
+            "route_follow_up:follow_up:follow_up:routine_action:routine_ready"
+        );
+        assert!(follow_up_summary.host_decision_queue_key_is_actionable());
+        assert!(follow_up_summary.host_decision_queue_key_is_auto_routable());
+        assert!(follow_up_summary.host_decision_queue_key_parts_match_decision());
+
+        let mut triage_report = continuation_report;
+        triage_report.drain.ticks[0].replay.next_checkpoint = ToolAuditReadCheckpoint::beginning();
+        let triage_summary = triage_report.summary();
+        assert_eq!(
+            triage_summary.host_decision_queue_key(),
+            ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+                ToolAuditSupervisorDrainHostDecisionKind::MultipleActions,
+                ToolAuditSupervisorDrainHostDecisionLane::Mixed,
+                ToolAuditSupervisorDrainHostDecisionRoute::Triage,
+                ToolAuditSupervisorDrainHostDecisionPriority::MixedAction,
+                ToolAuditSupervisorDrainHostDecisionReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            triage_summary.host_decision_queue_key_label(),
+            "multiple_actions:mixed:triage:mixed_action:triage_required"
+        );
+        assert_eq!(triage_summary.host_decision_queue_key_priority_rank(), 90);
+        assert!(triage_summary.host_decision_queue_key_is_actionable());
+        assert!(!triage_summary.host_decision_queue_key_is_auto_routable());
+        assert!(triage_summary.host_decision_queue_key_requires_manual_review());
+        assert!(!triage_summary.host_decision_queue_key_requires_investigation());
+        assert!(!triage_summary.host_decision_queue_key_requires_integrity_investigation());
+        assert!(triage_summary.host_decision_queue_key_requires_triage());
+        assert!(triage_summary.host_decision_queue_key_parts_match_decision());
+        assert!(!triage_summary.has_host_decision_queue_key_integrity_drift());
+
+        let mut drift_summary = idle_summary;
+        drift_summary.host_decision_queue_key = ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+            ToolAuditSupervisorDrainHostDecisionRoute::Scheduler,
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+        );
+        drift_summary.host_decision_queue_key_label =
+            "terminal_ready:terminal:scheduler:settled:settled".to_string();
+        drift_summary.host_decision_queue_key_route_matches_route = false;
+        drift_summary.host_decision_queue_key_parts_match_decision = false;
+        drift_summary.has_host_decision_queue_key_integrity_drift = true;
+        assert!(drift_summary.host_decision_queue_key_label_matches_key());
+        assert!(!drift_summary.host_decision_queue_key_route_matches_route());
+        assert!(!drift_summary.host_decision_queue_key_parts_match_decision());
+        assert!(drift_summary.has_host_decision_queue_key_integrity_drift());
     }
 
     #[test]
