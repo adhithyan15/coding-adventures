@@ -1,5 +1,27 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.10 — Navbar
+
+### Added
+
+**`Navbar`** — Bootstrap's top-of-page brand + nav-link row.
+Composition: `Row[navbar] { Text[navbar-brand], For items
+HostLink[navbar-link] }`. Slots: `brand`, `items: list<text>`,
+`active-index`. Emit: `onSelect(index: number)`.
+
+Like Nav and Breadcrumb (v0.4), each link wraps the UI29-4
+`HostLink` primitive — platform-native `role="link"` semantics +
+Tab/Enter keyboard activation come from the kernel.
+
+The brand is non-clickable in v0.10; an `onBrandClick` emit can be
+added in a follow-up if hosts ask for it.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 22 (was 21): one more interface
+test (`navbar_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [Unreleased] — v0.9 — DropdownMenu
 
 ### Added
