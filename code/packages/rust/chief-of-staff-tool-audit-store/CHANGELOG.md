@@ -177,6 +177,8 @@ All notable changes to this package will be documented in this file.
   readiness grouping keys for supervisor drain run report and summary grouping.
 - Aggregate host-run queue digest label-integrity flags for checking queue keys,
   routes, lanes, priorities, readiness, and grouping labels together.
+- Host-run attention component flags and counts for health-dashboard,
+  scheduler, host-investigation, and run-integrity work.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
