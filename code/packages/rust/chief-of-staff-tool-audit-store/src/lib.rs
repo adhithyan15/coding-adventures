@@ -1557,6 +1557,146 @@ impl ToolAuditSupervisorDrainPlanSummary {
         self.has_pending_records()
     }
 
+    /// Classify aggregate planned page health for host preflight logs.
+    pub fn checkpoint_page_outcome(&self) -> ToolAuditCheckpointPageOutcome {
+        ToolAuditCheckpointPageOutcome::from_page_flags(
+            self.plan_inventory_counts_match(),
+            self.is_idle(),
+            self.should_continue(),
+            self.requires_follow_up(),
+        )
+    }
+
+    /// Return the stable aggregate planned-page outcome label.
+    pub fn checkpoint_page_outcome_label(&self) -> &'static str {
+        self.checkpoint_page_outcome().as_str()
+    }
+
+    /// Return whether the aggregate planned-page label parses back to its typed outcome.
+    pub fn checkpoint_page_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditCheckpointPageOutcome::from_label(self.checkpoint_page_outcome_label())
+            == Some(self.checkpoint_page_outcome())
+    }
+
+    /// Return whether all aggregate planned health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.pages
+            .iter()
+            .all(ToolAuditSupervisorDrainPlanPage::health_labels_match)
+            && self.checkpoint_page_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
+    }
+
+    /// Return whether any aggregate planned health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for aggregate planned health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.checkpoint_page_outcome().health_action()
+    }
+
+    /// Return the stable aggregate health-action label.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the aggregate health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether the aggregate planned health needs host action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return the host route for aggregate planned health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable aggregate health-route label.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the aggregate health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether aggregate planned health has a concrete host route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Classify dashboard priority for aggregate planned health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable aggregate health-priority label.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the aggregate health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable aggregate health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Classify queue readiness for aggregate planned health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable aggregate health-readiness label.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the aggregate health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether aggregate planned health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether aggregate planned health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether aggregate planned health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether aggregate planned health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether aggregate planned health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
+    }
+
     /// Return the last checkpoint a matching drain run would observe.
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.pages.last().map(|page| &page.next_checkpoint)
@@ -1713,6 +1853,146 @@ impl ToolAuditSupervisorDrainLoopSummary {
         self.ticks.iter().any(|tick| tick.advanced_checkpoint())
     }
 
+    /// Classify aggregate drain-loop health for host drain logs.
+    pub fn checkpoint_page_outcome(&self) -> ToolAuditCheckpointPageOutcome {
+        ToolAuditCheckpointPageOutcome::from_page_flags(
+            self.drain_inventory_counts_match(),
+            self.is_idle(),
+            self.should_continue(),
+            self.requires_follow_up(),
+        )
+    }
+
+    /// Return the stable aggregate drain-loop outcome label.
+    pub fn checkpoint_page_outcome_label(&self) -> &'static str {
+        self.checkpoint_page_outcome().as_str()
+    }
+
+    /// Return whether the aggregate drain-loop label parses back to its typed outcome.
+    pub fn checkpoint_page_outcome_label_matches_outcome(&self) -> bool {
+        ToolAuditCheckpointPageOutcome::from_label(self.checkpoint_page_outcome_label())
+            == Some(self.checkpoint_page_outcome())
+    }
+
+    /// Return whether all aggregate replay health labels match their typed values.
+    pub fn health_labels_match(&self) -> bool {
+        self.ticks
+            .iter()
+            .all(|tick| tick.replay.health_labels_match())
+            && self.checkpoint_page_outcome_label_matches_outcome()
+            && self.health_action_label_matches_action()
+            && self.health_route_label_matches_route()
+            && self.health_priority_label_matches_priority()
+            && self.health_readiness_label_matches_readiness()
+    }
+
+    /// Return whether any aggregate replay health label drifted from its classifier.
+    pub fn has_health_label_integrity_drift(&self) -> bool {
+        !self.health_labels_match()
+    }
+
+    /// Return the recommended host action for aggregate replay health.
+    pub fn health_action(&self) -> ToolAuditHealthAction {
+        self.checkpoint_page_outcome().health_action()
+    }
+
+    /// Return the stable aggregate health-action label.
+    pub fn health_action_label(&self) -> &'static str {
+        self.health_action().as_str()
+    }
+
+    /// Return whether the aggregate health-action label parses back to its typed action.
+    pub fn health_action_label_matches_action(&self) -> bool {
+        ToolAuditHealthAction::from_label(self.health_action_label()) == Some(self.health_action())
+    }
+
+    /// Return whether the aggregate replay health needs host action.
+    pub fn requires_health_action(&self) -> bool {
+        self.health_action().requires_action()
+    }
+
+    /// Return the host route for aggregate replay health.
+    pub fn health_route(&self) -> ToolAuditHealthRoute {
+        self.health_action().route()
+    }
+
+    /// Return the stable aggregate health-route label.
+    pub fn health_route_label(&self) -> &'static str {
+        self.health_route().as_str()
+    }
+
+    /// Return whether the aggregate health-route label parses back to its typed route.
+    pub fn health_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_route_label()) == Some(self.health_route())
+    }
+
+    /// Return whether aggregate replay health has a concrete host route.
+    pub fn health_has_route(&self) -> bool {
+        self.health_route().has_route()
+    }
+
+    /// Classify dashboard priority for aggregate replay health.
+    pub fn health_priority(&self) -> ToolAuditHealthPriority {
+        self.health_action().priority()
+    }
+
+    /// Return the stable aggregate health-priority label.
+    pub fn health_priority_label(&self) -> &'static str {
+        self.health_priority().as_str()
+    }
+
+    /// Return whether the aggregate health-priority label parses back to its typed priority.
+    pub fn health_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_priority_label())
+            == Some(self.health_priority())
+    }
+
+    /// Return the sortable aggregate health-priority rank.
+    pub fn health_priority_rank(&self) -> u8 {
+        self.health_priority().rank()
+    }
+
+    /// Classify queue readiness for aggregate replay health.
+    pub fn health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_action().readiness()
+    }
+
+    /// Return the stable aggregate health-readiness label.
+    pub fn health_readiness_label(&self) -> &'static str {
+        self.health_readiness().as_str()
+    }
+
+    /// Return whether the aggregate health-readiness label parses back to its typed readiness.
+    pub fn health_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_readiness_label())
+            == Some(self.health_readiness())
+    }
+
+    /// Return whether aggregate replay health should appear in an action queue.
+    pub fn health_is_actionable(&self) -> bool {
+        self.health_readiness().is_actionable()
+    }
+
+    /// Return whether aggregate replay health can be routed automatically.
+    pub fn health_is_auto_routable(&self) -> bool {
+        self.health_readiness().is_auto_routable()
+    }
+
+    /// Return whether aggregate replay health needs manual review.
+    pub fn health_readiness_requires_manual_review(&self) -> bool {
+        self.health_readiness().requires_manual_review()
+    }
+
+    /// Return whether aggregate replay health needs investigation.
+    pub fn health_readiness_requires_investigation(&self) -> bool {
+        self.health_readiness().requires_investigation()
+    }
+
+    /// Return whether aggregate replay health needs triage.
+    pub fn health_readiness_requires_triage(&self) -> bool {
+        self.health_readiness().requires_triage()
+    }
+
     /// Return the last replay checkpoint observed by this run.
     pub fn last_checkpoint(&self) -> Option<&ToolAuditReadCheckpoint> {
         self.ticks.last().map(|tick| &tick.replay.next_checkpoint)
@@ -1815,6 +2095,176 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether follow-up pressure should be routed to the host.
     pub fn routes_follow_up(&self) -> bool {
         self.scheduler_action().routes_follow_up()
+    }
+
+    /// Return the aggregate health action for the preflight plan.
+    pub fn plan_health_action(&self) -> ToolAuditHealthAction {
+        self.plan.health_action()
+    }
+
+    /// Return the stable preflight health-action label.
+    pub fn plan_health_action_label(&self) -> &'static str {
+        self.plan.health_action_label()
+    }
+
+    /// Return whether the preflight health-action label matches its typed action.
+    pub fn plan_health_action_label_matches_action(&self) -> bool {
+        self.plan.health_action_label_matches_action()
+    }
+
+    /// Return the aggregate health route for the preflight plan.
+    pub fn plan_health_route(&self) -> ToolAuditHealthRoute {
+        self.plan.health_route()
+    }
+
+    /// Return the stable preflight health-route label.
+    pub fn plan_health_route_label(&self) -> &'static str {
+        self.plan.health_route_label()
+    }
+
+    /// Return whether the preflight health-route label matches its typed route.
+    pub fn plan_health_route_label_matches_route(&self) -> bool {
+        self.plan.health_route_label_matches_route()
+    }
+
+    /// Return the aggregate health priority for the preflight plan.
+    pub fn plan_health_priority(&self) -> ToolAuditHealthPriority {
+        self.plan.health_priority()
+    }
+
+    /// Return the stable preflight health-priority label.
+    pub fn plan_health_priority_label(&self) -> &'static str {
+        self.plan.health_priority_label()
+    }
+
+    /// Return whether the preflight health-priority label matches its typed priority.
+    pub fn plan_health_priority_label_matches_priority(&self) -> bool {
+        self.plan.health_priority_label_matches_priority()
+    }
+
+    /// Return the sortable preflight health-priority rank.
+    pub fn plan_health_priority_rank(&self) -> u8 {
+        self.plan.health_priority_rank()
+    }
+
+    /// Return the aggregate health readiness for the preflight plan.
+    pub fn plan_health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.plan.health_readiness()
+    }
+
+    /// Return the stable preflight health-readiness label.
+    pub fn plan_health_readiness_label(&self) -> &'static str {
+        self.plan.health_readiness_label()
+    }
+
+    /// Return whether the preflight health-readiness label matches its typed readiness.
+    pub fn plan_health_readiness_label_matches_readiness(&self) -> bool {
+        self.plan.health_readiness_label_matches_readiness()
+    }
+
+    /// Return whether the preflight health should appear in an action queue.
+    pub fn plan_health_is_actionable(&self) -> bool {
+        self.plan.health_is_actionable()
+    }
+
+    /// Return whether the preflight health can be routed automatically.
+    pub fn plan_health_is_auto_routable(&self) -> bool {
+        self.plan.health_is_auto_routable()
+    }
+
+    /// Return whether the preflight health needs manual review.
+    pub fn plan_health_readiness_requires_manual_review(&self) -> bool {
+        self.plan.health_readiness_requires_manual_review()
+    }
+
+    /// Return the aggregate health action for the drain result.
+    pub fn drain_health_action(&self) -> ToolAuditHealthAction {
+        self.drain.health_action()
+    }
+
+    /// Return the stable drain health-action label.
+    pub fn drain_health_action_label(&self) -> &'static str {
+        self.drain.health_action_label()
+    }
+
+    /// Return whether the drain health-action label matches its typed action.
+    pub fn drain_health_action_label_matches_action(&self) -> bool {
+        self.drain.health_action_label_matches_action()
+    }
+
+    /// Return the aggregate health route for the drain result.
+    pub fn drain_health_route(&self) -> ToolAuditHealthRoute {
+        self.drain.health_route()
+    }
+
+    /// Return the stable drain health-route label.
+    pub fn drain_health_route_label(&self) -> &'static str {
+        self.drain.health_route_label()
+    }
+
+    /// Return whether the drain health-route label matches its typed route.
+    pub fn drain_health_route_label_matches_route(&self) -> bool {
+        self.drain.health_route_label_matches_route()
+    }
+
+    /// Return the aggregate health priority for the drain result.
+    pub fn drain_health_priority(&self) -> ToolAuditHealthPriority {
+        self.drain.health_priority()
+    }
+
+    /// Return the stable drain health-priority label.
+    pub fn drain_health_priority_label(&self) -> &'static str {
+        self.drain.health_priority_label()
+    }
+
+    /// Return whether the drain health-priority label matches its typed priority.
+    pub fn drain_health_priority_label_matches_priority(&self) -> bool {
+        self.drain.health_priority_label_matches_priority()
+    }
+
+    /// Return the sortable drain health-priority rank.
+    pub fn drain_health_priority_rank(&self) -> u8 {
+        self.drain.health_priority_rank()
+    }
+
+    /// Return the aggregate health readiness for the drain result.
+    pub fn drain_health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.drain.health_readiness()
+    }
+
+    /// Return the stable drain health-readiness label.
+    pub fn drain_health_readiness_label(&self) -> &'static str {
+        self.drain.health_readiness_label()
+    }
+
+    /// Return whether the drain health-readiness label matches its typed readiness.
+    pub fn drain_health_readiness_label_matches_readiness(&self) -> bool {
+        self.drain.health_readiness_label_matches_readiness()
+    }
+
+    /// Return whether the drain health should appear in an action queue.
+    pub fn drain_health_is_actionable(&self) -> bool {
+        self.drain.health_is_actionable()
+    }
+
+    /// Return whether the drain health can be routed automatically.
+    pub fn drain_health_is_auto_routable(&self) -> bool {
+        self.drain.health_is_auto_routable()
+    }
+
+    /// Return whether the drain health needs manual review.
+    pub fn drain_health_readiness_requires_manual_review(&self) -> bool {
+        self.drain.health_readiness_requires_manual_review()
+    }
+
+    /// Return whether aggregate plan and drain health labels match typed values.
+    pub fn health_dashboard_labels_match(&self) -> bool {
+        self.plan.health_labels_match() && self.drain.health_labels_match()
+    }
+
+    /// Return whether any aggregate plan or drain health label drifted.
+    pub fn has_health_dashboard_label_integrity_drift(&self) -> bool {
+        !self.health_dashboard_labels_match()
     }
 
     /// Return whether the host should investigate preflight/drain drift.
@@ -2494,6 +2944,48 @@ impl ToolAuditSupervisorDrainRunReport {
             requires_scheduler_action: self.requires_scheduler_action(),
             requests_continuation: self.requests_continuation(),
             routes_follow_up: self.routes_follow_up(),
+            plan_health_action: self.plan_health_action(),
+            plan_health_action_label: self.plan_health_action_label(),
+            plan_health_action_label_matches_action: self.plan_health_action_label_matches_action(),
+            plan_health_route: self.plan_health_route(),
+            plan_health_route_label: self.plan_health_route_label(),
+            plan_health_route_label_matches_route: self.plan_health_route_label_matches_route(),
+            plan_health_priority: self.plan_health_priority(),
+            plan_health_priority_label: self.plan_health_priority_label(),
+            plan_health_priority_label_matches_priority: self
+                .plan_health_priority_label_matches_priority(),
+            plan_health_priority_rank: self.plan_health_priority_rank(),
+            plan_health_readiness: self.plan_health_readiness(),
+            plan_health_readiness_label: self.plan_health_readiness_label(),
+            plan_health_readiness_label_matches_readiness: self
+                .plan_health_readiness_label_matches_readiness(),
+            plan_health_is_actionable: self.plan_health_is_actionable(),
+            plan_health_is_auto_routable: self.plan_health_is_auto_routable(),
+            plan_health_readiness_requires_manual_review: self
+                .plan_health_readiness_requires_manual_review(),
+            drain_health_action: self.drain_health_action(),
+            drain_health_action_label: self.drain_health_action_label(),
+            drain_health_action_label_matches_action: self
+                .drain_health_action_label_matches_action(),
+            drain_health_route: self.drain_health_route(),
+            drain_health_route_label: self.drain_health_route_label(),
+            drain_health_route_label_matches_route: self.drain_health_route_label_matches_route(),
+            drain_health_priority: self.drain_health_priority(),
+            drain_health_priority_label: self.drain_health_priority_label(),
+            drain_health_priority_label_matches_priority: self
+                .drain_health_priority_label_matches_priority(),
+            drain_health_priority_rank: self.drain_health_priority_rank(),
+            drain_health_readiness: self.drain_health_readiness(),
+            drain_health_readiness_label: self.drain_health_readiness_label(),
+            drain_health_readiness_label_matches_readiness: self
+                .drain_health_readiness_label_matches_readiness(),
+            drain_health_is_actionable: self.drain_health_is_actionable(),
+            drain_health_is_auto_routable: self.drain_health_is_auto_routable(),
+            drain_health_readiness_requires_manual_review: self
+                .drain_health_readiness_requires_manual_review(),
+            health_dashboard_labels_match: self.health_dashboard_labels_match(),
+            has_health_dashboard_label_integrity_drift: self
+                .has_health_dashboard_label_integrity_drift(),
             max_records_per_tick: self.max_records_per_tick(),
             max_ticks: self.max_ticks(),
             planned_pages: self.planned_pages(),
@@ -3149,6 +3641,74 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub requests_continuation: bool,
     /// Whether follow-up pressure should be routed to the host.
     pub routes_follow_up: bool,
+    /// Aggregate health action for the preflight plan.
+    pub plan_health_action: ToolAuditHealthAction,
+    /// Stable preflight health-action label.
+    pub plan_health_action_label: &'static str,
+    /// Whether the preflight health-action label parses back to the typed action.
+    pub plan_health_action_label_matches_action: bool,
+    /// Aggregate health route for the preflight plan.
+    pub plan_health_route: ToolAuditHealthRoute,
+    /// Stable preflight health-route label.
+    pub plan_health_route_label: &'static str,
+    /// Whether the preflight health-route label parses back to the typed route.
+    pub plan_health_route_label_matches_route: bool,
+    /// Aggregate health priority for the preflight plan.
+    pub plan_health_priority: ToolAuditHealthPriority,
+    /// Stable preflight health-priority label.
+    pub plan_health_priority_label: &'static str,
+    /// Whether the preflight health-priority label parses back to the typed priority.
+    pub plan_health_priority_label_matches_priority: bool,
+    /// Sortable preflight health-priority rank.
+    pub plan_health_priority_rank: u8,
+    /// Aggregate health readiness for the preflight plan.
+    pub plan_health_readiness: ToolAuditHealthReadiness,
+    /// Stable preflight health-readiness label.
+    pub plan_health_readiness_label: &'static str,
+    /// Whether the preflight health-readiness label parses back to the typed readiness.
+    pub plan_health_readiness_label_matches_readiness: bool,
+    /// Whether preflight health should appear in an action queue.
+    pub plan_health_is_actionable: bool,
+    /// Whether preflight health can be routed without manual review.
+    pub plan_health_is_auto_routable: bool,
+    /// Whether preflight health needs manual review.
+    pub plan_health_readiness_requires_manual_review: bool,
+    /// Aggregate health action for the drain result.
+    pub drain_health_action: ToolAuditHealthAction,
+    /// Stable drain health-action label.
+    pub drain_health_action_label: &'static str,
+    /// Whether the drain health-action label parses back to the typed action.
+    pub drain_health_action_label_matches_action: bool,
+    /// Aggregate health route for the drain result.
+    pub drain_health_route: ToolAuditHealthRoute,
+    /// Stable drain health-route label.
+    pub drain_health_route_label: &'static str,
+    /// Whether the drain health-route label parses back to the typed route.
+    pub drain_health_route_label_matches_route: bool,
+    /// Aggregate health priority for the drain result.
+    pub drain_health_priority: ToolAuditHealthPriority,
+    /// Stable drain health-priority label.
+    pub drain_health_priority_label: &'static str,
+    /// Whether the drain health-priority label parses back to the typed priority.
+    pub drain_health_priority_label_matches_priority: bool,
+    /// Sortable drain health-priority rank.
+    pub drain_health_priority_rank: u8,
+    /// Aggregate health readiness for the drain result.
+    pub drain_health_readiness: ToolAuditHealthReadiness,
+    /// Stable drain health-readiness label.
+    pub drain_health_readiness_label: &'static str,
+    /// Whether the drain health-readiness label parses back to the typed readiness.
+    pub drain_health_readiness_label_matches_readiness: bool,
+    /// Whether drain health should appear in an action queue.
+    pub drain_health_is_actionable: bool,
+    /// Whether drain health can be routed without manual review.
+    pub drain_health_is_auto_routable: bool,
+    /// Whether drain health needs manual review.
+    pub drain_health_readiness_requires_manual_review: bool,
+    /// Whether aggregate plan and drain health labels parse back to typed values.
+    pub health_dashboard_labels_match: bool,
+    /// Whether any aggregate health dashboard label drifted.
+    pub has_health_dashboard_label_integrity_drift: bool,
     /// Maximum rows each drain tick may replay.
     pub max_records_per_tick: usize,
     /// Maximum drain ticks requested for this run.
@@ -3618,6 +4178,176 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether follow-up pressure should be routed to the host.
     pub fn routes_follow_up(&self) -> bool {
         self.routes_follow_up
+    }
+
+    /// Return the aggregate health action for the preflight plan.
+    pub fn plan_health_action(&self) -> ToolAuditHealthAction {
+        self.plan_health_action
+    }
+
+    /// Return the stable preflight health-action label.
+    pub fn plan_health_action_label(&self) -> &'static str {
+        self.plan_health_action_label
+    }
+
+    /// Return whether the preflight health-action label matches its typed action.
+    pub fn plan_health_action_label_matches_action(&self) -> bool {
+        self.plan_health_action_label_matches_action
+    }
+
+    /// Return the aggregate health route for the preflight plan.
+    pub fn plan_health_route(&self) -> ToolAuditHealthRoute {
+        self.plan_health_route
+    }
+
+    /// Return the stable preflight health-route label.
+    pub fn plan_health_route_label(&self) -> &'static str {
+        self.plan_health_route_label
+    }
+
+    /// Return whether the preflight health-route label matches its typed route.
+    pub fn plan_health_route_label_matches_route(&self) -> bool {
+        self.plan_health_route_label_matches_route
+    }
+
+    /// Return the aggregate health priority for the preflight plan.
+    pub fn plan_health_priority(&self) -> ToolAuditHealthPriority {
+        self.plan_health_priority
+    }
+
+    /// Return the stable preflight health-priority label.
+    pub fn plan_health_priority_label(&self) -> &'static str {
+        self.plan_health_priority_label
+    }
+
+    /// Return whether the preflight health-priority label matches its typed priority.
+    pub fn plan_health_priority_label_matches_priority(&self) -> bool {
+        self.plan_health_priority_label_matches_priority
+    }
+
+    /// Return the sortable preflight health-priority rank.
+    pub fn plan_health_priority_rank(&self) -> u8 {
+        self.plan_health_priority_rank
+    }
+
+    /// Return the aggregate health readiness for the preflight plan.
+    pub fn plan_health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.plan_health_readiness
+    }
+
+    /// Return the stable preflight health-readiness label.
+    pub fn plan_health_readiness_label(&self) -> &'static str {
+        self.plan_health_readiness_label
+    }
+
+    /// Return whether the preflight health-readiness label matches its typed readiness.
+    pub fn plan_health_readiness_label_matches_readiness(&self) -> bool {
+        self.plan_health_readiness_label_matches_readiness
+    }
+
+    /// Return whether preflight health should appear in an action queue.
+    pub fn plan_health_is_actionable(&self) -> bool {
+        self.plan_health_is_actionable
+    }
+
+    /// Return whether preflight health can be routed without manual review.
+    pub fn plan_health_is_auto_routable(&self) -> bool {
+        self.plan_health_is_auto_routable
+    }
+
+    /// Return whether preflight health needs manual review.
+    pub fn plan_health_readiness_requires_manual_review(&self) -> bool {
+        self.plan_health_readiness_requires_manual_review
+    }
+
+    /// Return the aggregate health action for the drain result.
+    pub fn drain_health_action(&self) -> ToolAuditHealthAction {
+        self.drain_health_action
+    }
+
+    /// Return the stable drain health-action label.
+    pub fn drain_health_action_label(&self) -> &'static str {
+        self.drain_health_action_label
+    }
+
+    /// Return whether the drain health-action label matches its typed action.
+    pub fn drain_health_action_label_matches_action(&self) -> bool {
+        self.drain_health_action_label_matches_action
+    }
+
+    /// Return the aggregate health route for the drain result.
+    pub fn drain_health_route(&self) -> ToolAuditHealthRoute {
+        self.drain_health_route
+    }
+
+    /// Return the stable drain health-route label.
+    pub fn drain_health_route_label(&self) -> &'static str {
+        self.drain_health_route_label
+    }
+
+    /// Return whether the drain health-route label matches its typed route.
+    pub fn drain_health_route_label_matches_route(&self) -> bool {
+        self.drain_health_route_label_matches_route
+    }
+
+    /// Return the aggregate health priority for the drain result.
+    pub fn drain_health_priority(&self) -> ToolAuditHealthPriority {
+        self.drain_health_priority
+    }
+
+    /// Return the stable drain health-priority label.
+    pub fn drain_health_priority_label(&self) -> &'static str {
+        self.drain_health_priority_label
+    }
+
+    /// Return whether the drain health-priority label matches its typed priority.
+    pub fn drain_health_priority_label_matches_priority(&self) -> bool {
+        self.drain_health_priority_label_matches_priority
+    }
+
+    /// Return the sortable drain health-priority rank.
+    pub fn drain_health_priority_rank(&self) -> u8 {
+        self.drain_health_priority_rank
+    }
+
+    /// Return the aggregate health readiness for the drain result.
+    pub fn drain_health_readiness(&self) -> ToolAuditHealthReadiness {
+        self.drain_health_readiness
+    }
+
+    /// Return the stable drain health-readiness label.
+    pub fn drain_health_readiness_label(&self) -> &'static str {
+        self.drain_health_readiness_label
+    }
+
+    /// Return whether the drain health-readiness label matches its typed readiness.
+    pub fn drain_health_readiness_label_matches_readiness(&self) -> bool {
+        self.drain_health_readiness_label_matches_readiness
+    }
+
+    /// Return whether drain health should appear in an action queue.
+    pub fn drain_health_is_actionable(&self) -> bool {
+        self.drain_health_is_actionable
+    }
+
+    /// Return whether drain health can be routed without manual review.
+    pub fn drain_health_is_auto_routable(&self) -> bool {
+        self.drain_health_is_auto_routable
+    }
+
+    /// Return whether drain health needs manual review.
+    pub fn drain_health_readiness_requires_manual_review(&self) -> bool {
+        self.drain_health_readiness_requires_manual_review
+    }
+
+    /// Return whether aggregate plan and drain health labels match typed values.
+    pub fn health_dashboard_labels_match(&self) -> bool {
+        self.health_dashboard_labels_match
+    }
+
+    /// Return whether any aggregate health dashboard label drifted.
+    pub fn has_health_dashboard_label_integrity_drift(&self) -> bool {
+        self.has_health_dashboard_label_integrity_drift
     }
 
     /// Return whether the host should investigate preflight/drain drift.
@@ -15071,6 +15801,204 @@ mod tests {
         assert!(planned_page.health_is_actionable());
         assert!(planned_page.health_is_auto_routable());
         assert!(planned_page.health_readiness_label_matches_readiness());
+    }
+
+    #[test]
+    fn supervisor_drain_report_summary_flattens_health_dashboard_fields() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert_eq!(
+            idle_report.plan.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(
+            idle_report.drain.health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(
+            idle_report.plan.health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(
+            idle_report.drain.health_readiness(),
+            ToolAuditHealthReadiness::Settled
+        );
+        assert!(idle_report.health_dashboard_labels_match());
+        assert!(!idle_report.has_health_dashboard_label_integrity_drift());
+        assert_eq!(
+            idle_summary.plan_health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(idle_summary.plan_health_action_label(), "no_action");
+        assert!(idle_summary.plan_health_action_label_matches_action());
+        assert_eq!(
+            idle_summary.plan_health_route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert_eq!(idle_summary.plan_health_route_label(), "no_route");
+        assert!(idle_summary.plan_health_route_label_matches_route());
+        assert_eq!(
+            idle_summary.plan_health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(idle_summary.plan_health_priority_label(), "settled");
+        assert!(idle_summary.plan_health_priority_label_matches_priority());
+        assert_eq!(idle_summary.plan_health_priority_rank(), 0);
+        assert_eq!(
+            idle_summary.plan_health_readiness(),
+            ToolAuditHealthReadiness::Settled
+        );
+        assert_eq!(idle_summary.plan_health_readiness_label(), "settled");
+        assert!(idle_summary.plan_health_readiness_label_matches_readiness());
+        assert!(!idle_summary.plan_health_is_actionable());
+        assert!(!idle_summary.plan_health_is_auto_routable());
+        assert!(!idle_summary.plan_health_readiness_requires_manual_review());
+        assert_eq!(
+            idle_summary.drain_health_action(),
+            ToolAuditHealthAction::NoAction
+        );
+        assert_eq!(idle_summary.drain_health_action_label(), "no_action");
+        assert!(idle_summary.drain_health_action_label_matches_action());
+        assert_eq!(
+            idle_summary.drain_health_route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert_eq!(idle_summary.drain_health_route_label(), "no_route");
+        assert!(idle_summary.drain_health_route_label_matches_route());
+        assert_eq!(
+            idle_summary.drain_health_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(idle_summary.drain_health_priority_label(), "settled");
+        assert!(idle_summary.drain_health_priority_label_matches_priority());
+        assert_eq!(idle_summary.drain_health_priority_rank(), 0);
+        assert_eq!(
+            idle_summary.drain_health_readiness(),
+            ToolAuditHealthReadiness::Settled
+        );
+        assert_eq!(idle_summary.drain_health_readiness_label(), "settled");
+        assert!(idle_summary.drain_health_readiness_label_matches_readiness());
+        assert!(!idle_summary.drain_health_is_actionable());
+        assert!(!idle_summary.drain_health_is_auto_routable());
+        assert!(!idle_summary.drain_health_readiness_requires_manual_review());
+        assert!(idle_summary.health_dashboard_labels_match());
+        assert!(!idle_summary.has_health_dashboard_label_integrity_drift());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+
+        assert_eq!(
+            continuation_report.plan.health_action(),
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation
+        );
+        assert_eq!(
+            continuation_report.drain.health_action(),
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation
+        );
+        assert_eq!(
+            continuation_report.plan.health_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(
+            continuation_report.drain.health_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(
+            continuation_summary.plan_health_action(),
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation
+        );
+        assert_eq!(
+            continuation_summary.plan_health_action_label(),
+            "drain_page_and_schedule_continuation"
+        );
+        assert_eq!(
+            continuation_summary.plan_health_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(continuation_summary.plan_health_route_label(), "triage");
+        assert_eq!(
+            continuation_summary.plan_health_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(continuation_summary.plan_health_priority_rank(), 90);
+        assert_eq!(
+            continuation_summary.plan_health_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(
+            continuation_summary.plan_health_readiness_label(),
+            "triage_required"
+        );
+        assert!(continuation_summary.plan_health_is_actionable());
+        assert!(!continuation_summary.plan_health_is_auto_routable());
+        assert!(continuation_summary.plan_health_readiness_requires_manual_review());
+        assert_eq!(
+            continuation_summary.drain_health_action(),
+            ToolAuditHealthAction::DrainPageAndScheduleContinuation
+        );
+        assert_eq!(
+            continuation_summary.drain_health_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(
+            continuation_summary.drain_health_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(continuation_summary.drain_health_priority_rank(), 90);
+        assert!(continuation_summary.drain_health_is_actionable());
+        assert!(!continuation_summary.drain_health_is_auto_routable());
+        assert!(continuation_summary.drain_health_readiness_requires_manual_review());
+        assert!(continuation_summary.health_dashboard_labels_match());
+        assert!(!continuation_summary.has_health_dashboard_label_integrity_drift());
+
+        let follow_up_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(follow_up_store
+            .record_audit_batch(vec![failed_record("call_failed")])
+            .completed_without_failures());
+        let mut follow_up_sink = InMemoryToolAuditSink::new();
+        let follow_up_report = follow_up_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut follow_up_sink)
+            .unwrap();
+        let follow_up_summary = follow_up_report.summary();
+
+        assert_eq!(
+            follow_up_report.plan.health_action(),
+            ToolAuditHealthAction::DrainPageAndRouteFollowUp
+        );
+        assert_eq!(
+            follow_up_report.drain.health_action(),
+            ToolAuditHealthAction::DrainPageAndRouteFollowUp
+        );
+        assert_eq!(
+            follow_up_summary.plan_health_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(
+            follow_up_summary.drain_health_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(follow_up_summary.plan_health_route_label(), "triage");
+        assert_eq!(follow_up_summary.drain_health_route_label(), "triage");
+        assert!(follow_up_summary.plan_health_readiness_requires_manual_review());
+        assert!(follow_up_summary.drain_health_readiness_requires_manual_review());
+        assert!(follow_up_summary.health_dashboard_labels_match());
+        assert!(!follow_up_summary.has_health_dashboard_label_integrity_drift());
     }
 
     #[test]

@@ -183,6 +183,9 @@ The crate keeps the boundary narrow:
   host-log dashboards
 - lower-level audit health priority/readiness helpers provide sortable ranks,
   manual-review, investigation, and triage signals without parsing labels
+- supervisor drain run summaries flatten aggregate preflight-plan and
+  drain-result health dashboard labels, ranks, readiness, and label-integrity
+  flags for host queues
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
