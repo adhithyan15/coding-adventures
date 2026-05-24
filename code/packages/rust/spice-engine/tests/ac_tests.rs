@@ -347,6 +347,7 @@ fn ac_bjt_applies_zero_bias_common_emitter_gain() {
         0.02585,
         0.0,
         0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,
@@ -381,6 +382,7 @@ fn ac_bjt_uses_explicit_ac_source_and_dc_bias_operating_point() {
         25.85e-6,
         100.0,
         thermal_voltage,
+        0.0,
         0.0,
         0.0,
     )));
@@ -418,6 +420,7 @@ fn ac_bjt_uses_base_emitter_capacitance() {
             0.02585,
             base_emitter_capacitance,
             0.0,
+            0.0,
         )));
 
         ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
@@ -431,6 +434,44 @@ fn ac_bjt_uses_base_emitter_capacitance() {
 
     assert!(without_capacitance > 0.9);
     assert!(with_capacitance < without_capacitance / 100.0);
+}
+
+#[test]
+fn ac_bjt_uses_forward_transit_time_as_diffusion_capacitance() {
+    fn base_amplitude(forward_transit_time: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1_000.0)));
+        circuit.add(Element::Bjt(Bjt::with_model(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            forward_transit_time,
+        )));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    let without_transit_time = base_amplitude(0.0);
+    let with_transit_time = base_amplitude(1.0e-3);
+
+    assert!(without_transit_time > 0.9);
+    assert!(with_transit_time < without_transit_time / 100.0);
 }
 
 #[test]

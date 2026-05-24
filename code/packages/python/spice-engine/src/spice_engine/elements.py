@@ -514,6 +514,9 @@ class BJT:
         Base-emitter junction capacitance in Farads.
     Cjc:
         Base-collector junction capacitance in Farads.
+    Tf:
+        Forward transit time in seconds; contributes diffusion capacitance in
+        small-signal AC analysis.
     """
 
     name: str
@@ -526,6 +529,7 @@ class BJT:
     Vt: float = 0.02585     # thermal voltage (V) at ~300 K
     Cje: float = 0.0        # base-emitter junction capacitance (F)
     Cjc: float = 0.0        # base-collector junction capacitance (F)
+    Tf: float = 0.0         # forward transit time (s)
 
 
 # ---------------------------------------------------------------------------

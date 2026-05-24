@@ -394,6 +394,7 @@ export interface Bjt {
   readonly thermalVoltage: number;
   readonly baseEmitterCapacitance: number;
   readonly baseCollectorCapacitance: number;
+  readonly forwardTransitTime: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -956,7 +957,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -1256,6 +1257,7 @@ export function bjt(
   thermalVoltage = 0.02585,
   baseEmitterCapacitance = 0.0,
   baseCollectorCapacitance = 0.0,
+  forwardTransitTime = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -1269,6 +1271,7 @@ export function bjt(
     thermalVoltage,
     baseEmitterCapacitance,
     baseCollectorCapacitance,
+    forwardTransitTime,
   };
 }
 
@@ -4893,6 +4896,9 @@ function validateBjt(element: Bjt): void {
   if (!Number.isFinite(element.baseCollectorCapacitance) || element.baseCollectorCapacitance < 0.0) {
     throw invalidElement(element.name, "base-collector capacitance must be finite and non-negative");
   }
+  if (!Number.isFinite(element.forwardTransitTime) || element.forwardTransitTime < 0.0) {
+    throw invalidElement(element.name, "forward transit time must be finite and non-negative");
+  }
 }
 
 function validateMosfet(element: Mosfet): void {
@@ -6519,9 +6525,10 @@ function stampAcBjtSmallSignal(
   const emitter = nodeIndex(nodeIndices, element.emitter);
   const transconductance = element.saturationCurrent / element.thermalVoltage;
   const junctionConductance = transconductance / element.forwardBeta;
+  const diffusionCapacitance = element.forwardTransitTime * transconductance;
   const baseEmitterAdmittance = complex(
     junctionConductance,
-    omega * element.baseEmitterCapacitance,
+    omega * (element.baseEmitterCapacitance + diffusionCapacitance),
   );
   const baseCollectorAdmittance = complex(0.0, omega * element.baseCollectorCapacitance);
   if (element.polarity === "NPN") {

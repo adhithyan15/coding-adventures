@@ -11,6 +11,8 @@
 - Parse diode model-card transit time with `.model ... D(... TT=<time>)`.
 - Parse BJT model-card capacitances with `.model ... NPN|PNP(... CJE=<c>
   CJC=<c>)` and pass them into TypeScript `bjt` elements.
+- Parse BJT model-card forward transit time with
+  `.model ... NPN|PNP(... TF=<time>)`.
 - Parse and validate transient integration methods from
   `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
   `.options method=<...>`.

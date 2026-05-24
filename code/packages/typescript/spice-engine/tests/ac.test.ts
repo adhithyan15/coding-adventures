@@ -313,6 +313,23 @@ describe("acSweep", () => {
     expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
   });
 
+  it("uses BJT forward transit time as diffusion capacitance in AC analysis", () => {
+    function baseAmplitude(forwardTransitTime: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(resistor("Rc", "col", "0", 1_000.0));
+      circuit.add(bjt("Q1", "col", "base", "0", "NPN", 25.85e-6, 100.0, 0.02585, 0.0, 0.0, forwardTransitTime));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("base")!);
+    }
+
+    const withoutTransitTime = baseAmplitude(0.0);
+    const withTransitTime = baseAmplitude(1.0e-3);
+
+    expect(withoutTransitTime).toBeGreaterThan(0.9);
+    expect(withTransitTime).toBeLessThan(withoutTransitTime / 100.0);
+  });
+
   it("applies VCVS gain in AC analysis", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vin", "in", "0", 1.0));

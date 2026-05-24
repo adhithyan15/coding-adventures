@@ -324,6 +324,7 @@ fn clone_subckt_element(
             element.thermal_voltage,
             element.base_emitter_capacitance,
             element.base_collector_capacitance,
+            element.forward_transit_time,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -1245,6 +1246,7 @@ pub struct Bjt {
     pub thermal_voltage: f64,
     pub base_emitter_capacitance: f64,
     pub base_collector_capacitance: f64,
+    pub forward_transit_time: f64,
 }
 
 impl Bjt {
@@ -1265,6 +1267,7 @@ impl Bjt {
             0.02585,
             0.0,
             0.0,
+            0.0,
         )
     }
 
@@ -1279,6 +1282,7 @@ impl Bjt {
         thermal_voltage: f64,
         base_emitter_capacitance: f64,
         base_collector_capacitance: f64,
+        forward_transit_time: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -1291,6 +1295,7 @@ impl Bjt {
             thermal_voltage,
             base_emitter_capacitance,
             base_collector_capacitance,
+            forward_transit_time,
         }
     }
 }
@@ -5467,9 +5472,10 @@ fn stamp_ac_bjt_small_signal(
         bjt.saturation_current / bjt.thermal_voltage * exponent.exp(),
         0.0,
     );
+    let diffusion_capacitance = bjt.forward_transit_time * gm.real;
     let gpi = Complex::new(
         gm.real / bjt.forward_beta,
-        omega * bjt.base_emitter_capacitance,
+        omega * (bjt.base_emitter_capacitance + diffusion_capacitance),
     );
     let ybc = Complex::new(0.0, omega * bjt.base_collector_capacitance);
     match bjt.polarity {
@@ -5910,6 +5916,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "base-collector capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_transit_time.is_finite() || bjt.forward_transit_time < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward transit time must be finite and non-negative".to_string(),
         });
     }
     Ok(())

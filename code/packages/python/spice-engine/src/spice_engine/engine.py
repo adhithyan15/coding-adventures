@@ -261,7 +261,7 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -2003,6 +2003,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT base-emitter capacitance must be finite and non-negative")
     if not math.isfinite(el.Cjc) or el.Cjc < 0.0:
         raise ValueError(f"{el.name}: BJT base-collector capacitance must be finite and non-negative")
+    if not math.isfinite(el.Tf) or el.Tf < 0.0:
+        raise ValueError(f"{el.name}: BJT forward transit time must be finite and non-negative")
 
 
 # ---------------------------------------------------------------------------
@@ -3962,7 +3964,8 @@ def _stamp_ac(
         exp_t = math.exp(Vjunc / el.Vt)
         gm_b: float = (el.Is / el.Vt) * exp_t
         g_pi: float = gm_b / el.beta_f
-        y_be = g_pi + 1j * omega * el.Cje
+        diffusion_capacitance = el.Tf * gm_b
+        y_be = g_pi + 1j * omega * (el.Cje + diffusion_capacitance)
         y_bc = 1j * omega * el.Cjc
 
         if el.polarity == "NPN":
@@ -5355,6 +5358,7 @@ def sens_dc(
                     Vt=el.Vt,
                     Cje=el.Cje,
                     Cjc=el.Cjc,
+                    Tf=el.Tf,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -5369,6 +5373,7 @@ def sens_dc(
                     Vt=el.Vt,
                     Cje=el.Cje,
                     Cjc=el.Cjc,
+                    Tf=el.Tf,
                 ),
             )
 
@@ -5577,6 +5582,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Vt=el.Vt,
             Cje=el.Cje,
             Cjc=el.Cjc,
+            Tf=el.Tf,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
