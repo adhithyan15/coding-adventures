@@ -869,6 +869,49 @@ function isBoundedTimesLogInK(node: IRNode, k: IRNode): boolean {
   return logCount === 1;
 }
 
+/**
+ * Phase 56 (TypeScript port): Return the ``Sqrt`` inner half-degree
+ * when ``node`` is a ``Mul`` with exactly one
+ * ``Sqrt(positive-leading polynomial)`` factor and all remaining
+ * factors bounded in ``k``; ``undefined`` otherwise.
+ *
+ * Mirror of :func:`isBoundedTimesLogInK` but for sqrt instead of log.
+ * Returns the half-degree directly (Phase 51's
+ * ``sqrtEffectiveHalfDegree`` already returns the half value in TS),
+ * so the caller compares ``denDeg > sqrtHalfDeg`` directly.
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Sqrt(positive-leading polynomial)`` → record its half-deg;
+ *        refuse if a second sqrt appears.
+ *      - ``bounded`` → accept.
+ *      - otherwise → return undefined.
+ *   3. Require exactly one sqrt factor.
+ */
+function boundedTimesSqrtHalfDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  for (const arg of node.args) {
+    const deg = sqrtEffectiveHalfDegree(arg, k);
+    if (deg !== undefined) {
+      if (sqrtHalfDeg !== undefined) {
+        // Two Sqrt factors — refuse (conservative, would need
+        // combined growth-rate logic).
+        return undefined;
+      }
+      sqrtHalfDeg = deg;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Neither Sqrt(positive-poly) nor bounded → unrecognised.
+    return undefined;
+  }
+  return sqrtHalfDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -937,6 +980,22 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   // but log itself is dominated by any polynomial or faster-growing denominator).
   if (isBoundedTimesLogInK(num, k) && hDivergesAtInfinity(den, k)) {
     return true;
+  }
+  // Phase 56: Mul(bounded, Sqrt(positive-poly)) numerator pattern.
+  // Effective growth degree is deg(P)/2.  Vanishes when:
+  //   - denominator is polynomial with deg(den) > deg(P)/2, OR
+  //   - denominator is non-polynomial diverging (Exp / Pow / Log×poly)
+  //     which dominates any sub-polynomial sqrt growth automatically.
+  const sqrtBoundedHalfDeg = boundedTimesSqrtHalfDegree(num, k);
+  if (sqrtBoundedHalfDeg !== undefined) {
+    const denDegBs = polynomialDegreeInK(den, k);
+    if (denDegBs !== undefined) {
+      if (denDegBs > sqrtBoundedHalfDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

@@ -1171,6 +1171,41 @@ fn is_bounded_times_log_in_k(node: &IRNode, k: &IRNode) -> bool {
     log_count == 1
 }
 
+/// Phase 56 (Rust port): Return the ``Sqrt`` inner polynomial degree
+/// (×2 to stay exact) when ``node`` is a ``Mul`` with exactly one
+/// ``Sqrt(positive-leading polynomial)`` factor and all remaining
+/// factors bounded in ``k``; ``None`` otherwise.
+///
+/// Mirror of ``is_bounded_times_log_in_k`` for sqrt instead of log.
+/// Returns ``deg(P)`` (= 2 × half-degree) so callers can compare with
+/// ``2 * den_deg`` in integer arithmetic.
+fn bounded_times_sqrt_inner_deg(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut sqrt_inner_deg: Option<i64> = None;
+    for arg in &apply_node.args {
+        if let Some(deg) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_inner_deg.is_some() {
+                // Two Sqrt factors — refuse (conservative).
+                return None;
+            }
+            sqrt_inner_deg = Some(deg);
+            continue;
+        }
+        if is_bounded_in_k(arg, k) {
+            continue;
+        }
+        // Neither Sqrt(positive-poly) nor bounded → unrecognised.
+        return None;
+    }
+    sqrt_inner_deg
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1247,6 +1282,19 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     // the numerator's effective polynomial degree is 0 (no polynomial factor).
     if is_bounded_times_log_in_k(num, k) && h_diverges_at_infinity(den, k) {
         return true;
+    }
+    // Phase 56: Mul(bounded, Sqrt(positive-poly)) numerator pattern.
+    // Effective growth ``deg(P)/2``; closes when:
+    //   - polynomial denominator with ``2 * den_deg > deg(P)``, OR
+    //   - non-polynomial diverging denominator (Exp / Pow / Log×poly).
+    if let Some(sqrt_inner_deg) = bounded_times_sqrt_inner_deg(num, k) {
+        if let Some(den_deg_bs) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_bs > sqrt_inner_deg {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
     }
     // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
     let num_deg = match polynomial_degree_in_k(num, k) {

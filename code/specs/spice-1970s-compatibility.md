@@ -252,6 +252,9 @@ Status:
   implemented across Python, TypeScript, and Rust.
 - `.four <frequency> <V(node)|I(source)>...` parser/control-card records are
   implemented across Python, TypeScript, and Rust.
+- Fourier post-processing over transient output is implemented across Python,
+  TypeScript, and Rust, including DC, harmonic sine/cosine coefficients,
+  magnitudes, phases, and THD for `V(node)` and `I(source)` probes.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

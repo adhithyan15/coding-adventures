@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Fourier transient analysis** — `fourier()` now computes SPICE-style DC,
+  harmonic sine/cosine coefficients, magnitudes, phases, and THD from
+  transient samples for `V(node)` and `I(source)` probes.
+
 - **MOS Level-1 capacitance models** — `CGSO`, `CGDO`, `CGBO`, `CBS`, and
   `CBD` now contribute MOSFET small-signal AC susceptance.
 

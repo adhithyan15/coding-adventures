@@ -142,6 +142,8 @@ All notable changes to this package will be documented in this file.
   investigation, and triage readiness helpers for host dashboards.
 - Aggregate preflight-plan and drain-result health dashboard fields on
   supervisor drain run summaries.
+- Flattened preflight-plan and drain-result health action component flags and
+  counts for per-side supervisor drain run scheduler filters.
 - Flattened preflight-plan and drain-result health route, priority, and
   readiness booleans for per-side supervisor drain run queue filters.
 - Health dashboard label-integrity flags for aggregate supervisor plan/drain
