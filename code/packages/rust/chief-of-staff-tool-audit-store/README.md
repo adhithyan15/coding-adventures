@@ -178,6 +178,11 @@ The crate keeps the boundary narrow:
   triage, and no-route queues
 - supervisor drain reports and summaries expose aggregate host-decision and
   host-routing classifier label-integrity flags for payload-free dashboards
+- inventory, write, replay, checkpoint replay, checkpoint status, and planned
+  page health summaries expose stable priority and readiness labels for
+  host-log dashboards
+- lower-level audit health priority/readiness helpers provide sortable ranks,
+  manual-review, investigation, and triage signals without parsing labels
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
