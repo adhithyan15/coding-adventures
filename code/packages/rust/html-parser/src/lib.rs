@@ -842,6 +842,7 @@ pub struct BrowserMeta {
 pub struct BrowserResource {
     pub kind: String,
     pub url: String,
+    pub resolved_url: Option<String>,
     pub rel: Option<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
@@ -868,7 +869,9 @@ pub struct BrowserContentNode {
     pub name: Option<String>,
     pub text: Option<String>,
     pub href: Option<String>,
+    pub resolved_href: Option<String>,
     pub src: Option<String>,
+    pub resolved_src: Option<String>,
     pub alt: Option<String>,
     pub control_type: Option<String>,
     pub value: Option<String>,
@@ -891,7 +894,9 @@ pub struct BrowserRenderNode {
     pub name: Option<String>,
     pub text: Option<String>,
     pub href: Option<String>,
+    pub resolved_href: Option<String>,
     pub src: Option<String>,
+    pub resolved_src: Option<String>,
     pub alt: Option<String>,
     pub control_type: Option<String>,
     pub value: Option<String>,
@@ -911,6 +916,7 @@ pub struct BrowserHeading {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserLink {
     pub href: Option<String>,
+    pub resolved_href: Option<String>,
     pub name: Option<String>,
     pub target: Option<String>,
     pub rel: Option<String>,
@@ -921,6 +927,7 @@ pub struct BrowserLink {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserImage {
     pub src: Option<String>,
+    pub resolved_src: Option<String>,
     pub alt: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
@@ -929,6 +936,7 @@ pub struct BrowserImage {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserForm {
     pub action: Option<String>,
+    pub resolved_action: Option<String>,
     pub method: String,
     pub enctype: Option<String>,
     pub target: Option<String>,
@@ -988,16 +996,24 @@ impl BrowserDocument {
 
 impl BrowserContentTree {
     pub fn from_document(document: &Document) -> Self {
+        let head = find_first_element_in_nodes(&document.children, "head");
+        let base_href = head
+            .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+            .and_then(|element| element.attribute("href"));
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
             .map(|element| element.children.as_slice())
             .unwrap_or(document.children.as_slice());
-        Self::from_nodes(body_children)
+        Self::from_nodes_with_base(body_children, base_href)
     }
 
     pub fn from_nodes(nodes: &[Node]) -> Self {
+        Self::from_nodes_with_base(nodes, None)
+    }
+
+    fn from_nodes_with_base(nodes: &[Node], base_href: Option<&str>) -> Self {
         let mut children = Vec::new();
-        collect_browser_content_nodes(nodes, &mut children);
+        collect_browser_content_nodes(nodes, &mut children, base_href);
         Self { children }
     }
 }
@@ -1026,7 +1042,9 @@ impl BrowserRenderNode {
             name: content_node.name.clone(),
             text: content_node.text.clone(),
             href: content_node.href.clone(),
+            resolved_href: content_node.resolved_href.clone(),
             src: content_node.src.clone(),
+            resolved_src: content_node.resolved_src.clone(),
             alt: content_node.alt.clone(),
             control_type: content_node.control_type.clone(),
             value: content_node.value.clone(),
@@ -7959,6 +7977,9 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
         match element.name.as_str() {
             "a" => summary.links.push(BrowserLink {
                 href: element.attribute("href").map(ToOwned::to_owned),
+                resolved_href: element
+                    .attribute("href")
+                    .and_then(|href| resolve_browser_url(href, summary.base_href.as_deref())),
                 name: element.attribute("name").map(ToOwned::to_owned),
                 target: element.attribute("target").map(ToOwned::to_owned),
                 rel: element.attribute("rel").map(ToOwned::to_owned),
@@ -7967,12 +7988,18 @@ fn collect_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             }),
             "img" => summary.images.push(BrowserImage {
                 src: element.attribute("src").map(ToOwned::to_owned),
+                resolved_src: element
+                    .attribute("src")
+                    .and_then(|src| resolve_browser_url(src, summary.base_href.as_deref())),
                 alt: element.attribute("alt").map(ToOwned::to_owned),
                 width: element.attribute("width").map(ToOwned::to_owned),
                 height: element.attribute("height").map(ToOwned::to_owned),
             }),
             "form" => summary.forms.push(BrowserForm {
                 action: element.attribute("action").map(ToOwned::to_owned),
+                resolved_action: element
+                    .attribute("action")
+                    .and_then(|action| resolve_browser_url(action, summary.base_href.as_deref())),
                 method: element
                     .attribute("method")
                     .map(|method| method.to_ascii_lowercase())
@@ -8020,6 +8047,7 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                     summary.resources.push(BrowserResource {
                         kind: link_resource_kind(element.attribute("rel")),
                         url: href.to_string(),
+                        resolved_url: resolve_browser_url(href, summary.base_href.as_deref()),
                         rel: element.attribute("rel").map(ToOwned::to_owned),
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: element.attribute("media").map(ToOwned::to_owned),
@@ -8034,6 +8062,7 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                     summary.resources.push(BrowserResource {
                         kind: "script".to_string(),
                         url: src.to_string(),
+                        resolved_url: resolve_browser_url(src, summary.base_href.as_deref()),
                         rel: None,
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: None,
@@ -8071,6 +8100,7 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
 
     summary.resources.push(BrowserResource {
         kind,
+        resolved_url: resolve_browser_url(&url, summary.base_href.as_deref()),
         url,
         rel: None,
         type_hint: element.attribute("type").map(ToOwned::to_owned),
@@ -8108,6 +8138,146 @@ fn body_resource(element: &Element) -> Option<(String, String)> {
     }
 }
 
+fn resolve_browser_url(url: &str, base_href: Option<&str>) -> Option<String> {
+    let url = url.trim();
+    if url.is_empty() {
+        return None;
+    }
+    if is_absolute_url(url) {
+        return Some(url.to_string());
+    }
+
+    let base_href = base_href?.trim();
+    if !is_absolute_url(base_href) {
+        return None;
+    }
+
+    let (scheme, authority, base_path) = split_hierarchical_url(base_href)?;
+    if url.starts_with("//") {
+        return Some(format!("{scheme}:{url}"));
+    }
+    if let Some(fragment) = url.strip_prefix('#') {
+        return Some(format!(
+            "{scheme}://{authority}{}#{fragment}",
+            strip_fragment(base_path)
+        ));
+    }
+    if let Some(query) = url.strip_prefix('?') {
+        return Some(format!(
+            "{scheme}://{authority}{}?{query}",
+            strip_query_and_fragment(base_path)
+        ));
+    }
+
+    let (relative_path, suffix) = split_url_suffix(url);
+    let resolved_path = if relative_path.starts_with('/') {
+        normalize_browser_path(relative_path)
+    } else {
+        let base_dir = browser_base_directory(strip_query_and_fragment(base_path));
+        normalize_browser_path(&format!("{base_dir}{relative_path}"))
+    };
+
+    Some(format!("{scheme}://{authority}{resolved_path}{suffix}"))
+}
+
+fn is_absolute_url(url: &str) -> bool {
+    let Some(index) = url.find(':') else {
+        return false;
+    };
+    let scheme = &url[..index];
+    !scheme.is_empty()
+        && scheme.as_bytes()[0].is_ascii_alphabetic()
+        && scheme
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'+' | b'-' | b'.'))
+        && !scheme.contains('/')
+        && !scheme.contains('?')
+        && !scheme.contains('#')
+}
+
+fn split_hierarchical_url(url: &str) -> Option<(&str, &str, &str)> {
+    let (scheme, rest) = url.split_once(':')?;
+    let rest = rest.strip_prefix("//")?;
+    let authority_end = rest.find(['/', '?', '#']).unwrap_or(rest.len());
+    let authority = &rest[..authority_end];
+    if authority.is_empty() {
+        return None;
+    }
+    let path = if authority_end == rest.len() {
+        "/"
+    } else {
+        &rest[authority_end..]
+    };
+    Some((scheme, authority, path))
+}
+
+fn strip_fragment(path: &str) -> &str {
+    path.split_once('#')
+        .map(|(before_fragment, _)| before_fragment)
+        .unwrap_or(path)
+}
+
+fn strip_query_and_fragment(path: &str) -> &str {
+    let query_index = path.find('?');
+    let fragment_index = path.find('#');
+    let end = match (query_index, fragment_index) {
+        (Some(query), Some(fragment)) => query.min(fragment),
+        (Some(query), None) => query,
+        (None, Some(fragment)) => fragment,
+        (None, None) => path.len(),
+    };
+    &path[..end]
+}
+
+fn split_url_suffix(url: &str) -> (&str, &str) {
+    let suffix_index = match (url.find('?'), url.find('#')) {
+        (Some(query), Some(fragment)) => query.min(fragment),
+        (Some(query), None) => query,
+        (None, Some(fragment)) => fragment,
+        (None, None) => url.len(),
+    };
+    (&url[..suffix_index], &url[suffix_index..])
+}
+
+fn browser_base_directory(path: &str) -> String {
+    if path.ends_with('/') {
+        return path.to_string();
+    }
+    match path.rfind('/') {
+        Some(index) => path[..=index].to_string(),
+        None => "/".to_string(),
+    }
+}
+
+fn normalize_browser_path(path: &str) -> String {
+    let absolute = path.starts_with('/');
+    let trailing_slash = path.ends_with('/');
+    let mut segments: Vec<&str> = Vec::new();
+
+    for segment in path.split('/') {
+        match segment {
+            "" | "." => {}
+            ".." => {
+                segments.pop();
+            }
+            _ => segments.push(segment),
+        }
+    }
+
+    let mut normalized = if absolute {
+        format!("/{}", segments.join("/"))
+    } else {
+        segments.join("/")
+    };
+    if normalized.is_empty() {
+        normalized.push('/');
+    }
+    if trailing_slash && !normalized.ends_with('/') {
+        normalized.push('/');
+    }
+    normalized
+}
+
 fn link_resource_kind(rel: Option<&str>) -> String {
     let Some(rel) = rel else {
         return "link".to_string();
@@ -8127,7 +8297,11 @@ fn link_resource_kind(rel: Option<&str>) -> String {
     "link".to_string()
 }
 
-fn collect_browser_content_nodes(nodes: &[Node], output: &mut Vec<BrowserContentNode>) {
+fn collect_browser_content_nodes(
+    nodes: &[Node],
+    output: &mut Vec<BrowserContentNode>,
+    base_href: Option<&str>,
+) {
     for node in nodes {
         match node {
             Node::Text(value) => {
@@ -8138,7 +8312,9 @@ fn collect_browser_content_nodes(nodes: &[Node], output: &mut Vec<BrowserContent
                         name: None,
                         text: Some(text),
                         href: None,
+                        resolved_href: None,
                         src: None,
+                        resolved_src: None,
                         alt: None,
                         control_type: None,
                         value: None,
@@ -8151,7 +8327,7 @@ fn collect_browser_content_nodes(nodes: &[Node], output: &mut Vec<BrowserContent
                 }
             }
             Node::Element(element) => {
-                if let Some(content_node) = browser_content_node_for_element(element) {
+                if let Some(content_node) = browser_content_node_for_element(element, base_href) {
                     output.push(content_node);
                 }
             }
@@ -8160,7 +8336,10 @@ fn collect_browser_content_nodes(nodes: &[Node], output: &mut Vec<BrowserContent
     }
 }
 
-fn browser_content_node_for_element(element: &Element) -> Option<BrowserContentNode> {
+fn browser_content_node_for_element(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserContentNode> {
     if is_browser_invisible_element(&element.name) {
         return None;
     }
@@ -8168,7 +8347,7 @@ fn browser_content_node_for_element(element: &Element) -> Option<BrowserContentN
     let role = browser_content_role(&element.name)?;
     let mut children = Vec::new();
     if should_collect_browser_content_children(&element.name) {
-        collect_browser_content_nodes(&element.children, &mut children);
+        collect_browser_content_nodes(&element.children, &mut children, base_href);
     }
 
     let text = browser_content_text(element, role);
@@ -8176,12 +8355,21 @@ fn browser_content_node_for_element(element: &Element) -> Option<BrowserContentN
         return None;
     }
 
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    let src = browser_content_src(element);
+
     Some(BrowserContentNode {
         role: role.to_string(),
         name: Some(element.name.clone()),
         text,
-        href: element.attribute("href").map(ToOwned::to_owned),
-        src: browser_content_src(element),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
         alt: element.attribute("alt").map(ToOwned::to_owned),
         control_type: browser_content_control_type(element),
         value: browser_content_value(element),
@@ -8621,6 +8809,49 @@ mod tests {
 
     fn body(document: &Document) -> &Element {
         element(&html(document).children[1])
+    }
+
+    #[test]
+    fn resolves_browser_urls_against_document_base() {
+        let base = Some("https://example.test/docs/current/page.html?old=1#section");
+
+        assert_eq!(
+            resolve_browser_url("intro.html", base),
+            Some("https://example.test/docs/current/intro.html".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("../assets/logo.gif", base),
+            Some("https://example.test/docs/assets/logo.gif".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("/search?q=html#top", base),
+            Some("https://example.test/search?q=html#top".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("?page=2", base),
+            Some("https://example.test/docs/current/page.html?page=2".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("#next", base),
+            Some("https://example.test/docs/current/page.html?old=1#next".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("//cdn.example.test/app.js", base),
+            Some("https://cdn.example.test/app.js".to_string())
+        );
+    }
+
+    #[test]
+    fn browser_url_resolution_keeps_absolute_urls_and_marks_unresolved_relatives() {
+        assert_eq!(
+            resolve_browser_url("mailto:hello@example.test", None),
+            Some("mailto:hello@example.test".to_string())
+        );
+        assert_eq!(resolve_browser_url("relative.html", None), None);
+        assert_eq!(
+            resolve_browser_url("relative.html", Some("/local/base/")),
+            None
+        );
     }
 
     #[test]

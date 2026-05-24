@@ -257,7 +257,7 @@ def check_browser_expected_lists(
         resource_path = f"{case_path}.expected.resources[{index}]"
         require_string(resource_path, resource, "kind", errors)
         require_string(resource_path, resource, "url", errors)
-        for field in ("rel", "type_hint", "media", "title"):
+        for field in ("resolved_url", "rel", "type_hint", "media", "title"):
             require_optional_nullable_string(resource_path, resource, field, errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)
@@ -275,18 +275,19 @@ def check_browser_expected_lists(
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
-        for field in ("href", "name", "target", "rel", "title"):
+        for field in ("href", "resolved_href", "name", "target", "rel", "title"):
             require_optional_nullable_string(link_path, link, field, errors)
         require_string(link_path, link, "text", errors)
 
     for index, image in enumerate(object_list_items(expected, "images")):
         image_path = f"{case_path}.expected.images[{index}]"
-        for field in ("src", "alt", "width", "height"):
+        for field in ("src", "resolved_src", "alt", "width", "height"):
             require_optional_nullable_string(image_path, image, field, errors)
 
     for index, form in enumerate(object_list_items(expected, "forms")):
         form_path = f"{case_path}.expected.forms[{index}]"
         require_optional_nullable_string(form_path, form, "action", errors)
+        require_optional_nullable_string(form_path, form, "resolved_action", errors)
         require_string(form_path, form, "method", errors)
         require_optional_nullable_string(form_path, form, "enctype", errors)
         require_optional_nullable_string(form_path, form, "target", errors)
@@ -341,7 +342,17 @@ def check_browser_content_node(
     errors: list[str],
 ) -> None:
     require_string(node_path, node, "role", errors)
-    for field in ("name", "text", "href", "src", "alt", "control_type", "value"):
+    for field in (
+        "name",
+        "text",
+        "href",
+        "resolved_href",
+        "src",
+        "resolved_src",
+        "alt",
+        "control_type",
+        "value",
+    ):
         require_optional_nullable_string(node_path, node, field, errors)
     for field in ("disabled", "checked", "selected"):
         require_optional_boolean(node_path, node, field, errors)
@@ -389,7 +400,17 @@ def check_browser_render_node(
 ) -> None:
     require_string(node_path, node, "display", errors)
     require_string(node_path, node, "role", errors)
-    for field in ("name", "text", "href", "src", "alt", "control_type", "value"):
+    for field in (
+        "name",
+        "text",
+        "href",
+        "resolved_href",
+        "src",
+        "resolved_src",
+        "alt",
+        "control_type",
+        "value",
+    ):
         require_optional_nullable_string(node_path, node, field, errors)
     for field in ("disabled", "checked", "selected"):
         require_optional_boolean(node_path, node, field, errors)

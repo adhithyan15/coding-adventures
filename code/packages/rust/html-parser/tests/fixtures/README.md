@@ -13,20 +13,24 @@ without inventing a Rust-only test schema.
 browser-facing extraction. It verifies that broad HTML documents produce stable
 title, base URL/target, metadata, resource, anchor, body text, heading, link,
 image, form, and table facts that a browser pipeline can consume before layout
-and Paint VM rendering.
+and Paint VM rendering. The fixture also pins resolved URL metadata derived
+from `base` hrefs while preserving raw authored link and resource attributes.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body
 content can be filtered into renderable structural nodes such as headings,
 blocks, inline runs, links, images, form controls, lists, and tables while
 skipping parser shell, head metadata, comments, scripts, styles, and templates.
+Where a document base is present, link and replaced-resource nodes also expose
+resolved URL fields for downstream navigation and fetch planning.
 
 `html-browser-render-tree.json` is a checked parser acceptance corpus for the
 browser-facing render-tree input projection. It verifies that the content tree
 is converted into stable default display categories such as block, inline,
 inline-replaced, list-item, and table display nodes for early layout work. The
 browser-facing fixture set also pins control metadata such as value,
-disabled/checked/selected state, select option labels, and textarea values.
+disabled/checked/selected state, select option labels, textarea values, and
+resolved URL metadata for link and replaced nodes.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 

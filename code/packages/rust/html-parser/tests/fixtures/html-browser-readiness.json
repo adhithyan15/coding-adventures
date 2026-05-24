@@ -16,8 +16,8 @@
           { "name": null, "http_equiv": null, "property": null, "charset": "utf-8", "content": null }
         ],
         "resources": [
-          { "kind": "stylesheet", "url": "style.css", "rel": "stylesheet", "type_hint": null, "media": "screen", "title": "default", "async_script": false, "defer_script": false },
-          { "kind": "image", "url": "logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
+          { "kind": "stylesheet", "url": "style.css", "resolved_url": "https://example.test/docs/style.css", "rel": "stylesheet", "type_hint": null, "media": "screen", "title": "default", "async_script": false, "defer_script": false },
+          { "kind": "image", "url": "logo.gif", "resolved_url": "https://example.test/docs/logo.gif", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
         ],
         "anchors": [
           { "id": "index", "name": null, "text": "Example Directory" }
@@ -26,10 +26,10 @@
           { "level": 1, "text": "Example Directory" }
         ],
         "links": [
-          { "href": "intro.html", "name": null, "target": "main", "rel": "next", "title": "Intro", "text": "Venture HTML" }
+          { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "rel": "next", "title": "Intro", "text": "Venture HTML" }
         ],
         "images": [
-          { "src": "logo.gif", "alt": "Logo", "width": "88", "height": "31" }
+          { "src": "logo.gif", "resolved_src": "https://example.test/docs/logo.gif", "alt": "Logo", "width": "88", "height": "31" }
         ],
         "forms": [],
         "tables": []
@@ -57,6 +57,7 @@
         "forms": [
           {
             "action": "/search",
+            "resolved_action": null,
             "method": "post",
             "enctype": "multipart/form-data",
             "target": "results",
@@ -87,7 +88,7 @@
         "body_text": "Alpha bold Beta italic tail Archive Back spaced text",
         "metas": [],
         "resources": [
-          { "kind": "script", "url": "app.js", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": true, "defer_script": true }
+          { "kind": "script", "url": "app.js", "resolved_url": null, "rel": null, "type_hint": null, "media": null, "title": null, "async_script": true, "defer_script": true }
         ],
         "anchors": [
           { "id": null, "name": "top", "text": "" }
@@ -96,8 +97,8 @@
           { "level": 3, "text": "Archive" }
         ],
         "links": [
-          { "href": null, "name": "top", "target": null, "rel": null, "title": null, "text": "" },
-          { "href": "#top", "name": null, "target": null, "rel": null, "title": null, "text": "Back" }
+          { "href": null, "resolved_href": null, "name": "top", "target": null, "rel": null, "title": null, "text": "" },
+          { "href": "#top", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Back" }
         ],
         "images": [],
         "forms": [],
