@@ -4478,6 +4478,48 @@ def test_noise_bjt_shot_noise_type_string() -> None:
     assert bjt_entry.noise_type == "shot"
 
 
+def test_noise_mosfet_channel_thermal_noise() -> None:
+    """A biased MOSFET contributes long-channel channel thermal noise."""
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "vdd", "out", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(
+                VT0=1.0,
+                KP=1.0e-3,
+                LAMBDA=0.0,
+                GAMMA=0.0,
+                W=1.0,
+                L=1.0,
+            )),
+        ),
+    ))
+
+    result = noise_ac(c, "out", "Vgate", freqs=[1000.0], temperature=300.0)
+    entry = next(
+        (e for e in result.points[0].entries if e.element_name == "M1"), None
+    )
+    gm = 1.0e-3 * (3.0 - 1.0)
+    expected_source_psd = 4.0 * _kB * 300.0 * (2.0 / 3.0) * gm
+
+    assert entry is not None, "No MOSFET channel noise entry"
+    assert entry.noise_type == "thermal"
+    assert isclose(entry.source_psd, expected_source_psd, rel_tol=1e-6)
+    assert isclose(
+        entry.output_psd,
+        expected_source_psd * 1000.0 ** 2,
+        rel_tol=1e-6,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section 51 — Noise analysis: frequency sweep and defaults
 # ---------------------------------------------------------------------------

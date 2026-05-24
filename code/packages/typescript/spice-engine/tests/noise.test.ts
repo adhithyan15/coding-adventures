@@ -4,12 +4,14 @@ import {
   SpiceError,
   capacitor,
   currentSource,
+  mosfet,
   noiseAc,
   resistor,
   voltageSource,
 } from "../src/index.js";
 
 const BOLTZMANN = 1.380_649e-23;
+const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 
 describe("noiseAc", () => {
   it("computes Johnson noise for a single grounded resistor", () => {
@@ -80,6 +82,32 @@ describe("noiseAc", () => {
     expect(corner.outputPsd).toBeGreaterThan(high.outputPsd);
     expect(corner.outputPsd).toBeCloseTo(low.outputPsd / 2.0, 1);
     expect(high.outputPsd).toBeLessThan(low.outputPsd * 1.0e-4);
+  });
+
+  it("includes MOSFET channel thermal noise", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 3.0));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      VT0: 1.0,
+      KP: 1.0e-3,
+      LAMBDA: 0.0,
+      GAMMA: 0.0,
+      W: 1.0,
+      L: 1.0,
+    }));
+
+    const point = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0];
+    const entry = point.entries.find((candidate) => candidate.elementName === "M1");
+    const gm = 1.0e-3 * (3.0 - 1.0);
+    const expectedSourcePsd =
+      4.0 * BOLTZMANN * 300.0 * MOSFET_CHANNEL_NOISE_GAMMA * gm;
+
+    expect(entry).toBeDefined();
+    expect(entry?.noiseType).toBe("thermal");
+    expect(entry?.sourcePsd).toBeCloseTo(expectedSourcePsd, 30);
+    expect(entry?.outputPsd).toBeCloseTo(expectedSourcePsd * 1_000.0 ** 2, 30);
   });
 
   it("uses default logarithmic frequencies", () => {

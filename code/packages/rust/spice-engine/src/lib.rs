@@ -5,6 +5,7 @@ const PIVOT_EPSILON: f64 = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD: usize = 30;
 const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
+const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
@@ -3515,14 +3516,14 @@ pub fn noise_ac(
     let voltage_sources = collect_ac_voltage_sources(circuit)?;
     let node_count = node_indices.len();
     let matrix_size = node_count + voltage_sources.len();
-    let uses_explicit_ac_sources = circuit_has_explicit_ac_sources(circuit);
-    let operating_point = if uses_explicit_ac_sources && matrix_size > 0 {
+    let operating_point = if matrix_size > 0 {
         solve_linear_circuit(circuit, &[], &[], None)?.vector
     } else {
         vec![0.0; matrix_size]
     };
     let output_index = node_index(&node_indices, output_node);
-    let noise_sources = collect_noise_sources(circuit, &node_indices, temperature_kelvin)?;
+    let noise_sources =
+        collect_noise_sources(circuit, &node_indices, &operating_point, temperature_kelvin)?;
     let frequencies = if frequencies_hz.is_empty() {
         default_noise_frequencies()
     } else {
@@ -5646,24 +5647,59 @@ fn input_source_type_error(input_source: &str, kind: &str) -> SpiceError {
 fn collect_noise_sources(
     circuit: &Circuit,
     node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
     temperature_kelvin: f64,
 ) -> Result<Vec<NoiseSource>, SpiceError> {
     let mut sources = Vec::new();
     for element in circuit.elements() {
-        if let Element::Resistor(resistor) = element {
-            if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
-                return Err(SpiceError::InvalidElement {
-                    name: resistor.name.clone(),
-                    reason: "resistance must be finite and positive".to_string(),
+        match element {
+            Element::Resistor(resistor) => {
+                if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
+                    return Err(SpiceError::InvalidElement {
+                        name: resistor.name.clone(),
+                        reason: "resistance must be finite and positive".to_string(),
+                    });
+                }
+                sources.push(NoiseSource {
+                    element_name: resistor.name.clone(),
+                    noise_type: NoiseType::Thermal,
+                    positive: node_index(node_indices, &resistor.n1),
+                    negative: node_index(node_indices, &resistor.n2),
+                    source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
                 });
             }
-            sources.push(NoiseSource {
-                element_name: resistor.name.clone(),
-                noise_type: NoiseType::Thermal,
-                positive: node_index(node_indices, &resistor.n1),
-                negative: node_index(node_indices, &resistor.n2),
-                source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
-            });
+            Element::Mosfet(mosfet) => {
+                validate_mosfet(mosfet)?;
+                let drain = node_index(node_indices, &mosfet.drain);
+                let gate = node_index(node_indices, &mosfet.gate);
+                let source = node_index(node_indices, &mosfet.source);
+                let body = node_index(node_indices, &mosfet.body);
+                let drain_voltage = vector_voltage(operating_point, drain);
+                let gate_voltage = vector_voltage(operating_point, gate);
+                let source_voltage = vector_voltage(operating_point, source);
+                let body_voltage = vector_voltage(operating_point, body);
+                let result = evaluate_mosfet_level1(
+                    mosfet,
+                    gate_voltage - source_voltage,
+                    drain_voltage - source_voltage,
+                    body_voltage - source_voltage,
+                );
+                let gm = result.gm.max(0.0);
+                if gm > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: mosfet.name.clone(),
+                        noise_type: NoiseType::Thermal,
+                        positive: drain,
+                        negative: source,
+                        source_psd: 4.0
+                            * BOLTZMANN
+                            * temperature_kelvin
+                            * MOSFET_CHANNEL_NOISE_GAMMA
+                            * gm,
+                    });
+                }
+            }
+            _ => {}
         }
     }
     Ok(sources)
