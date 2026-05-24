@@ -1,5 +1,49 @@
 # Changelog
 
+## 1.6.0 — 2026-05-23
+
+**Phase 58 — Log × Sqrt × polynomial numerator (Python).**
+
+Generalises Phase 57 by also accepting positive-degree polynomial
+factors in the numerator alongside the Log and Sqrt.  Effective
+growth ``log(k) · k^{deg(P)/2 + Σ deg(Qᵢ)}`` is strictly dominated by
+``k^{deg(P)/2 + Σ deg(Qᵢ) + ε}`` for any ``ε > 0``.  Vanishes when
+``2 · den_deg > deg(P) + 2·Σ deg(Qᵢ)``.
+
+Bumps cas-summation 1.5.0 → 1.6.0.
+
+### Added
+
+- **`_bounded_log_sqrt_poly_effective_deg_x2(node, k) -> int | None`**
+  — returns ``2·Σ deg(Qᵢ) + deg(P)`` (×2 effective growth degree)
+  when ``node`` is a ``Mul`` with exactly one ``Log(diverging)``
+  factor, exactly one ``Sqrt(positive-leading polynomial)`` factor,
+  at least one positive-degree polynomial factor, and any number of
+  bounded factors.  Returns ``None`` when no polynomial factor
+  exists (Phase 57 catches those).
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds Phase 58 branch after Phase 57.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase58LogSqrtPolyNumerator`
+— 5 new cases:
+
+- ``log(k)·sqrt(k)·k/k³`` closes (3/2 < 3).
+- ``sin·log·sqrt(k³)·k²/k⁵`` closes (7/2 < 5).
+- ``log·sqrt(k)·k²/k²`` refused (5/2 > 2).
+- ``log·sqrt(k)·k/2^k`` closes (exponential dominates).
+- ``log·sqrt(k)/k²`` falls through to Phase 57 (no poly factor).
+
+Full suite: **138 passed** (was 133; +5).
+
+### Still deferred
+
+- Two-Log or two-Sqrt patterns (combined growth-rate calc).
+- Cross-language port.
+
 ## 1.5.0 — 2026-05-23
 
 **Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator

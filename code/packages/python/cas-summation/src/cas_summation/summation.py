@@ -775,6 +775,21 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 58: ``Mul(bounded..., Log(diverging), Sqrt(P(k)), polynomial)``
+    # numerator pattern.  Combines the sub-polynomial growth of ``Log``
+    # with the half-polynomial growth of ``Sqrt(P)`` AND any additional
+    # polynomial factors.  Effective growth is
+    # ``log(k) · k^{deg(P)/2 + Σ deg(Qᵢ)}`` which is strictly dominated
+    # by ``k^{deg(P)/2 + Σ deg(Qᵢ) + ε}`` for any ``ε > 0``.  The
+    # quotient vanishes when ``2 · den_deg > deg(P) + 2·Σ deg(Qᵢ)``.
+    bls_poly_eff = _bounded_log_sqrt_poly_effective_deg_x2(num, k)
+    if bls_poly_eff is not None:
+        den_deg_blsp = _polynomial_degree_in_k(den, k)
+        if den_deg_blsp is not None:
+            if 2 * den_deg_blsp > bls_poly_eff:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1157,6 +1172,79 @@ def _bounded_log_sqrt_inner_deg(node: IRNode, k: IRSymbol) -> int | None:
     if log_count != 1 or sqrt_inner_deg is None:
         return None
     return sqrt_inner_deg
+
+
+def _bounded_log_sqrt_poly_effective_deg_x2(
+    node: IRNode, k: IRSymbol
+) -> int | None:
+    """Return ``2 · poly_deg + sqrt_inner_deg`` (= 2 × effective growth
+    degree) when ``node`` is a ``Mul`` with:
+
+    - exactly one ``Log(diverging)`` factor,
+    - exactly one ``Sqrt(positive-leading polynomial)`` factor,
+    - at least one positive-degree polynomial factor (otherwise this
+      is Phase 57's territory, not Phase 58), and
+    - any number of bounded factors.
+
+    Phase 58 — combines the sub-polynomial growth of ``Log`` with the
+    half-polynomial growth of ``Sqrt(P)`` AND the polynomial growth of
+    additional polynomial factors.  Effective growth is
+    ``log(k) · k^{deg(P)/2 + Σ deg(Qᵢ)}``, strictly dominated by
+    ``k^{deg(P)/2 + Σ deg(Qᵢ) + ε}`` for any ``ε > 0``.  The quotient
+    vanishes when ``2 · den_deg > deg(P) + 2·Σ deg(Qᵢ)``.
+
+    Returns ``None`` for one-only patterns (those go through earlier
+    phases) and for ``Mul`` without a positive-degree polynomial
+    factor (handled by Phase 57).
+
+    +-------------------------------------------+----------+
+    | Input                                     | Return   |
+    +===========================================+==========+
+    | ``Mul(Log(k), Sqrt(k), k)``               | ``3``    |
+    | ``Mul(Sin(k), Log(k), Sqrt(k³), k²)``     | ``7``    |
+    | ``Mul(Log(k), Sqrt(k))``  (no poly)       | ``None`` |
+    | ``Mul(Sin(k), Log(k), k)`` (no Sqrt)      | ``None`` |
+    | ``Mul(Log(k), k, k)`` (no Sqrt)           | ``None`` |
+    | ``Mul(Log(k), Log(k), Sqrt(k), k)`` (2 Log)| ``None`` |
+    +-------------------------------------------+----------+
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count = 0
+    sqrt_inner_deg: int | None = None
+    poly_deg_sum = 0
+    has_poly_factor = False
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 1:
+                return None
+            continue
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if sqrt_inner_deg is not None:
+                return None
+            sqrt_inner_deg = deg_x2
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Try as a polynomial factor.
+        poly_deg = _polynomial_degree_in_k(arg, k)
+        if poly_deg is None:
+            # Unrecognised factor.
+            return None
+        if poly_deg < 1:
+            # Degree-0 polynomial is just a constant — already covered
+            # by the bounded-in-k branch; skipping here would be a no-op
+            # but we want a positive-degree polynomial factor to make
+            # this a Phase 58 case rather than Phase 57.
+            continue
+        poly_deg_sum += poly_deg
+        has_poly_factor = True
+    if log_count != 1 or sqrt_inner_deg is None or not has_poly_factor:
+        return None
+    # Effective growth degree (×2) = 2·poly_deg_sum + sqrt_inner_deg.
+    return 2 * poly_deg_sum + sqrt_inner_deg
 
 
 def _try_power_of_k(

@@ -1910,3 +1910,107 @@ class TestEvaluateSumPhase57BoundedLogSqrtNumerator:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         # Phase 55 handles this case — pin the chain still closes.
         assert not (isinstance(result, IRApply) and result.head == SUM)
+
+
+# ---------------------------------------------------------------------------
+# Phase 58 — Mul(bounded..., Log(diverging), Sqrt(P), polynomial)
+# numerator pattern.  Generalises Phase 57 with extra polynomial factors.
+# Effective growth = Σ poly_deg + sqrt half-degree.
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateSumPhase58LogSqrtPolyNumerator:
+    def test_log_sqrt_k_times_k_over_k_cubed_closes(self):
+        """``log(k)·sqrt(k)·k/k³``: eff deg 1/2 + 1 = 3/2 < 3 → vanishes."""
+        from symbolic_ir import POW, SQRT, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (log_k, sqrt_k, _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1, sqrt_kp1, kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Phase 58 should close; got {result!r}"
+        )
+
+    def test_sin_log_sqrt_k_cubed_times_k_squared_over_k_quintic_closes(self):
+        """``sin(k)·log(k)·sqrt(k³)·k²/k⁵``: 3/2 + 2 = 7/2 < 5 → vanishes."""
+        from symbolic_ir import POW, SIN, SQRT, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        log_k = IRApply(LOG, (_k,))
+        sqrt_k3 = IRApply(SQRT, (IRApply(POW, (_k, IRInteger(3))),))
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (sin_k, log_k, sqrt_k3, k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        log_kp1 = IRApply(LOG, (kp1,))
+        sqrt_kp1_3 = IRApply(SQRT, (IRApply(POW, (kp1, IRInteger(3))),))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (sin_kp1, log_kp1, sqrt_kp1_3, kp1_sq))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(5)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(5)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_sqrt_k_times_k_squared_over_k_squared_refused(self):
+        """``log·sqrt(k)·k²/k²``: 1/2 + 2 = 5/2 > 2 → does NOT vanish."""
+        from symbolic_ir import POW, SQRT, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        k_sq = IRApply(POW, (_k, IRInteger(2)))
+        num_k = IRApply(MUL, (log_k, sqrt_k, k_sq))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        kp1_sq = IRApply(POW, (kp1, IRInteger(2)))
+        num_kp1 = IRApply(MUL, (log_kp1, sqrt_kp1, kp1_sq))
+        g_k = IRApply(DIV, (num_k, k_sq))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_sq))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_log_sqrt_k_times_k_over_exponential_closes(self):
+        """``log·sqrt(k)·k/2^k``: any polynomial/sub-poly dominated by exp."""
+        from symbolic_ir import POW, SQRT, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (log_k, sqrt_k, _k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1, sqrt_kp1, kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (IRInteger(2), _k))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (IRInteger(2), kp1))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_no_poly_factor_falls_through_to_phase57(self):
+        """``log·sqrt(k)/k²``: no positive-degree polynomial factor →
+        Phase 58 declines but Phase 57 catches it (1/2 < 2)."""
+        from symbolic_ir import POW, SQRT, SUB
+
+        log_k = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (log_k, sqrt_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1, sqrt_kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Phase 57 closes this — end-to-end pin.
+        assert not (isinstance(result, IRApply) and result.head == SUM)
