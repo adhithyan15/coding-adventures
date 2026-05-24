@@ -61,6 +61,10 @@ for the architecture, component catalog, and phasing plan.
   `onToggle(index: number)`. See CHANGELOG for the v0.7 always-
   visible-body limitation (kernel `If` doesn't yet support
   comparison).
+- **`Tabs`** — horizontal tab bar + single body panel. Host owns
+  the active-index → active-body mapping. Slots: `headers:
+  list<text>`, `active-body`, `active-index`. Emit:
+  `onSelect(index: number)`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 

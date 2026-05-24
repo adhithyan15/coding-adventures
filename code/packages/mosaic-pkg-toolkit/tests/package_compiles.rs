@@ -37,8 +37,8 @@ use std::path::PathBuf;
 const COMPONENTS: &[&str] = &[
     "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
     "Checkbox", "Field", "Input", "InputGroup", "ListGroup", "Modal",
-    "Nav", "NumberInput", "Pagination", "Radio", "Spinner", "Toast",
-    "Tooltip",
+    "Nav", "NumberInput", "Pagination", "Radio", "Spinner", "Tabs",
+    "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -83,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.7.0",
-        "[package].version must be 0.7.0 for the Accordion release"
+        version, "0.8.0",
+        "[package].version must be 0.8.0 for the Tabs release"
     );
 
     let exports = value
@@ -412,4 +412,17 @@ fn accordion_interface_matches_spec() {
     assert_eq!(slot_names, vec!["headers", "bodies", "open-index"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onToggle"]);
+}
+
+/// Tabs — horizontal tab bar + body panel. Host owns active-index
+/// and supplies the matching active-body each tick.
+#[test]
+fn tabs_interface_matches_spec() {
+    let mil_src = read_source("Tabs.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["headers", "active-body", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
 }
