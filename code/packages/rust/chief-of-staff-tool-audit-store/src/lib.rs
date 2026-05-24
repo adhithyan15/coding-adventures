@@ -3618,6 +3618,106 @@ impl ToolAuditSupervisorDrainRunReport {
             == Some(self.host_run_queue_key())
     }
 
+    /// Return the aggregate host-run queue route.
+    pub fn host_run_queue_route(&self) -> ToolAuditSupervisorDrainHostRunQueueRoute {
+        self.host_run_queue_key().route()
+    }
+
+    /// Return the stable aggregate host-run queue route label.
+    pub fn host_run_queue_route_label(&self) -> &'static str {
+        self.host_run_queue_route().as_str()
+    }
+
+    /// Return whether the aggregate host-run queue route label parses back to its typed route.
+    pub fn host_run_queue_route_label_matches_route(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueRoute::from_label(self.host_run_queue_route_label())
+            == Some(self.host_run_queue_route())
+    }
+
+    /// Return whether the aggregate host-run queue route has a concrete target.
+    pub fn host_run_queue_has_route(&self) -> bool {
+        self.host_run_queue_route().has_route()
+    }
+
+    /// Return whether the aggregate host-run queue routes to the health-dashboard side.
+    pub fn host_run_queue_routes_to_health_dashboard(&self) -> bool {
+        self.host_run_queue_route().routes_to_health_dashboard()
+    }
+
+    /// Return whether the aggregate host-run queue routes to the host-decision side.
+    pub fn host_run_queue_routes_to_host_decision(&self) -> bool {
+        self.host_run_queue_route().routes_to_host_decision()
+    }
+
+    /// Return whether the aggregate host-run queue spans both route sides.
+    pub fn host_run_queue_routes_to_split_queues(&self) -> bool {
+        self.host_run_queue_route().routes_to_split_queues()
+    }
+
+    /// Return the aggregate host-run queue readiness.
+    pub fn host_run_queue_readiness(&self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.host_run_queue_key().readiness()
+    }
+
+    /// Return the stable aggregate host-run queue readiness label.
+    pub fn host_run_queue_readiness_label(&self) -> &'static str {
+        self.host_run_queue_readiness().as_str()
+    }
+
+    /// Return whether the aggregate host-run queue readiness label parses back to its typed value.
+    pub fn host_run_queue_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(
+            self.host_run_queue_readiness_label(),
+        ) == Some(self.host_run_queue_readiness())
+    }
+
+    /// Return whether the aggregate host-run queue readiness is settled.
+    pub fn host_run_queue_readiness_is_settled(&self) -> bool {
+        self.host_run_queue_readiness().is_settled()
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs action.
+    pub fn host_run_queue_readiness_is_actionable(&self) -> bool {
+        self.host_run_queue_readiness().is_actionable()
+    }
+
+    /// Return whether the aggregate host-run queue readiness can auto-route.
+    pub fn host_run_queue_readiness_is_auto_routable(&self) -> bool {
+        self.host_run_queue_readiness().is_auto_routable()
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs manual review.
+    pub fn host_run_queue_readiness_requires_manual_review(&self) -> bool {
+        self.host_run_queue_readiness().requires_manual_review()
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs investigation.
+    pub fn host_run_queue_readiness_requires_investigation(&self) -> bool {
+        self.host_run_queue_readiness().requires_investigation()
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs host-log integrity investigation.
+    pub fn host_run_queue_readiness_requires_integrity_investigation(&self) -> bool {
+        self.host_run_queue_readiness()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs triage.
+    pub fn host_run_queue_readiness_requires_triage(&self) -> bool {
+        self.host_run_queue_readiness().requires_triage()
+    }
+
+    /// Return whether aggregate host-run queue route/readiness labels match their typed values.
+    pub fn host_run_queue_route_readiness_labels_match(&self) -> bool {
+        self.host_run_queue_route_label_matches_route()
+            && self.host_run_queue_readiness_label_matches_readiness()
+    }
+
+    /// Return whether any aggregate host-run queue route/readiness label drifted.
+    pub fn has_host_run_queue_route_readiness_label_integrity_drift(&self) -> bool {
+        !self.host_run_queue_route_readiness_labels_match()
+    }
+
     /// Return the composite host-run queue-key priority rank.
     pub fn host_run_queue_key_priority_rank(&self) -> u8 {
         self.host_run_queue_key().priority_rank()
@@ -4411,6 +4511,35 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_queue_key: self.host_run_queue_key(),
             host_run_queue_key_label: self.host_run_queue_key_label(),
             host_run_queue_key_label_matches_key: self.host_run_queue_key_label_matches_key(),
+            host_run_queue_route: self.host_run_queue_route(),
+            host_run_queue_route_label: self.host_run_queue_route_label(),
+            host_run_queue_route_label_matches_route: self
+                .host_run_queue_route_label_matches_route(),
+            host_run_queue_has_route: self.host_run_queue_has_route(),
+            host_run_queue_routes_to_health_dashboard: self
+                .host_run_queue_routes_to_health_dashboard(),
+            host_run_queue_routes_to_host_decision: self.host_run_queue_routes_to_host_decision(),
+            host_run_queue_routes_to_split_queues: self.host_run_queue_routes_to_split_queues(),
+            host_run_queue_readiness: self.host_run_queue_readiness(),
+            host_run_queue_readiness_label: self.host_run_queue_readiness_label(),
+            host_run_queue_readiness_label_matches_readiness: self
+                .host_run_queue_readiness_label_matches_readiness(),
+            host_run_queue_readiness_is_settled: self.host_run_queue_readiness_is_settled(),
+            host_run_queue_readiness_is_actionable: self.host_run_queue_readiness_is_actionable(),
+            host_run_queue_readiness_is_auto_routable: self
+                .host_run_queue_readiness_is_auto_routable(),
+            host_run_queue_readiness_requires_manual_review: self
+                .host_run_queue_readiness_requires_manual_review(),
+            host_run_queue_readiness_requires_investigation: self
+                .host_run_queue_readiness_requires_investigation(),
+            host_run_queue_readiness_requires_integrity_investigation: self
+                .host_run_queue_readiness_requires_integrity_investigation(),
+            host_run_queue_readiness_requires_triage: self
+                .host_run_queue_readiness_requires_triage(),
+            host_run_queue_route_readiness_labels_match: self
+                .host_run_queue_route_readiness_labels_match(),
+            has_host_run_queue_route_readiness_label_integrity_drift: self
+                .has_host_run_queue_route_readiness_label_integrity_drift(),
             host_run_queue_key_priority_rank: self.host_run_queue_key_priority_rank(),
             host_run_queue_key_action_count: self.host_run_queue_key_action_count(),
             host_run_queue_key_has_multiple_actions: self.host_run_queue_key_has_multiple_actions(),
@@ -5582,6 +5711,44 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_queue_key_label: String,
     /// Whether the composite host-run queue-key label parses back to the typed key.
     pub host_run_queue_key_label_matches_key: bool,
+    /// Aggregate host-run queue route.
+    pub host_run_queue_route: ToolAuditSupervisorDrainHostRunQueueRoute,
+    /// Stable aggregate host-run queue route label.
+    pub host_run_queue_route_label: &'static str,
+    /// Whether the aggregate host-run queue route label parses back to the typed route.
+    pub host_run_queue_route_label_matches_route: bool,
+    /// Whether the aggregate host-run queue route has a concrete target.
+    pub host_run_queue_has_route: bool,
+    /// Whether the aggregate host-run queue routes to the health-dashboard side.
+    pub host_run_queue_routes_to_health_dashboard: bool,
+    /// Whether the aggregate host-run queue routes to the host-decision side.
+    pub host_run_queue_routes_to_host_decision: bool,
+    /// Whether the aggregate host-run queue spans both route sides.
+    pub host_run_queue_routes_to_split_queues: bool,
+    /// Aggregate host-run queue readiness.
+    pub host_run_queue_readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    /// Stable aggregate host-run queue readiness label.
+    pub host_run_queue_readiness_label: &'static str,
+    /// Whether the aggregate host-run queue readiness label parses back to the typed value.
+    pub host_run_queue_readiness_label_matches_readiness: bool,
+    /// Whether the aggregate host-run queue readiness is settled.
+    pub host_run_queue_readiness_is_settled: bool,
+    /// Whether the aggregate host-run queue readiness needs action.
+    pub host_run_queue_readiness_is_actionable: bool,
+    /// Whether the aggregate host-run queue readiness can auto-route.
+    pub host_run_queue_readiness_is_auto_routable: bool,
+    /// Whether the aggregate host-run queue readiness needs manual review.
+    pub host_run_queue_readiness_requires_manual_review: bool,
+    /// Whether the aggregate host-run queue readiness needs investigation.
+    pub host_run_queue_readiness_requires_investigation: bool,
+    /// Whether the aggregate host-run queue readiness needs host-log integrity investigation.
+    pub host_run_queue_readiness_requires_integrity_investigation: bool,
+    /// Whether the aggregate host-run queue readiness needs triage.
+    pub host_run_queue_readiness_requires_triage: bool,
+    /// Whether aggregate host-run queue route/readiness labels match their typed values.
+    pub host_run_queue_route_readiness_labels_match: bool,
+    /// Whether any aggregate host-run queue route/readiness label drifted.
+    pub has_host_run_queue_route_readiness_label_integrity_drift: bool,
     /// Sortable composite host-run queue-key priority rank.
     pub host_run_queue_key_priority_rank: u8,
     /// Number of composite host-run queue-key surfaces needing action.
@@ -7449,6 +7616,101 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the composite host-run queue-key label parses back to the typed key.
     pub fn host_run_queue_key_label_matches_key(&self) -> bool {
         self.host_run_queue_key_label_matches_key
+    }
+
+    /// Return the aggregate host-run queue route.
+    pub fn host_run_queue_route(&self) -> ToolAuditSupervisorDrainHostRunQueueRoute {
+        self.host_run_queue_route
+    }
+
+    /// Return the stable aggregate host-run queue route label.
+    pub fn host_run_queue_route_label(&self) -> &'static str {
+        self.host_run_queue_route_label
+    }
+
+    /// Return whether the aggregate host-run queue route label parses back to the typed route.
+    pub fn host_run_queue_route_label_matches_route(&self) -> bool {
+        self.host_run_queue_route_label_matches_route
+    }
+
+    /// Return whether the aggregate host-run queue route has a concrete target.
+    pub fn host_run_queue_has_route(&self) -> bool {
+        self.host_run_queue_has_route
+    }
+
+    /// Return whether the aggregate host-run queue routes to the health-dashboard side.
+    pub fn host_run_queue_routes_to_health_dashboard(&self) -> bool {
+        self.host_run_queue_routes_to_health_dashboard
+    }
+
+    /// Return whether the aggregate host-run queue routes to the host-decision side.
+    pub fn host_run_queue_routes_to_host_decision(&self) -> bool {
+        self.host_run_queue_routes_to_host_decision
+    }
+
+    /// Return whether the aggregate host-run queue spans both route sides.
+    pub fn host_run_queue_routes_to_split_queues(&self) -> bool {
+        self.host_run_queue_routes_to_split_queues
+    }
+
+    /// Return the aggregate host-run queue readiness.
+    pub fn host_run_queue_readiness(&self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.host_run_queue_readiness
+    }
+
+    /// Return the stable aggregate host-run queue readiness label.
+    pub fn host_run_queue_readiness_label(&self) -> &'static str {
+        self.host_run_queue_readiness_label
+    }
+
+    /// Return whether the aggregate host-run queue readiness label parses back to the typed value.
+    pub fn host_run_queue_readiness_label_matches_readiness(&self) -> bool {
+        self.host_run_queue_readiness_label_matches_readiness
+    }
+
+    /// Return whether the aggregate host-run queue readiness is settled.
+    pub fn host_run_queue_readiness_is_settled(&self) -> bool {
+        self.host_run_queue_readiness_is_settled
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs action.
+    pub fn host_run_queue_readiness_is_actionable(&self) -> bool {
+        self.host_run_queue_readiness_is_actionable
+    }
+
+    /// Return whether the aggregate host-run queue readiness can auto-route.
+    pub fn host_run_queue_readiness_is_auto_routable(&self) -> bool {
+        self.host_run_queue_readiness_is_auto_routable
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs manual review.
+    pub fn host_run_queue_readiness_requires_manual_review(&self) -> bool {
+        self.host_run_queue_readiness_requires_manual_review
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs investigation.
+    pub fn host_run_queue_readiness_requires_investigation(&self) -> bool {
+        self.host_run_queue_readiness_requires_investigation
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs host-log integrity investigation.
+    pub fn host_run_queue_readiness_requires_integrity_investigation(&self) -> bool {
+        self.host_run_queue_readiness_requires_integrity_investigation
+    }
+
+    /// Return whether the aggregate host-run queue readiness needs triage.
+    pub fn host_run_queue_readiness_requires_triage(&self) -> bool {
+        self.host_run_queue_readiness_requires_triage
+    }
+
+    /// Return whether aggregate host-run queue route/readiness labels match their typed values.
+    pub fn host_run_queue_route_readiness_labels_match(&self) -> bool {
+        self.host_run_queue_route_readiness_labels_match
+    }
+
+    /// Return whether any aggregate host-run queue route/readiness label drifted.
+    pub fn has_host_run_queue_route_readiness_label_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_route_readiness_label_integrity_drift
     }
 
     /// Return the sortable composite host-run queue-key priority rank.
@@ -9728,6 +9990,192 @@ impl Display for ToolAuditSupervisorDrainHostDecisionQueueKey {
     }
 }
 
+/// Stable aggregate queue route for the full supervisor host run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostRunQueueRoute {
+    /// The full host run is settled and should not enter a queue.
+    NoRoute,
+    /// Only the aggregate health-dashboard side needs queue action.
+    HealthDashboard,
+    /// Only the host-decision side needs queue action.
+    HostDecision,
+    /// Both aggregate health-dashboard and host-decision sides need queue action.
+    SplitQueues,
+}
+
+impl ToolAuditSupervisorDrainHostRunQueueRoute {
+    /// Classify the aggregate route from component action flags.
+    pub fn from_action_flags(
+        health_dashboard_is_actionable: bool,
+        host_decision_is_actionable: bool,
+    ) -> Self {
+        match (health_dashboard_is_actionable, host_decision_is_actionable) {
+            (false, false) => Self::NoRoute,
+            (true, false) => Self::HealthDashboard,
+            (false, true) => Self::HostDecision,
+            (true, true) => Self::SplitQueues,
+        }
+    }
+
+    /// Return a stable snake_case label for host-run queue routing.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoRoute => "no_route",
+            Self::HealthDashboard => "health_dashboard",
+            Self::HostDecision => "host_decision",
+            Self::SplitQueues => "split_queues",
+        }
+    }
+
+    /// Parse a stable snake_case host-run queue route label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_route" => Some(Self::NoRoute),
+            "health_dashboard" => Some(Self::HealthDashboard),
+            "host_decision" => Some(Self::HostDecision),
+            "split_queues" => Some(Self::SplitQueues),
+            _ => None,
+        }
+    }
+
+    /// Return whether this route points at any queue.
+    pub fn has_route(self) -> bool {
+        !matches!(self, Self::NoRoute)
+    }
+
+    /// Return whether this route includes the aggregate health-dashboard queue.
+    pub fn routes_to_health_dashboard(self) -> bool {
+        matches!(self, Self::HealthDashboard | Self::SplitQueues)
+    }
+
+    /// Return whether this route includes the host-decision queue.
+    pub fn routes_to_host_decision(self) -> bool {
+        matches!(self, Self::HostDecision | Self::SplitQueues)
+    }
+
+    /// Return whether this route spans both host-run queue sides.
+    pub fn routes_to_split_queues(self) -> bool {
+        matches!(self, Self::SplitQueues)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunQueueRoute {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable aggregate readiness for the full supervisor host-run queue.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostRunQueueReadiness {
+    /// The full host run is settled and needs no queue action.
+    Settled,
+    /// The next queue action can be routed automatically.
+    RoutineReady,
+    /// The next queue action needs manual review before routing.
+    ManualReviewReady,
+    /// The next queue action is a non-integrity investigation.
+    InvestigationReady,
+    /// The next queue action is a host-log integrity investigation.
+    IntegrityInvestigationReady,
+    /// Multiple active surfaces require triage.
+    TriageRequired,
+}
+
+impl ToolAuditSupervisorDrainHostRunQueueReadiness {
+    /// Classify the aggregate host-run readiness from a composite queue key.
+    pub fn from_queue_key(queue_key: ToolAuditSupervisorDrainHostRunQueueKey) -> Self {
+        if queue_key.is_settled() {
+            Self::Settled
+        } else if queue_key.requires_triage() || queue_key.has_multiple_actions() {
+            Self::TriageRequired
+        } else if queue_key.requires_integrity_investigation() {
+            Self::IntegrityInvestigationReady
+        } else if queue_key.requires_investigation() {
+            Self::InvestigationReady
+        } else if queue_key.requires_manual_review() {
+            Self::ManualReviewReady
+        } else {
+            Self::RoutineReady
+        }
+    }
+
+    /// Return a stable snake_case label for host-run queue readiness.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::RoutineReady => "routine_ready",
+            Self::ManualReviewReady => "manual_review_ready",
+            Self::InvestigationReady => "investigation_ready",
+            Self::IntegrityInvestigationReady => "integrity_investigation_ready",
+            Self::TriageRequired => "triage_required",
+        }
+    }
+
+    /// Parse a stable snake_case host-run queue readiness label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine_ready" => Some(Self::RoutineReady),
+            "manual_review_ready" => Some(Self::ManualReviewReady),
+            "investigation_ready" => Some(Self::InvestigationReady),
+            "integrity_investigation_ready" => Some(Self::IntegrityInvestigationReady),
+            "triage_required" => Some(Self::TriageRequired),
+            _ => None,
+        }
+    }
+
+    /// Return whether this readiness is settled.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this readiness can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        matches!(self, Self::RoutineReady)
+    }
+
+    /// Return whether this readiness needs queue action.
+    pub fn is_actionable(self) -> bool {
+        !self.is_settled()
+    }
+
+    /// Return whether this readiness needs manual review.
+    pub fn requires_manual_review(self) -> bool {
+        matches!(
+            self,
+            Self::ManualReviewReady
+                | Self::InvestigationReady
+                | Self::IntegrityInvestigationReady
+                | Self::TriageRequired
+        )
+    }
+
+    /// Return whether this readiness needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        matches!(
+            self,
+            Self::InvestigationReady | Self::IntegrityInvestigationReady
+        )
+    }
+
+    /// Return whether this readiness needs host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigationReady)
+    }
+
+    /// Return whether this readiness needs triage.
+    pub fn requires_triage(self) -> bool {
+        matches!(self, Self::TriageRequired)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunQueueReadiness {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 /// Stable composite queue key for the full supervisor host run.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ToolAuditSupervisorDrainHostRunQueueKey {
@@ -9783,6 +10231,41 @@ impl ToolAuditSupervisorDrainHostRunQueueKey {
     /// Return whether this queue-key label parses back to this typed key.
     pub fn label_matches_key(self) -> bool {
         Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return the aggregate host-run queue route.
+    pub fn route(self) -> ToolAuditSupervisorDrainHostRunQueueRoute {
+        ToolAuditSupervisorDrainHostRunQueueRoute::from_action_flags(
+            self.health_dashboard_queue_key.is_actionable(),
+            self.host_decision_queue_key.is_actionable(),
+        )
+    }
+
+    /// Return the stable aggregate host-run queue route label.
+    pub fn route_label(self) -> &'static str {
+        self.route().as_str()
+    }
+
+    /// Return whether this queue-key route label parses back to the typed route.
+    pub fn route_label_matches_route(self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueRoute::from_label(self.route_label())
+            == Some(self.route())
+    }
+
+    /// Return the aggregate host-run queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        ToolAuditSupervisorDrainHostRunQueueReadiness::from_queue_key(self)
+    }
+
+    /// Return the stable aggregate host-run queue readiness label.
+    pub fn readiness_label(self) -> &'static str {
+        self.readiness().as_str()
+    }
+
+    /// Return whether this queue-key readiness label parses back to the typed readiness.
+    pub fn readiness_label_matches_readiness(self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(self.readiness_label())
+            == Some(self.readiness())
     }
 
     /// Return the highest sortable priority rank across host-run queue surfaces.
@@ -15319,6 +15802,266 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_queue_routes_and_readiness_are_stable_for_host_logs() {
+        let route_cases = [
+            (
+                false,
+                false,
+                ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+                "no_route",
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                true,
+                false,
+                ToolAuditSupervisorDrainHostRunQueueRoute::HealthDashboard,
+                "health_dashboard",
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                false,
+                true,
+                ToolAuditSupervisorDrainHostRunQueueRoute::HostDecision,
+                "host_decision",
+                true,
+                false,
+                true,
+                false,
+            ),
+            (
+                true,
+                true,
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                "split_queues",
+                true,
+                true,
+                true,
+                true,
+            ),
+        ];
+
+        for (
+            health_dashboard_is_actionable,
+            host_decision_is_actionable,
+            route,
+            label,
+            has_route,
+            routes_to_health_dashboard,
+            routes_to_host_decision,
+            routes_to_split_queues,
+        ) in route_cases
+        {
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunQueueRoute::from_action_flags(
+                    health_dashboard_is_actionable,
+                    host_decision_is_actionable,
+                ),
+                route
+            );
+            assert_eq!(route.as_str(), label);
+            assert_eq!(route.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunQueueRoute::from_label(label),
+                Some(route)
+            );
+            assert_eq!(route.has_route(), has_route);
+            assert_eq!(
+                route.routes_to_health_dashboard(),
+                routes_to_health_dashboard
+            );
+            assert_eq!(route.routes_to_host_decision(), routes_to_host_decision);
+            assert_eq!(route.routes_to_split_queues(), routes_to_split_queues);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunQueueRoute::from_label("somewhere_else"),
+            None
+        );
+
+        let readiness_cases = [
+            (
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+                "settled",
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueueReadiness::RoutineReady,
+                "routine_ready",
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueueReadiness::ManualReviewReady,
+                "manual_review_ready",
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueueReadiness::InvestigationReady,
+                "investigation_ready",
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueueReadiness::IntegrityInvestigationReady,
+                "integrity_investigation_ready",
+                false,
+                true,
+                false,
+                true,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+                "triage_required",
+                false,
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            readiness,
+            label,
+            is_settled,
+            is_actionable,
+            is_auto_routable,
+            requires_manual_review,
+            requires_investigation,
+            requires_integrity_investigation,
+            requires_triage,
+        ) in readiness_cases
+        {
+            assert_eq!(readiness.as_str(), label);
+            assert_eq!(readiness.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(label),
+                Some(readiness)
+            );
+            assert_eq!(readiness.is_settled(), is_settled);
+            assert_eq!(readiness.is_actionable(), is_actionable);
+            assert_eq!(readiness.is_auto_routable(), is_auto_routable);
+            assert_eq!(readiness.requires_manual_review(), requires_manual_review);
+            assert_eq!(readiness.requires_investigation(), requires_investigation);
+            assert_eq!(
+                readiness.requires_integrity_investigation(),
+                requires_integrity_investigation
+            );
+            assert_eq!(readiness.requires_triage(), requires_triage);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunQueueReadiness::from_label("readyish"),
+            None
+        );
+
+        let settled_health = ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled,
+            ToolAuditSupervisorDrainHealthDashboardActionLane::NoAction,
+            ToolAuditHealthRoute::NoRoute,
+            ToolAuditHealthPriority::Settled,
+            ToolAuditHealthReadiness::Settled,
+        );
+        let settled_decision = ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+            ToolAuditSupervisorDrainHostDecisionKind::TerminalReady,
+            ToolAuditSupervisorDrainHostDecisionLane::Terminal,
+            ToolAuditSupervisorDrainHostDecisionRoute::NoRoute,
+            ToolAuditSupervisorDrainHostDecisionPriority::Settled,
+            ToolAuditSupervisorDrainHostDecisionReadiness::Settled,
+        );
+        let routine_health = ToolAuditSupervisorDrainHealthDashboardQueueKey::new(
+            ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction,
+            ToolAuditSupervisorDrainHealthDashboardActionLane::Drain,
+            ToolAuditHealthRoute::Drain,
+            ToolAuditHealthPriority::RoutineAction,
+            ToolAuditHealthReadiness::RoutineReady,
+        );
+        let routine_decision = ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+            ToolAuditSupervisorDrainHostDecisionKind::ScheduleContinuation,
+            ToolAuditSupervisorDrainHostDecisionLane::Scheduler,
+            ToolAuditSupervisorDrainHostDecisionRoute::Scheduler,
+            ToolAuditSupervisorDrainHostDecisionPriority::RoutineAction,
+            ToolAuditSupervisorDrainHostDecisionReadiness::RoutineReady,
+        );
+        let integrity_decision = ToolAuditSupervisorDrainHostDecisionQueueKey::new(
+            ToolAuditSupervisorDrainHostDecisionKind::InvestigateRunIntegrity,
+            ToolAuditSupervisorDrainHostDecisionLane::Investigation,
+            ToolAuditSupervisorDrainHostDecisionRoute::IntegrityInvestigation,
+            ToolAuditSupervisorDrainHostDecisionPriority::IntegrityInvestigation,
+            ToolAuditSupervisorDrainHostDecisionReadiness::IntegrityInvestigationReady,
+        );
+
+        let health_only =
+            ToolAuditSupervisorDrainHostRunQueueKey::new(routine_health, settled_decision);
+        assert_eq!(
+            health_only.route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::HealthDashboard
+        );
+        assert!(health_only.route_label_matches_route());
+        assert_eq!(health_only.readiness_label(), "routine_ready");
+        assert!(health_only.readiness_label_matches_readiness());
+
+        let decision_only =
+            ToolAuditSupervisorDrainHostRunQueueKey::new(settled_health, routine_decision);
+        assert_eq!(
+            decision_only.route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::HostDecision
+        );
+        assert_eq!(
+            decision_only.readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::RoutineReady
+        );
+
+        let integrity =
+            ToolAuditSupervisorDrainHostRunQueueKey::new(settled_health, integrity_decision);
+        assert_eq!(
+            integrity.readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::IntegrityInvestigationReady
+        );
+
+        let split = ToolAuditSupervisorDrainHostRunQueueKey::new(routine_health, routine_decision);
+        assert_eq!(
+            split.route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues
+        );
+        assert_eq!(
+            split.readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+    }
+
+    #[test]
     fn supervisor_drain_report_exposes_outcome_label_and_action_flag() {
         let store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(store
@@ -17711,6 +18454,31 @@ mod tests {
             "health_dashboard=settled:no_action:no_route:settled:settled|host_decision=terminal_ready:terminal:no_route:settled:settled"
         );
         assert!(idle_report.host_run_queue_key_label_matches_key());
+        assert_eq!(
+            idle_report.host_run_queue_route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute
+        );
+        assert_eq!(idle_report.host_run_queue_route_label(), "no_route");
+        assert!(idle_report.host_run_queue_route_label_matches_route());
+        assert!(!idle_report.host_run_queue_has_route());
+        assert!(!idle_report.host_run_queue_routes_to_health_dashboard());
+        assert!(!idle_report.host_run_queue_routes_to_host_decision());
+        assert!(!idle_report.host_run_queue_routes_to_split_queues());
+        assert_eq!(
+            idle_report.host_run_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
+        );
+        assert_eq!(idle_report.host_run_queue_readiness_label(), "settled");
+        assert!(idle_report.host_run_queue_readiness_label_matches_readiness());
+        assert!(idle_report.host_run_queue_readiness_is_settled());
+        assert!(!idle_report.host_run_queue_readiness_is_actionable());
+        assert!(!idle_report.host_run_queue_readiness_is_auto_routable());
+        assert!(!idle_report.host_run_queue_readiness_requires_manual_review());
+        assert!(!idle_report.host_run_queue_readiness_requires_investigation());
+        assert!(!idle_report.host_run_queue_readiness_requires_integrity_investigation());
+        assert!(!idle_report.host_run_queue_readiness_requires_triage());
+        assert!(idle_report.host_run_queue_route_readiness_labels_match());
+        assert!(!idle_report.has_host_run_queue_route_readiness_label_integrity_drift());
         assert_eq!(idle_report.host_run_queue_key_priority_rank(), 0);
         assert_eq!(idle_report.host_run_queue_key_action_count(), 0);
         assert!(!idle_report.host_run_queue_key_has_multiple_actions());
@@ -17738,6 +18506,56 @@ mod tests {
         );
         assert!(idle_summary.host_run_queue_key_label_matches_key);
         assert!(idle_summary.host_run_queue_key_label_matches_key());
+        assert_eq!(
+            idle_summary.host_run_queue_route,
+            ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute
+        );
+        assert_eq!(idle_summary.host_run_queue_route_label, "no_route");
+        assert_eq!(idle_summary.host_run_queue_route_label(), "no_route");
+        assert!(idle_summary.host_run_queue_route_label_matches_route);
+        assert!(idle_summary.host_run_queue_route_label_matches_route());
+        assert!(!idle_summary.host_run_queue_has_route);
+        assert!(!idle_summary.host_run_queue_has_route());
+        assert!(!idle_summary.host_run_queue_routes_to_health_dashboard);
+        assert!(!idle_summary.host_run_queue_routes_to_health_dashboard());
+        assert!(!idle_summary.host_run_queue_routes_to_host_decision);
+        assert!(!idle_summary.host_run_queue_routes_to_host_decision());
+        assert!(!idle_summary.host_run_queue_routes_to_split_queues);
+        assert!(!idle_summary.host_run_queue_routes_to_split_queues());
+        assert_eq!(
+            idle_summary.host_run_queue_readiness,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
+        );
+        assert_eq!(idle_summary.host_run_queue_readiness_label, "settled");
+        assert_eq!(idle_summary.host_run_queue_readiness_label(), "settled");
+        assert!(idle_summary.host_run_queue_readiness_label_matches_readiness);
+        assert!(idle_summary.host_run_queue_readiness_label_matches_readiness());
+        assert!(idle_summary.host_run_queue_readiness_is_settled);
+        assert!(idle_summary.host_run_queue_readiness_is_settled());
+        assert!(!idle_summary.host_run_queue_readiness_is_actionable);
+        assert!(!idle_summary.host_run_queue_readiness_is_actionable());
+        assert!(!idle_summary.host_run_queue_readiness_is_auto_routable);
+        assert!(!idle_summary.host_run_queue_readiness_is_auto_routable());
+        assert!(!idle_summary.host_run_queue_readiness_requires_manual_review);
+        assert!(!idle_summary.host_run_queue_readiness_requires_manual_review());
+        assert!(!idle_summary.host_run_queue_readiness_requires_investigation);
+        assert!(!idle_summary.host_run_queue_readiness_requires_investigation());
+        assert!(!idle_summary.host_run_queue_readiness_requires_integrity_investigation);
+        assert!(!idle_summary.host_run_queue_readiness_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_queue_readiness_requires_triage);
+        assert!(!idle_summary.host_run_queue_readiness_requires_triage());
+        assert!(idle_summary.host_run_queue_route_readiness_labels_match);
+        assert!(idle_summary.host_run_queue_route_readiness_labels_match());
+        assert!(!idle_summary.has_host_run_queue_route_readiness_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_route_readiness_label_integrity_drift());
         assert_eq!(idle_summary.host_run_queue_key_priority_rank, 0);
         assert_eq!(idle_summary.host_run_queue_key_priority_rank(), 0);
         assert_eq!(idle_summary.host_run_queue_key_action_count, 0);
@@ -17791,6 +18609,37 @@ mod tests {
             "health_dashboard=plan_and_drain_action:mixed:triage:triage:triage_required|host_decision=schedule_continuation:scheduler:scheduler:routine_action:routine_ready"
         );
         assert!(continuation_summary.host_run_queue_key_label_matches_key());
+        assert_eq!(
+            continuation_summary.host_run_queue_route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues
+        );
+        assert_eq!(
+            continuation_summary.host_run_queue_route_label(),
+            "split_queues"
+        );
+        assert!(continuation_summary.host_run_queue_route_label_matches_route());
+        assert!(continuation_summary.host_run_queue_has_route());
+        assert!(continuation_summary.host_run_queue_routes_to_health_dashboard());
+        assert!(continuation_summary.host_run_queue_routes_to_host_decision());
+        assert!(continuation_summary.host_run_queue_routes_to_split_queues());
+        assert_eq!(
+            continuation_summary.host_run_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+        assert_eq!(
+            continuation_summary.host_run_queue_readiness_label(),
+            "triage_required"
+        );
+        assert!(continuation_summary.host_run_queue_readiness_label_matches_readiness());
+        assert!(!continuation_summary.host_run_queue_readiness_is_settled());
+        assert!(continuation_summary.host_run_queue_readiness_is_actionable());
+        assert!(!continuation_summary.host_run_queue_readiness_is_auto_routable());
+        assert!(continuation_summary.host_run_queue_readiness_requires_manual_review());
+        assert!(!continuation_summary.host_run_queue_readiness_requires_investigation());
+        assert!(!continuation_summary.host_run_queue_readiness_requires_integrity_investigation());
+        assert!(continuation_summary.host_run_queue_readiness_requires_triage());
+        assert!(continuation_summary.host_run_queue_route_readiness_labels_match());
+        assert!(!continuation_summary.has_host_run_queue_route_readiness_label_integrity_drift());
         assert_eq!(continuation_summary.host_run_queue_key_priority_rank(), 90);
         assert_eq!(continuation_summary.host_run_queue_key_action_count(), 2);
         assert!(continuation_summary.host_run_queue_key_has_multiple_actions());
@@ -17820,6 +18669,24 @@ mod tests {
         assert!(drift_summary.host_run_queue_key_host_decision_matches_key());
         assert!(!drift_summary.host_run_queue_key_parts_match_component_keys());
         assert!(drift_summary.has_host_run_queue_key_component_integrity_drift());
+
+        let mut stale_route_summary = idle_summary.clone();
+        stale_route_summary.host_run_queue_route_label = "host_decision";
+        stale_route_summary.host_run_queue_route_label_matches_route = false;
+        stale_route_summary.host_run_queue_route_readiness_labels_match = false;
+        stale_route_summary.has_host_run_queue_route_readiness_label_integrity_drift = true;
+        assert!(!stale_route_summary.host_run_queue_route_label_matches_route());
+        assert!(!stale_route_summary.host_run_queue_route_readiness_labels_match());
+        assert!(stale_route_summary.has_host_run_queue_route_readiness_label_integrity_drift());
+
+        let mut stale_readiness_summary = idle_summary;
+        stale_readiness_summary.host_run_queue_readiness_label = "routine_ready";
+        stale_readiness_summary.host_run_queue_readiness_label_matches_readiness = false;
+        stale_readiness_summary.host_run_queue_route_readiness_labels_match = false;
+        stale_readiness_summary.has_host_run_queue_route_readiness_label_integrity_drift = true;
+        assert!(!stale_readiness_summary.host_run_queue_readiness_label_matches_readiness());
+        assert!(!stale_readiness_summary.host_run_queue_route_readiness_labels_match());
+        assert!(stale_readiness_summary.has_host_run_queue_route_readiness_label_integrity_drift());
     }
 
     #[test]
