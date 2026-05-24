@@ -20,6 +20,8 @@
   returns the Phase-8 distortion result shape directly from transient samples.
 - Add `pole_zero_rc_highpass`, which returns the origin zero and RC pole for a
   constrained first-order high-pass fixture.
+- Add `pole_zero_rlc_lowpass`, which returns the second-order pole pair for a
+  constrained series R-L / shunt-C low-pass fixture.
 - Add MOS Level-1 capacitance support through `CGSO`, `CGDO`, `CGBO`, `CBS`,
   and `CBD`, contributing small-signal AC susceptance.
 - Add MOSFET channel thermal noise to `.NOISE` via the long-channel `4kTγgm`

@@ -14,7 +14,7 @@ PWL/SIN/PULSE/EXP
 source waveforms for transient analysis, ground aliases, node voltages,
 voltage source branch currents, Fourier post-processing for transient output,
 transient-to-distortion projection,
-constrained RC pole-zero helpers,
+constrained RC and RLC pole-zero helpers,
 stable text tables for selected node voltages and branch currents,
 and backward-Euler reactive-element companion models.
 

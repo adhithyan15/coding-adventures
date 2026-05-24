@@ -838,6 +838,117 @@ export function poleZeroRcHighpass(
   };
 }
 
+export function poleZeroRlcLowpass(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+): PoleZeroResult {
+  const source = circuit
+    .elements()
+    .find((element): element is VoltageSource => element.kind === "voltage-source" && element.name === inputSource);
+  if (source === undefined) {
+    throw new SpiceError(`poleZeroRlcLowpass: missing input source ${JSON.stringify(inputSource)}`, "INVALID_ELEMENT", inputSource);
+  }
+  if (!isGround(source.negative)) {
+    throw new SpiceError("poleZeroRlcLowpass: input source negative terminal must be ground", "INVALID_ELEMENT", inputSource);
+  }
+
+  let resistor: Resistor | undefined;
+  let intermediate: string | undefined;
+  for (const element of circuit.elements()) {
+    if (element.kind === "resistor" && (element.n1 === source.positive || element.n2 === source.positive)) {
+      const other = element.n1 === source.positive ? element.n2 : element.n1;
+      if (other !== outputNode && !isGround(other)) {
+        resistor = element;
+        intermediate = other;
+        break;
+      }
+    }
+  }
+  const inductor = circuit
+    .elements()
+    .find(
+      (element): element is Inductor =>
+        element.kind === "inductor" &&
+        intermediate !== undefined &&
+        ((element.n1 === intermediate && element.n2 === outputNode) ||
+          (element.n2 === intermediate && element.n1 === outputNode)),
+    );
+  const capacitor = circuit
+    .elements()
+    .find(
+      (element): element is Capacitor =>
+        element.kind === "capacitor" &&
+        (element.n1 === outputNode || element.n2 === outputNode) &&
+        (isGround(element.n1) || isGround(element.n2)),
+    );
+  if (resistor === undefined || inductor === undefined || capacitor === undefined) {
+    throw new SpiceError(
+      "poleZeroRlcLowpass: expected series resistor and inductor from input to output plus one grounded output capacitor",
+      "INVALID_ELEMENT",
+      outputNode,
+    );
+  }
+  if (!Number.isFinite(resistor.resistanceOhms) || resistor.resistanceOhms <= 0.0) {
+    throw new SpiceError("poleZeroRlcLowpass: resistance must be finite and positive", "INVALID_ELEMENT", resistor.name);
+  }
+  if (!Number.isFinite(inductor.inductanceHenrys) || inductor.inductanceHenrys <= 0.0) {
+    throw new SpiceError("poleZeroRlcLowpass: inductance must be finite and positive", "INVALID_ELEMENT", inductor.name);
+  }
+  if (!Number.isFinite(capacitor.capacitanceFarads) || capacitor.capacitanceFarads <= 0.0) {
+    throw new SpiceError("poleZeroRlcLowpass: capacitance must be finite and positive", "INVALID_ELEMENT", capacitor.name);
+  }
+
+  const alpha = resistor.resistanceOhms / (2.0 * inductor.inductanceHenrys);
+  const omega0 = 1.0 / Math.sqrt(inductor.inductanceHenrys * capacitor.capacitanceFarads);
+  const discriminant = alpha * alpha - omega0 * omega0;
+  let entries: readonly PoleZeroEntry[];
+  if (discriminant >= 0.0) {
+    const root = Math.sqrt(discriminant);
+    const first = -alpha + root;
+    const second = -alpha - root;
+    entries = [
+      {
+        kind: "pole",
+        real: first,
+        imaginary: 0.0,
+        frequencyHz: Math.abs(first) / TWO_PI,
+        damping: 1.0,
+      },
+      {
+        kind: "pole",
+        real: second,
+        imaginary: 0.0,
+        frequencyHz: Math.abs(second) / TWO_PI,
+        damping: 1.0,
+      },
+    ];
+  } else {
+    const imaginary = Math.sqrt(-discriminant);
+    entries = [
+      {
+        kind: "pole",
+        real: -alpha,
+        imaginary,
+        frequencyHz: omega0 / TWO_PI,
+        damping: alpha / omega0,
+      },
+      {
+        kind: "pole",
+        real: -alpha,
+        imaginary: -imaginary,
+        frequencyHz: omega0 / TWO_PI,
+        damping: alpha / omega0,
+      },
+    ];
+  }
+  return {
+    inputSource,
+    outputNode,
+    entries,
+  };
+}
+
 export function distortionFromFourier(
   result: FourierResult,
   inputSource: string,
