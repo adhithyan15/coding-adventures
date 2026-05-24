@@ -167,6 +167,8 @@ All notable changes to this package will be documented in this file.
 - Host-run queue rollups that combine health-dashboard and host-decision queue
   actions, priority ranks, readiness flags, and queue-key integrity checks for
   supervisor drain run summaries.
+- Stable composite host-run queue keys that combine health-dashboard and
+  host-decision keys in supervisor drain run reports and summaries.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
