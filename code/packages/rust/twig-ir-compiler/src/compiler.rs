@@ -1706,11 +1706,10 @@ impl Compiler {
 
             // Start from the nil end and fold right.
             //
-            // Path A increment 6a: typed `const 0 [ref<LispyPair>]`
-            // initial tail.  The subsequent `cons` cells (still
-            // emitted as `call_builtin "cons"`) consume `tail` as a
-            // `ref<LispyPair>` srcs operand — increment 6b will
-            // convert the cons emission too.
+            // Path A increment 6a + 6b: typed `const 0 [ref<LispyPair>]`
+            // initial tail, and each cons cell lowers to typed
+            // `alloc [ref<LispyPair>]` + 2× `field_store [void]`
+            // (Phase 2 heap-lowering convention).
             let nil_r = ctx.fresh_var("nil");
             ctx.emit(IIRInstr::new(
                 "const",
@@ -1720,22 +1719,53 @@ impl Compiler {
             ), loc);
             ctx.record_type(&nil_r, "ref<LispyPair>");
 
+            // Path A increment 6b: emit typed `alloc` + 2× `field_store`
+            // instead of `call_builtin "cons" [any]`.  The Phase 2 heap-
+            // lowering convention is:
+            //   alloc cell [ref<LispyPair>]
+            //   field_store cell, 0, head [void]    -- car
+            //   field_store cell, 1, tail [void]    -- cdr
+            // Every IIR-to-* backend accepts this triple for ref<LispyPair>.
             let mut tail = nil_r;
             for field_name in params.iter().rev() {
                 let cell = ctx.fresh_var("cell");
-                ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                let mut alloc = IIRInstr::new(
+                    "alloc",
                     Some(cell.clone()),
+                    vec![],
+                    "ref<LispyPair>",
+                );
+                alloc.may_alloc = true;
+                ctx.emit(alloc, loc);
+                ctx.record_type(&cell, "ref<LispyPair>");
+                // field_store cell, 0, head — car
+                ctx.emit(IIRInstr::new(
+                    "field_store",
+                    None,
                     vec![
-                        Operand::Var("cons".into()),
+                        Operand::Var(cell.clone()),
+                        Operand::Int(0),
                         Operand::Var(field_name.clone()),
+                    ],
+                    // type_hint "void" matches iir-builtin-lowering's
+                    // Phase 2 convention and the BEAM validator.  WASM,
+                    // JVM, CLR accept it via their GC-op handlers.
+                    "void",
+                ), loc);
+                // field_store cell, 1, tail — cdr
+                ctx.emit(IIRInstr::new(
+                    "field_store",
+                    None,
+                    vec![
+                        Operand::Var(cell.clone()),
+                        Operand::Int(1),
                         Operand::Var(tail),
                     ],
-                    "any",
+                    "void",
                 ), loc);
                 tail = cell;
             }
-            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(tail)], "any"), loc);
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(tail)], "ref<LispyPair>"), loc);
 
             self.functions.push(IIRFunction {
                 name: rec.name.clone(),
@@ -1858,42 +1888,85 @@ impl Compiler {
                 ), loc);
                 ctx.record_type(&nil_r, "ref<LispyPair>");
 
+                // Path A increment 6b: typed `alloc` + 2× `field_store`
+                // for each variant field's cons cell (see record-constructor
+                // site above for the convention).
                 let mut tail = nil_r;
                 for field_name in params.iter().rev() {
                     let cell = ctx.fresh_var("cell");
-                    ctx.emit(IIRInstr::new(
-                        "call_builtin",
+                    let mut alloc = IIRInstr::new(
+                        "alloc",
                         Some(cell.clone()),
+                        vec![],
+                        "ref<LispyPair>",
+                    );
+                    alloc.may_alloc = true;
+                    ctx.emit(alloc, loc);
+                    ctx.record_type(&cell, "ref<LispyPair>");
+                    ctx.emit(IIRInstr::new(
+                        "field_store",
+                        None,
                         vec![
-                            Operand::Var("cons".into()),
+                            Operand::Var(cell.clone()),
+                            Operand::Int(0),
                             Operand::Var(field_name.clone()),
+                        ],
+                        "void",
+                    ), loc);
+                    ctx.emit(IIRInstr::new(
+                        "field_store",
+                        None,
+                        vec![
+                            Operand::Var(cell.clone()),
+                            Operand::Int(1),
                             Operand::Var(tail),
                         ],
-                        "any",
+                        "void",
                     ), loc);
                     tail = cell;
                 }
 
-                // Prepend the integer tag.
+                // Prepend the integer tag — typed `const Int(tag) [i64]`
+                // then typed `alloc` + `field_store` cons cell.
                 let tag_reg = ctx.fresh_var("tag");
                 ctx.emit(IIRInstr::new(
                     "const",
                     Some(tag_reg.clone()),
                     vec![Operand::Int(tag as i64)],
-                    "any",
+                    "i64",
                 ), loc);
+                ctx.record_type(&tag_reg, "i64");
                 let head = ctx.fresh_var("head");
-                ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                let mut alloc_head = IIRInstr::new(
+                    "alloc",
                     Some(head.clone()),
+                    vec![],
+                    "ref<LispyPair>",
+                );
+                alloc_head.may_alloc = true;
+                ctx.emit(alloc_head, loc);
+                ctx.record_type(&head, "ref<LispyPair>");
+                ctx.emit(IIRInstr::new(
+                    "field_store",
+                    None,
                     vec![
-                        Operand::Var("cons".into()),
+                        Operand::Var(head.clone()),
+                        Operand::Int(0),
                         Operand::Var(tag_reg),
+                    ],
+                    "void",
+                ), loc);
+                ctx.emit(IIRInstr::new(
+                    "field_store",
+                    None,
+                    vec![
+                        Operand::Var(head.clone()),
+                        Operand::Int(1),
                         Operand::Var(tail),
                     ],
-                    "any",
+                    "void",
                 ), loc);
-                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(head)], "any"), loc);
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(head)], "ref<LispyPair>"), loc);
 
                 self.functions.push(IIRFunction {
                     name: variant.name.clone(),

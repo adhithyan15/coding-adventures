@@ -1187,6 +1187,31 @@ fn dispatch(
             // For `mov` specifically, the synthesised call_builtin form is
             // `call_builtin "_move" src`, which the existing dispatch
             // already handles correctly.
+            // ── Path A increment 6b: typed heap-allocation opcodes ─────
+            //
+            // The Twig IIR compiler now emits `(cons head tail)` as a
+            // three-instruction sequence:
+            //
+            //     alloc cell [ref<LispyPair>]
+            //     field_store cell, 0, head [void]    -- car
+            //     field_store cell, 1, tail [void]    -- cdr
+            //
+            // matching the IIR-to-{wasm,jvm,clr,beam} backends' Phase 2
+            // heap-lowering convention.  twig-vm executes the sequence
+            // by allocating a fresh (NIL,NIL) cons cell at `alloc` and
+            // mutating the fields in place at `field_store`.  Both
+            // opcodes also accept `type_hint == "ref<*>"`-shaped variants
+            // for forward-compatibility with future record types, but
+            // the current path only specialises ref<LispyPair>.
+            "alloc" => {
+                exec_alloc(instr, &mut frame)?;
+                pc += 1;
+            }
+            "field_store" => {
+                exec_field_store(instr, &mut frame)?;
+                pc += 1;
+            }
+
             "add" | "sub" | "mul" | "div"
             | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le" | "cmp_ge"
             | "mov" => {
@@ -1356,6 +1381,106 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         }
     };
     frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+/// ── Path A increment 6b: `alloc [ref<LispyPair>]` ─────────────────
+///
+/// Allocates a fresh cons cell with NIL placeholders for both fields.
+/// The following two `field_store` instructions overwrite those
+/// placeholders with the head and tail values.
+///
+/// This matches the Phase 2 heap-lowering convention used by the
+/// IIR-to-{wasm,jvm,clr,beam} backends: a `call_builtin "cons"`
+/// instruction lowers to `alloc + 2× field_store`, and twig-vm now
+/// executes that same form natively.
+fn exec_alloc(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("alloc requires dest".into())
+    })?;
+    // Only `ref<LispyPair>` is currently supported.  Future record
+    // types would extend this match.
+    match instr.type_hint.as_str() {
+        "ref<LispyPair>" => {
+            let cell = lispy_runtime::heap::alloc_cons(
+                LispyValue::NIL,
+                LispyValue::NIL,
+            );
+            frame.set(dest.clone(), cell)?;
+            Ok(())
+        }
+        other => Err(RunError::MalformedInstruction(format!(
+            "alloc: unsupported type_hint {other:?} (only ref<LispyPair> is wired)"
+        ))),
+    }
+}
+
+/// ── Path A increment 6b: `field_store dest_unused, idx, value [void]` ──
+///
+/// Writes `value` (srcs[2]) into field `idx` (srcs[1], an integer
+/// operand) of the cons cell named by srcs[0].  Returns no result.
+///
+/// `dest` is intentionally unused — `field_store` is a side-effecting
+/// opcode.  In twig-vm we keep the side-table-update semantics in
+/// `lispy_runtime::heap::set_field_unchecked` to centralise the
+/// "mutate a leaked cons" path.
+fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "field_store requires 3 srcs [pair, idx, value]; got {}",
+            instr.srcs.len()
+        )));
+    }
+    // srcs[0] — the pair register.
+    let pair_name = match &instr.srcs[0] {
+        Operand::Var(name) => name.clone(),
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_store srcs[0] must be Var(pair_register); got {other:?}"
+        ))),
+    };
+    let pair = frame.get(&pair_name).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!(
+            "field_store: undefined pair register {pair_name:?}"
+        )))
+    })?;
+    // srcs[1] — the field index (must be 0 or 1).
+    let index: usize = match &instr.srcs[1] {
+        Operand::Int(0) => 0,
+        Operand::Int(1) => 1,
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_store srcs[1] must be Int(0|1); got {other:?}"
+        ))),
+    };
+    // srcs[2] — the value to write.  Resolve to LispyValue using the
+    // same operand-to-value bridge that exec_call_builtin uses.
+    let value = match &instr.srcs[2] {
+        Operand::Var(name) => frame.get(name).ok_or_else(|| {
+            RunError::Runtime(RuntimeError::Custom(format!(
+                "field_store: undefined value register {name:?}"
+            )))
+        })?,
+        Operand::Int(n) => LispyValue::int(*n),
+        Operand::Bool(b) => LispyValue::bool(*b),
+        Operand::Float(_) => return Err(RunError::OperandConversion(
+            RuntimeError::TypeError("field_store: floats not supported".into()),
+        )),
+        Operand::Str(_) => return Err(RunError::OperandConversion(
+            RuntimeError::TypeError("field_store: string operands not supported".into()),
+        )),
+    };
+    // SAFETY: `pair` is the value last written into `pair_name` by
+    // either `exec_alloc` (which uses `alloc_cons`) or a previous
+    // value-flow that itself came from a heap-allocating builtin.  In
+    // PR 2's Box::leak model every such value is a live cons forever.
+    // `set_field_unchecked` re-validates the class id internally and
+    // returns Err on non-cons input, so misuse surfaces as a
+    // MalformedInstruction rather than memory corruption.
+    unsafe {
+        lispy_runtime::heap::set_field_unchecked(pair, index, value)
+            .map_err(|e| RunError::MalformedInstruction(format!(
+                "field_store: {e}"
+            )))?;
+    }
     Ok(())
 }
 

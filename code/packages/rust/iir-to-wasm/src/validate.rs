@@ -319,7 +319,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         ));
                     }
                 }
-            } else if instr.op == "alloc" || instr.op == "field_load" || instr.op == "field_store" {
+            } else if instr.op == "alloc" || instr.op == "field_load" {
                 // These GC ops require the instruction's type_hint to be a
                 // supported reference type.  They allocate or access fields
                 // of a specific struct type; without the correct type hint
@@ -328,6 +328,21 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                     errors.push(format!(
                         "UnsupportedOp: function {:?}, op {:?} (GC op) requires \
                          type_hint \"ref<LispyPair>\" but got {:?}",
+                        func.name, instr.op, instr.type_hint
+                    ));
+                }
+            } else if instr.op == "field_store" {
+                // `field_store` matches iir-builtin-lowering's Phase 2
+                // convention: `type_hint == "void"` (the write returns
+                // nothing).  The pair type is determined from the cons-cell
+                // operand's typing context, not from the instruction's
+                // hint.  We additionally accept `"ref<LispyPair>"` for
+                // forward compatibility with frontends that propagate the
+                // object type onto the store.
+                if instr.type_hint != "void" && !is_supported_ref_type(&instr.type_hint) {
+                    errors.push(format!(
+                        "UnsupportedOp: function {:?}, op {:?} (GC op) requires \
+                         type_hint \"void\" or \"ref<LispyPair>\" but got {:?}",
                         func.name, instr.op, instr.type_hint
                     ));
                 }
