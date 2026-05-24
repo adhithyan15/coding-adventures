@@ -77,6 +77,7 @@ from math import exp, isclose
 
 import pytest
 
+from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
     BSource,
     BJT,
@@ -102,6 +103,7 @@ from spice_engine import (
     ExpWaveform,
     Inductor,
     JFET,
+    Mosfet,
     MutualInductor,
     McPoint,
     McResult,
@@ -2200,6 +2202,34 @@ def test_ac_bjt_reverse_transit_time_adds_collector_diffusion_capacitance():
 
     assert without_transit_time > 0.9
     assert with_transit_time < without_transit_time / 100.0
+
+
+def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
+    """MOS Level-1 CGSO contributes gate-source AC susceptance."""
+    def gate_amplitude(cgso: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "gate", 1000.0))
+        c.add(Resistor("Rdrain", "drain", "0", 1000.0))
+        c.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+            ),
+        ))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    without_capacitance = gate_amplitude(0.0)
+    with_capacitance = gate_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
 
 
 # ============================================================================

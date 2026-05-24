@@ -125,6 +125,26 @@ def test_gds_increases_with_lambda():
     assert r_yes.gds > r_no.gds
 
 
+def test_overlap_and_bulk_capacitances_are_reported():
+    p = Level1Params(
+        W=2e-6,
+        L=1e-6,
+        CGSO=3e-10,
+        CGDO=4e-10,
+        CGBO=5e-10,
+        CBS=6e-12,
+        CBD=7e-12,
+        subthreshold_enable=False,
+    )
+    r = evaluate_level1(p, V_GS=0.0, V_DS=0.0)
+
+    assert r.Cgs >= 3e-10 * 2e-6
+    assert r.Cgd == 4e-10 * 2e-6
+    assert r.Cgb == 5e-10 * 1e-6
+    assert r.Cbs == 6e-12
+    assert r.Cbd == 7e-12
+
+
 # ---- MOSFET wrapper ----
 
 

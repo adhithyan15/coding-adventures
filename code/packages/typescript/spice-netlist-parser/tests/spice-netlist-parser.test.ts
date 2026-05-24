@@ -571,7 +571,7 @@ Jp drain gate source pslow
 
   it("parses MOSFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
-.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02)
+.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
 Vdd vdd 0 DC 1.8
 Vgate gate 0 DC 1.8
 Rload vdd out 1k
@@ -584,6 +584,7 @@ M1 out gate 0 0 nfast W=2u L=180n
     expect(model?.kind).toBe("NMOS");
     expect(model?.params.get("VT0")).toBe(0.45);
     expect(model?.params.get("KP")).toBeCloseTo(200.0e-6, 12);
+    expect(model?.params.get("CGSO")).toBeCloseTo(3.0e-12, 18);
     expect(parsed.circuit.elements()[3]).toMatchObject({
       kind: "mosfet",
       name: "M1",
@@ -603,6 +604,11 @@ M1 out gate 0 0 nfast W=2u L=180n
       throw new Error("unexpected element kind");
     }
     expect(element.params.KP).toBeCloseTo(200.0e-6, 12);
+    expect(element.params.CGSO).toBeCloseTo(3.0e-12, 18);
+    expect(element.params.CGDO).toBeCloseTo(4.0e-12, 18);
+    expect(element.params.CGBO).toBeCloseTo(5.0e-12, 18);
+    expect(element.params.CBS).toBeCloseTo(6.0e-12, 18);
+    expect(element.params.CBD).toBeCloseTo(7.0e-12, 18);
     expect(element.params.W).toBeCloseTo(2.0e-6, 12);
     expect(element.params.L).toBeCloseTo(180.0e-9, 12);
 

@@ -411,6 +411,11 @@ export interface MosfetLevel1Params {
   readonly IS: number;
   readonly N_SUB: number;
   readonly T_NOM: number;
+  readonly CGSO: number;
+  readonly CGDO: number;
+  readonly CGBO: number;
+  readonly CBS: number;
+  readonly CBD: number;
 }
 
 export interface Mosfet {
@@ -1290,6 +1295,11 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     IS: 1.0e-15,
     N_SUB: 1.4,
     T_NOM: 300.15,
+    CGSO: 0.0,
+    CGDO: 0.0,
+    CGBO: 0.0,
+    CBS: 0.0,
+    CBD: 0.0,
   };
 }
 
@@ -3948,7 +3958,7 @@ function buildAcMatrix(
         stampAcBjtSmallSignal(element, nodeIndices, matrix, omega);
         break;
       case "mosfet":
-        stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
+        stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
         break;
       case "vccs":
         stampAcVccs(element, nodeIndices, matrix);
@@ -4614,6 +4624,11 @@ interface MosfetDcResult {
   readonly gm: number;
   readonly gds: number;
   readonly gmb: number;
+  readonly cgs: number;
+  readonly cgd: number;
+  readonly cgb: number;
+  readonly cbs: number;
+  readonly cbd: number;
 }
 
 interface JfetDcResult {
@@ -4755,6 +4770,11 @@ function evaluateMosfetLevel1(
       gm: result.gm,
       gds: result.gds,
       gmb: result.gmb,
+      cgs: result.cgs,
+      cgd: result.cgd,
+      cgb: result.cgb,
+      cbs: result.cbs,
+      cbd: result.cbd,
     };
   }
   return evaluateNmosLevel1(element.params, vgs, vds, vbs);
@@ -4767,13 +4787,24 @@ function evaluateNmosLevel1(
   vbs: number,
 ): MosfetDcResult {
   const beta = params.KP * (params.W / params.L);
+  const cgsOverlap = params.CGSO * params.W;
+  const cgdOverlap = params.CGDO * params.W;
+  const cgbOverlap = params.CGBO * params.L;
+  const cgsIntrinsic = (2.0 / 3.0) * params.W * params.L * params.KP;
+  const capacitances = {
+    cgs: cgsOverlap + cgsIntrinsic,
+    cgd: cgdOverlap,
+    cgb: cgbOverlap,
+    cbs: params.CBS,
+    cbd: params.CBD,
+  };
   const threshold =
     params.PHI - vbs >= 0.0
       ? params.VT0 + params.GAMMA * (Math.sqrt(params.PHI - vbs) - Math.sqrt(params.PHI))
       : params.VT0;
   const overdrive = vgs - threshold;
   if (overdrive <= 0.0) {
-    return { drainCurrent: 0.0, gm: 0.0, gds: 0.0, gmb: 0.0 };
+    return { drainCurrent: 0.0, gm: 0.0, gds: 0.0, gmb: 0.0, ...capacitances };
   }
   const bodyFactor =
     params.PHI - vbs > 0.0
@@ -4788,6 +4819,11 @@ function evaluateNmosLevel1(
       gm,
       gds: beta * (overdrive - vds) * modulation + beta * channel * params.LAMBDA,
       gmb: gm * bodyFactor,
+      cgs: cgsOverlap + cgsIntrinsic / 2.0,
+      cgd: cgdOverlap,
+      cgb: cgbOverlap,
+      cbs: params.CBS,
+      cbd: params.CBD,
     };
   }
   const current = 0.5 * beta * overdrive * overdrive * (1.0 + params.LAMBDA * vds);
@@ -4797,6 +4833,11 @@ function evaluateNmosLevel1(
     gm,
     gds: 0.5 * beta * overdrive * overdrive * params.LAMBDA,
     gmb: gm * bodyFactor,
+    cgs: cgsOverlap + (2.0 / 3.0) * cgsIntrinsic,
+    cgd: cgdOverlap,
+    cgb: cgbOverlap,
+    cbs: params.CBS,
+    cbd: params.CBD,
   };
 }
 
@@ -4928,6 +4969,15 @@ function validateMosfet(element: Mosfet): void {
   }
   if (params.IS <= 0.0 || params.N_SUB <= 0.0 || params.T_NOM <= 0.0) {
     throw invalidElement(element.name, "MOSFET IS, N_SUB, and T_NOM must be positive");
+  }
+  if (
+    params.CGSO < 0.0 ||
+    params.CGDO < 0.0 ||
+    params.CGBO < 0.0 ||
+    params.CBS < 0.0 ||
+    params.CBD < 0.0
+  ) {
+    throw invalidElement(element.name, "MOSFET capacitances must be non-negative");
   }
 }
 
@@ -6581,6 +6631,7 @@ function stampAcMosfetSmallSignal(
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
   operatingPoint: readonly number[],
+  omega: number,
 ): void {
   validateMosfet(element);
   const drain = nodeIndex(nodeIndices, element.drain);
@@ -6606,6 +6657,11 @@ function stampAcMosfetSmallSignal(
     source,
     complex(result.gm, 0.0),
   );
+  stampComplexConductance(matrix, gate, source, complex(0.0, omega * result.cgs));
+  stampComplexConductance(matrix, gate, drain, complex(0.0, omega * result.cgd));
+  stampComplexConductance(matrix, gate, body, complex(0.0, omega * result.cgb));
+  stampComplexConductance(matrix, body, source, complex(0.0, omega * result.cbs));
+  stampComplexConductance(matrix, body, drain, complex(0.0, omega * result.cbd));
   stampComplexTransconductance(
     matrix,
     drain,

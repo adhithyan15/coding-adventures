@@ -803,7 +803,7 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n NSUB=1.5 TNOM=300)
+.model nch NMOS(VTO=0.45 KP=250u LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
 M1 vdd gate out 0 nch W=4u L=200n
@@ -818,6 +818,7 @@ Rload out 0 1k
     assert_eq!(model.kind, "NMOS");
     assert_close(*model.params.get("VTO").unwrap(), 0.45);
     assert_close(*model.params.get("KP").unwrap(), 250.0e-6);
+    assert_close(*model.params.get("CGSO").unwrap(), 3.0e-12);
 
     let Element::Mosfet(mosfet) = &parsed.circuit.elements()[2] else {
         panic!("expected MOSFET");
@@ -837,6 +838,11 @@ Rload out 0 1k
     assert_close(mosfet.params.l, 200.0e-9);
     assert_close(mosfet.params.n_sub, 1.5);
     assert_close(mosfet.params.t_nom, 300.0);
+    assert_close(mosfet.params.gate_source_overlap_capacitance, 3.0e-12);
+    assert_close(mosfet.params.gate_drain_overlap_capacitance, 4.0e-12);
+    assert_close(mosfet.params.gate_bulk_overlap_capacitance, 5.0e-12);
+    assert_close(mosfet.params.source_bulk_capacitance, 6.0e-12);
+    assert_close(mosfet.params.drain_bulk_capacitance, 7.0e-12);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
