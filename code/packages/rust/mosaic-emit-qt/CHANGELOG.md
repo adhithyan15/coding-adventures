@@ -4,6 +4,40 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI31-K-qt — `HostTable` RTL contract
+
+The Qt `HostTable` lowering (which produces a structural
+`ColumnLayout` of `RowLayout` rows) now honours the UI31 §3.2 RTL
+contract via QML's `LayoutMirroring` attached property:
+
+- `dir: rtl` → `LayoutMirroring.enabled: true` +
+  `LayoutMirroring.childrenInherit: true` so the flip propagates
+  into the body's `RowLayout` rows and cell order matches the
+  column flip.
+- `dir: ltr` → `LayoutMirroring.enabled: false` — explicit
+  disable, which is the right thing for an author overriding an
+  ambient RTL ancestor.
+- `dir: auto` → no attached property emitted; the spec-mandated
+  "let the host decide" semantic is the QML default of inheriting
+  from an ancestor (typically the `ApplicationWindow` root's
+  `LayoutMirroring`).
+- `dir: slot: layout-direction` →
+  `LayoutMirroring.enabled: layoutDirection`, where the slot must
+  evaluate to a `bool`. The slot name passes through
+  `is_safe_identifier` so it can't smuggle malicious QML through
+  the binding expression.
+- Unknown keywords drop silently — the allow-list is the security
+  gate against attacker-controlled keywords smuggling arbitrary
+  QML through the attribute position. The bare `ColumnLayout` still
+  renders so the rest of the table is intact.
+
+7 new tests cover the a11y gate (ColumnLayout + RowLayout shape
+preserved), the three allow-listed keywords (including the no-
+emit `auto` case), the slot-ref binding, the silent-drop with an
+injection-style payload (`"true; Component.onCompleted: pwn()"`),
+and a regression guard for the no-`dir` case. Total tests: 81 (was
+74).
+
 ### Added — U29-4-K-qt — `HostLink` + `HostTooltip` + `HostNumberInput` kernel primitive lowerings
 
 Three new UI29-4 kernel primitives lower to QML widgets:
