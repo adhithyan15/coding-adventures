@@ -1244,7 +1244,10 @@ def _insert(
     insert_body_node = _maybe_child(node, "insert_body")
     returning = _returning_exprs(node, state)
     if insert_body_node is not None:
-        # New grammar: insert_body = "VALUES" row_value ... | query_stmt
+        # New grammar:
+        #   insert_body = "VALUES" row_value ...
+        #              | "DEFAULT" "VALUES"
+        #              | query_stmt
         q = _maybe_child(insert_body_node, "query_stmt")
         if q is not None:
             inner_stmt = _query_stmt(q)
@@ -1254,6 +1257,16 @@ def _insert(
                 )
             return InsertSelectStmt(
                 table=table, columns=columns, select=inner_stmt,
+                on_conflict=on_conflict, returning=returning,
+                upsert_clause=upsert,
+            )
+        # ``DEFAULT VALUES`` form \u2014 insert a single row consisting entirely
+        # of column defaults.  Equivalent to ``INSERT INTO t () VALUES ()``.
+        # Detected by the presence of a ``DEFAULT`` keyword child where no
+        # ``row_value`` children appear.
+        if _has_keyword_child(insert_body_node, "DEFAULT"):
+            return InsertValuesStmt(
+                table=table, columns=(), rows=((),),
                 on_conflict=on_conflict, returning=returning,
                 upsert_clause=upsert,
             )
