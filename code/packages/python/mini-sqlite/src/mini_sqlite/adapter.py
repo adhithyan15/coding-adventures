@@ -262,9 +262,31 @@ def _query_stmt(
 
             if is_recursive and _child_nodes(inner_q, "set_op_clause"):
                 # Recursive CTE: body is "anchor UNION [ALL] recursive_step".
-                # Parse anchor with the CTEs accumulated so far.
-                anchor_node = _child_node(inner_q, "select_stmt")
-                anchor_stmt = _select(anchor_node, ctes=active_ctes)
+                # The anchor can be either a SELECT or a VALUES expression
+                # (SQLite accepts both — e.g. ``WITH RECURSIVE c(n) AS
+                # (VALUES(1) UNION ALL SELECT n+1 FROM c WHERE n < 5)``
+                # is the canonical "count from 1 to 5" pattern).
+                #
+                # Single-row VALUES yields a ``SelectStmt`` (a single SELECT
+                # with literal columns), which fits ``RecursiveCTERef.anchor``
+                # directly.  Multi-row VALUES yields a ``UnionStmt`` tree;
+                # the planner's recursive-CTE anchor path expects a
+                # ``SelectStmt`` (single base relation), so we reject the
+                # multi-row case with a clear pointer to the workaround.
+                anchor_values_node = _maybe_child(inner_q, "values_stmt")
+                if anchor_values_node is not None:
+                    values_anchor = _values_stmt(anchor_values_node)
+                    if not isinstance(values_anchor, SelectStmt):
+                        raise ProgrammingError(
+                            f"RECURSIVE CTE {cte_name!r} anchor: multi-row "
+                            f"VALUES is not yet supported (use a single "
+                            f"VALUES row, or rewrite as ``SELECT … UNION "
+                            f"ALL SELECT …`` for the anchor)"
+                        )
+                    anchor_stmt = values_anchor
+                else:
+                    anchor_node = _child_node(inner_q, "select_stmt")
+                    anchor_stmt = _select(anchor_node, ctes=active_ctes)
 
                 # Apply column aliases to the anchor's SELECT items so the
                 # planner derives the right output-column names.  For example:

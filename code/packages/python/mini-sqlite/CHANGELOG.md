@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.4.0] - 2026-05-23
+
+### Added
+
+- ``WITH RECURSIVE`` CTEs now accept a ``VALUES`` anchor, matching
+  SQLite.  The canonical "count from N" idiom works::
+
+      WITH RECURSIVE c(n) AS (
+          VALUES(1)
+          UNION ALL
+          SELECT n + 1 FROM c WHERE n < 5
+      ) SELECT n FROM c
+
+  Previously this raised ``ProgrammingError: expected child rule
+  'select_stmt' under query_stmt`` because the recursive CTE branch
+  of ``mini_sqlite.adapter`` only looked for a ``select_stmt`` child
+  in the inner ``query_stmt``.  The non-recursive branch already
+  supported VALUES via ``_query_stmt`` recursion.
+
+  Implementation: the adapter first tries ``values_stmt`` and, if
+  present, runs ``_values_stmt`` to build the anchor; otherwise falls
+  back to the existing ``select_stmt`` path.  Single-row VALUES
+  (which is what every realistic recursive anchor needs) maps cleanly
+  onto ``RecursiveCTERef.anchor: SelectStmt``.  Multi-row VALUES
+  anchors are rejected with a clear pointer to the
+  ``SELECT … UNION ALL SELECT …`` rewrite — the planner's recursive
+  anchor path expects a single SELECT.
+
 ## [2.3.0] - 2026-05-23
 
 ### Fixed
