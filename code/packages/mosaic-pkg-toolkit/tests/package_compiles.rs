@@ -37,7 +37,7 @@ use std::path::PathBuf;
 const COMPONENTS: &[&str] = &[
     "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
     "Checkbox", "Field", "Input", "ListGroup", "Modal", "Nav",
-    "NumberInput", "Radio", "Spinner", "Toast", "Tooltip",
+    "NumberInput", "Pagination", "Radio", "Spinner", "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -82,8 +82,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.4.0",
-        "[package].version must be 0.4.0 for the UI29-4 HostLink + Tooltip + NumberInput release"
+        version, "0.5.0",
+        "[package].version must be 0.5.0 for the Pagination release"
     );
 
     let exports = value
@@ -366,4 +366,20 @@ fn breadcrumb_interface_matches_spec() {
     assert_eq!(slot_names, vec!["crumbs"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Pagination — « prev | 1 2 3 | next » row of HostLink chips. Three
+/// emits: onPrev, onNext (no payload), onPageSelect(index).
+#[test]
+fn pagination_interface_matches_spec() {
+    let mil_src = read_source("Pagination.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["pages", "prev-label", "next-label", "active-index"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onPrev", "onNext", "onPageSelect"]);
 }

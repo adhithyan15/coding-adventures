@@ -46,6 +46,11 @@ for the architecture, component catalog, and phasing plan.
   `If open { Box[toast] { Column { Row[toast-header],
   Box[toast-body] } } }`. Slots: `title`, `message`, `variant`,
   `open`. Emit: `onClose`.
+- **`Pagination`** — Bootstrap's page-navigation row («prev | 1 2
+  3 | next »). Each chip wraps the UI29-4 `HostLink` primitive
+  (same convention as Nav/Breadcrumb). Slots: `pages: list<text>`,
+  `prev-label`, `next-label`, `active-index`. Emits: `onPrev`,
+  `onNext`, `onPageSelect(index: number)`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 
