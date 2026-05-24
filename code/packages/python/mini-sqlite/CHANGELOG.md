@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.12.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(TRUE AS TEXT)`` / ``CAST(FALSE AS TEXT)`` (and the
+  ``VARCHAR`` / ``CHAR`` / ``NVARCHAR`` aliases) now return ``'1'``
+  / ``'0'`` instead of Python's ``'True'`` / ``'False'``.  Matches
+  SQLite — see the sql-vm 1.57 entry for the scalar-function-level
+  fix.
+
+  Common idioms that the bug used to corrupt::
+
+      SELECT 'is_active=' || CAST(is_active AS TEXT) FROM users;
+      WHERE CAST(flag AS TEXT) = '1'
+
+  Now both sides agree with sqlite3.
+
 ## [2.11.0] - 2026-05-24
 
 ### Changed
