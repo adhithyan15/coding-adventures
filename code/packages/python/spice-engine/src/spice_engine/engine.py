@@ -58,6 +58,7 @@ import math
 import random
 import re
 import statistics
+from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 
 from spice_engine.elements import (
@@ -345,6 +346,204 @@ class TransientResult:
     converged: bool
     method: str = "trap"
     steps_rejected: int = 0
+
+
+@dataclass(frozen=True)
+class FourierHarmonic:
+    harmonic: int
+    frequency: float
+    cosine: float
+    sine: float
+    magnitude: float
+    phase_degrees: float
+
+
+@dataclass(frozen=True)
+class FourierProbeResult:
+    probe: str
+    dc: float
+    harmonics: list[FourierHarmonic]
+    total_harmonic_distortion: float
+
+
+@dataclass(frozen=True)
+class FourierResult:
+    fundamental_frequency: float
+    start_time: float
+    end_time: float
+    probes: list[FourierProbeResult]
+
+
+def fourier(
+    transient_result: TransientResult | list[TransientPoint],
+    fundamental_frequency: float,
+    probes: list[str],
+    *,
+    harmonics: int = 9,
+    start_time: float | None = None,
+) -> FourierResult:
+    """Compute SPICE-style Fourier components from transient samples.
+
+    By default the latest full fundamental period in the transient output is
+    used, matching the common ``.four`` workflow of ignoring startup transients.
+    Probe strings accept ``V(node)``, ``V(node,ref)``, ``I(source)``, or a bare
+    node name.
+    """
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    if not math.isfinite(fundamental_frequency) or fundamental_frequency <= 0.0:
+        raise ValueError("fourier: fundamental_frequency must be finite and positive")
+    if harmonics < 1:
+        raise ValueError("fourier: harmonics must be positive")
+    if not probes:
+        raise ValueError("fourier: at least one probe is required")
+    if len(points) < 2:
+        raise ValueError("fourier: at least two transient points are required")
+
+    sorted_points = sorted(points, key=lambda point: point.time)
+    period = 1.0 / fundamental_frequency
+    end_time = sorted_points[-1].time
+    window_start = end_time - period if start_time is None else start_time
+    if not math.isfinite(window_start) or window_start < sorted_points[0].time:
+        raise ValueError("fourier: transient output does not contain a full analysis window")
+    if window_start >= end_time:
+        raise ValueError("fourier: analysis window must have positive duration")
+
+    results = [
+        _fourier_probe(
+            sorted_points,
+            probe,
+            fundamental_frequency,
+            harmonics,
+            window_start,
+            end_time,
+        )
+        for probe in probes
+    ]
+    return FourierResult(
+        fundamental_frequency=fundamental_frequency,
+        start_time=window_start,
+        end_time=end_time,
+        probes=results,
+    )
+
+
+def _fourier_probe(
+    points: list[TransientPoint],
+    probe: str,
+    fundamental_frequency: float,
+    harmonics: int,
+    start_time: float,
+    end_time: float,
+) -> FourierProbeResult:
+    samples: list[tuple[float, float]] = [
+        (start_time, _interpolate_probe(points, probe, start_time))
+    ]
+    for point in points:
+        if start_time < point.time < end_time:
+            samples.append((point.time, _probe_value(point, probe)))
+    samples.append((end_time, _interpolate_probe(points, probe, end_time)))
+    samples.sort(key=lambda sample: sample[0])
+
+    duration = end_time - start_time
+    dc = _integrate(samples, lambda _time: 1.0) / duration
+    components: list[FourierHarmonic] = []
+    omega = 2.0 * math.pi * fundamental_frequency
+    for harmonic in range(1, harmonics + 1):
+        frequency = harmonic * fundamental_frequency
+        cosine = 2.0 / duration * _integrate(
+            samples, lambda time, n=harmonic: math.cos(n * omega * time)
+        )
+        sine = 2.0 / duration * _integrate(
+            samples, lambda time, n=harmonic: math.sin(n * omega * time)
+        )
+        magnitude = math.hypot(cosine, sine)
+        components.append(
+            FourierHarmonic(
+                harmonic=harmonic,
+                frequency=frequency,
+                cosine=cosine,
+                sine=sine,
+                magnitude=magnitude,
+                phase_degrees=math.degrees(math.atan2(cosine, sine)),
+            )
+        )
+    fundamental = components[0].magnitude
+    distortion = math.sqrt(
+        sum(component.magnitude ** 2 for component in components[1:])
+    )
+    thd = (
+        math.inf
+        if fundamental == 0.0 and distortion > 0.0
+        else (0.0 if fundamental == 0.0 else distortion / fundamental)
+    )
+    return FourierProbeResult(
+        probe=probe,
+        dc=dc,
+        harmonics=components,
+        total_harmonic_distortion=thd,
+    )
+
+
+def _integrate(
+    samples: list[tuple[float, float]], weight: Callable[[float], float]
+) -> float:
+    total = 0.0
+    for (left_time, left_value), (right_time, right_value) in zip(
+        samples, samples[1:], strict=False
+    ):
+        left_weight = weight(left_time)
+        right_weight = weight(right_time)
+        total += 0.5 * (right_time - left_time) * (
+            left_value * left_weight + right_value * right_weight
+        )
+    return total
+
+
+def _interpolate_probe(points: list[TransientPoint], probe: str, time: float) -> float:
+    for point in points:
+        if math.isclose(point.time, time, rel_tol=0.0, abs_tol=1.0e-15):
+            return _probe_value(point, probe)
+    for left, right in zip(points, points[1:], strict=False):
+        if left.time <= time <= right.time:
+            span = right.time - left.time
+            if span <= 0.0:
+                return _probe_value(left, probe)
+            alpha = (time - left.time) / span
+            return (1.0 - alpha) * _probe_value(
+                left, probe
+            ) + alpha * _probe_value(right, probe)
+    raise ValueError("fourier: analysis window is outside transient output")
+
+
+def _probe_value(point: TransientPoint, probe: str) -> float:
+    text = probe.strip()
+    lower = text.lower()
+    if lower.startswith("v(") and text.endswith(")"):
+        args = [arg.strip() for arg in text[2:-1].split(",")]
+        if len(args) == 1:
+            return _point_voltage(point, args[0])
+        if len(args) == 2:
+            return _point_voltage(point, args[0]) - _point_voltage(point, args[1])
+    if lower.startswith("i(") and text.endswith(")"):
+        key = f"I({text[2:-1].strip()})"
+        if key in point.branch_currents:
+            return point.branch_currents[key]
+        raise ValueError(f"fourier: missing branch current probe {probe!r}")
+    if text:
+        return _point_voltage(point, text)
+    raise ValueError("fourier: empty probe")
+
+
+def _point_voltage(point: TransientPoint, node: str) -> float:
+    if node.lower() in {"0", "gnd"}:
+        return 0.0
+    if node in point.node_voltages:
+        return point.node_voltages[node]
+    raise ValueError(f"fourier: missing node voltage {node!r}")
 
 
 @dataclass

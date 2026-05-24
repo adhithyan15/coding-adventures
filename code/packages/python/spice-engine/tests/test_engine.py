@@ -101,6 +101,9 @@ from spice_engine import (
     DcSweepResult,
     Diode,
     ExpWaveform,
+    FourierHarmonic,
+    FourierProbeResult,
+    FourierResult,
     Inductor,
     JFET,
     Mosfet,
@@ -137,6 +140,7 @@ from spice_engine import (
     dc_sweep,
     dc_sweep_corners,
     estimate_period,
+    fourier,
     mc_dc,
     noise_ac,
     pss,
@@ -5492,6 +5496,37 @@ def test_sin_waveform_transient_sinusoid() -> None:
         assert abs(v_out - expected) < 0.05, (
             f"t={pt.time:.3f}: V(out)={v_out:.4f} expected ~{expected:.4f}"
         )
+
+
+def test_fourier_extracts_transient_sinusoid_components() -> None:
+    freq = 1_000.0
+    amp = 2.0
+    offset = 0.25
+    period = 1.0 / freq
+    c = Circuit([
+        VoltageSource(
+            "Vs",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=offset, amplitude=amp, frequency=freq),
+        ),
+    ])
+    result = transient(c, t_stop=2.0 * period, t_step=period / 64.0)
+    analysis = fourier(result, freq, ["V(in)"], harmonics=5)
+
+    assert isinstance(analysis, FourierResult)
+    assert isinstance(analysis.probes[0], FourierProbeResult)
+    assert isinstance(analysis.probes[0].harmonics[0], FourierHarmonic)
+    assert analysis.start_time == pytest.approx(period)
+    probe = analysis.probes[0]
+    fundamental = probe.harmonics[0]
+    assert probe.dc == pytest.approx(offset, abs=2.0e-3)
+    assert fundamental.frequency == pytest.approx(freq)
+    assert fundamental.magnitude == pytest.approx(amp, rel=2.0e-3)
+    assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
+    assert abs(fundamental.cosine) < 2.0e-3
+    assert probe.total_harmonic_distortion < 2.0e-3
 
 
 # ---- PulseWaveform unit tests -----------------------------------------------
