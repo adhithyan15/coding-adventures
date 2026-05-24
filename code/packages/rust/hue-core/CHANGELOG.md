@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   room/zone scope and projected action coverage.
 - Hue state update summaries for read models and event-stream telemetry across
   light, grouped-light, motion, and button updates.
+- `HueStateUpdate` and `HueStateUpdateSetSummary` for unified state update
+  streams across light, grouped-light, motion, and button resources.
 
 ## [0.1.0] - 2026-05-06
 

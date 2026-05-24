@@ -25,6 +25,8 @@ packages a typed surface for:
 - Hue light, grouped-light, motion, and button state update-to-`StateDelta`
   projection
 - Hue state update summaries for read models and event-stream telemetry
+- unified Hue state update streams and rollups across light, grouped-light,
+  motion, and button resources
 - Hue snapshot and scene desired-state values keyed by canonical D23 capability
   ids such as `light.on_off` and `light.brightness`
 - integration descriptor metadata for Chief of Staff discovery

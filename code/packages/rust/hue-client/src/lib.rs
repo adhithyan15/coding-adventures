@@ -14,7 +14,7 @@ use hue_core::{
     HueDeviceResource, HueGroupedLightResource, HueGroupedLightStateUpdate, HueLightResource,
     HueLightStateUpdate, HueMethod, HueMotionResource, HueMotionStateUpdate, HueRequest,
     HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
-    HueSceneAction, HueSceneResource, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
+    HueSceneAction, HueSceneResource, HueStateUpdate, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
     CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
@@ -672,6 +672,11 @@ impl<T: HueTransport> HueClient<T> {
         parse_button_state_updates_from_envelope(&envelope)
     }
 
+    pub fn get_state_updates(&mut self) -> Result<Vec<HueStateUpdate>, HueClientError> {
+        let envelope = self.get_resources()?;
+        parse_state_updates_from_envelope(&envelope)
+    }
+
     pub fn send_command(&mut self, command: HueCommand) -> Result<HueEnvelope, HueClientError> {
         let request = command.to_request();
         let response = self
@@ -1110,6 +1115,18 @@ pub fn parse_button_state_updates_from_envelope(
     Ok(updates)
 }
 
+pub fn parse_state_updates_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for resource in &envelope.data {
+        if let Some(update) = parse_state_update(resource)? {
+            updates.push(update);
+        }
+    }
+    Ok(updates)
+}
+
 pub fn parse_light_state_updates_from_event_batches(
     batches: &[HueEventStreamBatch],
 ) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
@@ -1175,6 +1192,22 @@ pub fn parse_button_state_updates_from_event_batches(
                     == Some(HueResourceType::Button.as_hue_type())
                 {
                     updates.push(parse_button_state_update(resource)?);
+                }
+            }
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_state_updates_from_event_batches(
+    batches: &[HueEventStreamBatch],
+) -> Result<Vec<HueStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for batch in batches {
+        for event in &batch.events {
+            for resource in &event.data {
+                if let Some(update) = parse_state_update(resource)? {
+                    updates.push(update);
                 }
             }
         }
@@ -1334,6 +1367,29 @@ fn parse_light_state_update(resource: &JsonValue) -> Result<HueLightStateUpdate,
         brightness,
         color_temperature_mirek,
     })
+}
+
+fn parse_state_update(resource: &JsonValue) -> Result<Option<HueStateUpdate>, HueClientError> {
+    let Some(resource_type) =
+        object_string_field(resource, "type").map(HueResourceType::from_hue_type)
+    else {
+        return Ok(None);
+    };
+    match resource_type {
+        HueResourceType::Light => parse_light_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        HueResourceType::GroupedLight => parse_grouped_light_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        HueResourceType::Motion => parse_motion_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        HueResourceType::Button => parse_button_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        _ => Ok(None),
+    }
 }
 
 fn parse_grouped_light_state_update(
@@ -2025,6 +2081,30 @@ mod tests {
     }
 
     #[test]
+    fn parses_unified_state_updates_from_event_stream_batches() {
+        let batches = parse_event_stream(
+            b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[{\"id\":\"button-1\",\"type\":\"button\",\"button\":{\"last_event\":\"short_release\"}},{\"id\":\"grouped-light-1\",\"type\":\"grouped_light\",\"dimming\":{\"brightness\":67}},{\"id\":\"light-1\",\"type\":\"light\",\"on\":{\"on\":false}},{\"id\":\"motion-1\",\"type\":\"motion\",\"motion\":{\"motion\":true}}]}]\n\n",
+        )
+        .unwrap();
+
+        let updates = parse_state_updates_from_event_batches(&batches).unwrap();
+
+        assert_eq!(updates.len(), 4);
+        assert!(matches!(updates[0], HueStateUpdate::Button(_)));
+        assert!(matches!(updates[1], HueStateUpdate::GroupedLight(_)));
+        assert!(matches!(updates[2], HueStateUpdate::Light(_)));
+        assert!(matches!(updates[3], HueStateUpdate::Motion(_)));
+        assert!(updates.iter().all(HueStateUpdate::has_state));
+        assert_eq!(
+            updates
+                .iter()
+                .flat_map(HueStateUpdate::state_deltas)
+                .count(),
+            4
+        );
+    }
+
+    #[test]
     fn event_stream_parser_accepts_multiline_data() {
         let batches = parse_event_stream(
             b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[]}\ndata: ,{\"id\":\"event-2\",\"type\":\"add\",\"data\":[]}]\n\n",
@@ -2132,6 +2212,25 @@ mod tests {
             transport.requests[0].path,
             "/clip/v2/resource/grouped_light"
         );
+    }
+
+    #[test]
+    fn client_reads_unified_state_updates_through_single_snapshot_request() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"motion-1","type":"motion","motion":{"motion":false}},{"id":"light-1","type":"light","on":{"on":true}},{"id":"button-1","type":"button","button":{"last_event":"initial_press"}},{"id":"grouped-light-1","type":"grouped_light","dimming":{"brightness":84}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let updates = client.get_state_updates().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(updates.len(), 4);
+        assert_eq!(updates[0].resource_type(), HueResourceType::Motion);
+        assert_eq!(updates[1].resource_type(), HueResourceType::Light);
+        assert_eq!(updates[2].resource_type(), HueResourceType::Button);
+        assert_eq!(updates[3].resource_type(), HueResourceType::GroupedLight);
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource");
     }
 
     #[test]
@@ -2583,6 +2682,34 @@ mod tests {
         assert_eq!(updates[0].id.as_str(), "light-1");
         assert_eq!(updates[0].on, Some(true));
         assert!(updates[0].has_state());
+    }
+
+    #[test]
+    fn parses_unified_state_updates_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"light-1","type":"light","on":{"on":true}},{"id":"grouped-light-1","type":"grouped_light","dimming":{"brightness":84}},{"id":"motion-1","type":"motion","motion":{"motion":false}},{"id":"button-1","type":"button","button":{"last_event":"initial_press"}},{"id":"room-1","type":"room"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let updates = parse_state_updates_from_envelope(&envelope).unwrap();
+
+        assert_eq!(updates.len(), 4);
+        assert_eq!(
+            updates[0].summary().resource.resource_type,
+            HueResourceType::Light
+        );
+        assert_eq!(
+            updates[1].summary().resource.resource_type,
+            HueResourceType::GroupedLight
+        );
+        assert_eq!(
+            updates[2].summary().resource.resource_type,
+            HueResourceType::Motion
+        );
+        assert_eq!(
+            updates[3].summary().resource.resource_type,
+            HueResourceType::Button
+        );
     }
 
     #[test]

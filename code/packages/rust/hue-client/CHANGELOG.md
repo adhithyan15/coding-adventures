@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   resource-type coverage over parsed Server-Sent Events batches.
 - `HueClient::get_grouped_light_state_updates` for room/zone aggregate-light
   state reads through the facade.
+- Unified Hue state update extraction from full snapshots and event-stream
+  batches, plus `HueClient::get_state_updates` for a single aggregate read.
 
 ## [0.1.0] - 2026-05-06
 
