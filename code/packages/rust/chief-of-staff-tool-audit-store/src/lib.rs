@@ -2127,6 +2127,41 @@ impl ToolAuditSupervisorDrainRunReport {
         self.plan.health_route_label_matches_route()
     }
 
+    /// Return whether preflight health has a concrete route.
+    pub fn plan_health_has_route(&self) -> bool {
+        self.plan_health_route().has_route()
+    }
+
+    /// Return whether preflight health routes to the drain queue.
+    pub fn plan_health_routes_to_drain(&self) -> bool {
+        self.plan_health_route().is_drain()
+    }
+
+    /// Return whether preflight health routes to the follow-up queue.
+    pub fn plan_health_routes_to_follow_up(&self) -> bool {
+        self.plan_health_route().is_follow_up()
+    }
+
+    /// Return whether preflight health routes to the storage-investigation queue.
+    pub fn plan_health_routes_to_storage_investigation(&self) -> bool {
+        self.plan_health_route().is_storage_investigation()
+    }
+
+    /// Return whether preflight health routes to the count-integrity queue.
+    pub fn plan_health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.plan_health_route().is_count_integrity_investigation()
+    }
+
+    /// Return whether preflight health routes to the triage queue.
+    pub fn plan_health_routes_to_triage(&self) -> bool {
+        self.plan_health_route().is_triage()
+    }
+
+    /// Return whether preflight health routes to an investigation queue.
+    pub fn plan_health_routes_to_investigation(&self) -> bool {
+        self.plan_health_route().is_investigation()
+    }
+
     /// Return the aggregate health priority for the preflight plan.
     pub fn plan_health_priority(&self) -> ToolAuditHealthPriority {
         self.plan.health_priority()
@@ -2145,6 +2180,37 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return the sortable preflight health-priority rank.
     pub fn plan_health_priority_rank(&self) -> u8 {
         self.plan.health_priority_rank()
+    }
+
+    /// Return whether preflight health has settled priority.
+    pub fn plan_health_has_settled_priority(&self) -> bool {
+        self.plan_health_priority().is_settled()
+    }
+
+    /// Return whether preflight health has routine-action priority.
+    pub fn plan_health_has_routine_priority(&self) -> bool {
+        self.plan_health_priority().is_routine_action()
+    }
+
+    /// Return whether preflight health has storage-investigation priority.
+    pub fn plan_health_has_storage_investigation_priority(&self) -> bool {
+        self.plan_health_priority().is_storage_investigation()
+    }
+
+    /// Return whether preflight health has count-integrity priority.
+    pub fn plan_health_has_count_integrity_investigation_priority(&self) -> bool {
+        self.plan_health_priority()
+            .is_count_integrity_investigation()
+    }
+
+    /// Return whether preflight health priority is investigation-grade.
+    pub fn plan_health_has_investigation_priority(&self) -> bool {
+        self.plan_health_priority().requires_investigation()
+    }
+
+    /// Return whether preflight health priority requires triage.
+    pub fn plan_health_priority_requires_triage(&self) -> bool {
+        self.plan_health_priority().requires_triage()
     }
 
     /// Return the aggregate health readiness for the preflight plan.
@@ -2177,6 +2243,28 @@ impl ToolAuditSupervisorDrainRunReport {
         self.plan.health_readiness_requires_manual_review()
     }
 
+    /// Return whether preflight health needs investigation.
+    pub fn plan_health_readiness_requires_investigation(&self) -> bool {
+        self.plan_health_readiness().requires_investigation()
+    }
+
+    /// Return whether preflight health readiness routes to storage investigation.
+    pub fn plan_health_readiness_requires_storage_investigation(&self) -> bool {
+        self.plan_health_readiness()
+            .requires_storage_investigation()
+    }
+
+    /// Return whether preflight health readiness routes to count-integrity investigation.
+    pub fn plan_health_readiness_requires_count_integrity_investigation(&self) -> bool {
+        self.plan_health_readiness()
+            .requires_count_integrity_investigation()
+    }
+
+    /// Return whether preflight health needs triage.
+    pub fn plan_health_readiness_requires_triage(&self) -> bool {
+        self.plan_health_readiness().requires_triage()
+    }
+
     /// Return the aggregate health action for the drain result.
     pub fn drain_health_action(&self) -> ToolAuditHealthAction {
         self.drain.health_action()
@@ -2207,6 +2295,41 @@ impl ToolAuditSupervisorDrainRunReport {
         self.drain.health_route_label_matches_route()
     }
 
+    /// Return whether drain health has a concrete route.
+    pub fn drain_health_has_route(&self) -> bool {
+        self.drain_health_route().has_route()
+    }
+
+    /// Return whether drain health routes to the drain queue.
+    pub fn drain_health_routes_to_drain(&self) -> bool {
+        self.drain_health_route().is_drain()
+    }
+
+    /// Return whether drain health routes to the follow-up queue.
+    pub fn drain_health_routes_to_follow_up(&self) -> bool {
+        self.drain_health_route().is_follow_up()
+    }
+
+    /// Return whether drain health routes to the storage-investigation queue.
+    pub fn drain_health_routes_to_storage_investigation(&self) -> bool {
+        self.drain_health_route().is_storage_investigation()
+    }
+
+    /// Return whether drain health routes to the count-integrity queue.
+    pub fn drain_health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.drain_health_route().is_count_integrity_investigation()
+    }
+
+    /// Return whether drain health routes to the triage queue.
+    pub fn drain_health_routes_to_triage(&self) -> bool {
+        self.drain_health_route().is_triage()
+    }
+
+    /// Return whether drain health routes to an investigation queue.
+    pub fn drain_health_routes_to_investigation(&self) -> bool {
+        self.drain_health_route().is_investigation()
+    }
+
     /// Return the aggregate health priority for the drain result.
     pub fn drain_health_priority(&self) -> ToolAuditHealthPriority {
         self.drain.health_priority()
@@ -2225,6 +2348,37 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return the sortable drain health-priority rank.
     pub fn drain_health_priority_rank(&self) -> u8 {
         self.drain.health_priority_rank()
+    }
+
+    /// Return whether drain health has settled priority.
+    pub fn drain_health_has_settled_priority(&self) -> bool {
+        self.drain_health_priority().is_settled()
+    }
+
+    /// Return whether drain health has routine-action priority.
+    pub fn drain_health_has_routine_priority(&self) -> bool {
+        self.drain_health_priority().is_routine_action()
+    }
+
+    /// Return whether drain health has storage-investigation priority.
+    pub fn drain_health_has_storage_investigation_priority(&self) -> bool {
+        self.drain_health_priority().is_storage_investigation()
+    }
+
+    /// Return whether drain health has count-integrity priority.
+    pub fn drain_health_has_count_integrity_investigation_priority(&self) -> bool {
+        self.drain_health_priority()
+            .is_count_integrity_investigation()
+    }
+
+    /// Return whether drain health priority is investigation-grade.
+    pub fn drain_health_has_investigation_priority(&self) -> bool {
+        self.drain_health_priority().requires_investigation()
+    }
+
+    /// Return whether drain health priority requires triage.
+    pub fn drain_health_priority_requires_triage(&self) -> bool {
+        self.drain_health_priority().requires_triage()
     }
 
     /// Return the aggregate health readiness for the drain result.
@@ -2255,6 +2409,28 @@ impl ToolAuditSupervisorDrainRunReport {
     /// Return whether the drain health needs manual review.
     pub fn drain_health_readiness_requires_manual_review(&self) -> bool {
         self.drain.health_readiness_requires_manual_review()
+    }
+
+    /// Return whether drain health needs investigation.
+    pub fn drain_health_readiness_requires_investigation(&self) -> bool {
+        self.drain_health_readiness().requires_investigation()
+    }
+
+    /// Return whether drain health readiness routes to storage investigation.
+    pub fn drain_health_readiness_requires_storage_investigation(&self) -> bool {
+        self.drain_health_readiness()
+            .requires_storage_investigation()
+    }
+
+    /// Return whether drain health readiness routes to count-integrity investigation.
+    pub fn drain_health_readiness_requires_count_integrity_investigation(&self) -> bool {
+        self.drain_health_readiness()
+            .requires_count_integrity_investigation()
+    }
+
+    /// Return whether drain health needs triage.
+    pub fn drain_health_readiness_requires_triage(&self) -> bool {
+        self.drain_health_readiness().requires_triage()
     }
 
     /// Classify which aggregate health surfaces need host action.
@@ -3204,11 +3380,28 @@ impl ToolAuditSupervisorDrainRunReport {
             plan_health_route: self.plan_health_route(),
             plan_health_route_label: self.plan_health_route_label(),
             plan_health_route_label_matches_route: self.plan_health_route_label_matches_route(),
+            plan_health_has_route: self.plan_health_has_route(),
+            plan_health_routes_to_drain: self.plan_health_routes_to_drain(),
+            plan_health_routes_to_follow_up: self.plan_health_routes_to_follow_up(),
+            plan_health_routes_to_storage_investigation: self
+                .plan_health_routes_to_storage_investigation(),
+            plan_health_routes_to_count_integrity_investigation: self
+                .plan_health_routes_to_count_integrity_investigation(),
+            plan_health_routes_to_triage: self.plan_health_routes_to_triage(),
+            plan_health_routes_to_investigation: self.plan_health_routes_to_investigation(),
             plan_health_priority: self.plan_health_priority(),
             plan_health_priority_label: self.plan_health_priority_label(),
             plan_health_priority_label_matches_priority: self
                 .plan_health_priority_label_matches_priority(),
             plan_health_priority_rank: self.plan_health_priority_rank(),
+            plan_health_has_settled_priority: self.plan_health_has_settled_priority(),
+            plan_health_has_routine_priority: self.plan_health_has_routine_priority(),
+            plan_health_has_storage_investigation_priority: self
+                .plan_health_has_storage_investigation_priority(),
+            plan_health_has_count_integrity_investigation_priority: self
+                .plan_health_has_count_integrity_investigation_priority(),
+            plan_health_has_investigation_priority: self.plan_health_has_investigation_priority(),
+            plan_health_priority_requires_triage: self.plan_health_priority_requires_triage(),
             plan_health_readiness: self.plan_health_readiness(),
             plan_health_readiness_label: self.plan_health_readiness_label(),
             plan_health_readiness_label_matches_readiness: self
@@ -3217,6 +3410,13 @@ impl ToolAuditSupervisorDrainRunReport {
             plan_health_is_auto_routable: self.plan_health_is_auto_routable(),
             plan_health_readiness_requires_manual_review: self
                 .plan_health_readiness_requires_manual_review(),
+            plan_health_readiness_requires_investigation: self
+                .plan_health_readiness_requires_investigation(),
+            plan_health_readiness_requires_storage_investigation: self
+                .plan_health_readiness_requires_storage_investigation(),
+            plan_health_readiness_requires_count_integrity_investigation: self
+                .plan_health_readiness_requires_count_integrity_investigation(),
+            plan_health_readiness_requires_triage: self.plan_health_readiness_requires_triage(),
             drain_health_action: self.drain_health_action(),
             drain_health_action_label: self.drain_health_action_label(),
             drain_health_action_label_matches_action: self
@@ -3224,11 +3424,28 @@ impl ToolAuditSupervisorDrainRunReport {
             drain_health_route: self.drain_health_route(),
             drain_health_route_label: self.drain_health_route_label(),
             drain_health_route_label_matches_route: self.drain_health_route_label_matches_route(),
+            drain_health_has_route: self.drain_health_has_route(),
+            drain_health_routes_to_drain: self.drain_health_routes_to_drain(),
+            drain_health_routes_to_follow_up: self.drain_health_routes_to_follow_up(),
+            drain_health_routes_to_storage_investigation: self
+                .drain_health_routes_to_storage_investigation(),
+            drain_health_routes_to_count_integrity_investigation: self
+                .drain_health_routes_to_count_integrity_investigation(),
+            drain_health_routes_to_triage: self.drain_health_routes_to_triage(),
+            drain_health_routes_to_investigation: self.drain_health_routes_to_investigation(),
             drain_health_priority: self.drain_health_priority(),
             drain_health_priority_label: self.drain_health_priority_label(),
             drain_health_priority_label_matches_priority: self
                 .drain_health_priority_label_matches_priority(),
             drain_health_priority_rank: self.drain_health_priority_rank(),
+            drain_health_has_settled_priority: self.drain_health_has_settled_priority(),
+            drain_health_has_routine_priority: self.drain_health_has_routine_priority(),
+            drain_health_has_storage_investigation_priority: self
+                .drain_health_has_storage_investigation_priority(),
+            drain_health_has_count_integrity_investigation_priority: self
+                .drain_health_has_count_integrity_investigation_priority(),
+            drain_health_has_investigation_priority: self.drain_health_has_investigation_priority(),
+            drain_health_priority_requires_triage: self.drain_health_priority_requires_triage(),
             drain_health_readiness: self.drain_health_readiness(),
             drain_health_readiness_label: self.drain_health_readiness_label(),
             drain_health_readiness_label_matches_readiness: self
@@ -3237,6 +3454,13 @@ impl ToolAuditSupervisorDrainRunReport {
             drain_health_is_auto_routable: self.drain_health_is_auto_routable(),
             drain_health_readiness_requires_manual_review: self
                 .drain_health_readiness_requires_manual_review(),
+            drain_health_readiness_requires_investigation: self
+                .drain_health_readiness_requires_investigation(),
+            drain_health_readiness_requires_storage_investigation: self
+                .drain_health_readiness_requires_storage_investigation(),
+            drain_health_readiness_requires_count_integrity_investigation: self
+                .drain_health_readiness_requires_count_integrity_investigation(),
+            drain_health_readiness_requires_triage: self.drain_health_readiness_requires_triage(),
             health_dashboard_surface: self.health_dashboard_surface(),
             health_dashboard_surface_label: self.health_dashboard_surface_label(),
             health_dashboard_surface_label_matches_surface: self
@@ -3964,6 +4188,20 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub plan_health_route_label: &'static str,
     /// Whether the preflight health-route label parses back to the typed route.
     pub plan_health_route_label_matches_route: bool,
+    /// Whether preflight health has a concrete route.
+    pub plan_health_has_route: bool,
+    /// Whether preflight health routes to the drain queue.
+    pub plan_health_routes_to_drain: bool,
+    /// Whether preflight health routes to the follow-up queue.
+    pub plan_health_routes_to_follow_up: bool,
+    /// Whether preflight health routes to the storage-investigation queue.
+    pub plan_health_routes_to_storage_investigation: bool,
+    /// Whether preflight health routes to the count-integrity queue.
+    pub plan_health_routes_to_count_integrity_investigation: bool,
+    /// Whether preflight health routes to the triage queue.
+    pub plan_health_routes_to_triage: bool,
+    /// Whether preflight health routes to an investigation queue.
+    pub plan_health_routes_to_investigation: bool,
     /// Aggregate health priority for the preflight plan.
     pub plan_health_priority: ToolAuditHealthPriority,
     /// Stable preflight health-priority label.
@@ -3972,6 +4210,18 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub plan_health_priority_label_matches_priority: bool,
     /// Sortable preflight health-priority rank.
     pub plan_health_priority_rank: u8,
+    /// Whether preflight health has settled priority.
+    pub plan_health_has_settled_priority: bool,
+    /// Whether preflight health has routine-action priority.
+    pub plan_health_has_routine_priority: bool,
+    /// Whether preflight health has storage-investigation priority.
+    pub plan_health_has_storage_investigation_priority: bool,
+    /// Whether preflight health has count-integrity priority.
+    pub plan_health_has_count_integrity_investigation_priority: bool,
+    /// Whether preflight health priority is investigation-grade.
+    pub plan_health_has_investigation_priority: bool,
+    /// Whether preflight health priority requires triage.
+    pub plan_health_priority_requires_triage: bool,
     /// Aggregate health readiness for the preflight plan.
     pub plan_health_readiness: ToolAuditHealthReadiness,
     /// Stable preflight health-readiness label.
@@ -3984,6 +4234,14 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub plan_health_is_auto_routable: bool,
     /// Whether preflight health needs manual review.
     pub plan_health_readiness_requires_manual_review: bool,
+    /// Whether preflight health needs investigation.
+    pub plan_health_readiness_requires_investigation: bool,
+    /// Whether preflight health readiness routes to storage investigation.
+    pub plan_health_readiness_requires_storage_investigation: bool,
+    /// Whether preflight health readiness routes to count-integrity investigation.
+    pub plan_health_readiness_requires_count_integrity_investigation: bool,
+    /// Whether preflight health needs triage.
+    pub plan_health_readiness_requires_triage: bool,
     /// Aggregate health action for the drain result.
     pub drain_health_action: ToolAuditHealthAction,
     /// Stable drain health-action label.
@@ -3996,6 +4254,20 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drain_health_route_label: &'static str,
     /// Whether the drain health-route label parses back to the typed route.
     pub drain_health_route_label_matches_route: bool,
+    /// Whether drain health has a concrete route.
+    pub drain_health_has_route: bool,
+    /// Whether drain health routes to the drain queue.
+    pub drain_health_routes_to_drain: bool,
+    /// Whether drain health routes to the follow-up queue.
+    pub drain_health_routes_to_follow_up: bool,
+    /// Whether drain health routes to the storage-investigation queue.
+    pub drain_health_routes_to_storage_investigation: bool,
+    /// Whether drain health routes to the count-integrity queue.
+    pub drain_health_routes_to_count_integrity_investigation: bool,
+    /// Whether drain health routes to the triage queue.
+    pub drain_health_routes_to_triage: bool,
+    /// Whether drain health routes to an investigation queue.
+    pub drain_health_routes_to_investigation: bool,
     /// Aggregate health priority for the drain result.
     pub drain_health_priority: ToolAuditHealthPriority,
     /// Stable drain health-priority label.
@@ -4004,6 +4276,18 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drain_health_priority_label_matches_priority: bool,
     /// Sortable drain health-priority rank.
     pub drain_health_priority_rank: u8,
+    /// Whether drain health has settled priority.
+    pub drain_health_has_settled_priority: bool,
+    /// Whether drain health has routine-action priority.
+    pub drain_health_has_routine_priority: bool,
+    /// Whether drain health has storage-investigation priority.
+    pub drain_health_has_storage_investigation_priority: bool,
+    /// Whether drain health has count-integrity priority.
+    pub drain_health_has_count_integrity_investigation_priority: bool,
+    /// Whether drain health priority is investigation-grade.
+    pub drain_health_has_investigation_priority: bool,
+    /// Whether drain health priority requires triage.
+    pub drain_health_priority_requires_triage: bool,
     /// Aggregate health readiness for the drain result.
     pub drain_health_readiness: ToolAuditHealthReadiness,
     /// Stable drain health-readiness label.
@@ -4016,6 +4300,14 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drain_health_is_auto_routable: bool,
     /// Whether drain health needs manual review.
     pub drain_health_readiness_requires_manual_review: bool,
+    /// Whether drain health needs investigation.
+    pub drain_health_readiness_requires_investigation: bool,
+    /// Whether drain health readiness routes to storage investigation.
+    pub drain_health_readiness_requires_storage_investigation: bool,
+    /// Whether drain health readiness routes to count-integrity investigation.
+    pub drain_health_readiness_requires_count_integrity_investigation: bool,
+    /// Whether drain health needs triage.
+    pub drain_health_readiness_requires_triage: bool,
     /// Aggregate health-dashboard surface for plan/drain actionability.
     pub health_dashboard_surface: ToolAuditSupervisorDrainHealthDashboardSurface,
     /// Stable aggregate health-dashboard surface label.
@@ -4601,6 +4893,41 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.plan_health_route_label_matches_route
     }
 
+    /// Return whether preflight health has a concrete route.
+    pub fn plan_health_has_route(&self) -> bool {
+        self.plan_health_has_route
+    }
+
+    /// Return whether preflight health routes to the drain queue.
+    pub fn plan_health_routes_to_drain(&self) -> bool {
+        self.plan_health_routes_to_drain
+    }
+
+    /// Return whether preflight health routes to the follow-up queue.
+    pub fn plan_health_routes_to_follow_up(&self) -> bool {
+        self.plan_health_routes_to_follow_up
+    }
+
+    /// Return whether preflight health routes to the storage-investigation queue.
+    pub fn plan_health_routes_to_storage_investigation(&self) -> bool {
+        self.plan_health_routes_to_storage_investigation
+    }
+
+    /// Return whether preflight health routes to the count-integrity queue.
+    pub fn plan_health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.plan_health_routes_to_count_integrity_investigation
+    }
+
+    /// Return whether preflight health routes to the triage queue.
+    pub fn plan_health_routes_to_triage(&self) -> bool {
+        self.plan_health_routes_to_triage
+    }
+
+    /// Return whether preflight health routes to an investigation queue.
+    pub fn plan_health_routes_to_investigation(&self) -> bool {
+        self.plan_health_routes_to_investigation
+    }
+
     /// Return the aggregate health priority for the preflight plan.
     pub fn plan_health_priority(&self) -> ToolAuditHealthPriority {
         self.plan_health_priority
@@ -4619,6 +4946,36 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the sortable preflight health-priority rank.
     pub fn plan_health_priority_rank(&self) -> u8 {
         self.plan_health_priority_rank
+    }
+
+    /// Return whether preflight health has settled priority.
+    pub fn plan_health_has_settled_priority(&self) -> bool {
+        self.plan_health_has_settled_priority
+    }
+
+    /// Return whether preflight health has routine-action priority.
+    pub fn plan_health_has_routine_priority(&self) -> bool {
+        self.plan_health_has_routine_priority
+    }
+
+    /// Return whether preflight health has storage-investigation priority.
+    pub fn plan_health_has_storage_investigation_priority(&self) -> bool {
+        self.plan_health_has_storage_investigation_priority
+    }
+
+    /// Return whether preflight health has count-integrity priority.
+    pub fn plan_health_has_count_integrity_investigation_priority(&self) -> bool {
+        self.plan_health_has_count_integrity_investigation_priority
+    }
+
+    /// Return whether preflight health priority is investigation-grade.
+    pub fn plan_health_has_investigation_priority(&self) -> bool {
+        self.plan_health_has_investigation_priority
+    }
+
+    /// Return whether preflight health priority requires triage.
+    pub fn plan_health_priority_requires_triage(&self) -> bool {
+        self.plan_health_priority_requires_triage
     }
 
     /// Return the aggregate health readiness for the preflight plan.
@@ -4651,6 +5008,26 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.plan_health_readiness_requires_manual_review
     }
 
+    /// Return whether preflight health needs investigation.
+    pub fn plan_health_readiness_requires_investigation(&self) -> bool {
+        self.plan_health_readiness_requires_investigation
+    }
+
+    /// Return whether preflight health readiness routes to storage investigation.
+    pub fn plan_health_readiness_requires_storage_investigation(&self) -> bool {
+        self.plan_health_readiness_requires_storage_investigation
+    }
+
+    /// Return whether preflight health readiness routes to count-integrity investigation.
+    pub fn plan_health_readiness_requires_count_integrity_investigation(&self) -> bool {
+        self.plan_health_readiness_requires_count_integrity_investigation
+    }
+
+    /// Return whether preflight health needs triage.
+    pub fn plan_health_readiness_requires_triage(&self) -> bool {
+        self.plan_health_readiness_requires_triage
+    }
+
     /// Return the aggregate health action for the drain result.
     pub fn drain_health_action(&self) -> ToolAuditHealthAction {
         self.drain_health_action
@@ -4681,6 +5058,41 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.drain_health_route_label_matches_route
     }
 
+    /// Return whether drain health has a concrete route.
+    pub fn drain_health_has_route(&self) -> bool {
+        self.drain_health_has_route
+    }
+
+    /// Return whether drain health routes to the drain queue.
+    pub fn drain_health_routes_to_drain(&self) -> bool {
+        self.drain_health_routes_to_drain
+    }
+
+    /// Return whether drain health routes to the follow-up queue.
+    pub fn drain_health_routes_to_follow_up(&self) -> bool {
+        self.drain_health_routes_to_follow_up
+    }
+
+    /// Return whether drain health routes to the storage-investigation queue.
+    pub fn drain_health_routes_to_storage_investigation(&self) -> bool {
+        self.drain_health_routes_to_storage_investigation
+    }
+
+    /// Return whether drain health routes to the count-integrity queue.
+    pub fn drain_health_routes_to_count_integrity_investigation(&self) -> bool {
+        self.drain_health_routes_to_count_integrity_investigation
+    }
+
+    /// Return whether drain health routes to the triage queue.
+    pub fn drain_health_routes_to_triage(&self) -> bool {
+        self.drain_health_routes_to_triage
+    }
+
+    /// Return whether drain health routes to an investigation queue.
+    pub fn drain_health_routes_to_investigation(&self) -> bool {
+        self.drain_health_routes_to_investigation
+    }
+
     /// Return the aggregate health priority for the drain result.
     pub fn drain_health_priority(&self) -> ToolAuditHealthPriority {
         self.drain_health_priority
@@ -4699,6 +5111,36 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return the sortable drain health-priority rank.
     pub fn drain_health_priority_rank(&self) -> u8 {
         self.drain_health_priority_rank
+    }
+
+    /// Return whether drain health has settled priority.
+    pub fn drain_health_has_settled_priority(&self) -> bool {
+        self.drain_health_has_settled_priority
+    }
+
+    /// Return whether drain health has routine-action priority.
+    pub fn drain_health_has_routine_priority(&self) -> bool {
+        self.drain_health_has_routine_priority
+    }
+
+    /// Return whether drain health has storage-investigation priority.
+    pub fn drain_health_has_storage_investigation_priority(&self) -> bool {
+        self.drain_health_has_storage_investigation_priority
+    }
+
+    /// Return whether drain health has count-integrity priority.
+    pub fn drain_health_has_count_integrity_investigation_priority(&self) -> bool {
+        self.drain_health_has_count_integrity_investigation_priority
+    }
+
+    /// Return whether drain health priority is investigation-grade.
+    pub fn drain_health_has_investigation_priority(&self) -> bool {
+        self.drain_health_has_investigation_priority
+    }
+
+    /// Return whether drain health priority requires triage.
+    pub fn drain_health_priority_requires_triage(&self) -> bool {
+        self.drain_health_priority_requires_triage
     }
 
     /// Return the aggregate health readiness for the drain result.
@@ -4729,6 +5171,26 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether drain health needs manual review.
     pub fn drain_health_readiness_requires_manual_review(&self) -> bool {
         self.drain_health_readiness_requires_manual_review
+    }
+
+    /// Return whether drain health needs investigation.
+    pub fn drain_health_readiness_requires_investigation(&self) -> bool {
+        self.drain_health_readiness_requires_investigation
+    }
+
+    /// Return whether drain health readiness routes to storage investigation.
+    pub fn drain_health_readiness_requires_storage_investigation(&self) -> bool {
+        self.drain_health_readiness_requires_storage_investigation
+    }
+
+    /// Return whether drain health readiness routes to count-integrity investigation.
+    pub fn drain_health_readiness_requires_count_integrity_investigation(&self) -> bool {
+        self.drain_health_readiness_requires_count_integrity_investigation
+    }
+
+    /// Return whether drain health needs triage.
+    pub fn drain_health_readiness_requires_triage(&self) -> bool {
+        self.drain_health_readiness_requires_triage
     }
 
     /// Return the aggregate health-dashboard surface.
@@ -16581,6 +17043,13 @@ mod tests {
         );
         assert_eq!(idle_summary.plan_health_route_label(), "no_route");
         assert!(idle_summary.plan_health_route_label_matches_route());
+        assert!(!idle_summary.plan_health_has_route());
+        assert!(!idle_summary.plan_health_routes_to_drain());
+        assert!(!idle_summary.plan_health_routes_to_follow_up());
+        assert!(!idle_summary.plan_health_routes_to_storage_investigation());
+        assert!(!idle_summary.plan_health_routes_to_count_integrity_investigation());
+        assert!(!idle_summary.plan_health_routes_to_triage());
+        assert!(!idle_summary.plan_health_routes_to_investigation());
         assert_eq!(
             idle_summary.plan_health_priority(),
             ToolAuditHealthPriority::Settled
@@ -16588,6 +17057,12 @@ mod tests {
         assert_eq!(idle_summary.plan_health_priority_label(), "settled");
         assert!(idle_summary.plan_health_priority_label_matches_priority());
         assert_eq!(idle_summary.plan_health_priority_rank(), 0);
+        assert!(idle_summary.plan_health_has_settled_priority());
+        assert!(!idle_summary.plan_health_has_routine_priority());
+        assert!(!idle_summary.plan_health_has_storage_investigation_priority());
+        assert!(!idle_summary.plan_health_has_count_integrity_investigation_priority());
+        assert!(!idle_summary.plan_health_has_investigation_priority());
+        assert!(!idle_summary.plan_health_priority_requires_triage());
         assert_eq!(
             idle_summary.plan_health_readiness(),
             ToolAuditHealthReadiness::Settled
@@ -16597,6 +17072,10 @@ mod tests {
         assert!(!idle_summary.plan_health_is_actionable());
         assert!(!idle_summary.plan_health_is_auto_routable());
         assert!(!idle_summary.plan_health_readiness_requires_manual_review());
+        assert!(!idle_summary.plan_health_readiness_requires_investigation());
+        assert!(!idle_summary.plan_health_readiness_requires_storage_investigation());
+        assert!(!idle_summary.plan_health_readiness_requires_count_integrity_investigation());
+        assert!(!idle_summary.plan_health_readiness_requires_triage());
         assert_eq!(
             idle_summary.drain_health_action(),
             ToolAuditHealthAction::NoAction
@@ -16609,6 +17088,13 @@ mod tests {
         );
         assert_eq!(idle_summary.drain_health_route_label(), "no_route");
         assert!(idle_summary.drain_health_route_label_matches_route());
+        assert!(!idle_summary.drain_health_has_route());
+        assert!(!idle_summary.drain_health_routes_to_drain());
+        assert!(!idle_summary.drain_health_routes_to_follow_up());
+        assert!(!idle_summary.drain_health_routes_to_storage_investigation());
+        assert!(!idle_summary.drain_health_routes_to_count_integrity_investigation());
+        assert!(!idle_summary.drain_health_routes_to_triage());
+        assert!(!idle_summary.drain_health_routes_to_investigation());
         assert_eq!(
             idle_summary.drain_health_priority(),
             ToolAuditHealthPriority::Settled
@@ -16616,6 +17102,12 @@ mod tests {
         assert_eq!(idle_summary.drain_health_priority_label(), "settled");
         assert!(idle_summary.drain_health_priority_label_matches_priority());
         assert_eq!(idle_summary.drain_health_priority_rank(), 0);
+        assert!(idle_summary.drain_health_has_settled_priority());
+        assert!(!idle_summary.drain_health_has_routine_priority());
+        assert!(!idle_summary.drain_health_has_storage_investigation_priority());
+        assert!(!idle_summary.drain_health_has_count_integrity_investigation_priority());
+        assert!(!idle_summary.drain_health_has_investigation_priority());
+        assert!(!idle_summary.drain_health_priority_requires_triage());
         assert_eq!(
             idle_summary.drain_health_readiness(),
             ToolAuditHealthReadiness::Settled
@@ -16625,6 +17117,10 @@ mod tests {
         assert!(!idle_summary.drain_health_is_actionable());
         assert!(!idle_summary.drain_health_is_auto_routable());
         assert!(!idle_summary.drain_health_readiness_requires_manual_review());
+        assert!(!idle_summary.drain_health_readiness_requires_investigation());
+        assert!(!idle_summary.drain_health_readiness_requires_storage_investigation());
+        assert!(!idle_summary.drain_health_readiness_requires_count_integrity_investigation());
+        assert!(!idle_summary.drain_health_readiness_requires_triage());
         assert_eq!(
             idle_report.health_dashboard_surface(),
             ToolAuditSupervisorDrainHealthDashboardSurface::Settled
@@ -16707,6 +17203,84 @@ mod tests {
         assert!(idle_summary.health_dashboard_labels_match());
         assert!(!idle_summary.has_health_dashboard_label_integrity_drift());
 
+        let clean_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(clean_store
+            .record_audit_batch(vec![sample_record("call_clean")])
+            .completed_without_failures());
+        let mut clean_sink = InMemoryToolAuditSink::new();
+        let clean_report = clean_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut clean_sink)
+            .unwrap();
+        let clean_summary = clean_report.summary();
+
+        assert_eq!(
+            clean_report.plan_health_action(),
+            ToolAuditHealthAction::DrainPage
+        );
+        assert_eq!(
+            clean_report.drain_health_action(),
+            ToolAuditHealthAction::DrainPage
+        );
+        assert!(clean_report.plan_health_has_route());
+        assert!(clean_report.plan_health_routes_to_drain());
+        assert!(clean_report.drain_health_routes_to_drain());
+        assert!(clean_report.plan_health_has_routine_priority());
+        assert!(clean_report.drain_health_has_routine_priority());
+        assert!(clean_report.plan_health_is_auto_routable());
+        assert!(clean_report.drain_health_is_auto_routable());
+        assert!(!clean_report.plan_health_readiness_requires_manual_review());
+        assert!(!clean_report.drain_health_readiness_requires_manual_review());
+        assert_eq!(
+            clean_summary.plan_health_route(),
+            ToolAuditHealthRoute::Drain
+        );
+        assert!(clean_summary.plan_health_has_route());
+        assert!(clean_summary.plan_health_routes_to_drain());
+        assert!(!clean_summary.plan_health_routes_to_follow_up());
+        assert!(!clean_summary.plan_health_routes_to_investigation());
+        assert!(!clean_summary.plan_health_routes_to_triage());
+        assert_eq!(
+            clean_summary.plan_health_priority(),
+            ToolAuditHealthPriority::RoutineAction
+        );
+        assert!(clean_summary.plan_health_has_routine_priority());
+        assert!(!clean_summary.plan_health_has_settled_priority());
+        assert!(!clean_summary.plan_health_has_investigation_priority());
+        assert!(!clean_summary.plan_health_priority_requires_triage());
+        assert_eq!(
+            clean_summary.plan_health_readiness(),
+            ToolAuditHealthReadiness::RoutineReady
+        );
+        assert!(clean_summary.plan_health_is_auto_routable());
+        assert!(!clean_summary.plan_health_readiness_requires_manual_review());
+        assert!(!clean_summary.plan_health_readiness_requires_investigation());
+        assert!(!clean_summary.plan_health_readiness_requires_triage());
+        assert_eq!(
+            clean_summary.drain_health_route(),
+            ToolAuditHealthRoute::Drain
+        );
+        assert!(clean_summary.drain_health_has_route());
+        assert!(clean_summary.drain_health_routes_to_drain());
+        assert!(!clean_summary.drain_health_routes_to_follow_up());
+        assert!(!clean_summary.drain_health_routes_to_investigation());
+        assert!(!clean_summary.drain_health_routes_to_triage());
+        assert_eq!(
+            clean_summary.drain_health_priority(),
+            ToolAuditHealthPriority::RoutineAction
+        );
+        assert!(clean_summary.drain_health_has_routine_priority());
+        assert!(!clean_summary.drain_health_has_settled_priority());
+        assert!(!clean_summary.drain_health_has_investigation_priority());
+        assert!(!clean_summary.drain_health_priority_requires_triage());
+        assert_eq!(
+            clean_summary.drain_health_readiness(),
+            ToolAuditHealthReadiness::RoutineReady
+        );
+        assert!(clean_summary.drain_health_is_auto_routable());
+        assert!(!clean_summary.drain_health_readiness_requires_manual_review());
+        assert!(!clean_summary.drain_health_readiness_requires_investigation());
+        assert!(!clean_summary.drain_health_readiness_requires_triage());
+
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
             .record_audit_batch(vec![
@@ -16750,11 +17324,24 @@ mod tests {
             ToolAuditHealthRoute::Triage
         );
         assert_eq!(continuation_summary.plan_health_route_label(), "triage");
+        assert!(continuation_summary.plan_health_has_route());
+        assert!(!continuation_summary.plan_health_routes_to_drain());
+        assert!(!continuation_summary.plan_health_routes_to_follow_up());
+        assert!(!continuation_summary.plan_health_routes_to_storage_investigation());
+        assert!(!continuation_summary.plan_health_routes_to_count_integrity_investigation());
+        assert!(continuation_summary.plan_health_routes_to_triage());
+        assert!(!continuation_summary.plan_health_routes_to_investigation());
         assert_eq!(
             continuation_summary.plan_health_priority(),
             ToolAuditHealthPriority::Triage
         );
         assert_eq!(continuation_summary.plan_health_priority_rank(), 90);
+        assert!(!continuation_summary.plan_health_has_settled_priority());
+        assert!(!continuation_summary.plan_health_has_routine_priority());
+        assert!(!continuation_summary.plan_health_has_storage_investigation_priority());
+        assert!(!continuation_summary.plan_health_has_count_integrity_investigation_priority());
+        assert!(!continuation_summary.plan_health_has_investigation_priority());
+        assert!(continuation_summary.plan_health_priority_requires_triage());
         assert_eq!(
             continuation_summary.plan_health_readiness(),
             ToolAuditHealthReadiness::TriageRequired
@@ -16766,14 +17353,37 @@ mod tests {
         assert!(continuation_summary.plan_health_is_actionable());
         assert!(!continuation_summary.plan_health_is_auto_routable());
         assert!(continuation_summary.plan_health_readiness_requires_manual_review());
+        assert!(!continuation_summary.plan_health_readiness_requires_investigation());
+        assert!(!continuation_summary.plan_health_readiness_requires_storage_investigation());
+        assert!(
+            !continuation_summary.plan_health_readiness_requires_count_integrity_investigation()
+        );
+        assert!(continuation_summary.plan_health_readiness_requires_triage());
         assert_eq!(
             continuation_summary.drain_health_action(),
             ToolAuditHealthAction::DrainPageAndScheduleContinuation
         );
         assert_eq!(
+            continuation_summary.drain_health_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert!(continuation_summary.drain_health_has_route());
+        assert!(!continuation_summary.drain_health_routes_to_drain());
+        assert!(!continuation_summary.drain_health_routes_to_follow_up());
+        assert!(!continuation_summary.drain_health_routes_to_storage_investigation());
+        assert!(!continuation_summary.drain_health_routes_to_count_integrity_investigation());
+        assert!(continuation_summary.drain_health_routes_to_triage());
+        assert!(!continuation_summary.drain_health_routes_to_investigation());
+        assert_eq!(
             continuation_summary.drain_health_priority(),
             ToolAuditHealthPriority::Triage
         );
+        assert!(!continuation_summary.drain_health_has_settled_priority());
+        assert!(!continuation_summary.drain_health_has_routine_priority());
+        assert!(!continuation_summary.drain_health_has_storage_investigation_priority());
+        assert!(!continuation_summary.drain_health_has_count_integrity_investigation_priority());
+        assert!(!continuation_summary.drain_health_has_investigation_priority());
+        assert!(continuation_summary.drain_health_priority_requires_triage());
         assert_eq!(
             continuation_summary.drain_health_readiness(),
             ToolAuditHealthReadiness::TriageRequired
@@ -16782,6 +17392,12 @@ mod tests {
         assert!(continuation_summary.drain_health_is_actionable());
         assert!(!continuation_summary.drain_health_is_auto_routable());
         assert!(continuation_summary.drain_health_readiness_requires_manual_review());
+        assert!(!continuation_summary.drain_health_readiness_requires_investigation());
+        assert!(!continuation_summary.drain_health_readiness_requires_storage_investigation());
+        assert!(
+            !continuation_summary.drain_health_readiness_requires_count_integrity_investigation()
+        );
+        assert!(continuation_summary.drain_health_readiness_requires_triage());
         assert_eq!(
             continuation_report.health_dashboard_surface(),
             ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
@@ -16902,8 +17518,26 @@ mod tests {
         );
         assert_eq!(follow_up_summary.plan_health_route_label(), "triage");
         assert_eq!(follow_up_summary.drain_health_route_label(), "triage");
+        assert!(follow_up_summary.plan_health_has_route());
+        assert!(follow_up_summary.plan_health_routes_to_triage());
+        assert!(!follow_up_summary.plan_health_routes_to_drain());
+        assert!(!follow_up_summary.plan_health_routes_to_follow_up());
+        assert!(!follow_up_summary.plan_health_routes_to_investigation());
+        assert!(follow_up_summary.drain_health_has_route());
+        assert!(follow_up_summary.drain_health_routes_to_triage());
+        assert!(!follow_up_summary.drain_health_routes_to_drain());
+        assert!(!follow_up_summary.drain_health_routes_to_follow_up());
+        assert!(!follow_up_summary.drain_health_routes_to_investigation());
+        assert!(follow_up_summary.plan_health_priority_requires_triage());
+        assert!(follow_up_summary.drain_health_priority_requires_triage());
+        assert!(!follow_up_summary.plan_health_has_investigation_priority());
+        assert!(!follow_up_summary.drain_health_has_investigation_priority());
         assert!(follow_up_summary.plan_health_readiness_requires_manual_review());
+        assert!(!follow_up_summary.plan_health_readiness_requires_investigation());
+        assert!(follow_up_summary.plan_health_readiness_requires_triage());
         assert!(follow_up_summary.drain_health_readiness_requires_manual_review());
+        assert!(!follow_up_summary.drain_health_readiness_requires_investigation());
+        assert!(follow_up_summary.drain_health_readiness_requires_triage());
         assert_eq!(
             follow_up_summary.health_dashboard_surface(),
             ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
