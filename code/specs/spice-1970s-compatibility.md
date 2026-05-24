@@ -285,6 +285,9 @@ Status:
 - A constrained Phase 8 executable foothold is implemented across Python,
   TypeScript, and Rust: a simple grounded RC low-pass pole-zero helper and a
   Fourier-to-distortion projection helper.
+- Distortion analysis can now be projected directly from transient samples
+  across Python, TypeScript, and Rust by reusing the Fourier extraction path
+  for a selected output probe.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

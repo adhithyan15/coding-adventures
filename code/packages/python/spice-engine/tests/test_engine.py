@@ -147,6 +147,7 @@ from spice_engine import (
     dc_sweep,
     dc_sweep_corners,
     distortion_from_fourier,
+    distortion_from_transient,
     estimate_period,
     format_dc_table,
     format_transient_table,
@@ -5780,6 +5781,38 @@ def test_distortion_from_fourier_projects_probe_harmonics() -> None:
             )
         ],
     )
+
+
+def test_distortion_from_transient_extracts_harmonic_content() -> None:
+    freq = 1.0e3
+    period = 1.0 / freq
+    points = [
+        TransientPoint(
+            time=index * period / 64.0,
+            node_voltages={
+                "out": math.sin(2.0 * math.pi * freq * index * period / 64.0)
+                + 0.1 * math.sin(4.0 * math.pi * freq * index * period / 64.0)
+            },
+        )
+        for index in range(129)
+    ]
+
+    result = distortion_from_transient(
+        points,
+        fundamental_frequency=freq,
+        input_source="Vin",
+        output_probe="V(out)",
+        harmonics=3,
+    )
+
+    assert result.input_source == "Vin"
+    assert result.output_probe == "V(out)"
+    point = result.points[0]
+    assert point.frequency == pytest.approx(freq)
+    assert point.fundamental_magnitude == pytest.approx(1.0, abs=2.0e-3)
+    assert point.harmonics[0].harmonic == 2
+    assert point.harmonics[0].magnitude == pytest.approx(0.1, abs=2.0e-3)
+    assert point.total_harmonic_distortion == pytest.approx(0.1, abs=2.0e-3)
 
 
 def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:

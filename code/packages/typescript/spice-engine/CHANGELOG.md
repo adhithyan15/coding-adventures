@@ -16,6 +16,8 @@
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine
   coefficients, magnitudes, phases, and THD from transient samples for
   `V(node)` and `I(source)` probes.
+- Add `distortionFromTransient`, which runs the Fourier extraction path and
+  returns the Phase-8 distortion result shape directly from transient samples.
 - Add MOS Level-1 capacitance support through `CGSO`, `CGDO`, `CGBO`, `CBS`,
   and `CBD`, contributing small-signal AC susceptance.
 - Add MOSFET channel thermal noise to `.NOISE` via the long-channel `4kTγgm`
