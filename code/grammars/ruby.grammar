@@ -51,7 +51,18 @@ unless_statement = "unless" expression { !"else" !"end" statement } [ else_claus
 while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
 assignment   = NAME EQUALS expression ;
-method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
+# Phase 6l — method receiver chains.  `foo.bar`, `foo.bar.baz`,
+# `foo.bar(args)`, `foo(1).bar`, `foo.bar(args).baz(more)`, etc.
+#
+# Postfix design: a `dot_call` rule captures one `.method[(...)]` step;
+# `{ dot_call }` repetitions appended to both `factor` (so chains work
+# everywhere expressions go) and to `method_call` (so statement-level
+# `foo(1).bar` parses cleanly).
+#
+# Setter calls (`foo.bar = 1`) and bracket access (`arr[0]`) are
+# deliberately out of scope for this chunk — they get their own phases.
+method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN { dot_call } ;
+dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] ;
 # Phase 6h — paren-less method call.  Idiomatic Ruby allows
 # `puts 1, 2` (no parens) when the call has at least one argument.
 #
@@ -94,7 +105,12 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # so they win first.  Right-recursive: `--5` parses fine.  Precedence:
 # tighter than binary `+ -` (since `unary_minus` lives inside `factor`),
 # so `-5 + 3` parses as `(-5) + 3`.
-factor       = NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ;
+# Phase 6l — `method_call` placed FIRST in factor's atom alternation so
+# `foo(1).bar` in expression position parses as `(foo(1)).bar` instead of
+# leaving `(1).bar` unconsumed.  When no parens follow the name, the
+# method_call alternative fails (requires LPAREN) and we fall through to
+# the bare-NAME branch.
+factor       = ( method_call | NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call } ;
 unary_minus  = MINUS factor ;
 symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;
 array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
