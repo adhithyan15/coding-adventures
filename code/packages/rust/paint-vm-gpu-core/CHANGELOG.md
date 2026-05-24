@@ -12,3 +12,5 @@
   backends that support texture sampling.
 - Added radial gradient 2D textures with radial UV lowering for GPU backends
   that support sampled gradient textures.
+- Added a shared Tier 1 textured backend profile for GPU/compute backends that
+  accept image, linear-gradient, and radial-gradient texture plans.
