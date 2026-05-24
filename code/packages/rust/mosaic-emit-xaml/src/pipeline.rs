@@ -4172,6 +4172,50 @@ fn emit_host_table(
     let pad2 = " ".repeat(indent + 4);
     let style = part_style_attr(node, part_styles);
 
+    // UI31 §3.2 RTL contract. WinUI's `FrameworkElement.FlowDirection`
+    // is the canonical RTL knob: setting it to `RightToLeft` on the
+    // root `<Grid>` flips the column ordering of all descendant rows
+    // automatically by the WinUI layout pass. Inherited by descendants.
+    //
+    // Three accepted shapes (mirrors the React/HTML/Webcomp/Flutter/
+    // Qt/SwiftUI backends in #4143, #4156, #4162, #4166, #4185, #4194):
+    //
+    // | Source                 | Emits                                                |
+    // |------------------------|------------------------------------------------------|
+    // | `dir: rtl`             | ` FlowDirection="RightToLeft"`                       |
+    // | `dir: ltr`             | ` FlowDirection="LeftToRight"`                       |
+    // | `dir: auto`            | (nothing — inherit from ancestor; WinUI has no auto) |
+    // | `dir: slot: layout-dir`| ` FlowDirection="{x:Bind LayoutDir}"`                |
+    // | unknown keyword        | (nothing — drops silently per allow-list)            |
+    //
+    // The allow-list (`ltr` / `rtl` / `auto`) is the security gate.
+    // Slot refs go through `kebab_to_pascal_case` + `is_safe_identifier`
+    // so the binding path stays a clean XAML identifier — an
+    // attacker-controlled slot name can't break out of the
+    // `{x:Bind ...}` attribute value.
+    let flow_direction_attr: String = match find_prop_value(node, "dir") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            if is_safe_identifier(&pascal) {
+                format!(" FlowDirection=\"{{x:Bind {pascal}}}\"")
+            } else {
+                String::new()
+            }
+        }
+        Some(LayoutPropValue::Keyword(k)) => match k.as_str() {
+            "rtl" => " FlowDirection=\"RightToLeft\"".to_string(),
+            "ltr" => " FlowDirection=\"LeftToRight\"".to_string(),
+            // `auto` is the spec-mandated "let the host decide"
+            // keyword. WinUI has no `Auto` enum value for
+            // FlowDirection — the right behaviour is to NOT emit the
+            // attribute so any ancestor's FlowDirection (typically
+            // the root `Page`'s, set from CultureInfo) flows through.
+            "auto" => String::new(),
+            _ => String::new(),
+        },
+        _ => String::new(),
+    };
+
     // -- 1. Find each section sub-tag at most once. --
     let mut colgroup: Option<&LayoutNode> = None;
     let mut head: Option<&LayoutNode> = None;
@@ -4226,7 +4270,9 @@ fn emit_host_table(
 
     // -- 2. Empty HostTable → empty `<Grid/>`. Preserves part style. --
     if head.is_none() && body.is_none() && foot.is_none() {
-        return Ok(format!("{pad}<Grid{style}></Grid>\n"));
+        return Ok(format!(
+            "{pad}<Grid{flow_direction_attr}{style}></Grid>\n"
+        ));
     }
 
     // -- 3. Build RowDefinitions list. Each present section gets one
@@ -4244,7 +4290,7 @@ fn emit_host_table(
 
     // -- 4. Assemble the XAML. --
     let mut out = String::new();
-    writeln!(out, "{pad}<Grid{style}>").unwrap();
+    writeln!(out, "{pad}<Grid{flow_direction_attr}{style}>").unwrap();
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     for r in &row_defs {
         writeln!(
@@ -5460,6 +5506,199 @@ mod tests {
         assert!(
             r.xaml.contains("<Grid Background=\"#1e1e1e\""),
             "got:\n{}",
+            r.xaml
+        );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // UI31 — HostTable a11y gate + RTL contract (XAML backend)
+    //
+    // Mirrors the React (#4143), HTML (#4156), WebComponent (#4162),
+    // Flutter (#4166), Qt (#4185), and SwiftUI (#4194) precedents:
+    //
+    // - **A11y gate**: the XAML lowering must continue to emit a
+    //   structural <Grid> with <Grid.RowDefinitions> per section —
+    //   WinUI/UIA tooling sees that as a coherent table region, NOT
+    //   a flat StackPanel where row associations are lost.
+    // - **RTL gate**: when `dir:` is authored, the <Grid> carries
+    //   `FlowDirection="RightToLeft"` (or LeftToRight, or a slot
+    //   binding). Allow-list is `ltr|rtl|auto`; unknown keywords
+    //   drop silently.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// Helper: build a `HostTable` LayoutDef carrying a `dir:` prop
+    /// and a minimal HostTableBody so the table is non-empty (lets us
+    /// exercise the assembled-Grid emission path, not just the empty
+    /// short-circuit).
+    fn host_table_with_dir(value: LayoutPropValue) -> LayoutDef {
+        let table = LayoutNode {
+            tag: "HostTable".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "dir".to_string(),
+                value,
+            }],
+            children: vec![section_node("HostTableBody", vec![row_with_text_cells(&["x"])])],
+        };
+        layout_with_root("Foo", table)
+    }
+
+    /// UI31 §3.1 a11y gate — `HostTable` MUST continue to lower to
+    /// a structural `<Grid>` with `<Grid.RowDefinitions>`. A
+    /// regression to a flat `<StackPanel>` would lose the
+    /// row-association semantics WinUI's automation peer derives
+    /// from `Grid.Row="..."` attached properties.
+    #[test]
+    fn ui31_a11y_host_table_uses_structural_grid_with_row_definitions() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![section_node("HostTableBody", vec![row_with_text_cells(&["a"])])],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<Grid"),
+            "HostTable must lower to <Grid>, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Grid.RowDefinitions>"),
+            "must include <Grid.RowDefinitions>, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// UI31 §3.2 RTL contract — `dir: rtl` keyword emits
+    /// `FlowDirection="RightToLeft"` on the Grid. WinUI's
+    /// `FrameworkElement.FlowDirection` cascades to all descendants,
+    /// flipping column ordering inside the grid rows.
+    #[test]
+    fn ui31_rtl_host_table_dir_rtl_keyword_emits_flow_direction_right_to_left() {
+        let c = component("Foo", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword("rtl".to_string()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("FlowDirection=\"RightToLeft\""),
+            "expected FlowDirection=\"RightToLeft\", got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `dir: ltr` keyword emits the explicit-LeftToRight form.
+    /// Useful for tables that should stay LTR inside an ambient-RTL
+    /// page (e.g. number-heavy spreadsheets).
+    #[test]
+    fn ui31_rtl_host_table_dir_ltr_keyword_emits_flow_direction_left_to_right() {
+        let c = component("Foo", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword("ltr".to_string()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("FlowDirection=\"LeftToRight\""),
+            "expected FlowDirection=\"LeftToRight\", got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `dir: auto` keyword is the spec-mandated "let the host
+    /// decide". WinUI has no `Auto` enum for FlowDirection — the
+    /// right behaviour is to NOT emit the attribute so any
+    /// ancestor's FlowDirection (typically the `Page`'s, set from
+    /// CultureInfo) flows through.
+    #[test]
+    fn ui31_rtl_host_table_dir_auto_keyword_does_not_emit_attribute() {
+        let c = component("Foo", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword("auto".to_string()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            !r.xaml.contains("FlowDirection"),
+            "auto must NOT emit FlowDirection, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Grid"),
+            "bare <Grid> should still render, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `dir: slot: layout-direction` interpolates the bound slot
+    /// (Pascal-cased to `LayoutDirection`) into the `{x:Bind ...}`
+    /// expression. The slot is expected to evaluate to a
+    /// `FlowDirection`. Slot name goes through
+    /// `kebab_to_pascal_case` + `is_safe_identifier` so it can't
+    /// smuggle malicious XAML through the binding path.
+    #[test]
+    fn ui31_rtl_host_table_dir_slot_ref_interpolates_pascal_case_x_bind() {
+        let c = component(
+            "Foo",
+            vec![SlotDecl {
+                name: "layout-direction".to_string(),
+                r#type: SlotType::Text,
+                required: true,
+                default: None,
+            }],
+            vec![],
+        );
+        let l = host_table_with_dir(LayoutPropValue::SlotRef("layout-direction".to_string()));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("FlowDirection=\"{x:Bind LayoutDirection}\""),
+            "expected FlowDirection=\"{{x:Bind LayoutDirection}}\", got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Unknown `dir:` keywords (anything outside the `ltr|rtl|auto`
+    /// allow-list) MUST drop silently. This is the security gate:
+    /// an attacker-controlled keyword cannot inject XAML because
+    /// it never reaches the format string. Test payload
+    /// `"RightToLeft\" Tag=\"pwn\""` is shaped to break out of the
+    /// attribute-value quoting if naively interpolated.
+    #[test]
+    fn ui31_rtl_host_table_unknown_dir_keyword_drops_silently() {
+        let c = component("Foo", vec![], vec![]);
+        let l = host_table_with_dir(LayoutPropValue::Keyword(
+            "RightToLeft\" Tag=\"pwn\"".to_string(),
+        ));
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            !r.xaml.contains("Tag=\"pwn\""),
+            "unknown keyword payload must not appear, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("FlowDirection"),
+            "unknown keyword must NOT emit FlowDirection, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Grid"),
+            "bare <Grid> should still render, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Regression guard — `HostTable` with no `dir:` prop emits no
+    /// `FlowDirection` attribute. A future refactor that always-
+    /// emits would break authors who rely on the Page-level
+    /// CultureInfo cascade.
+    #[test]
+    fn ui31_rtl_host_table_without_dir_prop_emits_no_flow_direction() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            host_table_node(
+                None,
+                vec![section_node("HostTableBody", vec![row_with_text_cells(&["x"])])],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            !r.xaml.contains("FlowDirection"),
+            "no FlowDirection expected when dir absent, got:\n{}",
             r.xaml
         );
     }
