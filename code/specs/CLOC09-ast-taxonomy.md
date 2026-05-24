@@ -110,39 +110,126 @@ This spec calls out the constraint explicitly so future PRs
 don't accidentally optimize toward "what Closure-style passes
 need" at the cost of "what an interpreter needs."
 
-### 3. Per-node `CvId` is the only identity
+### 3. Optional per-node `CvId` is the only identity
 
-Every node carries exactly one `CvId` field, named `cv`. No
-spans, no parent pointers, no node IDs. The correlation-vector
-graph stores the actual `(file, byte_start, byte_end)` triple
-keyed by `CvId`.
+Every node carries one optional `CvId` field, named `cv`:
 
 ```rust
 pub struct IfStatement {
-    pub cv: CvId,
+    pub cv: Option<CvId>,
     pub test: Expression,
     pub consequent: Box<Statement>,
     pub alternate: Option<Box<Statement>>,
 }
 ```
 
-Why one identity, not many:
+No spans, no parent pointers, no node IDs. When `cv` is
+populated, the correlation-vector graph stores the actual
+`(file, byte_start, byte_end)` triple keyed by that `CvId`.
 
-- **Source-map preservation across passes**. Every pass that
-  rewrites a node creates a new `CvId` via `cv.fork(parent_cv)`
-  or `cv.create()`. The old CvId stays in the log marked
-  `deleted`. So the chain `original_source_byte → original_ast
-  → folded_ast → renamed_ast → emitted_token` is queryable
-  through the CV graph long after the AST itself has moved on.
+#### Optionality is first-class — both modes work
+
+The user opts into CV tracing per-program, not per-pass and not
+per-build. Two equally-supported modes:
+
+1. **Tracing enabled** — every node is constructed with
+   `cv: Some(id)`. The frontend assigns ids during lex/parse;
+   passes fork new ids when they rewrite a node; the emitter
+   reads `cv.expect(...)` on each token and writes a source-map
+   mapping. Full source-map support, full provenance queries
+   through the CV graph.
+
+2. **Tracing disabled** — every node is constructed with
+   `cv: None`. The frontend skips id assignment, passes don't
+   fork (there's nothing to fork from), the emitter writes no
+   source map. Useful for:
+   - synthetic test programs constructed in Rust (no real source
+     to map back to),
+   - quick code-transform tools that just want fold/rename/emit
+     without source-map overhead,
+   - downstream consumers like a future V8-on-LANG-VM that
+     produces its own debugger metadata and doesn't need
+     CV-graph queries.
+
+Modes are **per-program**, not mixed. Mixing within one program
+is supported (an isolated `None` node in an otherwise-traced
+tree is fine — the pipeline behavior below defines how passes
+treat it), but the common case is "the whole tree is traced or
+none of it is."
+
+#### How passes behave in each mode
+
+A pass's `Pass::run` body, when handling a node, follows this
+rule:
+
+```rust
+let new_cv = match node.cv {
+    Some(parent_id) => Some(ctx.cv.fork(parent_id)),  // tracing on
+    None => None,                                      // tracing off
+};
+let new_node = SomeStatement { cv: new_cv, /* … */ };
+```
+
+In the `Some` arm the pass also emits a `Contribution` to
+`ctx.cv` per CLOC03, marking what kind of rewrite happened. In
+the `None` arm the pass *skips* contribution emission for that
+node (there's no id to attribute it to).
+
+Concretely: if every node in the input has `cv: None`, the pass
+runs to completion and emits zero contributions and zero CV
+entries. The CV log is empty at the end. The emitter then sees
+`cv: None` everywhere and writes `source_map: Some(empty_v3_blob)`
+or `source_map: None` (per `EmitOptions::source_map`) — the blob
+has no mappings inside because there's nothing to map.
+
+If the input is fully traced, the pass forks ids, emits
+contributions, and the emitter writes a full source map.
+
+The pipeline thus has **one behavior** for both modes — it
+doesn't branch on a "tracing enabled?" flag. The `Option`
+discriminator on each node is the only switch.
+
+#### Why optional, not mandatory
+
+Earlier drafts of this spec mandated `cv: CvId` (non-optional) on every node.
+Three reasons that turned out to be the wrong call:
+
+1. **Synthetic tests are painful.** Passes have unit tests that
+   construct nodes directly. Forcing every test fixture to fork
+   a fresh `CvId` adds boilerplate to every test for no win.
+2. **Downstream consumers vary.** A V8-on-LANG-VM frontend that
+   only cares about lowering to bytecode shouldn't have to
+   participate in CV bookkeeping. Making it optional lets that
+   consumer use the AST without dragging in the correlation
+   vector graph.
+3. **Future codegen / macro-expansion.** AST nodes constructed
+   by macro expansion (Phase 3+) or by a `@JsxFactory`-style
+   transform don't have a meaningful source position. They
+   should emit nodes with `cv: None` rather than fabricate fake
+   ids — the latter creates source maps that point to nonsense.
+
+The cost is one byte per node (the `Option` discriminant) plus
+slightly more boilerplate inside pass bodies. The win is that
+both modes are honest about what they're doing.
+
+#### Why one identity (still), not many
+
+Even though `cv` is optional, it remains the **only** identity
+field. We still don't carry spans / parent pointers / node IDs:
+
+- **Source-map preservation across passes (when tracing).**
+  Every pass forks ids; the old CvId stays in the log marked
+  `deleted`; the chain `original_source_byte → original_ast →
+  folded_ast → renamed_ast → emitted_token` is queryable through
+  the CV graph long after the AST itself has moved on.
 - **No parent pointers**. ESTree allows them (some tools attach
   them) but they make every mutation a graph-fixup. Our passes
   produce *new* trees rather than mutating in place; if a pass
   needs the parent it threads it through the recursion.
-- **No span on the node**. The span is in the CV graph. This is
-  what makes the V8 frontend's job feasible — V8 needs to map
-  bytecode back to source positions for the debugger / profiler,
-  but it does so through whatever IR it produces, not by
-  carrying spans on every AST node through every pass.
+- **No span on the node**. The span lives in the CV graph (when
+  tracing) or in the parser's input buffer (when not — the
+  parser may surface span info via diagnostics out-of-band, but
+  the AST itself stays span-free).
 
 ## Wire format
 
@@ -163,7 +250,8 @@ pub enum Statement {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct IfStatement {
-    pub cv: CvId,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
     pub test: Expression,
     pub consequent: Box<Statement>,
     pub alternate: Option<Box<Statement>>,
@@ -171,7 +259,10 @@ pub struct IfStatement {
 ```
 
 A node serialized to JSON is exactly the ESTree shape modulo
-the `cv` field replacing `loc` / `range`. JSON-emitting tools
+the `cv` field replacing `loc` / `range`. The `skip_serializing_if`
+attribute means a `None` cv is omitted from JSON entirely (rather
+than serialized as `"cv": null`) — so traced AST output carries
+the `cv` key, untraced output omits it. JSON-emitting tools
 (debug dumps, `--print_tree_json`) match what Babel / Acorn
 output for the same source.
 
@@ -179,7 +270,8 @@ output for the same source.
 
 ```rust
 pub struct Program {
-    pub cv: CvId,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
     pub version: EsVersion,         // already present
     pub source_type: SourceType,    // already present
     pub body: Vec<ProgramItem>,     // NEW in Phase 1
@@ -202,15 +294,15 @@ specifically (renaming, treeshaking, remove-unused-vars).
 
 | Variant               | Fields                                                                                                                                              |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ExpressionStatement` | `cv: CvId`, `expression: Expression`                                                                                                                |
-| `BlockStatement`      | `cv: CvId`, `body: Vec<Statement>` (Declarations land via Phase 1's `Statement::Declaration` lift — see below)                                      |
-| `IfStatement`         | `cv: CvId`, `test: Expression`, `consequent: Box<Statement>`, `alternate: Option<Box<Statement>>`                                                   |
-| `WhileStatement`      | `cv: CvId`, `test: Expression`, `body: Box<Statement>`                                                                                              |
-| `ForStatement`        | `cv: CvId`, `init: Option<ForInit>`, `test: Option<Expression>`, `update: Option<Expression>`, `body: Box<Statement>`                               |
-| `ReturnStatement`     | `cv: CvId`, `argument: Option<Expression>`                                                                                                          |
-| `BreakStatement`      | `cv: CvId`, `label: Option<Identifier>`                                                                                                             |
-| `ContinueStatement`   | `cv: CvId`, `label: Option<Identifier>`                                                                                                             |
-| `EmptyStatement`      | `cv: CvId`                                                                                                                                          |
+| `ExpressionStatement` | `cv: Option<CvId>`, `expression: Expression`                                                                                                                |
+| `BlockStatement`      | `cv: Option<CvId>`, `body: Vec<Statement>` (Declarations land via Phase 1's `Statement::Declaration` lift — see below)                                      |
+| `IfStatement`         | `cv: Option<CvId>`, `test: Expression`, `consequent: Box<Statement>`, `alternate: Option<Box<Statement>>`                                                   |
+| `WhileStatement`      | `cv: Option<CvId>`, `test: Expression`, `body: Box<Statement>`                                                                                              |
+| `ForStatement`        | `cv: Option<CvId>`, `init: Option<ForInit>`, `test: Option<Expression>`, `update: Option<Expression>`, `body: Box<Statement>`                               |
+| `ReturnStatement`     | `cv: Option<CvId>`, `argument: Option<Expression>`                                                                                                          |
+| `BreakStatement`      | `cv: Option<CvId>`, `label: Option<Identifier>`                                                                                                             |
+| `ContinueStatement`   | `cv: Option<CvId>`, `label: Option<Identifier>`                                                                                                             |
+| `EmptyStatement`      | `cv: Option<CvId>`                                                                                                                                          |
 | `Declaration`         | wraps `Declaration` so a top-level or block-scoped declaration is also a `Statement` (matches ESTree's lift of `VariableDeclaration` etc. into `Statement`) |
 
 ```rust
@@ -229,20 +321,20 @@ pub enum ForInit {
 
 | Variant                 | Fields                                                                                                                                              |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Identifier`            | `cv: CvId`, `name: String`                                                                                                                          |
-| `NumericLiteral`        | `cv: CvId`, `value: f64`, `raw: String`                                                                                                             |
-| `StringLiteral`         | `cv: CvId`, `value: String`, `raw: String`                                                                                                          |
-| `BooleanLiteral`        | `cv: CvId`, `value: bool`                                                                                                                           |
-| `NullLiteral`           | `cv: CvId`                                                                                                                                          |
-| `BinaryExpression`      | `cv: CvId`, `operator: BinaryOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                           |
-| `LogicalExpression`     | `cv: CvId`, `operator: LogicalOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                          |
-| `UnaryExpression`       | `cv: CvId`, `operator: UnaryOperator`, `prefix: bool`, `argument: Box<Expression>`                                                                  |
-| `AssignmentExpression`  | `cv: CvId`, `operator: AssignmentOperator`, `left: AssignmentTarget`, `right: Box<Expression>`                                                      |
-| `ConditionalExpression` | `cv: CvId`, `test: Box<Expression>`, `consequent: Box<Expression>`, `alternate: Box<Expression>`                                                    |
-| `CallExpression`        | `cv: CvId`, `callee: Box<Expression>`, `arguments: Vec<Expression>`                                                                                 |
-| `MemberExpression`      | `cv: CvId`, `object: Box<Expression>`, `property: MemberProperty`, `computed: bool`                                                                 |
-| `ArrayExpression`       | `cv: CvId`, `elements: Vec<Option<Expression>>` (`None` represents an elision: `[1, , 3]`)                                                          |
-| `ObjectExpression`      | `cv: CvId`, `properties: Vec<Property>` (insertion order preserved per ES2015+)                                                                     |
+| `Identifier`            | `cv: Option<CvId>`, `name: String`                                                                                                                          |
+| `NumericLiteral`        | `cv: Option<CvId>`, `value: f64`, `raw: String`                                                                                                             |
+| `StringLiteral`         | `cv: Option<CvId>`, `value: String`, `raw: String`                                                                                                          |
+| `BooleanLiteral`        | `cv: Option<CvId>`, `value: bool`                                                                                                                           |
+| `NullLiteral`           | `cv: Option<CvId>`                                                                                                                                          |
+| `BinaryExpression`      | `cv: Option<CvId>`, `operator: BinaryOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                           |
+| `LogicalExpression`     | `cv: Option<CvId>`, `operator: LogicalOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                          |
+| `UnaryExpression`       | `cv: Option<CvId>`, `operator: UnaryOperator`, `prefix: bool`, `argument: Box<Expression>`                                                                  |
+| `AssignmentExpression`  | `cv: Option<CvId>`, `operator: AssignmentOperator`, `left: AssignmentTarget`, `right: Box<Expression>`                                                      |
+| `ConditionalExpression` | `cv: Option<CvId>`, `test: Box<Expression>`, `consequent: Box<Expression>`, `alternate: Box<Expression>`                                                    |
+| `CallExpression`        | `cv: Option<CvId>`, `callee: Box<Expression>`, `arguments: Vec<Expression>`                                                                                 |
+| `MemberExpression`      | `cv: Option<CvId>`, `object: Box<Expression>`, `property: MemberProperty`, `computed: bool`                                                                 |
+| `ArrayExpression`       | `cv: Option<CvId>`, `elements: Vec<Option<Expression>>` (`None` represents an elision: `[1, , 3]`)                                                          |
+| `ObjectExpression`      | `cv: Option<CvId>`, `properties: Vec<Property>` (insertion order preserved per ES2015+)                                                                     |
 
 ```rust
 pub enum BinaryOperator {
@@ -278,7 +370,8 @@ pub enum AssignmentTarget {
 }
 
 pub struct Property {
-    pub cv: CvId,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
     pub kind: PropertyKind,        // init | get | set
     pub key: PropertyKey,
     pub value: Box<Expression>,
@@ -305,14 +398,15 @@ pub enum PropertyKey {
 
 | Variant               | Fields                                                                                                                                              |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VariableDeclaration` | `cv: CvId`, `kind: VarKind`, `declarations: Vec<VariableDeclarator>`                                                                                |
-| `FunctionDeclaration` | `cv: CvId`, `id: Identifier`, `params: Vec<FunctionParam>`, `body: BlockStatement`, `generator: bool`, `is_async: bool`                             |
+| `VariableDeclaration` | `cv: Option<CvId>`, `kind: VarKind`, `declarations: Vec<VariableDeclarator>`                                                                                |
+| `FunctionDeclaration` | `cv: Option<CvId>`, `id: Identifier`, `params: Vec<FunctionParam>`, `body: BlockStatement`, `generator: bool`, `is_async: bool`                             |
 
 ```rust
 pub enum VarKind { Var, Let, Const }
 
 pub struct VariableDeclarator {
-    pub cv: CvId,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
     pub id: BindingTarget,
     pub init: Option<Expression>,
 }
@@ -441,8 +535,15 @@ implementations are independent follow-ups.
 1. The full Phase 1 node taxonomy listed above (25 variants).
 2. Full ESTree-compat wire format: JSON `"type"` tags, camelCase
    field names, structural shape per ESTree-spec.
-3. The `cv: CvId` convention as the only identity field on every
-   node.
+3. The `cv: Option<CvId>` convention as the **only** identity
+   field on every node. Optionality is first-class — both
+   tracing-enabled and tracing-disabled modes are equally
+   supported, switched per-program by whether the user
+   constructs nodes with `Some(id)` or `None`. The pipeline has
+   one behavior across both modes; the `Option` discriminator
+   is the only switch. `#[serde(skip_serializing_if = "Option::is_none", default)]`
+   omits the field from JSON entirely when `None`, so untraced
+   ASTs match ESTree's wire format byte-for-byte.
 4. The `is_async` rename to JSON `"async"` (only field-name
    divergence Phase 1 introduces).
 5. The split `Statement` / `Declaration` enum design with the
