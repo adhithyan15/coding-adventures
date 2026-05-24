@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.8.0] - 2026-05-23
+
+### Added
+
+- ``LIMIT`` clause now supports SQLite's two non-standard extensions:
+
+  * **Negative count** means "no limit" (unbounded).  ``SELECT v FROM
+    t LIMIT -1`` returns all rows; ``LIMIT -1 OFFSET 10`` returns
+    everything from row 11 onwards — the canonical "skip N, take
+    rest" idiom.
+
+  * **MySQL-compatible ``LIMIT m, n``** is now accepted as a synonym
+    for ``LIMIT n OFFSET m``.  Note the reversed argument order: the
+    FIRST number is the offset, the SECOND is the count.  This is the
+    only place in SQL where the order swaps.
+
+  * **Negative offset** is treated as zero (matches SQLite).  ``LIMIT
+    5 OFFSET -3`` returns the first five rows with no skip.
+
+  Previously all three raised ``Parse error … Expected NUMBER, got
+  '-'`` or ``Unexpected token: ','`` because the grammar only
+  accepted ``LIMIT NUMBER [ OFFSET NUMBER ]``.
+
+  Implementation: new grammar rule ``signed_number = [ "-" ] NUMBER``
+  used in both ``LIMIT`` slots, plus a comma-form alternative in the
+  trailing position.  The adapter detects the comma form by the
+  presence of a COMMA token and swaps the argument interpretation.
+  Negative counts map to ``Limit.count=None`` so the planner / codegen
+  paths that already understand "no limit" don't need any changes.
+
 ## [2.7.0] - 2026-05-23
 
 ### Added
