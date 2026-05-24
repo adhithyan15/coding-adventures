@@ -3599,6 +3599,97 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_routing_classifier_labels_match()
     }
 
+    /// Return whether the health dashboard contributes a host-run queue action.
+    pub fn host_run_queue_has_health_dashboard_action(&self) -> bool {
+        self.health_dashboard_queue_key_is_actionable()
+    }
+
+    /// Return whether the host decision contributes a host-run queue action.
+    pub fn host_run_queue_has_host_decision_action(&self) -> bool {
+        self.host_decision_queue_key_is_actionable()
+    }
+
+    /// Return how many host-run queue surfaces need action.
+    pub fn host_run_queue_action_count(&self) -> usize {
+        [
+            self.host_run_queue_has_health_dashboard_action(),
+            self.host_run_queue_has_host_decision_action(),
+        ]
+        .into_iter()
+        .filter(|needs_action| *needs_action)
+        .count()
+    }
+
+    /// Return whether multiple host-run queue surfaces need action.
+    pub fn host_run_queue_has_multiple_actions(&self) -> bool {
+        self.host_run_queue_action_count() > 1
+    }
+
+    /// Return whether the host-run queue is fully settled.
+    pub fn host_run_queue_is_settled(&self) -> bool {
+        self.health_dashboard_queue_key_is_settled() && self.host_decision_queue_key_is_settled()
+    }
+
+    /// Return whether any host-run queue action is required.
+    pub fn host_run_queue_requires_action(&self) -> bool {
+        self.host_run_queue_action_count() > 0
+    }
+
+    /// Return the highest sortable priority rank across host-run queue surfaces.
+    pub fn host_run_queue_priority_rank(&self) -> u8 {
+        self.health_dashboard_queue_key_priority_rank()
+            .max(self.host_decision_queue_key_priority_rank())
+    }
+
+    /// Return whether every actionable host-run queue surface can auto-route.
+    pub fn host_run_queue_is_auto_routable(&self) -> bool {
+        self.host_run_queue_requires_action()
+            && (!self.host_run_queue_has_health_dashboard_action()
+                || self.health_dashboard_queue_key_is_auto_routable())
+            && (!self.host_run_queue_has_host_decision_action()
+                || self.host_decision_queue_key_is_auto_routable())
+    }
+
+    /// Return whether any host-run queue surface needs manual review.
+    pub fn host_run_queue_requires_manual_review(&self) -> bool {
+        self.health_dashboard_queue_key_requires_manual_review()
+            || self.host_decision_queue_key_requires_manual_review()
+    }
+
+    /// Return whether any host-run queue surface needs investigation.
+    pub fn host_run_queue_requires_investigation(&self) -> bool {
+        self.health_dashboard_queue_key_requires_investigation()
+            || self.host_decision_queue_key_requires_investigation()
+    }
+
+    /// Return whether host-run queue investigation is for host-log integrity.
+    pub fn host_run_queue_requires_integrity_investigation(&self) -> bool {
+        self.host_decision_queue_key_requires_integrity_investigation()
+    }
+
+    /// Return whether any host-run queue surface needs triage.
+    pub fn host_run_queue_requires_triage(&self) -> bool {
+        self.health_dashboard_queue_key_requires_triage()
+            || self.host_decision_queue_key_requires_triage()
+    }
+
+    /// Return whether both host-run queue-key labels parse back to typed keys.
+    pub fn host_run_queue_key_labels_match(&self) -> bool {
+        self.health_dashboard_queue_key_label_matches_key()
+            && self.host_decision_queue_key_label_matches_key()
+    }
+
+    /// Return whether both host-run queue keys match their typed classifiers.
+    pub fn host_run_queue_key_parts_match(&self) -> bool {
+        self.health_dashboard_queue_key_parts_match_dashboard()
+            && self.host_decision_queue_key_parts_match_decision()
+    }
+
+    /// Return whether any host-run queue-key component drifted.
+    pub fn has_host_run_queue_key_integrity_drift(&self) -> bool {
+        !self.host_run_queue_key_parts_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -4223,6 +4314,23 @@ impl ToolAuditSupervisorDrainRunReport {
             has_host_decision_label_integrity_drift: self.has_host_decision_label_integrity_drift(),
             host_routing_classifier_labels_match: self.host_routing_classifier_labels_match(),
             has_host_routing_label_integrity_drift: self.has_host_routing_label_integrity_drift(),
+            host_run_queue_has_health_dashboard_action: self
+                .host_run_queue_has_health_dashboard_action(),
+            host_run_queue_has_host_decision_action: self.host_run_queue_has_host_decision_action(),
+            host_run_queue_action_count: self.host_run_queue_action_count(),
+            host_run_queue_has_multiple_actions: self.host_run_queue_has_multiple_actions(),
+            host_run_queue_is_settled: self.host_run_queue_is_settled(),
+            host_run_queue_requires_action: self.host_run_queue_requires_action(),
+            host_run_queue_priority_rank: self.host_run_queue_priority_rank(),
+            host_run_queue_is_auto_routable: self.host_run_queue_is_auto_routable(),
+            host_run_queue_requires_manual_review: self.host_run_queue_requires_manual_review(),
+            host_run_queue_requires_investigation: self.host_run_queue_requires_investigation(),
+            host_run_queue_requires_integrity_investigation: self
+                .host_run_queue_requires_integrity_investigation(),
+            host_run_queue_requires_triage: self.host_run_queue_requires_triage(),
+            host_run_queue_key_labels_match: self.host_run_queue_key_labels_match(),
+            host_run_queue_key_parts_match: self.host_run_queue_key_parts_match(),
+            has_host_run_queue_key_integrity_drift: self.has_host_run_queue_key_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -5350,6 +5458,36 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_routing_classifier_labels_match: bool,
     /// Whether any host-routing classifier label drifted from its typed value.
     pub has_host_routing_label_integrity_drift: bool,
+    /// Whether the health dashboard contributes a host-run queue action.
+    pub host_run_queue_has_health_dashboard_action: bool,
+    /// Whether the host decision contributes a host-run queue action.
+    pub host_run_queue_has_host_decision_action: bool,
+    /// Number of host-run queue surfaces needing action.
+    pub host_run_queue_action_count: usize,
+    /// Whether multiple host-run queue surfaces need action.
+    pub host_run_queue_has_multiple_actions: bool,
+    /// Whether the host-run queue is fully settled.
+    pub host_run_queue_is_settled: bool,
+    /// Whether any host-run queue action is required.
+    pub host_run_queue_requires_action: bool,
+    /// Highest sortable priority rank across host-run queue surfaces.
+    pub host_run_queue_priority_rank: u8,
+    /// Whether every actionable host-run queue surface can auto-route.
+    pub host_run_queue_is_auto_routable: bool,
+    /// Whether any host-run queue surface needs manual review.
+    pub host_run_queue_requires_manual_review: bool,
+    /// Whether any host-run queue surface needs investigation.
+    pub host_run_queue_requires_investigation: bool,
+    /// Whether host-run queue investigation is for host-log integrity.
+    pub host_run_queue_requires_integrity_investigation: bool,
+    /// Whether any host-run queue surface needs triage.
+    pub host_run_queue_requires_triage: bool,
+    /// Whether both host-run queue-key labels parse back to typed keys.
+    pub host_run_queue_key_labels_match: bool,
+    /// Whether both host-run queue keys match their typed classifiers.
+    pub host_run_queue_key_parts_match: bool,
+    /// Whether any host-run queue-key component drifted.
+    pub has_host_run_queue_key_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -7144,6 +7282,81 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any host-routing classifier label drifted from its typed value.
     pub fn has_host_routing_label_integrity_drift(&self) -> bool {
         self.has_host_routing_label_integrity_drift
+    }
+
+    /// Return whether the health dashboard contributes a host-run queue action.
+    pub fn host_run_queue_has_health_dashboard_action(&self) -> bool {
+        self.host_run_queue_has_health_dashboard_action
+    }
+
+    /// Return whether the host decision contributes a host-run queue action.
+    pub fn host_run_queue_has_host_decision_action(&self) -> bool {
+        self.host_run_queue_has_host_decision_action
+    }
+
+    /// Return how many host-run queue surfaces need action.
+    pub fn host_run_queue_action_count(&self) -> usize {
+        self.host_run_queue_action_count
+    }
+
+    /// Return whether multiple host-run queue surfaces need action.
+    pub fn host_run_queue_has_multiple_actions(&self) -> bool {
+        self.host_run_queue_has_multiple_actions
+    }
+
+    /// Return whether the host-run queue is fully settled.
+    pub fn host_run_queue_is_settled(&self) -> bool {
+        self.host_run_queue_is_settled
+    }
+
+    /// Return whether any host-run queue action is required.
+    pub fn host_run_queue_requires_action(&self) -> bool {
+        self.host_run_queue_requires_action
+    }
+
+    /// Return the highest sortable priority rank across host-run queue surfaces.
+    pub fn host_run_queue_priority_rank(&self) -> u8 {
+        self.host_run_queue_priority_rank
+    }
+
+    /// Return whether every actionable host-run queue surface can auto-route.
+    pub fn host_run_queue_is_auto_routable(&self) -> bool {
+        self.host_run_queue_is_auto_routable
+    }
+
+    /// Return whether any host-run queue surface needs manual review.
+    pub fn host_run_queue_requires_manual_review(&self) -> bool {
+        self.host_run_queue_requires_manual_review
+    }
+
+    /// Return whether any host-run queue surface needs investigation.
+    pub fn host_run_queue_requires_investigation(&self) -> bool {
+        self.host_run_queue_requires_investigation
+    }
+
+    /// Return whether host-run queue investigation is for host-log integrity.
+    pub fn host_run_queue_requires_integrity_investigation(&self) -> bool {
+        self.host_run_queue_requires_integrity_investigation
+    }
+
+    /// Return whether any host-run queue surface needs triage.
+    pub fn host_run_queue_requires_triage(&self) -> bool {
+        self.host_run_queue_requires_triage
+    }
+
+    /// Return whether both host-run queue-key labels parse back to typed keys.
+    pub fn host_run_queue_key_labels_match(&self) -> bool {
+        self.host_run_queue_key_labels_match
+    }
+
+    /// Return whether both host-run queue keys match their typed classifiers.
+    pub fn host_run_queue_key_parts_match(&self) -> bool {
+        self.host_run_queue_key_parts_match
+    }
+
+    /// Return whether any host-run queue-key component drifted.
+    pub fn has_host_run_queue_key_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_key_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -16843,6 +17056,118 @@ mod tests {
         assert!(!stale_attention_summary.host_attention_label_matches_kind());
         assert!(!stale_attention_summary.host_routing_classifier_labels_match());
         assert!(stale_attention_summary.has_host_routing_label_integrity_drift());
+    }
+
+    #[test]
+    fn supervisor_drain_summary_flattens_host_run_queue_rollups() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+
+        assert!(!idle_report.host_run_queue_has_health_dashboard_action());
+        assert!(!idle_report.host_run_queue_has_host_decision_action());
+        assert_eq!(idle_report.host_run_queue_action_count(), 0);
+        assert!(!idle_report.host_run_queue_has_multiple_actions());
+        assert!(idle_report.host_run_queue_is_settled());
+        assert!(!idle_report.host_run_queue_requires_action());
+        assert_eq!(idle_report.host_run_queue_priority_rank(), 0);
+        assert!(!idle_report.host_run_queue_is_auto_routable());
+        assert!(!idle_report.host_run_queue_requires_manual_review());
+        assert!(!idle_report.host_run_queue_requires_investigation());
+        assert!(!idle_report.host_run_queue_requires_integrity_investigation());
+        assert!(!idle_report.host_run_queue_requires_triage());
+        assert!(idle_report.host_run_queue_key_labels_match());
+        assert!(idle_report.host_run_queue_key_parts_match());
+        assert!(!idle_report.has_host_run_queue_key_integrity_drift());
+
+        assert!(!idle_summary.host_run_queue_has_health_dashboard_action);
+        assert!(!idle_summary.host_run_queue_has_health_dashboard_action());
+        assert!(!idle_summary.host_run_queue_has_host_decision_action);
+        assert!(!idle_summary.host_run_queue_has_host_decision_action());
+        assert_eq!(idle_summary.host_run_queue_action_count, 0);
+        assert_eq!(idle_summary.host_run_queue_action_count(), 0);
+        assert!(!idle_summary.host_run_queue_has_multiple_actions);
+        assert!(!idle_summary.host_run_queue_has_multiple_actions());
+        assert!(idle_summary.host_run_queue_is_settled);
+        assert!(idle_summary.host_run_queue_is_settled());
+        assert!(!idle_summary.host_run_queue_requires_action);
+        assert!(!idle_summary.host_run_queue_requires_action());
+        assert_eq!(idle_summary.host_run_queue_priority_rank, 0);
+        assert_eq!(idle_summary.host_run_queue_priority_rank(), 0);
+        assert!(!idle_summary.host_run_queue_is_auto_routable);
+        assert!(!idle_summary.host_run_queue_is_auto_routable());
+        assert!(!idle_summary.host_run_queue_requires_manual_review);
+        assert!(!idle_summary.host_run_queue_requires_manual_review());
+        assert!(!idle_summary.host_run_queue_requires_investigation);
+        assert!(!idle_summary.host_run_queue_requires_investigation());
+        assert!(!idle_summary.host_run_queue_requires_integrity_investigation);
+        assert!(!idle_summary.host_run_queue_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_queue_requires_triage);
+        assert!(!idle_summary.host_run_queue_requires_triage());
+        assert!(idle_summary.host_run_queue_key_labels_match);
+        assert!(idle_summary.host_run_queue_key_labels_match());
+        assert!(idle_summary.host_run_queue_key_parts_match);
+        assert!(idle_summary.host_run_queue_key_parts_match());
+        assert!(!idle_summary.has_host_run_queue_key_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_key_integrity_drift());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+
+        assert!(continuation_report.host_run_queue_has_health_dashboard_action());
+        assert!(continuation_report.host_run_queue_has_host_decision_action());
+        assert_eq!(continuation_report.host_run_queue_action_count(), 2);
+        assert!(continuation_report.host_run_queue_has_multiple_actions());
+        assert!(!continuation_report.host_run_queue_is_settled());
+        assert!(continuation_report.host_run_queue_requires_action());
+        assert_eq!(continuation_report.host_run_queue_priority_rank(), 90);
+        assert!(!continuation_report.host_run_queue_is_auto_routable());
+        assert!(continuation_report.host_run_queue_requires_manual_review());
+        assert!(!continuation_report.host_run_queue_requires_investigation());
+        assert!(!continuation_report.host_run_queue_requires_integrity_investigation());
+        assert!(continuation_report.host_run_queue_requires_triage());
+        assert!(continuation_report.host_run_queue_key_labels_match());
+        assert!(continuation_report.host_run_queue_key_parts_match());
+        assert!(!continuation_report.has_host_run_queue_key_integrity_drift());
+
+        assert!(continuation_summary.host_run_queue_has_health_dashboard_action());
+        assert!(continuation_summary.host_run_queue_has_host_decision_action());
+        assert_eq!(continuation_summary.host_run_queue_action_count(), 2);
+        assert!(continuation_summary.host_run_queue_has_multiple_actions());
+        assert!(!continuation_summary.host_run_queue_is_settled());
+        assert!(continuation_summary.host_run_queue_requires_action());
+        assert_eq!(continuation_summary.host_run_queue_priority_rank(), 90);
+        assert!(!continuation_summary.host_run_queue_is_auto_routable());
+        assert!(continuation_summary.host_run_queue_requires_manual_review());
+        assert!(!continuation_summary.host_run_queue_requires_investigation());
+        assert!(!continuation_summary.host_run_queue_requires_integrity_investigation());
+        assert!(continuation_summary.host_run_queue_requires_triage());
+        assert!(continuation_summary.host_run_queue_key_labels_match());
+        assert!(continuation_summary.host_run_queue_key_parts_match());
+        assert!(!continuation_summary.has_host_run_queue_key_integrity_drift());
+
+        let mut drift_summary = idle_summary;
+        drift_summary.host_decision_queue_key_parts_match_decision = false;
+        drift_summary.has_host_decision_queue_key_integrity_drift = true;
+        drift_summary.host_run_queue_key_parts_match = false;
+        drift_summary.has_host_run_queue_key_integrity_drift = true;
+        assert!(drift_summary.host_run_queue_key_labels_match());
+        assert!(!drift_summary.host_run_queue_key_parts_match());
+        assert!(drift_summary.has_host_run_queue_key_integrity_drift());
     }
 
     #[test]
