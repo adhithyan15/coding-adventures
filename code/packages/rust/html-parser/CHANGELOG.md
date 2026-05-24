@@ -208,6 +208,9 @@ documented in this file.
   embedded resource metadata for frames, objects, embeds, media, and images,
   including resolved source URLs, resource kind, type hints, media attributes,
   and authored dimensions for fetch and layout planning.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  media playback metadata for `audio` and `video`, including playback flags,
+  and preload/poster fields.
 - Browser-facing table summaries and tree projections now carry table layout and
   accessibility metadata, including effective column counts, column hints,
   row-group identity, column and cell spans, header associations, scopes, and

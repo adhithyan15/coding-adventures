@@ -598,8 +598,54 @@
         "children": [
           { "role": "frame", "name": "iframe", "title": "Frame", "text": null, "href": null, "src": "frame.html", "resolved_src": "https://example.test/media/frame.html", "alt": null, "resource_kind": "frame", "width": "320", "height": "200", "control_type": null, "children": [] },
           { "role": "object", "name": "object", "text": null, "href": null, "src": "movie.swf", "resolved_src": "https://example.test/media/movie.swf", "alt": null, "resource_kind": "object", "width": "400", "height": "300", "type_hint": "application/x-shockwave-flash", "control_type": null, "children": [] },
-          { "role": "media", "name": "video", "text": null, "href": null, "src": "movie.mp4", "resolved_src": "https://example.test/media/movie.mp4", "alt": null, "resource_kind": "video", "width": "640", "height": "360", "control_type": null, "children": [] },
+          { "role": "media", "name": "video", "text": null, "href": null, "src": "movie.mp4", "resolved_src": "https://example.test/media/movie.mp4", "alt": null, "resource_kind": "video", "width": "640", "height": "360", "controls": true, "control_type": null, "children": [] },
           { "role": "embed", "name": "embed", "text": null, "href": null, "src": "legacy.mov", "resolved_src": "https://example.test/media/legacy.mov", "alt": null, "resource_kind": "embed", "width": "160", "height": "120", "type_hint": "video/quicktime", "control_type": null, "children": [] }
+        ]
+      }
+    },
+    {
+      "id": "media-playback-nodes",
+      "description": "Media content nodes keep playback attributes and resolved poster URLs.",
+      "input": "<base href=\"https://example.test/watch/index.html\"><body><video id=hero src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline preload=metadata width=640 height=360></video><audio src=theme.ogg controls preload=none></audio>",
+      "expected": {
+        "children": [
+          {
+            "role": "media",
+            "name": "video",
+            "id": "hero",
+            "text": null,
+            "href": null,
+            "src": "movie.mp4",
+            "resolved_src": "https://example.test/watch/movie.mp4",
+            "alt": null,
+            "resource_kind": "video",
+            "width": "640",
+            "height": "360",
+            "poster": "poster.jpg",
+            "resolved_poster": "https://example.test/watch/poster.jpg",
+            "preload": "metadata",
+            "controls": true,
+            "autoplay": true,
+            "loop_media": true,
+            "muted": true,
+            "playsinline": true,
+            "control_type": null,
+            "children": []
+          },
+          {
+            "role": "media",
+            "name": "audio",
+            "text": null,
+            "href": null,
+            "src": "theme.ogg",
+            "resolved_src": "https://example.test/watch/theme.ogg",
+            "alt": null,
+            "resource_kind": "audio",
+            "preload": "none",
+            "controls": true,
+            "control_type": null,
+            "children": []
+          }
         ]
       }
     }

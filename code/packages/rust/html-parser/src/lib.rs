@@ -831,6 +831,7 @@ pub struct BrowserDocument {
     pub headings: Vec<BrowserHeading>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
+    pub media: Vec<BrowserMedia>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
 }
@@ -891,6 +892,14 @@ pub struct BrowserContentNode {
     pub height: Option<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub preload: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
     pub control_type: Option<String>,
     pub form_owner: Option<String>,
     pub label_for: Option<String>,
@@ -954,6 +963,14 @@ pub struct BrowserRenderNode {
     pub height: Option<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub preload: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
     pub control_type: Option<String>,
     pub form_owner: Option<String>,
     pub label_for: Option<String>,
@@ -1015,6 +1032,23 @@ pub struct BrowserImage {
     pub alt: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMedia {
+    pub kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
+    pub preload: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1173,6 +1207,14 @@ impl BrowserRenderNode {
             height: content_node.height.clone(),
             type_hint: content_node.type_hint.clone(),
             media: content_node.media.clone(),
+            poster: content_node.poster.clone(),
+            resolved_poster: content_node.resolved_poster.clone(),
+            preload: content_node.preload.clone(),
+            controls: content_node.controls,
+            autoplay: content_node.autoplay,
+            loop_media: content_node.loop_media,
+            muted: content_node.muted,
+            playsinline: content_node.playsinline,
             control_type: content_node.control_type.clone(),
             form_owner: content_node.form_owner.clone(),
             label_for: content_node.label_for.clone(),
@@ -8154,6 +8196,9 @@ fn collect_browser_facts(
                 width: element.attribute("width").map(ToOwned::to_owned),
                 height: element.attribute("height").map(ToOwned::to_owned),
             }),
+            "audio" | "video" => summary
+                .media
+                .push(browser_media_element(element, summary.base_href.as_deref())),
             "form" => summary.forms.push(BrowserForm {
                 action: element.attribute("action").map(ToOwned::to_owned),
                 resolved_action: element
@@ -8507,6 +8552,14 @@ fn collect_browser_content_nodes_with_mode(
                         height: None,
                         type_hint: None,
                         media: None,
+                        poster: None,
+                        resolved_poster: None,
+                        preload: None,
+                        controls: false,
+                        autoplay: false,
+                        loop_media: false,
+                        muted: false,
+                        playsinline: false,
                         control_type: None,
                         form_owner: None,
                         label_for: None,
@@ -8600,6 +8653,7 @@ fn browser_content_node_for_element(
 
     let href = element.attribute("href").map(ToOwned::to_owned);
     let src = browser_content_src(element);
+    let poster = browser_media_poster(element);
     let quote_cite = browser_quote_cite(element);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let accessible_name = browser_accessible_name(element, role, &control_labels);
@@ -8630,6 +8684,16 @@ fn browser_content_node_for_element(
         height: element.attribute("height").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
+        resolved_poster: poster
+            .as_deref()
+            .and_then(|poster| resolve_browser_url(poster, base_href)),
+        poster,
+        preload: browser_media_preload(element),
+        controls: browser_media_controls(element),
+        autoplay: browser_media_autoplay(element),
+        loop_media: browser_media_loop(element),
+        muted: browser_media_muted(element),
+        playsinline: browser_media_playsinline(element),
         control_type: browser_content_control_type(element),
         form_owner: browser_form_owner(element),
         label_for: browser_label_for(element),
@@ -8775,6 +8839,68 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "canvas" => Some("canvas".to_string()),
         _ => None,
     }
+}
+
+fn browser_media_element(element: &Element, base_href: Option<&str>) -> BrowserMedia {
+    let src = element.attribute("src").map(ToOwned::to_owned);
+    let poster = browser_media_poster(element);
+    BrowserMedia {
+        kind: element.name.clone(),
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        resolved_poster: poster
+            .as_deref()
+            .and_then(|poster| resolve_browser_url(poster, base_href)),
+        poster,
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        controls: browser_media_controls(element),
+        autoplay: browser_media_autoplay(element),
+        loop_media: browser_media_loop(element),
+        muted: browser_media_muted(element),
+        playsinline: browser_media_playsinline(element),
+        preload: browser_media_preload(element),
+    }
+}
+
+fn browser_media_poster(element: &Element) -> Option<String> {
+    if element.name == "video" {
+        element.attribute("poster").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_preload(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "audio" | "video") {
+        element.attribute("preload").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_controls(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("controls").is_some()
+}
+
+fn browser_media_autoplay(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("autoplay").is_some()
+}
+
+fn browser_media_loop(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("loop").is_some()
+}
+
+fn browser_media_muted(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("muted").is_some()
+}
+
+fn browser_media_playsinline(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video")
+        && (element.attribute("playsinline").is_some()
+            || element.attribute("webkit-playsinline").is_some())
 }
 
 fn browser_table_section_kind(element: &Element) -> Option<String> {
@@ -9814,6 +9940,51 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_media_metadata_tracks_playback_and_poster_state() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\">\
+             <video id=hero src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline preload=metadata width=640 height=360></video>\
+             <audio src=theme.ogg controls preload=none></audio>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let video = &summary.media[0];
+        assert_eq!(video.kind, "video");
+        assert_eq!(
+            video.resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.mp4")
+        );
+        assert_eq!(
+            video.resolved_poster.as_deref(),
+            Some("https://example.test/watch/poster.jpg")
+        );
+        assert_eq!(video.width.as_deref(), Some("640"));
+        assert!(video.controls);
+        assert!(video.autoplay);
+        assert!(video.loop_media);
+        assert!(video.muted);
+        assert!(video.playsinline);
+        assert_eq!(video.preload.as_deref(), Some("metadata"));
+        assert_eq!(summary.media[1].kind, "audio");
+        assert_eq!(summary.media[1].preload.as_deref(), Some("none"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let media = &content_tree.children[0];
+        assert_eq!(media.role, "media");
+        assert_eq!(media.poster.as_deref(), Some("poster.jpg"));
+        assert_eq!(
+            media.resolved_poster.as_deref(),
+            Some("https://example.test/watch/poster.jpg")
+        );
+        assert!(media.controls);
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline-replaced");
+        assert!(render_tree.children[0].controls);
     }
 
     #[test]

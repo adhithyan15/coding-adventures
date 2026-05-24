@@ -239,6 +239,7 @@ def check_browser_readiness_case(
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "media", errors)
     require_object_list(f"{case_path}.expected", expected, "forms", errors)
     require_object_list(f"{case_path}.expected", expected, "tables", errors)
     check_browser_expected_lists(case_path, expected, errors)
@@ -286,6 +287,22 @@ def check_browser_expected_lists(
         image_path = f"{case_path}.expected.images[{index}]"
         for field in ("src", "resolved_src", "alt", "width", "height"):
             require_optional_nullable_string(image_path, image, field, errors)
+
+    for index, media in enumerate(object_list_items(expected, "media")):
+        media_path = f"{case_path}.expected.media[{index}]"
+        require_string(media_path, media, "kind", errors)
+        for field in (
+            "src",
+            "resolved_src",
+            "poster",
+            "resolved_poster",
+            "width",
+            "height",
+            "preload",
+        ):
+            require_optional_nullable_string(media_path, media, field, errors)
+        for field in ("controls", "autoplay", "loop_media", "muted", "playsinline"):
+            require_optional_boolean(media_path, media, field, errors)
 
     for index, form in enumerate(object_list_items(expected, "forms")):
         form_path = f"{case_path}.expected.forms[{index}]"
@@ -380,6 +397,9 @@ def check_browser_content_node(
         "height",
         "type_hint",
         "media",
+        "poster",
+        "resolved_poster",
+        "preload",
         "control_type",
         "form_owner",
         "label_for",
@@ -416,6 +436,11 @@ def check_browser_content_node(
         "checked",
         "selected",
         "multiple",
+        "controls",
+        "autoplay",
+        "loop_media",
+        "muted",
+        "playsinline",
         "list_reversed",
     ):
         require_optional_boolean(node_path, node, field, errors)
@@ -480,6 +505,9 @@ def check_browser_render_node(
         "height",
         "type_hint",
         "media",
+        "poster",
+        "resolved_poster",
+        "preload",
         "control_type",
         "form_owner",
         "label_for",
@@ -516,6 +544,11 @@ def check_browser_render_node(
         "checked",
         "selected",
         "multiple",
+        "controls",
+        "autoplay",
+        "loop_media",
+        "muted",
+        "playsinline",
         "list_reversed",
     ):
         require_optional_boolean(node_path, node, field, errors)
@@ -673,6 +706,16 @@ def require_object_list(
     value = data.get(field)
     if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
         errors.append(f"{path}.{field} must be a list of objects")
+
+
+def require_optional_object_list(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    if field in data:
+        require_object_list(path, data, field, errors)
 
 
 def object_list_items(data: dict[str, Any], field: str) -> list[dict[str, Any]]:

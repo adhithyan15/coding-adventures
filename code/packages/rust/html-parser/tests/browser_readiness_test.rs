@@ -1,6 +1,7 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserForm, BrowserFormControl,
-    BrowserHeading, BrowserImage, BrowserLink, BrowserMeta, BrowserResource, BrowserTable,
+    BrowserHeading, BrowserImage, BrowserLink, BrowserMedia, BrowserMeta, BrowserResource,
+    BrowserTable,
 };
 use serde::Deserialize;
 
@@ -44,6 +45,8 @@ struct ExpectedBrowserDocument {
     headings: Vec<ExpectedHeading>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
+    #[serde(default)]
+    media: Vec<ExpectedMedia>,
     forms: Vec<ExpectedForm>,
     tables: Vec<ExpectedTable>,
 }
@@ -105,6 +108,34 @@ struct ExpectedImage {
     alt: Option<String>,
     width: Option<String>,
     height: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedMedia {
+    kind: String,
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    poster: Option<String>,
+    #[serde(default)]
+    resolved_poster: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    controls: bool,
+    #[serde(default)]
+    autoplay: bool,
+    #[serde(default)]
+    loop_media: bool,
+    #[serde(default)]
+    muted: bool,
+    #[serde(default)]
+    playsinline: bool,
+    #[serde(default)]
+    preload: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -223,6 +254,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedImage::into_browser_image)
                 .collect(),
+            media: self
+                .media
+                .into_iter()
+                .map(ExpectedMedia::into_browser_media)
+                .collect(),
             forms: self
                 .forms
                 .into_iter()
@@ -308,6 +344,26 @@ impl ExpectedImage {
             alt: self.alt,
             width: self.width,
             height: self.height,
+        }
+    }
+}
+
+impl ExpectedMedia {
+    fn into_browser_media(self) -> BrowserMedia {
+        BrowserMedia {
+            kind: self.kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            poster: self.poster,
+            resolved_poster: self.resolved_poster,
+            width: self.width,
+            height: self.height,
+            controls: self.controls,
+            autoplay: self.autoplay,
+            loop_media: self.loop_media,
+            muted: self.muted,
+            playsinline: self.playsinline,
+            preload: self.preload,
         }
     }
 }

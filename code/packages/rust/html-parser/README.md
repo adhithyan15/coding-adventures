@@ -81,6 +81,8 @@ The current parser surface includes:
 - browser-facing embedded resource metadata for replaced content such as
   `iframe`, `object`, `embed`, `audio`, and `video`, including resolved source
   URLs, resource kind, type hints, media attributes, and authored dimensions
+- browser-facing media playback metadata for `audio` and `video`, including
+  playback flags and preload/poster fields
 - browser-facing table layout and accessibility metadata, including effective
   column counts, column hints, row-group identity, column spans, cell spans,
   header associations, scopes, and abbreviated header labels
