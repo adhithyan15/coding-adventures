@@ -201,6 +201,10 @@ transport state without rebuilding snapshot policy.
 transport marker records with Rust-owned marker names, labels, queue-depth
 metadata, and messages, so frontends can correlate handoff and adapter-event
 boundaries without rebuilding checkpoint policy.
+`input_callback_transport_cursor_summary` points at those markers as stable
+transport cursor records with Rust-owned cursor names, labels, queue-depth
+metadata, and messages, so frontends can resume marked transport views without
+rebuilding marker policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
