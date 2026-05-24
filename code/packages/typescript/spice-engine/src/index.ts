@@ -2,6 +2,7 @@ const PIVOT_EPSILON = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD = 30;
 const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
+const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 
 export type Element =
   | Resistor
@@ -2115,15 +2116,16 @@ export function noiseAc(
   const nodeCount = nodeIndices.size;
   const matrixSize = nodeCount + voltageSources.size;
   const outputIndex = nodeIndex(nodeIndices, outputNode);
-  const noiseSources = collectNoiseSources(
-    circuit,
-    nodeIndices,
-    temperatureKelvin,
-  );
   const operatingPoint = solveDcOperatingPointForSmallSignal(
     circuit,
     nodeIndices,
     voltageSources,
+  );
+  const noiseSources = collectNoiseSources(
+    circuit,
+    nodeIndices,
+    operatingPoint,
+    temperatureKelvin,
   );
 
   const points = frequenciesHz.map((frequencyHz) => {
@@ -4749,23 +4751,49 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
 function collectNoiseSources(
   circuit: Circuit,
   nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
   temperatureKelvin: number,
 ): NoiseSource[] {
   const sources: NoiseSource[] = [];
   for (const element of circuit.elements()) {
-    if (element.kind !== "resistor") {
-      continue;
+    if (element.kind === "resistor") {
+      if (!Number.isFinite(element.resistanceOhms) || element.resistanceOhms <= 0) {
+        throw invalidElement(element.name, "resistance must be finite and positive");
+      }
+      sources.push({
+        elementName: element.name,
+        noiseType: "thermal",
+        positive: nodeIndex(nodeIndices, element.n1),
+        negative: nodeIndex(nodeIndices, element.n2),
+        sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.resistanceOhms,
+      });
+    } else if (element.kind === "mosfet") {
+      validateMosfet(element);
+      const drain = nodeIndex(nodeIndices, element.drain);
+      const gate = nodeIndex(nodeIndices, element.gate);
+      const source = nodeIndex(nodeIndices, element.source);
+      const body = nodeIndex(nodeIndices, element.body);
+      const drainVoltage = vectorVoltage(operatingPoint, drain);
+      const gateVoltage = vectorVoltage(operatingPoint, gate);
+      const sourceVoltage = vectorVoltage(operatingPoint, source);
+      const bodyVoltage = vectorVoltage(operatingPoint, body);
+      const result = evaluateMosfetLevel1(
+        element,
+        gateVoltage - sourceVoltage,
+        drainVoltage - sourceVoltage,
+        bodyVoltage - sourceVoltage,
+      );
+      const gm = Math.max(0.0, result.gm);
+      if (gm > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "thermal",
+          positive: drain,
+          negative: source,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * MOSFET_CHANNEL_NOISE_GAMMA * gm,
+        });
+      }
     }
-    if (!Number.isFinite(element.resistanceOhms) || element.resistanceOhms <= 0) {
-      throw invalidElement(element.name, "resistance must be finite and positive");
-    }
-    sources.push({
-      elementName: element.name,
-      noiseType: "thermal",
-      positive: nodeIndex(nodeIndices, element.n1),
-      negative: nodeIndex(nodeIndices, element.n2),
-      sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.resistanceOhms,
-    });
   }
   return sources;
 }

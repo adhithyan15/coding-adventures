@@ -1,9 +1,10 @@
 use spice_engine::{
-    noise_ac, noise_ac_default, Capacitor, Circuit, CurrentSource, Element, NoiseType, Resistor,
-    SpiceError, VoltageSource,
+    noise_ac, noise_ac_default, Capacitor, Circuit, CurrentSource, Element, Mosfet,
+    MosfetLevel1Params, MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
 };
 
 const BOLTZMANN: f64 = 1.380_649e-23;
+const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 
 fn assert_close(actual: f64, expected: f64, tolerance: f64) {
     assert!(
@@ -96,6 +97,56 @@ fn noise_ac_rc_low_pass_rolls_off_with_frequency() {
     assert!(at_corner > high, "corner={at_corner}, high={high}");
     assert!((at_corner - low / 2.0).abs() < low * 0.05);
     assert!(high < low * 1.0e-4, "high={high}, low={low}");
+}
+
+#[test]
+fn noise_ac_includes_mosfet_channel_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 3.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    circuit.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            vt0: 1.0,
+            kp: 1.0e-3,
+            lambda: 0.0,
+            gamma: 0.0,
+            w: 1.0,
+            l: 1.0,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let point = &noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0)
+        .unwrap()
+        .points[0];
+    let entry = point
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "M1")
+        .expect("missing MOSFET channel noise entry");
+    let gm = 1.0e-3 * (3.0 - 1.0);
+    let expected_source_psd = 4.0 * BOLTZMANN * 300.0 * MOSFET_CHANNEL_NOISE_GAMMA * gm;
+
+    assert_eq!(entry.noise_type, NoiseType::Thermal);
+    assert_close(entry.source_psd, expected_source_psd, 1.0e-32);
+    assert_close(
+        entry.output_psd,
+        expected_source_psd * 1_000.0_f64.powi(2),
+        1.0e-27,
+    );
 }
 
 #[test]

@@ -6254,7 +6254,8 @@ def mc_dc(
 #   Diode       : S_i = 2q|I_D|, current noise anode → cathode
 #   BJT         : S_i = 2q|I_C|, current noise base → emitter (collector
 #                 junction — approximated as proportional to I_C)
-#   All others (Capacitor, Inductor, VoltageSource, CurrentSource, Mosfet):
+#   Mosfet      : S_i = 4kTγgm, channel thermal noise drain → source
+#   All others (Capacitor, Inductor, VoltageSource, CurrentSource):
 #                 treated as noiseless in this model
 #
 # The adjoint method — computing all contributions in one solve
@@ -6313,6 +6314,7 @@ def mc_dc(
 # Physical constants used in noise calculations.
 _BOLTZMANN: float = 1.380649e-23  # Boltzmann constant [J/K]
 _ELECTRON_CHARGE: float = 1.602176634e-19  # Electron charge [C]
+_MOSFET_CHANNEL_NOISE_GAMMA: float = 2.0 / 3.0
 
 
 @dataclass(frozen=True)
@@ -6324,11 +6326,13 @@ class NoiseEntry:
     element_name : str
         Name of the circuit element generating this noise.
     noise_type : str
-        ``"thermal"`` (Johnson-Nyquist noise, for resistors) or
+        ``"thermal"`` (Johnson-Nyquist noise, for resistors and MOSFET
+        channel noise) or
         ``"shot"`` (Poisson/shot noise, for diodes and BJTs).
     source_psd : float
         Noise current power spectral density at the source itself, in A²/Hz.
-        For resistors: ``4kT/R``.  For diodes/BJTs: ``2q|I_DC|``.
+        For resistors: ``4kT/R``.  For MOSFETs: ``4kTγgm``.  For
+        diodes/BJTs: ``2q|I_DC|``.
     output_psd : float
         Contribution to the output voltage noise spectral density, in V²/Hz.
         Computed as ``|H_k(jω)|² × source_psd`` where ``H_k`` is the transfer
@@ -6474,8 +6478,22 @@ def _collect_noise_sources(
             n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]
             sources.append((el.name, "shot", n_b, n_e, psd))
 
-        # Capacitors, Inductors, VoltageSources, CurrentSources, MOSFETs:
-        # noiseless in this first-order model.
+        elif isinstance(el, Mosfet):
+            # Long-channel MOSFET channel thermal noise: S_i = 4kTγgm.
+            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
+            r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
+            gm = max(0.0, float(r.gm))
+            if gm > 0.0:
+                psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
+                n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
+                n_s = None if _is_ground(el.source) else node_to_idx[el.source]
+                sources.append((el.name, "thermal", n_d, n_s, psd))
+
+        # Capacitors, Inductors, VoltageSources, CurrentSources: noiseless in
+        # this first-order model.
 
     return sources
 
@@ -6493,10 +6511,10 @@ def noise_ac(
     """Small-signal noise analysis (the SPICE .NOISE analysis).
 
     Computes the voltage noise power spectral density (PSD) at ``output_node``
-    due to thermal noise (Johnson-Nyquist) in resistors and shot noise in
-    diodes and BJTs, at each frequency in ``freqs``.  Also reports the noise
-    referred back to ``input_source`` so you can compare it directly to your
-    signal level.
+    due to thermal noise (Johnson-Nyquist) in resistors, MOSFET channel
+    thermal noise, and shot noise in diodes and BJTs, at each frequency in
+    ``freqs``.  Also reports the noise referred back to ``input_source`` so
+    you can compare it directly to your signal level.
 
     Algorithm
     ---------
@@ -6550,8 +6568,9 @@ def noise_ac(
 
     Notes
     -----
-    - Noiseless elements: Capacitor, Inductor, VoltageSource, CurrentSource,
-      Mosfet.  Extending to MOSFET channel noise (``4kT γ gm``) is future work.
+    - MOSFET channel noise uses the long-channel thermal approximation
+      ``4kT γ gm`` with ``γ = 2/3``.
+    - Noiseless elements: Capacitor, Inductor, VoltageSource, CurrentSource.
     - If the AC matrix is singular at a frequency, that point's PSDs are 0.0.
     - Output PSD in V²/Hz; take ``math.sqrt(pt.output_psd)`` for V/√Hz density.
 

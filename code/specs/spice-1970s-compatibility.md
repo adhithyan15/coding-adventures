@@ -30,8 +30,9 @@ Historical references:
 The repo already has the essential solver spine:
 
 - MNA-based DC operating point with Newton-Raphson.
-- DC source sweep, transfer function, sensitivity, Monte Carlo, noise, AC
-  sweep, transient analysis, and recent PSS footholds.
+- DC source sweep, transfer function, sensitivity, Monte Carlo, noise
+  including MOSFET channel thermal noise, AC sweep, transient analysis, and
+  recent PSS footholds.
 - R, C, L, independent V/I sources, all four dependent sources, diode, BJT,
   MOSFET, behavioral sources, subcircuits, and sparse real solve support.
 - Python, TypeScript, and Rust `spice-engine` packages.

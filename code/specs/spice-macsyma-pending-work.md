@@ -186,7 +186,7 @@ files.
 | v0.6.0 | #2353 | DC parameter sweep (`.DC`) |
 | v0.7.0 | #2357 | DC sensitivity analysis (`.SENS`) — ∂V/∂P per element |
 | v0.8.0 | #2359 | Monte Carlo (`.MC`) — Gaussian + uniform tolerance distributions |
-| v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist + shot noise, adjoint method |
+| v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist, MOSFET channel thermal, and shot noise; adjoint method |
 
 **Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `VoltageSource`,
 `CurrentSource`, `BSource`, `Diode`, `Mosfet`, `BJT`
