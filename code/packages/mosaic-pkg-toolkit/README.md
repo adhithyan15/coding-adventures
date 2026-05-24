@@ -68,6 +68,8 @@ for the architecture, component catalog, and phasing plan.
 - **`DropdownMenu`** — toggle button + revealed item list. Host
   owns the open flag. Slots: `label`, `items: list<text>`, `open`.
   Emits: `onToggle`, `onSelect(index: number)`.
+- **`Navbar`** — top-of-page brand + HostLink row. Slots: `brand`,
+  `items: list<text>`, `active-index`. Emit: `onSelect(index)`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 
