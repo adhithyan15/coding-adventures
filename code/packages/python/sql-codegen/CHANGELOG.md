@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.40.0] - 2026-05-23
+
+### Fixed
+
+- ``ORDER BY <expr>`` with arbitrary expressions (``a+b``,
+  ``UPPER(name)``, ``CASE WHEN … END``, …) no longer raises
+  ``ValueError: tuple.index(x): x not in tuple`` at SortResult time.
+
+  The hidden-column injection pass in ``_compile_read`` previously
+  short-circuited when the planner sort key's display name was ``"?"``
+  (the fallback for un-named expressions), so the VM ended up looking
+  up a non-existent ``"?"`` column in the result schema.  The pass now
+  recognises the expression case: each ``"?"``-named sort key is
+  projected as a hidden trailing column under a synthetic per-position
+  name (``__sortkey_0``, ``__sortkey_1``, …), and the corresponding
+  SortKey IR is rewritten to look up that synthetic name.
+  ``StripTrailingColumns`` removes the extras after the sort, so the
+  output shape is unchanged for the caller.
+
+  Position-local synthetic names are required because two ``ORDER BY``
+  terms with the same ``"?"`` display name would otherwise collide on
+  one hidden slot and silently sort by only the first expression.
+
 ## [1.39.0] - 2026-05-23
 
 ### Changed

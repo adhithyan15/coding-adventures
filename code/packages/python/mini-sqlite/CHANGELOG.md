@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.3.0] - 2026-05-23
+
+### Fixed
+
+- ``ORDER BY <expr>`` with arbitrary expressions (``ORDER BY a+b``,
+  ``ORDER BY UPPER(name)``, ``ORDER BY CASE WHEN … END``, …) now
+  matches SQLite row-for-row instead of raising
+  ``InternalError: unexpected error: ValueError: tuple.index(x): x not
+  in tuple``.  Root cause was in sql-codegen's hidden-column
+  injection pass — see sql-codegen CHANGELOG 1.40.0 for the full fix.
+
+  Also covers multiple expression sort keys (``ORDER BY a+1, b-1``),
+  mixed expression + column keys, and the ``LIMIT`` / ``OFFSET`` /
+  ``DISTINCT`` interactions on top.
+
 ## [2.2.0] - 2026-05-23
 
 ### Added

@@ -542,8 +542,12 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # This only applies when the inner plan is a Project.  For Aggregate and
     # set-operation plans the sort key is always an output column (the planner
     # enforces this), so no injection is needed.
-    hidden_col_names: list[str] = []
+    hidden_pairs: list[tuple[str, object]] = []  # (col_name, planner_expr)
     extended_schema: tuple[str, ...] | None = None
+    # Maps positions in ir_sort_keys that need rewriting to point at a
+    # synthetic hidden-column name (used for arbitrary-expression sort keys
+    # like ``ORDER BY a+b`` whose natural display name is "?").
+    expr_key_renames: dict[int, str] = {}
 
     if ir_sort_keys is not None and isinstance(cur, Project) and not any(
         isinstance(it.expr, Wildcard) for it in cur.items  # type: ignore[union-attr]
@@ -559,46 +563,80 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
         output_names: set[str] = {_projection_name(it) for it in cur.items}
         seen: set[str] = set()
 
-        for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
-            col = ir_sk.column
+        for i, (ir_sk, plan_sk) in enumerate(
+            zip(ir_sort_keys, planner_sort_keys or (), strict=False),
+        ):
             # Skip positional sort keys (ORDER BY N): they use column_idx for
             # direct index lookup and always refer to visible output columns —
             # no hidden-column injection needed or possible.
-            # Skip "?" (un-named expression sort keys) — can't inject by name.
-            # Skip columns already in the SELECT output — no injection needed.
-            # Skip duplicates (same hidden column in multiple ORDER BY terms).
-            if ir_sk.column_idx is not None or col == "?" or col in output_names or col in seen:
+            if ir_sk.column_idx is not None:
                 continue
-            if isinstance(plan_sk, PlanSortKey):
-                hidden_col_names.append(col)
+            if not isinstance(plan_sk, PlanSortKey):
+                continue
+            col = ir_sk.column
+            if col == "?":
+                # Expression sort key (``ORDER BY a+b``, ``UPPER(x)``,
+                # ``CASE …``, …): the planner expr has no natural display
+                # name, so we cannot look it up by name in the result
+                # schema.  Inject it as a hidden trailing column under a
+                # synthetic name unique to this sort position, then rewrite
+                # the corresponding SortKey IR to reference that name.
+                #
+                # A position-local synthetic name (``__sortkey_<N>``) is
+                # required because two ``ORDER BY`` terms with the same
+                # display name (``"?"``) would otherwise collide on the
+                # same hidden slot — sharing one column would silently
+                # change the sort to use only the first expression.
+                synth = f"__sortkey_{len(hidden_pairs)}"
+                expr_key_renames[i] = synth
+                hidden_pairs.append((synth, plan_sk.expr))
+            elif col not in output_names and col not in seen:
+                # Named column not in SELECT output: inject under its
+                # natural name.  De-dup by column name so multiple ORDER BY
+                # terms referencing the same hidden column share one slot.
+                hidden_pairs.append((col, plan_sk.expr))
                 seen.add(col)
 
-        if hidden_col_names:
+        if hidden_pairs:
             # Compute the original schema before extending the Project.
             orig_schema = tuple(_projection_name(it) for it in cur.items)
+            hidden_col_names = [n for n, _ in hidden_pairs]
             extended_schema = orig_schema + tuple(hidden_col_names)
 
             # Build new ProjectionItems using the original planner expressions
             # so _compile_expr generates the right LoadColumn instructions (with
             # the correct table alias / cursor id), not a generic cursor-0 load.
-            extra_items: list[object] = []
-            for col in hidden_col_names:
-                # Find the matching planner SortKey to get its expression.
-                for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
-                    if ir_sk.column == col and isinstance(plan_sk, PlanSortKey):
-                        extra_items.append(ProjectionItem(expr=plan_sk.expr, alias=col))
-                        break
+            extra_items: list[object] = [
+                ProjectionItem(expr=expr, alias=name)  # type: ignore[arg-type]
+                for name, expr in hidden_pairs
+            ]
 
             cur = Project(
                 input=cur.input,
                 items=cur.items + tuple(extra_items),  # type: ignore[arg-type]
             )
 
+            # Rewrite expression-key SortKey IRs to point at their synthetic
+            # hidden-column names, and replace the SortResult instruction in
+            # ``post`` with the rebuilt keys tuple.
+            if expr_key_renames:
+                from dataclasses import replace as _replace
+                ir_sort_keys = tuple(
+                    _replace(sk, column=expr_key_renames[idx])
+                    if idx in expr_key_renames
+                    else sk
+                    for idx, sk in enumerate(ir_sort_keys)
+                )
+                for j, ins in enumerate(post):
+                    if isinstance(ins, SortResult):
+                        post[j] = SortResult(keys=ir_sort_keys)
+                        break
+
             # Insert StripTrailingColumns immediately after SortResult in post.
             sort_idx = next(
                 i for i, ins in enumerate(post) if isinstance(ins, SortResult)
             )
-            post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_col_names)))
+            post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_pairs)))
 
     core = _compile_core(cur, ctx)
 
