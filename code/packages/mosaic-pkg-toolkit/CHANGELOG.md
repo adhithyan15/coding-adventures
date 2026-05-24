@@ -1,5 +1,25 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — v0.8 — Tabs
+
+### Added
+
+**`Tabs`** — Bootstrap's horizontal tab bar + single body panel.
+Composition: `Column[tabs] { Row[tabs-bar] { For headers
+HostButton[tabs-tab] }, Text[tabs-panel] (content: active-body) }`.
+Slots: `headers: list<text>`, `active-body`, `active-index`. Emit:
+`onSelect(index: number)`.
+
+Host owns the active-index → active-body mapping. Simpler than
+Accordion's parallel-bodies workaround since only one body renders
+at a time.
+
+### Tests
+
+`tests/package_compiles.rs` grew to 20 (was 19): one more interface
+test (`tabs_interface_matches_spec`) plus the new component
+in the `COMPONENTS` array. All pass.
+
 ## [Unreleased] — v0.7 — Accordion
 
 ### Added
