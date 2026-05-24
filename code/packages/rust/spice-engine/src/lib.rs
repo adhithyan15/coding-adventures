@@ -322,6 +322,8 @@ fn clone_subckt_element(
             element.saturation_current,
             element.forward_beta,
             element.thermal_voltage,
+            element.base_emitter_capacitance,
+            element.base_collector_capacitance,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -1241,6 +1243,8 @@ pub struct Bjt {
     pub saturation_current: f64,
     pub forward_beta: f64,
     pub thermal_voltage: f64,
+    pub base_emitter_capacitance: f64,
+    pub base_collector_capacitance: f64,
 }
 
 impl Bjt {
@@ -1259,6 +1263,8 @@ impl Bjt {
             1.0e-14,
             100.0,
             0.02585,
+            0.0,
+            0.0,
         )
     }
 
@@ -1271,6 +1277,8 @@ impl Bjt {
         saturation_current: f64,
         forward_beta: f64,
         thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -1281,6 +1289,8 @@ impl Bjt {
             saturation_current,
             forward_beta,
             thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
         }
     }
 }
@@ -4704,7 +4714,7 @@ fn build_ac_matrix(
                 stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
             }
             Element::Bjt(bjt) => {
-                stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point)?
+                stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point, omega)?
             }
             Element::Mosfet(mosfet) => {
                 stamp_ac_mosfet_small_signal(mosfet, node_indices, &mut matrix, operating_point)?
@@ -5440,6 +5450,7 @@ fn stamp_ac_bjt_small_signal(
     node_indices: &HashMap<String, usize>,
     matrix: &mut [Vec<Complex>],
     operating_point: &[f64],
+    omega: f64,
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
     let collector = node_index(node_indices, &bjt.collector);
@@ -5456,14 +5467,20 @@ fn stamp_ac_bjt_small_signal(
         bjt.saturation_current / bjt.thermal_voltage * exponent.exp(),
         0.0,
     );
-    let gpi = Complex::new(gm.real / bjt.forward_beta, 0.0);
+    let gpi = Complex::new(
+        gm.real / bjt.forward_beta,
+        omega * bjt.base_emitter_capacitance,
+    );
+    let ybc = Complex::new(0.0, omega * bjt.base_collector_capacitance);
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_complex_conductance(matrix, base, emitter, gpi);
+            stamp_complex_conductance(matrix, base, collector, ybc);
             stamp_complex_transconductance(matrix, collector, emitter, base, emitter, gm);
         }
         BjtPolarity::Pnp => {
             stamp_complex_conductance(matrix, emitter, base, gpi);
+            stamp_complex_conductance(matrix, base, collector, ybc);
             stamp_complex_transconductance(matrix, emitter, collector, emitter, base, gm);
         }
     }
@@ -5881,6 +5898,18 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "thermal voltage must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_emitter_capacitance.is_finite() || bjt.base_emitter_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.base_collector_capacitance.is_finite() || bjt.base_collector_capacitance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector capacitance must be finite and non-negative".to_string(),
         });
     }
     Ok(())

@@ -510,6 +510,10 @@ class BJT:
         Forward current gain hFE (default 100).
     Vt:
         Thermal voltage in Volts.  At 300 K, Vt = kT/q ≈ 25.85 mV.
+    Cje:
+        Base-emitter junction capacitance in Farads.
+    Cjc:
+        Base-collector junction capacitance in Farads.
     """
 
     name: str
@@ -520,6 +524,8 @@ class BJT:
     Is: float = 1e-14       # saturation current (A)
     beta_f: float = 100.0   # forward current gain hFE
     Vt: float = 0.02585     # thermal voltage (V) at ~300 K
+    Cje: float = 0.0        # base-emitter junction capacitance (F)
+    Cjc: float = 0.0        # base-collector junction capacitance (F)
 
 
 # ---------------------------------------------------------------------------

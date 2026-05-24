@@ -775,6 +775,16 @@ fn parse_element(
                 *model.params.get("IS").unwrap_or(&1.0e-14),
                 forward_beta,
                 *model.params.get("VT").unwrap_or(&0.02585),
+                *model
+                    .params
+                    .get("CJE")
+                    .or_else(|| model.params.get("CBE"))
+                    .unwrap_or(&0.0),
+                *model
+                    .params
+                    .get("CJC")
+                    .or_else(|| model.params.get("CBC"))
+                    .unwrap_or(&0.0),
             )))
         }
         'J' => {

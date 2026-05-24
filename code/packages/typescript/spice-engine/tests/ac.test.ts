@@ -4,6 +4,7 @@ import {
   SpiceError,
   acSweep,
   acSweepCorners,
+  bjt,
   capacitor,
   cccs,
   ccvs,
@@ -293,6 +294,23 @@ describe("acSweep", () => {
     expectClose(out!.real, -4.0);
     expectClose(out!.imag, 0.0);
     expectClose(complexAbs(points[0].voltage("vdd")!), 0.0);
+  });
+
+  it("uses BJT base-emitter capacitance in AC analysis", () => {
+    function baseAmplitude(baseEmitterCapacitance: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(resistor("Rc", "col", "0", 1_000.0));
+      circuit.add(bjt("Q1", "col", "base", "0", "NPN", 1.0e-14, 100.0, 0.02585, baseEmitterCapacitance));
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("base")!);
+    }
+
+    const withoutCapacitance = baseAmplitude(0.0);
+    const withCapacitance = baseAmplitude(1.0e-6);
+
+    expect(withoutCapacitance).toBeGreaterThan(0.9);
+    expect(withCapacitance).toBeLessThan(withoutCapacitance / 100.0);
   });
 
   it("applies VCVS gain in AC analysis", () => {

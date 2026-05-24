@@ -392,6 +392,8 @@ export interface Bjt {
   readonly saturationCurrent: number;
   readonly forwardBeta: number;
   readonly thermalVoltage: number;
+  readonly baseEmitterCapacitance: number;
+  readonly baseCollectorCapacitance: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -954,7 +956,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -1252,6 +1254,8 @@ export function bjt(
   saturationCurrent = 1.0e-14,
   forwardBeta = 100.0,
   thermalVoltage = 0.02585,
+  baseEmitterCapacitance = 0.0,
+  baseCollectorCapacitance = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -1263,6 +1267,8 @@ export function bjt(
     saturationCurrent,
     forwardBeta,
     thermalVoltage,
+    baseEmitterCapacitance,
+    baseCollectorCapacitance,
   };
 }
 
@@ -3933,7 +3939,7 @@ function buildAcMatrix(
         stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "bjt":
-        stampAcBjtSmallSignal(element, nodeIndices, matrix);
+        stampAcBjtSmallSignal(element, nodeIndices, matrix, omega);
         break;
       case "mosfet":
         stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
@@ -4880,6 +4886,12 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
     throw invalidElement(element.name, "thermal voltage must be finite and positive");
+  }
+  if (!Number.isFinite(element.baseEmitterCapacitance) || element.baseEmitterCapacitance < 0.0) {
+    throw invalidElement(element.name, "base-emitter capacitance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.baseCollectorCapacitance) || element.baseCollectorCapacitance < 0.0) {
+    throw invalidElement(element.name, "base-collector capacitance must be finite and non-negative");
   }
 }
 
@@ -6499,6 +6511,7 @@ function stampAcBjtSmallSignal(
   element: Bjt,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
+  omega: number,
 ): void {
   validateBjt(element);
   const collector = nodeIndex(nodeIndices, element.collector);
@@ -6506,13 +6519,19 @@ function stampAcBjtSmallSignal(
   const emitter = nodeIndex(nodeIndices, element.emitter);
   const transconductance = element.saturationCurrent / element.thermalVoltage;
   const junctionConductance = transconductance / element.forwardBeta;
+  const baseEmitterAdmittance = complex(
+    junctionConductance,
+    omega * element.baseEmitterCapacitance,
+  );
+  const baseCollectorAdmittance = complex(0.0, omega * element.baseCollectorCapacitance);
   if (element.polarity === "NPN") {
     stampComplexConductance(
       matrix,
       base,
       emitter,
-      complex(junctionConductance, 0.0),
+      baseEmitterAdmittance,
     );
+    stampComplexConductance(matrix, base, collector, baseCollectorAdmittance);
     stampComplexTransconductance(
       matrix,
       collector,
@@ -6526,8 +6545,9 @@ function stampAcBjtSmallSignal(
       matrix,
       emitter,
       base,
-      complex(junctionConductance, 0.0),
+      baseEmitterAdmittance,
     );
+    stampComplexConductance(matrix, base, collector, baseCollectorAdmittance);
     stampComplexTransconductance(
       matrix,
       emitter,

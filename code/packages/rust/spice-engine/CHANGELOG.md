@@ -13,6 +13,8 @@
   diode conductance.
 - Add diode transit-time support through `transit_time`, contributing
   forward-bias diffusion capacitance to small-signal AC admittance.
+- Add BJT capacitance support through `base_emitter_capacitance` /
+  `base_collector_capacitance`, contributing small-signal AC susceptance.
 - Add pseudo-transient DC continuation as a final bounded convergence aid after
   Newton, Gmin stepping, and source stepping; successful fallback results
   report `DcConvergenceAid::PseudoTransient`.

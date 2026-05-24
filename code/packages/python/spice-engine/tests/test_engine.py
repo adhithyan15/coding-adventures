@@ -2148,6 +2148,24 @@ def test_ac_bjt_npn_small_signal():
         assert "base" in pt.node_voltages
 
 
+def test_ac_bjt_junction_capacitance_shunts_high_frequency_base_drive():
+    """BJT Cje contributes base-emitter capacitance in AC analysis."""
+    def base_amplitude(cje: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(Resistor("Rc", "col", "0", 1000.0))
+        c.add(BJT("Q1", collector="col", base="base", emitter="0", Cje=cje))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    without_capacitance = base_amplitude(0.0)
+    with_capacitance = base_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
+
+
 # ============================================================================
 # 22. AC sweep — current source injection
 # ============================================================================

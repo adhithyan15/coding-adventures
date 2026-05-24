@@ -210,6 +210,9 @@ Status:
 - Diode `.model ... D(... TT=<time>)` parsing and forward-bias diffusion
   capacitance are implemented in AC analysis across Python, TypeScript, and
   Rust.
+- BJT `.model ... NPN|PNP(... CJE=<capacitance> CJC=<capacitance>)` parsing
+  and base-emitter/base-collector AC capacitance stamping are implemented
+  across Python, TypeScript, and Rust.
 
 ### Phase 7 - Classic Text Output and Control Cards
 
