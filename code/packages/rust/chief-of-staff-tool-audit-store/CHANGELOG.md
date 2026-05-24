@@ -173,6 +173,8 @@ All notable changes to this package will be documented in this file.
   for supervisor drain run report and summary grouping.
 - Aggregate host-run action lanes, component flags, counts, and label-integrity
   flags for supervisor drain run report and summary grouping.
+- Aggregate host-run queue priorities and compact route/action-lane/priority/
+  readiness grouping keys for supervisor drain run report and summary grouping.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host

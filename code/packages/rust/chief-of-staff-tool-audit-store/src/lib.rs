@@ -3806,6 +3806,120 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_run_queue_readiness().requires_triage()
     }
 
+    /// Return the aggregate host-run queue priority.
+    pub fn host_run_queue_priority(&self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        ToolAuditSupervisorDrainHostRunQueuePriority::from_queue_key(self.host_run_queue_key())
+    }
+
+    /// Return the stable aggregate host-run queue priority label.
+    pub fn host_run_queue_priority_label(&self) -> &'static str {
+        self.host_run_queue_priority().as_str()
+    }
+
+    /// Return whether the aggregate host-run queue priority label matches its type.
+    pub fn host_run_queue_priority_label_matches_priority(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueuePriority::from_label(
+            self.host_run_queue_priority_label(),
+        ) == Some(self.host_run_queue_priority())
+    }
+
+    /// Return whether the aggregate host-run queue priority is settled.
+    pub fn host_run_queue_priority_is_settled(&self) -> bool {
+        self.host_run_queue_priority().is_settled()
+    }
+
+    /// Return whether the aggregate host-run queue priority is routine action.
+    pub fn host_run_queue_priority_is_routine_action(&self) -> bool {
+        self.host_run_queue_priority().is_routine_action()
+    }
+
+    /// Return whether the aggregate host-run queue priority needs manual review.
+    pub fn host_run_queue_priority_requires_manual_review(&self) -> bool {
+        self.host_run_queue_priority().requires_manual_review()
+    }
+
+    /// Return whether the aggregate host-run queue priority needs investigation.
+    pub fn host_run_queue_priority_requires_investigation(&self) -> bool {
+        self.host_run_queue_priority().requires_investigation()
+    }
+
+    /// Return whether the aggregate host-run queue priority is host-log integrity work.
+    pub fn host_run_queue_priority_requires_integrity_investigation(&self) -> bool {
+        self.host_run_queue_priority()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the aggregate host-run queue priority needs triage.
+    pub fn host_run_queue_priority_requires_triage(&self) -> bool {
+        self.host_run_queue_priority().requires_triage()
+    }
+
+    /// Return whether the aggregate host-run queue priority label drifted.
+    pub fn has_host_run_queue_priority_label_integrity_drift(&self) -> bool {
+        !self.host_run_queue_priority_label_matches_priority()
+    }
+
+    /// Return the compact aggregate host-run queue grouping key.
+    pub fn host_run_queue_group_key(&self) -> ToolAuditSupervisorDrainHostRunQueueGroupKey {
+        ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+            self.host_run_queue_route(),
+            self.host_run_queue_action_lane(),
+            self.host_run_queue_priority(),
+            self.host_run_queue_readiness(),
+        )
+    }
+
+    /// Return the stable compact aggregate host-run queue grouping-key label.
+    pub fn host_run_queue_group_key_label(&self) -> String {
+        self.host_run_queue_group_key().label()
+    }
+
+    /// Return whether the compact aggregate host-run queue grouping-key label matches its key.
+    pub fn host_run_queue_group_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueGroupKey::from_label(
+            &self.host_run_queue_group_key_label(),
+        ) == Some(self.host_run_queue_group_key())
+    }
+
+    /// Return whether the compact grouping-key route matches the aggregate route.
+    pub fn host_run_queue_group_key_route_matches_route(&self) -> bool {
+        self.host_run_queue_group_key()
+            .route_matches(self.host_run_queue_route())
+    }
+
+    /// Return whether the compact grouping-key lane matches the aggregate action lane.
+    pub fn host_run_queue_group_key_action_lane_matches_lane(&self) -> bool {
+        self.host_run_queue_group_key()
+            .action_lane_matches(self.host_run_queue_action_lane())
+    }
+
+    /// Return whether the compact grouping-key priority matches the aggregate priority.
+    pub fn host_run_queue_group_key_priority_matches_priority(&self) -> bool {
+        self.host_run_queue_group_key()
+            .priority_matches(self.host_run_queue_priority())
+    }
+
+    /// Return whether the compact grouping-key readiness matches aggregate readiness.
+    pub fn host_run_queue_group_key_readiness_matches_readiness(&self) -> bool {
+        self.host_run_queue_group_key()
+            .readiness_matches(self.host_run_queue_readiness())
+    }
+
+    /// Return whether every compact grouping-key component matches aggregate classifiers.
+    pub fn host_run_queue_group_key_parts_match_queue(&self) -> bool {
+        self.host_run_queue_group_key().parts_match(
+            self.host_run_queue_route(),
+            self.host_run_queue_action_lane(),
+            self.host_run_queue_priority(),
+            self.host_run_queue_readiness(),
+        )
+    }
+
+    /// Return whether any compact host-run grouping-key component drifted.
+    pub fn has_host_run_queue_group_key_integrity_drift(&self) -> bool {
+        !self.host_run_queue_group_key_parts_match_queue()
+    }
+
     /// Return whether aggregate host-run queue route/readiness labels match their typed values.
     pub fn host_run_queue_route_readiness_labels_match(&self) -> bool {
         self.host_run_queue_route_label_matches_route()
@@ -4657,6 +4771,38 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_queue_readiness_requires_integrity_investigation(),
             host_run_queue_readiness_requires_triage: self
                 .host_run_queue_readiness_requires_triage(),
+            host_run_queue_priority: self.host_run_queue_priority(),
+            host_run_queue_priority_label: self.host_run_queue_priority_label(),
+            host_run_queue_priority_label_matches_priority: self
+                .host_run_queue_priority_label_matches_priority(),
+            host_run_queue_priority_is_settled: self.host_run_queue_priority_is_settled(),
+            host_run_queue_priority_is_routine_action: self
+                .host_run_queue_priority_is_routine_action(),
+            host_run_queue_priority_requires_manual_review: self
+                .host_run_queue_priority_requires_manual_review(),
+            host_run_queue_priority_requires_investigation: self
+                .host_run_queue_priority_requires_investigation(),
+            host_run_queue_priority_requires_integrity_investigation: self
+                .host_run_queue_priority_requires_integrity_investigation(),
+            host_run_queue_priority_requires_triage: self.host_run_queue_priority_requires_triage(),
+            has_host_run_queue_priority_label_integrity_drift: self
+                .has_host_run_queue_priority_label_integrity_drift(),
+            host_run_queue_group_key: self.host_run_queue_group_key(),
+            host_run_queue_group_key_label: self.host_run_queue_group_key_label(),
+            host_run_queue_group_key_label_matches_key: self
+                .host_run_queue_group_key_label_matches_key(),
+            host_run_queue_group_key_route_matches_route: self
+                .host_run_queue_group_key_route_matches_route(),
+            host_run_queue_group_key_action_lane_matches_lane: self
+                .host_run_queue_group_key_action_lane_matches_lane(),
+            host_run_queue_group_key_priority_matches_priority: self
+                .host_run_queue_group_key_priority_matches_priority(),
+            host_run_queue_group_key_readiness_matches_readiness: self
+                .host_run_queue_group_key_readiness_matches_readiness(),
+            host_run_queue_group_key_parts_match_queue: self
+                .host_run_queue_group_key_parts_match_queue(),
+            has_host_run_queue_group_key_integrity_drift: self
+                .has_host_run_queue_group_key_integrity_drift(),
             host_run_queue_route_readiness_labels_match: self
                 .host_run_queue_route_readiness_labels_match(),
             has_host_run_queue_route_readiness_label_integrity_drift: self
@@ -5898,6 +6044,44 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_queue_readiness_requires_integrity_investigation: bool,
     /// Whether the aggregate host-run queue readiness needs triage.
     pub host_run_queue_readiness_requires_triage: bool,
+    /// Aggregate host-run queue priority.
+    pub host_run_queue_priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+    /// Stable aggregate host-run queue priority label.
+    pub host_run_queue_priority_label: &'static str,
+    /// Whether the aggregate host-run queue priority label matches its type.
+    pub host_run_queue_priority_label_matches_priority: bool,
+    /// Whether the aggregate host-run queue priority is settled.
+    pub host_run_queue_priority_is_settled: bool,
+    /// Whether the aggregate host-run queue priority is routine action.
+    pub host_run_queue_priority_is_routine_action: bool,
+    /// Whether the aggregate host-run queue priority needs manual review.
+    pub host_run_queue_priority_requires_manual_review: bool,
+    /// Whether the aggregate host-run queue priority needs investigation.
+    pub host_run_queue_priority_requires_investigation: bool,
+    /// Whether the aggregate host-run queue priority is host-log integrity work.
+    pub host_run_queue_priority_requires_integrity_investigation: bool,
+    /// Whether the aggregate host-run queue priority needs triage.
+    pub host_run_queue_priority_requires_triage: bool,
+    /// Whether the aggregate host-run queue priority label drifted.
+    pub has_host_run_queue_priority_label_integrity_drift: bool,
+    /// Compact aggregate host-run queue grouping key.
+    pub host_run_queue_group_key: ToolAuditSupervisorDrainHostRunQueueGroupKey,
+    /// Stable compact aggregate host-run queue grouping-key label.
+    pub host_run_queue_group_key_label: String,
+    /// Whether the compact aggregate host-run queue grouping-key label matches its key.
+    pub host_run_queue_group_key_label_matches_key: bool,
+    /// Whether the compact grouping-key route matches the aggregate route.
+    pub host_run_queue_group_key_route_matches_route: bool,
+    /// Whether the compact grouping-key lane matches the aggregate action lane.
+    pub host_run_queue_group_key_action_lane_matches_lane: bool,
+    /// Whether the compact grouping-key priority matches the aggregate priority.
+    pub host_run_queue_group_key_priority_matches_priority: bool,
+    /// Whether the compact grouping-key readiness matches aggregate readiness.
+    pub host_run_queue_group_key_readiness_matches_readiness: bool,
+    /// Whether every compact grouping-key component matches aggregate classifiers.
+    pub host_run_queue_group_key_parts_match_queue: bool,
+    /// Whether any compact host-run grouping-key component drifted.
+    pub has_host_run_queue_group_key_integrity_drift: bool,
     /// Whether aggregate host-run queue route/readiness labels match their typed values.
     pub host_run_queue_route_readiness_labels_match: bool,
     /// Whether any aggregate host-run queue route/readiness label drifted.
@@ -7934,6 +8118,101 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the aggregate host-run queue readiness needs triage.
     pub fn host_run_queue_readiness_requires_triage(&self) -> bool {
         self.host_run_queue_readiness_requires_triage
+    }
+
+    /// Return the aggregate host-run queue priority.
+    pub fn host_run_queue_priority(&self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.host_run_queue_priority
+    }
+
+    /// Return the stable aggregate host-run queue priority label.
+    pub fn host_run_queue_priority_label(&self) -> &'static str {
+        self.host_run_queue_priority_label
+    }
+
+    /// Return whether the aggregate host-run queue priority label matches its type.
+    pub fn host_run_queue_priority_label_matches_priority(&self) -> bool {
+        self.host_run_queue_priority_label_matches_priority
+    }
+
+    /// Return whether the aggregate host-run queue priority is settled.
+    pub fn host_run_queue_priority_is_settled(&self) -> bool {
+        self.host_run_queue_priority_is_settled
+    }
+
+    /// Return whether the aggregate host-run queue priority is routine action.
+    pub fn host_run_queue_priority_is_routine_action(&self) -> bool {
+        self.host_run_queue_priority_is_routine_action
+    }
+
+    /// Return whether the aggregate host-run queue priority needs manual review.
+    pub fn host_run_queue_priority_requires_manual_review(&self) -> bool {
+        self.host_run_queue_priority_requires_manual_review
+    }
+
+    /// Return whether the aggregate host-run queue priority needs investigation.
+    pub fn host_run_queue_priority_requires_investigation(&self) -> bool {
+        self.host_run_queue_priority_requires_investigation
+    }
+
+    /// Return whether the aggregate host-run queue priority is host-log integrity work.
+    pub fn host_run_queue_priority_requires_integrity_investigation(&self) -> bool {
+        self.host_run_queue_priority_requires_integrity_investigation
+    }
+
+    /// Return whether the aggregate host-run queue priority needs triage.
+    pub fn host_run_queue_priority_requires_triage(&self) -> bool {
+        self.host_run_queue_priority_requires_triage
+    }
+
+    /// Return whether the aggregate host-run queue priority label drifted.
+    pub fn has_host_run_queue_priority_label_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_priority_label_integrity_drift
+    }
+
+    /// Return the compact aggregate host-run queue grouping key.
+    pub fn host_run_queue_group_key(&self) -> ToolAuditSupervisorDrainHostRunQueueGroupKey {
+        self.host_run_queue_group_key
+    }
+
+    /// Return the stable compact aggregate host-run queue grouping-key label.
+    pub fn host_run_queue_group_key_label(&self) -> &str {
+        &self.host_run_queue_group_key_label
+    }
+
+    /// Return whether the compact aggregate host-run queue grouping-key label matches its key.
+    pub fn host_run_queue_group_key_label_matches_key(&self) -> bool {
+        self.host_run_queue_group_key_label_matches_key
+    }
+
+    /// Return whether the compact grouping-key route matches the aggregate route.
+    pub fn host_run_queue_group_key_route_matches_route(&self) -> bool {
+        self.host_run_queue_group_key_route_matches_route
+    }
+
+    /// Return whether the compact grouping-key lane matches the aggregate action lane.
+    pub fn host_run_queue_group_key_action_lane_matches_lane(&self) -> bool {
+        self.host_run_queue_group_key_action_lane_matches_lane
+    }
+
+    /// Return whether the compact grouping-key priority matches the aggregate priority.
+    pub fn host_run_queue_group_key_priority_matches_priority(&self) -> bool {
+        self.host_run_queue_group_key_priority_matches_priority
+    }
+
+    /// Return whether the compact grouping-key readiness matches aggregate readiness.
+    pub fn host_run_queue_group_key_readiness_matches_readiness(&self) -> bool {
+        self.host_run_queue_group_key_readiness_matches_readiness
+    }
+
+    /// Return whether every compact grouping-key component matches aggregate classifiers.
+    pub fn host_run_queue_group_key_parts_match_queue(&self) -> bool {
+        self.host_run_queue_group_key_parts_match_queue
+    }
+
+    /// Return whether any compact host-run grouping-key component drifted.
+    pub fn has_host_run_queue_group_key_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_group_key_integrity_drift
     }
 
     /// Return whether aggregate host-run queue route/readiness labels match their typed values.
@@ -10329,6 +10608,118 @@ impl Display for ToolAuditSupervisorDrainHostRunActionLane {
     }
 }
 
+/// Stable aggregate priority for the full supervisor host-run queue.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostRunQueuePriority {
+    /// The full host run is settled and needs no queue action.
+    Settled,
+    /// The next queue action is routine and auto-routable.
+    RoutineAction,
+    /// The next queue action needs manual review before routing.
+    ManualReview,
+    /// The next queue action is a non-integrity investigation.
+    Investigation,
+    /// The next queue action is a host-log integrity investigation.
+    IntegrityInvestigation,
+    /// Multiple active surfaces require triage.
+    Triage,
+}
+
+impl ToolAuditSupervisorDrainHostRunQueuePriority {
+    /// Classify aggregate host-run priority from a composite queue key.
+    pub fn from_queue_key(queue_key: ToolAuditSupervisorDrainHostRunQueueKey) -> Self {
+        if queue_key.is_settled() {
+            Self::Settled
+        } else if queue_key.requires_triage() || queue_key.has_multiple_actions() {
+            Self::Triage
+        } else if queue_key.requires_integrity_investigation() {
+            Self::IntegrityInvestigation
+        } else if queue_key.requires_investigation() {
+            Self::Investigation
+        } else if queue_key.requires_manual_review() {
+            Self::ManualReview
+        } else {
+            Self::RoutineAction
+        }
+    }
+
+    /// Return a stable snake_case label for host-run queue priority.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::RoutineAction => "routine_action",
+            Self::ManualReview => "manual_review",
+            Self::Investigation => "investigation",
+            Self::IntegrityInvestigation => "integrity_investigation",
+            Self::Triage => "triage",
+        }
+    }
+
+    /// Parse a stable snake_case host-run queue priority label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine_action" => Some(Self::RoutineAction),
+            "manual_review" => Some(Self::ManualReview),
+            "investigation" => Some(Self::Investigation),
+            "integrity_investigation" => Some(Self::IntegrityInvestigation),
+            "triage" => Some(Self::Triage),
+            _ => None,
+        }
+    }
+
+    /// Return the sortable priority rank.
+    pub fn rank(self) -> u8 {
+        match self {
+            Self::Settled => 0,
+            Self::RoutineAction => 20,
+            Self::ManualReview => 60,
+            Self::Investigation => 70,
+            Self::IntegrityInvestigation => 80,
+            Self::Triage => 90,
+        }
+    }
+
+    /// Return whether this priority is settled.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this priority is routine action.
+    pub fn is_routine_action(self) -> bool {
+        matches!(self, Self::RoutineAction)
+    }
+
+    /// Return whether this priority needs manual review.
+    pub fn requires_manual_review(self) -> bool {
+        matches!(
+            self,
+            Self::ManualReview | Self::Investigation | Self::IntegrityInvestigation | Self::Triage
+        )
+    }
+
+    /// Return whether this priority needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        matches!(self, Self::Investigation | Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this priority is host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this priority needs triage.
+    pub fn requires_triage(self) -> bool {
+        matches!(self, Self::Triage)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunQueuePriority {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 /// Stable aggregate queue route for the full supervisor host run.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ToolAuditSupervisorDrainHostRunQueueRoute {
@@ -10512,6 +10903,168 @@ impl ToolAuditSupervisorDrainHostRunQueueReadiness {
 impl Display for ToolAuditSupervisorDrainHostRunQueueReadiness {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
+    }
+}
+
+/// Stable compact grouping key for the full supervisor host-run queue.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunQueueGroupKey {
+    route: ToolAuditSupervisorDrainHostRunQueueRoute,
+    action_lane: ToolAuditSupervisorDrainHostRunActionLane,
+    priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+    readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+}
+
+impl ToolAuditSupervisorDrainHostRunQueueGroupKey {
+    /// Create a compact grouping key from aggregate host-run classifiers.
+    pub fn new(
+        route: ToolAuditSupervisorDrainHostRunQueueRoute,
+        action_lane: ToolAuditSupervisorDrainHostRunActionLane,
+        priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> Self {
+        Self {
+            route,
+            action_lane,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Parse a stable compact host-run queue grouping-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let mut parts = label.split(':');
+        let route = ToolAuditSupervisorDrainHostRunQueueRoute::from_label(parts.next()?)?;
+        let action_lane = ToolAuditSupervisorDrainHostRunActionLane::from_label(parts.next()?)?;
+        let priority = ToolAuditSupervisorDrainHostRunQueuePriority::from_label(parts.next()?)?;
+        let readiness = ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(parts.next()?)?;
+        if parts.next().is_some() {
+            return None;
+        }
+        Some(Self::new(route, action_lane, priority, readiness))
+    }
+
+    /// Return the aggregate host-run queue route.
+    pub fn route(self) -> ToolAuditSupervisorDrainHostRunQueueRoute {
+        self.route
+    }
+
+    /// Return the aggregate host-run queue action lane.
+    pub fn action_lane(self) -> ToolAuditSupervisorDrainHostRunActionLane {
+        self.action_lane
+    }
+
+    /// Return the aggregate host-run queue priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.priority
+    }
+
+    /// Return the aggregate host-run queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.readiness
+    }
+
+    /// Return a stable compact label for host-run queue grouping.
+    pub fn label(self) -> String {
+        format!(
+            "{}:{}:{}:{}",
+            self.route.as_str(),
+            self.action_lane.as_str(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this grouping-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return the sortable aggregate priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.priority.rank()
+    }
+
+    /// Return whether the grouping key is settled.
+    pub fn is_settled(self) -> bool {
+        !self.route.has_route()
+            && self.action_lane.is_no_action()
+            && self.priority.is_settled()
+            && self.readiness.is_settled()
+    }
+
+    /// Return whether the grouping key should enter an action queue.
+    pub fn is_actionable(self) -> bool {
+        self.readiness.is_actionable()
+    }
+
+    /// Return whether the grouping key can auto-route.
+    pub fn is_auto_routable(self) -> bool {
+        self.readiness.is_auto_routable()
+    }
+
+    /// Return whether the grouping key needs manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.priority.requires_manual_review() || self.readiness.requires_manual_review()
+    }
+
+    /// Return whether the grouping key needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.priority.requires_investigation() || self.readiness.requires_investigation()
+    }
+
+    /// Return whether the grouping key is host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.priority.requires_integrity_investigation()
+            || self.readiness.requires_integrity_investigation()
+    }
+
+    /// Return whether the grouping key needs triage.
+    pub fn requires_triage(self) -> bool {
+        self.priority.requires_triage() || self.readiness.requires_triage()
+    }
+
+    /// Return whether this key's route matches the supplied route.
+    pub fn route_matches(self, route: ToolAuditSupervisorDrainHostRunQueueRoute) -> bool {
+        self.route == route
+    }
+
+    /// Return whether this key's action lane matches the supplied lane.
+    pub fn action_lane_matches(self, lane: ToolAuditSupervisorDrainHostRunActionLane) -> bool {
+        self.action_lane == lane
+    }
+
+    /// Return whether this key's priority matches the supplied priority.
+    pub fn priority_matches(self, priority: ToolAuditSupervisorDrainHostRunQueuePriority) -> bool {
+        self.priority == priority
+    }
+
+    /// Return whether this key's readiness matches the supplied readiness.
+    pub fn readiness_matches(
+        self,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> bool {
+        self.readiness == readiness
+    }
+
+    /// Return whether every key component matches the supplied aggregate classifiers.
+    pub fn parts_match(
+        self,
+        route: ToolAuditSupervisorDrainHostRunQueueRoute,
+        action_lane: ToolAuditSupervisorDrainHostRunActionLane,
+        priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> bool {
+        self.route_matches(route)
+            && self.action_lane_matches(action_lane)
+            && self.priority_matches(priority)
+            && self.readiness_matches(readiness)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunQueueGroupKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
     }
 }
 
@@ -16274,6 +16827,191 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_priorities_and_group_keys_are_stable() {
+        let priority_cases = [
+            (
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                "settled",
+                0,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueuePriority::RoutineAction,
+                "routine_action",
+                20,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueuePriority::ManualReview,
+                "manual_review",
+                60,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueuePriority::Investigation,
+                "investigation",
+                70,
+                false,
+                false,
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueuePriority::IntegrityInvestigation,
+                "integrity_investigation",
+                80,
+                false,
+                false,
+                true,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                "triage",
+                90,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            priority,
+            label,
+            rank,
+            is_settled,
+            is_routine_action,
+            requires_manual_review,
+            requires_investigation,
+            requires_integrity_investigation,
+            requires_triage,
+        ) in priority_cases
+        {
+            assert_eq!(priority.as_str(), label);
+            assert_eq!(priority.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunQueuePriority::from_label(label),
+                Some(priority)
+            );
+            assert_eq!(priority.rank(), rank);
+            assert_eq!(priority.is_settled(), is_settled);
+            assert_eq!(priority.is_routine_action(), is_routine_action);
+            assert_eq!(priority.requires_manual_review(), requires_manual_review);
+            assert_eq!(priority.requires_investigation(), requires_investigation);
+            assert_eq!(
+                priority.requires_integrity_investigation(),
+                requires_integrity_investigation
+            );
+            assert_eq!(priority.requires_triage(), requires_triage);
+        }
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunQueuePriority::from_label("priorityish"),
+            None
+        );
+
+        let group_key = ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+            ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+            ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+        );
+        assert_eq!(
+            group_key.route(),
+            ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues
+        );
+        assert_eq!(
+            group_key.action_lane(),
+            ToolAuditSupervisorDrainHostRunActionLane::Mixed
+        );
+        assert_eq!(
+            group_key.priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        );
+        assert_eq!(
+            group_key.readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+        assert_eq!(
+            group_key.label(),
+            "split_queues:mixed:triage:triage_required"
+        );
+        assert_eq!(
+            group_key.to_string(),
+            "split_queues:mixed:triage:triage_required"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::from_label(
+                "split_queues:mixed:triage:triage_required"
+            ),
+            Some(group_key)
+        );
+        assert!(group_key.label_matches_key());
+        assert_eq!(group_key.priority_rank(), 90);
+        assert!(!group_key.is_settled());
+        assert!(group_key.is_actionable());
+        assert!(!group_key.is_auto_routable());
+        assert!(group_key.requires_manual_review());
+        assert!(!group_key.requires_investigation());
+        assert!(!group_key.requires_integrity_investigation());
+        assert!(group_key.requires_triage());
+        assert!(group_key.route_matches(ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues));
+        assert!(group_key.action_lane_matches(ToolAuditSupervisorDrainHostRunActionLane::Mixed));
+        assert!(group_key.priority_matches(ToolAuditSupervisorDrainHostRunQueuePriority::Triage));
+        assert!(group_key
+            .readiness_matches(ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired));
+        assert!(group_key.parts_match(
+            ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+            ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+        ));
+
+        let settled_group_key = ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+            ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+            ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+        );
+        assert_eq!(settled_group_key.priority_rank(), 0);
+        assert!(settled_group_key.is_settled());
+        assert!(!settled_group_key.is_actionable());
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::from_label(
+                "no_route:no_action:settled:settled:extra"
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::from_label(
+                "no_route:missing:settled:settled"
+            ),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_host_run_queue_routes_and_readiness_are_stable_for_host_logs() {
         let route_cases = [
             (
@@ -18968,6 +19706,39 @@ mod tests {
         assert!(!idle_report.host_run_queue_readiness_requires_investigation());
         assert!(!idle_report.host_run_queue_readiness_requires_integrity_investigation());
         assert!(!idle_report.host_run_queue_readiness_requires_triage());
+        assert_eq!(
+            idle_report.host_run_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled
+        );
+        assert_eq!(idle_report.host_run_queue_priority_label(), "settled");
+        assert!(idle_report.host_run_queue_priority_label_matches_priority());
+        assert!(idle_report.host_run_queue_priority_is_settled());
+        assert!(!idle_report.host_run_queue_priority_is_routine_action());
+        assert!(!idle_report.host_run_queue_priority_requires_manual_review());
+        assert!(!idle_report.host_run_queue_priority_requires_investigation());
+        assert!(!idle_report.host_run_queue_priority_requires_integrity_investigation());
+        assert!(!idle_report.host_run_queue_priority_requires_triage());
+        assert!(!idle_report.has_host_run_queue_priority_label_integrity_drift());
+        assert_eq!(
+            idle_report.host_run_queue_group_key(),
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+                ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_report.host_run_queue_group_key_label(),
+            "no_route:no_action:settled:settled"
+        );
+        assert!(idle_report.host_run_queue_group_key_label_matches_key());
+        assert!(idle_report.host_run_queue_group_key_route_matches_route());
+        assert!(idle_report.host_run_queue_group_key_action_lane_matches_lane());
+        assert!(idle_report.host_run_queue_group_key_priority_matches_priority());
+        assert!(idle_report.host_run_queue_group_key_readiness_matches_readiness());
+        assert!(idle_report.host_run_queue_group_key_parts_match_queue());
+        assert!(!idle_report.has_host_run_queue_group_key_integrity_drift());
         assert!(idle_report.host_run_queue_route_readiness_labels_match());
         assert!(!idle_report.has_host_run_queue_route_readiness_label_integrity_drift());
         assert_eq!(idle_report.host_run_queue_key_priority_rank(), 0);
@@ -19081,6 +19852,72 @@ mod tests {
         assert!(!idle_summary.host_run_queue_readiness_requires_integrity_investigation());
         assert!(!idle_summary.host_run_queue_readiness_requires_triage);
         assert!(!idle_summary.host_run_queue_readiness_requires_triage());
+        assert_eq!(
+            idle_summary.host_run_queue_priority,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled
+        );
+        assert_eq!(idle_summary.host_run_queue_priority_label, "settled");
+        assert_eq!(idle_summary.host_run_queue_priority_label(), "settled");
+        assert!(idle_summary.host_run_queue_priority_label_matches_priority);
+        assert!(idle_summary.host_run_queue_priority_label_matches_priority());
+        assert!(idle_summary.host_run_queue_priority_is_settled);
+        assert!(idle_summary.host_run_queue_priority_is_settled());
+        assert!(!idle_summary.host_run_queue_priority_is_routine_action);
+        assert!(!idle_summary.host_run_queue_priority_is_routine_action());
+        assert!(!idle_summary.host_run_queue_priority_requires_manual_review);
+        assert!(!idle_summary.host_run_queue_priority_requires_manual_review());
+        assert!(!idle_summary.host_run_queue_priority_requires_investigation);
+        assert!(!idle_summary.host_run_queue_priority_requires_investigation());
+        assert!(!idle_summary.host_run_queue_priority_requires_integrity_investigation);
+        assert!(!idle_summary.host_run_queue_priority_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_queue_priority_requires_triage);
+        assert!(!idle_summary.host_run_queue_priority_requires_triage());
+        assert!(!idle_summary.has_host_run_queue_priority_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_priority_label_integrity_drift());
+        assert_eq!(
+            idle_summary.host_run_queue_group_key,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+                ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_group_key(),
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+                ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+            )
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_group_key_label,
+            "no_route:no_action:settled:settled"
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_group_key_label(),
+            "no_route:no_action:settled:settled"
+        );
+        assert!(idle_summary.host_run_queue_group_key_label_matches_key);
+        assert!(idle_summary.host_run_queue_group_key_label_matches_key());
+        assert!(idle_summary.host_run_queue_group_key_route_matches_route);
+        assert!(idle_summary.host_run_queue_group_key_route_matches_route());
+        assert!(idle_summary.host_run_queue_group_key_action_lane_matches_lane);
+        assert!(idle_summary.host_run_queue_group_key_action_lane_matches_lane());
+        assert!(idle_summary.host_run_queue_group_key_priority_matches_priority);
+        assert!(idle_summary.host_run_queue_group_key_priority_matches_priority());
+        assert!(idle_summary.host_run_queue_group_key_readiness_matches_readiness);
+        assert!(idle_summary.host_run_queue_group_key_readiness_matches_readiness());
+        assert!(idle_summary.host_run_queue_group_key_parts_match_queue);
+        assert!(idle_summary.host_run_queue_group_key_parts_match_queue());
+        assert!(!idle_summary.has_host_run_queue_group_key_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_group_key_integrity_drift());
         assert!(idle_summary.host_run_queue_route_readiness_labels_match);
         assert!(idle_summary.host_run_queue_route_readiness_labels_match());
         assert!(!idle_summary.has_host_run_queue_route_readiness_label_integrity_drift);
@@ -19192,6 +20029,42 @@ mod tests {
         assert!(!continuation_summary.host_run_queue_readiness_requires_investigation());
         assert!(!continuation_summary.host_run_queue_readiness_requires_integrity_investigation());
         assert!(continuation_summary.host_run_queue_readiness_requires_triage());
+        assert_eq!(
+            continuation_summary.host_run_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        );
+        assert_eq!(
+            continuation_summary.host_run_queue_priority_label(),
+            "triage"
+        );
+        assert!(continuation_summary.host_run_queue_priority_label_matches_priority());
+        assert!(!continuation_summary.host_run_queue_priority_is_settled());
+        assert!(!continuation_summary.host_run_queue_priority_is_routine_action());
+        assert!(continuation_summary.host_run_queue_priority_requires_manual_review());
+        assert!(!continuation_summary.host_run_queue_priority_requires_investigation());
+        assert!(!continuation_summary.host_run_queue_priority_requires_integrity_investigation());
+        assert!(continuation_summary.host_run_queue_priority_requires_triage());
+        assert!(!continuation_summary.has_host_run_queue_priority_label_integrity_drift());
+        assert_eq!(
+            continuation_summary.host_run_queue_group_key(),
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            continuation_summary.host_run_queue_group_key_label(),
+            "split_queues:mixed:triage:triage_required"
+        );
+        assert!(continuation_summary.host_run_queue_group_key_label_matches_key());
+        assert!(continuation_summary.host_run_queue_group_key_route_matches_route());
+        assert!(continuation_summary.host_run_queue_group_key_action_lane_matches_lane());
+        assert!(continuation_summary.host_run_queue_group_key_priority_matches_priority());
+        assert!(continuation_summary.host_run_queue_group_key_readiness_matches_readiness());
+        assert!(continuation_summary.host_run_queue_group_key_parts_match_queue());
+        assert!(!continuation_summary.has_host_run_queue_group_key_integrity_drift());
         assert!(continuation_summary.host_run_queue_route_readiness_labels_match());
         assert!(!continuation_summary.has_host_run_queue_route_readiness_label_integrity_drift());
         assert_eq!(continuation_summary.host_run_queue_key_priority_rank(), 90);
@@ -19230,6 +20103,34 @@ mod tests {
         stale_action_lane_summary.has_host_run_queue_action_lane_label_integrity_drift = true;
         assert!(!stale_action_lane_summary.host_run_queue_action_lane_label_matches_lane());
         assert!(stale_action_lane_summary.has_host_run_queue_action_lane_label_integrity_drift());
+
+        let mut stale_priority_summary = continuation_summary.clone();
+        stale_priority_summary.host_run_queue_priority_label = "routine_action";
+        stale_priority_summary.host_run_queue_priority_label_matches_priority = false;
+        stale_priority_summary.has_host_run_queue_priority_label_integrity_drift = true;
+        assert!(!stale_priority_summary.host_run_queue_priority_label_matches_priority());
+        assert!(stale_priority_summary.has_host_run_queue_priority_label_integrity_drift());
+
+        let mut stale_group_key_summary = continuation_summary.clone();
+        stale_group_key_summary.host_run_queue_group_key =
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::HostDecision,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            );
+        stale_group_key_summary.host_run_queue_group_key_label =
+            stale_group_key_summary.host_run_queue_group_key.label();
+        stale_group_key_summary.host_run_queue_group_key_route_matches_route = false;
+        stale_group_key_summary.host_run_queue_group_key_parts_match_queue = false;
+        stale_group_key_summary.has_host_run_queue_group_key_integrity_drift = true;
+        assert!(stale_group_key_summary.host_run_queue_group_key_label_matches_key());
+        assert!(!stale_group_key_summary.host_run_queue_group_key_route_matches_route());
+        assert!(stale_group_key_summary.host_run_queue_group_key_action_lane_matches_lane());
+        assert!(stale_group_key_summary.host_run_queue_group_key_priority_matches_priority());
+        assert!(stale_group_key_summary.host_run_queue_group_key_readiness_matches_readiness());
+        assert!(!stale_group_key_summary.host_run_queue_group_key_parts_match_queue());
+        assert!(stale_group_key_summary.has_host_run_queue_group_key_integrity_drift());
 
         let mut stale_route_summary = idle_summary.clone();
         stale_route_summary.host_run_queue_route_label = "host_decision";
