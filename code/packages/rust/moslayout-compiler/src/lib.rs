@@ -126,6 +126,14 @@ const PRIMITIVES: &[&str] = &[
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
     "HostCheckbox", "HostRadio",
     "HostLink", "HostTooltip", "HostNumberInput",
+    // UI31 — `HostTable` sibling primitives. Recognised by the React
+    // emitter's HostTable dispatcher pre-UI31; promoting to PRIMITIVES
+    // here so the parser stops routing them through the unknown-
+    // component-reference fallback path and so future backends'
+    // emitters can match on them directly. See
+    // `code/specs/UI31-host-table.md` §2 for the structural shape.
+    "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
+    "Col",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -2139,6 +2147,27 @@ mod tests {
         assert!(
             PRIMITIVES.contains(&"HostNumberInput"),
             "UI29-4 added HostNumberInput as the 21st kernel primitive"
+        );
+        // UI31 — HostTable family structural sub-tags.
+        assert!(
+            PRIMITIVES.contains(&"HostTableColGroup"),
+            "UI31 added HostTableColGroup as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTableHead"),
+            "UI31 added HostTableHead as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTableBody"),
+            "UI31 added HostTableBody as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTableFoot"),
+            "UI31 added HostTableFoot as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"Col"),
+            "UI31 added Col as the cell-definition sub-tag inside HostTableColGroup"
         );
     }
 
