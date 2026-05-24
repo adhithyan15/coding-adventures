@@ -229,6 +229,9 @@ def check_browser_readiness_case(
     require_optional_nullable_string(case_path, expected, "title", errors)
     require_optional_nullable_string(case_path, expected, "base_href", errors)
     require_optional_nullable_string(case_path, expected, "base_target", errors)
+    for field in ("document_lang", "document_dir", "body_id", "body_lang", "body_dir"):
+        require_optional_nullable_string(case_path, expected, field, errors)
+    require_optional_string_list(case_path, expected, "body_classes", errors)
     require_string(f"{case_path}.expected", expected, "body_text", errors)
     require_object_list(f"{case_path}.expected", expected, "metas", errors)
     require_object_list(f"{case_path}.expected", expected, "resources", errors)
@@ -344,6 +347,10 @@ def check_browser_content_node(
     require_string(node_path, node, "role", errors)
     for field in (
         "name",
+        "id",
+        "title",
+        "lang",
+        "dir",
         "text",
         "href",
         "resolved_href",
@@ -354,6 +361,7 @@ def check_browser_content_node(
         "value",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
+    require_optional_string_list(node_path, node, "classes", errors)
     for field in ("disabled", "checked", "selected"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
@@ -402,6 +410,10 @@ def check_browser_render_node(
     require_string(node_path, node, "role", errors)
     for field in (
         "name",
+        "id",
+        "title",
+        "lang",
+        "dir",
         "text",
         "href",
         "resolved_href",
@@ -412,6 +424,7 @@ def check_browser_render_node(
         "value",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
+    require_optional_string_list(node_path, node, "classes", errors)
     for field in ("disabled", "checked", "selected"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
