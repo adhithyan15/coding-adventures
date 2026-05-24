@@ -81,17 +81,21 @@ class TestPassthrough:
         _both_match("SELECT CAST(NULL AS BLOB)")
 
 
-class TestKnownLimitationBlobToText:
-    """``CAST(<blob> AS TEXT)`` currently hex-encodes the BLOB bytes
-    instead of UTF-8-decoding them — so ``CAST(CAST(42 AS BLOB) AS
-    TEXT)`` returns ``'3432'`` (hex of ``b'42'``) rather than the
-    SQLite-compatible ``'42'``.  Out of scope for this PR; pinned
-    so a future BLOB→TEXT fix is reminded to update this test
-    alongside the CHANGELOG entry."""
+class TestRoundTripIdentity:
+    """``CAST(CAST(x AS BLOB) AS TEXT)`` recovers the original textual
+    form for numeric ``x`` — now that the BLOB→TEXT direction
+    UTF-8-decodes (mini-sqlite 2.15+ / sql-vm 1.59+).  Replaces the
+    earlier ``TestKnownLimitationBlobToText`` pin which documented the
+    hex-encoding divergence."""
 
-    def test_int_blob_to_text_diverges(self) -> None:
-        m = mini_sqlite.connect(":memory:")
-        # Hex of '42' is '3432'.
-        assert m.execute(
-            "SELECT CAST(CAST(42 AS BLOB) AS TEXT)"
-        ).fetchall() == [("3432",)]
+    def test_int_roundtrip(self) -> None:
+        _both_match("SELECT CAST(CAST(42 AS BLOB) AS TEXT)")
+
+    def test_bool_roundtrip(self) -> None:
+        _both_match("SELECT CAST(CAST(TRUE AS BLOB) AS TEXT)")
+
+    def test_float_roundtrip(self) -> None:
+        _both_match("SELECT CAST(CAST(1.5 AS BLOB) AS TEXT)")
+
+    def test_negative_int_roundtrip(self) -> None:
+        _both_match("SELECT CAST(CAST(-7 AS BLOB) AS TEXT)")

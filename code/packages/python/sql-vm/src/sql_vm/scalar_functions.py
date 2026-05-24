@@ -349,7 +349,15 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
                  "varying character", "nchar", "native character",
                  "clob"):
             if isinstance(x, bytes):
-                return x.hex()
+                # SQLite's BLOB→TEXT cast UTF-8-decodes the bytes
+                # (treating them as the encoded text representation),
+                # NOT hex-encodes them.  So ``CAST(x'48656c6c6f' AS
+                # TEXT)`` is ``'Hello'`` and ``CAST(CAST(42 AS BLOB)
+                # AS TEXT)`` round-trips to ``'42'``.  Invalid UTF-8
+                # bytes are replaced with U+FFFD via ``errors="replace"``
+                # so a malformed blob can never raise UnicodeDecodeError
+                # mid-query (matches SQLite's lenient decoding).
+                return x.decode("utf-8", errors="replace")
             # SQLite has no native boolean type — TRUE / FALSE round-trip
             # as integers 1 / 0.  ``CAST(TRUE AS TEXT)`` must therefore
             # yield ``'1'``, not Python's ``'True'``.  Check ``bool``
