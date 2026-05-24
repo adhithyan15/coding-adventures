@@ -24,7 +24,9 @@ skipping parser shell, head metadata, comments, scripts, styles, and templates.
 `html-browser-render-tree.json` is a checked parser acceptance corpus for the
 browser-facing render-tree input projection. It verifies that the content tree
 is converted into stable default display categories such as block, inline,
-inline-replaced, list-item, and table display nodes for early layout work.
+inline-replaced, list-item, and table display nodes for early layout work. The
+browser-facing fixture set also pins control metadata such as value,
+disabled/checked/selected state, select option labels, and textarea values.
 
 Validate the checked-in smoke fixture's case boundaries and metadata with:
 

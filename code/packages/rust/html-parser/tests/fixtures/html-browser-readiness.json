@@ -38,7 +38,7 @@
     {
       "id": "catalog-form-table-page",
       "description": "Form controls, select options, textarea text, button text, and table summaries.",
-      "input": "<html><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option>Books<option>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
+      "input": "<html><head><title>Search</title><meta http-equiv=refresh content=\"30; url=/next\"></head><body><h2>Catalog</h2><form action=\"/search\" method=POST enctype=\"multipart/form-data\" target=results><input name=q value=\"rust html\"><input type=hidden name=page value=1><input type=checkbox name=in_stock value=yes checked><input type=text name=disabled value=no disabled><select name=section><option value=books>Books<option value=manuals selected>Manuals</select><textarea name=notes>Line one\nLine two</textarea><button name=go>Search</button></form><table><caption>Results</caption><tr><th>Name<th>Kind<tr><td>Mosaic<td>Browser</table>",
       "expected": {
         "title": "Search",
         "base_href": null,
@@ -65,8 +65,8 @@
               { "control_type": "hidden", "name": "page", "value": "1", "disabled": false, "checked": false, "text": "", "options": [] },
               { "control_type": "checkbox", "name": "in_stock", "value": "yes", "disabled": false, "checked": true, "text": "", "options": [] },
               { "control_type": "text", "name": "disabled", "value": "no", "disabled": true, "checked": false, "text": "", "options": [] },
-              { "control_type": "select", "name": "section", "value": null, "disabled": false, "checked": false, "text": "Books Manuals", "options": ["Books", "Manuals"] },
-              { "control_type": "textarea", "name": "notes", "value": null, "disabled": false, "checked": false, "text": "Line one Line two", "options": [] },
+              { "control_type": "select", "name": "section", "value": "manuals", "disabled": false, "checked": false, "text": "Books Manuals", "options": ["Books", "Manuals"] },
+              { "control_type": "textarea", "name": "notes", "value": "Line one Line two", "disabled": false, "checked": false, "text": "Line one Line two", "options": [] },
               { "control_type": "submit", "name": "go", "value": null, "disabled": false, "checked": false, "text": "Search", "options": [] }
             ]
           }

@@ -871,6 +871,11 @@ pub struct BrowserContentNode {
     pub src: Option<String>,
     pub alt: Option<String>,
     pub control_type: Option<String>,
+    pub value: Option<String>,
+    pub disabled: bool,
+    pub checked: bool,
+    pub selected: bool,
+    pub options: Vec<String>,
     pub children: Vec<BrowserContentNode>,
 }
 
@@ -889,6 +894,11 @@ pub struct BrowserRenderNode {
     pub src: Option<String>,
     pub alt: Option<String>,
     pub control_type: Option<String>,
+    pub value: Option<String>,
+    pub disabled: bool,
+    pub checked: bool,
+    pub selected: bool,
+    pub options: Vec<String>,
     pub children: Vec<BrowserRenderNode>,
 }
 
@@ -1019,6 +1029,11 @@ impl BrowserRenderNode {
             src: content_node.src.clone(),
             alt: content_node.alt.clone(),
             control_type: content_node.control_type.clone(),
+            value: content_node.value.clone(),
+            disabled: content_node.disabled,
+            checked: content_node.checked,
+            selected: content_node.selected,
+            options: content_node.options.clone(),
             children: content_node
                 .children
                 .iter()
@@ -8126,6 +8141,11 @@ fn collect_browser_content_nodes(nodes: &[Node], output: &mut Vec<BrowserContent
                         src: None,
                         alt: None,
                         control_type: None,
+                        value: None,
+                        disabled: false,
+                        checked: false,
+                        selected: false,
+                        options: Vec::new(),
                         children: Vec::new(),
                     });
                 }
@@ -8164,6 +8184,11 @@ fn browser_content_node_for_element(element: &Element) -> Option<BrowserContentN
         src: browser_content_src(element),
         alt: element.attribute("alt").map(ToOwned::to_owned),
         control_type: browser_content_control_type(element),
+        value: browser_content_value(element),
+        disabled: element.attribute("disabled").is_some(),
+        checked: element.attribute("checked").is_some(),
+        selected: element.attribute("selected").is_some(),
+        options: browser_content_options(element),
         children,
     })
 }
@@ -8177,7 +8202,12 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "img" => Some("image"),
         "br" | "wbr" => Some("line_break"),
         "form" => Some("form"),
+        "fieldset" => Some("form_group"),
+        "label" => Some("label"),
+        "legend" => Some("legend"),
         "input" | "button" | "select" | "textarea" => Some("control"),
+        "optgroup" => Some("option_group"),
+        "option" => Some("option"),
         "ul" | "ol" | "menu" | "dir" => Some("list"),
         "li" | "dt" | "dd" => Some("list_item"),
         "table" => Some("table"),
@@ -8203,7 +8233,6 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "link"
             | "meta"
             | "param"
-            | "select"
             | "textarea"
             | "wbr"
     )
@@ -8211,10 +8240,9 @@ fn should_collect_browser_content_children(name: &str) -> bool {
 
 fn browser_content_text(element: &Element, role: &str) -> Option<String> {
     let text = match role {
-        "control" if element.name == "input" => {
-            element.attribute("value").unwrap_or_default().to_string()
-        }
-        "control" | "heading" | "link" | "table_caption" => {
+        "control" if element.name == "input" => browser_input_display_value(element),
+        "option" => browser_option_display_text(element),
+        "control" | "heading" | "label" | "legend" | "link" | "table_caption" => {
             visible_text_for_nodes(&element.children)
         }
         _ => String::new(),
@@ -8250,6 +8278,87 @@ fn browser_content_control_type(element: &Element) -> Option<String> {
         "select" | "textarea" => Some(element.name.clone()),
         _ => None,
     }
+}
+
+fn browser_content_value(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "button" => element.attribute("value").map(ToOwned::to_owned),
+        "input" => browser_input_value(element),
+        "option" => Some(browser_option_value(element)),
+        "select" => selected_option_value(&element.children),
+        "textarea" => Some(element_text(element)),
+        _ => None,
+    }
+}
+
+fn browser_content_options(element: &Element) -> Vec<String> {
+    match element.name.as_str() {
+        "select" => collect_select_options(&element.children),
+        _ => Vec::new(),
+    }
+}
+
+fn selected_option_value(nodes: &[Node]) -> Option<String> {
+    let mut first = None;
+    selected_option_value_in(nodes, &mut first).or(first)
+}
+
+fn selected_option_value_in(nodes: &[Node], first: &mut Option<String>) -> Option<String> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "option" {
+            let value = browser_option_value(element);
+            if first.is_none() {
+                *first = Some(value.clone());
+            }
+            if element.attribute("selected").is_some() {
+                return Some(value);
+            }
+        } else if let Some(value) = selected_option_value_in(&element.children, first) {
+            return Some(value);
+        }
+    }
+    None
+}
+
+fn browser_input_display_value(element: &Element) -> String {
+    match element
+        .attribute("type")
+        .map(|input_type| input_type.to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("checkbox" | "hidden" | "password" | "radio") => String::new(),
+        _ => element.attribute("value").unwrap_or_default().to_string(),
+    }
+}
+
+fn browser_input_value(element: &Element) -> Option<String> {
+    match element
+        .attribute("type")
+        .map(|input_type| input_type.to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("checkbox" | "radio") => Some(element.attribute("value").unwrap_or("on").to_string()),
+        _ => element.attribute("value").map(ToOwned::to_owned),
+    }
+}
+
+fn browser_option_display_text(element: &Element) -> String {
+    let text = visible_text_for_nodes(&element.children);
+    if text.is_empty() {
+        element.attribute("label").unwrap_or_default().to_string()
+    } else {
+        text
+    }
+}
+
+fn browser_option_value(element: &Element) -> String {
+    element
+        .attribute("value")
+        .map(ToOwned::to_owned)
+        .unwrap_or_else(|| browser_option_display_text(element))
 }
 
 fn is_browser_block_element(name: &str) -> bool {
@@ -8290,7 +8399,8 @@ fn browser_render_display(role: &str) -> &'static str {
         "inline" | "link" => "inline",
         "image" | "control" => "inline-replaced",
         "line_break" => "line-break",
-        "heading" | "block" | "form" | "list" => "block",
+        "heading" | "block" | "form" | "form_group" | "legend" | "list" => "block",
+        "label" | "option" | "option_group" => "inline",
         "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
@@ -8320,7 +8430,7 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
                     .map(|input_type| input_type.to_ascii_lowercase())
                     .unwrap_or_else(|| "text".to_string()),
                 name: element.attribute("name").map(ToOwned::to_owned),
-                value: element.attribute("value").map(ToOwned::to_owned),
+                value: browser_input_value(element),
                 disabled: element.attribute("disabled").is_some(),
                 checked: element.attribute("checked").is_some(),
                 text: String::new(),
@@ -8341,7 +8451,7 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
             "select" => controls.push(BrowserFormControl {
                 control_type: "select".to_string(),
                 name: element.attribute("name").map(ToOwned::to_owned),
-                value: None,
+                value: selected_option_value(&element.children),
                 disabled: element.attribute("disabled").is_some(),
                 checked: false,
                 text: visible_text_for_nodes(&element.children),
@@ -8350,7 +8460,7 @@ fn collect_form_controls_into(nodes: &[Node], controls: &mut Vec<BrowserFormCont
             "textarea" => controls.push(BrowserFormControl {
                 control_type: "textarea".to_string(),
                 name: element.attribute("name").map(ToOwned::to_owned),
-                value: None,
+                value: Some(element_text(element)),
                 disabled: element.attribute("disabled").is_some(),
                 checked: false,
                 text: element_text(element),

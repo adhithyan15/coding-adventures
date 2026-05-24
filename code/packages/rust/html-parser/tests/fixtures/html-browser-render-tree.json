@@ -56,8 +56,8 @@
     },
     {
       "id": "form-and-table-display",
-      "description": "Form controls become inline replaced boxes, and parser-implied table sections become table row group inputs.",
-      "input": "<body><form><input value=query><button>Go</button></form><table><tr><td>A<td>B</table>",
+      "description": "Form controls become inline replaced boxes with stable control metadata, and parser-implied table sections become table row group inputs.",
+      "input": "<body><form><input value=query><select name=section><option value=books>Books<option selected>Manuals</select><textarea>Notes</textarea><button>Go</button></form><table><tr><td>A<td>B</table>",
       "expected": {
         "children": [
           {
@@ -70,7 +70,51 @@
             "alt": null,
             "control_type": null,
             "children": [
-              { "display": "inline-replaced", "role": "control", "name": "input", "text": "query", "href": null, "src": null, "alt": null, "control_type": "text", "children": [] },
+              { "display": "inline-replaced", "role": "control", "name": "input", "text": "query", "href": null, "src": null, "alt": null, "control_type": "text", "value": "query", "children": [] },
+              {
+                "display": "inline-replaced",
+                "role": "control",
+                "name": "select",
+                "text": "Books Manuals",
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": "select",
+                "value": "Manuals",
+                "options": ["Books", "Manuals"],
+                "children": [
+                  {
+                    "display": "inline",
+                    "role": "option",
+                    "name": "option",
+                    "text": "Books",
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "value": "books",
+                    "children": [
+                      { "display": "inline-text", "role": "text", "name": null, "text": "Books", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                    ]
+                  },
+                  {
+                    "display": "inline",
+                    "role": "option",
+                    "name": "option",
+                    "text": "Manuals",
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "control_type": null,
+                    "value": "Manuals",
+                    "selected": true,
+                    "children": [
+                      { "display": "inline-text", "role": "text", "name": null, "text": "Manuals", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+                    ]
+                  }
+                ]
+              },
+              { "display": "inline-replaced", "role": "control", "name": "textarea", "text": "Notes", "href": null, "src": null, "alt": null, "control_type": "textarea", "value": "Notes", "children": [] },
               { "display": "inline-replaced", "role": "control", "name": "button", "text": "Go", "href": null, "src": null, "alt": null, "control_type": "submit", "children": [] }
             ]
           },
