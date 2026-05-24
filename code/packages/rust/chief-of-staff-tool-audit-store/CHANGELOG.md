@@ -124,6 +124,10 @@ All notable changes to this package will be documented in this file.
   for supervisor drain run reports and summaries.
 - Stable host-decision route targets for scheduler, follow-up, investigation,
   triage, and no-route supervisor drain run queues.
+- Stable host-decision queue keys for grouping decision kind, lane, route,
+  priority, and readiness in one supervisor drain run host action key.
+- Flattened host-decision queue-key integrity flags for checking each key
+  component against the typed supervisor drain run decision.
 - Aggregate host-decision and host-routing classifier label-integrity flags for
   supervisor drain run reports and summaries.
 - Stable batch-write, replay, and inventory health labels with write
