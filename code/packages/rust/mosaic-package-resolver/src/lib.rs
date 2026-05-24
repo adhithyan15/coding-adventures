@@ -111,6 +111,17 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
     "HostCheckbox", "HostRadio",
     "HostLink", "HostTooltip", "HostNumberInput",
+    // UI31 — `HostTable` sibling primitives. The structural sub-tags
+    // (HostTableColGroup / HostTableHead / HostTableBody /
+    // HostTableFoot) plus the cell-defining `Col` lower together with
+    // HostTable into a real semantic-HTML `<table>` (and the matching
+    // native widgets on every other backend). Pre-UI31 these were
+    // recognised only by the React emitter's HostTable dispatcher and
+    // sat outside KERNEL_PRIMITIVES — UI31 makes them first-class so
+    // future backends don't need to special-case them and so
+    // package-resolver-driven validation accepts them at parse time.
+    "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
+    "Col",
 ];
 
 // ---------------------------------------------------------------------------
@@ -668,12 +679,13 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The twenty-one primitives — fifteen from UI29 §2.1, plus
+        // The twenty-six primitives — fifteen from UI29 §2.1, plus
         // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
         // HostRadio added in UI29-2 (#3978), plus HostLink,
-        // HostTooltip, and HostNumberInput added in UI29-4 (this
-        // batch).
-        let expected_21 = [
+        // HostTooltip, and HostNumberInput added in UI29-4, plus the
+        // five UI31 HostTable structural sub-tags (HostTableColGroup,
+        // HostTableHead, HostTableBody, HostTableFoot, Col).
+        let expected_26 = [
             "Box", "Row", "Column", "Stack", "Text", "Image",
             "Spacer", "Divider", "Icon",
             "If", "For",
@@ -681,8 +693,10 @@ version = "1"
             "HostDialog",
             "HostCheckbox", "HostRadio",
             "HostLink", "HostTooltip", "HostNumberInput",
+            "HostTableColGroup", "HostTableHead", "HostTableBody",
+            "HostTableFoot", "Col",
         ];
-        for name in &expected_21 {
+        for name in &expected_26 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"
