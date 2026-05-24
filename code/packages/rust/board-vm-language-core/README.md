@@ -233,6 +233,11 @@ callback transport state without rebuilding resolution policy.
 stable transport completion records with Rust-owned completion names, labels,
 queue-depth metadata, and messages, so frontends can consume finished callback
 transport state without rebuilding finalization policy.
+`input_callback_transport_diagnostic_summary` reports those completions as
+stable transport diagnostic records with Rust-owned diagnostic names, labels,
+queue-depth metadata, terminal/retry flags, and messages, so frontends can
+surface callback transport completion state without rebuilding completion
+policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
