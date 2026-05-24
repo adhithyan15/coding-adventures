@@ -30,6 +30,7 @@ Included surfaces:
 - Hue light resource decoding
 - Hue light, grouped-light, motion, and button state update extraction from
   snapshots and event-stream batches
+- unified Hue state update extraction from snapshots and event-stream batches
 - grouped-light state update collection reads through the `HueClient` facade
 
 ## Dependencies

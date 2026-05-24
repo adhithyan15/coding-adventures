@@ -964,6 +964,149 @@ impl HueStateUpdateSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum HueStateUpdate {
+    Light(HueLightStateUpdate),
+    GroupedLight(HueGroupedLightStateUpdate),
+    Motion(HueMotionStateUpdate),
+    Button(HueButtonStateUpdate),
+}
+
+impl HueStateUpdate {
+    pub fn resource_type(&self) -> HueResourceType {
+        match self {
+            Self::Light(_) => HueResourceType::Light,
+            Self::GroupedLight(_) => HueResourceType::GroupedLight,
+            Self::Motion(_) => HueResourceType::Motion,
+            Self::Button(_) => HueResourceType::Button,
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        match self {
+            Self::Light(update) => update.has_state(),
+            Self::GroupedLight(update) => update.has_state(),
+            Self::Motion(update) => update.has_state(),
+            Self::Button(update) => update.has_state(),
+        }
+    }
+
+    pub fn summary(&self) -> HueStateUpdateSummary {
+        match self {
+            Self::Light(update) => update.summary(),
+            Self::GroupedLight(update) => update.summary(),
+            Self::Motion(update) => update.summary(),
+            Self::Button(update) => update.summary(),
+        }
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        match self {
+            Self::Light(update) => update.state_deltas(),
+            Self::GroupedLight(update) => update.state_deltas(),
+            Self::Motion(update) => update.state_deltas(),
+            Self::Button(update) => update.state_deltas(),
+        }
+    }
+}
+
+impl From<HueLightStateUpdate> for HueStateUpdate {
+    fn from(update: HueLightStateUpdate) -> Self {
+        Self::Light(update)
+    }
+}
+
+impl From<HueGroupedLightStateUpdate> for HueStateUpdate {
+    fn from(update: HueGroupedLightStateUpdate) -> Self {
+        Self::GroupedLight(update)
+    }
+}
+
+impl From<HueMotionStateUpdate> for HueStateUpdate {
+    fn from(update: HueMotionStateUpdate) -> Self {
+        Self::Motion(update)
+    }
+}
+
+impl From<HueButtonStateUpdate> for HueStateUpdate {
+    fn from(update: HueButtonStateUpdate) -> Self {
+        Self::Button(update)
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct HueStateUpdateSetSummary {
+    pub total_updates: usize,
+    pub light_updates: usize,
+    pub grouped_light_updates: usize,
+    pub motion_updates: usize,
+    pub button_updates: usize,
+    pub updates_with_state: usize,
+    pub updates_with_owner: usize,
+    pub light_surface_updates: usize,
+    pub sensor_or_input_updates: usize,
+    pub state_field_count: usize,
+    pub delta_count: usize,
+}
+
+impl HueStateUpdateSetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_updates<'a>(updates: impl IntoIterator<Item = &'a HueStateUpdate>) -> Self {
+        let mut summary = Self::empty();
+        for update in updates {
+            summary.record_summary(&update.summary());
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &HueStateUpdateSummary) {
+        self.total_updates += 1;
+        match summary.resource.resource_type {
+            HueResourceType::Light => self.light_updates += 1,
+            HueResourceType::GroupedLight => self.grouped_light_updates += 1,
+            HueResourceType::Motion => self.motion_updates += 1,
+            HueResourceType::Button => self.button_updates += 1,
+            _ => {}
+        }
+        if summary.has_state() {
+            self.updates_with_state += 1;
+        }
+        if summary.has_owner() {
+            self.updates_with_owner += 1;
+        }
+        if summary.is_light_surface() {
+            self.light_surface_updates += 1;
+        }
+        if matches!(
+            summary.resource.resource_type,
+            HueResourceType::Motion | HueResourceType::Button
+        ) {
+            self.sensor_or_input_updates += 1;
+        }
+        self.state_field_count += summary.state_field_count;
+        self.delta_count += summary.delta_count;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_updates == 0
+    }
+
+    pub fn has_light_surfaces(&self) -> bool {
+        self.light_surface_updates > 0
+    }
+
+    pub fn has_sensor_or_input_updates(&self) -> bool {
+        self.sensor_or_input_updates > 0
+    }
+
+    pub fn projects_deltas(&self) -> bool {
+        self.delta_count > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueDeviceResource {
     pub id: HueResourceId,
@@ -1866,6 +2009,72 @@ mod tests {
                 },
             ]
         );
+    }
+
+    #[test]
+    fn hue_state_update_enum_preserves_summaries_and_deltas() {
+        let light = HueStateUpdate::from(HueLightStateUpdate {
+            id: HueResourceId::trusted("light-1"),
+            owner_device_id: Some(HueResourceId::trusted("device-1")),
+            name: Some("Kitchen".to_string()),
+            on: Some(true),
+            brightness: Some(50),
+            color_temperature_mirek: None,
+        });
+        let grouped = HueStateUpdate::from(HueGroupedLightStateUpdate {
+            id: HueResourceId::trusted("grouped-light-1"),
+            owner: Some(HueResourceRef::new(
+                HueResourceType::Room,
+                HueResourceId::trusted("room-1"),
+            )),
+            name: None,
+            on: None,
+            brightness: Some(10),
+        });
+        let motion = HueStateUpdate::from(HueMotionStateUpdate {
+            id: HueResourceId::trusted("motion-1"),
+            owner_device_id: None,
+            name: None,
+            motion: Some(true),
+            motion_valid: Some(true),
+        });
+        let button = HueStateUpdate::from(HueButtonStateUpdate {
+            id: HueResourceId::trusted("button-1"),
+            owner_device_id: None,
+            name: None,
+            last_event: Some("short_release".to_string()),
+        });
+        let updates = vec![light, grouped, motion, button];
+
+        let summary = HueStateUpdateSetSummary::from_updates(&updates);
+
+        assert_eq!(updates[0].resource_type(), HueResourceType::Light);
+        assert_eq!(updates[0].state_deltas().len(), 2);
+        assert_eq!(
+            updates[1].summary().resource.resource_type,
+            HueResourceType::GroupedLight
+        );
+        assert!(updates.iter().all(HueStateUpdate::has_state));
+        assert_eq!(
+            summary,
+            HueStateUpdateSetSummary {
+                total_updates: 4,
+                light_updates: 1,
+                grouped_light_updates: 1,
+                motion_updates: 1,
+                button_updates: 1,
+                updates_with_state: 4,
+                updates_with_owner: 2,
+                light_surface_updates: 2,
+                sensor_or_input_updates: 2,
+                state_field_count: 6,
+                delta_count: 5,
+            }
+        );
+        assert!(summary.has_light_surfaces());
+        assert!(summary.has_sensor_or_input_updates());
+        assert!(summary.projects_deltas());
+        assert!(HueStateUpdateSetSummary::empty().is_empty());
     }
 
     #[test]
