@@ -215,6 +215,10 @@ documented in this file.
   metadata, including script kind, async/defer/nomodule flags, inline
   script/style text, integrity/crossorigin/referrer-policy hints, fetch
   priority, blocking, alternate stylesheets, and disabled stylesheet state.
+- Browser-facing image summaries now carry responsive image selection metadata,
+  including `srcset`/`sizes`, resolved candidate URLs, `picture/source`
+  media/type hints, lazy loading, decoding, fetch priority, CORS/referrer
+  policy, usemap, and server-side image-map state.
 - Browser-facing table summaries and tree projections now carry table layout and
   accessibility metadata, including effective column counts, column hints,
   row-group identity, column and cell spans, header associations, scopes, and

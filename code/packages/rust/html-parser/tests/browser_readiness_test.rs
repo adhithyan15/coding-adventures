@@ -1,7 +1,7 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserForm, BrowserFormControl,
-    BrowserHeading, BrowserImage, BrowserLink, BrowserMedia, BrowserMeta, BrowserResource,
-    BrowserScript, BrowserStylesheet, BrowserTable,
+    BrowserHeading, BrowserImage, BrowserImageSource, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserResource, BrowserScript, BrowserStylesheet, BrowserTable,
 };
 use serde::Deserialize;
 
@@ -172,6 +172,42 @@ struct ExpectedImage {
     alt: Option<String>,
     width: Option<String>,
     height: Option<String>,
+    #[serde(default)]
+    srcset: Option<String>,
+    #[serde(default)]
+    resolved_srcset: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    decoding: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    usemap: Option<String>,
+    #[serde(default)]
+    ismap: bool,
+    #[serde(default)]
+    sources: Vec<ExpectedImageSource>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedImageSource {
+    #[serde(default)]
+    srcset: Option<String>,
+    #[serde(default)]
+    resolved_srcset: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -460,6 +496,33 @@ impl ExpectedImage {
             alt: self.alt,
             width: self.width,
             height: self.height,
+            srcset: self.srcset,
+            resolved_srcset: self.resolved_srcset,
+            sizes: self.sizes,
+            loading: self.loading,
+            decoding: self.decoding,
+            fetchpriority: self.fetchpriority,
+            crossorigin: self.crossorigin,
+            referrerpolicy: self.referrerpolicy,
+            usemap: self.usemap,
+            ismap: self.ismap,
+            sources: self
+                .sources
+                .into_iter()
+                .map(ExpectedImageSource::into_browser_image_source)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedImageSource {
+    fn into_browser_image_source(self) -> BrowserImageSource {
+        BrowserImageSource {
+            srcset: self.srcset,
+            resolved_srcset: self.resolved_srcset,
+            sizes: self.sizes,
+            media: self.media,
+            type_hint: self.type_hint,
         }
     }
 }

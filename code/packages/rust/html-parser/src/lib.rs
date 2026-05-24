@@ -1070,6 +1070,26 @@ pub struct BrowserImage {
     pub alt: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub loading: Option<String>,
+    pub decoding: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub usemap: Option<String>,
+    pub ismap: bool,
+    pub sources: Vec<BrowserImageSource>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageSource {
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub media: Option<String>,
+    pub type_hint: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1177,7 +1197,7 @@ impl BrowserDocument {
             collect_head_browser_facts(&head.children, &mut summary);
         }
         let labels = collect_label_texts_by_control_id(body_children);
-        collect_browser_facts(body_children, &mut summary, &labels);
+        collect_browser_facts(body_children, &mut summary, &labels, &[]);
         summary
     }
 }
@@ -8204,7 +8224,9 @@ fn collect_browser_facts(
     nodes: &[Node],
     summary: &mut BrowserDocument,
     labels: &[(String, String)],
+    picture_sources: &[BrowserImageSource],
 ) {
+    let mut pending_picture_sources = Vec::new();
     for node in nodes {
         let Node::Element(element) = node else {
             continue;
@@ -8225,15 +8247,27 @@ fn collect_browser_facts(
                 title: element.attribute("title").map(ToOwned::to_owned),
                 text: visible_text_for_nodes(&element.children),
             }),
-            "img" => summary.images.push(BrowserImage {
-                src: element.attribute("src").map(ToOwned::to_owned),
-                resolved_src: element
-                    .attribute("src")
-                    .and_then(|src| resolve_browser_url(src, summary.base_href.as_deref())),
-                alt: element.attribute("alt").map(ToOwned::to_owned),
-                width: element.attribute("width").map(ToOwned::to_owned),
-                height: element.attribute("height").map(ToOwned::to_owned),
-            }),
+            "picture" => {
+                collect_browser_facts(&element.children, summary, labels, &[]);
+                continue;
+            }
+            "source" => {
+                if picture_sources.is_empty() {
+                    pending_picture_sources.push(browser_image_source_element(
+                        element,
+                        summary.base_href.as_deref(),
+                    ));
+                }
+            }
+            "img" => summary.images.push(browser_image_element(
+                element,
+                summary.base_href.as_deref(),
+                if picture_sources.is_empty() {
+                    &pending_picture_sources
+                } else {
+                    picture_sources
+                },
+            )),
             "audio" | "video" => summary
                 .media
                 .push(browser_media_element(element, summary.base_href.as_deref())),
@@ -8273,7 +8307,10 @@ fn collect_browser_facts(
             _ => {}
         }
 
-        collect_browser_facts(&element.children, summary, labels);
+        collect_browser_facts(&element.children, summary, labels, picture_sources);
+        if element.name == "img" {
+            pending_picture_sources.clear();
+        }
     }
 }
 
@@ -8900,6 +8937,75 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "audio" | "video" => Some(element.name.clone()),
         "canvas" => Some("canvas".to_string()),
         _ => None,
+    }
+}
+
+fn browser_image_element(
+    element: &Element,
+    base_href: Option<&str>,
+    picture_sources: &[BrowserImageSource],
+) -> BrowserImage {
+    let src = element.attribute("src").map(ToOwned::to_owned);
+    let srcset = element.attribute("srcset").map(ToOwned::to_owned);
+    BrowserImage {
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        resolved_srcset: srcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        srcset,
+        sizes: element.attribute("sizes").map(ToOwned::to_owned),
+        loading: element.attribute("loading").map(ToOwned::to_owned),
+        decoding: element.attribute("decoding").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        usemap: element.attribute("usemap").map(ToOwned::to_owned),
+        ismap: element.attribute("ismap").is_some(),
+        sources: picture_sources.to_vec(),
+    }
+}
+
+fn browser_image_source_element(element: &Element, base_href: Option<&str>) -> BrowserImageSource {
+    let srcset = element.attribute("srcset").map(ToOwned::to_owned);
+    BrowserImageSource {
+        resolved_srcset: srcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        srcset,
+        sizes: element.attribute("sizes").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+    }
+}
+
+fn resolve_browser_srcset(srcset: &str, base_href: Option<&str>) -> String {
+    srcset
+        .split(',')
+        .map(|candidate| resolve_browser_srcset_candidate(candidate, base_href))
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+fn resolve_browser_srcset_candidate(candidate: &str, base_href: Option<&str>) -> String {
+    let trimmed = candidate.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    let Some((url, descriptor)) = trimmed.split_once(char::is_whitespace) else {
+        return resolve_browser_url(trimmed, base_href).unwrap_or_else(|| trimmed.to_string());
+    };
+    let resolved_url = resolve_browser_url(url, base_href).unwrap_or_else(|| url.to_string());
+    let descriptor = descriptor.trim();
+    if descriptor.is_empty() {
+        resolved_url
+    } else {
+        format!("{resolved_url} {descriptor}")
     }
 }
 
@@ -9877,6 +9983,54 @@ mod tests {
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         assert_eq!(render_tree.children[0].display, "inline-replaced");
         assert_eq!(render_tree.children[1].display, "inline-replaced");
+    }
+
+    #[test]
+    fn browser_responsive_image_metadata_tracks_sources_and_loading_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/gallery/index.html\"><body>\
+             <picture>\
+               <source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\">\
+               <source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\">\
+               <img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap>\
+             </picture>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.images.len(), 1);
+        let image = &summary.images[0];
+        assert_eq!(image.alt.as_deref(), Some("Hero"));
+        assert_eq!(
+            image.resolved_src.as_deref(),
+            Some("https://example.test/gallery/hero.jpg")
+        );
+        assert_eq!(
+            image.resolved_srcset.as_deref(),
+            Some("https://example.test/gallery/hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w")
+        );
+        assert_eq!(
+            image.sizes.as_deref(),
+            Some("(max-width: 600px) 100vw, 50vw")
+        );
+        assert_eq!(image.loading.as_deref(), Some("lazy"));
+        assert_eq!(image.decoding.as_deref(), Some("async"));
+        assert_eq!(image.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(image.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(image.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(image.usemap.as_deref(), Some("#hero-map"));
+        assert!(image.ismap);
+        assert_eq!(image.sources.len(), 2);
+        assert_eq!(
+            image.sources[0].media.as_deref(),
+            Some("(min-width: 800px)")
+        );
+        assert_eq!(image.sources[0].type_hint.as_deref(), Some("image/avif"));
+        assert_eq!(
+            image.sources[0].resolved_srcset.as_deref(),
+            Some("https://example.test/gallery/hero-wide.avif 1x, https://example.test/gallery/hero-wide@2x.avif 2x")
+        );
+        assert_eq!(image.sources[1].sizes.as_deref(), Some("100vw"));
     }
 
     #[test]

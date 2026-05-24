@@ -22,7 +22,10 @@ required/readonly/multiple control state. Media cases pin audio/video playback
 flags and preload/poster metadata. Script/style cases pin module/classic script
 kind, async/defer/nomodule flags, inline script/style text, and loading-policy
 hints such as integrity, crossorigin, referrer policy, fetch priority,
-blocking, disabled state, and alternate stylesheets.
+blocking, disabled state, and alternate stylesheets. Responsive image cases pin
+`srcset`/`sizes`, resolved candidate URLs, `picture/source` media/type hints,
+lazy loading, decoding, fetch priority, CORS/referrer policy, usemap, and
+server-side image-map state.
 
 `html-browser-content-tree.json` is a checked parser acceptance corpus for the
 browser-facing content-tree projection. It verifies that broad HTML body
