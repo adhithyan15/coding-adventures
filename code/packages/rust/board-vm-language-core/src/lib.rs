@@ -1909,6 +1909,85 @@ pub struct LanguageInputCallbackTransportDecisionSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportResolutionKind {
+    CallbackRunnerHandoffResolution,
+    AdapterEventPublicationResolution,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportResolutionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub resolution_label: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_resolution: u8,
+    pub message: String,
+    pub decision_summary: LanguageInputCallbackTransportDecisionSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackDiagnosticStage {
     Plan,
     Event,
@@ -2617,6 +2696,19 @@ pub const fn input_callback_transport_decision_kind_name(
         }
         LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision => {
             "adapter_event_publication_decision"
+        }
+    }
+}
+
+pub const fn input_callback_transport_resolution_kind_name(
+    kind: LanguageInputCallbackTransportResolutionKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution => {
+            "callback_runner_handoff_resolution"
+        }
+        LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution => {
+            "adapter_event_publication_resolution"
         }
     }
 }
@@ -4765,6 +4857,87 @@ pub fn input_callback_transport_decision_summary(
     }
 }
 
+pub fn input_callback_transport_resolution_summary(
+    decision_summary: &LanguageInputCallbackTransportDecisionSummary,
+) -> LanguageInputCallbackTransportResolutionSummary {
+    let resolution_kind = input_callback_transport_resolution_kind(decision_summary.decision_kind);
+
+    LanguageInputCallbackTransportResolutionSummary {
+        endpoint: decision_summary.endpoint.clone(),
+        connection_label: decision_summary.connection_label.clone(),
+        resolution_label: input_callback_transport_resolution_label(
+            decision_summary,
+            resolution_kind,
+        ),
+        resolution_kind,
+        resolution_name: input_callback_transport_resolution_kind_name(resolution_kind).to_owned(),
+        decision_kind: decision_summary.decision_kind,
+        decision_name: decision_summary.decision_name.clone(),
+        logic_kind: decision_summary.logic_kind,
+        logic_name: decision_summary.logic_name.clone(),
+        reference_kind: decision_summary.reference_kind,
+        reference_name: decision_summary.reference_name.clone(),
+        bookmark_kind: decision_summary.bookmark_kind,
+        bookmark_name: decision_summary.bookmark_name.clone(),
+        cursor_kind: decision_summary.cursor_kind,
+        cursor_name: decision_summary.cursor_name.clone(),
+        marker_kind: decision_summary.marker_kind,
+        marker_name: decision_summary.marker_name.clone(),
+        checkpoint_kind: decision_summary.checkpoint_kind,
+        checkpoint_name: decision_summary.checkpoint_name.clone(),
+        snapshot_kind: decision_summary.snapshot_kind,
+        snapshot_name: decision_summary.snapshot_name.clone(),
+        archive_kind: decision_summary.archive_kind,
+        archive_name: decision_summary.archive_name.clone(),
+        journal_kind: decision_summary.journal_kind,
+        journal_name: decision_summary.journal_name.clone(),
+        log_kind: decision_summary.log_kind,
+        log_name: decision_summary.log_name.clone(),
+        audit_kind: decision_summary.audit_kind,
+        audit_name: decision_summary.audit_name.clone(),
+        trace_kind: decision_summary.trace_kind,
+        trace_name: decision_summary.trace_name.clone(),
+        outcome_kind: decision_summary.outcome_kind,
+        outcome_name: decision_summary.outcome_name.clone(),
+        receipt_kind: decision_summary.receipt_kind,
+        receipt_name: decision_summary.receipt_name.clone(),
+        acknowledgement_kind: decision_summary.acknowledgement_kind,
+        acknowledgement_name: decision_summary.acknowledgement_name.clone(),
+        delivery_route: decision_summary.delivery_route,
+        delivery_route_name: decision_summary.delivery_route_name.clone(),
+        event_kind: decision_summary.event_kind,
+        event_name: decision_summary.event_name.clone(),
+        report_kind: decision_summary.report_kind,
+        report_name: decision_summary.report_name.clone(),
+        action: decision_summary.action,
+        action_name: decision_summary.action_name.clone(),
+        callback_runner_handoff: decision_summary.callback_runner_handoff,
+        adapter_event_published: decision_summary.adapter_event_published,
+        delivery_acknowledged: decision_summary.delivery_acknowledged,
+        receipt_recorded: decision_summary.receipt_recorded,
+        outcome_recorded: decision_summary.outcome_recorded,
+        trace_recorded: decision_summary.trace_recorded,
+        audit_recorded: decision_summary.audit_recorded,
+        log_recorded: decision_summary.log_recorded,
+        journal_recorded: decision_summary.journal_recorded,
+        archive_recorded: decision_summary.archive_recorded,
+        snapshot_recorded: decision_summary.snapshot_recorded,
+        checkpoint_recorded: decision_summary.checkpoint_recorded,
+        marker_recorded: decision_summary.marker_recorded,
+        cursor_recorded: decision_summary.cursor_recorded,
+        bookmark_recorded: decision_summary.bookmark_recorded,
+        reference_recorded: decision_summary.reference_recorded,
+        logic_recorded: decision_summary.logic_recorded,
+        decision_recorded: decision_summary.decision_recorded,
+        resolution_recorded: true,
+        terminal: decision_summary.terminal,
+        retryable: decision_summary.retryable,
+        queue_depth_after_resolution: decision_summary.queue_depth_after_decision,
+        message: input_callback_transport_resolution_message(resolution_kind).to_owned(),
+        decision_summary: decision_summary.clone(),
+    }
+}
+
 pub fn input_callback_plan_diagnostic(
     error: &LanguageInputCallbackPlanError,
 ) -> LanguageInputCallbackPlanDiagnostic {
@@ -6695,6 +6868,44 @@ fn input_callback_transport_decision_message(
         }
         LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision => {
             "Transport decision should choose the adapter event publication logic."
+        }
+    }
+}
+
+fn input_callback_transport_resolution_kind(
+    decision_kind: LanguageInputCallbackTransportDecisionKind,
+) -> LanguageInputCallbackTransportResolutionKind {
+    match decision_kind {
+        LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision => {
+            LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution
+        }
+        LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision => {
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        }
+    }
+}
+
+fn input_callback_transport_resolution_label(
+    decision_summary: &LanguageInputCallbackTransportDecisionSummary,
+    resolution_kind: LanguageInputCallbackTransportResolutionKind,
+) -> String {
+    format!(
+        "{} transport_resolution={} resolution_recorded=true queue_depth_after_resolution={}",
+        decision_summary.decision_label,
+        input_callback_transport_resolution_kind_name(resolution_kind),
+        decision_summary.queue_depth_after_decision
+    )
+}
+
+fn input_callback_transport_resolution_message(
+    resolution_kind: LanguageInputCallbackTransportResolutionKind,
+) -> &'static str {
+    match resolution_kind {
+        LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution => {
+            "Transport resolution should finalize the callback-runner handoff decision."
+        }
+        LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution => {
+            "Transport resolution should finalize the adapter event publication decision."
         }
     }
 }
@@ -16437,6 +16648,247 @@ mod tests {
             )
         );
         assert_eq!(dropped.logic_summary, dropped_logic);
+    }
+
+    #[test]
+    fn input_callback_transport_resolution_is_owned_by_rust_language_core() {
+        fn decision_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportDecisionSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            input_callback_transport_decision_summary(&logic)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_decision = decision_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_resolution_summary(&completed_decision);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.resolution_name,
+            "adapter_event_publication_resolution"
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_resolution, 2);
+        assert_eq!(
+            completed.resolution_label,
+            format!(
+                "{} transport_resolution=adapter_event_publication_resolution resolution_recorded=true queue_depth_after_resolution=2",
+                completed_decision.decision_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport resolution should finalize the adapter event publication decision."
+        );
+        assert_eq!(completed.decision_summary, completed_decision);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_decision = decision_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_resolution_summary(&pending_decision);
+
+        assert_eq!(
+            pending.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution
+        );
+        assert_eq!(
+            pending.resolution_name,
+            "callback_runner_handoff_resolution"
+        );
+        assert_eq!(
+            pending.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_resolution, 3);
+        assert_eq!(
+            pending.resolution_label,
+            format!(
+                "{} transport_resolution=callback_runner_handoff_resolution resolution_recorded=true queue_depth_after_resolution=3",
+                pending_decision.decision_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport resolution should finalize the callback-runner handoff decision."
+        );
+        assert_eq!(pending.decision_summary, pending_decision);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_decision = decision_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_resolution_summary(&dropped_decision);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            dropped.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_resolution, 1);
+        assert_eq!(
+            dropped.resolution_label,
+            format!(
+                "{} transport_resolution=adapter_event_publication_resolution resolution_recorded=true queue_depth_after_resolution=1",
+                dropped_decision.decision_label
+            )
+        );
+        assert_eq!(dropped.decision_summary, dropped_decision);
     }
 
     #[test]
