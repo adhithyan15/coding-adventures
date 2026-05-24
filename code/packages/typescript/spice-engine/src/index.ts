@@ -1428,6 +1428,136 @@ export function complexPhase(value: Complex): number {
   return Math.atan2(value.imag, value.real);
 }
 
+export function formatDcTable(
+  result: DcResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultOutputProbes(
+    result.nodeVoltages,
+    result.branchCurrents,
+  );
+  const values = selectedProbes.map((probe) =>
+    formatTableNumber(
+      tableProbeValue(
+        result.nodeVoltages,
+        result.branchCurrents,
+        probe,
+        "formatDcTable",
+      ),
+    ),
+  );
+  return [
+    ["Index", ...selectedProbes].join("\t"),
+    ["0", ...values].join("\t"),
+    "",
+  ].join("\n");
+}
+
+export function formatTransientTable(
+  points: readonly TransientPoint[],
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultTransientOutputProbes(points);
+  const rows = [["Index", "Time", ...selectedProbes].join("\t")];
+  points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.nodeVoltages,
+          point.branchCurrents,
+          probe,
+          "formatTransientTable",
+        ),
+      ),
+    );
+    rows.push([String(index), formatTableNumber(point.time), ...values].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+function defaultOutputProbes(
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: ReadonlyMap<string, number>,
+): string[] {
+  return [
+    ...Array.from(nodeVoltages.keys()).sort().map((name) => `V(${name})`),
+    ...Array.from(branchCurrents.keys()).sort(),
+  ];
+}
+
+function defaultTransientOutputProbes(points: readonly TransientPoint[]): string[] {
+  const nodeNames = new Set<string>();
+  const branchNames = new Set<string>();
+  for (const point of points) {
+    for (const name of point.nodeVoltages.keys()) {
+      nodeNames.add(name);
+    }
+    for (const name of point.branchCurrents.keys()) {
+      branchNames.add(name);
+    }
+  }
+  return [
+    ...Array.from(nodeNames).sort().map((name) => `V(${name})`),
+    ...Array.from(branchNames).sort(),
+  ];
+}
+
+function formatTableNumber(value: number): string {
+  const [mantissa, exponentText] = value.toExponential(6).split("e");
+  const exponent = Number.parseInt(exponentText, 10);
+  const sign = exponent < 0 ? "-" : "+";
+  const magnitude = Math.abs(exponent).toString().padStart(2, "0");
+  return `${mantissa}e${sign}${magnitude}`;
+}
+
+function tableProbeValue(
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: ReadonlyMap<string, number>,
+  probe: string,
+  context: string,
+): number {
+  const text = probe.trim();
+  const lower = text.toLowerCase();
+  if (lower.startsWith("v(") && text.endsWith(")")) {
+    const args = text.slice(2, -1).split(",").map((arg) => arg.trim());
+    if (args.length === 1) {
+      return tableVoltage(nodeVoltages, args[0], context);
+    }
+    if (args.length === 2) {
+      return tableVoltage(nodeVoltages, args[0], context) -
+        tableVoltage(nodeVoltages, args[1], context);
+    }
+  }
+  if (lower.startsWith("i(") && text.endsWith(")")) {
+    const key = `I(${text.slice(2, -1).trim()})`;
+    const value = branchCurrents.get(key);
+    if (value === undefined) {
+      throw invalidElement(context, `missing branch current probe ${probe}`);
+    }
+    return value;
+  }
+  if (text.length > 0) {
+    return tableVoltage(nodeVoltages, text, context);
+  }
+  throw invalidElement(context, "empty probe");
+}
+
+function tableVoltage(
+  nodeVoltages: ReadonlyMap<string, number>,
+  node: string,
+  context: string,
+): number {
+  if (isGround(node)) {
+    return 0.0;
+  }
+  const value = nodeVoltages.get(node);
+  if (value === undefined) {
+    throw invalidElement(context, `missing node voltage ${node}`);
+  }
+  return value;
+}
+
 export function dcOp(
   circuit: Circuit,
   options: DcOpOptions = {},

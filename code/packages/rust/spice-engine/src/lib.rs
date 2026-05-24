@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
@@ -2280,6 +2280,153 @@ impl DcResult {
             format!("I({source_name})")
         };
         self.branch_currents.get(&key).copied()
+    }
+}
+
+pub fn format_dc_table(result: &DcResult, probes: &[&str]) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_output_probes(&result.node_voltages, &result.branch_currents)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let values: Result<Vec<String>, SpiceError> = selected_probes
+        .iter()
+        .map(|probe| {
+            table_probe_value(
+                &result.node_voltages,
+                &result.branch_currents,
+                probe,
+                "format_dc_table",
+            )
+            .map(format_table_number)
+        })
+        .collect();
+    Ok(format!(
+        "Index\t{}\n0\t{}\n",
+        selected_probes.join("\t"),
+        values?.join("\t")
+    ))
+}
+
+pub fn format_transient_table(
+    points: &[TransientPoint],
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_transient_output_probes(points)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!("Index\tTime\t{}", selected_probes.join("\t"))];
+    for (index, point) in points.iter().enumerate() {
+        let values: Result<Vec<String>, SpiceError> = selected_probes
+            .iter()
+            .map(|probe| {
+                table_probe_value(
+                    &point.node_voltages,
+                    &point.branch_currents,
+                    probe,
+                    "format_transient_table",
+                )
+                .map(format_table_number)
+            })
+            .collect();
+        rows.push(format!(
+            "{index}\t{}\t{}",
+            format_table_number(point.time),
+            values?.join("\t")
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+fn default_output_probes(
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &BTreeMap<String, f64>,
+) -> Vec<String> {
+    node_voltages
+        .keys()
+        .map(|name| format!("V({name})"))
+        .chain(branch_currents.keys().cloned())
+        .collect()
+}
+
+fn default_transient_output_probes(points: &[TransientPoint]) -> Vec<String> {
+    let mut node_names = BTreeSet::new();
+    let mut branch_names = BTreeSet::new();
+    for point in points {
+        node_names.extend(point.node_voltages.keys().cloned());
+        branch_names.extend(point.branch_currents.keys().cloned());
+    }
+    node_names
+        .iter()
+        .map(|name| format!("V({name})"))
+        .chain(branch_names)
+        .collect()
+}
+
+fn format_table_number(value: f64) -> String {
+    let raw = format!("{value:.6e}");
+    if let Some((mantissa, exponent_text)) = raw.split_once('e') {
+        let exponent = exponent_text.parse::<i32>().unwrap_or(0);
+        return format!("{mantissa}e{exponent:+03}");
+    }
+    raw
+}
+
+fn table_probe_value(
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &BTreeMap<String, f64>,
+    probe: &str,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let text = probe.trim();
+    let lower = text.to_ascii_lowercase();
+    if lower.starts_with("v(") && text.ends_with(')') {
+        let args: Vec<&str> = text[2..text.len() - 1]
+            .split(',')
+            .map(|arg| arg.trim())
+            .collect();
+        if args.len() == 1 {
+            return table_voltage(node_voltages, args[0], context);
+        }
+        if args.len() == 2 {
+            return Ok(table_voltage(node_voltages, args[0], context)?
+                - table_voltage(node_voltages, args[1], context)?);
+        }
+    }
+    if lower.starts_with("i(") && text.ends_with(')') {
+        let key = format!("I({})", text[2..text.len() - 1].trim());
+        return branch_currents
+            .get(&key)
+            .copied()
+            .ok_or_else(|| table_error(context, &format!("missing branch current probe {probe}")));
+    }
+    if !text.is_empty() {
+        return table_voltage(node_voltages, text, context);
+    }
+    Err(table_error(context, "empty probe"))
+}
+
+fn table_voltage(
+    node_voltages: &BTreeMap<String, f64>,
+    node: &str,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    if is_ground(node) {
+        return Ok(0.0);
+    }
+    node_voltages
+        .get(node)
+        .copied()
+        .ok_or_else(|| table_error(context, &format!("missing node voltage {node}")))
+}
+
+fn table_error(context: &str, reason: &str) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: context.to_string(),
+        reason: reason.to_string(),
     }
 }
 

@@ -1272,6 +1272,27 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let src = instr.srcs.first().ok_or_else(|| {
         RunError::MalformedInstruction("const requires srcs[0]".into())
     })?;
+    // ── Path A increment 6a (twig-vm dispatch wrapper) ──────────────
+    //
+    // The twig-ir-compiler now emits `const 0 [ref<LispyPair>]` for
+    // every `(make_nil)` / `nil` site (matching the IIR-to-{wasm,jvm,
+    // clr,beam} backends' Phase 2 heap-lowering convention).  Under
+    // the plain `Operand::Int(0)` path that would produce
+    // `LispyValue::int(0)` — but the runtime semantic is "the empty
+    // list", which is `LispyValue::NIL`.  Fix: special-case the
+    // typed-const-of-zero into NIL when `type_hint == "ref<LispyPair>"`.
+    //
+    // This is the symmetric companion to the increment 2 dispatch
+    // wrapper that synthesised `call_builtin "+"` from typed `add`.
+    // Without this, HOF builtins like `map` / `filter` / `fold-*`
+    // see Int(0) where they expect a NIL sentinel and bail out with
+    // `"list tail 0 is not a cons cell"`.
+    if instr.type_hint == "ref<LispyPair>" {
+        if let Operand::Int(0) = src {
+            frame.set(dest.clone(), LispyValue::NIL)?;
+            return Ok(());
+        }
+    }
     let value = match src {
         Operand::Int(n) => {
             // Same range check as operand_to_value — keep behaviour

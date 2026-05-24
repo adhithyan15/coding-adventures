@@ -13,6 +13,7 @@ independent voltage sources, voltage-controlled current sources (VCCS),
 PWL/SIN/PULSE/EXP
 source waveforms for transient analysis, ground aliases, node voltages,
 voltage source branch currents, Fourier post-processing for transient output,
+stable text tables for selected node voltages and branch currents,
 and backward-Euler reactive-element companion models.
 
 ```ts

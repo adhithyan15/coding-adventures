@@ -132,6 +132,7 @@ from spice_engine import (
     TfResult,
     TransmissionLine,
     VoltageSource,
+    TransientPoint,
     XInstance,
     ac_sweep,
     ac_sweep_corners,
@@ -140,6 +141,8 @@ from spice_engine import (
     dc_sweep,
     dc_sweep_corners,
     estimate_period,
+    format_dc_table,
+    format_transient_table,
     fourier,
     mc_dc,
     noise_ac,
@@ -5527,6 +5530,34 @@ def test_fourier_extracts_transient_sinusoid_components() -> None:
     assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
     assert abs(fundamental.cosine) < 2.0e-3
     assert probe.total_harmonic_distortion < 2.0e-3
+
+
+def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
+    circuit = Circuit([
+        VoltageSource("V1", "vin", "0", 10.0),
+        Resistor("R1", "vin", "mid", 1_000.0),
+        Resistor("R2", "mid", "0", 1_000.0),
+    ])
+    dc_result = dc_op(circuit)
+
+    assert format_dc_table(dc_result) == (
+        "Index\tV(mid)\tV(vin)\tI(V1)\n"
+        "0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n"
+    )
+    assert format_dc_table(dc_result, ["V(vin, mid)", "I(V1)"]) == (
+        "Index\tV(vin, mid)\tI(V1)\n"
+        "0\t5.000000e+00\t-5.000000e-03\n"
+    )
+
+    transient_points = [
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {"I(V1)": 0.0}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 0.5}, {"I(V1)": -5.0e-4}),
+    ]
+    assert format_transient_table(transient_points) == (
+        "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
 
 
 # ---- PulseWaveform unit tests -----------------------------------------------
