@@ -164,6 +164,9 @@ All notable changes to this package will be documented in this file.
   each queue-key component against the supervisor drain run summary digest.
 - Flattened combined health-dashboard route, priority, and readiness booleans
   for supervisor drain run summary host queue filters.
+- Host-run queue rollups that combine health-dashboard and host-decision queue
+  actions, priority ranks, readiness flags, and queue-key integrity checks for
+  supervisor drain run summaries.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host

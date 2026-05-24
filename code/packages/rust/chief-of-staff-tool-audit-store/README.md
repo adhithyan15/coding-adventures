@@ -207,6 +207,9 @@ The crate keeps the boundary narrow:
   integrity flags so host logs can verify each key component against the digest
 - supervisor drain run summaries flatten combined health-dashboard route,
   priority, and readiness booleans for host queue filters
+- supervisor drain run summaries expose host-run queue rollups that combine
+  health-dashboard and host-decision action surfaces, priority ranks,
+  readiness flags, and queue-key integrity checks for host logs
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
