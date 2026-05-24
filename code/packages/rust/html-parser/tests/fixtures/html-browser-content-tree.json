@@ -27,7 +27,7 @@
             ]
           },
           {
-            "role": "block",
+            "role": "paragraph",
             "name": "p",
             "classes": ["lede"],
             "text": null,
@@ -54,7 +54,7 @@
                 ]
               },
               { "role": "text", "name": null, "text": ".", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
-              { "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "break_kind": "line", "control_type": null, "children": [] },
               { "role": "image", "name": "img", "text": null, "href": null, "src": "logo.gif", "resolved_src": "https://example.test/docs/logo.gif", "alt": "Logo", "resource_kind": "image", "control_type": null, "children": [] }
             ]
           },
@@ -65,6 +65,7 @@
             "href": null,
             "src": null,
             "alt": null,
+            "list_kind": "unordered",
             "control_type": null,
             "children": [
               {
@@ -213,7 +214,7 @@
       "expected": {
         "children": [
           {
-            "role": "block",
+            "role": "paragraph",
             "name": "p",
             "text": null,
             "href": null,
@@ -318,6 +319,89 @@
                       { "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "colspan": "2", "headers": ["item", "price"], "control_type": null, "children": [{ "role": "text", "name": null, "text": "$1", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                     ]
                   }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "text-flow-list-quote-metadata",
+      "description": "Paragraphs, preformatted text, lists, quotes, and break elements preserve browser layout metadata.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+      "expected": {
+        "children": [
+          {
+            "role": "paragraph",
+            "name": "p",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "Intro", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "break_kind": "line", "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": "line", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "line_break", "name": "wbr", "text": null, "href": null, "src": null, "alt": null, "break_kind": "word", "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": "word", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          },
+          { "role": "separator", "name": "hr", "text": null, "href": null, "src": null, "alt": null, "break_kind": "thematic", "control_type": null, "children": [] },
+          {
+            "role": "list",
+            "name": "ol",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "list_kind": "ordered",
+            "list_start": "3",
+            "list_marker_type": "A",
+            "type_hint": "A",
+            "list_reversed": true,
+            "control_type": null,
+            "children": [
+              { "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "list_item_value": "7", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Seven", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Eight", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+            ]
+          },
+          {
+            "role": "preformatted",
+            "name": "pre",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "text_flow": "preformatted",
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "  keep\nspace", "href": null, "src": null, "alt": null, "text_flow": "preformatted", "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "role": "quote_block",
+            "name": "blockquote",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "quote_cite": "notes/ref.html",
+            "resolved_quote_cite": "https://example.test/docs/notes/ref.html",
+            "control_type": null,
+            "children": [
+              {
+                "role": "paragraph",
+                "name": "p",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "role": "text", "name": null, "text": "Quote", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+                  { "role": "quote", "name": "q", "text": null, "href": null, "src": null, "alt": null, "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part", "control_type": null, "children": [{ "role": "text", "name": null, "text": "part", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               }
             ]

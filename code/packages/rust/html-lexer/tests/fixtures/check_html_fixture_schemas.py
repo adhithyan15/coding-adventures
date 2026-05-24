@@ -376,11 +376,19 @@ def check_browser_content_node(
         "span",
         "scope",
         "abbr",
+        "text_flow",
+        "list_kind",
+        "list_start",
+        "list_marker_type",
+        "list_item_value",
+        "quote_cite",
+        "resolved_quote_cite",
+        "break_kind",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
-    for field in ("disabled", "checked", "selected"):
+    for field in ("disabled", "checked", "selected", "list_reversed"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)
@@ -451,11 +459,19 @@ def check_browser_render_node(
         "span",
         "scope",
         "abbr",
+        "text_flow",
+        "list_kind",
+        "list_start",
+        "list_marker_type",
+        "list_item_value",
+        "quote_cite",
+        "resolved_quote_cite",
+        "break_kind",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
-    for field in ("disabled", "checked", "selected"):
+    for field in ("disabled", "checked", "selected", "list_reversed"):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
     require_object_list(node_path, node, "children", errors)

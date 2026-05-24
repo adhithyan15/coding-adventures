@@ -26,7 +26,7 @@
           },
           {
             "display": "block",
-            "role": "block",
+            "role": "paragraph",
             "name": "p",
             "id": "intro",
             "classes": ["lede", "print"],
@@ -55,7 +55,7 @@
                 ]
               },
               { "display": "inline-replaced", "role": "image", "name": "img", "text": null, "href": null, "src": "../assets/logo.gif", "resolved_src": "https://example.test/assets/logo.gif", "alt": "Logo", "resource_kind": "image", "control_type": null, "children": [] },
-              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "break_kind": "line", "control_type": null, "children": [] },
               { "display": "inline-text", "role": "text", "name": null, "text": "Tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
             ]
           }
@@ -263,6 +263,94 @@
                       { "display": "table-cell", "role": "table_cell", "name": "td", "text": null, "href": null, "src": null, "alt": null, "colspan": "2", "headers": ["item", "price"], "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "$1", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                     ]
                   }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "text-flow-list-quote-display-metadata",
+      "description": "Paragraphs, preformatted text, lists, quotes, and break elements survive render-tree input projection.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+      "expected": {
+        "children": [
+          {
+            "display": "block",
+            "role": "paragraph",
+            "name": "p",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "control_type": null,
+            "children": [
+              { "display": "inline-text", "role": "text", "name": null, "text": "Intro", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "br", "text": null, "href": null, "src": null, "alt": null, "break_kind": "line", "control_type": null, "children": [] },
+              { "display": "inline-text", "role": "text", "name": null, "text": "line", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "display": "line-break", "role": "line_break", "name": "wbr", "text": null, "href": null, "src": null, "alt": null, "break_kind": "word", "control_type": null, "children": [] },
+              { "display": "inline-text", "role": "text", "name": null, "text": "word", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+            ]
+          },
+          { "display": "block", "role": "separator", "name": "hr", "text": null, "href": null, "src": null, "alt": null, "break_kind": "thematic", "control_type": null, "children": [] },
+          {
+            "display": "block",
+            "role": "list",
+            "name": "ol",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "list_kind": "ordered",
+            "list_start": "3",
+            "list_marker_type": "A",
+            "type_hint": "A",
+            "list_reversed": true,
+            "control_type": null,
+            "children": [
+              { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "list_item_value": "7", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Seven", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Eight", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+            ]
+          },
+          {
+            "display": "block",
+            "role": "preformatted",
+            "name": "pre",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "text_flow": "preformatted",
+            "control_type": null,
+            "children": [
+              { "display": "inline-text", "role": "text", "name": null, "text": "  keep\nspace", "href": null, "src": null, "alt": null, "text_flow": "preformatted", "control_type": null, "children": [] }
+            ]
+          },
+          {
+            "display": "block",
+            "role": "quote_block",
+            "name": "blockquote",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "quote_cite": "notes/ref.html",
+            "resolved_quote_cite": "https://example.test/docs/notes/ref.html",
+            "control_type": null,
+            "children": [
+              {
+                "display": "block",
+                "role": "paragraph",
+                "name": "p",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "control_type": null,
+                "children": [
+                  { "display": "inline-text", "role": "text", "name": null, "text": "Quote", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+                  { "display": "inline", "role": "quote", "name": "q", "text": null, "href": null, "src": null, "alt": null, "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "part", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               }
             ]

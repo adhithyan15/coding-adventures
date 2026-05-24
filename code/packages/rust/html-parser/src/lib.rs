@@ -904,6 +904,15 @@ pub struct BrowserContentNode {
     pub scope: Option<String>,
     pub headers: Vec<String>,
     pub abbr: Option<String>,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub break_kind: Option<String>,
     pub children: Vec<BrowserContentNode>,
 }
 
@@ -946,6 +955,15 @@ pub struct BrowserRenderNode {
     pub scope: Option<String>,
     pub headers: Vec<String>,
     pub abbr: Option<String>,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub break_kind: Option<String>,
     pub children: Vec<BrowserRenderNode>,
 }
 
@@ -1133,6 +1151,15 @@ impl BrowserRenderNode {
             scope: content_node.scope.clone(),
             headers: content_node.headers.clone(),
             abbr: content_node.abbr.clone(),
+            text_flow: content_node.text_flow.clone(),
+            list_kind: content_node.list_kind.clone(),
+            list_start: content_node.list_start.clone(),
+            list_marker_type: content_node.list_marker_type.clone(),
+            list_reversed: content_node.list_reversed,
+            list_item_value: content_node.list_item_value.clone(),
+            quote_cite: content_node.quote_cite.clone(),
+            resolved_quote_cite: content_node.resolved_quote_cite.clone(),
+            break_kind: content_node.break_kind.clone(),
             children: content_node
                 .children
                 .iter()
@@ -8389,10 +8416,23 @@ fn collect_browser_content_nodes(
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
 ) {
+    collect_browser_content_nodes_with_mode(nodes, output, base_href, false);
+}
+
+fn collect_browser_content_nodes_with_mode(
+    nodes: &[Node],
+    output: &mut Vec<BrowserContentNode>,
+    base_href: Option<&str>,
+    preserve_whitespace: bool,
+) {
     for node in nodes {
         match node {
             Node::Text(value) => {
-                let text = collapse_html_whitespace(&value.data);
+                let text = if preserve_whitespace {
+                    value.data.clone()
+                } else {
+                    collapse_html_whitespace(&value.data)
+                };
                 if !text.is_empty() {
                     output.push(BrowserContentNode {
                         role: "text".to_string(),
@@ -8426,12 +8466,27 @@ fn collect_browser_content_nodes(
                         scope: None,
                         headers: Vec::new(),
                         abbr: None,
+                        text_flow: if preserve_whitespace {
+                            Some("preformatted".to_string())
+                        } else {
+                            None
+                        },
+                        list_kind: None,
+                        list_start: None,
+                        list_marker_type: None,
+                        list_reversed: false,
+                        list_item_value: None,
+                        quote_cite: None,
+                        resolved_quote_cite: None,
+                        break_kind: None,
                         children: Vec::new(),
                     });
                 }
             }
             Node::Element(element) => {
-                if let Some(content_node) = browser_content_node_for_element(element, base_href) {
+                if let Some(content_node) =
+                    browser_content_node_for_element(element, base_href, preserve_whitespace)
+                {
                     output.push(content_node);
                 }
             }
@@ -8443,6 +8498,7 @@ fn collect_browser_content_nodes(
 fn browser_content_node_for_element(
     element: &Element,
     base_href: Option<&str>,
+    preserve_whitespace: bool,
 ) -> Option<BrowserContentNode> {
     if is_browser_invisible_element(&element.name) {
         return None;
@@ -8451,7 +8507,12 @@ fn browser_content_node_for_element(
     let role = browser_content_role(&element.name)?;
     let mut children = Vec::new();
     if should_collect_browser_content_children(&element.name) {
-        collect_browser_content_nodes(&element.children, &mut children, base_href);
+        collect_browser_content_nodes_with_mode(
+            &element.children,
+            &mut children,
+            base_href,
+            preserve_whitespace || browser_preserves_text_whitespace(&element.name),
+        );
     }
 
     let text = browser_content_text(element, role);
@@ -8461,6 +8522,7 @@ fn browser_content_node_for_element(
 
     let href = element.attribute("href").map(ToOwned::to_owned);
     let src = browser_content_src(element);
+    let quote_cite = browser_quote_cite(element);
 
     Some(BrowserContentNode {
         role: role.to_string(),
@@ -8504,6 +8566,17 @@ fn browser_content_node_for_element(
             .map(split_html_classes)
             .unwrap_or_default(),
         abbr: element.attribute("abbr").map(ToOwned::to_owned),
+        text_flow: browser_text_flow(element, preserve_whitespace),
+        list_kind: browser_list_kind(element),
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+        list_item_value: browser_list_item_value(element),
+        resolved_quote_cite: quote_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        quote_cite,
+        break_kind: browser_break_kind(element),
         children,
     })
 }
@@ -8521,6 +8594,11 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "audio" | "video" => Some("media"),
         "canvas" => Some("canvas"),
         "br" | "wbr" => Some("line_break"),
+        "hr" => Some("separator"),
+        "blockquote" => Some("quote_block"),
+        "q" => Some("quote"),
+        "p" => Some("paragraph"),
+        "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
         "form" => Some("form"),
         "fieldset" => Some("form_group"),
         "label" => Some("label"),
@@ -8602,6 +8680,67 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
 fn browser_table_section_kind(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "thead" | "tbody" | "tfoot" => Some(element.name.clone()),
+        _ => None,
+    }
+}
+
+fn browser_preserves_text_whitespace(name: &str) -> bool {
+    matches!(name, "pre" | "plaintext" | "xmp" | "listing")
+}
+
+fn browser_text_flow(element: &Element, inherited_preserve_whitespace: bool) -> Option<String> {
+    if browser_preserves_text_whitespace(&element.name) || inherited_preserve_whitespace {
+        Some("preformatted".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_list_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ul" => Some("unordered".to_string()),
+        "ol" => Some("ordered".to_string()),
+        "menu" => Some("menu".to_string()),
+        "dir" => Some("directory".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_list_start(element: &Element) -> Option<String> {
+    if element.name == "ol" {
+        element.attribute("start").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_list_marker_type(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ol" | "ul" | "li" => element.attribute("type").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_list_item_value(element: &Element) -> Option<String> {
+    if element.name == "li" {
+        element.attribute("value").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_quote_cite(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "blockquote" | "q" => element.attribute("cite").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_break_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "br" => Some("line".to_string()),
+        "wbr" => Some("word".to_string()),
+        "hr" => Some("thematic".to_string()),
         _ => None,
     }
 }
@@ -8753,8 +8892,9 @@ fn browser_render_display(role: &str) -> &'static str {
             "inline-replaced"
         }
         "line_break" => "line-break",
-        "heading" | "block" | "form" | "form_group" | "legend" | "list" => "block",
-        "label" | "option" | "option_group" => "inline",
+        "paragraph" | "preformatted" | "heading" | "block" | "form" | "form_group" | "legend"
+        | "list" | "quote_block" | "separator" => "block",
+        "label" | "option" | "option_group" | "quote" => "inline",
         "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
@@ -9209,12 +9349,70 @@ mod tests {
         );
 
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
-        assert_eq!(render_tree.children[0].children[1].display, "table-column-group");
+        assert_eq!(
+            render_tree.children[0].children[1].display,
+            "table-column-group"
+        );
         assert_eq!(
             render_tree.children[0].children[3].children[0].children[1]
                 .colspan
                 .as_deref(),
             Some("2")
+        );
+    }
+
+    #[test]
+    fn browser_text_flow_metadata_tracks_lists_quotes_and_breaks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/page.html\">\
+             <p>Intro<br>line<wbr>word</p><hr>\
+             <ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol>\
+             <pre>  keep\nspace</pre>\
+             <blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+        assert_eq!(paragraph.role, "paragraph");
+        assert_eq!(paragraph.children[1].break_kind.as_deref(), Some("line"));
+        assert_eq!(paragraph.children[3].break_kind.as_deref(), Some("word"));
+
+        let separator = &content_tree.children[1];
+        assert_eq!(separator.role, "separator");
+        assert_eq!(separator.break_kind.as_deref(), Some("thematic"));
+
+        let list = &content_tree.children[2];
+        assert_eq!(list.list_kind.as_deref(), Some("ordered"));
+        assert_eq!(list.list_start.as_deref(), Some("3"));
+        assert_eq!(list.list_marker_type.as_deref(), Some("A"));
+        assert!(list.list_reversed);
+        assert_eq!(list.children[0].list_item_value.as_deref(), Some("7"));
+
+        let pre = &content_tree.children[3];
+        assert_eq!(pre.role, "preformatted");
+        assert_eq!(pre.text_flow.as_deref(), Some("preformatted"));
+        assert_eq!(pre.children[0].text.as_deref(), Some("  keep\nspace"));
+
+        let quote = &content_tree.children[4];
+        assert_eq!(quote.role, "quote_block");
+        assert_eq!(quote.quote_cite.as_deref(), Some("notes/ref.html"));
+        assert_eq!(
+            quote.resolved_quote_cite.as_deref(),
+            Some("https://example.test/docs/notes/ref.html")
+        );
+        let inline_quote = &quote.children[0].children[1];
+        assert_eq!(inline_quote.role, "quote");
+        assert_eq!(inline_quote.quote_cite.as_deref(), Some("#part"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[1].display, "line-break");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[2].children[0].display, "list-item");
+        assert_eq!(
+            render_tree.children[4].children[0].children[1].display,
+            "inline"
         );
     }
 

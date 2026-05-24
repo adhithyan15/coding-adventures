@@ -82,6 +82,24 @@ struct ExpectedRenderNode {
     headers: Vec<String>,
     #[serde(default)]
     abbr: Option<String>,
+    #[serde(default)]
+    text_flow: Option<String>,
+    #[serde(default)]
+    list_kind: Option<String>,
+    #[serde(default)]
+    list_start: Option<String>,
+    #[serde(default)]
+    list_marker_type: Option<String>,
+    #[serde(default)]
+    list_reversed: bool,
+    #[serde(default)]
+    list_item_value: Option<String>,
+    #[serde(default)]
+    quote_cite: Option<String>,
+    #[serde(default)]
+    resolved_quote_cite: Option<String>,
+    #[serde(default)]
+    break_kind: Option<String>,
     children: Vec<ExpectedRenderNode>,
 }
 
@@ -154,6 +172,15 @@ impl ExpectedRenderNode {
             scope: self.scope,
             headers: self.headers,
             abbr: self.abbr,
+            text_flow: self.text_flow,
+            list_kind: self.list_kind,
+            list_start: self.list_start,
+            list_marker_type: self.list_marker_type,
+            list_reversed: self.list_reversed,
+            list_item_value: self.list_item_value,
+            quote_cite: self.quote_cite,
+            resolved_quote_cite: self.resolved_quote_cite,
+            break_kind: self.break_kind,
             children: self
                 .children
                 .into_iter()
