@@ -1446,6 +1446,30 @@ export function bjtAtTemperature(
   };
 }
 
+export function mosfetAtTemperature(
+  element: Mosfet,
+  temperatureKelvin: number,
+  nominalTemperatureKelvin = 300.15,
+): Mosfet {
+  if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "temperature must be finite and positive");
+  }
+  if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  const ratio = temperatureKelvin / nominalTemperatureKelvin;
+  const thresholdShift = -2.0e-3 * (temperatureKelvin - nominalTemperatureKelvin);
+  return {
+    ...element,
+    params: {
+      ...element.params,
+      VT0: element.params.VT0 + thresholdShift,
+      KP: element.params.KP * ratio ** -1.5,
+      T_NOM: temperatureKelvin,
+    },
+  };
+}
+
 export function circuitAtTemperature(
   circuit: Circuit,
   temperatureKelvin: number,
@@ -1475,6 +1499,8 @@ export function circuitAtTemperature(
           energyGapElectronVolts,
         ),
       );
+    } else if (element.kind === "mosfet") {
+      adjusted.add(mosfetAtTemperature(element, temperatureKelvin, nominalTemperatureKelvin));
     } else {
       adjusted.add(element);
     }

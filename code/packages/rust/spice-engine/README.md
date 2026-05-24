@@ -56,6 +56,6 @@ let result = transient_adaptive(
 )?;
 ```
 
-`diode_at_temperature`, `bjt_at_temperature`, and `circuit_at_temperature`
-provide operating-temperature footholds for diode and BJT models by scaling
-thermal voltage and saturation current before running an analysis.
+`diode_at_temperature`, `bjt_at_temperature`, `mosfet_at_temperature`, and
+`circuit_at_temperature` provide operating-temperature footholds for diode,
+BJT, and Level-1 MOSFET models before running an analysis.

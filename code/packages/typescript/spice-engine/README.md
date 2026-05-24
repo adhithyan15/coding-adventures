@@ -45,6 +45,6 @@ const points = transient(circuit, 0.5e-9, 1.0e-9);
 const adaptive = transientAdaptive(circuit, 0.5e-9, 1.0e-9, { method: "gear2" });
 ```
 
-`diodeAtTemperature`, `bjtAtTemperature`, and `circuitAtTemperature` provide
-operating-temperature footholds for diode and BJT models by scaling thermal
-voltage and saturation current before running an analysis.
+`diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
+`circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
+and Level-1 MOSFET models before running an analysis.

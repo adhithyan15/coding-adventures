@@ -8,6 +8,9 @@
 - Add `bjt_at_temperature` and extend `circuit_at_temperature` to adjust BJT
   thermal voltage and saturation current with the same silicon energy-gap
   foothold.
+- Add `mosfet_at_temperature` and extend `circuit_at_temperature` to adjust
+  Level-1 MOSFET threshold voltage, transconductance parameter, and nominal
+  temperature.
 - Add `format_dc_table` and `format_transient_table` for stable tab-separated
   node-voltage and branch-current text output snapshots.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine

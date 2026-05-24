@@ -305,6 +305,30 @@ describe("dcOp", () => {
     expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
   });
 
+  it("uses MOSFET temperature scaling in common-source drain voltage", () => {
+    const nominal = new Circuit();
+    nominal.add(voltageSource("Vdd", "vdd", "0", 1.8));
+    nominal.add(voltageSource("Vgate", "gate", "0", 1.1));
+    nominal.add(resistor("Rload", "vdd", "out", 1_000.0));
+    nominal.add(mosfet("M1", "out", "gate", "0", "0", "NMOS", {
+      VT0: 0.65,
+      KP: 200.0e-6,
+      W: 2.0e-6,
+      L: 180.0e-9,
+      LAMBDA: 0.02,
+    }));
+
+    const cold = circuitAtTemperature(nominal, 275.0);
+    const hot = circuitAtTemperature(nominal, 350.0);
+
+    const nominalResult = dcOp(nominal);
+    const coldResult = dcOp(cold);
+    const hotResult = dcOp(hot);
+
+    expect(coldResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
+    expect(hotResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
+  });
+
   it("preserves subcircuits when applying temperature helpers", () => {
     const nominal = new Circuit();
     nominal.defineSubcircuit(

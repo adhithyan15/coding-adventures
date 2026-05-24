@@ -403,6 +403,46 @@ fn dc_bjt_temperature_scaling_reduces_emitter_follower_forward_drop() {
 }
 
 #[test]
+fn dc_mosfet_temperature_scaling_changes_common_source_bias() {
+    let mut nominal = Circuit::new();
+    nominal.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 1.8,
+    )));
+    nominal.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 1.1,
+    )));
+    nominal.add(Element::Resistor(Resistor::new(
+        "Rload", "vdd", "out", 1_000.0,
+    )));
+    nominal.add(Element::Mosfet(Mosfet::with_model(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MosfetType::Nmos,
+        MosfetLevel1Params {
+            vt0: 0.65,
+            kp: 200.0e-6,
+            w: 2.0e-6,
+            l: 180.0e-9,
+            lambda: 0.02,
+            ..MosfetLevel1Params::default()
+        },
+    )));
+
+    let cold = circuit_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = circuit_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    let nominal_result = dc_op(&nominal).unwrap();
+    let cold_result = dc_op(&cold).unwrap();
+    let hot_result = dc_op(&hot).unwrap();
+
+    assert!(cold_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
+    assert!(hot_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+}
+
+#[test]
 fn dc_bjt_solves_npn_emitter_follower_operating_point() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
