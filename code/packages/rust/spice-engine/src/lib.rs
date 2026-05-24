@@ -1212,6 +1212,40 @@ pub fn diode_at_temperature(
     Ok(adjusted)
 }
 
+pub fn bjt_at_temperature(
+    bjt: &Bjt,
+    temperature_kelvin: f64,
+    nominal_temperature_kelvin: f64,
+    energy_gap_electron_volts: f64,
+) -> Result<Bjt, SpiceError> {
+    if !temperature_kelvin.is_finite() || temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "temperature must be finite and positive".to_string(),
+        });
+    }
+    if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "nominal temperature must be finite and positive".to_string(),
+        });
+    }
+    if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "energy gap must be finite and positive".to_string(),
+        });
+    }
+    let ratio = temperature_kelvin / nominal_temperature_kelvin;
+    let exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
+        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
+    let saturation_scale = ratio.powi(3) * exponent.clamp(-100.0, 100.0).exp();
+    let mut adjusted = bjt.clone();
+    adjusted.saturation_current *= saturation_scale;
+    adjusted.thermal_voltage *= ratio;
+    Ok(adjusted)
+}
+
 pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
@@ -1226,6 +1260,12 @@ pub fn circuit_at_temperature(
         adjusted.add(match element {
             Element::Diode(diode) => Element::Diode(diode_at_temperature(
                 diode,
+                temperature_kelvin,
+                nominal_temperature_kelvin,
+                energy_gap_electron_volts,
+            )?),
+            Element::Bjt(bjt) => Element::Bjt(bjt_at_temperature(
+                bjt,
                 temperature_kelvin,
                 nominal_temperature_kelvin,
                 energy_gap_electron_volts,

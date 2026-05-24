@@ -150,6 +150,36 @@ def diode_at_temperature(
     )
 
 
+def bjt_at_temperature(
+    bjt: BJT,
+    temperature_kelvin: float,
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+) -> BJT:
+    """Return a BJT adjusted from its nominal model temperature."""
+
+    if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
+        raise ValueError("temperature_kelvin must be finite and positive")
+    if not math.isfinite(nominal_temperature_kelvin) or nominal_temperature_kelvin <= 0.0:
+        raise ValueError("nominal_temperature_kelvin must be finite and positive")
+    if not math.isfinite(energy_gap_ev) or energy_gap_ev <= 0.0:
+        raise ValueError("energy_gap_ev must be finite and positive")
+    ratio = temperature_kelvin / nominal_temperature_kelvin
+    exponent = (
+        energy_gap_ev
+        * _ELECTRON_CHARGE
+        / _BOLTZMANN
+        * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
+    )
+    saturation_scale = ratio**3 * math.exp(max(-100.0, min(100.0, exponent)))
+    return replace(
+        bjt,
+        Is=bjt.Is * saturation_scale,
+        Vt=bjt.Vt * ratio,
+    )
+
+
 def circuit_at_temperature(
     circuit: Circuit,
     temperature_kelvin: float,
@@ -157,20 +187,27 @@ def circuit_at_temperature(
     nominal_temperature_kelvin: float = 300.15,
     energy_gap_ev: float = 1.11,
 ) -> Circuit:
-    """Return a circuit with diode models adjusted for an operating temperature."""
+    """Return a circuit with semiconductor models adjusted for temperature."""
 
-    return Circuit(
-        elements=[
-            diode_at_temperature(
+    def _adjust_element(element: Element) -> Element:
+        if isinstance(element, Diode):
+            return diode_at_temperature(
                 element,
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
                 energy_gap_ev=energy_gap_ev,
             )
-            if isinstance(element, Diode)
-            else element
-            for element in circuit.elements
-        ],
+        if isinstance(element, BJT):
+            return bjt_at_temperature(
+                element,
+                temperature_kelvin,
+                nominal_temperature_kelvin=nominal_temperature_kelvin,
+                energy_gap_ev=energy_gap_ev,
+            )
+        return element
+
+    return Circuit(
+        elements=[_adjust_element(element) for element in circuit.elements],
         subcircuits=dict(circuit.subcircuits),
     )
 

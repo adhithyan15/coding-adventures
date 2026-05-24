@@ -1417,6 +1417,35 @@ export function diodeAtTemperature(
   };
 }
 
+export function bjtAtTemperature(
+  element: Bjt,
+  temperatureKelvin: number,
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): Bjt {
+  if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "temperature must be finite and positive");
+  }
+  if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
+  }
+  if (!Number.isFinite(energyGapElectronVolts) || energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
+  }
+  const ratio = temperatureKelvin / nominalTemperatureKelvin;
+  const exponent =
+    (energyGapElectronVolts * ELECTRON_CHARGE) /
+    BOLTZMANN *
+    (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+  const saturationScale =
+    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
+  return {
+    ...element,
+    saturationCurrent: element.saturationCurrent * saturationScale,
+    thermalVoltage: element.thermalVoltage * ratio,
+  };
+}
+
 export function circuitAtTemperature(
   circuit: Circuit,
   temperatureKelvin: number,
@@ -1428,16 +1457,27 @@ export function circuitAtTemperature(
     adjusted.defineSubcircuit(definition);
   }
   for (const element of circuit.elements()) {
-    adjusted.add(
-      element.kind === "diode"
-        ? diodeAtTemperature(
-            element,
-            temperatureKelvin,
-            nominalTemperatureKelvin,
-            energyGapElectronVolts,
-          )
-        : element,
-    );
+    if (element.kind === "diode") {
+      adjusted.add(
+        diodeAtTemperature(
+          element,
+          temperatureKelvin,
+          nominalTemperatureKelvin,
+          energyGapElectronVolts,
+        ),
+      );
+    } else if (element.kind === "bjt") {
+      adjusted.add(
+        bjtAtTemperature(
+          element,
+          temperatureKelvin,
+          nominalTemperatureKelvin,
+          energyGapElectronVolts,
+        ),
+      );
+    } else {
+      adjusted.add(element);
+    }
   }
   return adjusted;
 }

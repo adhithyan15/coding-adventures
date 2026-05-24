@@ -365,6 +365,44 @@ fn dc_diode_temperature_scaling_reduces_fixed_current_forward_drop() {
 }
 
 #[test]
+fn dc_bjt_temperature_scaling_reduces_emitter_follower_forward_drop() {
+    let mut nominal = Circuit::new();
+    nominal.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    nominal.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.72,
+    )));
+    nominal.add(Element::Bjt(Bjt::with_model(
+        "Q1",
+        "vcc",
+        "base",
+        "out",
+        BjtPolarity::Npn,
+        1.0e-14,
+        120.0,
+        0.02585,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    )));
+    nominal.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let cold = circuit_at_temperature(&nominal, 275.0, 300.15, 1.11).unwrap();
+    let hot = circuit_at_temperature(&nominal, 350.0, 300.15, 1.11).unwrap();
+
+    let nominal_result = dc_op(&nominal).unwrap();
+    let cold_result = dc_op(&cold).unwrap();
+    let hot_result = dc_op(&hot).unwrap();
+
+    assert!(cold_result.voltage("out").unwrap() < nominal_result.voltage("out").unwrap());
+    assert!(hot_result.voltage("out").unwrap() > nominal_result.voltage("out").unwrap());
+}
+
+#[test]
 fn dc_bjt_solves_npn_emitter_follower_operating_point() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
