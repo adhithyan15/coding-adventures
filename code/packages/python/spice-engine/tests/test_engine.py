@@ -159,6 +159,7 @@ from spice_engine import (
     pss_newton_iteration,
     pss_newton_solve,
     pss_newton_update,
+    pole_zero_rc_highpass,
     pole_zero_rc_lowpass,
     pss_residual_jacobian,
     pss_residual,
@@ -5719,6 +5720,37 @@ def test_pole_zero_rc_lowpass_returns_simple_rc_pole() -> None:
                 frequency=1.0e3 / (2.0 * math.pi),
                 damping=1.0,
             )
+        ],
+    )
+
+
+def test_pole_zero_rc_highpass_returns_origin_zero_and_simple_rc_pole() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Capacitor("C1", "in", "out", 1.0e-6),
+        Resistor("R1", "out", "0", 1_000.0),
+    ])
+
+    result = pole_zero_rc_highpass(circuit, input_source="Vin", output_node="out")
+
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-1.0e3,
+                imaginary=0.0,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=1.0,
+            ),
         ],
     )
 

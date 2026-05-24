@@ -770,6 +770,74 @@ export function poleZeroRcLowpass(
   };
 }
 
+export function poleZeroRcHighpass(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+): PoleZeroResult {
+  const source = circuit
+    .elements()
+    .find((element): element is VoltageSource => element.kind === "voltage-source" && element.name === inputSource);
+  if (source === undefined) {
+    throw new SpiceError(`poleZeroRcHighpass: missing input source ${JSON.stringify(inputSource)}`, "INVALID_ELEMENT", inputSource);
+  }
+  if (!isGround(source.negative)) {
+    throw new SpiceError("poleZeroRcHighpass: input source negative terminal must be ground", "INVALID_ELEMENT", inputSource);
+  }
+
+  const capacitor = circuit
+    .elements()
+    .find(
+      (element): element is Capacitor =>
+        element.kind === "capacitor" &&
+        ((element.n1 === source.positive && element.n2 === outputNode) ||
+          (element.n2 === source.positive && element.n1 === outputNode)),
+    );
+  const resistor = circuit
+    .elements()
+    .find(
+      (element): element is Resistor =>
+        element.kind === "resistor" &&
+        (element.n1 === outputNode || element.n2 === outputNode) &&
+        (isGround(element.n1) || isGround(element.n2)),
+    );
+  if (capacitor === undefined || resistor === undefined) {
+    throw new SpiceError(
+      "poleZeroRcHighpass: expected one capacitor from input to output and one grounded output resistor",
+      "INVALID_ELEMENT",
+      outputNode,
+    );
+  }
+  if (!Number.isFinite(resistor.resistanceOhms) || resistor.resistanceOhms <= 0.0) {
+    throw new SpiceError("poleZeroRcHighpass: resistance must be finite and positive", "INVALID_ELEMENT", resistor.name);
+  }
+  if (!Number.isFinite(capacitor.capacitanceFarads) || capacitor.capacitanceFarads <= 0.0) {
+    throw new SpiceError("poleZeroRcHighpass: capacitance must be finite and positive", "INVALID_ELEMENT", capacitor.name);
+  }
+
+  const real = -1.0 / (resistor.resistanceOhms * capacitor.capacitanceFarads);
+  return {
+    inputSource,
+    outputNode,
+    entries: [
+      {
+        kind: "zero",
+        real: 0.0,
+        imaginary: 0.0,
+        frequencyHz: 0.0,
+        damping: 1.0,
+      },
+      {
+        kind: "pole",
+        real,
+        imaginary: 0.0,
+        frequencyHz: Math.abs(real) / TWO_PI,
+        damping: 1.0,
+      },
+    ],
+  };
+}
+
 export function distortionFromFourier(
   result: FourierResult,
   inputSource: string,

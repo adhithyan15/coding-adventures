@@ -288,6 +288,9 @@ Status:
 - Distortion analysis can now be projected directly from transient samples
   across Python, TypeScript, and Rust by reusing the Fourier extraction path
   for a selected output probe.
+- The constrained Phase 8 pole-zero foothold now covers both simple grounded RC
+  low-pass and high-pass fixtures, with the high-pass helper returning the
+  origin zero plus the shared RC pole.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

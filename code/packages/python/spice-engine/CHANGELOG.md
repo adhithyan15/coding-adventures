@@ -26,6 +26,9 @@
   harmonic sine/cosine coefficients, magnitudes, phases, and THD from
   transient samples for `V(node)` and `I(source)` probes.
 
+- **RC high-pass pole-zero helper** — `pole_zero_rc_highpass()` now returns the
+  origin zero and RC pole for a constrained first-order high-pass fixture.
+
 - **Transient distortion helper** — `distortion_from_transient()` now runs the
   Fourier extraction path and returns the Phase-8 distortion result shape
   directly from transient samples.
