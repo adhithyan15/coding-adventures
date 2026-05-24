@@ -37,6 +37,7 @@ from spice_netlist_parser import (
     OpAnalysis,
     OptionsAnalysis,
     SensAnalysis,
+    TempAnalysis,
     TfAnalysis,
     TranAnalysis,
     parse_netlist,
@@ -191,6 +192,18 @@ def test_parse_options_analysis_card() -> None:
         )
     ]
     assert parsed.options_cards() == parsed.analyses
+
+
+def test_parse_temp_analysis_card() -> None:
+    parsed = parse_netlist(".temp 27 75 -40")
+
+    assert parsed.analyses == [TempAnalysis((27.0, 75.0, -40.0))]
+    assert parsed.temp_cards() == parsed.analyses
+
+
+def test_temp_card_rejects_missing_temperatures() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.temp expects at least 2 fields"):
+        parse_netlist(".temp")
 
 
 def test_parse_transient_method_from_tran_card() -> None:

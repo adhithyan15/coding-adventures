@@ -109,6 +109,13 @@ class NoiseAnalysis:
     temperature: float = 300.0
 
 
+@dataclass(frozen=True, slots=True)
+class TempAnalysis:
+    """A `.temp <celsius> [celsius ...]` operating-temperature card."""
+
+    temperatures_celsius: tuple[float, ...]
+
+
 type OptionValue = float | str | bool
 type TransientMethod = Literal["euler", "trap", "gear2"]
 
@@ -129,6 +136,7 @@ type Analysis = (
     | SensAnalysis
     | McAnalysis
     | NoiseAnalysis
+    | TempAnalysis
     | OptionsAnalysis
 )
 
@@ -195,6 +203,9 @@ class ParsedNetlist:
 
     def noise_cards(self) -> list[NoiseAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, NoiseAnalysis)]
+
+    def temp_cards(self) -> list[TempAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, TempAnalysis)]
 
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
@@ -809,6 +820,11 @@ def _parse_directive(fields: list[str]) -> Analysis:
             input_source=fields[2],
             freqs=tuple(freqs),
             temperature=temperature,
+        )
+    if directive == ".temp":
+        _require_min_fields(fields, 2, ".temp")
+        return TempAnalysis(
+            temperatures_celsius=tuple(parse_value(token) for token in fields[1:])
         )
     if directive == ".options":
         _require_min_fields(fields, 2, ".options")
