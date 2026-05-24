@@ -250,6 +250,8 @@ Status:
 - `.print <analysis> <V(node)|I(source)>...` and
   `.plot <analysis> <V(node)|I(source)>...` parser/control-card records are
   implemented across Python, TypeScript, and Rust.
+- `.four <frequency> <V(node)|I(source)>...` parser/control-card records are
+  implemented across Python, TypeScript, and Rust.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

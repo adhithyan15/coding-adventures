@@ -31,6 +31,7 @@ elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 initial conditions,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
 `.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`,
-`.sens`, `.mc`, `.noise`, `.temp`, `.print`, `.plot`, and `.options` analysis
-cards. Transient cards can carry `method=euler|trap|gear2`; when omitted,
-`netlist.transientMethod()` falls back to `.options method=<...>` if present.
+`.sens`, `.mc`, `.noise`, `.temp`, `.print`, `.plot`, `.four`, and `.options`
+analysis cards. Transient cards can carry `method=euler|trap|gear2`; when
+omitted, `netlist.transientMethod()` falls back to `.options method=<...>` if
+present.

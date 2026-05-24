@@ -140,6 +140,14 @@ class PlotAnalysis:
     probes: tuple[OutputProbe, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class FourAnalysis:
+    """A `.four <frequency> <V(node)|I(source)>...` Fourier-analysis card."""
+
+    frequency_hz: float
+    probes: tuple[OutputProbe, ...]
+
+
 type OptionValue = float | str | bool
 type TransientMethod = Literal["euler", "trap", "gear2"]
 
@@ -163,6 +171,7 @@ type Analysis = (
     | TempAnalysis
     | PrintAnalysis
     | PlotAnalysis
+    | FourAnalysis
     | OptionsAnalysis
 )
 
@@ -238,6 +247,9 @@ class ParsedNetlist:
 
     def plot_cards(self) -> list[PlotAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, PlotAnalysis)]
+
+    def four_cards(self) -> list[FourAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, FourAnalysis)]
 
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
@@ -869,6 +881,12 @@ def _parse_directive(fields: list[str]) -> Analysis:
         return PlotAnalysis(
             analysis=fields[1].lower(),
             probes=tuple(_parse_output_probe(token, ".plot") for token in fields[2:]),
+        )
+    if directive == ".four":
+        _require_min_fields(fields, 3, ".four")
+        return FourAnalysis(
+            frequency_hz=parse_value(fields[1]),
+            probes=tuple(_parse_output_probe(token, ".four") for token in fields[2:]),
         )
     if directive == ".options":
         _require_min_fields(fields, 2, ".options")
