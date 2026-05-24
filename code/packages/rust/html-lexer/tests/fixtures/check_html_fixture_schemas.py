@@ -384,8 +384,11 @@ def check_browser_content_node(
         "quote_cite",
         "resolved_quote_cite",
         "break_kind",
+        "section_kind",
+        "landmark_kind",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
+    require_optional_integer(node_path, node, "heading_level", errors)
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     for field in ("disabled", "checked", "selected", "list_reversed"):
@@ -467,8 +470,11 @@ def check_browser_render_node(
         "quote_cite",
         "resolved_quote_cite",
         "break_kind",
+        "section_kind",
+        "landmark_kind",
     ):
         require_optional_nullable_string(node_path, node, field, errors)
+    require_optional_integer(node_path, node, "heading_level", errors)
     require_optional_string_list(node_path, node, "classes", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     for field in ("disabled", "checked", "selected", "list_reversed"):
@@ -565,6 +571,16 @@ def require_integer(
 ) -> None:
     if not isinstance(data.get(field), int):
         errors.append(f"{path}.{field} must be an integer")
+
+
+def require_optional_integer(
+    path: str,
+    data: dict[str, Any],
+    field: str,
+    errors: list[str],
+) -> None:
+    if field in data:
+        require_integer(path, data, field, errors)
 
 
 def require_boolean(

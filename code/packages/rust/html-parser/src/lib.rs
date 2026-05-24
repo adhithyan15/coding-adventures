@@ -913,6 +913,9 @@ pub struct BrowserContentNode {
     pub quote_cite: Option<String>,
     pub resolved_quote_cite: Option<String>,
     pub break_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
     pub children: Vec<BrowserContentNode>,
 }
 
@@ -964,6 +967,9 @@ pub struct BrowserRenderNode {
     pub quote_cite: Option<String>,
     pub resolved_quote_cite: Option<String>,
     pub break_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
     pub children: Vec<BrowserRenderNode>,
 }
 
@@ -1160,6 +1166,9 @@ impl BrowserRenderNode {
             quote_cite: content_node.quote_cite.clone(),
             resolved_quote_cite: content_node.resolved_quote_cite.clone(),
             break_kind: content_node.break_kind.clone(),
+            heading_level: content_node.heading_level,
+            section_kind: content_node.section_kind.clone(),
+            landmark_kind: content_node.landmark_kind.clone(),
             children: content_node
                 .children
                 .iter()
@@ -8479,6 +8488,9 @@ fn collect_browser_content_nodes_with_mode(
                         quote_cite: None,
                         resolved_quote_cite: None,
                         break_kind: None,
+                        heading_level: None,
+                        section_kind: None,
+                        landmark_kind: None,
                         children: Vec::new(),
                     });
                 }
@@ -8577,6 +8589,9 @@ fn browser_content_node_for_element(
             .and_then(|cite| resolve_browser_url(cite, base_href)),
         quote_cite,
         break_kind: browser_break_kind(element),
+        heading_level: heading_level(&element.name),
+        section_kind: browser_section_kind(element),
+        landmark_kind: browser_landmark_kind(element),
         children,
     })
 }
@@ -8599,6 +8614,14 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "q" => Some("quote"),
         "p" => Some("paragraph"),
         "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
+        "article" => Some("article"),
+        "aside" => Some("aside"),
+        "footer" => Some("footer"),
+        "header" => Some("header"),
+        "hgroup" => Some("heading_group"),
+        "main" => Some("main"),
+        "nav" => Some("navigation"),
+        "section" => Some("section"),
         "form" => Some("form"),
         "fieldset" => Some("form_group"),
         "label" => Some("label"),
@@ -8741,6 +8764,31 @@ fn browser_break_kind(element: &Element) -> Option<String> {
         "br" => Some("line".to_string()),
         "wbr" => Some("word".to_string()),
         "hr" => Some("thematic".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_section_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "article" => Some("article".to_string()),
+        "aside" => Some("aside".to_string()),
+        "footer" => Some("footer".to_string()),
+        "header" => Some("header".to_string()),
+        "hgroup" => Some("heading_group".to_string()),
+        "main" => Some("main".to_string()),
+        "nav" => Some("navigation".to_string()),
+        "section" => Some("section".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_landmark_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "aside" => Some("complementary".to_string()),
+        "footer" => Some("footer".to_string()),
+        "header" => Some("header".to_string()),
+        "main" => Some("main".to_string()),
+        "nav" => Some("navigation".to_string()),
         _ => None,
     }
 }
@@ -8892,8 +8940,9 @@ fn browser_render_display(role: &str) -> &'static str {
             "inline-replaced"
         }
         "line_break" => "line-break",
-        "paragraph" | "preformatted" | "heading" | "block" | "form" | "form_group" | "legend"
-        | "list" | "quote_block" | "separator" => "block",
+        "article" | "aside" | "footer" | "header" | "heading" | "heading_group" | "main"
+        | "navigation" | "paragraph" | "preformatted" | "section" | "block" | "form"
+        | "form_group" | "legend" | "list" | "quote_block" | "separator" => "block",
         "label" | "option" | "option_group" | "quote" => "inline",
         "list_item" => "list-item",
         "table" => "table",
@@ -9413,6 +9462,59 @@ mod tests {
         assert_eq!(
             render_tree.children[4].children[0].children[1].display,
             "inline"
+        );
+    }
+
+    #[test]
+    fn browser_outline_metadata_tracks_sections_landmarks_and_heading_levels() {
+        let document = parse_html(
+            "<body><header><h1>Site</h1></header>\
+             <nav><h2>Nav</h2><a href=/home>Home</a></nav>\
+             <main><article id=post><h2>Post</h2><section aria-label=Chapter><h3>Chapter</h3></section></article>\
+             <aside><h2>Related</h2></aside></main><footer>Fine print</footer>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let header = &content_tree.children[0];
+        assert_eq!(header.role, "header");
+        assert_eq!(header.section_kind.as_deref(), Some("header"));
+        assert_eq!(header.landmark_kind.as_deref(), Some("header"));
+        assert_eq!(header.children[0].heading_level, Some(1));
+
+        let navigation = &content_tree.children[1];
+        assert_eq!(navigation.role, "navigation");
+        assert_eq!(navigation.section_kind.as_deref(), Some("navigation"));
+        assert_eq!(navigation.landmark_kind.as_deref(), Some("navigation"));
+        assert_eq!(navigation.children[0].heading_level, Some(2));
+
+        let main = &content_tree.children[2];
+        assert_eq!(main.role, "main");
+        assert_eq!(main.landmark_kind.as_deref(), Some("main"));
+        let article = &main.children[0];
+        assert_eq!(article.role, "article");
+        assert_eq!(article.section_kind.as_deref(), Some("article"));
+        assert_eq!(article.children[0].heading_level, Some(2));
+        let section = &article.children[1];
+        assert_eq!(section.role, "section");
+        assert_eq!(section.section_kind.as_deref(), Some("section"));
+        assert_eq!(section.children[0].heading_level, Some(3));
+
+        let aside = &main.children[1];
+        assert_eq!(aside.role, "aside");
+        assert_eq!(aside.landmark_kind.as_deref(), Some("complementary"));
+
+        let footer = &content_tree.children[3];
+        assert_eq!(footer.role, "footer");
+        assert_eq!(footer.landmark_kind.as_deref(), Some("footer"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[2].children[0].display, "block");
+        assert_eq!(
+            render_tree.children[2].children[0].children[1].children[0].heading_level,
+            Some(3)
         );
     }
 

@@ -12,6 +12,7 @@
           {
             "role": "heading",
             "name": "h1",
+            "heading_level": 1,
             "id": "top",
             "classes": ["headline", "primary"],
             "title": "Directory",
@@ -106,6 +107,7 @@
           {
             "role": "heading",
             "name": "h2",
+            "heading_level": 2,
             "text": "Catalog",
             "href": null,
             "src": null,
@@ -404,6 +406,112 @@
                   { "role": "quote", "name": "q", "text": null, "href": null, "src": null, "alt": null, "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part", "control_type": null, "children": [{ "role": "text", "name": null, "text": "part", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-outline-landmark-metadata",
+      "description": "Sectioning and landmark elements carry stable browser outline metadata alongside heading levels.",
+      "input": "<body><header><h1>Site</h1></header><nav><h2>Nav</h2><a href=/home>Home</a></nav><main><article id=post><h2>Post</h2><section aria-label=Chapter><h3>Chapter</h3></section></article><aside><h2>Related</h2></aside></main><footer>Fine print</footer>",
+      "expected": {
+        "children": [
+          {
+            "role": "header",
+            "name": "header",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "section_kind": "header",
+            "landmark_kind": "header",
+            "control_type": null,
+            "children": [
+              { "role": "heading", "name": "h1", "heading_level": 1, "text": "Site", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Site", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+            ]
+          },
+          {
+            "role": "navigation",
+            "name": "nav",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "section_kind": "navigation",
+            "landmark_kind": "navigation",
+            "control_type": null,
+            "children": [
+              { "role": "heading", "name": "h2", "heading_level": 2, "text": "Nav", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Nav", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "link", "name": "a", "text": "Home", "href": "/home", "resolved_href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Home", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+            ]
+          },
+          {
+            "role": "main",
+            "name": "main",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "section_kind": "main",
+            "landmark_kind": "main",
+            "control_type": null,
+            "children": [
+              {
+                "role": "article",
+                "name": "article",
+                "id": "post",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "section_kind": "article",
+                "control_type": null,
+                "children": [
+                  { "role": "heading", "name": "h2", "heading_level": 2, "text": "Post", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Post", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+                  {
+                    "role": "section",
+                    "name": "section",
+                    "text": null,
+                    "href": null,
+                    "src": null,
+                    "alt": null,
+                    "section_kind": "section",
+                    "control_type": null,
+                    "children": [
+                      { "role": "heading", "name": "h3", "heading_level": 3, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Chapter", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                    ]
+                  }
+                ]
+              },
+              {
+                "role": "aside",
+                "name": "aside",
+                "text": null,
+                "href": null,
+                "src": null,
+                "alt": null,
+                "section_kind": "aside",
+                "landmark_kind": "complementary",
+                "control_type": null,
+                "children": [
+                  { "role": "heading", "name": "h2", "heading_level": 2, "text": "Related", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Related", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+                ]
+              }
+            ]
+          },
+          {
+            "role": "footer",
+            "name": "footer",
+            "text": null,
+            "href": null,
+            "src": null,
+            "alt": null,
+            "section_kind": "footer",
+            "landmark_kind": "footer",
+            "control_type": null,
+            "children": [
+              { "role": "text", "name": null, "text": "Fine print", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
             ]
           }
         ]

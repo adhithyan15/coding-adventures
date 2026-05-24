@@ -138,6 +138,9 @@ documented in this file.
 - Parser-approved initial tokenizer contexts now include seeded text/RCDATA
   character-reference continuation substates, carrying temporary buffers and
   return states through named, numeric, decimal, and hexadecimal recovery paths.
+- Browser-facing content and render projections now expose document outline
+  metadata for heading levels, sectioning elements, and landmark-like regions
+  such as `main`, `nav`, `aside`, `header`, and `footer`.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
