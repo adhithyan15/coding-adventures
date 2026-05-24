@@ -98,6 +98,23 @@ export interface TempAnalysis {
   readonly temperaturesCelsius: readonly number[];
 }
 
+export interface OutputProbe {
+  readonly kind: "voltage" | "current";
+  readonly target: string;
+}
+
+export interface PrintAnalysis {
+  readonly kind: "print";
+  readonly analysis: string;
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface PlotAnalysis {
+  readonly kind: "plot";
+  readonly analysis: string;
+  readonly probes: readonly OutputProbe[];
+}
+
 export type OptionValue = number | string | boolean;
 
 export interface OptionsAnalysis {
@@ -115,6 +132,8 @@ export type Analysis =
   | McAnalysis
   | NoiseAnalysis
   | TempAnalysis
+  | PrintAnalysis
+  | PlotAnalysis
   | OptionsAnalysis;
 
 export interface ModelCard {
@@ -171,6 +190,14 @@ export class ParsedNetlist {
 
   tempCards(): TempAnalysis[] {
     return this.analyses.filter((analysis): analysis is TempAnalysis => analysis.kind === "temp");
+  }
+
+  printCards(): PrintAnalysis[] {
+    return this.analyses.filter((analysis): analysis is PrintAnalysis => analysis.kind === "print");
+  }
+
+  plotCards(): PlotAnalysis[] {
+    return this.analyses.filter((analysis): analysis is PlotAnalysis => analysis.kind === "plot");
   }
 
   transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
@@ -1093,6 +1120,22 @@ function parseDirective(fields: readonly string[]): Analysis {
       temperaturesCelsius: fields.slice(1).map(parseValue),
     };
   }
+  if (directive === ".print") {
+    requireMinFields(fields, 3, ".print");
+    return {
+      kind: "print",
+      analysis: fields[1].toLowerCase(),
+      probes: fields.slice(2).map((token) => parseOutputProbe(token, ".print")),
+    };
+  }
+  if (directive === ".plot") {
+    requireMinFields(fields, 3, ".plot");
+    return {
+      kind: "plot",
+      analysis: fields[1].toLowerCase(),
+      probes: fields.slice(2).map((token) => parseOutputProbe(token, ".plot")),
+    };
+  }
   if (directive === ".options") {
     requireMinFields(fields, 2, ".options");
     return { kind: "options", values: parseOptions(fields.slice(1)) };
@@ -1177,6 +1220,19 @@ function parseVoltageProbe(token: string, directive: string): string {
     );
   }
   return match[1];
+}
+
+function parseOutputProbe(token: string, directive: string): OutputProbe {
+  const match = /^([vi])\(([^()\s]+)\)$/i.exec(token);
+  if (match === null) {
+    throw new NetlistParseError(
+      `${directive} probe must be V(node) or I(source), got ${JSON.stringify(token)}`,
+    );
+  }
+  return {
+    kind: match[1].toLowerCase() === "v" ? "voltage" : "current",
+    target: match[2],
+  };
 }
 
 function splitFields(line: string): string[] {

@@ -28,6 +28,6 @@ MOSFET parameters (`NMOS`/`PMOS`, `VT0`/`VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 and inductor `IC=<current>` initial conditions, SPICE engineering suffixes,
 PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X` instance
 expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
-`.temp`, and `.options` analysis cards. Transient cards can carry
+`.temp`, `.print`, `.plot`, and `.options` analysis cards. Transient cards can carry
 `method=euler|trap|gear2`; when omitted, `netlist.transient_method()` falls
 back to `.options method=<...>` if present.

@@ -29,7 +29,7 @@ suffixes, capacitor `IC=<voltage>` and inductor `IC=<current>` initial
 conditions, independent-source `AC <magnitude> [phase]` forms,
 PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X` instance
 expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
-`.temp`, and `.options` analysis cards.
+`.temp`, `.print`, `.plot`, and `.options` analysis cards.
 Transient cards can carry `method=euler|trap|gear2`; when omitted,
 `parsed.transient_method(None)?` falls back to `.options method=<...>` if
 present.

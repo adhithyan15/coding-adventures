@@ -116,6 +116,30 @@ class TempAnalysis:
     temperatures_celsius: tuple[float, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class OutputProbe:
+    """A voltage-node or branch-current output probe."""
+
+    kind: Literal["voltage", "current"]
+    target: str
+
+
+@dataclass(frozen=True, slots=True)
+class PrintAnalysis:
+    """A `.print <analysis> <V(node)|I(source)>...` output card."""
+
+    analysis: str
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class PlotAnalysis:
+    """A `.plot <analysis> <V(node)|I(source)>...` output card."""
+
+    analysis: str
+    probes: tuple[OutputProbe, ...]
+
+
 type OptionValue = float | str | bool
 type TransientMethod = Literal["euler", "trap", "gear2"]
 
@@ -137,6 +161,8 @@ type Analysis = (
     | McAnalysis
     | NoiseAnalysis
     | TempAnalysis
+    | PrintAnalysis
+    | PlotAnalysis
     | OptionsAnalysis
 )
 
@@ -206,6 +232,12 @@ class ParsedNetlist:
 
     def temp_cards(self) -> list[TempAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, TempAnalysis)]
+
+    def print_cards(self) -> list[PrintAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, PrintAnalysis)]
+
+    def plot_cards(self) -> list[PlotAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, PlotAnalysis)]
 
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
@@ -826,6 +858,18 @@ def _parse_directive(fields: list[str]) -> Analysis:
         return TempAnalysis(
             temperatures_celsius=tuple(parse_value(token) for token in fields[1:])
         )
+    if directive == ".print":
+        _require_min_fields(fields, 3, ".print")
+        return PrintAnalysis(
+            analysis=fields[1].lower(),
+            probes=tuple(_parse_output_probe(token, ".print") for token in fields[2:]),
+        )
+    if directive == ".plot":
+        _require_min_fields(fields, 3, ".plot")
+        return PlotAnalysis(
+            analysis=fields[1].lower(),
+            probes=tuple(_parse_output_probe(token, ".plot") for token in fields[2:]),
+        )
     if directive == ".options":
         _require_min_fields(fields, 2, ".options")
         return OptionsAnalysis(values=_parse_options(fields[1:]))
@@ -893,6 +937,16 @@ def _parse_voltage_probe(token: str, directive: str) -> str:
             f"{directive} output must be a voltage probe V(node), got {token!r}"
         )
     return match.group(1)
+
+
+def _parse_output_probe(token: str, directive: str) -> OutputProbe:
+    match = re.fullmatch(r"(?i)([vi])\(([^()\s]+)\)", token)
+    if match is None:
+        raise NetlistParseError(
+            f"{directive} probe must be V(node) or I(source), got {token!r}"
+        )
+    kind = "voltage" if match.group(1).lower() == "v" else "current"
+    return OutputProbe(kind=kind, target=match.group(2))
 
 
 def _parse_model_card(fields: list[str]) -> ModelCard:
