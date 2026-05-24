@@ -193,6 +193,28 @@ Tdelay in 0 out 0 Z0=50 TD=1n
     );
   });
 
+  it("parses .four analysis cards", () => {
+    const parsed = parseNetlist(".four 1k V(out) I(Vin)");
+    const card = {
+      kind: "four",
+      frequencyHz: 1000,
+      probes: [
+        { kind: "voltage", target: "out" },
+        { kind: "current", target: "Vin" },
+      ],
+    };
+
+    expect(parsed.analyses).toEqual([card]);
+    expect(parsed.fourCards()).toEqual([card]);
+  });
+
+  it("rejects .four cards with missing or unknown probes", () => {
+    expect(() => parseNetlist(".four 1k")).toThrow(/\.four expects at least 3 fields/);
+    expect(() => parseNetlist(".four 1k P(out)")).toThrow(
+      /\.four probe must be V\(node\) or I\(source\)/,
+    );
+  });
+
   it("parses transient methods from .tran cards", () => {
     const parsed = parseNetlist(".tran 1n 20n method=gear2");
 

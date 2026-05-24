@@ -30,6 +30,7 @@ from spice_engine import (
 from spice_netlist_parser import (
     AcAnalysis,
     DcAnalysis,
+    FourAnalysis,
     McAnalysis,
     ModelCard,
     NetlistParseError,
@@ -242,6 +243,28 @@ def test_output_cards_reject_missing_or_unknown_probes() -> None:
         parse_netlist(".print tran")
     with pytest.raises(NetlistParseError, match=r"\.plot probe must be V\(node\) or I\(source\)"):
         parse_netlist(".plot tran P(out)")
+
+
+def test_parse_four_analysis_card() -> None:
+    parsed = parse_netlist(".four 1k V(out) I(Vin)")
+
+    assert parsed.analyses == [
+        FourAnalysis(
+            1.0e3,
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            ),
+        )
+    ]
+    assert parsed.four_cards() == parsed.analyses
+
+
+def test_four_card_rejects_missing_or_unknown_probes() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.four expects at least 3 fields"):
+        parse_netlist(".four 1k")
+    with pytest.raises(NetlistParseError, match=r"\.four probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".four 1k P(out)")
 
 
 def test_parse_transient_method_from_tran_card() -> None:

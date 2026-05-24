@@ -3,9 +3,9 @@ use spice_engine::{
     McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
-    parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, McAnalysis, NetlistParseError,
-    NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PrintAnalysis, SensAnalysis,
-    TempAnalysis, TfAnalysis, TranAnalysis,
+    parse_netlist, parse_value, AcAnalysis, Analysis, DcAnalysis, FourAnalysis, McAnalysis,
+    NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis,
+    PrintAnalysis, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -306,6 +306,40 @@ fn rejects_output_cards_with_missing_or_unknown_probes() {
     assert!(probe_error
         .to_string()
         .contains(".plot probe must be V(node) or I(source)"));
+}
+
+#[test]
+fn parses_four_analysis_cards() {
+    let parsed = parse_netlist(".four 1k V(out) I(Vin)").unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![Analysis::Four(FourAnalysis {
+            frequency_hz: 1.0e3,
+            probes: vec![
+                OutputProbe::Voltage {
+                    node: "out".to_string()
+                },
+                OutputProbe::Current {
+                    source_name: "Vin".to_string()
+                },
+            ],
+        })]
+    );
+    assert!(matches!(parsed.four_cards().as_slice(), [_]));
+}
+
+#[test]
+fn rejects_four_cards_with_missing_or_unknown_probes() {
+    let missing_error = parse_netlist(".four 1k").unwrap_err();
+    assert!(missing_error
+        .to_string()
+        .contains(".four expects at least 3 fields"));
+
+    let probe_error = parse_netlist(".four 1k P(out)").unwrap_err();
+    assert!(probe_error
+        .to_string()
+        .contains(".four probe must be V(node) or I(source)"));
 }
 
 #[test]

@@ -106,6 +106,12 @@ pub struct PlotAnalysis {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct FourAnalysis {
+    pub frequency_hz: f64,
+    pub probes: Vec<OutputProbe>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum OptionValue {
     Number(f64),
     Text(String),
@@ -130,6 +136,7 @@ pub enum Analysis {
     Temp(TempAnalysis),
     Print(PrintAnalysis),
     Plot(PlotAnalysis),
+    Four(FourAnalysis),
     Options(OptionsAnalysis),
 }
 
@@ -264,6 +271,16 @@ impl ParsedNetlist {
             .iter()
             .filter_map(|analysis| match analysis {
                 Analysis::Plot(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn four_cards(&self) -> Vec<&FourAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Four(card) => Some(card),
                 _ => None,
             })
             .collect()
@@ -1418,6 +1435,13 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             Ok(Analysis::Plot(PlotAnalysis {
                 analysis: fields[1].to_ascii_lowercase(),
                 probes: parse_output_probes(&fields[2..], ".plot")?,
+            }))
+        }
+        ".four" => {
+            require_min_fields(fields, 3, ".four")?;
+            Ok(Analysis::Four(FourAnalysis {
+                frequency_hz: parse_value(&fields[1])?,
+                probes: parse_output_probes(&fields[2..], ".four")?,
             }))
         }
         ".options" => {

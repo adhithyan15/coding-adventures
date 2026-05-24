@@ -115,6 +115,12 @@ export interface PlotAnalysis {
   readonly probes: readonly OutputProbe[];
 }
 
+export interface FourAnalysis {
+  readonly kind: "four";
+  readonly frequencyHz: number;
+  readonly probes: readonly OutputProbe[];
+}
+
 export type OptionValue = number | string | boolean;
 
 export interface OptionsAnalysis {
@@ -134,6 +140,7 @@ export type Analysis =
   | TempAnalysis
   | PrintAnalysis
   | PlotAnalysis
+  | FourAnalysis
   | OptionsAnalysis;
 
 export interface ModelCard {
@@ -198,6 +205,10 @@ export class ParsedNetlist {
 
   plotCards(): PlotAnalysis[] {
     return this.analyses.filter((analysis): analysis is PlotAnalysis => analysis.kind === "plot");
+  }
+
+  fourCards(): FourAnalysis[] {
+    return this.analyses.filter((analysis): analysis is FourAnalysis => analysis.kind === "four");
   }
 
   transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
@@ -1134,6 +1145,14 @@ function parseDirective(fields: readonly string[]): Analysis {
       kind: "plot",
       analysis: fields[1].toLowerCase(),
       probes: fields.slice(2).map((token) => parseOutputProbe(token, ".plot")),
+    };
+  }
+  if (directive === ".four") {
+    requireMinFields(fields, 3, ".four");
+    return {
+      kind: "four",
+      frequencyHz: parseValue(fields[1]),
+      probes: fields.slice(2).map((token) => parseOutputProbe(token, ".four")),
     };
   }
   if (directive === ".options") {

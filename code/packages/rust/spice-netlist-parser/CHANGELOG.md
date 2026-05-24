@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Parse SPICE `.four <frequency> <V(node)|I(source)>...` Fourier-analysis
+  cards.
 - Parse SPICE `.print <analysis> <V(node)|I(source)>...` and
   `.plot <analysis> <V(node)|I(source)>...` output cards.
 - Parse SPICE `.temp <celsius> [celsius ...]` operating-temperature cards.
