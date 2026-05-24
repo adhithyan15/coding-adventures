@@ -3654,6 +3654,105 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_run_queue_route().routes_to_split_queues()
     }
 
+    /// Return the aggregate host-run queue action lane.
+    pub fn host_run_queue_action_lane(&self) -> ToolAuditSupervisorDrainHostRunActionLane {
+        ToolAuditSupervisorDrainHostRunActionLane::from_action_flags(
+            self.host_run_queue_should_drain_page(),
+            self.host_run_queue_routes_follow_up(),
+            self.host_run_queue_requests_continuation(),
+            self.host_run_queue_requires_action_investigation(),
+        )
+    }
+
+    /// Return the stable aggregate host-run queue action-lane label.
+    pub fn host_run_queue_action_lane_label(&self) -> &'static str {
+        self.host_run_queue_action_lane().as_str()
+    }
+
+    /// Return whether the aggregate host-run queue action-lane label matches its type.
+    pub fn host_run_queue_action_lane_label_matches_lane(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunActionLane::from_label(
+            self.host_run_queue_action_lane_label(),
+        ) == Some(self.host_run_queue_action_lane())
+    }
+
+    /// Return whether the aggregate host-run queue action lane is idle.
+    pub fn host_run_queue_action_lane_is_no_action(&self) -> bool {
+        self.host_run_queue_action_lane().is_no_action()
+    }
+
+    /// Return whether the aggregate host-run queue action lane is drain work.
+    pub fn host_run_queue_action_lane_is_drain(&self) -> bool {
+        self.host_run_queue_action_lane().is_drain()
+    }
+
+    /// Return whether the aggregate host-run queue action lane is follow-up work.
+    pub fn host_run_queue_action_lane_is_follow_up(&self) -> bool {
+        self.host_run_queue_action_lane().is_follow_up()
+    }
+
+    /// Return whether the aggregate host-run queue action lane is continuation work.
+    pub fn host_run_queue_action_lane_is_continuation(&self) -> bool {
+        self.host_run_queue_action_lane().is_continuation()
+    }
+
+    /// Return whether the aggregate host-run queue action lane is investigation work.
+    pub fn host_run_queue_action_lane_is_investigation(&self) -> bool {
+        self.host_run_queue_action_lane().is_investigation()
+    }
+
+    /// Return whether the aggregate host-run queue action lane spans multiple families.
+    pub fn host_run_queue_action_lane_is_mixed(&self) -> bool {
+        self.host_run_queue_action_lane().is_mixed()
+    }
+
+    /// Return whether the host-run queue needs checkpoint drain work.
+    pub fn host_run_queue_should_drain_page(&self) -> bool {
+        self.health_dashboard_action_should_drain_page()
+    }
+
+    /// Return whether the host-run queue routes follow-up pressure.
+    pub fn host_run_queue_routes_follow_up(&self) -> bool {
+        self.health_dashboard_action_routes_follow_up() || self.host_decision_routes_follow_up()
+    }
+
+    /// Return whether the host-run queue schedules continuation.
+    pub fn host_run_queue_requests_continuation(&self) -> bool {
+        self.health_dashboard_action_requests_continuation()
+            || self.host_decision_schedules_continuation()
+    }
+
+    /// Return whether the host-run queue has any investigation action.
+    pub fn host_run_queue_requires_action_investigation(&self) -> bool {
+        self.health_dashboard_action_requires_investigation()
+            || self.host_decision_investigates_plan_drift()
+            || self.host_decision_investigates_count_drift()
+            || self.host_decision_investigates_run_integrity()
+    }
+
+    /// Return how many aggregate host-run queue action families are active.
+    pub fn host_run_queue_action_component_count(&self) -> usize {
+        [
+            self.host_run_queue_should_drain_page(),
+            self.host_run_queue_routes_follow_up(),
+            self.host_run_queue_requests_continuation(),
+            self.host_run_queue_requires_action_investigation(),
+        ]
+        .into_iter()
+        .filter(|is_active| *is_active)
+        .count()
+    }
+
+    /// Return whether the host-run queue combines multiple action families.
+    pub fn host_run_queue_has_multiple_action_components(&self) -> bool {
+        self.host_run_queue_action_component_count() > 1
+    }
+
+    /// Return whether the aggregate host-run queue action-lane label drifted.
+    pub fn has_host_run_queue_action_lane_label_integrity_drift(&self) -> bool {
+        !self.host_run_queue_action_lane_label_matches_lane()
+    }
+
     /// Return the aggregate host-run queue readiness.
     pub fn host_run_queue_readiness(&self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
         self.host_run_queue_key().readiness()
@@ -4520,6 +4619,28 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_queue_routes_to_health_dashboard(),
             host_run_queue_routes_to_host_decision: self.host_run_queue_routes_to_host_decision(),
             host_run_queue_routes_to_split_queues: self.host_run_queue_routes_to_split_queues(),
+            host_run_queue_action_lane: self.host_run_queue_action_lane(),
+            host_run_queue_action_lane_label: self.host_run_queue_action_lane_label(),
+            host_run_queue_action_lane_label_matches_lane: self
+                .host_run_queue_action_lane_label_matches_lane(),
+            host_run_queue_action_lane_is_no_action: self.host_run_queue_action_lane_is_no_action(),
+            host_run_queue_action_lane_is_drain: self.host_run_queue_action_lane_is_drain(),
+            host_run_queue_action_lane_is_follow_up: self.host_run_queue_action_lane_is_follow_up(),
+            host_run_queue_action_lane_is_continuation: self
+                .host_run_queue_action_lane_is_continuation(),
+            host_run_queue_action_lane_is_investigation: self
+                .host_run_queue_action_lane_is_investigation(),
+            host_run_queue_action_lane_is_mixed: self.host_run_queue_action_lane_is_mixed(),
+            host_run_queue_should_drain_page: self.host_run_queue_should_drain_page(),
+            host_run_queue_routes_follow_up: self.host_run_queue_routes_follow_up(),
+            host_run_queue_requests_continuation: self.host_run_queue_requests_continuation(),
+            host_run_queue_requires_action_investigation: self
+                .host_run_queue_requires_action_investigation(),
+            host_run_queue_action_component_count: self.host_run_queue_action_component_count(),
+            host_run_queue_has_multiple_action_components: self
+                .host_run_queue_has_multiple_action_components(),
+            has_host_run_queue_action_lane_label_integrity_drift: self
+                .has_host_run_queue_action_lane_label_integrity_drift(),
             host_run_queue_readiness: self.host_run_queue_readiness(),
             host_run_queue_readiness_label: self.host_run_queue_readiness_label(),
             host_run_queue_readiness_label_matches_readiness: self
@@ -5725,6 +5846,38 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_queue_routes_to_host_decision: bool,
     /// Whether the aggregate host-run queue spans both route sides.
     pub host_run_queue_routes_to_split_queues: bool,
+    /// Aggregate host-run queue action lane.
+    pub host_run_queue_action_lane: ToolAuditSupervisorDrainHostRunActionLane,
+    /// Stable aggregate host-run queue action-lane label.
+    pub host_run_queue_action_lane_label: &'static str,
+    /// Whether the aggregate host-run queue action-lane label matches its type.
+    pub host_run_queue_action_lane_label_matches_lane: bool,
+    /// Whether the aggregate host-run queue action lane is idle.
+    pub host_run_queue_action_lane_is_no_action: bool,
+    /// Whether the aggregate host-run queue action lane is drain work.
+    pub host_run_queue_action_lane_is_drain: bool,
+    /// Whether the aggregate host-run queue action lane is follow-up work.
+    pub host_run_queue_action_lane_is_follow_up: bool,
+    /// Whether the aggregate host-run queue action lane is continuation work.
+    pub host_run_queue_action_lane_is_continuation: bool,
+    /// Whether the aggregate host-run queue action lane is investigation work.
+    pub host_run_queue_action_lane_is_investigation: bool,
+    /// Whether the aggregate host-run queue action lane spans multiple families.
+    pub host_run_queue_action_lane_is_mixed: bool,
+    /// Whether the host-run queue needs checkpoint drain work.
+    pub host_run_queue_should_drain_page: bool,
+    /// Whether the host-run queue routes follow-up pressure.
+    pub host_run_queue_routes_follow_up: bool,
+    /// Whether the host-run queue schedules continuation.
+    pub host_run_queue_requests_continuation: bool,
+    /// Whether the host-run queue has any investigation action.
+    pub host_run_queue_requires_action_investigation: bool,
+    /// Number of aggregate host-run queue action families active.
+    pub host_run_queue_action_component_count: usize,
+    /// Whether the host-run queue combines multiple action families.
+    pub host_run_queue_has_multiple_action_components: bool,
+    /// Whether the aggregate host-run queue action-lane label drifted.
+    pub has_host_run_queue_action_lane_label_integrity_drift: bool,
     /// Aggregate host-run queue readiness.
     pub host_run_queue_readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
     /// Stable aggregate host-run queue readiness label.
@@ -7651,6 +7804,86 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the aggregate host-run queue spans both route sides.
     pub fn host_run_queue_routes_to_split_queues(&self) -> bool {
         self.host_run_queue_routes_to_split_queues
+    }
+
+    /// Return the aggregate host-run queue action lane.
+    pub fn host_run_queue_action_lane(&self) -> ToolAuditSupervisorDrainHostRunActionLane {
+        self.host_run_queue_action_lane
+    }
+
+    /// Return the stable aggregate host-run queue action-lane label.
+    pub fn host_run_queue_action_lane_label(&self) -> &'static str {
+        self.host_run_queue_action_lane_label
+    }
+
+    /// Return whether the aggregate host-run queue action-lane label matches its type.
+    pub fn host_run_queue_action_lane_label_matches_lane(&self) -> bool {
+        self.host_run_queue_action_lane_label_matches_lane
+    }
+
+    /// Return whether the aggregate host-run queue action lane is idle.
+    pub fn host_run_queue_action_lane_is_no_action(&self) -> bool {
+        self.host_run_queue_action_lane_is_no_action
+    }
+
+    /// Return whether the aggregate host-run queue action lane is drain work.
+    pub fn host_run_queue_action_lane_is_drain(&self) -> bool {
+        self.host_run_queue_action_lane_is_drain
+    }
+
+    /// Return whether the aggregate host-run queue action lane is follow-up work.
+    pub fn host_run_queue_action_lane_is_follow_up(&self) -> bool {
+        self.host_run_queue_action_lane_is_follow_up
+    }
+
+    /// Return whether the aggregate host-run queue action lane is continuation work.
+    pub fn host_run_queue_action_lane_is_continuation(&self) -> bool {
+        self.host_run_queue_action_lane_is_continuation
+    }
+
+    /// Return whether the aggregate host-run queue action lane is investigation work.
+    pub fn host_run_queue_action_lane_is_investigation(&self) -> bool {
+        self.host_run_queue_action_lane_is_investigation
+    }
+
+    /// Return whether the aggregate host-run queue action lane spans multiple families.
+    pub fn host_run_queue_action_lane_is_mixed(&self) -> bool {
+        self.host_run_queue_action_lane_is_mixed
+    }
+
+    /// Return whether the host-run queue needs checkpoint drain work.
+    pub fn host_run_queue_should_drain_page(&self) -> bool {
+        self.host_run_queue_should_drain_page
+    }
+
+    /// Return whether the host-run queue routes follow-up pressure.
+    pub fn host_run_queue_routes_follow_up(&self) -> bool {
+        self.host_run_queue_routes_follow_up
+    }
+
+    /// Return whether the host-run queue schedules continuation.
+    pub fn host_run_queue_requests_continuation(&self) -> bool {
+        self.host_run_queue_requests_continuation
+    }
+
+    /// Return whether the host-run queue has any investigation action.
+    pub fn host_run_queue_requires_action_investigation(&self) -> bool {
+        self.host_run_queue_requires_action_investigation
+    }
+
+    /// Return how many aggregate host-run queue action families are active.
+    pub fn host_run_queue_action_component_count(&self) -> usize {
+        self.host_run_queue_action_component_count
+    }
+
+    /// Return whether the host-run queue combines multiple action families.
+    pub fn host_run_queue_has_multiple_action_components(&self) -> bool {
+        self.host_run_queue_has_multiple_action_components
+    }
+
+    /// Return whether the aggregate host-run queue action-lane label drifted.
+    pub fn has_host_run_queue_action_lane_label_integrity_drift(&self) -> bool {
+        self.has_host_run_queue_action_lane_label_integrity_drift
     }
 
     /// Return the aggregate host-run queue readiness.
@@ -9987,6 +10220,112 @@ impl ToolAuditSupervisorDrainHostDecisionQueueKey {
 impl Display for ToolAuditSupervisorDrainHostDecisionQueueKey {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
+    }
+}
+
+/// Stable aggregate action lane for the full supervisor host run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostRunActionLane {
+    /// No aggregate host-run queue action is needed.
+    NoAction,
+    /// The only aggregate host-run queue action is draining checkpoint pages.
+    Drain,
+    /// The only aggregate host-run queue action is routing follow-up pressure.
+    FollowUp,
+    /// The only aggregate host-run queue action is scheduling continuation.
+    Continuation,
+    /// The only aggregate host-run queue action is investigation.
+    Investigation,
+    /// Multiple aggregate host-run queue action lanes are active.
+    Mixed,
+}
+
+impl ToolAuditSupervisorDrainHostRunActionLane {
+    /// Classify the aggregate host-run action lane from component flags.
+    pub fn from_action_flags(
+        should_drain_page: bool,
+        routes_follow_up: bool,
+        requests_continuation: bool,
+        requires_investigation: bool,
+    ) -> Self {
+        match [
+            should_drain_page,
+            routes_follow_up,
+            requests_continuation,
+            requires_investigation,
+        ]
+        .into_iter()
+        .filter(|is_active| *is_active)
+        .count()
+        {
+            0 => Self::NoAction,
+            1 if should_drain_page => Self::Drain,
+            1 if routes_follow_up => Self::FollowUp,
+            1 if requests_continuation => Self::Continuation,
+            1 if requires_investigation => Self::Investigation,
+            _ => Self::Mixed,
+        }
+    }
+
+    /// Return a stable snake_case label for host-run action grouping.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoAction => "no_action",
+            Self::Drain => "drain",
+            Self::FollowUp => "follow_up",
+            Self::Continuation => "continuation",
+            Self::Investigation => "investigation",
+            Self::Mixed => "mixed",
+        }
+    }
+
+    /// Parse a stable snake_case host-run action-lane label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_action" => Some(Self::NoAction),
+            "drain" => Some(Self::Drain),
+            "follow_up" => Some(Self::FollowUp),
+            "continuation" => Some(Self::Continuation),
+            "investigation" => Some(Self::Investigation),
+            "mixed" => Some(Self::Mixed),
+            _ => None,
+        }
+    }
+
+    /// Return whether no aggregate host-run queue action is needed.
+    pub fn is_no_action(self) -> bool {
+        matches!(self, Self::NoAction)
+    }
+
+    /// Return whether this is the drain action lane.
+    pub fn is_drain(self) -> bool {
+        matches!(self, Self::Drain)
+    }
+
+    /// Return whether this is the follow-up action lane.
+    pub fn is_follow_up(self) -> bool {
+        matches!(self, Self::FollowUp)
+    }
+
+    /// Return whether this is the continuation action lane.
+    pub fn is_continuation(self) -> bool {
+        matches!(self, Self::Continuation)
+    }
+
+    /// Return whether this is the investigation action lane.
+    pub fn is_investigation(self) -> bool {
+        matches!(self, Self::Investigation)
+    }
+
+    /// Return whether multiple host-run action lanes are active.
+    pub fn is_mixed(self) -> bool {
+        matches!(self, Self::Mixed)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunActionLane {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -15802,6 +16141,139 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_action_lanes_are_stable_for_host_logs() {
+        let cases = [
+            (
+                false,
+                false,
+                false,
+                false,
+                ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+                "no_action",
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                true,
+                false,
+                false,
+                false,
+                ToolAuditSupervisorDrainHostRunActionLane::Drain,
+                "drain",
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                false,
+                true,
+                false,
+                false,
+                ToolAuditSupervisorDrainHostRunActionLane::FollowUp,
+                "follow_up",
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                false,
+                false,
+                true,
+                false,
+                ToolAuditSupervisorDrainHostRunActionLane::Continuation,
+                "continuation",
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+            ),
+            (
+                false,
+                false,
+                false,
+                true,
+                ToolAuditSupervisorDrainHostRunActionLane::Investigation,
+                "investigation",
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+            ),
+            (
+                true,
+                true,
+                false,
+                false,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                "mixed",
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            should_drain_page,
+            routes_follow_up,
+            requests_continuation,
+            requires_investigation,
+            lane,
+            label,
+            is_no_action,
+            is_drain,
+            is_follow_up,
+            is_continuation,
+            is_investigation,
+            is_mixed,
+        ) in cases
+        {
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunActionLane::from_action_flags(
+                    should_drain_page,
+                    routes_follow_up,
+                    requests_continuation,
+                    requires_investigation,
+                ),
+                lane
+            );
+            assert_eq!(lane.as_str(), label);
+            assert_eq!(lane.to_string(), label);
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunActionLane::from_label(label),
+                Some(lane)
+            );
+            assert_eq!(lane.is_no_action(), is_no_action);
+            assert_eq!(lane.is_drain(), is_drain);
+            assert_eq!(lane.is_follow_up(), is_follow_up);
+            assert_eq!(lane.is_continuation(), is_continuation);
+            assert_eq!(lane.is_investigation(), is_investigation);
+            assert_eq!(lane.is_mixed(), is_mixed);
+        }
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunActionLane::from_label("elsewhere"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_host_run_queue_routes_and_readiness_are_stable_for_host_logs() {
         let route_cases = [
             (
@@ -18465,6 +18937,25 @@ mod tests {
         assert!(!idle_report.host_run_queue_routes_to_host_decision());
         assert!(!idle_report.host_run_queue_routes_to_split_queues());
         assert_eq!(
+            idle_report.host_run_queue_action_lane(),
+            ToolAuditSupervisorDrainHostRunActionLane::NoAction
+        );
+        assert_eq!(idle_report.host_run_queue_action_lane_label(), "no_action");
+        assert!(idle_report.host_run_queue_action_lane_label_matches_lane());
+        assert!(idle_report.host_run_queue_action_lane_is_no_action());
+        assert!(!idle_report.host_run_queue_action_lane_is_drain());
+        assert!(!idle_report.host_run_queue_action_lane_is_follow_up());
+        assert!(!idle_report.host_run_queue_action_lane_is_continuation());
+        assert!(!idle_report.host_run_queue_action_lane_is_investigation());
+        assert!(!idle_report.host_run_queue_action_lane_is_mixed());
+        assert!(!idle_report.host_run_queue_should_drain_page());
+        assert!(!idle_report.host_run_queue_routes_follow_up());
+        assert!(!idle_report.host_run_queue_requests_continuation());
+        assert!(!idle_report.host_run_queue_requires_action_investigation());
+        assert_eq!(idle_report.host_run_queue_action_component_count(), 0);
+        assert!(!idle_report.host_run_queue_has_multiple_action_components());
+        assert!(!idle_report.has_host_run_queue_action_lane_label_integrity_drift());
+        assert_eq!(
             idle_report.host_run_queue_readiness(),
             ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
         );
@@ -18526,6 +19017,44 @@ mod tests {
         assert!(!idle_summary.host_run_queue_routes_to_host_decision());
         assert!(!idle_summary.host_run_queue_routes_to_split_queues);
         assert!(!idle_summary.host_run_queue_routes_to_split_queues());
+        assert_eq!(
+            idle_summary.host_run_queue_action_lane,
+            ToolAuditSupervisorDrainHostRunActionLane::NoAction
+        );
+        assert_eq!(
+            idle_summary.host_run_queue_action_lane(),
+            ToolAuditSupervisorDrainHostRunActionLane::NoAction
+        );
+        assert_eq!(idle_summary.host_run_queue_action_lane_label, "no_action");
+        assert_eq!(idle_summary.host_run_queue_action_lane_label(), "no_action");
+        assert!(idle_summary.host_run_queue_action_lane_label_matches_lane);
+        assert!(idle_summary.host_run_queue_action_lane_label_matches_lane());
+        assert!(idle_summary.host_run_queue_action_lane_is_no_action);
+        assert!(idle_summary.host_run_queue_action_lane_is_no_action());
+        assert!(!idle_summary.host_run_queue_action_lane_is_drain);
+        assert!(!idle_summary.host_run_queue_action_lane_is_drain());
+        assert!(!idle_summary.host_run_queue_action_lane_is_follow_up);
+        assert!(!idle_summary.host_run_queue_action_lane_is_follow_up());
+        assert!(!idle_summary.host_run_queue_action_lane_is_continuation);
+        assert!(!idle_summary.host_run_queue_action_lane_is_continuation());
+        assert!(!idle_summary.host_run_queue_action_lane_is_investigation);
+        assert!(!idle_summary.host_run_queue_action_lane_is_investigation());
+        assert!(!idle_summary.host_run_queue_action_lane_is_mixed);
+        assert!(!idle_summary.host_run_queue_action_lane_is_mixed());
+        assert!(!idle_summary.host_run_queue_should_drain_page);
+        assert!(!idle_summary.host_run_queue_should_drain_page());
+        assert!(!idle_summary.host_run_queue_routes_follow_up);
+        assert!(!idle_summary.host_run_queue_routes_follow_up());
+        assert!(!idle_summary.host_run_queue_requests_continuation);
+        assert!(!idle_summary.host_run_queue_requests_continuation());
+        assert!(!idle_summary.host_run_queue_requires_action_investigation);
+        assert!(!idle_summary.host_run_queue_requires_action_investigation());
+        assert_eq!(idle_summary.host_run_queue_action_component_count, 0);
+        assert_eq!(idle_summary.host_run_queue_action_component_count(), 0);
+        assert!(!idle_summary.host_run_queue_has_multiple_action_components);
+        assert!(!idle_summary.host_run_queue_has_multiple_action_components());
+        assert!(!idle_summary.has_host_run_queue_action_lane_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_queue_action_lane_label_integrity_drift());
         assert_eq!(
             idle_summary.host_run_queue_readiness,
             ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
@@ -18623,6 +19152,31 @@ mod tests {
         assert!(continuation_summary.host_run_queue_routes_to_host_decision());
         assert!(continuation_summary.host_run_queue_routes_to_split_queues());
         assert_eq!(
+            continuation_summary.host_run_queue_action_lane(),
+            ToolAuditSupervisorDrainHostRunActionLane::Mixed
+        );
+        assert_eq!(
+            continuation_summary.host_run_queue_action_lane_label(),
+            "mixed"
+        );
+        assert!(continuation_summary.host_run_queue_action_lane_label_matches_lane());
+        assert!(!continuation_summary.host_run_queue_action_lane_is_no_action());
+        assert!(!continuation_summary.host_run_queue_action_lane_is_drain());
+        assert!(!continuation_summary.host_run_queue_action_lane_is_follow_up());
+        assert!(!continuation_summary.host_run_queue_action_lane_is_continuation());
+        assert!(!continuation_summary.host_run_queue_action_lane_is_investigation());
+        assert!(continuation_summary.host_run_queue_action_lane_is_mixed());
+        assert!(continuation_summary.host_run_queue_should_drain_page());
+        assert!(!continuation_summary.host_run_queue_routes_follow_up());
+        assert!(continuation_summary.host_run_queue_requests_continuation());
+        assert!(!continuation_summary.host_run_queue_requires_action_investigation());
+        assert_eq!(
+            continuation_summary.host_run_queue_action_component_count(),
+            2
+        );
+        assert!(continuation_summary.host_run_queue_has_multiple_action_components());
+        assert!(!continuation_summary.has_host_run_queue_action_lane_label_integrity_drift());
+        assert_eq!(
             continuation_summary.host_run_queue_readiness(),
             ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
         );
@@ -18669,6 +19223,13 @@ mod tests {
         assert!(drift_summary.host_run_queue_key_host_decision_matches_key());
         assert!(!drift_summary.host_run_queue_key_parts_match_component_keys());
         assert!(drift_summary.has_host_run_queue_key_component_integrity_drift());
+
+        let mut stale_action_lane_summary = continuation_summary.clone();
+        stale_action_lane_summary.host_run_queue_action_lane_label = "continuation";
+        stale_action_lane_summary.host_run_queue_action_lane_label_matches_lane = false;
+        stale_action_lane_summary.has_host_run_queue_action_lane_label_integrity_drift = true;
+        assert!(!stale_action_lane_summary.host_run_queue_action_lane_label_matches_lane());
+        assert!(stale_action_lane_summary.has_host_run_queue_action_lane_label_integrity_drift());
 
         let mut stale_route_summary = idle_summary.clone();
         stale_route_summary.host_run_queue_route_label = "host_decision";
