@@ -2257,9 +2257,184 @@ impl ToolAuditSupervisorDrainRunReport {
         self.drain.health_readiness_requires_manual_review()
     }
 
+    /// Classify which aggregate health surfaces need host action.
+    pub fn health_dashboard_surface(&self) -> ToolAuditSupervisorDrainHealthDashboardSurface {
+        ToolAuditSupervisorDrainHealthDashboardSurface::from_surface_flags(
+            self.plan_health_is_actionable(),
+            self.drain_health_is_actionable(),
+        )
+    }
+
+    /// Return the stable aggregate health-dashboard surface label.
+    pub fn health_dashboard_surface_label(&self) -> &'static str {
+        self.health_dashboard_surface().as_str()
+    }
+
+    /// Return whether the aggregate health-dashboard surface label matches its type.
+    pub fn health_dashboard_surface_label_matches_surface(&self) -> bool {
+        ToolAuditSupervisorDrainHealthDashboardSurface::from_label(
+            self.health_dashboard_surface_label(),
+        ) == Some(self.health_dashboard_surface())
+    }
+
+    /// Return whether aggregate health has no queued surface.
+    pub fn health_dashboard_is_settled(&self) -> bool {
+        self.health_dashboard_surface().is_settled()
+    }
+
+    /// Return whether the preflight plan contributes to aggregate health action.
+    pub fn health_dashboard_has_plan_action(&self) -> bool {
+        self.health_dashboard_surface().has_plan_action()
+    }
+
+    /// Return whether the drain result contributes to aggregate health action.
+    pub fn health_dashboard_has_drain_action(&self) -> bool {
+        self.health_dashboard_surface().has_drain_action()
+    }
+
+    /// Return how many aggregate health surfaces need action.
+    pub fn health_dashboard_action_count(&self) -> usize {
+        self.health_dashboard_surface().action_count()
+    }
+
+    /// Return whether multiple aggregate health surfaces need action.
+    pub fn health_dashboard_has_multiple_actions(&self) -> bool {
+        self.health_dashboard_surface().has_multiple_actions()
+    }
+
+    /// Return the aggregate health-dashboard route.
+    pub fn health_dashboard_route(&self) -> ToolAuditHealthRoute {
+        match self.health_dashboard_surface() {
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled => {
+                ToolAuditHealthRoute::NoRoute
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAction => self.plan_health_route(),
+            ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction => {
+                self.drain_health_route()
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction => {
+                ToolAuditHealthRoute::Triage
+            }
+        }
+    }
+
+    /// Return the stable aggregate health-dashboard route label.
+    pub fn health_dashboard_route_label(&self) -> &'static str {
+        self.health_dashboard_route().as_str()
+    }
+
+    /// Return whether the aggregate health-dashboard route label matches its type.
+    pub fn health_dashboard_route_label_matches_route(&self) -> bool {
+        ToolAuditHealthRoute::from_label(self.health_dashboard_route_label())
+            == Some(self.health_dashboard_route())
+    }
+
+    /// Return the aggregate health-dashboard priority.
+    pub fn health_dashboard_priority(&self) -> ToolAuditHealthPriority {
+        match self.health_dashboard_surface() {
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled => {
+                ToolAuditHealthPriority::Settled
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAction => {
+                self.plan_health_priority()
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction => {
+                self.drain_health_priority()
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction => {
+                ToolAuditHealthPriority::Triage
+            }
+        }
+    }
+
+    /// Return the stable aggregate health-dashboard priority label.
+    pub fn health_dashboard_priority_label(&self) -> &'static str {
+        self.health_dashboard_priority().as_str()
+    }
+
+    /// Return whether the aggregate health-dashboard priority label matches its type.
+    pub fn health_dashboard_priority_label_matches_priority(&self) -> bool {
+        ToolAuditHealthPriority::from_label(self.health_dashboard_priority_label())
+            == Some(self.health_dashboard_priority())
+    }
+
+    /// Return the sortable aggregate health-dashboard priority rank.
+    pub fn health_dashboard_priority_rank(&self) -> u8 {
+        self.health_dashboard_priority().rank()
+    }
+
+    /// Return the aggregate health-dashboard readiness.
+    pub fn health_dashboard_readiness(&self) -> ToolAuditHealthReadiness {
+        match self.health_dashboard_surface() {
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled => {
+                ToolAuditHealthReadiness::Settled
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAction => {
+                self.plan_health_readiness()
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction => {
+                self.drain_health_readiness()
+            }
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction => {
+                ToolAuditHealthReadiness::TriageRequired
+            }
+        }
+    }
+
+    /// Return the stable aggregate health-dashboard readiness label.
+    pub fn health_dashboard_readiness_label(&self) -> &'static str {
+        self.health_dashboard_readiness().as_str()
+    }
+
+    /// Return whether the aggregate health-dashboard readiness label matches its type.
+    pub fn health_dashboard_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditHealthReadiness::from_label(self.health_dashboard_readiness_label())
+            == Some(self.health_dashboard_readiness())
+    }
+
+    /// Return whether aggregate health should appear in an action queue.
+    pub fn health_dashboard_is_actionable(&self) -> bool {
+        self.health_dashboard_readiness().is_actionable()
+    }
+
+    /// Return whether aggregate health can be routed without manual review.
+    pub fn health_dashboard_is_auto_routable(&self) -> bool {
+        self.health_dashboard_readiness().is_auto_routable()
+    }
+
+    /// Return whether aggregate health needs manual review.
+    pub fn health_dashboard_readiness_requires_manual_review(&self) -> bool {
+        self.health_dashboard_readiness().requires_manual_review()
+    }
+
+    /// Return whether aggregate health needs investigation.
+    pub fn health_dashboard_readiness_requires_investigation(&self) -> bool {
+        self.health_dashboard_readiness().requires_investigation()
+    }
+
+    /// Return whether aggregate health needs triage.
+    pub fn health_dashboard_readiness_requires_triage(&self) -> bool {
+        self.health_dashboard_readiness().requires_triage()
+    }
+
+    /// Return whether aggregate health-dashboard digest labels match typed values.
+    pub fn health_dashboard_digest_labels_match(&self) -> bool {
+        self.health_dashboard_surface_label_matches_surface()
+            && self.health_dashboard_route_label_matches_route()
+            && self.health_dashboard_priority_label_matches_priority()
+            && self.health_dashboard_readiness_label_matches_readiness()
+    }
+
+    /// Return whether any aggregate health-dashboard digest label drifted.
+    pub fn has_health_dashboard_digest_label_integrity_drift(&self) -> bool {
+        !self.health_dashboard_digest_labels_match()
+    }
+
     /// Return whether aggregate plan and drain health labels match typed values.
     pub fn health_dashboard_labels_match(&self) -> bool {
-        self.plan.health_labels_match() && self.drain.health_labels_match()
+        self.plan.health_labels_match()
+            && self.drain.health_labels_match()
+            && self.health_dashboard_digest_labels_match()
     }
 
     /// Return whether any aggregate plan or drain health label drifted.
@@ -2983,6 +3158,39 @@ impl ToolAuditSupervisorDrainRunReport {
             drain_health_is_auto_routable: self.drain_health_is_auto_routable(),
             drain_health_readiness_requires_manual_review: self
                 .drain_health_readiness_requires_manual_review(),
+            health_dashboard_surface: self.health_dashboard_surface(),
+            health_dashboard_surface_label: self.health_dashboard_surface_label(),
+            health_dashboard_surface_label_matches_surface: self
+                .health_dashboard_surface_label_matches_surface(),
+            health_dashboard_is_settled: self.health_dashboard_is_settled(),
+            health_dashboard_has_plan_action: self.health_dashboard_has_plan_action(),
+            health_dashboard_has_drain_action: self.health_dashboard_has_drain_action(),
+            health_dashboard_action_count: self.health_dashboard_action_count(),
+            health_dashboard_has_multiple_actions: self.health_dashboard_has_multiple_actions(),
+            health_dashboard_route: self.health_dashboard_route(),
+            health_dashboard_route_label: self.health_dashboard_route_label(),
+            health_dashboard_route_label_matches_route: self
+                .health_dashboard_route_label_matches_route(),
+            health_dashboard_priority: self.health_dashboard_priority(),
+            health_dashboard_priority_label: self.health_dashboard_priority_label(),
+            health_dashboard_priority_label_matches_priority: self
+                .health_dashboard_priority_label_matches_priority(),
+            health_dashboard_priority_rank: self.health_dashboard_priority_rank(),
+            health_dashboard_readiness: self.health_dashboard_readiness(),
+            health_dashboard_readiness_label: self.health_dashboard_readiness_label(),
+            health_dashboard_readiness_label_matches_readiness: self
+                .health_dashboard_readiness_label_matches_readiness(),
+            health_dashboard_is_actionable: self.health_dashboard_is_actionable(),
+            health_dashboard_is_auto_routable: self.health_dashboard_is_auto_routable(),
+            health_dashboard_readiness_requires_manual_review: self
+                .health_dashboard_readiness_requires_manual_review(),
+            health_dashboard_readiness_requires_investigation: self
+                .health_dashboard_readiness_requires_investigation(),
+            health_dashboard_readiness_requires_triage: self
+                .health_dashboard_readiness_requires_triage(),
+            health_dashboard_digest_labels_match: self.health_dashboard_digest_labels_match(),
+            has_health_dashboard_digest_label_integrity_drift: self
+                .has_health_dashboard_digest_label_integrity_drift(),
             health_dashboard_labels_match: self.health_dashboard_labels_match(),
             has_health_dashboard_label_integrity_drift: self
                 .has_health_dashboard_label_integrity_drift(),
@@ -3705,6 +3913,56 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub drain_health_is_auto_routable: bool,
     /// Whether drain health needs manual review.
     pub drain_health_readiness_requires_manual_review: bool,
+    /// Aggregate health-dashboard surface for plan/drain actionability.
+    pub health_dashboard_surface: ToolAuditSupervisorDrainHealthDashboardSurface,
+    /// Stable aggregate health-dashboard surface label.
+    pub health_dashboard_surface_label: &'static str,
+    /// Whether the aggregate surface label parses back to the typed surface.
+    pub health_dashboard_surface_label_matches_surface: bool,
+    /// Whether aggregate health has no queued surface.
+    pub health_dashboard_is_settled: bool,
+    /// Whether the preflight plan contributes to aggregate health action.
+    pub health_dashboard_has_plan_action: bool,
+    /// Whether the drain result contributes to aggregate health action.
+    pub health_dashboard_has_drain_action: bool,
+    /// Number of aggregate health surfaces needing action.
+    pub health_dashboard_action_count: usize,
+    /// Whether multiple aggregate health surfaces need action.
+    pub health_dashboard_has_multiple_actions: bool,
+    /// Aggregate health-dashboard route.
+    pub health_dashboard_route: ToolAuditHealthRoute,
+    /// Stable aggregate health-dashboard route label.
+    pub health_dashboard_route_label: &'static str,
+    /// Whether the aggregate route label parses back to the typed route.
+    pub health_dashboard_route_label_matches_route: bool,
+    /// Aggregate health-dashboard priority.
+    pub health_dashboard_priority: ToolAuditHealthPriority,
+    /// Stable aggregate health-dashboard priority label.
+    pub health_dashboard_priority_label: &'static str,
+    /// Whether the aggregate priority label parses back to the typed priority.
+    pub health_dashboard_priority_label_matches_priority: bool,
+    /// Sortable aggregate health-dashboard priority rank.
+    pub health_dashboard_priority_rank: u8,
+    /// Aggregate health-dashboard readiness.
+    pub health_dashboard_readiness: ToolAuditHealthReadiness,
+    /// Stable aggregate health-dashboard readiness label.
+    pub health_dashboard_readiness_label: &'static str,
+    /// Whether the aggregate readiness label parses back to the typed readiness.
+    pub health_dashboard_readiness_label_matches_readiness: bool,
+    /// Whether aggregate health should appear in an action queue.
+    pub health_dashboard_is_actionable: bool,
+    /// Whether aggregate health can be routed without manual review.
+    pub health_dashboard_is_auto_routable: bool,
+    /// Whether aggregate health needs manual review.
+    pub health_dashboard_readiness_requires_manual_review: bool,
+    /// Whether aggregate health needs investigation.
+    pub health_dashboard_readiness_requires_investigation: bool,
+    /// Whether aggregate health needs triage.
+    pub health_dashboard_readiness_requires_triage: bool,
+    /// Whether aggregate health-dashboard digest labels parse back to typed values.
+    pub health_dashboard_digest_labels_match: bool,
+    /// Whether any aggregate health-dashboard digest label drifted.
+    pub has_health_dashboard_digest_label_integrity_drift: bool,
     /// Whether aggregate plan and drain health labels parse back to typed values.
     pub health_dashboard_labels_match: bool,
     /// Whether any aggregate health dashboard label drifted.
@@ -4338,6 +4596,131 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether drain health needs manual review.
     pub fn drain_health_readiness_requires_manual_review(&self) -> bool {
         self.drain_health_readiness_requires_manual_review
+    }
+
+    /// Return the aggregate health-dashboard surface.
+    pub fn health_dashboard_surface(&self) -> ToolAuditSupervisorDrainHealthDashboardSurface {
+        self.health_dashboard_surface
+    }
+
+    /// Return the stable aggregate health-dashboard surface label.
+    pub fn health_dashboard_surface_label(&self) -> &'static str {
+        self.health_dashboard_surface_label
+    }
+
+    /// Return whether the aggregate surface label matches its typed surface.
+    pub fn health_dashboard_surface_label_matches_surface(&self) -> bool {
+        self.health_dashboard_surface_label_matches_surface
+    }
+
+    /// Return whether aggregate health has no queued surface.
+    pub fn health_dashboard_is_settled(&self) -> bool {
+        self.health_dashboard_is_settled
+    }
+
+    /// Return whether the preflight plan contributes to aggregate health action.
+    pub fn health_dashboard_has_plan_action(&self) -> bool {
+        self.health_dashboard_has_plan_action
+    }
+
+    /// Return whether the drain result contributes to aggregate health action.
+    pub fn health_dashboard_has_drain_action(&self) -> bool {
+        self.health_dashboard_has_drain_action
+    }
+
+    /// Return how many aggregate health surfaces need action.
+    pub fn health_dashboard_action_count(&self) -> usize {
+        self.health_dashboard_action_count
+    }
+
+    /// Return whether multiple aggregate health surfaces need action.
+    pub fn health_dashboard_has_multiple_actions(&self) -> bool {
+        self.health_dashboard_has_multiple_actions
+    }
+
+    /// Return the aggregate health-dashboard route.
+    pub fn health_dashboard_route(&self) -> ToolAuditHealthRoute {
+        self.health_dashboard_route
+    }
+
+    /// Return the stable aggregate health-dashboard route label.
+    pub fn health_dashboard_route_label(&self) -> &'static str {
+        self.health_dashboard_route_label
+    }
+
+    /// Return whether the aggregate route label matches its typed route.
+    pub fn health_dashboard_route_label_matches_route(&self) -> bool {
+        self.health_dashboard_route_label_matches_route
+    }
+
+    /// Return the aggregate health-dashboard priority.
+    pub fn health_dashboard_priority(&self) -> ToolAuditHealthPriority {
+        self.health_dashboard_priority
+    }
+
+    /// Return the stable aggregate health-dashboard priority label.
+    pub fn health_dashboard_priority_label(&self) -> &'static str {
+        self.health_dashboard_priority_label
+    }
+
+    /// Return whether the aggregate priority label matches its typed priority.
+    pub fn health_dashboard_priority_label_matches_priority(&self) -> bool {
+        self.health_dashboard_priority_label_matches_priority
+    }
+
+    /// Return the sortable aggregate health-dashboard priority rank.
+    pub fn health_dashboard_priority_rank(&self) -> u8 {
+        self.health_dashboard_priority_rank
+    }
+
+    /// Return the aggregate health-dashboard readiness.
+    pub fn health_dashboard_readiness(&self) -> ToolAuditHealthReadiness {
+        self.health_dashboard_readiness
+    }
+
+    /// Return the stable aggregate health-dashboard readiness label.
+    pub fn health_dashboard_readiness_label(&self) -> &'static str {
+        self.health_dashboard_readiness_label
+    }
+
+    /// Return whether the aggregate readiness label matches its typed readiness.
+    pub fn health_dashboard_readiness_label_matches_readiness(&self) -> bool {
+        self.health_dashboard_readiness_label_matches_readiness
+    }
+
+    /// Return whether aggregate health should appear in an action queue.
+    pub fn health_dashboard_is_actionable(&self) -> bool {
+        self.health_dashboard_is_actionable
+    }
+
+    /// Return whether aggregate health can be routed without manual review.
+    pub fn health_dashboard_is_auto_routable(&self) -> bool {
+        self.health_dashboard_is_auto_routable
+    }
+
+    /// Return whether aggregate health needs manual review.
+    pub fn health_dashboard_readiness_requires_manual_review(&self) -> bool {
+        self.health_dashboard_readiness_requires_manual_review
+    }
+
+    /// Return whether aggregate health needs investigation.
+    pub fn health_dashboard_readiness_requires_investigation(&self) -> bool {
+        self.health_dashboard_readiness_requires_investigation
+    }
+
+    /// Return whether aggregate health needs triage.
+    pub fn health_dashboard_readiness_requires_triage(&self) -> bool {
+        self.health_dashboard_readiness_requires_triage
+    }
+
+    /// Return whether aggregate health-dashboard digest labels match typed values.
+    pub fn health_dashboard_digest_labels_match(&self) -> bool {
+        self.health_dashboard_digest_labels_match
+    }
+
+    /// Return whether any aggregate health-dashboard digest label drifted.
+    pub fn has_health_dashboard_digest_label_integrity_drift(&self) -> bool {
+        self.has_health_dashboard_digest_label_integrity_drift
     }
 
     /// Return whether aggregate plan and drain health labels match typed values.
@@ -5203,6 +5586,86 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether checkpoint-boundary fields agree with their source checkpoints.
     pub fn checkpoint_boundary_fields_match(&self) -> bool {
         self.checkpoint_boundary_fields_match
+    }
+}
+
+/// Aggregate plan/drain health surface for supervisor drain host dashboards.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHealthDashboardSurface {
+    /// Neither the preflight plan nor the drain result needs health action.
+    Settled,
+    /// The preflight plan needs health action.
+    PlanAction,
+    /// The drain result needs health action.
+    DrainAction,
+    /// Both the preflight plan and drain result need health action.
+    PlanAndDrainAction,
+}
+
+impl ToolAuditSupervisorDrainHealthDashboardSurface {
+    /// Classify aggregate health actionability from plan and drain flags.
+    pub fn from_surface_flags(plan_is_actionable: bool, drain_is_actionable: bool) -> Self {
+        match (plan_is_actionable, drain_is_actionable) {
+            (false, false) => Self::Settled,
+            (true, false) => Self::PlanAction,
+            (false, true) => Self::DrainAction,
+            (true, true) => Self::PlanAndDrainAction,
+        }
+    }
+
+    /// Return a stable snake_case label for host dashboards.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::PlanAction => "plan_action",
+            Self::DrainAction => "drain_action",
+            Self::PlanAndDrainAction => "plan_and_drain_action",
+        }
+    }
+
+    /// Parse a stable snake_case health-dashboard surface label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "plan_action" => Some(Self::PlanAction),
+            "drain_action" => Some(Self::DrainAction),
+            "plan_and_drain_action" => Some(Self::PlanAndDrainAction),
+            _ => None,
+        }
+    }
+
+    /// Return whether no aggregate health surface needs action.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether the preflight plan contributes action pressure.
+    pub fn has_plan_action(self) -> bool {
+        matches!(self, Self::PlanAction | Self::PlanAndDrainAction)
+    }
+
+    /// Return whether the drain result contributes action pressure.
+    pub fn has_drain_action(self) -> bool {
+        matches!(self, Self::DrainAction | Self::PlanAndDrainAction)
+    }
+
+    /// Return how many aggregate health surfaces need action.
+    pub fn action_count(self) -> usize {
+        [self.has_plan_action(), self.has_drain_action()]
+            .into_iter()
+            .filter(|is_active| *is_active)
+            .count()
+    }
+
+    /// Return whether more than one aggregate health surface needs action.
+    pub fn has_multiple_actions(self) -> bool {
+        matches!(self, Self::PlanAndDrainAction)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHealthDashboardSurface {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -15804,6 +16267,74 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_health_dashboard_surfaces_are_stable() {
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled.as_str(),
+            "settled"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_label("plan_action"),
+            Some(ToolAuditSupervisorDrainHealthDashboardSurface::PlanAction)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_label("drain_action"),
+            Some(ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_label("plan_and_drain_action"),
+            Some(ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_label("maybe_later"),
+            None
+        );
+
+        let settled =
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_surface_flags(false, false);
+        assert_eq!(
+            settled,
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled
+        );
+        assert!(settled.is_settled());
+        assert!(!settled.has_plan_action());
+        assert!(!settled.has_drain_action());
+        assert_eq!(settled.action_count(), 0);
+        assert!(!settled.has_multiple_actions());
+
+        let plan_only =
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_surface_flags(true, false);
+        assert_eq!(
+            plan_only,
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAction
+        );
+        assert!(plan_only.has_plan_action());
+        assert!(!plan_only.has_drain_action());
+        assert_eq!(plan_only.action_count(), 1);
+        assert!(!plan_only.has_multiple_actions());
+
+        let drain_only =
+            ToolAuditSupervisorDrainHealthDashboardSurface::from_surface_flags(false, true);
+        assert_eq!(
+            drain_only,
+            ToolAuditSupervisorDrainHealthDashboardSurface::DrainAction
+        );
+        assert!(!drain_only.has_plan_action());
+        assert!(drain_only.has_drain_action());
+        assert_eq!(drain_only.action_count(), 1);
+
+        let both = ToolAuditSupervisorDrainHealthDashboardSurface::from_surface_flags(true, true);
+        assert_eq!(
+            both,
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
+        );
+        assert!(both.has_plan_action());
+        assert!(both.has_drain_action());
+        assert_eq!(both.action_count(), 2);
+        assert!(both.has_multiple_actions());
+        assert_eq!(both.to_string(), "plan_and_drain_action");
+    }
+
+    #[test]
     fn supervisor_drain_report_summary_flattens_health_dashboard_fields() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -15886,6 +16417,55 @@ mod tests {
         assert!(!idle_summary.drain_health_is_actionable());
         assert!(!idle_summary.drain_health_is_auto_routable());
         assert!(!idle_summary.drain_health_readiness_requires_manual_review());
+        assert_eq!(
+            idle_report.health_dashboard_surface(),
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled
+        );
+        assert_eq!(idle_report.health_dashboard_route_label(), "no_route");
+        assert_eq!(idle_report.health_dashboard_priority_rank(), 0);
+        assert_eq!(
+            idle_report.health_dashboard_readiness(),
+            ToolAuditHealthReadiness::Settled
+        );
+        assert!(idle_report.health_dashboard_digest_labels_match());
+        assert!(!idle_report.has_health_dashboard_digest_label_integrity_drift());
+        assert_eq!(
+            idle_summary.health_dashboard_surface(),
+            ToolAuditSupervisorDrainHealthDashboardSurface::Settled
+        );
+        assert_eq!(idle_summary.health_dashboard_surface_label(), "settled");
+        assert!(idle_summary.health_dashboard_surface_label_matches_surface());
+        assert!(idle_summary.health_dashboard_is_settled());
+        assert!(!idle_summary.health_dashboard_has_plan_action());
+        assert!(!idle_summary.health_dashboard_has_drain_action());
+        assert_eq!(idle_summary.health_dashboard_action_count(), 0);
+        assert!(!idle_summary.health_dashboard_has_multiple_actions());
+        assert_eq!(
+            idle_summary.health_dashboard_route(),
+            ToolAuditHealthRoute::NoRoute
+        );
+        assert_eq!(idle_summary.health_dashboard_route_label(), "no_route");
+        assert!(idle_summary.health_dashboard_route_label_matches_route());
+        assert_eq!(
+            idle_summary.health_dashboard_priority(),
+            ToolAuditHealthPriority::Settled
+        );
+        assert_eq!(idle_summary.health_dashboard_priority_label(), "settled");
+        assert!(idle_summary.health_dashboard_priority_label_matches_priority());
+        assert_eq!(idle_summary.health_dashboard_priority_rank(), 0);
+        assert_eq!(
+            idle_summary.health_dashboard_readiness(),
+            ToolAuditHealthReadiness::Settled
+        );
+        assert_eq!(idle_summary.health_dashboard_readiness_label(), "settled");
+        assert!(idle_summary.health_dashboard_readiness_label_matches_readiness());
+        assert!(!idle_summary.health_dashboard_is_actionable());
+        assert!(!idle_summary.health_dashboard_is_auto_routable());
+        assert!(!idle_summary.health_dashboard_readiness_requires_manual_review());
+        assert!(!idle_summary.health_dashboard_readiness_requires_investigation());
+        assert!(!idle_summary.health_dashboard_readiness_requires_triage());
+        assert!(idle_summary.health_dashboard_digest_labels_match());
+        assert!(!idle_summary.has_health_dashboard_digest_label_integrity_drift());
         assert!(idle_summary.health_dashboard_labels_match());
         assert!(!idle_summary.has_health_dashboard_label_integrity_drift());
 
@@ -15964,6 +16544,63 @@ mod tests {
         assert!(continuation_summary.drain_health_is_actionable());
         assert!(!continuation_summary.drain_health_is_auto_routable());
         assert!(continuation_summary.drain_health_readiness_requires_manual_review());
+        assert_eq!(
+            continuation_report.health_dashboard_surface(),
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
+        );
+        assert_eq!(
+            continuation_report.health_dashboard_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(
+            continuation_report.health_dashboard_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(
+            continuation_report.health_dashboard_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert!(continuation_report.health_dashboard_digest_labels_match());
+        assert_eq!(
+            continuation_summary.health_dashboard_surface(),
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
+        );
+        assert_eq!(
+            continuation_summary.health_dashboard_surface_label(),
+            "plan_and_drain_action"
+        );
+        assert!(continuation_summary.health_dashboard_has_plan_action());
+        assert!(continuation_summary.health_dashboard_has_drain_action());
+        assert_eq!(continuation_summary.health_dashboard_action_count(), 2);
+        assert!(continuation_summary.health_dashboard_has_multiple_actions());
+        assert_eq!(
+            continuation_summary.health_dashboard_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(
+            continuation_summary.health_dashboard_route_label(),
+            "triage"
+        );
+        assert_eq!(
+            continuation_summary.health_dashboard_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(continuation_summary.health_dashboard_priority_rank(), 90);
+        assert_eq!(
+            continuation_summary.health_dashboard_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert_eq!(
+            continuation_summary.health_dashboard_readiness_label(),
+            "triage_required"
+        );
+        assert!(continuation_summary.health_dashboard_is_actionable());
+        assert!(!continuation_summary.health_dashboard_is_auto_routable());
+        assert!(continuation_summary.health_dashboard_readiness_requires_manual_review());
+        assert!(!continuation_summary.health_dashboard_readiness_requires_investigation());
+        assert!(continuation_summary.health_dashboard_readiness_requires_triage());
+        assert!(continuation_summary.health_dashboard_digest_labels_match());
+        assert!(!continuation_summary.has_health_dashboard_digest_label_integrity_drift());
         assert!(continuation_summary.health_dashboard_labels_match());
         assert!(!continuation_summary.has_health_dashboard_label_integrity_drift());
 
@@ -15997,6 +16634,26 @@ mod tests {
         assert_eq!(follow_up_summary.drain_health_route_label(), "triage");
         assert!(follow_up_summary.plan_health_readiness_requires_manual_review());
         assert!(follow_up_summary.drain_health_readiness_requires_manual_review());
+        assert_eq!(
+            follow_up_summary.health_dashboard_surface(),
+            ToolAuditSupervisorDrainHealthDashboardSurface::PlanAndDrainAction
+        );
+        assert_eq!(
+            follow_up_summary.health_dashboard_route(),
+            ToolAuditHealthRoute::Triage
+        );
+        assert_eq!(
+            follow_up_summary.health_dashboard_priority(),
+            ToolAuditHealthPriority::Triage
+        );
+        assert_eq!(
+            follow_up_summary.health_dashboard_readiness(),
+            ToolAuditHealthReadiness::TriageRequired
+        );
+        assert!(follow_up_summary.health_dashboard_readiness_requires_manual_review());
+        assert!(follow_up_summary.health_dashboard_readiness_requires_triage());
+        assert!(follow_up_summary.health_dashboard_digest_labels_match());
+        assert!(!follow_up_summary.has_health_dashboard_digest_label_integrity_drift());
         assert!(follow_up_summary.health_dashboard_labels_match());
         assert!(!follow_up_summary.has_health_dashboard_label_integrity_drift());
     }
