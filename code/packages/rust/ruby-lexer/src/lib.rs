@@ -1236,6 +1236,19 @@ impl RubyLexer {
                 let text = std::mem::take(&mut self.text_buffer);
                 self.push_token(TokenType::String, text);
             }
+            "Backtick" => {
+                // Phase 4m — `` `cmd args` `` command-execution literal.
+                // The text buffer holds the *body* (without the
+                // surrounding backticks).  Encode as `TokenType::String`
+                // with the backticks re-wrapped so the parser can
+                // distinguish backtick literals from plain strings by
+                // inspecting the lexeme's first character.  Same
+                // sentinel-by-prefix trick the percent literals
+                // (`%w[…]`) and heredocs (`<<TAG\n…TAG`) use.
+                let body = std::mem::take(&mut self.text_buffer);
+                let value = format!("`{body}`");
+                self.push_token(TokenType::String, value);
+            }
             "Op" => {
                 let text = std::mem::take(&mut self.text_buffer);
                 let kind = classify_op_token(&text);
@@ -3452,5 +3465,113 @@ mod tests {
         assert!(!is_radix_integer_body("xZZ"));   // Z isn't hex
         assert!(!is_radix_integer_body("foo"));   // wrong prefix letter
         assert!(!is_radix_integer_body("e10"));   // e is exponent, not radix
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4m — backtick command literals `` `cmd args` ``
+    // -----------------------------------------------------------------
+    //
+    // The lexer emits a single `TokenType::String` token whose value is
+    // the verbatim source including the surrounding backticks
+    // (`` `ls -la` `` → value `` `ls -la` ``).  Parser code can
+    // distinguish backtick literals from plain strings by inspecting
+    // the leading character — same trick used by percent literals and
+    // heredocs.
+
+    /// Helper: tokens whose `value` starts with a backtick.
+    fn backtick_values(toks: &[Token]) -> Vec<String> {
+        toks.iter()
+            .filter(|t| t.type_ == TokenType::String && t.value.starts_with('`'))
+            .map(|t| t.value.clone())
+            .collect()
+    }
+
+    #[test]
+    fn backtick_simple_command_lexes_as_string_with_backticks() {
+        let toks = tokenize_ruby_for_version("`ls -la`", "1.8").unwrap();
+        assert_eq!(backtick_values(&toks), vec!["`ls -la`"]);
+    }
+
+    #[test]
+    fn backtick_empty_body_lexes_to_two_backticks() {
+        // Empty body — opening and closing backtick are adjacent.
+        let toks = tokenize_ruby_for_version("``", "1.8").unwrap();
+        assert_eq!(backtick_values(&toks), vec!["``"]);
+    }
+
+    #[test]
+    fn backtick_escape_sequences_resolved_in_body() {
+        // `\n`, `\t`, `\r`, `\\` get resolved to the escape characters
+        // (same as `string_d_escape`).  Backtick-escape `` \` `` lets
+        // you embed a literal backtick.
+        let toks = tokenize_ruby_for_version(r#"`echo \`hi\`\n`"#, "1.8").unwrap();
+        let v = &backtick_values(&toks)[0];
+        // The escaped backticks become literal backticks; \n becomes a
+        // newline character.  Outer wrapping backticks remain.
+        assert_eq!(v, "`echo `hi`\n`");
+    }
+
+    #[test]
+    fn backtick_multiline_command_keeps_newlines() {
+        // Real ruby allows multi-line `` `…` `` — the body captures
+        // newlines verbatim (same shape as double-quoted strings).
+        let src = "`ls\\\nfoo`"; // backslash-newline continuation in command
+        // Without continuation handling, we just verify a literal
+        // newline inside the body survives.
+        let toks = tokenize_ruby_for_version("`line1\nline2`", "1.8").unwrap();
+        let v = &backtick_values(&toks)[0];
+        assert!(v.contains("line1\nline2"), "expected newline inside body, got {v:?}");
+        // Sanity check the source-based test above did not crash.
+        let _ = tokenize_ruby_for_version(src, "1.8").unwrap();
+    }
+
+    #[test]
+    fn backtick_lexing_is_era_invariant() {
+        // Backticks have been in Ruby since 1.0 — every era produces
+        // the same token shape.
+        let src = "`pwd`";
+        let baseline = backtick_values(&tokenize_ruby_for_version(src, "1.8").unwrap());
+        assert_eq!(baseline, vec!["`pwd`"]);
+        for v in machine::ERA_VERSIONS {
+            let actual = backtick_values(&tokenize_ruby_for_version(src, v).unwrap());
+            assert_eq!(actual, baseline, "backtick lexing diverged in era {v}");
+        }
+    }
+
+    #[test]
+    fn backtick_does_not_swallow_following_tokens() {
+        // After the closing backtick, the dispatcher resumes normal
+        // tokenizing — `puts \`pwd\``  followed by  `+`  `1`  should
+        // yield Name(puts), String(`pwd`), Op(+), Int(1).
+        let toks = tokenize_ruby_for_version("`pwd` + 1", "1.8").unwrap();
+        let kinds: Vec<TokenType> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.type_)
+            .collect();
+        // Expect: String, Plus, Number  (whitespace skipped).
+        assert_eq!(
+            kinds,
+            vec![TokenType::String, TokenType::Plus, TokenType::Number],
+            "got tokens {toks:?}"
+        );
+    }
+
+    #[test]
+    fn backtick_unterminated_reports_diagnostic() {
+        // A backtick with no closing `` ` `` should leave a diagnostic
+        // behind.  The lexer still finishes (terminates on EOF) — the
+        // `parse_error(unterminated_backtick)` action records the
+        // error rather than aborting.  We use the public RubyLexer API
+        // directly so we can read its diagnostics() after `finish()`.
+        let mut lx = RubyLexer::new("1.8").expect("lexer build");
+        lx.push("`unterminated\n").unwrap();
+        lx.finish().unwrap();
+        let diags = lx.diagnostics();
+        assert!(
+            diags.iter().any(|d| d.code.contains("unterminated_backtick")),
+            "expected unterminated_backtick diagnostic, got {:?}",
+            diags
+        );
     }
 }

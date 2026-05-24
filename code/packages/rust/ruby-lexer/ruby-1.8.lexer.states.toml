@@ -51,6 +51,10 @@ alphabet = [
   # part of Ruby since 1.0, so they're not era-gated — they were
   # simply missing from the baseline lexer until now.
   "@", "$",
+  # Phase 4m — backtick (`` ` ``) opens a command-execution literal
+  # (`` `ls -la` `` runs the shell command).  Ruby has had this since
+  # 1.0, so no era gating — just a new dispatch from `data`.
+  "`",
   # string-escape letters (n, t, r) — referenced as `literal` matchers
   # inside string_d_escape.  range matchers don't need alphabet entries
   # but literal matchers do.
@@ -106,6 +110,15 @@ fields = ["value"]
 
 [[tokens]]
 name = "PercentBigI"   # %I[a b c]   — interpolating symbol array (2.0+)
+fields = ["value"]
+
+# Phase 4m — `` `cmd` `` command-execution literal.  Lexically it
+# resembles a string: open backtick, body with escapes, close backtick.
+# Semantically it runs the body as a shell command — but that's the
+# runtime's concern.  The lexer just emits a `Backtick` token carrying
+# the raw body (without the surrounding backticks).
+[[tokens]]
+name = "Backtick"      # `` `ls -la` `` — command-execution literal
 fields = ["value"]
 
 [[tokens]]
@@ -292,6 +305,20 @@ id = "after_dollar"      # saw `$`, peeking for an ident-starter first char
 [[states]]
 id = "dollar_body"       # inside `$x` — slurp ident chars then emit Name
 
+# Phase 4m — backtick command literal `` `cmd args` ``.  Two states:
+# the body collects raw bytes (with minimal escape handling), and the
+# escape state processes a single escape sequence then returns.  The
+# shape mirrors `string_d_body` / `string_d_escape` — same idea, but:
+#   - the close terminator is a backtick, not a double quote, and
+#   - we don't peek for `#` interpolation in v0.  Real Ruby allows
+#     `#{}` interpolation inside backticks; the parser-side phase
+#     (7a) can promote `#` handling once the rest of backtick lexing
+#     is in place.  For now, `#` is a literal character.
+[[states]]
+id = "backtick_body"     # inside `` `…` `` — accumulating command body
+[[states]]
+id = "backtick_escape"   # inside `` `…` `` after a `\` — processing one escape char
+
 [[states]]
 id = "done"
 final = true
@@ -367,6 +394,15 @@ actions = ["clear_text"]
 from = "data"
 matcher = { literal = "'" }
 to = "string_s_body"
+actions = ["clear_text"]
+
+# Phase 4m — backtick opens a command-execution literal.  Clear the
+# text buffer (the value field carries the body *without* the
+# surrounding backticks, matching how `String` carries it).
+[[transitions]]
+from = "data"
+matcher = { literal = "`" }
+to = "backtick_body"
 actions = ["clear_text"]
 
 # Punctuation that emits immediately.
@@ -817,6 +853,105 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Backtick command literal (Phase 4m) — `` `cmd args` ``.
+#
+# Shape mirrors `string_d_body`:
+#   - `\` opens an escape (one of `\\`, `` \` ``, `\n`, `\t`, `\r`,
+#     literal otherwise).
+#   - The matching `` ` `` closes the literal and we emit `Backtick`.
+#   - `\n` is permitted inside the body (multi-line shell commands).
+#   - EOF mid-body is an unterminated-literal error.
+#
+# Differences from `string_d_body`:
+#   - `#` is *not* treated as an interpolation opener in v0.  Real
+#     Ruby allows `#{}` inside backticks; the post-pass / parser
+#     phase 7a can layer interpolation on later when needed.
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "\\" }
+to = "backtick_escape"
+
+# Closing backtick — emit the buffered body as a Backtick token and
+# return to the dispatcher.
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "`" }
+to = "data"
+actions = ["emit(Backtick)"]
+
+# Multi-line backticks: a literal newline inside the body becomes
+# part of the buffered command — same behaviour as `string_d_body`.
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "\n" }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "backtick_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_backtick)", "emit(Eof)"]
+
+# Everything else is body content.
+[[transitions]]
+from = "backtick_body"
+matcher = { anything = true }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+# Escape handling: the same five escapes string_d_escape recognises
+# (`n`, `t`, `r`, `\\`, plus `` ` `` instead of `"` since that's
+# the close char here).  Anything else carries the escape through
+# verbatim — matching how Ruby handles unknown escapes in `` `…` ``.
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "n" }
+to = "backtick_body"
+actions = ["append_text(\\n)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "t" }
+to = "backtick_body"
+actions = ["append_text(\\t)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "r" }
+to = "backtick_body"
+actions = ["append_text(\\r)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "\\" }
+to = "backtick_body"
+actions = ["append_text(\\\\)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "`" }
+to = "backtick_body"
+actions = ["append_text(`)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { anything = true }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_backtick)", "emit(Eof)"]
 
 # ─────────────────────────────────────────────────────────────────
 # Regex body  (Phase 2)
