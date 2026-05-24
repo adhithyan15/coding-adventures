@@ -2,6 +2,51 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.16.0] - 2026-05-24
+
+### Added (Phase 4k — float literals `1.5`, `1e10`, `1.5e-3`)
+
+Float literals have been in Ruby since 1.0 but were never lexed by the v0 state machine.  Implemented via a **post-pass fusion** (same pattern as Phase 4b's `->` arrow, Phase 4c's `&.`, Phase 4f's numeric suffixes, etc.) — keeps the state machine TOML simple and avoids the lookahead-then-unpeek dance that would be needed in the engine itself.
+
+#### Supported lexeme shapes
+
+| Source       | Pre-fusion tokens                   | Post-fusion Number    |
+|--------------|-------------------------------------|-----------------------|
+| `1.5`        | Int "1", Dot, Int "5"               | "1.5"                 |
+| `1e10`       | Int "1", Name "e10"                 | "1e10"                |
+| `1E5`        | Int "1", Name "E5"                  | "1E5"                 |
+| `1.5e10`     | Int, Dot, Int, Name "e10"           | "1.5e10"              |
+| `1.5e-3`     | Int, Dot, Int, Name "e", Minus, Int | "1.5e-3"              |
+| `1e+10`      | Int, Name "e", Plus, Int            | "1e+10"               |
+| `1_000.5`    | Int "1_000", Dot, Int "5"           | "1_000.5"             |
+
+#### What this is **not** doing
+
+- **Method calls**: `1.method` stays as `Int "1"`, `Dot`, `Name "method"` (the fusion only fires when the dot is flanked by integer-shaped tokens).
+- **Range operator**: `1..5` stays a range — `fuse_range_ops` runs before `fuse_float_literals` and consumes the two dots into `Name ".."` before float fusion sees the stream.
+- **Whitespace-separated**: `1 . 5` is three separate tokens — every fusion step checks `whitespace_before_token` and same-line.
+- **Sign-only exponent**: signed exponents (`1e+10`) need three additional tokens (Name "e", Plus/Minus, Int) — handled by the third fusion step.
+
+#### Why a post-pass, not a TOML state?
+
+The state machine would need lookahead to decide between `1.5` (one float token) and `1.method` (Int + Dot + Name).  Our TOML doesn't support multi-char lookahead cleanly — we'd have to consume the `.` and then somehow re-emit a Dot if the next char isn't a digit.  The post-pass approach is uniform with how `..` / `...` / `->` / `&.` / `2r` / `_1` already work and stays cleanly testable.
+
+### Helpers added
+- `fuse_float_literals` — three-step fusion: (1) `Int Dot Int`, (2) `Number Name(e<digits>)`, (3) `Number Name(e) (+|-) Int`.
+- `is_integer_lexeme` — true iff the lexeme is just digits and `_`.
+- `is_unsigned_exponent_lexeme` (module-scope) — true iff the lexeme is `[eE]<digit_or_underscore>+`.
+
+### Tests (+9 new, total 133)
+- `lexes_simple_float` — `1.5` → Number "1.5".
+- `lexes_float_in_assignment` — `x = 1.5` produces the full expected token stream.
+- `lexes_float_with_unsigned_exponent` — `1e10`, `2E5`, `1.5e10`.
+- `lexes_float_with_signed_exponent` — `1.5e-3`, `1e+10`.
+- `float_does_not_swallow_range_operator` — `1..5` stays a range.
+- `float_does_not_swallow_method_call` — `1.method` stays `Int Dot Name`.
+- `float_requires_no_whitespace` — `1 . 5` is three tokens.
+- `float_lexes_uniformly_across_all_eras` — pins float-Number stream across every era in `ERA_VERSIONS`.
+- `is_unsigned_exponent_lexeme_smoke` — direct helper test.
+
 ## [0.15.0] - 2026-05-23
 
 ### Added (Phase 4i / 4j — instance vars `@x`, class vars `@@x`, globals `$x`)
