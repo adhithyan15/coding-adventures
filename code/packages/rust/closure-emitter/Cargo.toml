@@ -1,15 +1,19 @@
 [package]
 name = "coding-adventures-closure-emitter"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "JavaScript code emitter for the Closure Compiler clone. Per CLOC07's emit contract. Takes a finalized Program + sidecar and produces output JavaScript text + companion source map. Runs after every pass in the pipeline."
 
 [dependencies]
 coding-adventures-javascript-ast = { path = "../javascript-ast" }
 coding-adventures-type-sidecar = { path = "../type-sidecar" }
+coding-adventures-closure-source-map = { path = "../closure-source-map" }
 coding_adventures_correlation_vector = { path = "../correlation-vector" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 [dev-dependencies]
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+# End-to-end pipeline tests: constant-fold + pipeline scheduler.
+coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
+coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
