@@ -4,6 +4,47 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI28-1 §6.3 — Automatic React keys for `For` iterations
+
+Every `For` body is now wrapped in a `<React.Fragment key={...}>` so
+React's reconciler always has a stable per-iteration identity. This
+is the UI28-1 §5 performance property the spec promises — eliminates
+React's "Each child in a list should have a unique 'key' prop"
+runtime warning by default.
+
+Two emission shapes:
+
+- **Author bound `index: <name>`** — that name doubles as the
+  React.Fragment key source. Callback signature is `(<as>, <index>)`,
+  wrapper is `<React.Fragment key={<index>}>`.
+- **Author omitted `index:`** — emitter injects an implicit `_idx`
+  parameter into the .map callback and uses it as the key. Callback
+  signature is `(<as>, _idx)`, wrapper is `<React.Fragment key={_idx}>`.
+  The underscored name signals "framework-internal"; author body code
+  is unaffected.
+
+The wrapper is always the long-form `<React.Fragment>`, never the
+shorthand `<>`, because JSX shorthand fragments cannot carry
+attributes. Multi-child bodies that previously wrapped in `<>...</>`
+now wrap in `<React.Fragment key={...}>...</React.Fragment>` —
+single-child bodies, which previously emitted bare, also gain the
+keyed wrapper for uniformity.
+
+A new layout-scan helper `layout_contains_for` extends the file-
+header import detection: any component whose layout has a For now
+triggers `import React from "react";` (otherwise the file would
+reference the `React` namespace without importing it). Components
+without For or React.*-typed slots still skip the import — the
+existing `noUnusedLocals` discipline holds.
+
+5 new tests + 4 snapshot tests updated to assert the new shapes.
+Total tests: 198 (was 193, +5). Notable:
+`ui28_1_react_for_with_explicit_index_uses_that_name_as_key`,
+`ui28_1_react_for_without_index_injects_implicit_idx_for_key`,
+`ui28_1_react_for_kebab_case_index_camel_cases_in_both_callback_and_key`,
+`ui28_1_react_for_triggers_react_namespace_import_even_for_primitive_only_interface`,
+`ui28_1_react_for_multi_child_body_still_uses_react_fragment_wrapper`.
+
 ### Added — UI32-K-react — `--emit-project` Vite shell
 
 Mirrors the XAML pattern (UI32 spec §2.1, PR #3917, spec PR #4286)

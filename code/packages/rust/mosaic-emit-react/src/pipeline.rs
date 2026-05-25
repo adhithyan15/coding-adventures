@@ -452,7 +452,14 @@ pub fn from_pipeline(
     // The modern JSX transform (`"jsx": "react-jsx"`) auto-imports
     // the `jsx`/`jsxs` helpers from `react/jsx-runtime`, so JSX
     // itself does not require the React identifier to be in scope.
-    let needs_react_import = interface_uses_react_namespace(interface);
+    // UI28-1 §6.3 — every `For` body is wrapped in `<React.Fragment
+    // key={...}>` for stable iteration keys. The shorthand `<>` can't
+    // carry a `key=`, and we always want a stable key, so the long
+    // form is mandatory. That introduces a hard dependency on the
+    // `React` namespace identifier, so a layout containing any For
+    // must trigger the import even when the interface itself wouldn't.
+    let needs_react_import = interface_uses_react_namespace(interface)
+        || layout_contains_for(&layout.root);
 
     // UI29-1 — `HostDialog` lowers to React's native `<dialog>` with a
     // `useRef` + `useEffect` pair that drives `showModal()`/`show()`/`close()`
@@ -999,15 +1006,29 @@ fn emit_children_jsx_with_control_flow(
 ///
 /// ## Lowering rules
 ///
-/// - `each: slot: rows`     → `{rows.map((<as>, <index>?) => <body-jsx>)}`
-/// - `each: <expr>`         → `{<expr>.map((<as>, <index>?) => <body-jsx>)}`
+/// - `each: slot: rows`     → `{rows.map((<as>, <index-or-implicit>) => <body-jsx-with-key>)}`
+/// - `each: <expr>`         → `{<expr>.map((<as>, <index-or-implicit>) => <body-jsx-with-key>)}`
 ///
-/// The `as:` binding becomes the first callback parameter. When `index:`
-/// is present it becomes the second. When `index:` is omitted, the
-/// callback declares only the one parameter (and React's reconciler will
-/// warn the host about a missing `key={...}` — that warning belongs in a
-/// follow-up keying PR, which also needs UI29 expression support to plumb
-/// a stable id out of the iterated element).
+/// The `as:` binding becomes the first callback parameter. When the
+/// author writes `index: <name>`, that name becomes the second parameter
+/// AND the key source. When the author **omits** `index:`, we inject an
+/// implicit second parameter named `_idx` (underscored to discourage
+/// any author-body reference) and use it as the key source. Result:
+/// every emitted `.map()` body is wrapped in a `<React.Fragment
+/// key={<key-source>}>...</React.Fragment>` so React's reconciler always
+/// has a stable identity per iteration — no `Warning: Each child in a
+/// list should have a unique "key" prop` at runtime, ever.
+///
+/// This is UI28-1 §5's "stable iteration keys" performance property —
+/// the difference between O(n) and O(1) per-render cost in React's diff
+/// for VisiCalc-scale data (100×26 grid = 2,600 keyed elements). For
+/// VisiCalc specifically the index is a meaningful row/col coordinate
+/// so the author will normally bind it explicitly; the implicit
+/// fallback keeps the safety net on for hand-written components that
+/// forget.
+///
+/// We use the long-form `<React.Fragment key={k}>` (not the shorthand
+/// `<>`) because the JSX shorthand fragment cannot carry attributes.
 ///
 /// The body is the For node's children, recursively emitted by the
 /// standard tree walker. This means a `Text (content: slot: <as>)` child
@@ -1078,15 +1099,40 @@ fn emit_for_jsx(
         None => None,
     };
 
-    // Build the callback param list: `(row)` or `(row, r)`.
-    let params = match &index_ident {
-        Some(idx) => format!("({as_ident}, {idx})"),
-        None => format!("({as_ident})"),
+    // Build the callback param list AND pick the key source.
+    //
+    // Two cases:
+    //  1. Author bound `index: <name>` — that name is both the
+    //     callback's second parameter and the key source. Body code
+    //     can read it as a regular identifier.
+    //  2. Author did NOT bind `index:` — inject an implicit `_idx`
+    //     parameter (underscored to flag "framework-internal") and
+    //     use it as the key source. Author body code never references
+    //     `_idx` directly; it's purely the key plumbing.
+    //
+    // The `_idx` literal is hand-validated (not author-controlled) so
+    // it can't collide with author bindings going through
+    // `to_camel_case_first_lower` (which never produces an underscore-
+    // leading identifier). It also won't collide with `_idx` written
+    // by the author since `to_camel_case_first_lower("_idx")` would
+    // pass through `_idx`, and `is_safe_js_identifier` would accept it
+    // — but no author idiom uses `_idx` as a binding name. If a
+    // hostile .mll author chose `as: _idx` we'd get a collision in
+    // the .map callback signature `(_idx, _idx)`, which JavaScript
+    // rejects at parse time as a duplicate parameter — fail-loud, not
+    // silent-misbehave, so the bug surfaces immediately.
+    let (params, key_source) = match &index_ident {
+        Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
+        None => (
+            format!("({as_ident}, _idx)"),
+            "_idx".to_string(),
+        ),
     };
 
-    // Emit the body. Multiple children render as a JSX fragment so the
-    // .map callback returns a single element per iteration. A single
-    // child returns directly without wrapping.
+    // Emit the body. Always wrap in a keyed React.Fragment so React's
+    // reconciler has a stable identity per iteration regardless of
+    // child count. Long-form fragment is required — the JSX shorthand
+    // `<>` cannot carry a `key={}` attribute.
     let body_indent = indent + 2;
     let body_jsx = emit_children_jsx_with_control_flow(
         &node.children,
@@ -1097,19 +1143,15 @@ fn emit_for_jsx(
     )?;
     let body_trimmed = body_jsx.trim_end_matches('\n');
 
-    let wrap_fragment = node.children.len() != 1;
     let body_pad = " ".repeat(body_indent);
 
     let mut out = format!("{pad}{{{collection_expr}.map({params} => (\n");
-    if wrap_fragment {
-        out.push_str(&format!("{body_pad}<>\n"));
-        out.push_str(body_trimmed);
-        out.push('\n');
-        out.push_str(&format!("{body_pad}</>\n"));
-    } else {
-        out.push_str(body_trimmed);
-        out.push('\n');
-    }
+    out.push_str(&format!(
+        "{body_pad}<React.Fragment key={{{key_source}}}>\n"
+    ));
+    out.push_str(body_trimmed);
+    out.push('\n');
+    out.push_str(&format!("{body_pad}</React.Fragment>\n"));
     out.push_str(&format!("{pad}))}}\n"));
     Ok(out)
 }
@@ -1560,6 +1602,21 @@ fn emit_host_button_jsx(
 /// never outlive the borrow that produced them. Using a path-based or
 /// "Nth in DFS" key would require re-walking the tree on every lookup,
 /// which is the same big-O but harder to read.
+/// True when the layout tree contains at least one `For` node.
+///
+/// Used by the file-header emitter to decide whether to emit
+/// `import React from "react";`. Every `For` body is wrapped in
+/// `<React.Fragment key={...}>` (UI28-1 §6.3), which references the
+/// `React` namespace identifier. Without this trigger, a component
+/// whose interface is all-primitives but whose layout has a For
+/// would emit a file that references `React` without importing it.
+fn layout_contains_for(root: &LayoutNode) -> bool {
+    if root.tag == "For" {
+        return true;
+    }
+    root.children.iter().any(layout_contains_for)
+}
+
 fn collect_host_dialog_nodes(root: &LayoutNode) -> Vec<*const LayoutNode> {
     let mut out = Vec::new();
     collect_host_dialog_nodes_inner(root, &mut out);
@@ -9552,9 +9609,23 @@ mod tests {
         let l = box_wrapping("X", vec![for_node]);
         let s = empty_style("X");
         let result = from_pipeline(&m, &l, &s).expect("emit ok");
+        // No `index:` bound → emitter injects implicit `_idx`
+        // parameter and uses it as the React.Fragment key source.
         assert!(
-            result.output.contains("{rows.map((row) => ("),
-            "expected `{{rows.map((row) => (` in output, got:\n{}",
+            result.output.contains("{rows.map((row, _idx) => ("),
+            "expected `{{rows.map((row, _idx) => (` in output (implicit _idx for keying), got:\n{}",
+            result.output
+        );
+        // React.Fragment with key={_idx} — guarantees stable React
+        // identity per iteration (UI28-1 §5 performance property).
+        assert!(
+            result.output.contains("<React.Fragment key={_idx}>"),
+            "expected `<React.Fragment key={{_idx}}>` wrapping the body, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("</React.Fragment>"),
+            "expected closing `</React.Fragment>` for the keyed wrapper, got:\n{}",
             result.output
         );
         // The body references `row` (the as-binding) — Text's content slot
@@ -9604,6 +9675,18 @@ mod tests {
             "expected two-param map callback `(row, r)`, got:\n{}",
             result.output
         );
+        // The explicit `index:` binding doubles as the React.Fragment
+        // key source — no implicit `_idx` is injected.
+        assert!(
+            result.output.contains("<React.Fragment key={r}>"),
+            "expected `<React.Fragment key={{r}}>` (using the explicit `index:` binding `r`), got:\n{}",
+            result.output
+        );
+        assert!(
+            !result.output.contains("_idx"),
+            "did not expect implicit `_idx` when author bound `index:` explicitly, got:\n{}",
+            result.output
+        );
     }
 
     /// UI29 §3.1 — `For each: <expr>, as: x` passes the expression text
@@ -9629,9 +9712,11 @@ mod tests {
         let l = box_wrapping("X", vec![for_node]);
         let s = empty_style("X");
         let result = from_pipeline(&m, &l, &s).expect("emit ok");
+        // `each:` Expr passes through verbatim. With no `index:`
+        // the implicit `_idx` is still injected into the callback.
         assert!(
-            result.output.contains("{cols.visible.map((col) => ("),
-            "expected verbatim expr `cols.visible.map(...)`, got:\n{}",
+            result.output.contains("{cols.visible.map((col, _idx) => ("),
+            "expected verbatim expr `cols.visible.map((col, _idx) => (`, got:\n{}",
             result.output
         );
     }
@@ -9669,11 +9754,12 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = box_wrapping("X", vec![for_node]);
         let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
-        // The map declares `(item)` as its parameter and the body's
-        // <span>{item}</span> closes over it.
+        // The map declares `(item, _idx)` as its parameters (implicit
+        // `_idx` for keying) and the body's <span>{item}</span> closes
+        // over the as-binding.
         assert!(
-            result.output.contains("{items.map((item) => ("),
-            "expected `items.map((item) => (`, got:\n{}",
+            result.output.contains("{items.map((item, _idx) => ("),
+            "expected `items.map((item, _idx) => (`, got:\n{}",
             result.output
         );
         assert!(
@@ -9864,6 +9950,18 @@ mod tests {
             "expected inner .map((col, c) => (), got:\n{}",
             result.output
         );
+        // Both loops have explicit `index:` bindings so both wrappers
+        // use the author's chosen names (`r` / `c`) as their keys.
+        assert!(
+            result.output.contains("<React.Fragment key={r}>"),
+            "expected outer React.Fragment keyed by `r`, got:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("<React.Fragment key={c}>"),
+            "expected inner React.Fragment keyed by `c`, got:\n{}",
+            result.output
+        );
     }
 
     /// UI29 §3.1 + §3.2 — a `For` whose body contains an `If`/`Else` pair
@@ -9915,8 +10013,8 @@ mod tests {
         let l = box_wrapping("X", vec![for_node]);
         let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
         assert!(
-            result.output.contains("{rows.map((row) => ("),
-            "expected outer For .map, got:\n{}",
+            result.output.contains("{rows.map((row, _idx) => ("),
+            "expected outer For .map with implicit _idx for keying, got:\n{}",
             result.output
         );
         assert!(
@@ -10228,5 +10326,230 @@ mod tests {
         assert!(!is_valid_npm_name("has/slash"));
         assert!(!is_valid_npm_name("@scope/foo"));
         assert!(!is_valid_npm_name(&"a".repeat(215)));
+    }
+
+    // =====================================================================
+    // UI28-1 §6.3 / Phase 3 — React `For` auto-key from `index:`
+    //
+    // These tests pin the keyed-React.Fragment shape we always emit
+    // around a For body. The contract:
+    //
+    // 1. When `index:` is bound, the binding doubles as the key
+    //    source — no implicit `_idx` is introduced.
+    // 2. When `index:` is NOT bound, an implicit `_idx` is injected
+    //    into the .map callback signature and used as the key. This
+    //    eliminates React's "missing key" runtime warning by default.
+    // 3. The wrapper is always `<React.Fragment key={...}>`, not the
+    //    shorthand `<>` (which cannot carry attributes).
+    //
+    // UI28-1 §5 promised stable iteration keys as the chosen
+    // performance investment for v0.2.0; this is where it lands for
+    // React.
+    // =====================================================================
+
+    #[test]
+    fn ui28_1_react_for_without_index_injects_implicit_idx_for_key() {
+        // For (each: slot: rows, as: row)
+        // → rows.map((row, _idx) => <React.Fragment key={_idx}>...
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        let out = &result.output;
+        assert!(
+            out.contains("rows.map((row, _idx) => ("),
+            "expected implicit _idx in callback signature, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("<React.Fragment key={_idx}>"),
+            "expected React.Fragment keyed by the implicit _idx, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("</React.Fragment>"),
+            "expected closing </React.Fragment>, got:\n{}",
+            out
+        );
+        // Shorthand fragments cannot carry attributes; we must use
+        // the long form. Ensure we did not regress to `<>`/`</>`.
+        assert!(
+            !out.contains(" <>") && !out.contains("</>"),
+            "did not expect shorthand fragments (they can't carry key=), got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn ui28_1_react_for_with_explicit_index_uses_that_name_as_key() {
+        // For (each: slot: rows, as: row, index: r)
+        // → rows.map((row, r) => <React.Fragment key={r}>...
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("r".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        let out = &result.output;
+        assert!(
+            out.contains("rows.map((row, r) => ("),
+            "expected explicit `r` index in callback, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("<React.Fragment key={r}>"),
+            "expected React.Fragment keyed by the explicit `r`, got:\n{}",
+            out
+        );
+        assert!(
+            !out.contains("_idx"),
+            "did not expect implicit _idx when index was bound explicitly, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn ui28_1_react_for_kebab_case_index_camel_cases_in_both_callback_and_key() {
+        // For (each: ..., as: ..., index: cell-idx)
+        // → ...(_, cellIdx) => <React.Fragment key={cellIdx}>
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("cell-idx".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        let out = &result.output;
+        assert!(
+            out.contains("rows.map((row, cellIdx) => ("),
+            "expected camelCased `cellIdx` in callback signature, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("<React.Fragment key={cellIdx}>"),
+            "expected React.Fragment keyed by camelCased `cellIdx`, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn ui28_1_react_for_triggers_react_namespace_import_even_for_primitive_only_interface() {
+        // Component with a primitives-only interface (just a `list<text>`
+        // slot) would normally NOT trigger `import React from "react"`
+        // because the JSX transform handles JSX itself. But our For
+        // lowering emits `React.Fragment` which references the
+        // `React` identifier, so the import must be added.
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        assert!(
+            result.output.contains("import React from \"react\";"),
+            "expected `import React from \"react\";` (For requires React.Fragment), got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn ui28_1_react_for_multi_child_body_still_uses_react_fragment_wrapper() {
+        // For body with 2 children — previously this triggered the
+        // shorthand `<>...</>` fallback. Now it uses React.Fragment
+        // with the key, same as the single-child path.
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("r".to_string()),
+                },
+            ],
+            children: vec![text_leaf("row"), text_leaf("row")],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_wrapping("X", vec![for_node]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        let out = &result.output;
+        // The multi-child body must still be inside a keyed wrapper.
+        assert!(
+            out.contains("<React.Fragment key={r}>"),
+            "expected React.Fragment key={{r}} wrapping the multi-child body, got:\n{}",
+            out
+        );
+        // Two `{row}` body interpolations — one per child.
+        let row_refs = out.matches("{row}").count();
+        assert!(
+            row_refs >= 2,
+            "expected at least 2 body references to {{row}}, found {}, output:\n{}",
+            row_refs,
+            out
+        );
     }
 }
