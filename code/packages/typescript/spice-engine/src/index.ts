@@ -2297,6 +2297,24 @@ export function formatTransientTable(
   return rows.join("\n");
 }
 
+export function formatPoleZeroTable(result: PoleZeroResult): string {
+  const rows = [["Index", "Kind", "Real", "Imaginary", "Frequency", "Damping"].join("\t")];
+  result.entries.forEach((entry, index) => {
+    rows.push(
+      [
+        String(index),
+        entry.kind,
+        formatTableNumber(entry.real),
+        formatTableNumber(entry.imaginary),
+        formatTableNumber(entry.frequencyHz),
+        formatTableNumber(entry.damping),
+      ].join("\t"),
+    );
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 function defaultOutputProbes(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: ReadonlyMap<string, number>,

@@ -22,6 +22,9 @@
   `format_transient_table()` now emit stable tab-separated node-voltage and
   branch-current tables for `.OP` / `.TRAN` style snapshots.
 
+- **Pole-zero text output table** — `format_pole_zero_table()` now emits a
+  stable tab-separated row set for `.PZ` poles and zeros.
+
 - **Fourier transient analysis** — `fourier()` now computes SPICE-style DC,
   harmonic sine/cosine coefficients, magnitudes, phases, and THD from
   transient samples for `V(node)` and `I(source)` probes.

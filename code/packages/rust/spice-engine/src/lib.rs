@@ -3354,6 +3354,26 @@ pub fn format_transient_table(
     Ok(rows.join("\n"))
 }
 
+pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
+    let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
+    for (index, entry) in result.entries.iter().enumerate() {
+        let kind = match entry.kind {
+            PoleZeroEntryKind::Pole => "pole",
+            PoleZeroEntryKind::Zero => "zero",
+        };
+        rows.push(format!(
+            "{index}\t{}\t{}\t{}\t{}\t{}",
+            kind,
+            format_table_number(entry.real),
+            format_table_number(entry.imaginary),
+            format_table_number(entry.frequency_hz),
+            format_table_number(entry.damping)
+        ));
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 fn default_output_probes(
     node_voltages: &BTreeMap<String, f64>,
     branch_currents: &BTreeMap<String, f64>,

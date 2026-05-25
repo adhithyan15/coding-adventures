@@ -150,6 +150,7 @@ from spice_engine import (
     distortion_from_transient,
     estimate_period,
     format_dc_table,
+    format_pole_zero_table,
     format_transient_table,
     fourier,
     mc_dc,
@@ -6051,6 +6052,35 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
         "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
         "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
         "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+
+
+def test_pole_zero_text_output_table_is_stable() -> None:
+    result = PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=1.0e3,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=0.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-5.0,
+                imaginary=-999.987499921874,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=5.0e-3,
+            ),
+        ],
+    )
+
+    assert format_pole_zero_table(result) == (
+        "Index\tKind\tReal\tImaginary\tFrequency\tDamping\n"
+        "0\tzero\t0.000000e+00\t1.000000e+03\t1.591549e+02\t0.000000e+00\n"
+        "1\tpole\t-5.000000e+00\t-9.999875e+02\t1.591549e+02\t5.000000e-03\n"
     )
 
 
