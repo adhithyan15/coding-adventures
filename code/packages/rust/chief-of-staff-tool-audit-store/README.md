@@ -230,6 +230,9 @@ The crate keeps the boundary narrow:
   keys that combine top-level attention and queue grouping for dashboard rows
 - supervisor drain run summaries flatten host-run supervision routing,
   priority, review, investigation, triage, and label-integrity flags
+- supervisor drain reports and summaries expose compact host-run escalation
+  labels, ranks, routing flags, and label-integrity checks for supervision
+  queues
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
