@@ -1,7 +1,7 @@
 use spice_engine::{
-    tf, tf_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
-    CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SpiceError,
-    TfResult, Vccs, Vcvs, VoltageSource,
+    format_tf_table, tf, tf_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params,
+    MosfetType, Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -38,6 +38,20 @@ fn tf_voltage_divider_reports_gain_and_impedances() {
     assert_close(result.transfer_ratio, 0.5);
     assert_close(result.input_impedance_ohms, 2_000.0);
     assert_close(result.output_impedance_ohms, 500.0);
+}
+
+#[test]
+fn tf_text_output_table_is_stable() {
+    let result = TfResult {
+        transfer_ratio: 0.5,
+        input_impedance_ohms: 2_000.0,
+        output_impedance_ohms: 500.0,
+    };
+
+    assert_eq!(
+        format_tf_table(&result),
+        "TransferRatio\tInputImpedance\tOutputImpedance\n5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    );
 }
 
 #[test]

@@ -2328,6 +2328,18 @@ export function formatAcTable(
   return rows.join("\n");
 }
 
+export function formatTfTable(result: TfResult): string {
+  return [
+    ["TransferRatio", "InputImpedance", "OutputImpedance"].join("\t"),
+    [
+      formatTableNumber(result.transferRatio),
+      formatTableNumber(result.inputImpedanceOhms),
+      formatTableNumber(result.outputImpedanceOhms),
+    ].join("\t"),
+    "",
+  ].join("\n");
+}
+
 export function formatPoleZeroTable(result: PoleZeroResult): string {
   const rows = [["Index", "Kind", "Real", "Imaginary", "Frequency", "Damping"].join("\t")];
   result.entries.forEach((entry, index) => {

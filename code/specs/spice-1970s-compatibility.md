@@ -308,6 +308,9 @@ Status:
 - `.FOUR` Fourier results can now be rendered as stable tab-separated text
   tables across Python, TypeScript, and Rust, covering harmonic coefficients,
   magnitude, phase, DC, and THD rows.
+- `.TF` transfer-function results can now be rendered as stable tab-separated
+  text tables across Python, TypeScript, and Rust, covering gain and
+  input/output impedance rows.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

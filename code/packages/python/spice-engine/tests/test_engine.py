@@ -154,6 +154,7 @@ from spice_engine import (
     format_distortion_table,
     format_fourier_table,
     format_pole_zero_table,
+    format_tf_table,
     format_transient_table,
     fourier,
     mc_dc,
@@ -2496,6 +2497,19 @@ def test_tfresult_exported():
     """TfResult is importable from the top-level spice_engine package."""
     from spice_engine import TfResult as TfResult_exported
     assert TfResult_exported is TfResult
+
+
+def test_tf_text_output_table_is_stable() -> None:
+    result = TfResult(
+        transfer_ratio=0.5,
+        input_impedance=2000.0,
+        output_impedance=500.0,
+    )
+
+    assert format_tf_table(result) == (
+        "TransferRatio\tInputImpedance\tOutputImpedance\n"
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    )
 
 
 # ============================================================================

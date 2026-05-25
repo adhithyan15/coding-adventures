@@ -3384,6 +3384,15 @@ pub fn format_ac_table(points: &[AcPoint], probes: &[&str]) -> Result<String, Sp
     Ok(rows.join("\n"))
 }
 
+pub fn format_tf_table(result: &TfResult) -> String {
+    format!(
+        "TransferRatio\tInputImpedance\tOutputImpedance\n{}\t{}\t{}\n",
+        format_table_number(result.transfer_ratio),
+        format_table_number(result.input_impedance_ohms),
+        format_table_number(result.output_impedance_ohms)
+    )
+}
+
 pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
     for (index, entry) in result.entries.iter().enumerate() {
