@@ -2624,4 +2624,100 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7a — backtick command literal lowering
+    //
+    // Lexer Phase 4m emits `` `ls -la` `` as a `TokenType::String` whose
+    // value is the verbatim source including the surrounding backticks
+    // (`` `ls -la` ``).  The lowerer detects the leading backtick and
+    // emits a marker `BuiltinCall("backtick", [StrLit(body)])` with
+    // effects = MayBlock | MayPrint | MayThrow.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn backtick_command_literal_lowers_to_backtick_builtin_call() {
+        // `x = `ls -la`` → BuiltinCall("backtick", [StrLit("ls -la")]).
+        let m = lower("x = `ls -la`");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, name, .. } => {
+                assert_eq!(name, "x");
+                match value {
+                    Expr::BuiltinCall { name, args, .. } => {
+                        assert_eq!(name, "backtick");
+                        assert_eq!(args.len(), 1);
+                        match &args[0] {
+                            Expr::StrLit { value, .. } => {
+                                assert_eq!(value, "ls -la");
+                            }
+                            other => panic!("expected StrLit body, got {:?}", other),
+                        }
+                    }
+                    other => panic!("expected backtick BuiltinCall, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn backtick_command_literal_carries_effect_set() {
+        // Backtick spawns a child process — must carry MayBlock,
+        // MayPrint, MayThrow.  Verify all three are set on the marker.
+        let m = lower("x = `pwd`");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding {
+                value: Expr::BuiltinCall { effects, .. },
+                ..
+            } => {
+                assert!(effects.contains(Effect::MayBlock), "expected MayBlock");
+                assert!(effects.contains(Effect::MayPrint), "expected MayPrint");
+                assert!(effects.contains(Effect::MayThrow), "expected MayThrow");
+            }
+            other => panic!("expected backtick BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn empty_backtick_command_literal_lowers_with_empty_body() {
+        // `x = ``` (empty body).  The marker still emits a StrLit, with
+        // an empty body string.
+        let m = lower("x = ``");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding {
+                value: Expr::BuiltinCall { name, args, .. },
+                ..
+            } => {
+                assert_eq!(name, "backtick");
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value.is_empty()));
+            }
+            other => panic!("expected backtick BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn backtick_command_literal_triggers_strings_feature() {
+        // The synthetic StrLit body triggers `Feature::Strings`.
+        let m = lower("x = `whoami`");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Strings),
+            "expected Strings feature in manifest"
+        );
+    }
+
+    #[test]
+    fn backtick_command_literal_module_passes_sir_validator() {
+        // End-to-end smoke: a module that uses a backtick literal
+        // passes the SIR validator.
+        let m = lower("x = `echo hi`\nputs(x)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected backtick-using module: {:?}",
+            result
+        );
+    }
 }

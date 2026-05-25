@@ -2,6 +2,39 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.28.0] - 2026-05-25
+
+### Added (Phase 7a — backtick command literal lowering)
+
+`lower_factor_atom`'s `String` case now dispatches by lexeme prefix:
+- starts with `` ` `` → new `lower_backtick_command_literal` helper (Phase 7a).
+- otherwise → existing `lower_string_literal_with_interp` (Phase 6y).
+
+### Lowering
+
+| Source       | SIR shape                                                       |
+|--------------|-----------------------------------------------------------------|
+| `` `ls` ``   | `BuiltinCall("backtick", [StrLit("ls")])` + MayBlock\|MayPrint\|MayThrow |
+| `` `` ``     | `BuiltinCall("backtick", [StrLit("")])` + same effects          |
+
+The triple-effect set reflects that command execution may **block** on the child process, **print** stdout/stderr, and **throw** if the command can't be invoked.  Marker-builtin pattern reused from Phase 6v (`__rescue_marker__`), Phase 6w (`lambda`/`proc`), and Phase 6y (`__interp__`).
+
+The synthetic `StrLit` body triggers `Feature::Strings`.
+
+### v0 deferred limitations
+
+- Interpolation inside the body (`` `echo #{name}` ``) is NOT split — the body lowers as a single `StrLit` with any `#{...}` markers preserved verbatim.  Follow-up will reuse the Phase 6y splitter.
+- Escape sequences are already resolved by the lexer's `backtick_body` state.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 127 → **132** (+5):
+  - `backtick_command_literal_lowers_to_backtick_builtin_call` — happy path.
+  - `backtick_command_literal_carries_effect_set` — asserts MayBlock + MayPrint + MayThrow.
+  - `empty_backtick_command_literal_lowers_with_empty_body` — `` `` ``.
+  - `backtick_command_literal_triggers_strings_feature` — manifest gating.
+  - `backtick_command_literal_module_passes_sir_validator` — end-to-end smoke.
+
 ## [0.27.0] - 2026-05-25
 
 ### Added (Phase 6z — float / hex / bin / oct numeric literal lowering)

@@ -2935,6 +2935,73 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
+    // Phase 7a — backtick command literal lowering
+    // -------------------------------------------------------------------
+
+    /// Lower a Ruby backtick command literal `` `cmd args` `` (Phase 7a).
+    ///
+    /// The lexer's Phase-4m `backtick_body` state emits the entire
+    /// literal — including the surrounding backticks — as a single
+    /// `TokenType::String` token whose `value` is `` `<body>` `` (the
+    /// inner body wrapped back up).  This sentinel-by-prefix trick
+    /// lets the parser route both plain strings and backtick literals
+    /// through the same NUMBER/STRING/NAME factor alternation while
+    /// preserving the distinction for the lowerer.
+    ///
+    /// ## SIR shape
+    ///
+    /// `BuiltinCall { name: "backtick", args: [StrLit(body)] }` — the
+    /// inner body (backticks stripped) is carried as a `StrLit` arg.
+    /// Effects are `MayBlock | MayPrint | MayThrow`: command execution
+    /// can block (waiting for the child process), print (stdout/stderr
+    /// from the child), and throw (`Errno::ENOENT` and friends).  Same
+    /// marker-builtin pattern as Phase 6v's `__rescue_marker__`,
+    /// Phase 6w's lambda construction, and Phase 6y's `__interp__`.
+    ///
+    /// ## v0 deferred limitations
+    ///
+    /// - Interpolation inside the body (`` `echo #{name}` ``) is NOT
+    ///   split.  The body is emitted as a single `StrLit` with any
+    ///   `#{...}` markers preserved verbatim.  A future phase will
+    ///   reuse the Phase 6y interpolation splitter inside the body.
+    /// - Escape sequences inside the body (`` \` ``, `\n`, etc.) are
+    ///   resolved by the lexer (Phase 4m's body state) before reaching
+    ///   us — we don't re-process them here.
+    /// - Triggers `Feature::Strings` because we emit a `StrLit`.
+    fn lower_backtick_command_literal(&mut self, raw: &str, span: Span) -> Expr {
+        // Strip the surrounding backticks.  The lexer guarantees the
+        // value is `` `<body>` ``, so the first and last bytes are
+        // always ASCII `` ` `` (single-byte) — we can slice on bytes.
+        // Defensive fallback: if either delimiter is missing (which
+        // would be a lexer bug), treat the whole value as the body so
+        // we don't panic on a malformed input.
+        let body = if raw.len() >= 2
+            && raw.starts_with('`')
+            && raw.ends_with('`')
+        {
+            &raw[1..raw.len() - 1]
+        } else {
+            raw
+        };
+        self.features_used.insert(Feature::Strings);
+        Expr::BuiltinCall {
+            name: "backtick".to_string(),
+            args: vec![Expr::StrLit {
+                value: body.to_string(),
+                span: span.clone(),
+            }],
+            // Backtick execution can block on the child process, print
+            // its output, and throw if the command can't be invoked
+            // (`Errno::ENOENT`, etc).
+            effects: EffectSet::PURE
+                .with(Effect::MayBlock)
+                .with(Effect::MayPrint)
+                .with(Effect::MayThrow),
+            span,
+        }
+    }
+
+    // -------------------------------------------------------------------
     // Phase 6z — numeric literal lowering (float / hex / bin / oct / dec)
     // -------------------------------------------------------------------
 
@@ -3303,6 +3370,19 @@ impl Lowerer {
                             );
                         }
                         TokenType::String => {
+                            // Phase 7a — backtick command literal dispatch.
+                            // The lexer (Phase 4m) emits `` `cmd args` `` as
+                            // a `String` token whose value is the verbatim
+                            // source *including* the surrounding backticks
+                            // — same lexeme-prefix sentinel trick the
+                            // percent literals and heredocs use.  Detect by
+                            // checking the leading byte.
+                            if tok.value.starts_with('`') {
+                                return Ok(self.lower_backtick_command_literal(
+                                    &tok.value,
+                                    span,
+                                ));
+                            }
                             // Phase 6y — string interpolation expression
                             // lowering.  The lexer (Phase 3b) emits the
                             // entire `"foo#{x}bar"` literal as a single

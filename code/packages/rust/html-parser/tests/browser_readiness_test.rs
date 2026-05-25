@@ -1,9 +1,9 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata, BrowserForm,
-    BrowserFormControl, BrowserHeading, BrowserImage, BrowserImageSource, BrowserLink,
-    BrowserMedia, BrowserMeta, BrowserRefresh, BrowserResource, BrowserScript,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserFormControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
+    BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh,
+    BrowserResource, BrowserScript, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -74,6 +74,8 @@ struct ExpectedDocumentMetadata {
     #[serde(default)]
     viewport: Option<String>,
     #[serde(default)]
+    viewport_directives: Vec<ExpectedMetadataDirective>,
+    #[serde(default)]
     description: Option<String>,
     #[serde(default)]
     application_name: Option<String>,
@@ -82,7 +84,11 @@ struct ExpectedDocumentMetadata {
     #[serde(default)]
     robots: Option<String>,
     #[serde(default)]
+    robots_directives: Vec<String>,
+    #[serde(default)]
     color_scheme: Option<String>,
+    #[serde(default)]
+    http_equiv_hints: Vec<ExpectedHttpEquivHint>,
     #[serde(default)]
     theme_colors: Vec<ExpectedThemeColor>,
     #[serde(default)]
@@ -95,6 +101,19 @@ struct ExpectedDocumentMetadata {
     manifest_url: Option<String>,
     #[serde(default)]
     resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedMetadataDirective {
+    name: String,
+    #[serde(default)]
+    value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedHttpEquivHint {
+    name: String,
+    content: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -622,11 +641,22 @@ impl ExpectedDocumentMetadata {
         BrowserDocumentMetadata {
             charset: self.charset,
             viewport: self.viewport,
+            viewport_directives: self
+                .viewport_directives
+                .into_iter()
+                .map(ExpectedMetadataDirective::into_browser_metadata_directive)
+                .collect(),
             description: self.description,
             application_name: self.application_name,
             referrer_policy: self.referrer_policy,
             robots: self.robots,
+            robots_directives: self.robots_directives,
             color_scheme: self.color_scheme,
+            http_equiv_hints: self
+                .http_equiv_hints
+                .into_iter()
+                .map(ExpectedHttpEquivHint::into_browser_http_equiv_hint)
+                .collect(),
             theme_colors: self
                 .theme_colors
                 .into_iter()
@@ -637,6 +667,24 @@ impl ExpectedDocumentMetadata {
             resolved_canonical_url: self.resolved_canonical_url,
             manifest_url: self.manifest_url,
             resolved_manifest_url: self.resolved_manifest_url,
+        }
+    }
+}
+
+impl ExpectedMetadataDirective {
+    fn into_browser_metadata_directive(self) -> BrowserMetadataDirective {
+        BrowserMetadataDirective {
+            name: self.name,
+            value: self.value,
+        }
+    }
+}
+
+impl ExpectedHttpEquivHint {
+    fn into_browser_http_equiv_hint(self) -> BrowserHttpEquivHint {
+        BrowserHttpEquivHint {
+            name: self.name,
+            content: self.content,
         }
     }
 }
