@@ -135,16 +135,16 @@
     {
       "id": "form-accessibility-document-page",
       "description": "Browser document form summaries include labels, accessible names, submission metadata, validation hints, autocomplete, and control state.",
-      "input": "<base href=\"https://example.test/search/index.html\"><body><form id=search name=searchForm aria-label=\"Search form\" action=find.html method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search autocapitalize=words enterkeyhint=search dirname=q.dir autofocus inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions><datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist><label>Notes<textarea id=notes name=notes placeholder=Details readonly maxlength=500 autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select><input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment><button id=go type=submit aria-label=\"Run search\" formaction=run.html formenctype=\"application/x-www-form-urlencoded\" formmethod=post formtarget=results formnovalidate>Go</button><input id=imageGo type=image name=image-go src=buttons/search.png alt=\"Search image\" width=32 height=16></form><input id=external form=search name=outside placeholder=Outside>",
+      "input": "<base href=\"https://example.test/search/index.html\"><body><form id=search name=searchForm aria-label=\"Search form\" action=find.html method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search autocapitalize=words enterkeyhint=search dirname=q.dir autofocus inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions><datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist><label>Notes<textarea id=notes name=notes placeholder=Details readonly maxlength=500 autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select><input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment><button id=go type=submit aria-label=\"Run search\" formaction=run.html formenctype=\"application/x-www-form-urlencoded\" formmethod=post formtarget=results formnovalidate>Go</button><input id=imageGo type=image name=image-go src=buttons/search.png alt=\"Search image\" width=32 height=16><output id=total name=total for=\"q kind\">Ready</output></form><input id=external form=search name=outside placeholder=Outside>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/search/index.html",
         "base_target": null,
-        "body_text": "Query NotesKeep me Options Fast Books Manuals Go",
+        "body_text": "Query NotesKeep me Options Fast Books Manuals Go Ready",
         "metas": [],
         "resources": [],
         "anchors": [
-          { "id": "search", "name": null, "text": "Query NotesKeep me Options Fast Books Manuals Go" },
+          { "id": "search", "name": null, "text": "Query NotesKeep me Options Fast Books Manuals Go Ready" },
           { "id": "q", "name": null, "text": "" },
           { "id": "query-suggestions", "name": null, "text": "Browser APIs" },
           { "id": "notes", "name": null, "text": "Keep me" },
@@ -153,6 +153,7 @@
           { "id": "upload", "name": null, "text": "" },
           { "id": "go", "name": null, "text": "Go" },
           { "id": "imageGo", "name": null, "text": "" },
+          { "id": "total", "name": null, "text": "Ready" },
           { "id": "external", "name": null, "text": "" }
         ],
         "headings": [],
@@ -179,6 +180,7 @@
               { "id": "upload", "control_type": "file", "name": "upload", "accept": "image/png,image/jpeg", "capture": "environment", "value": null, "disabled": false, "checked": false, "text": "", "options": [] },
               { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "form_action": "run.html", "resolved_form_action": "https://example.test/search/run.html", "form_enctype": "application/x-www-form-urlencoded", "form_method": "post", "form_target": "results", "form_novalidate": true, "value": null, "disabled": false, "checked": false, "text": "Go", "options": [] },
               { "id": "imageGo", "control_type": "image", "name": "image-go", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16", "value": null, "disabled": false, "checked": false, "text": "", "options": [] },
+              { "id": "total", "control_type": "output", "name": "total", "output_for": ["q", "kind"], "value": "Ready", "disabled": false, "checked": false, "text": "Ready", "options": [] },
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "disabled": false, "checked": false, "text": "", "options": [] }
             ]
           }

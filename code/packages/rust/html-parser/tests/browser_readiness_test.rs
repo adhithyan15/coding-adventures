@@ -411,6 +411,8 @@ struct ExpectedFormControl {
     #[serde(default)]
     datalist_options: Vec<String>,
     #[serde(default)]
+    output_for: Vec<String>,
+    #[serde(default)]
     form_action: Option<String>,
     #[serde(default)]
     resolved_form_action: Option<String>,
@@ -827,6 +829,7 @@ impl ExpectedFormControl {
             size: self.size,
             list: self.list,
             datalist_options: self.datalist_options,
+            output_for: self.output_for,
             form_action: self.form_action,
             resolved_form_action: self.resolved_form_action,
             form_enctype: self.form_enctype,

@@ -1334,6 +1334,7 @@ pub struct BrowserFormControl {
     pub size: Option<String>,
     pub list: Option<String>,
     pub datalist_options: Vec<String>,
+    pub output_for: Vec<String>,
     pub form_action: Option<String>,
     pub resolved_form_action: Option<String>,
     pub form_enctype: Option<String>,
@@ -10018,7 +10019,7 @@ fn collect_element_texts_by_id_into(nodes: &[Node], id_texts: &mut Vec<(String, 
 }
 
 fn is_browser_form_control_element(name: &str) -> bool {
-    matches!(name, "button" | "input" | "select" | "textarea")
+    matches!(name, "button" | "input" | "output" | "select" | "textarea")
 }
 
 fn browser_control_labels(
@@ -10540,7 +10541,7 @@ fn browser_content_control_type(element: &Element) -> Option<String> {
                 .map(|button_type| button_type.to_ascii_lowercase())
                 .unwrap_or_else(|| "submit".to_string()),
         ),
-        "select" | "textarea" => Some(element.name.clone()),
+        "output" | "select" | "textarea" => Some(element.name.clone()),
         _ => None,
     }
 }
@@ -10550,6 +10551,7 @@ fn browser_content_value(element: &Element) -> Option<String> {
         "button" => element.attribute("value").map(ToOwned::to_owned),
         "input" => browser_input_value(element),
         "option" => Some(browser_option_value(element)),
+        "output" => Some(element_text(element)),
         "select" => selected_option_value(&element.children),
         "textarea" => Some(element_text(element)),
         _ => None,
@@ -10567,6 +10569,17 @@ fn browser_control_datalist_options(element: &Element, body_root: &[Node]) -> Ve
     browser_control_list(element)
         .as_deref()
         .and_then(|list_id| datalist_options_by_id(body_root, list_id))
+        .unwrap_or_default()
+}
+
+fn browser_output_for(element: &Element) -> Vec<String> {
+    if element.name != "output" {
+        return Vec::new();
+    }
+
+    element
+        .attribute("for")
+        .map(split_html_classes)
         .unwrap_or_default()
 }
 
@@ -10776,7 +10789,7 @@ fn collect_form_controls_for_form_into(
 
         if matches!(
             element.name.as_str(),
-            "input" | "button" | "select" | "textarea"
+            "input" | "button" | "output" | "select" | "textarea"
         ) {
             let form_owner = browser_form_owner(element);
             let associated_with_target = match form_owner.as_deref() {
@@ -10820,7 +10833,7 @@ fn browser_form_control(
         .expect("browser_form_control is only called for form controls");
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let text = match element.name.as_str() {
-        "button" | "select" => visible_text_for_nodes(&element.children),
+        "button" | "output" | "select" => visible_text_for_nodes(&element.children),
         "textarea" => element_text(element),
         _ => String::new(),
     };
@@ -10856,6 +10869,7 @@ fn browser_form_control(
         size: browser_control_size(element),
         list: browser_control_list(element),
         datalist_options: browser_control_datalist_options(element, body_root),
+        output_for: browser_output_for(element),
         resolved_form_action: browser_control_form_action(element)
             .as_deref()
             .and_then(|action| resolve_browser_url(action, base_href)),
@@ -11626,7 +11640,8 @@ mod tests {
              formenctype=\"application/x-www-form-urlencoded\" formmethod=post \
              formtarget=results formnovalidate>Go</button>\
              <input id=imageGo type=image name=image-go src=buttons/search.png \
-             alt=\"Search image\" width=32 height=16></form>\
+             alt=\"Search image\" width=32 height=16>\
+             <output id=total name=total for=\"q kind\">Ready</output></form>\
              <input id=external form=f name=outside placeholder=Outside>",
         )
         .unwrap();
@@ -11702,11 +11717,16 @@ mod tests {
         assert_eq!(controls[6].alt.as_deref(), Some("Search image"));
         assert_eq!(controls[6].width.as_deref(), Some("32"));
         assert_eq!(controls[6].height.as_deref(), Some("16"));
-        assert_eq!(controls[7].id.as_deref(), Some("external"));
-        assert_eq!(controls[7].name.as_deref(), Some("outside"));
-        assert_eq!(controls[7].form_owner.as_deref(), Some("f"));
-        assert_eq!(controls[7].accessible_name.as_deref(), Some("Outside"));
-        assert_eq!(controls[7].placeholder.as_deref(), Some("Outside"));
+        assert_eq!(controls[7].control_type, "output");
+        assert_eq!(controls[7].name.as_deref(), Some("total"));
+        assert_eq!(controls[7].output_for, vec!["q", "kind"]);
+        assert_eq!(controls[7].value.as_deref(), Some("Ready"));
+        assert_eq!(controls[7].text, "Ready");
+        assert_eq!(controls[8].id.as_deref(), Some("external"));
+        assert_eq!(controls[8].name.as_deref(), Some("outside"));
+        assert_eq!(controls[8].form_owner.as_deref(), Some("f"));
+        assert_eq!(controls[8].accessible_name.as_deref(), Some("Outside"));
+        assert_eq!(controls[8].placeholder.as_deref(), Some("Outside"));
 
         let content_tree = BrowserContentTree::from_document(&document);
         let form = &content_tree.children[0];
@@ -11761,6 +11781,9 @@ mod tests {
         assert_eq!(image_button.alt.as_deref(), Some("Search image"));
         assert_eq!(image_button.width.as_deref(), Some("32"));
         assert_eq!(image_button.height.as_deref(), Some("16"));
+        let output = &form.children[8];
+        assert_eq!(output.control_type.as_deref(), Some("output"));
+        assert_eq!(output.value.as_deref(), Some("Ready"));
         let external = &content_tree.children[1];
         assert_eq!(external.form_owner.as_deref(), Some("f"));
         assert_eq!(external.accessible_name.as_deref(), Some("Outside"));
