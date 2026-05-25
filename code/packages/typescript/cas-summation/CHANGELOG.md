@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.0 — 2026-05-25
+
+### Added
+
+- **Phase 69 — One-Sqrt × Three-Log × polynomial numerator** (`oneSqrtThreeLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt and exactly 3 Log factors; log³ sub-polynomial contributes 0 to effective
+  degree. effective degree = sqrtHalfDeg + polyDeg.
+  Closes when `denDeg > oneSqrtThreeLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 4 new tests in the "Phase 69" describe block.
+
 ## 2.6.0 — 2026-05-25
 
 ### Added
