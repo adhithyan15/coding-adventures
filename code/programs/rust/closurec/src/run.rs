@@ -20,6 +20,7 @@
 //! The function signature doesn't change; only the body grows.
 
 use crate::config::{CompilationLevel, CompilerConfig};
+use crate::defines;
 use crate::globs;
 use crate::whitespace_only;
 use coding_adventures_javascript_tokens::EsVersion;
@@ -73,6 +74,9 @@ pub enum CompilerError {
     /// `--compilation_level WHITESPACE_ONLY` minification failed.
     /// Carries the underlying [`whitespace_only::MinifyError`].
     Minify(whitespace_only::MinifyError),
+    /// `--define / -D` substitution failed (tokenizer rejected the
+    /// source). Inner [`defines::DefineError`] carries the message.
+    Define(defines::DefineError),
 }
 
 impl std::fmt::Display for CompilerError {
@@ -86,6 +90,7 @@ impl std::fmt::Display for CompilerError {
             }
             CompilerError::GlobExpansion(e) => write!(f, "{e}"),
             CompilerError::Minify(e) => write!(f, "{e}"),
+            CompilerError::Define(e) => write!(f, "{e}"),
         }
     }
 }
@@ -121,17 +126,33 @@ pub fn transform_source(
     config: &CompilerConfig,
 ) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
-    match config.compilation.level {
+
+    // Step 1 — compilation-level transform.
+    let after_level = match config.compilation.level {
         CompilationLevel::WhitespaceOnly => {
             whitespace_only::whitespace_only_minify(source, es_version)
-                .map_err(CompilerError::Minify)
+                .map_err(CompilerError::Minify)?
         }
         // CLOC11.07+ will replace each of these with real passes.
         CompilationLevel::Simple
         | CompilationLevel::Advanced
         | CompilationLevel::Bundle
-        | CompilationLevel::TranspileOnly => Ok(source.to_string()),
-    }
+        | CompilationLevel::TranspileOnly => source.to_string(),
+    };
+
+    // Step 2 — `--define / -D` substitution (CLOC11.19). Runs
+    // *after* the compilation-level transform so that
+    // WHITESPACE_ONLY's output is the input to substitution. The
+    // ordering matches CC's: defines are applied during
+    // compilation, alongside the level's pass set. The
+    // composition matters because some `@define`-tagged names
+    // can survive comment-stripping (they shouldn't be in
+    // comments) but the *whitespace* changes don't affect
+    // identifier matching either way.
+    //
+    // Fast path: with no defines, this is a no-op string copy.
+    defines::apply_defines(&after_level, &config.defines.defines, es_version)
+        .map_err(CompilerError::Define)
 }
 
 /// Project the typed `LanguageVersion` enum into the
