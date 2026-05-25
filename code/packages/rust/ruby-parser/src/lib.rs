@@ -2142,5 +2142,60 @@ mod tests {
             "expected empty-body backtick lexeme"
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7b — heredocs in parser
+    //
+    // The lexer's Phase-3c heredoc body capture + Phase-4o opener-variant
+    // handling finalise every heredoc (`<<EOF`, `<<-EOF`, `<<~EOF`) into
+    // a single `TokenType::String` token whose value is the verbatim
+    // canonical form (`<<TAG\n<body>TAG`).  The parser sees the heredoc
+    // as a regular STRING token at the factor position — no grammar
+    // changes needed.  These tests confirm the grammar accepts every
+    // variant in assignment-RHS context.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_plain_heredoc_assignment() {
+        // `x = <<EOF\nhello\nEOF\n` — plain heredoc on RHS.
+        let ast = parse_ruby("x = <<EOF\nhello\nEOF\n");
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected assignment node"
+        );
+        assert!(
+            tree_has_token_value(&ast, "<<EOF\nhello\nEOF"),
+            "expected canonical heredoc lexeme in tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_dash_indent_heredoc_assignment() {
+        // `x = <<-EOF\nhello\n  EOF` — `<<-` indent-tolerant heredoc:
+        // closing tag may be indented (lexer Phase 4o).
+        let ast = parse_ruby("x = <<-EOF\nhello\n  EOF\n");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        // The lexer's canonicalisation strips the indentation from the
+        // closing tag in the *value*, so the in-tree lexeme is the
+        // canonical form.
+        assert!(
+            tree_has_token_value(&ast, "<<-EOF\nhello\nEOF"),
+            "expected canonical <<- heredoc lexeme in tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_tilde_indent_heredoc_assignment() {
+        // `x = <<~EOF\n  hello\n  EOF` — `<<~` indent-stripping heredoc.
+        // The lexer strips common leading indent from each body line
+        // before re-wrapping into the canonical token form.
+        let ast = parse_ruby("x = <<~EOF\n  hello\n  EOF\n");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        // Lexer stripped the common 2-space indent from `  hello`.
+        assert!(
+            tree_has_token_value(&ast, "<<~EOF\nhello\nEOF"),
+            "expected canonical <<~ heredoc with indent stripped"
+        );
+    }
 }
 

@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.29.0] - 2026-05-25
+
+### Added (Phase 7b — heredocs in parser)
+
+The lexer's Phase-3c body capture + Phase-4o opener-variant handling (`<<EOF`, `<<-EOF`, `<<~EOF`) finalise every heredoc into a single `TokenType::String` token whose value is the verbatim canonical form `<<TAG\n<body>TAG` (with `<<~TAG`'s common-indent stripping pre-applied).  Phase 7b is therefore **grammar-zero**: the existing STRING token at factor / assignment-RHS positions already accepts heredocs.  This PR adds the SIR lowering dispatch + explicit test coverage.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+A new helper `lower_heredoc_literal` strips the opener prefix and the closing tag, emitting:
+
+```
+StrLit(body)
+```
+
+The `String` case of `lower_factor_atom` now dispatches in lexeme-prefix priority order:
+- starts with `` ` `` → backtick command literal (Phase 7a)
+- starts with `<<` → heredoc (Phase 7b)
+- otherwise → string interpolation lowering (Phase 6y)
+
+The synthetic `StrLit` triggers `Feature::Strings`.
+
+### v0 deferred limitations
+
+- Interpolation inside the body (`#{name}`) is NOT split — the body lowers as a single `StrLit` with `#{...}` markers preserved verbatim.  Follow-up will reuse the Phase 6y splitter.
+- Non-interpolating heredocs (`<<'TAG'`) and the `<<"TAG"` form are not yet distinguished — the lexer doesn't carry the quote state, so every heredoc is treated the same.
+- Escape sequences inside the body are kept literal (the lexer's heredoc capture does not unescape; same v0 stance as backticks).
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 125 → **128** (+3 grammar tests):
+  - `test_parse_plain_heredoc_assignment` — `<<EOF`.
+  - `test_parse_dash_indent_heredoc_assignment` — `<<-EOF` with indented closer.
+  - `test_parse_tilde_indent_heredoc_assignment` — `<<~EOF` with indent stripping.
+
 ## [0.28.0] - 2026-05-25
 
 ### Added (Phase 7a — backtick command literals in parser)

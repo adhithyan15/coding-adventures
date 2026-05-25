@@ -2,6 +2,42 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.29.0] - 2026-05-25
+
+### Added (Phase 7b — heredoc literal lowering)
+
+`lower_factor_atom`'s `String` case now dispatches in lexeme-prefix priority order:
+- starts with `` ` `` → backtick command literal (Phase 7a)
+- starts with `<<` → heredoc (Phase 7b — this phase)
+- otherwise → string interpolation lowering (Phase 6y)
+
+### Lowering
+
+| Source                            | SIR shape                            |
+|-----------------------------------|--------------------------------------|
+| `` `<<EOF\nhello\nEOF` ``         | `StrLit("hello\n")`                  |
+| `` `<<-EOF\nhello\n  EOF` ``      | `StrLit("hello\n")`                  |
+| `` `<<~EOF\n  hello\n  EOF` ``    | `StrLit("hello\n")` (lexer pre-strips indent) |
+
+The `<<~TAG` common-indent stripping is performed by the lexer's `finalize_heredoc` before the token reaches the lowerer; this routine just removes the opener prefix (`<<`, `<<-`, `<<~`) and the trailing closing-tag suffix.
+
+The synthetic `StrLit` triggers `Feature::Strings`.
+
+### v0 deferred limitations
+
+- Interpolation inside the body (`#{name}`) is NOT split — the body lowers as a single `StrLit` with `#{...}` markers preserved verbatim.  Follow-up will reuse the Phase 6y interpolation splitter.
+- Non-interpolating heredocs (`<<'TAG'`) and the `<<"TAG"` form are not yet distinguished from the unquoted form — the lexer doesn't carry the quote state through.
+- Escape sequences inside the body are kept literal.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 132 → **137** (+5):
+  - `plain_heredoc_lowers_to_strlit_body_only` — happy path.
+  - `dash_indent_heredoc_lowers_to_strlit_body_only` — `<<-EOF`.
+  - `tilde_indent_heredoc_strips_common_leading_whitespace` — `<<~EOF`.
+  - `heredoc_triggers_strings_feature` — manifest gating.
+  - `heredoc_module_passes_sir_validator` — end-to-end smoke.
+
 ## [0.28.0] - 2026-05-25
 
 ### Added (Phase 7a — backtick command literal lowering)

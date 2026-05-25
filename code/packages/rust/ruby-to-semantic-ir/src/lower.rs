@@ -2935,6 +2935,78 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
+    // Phase 7b — heredoc literal lowering
+    // -------------------------------------------------------------------
+
+    /// Lower a Ruby heredoc literal (Phase 7b).
+    ///
+    /// The lexer's Phase-3c body capture and Phase-4o opener-variant
+    /// handling finalise every heredoc into a single `TokenType::String`
+    /// token whose value is the verbatim canonical form:
+    ///
+    /// ```text
+    /// <<TAG\n<body>TAG     (Plain)
+    /// <<-TAG\n<body>TAG    (DashIndent — closing tag may be indented)
+    /// <<~TAG\n<body>TAG    (TildeIndent — common indent already stripped)
+    /// ```
+    ///
+    /// Note: the `<<~TAG` indent-stripping is already applied by the
+    /// lexer before we see the token, so we don't repeat it here.
+    ///
+    /// ## SIR shape
+    ///
+    /// `StrLit(body)` — the inner body (opener line + tag suffix
+    /// stripped) is emitted as a plain string literal.  This matches
+    /// Ruby's surface semantics: a heredoc *is* a string literal, just
+    /// with a different on-source representation.  Triggers
+    /// `Feature::Strings`.
+    ///
+    /// ## v0 deferred limitations
+    ///
+    /// - Interpolation inside the body (`#{name}`) is NOT split.  The
+    ///   body is emitted as a single `StrLit` with any `#{...}` markers
+    ///   preserved verbatim.  Follow-up will reuse the Phase 6y
+    ///   interpolation splitter.
+    /// - Non-interpolating heredocs (`<<'TAG'`) and the `<<"TAG"` form
+    ///   are not yet distinguished — the lexer doesn't carry the quote
+    ///   state, so we treat every heredoc the same.
+    /// - Escape sequences inside the body are kept literal (the lexer's
+    ///   heredoc capture does not unescape; same v0 stance as backticks).
+    fn lower_heredoc_literal(&mut self, raw: &str, span: Span) -> Expr {
+        // Step 1: strip the opener prefix.  Order matters — `<<~` and
+        // `<<-` must be tried *before* `<<`, because `<<~`/`<<-` both
+        // start with `<<`.
+        let after_prefix = raw
+            .strip_prefix("<<~")
+            .or_else(|| raw.strip_prefix("<<-"))
+            .or_else(|| raw.strip_prefix("<<"))
+            .unwrap_or(raw);
+
+        // Step 2: split off the tag (everything up to the first `\n`).
+        // The remainder is `<body><tag>` (the trailing tag was appended
+        // by the lexer's `finalize_heredoc`).
+        let body: String = if let Some(nl_idx) = after_prefix.find('\n') {
+            let tag = &after_prefix[..nl_idx];
+            let body_plus_tag = &after_prefix[nl_idx + 1..];
+            // Strip the closing tag from the end.  Defensive `or`:
+            // if the suffix isn't present (a lexer bug), keep the
+            // body intact rather than panicking.
+            body_plus_tag
+                .strip_suffix(tag)
+                .unwrap_or(body_plus_tag)
+                .to_string()
+        } else {
+            // Pathological: opener with no newline.  Shouldn't be
+            // possible given the lexer's finalise path, but handle it
+            // by treating the whole thing as the body.
+            after_prefix.to_string()
+        };
+
+        self.features_used.insert(Feature::Strings);
+        Expr::StrLit { value: body, span }
+    }
+
+    // -------------------------------------------------------------------
     // Phase 7a — backtick command literal lowering
     // -------------------------------------------------------------------
 
@@ -3379,6 +3451,18 @@ impl Lowerer {
                             // checking the leading byte.
                             if tok.value.starts_with('`') {
                                 return Ok(self.lower_backtick_command_literal(
+                                    &tok.value,
+                                    span,
+                                ));
+                            }
+                            // Phase 7b — heredoc dispatch.  The lexer (Phase
+                            // 3c / 4o) finalises every heredoc into a single
+                            // `String` token whose value is the verbatim
+                            // source: opener line (`<<TAG`, `<<-TAG`, or
+                            // `<<~TAG`), a `\n`, the body, then the closing
+                            // tag.  We detect by the `<<` prefix.
+                            if tok.value.starts_with("<<") {
+                                return Ok(self.lower_heredoc_literal(
                                     &tok.value,
                                     span,
                                 ));
