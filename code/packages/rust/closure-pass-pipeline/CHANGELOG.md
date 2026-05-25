@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-pass-pipeline` crate will be documented in this file.
 
+## [0.2.0] - 2026-05-24
+
+### Added — `PassRegistry` runtime-discovery layer (CLOC10.A)
+- `PassRegistry` per [CLOC10 §5](../../../specs/CLOC10-pass-plugin-api.md#5-passregistry-runtime-discovery): a runtime catalog of named pass factories. Lets a host (typically `closurec`) build pipelines by *naming* passes instead of holding onto concrete `Box<dyn Pass>` values. This is what makes user-facing pass selection (`--enable=<name>`, `--passes <config>`, REPLs, plugins) practical.
+- `PassFactory = Box<dyn Fn() -> Box<dyn Pass> + Send + Sync>` — factories rather than stored boxes so the registry can hand out fresh instances per `build_pipeline` call (no shared state across pipeline runs, no one-shot registry).
+- `PassRegistry::new() / Default / Debug` — `Debug` lists registered names (factories can't be debug-printed).
+- `register(name, factory) -> Result<(), RegistryError>` — `Err(DuplicateName)` if `name` is already taken. Strict by design: silent shadowing of pass names would be a debugging nightmare.
+- `contains(name) -> bool`, `len() -> usize`, `is_empty() -> bool`, `registered_names() -> Vec<String>` (sorted alphabetically — what `closurec --list-passes` will emit per CLOC10 §6).
+- `build_pipeline(&[&str]) -> Result<PassPipeline, RegistryError>` — instantiates a fresh pipeline containing the named passes in the given order. Stops at first `Err(UnknownPass)`. Input order is preserved (relevant as the topo-sort's tie-breaker).
+- `RegistryError { UnknownPass(String), DuplicateName(String) }` with `Display` + `std::error::Error` — friendly CLI messages, no panics.
+- 9 new tests: empty registry, register-and-contains, duplicate-name error preserves first registration, sorted `registered_names()`, `build_pipeline` preserves input order, unknown-name error, factories produce fresh instances each call (verified via shared `AtomicUsize` counter), empty input → empty pipeline, `Debug` lists names, `RegistryError` is `std::error::Error`.
+
+### Notes
+- `PassRegistry::new()` deliberately does NOT pre-populate the 8 canonical passes (`constant-fold`, `dce`, `fold-control-flow`, `inline`, `rename`, `treeshake`, `collapse-properties`, `remove-unused-vars`). Auto-populating would force `closure-pass-pipeline` to depend on every `closure-pass-*` crate, which would create a circular dep (each pass already depends on pipeline for the `Pass` trait). The convention per CLOC10 is: the *host* (typically `closurec`) imports each pass crate and calls `registry.register(...)` for each canonical pass at startup. CLOC10.C will wire this up in the CLI.
+- No `Pass` trait changes — all existing `closure-pass-*` crates and their tests are unaffected.
+
 ## [0.1.0] - 2026-05-23
 
 ### Added
