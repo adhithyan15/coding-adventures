@@ -1119,6 +1119,59 @@ mod tests {
         assert!(tree_has_token_value(arr, ".."));
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 6o — ternary `cond ? a : b`
+    // -----------------------------------------------------------------------
+    //
+    // The grammar rule is `ternary = range [ "?" expression ":" expression ]`.
+    // A bare expression with no `?` still produces a `ternary` node (the
+    // rule is the new expression entry point), but with exactly one
+    // `range` operand and no `?` token.
+
+    #[test]
+    fn test_parse_simple_ternary() {
+        // `x = 1 ? 2 : 3` — wrapped in an assignment to dodge the
+        // bare-NAME-led statement ambiguity (lessons.md).
+        let ast = parse_ruby("x = 1 ? 2 : 3");
+        let t = find_descendant(&ast, "ternary").expect("expected ternary node");
+        assert!(tree_has_token_value(t, "?"), "expected `?` token");
+        assert!(tree_has_token_value(t, ":"), "expected `:` token");
+    }
+
+    #[test]
+    fn test_parse_ternary_right_associative() {
+        // `x = a ? b : c ? d : e` — chained ternary, right-associative.
+        // Two `?` and two `:` tokens; SIR test will pin the nesting.
+        let ast = parse_ruby("x = a ? b : c ? d : e");
+        let t = find_descendant(&ast, "ternary").expect("expected ternary node");
+        fn count_value(node: &GrammarASTNode, val: &str) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == val => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_value(sub, val),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert_eq!(count_value(t, "?"), 2, "expected two `?` tokens");
+        assert_eq!(count_value(t, ":"), 2, "expected two `:` tokens");
+    }
+
+    #[test]
+    fn test_parse_ternary_inside_array_literal() {
+        // `[1 ? 2 : 3]` — ternary as an array element parses cleanly.
+        let ast = parse_ruby("[1 ? 2 : 3]");
+        let arr = find_descendant(&ast, "array_literal").expect("expected array_literal");
+        assert!(
+            find_descendant(arr, "ternary").is_some(),
+            "expected ternary inside array_literal"
+        );
+        assert!(tree_has_token_value(arr, "?"));
+        assert!(tree_has_token_value(arr, ":"));
+    }
+
     #[test]
     fn test_parse_range_with_paren_logical_operands() {
         // `(a || b)..(c || d)` — explicit parens make precedence

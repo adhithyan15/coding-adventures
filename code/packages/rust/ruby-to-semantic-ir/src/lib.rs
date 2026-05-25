@@ -1382,4 +1382,84 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6o — ternary `cond ? a : b` lowering
+    // -----------------------------------------------------------------
+    //
+    // SIR encoding:
+    //   `cond ? a : b` → Expr::If { cond, then_branch: Block{value:a},
+    //                               else_branch: Block{value:b} }
+    //
+    // Lowering identically to `if cond then a else b end` means
+    // downstream emitters need no new dispatch — the existing
+    // if-lowering paths handle both syntactic forms transparently.
+
+    #[test]
+    fn ternary_lowers_to_if_expr_with_branch_blocks() {
+        // `x = 1 ? 2 : 3` — the RHS of the assignment is the ternary,
+        // which lowers to Expr::If { cond=1, then=2, else=3 }.
+        let m = lower("x = 1 ? 2 : 3\n");
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .unwrap_or_else(|| panic!("expected main function, got {:?}",
+                m.functions.iter().map(|f| f.name.as_str()).collect::<Vec<_>>()));
+        // The main body's first statement is a LetBinding whose value is the ternary.
+        let stmt = f.body.stmts.first().expect("expected at least one stmt");
+        let value = match stmt {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                assert!(matches!(cond.as_ref(), Expr::IntLit { value: 1, .. }),
+                    "expected cond = IntLit(1), got {:?}", cond);
+                assert!(matches!(&then_branch.value, Expr::IntLit { value: 2, .. }),
+                    "expected then = IntLit(2), got {:?}", then_branch.value);
+                assert!(matches!(&else_branch.value, Expr::IntLit { value: 3, .. }),
+                    "expected else = IntLit(3), got {:?}", else_branch.value);
+            }
+            other => panic!("expected Expr::If, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn ternary_right_associative_nests_in_else_branch() {
+        // `x = a ? b : c ? d : e` parses as `a ? b : (c ? d : e)`.
+        // SIR: outer If's else-branch contains an inner If.
+        let m = lower("x = 1 ? 2 : 3 ? 4 : 5\n");
+        let f = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let stmt = f.body.stmts.first().expect("expected at least one stmt");
+        let value = match stmt {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::If { else_branch, .. } => {
+                match &else_branch.value {
+                    Expr::If { cond: inner_cond, then_branch: inner_then, else_branch: inner_else, .. } => {
+                        assert!(matches!(inner_cond.as_ref(), Expr::IntLit { value: 3, .. }));
+                        assert!(matches!(&inner_then.value, Expr::IntLit { value: 4, .. }));
+                        assert!(matches!(&inner_else.value, Expr::IntLit { value: 5, .. }));
+                    }
+                    other => panic!("expected nested If in else branch, got {:?}", other),
+                }
+            }
+            other => panic!("expected outer Expr::If, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn ternary_module_passes_sir_validator() {
+        // End-to-end smoke test: validator accepts the ternary lowering.
+        let m = lower("x = 1 ? 2 : 3\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected ternary output: {:?}",
+            result
+        );
+    }
 }

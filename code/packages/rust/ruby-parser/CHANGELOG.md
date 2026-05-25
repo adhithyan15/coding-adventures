@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.16.0] - 2026-05-24
+
+### Added (Phase 6o — ternary `cond ? a : b`)
+
+New grammar layer inserted between `expression` and `range`:
+
+```
+expression = ternary ;
+ternary    = range [ "?" expression ":" expression ] ;
+```
+
+**Precedence**: ternary sits above range (looser than `..`/`...`) and below assignment.  So `a..b ? c : d` parses as `(a..b) ? c : d`, and `x = b ? c : d` parses as `x = (b ? c : d)` (since `assignment` is statement-level, outside the expression hierarchy).
+
+**Right-associativity**: `a ? b : c ? d : e` parses as `a ? b : (c ? d : e)`.  The false-branch recurses through `expression` (→ ternary at the top), so the inner ternary nests inside the outer's else.
+
+**Colon ambiguity**: `:foo` opens a `symbol_literal` in `factor`.  But by the time the ternary's `:` is reached, the true-branch's factor has already completed and control has unwound back to the ternary rule.  The grammar parser consumes the `:` as the ternary separator, not as a symbol opener.
+
+**Token typing**: `?` lexes as a `Name`-typed Op token with value `?` (catch-all in `classify_op_token`); `:` lexes as `TokenType::Colon`.  Grammar matches by value (`"?"`, `":"`) — same trick as `"=>"`, `"<="`, etc.
+
+### Tests (+3 new, total 74)
+- `test_parse_simple_ternary` — `x = 1 ? 2 : 3` produces a ternary node carrying `?` and `:`.
+- `test_parse_ternary_right_associative` — `x = a ? b : c ? d : e` carries two `?` and two `:` tokens.
+- `test_parse_ternary_inside_array_literal` — `[1 ? 2 : 3]` works as an array element.
+
+All tests wrap the ternary in an assignment to dodge the bare-NAME-led statement ambiguity (lessons.md).
+
 ## [0.15.0] - 2026-05-24
 
 ### Added (Phase 6n — range expressions `..` and `...`)

@@ -1198,6 +1198,11 @@ impl Lowerer {
             // `BuiltinCall("or", [lhs, rhs])`.  Operator forms `||`
             // (symbol) and `or` (keyword) lower identically — see the
             // grammar comment for the v0 simplification.
+            // Phase 6o — ternary `cond ? a : b`.  Either a bare
+            // `range` pass-through or an `Expr::If` with single-expression
+            // branch blocks.  Lowers identically to `if cond then a else b end`
+            // so downstream emitters need no new code path.
+            "ternary" => self.lower_ternary(node),
             // Phase 6n — range expressions `a..b` (inclusive) and
             // `a...b` (exclusive).  Either a bare `logical_or` pass-through
             // or a `BuiltinCall("range", [start, end, BoolLit(exclusive)])`.
@@ -1536,6 +1541,76 @@ impl Lowerer {
                 message: format!(
                     "range node had {n} operand(s) and op={:?} — expected (1, None) or (2, Some(..|...))",
                     op_tok.map(|t| t.value.clone()),
+                ),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            }),
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6o — ternary `cond ? a : b`
+    // -------------------------------------------------------------------
+
+    /// Lower a `ternary` node.  Grammar shape:
+    ///
+    ///   ternary = range [ "?" expression ":" expression ]
+    ///
+    /// Two cases:
+    ///   - One operand sub-node (just a `range`, no `?`) → pass through.
+    ///   - Three operand sub-nodes (`range "?" expression ":" expression`)
+    ///     → emit `Expr::If` wrapping each branch in a single-expression
+    ///     `Block`.  Lowers identically to `if cond then a else b end`
+    ///     so all downstream emitters (semantic-ir-to-python, etc.) reuse
+    ///     existing if-lowering code paths.
+    ///
+    /// Right-associativity (`a ? b : c ? d : e` → `a ? b : (c ? d : e)`)
+    /// is enforced by the grammar's recursion into `expression` for the
+    /// false branch.  Each `expression` recursion bottoms back out at
+    /// `ternary` at the top of the precedence pyramid, so the inner
+    /// ternary appears as the else-branch's value.
+    fn lower_ternary(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
+        // Collect operand sub-nodes (each is an `expression`-shaped
+        // subtree: the first is `range`, the trailing two are
+        // `expression`).
+        let operands: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                _ => None,
+            })
+            .collect();
+
+        match operands.len() {
+            // Bare range pass-through — no `?` operator.
+            1 => self.lower_expression(operands[0]),
+            // cond ? then : else — three operand sub-nodes.
+            3 => {
+                let cond = self.lower_expression(operands[0])?;
+                let then_value = self.lower_expression(operands[1])?;
+                let else_value = self.lower_expression(operands[2])?;
+                let span = self.span_of(node);
+                let then_block = Block {
+                    stmts: Vec::new(),
+                    value: then_value,
+                    span: span.clone(),
+                };
+                let else_block = Block {
+                    stmts: Vec::new(),
+                    value: else_value,
+                    span: span.clone(),
+                };
+                Ok(Expr::If {
+                    cond: Box::new(cond),
+                    then_branch: Box::new(then_block),
+                    else_branch: Box::new(else_block),
+                    span,
+                })
+            }
+            n => Err(RubyLowerError {
+                message: format!(
+                    "ternary node had {n} operand sub-node(s) — expected 1 (pass-through) or 3 (cond/then/else)",
                 ),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
