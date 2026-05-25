@@ -224,6 +224,8 @@ All notable changes to this package will be documented in this file.
 - Flattened host-run escalation dashboard lane queue route flags for routing
   lane queues and their digests to routine action, manual review,
   investigation, integrity investigation, or triage host queues.
+- Flattened host-run escalation dashboard lane queue classifier labels for
+  route, priority, and readiness on queue keys and queue digests.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
