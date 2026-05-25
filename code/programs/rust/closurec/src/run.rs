@@ -237,6 +237,28 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
     }
 
+    // Step 2.25 (CLOC11.51): --checks_only short-circuits emission.
+    //
+    // CC's --checks_only validates the inputs (so the same parse/
+    // type/diagnostic errors a real compile would catch still
+    // surface) but emits *no* JS. Concretely: we already ran
+    // tokenize-driven transforms above for each input — any
+    // tokenizer rejection produced a typed error before we got
+    // here. With --checks_only set, the user wants validation
+    // only, so we discard `combined` (and never run wrapping or
+    // write), returning an empty CompilerOutput.
+    //
+    // No `wrote_files`, no `stdout_text`: a CI script invoking
+    // `closurec --checks_only --js app.js` cares about exit code
+    // (0 if validation passed, non-zero otherwise) and stderr,
+    // not stdout. Matches CC.
+    if config.compilation.checks_only {
+        return Ok(CompilerOutput {
+            stdout_text: String::new(),
+            wrote_files: Vec::new(),
+        });
+    }
+
     // Step 2.5 (CLOC11.18): prepend `"use strict";` when
     // `--emit_use_strict` is set. The directive must land at the
     // top of whatever scope ultimately wraps the code, so we
@@ -744,6 +766,83 @@ mod tests {
         let body = s.find("var x=1;").expect("body");
         assert!(pre < directive);
         assert!(directive < body);
+        let _ = fs::remove_file(&in_path);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.51 — --checks_only behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn checks_only_returns_empty_output() {
+        let in_path = temp_path("checks-only-empty.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                checks_only: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.stdout_text.is_empty(), "stdout must be empty: {:?}", out.stdout_text);
+        assert!(out.wrote_files.is_empty());
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn checks_only_does_not_write_output_file() {
+        // Even when --js_output_file is set, --checks_only must
+        // skip the disk write entirely.
+        let in_path = temp_path("checks-only-in.js");
+        let out_path = temp_path("checks-only-out.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                checks_only: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.is_empty());
+        assert!(!out_path.exists(), "file should NOT have been written");
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn checks_only_surfaces_lex_errors_in_inputs() {
+        // The validation phase still runs — a tokenizer-rejecting
+        // input under --checks_only still produces an error.
+        // Use a deliberately broken source: an unterminated string
+        // literal.
+        let in_path = temp_path("checks-only-broken.js");
+        fs::write(&in_path, "var s = \"unterminated").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                checks_only: true,
+                // Force a path that tokenizes (WHITESPACE_ONLY).
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        // The transform_source step must surface the lex error.
+        let result = run_compiler(&cfg);
+        assert!(result.is_err(), "expected lex error, got: {result:?}");
         let _ = fs::remove_file(&in_path);
     }
 }
