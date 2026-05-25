@@ -1,0 +1,5 @@
+[package]
+name = "range-coder"
+version = "0.1.0"
+edition = "2021"
+description = "VP8 boolean arithmetic range coder: BoolEncoder + BoolDecoder (zero dependencies)"
