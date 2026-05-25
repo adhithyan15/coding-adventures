@@ -1089,6 +1089,8 @@ pub struct BrowserContentNode {
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
     pub break_kind: Option<String>,
+    pub grouping_kind: Option<String>,
+    pub disclosure_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub section_kind: Option<String>,
     pub landmark_kind: Option<String>,
@@ -1233,6 +1235,8 @@ pub struct BrowserRenderNode {
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
     pub break_kind: Option<String>,
+    pub grouping_kind: Option<String>,
+    pub disclosure_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub section_kind: Option<String>,
     pub landmark_kind: Option<String>,
@@ -1611,6 +1615,8 @@ impl BrowserRenderNode {
             ruby_kind: content_node.ruby_kind.clone(),
             bidi_kind: content_node.bidi_kind.clone(),
             break_kind: content_node.break_kind.clone(),
+            grouping_kind: content_node.grouping_kind.clone(),
+            disclosure_kind: content_node.disclosure_kind.clone(),
             heading_level: content_node.heading_level,
             section_kind: content_node.section_kind.clone(),
             landmark_kind: content_node.landmark_kind.clone(),
@@ -9307,6 +9313,8 @@ fn collect_browser_content_nodes_with_mode(
                         ruby_kind: None,
                         bidi_kind: None,
                         break_kind: None,
+                        grouping_kind: None,
+                        disclosure_kind: None,
                         heading_level: None,
                         section_kind: None,
                         landmark_kind: None,
@@ -9527,6 +9535,8 @@ fn browser_content_node_for_element(
         ruby_kind: browser_ruby_kind(element),
         bidi_kind: browser_bidi_kind(element),
         break_kind: browser_break_kind(element),
+        grouping_kind: browser_grouping_kind(element),
+        disclosure_kind: browser_disclosure_kind(element),
         heading_level: heading_level(&element.name),
         section_kind: browser_section_kind(element),
         landmark_kind: browser_landmark_kind(element),
@@ -9562,6 +9572,13 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "rtc" => Some("ruby_text_container"),
         "bdi" => Some("bidi_isolate"),
         "bdo" => Some("bidi_override"),
+        "figure" => Some("figure"),
+        "figcaption" => Some("figure_caption"),
+        "details" => Some("disclosure"),
+        "summary" => Some("disclosure_summary"),
+        "dialog" => Some("dialog"),
+        "search" => Some("search"),
+        "address" => Some("contact"),
         "p" => Some("paragraph"),
         "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
         "article" => Some("article"),
@@ -10065,6 +10082,25 @@ fn browser_break_kind(element: &Element) -> Option<String> {
         "br" => Some("line".to_string()),
         "wbr" => Some("word".to_string()),
         "hr" => Some("thematic".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_grouping_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "figure" => Some("figure".to_string()),
+        "figcaption" => Some("caption".to_string()),
+        "search" => Some("search".to_string()),
+        "address" => Some("contact".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_disclosure_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "details" => Some("details".to_string()),
+        "summary" => Some("summary".to_string()),
+        "dialog" => Some("dialog".to_string()),
         _ => None,
     }
 }
@@ -10875,9 +10911,10 @@ fn browser_render_display(role: &str) -> &'static str {
         "canvas" | "control" | "embed" | "frame" | "image" | "media" | "meter" | "object"
         | "progress" => "inline-replaced",
         "line_break" => "line-break",
-        "article" | "aside" | "footer" | "header" | "heading" | "heading_group" | "main"
-        | "navigation" | "paragraph" | "preformatted" | "section" | "block" | "form"
-        | "form_group" | "legend" | "list" | "quote_block" | "separator" => "block",
+        "article" | "aside" | "contact" | "dialog" | "disclosure" | "figure" | "figure_caption"
+        | "footer" | "header" | "heading" | "heading_group" | "main" | "navigation"
+        | "paragraph" | "preformatted" | "search" | "section" | "block" | "form" | "form_group"
+        | "legend" | "list" | "quote_block" | "separator" => "block",
         "bidi_isolate"
         | "bidi_override"
         | "data"
@@ -10894,7 +10931,7 @@ fn browser_render_display(role: &str) -> &'static str {
         | "ruby_text"
         | "ruby_text_container"
         | "time" => "inline",
-        "list_item" => "list-item",
+        "disclosure_summary" | "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
         "table_column_group" => "table-column-group",
@@ -12086,6 +12123,57 @@ mod tests {
     }
 
     #[test]
+    fn browser_grouping_disclosure_metadata_tracks_figures_dialogs_search_and_contact() {
+        let document = parse_html(
+            "<body><figure id=fig><img src=chart.png alt=Chart>\
+             <figcaption>Chart caption</figcaption></figure>\
+             <details id=more open><summary>More</summary><p>Extra</p></details>\
+             <dialog id=dlg open aria-label=Dialog><p>Dialog copy</p></dialog>\
+             <search id=site-search><form><input name=q></form></search>\
+             <address id=contact>Contact us</address>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let figure = &content_tree.children[0];
+        assert_eq!(figure.role, "figure");
+        assert_eq!(figure.grouping_kind.as_deref(), Some("figure"));
+        assert_eq!(figure.children[1].role, "figure_caption");
+        assert_eq!(figure.children[1].grouping_kind.as_deref(), Some("caption"));
+
+        let details = &content_tree.children[1];
+        assert_eq!(details.role, "disclosure");
+        assert!(details.open);
+        assert_eq!(details.disclosure_kind.as_deref(), Some("details"));
+        assert_eq!(details.children[0].role, "disclosure_summary");
+        assert_eq!(
+            details.children[0].disclosure_kind.as_deref(),
+            Some("summary")
+        );
+
+        let dialog = &content_tree.children[2];
+        assert_eq!(dialog.role, "dialog");
+        assert!(dialog.open);
+        assert_eq!(dialog.disclosure_kind.as_deref(), Some("dialog"));
+        assert_eq!(dialog.accessible_name.as_deref(), Some("Dialog"));
+
+        let search = &content_tree.children[3];
+        assert_eq!(search.role, "search");
+        assert_eq!(search.grouping_kind.as_deref(), Some("search"));
+
+        let contact = &content_tree.children[4];
+        assert_eq!(contact.role, "contact");
+        assert_eq!(contact.grouping_kind.as_deref(), Some("contact"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[1].children[0].display, "list-item");
+        assert_eq!(render_tree.children[2].display, "block");
+        assert_eq!(render_tree.children[3].display, "block");
+        assert_eq!(render_tree.children[4].display, "block");
+    }
+
+    #[test]
     fn browser_measurement_metadata_tracks_meter_and_progress_ranges() {
         let document = parse_html(
             "<body><label for=disk>Disk</label>\
@@ -12194,13 +12282,15 @@ mod tests {
         assert_eq!(editable.focusable, Some(true));
 
         let dialog = &main.children[2];
-        assert_eq!(dialog.role, "block");
+        assert_eq!(dialog.role, "dialog");
         assert!(dialog.open);
+        assert_eq!(dialog.disclosure_kind.as_deref(), Some("dialog"));
         assert_eq!(dialog.accesskey, vec!["d", "x"]);
 
         let details = &main.children[3];
-        assert_eq!(details.role, "block");
+        assert_eq!(details.role, "disclosure");
         assert!(details.open);
+        assert_eq!(details.disclosure_kind.as_deref(), Some("details"));
 
         assert!(main.children[4].hidden);
         assert!(main.children[5].aria_hidden);

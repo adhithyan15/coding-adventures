@@ -281,6 +281,10 @@ struct ExpectedRenderNode {
     #[serde(default)]
     break_kind: Option<String>,
     #[serde(default)]
+    grouping_kind: Option<String>,
+    #[serde(default)]
+    disclosure_kind: Option<String>,
+    #[serde(default)]
     heading_level: Option<u8>,
     #[serde(default)]
     section_kind: Option<String>,
@@ -457,6 +461,8 @@ impl ExpectedRenderNode {
             ruby_kind: self.ruby_kind,
             bidi_kind: self.bidi_kind,
             break_kind: self.break_kind,
+            grouping_kind: self.grouping_kind,
+            disclosure_kind: self.disclosure_kind,
             heading_level: self.heading_level,
             section_kind: self.section_kind,
             landmark_kind: self.landmark_kind,
