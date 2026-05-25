@@ -8,6 +8,8 @@
   the same `.SENS` output-node query evaluated under each named corner.
 - Add `format_noise_table` for stable tab-separated `.NOISE` total and
   per-source PSD text output snapshots.
+- Add multi-corner AC noise analysis with `noise_ac_corners`, returning the
+  same `.NOISE` output/input query evaluated under each named corner.
 - Add `diode_at_temperature` and `circuit_at_temperature` helpers, which adjust
   diode thermal voltage and saturation current for an operating temperature
   using a SPICE-style silicon energy-gap foothold.

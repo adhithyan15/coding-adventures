@@ -2053,6 +2053,19 @@ pub struct NoiseResult {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct CornerNoisePoint {
+    pub corner_name: String,
+    pub result: NoiseResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerNoiseResult {
+    pub output_node: String,
+    pub input_source: String,
+    pub points: Vec<CornerNoisePoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct TransientPoint {
     pub time: f64,
     pub node_voltages: BTreeMap<String, f64>,
@@ -4791,6 +4804,35 @@ pub fn noise_ac(
         output_node: output_node.to_string(),
         input_source: input_source.to_string(),
         temperature_kelvin,
+        points,
+    })
+}
+
+pub fn noise_ac_corners(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+    frequencies_hz: &[f64],
+    temperature_kelvin: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerNoiseResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerNoisePoint {
+            corner_name: corner.name.clone(),
+            result: noise_ac(
+                &corner_circuit,
+                output_node,
+                input_source,
+                frequencies_hz,
+                temperature_kelvin,
+            )?,
+        });
+    }
+    Ok(CornerNoiseResult {
+        output_node: output_node.to_string(),
+        input_source: input_source.to_string(),
         points,
     })
 }
