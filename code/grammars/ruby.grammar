@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -106,6 +106,30 @@ block_params = "|" NAME { COMMA NAME } "|" ;
 return_statement = "return" [ expression ] ;
 break_statement  = "break"  [ expression ] ;
 next_statement   = "next"   [ expression ] ;
+# Phase 6t — `yield` keyword.  Inside a method body, `yield` invokes
+# the block argument supplied by the caller (if any), forwarding the
+# given arguments to it.  All three surface forms supported:
+#
+#   yield                # bare — no args
+#   yield x              # parenless — one or more args
+#   yield x, y           # parenless — multiple args
+#   yield(x)             # parens — same
+#   yield(x, y)
+#   yield()              # parens, no args
+#
+# Placed in `statement` AFTER `next_statement` and BEFORE the catch-all
+# `multi_assignment` / `modifier_statement` / `assignment` /
+# `method_with_block` / `method_call` family so that `yield` (which the
+# lexer reclassifies as a KEYWORD token) doesn't accidentally fall
+# through to `method_call_no_paren` (which would treat it as a
+# keyword-led paren-less method call, losing the yield-specific
+# lowering).
+#
+# Args reuse `call_arg` (Phase 6s) so splat (`yield *arr`) and
+# double-splat (`yield **hsh`) work uniformly with method-call args.
+yield_statement = "yield" [ yield_args ] ;
+yield_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+           | call_arg { COMMA call_arg } ;
 # Phase 6s — splat (`*args`) and double-splat (`**kwargs`) parameters.
 #
 # `params` previously was `NAME { COMMA NAME }`.  We now wrap each

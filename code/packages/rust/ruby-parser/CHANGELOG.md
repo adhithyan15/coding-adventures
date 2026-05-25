@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.21.0] - 2026-05-25
+
+### Added (Phase 6t — `yield` keyword with optional args)
+
+New grammar rule:
+
+```
+statement       = ... | next_statement | yield_statement | multi_assignment | ... ;
+yield_statement = "yield" [ yield_args ] ;
+yield_args      = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+                | call_arg { COMMA call_arg } ;
+```
+
+All three surface forms supported:
+
+| Source | AST |
+|---|---|
+| `yield` | yield_statement with no `yield_args` wrapper |
+| `yield(x, y)` | yield_statement → yield_args → LPAREN call_arg COMMA call_arg RPAREN |
+| `yield x, y` | yield_statement → yield_args → call_arg COMMA call_arg |
+| `yield(*arr)` | yield_statement → yield_args → LPAREN call_arg(*arr) RPAREN |
+
+Placed AFTER `next_statement` and BEFORE the catch-all `multi_assignment` / `modifier_statement` / `assignment` / `method_with_block` / `method_call` family so `yield` (which the lexer reclassifies as a KEYWORD token) doesn't fall through to `method_call_no_paren` (which would lose the yield-specific lowering).
+
+Args reuse Phase 6s's `call_arg`, so splat (`yield *arr`) and double-splat (`yield **hsh`) work uniformly with method-call args.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+`yield ...` → `Stmt::ExprStmt(Expr::BuiltinCall("yield", lowered_args, EffectSet::PURE))`.
+
+Effects are PURE — the block's effects bubble up through its construction site (via the `MakeClosure` effect set) rather than via the `yield` call.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 94 → **98** (+4):
+  - `test_parse_bare_yield` — `yield` alone.
+  - `test_parse_yield_with_paren_args` — `yield(x, y)`.
+  - `test_parse_yield_with_parenless_args` — `yield x, y`.
+  - `test_parse_yield_with_splat_arg` — `yield(*arr)`.
+
 ## [0.20.0] - 2026-05-25
 
 ### Added (Phase 6s — splat / double-splat in params and call args)

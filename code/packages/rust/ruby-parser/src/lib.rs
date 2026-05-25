@@ -1597,5 +1597,79 @@ mod tests {
         let term = find_descendant(&ast, "term").expect("expected term node");
         assert!(tree_has_token_value(term, "*"), "expected binary `*` in term");
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6t — `yield` keyword with optional args
+    //
+    // Grammar:
+    //   yield_statement = "yield" [ yield_args ] ;
+    //   yield_args      = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+    //                   | call_arg { COMMA call_arg } ;
+    //
+    // Placed before the generic method_call_no_paren so `yield x`
+    // doesn't fall through to keyword-led no-paren call lowering.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_bare_yield() {
+        // `yield` alone — no args.
+        let ast = parse_ruby("yield");
+        let y = find_descendant(&ast, "yield_statement")
+            .expect("expected yield_statement node");
+        // Token "yield" present, no yield_args wrapper.
+        assert!(tree_has_token_value(y, "yield"), "expected `yield` keyword");
+        assert!(
+            find_descendant(y, "yield_args").is_none(),
+            "bare `yield` should not produce a yield_args wrapper"
+        );
+        assert!(
+            find_descendant(y, "call_arg").is_none(),
+            "bare `yield` should not produce a call_arg"
+        );
+    }
+
+    #[test]
+    fn test_parse_yield_with_paren_args() {
+        // `yield(x, y)` — parens-form with two args.
+        let ast = parse_ruby("yield(x, y)");
+        let y = find_descendant(&ast, "yield_statement")
+            .expect("expected yield_statement node");
+        let ya = find_descendant(y, "yield_args").expect("expected yield_args");
+        let arg_count = ya
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 2, "expected 2 call_args, got {arg_count}");
+    }
+
+    #[test]
+    fn test_parse_yield_with_parenless_args() {
+        // `yield x, y` — parenless form.
+        let ast = parse_ruby("yield x, y");
+        let y = find_descendant(&ast, "yield_statement")
+            .expect("expected yield_statement node for parenless yield");
+        let ya = find_descendant(y, "yield_args").expect("expected yield_args");
+        let arg_count = ya
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 2, "expected 2 call_args (parenless), got {arg_count}");
+        // Regression: NO LPAREN/RPAREN tokens in the args.
+        assert!(!tree_has_token_value(ya, "("),
+            "parenless form must not produce an LPAREN");
+    }
+
+    #[test]
+    fn test_parse_yield_with_splat_arg() {
+        // `yield *arr` — splat arg reuses Phase 6s's call_arg shape.
+        let ast = parse_ruby("yield(*arr)");
+        let y = find_descendant(&ast, "yield_statement")
+            .expect("expected yield_statement node");
+        let ca = find_descendant(y, "call_arg").expect("expected call_arg");
+        assert!(tree_has_token_value(ca, "*"), "expected `*` splat prefix in yield arg");
+        assert!(tree_has_token_value(ca, "arr"));
+    }
 }
 
