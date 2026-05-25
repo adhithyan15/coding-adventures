@@ -2,6 +2,35 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.25.0] - 2026-05-25
+
+### Added (Phase 6x — sigil variable refs `@x`, `@@x`, `$x`)
+
+`lower_factor_atom` now documents Ruby's sigil-prefixed variable convention and explicitly routes all three sigil forms to `Scope::Local` with the sigil preserved in the bound name.
+
+### Lowering
+
+| Source | SIR shape |
+|---|---|
+| `@a` | `VarRef { name: "@a", scope: Local }` |
+| `@@count` | `VarRef { name: "@@count", scope: Local }` |
+| `$config` | `VarRef { name: "$config", scope: Local }` |
+
+`Scope::Local` is the conservative v0 choice — the SIR validator enforces that `Scope::Global` references have a matching `Global` declaration in the module, and the Ruby lowerer doesn't yet auto-emit those declarations.  Downstream emitters can still recognise the sigil form via the leading `@` / `@@` / `$` in `name`.
+
+### v0 deferred limitations
+
+- No SIR `IVar` / `CVar` / `GVar` scope.  A future phase will add auto-`Global`-declaration for `$x` so the validator-true mapping `$x` → `Scope::Global` becomes usable.
+- The sigil convention is purely a name-encoding hint for downstream emitters; the SIR scope machinery treats all three identically.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 112 → **116** (+4):
+  - `global_var_ref_preserves_sigil_in_name` — `$config` keeps the `$`.
+  - `instance_var_ref_lowers_with_local_scope_and_sigil_preserved` — `@a`.
+  - `class_var_ref_lowers_with_local_scope_and_double_at_preserved` — `@@count`.
+  - `sigil_vars_module_passes_sir_validator` — end-to-end validator smoke across all three sigils.
+
 ## [0.24.0] - 2026-05-25
 
 ### Added (Phase 6w — arrow-lambda lowering)

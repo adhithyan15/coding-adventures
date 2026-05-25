@@ -2980,6 +2980,29 @@ impl Lowerer {
                             // (main) the params set is empty and
                             // every name falls through to
                             // `Scope::Local`.
+                            //
+                            // Phase 6x — Ruby sigil-prefixed variable refs
+                            // (`@x` ivar, `@@x` cvar, `$x` gvar) come through
+                            // as Name-typed tokens with the sigil preserved
+                            // in `value` (the lexer's Phase-4i/4j states
+                            // build a single-token form).
+                            //
+                            // v0 SIR limitation: there is no dedicated IVar /
+                            // CVar / GVar scope.  Using `Scope::Global` for
+                            // `$x` would require a matching `Global` decl on
+                            // the module (the validator enforces this); we
+                            // skip the auto-declaration and put all sigil
+                            // vars on `Scope::Local` instead.  The leading
+                            // sigil stays in the bound name, so downstream
+                            // emitters that target Ruby (or any language
+                            // with similar lookup) can detect the sigil and
+                            // route the assignment / read appropriately.
+                            //
+                            // Documented as a deferred limitation; a follow-
+                            // up phase will (a) add IVar/CVar scopes to SIR
+                            // and/or (b) auto-emit `Global` declarations for
+                            // `$x`-prefixed names so the validator-true
+                            // mapping `$x` → `Scope::Global` becomes usable.
                             let scope = if self.current_params.contains(&tok.value) {
                                 Scope::Param
                             } else {

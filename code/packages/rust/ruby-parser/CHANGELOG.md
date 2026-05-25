@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.25.0] - 2026-05-25
+
+### Added (Phase 6x — instance var `@x`, class var `@@x`, global var `$x` refs)
+
+The lexer (Phase 4i/4j) emits these as a SINGLE Name-typed token whose value carries the leading sigil (`@a`, `@@all`, `$c`).  The parser sees them as bare `NAME` tokens at the factor and assignment-LHS levels — **no new grammar rules required**.  This phase adds explicit test coverage and the SIR lowerer's documentation of how sigil-preserved names flow through.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+- All sigil-prefixed names route to `Scope::Local` for v0.
+- The sigil stays in the bound name (`@a`, `@@all`, `$config`), so downstream emitters can detect the form and route assignment/read appropriately.
+- The validator-correct `$x` → `Scope::Global` mapping would require auto-emitting matching `Global` declarations on the module; that's deferred to a follow-up phase.
+
+### v0 deferred limitations
+
+- SIR has no `IVar` / `CVar` / `GVar` scope.  Using `Scope::Global` for `$x` would require module-level `Global` declarations that the validator enforces.  Until those are auto-generated, all sigil vars sit on `Scope::Local` with the sigil preserved in `name`.
+- Downstream emitters targeting Ruby (or any language with similar sigil semantics) can still distinguish by checking for the leading `@` / `@@` / `$`.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 109 → **113** (+4):
+  - `test_parse_instance_var_assignment` — `@a = 1`.
+  - `test_parse_class_var_assignment` — `@@all = 0`.
+  - `test_parse_global_var_assignment` — `$config = 1`.
+  - `test_parse_instance_var_in_expression` — `puts(@a)`.
+
 ## [0.24.0] - 2026-05-25
 
 ### Added (Phase 6w — arrow-lambda literal `->(params){body}`)
