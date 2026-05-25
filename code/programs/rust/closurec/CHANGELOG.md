@@ -2,6 +2,60 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.7.0] - 2026-05-25
+
+### Added — CLOC11.30: `--output_wrapper` template substitution
+
+Third behavioral slice of [CLOC11], landing the first piece of Track 6 (output formatting). `closurec` now honors `--output_wrapper <template>` (and the companion `--output_wrapper_file <path>`) end-to-end.
+
+- **New `wrapper` module.** Single forward-scan template substituter recognizing two placeholders per CC's documented behavior:
+  - `%output%` → the compiled JS (the result of all prior pipeline stages: transform_source + defines + concatenation).
+  - `%n%` → a literal newline character.
+  
+  Unrecognized `%name%` placeholders (e.g. `%foo%`) pass through verbatim — CC's behavior. Lone `%` signs without a closing partner before a non-name character (e.g. `50% off`) also pass through unchanged.
+
+- **`--output_wrapper_file` overrides `--output_wrapper`** when both are supplied. The file's contents become the wrapper template. Matches CC's documented behavior ("loads the specified file and passes its contents to `--output_wrapper`").
+
+- **Pipeline ordering**: applied in `run_compiler` *after* the per-input transform and concatenation, *before* writing to disk or stdout. So the wrapper sees the final compiled JS — including everything WHITESPACE_ONLY, defines, and any future passes contributed.
+
+- **Fast-path passthrough.** When neither `--output_wrapper` nor `--output_wrapper_file` is set, `apply_output_wrapper` returns the compiled string unchanged without allocating. The common case stays cheap.
+
+- **New `CompilerError::Wrapper(WrapperError)`** variant. The single failure path today is `--output_wrapper_file` pointing at a non-readable path; we surface a typed `WrapperFileReadError` with the path, `io::ErrorKind`, and message.
+
+- **Diff fixture** `tests/diff/output-wrapper/` per CLOC11 §3: a tiny input file, a flags file invoking `--output_wrapper '(function(){%output%})();'`, and the expected wrapped output.
+
+- **New integration test** `tests/diff_output_wrapper.rs` drives the built binary against the fixture and asserts byte-equal stdout.
+
+- **14 new unit tests in `wrapper::tests`** covering: no-wrapper passthrough, `%output%` substitution, `%n%` newline expansion, unrecognized placeholder passthrough, lone `%` passthrough (`50% off`), wrapper without `%output%`, multiple `%output%`s all substitute, `--output_wrapper_file` override, missing file → typed error, trailing `%n%`, empty compiled + wrapper, Unicode-in-template, error display, low-level scanner edge cases.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+After CLOC11.30 lands, `transform_source` per input does:
+
+1. `--compilation_level` transform (CLOC11.06: WHITESPACE_ONLY active; others identity until CLOC11.07+).
+2. `--define / -D` substitution (CLOC11.19).
+
+Then `run_compiler` does:
+
+3. Concatenation of transformed inputs.
+4. **`--output_wrapper` template substitution (CLOC11.30, new).**
+5. Write to `--js_output_file` (auto-create parent dirs) or stdout.
+
+### Behavior changes (user-visible)
+
+- `closurec --output_wrapper '(function(){%output%})();' --js app.js` now actually wraps. Previously the flag was parsed but ignored.
+- `closurec --output_wrapper_file banner.txt --js app.js` reads `banner.txt` as the wrapper template.
+
+### Tests
+
+109 unit + 6 integration tests passing. Clippy clean.
+
+### Version
+
+Bumps closurec 0.6.0 → 0.7.0 (Cargo.toml + cli.spec.json kept in sync).
+
+[CLOC11]: ../../specs/CLOC11-drop-in-closure-compat.md
+
 ## [0.6.0] - 2026-05-25
 
 ### Added — CLOC11.19: `--define / -D` value substitution

@@ -23,6 +23,7 @@ use crate::config::{CompilationLevel, CompilerConfig};
 use crate::defines;
 use crate::globs;
 use crate::whitespace_only;
+use crate::wrapper;
 use coding_adventures_javascript_tokens::EsVersion;
 use std::fs;
 use std::io::{self, Write};
@@ -77,6 +78,8 @@ pub enum CompilerError {
     /// `--define / -D` substitution failed (tokenizer rejected the
     /// source). Inner [`defines::DefineError`] carries the message.
     Define(defines::DefineError),
+    /// `--output_wrapper_file` couldn't be read.
+    Wrapper(wrapper::WrapperError),
 }
 
 impl std::fmt::Display for CompilerError {
@@ -91,6 +94,7 @@ impl std::fmt::Display for CompilerError {
             CompilerError::GlobExpansion(e) => write!(f, "{e}"),
             CompilerError::Minify(e) => write!(f, "{e}"),
             CompilerError::Define(e) => write!(f, "{e}"),
+            CompilerError::Wrapper(e) => write!(f, "{e}"),
         }
     }
 }
@@ -233,19 +237,34 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
     }
 
-    // Step 3: write the output. Two cases:
+    // Step 3 (CLOC11.30): apply --output_wrapper / --output_wrapper_file.
+    // When neither is set, `apply_output_wrapper` short-circuits to
+    // a passthrough so the common no-wrapper case stays a simple
+    // copy. When a wrapper is set, `%output%` is replaced by the
+    // accumulated `combined` JS and `%n%` is replaced by a literal
+    // newline. `--output_wrapper_file` (read at this point, not at
+    // config-build time) overrides the inline `--output_wrapper`
+    // string when both are present.
+    let wrapped = wrapper::apply_output_wrapper(
+        &combined,
+        &config.formatting.output_wrapper,
+        config.formatting.output_wrapper_file.as_deref(),
+    )
+    .map_err(CompilerError::Wrapper)?;
+
+    // Step 4: write the output. Two cases:
     //   a) --js_output_file set → write to disk via write_output_file.
     //   b) absent → stdout via the returned `stdout_text`.
     match &config.io.js_output_file {
         Some(path) => {
-            write_output_file(path, &combined)?;
+            write_output_file(path, &wrapped)?;
             Ok(CompilerOutput {
                 stdout_text: String::new(),
                 wrote_files: vec![path.clone()],
             })
         }
         None => Ok(CompilerOutput {
-            stdout_text: combined,
+            stdout_text: wrapped,
             wrote_files: Vec::new(),
         }),
     }
