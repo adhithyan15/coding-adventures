@@ -2525,6 +2525,106 @@ pub struct LanguageInputCallbackTransportAvailabilitySummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportCapacityKind {
+    CallbackRunnerHandoffCapacity,
+    AdapterEventPublicationCapacity,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportCapacitySummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub capacity_label: String,
+    pub capacity_kind: LanguageInputCallbackTransportCapacityKind,
+    pub capacity_name: String,
+    pub availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+    pub availability_name: String,
+    pub readiness_kind: LanguageInputCallbackTransportReadinessKind,
+    pub readiness_name: String,
+    pub health_kind: LanguageInputCallbackTransportHealthKind,
+    pub health_name: String,
+    pub diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+    pub diagnostic_name: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub diagnostic_recorded: bool,
+    pub health_recorded: bool,
+    pub readiness_recorded: bool,
+    pub availability_recorded: bool,
+    pub capacity_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_capacity: u8,
+    pub message: String,
+    pub availability_summary: LanguageInputCallbackTransportAvailabilitySummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackDiagnosticStage {
     Plan,
     Event,
@@ -3324,6 +3424,19 @@ pub const fn input_callback_transport_availability_kind_name(
         }
         LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability => {
             "adapter_event_publication_availability"
+        }
+    }
+}
+
+pub const fn input_callback_transport_capacity_kind_name(
+    kind: LanguageInputCallbackTransportCapacityKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity => {
+            "callback_runner_handoff_capacity"
+        }
+        LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity => {
+            "adapter_event_publication_capacity"
         }
     }
 }
@@ -6102,6 +6215,109 @@ pub fn input_callback_transport_availability_summary(
     }
 }
 
+pub fn input_callback_transport_capacity_summary(
+    availability_summary: &LanguageInputCallbackTransportAvailabilitySummary,
+) -> LanguageInputCallbackTransportCapacitySummary {
+    let capacity_kind =
+        input_callback_transport_capacity_kind(availability_summary.availability_kind);
+
+    LanguageInputCallbackTransportCapacitySummary {
+        endpoint: availability_summary.endpoint.clone(),
+        connection_label: availability_summary.connection_label.clone(),
+        capacity_label: input_callback_transport_capacity_label(
+            availability_summary,
+            capacity_kind,
+        ),
+        capacity_kind,
+        capacity_name: input_callback_transport_capacity_kind_name(capacity_kind).to_owned(),
+        availability_kind: availability_summary.availability_kind,
+        availability_name: availability_summary.availability_name.clone(),
+        readiness_kind: availability_summary.readiness_kind,
+        readiness_name: availability_summary.readiness_name.clone(),
+        health_kind: availability_summary.health_kind,
+        health_name: availability_summary.health_name.clone(),
+        diagnostic_kind: availability_summary.diagnostic_kind,
+        diagnostic_name: availability_summary.diagnostic_name.clone(),
+        completion_kind: availability_summary.completion_kind,
+        completion_name: availability_summary.completion_name.clone(),
+        finalization_kind: availability_summary.finalization_kind,
+        finalization_name: availability_summary.finalization_name.clone(),
+        resolution_kind: availability_summary.resolution_kind,
+        resolution_name: availability_summary.resolution_name.clone(),
+        decision_kind: availability_summary.decision_kind,
+        decision_name: availability_summary.decision_name.clone(),
+        logic_kind: availability_summary.logic_kind,
+        logic_name: availability_summary.logic_name.clone(),
+        reference_kind: availability_summary.reference_kind,
+        reference_name: availability_summary.reference_name.clone(),
+        bookmark_kind: availability_summary.bookmark_kind,
+        bookmark_name: availability_summary.bookmark_name.clone(),
+        cursor_kind: availability_summary.cursor_kind,
+        cursor_name: availability_summary.cursor_name.clone(),
+        marker_kind: availability_summary.marker_kind,
+        marker_name: availability_summary.marker_name.clone(),
+        checkpoint_kind: availability_summary.checkpoint_kind,
+        checkpoint_name: availability_summary.checkpoint_name.clone(),
+        snapshot_kind: availability_summary.snapshot_kind,
+        snapshot_name: availability_summary.snapshot_name.clone(),
+        archive_kind: availability_summary.archive_kind,
+        archive_name: availability_summary.archive_name.clone(),
+        journal_kind: availability_summary.journal_kind,
+        journal_name: availability_summary.journal_name.clone(),
+        log_kind: availability_summary.log_kind,
+        log_name: availability_summary.log_name.clone(),
+        audit_kind: availability_summary.audit_kind,
+        audit_name: availability_summary.audit_name.clone(),
+        trace_kind: availability_summary.trace_kind,
+        trace_name: availability_summary.trace_name.clone(),
+        outcome_kind: availability_summary.outcome_kind,
+        outcome_name: availability_summary.outcome_name.clone(),
+        receipt_kind: availability_summary.receipt_kind,
+        receipt_name: availability_summary.receipt_name.clone(),
+        acknowledgement_kind: availability_summary.acknowledgement_kind,
+        acknowledgement_name: availability_summary.acknowledgement_name.clone(),
+        delivery_route: availability_summary.delivery_route,
+        delivery_route_name: availability_summary.delivery_route_name.clone(),
+        event_kind: availability_summary.event_kind,
+        event_name: availability_summary.event_name.clone(),
+        report_kind: availability_summary.report_kind,
+        report_name: availability_summary.report_name.clone(),
+        action: availability_summary.action,
+        action_name: availability_summary.action_name.clone(),
+        callback_runner_handoff: availability_summary.callback_runner_handoff,
+        adapter_event_published: availability_summary.adapter_event_published,
+        delivery_acknowledged: availability_summary.delivery_acknowledged,
+        receipt_recorded: availability_summary.receipt_recorded,
+        outcome_recorded: availability_summary.outcome_recorded,
+        trace_recorded: availability_summary.trace_recorded,
+        audit_recorded: availability_summary.audit_recorded,
+        log_recorded: availability_summary.log_recorded,
+        journal_recorded: availability_summary.journal_recorded,
+        archive_recorded: availability_summary.archive_recorded,
+        snapshot_recorded: availability_summary.snapshot_recorded,
+        checkpoint_recorded: availability_summary.checkpoint_recorded,
+        marker_recorded: availability_summary.marker_recorded,
+        cursor_recorded: availability_summary.cursor_recorded,
+        bookmark_recorded: availability_summary.bookmark_recorded,
+        reference_recorded: availability_summary.reference_recorded,
+        logic_recorded: availability_summary.logic_recorded,
+        decision_recorded: availability_summary.decision_recorded,
+        resolution_recorded: availability_summary.resolution_recorded,
+        finalization_recorded: availability_summary.finalization_recorded,
+        completion_recorded: availability_summary.completion_recorded,
+        diagnostic_recorded: availability_summary.diagnostic_recorded,
+        health_recorded: availability_summary.health_recorded,
+        readiness_recorded: availability_summary.readiness_recorded,
+        availability_recorded: availability_summary.availability_recorded,
+        capacity_recorded: true,
+        terminal: availability_summary.terminal,
+        retryable: availability_summary.retryable,
+        queue_depth_after_capacity: availability_summary.queue_depth_after_availability,
+        message: input_callback_transport_capacity_message(capacity_kind).to_owned(),
+        availability_summary: availability_summary.clone(),
+    }
+}
+
 pub fn input_callback_plan_diagnostic(
     error: &LanguageInputCallbackPlanError,
 ) -> LanguageInputCallbackPlanDiagnostic {
@@ -8298,6 +8514,44 @@ fn input_callback_transport_availability_message(
         }
         LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability => {
             "Transport availability should expose the adapter event publication readiness state."
+        }
+    }
+}
+
+fn input_callback_transport_capacity_kind(
+    availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+) -> LanguageInputCallbackTransportCapacityKind {
+    match availability_kind {
+        LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability => {
+            LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity
+        }
+        LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability => {
+            LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity
+        }
+    }
+}
+
+fn input_callback_transport_capacity_label(
+    availability_summary: &LanguageInputCallbackTransportAvailabilitySummary,
+    capacity_kind: LanguageInputCallbackTransportCapacityKind,
+) -> String {
+    format!(
+        "{} transport_capacity={} capacity_recorded=true queue_depth_after_capacity={}",
+        availability_summary.availability_label,
+        input_callback_transport_capacity_kind_name(capacity_kind),
+        availability_summary.queue_depth_after_availability
+    )
+}
+
+fn input_callback_transport_capacity_message(
+    capacity_kind: LanguageInputCallbackTransportCapacityKind,
+) -> &'static str {
+    match capacity_kind {
+        LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity => {
+            "Transport capacity should preserve the callback-runner handoff availability state."
+        }
+        LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity => {
+            "Transport capacity should preserve the adapter event publication availability state."
         }
     }
 }
@@ -19874,6 +20128,229 @@ mod tests {
             )
         );
         assert_eq!(dropped.readiness_summary, dropped_readiness);
+    }
+
+    #[test]
+    fn input_callback_transport_capacity_is_owned_by_rust_language_core() {
+        fn availability_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportAvailabilitySummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            let finalization = input_callback_transport_finalization_summary(&resolution);
+            let completion = input_callback_transport_completion_summary(&finalization);
+            let diagnostic = input_callback_transport_diagnostic_summary(&completion);
+            let health = input_callback_transport_health_summary(&diagnostic);
+            let readiness = input_callback_transport_readiness_summary(&health);
+            input_callback_transport_availability_summary(&readiness)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_availability = availability_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_capacity_summary(&completed_availability);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.capacity_kind,
+            LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity
+        );
+        assert_eq!(
+            completed.capacity_name,
+            "adapter_event_publication_capacity"
+        );
+        assert_eq!(
+            completed.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        );
+        assert_eq!(
+            completed.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        );
+        assert_eq!(
+            completed.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.diagnostic_recorded);
+        assert!(completed.health_recorded);
+        assert!(completed.readiness_recorded);
+        assert!(completed.availability_recorded);
+        assert!(completed.capacity_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_capacity, 2);
+        assert_eq!(
+            completed.capacity_label,
+            format!(
+                "{} transport_capacity=adapter_event_publication_capacity capacity_recorded=true queue_depth_after_capacity=2",
+                completed_availability.availability_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport capacity should preserve the adapter event publication availability state."
+        );
+        assert_eq!(completed.availability_summary, completed_availability);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_availability = availability_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_capacity_summary(&pending_availability);
+
+        assert_eq!(
+            pending.capacity_kind,
+            LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity
+        );
+        assert_eq!(pending.capacity_name, "callback_runner_handoff_capacity");
+        assert_eq!(
+            pending.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.capacity_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_capacity, 3);
+        assert_eq!(
+            pending.capacity_label,
+            format!(
+                "{} transport_capacity=callback_runner_handoff_capacity capacity_recorded=true queue_depth_after_capacity=3",
+                pending_availability.availability_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport capacity should preserve the callback-runner handoff availability state."
+        );
+        assert_eq!(pending.availability_summary, pending_availability);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_availability = availability_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_capacity_summary(&dropped_availability);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.capacity_kind,
+            LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity
+        );
+        assert_eq!(
+            dropped.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.availability_recorded);
+        assert!(dropped.capacity_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_capacity, 1);
+        assert_eq!(
+            dropped.capacity_label,
+            format!(
+                "{} transport_capacity=adapter_event_publication_capacity capacity_recorded=true queue_depth_after_capacity=1",
+                dropped_availability.availability_label
+            )
+        );
+        assert_eq!(dropped.availability_summary, dropped_availability);
     }
 
     #[test]

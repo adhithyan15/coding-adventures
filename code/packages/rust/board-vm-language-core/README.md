@@ -251,6 +251,10 @@ stable transport availability records with Rust-owned availability names,
 labels, queue-depth metadata, terminal/retry flags, and messages, so frontends
 can present callback transport availability without rebuilding readiness
 policy.
+`input_callback_transport_capacity_summary` preserves that availability as
+stable transport capacity records with Rust-owned capacity names, labels,
+queue-depth metadata, terminal/retry flags, and messages, so frontends can
+present callback transport capacity without rebuilding availability policy.
 `input_callback_plan_diagnostic`, `input_callback_event_diagnostic`, and
 `input_callback_queue_plan_diagnostic` turn those planner, event, and queue
 errors into stable Rust-owned kind names, labels, and messages, so frontends
