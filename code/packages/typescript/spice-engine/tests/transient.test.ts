@@ -29,6 +29,7 @@ import {
   pssNewtonIteration,
   pssNewtonSolve,
   pssNewtonUpdate,
+  poleZeroRlcBandpass,
   poleZeroRlcHighpass,
   poleZeroRlcLowpass,
   poleZeroRcHighpass,
@@ -889,6 +890,47 @@ describe("transient", () => {
           frequencyHz: 0.0,
           damping: 1.0,
         },
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: 0.0,
+          frequencyHz: 0.0,
+          damping: 1.0,
+        },
+        {
+          kind: "pole",
+          real: -alpha,
+          imaginary,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: alpha / omega0,
+        },
+        {
+          kind: "pole",
+          real: -alpha,
+          imaginary: -imaginary,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: alpha / omega0,
+        },
+      ],
+    });
+  });
+
+  it("computes an origin zero and complex conjugate poles for a series RLC band-pass fixture", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(inductor("L1", "in", "mid", 1.0e-3));
+    circuit.add(capacitor("C1", "mid", "out", 1.0e-6));
+    circuit.add(resistor("R1", "out", "0", 10.0));
+
+    const result = poleZeroRlcBandpass(circuit, "Vin", "out");
+
+    const alpha = 10.0 / (2.0 * 1.0e-3);
+    const omega0 = 1.0 / Math.sqrt(1.0e-3 * 1.0e-6);
+    const imaginary = Math.sqrt(omega0 * omega0 - alpha * alpha);
+    expect(result).toEqual({
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
         {
           kind: "zero",
           real: 0.0,

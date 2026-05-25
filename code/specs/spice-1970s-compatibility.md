@@ -297,6 +297,9 @@ Status:
 - The second-order Phase 8 pole-zero foothold now also covers a series R-C /
   shunt-L high-pass helper across Python, TypeScript, and Rust, returning the
   double origin zero plus the shared RLC pole pair.
+- The second-order Phase 8 pole-zero foothold now also covers a series L-C /
+  shunt-R band-pass helper across Python, TypeScript, and Rust, returning one
+  origin zero plus the shared RLC pole pair.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 
