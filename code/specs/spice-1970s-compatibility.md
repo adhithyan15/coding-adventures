@@ -303,6 +303,8 @@ Status:
 - The second-order Phase 8 pole-zero foothold now also covers a series-R /
   shunt-series-L-C notch helper across Python, TypeScript, and Rust, returning
   the imaginary-axis zero pair plus the shared RLC pole pair.
+- `.PZ` pole-zero results can now be rendered as stable tab-separated text
+  tables across Python, TypeScript, and Rust.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

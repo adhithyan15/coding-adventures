@@ -19,6 +19,7 @@ import {
   distortionFromTransient,
   estimatePeriod,
   formatDcTable,
+  formatPoleZeroTable,
   formatTransientTable,
   fourier,
   inductor,
@@ -1138,6 +1139,35 @@ describe("transient", () => {
       "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
+  });
+
+  it("formats stable text output tables for pole-zero results", () => {
+    const result: PoleZeroResult = {
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: 1.0e3,
+          frequencyHz: 1.0e3 / (2.0 * Math.PI),
+          damping: 0.0,
+        },
+        {
+          kind: "pole",
+          real: -5.0,
+          imaginary: -999.987499921874,
+          frequencyHz: 1.0e3 / (2.0 * Math.PI),
+          damping: 5.0e-3,
+        },
+      ],
+    };
+
+    expect(formatPoleZeroTable(result)).toBe(
+      "Index\tKind\tReal\tImaginary\tFrequency\tDamping\n" +
+        "0\tzero\t0.000000e+00\t1.000000e+03\t1.591549e+02\t0.000000e+00\n" +
+        "1\tpole\t-5.000000e+00\t-9.999875e+02\t1.591549e+02\t5.000000e-03\n",
     );
   });
 

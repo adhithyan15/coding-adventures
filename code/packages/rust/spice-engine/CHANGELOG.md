@@ -13,6 +13,8 @@
   temperature.
 - Add `format_dc_table` and `format_transient_table` for stable tab-separated
   node-voltage and branch-current text output snapshots.
+- Add `format_pole_zero_table` for stable tab-separated `.PZ` pole-zero text
+  output snapshots.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine
   coefficients, magnitudes, phases, and THD from transient samples for
   `V(node)` and `I(source)` probes.

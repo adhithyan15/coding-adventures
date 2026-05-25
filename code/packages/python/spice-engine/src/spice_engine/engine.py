@@ -1290,6 +1290,26 @@ def format_transient_table(
     return "\n".join(rows)
 
 
+def format_pole_zero_table(result: PoleZeroResult) -> str:
+    """Format pole-zero entries as a stable SPICE-style text table."""
+    rows = ["Index\tKind\tReal\tImaginary\tFrequency\tDamping"]
+    for index, entry in enumerate(result.entries):
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    entry.kind,
+                    _format_table_number(entry.real),
+                    _format_table_number(entry.imaginary),
+                    _format_table_number(entry.frequency),
+                    _format_table_number(entry.damping),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def _default_output_probes(
     node_voltages: dict[str, float],
     branch_currents: dict[str, float],

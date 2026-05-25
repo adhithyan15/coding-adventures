@@ -1,8 +1,8 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, estimate_period, format_dc_table,
-    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    format_pole_zero_table, format_transient_table, fourier, pole_zero_rc_highpass,
+    pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass,
+    pole_zero_rlc_notch, pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
     pss_with_tolerance, transient, transient_adaptive, transient_with_method,
@@ -1313,6 +1313,35 @@ fn text_output_tables_are_stable_for_dc_and_transient_results() {
     assert_eq!(
         format_transient_table(&points, &["V(vin)", "V(mid)", "I(V1)"]).unwrap(),
         "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+    );
+}
+
+#[test]
+fn pole_zero_text_output_table_is_stable() {
+    let result = PoleZeroResult {
+        input_source: "Vin".to_string(),
+        output_node: "out".to_string(),
+        entries: vec![
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Zero,
+                real: 0.0,
+                imaginary: 1.0e3,
+                frequency_hz: 1.0e3 / (2.0 * std::f64::consts::PI),
+                damping: 0.0,
+            },
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real: -5.0,
+                imaginary: -999.987499921874,
+                frequency_hz: 1.0e3 / (2.0 * std::f64::consts::PI),
+                damping: 5.0e-3,
+            },
+        ],
+    };
+
+    assert_eq!(
+        format_pole_zero_table(&result),
+        "Index\tKind\tReal\tImaginary\tFrequency\tDamping\n0\tzero\t0.000000e+00\t1.000000e+03\t1.591549e+02\t0.000000e+00\n1\tpole\t-5.000000e+00\t-9.999875e+02\t1.591549e+02\t5.000000e-03\n"
     );
 }
 
