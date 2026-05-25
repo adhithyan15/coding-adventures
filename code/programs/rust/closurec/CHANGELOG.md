@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.13.0] - 2026-05-25
+
+### Added — CLOC11.54: `--help_markdown` markdown flag dump
+
+Fourth slice of Track 11 (special modes). When `--help_markdown` is set, closurec prints a markdown document listing every flag in the CLI spec — name, type, default, description — and exits successfully. Mirrors CC's `--help_markdown`, intended for documentation tooling that pipes the output into a docs page.
+
+- **Wire format**: per-flag `### `--long` (type, default: X)` heading + body description. Heading-per-flag (not table) chosen so a diff stays readable when flags are added or descriptions change, and so GitHub's auto-anchors give linkable section IDs.
+- **Pipeline placement**: short-circuit in `main::parse_and_run` Step 3.5 — after `cfg` is built from parsed flags, before `run_compiler`. So a config-level user error (e.g. invalid `--define` value) still surfaces, but the markdown dump replaces the rest of the run.
+- **No new dependencies**. Uses `cli_builder::types::{CliSpec, FlagDef}` directly (already a transitive dep) and `serde_json::Value` for default-value rendering (already in the dep tree).
+- **Spec re-use**: clones the loaded `CliSpec` before passing it to `Parser::new` so the help-markdown branch can iterate the flag list after parsing. The clone is ~10 KB; cheap.
+- **7 new unit tests** in `help_markdown::tests` (title, version line, one section per flag, type+default in heading, body carries description, empty-string default disambiguated, no-default omits clause).
+- **2 new unit tests** in `main::tests` (flag emits markdown, doesn't run pipeline even with bogus `--js`).
+- **Diff fixture** `tests/diff/help-markdown/` with the full pinned markdown output (~400 lines, 100 flags).
+- **New integration test** `tests/diff_help_markdown.rs`. Pins the exact output so any change to the user-facing flag surface — a new flag, a renamed flag, a re-described flag — fails the diff and must be acknowledged by regenerating `expected.stdout`.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`main::parse_and_run`:
+1. Load embedded `cli.spec.json`
+2. cli-builder parses argv → typed flags
+3. `wire::config_from_parsed` → `CompilerConfig`
+4. **`--help_markdown` short-circuit (CLOC11.54, NEW) — markdown dump, return**
+5. `run::run_compiler(&cfg)`:
+   1. Resolve `--js` globs
+   2. `--print_tree` short-circuit (CLOC11.52)
+   3. `--print_tree_json` short-circuit (CLOC11.53)
+   4. Per-input `transform_source` (level + defines)
+   5. Concatenate transformed inputs
+   6. `--checks_only` short-circuit (CLOC11.51)
+   7. `--emit_use_strict` prepend (CLOC11.18)
+   8. `--output_wrapper` substitution (CLOC11.30)
+   9. `--isolation_mode IIFE` wrap (CLOC11.31)
+   10. Write to `--js_output_file` or stdout
+
 ## [0.12.0] - 2026-05-25
 
 ### Added — CLOC11.53: `--print_tree_json` JSON token-stream dump
