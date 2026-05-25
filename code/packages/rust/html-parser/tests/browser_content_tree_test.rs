@@ -264,6 +264,16 @@ struct ExpectedContentNode {
     #[serde(default)]
     resolved_quote_cite: Option<String>,
     #[serde(default)]
+    data_value: Option<String>,
+    #[serde(default)]
+    datetime: Option<String>,
+    #[serde(default)]
+    edit_cite: Option<String>,
+    #[serde(default)]
+    resolved_edit_cite: Option<String>,
+    #[serde(default)]
+    edit_datetime: Option<String>,
+    #[serde(default)]
     break_kind: Option<String>,
     #[serde(default)]
     heading_level: Option<u8>,
@@ -433,6 +443,11 @@ impl ExpectedContentNode {
             list_item_value: self.list_item_value,
             quote_cite: self.quote_cite,
             resolved_quote_cite: self.resolved_quote_cite,
+            data_value: self.data_value,
+            datetime: self.datetime,
+            edit_cite: self.edit_cite,
+            resolved_edit_cite: self.resolved_edit_cite,
+            edit_datetime: self.edit_datetime,
             break_kind: self.break_kind,
             heading_level: self.heading_level,
             section_kind: self.section_kind,
