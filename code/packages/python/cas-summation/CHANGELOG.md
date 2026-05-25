@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.6.0 — 2026-05-25
+
+**Phase 58 — Bounded × Log(diverging) × polynomial numerator (Python).**
+
+Closes the three-way gap between Phase 54 (Log × polynomial, refuses
+bounded factors), Phase 55 (bounded × Log, refuses polynomial factors),
+and Phase 57 (bounded × Log × Sqrt, the Sqrt specialisation).
+
+A numerator with one ``Log(diverging)`` factor, any polynomial factors
+(total degree ``m``), and any bounded factors has effective growth
+``log(k)·k^m = o(k^{m+ε})`` and vanishes when the denominator grows
+strictly faster than ``k^m``.
+
+### Added
+
+- **``_bounded_log_poly_degree``** — returns total polynomial degree for
+  ``Mul(bounded..., Log(diverging), polynomial_factors...)``.  Refuses
+  two-Log, any Sqrt (→ Phase 57), or unrecognised factors.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds Phase 58 branch after Phase 57:
+  ``den_deg > poly_deg`` for polynomial denominators, or
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+
+### Tests
+
+6 new ``TestEvaluateSumPhase58BoundedLogPolyNumerator`` cases.
+Full suite: **145 passed** (was 139; +6).
+
 ## 1.5.0 — 2026-05-23
 
 **Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator

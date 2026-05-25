@@ -1212,3 +1212,80 @@ describe("summation: Phase 57 bounded × log × sqrt numerator", () => {
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+// Phase 58 (TS port): bounded × Log(diverging) × polynomial numerator.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 58 bounded × log × polynomial numerator", () => {
+  it("∑ [sin(k)·log(k)·k/k³ − ...] closes (polyDeg=1 < denDeg=3)", () => {
+    // sin(k)·log(k)·k / k³: log sub-polynomial, effective poly deg = 1,
+    // denominator deg = 3, 3 > 1 ✓.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [sinK, logK, k]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·log(k)·k²/2^k − ...] closes (exp denominator dominates)", () => {
+    // Exponential denominator — non-polynomial diverging, dominates any k^m.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [sinK, logK, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [cos(k)·log(k)·k²/k⁴ − ...] closes (polyDeg=2 < denDeg=4)", () => {
+    const k = sym("k");
+    const cosK = app(sym("Cos"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [cosK, logK, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const cosKp1 = app(sym("Cos"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [cosKp1, logKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(4)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(4)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·log(k)·k²/k² stays unevaluated (equal degrees)", () => {
+    // polyDeg = denDeg = 2: log(k)·C diverges → refused.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [sinK, logK, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

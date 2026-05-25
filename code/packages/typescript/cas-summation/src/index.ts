@@ -971,6 +971,62 @@ function boundedLogSqrtHalfDegree(node: IRNode, k: IRNode): number | undefined {
   return sqrtHalfDeg;
 }
 
+/**
+ * Phase 58 (TypeScript port): Return the total polynomial degree when
+ * ``node`` is a ``Mul`` with exactly one ``Log(diverging)`` factor, any
+ * polynomial factors, and any number of bounded (non-polynomial) factors;
+ * ``undefined`` otherwise.
+ *
+ * Fills the gap between:
+ * - **Phase 54** — ``Mul(Log, polynomial_only)``; refuses bounded factors.
+ * - **Phase 55** — ``Mul(bounded, Log)``; refuses polynomial factors.
+ * - **Phase 57** — ``Mul(bounded, Log, Sqrt)``; the Sqrt specialisation.
+ *
+ * Effective growth ``log(k)·k^m = o(k^{m+ε})``.  Caller compares
+ * ``denDeg > polyDeg`` (strict).  Sqrt factors are refused here and
+ * handled by Phase 57.
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Log(diverging)`` → count; refuse if count > 1.
+ *      - polynomial → add its degree to ``polyDeg``.
+ *      - ``bounded`` (non-polynomial, non-Sqrt) → accept silently.
+ *      - Sqrt or unrecognised → return undefined.
+ *   3. Require exactly one Log.
+ *   4. Return ``polyDeg``.
+ */
+function boundedLogPolyDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 1) {
+        // Two or more Log factors — refuse.
+        return undefined;
+      }
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) {
+      polyDeg += deg;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      // Bounded but non-polynomial (e.g. Sin, Cos) — accept.
+      continue;
+    }
+    // Sqrt or unrecognised factor — bail (Sqrt is handled by Phase 57).
+    return undefined;
+  }
+  if (logCount !== 1) {
+    return undefined;
+  }
+  return polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1067,6 +1123,24 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegBls = polynomialDegreeInK(den, k);
     if (denDegBls !== undefined) {
       if (denDegBls > blsHalfDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 58: Mul(bounded, Log(diverging), polynomial) numerator.
+  // Effective growth ``log(k)·k^m = o(k^{m+ε})``.  Vanishes when:
+  //   - polynomial denominator with ``denDeg > polyDeg`` (strict), OR
+  //   - non-polynomial diverging denominator (Exp / Pow / Log×poly).
+  // Fills the gap between Phase 54 (Log × poly, refuses bounded) and
+  // Phase 55 (bounded × Log, refuses poly).  Sqrt is refused here →
+  // Phase 57 handles that case.
+  const blpDeg = boundedLogPolyDegree(num, k);
+  if (blpDeg !== undefined) {
+    const denDegBlp = polynomialDegreeInK(den, k);
+    if (denDegBlp !== undefined) {
+      if (denDegBlp > blpDeg) {
         return true;
       }
     } else if (hDivergesAtInfinity(den, k)) {

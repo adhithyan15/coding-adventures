@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.6.0 — 2026-05-25
+
+**Phase 58 — Bounded × Log(diverging) × polynomial numerator
+(TypeScript port).**
+
+Ports Python ``cas-summation`` 1.6.0.  Fills the gap between Phase 54
+(Log × polynomial, refuses bounded factors) and Phase 55 (bounded × Log,
+refuses polynomial factors).
+
+### Added
+
+- **`boundedLogPolyDegree(node, k)`** — returns total polynomial degree
+  for ``Mul(bounded..., Log(diverging), polynomial_factors...)``.  Refuses
+  two-Log, Sqrt (→ Phase 57), or unrecognised factors.
+
+### Changed
+
+- ``gVanishesAtInfinity`` adds Phase 58 branch after Phase 57:
+  ``denDeg > polyDeg`` for polynomial denominators, or
+  ``hDivergesAtInfinity`` for non-polynomial diverging denominators.
+
+### Tests
+
+4 new ``summation: Phase 58 bounded × log × polynomial numerator`` cases.
+Full suite: **77 passed** (was 73; +4).
+
 ## 1.5.0 — 2026-05-24
 
 **Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator

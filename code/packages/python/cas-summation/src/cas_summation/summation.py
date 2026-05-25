@@ -795,6 +795,24 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 58: ``Mul(bounded, Log(diverging), polynomial)`` numerator.
+    # Bounded × Log × polynomial: effective growth ``log(k)·k^m`` which is
+    # ``o(k^{m+ε})`` for any ``ε > 0``.  Vanishes when the denominator
+    # grows strictly faster than ``k^m``:
+    #   - polynomial denominator with ``den_deg > poly_deg``, OR
+    #   - non-polynomial diverging denominator (Exp / Pow / Log×poly).
+    # This closes the gap left by Phase 54 (Log × polynomial, refuses
+    # bounded factors) and Phase 55 (bounded × Log, refuses polynomial
+    # factors).  Sqrt factors are intentionally refused and handled by
+    # Phase 57.
+    blp_deg = _bounded_log_poly_degree(num, k)
+    if blp_deg is not None:
+        den_deg_blp = _polynomial_degree_in_k(den, k)
+        if den_deg_blp is not None:
+            if den_deg_blp > blp_deg:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1201,6 +1219,82 @@ def _bounded_log_sqrt_inner_deg(node: IRNode, k: IRSymbol) -> int | None:
     if log_count != 1 or sqrt_inner_deg is None:
         return None
     return sqrt_inner_deg
+
+
+def _bounded_log_poly_degree(node: IRNode, k: IRSymbol) -> int | None:
+    """Return the total polynomial degree when ``node`` is a ``Mul`` with
+    exactly one ``Log(diverging)`` factor, any polynomial factors (degree
+    ≥ 0), and any number of bounded (but non-polynomial) factors in ``k``;
+    ``None`` otherwise.
+
+    Phase 58 — Bounded × Log(diverging) × polynomial numerator.
+
+    This phase fills the gap between:
+
+    * **Phase 54** — ``Mul(Log, polynomial_only)``; refuses the moment any
+      factor is neither Log nor polynomial, so ``Sin(k)·Log(k)·k`` fails.
+    * **Phase 55** — ``Mul(bounded, Log)``; requires *all* non-Log factors
+      to be bounded, so ``Sin(k)·Log(k)·k`` fails (``k`` diverges).
+
+    Here we allow any mix of polynomial and bounded factors alongside one
+    Log:
+
+    +---------------------------------------+--------------+
+    | Input                                 | Return       |
+    +=======================================+==============+
+    | ``Mul(Sin(k), Log(k), k)``            | ``1``        |
+    | ``Mul(Cos(k), Log(k), k²)``           | ``2``        |
+    | ``Mul(Sin(k), Cos(k), Log(k), k)``    | ``1``        |
+    | ``Mul(Sin(k), Log(k))``               | ``0``        |
+    | ``Mul(Sin(k), Log(k), Log(k))``       | None (2 Log) |
+    | ``Mul(Sqrt(k), Log(k), k)``           | None (Sqrt)  |
+    | ``Mul(Sin(k), k)``                    | None (no Log)|
+    +---------------------------------------+--------------+
+
+    Mathematical basis:
+      ``|Sin(k)·Log(k)·k^m| = O(k^m · log k) = o(k^{m+ε})`` for any
+      ``ε > 0``.  The quotient therefore vanishes whenever the denominator
+      grows strictly faster than ``k^m`` (i.e. ``den_deg > m`` or the
+      denominator is non-polynomial diverging).
+
+    The Sqrt case is intentionally refused here — that is handled by
+    Phase 57 (``bounded × Log × Sqrt``).
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - Exactly one ``Log(diverging)`` → record it; bail on second.
+         - Polynomial in ``k`` → add its degree to ``poly_deg_sum``.
+         - Bounded in ``k`` (non-polynomial) → accept silently.
+         - Sqrt or anything else → bail (unrecognised).
+      3. Require exactly one Log factor found.
+      4. Return ``poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 1:
+                # Two or more Log factors — refuse (combined rate logic needed).
+                return None
+            continue
+        # Polynomial factor (including degree-0 constants)?
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        # Bounded but non-polynomial (e.g. Sin, Cos, bounded Mul)?
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Unrecognised factor (Sqrt, Exp, free diverging, …) — bail.
+        # Sqrt is handled by Phase 57; we don't want to silently consume it.
+        return None
+    if log_count != 1:
+        return None
+    return poly_deg_sum
 
 
 def _try_power_of_k(
