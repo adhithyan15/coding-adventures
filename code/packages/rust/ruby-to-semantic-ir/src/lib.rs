@@ -2720,4 +2720,94 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7b — heredoc literal lowering
+    //
+    // Lexer Phase 3c/4o emits every heredoc as a `TokenType::String` whose
+    // value is the canonical `<<TAG\n<body>TAG` form (with `<<~TAG`
+    // indent-stripping pre-applied).  The lowerer detects the `<<` prefix
+    // and emits `StrLit(body)` — the inner body, tag suffix stripped.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn plain_heredoc_lowers_to_strlit_body_only() {
+        // `x = <<EOF\nhello\nEOF\n` → StrLit("hello\n").
+        let m = lower("x = <<EOF\nhello\nEOF\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, name, .. } => {
+                assert_eq!(name, "x");
+                match value {
+                    Expr::StrLit { value, .. } => {
+                        // Body retains the trailing newline that was
+                        // part of the source between `hello` and `EOF`.
+                        assert_eq!(value, "hello\n");
+                    }
+                    other => panic!("expected StrLit, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dash_indent_heredoc_lowers_to_strlit_body_only() {
+        // `<<-EOF` strips opener prefix `<<-` and closing tag, leaves
+        // body intact.  Closing-tag indentation is already stripped by
+        // the lexer's canonicalisation.
+        let m = lower("x = <<-EOF\nhello\n  EOF\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding {
+                value: Expr::StrLit { value, .. },
+                ..
+            } => {
+                assert_eq!(value, "hello\n");
+            }
+            other => panic!("expected StrLit, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn tilde_indent_heredoc_strips_common_leading_whitespace() {
+        // `<<~EOF` — common leading whitespace pre-stripped by the
+        // lexer.  Our lowerer just emits the body as a StrLit.
+        let m = lower("x = <<~EOF\n  hello\n  world\n  EOF\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding {
+                value: Expr::StrLit { value, .. },
+                ..
+            } => {
+                // Lexer stripped the 2-space common indent from each
+                // non-empty body line.
+                assert_eq!(value, "hello\nworld\n");
+            }
+            other => panic!("expected StrLit, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn heredoc_triggers_strings_feature() {
+        // The synthetic StrLit body triggers `Feature::Strings`.
+        let m = lower("x = <<EOF\nhi\nEOF\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Strings),
+            "expected Strings feature in manifest"
+        );
+    }
+
+    #[test]
+    fn heredoc_module_passes_sir_validator() {
+        // End-to-end smoke: a module that uses a heredoc literal
+        // passes the SIR validator.
+        let m = lower("x = <<EOF\nhello\nEOF\nputs(x)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected heredoc-using module: {:?}",
+            result
+        );
+    }
 }
