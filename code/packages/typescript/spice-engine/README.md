@@ -16,7 +16,8 @@ voltage source branch currents, Fourier post-processing for transient output,
 transient-to-distortion projection,
 constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
 stable text tables for selected node voltages, branch currents, AC phasors,
-Fourier harmonics, pole-zero entries, and distortion harmonics,
+Fourier harmonics, transfer-function results, pole-zero entries, and
+distortion harmonics,
 and backward-Euler reactive-element companion models.
 
 ```ts

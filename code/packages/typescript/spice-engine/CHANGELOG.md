@@ -21,6 +21,8 @@
   coefficient, magnitude, phase, DC, and THD text output snapshots.
 - Add `formatAcTable` for stable tab-separated `.AC` real, imaginary,
   magnitude, and phase text output snapshots.
+- Add `formatTfTable` for stable tab-separated `.TF` gain and impedance text
+  output snapshots.
 - Add JFET source-follower transient fixtures covering nonlinear
   companion-model solves.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine

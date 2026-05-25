@@ -1320,6 +1320,23 @@ def format_ac_table(result: AcResult | list[AcPoint], probes: list[str] | None =
     return "\n".join(rows)
 
 
+def format_tf_table(result: TfResult) -> str:
+    """Format a transfer-function result as a stable SPICE-style text table."""
+    return "\n".join(
+        [
+            "TransferRatio\tInputImpedance\tOutputImpedance",
+            "\t".join(
+                [
+                    _format_table_number(result.transfer_ratio),
+                    _format_table_number(result.input_impedance),
+                    _format_table_number(result.output_impedance),
+                ]
+            ),
+            "",
+        ]
+    )
+
+
 def format_pole_zero_table(result: PoleZeroResult) -> str:
     """Format pole-zero entries as a stable SPICE-style text table."""
     rows = ["Index\tKind\tReal\tImaginary\tFrequency\tDamping"]

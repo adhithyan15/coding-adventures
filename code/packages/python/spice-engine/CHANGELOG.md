@@ -37,6 +37,9 @@
   tab-separated real, imaginary, magnitude, and phase rows for `.AC` phasor
   snapshots.
 
+- **Transfer-function text output table** — `format_tf_table()` now emits a
+  stable tab-separated row for `.TF` gain and impedance snapshots.
+
 - **JFET transient coverage** — source-follower transient fixtures now cover
   JFET participation in nonlinear companion-model solves.
 
