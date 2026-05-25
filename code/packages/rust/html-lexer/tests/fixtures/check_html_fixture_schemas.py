@@ -450,6 +450,7 @@ def check_browser_expected_lists(
 
     for index, form in enumerate(object_list_items(expected, "forms")):
         form_path = f"{case_path}.expected.forms[{index}]"
+        require_optional_nullable_string(form_path, form, "id", errors)
         require_optional_nullable_string(form_path, form, "action", errors)
         require_optional_nullable_string(form_path, form, "resolved_action", errors)
         require_optional_nullable_string(form_path, form, "name", errors)

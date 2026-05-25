@@ -334,6 +334,8 @@ struct ExpectedMedia {
 
 #[derive(Debug, Deserialize)]
 struct ExpectedForm {
+    #[serde(default)]
+    id: Option<String>,
     action: Option<String>,
     resolved_action: Option<String>,
     #[serde(default)]
@@ -772,6 +774,7 @@ impl ExpectedMedia {
 impl ExpectedForm {
     fn into_browser_form(self) -> BrowserForm {
         BrowserForm {
+            id: self.id,
             action: self.action,
             resolved_action: self.resolved_action,
             name: self.name,
