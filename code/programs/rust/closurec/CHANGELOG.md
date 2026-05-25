@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.14.0] - 2026-05-25
+
+### Changed — CLOC11.32: `--output_wrapper` missing `%output%` is now a typed error
+
+Behavioral compat slice with CC's `AbstractCommandLineRunner.checkFlags`. When `--output_wrapper` (or `--output_wrapper_file`) is set but the resolved template contains no `%output%` placeholder, closurec now errors out with the **exact** CC message:
+
+```
+ERROR - No %output% placeholder in the output wrapper
+```
+
+Previously closurec accepted any template silently — which meant a typo'd wrapper (e.g. `(function(){%otput%})()`) produced output that didn't contain the compiled JS at all, leaving the user to chase a confusing empty-bundle bug.
+
+- **New `WrapperError::MissingOutputPlaceholder` variant** + Display arm pinned to CC's wording so toolchains that grep stderr for the message keep working when they swap `closure-compiler.jar` for `closurec`.
+- **Validation runs in `apply_output_wrapper` after template resolution** — i.e. after `--output_wrapper_file` content is read. So a bad wrapper coming from a file produces the same typed error as a bad inline `--output_wrapper`.
+- **Empty wrapper is still pass-through.** An empty/absent wrapper means "no wrapping requested," not "user supplied an invalid wrapper" — the fast-path early return for empty templates runs *before* the validation.
+- **7 new unit tests** in `wrapper::tests` (inline-missing errors, exact CC message wording, empty wrapper pass-through still works, file-missing-placeholder also errors, happy path still works with placeholder, `%n%` still expands alongside `%output%`, `std::error::Error` impl pinned).
+- **1 unit test updated** (`wrapper_without_output_placeholder_drops_compiled_js` → `wrapper_without_output_placeholder_errors_per_cc`).
+- **Diff fixture** `tests/diff/output-wrapper-error/` exercising the error path end-to-end.
+- **New integration test** `tests/diff_output_wrapper_error.rs` pinning the CC-compat message + non-zero exit.
+
+### Pipeline matrix (unchanged structurally)
+
+Same 10-step pipeline as 0.13.0; the change is that step 7 (`--output_wrapper` substitution) now rejects placeholder-less templates instead of silently passing them through.
+
 ## [0.13.0] - 2026-05-25
 
 ### Added — CLOC11.54: `--help_markdown` markdown flag dump
