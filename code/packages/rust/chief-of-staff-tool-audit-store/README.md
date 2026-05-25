@@ -244,6 +244,9 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose compact host-run escalation
   queue keys that add priority and readiness labels to route keys for stable
   queue grouping and integrity checks
+- supervisor drain reports and summaries flatten host-run escalation queue
+  settled, action, rank, routing, review, investigation, triage, and route
+  presence flags for host dashboards
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
