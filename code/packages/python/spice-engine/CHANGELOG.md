@@ -29,6 +29,10 @@
 - **RC high-pass pole-zero helper** — `pole_zero_rc_highpass()` now returns the
   origin zero and RC pole for a constrained first-order high-pass fixture.
 
+- **RLC low-pass pole-zero helper** — `pole_zero_rlc_lowpass()` now returns the
+  second-order pole pair for a constrained series R-L / shunt-C low-pass
+  fixture.
+
 - **Transient distortion helper** — `distortion_from_transient()` now runs the
   Fourier extraction path and returns the Phase-8 distortion result shape
   directly from transient samples.

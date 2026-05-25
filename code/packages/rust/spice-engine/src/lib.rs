@@ -2320,6 +2320,145 @@ pub fn pole_zero_rc_highpass(
     })
 }
 
+pub fn pole_zero_rlc_lowpass(
+    circuit: &Circuit,
+    input_source: &str,
+    output_node: &str,
+) -> Result<PoleZeroResult, SpiceError> {
+    let source = circuit
+        .elements()
+        .iter()
+        .find_map(|element| match element {
+            Element::VoltageSource(source) if source.name == input_source => Some(source),
+            _ => None,
+        })
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: input_source.to_string(),
+            reason: "pole_zero_rlc_lowpass: missing input source".to_string(),
+        })?;
+    if !is_ground(&source.negative) {
+        return Err(SpiceError::InvalidElement {
+            name: input_source.to_string(),
+            reason: "pole_zero_rlc_lowpass: input source negative terminal must be ground"
+                .to_string(),
+        });
+    }
+
+    let mut resistor = None;
+    let mut intermediate: Option<&str> = None;
+    for element in circuit.elements() {
+        let Element::Resistor(candidate) = element else {
+            continue;
+        };
+        if candidate.n1 == source.positive || candidate.n2 == source.positive {
+            let other = if candidate.n1 == source.positive {
+                candidate.n2.as_str()
+            } else {
+                candidate.n1.as_str()
+            };
+            if other != output_node && !is_ground(other) {
+                resistor = Some(candidate);
+                intermediate = Some(other);
+                break;
+            }
+        }
+    }
+    let inductor = circuit.elements().iter().find_map(|element| match element {
+        Element::Inductor(inductor)
+            if intermediate.is_some_and(|node| {
+                (inductor.n1 == node && inductor.n2 == output_node)
+                    || (inductor.n2 == node && inductor.n1 == output_node)
+            }) =>
+        {
+            Some(inductor)
+        }
+        _ => None,
+    });
+    let capacitor = circuit.elements().iter().find_map(|element| match element {
+        Element::Capacitor(capacitor)
+            if (capacitor.n1 == output_node || capacitor.n2 == output_node)
+                && (is_ground(&capacitor.n1) || is_ground(&capacitor.n2)) =>
+        {
+            Some(capacitor)
+        }
+        _ => None,
+    });
+    let (Some(resistor), Some(inductor), Some(capacitor)) = (resistor, inductor, capacitor) else {
+        return Err(SpiceError::InvalidElement {
+            name: output_node.to_string(),
+            reason: "pole_zero_rlc_lowpass: expected series resistor and inductor from input to output plus one grounded output capacitor"
+                .to_string(),
+        });
+    };
+    if !resistor.resistance_ohms.is_finite() || resistor.resistance_ohms <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: resistor.name.clone(),
+            reason: "pole_zero_rlc_lowpass: resistance must be finite and positive".to_string(),
+        });
+    }
+    if !inductor.inductance_henrys.is_finite() || inductor.inductance_henrys <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: inductor.name.clone(),
+            reason: "pole_zero_rlc_lowpass: inductance must be finite and positive".to_string(),
+        });
+    }
+    if !capacitor.capacitance_farads.is_finite() || capacitor.capacitance_farads <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: capacitor.name.clone(),
+            reason: "pole_zero_rlc_lowpass: capacitance must be finite and positive".to_string(),
+        });
+    }
+
+    let alpha = resistor.resistance_ohms / (2.0 * inductor.inductance_henrys);
+    let omega0 = 1.0 / (inductor.inductance_henrys * capacitor.capacitance_farads).sqrt();
+    let discriminant = alpha * alpha - omega0 * omega0;
+    let entries = if discriminant >= 0.0 {
+        let root = discriminant.sqrt();
+        let first = -alpha + root;
+        let second = -alpha - root;
+        vec![
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real: first,
+                imaginary: 0.0,
+                frequency_hz: first.abs() / TWO_PI,
+                damping: 1.0,
+            },
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real: second,
+                imaginary: 0.0,
+                frequency_hz: second.abs() / TWO_PI,
+                damping: 1.0,
+            },
+        ]
+    } else {
+        let imaginary = (-discriminant).sqrt();
+        vec![
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real: -alpha,
+                imaginary,
+                frequency_hz: omega0 / TWO_PI,
+                damping: alpha / omega0,
+            },
+            PoleZeroEntry {
+                kind: PoleZeroEntryKind::Pole,
+                real: -alpha,
+                imaginary: -imaginary,
+                frequency_hz: omega0 / TWO_PI,
+                damping: alpha / omega0,
+            },
+        ]
+    };
+
+    Ok(PoleZeroResult {
+        input_source: input_source.to_string(),
+        output_node: output_node.to_string(),
+        entries,
+    })
+}
+
 pub fn distortion_from_fourier(
     result: &FourierResult,
     input_source: &str,
