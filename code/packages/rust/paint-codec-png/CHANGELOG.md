@@ -1,5 +1,25 @@
 # Changelog — paint-codec-png
 
+## 0.2.0 — 2026-05-25
+
+### Added
+
+- `PngCodec::decode()` now fully implemented — delegates to `png::decode_png_rgba` (v0.2.0)
+- Supports RGB (colour type 2) and RGBA (colour type 6) PNG files
+- All 5 PNG filter types handled: None, Sub, Up, Average, Paeth
+- CRC-32 validation per chunk
+- Round-trip tests: `decode_roundtrip_rgba`, `decode_convenience_fn_matches_trait`, `decode_roundtrip_large`
+
+### Removed
+
+- Stub error message "not yet implemented" from `decode_png()`
+- Placeholder test `decode_valid_png_returns_err_until_inflate_implemented`
+
+### Changed
+
+- VERSION bumped to `0.2.0`
+- Package description updated to reflect full encode + decode capability
+
 ## 0.1.0 — 2026-04-05
 
 Initial release.
