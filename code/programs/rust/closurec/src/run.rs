@@ -80,6 +80,10 @@ pub enum CompilerError {
     Define(defines::DefineError),
     /// `--output_wrapper_file` couldn't be read.
     Wrapper(wrapper::WrapperError),
+    /// `--print_tree` token-stream dump failed (tokenizer rejected
+    /// the source). Inner [`print_tree::PrintTreeError`] carries
+    /// the message.
+    PrintTree(crate::print_tree::PrintTreeError),
 }
 
 impl std::fmt::Display for CompilerError {
@@ -95,6 +99,7 @@ impl std::fmt::Display for CompilerError {
             CompilerError::Minify(e) => write!(f, "{e}"),
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
+            CompilerError::PrintTree(e) => write!(f, "{e}"),
         }
     }
 }
@@ -210,6 +215,46 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // from the accumulator. Errors out if any inclusion pattern
     // produces zero matches.
     let inputs = resolve_inputs(config)?;
+
+    // Step 1.5 (CLOC11.52): --print_tree short-circuit.
+    //
+    // CC's --print_tree dumps the parsed AST to stdout and exits
+    // without emitting JS. Until our parser produces the typed
+    // AST (CLOC11.07-ish bridges that), we emit the *token
+    // stream* — one significant token per line — which is the
+    // closest analogue the lexer can produce. Each input file
+    // gets a banner line so multi-file invocations are still
+    // navigable.
+    //
+    // No transform pipeline runs: --print_tree is purely a
+    // diagnostic readout of what the lexer sees, not what the
+    // compilation level would do.
+    if config.special_modes.print_tree {
+        let es_version = map_language_in_to_es_version(config);
+        let mut dump = String::new();
+        for path in &inputs {
+            let contents =
+                fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
+                    path: path.clone(),
+                    kind: e.kind(),
+                    message: e.to_string(),
+                })?;
+            // Header so multi-file dumps are navigable. Single
+            // line, prefixed with `===` to be visually distinct
+            // from token lines.
+            dump.push_str("=== ");
+            dump.push_str(&path.to_string_lossy());
+            dump.push_str(" ===\n");
+            let one_file =
+                crate::print_tree::format_token_dump(&contents, es_version)
+                    .map_err(CompilerError::PrintTree)?;
+            dump.push_str(&one_file);
+        }
+        return Ok(CompilerOutput {
+            stdout_text: dump,
+            wrote_files: Vec::new(),
+        });
+    }
 
     // Step 2: read every resolved input, then transform per
     // --compilation_level (CLOC11.06+).
@@ -816,6 +861,121 @@ mod tests {
         let out = run_compiler(&cfg).expect("ok");
         assert!(out.wrote_files.is_empty());
         assert!(!out_path.exists(), "file should NOT have been written");
+        let _ = fs::remove_file(&in_path);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.52 — --print_tree behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn print_tree_dumps_tokens_with_file_banner() {
+        let in_path = temp_path("print-tree.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Banner line names the file, then one token per line.
+        assert!(out.stdout_text.contains("=== "), "banner: {:?}", out.stdout_text);
+        assert!(
+            out.stdout_text.contains(&in_path.to_string_lossy().to_string()),
+            "banner names the file: {:?}",
+            out.stdout_text
+        );
+        assert!(out.stdout_text.contains("\tvar"));
+        assert!(out.stdout_text.contains("\tx"));
+        assert!(out.stdout_text.contains("\t1"));
+        // No files written; --print_tree is stdout-only and skips
+        // the rest of the pipeline.
+        assert!(out.wrote_files.is_empty());
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn print_tree_multi_file_emits_one_banner_per_file() {
+        let a = temp_path("pt-a.js");
+        let b = temp_path("pt-b.js");
+        fs::write(&a, "var a;").expect("a");
+        fs::write(&b, "var b;").expect("b");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![
+                    a.to_string_lossy().to_string(),
+                    b.to_string_lossy().to_string(),
+                ],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Two banner lines, in input order.
+        let banner_count = out.stdout_text.matches("=== ").count();
+        assert_eq!(banner_count, 2, "got: {}", out.stdout_text);
+        let a_idx = out.stdout_text.find("pt-a.js").expect("a banner");
+        let b_idx = out.stdout_text.find("pt-b.js").expect("b banner");
+        assert!(a_idx < b_idx, "input order: {}", out.stdout_text);
+        let _ = fs::remove_file(&a);
+        let _ = fs::remove_file(&b);
+    }
+
+    #[test]
+    fn print_tree_skips_output_file_write() {
+        // Even when --js_output_file is set, --print_tree must
+        // bypass writing to disk — the dump goes to stdout only.
+        let in_path = temp_path("pt-skip.js");
+        let out_path = temp_path("pt-skip-out.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.is_empty());
+        assert!(!out_path.exists(), "file should NOT have been written");
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn print_tree_surfaces_lex_errors() {
+        let in_path = temp_path("pt-broken.js");
+        fs::write(&in_path, "var s = \"unterminated").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let err = run_compiler(&cfg).expect_err("lex error must surface");
+        match err {
+            CompilerError::PrintTree(_) => {}
+            other => panic!("expected PrintTree, got {other:?}"),
+        }
         let _ = fs::remove_file(&in_path);
     }
 

@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.11.0] - 2026-05-25
+
+### Added — CLOC11.52: `--print_tree` token-stream dump
+
+Second slice of Track 11 (special modes). When `--print_tree` is set, closurec dumps the lexer's token stream to stdout and exits without running the rest of the pipeline. Stand-in for the upstream Java Closure Compiler's `--print_tree`, which dumps the parsed AST — until our parser produces the typed AST (CLOC11.07+ bridge), the token stream is the closest analogue diagnostic users actually find useful.
+
+- **Wire format.** Per input file:
+  - One banner line `=== <path> ===\n`.
+  - One line per significant token: `<TYPE_NAME>\t<value>\n`.
+  - Trivia (comments, whitespace, newlines, indent/dedent) and EOF filtered.
+  - `TYPE_NAME` is the grammar-supplied `type_name` when present, else the upper-cased `TokenType` debug name (fallback).
+- **New module `print_tree`** holds the pure-string formatter `format_token_dump(&str, EsVersion) -> Result<String, PrintTreeError>`. 5 unit tests inline.
+- **Pipeline insertion.** Added a "Step 1.5" guard at the top of `run_compiler`, right after `resolve_inputs` returns — before `transform_source`, `--checks_only` short-circuit, wrapping, and write. So:
+  - Glob expansion still runs (catches `JSC_NO_JS_FILES_FOUND_FOR_PATTERN`-equivalent errors).
+  - The compilation-level transform and the rest of the pipeline are skipped entirely.
+  - `--js_output_file` is ignored under `--print_tree` (CC's behavior too — diagnostic dumps go to stdout).
+- **New `CompilerError::PrintTree(print_tree::PrintTreeError)`** variant + Display arm so lex failures during the dump surface as typed errors, not panics.
+- **Diff fixture** `tests/diff/print-tree/` with input/, flags.txt, and pinned expected.stdout for `var x = 1;`.
+- **New integration test** `tests/diff_print_tree.rs`.
+- **4 new unit tests** in `run::tests`: basic dump with banner, multi-file banner ordering, no-write-when-output-file-set, lex-error-surfaces.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` glob patterns
+2. **`--print_tree` short-circuit (CLOC11.52, NEW) — token-stream dump, return**
+3. Per-input `transform_source` (level + defines)
+4. Concatenate transformed inputs
+5. `--checks_only` short-circuit (CLOC11.51)
+6. `--emit_use_strict` prepend (CLOC11.18)
+7. `--output_wrapper` substitution (CLOC11.30)
+8. `--isolation_mode IIFE` wrap (CLOC11.31)
+9. Write to `--js_output_file` or stdout
+
 ## [0.10.0] - 2026-05-25
 
 ### Added — CLOC11.51: `--checks_only` mode skips emission
