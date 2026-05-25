@@ -3,6 +3,7 @@ import {
   Circuit,
   type DistortionResult,
   ExpWaveform,
+  type FourierResult,
   type PoleZeroResult,
   PulseWaveform,
   PwlWaveform,
@@ -20,6 +21,7 @@ import {
   estimatePeriod,
   formatDcTable,
   formatDistortionTable,
+  formatFourierTable,
   formatPoleZeroTable,
   formatTransientTable,
   fourier,
@@ -1229,6 +1231,45 @@ describe("transient", () => {
       "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n" +
         "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n" +
         "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n",
+    );
+  });
+
+  it("formats stable text output tables for Fourier results", () => {
+    const result: FourierResult = {
+      fundamentalFrequencyHz: 1000.0,
+      startTime: 0.0,
+      endTime: 0.001,
+      probes: [
+        {
+          probe: "V(out)",
+          dc: 0.1,
+          harmonics: [
+            {
+              harmonic: 1,
+              frequencyHz: 1000.0,
+              cosine: 1.0,
+              sine: 0.0,
+              magnitude: 1.0,
+              phaseDegrees: 0.0,
+            },
+            {
+              harmonic: 2,
+              frequencyHz: 2000.0,
+              cosine: 0.0,
+              sine: -0.025,
+              magnitude: 0.025,
+              phaseDegrees: -90.0,
+            },
+          ],
+          totalHarmonicDistortion: 0.025,
+        },
+      ],
+    };
+
+    expect(formatFourierTable(result)).toBe(
+      "Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n" +
+        "V(out)\t1\t1.000000e+03\t1.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\t1.000000e-01\t2.500000e-02\n" +
+        "V(out)\t2\t2.000000e+03\t0.000000e+00\t-2.500000e-02\t2.500000e-02\t-9.000000e+01\t1.000000e-01\t2.500000e-02\n",
     );
   });
 

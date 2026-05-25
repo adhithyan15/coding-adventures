@@ -2336,6 +2336,29 @@ export function formatDistortionTable(result: DistortionResult): string {
   return rows.join("\n");
 }
 
+export function formatFourierTable(result: FourierResult): string {
+  const rows = [["Probe", "Harmonic", "Frequency", "Cosine", "Sine", "Magnitude", "Phase", "DC", "THD"].join("\t")];
+  result.probes.forEach((probe) => {
+    probe.harmonics.forEach((harmonic) => {
+      rows.push(
+        [
+          probe.probe,
+          String(harmonic.harmonic),
+          formatTableNumber(harmonic.frequencyHz),
+          formatTableNumber(harmonic.cosine),
+          formatTableNumber(harmonic.sine),
+          formatTableNumber(harmonic.magnitude),
+          formatTableNumber(harmonic.phaseDegrees),
+          formatTableNumber(probe.dc),
+          formatTableNumber(probe.totalHarmonicDistortion),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 function defaultOutputProbes(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: ReadonlyMap<string, number>,

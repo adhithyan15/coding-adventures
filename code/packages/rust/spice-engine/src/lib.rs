@@ -3394,6 +3394,29 @@ pub fn format_distortion_table(result: &DistortionResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_fourier_table(result: &FourierResult) -> String {
+    let mut rows =
+        vec!["Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD".to_string()];
+    for probe in &result.probes {
+        for harmonic in &probe.harmonics {
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                probe.probe,
+                harmonic.harmonic,
+                format_table_number(harmonic.frequency_hz),
+                format_table_number(harmonic.cosine),
+                format_table_number(harmonic.sine),
+                format_table_number(harmonic.magnitude),
+                format_table_number(harmonic.phase_degrees),
+                format_table_number(probe.dc),
+                format_table_number(probe.total_harmonic_distortion)
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 fn default_output_probes(
     node_voltages: &BTreeMap<String, f64>,
     branch_currents: &BTreeMap<String, f64>,

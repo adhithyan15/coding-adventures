@@ -17,6 +17,8 @@
   output snapshots.
 - Add `formatDistortionTable` for stable tab-separated `.DISTO` harmonic
   magnitude, phase, and THD text output snapshots.
+- Add `formatFourierTable` for stable tab-separated `.FOUR` harmonic
+  coefficient, magnitude, phase, DC, and THD text output snapshots.
 - Add JFET source-follower transient fixtures covering nonlinear
   companion-model solves.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine

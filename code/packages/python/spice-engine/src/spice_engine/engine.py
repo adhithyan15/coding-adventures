@@ -1332,6 +1332,30 @@ def format_distortion_table(result: DistortionResult) -> str:
     return "\n".join(rows)
 
 
+def format_fourier_table(result: FourierResult) -> str:
+    """Format Fourier harmonics as a stable SPICE-style text table."""
+    rows = ["Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD"]
+    for probe in result.probes:
+        for harmonic in probe.harmonics:
+            rows.append(
+                "\t".join(
+                    [
+                        probe.probe,
+                        str(harmonic.harmonic),
+                        _format_table_number(harmonic.frequency),
+                        _format_table_number(harmonic.cosine),
+                        _format_table_number(harmonic.sine),
+                        _format_table_number(harmonic.magnitude),
+                        _format_table_number(harmonic.phase_degrees),
+                        _format_table_number(probe.dc),
+                        _format_table_number(probe.total_harmonic_distortion),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def _default_output_probes(
     node_voltages: dict[str, float],
     branch_currents: dict[str, float],
