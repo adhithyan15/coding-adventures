@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.10.0] - 2026-05-25
+
+### Added — CLOC11.51: `--checks_only` mode skips emission
+
+First slice of Track 11 (special modes). When `--checks_only` is set, closurec validates the inputs (runs transform_source over each, so any tokenizer/parser errors still surface) but emits **no** JS — no stdout text, no file write. Matches CC's behavior.
+
+- **Pipeline insertion.** Added a guard at "Step 2.25" in `run_compiler`, right after the per-input transform loop accumulates `combined` but before `--emit_use_strict` prepend, `--output_wrapper` substitution, and `--isolation_mode IIFE` wrap. So:
+  - The tokenizer/transform validation still runs (errors propagate normally).
+  - The wrapping/write stages never run when `checks_only` is true.
+  - Returns `CompilerOutput { stdout_text: "", wrote_files: [] }`.
+- **CI-script-friendly semantics.** Exit code 0 on validation success; non-zero on any error from earlier stages (lex/glob/IO). Matches what a CI invocation expects from a `closure-compiler --checks_only` lint step.
+- **No `--js_output_file` interaction**: even when set, no file is written. Pinned by `checks_only_does_not_write_output_file`.
+- **Diff fixture** `tests/diff/checks-only/` with an empty `expected.stdout`.
+- **New integration test** `tests/diff_checks_only.rs`.
+- **3 new unit tests** in `run::tests`: empty-output basic, no-write-when-output-file-set, lex-error-still-surfaces.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Per-input `transform_source` (level + defines)
+2. Concatenate transformed inputs
+3. **`--checks_only` short-circuit (CLOC11.51, NEW) — return empty if set**
+4. `--emit_use_strict` prepend (CLOC11.18)
+5. `--output_wrapper` substitution (CLOC11.30)
+6. `--isolation_mode IIFE` wrap (CLOC11.31)
+7. Write to `--js_output_file` or stdout
+
+### Behavior changes (user-visible)
+
+- `closurec --checks_only --js app.js` now actually skips emission. Previously the flag was parsed but ignored (output emitted anyway).
+- `closurec --checks_only --js broken.js` still surfaces lex/parse errors (exit 2) — validation runs even though emission is skipped.
+
+### Tests
+
+120 unit + 8 integration tests passing. Clippy clean.
+
+### Version
+
+Bumps closurec 0.9.0 → 0.10.0 (Cargo.toml + cli.spec.json kept in sync).
+
+[CLOC11]: ../../specs/CLOC11-drop-in-closure-compat.md
+
 ## [0.9.0] - 2026-05-25
 
 ### Added — CLOC11.18: `--emit_use_strict` prelude
