@@ -1891,6 +1891,125 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 6x — instance / class / global variable refs
+    // -----------------------------------------------------------------
+    //
+    // The lexer emits `@x`, `@@x`, `$x` as single Name-typed tokens
+    // (sigil preserved in value).  The lowerer:
+    //   - `$x` → VarRef { name: "$x", scope: Global }
+    //   - `@x`, `@@x` → VarRef { name: "@x"/"@@x", scope: Local }
+    //     (no dedicated SIR ivar/cvar scope in v0).
+    //
+    // LHS in assignments routes through the same LetBinding path —
+    // first sighting → LetBinding, subsequent → Assign.
+
+    #[test]
+    fn global_var_ref_preserves_sigil_in_name() {
+        // `$config = 1\nputs($config)` — the RHS read should yield a
+        // VarRef whose name retains the `$` sigil.  v0 keeps `$x` on
+        // Scope::Local pending a follow-up phase that auto-declares
+        // Globals (the validator enforces declared globals).
+        let m = lower("$config = 1\nputs($config)\n");
+        let b = main_body(&m);
+        let ref_expr: &Expr = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => &args[0],
+            _ => {
+                b.stmts
+                    .iter()
+                    .find_map(|s| match s {
+                        Stmt::ExprStmt {
+                            expr: Expr::BuiltinCall { name, args, .. },
+                            ..
+                        } if name == "puts" => Some(&args[0]),
+                        _ => None,
+                    })
+                    .expect("expected puts(...) call")
+            }
+        };
+        match ref_expr {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "$config", "gvar value should retain `$`");
+                assert_eq!(*scope, Scope::Local, "v0 puts gvars on Scope::Local");
+            }
+            other => panic!("expected VarRef($config), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn instance_var_ref_lowers_with_local_scope_and_sigil_preserved() {
+        // `@a = 1\n(@a)` — assignment then a tail expression-stmt
+        // reading the ivar.
+        let m = lower("@a = 1\n(@a)\n");
+        let b = main_body(&m);
+        // Either tail value or last stmt should reference @a.
+        let ref_expr: &Expr = match &b.value {
+            Expr::VarRef { name, .. } if name == "@a" => &b.value,
+            _ => {
+                // Maybe wrapped — check last stmt's expr.
+                b.stmts
+                    .iter()
+                    .rev()
+                    .find_map(|s| match s {
+                        Stmt::ExprStmt { expr, .. } => Some(expr),
+                        _ => None,
+                    })
+                    .expect("expected ExprStmt with @a ref")
+            }
+        };
+        match ref_expr {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "@a", "ivar value should retain leading `@`");
+                assert_eq!(*scope, Scope::Local, "v0 puts ivars on Scope::Local");
+            }
+            other => panic!("expected VarRef(@a), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_var_ref_lowers_with_local_scope_and_double_at_preserved() {
+        let m = lower("@@count = 0\n(@@count)\n");
+        let b = main_body(&m);
+        let ref_expr: &Expr = match &b.value {
+            Expr::VarRef { name, .. } if name == "@@count" => &b.value,
+            _ => b
+                .stmts
+                .iter()
+                .rev()
+                .find_map(|s| match s {
+                    Stmt::ExprStmt { expr, .. } => Some(expr),
+                    _ => None,
+                })
+                .expect("expected ExprStmt with @@count ref"),
+        };
+        match ref_expr {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "@@count", "cvar value should retain `@@`");
+                assert_eq!(*scope, Scope::Local, "v0 puts cvars on Scope::Local");
+            }
+            other => panic!("expected VarRef(@@count), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn sigil_vars_module_passes_sir_validator() {
+        // End-to-end smoke check across all three sigil types.
+        let m = lower(concat!(
+            "@a = 1\n",
+            "@@b = 2\n",
+            "$c = 3\n",
+            "puts(@a)\n",
+            "puts(@@b)\n",
+            "puts($c)\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected sigil-var output: {:?}",
+            result
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6w — arrow-lambda literal `->(params){body}`
     // -----------------------------------------------------------------
     //

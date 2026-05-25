@@ -1711,6 +1711,66 @@ mod tests {
     // `method_with_block` (no separate grammar).
     // -----------------------------------------------------------------------
 
+    // -----------------------------------------------------------------------
+    // Phase 6x — instance var `@x`, class var `@@x`, global var `$x` refs
+    //
+    // The lexer (Phase 4i/4j) emits these as a SINGLE Name-typed token whose
+    // value carries the leading sigil (`@a`, `@@all`, `$c`).  This means the
+    // parser sees them as bare NAME tokens at the factor / assignment LHS
+    // level — no new grammar rules are required.
+    //
+    // The SIR lowerer routes `$x` to `Scope::Global` and preserves the bare
+    // value for `@x` / `@@x` (no native ivar/cvar scope in v0).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_instance_var_assignment() {
+        // `@a = 1` — ivar appears as a single NAME token at the assignment LHS.
+        let ast = parse_ruby("@a = 1");
+        let assn = find_descendant(&ast, "assignment")
+            .expect("expected assignment node for `@a = 1`");
+        // The LHS NAME value should include the `@` sigil.
+        assert!(tree_has_token_value(assn, "@a"), "expected `@a` token in assignment");
+    }
+
+    #[test]
+    fn test_parse_class_var_assignment() {
+        // `@@all = 0` — cvar via lexer's `@@`-prefixed Name token.
+        let ast = parse_ruby("@@all = 0");
+        let assn = find_descendant(&ast, "assignment")
+            .expect("expected assignment node for `@@all = 0`");
+        assert!(
+            tree_has_token_value(assn, "@@all"),
+            "expected `@@all` token in assignment"
+        );
+    }
+
+    #[test]
+    fn test_parse_global_var_assignment() {
+        // `$config = 1` — gvar via lexer's `$`-prefixed Name token.
+        let ast = parse_ruby("$config = 1");
+        let assn = find_descendant(&ast, "assignment")
+            .expect("expected assignment node for `$config = 1`");
+        assert!(
+            tree_has_token_value(assn, "$config"),
+            "expected `$config` token in assignment"
+        );
+    }
+
+    #[test]
+    fn test_parse_instance_var_in_expression() {
+        // `puts(@a)` — ivar appears as a call_arg expression.
+        let ast = parse_ruby("puts(@a)");
+        assert!(
+            tree_has_token_value(&ast, "@a"),
+            "expected `@a` token in argument position"
+        );
+        assert!(
+            find_descendant(&ast, "method_call").is_some(),
+            "expected method_call wrapping the puts(@a) invocation"
+        );
+    }
+
     #[test]
     fn test_parse_arrow_lambda_no_params() {
         // `-> { 1 }` — no params, brace block.  We wrap in an
