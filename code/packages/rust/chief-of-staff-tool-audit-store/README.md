@@ -257,6 +257,9 @@ The crate keeps the boundary narrow:
   dashboard integrity checks
 - supervisor drain reports and summaries expose stable host-run escalation
   dashboard lanes and lane-integrity flags for compact queue filtering
+- supervisor drain reports and summaries expose compact host-run escalation
+  dashboard lane-rollup keys that group lane, route, priority, and readiness
+  for dashboard rows and integrity checks
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
