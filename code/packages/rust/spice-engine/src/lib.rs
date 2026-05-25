@@ -1828,6 +1828,18 @@ pub struct McResult {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct CornerMcPoint {
+    pub corner_name: String,
+    pub result: McResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerMcResult {
+    pub output_node: String,
+    pub points: Vec<CornerMcPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct TfResult {
     pub transfer_ratio: f64,
     pub input_impedance_ohms: f64,
@@ -4218,6 +4230,27 @@ pub fn mc_dc(
         n_trials,
         mean: sample_mean(&converged_voltages),
         std_dev: sample_std_dev(&converged_voltages),
+    })
+}
+
+pub fn mc_dc_corners(
+    circuit: &Circuit,
+    output_node: &str,
+    n_trials: usize,
+    options: McOptions,
+    corners: &[CornerSpec],
+) -> Result<CornerMcResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerMcPoint {
+            corner_name: corner.name.clone(),
+            result: mc_dc(&corner_circuit, output_node, n_trials, options)?,
+        });
+    }
+    Ok(CornerMcResult {
+        output_node: output_node.to_string(),
+        points,
     })
 }
 

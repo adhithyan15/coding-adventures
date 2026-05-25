@@ -321,6 +321,9 @@ Status:
   in the live Rust SPICE package, covering period, time step, convergence,
   Newton iteration count, final residual norm, steady-state time, and selected
   voltage/current probes.
+- Monte Carlo DC analysis can now be evaluated across named corners in the
+  live Rust SPICE package, reusing the existing corner override surface with a
+  shared seeded tolerance trial configuration.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

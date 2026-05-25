@@ -134,6 +134,8 @@
   harmonic common independent-source period.
 - Add multi-corner transfer-function analysis with `tf_corners`, returning the
   same `.TF` query evaluated under each named corner.
+- Add multi-corner Monte Carlo DC analysis with `mc_dc_corners`, returning the
+  same seeded tolerance trial set evaluated under each named corner.
 - Add multi-corner AC frequency sweeps with `ac_sweep_corners`, returning the
   same frequency grid evaluated under each named corner.
 - Add multi-corner DC source sweeps with `dc_sweep_corners`, returning the same

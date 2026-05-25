@@ -10,7 +10,7 @@ The initial slices implement:
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters.
 - Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian
-  and uniform distributions.
+  and uniform distributions, including named corner sweeps.
 - AC noise analysis with resistor thermal-noise contributions and
   input-referred PSD.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
