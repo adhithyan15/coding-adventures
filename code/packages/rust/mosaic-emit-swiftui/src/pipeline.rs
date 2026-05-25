@@ -1830,13 +1830,21 @@ fn emit_for_swift(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // `each:` — required. `validate_for_node` guarantees SlotRef or Expr,
-    // but the emitter is defensive: if neither, fall back to an empty
-    // array literal so the generated file still type-checks.
+    // `each:` — required. `validate_for_node` guarantees SlotRef,
+    // Expr, OR (UI29 §3.4) Keyword that names an enclosing For's
+    // `as:`/`index:` binding. The emitter is defensive: if none of
+    // those, fall back to an empty array literal so the generated
+    // file still type-checks.
     let coll_expr = match node.props.iter().find(|p| p.name == "each") {
         Some(p) => match &p.value {
             LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
             LayoutPropValue::Expr(text) => text.clone(),
+            // UI29 §3.4 — Keyword names an outer For's binding. The
+            // validator has already verified the name is in scope,
+            // so we lower it to the camelCased Swift identifier
+            // (matching the binding name as declared in the outer
+            // ForEach's closure signature).
+            LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
             _ => "[]".to_string(),
         },
         None => "[]".to_string(),

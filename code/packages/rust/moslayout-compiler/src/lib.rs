@@ -394,11 +394,19 @@ pub fn validate(
     let mut parts = Vec::new();
     let mut part_names: HashSet<String> = HashSet::new();
 
+    // UI29 §3.4 — start with an empty loop-binding scope at the layout
+    // root. Each `For` node we walk into pushes its `as:` (and optional
+    // `index:`) bindings onto the stack for the duration of its
+    // children walk. The stack is per-call rather than per-tree-level
+    // — siblings never see each other's bindings, only ancestors'.
+    let loop_bindings: HashSet<String> = HashSet::new();
+
     validate_node(
         &def.root,
         &known_slots,
         &known_emits,
         has_interface,
+        &loop_bindings,
         &mut parts,
         &mut part_names,
         &mut errors,
@@ -416,6 +424,7 @@ fn validate_node(
     known_slots: &HashSet<String>,
     known_emits: &HashSet<String>,
     has_interface: bool,
+    loop_bindings: &HashSet<String>,
     parts: &mut Vec<PartEntry>,
     part_names: &mut HashSet<String>,
     errors: &mut Vec<CompileError>,
@@ -428,8 +437,15 @@ fn validate_node(
     // `InvalidPrimitiveUsage` before the rest of the prop-walking surfaces
     // `UnknownSlot` for `each:` / `when:`-referenced slots the user already
     // mistyped.
+    //
+    // UI29 §3.4 — `For` validation now consults `loop_bindings` to allow
+    // a NAME in `each:` to resolve to an enclosing For's binding. Without
+    // the scope, `For (each: row, as: cell) { ... }` (nested-For-over-
+    // outer-binding) would be rejected as "must be a slot reference or
+    // expression" because the parser parses bare NAMEs as Keyword, which
+    // pre-§3.4 the validator unconditionally rejected.
     match node.tag.as_str() {
-        "For" => validate_for_node(node, errors),
+        "For" => validate_for_node(node, loop_bindings, errors),
         "If" => validate_if_node(node, errors),
         "Else" => validate_else_node(node, errors),
         _ => {}
@@ -502,6 +518,47 @@ fn validate_node(
         prev_tag = Some(child.tag.as_str());
     }
 
+    // UI29 §3.4 — extend the loop-binding scope when descending into a
+    // `For`'s body. The For's `as:` and (optional) `index:` bindings are
+    // visible only to descendants in this subtree; siblings of the For
+    // do NOT see them (the per-call scope set is rebuilt per recursion).
+    //
+    // Shadowing: an inner For's `as:` with the same NAME as an outer's
+    // is silently allowed per UI29 §3.4 ("Nested `For`s shadow"). The
+    // shadow-warning case (For binding shadowing a slot) is also
+    // accepted today — see the open question in §3.4 ("Slots win? `For`
+    // wins?") — defaulting to "For wins" by construction since the
+    // loop_bindings scope is checked before the slot-known set in any
+    // emitter's name-resolution.
+    let child_loop_bindings: HashSet<String> = if node.tag == "For" {
+        let mut extended = loop_bindings.clone();
+        if let Some(as_name) = node
+            .props
+            .iter()
+            .find(|p| p.name == "as")
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Keyword(s) => Some(s.clone()),
+                _ => None,
+            })
+        {
+            extended.insert(as_name);
+        }
+        if let Some(idx_name) = node
+            .props
+            .iter()
+            .find(|p| p.name == "index")
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Keyword(s) => Some(s.clone()),
+                _ => None,
+            })
+        {
+            extended.insert(idx_name);
+        }
+        extended
+    } else {
+        loop_bindings.clone()
+    };
+
     // Recurse into children.
     for child in &node.children {
         validate_node(
@@ -509,6 +566,7 @@ fn validate_node(
             known_slots,
             known_emits,
             has_interface,
+            &child_loop_bindings,
             parts,
             part_names,
             errors,
@@ -543,7 +601,11 @@ fn validate_node(
 //   contexts. That requires `expr` (U29-G3) and a real lexical-scope walker;
 //   it cannot be checked at the `LayoutNode` level today.
 // • The `each:` slot's element type. Needs interface-aware analysis.
-fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
+fn validate_for_node(
+    node: &LayoutNode,
+    loop_bindings: &HashSet<String>,
+    errors: &mut Vec<CompileError>,
+) {
     // Part_name on a control-flow primitive is a category error.
     if let Some(part) = &node.part_name {
         errors.push(CompileError {
@@ -567,20 +629,46 @@ fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
                 // Pre-G3 this was SlotRef-only. U29-G3 lifted the restriction
                 // so `each:` can be either a slot reference (`each: slot: rows`)
                 // or any expression that evaluates to a list at runtime
-                // (`each: cols.visible`, `each: row.cells`). Type-of-list
-                // checking still belongs in a later pass with .mil-aware
-                // analysis; here we only enforce that the value is something
-                // list-shaped (SlotRef or Expr — never Number/String/Keyword).
-                if !matches!(
-                    prop.value,
-                    LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)
-                ) {
+                // (`each: cols.visible`, `each: row.cells`). U29 §3.4 further
+                // lifts the restriction to accept a bare NAME (parsed as
+                // Keyword) when the NAME shadows an enclosing `For`'s `as:`
+                // or `index:` binding — the nested-For-over-outer-binding
+                // case that mosaic-pkg-grid's Grid.mll needs:
+                //
+                //   For (each: slot: rows, as: row) {       ← outer
+                //     For (each: row, as: cell) { … }       ← inner: each: row
+                //   }                                          resolves to
+                //                                              outer's `as:`
+                //
+                // Type-of-list checking still belongs in a later pass with
+                // .mil-aware analysis; here we only enforce that the value
+                // shape is one of {SlotRef, Expr, Keyword-in-loop-scope}.
+                let accepted = match &prop.value {
+                    LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_) => true,
+                    LayoutPropValue::Keyword(name) => loop_bindings.contains(name),
+                    _ => false,
+                };
+                if !accepted {
+                    // The error message tailors to the bad shape: a Keyword
+                    // that's NOT in scope means the author wrote a bare
+                    // NAME that's neither a loop binding nor a slot — the
+                    // most useful hint is "did you mean `slot: NAME`?".
+                    let msg = match &prop.value {
+                        LayoutPropValue::Keyword(name) => format!(
+                            "`For` prop `each:` references bare name `{}`, but it isn't \
+                             an enclosing `For`'s `as:`/`index:` binding. Did you mean \
+                             `each: slot: {}`? (UI29 §3.4)",
+                            name, name
+                        ),
+                        _ => "`For` prop `each:` must be a slot reference, an enclosing \
+                              `For` binding, or an expression (e.g. `each: slot: rows`, \
+                              `each: row` where `row` is bound by an outer `For`, or \
+                              `each: cols.visible`)"
+                            .to_string(),
+                    };
                     errors.push(CompileError {
                         kind: ErrorKind::InvalidPrimitiveUsage,
-                        message:
-                            "`For` prop `each:` must be a slot reference or expression \
-                             (e.g. `each: slot: rows` or `each: cols.visible`)"
-                                .to_string(),
+                        message: msg,
                     });
                 }
             }
@@ -2473,6 +2561,180 @@ mod tests {
             LayoutPropValue::Keyword("row".to_string()),
             "bare NAME values must stay as Keyword, not become Expr"
         );
+    }
+
+    // =====================================================================
+    // UI29 §3.4 — For-loop binding scope
+    //
+    // These tests pin the scope-walker behaviour:
+    //   1. Nested For with `each: <outer-as-binding>` is accepted
+    //   2. Bare NAME that isn't bound anywhere is rejected with a helpful
+    //      hint ("did you mean `slot: NAME`?")
+    //   3. Outer For's `as:` is in scope for descendants
+    //   4. Inner For's `as:` shadows outer's
+    //   5. Sibling For's bindings don't leak across
+    //   6. `index:` bindings are also in scope (not just `as:`)
+    //
+    // Required by mosaic-pkg-grid v0.2.0's Grid.mll, which nests
+    // `For (each: slot: viewport-rows, as: row, index: r) {
+    //    Row {
+    //      For (each: row, as: cell, index: c) { Cell(...) }
+    //    }
+    //  }`.
+    // =====================================================================
+
+    #[test]
+    fn g34_nested_for_with_outer_as_binding_compiles() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Row {
+                  For ( each: row, as: cell ) {
+                    Text ( content: slot: cell )
+                  }
+                }
+              }
+            }
+          }
+        "#;
+        // Should compile cleanly — the inner `each: row` resolves to
+        // the outer For's `as: row` binding per UI29 §3.4.
+        compile(src, None).expect("nested For over outer binding must compile");
+    }
+
+    #[test]
+    fn g34_nested_for_with_outer_index_binding_compiles() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: r-data, index: r-idx ) {
+                For ( each: r-idx, as: x ) {
+                  Text ( content: slot: x )
+                }
+              }
+            }
+          }
+        "#;
+        // `each: r-idx` resolves to the outer's `index:` binding.
+        // Inner For's `as: x` is also a Keyword that the inner For
+        // happily declares.
+        compile(src, None).expect("nested For over outer index binding must compile");
+    }
+
+    #[test]
+    fn g34_unbound_bare_name_in_for_each_is_rejected_with_hint() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: rows, as: row ) {
+                Text ( content: slot: row )
+              }
+            }
+          }
+        "#;
+        // `rows` is a bare NAME with no enclosing For binding — should
+        // be rejected with a hint to use `slot: rows`.
+        let err = compile(src, None).expect_err("bare unbound NAME in each: must be rejected");
+        let msg = format!("{:?}", err);
+        assert!(
+            msg.contains("rows") && msg.contains("slot:"),
+            "expected error message to suggest `slot:` for bare NAME `rows`, got: {}",
+            msg
+        );
+    }
+
+    #[test]
+    fn g34_sibling_for_bindings_do_not_leak() {
+        // Two sibling Fors. The second cannot see the first's `as:`.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) { Text ( content: slot: row ) }
+              For ( each: row, as: other ) { Text ( content: slot: other ) }
+            }
+          }
+        "#;
+        let err = compile(src, None)
+            .expect_err("sibling For cannot reference earlier sibling's binding");
+        let msg = format!("{:?}", err);
+        assert!(
+            msg.contains("row"),
+            "expected error message to mention the unbound `row`, got: {}",
+            msg
+        );
+    }
+
+    #[test]
+    fn g34_three_deep_nested_for_resolves_through_multiple_scopes() {
+        // Innermost For sees ALL enclosing bindings, not just immediate parent.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: outer, as: a ) {
+                For ( each: a, as: b ) {
+                  For ( each: b, as: c ) {
+                    Text ( content: slot: c )
+                  }
+                }
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("three-deep nested For must compile");
+    }
+
+    #[test]
+    fn g34_inner_for_can_still_shadow_outer_as_binding() {
+        // Both Fors use `as: x`. Per UI29 §3.4 ("Nested Fors shadow"),
+        // this is silently allowed. The inner's `each: x` resolves to
+        // whichever For most-recently bound `x` — but since x is in
+        // scope at all, the validator accepts.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: x ) {
+                For ( each: x, as: x ) {
+                  Text ( content: slot: x )
+                }
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("shadowing inner `as: x` must compile per §3.4");
+    }
+
+    #[test]
+    fn g34_for_each_slot_ref_still_works_after_scope_change() {
+        // Regression guard — the §3.4 changes must NOT break the
+        // pre-§3.4 happy path (each: slot: rows). Without this guard,
+        // a future refactor of the validator could lose the SlotRef
+        // branch silently.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Text ( content: slot: row )
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("plain slot ref each: still works after §3.4");
+    }
+
+    #[test]
+    fn g34_for_each_expr_still_works_after_scope_change() {
+        // Same regression guard for the Expr branch.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: cols.visible, as: col ) {
+                Text ( content: slot: col )
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("Expr each: still works after §3.4");
     }
 
     #[test]

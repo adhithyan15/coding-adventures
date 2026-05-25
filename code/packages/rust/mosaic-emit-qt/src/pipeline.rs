@@ -1972,6 +1972,19 @@ fn find_each_expression(node: &LayoutNode) -> Option<String> {
             }
         }
         LayoutPropValue::Expr(text) => Some(text.clone()),
+        // UI29 §3.4 — bare NAME that the validator has accepted as an
+        // enclosing For-binding. Lower it as the camelCased QML
+        // identifier (matches how the outer For's `as:` is itself
+        // camelCased and exposed as a delegate property — see
+        // `emit_for_qml`).
+        LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if is_safe_identifier(&camel) {
+                Some(camel)
+            } else {
+                None
+            }
+        }
         _ => None,
     }
 }

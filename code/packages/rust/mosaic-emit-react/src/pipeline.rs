@@ -1045,12 +1045,28 @@ fn emit_for_jsx(
             camel
         }
         LayoutPropValue::Expr(text) => text.clone(),
+        // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing For's
+        // `as:`/`index:` binding. The moslayout validator gates this
+        // (only accepts Keyword when the name is in scope), so by the
+        // time we reach the emitter the name is guaranteed to resolve
+        // at runtime as the .map callback parameter from an outer
+        // iteration. CamelCase the kebab-case binding the same way
+        // `as:`/`index:` are camel-cased.
+        LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
         _ => {
-            // The moslayout validator already rejects non-SlotRef/non-Expr
-            // values for `each:`. If we somehow reach this emitter with a
-            // bad shape, fail loudly so the bug is found in tests.
+            // The moslayout validator already rejects shapes we don't
+            // handle. If we somehow reach the emitter with a bad shape,
+            // fail loudly so the bug is found in tests.
             return Err(PipelineEmitError::UnsafeSlotName(
-                "For prop `each:` must be a slot ref or expression".to_string(),
+                "For prop `each:` must be a slot ref, an enclosing For binding, \
+                 or an expression"
+                    .to_string(),
             ));
         }
     };
