@@ -3640,3 +3640,100 @@ class TestPhase71TwoSqrtThreeLogPoly:
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase72ThreeSqrtThreeLogPoly:
+    """Phase 72 — g(k)=Sqrt(P1)·Sqrt(P2)·Sqrt(P3)·Log(h1)·Log(h2)·Log(h3)·poly / den.
+
+    effective_x2 = deg_x2(P1) + deg_x2(P2) + deg_x2(P3) + 2·poly_deg.
+    Converges when 2·den_deg > effective_x2 (polynomial denominator) or
+    denominator diverges super-polynomially.
+    """
+
+    def test_sqrt_k_cubed_log3_k_over_k2_closes(self):
+        """√k·√k·√k·log(k)³/k²: eff_x2=1+1+1=3; 2·2=4 > 3 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,))))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_higher_log3_over_k3_closes(self):
+        """√(k³)·√k·√k·log(k)³/k³: eff_x2=3+1+1=5; 2·3=6 > 5 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3_arg = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (k3,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1_3_arg,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,))))
+        denom_k = IRApply(POW, (_k, IRInteger(3)))
+        denom_kp1 = IRApply(POW, (kp1, IRInteger(3)))
+        g_k = IRApply(DIV, (num_k, denom_k))
+        g_kp1 = IRApply(DIV, (num_kp1, denom_kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_log3_poly_factor_closes(self):
+        """√k·√k·√k·log(k)³·k/k³: poly_deg=1; eff_x2=1+1+1+2=5; 2·3=6>5 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                kp1))
+        denom_k = IRApply(POW, (_k, IRInteger(3)))
+        denom_kp1 = IRApply(POW, (kp1, IRInteger(3)))
+        g_k = IRApply(DIV, (num_k, denom_k))
+        g_kp1 = IRApply(DIV, (num_kp1, denom_kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_log3_over_exponential_closes(self):
+        """√k·√k·√k·log(k)³/2^k: exponential denominator → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,))))
+        two_k = IRApply(POW, (IRInteger(2), _k))
+        two_kp1 = IRApply(POW, (IRInteger(2), kp1))
+        g_k = IRApply(DIV, (num_k, two_k))
+        g_kp1 = IRApply(DIV, (num_kp1, two_kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_log3_over_k2_refused(self):
+        """√k·√k·√k·log(k)³/k²: eff_x2=3; 2·2=4>3 closes — boundary test over k^1.
+        Instead test √k·√k·√k·log(k)³/k: eff_x2=3; 2·1=2 not > 3 → refused."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
