@@ -532,6 +532,7 @@ def check_browser_expected_lists(
         require_optional_nullable_string(form_path, form, "rel", errors)
         require_optional_boolean(form_path, form, "novalidate", errors)
         require_object_list(form_path, form, "controls", errors)
+        require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):
             control_path = f"{form_path}.controls[{control_index}]"
             require_optional_nullable_string(control_path, control, "id", errors)
@@ -581,6 +582,22 @@ def check_browser_expected_lists(
             require_optional_boolean(control_path, control, "form_novalidate", errors)
             require_string(control_path, control, "text", errors)
             require_string_list(control_path, control, "options", errors)
+        for submitter_index, submitter in enumerate(object_list_items(form, "submitters")):
+            submitter_path = f"{form_path}.submitters[{submitter_index}]"
+            require_optional_nullable_string(submitter_path, submitter, "id", errors)
+            require_string(submitter_path, submitter, "control_type", errors)
+            require_string(submitter_path, submitter, "method", errors)
+            for field in (
+                "name",
+                "accessible_name",
+                "action",
+                "resolved_action",
+                "enctype",
+                "target",
+                "value",
+            ):
+                require_optional_nullable_string(submitter_path, submitter, field, errors)
+            require_optional_boolean(submitter_path, submitter, "novalidate", errors)
 
     for index, table in enumerate(object_list_items(expected, "tables")):
         table_path = f"{case_path}.expected.tables[{index}]"
