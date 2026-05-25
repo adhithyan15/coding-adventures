@@ -393,6 +393,206 @@ impl PassPipeline {
 }
 
 // ============================================================================
+// PassRegistry — runtime pass discovery layer (CLOC10.A)
+// ============================================================================
+//
+// Per [CLOC10 §5](../../../specs/CLOC10-pass-plugin-api.md#5-passregistry-runtime-discovery),
+// the `PassRegistry` sits on top of `PassPipeline` and lets callers
+// instantiate a pipeline by *naming* passes rather than by holding
+// onto concrete `Box<dyn Pass>` values. This is what makes the
+// plugin API practical:
+//
+// - A host like `closurec` can populate a registry once at startup
+//   (canonical passes + any third-party plugins the host wants to
+//   expose).
+// - User input — a `--enable=<name>` flag, a `--passes <config>`
+//   file, an interactive REPL — names passes by their canonical
+//   string name. The registry resolves names into a pipeline.
+// - Third-party plugin crates ship a public `register(&mut registry)`
+//   function. The host calls it; the registry grows; no recompile
+//   of `closurec` itself is needed for any pass that's already
+//   linked in.
+//
+// Why a *factory* rather than a stored `Box<dyn Pass>`? Two reasons:
+//
+// 1. A pipeline owns its passes. If we stored `Box<dyn Pass>` in
+//    the registry, building a pipeline would have to *move* them
+//    out, which means a one-shot registry. Factories let one
+//    registry hand out as many pipeline instances as the caller
+//    wants.
+// 2. Some passes have per-instance state that *must* be fresh per
+//    pipeline run. A factory closure naturally constructs a fresh
+//    pass each time.
+//
+// Note that we deliberately do NOT pre-populate `PassRegistry::new`
+// with the eight canonical passes. Doing that would require
+// `closure-pass-pipeline` to depend on every `closure-pass-*`
+// crate, which would create a circular dep (each pass already
+// depends on pipeline for the `Pass` trait). The convention is:
+// the *host* (typically `closurec`) imports each pass crate and
+// calls `registry.register(...)` for each canonical pass at
+// startup. CLOC10.C will wire this up in the CLI.
+
+use std::collections::HashMap as StdHashMap;
+
+/// A type-erased pass factory — closure that produces a fresh
+/// pass instance on demand.
+type PassFactory = Box<dyn Fn() -> Box<dyn Pass> + Send + Sync>;
+
+/// Errors that can occur during registry operations.
+///
+/// Per CLOC10 §5, all registry failures are reported via this enum
+/// rather than panics — the caller is in a position to recover
+/// (e.g. by falling back to a smaller pipeline, or by reporting a
+/// friendly CLI error).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RegistryError {
+    /// A name was passed to `build_pipeline` that wasn't registered.
+    UnknownPass(String),
+    /// A name passed to `register` was already taken. Names must be
+    /// unique per registry per CLOC10 §3.
+    DuplicateName(String),
+}
+
+impl std::fmt::Display for RegistryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RegistryError::UnknownPass(name) => {
+                write!(f, "no pass registered under the name {:?}", name)
+            }
+            RegistryError::DuplicateName(name) => {
+                write!(
+                    f,
+                    "a pass with name {:?} is already registered; \
+                     names must be unique within a registry",
+                    name
+                )
+            }
+        }
+    }
+}
+
+impl std::error::Error for RegistryError {}
+
+/// Runtime registry of named pass factories.
+///
+/// Lets a host (typically `closurec`) build pipelines by naming
+/// passes instead of holding onto concrete `Box<dyn Pass>` values.
+/// See [CLOC10 §5] for the design rationale.
+///
+/// # Example
+///
+/// ```rust,ignore
+/// // In the host (e.g. `closurec` startup):
+/// let mut registry = PassRegistry::new();
+/// registry.register("constant-fold",
+///                   || Box::new(ConstantFoldPass::new()))?;
+/// registry.register("dce", || Box::new(DcePass::new()))?;
+/// registry.register("acme/foo",
+///                   || Box::new(AcmePass::new()))?;
+///
+/// // Later, from user input:
+/// let pipeline = registry.build_pipeline(&[
+///     "constant-fold", "acme/foo", "dce",
+/// ])?;
+/// pipeline.run(program, &sidecar, &mut cv)?;
+/// ```
+///
+/// [CLOC10 §5]: ../../../specs/CLOC10-pass-plugin-api.md
+pub struct PassRegistry {
+    factories: StdHashMap<String, PassFactory>,
+}
+
+impl Default for PassRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl std::fmt::Debug for PassRegistry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Don't try to print the factories (they're closures, no
+        // Debug impl). Just list the names.
+        f.debug_struct("PassRegistry")
+            .field("names", &self.registered_names())
+            .finish()
+    }
+}
+
+impl PassRegistry {
+    /// Create an empty registry. Canonical pass registration is the
+    /// *host's* responsibility — see the module-level comment for
+    /// why this isn't auto-populated.
+    pub fn new() -> Self {
+        Self {
+            factories: StdHashMap::new(),
+        }
+    }
+
+    /// Register a pass factory under `name`. The factory will be
+    /// called once per `build_pipeline` invocation that mentions
+    /// the name — fresh pass instance every time, no shared state
+    /// between pipelines.
+    ///
+    /// Returns `Err(RegistryError::DuplicateName)` if `name` is
+    /// already registered. Use this strictness deliberately — silent
+    /// shadowing of pass names would be a debugging nightmare.
+    pub fn register<F>(&mut self, name: &str, factory: F) -> Result<(), RegistryError>
+    where
+        F: Fn() -> Box<dyn Pass> + Send + Sync + 'static,
+    {
+        if self.factories.contains_key(name) {
+            return Err(RegistryError::DuplicateName(name.to_string()));
+        }
+        self.factories.insert(name.to_string(), Box::new(factory));
+        Ok(())
+    }
+
+    /// True iff `name` has been registered.
+    pub fn contains(&self, name: &str) -> bool {
+        self.factories.contains_key(name)
+    }
+
+    /// All registered names, sorted alphabetically. Used by
+    /// `closurec --list-passes` per CLOC10 §6.
+    pub fn registered_names(&self) -> Vec<String> {
+        let mut names: Vec<String> = self.factories.keys().cloned().collect();
+        names.sort();
+        names
+    }
+
+    /// Build a fresh pipeline containing the passes named in
+    /// `names`, in that order. The order matters as a tie-breaker
+    /// for the topo-sort (see [`PassPipeline::add`]).
+    ///
+    /// Returns `Err(RegistryError::UnknownPass)` on the first
+    /// unrecognized name. Stops at the first error rather than
+    /// collecting all unknowns — keep the API tight; callers that
+    /// want validation-up-front can call `contains` in a loop first.
+    pub fn build_pipeline(&self, names: &[&str]) -> Result<PassPipeline, RegistryError> {
+        let mut pipeline = PassPipeline::new();
+        for name in names {
+            let factory = self
+                .factories
+                .get(*name)
+                .ok_or_else(|| RegistryError::UnknownPass((*name).to_string()))?;
+            pipeline.add(factory());
+        }
+        Ok(pipeline)
+    }
+
+    /// Number of registered passes.
+    pub fn len(&self) -> usize {
+        self.factories.len()
+    }
+
+    /// Is the registry empty?
+    pub fn is_empty(&self) -> bool {
+        self.factories.is_empty()
+    }
+}
+
+// ============================================================================
 // Tests
 // ============================================================================
 
@@ -610,5 +810,147 @@ mod tests {
         assert!(s.contains("foo"));
         assert!(s.contains("boom"));
         let _: &dyn std::error::Error = &e;
+    }
+
+    // ------------------------------------------------------------------------
+    // PassRegistry tests (CLOC10.A)
+    // ------------------------------------------------------------------------
+
+    #[test]
+    fn registry_starts_empty() {
+        let r = PassRegistry::new();
+        assert!(r.is_empty());
+        assert_eq!(r.len(), 0);
+        assert!(r.registered_names().is_empty());
+        // Default impl matches new().
+        let d: PassRegistry = Default::default();
+        assert!(d.is_empty());
+    }
+
+    #[test]
+    fn registry_register_and_contains() {
+        let mut r = PassRegistry::new();
+        r.register("alpha", || Box::new(NoOpPass::new("alpha")))
+            .expect("first register succeeds");
+        assert!(r.contains("alpha"));
+        assert!(!r.contains("beta"));
+        assert_eq!(r.len(), 1);
+    }
+
+    #[test]
+    fn registry_duplicate_name_errors() {
+        let mut r = PassRegistry::new();
+        r.register("dupe", || Box::new(NoOpPass::new("dupe")))
+            .expect("first register succeeds");
+        let err = r
+            .register("dupe", || Box::new(NoOpPass::new("dupe")))
+            .expect_err("second register should fail");
+        assert_eq!(err, RegistryError::DuplicateName("dupe".to_string()));
+        // Display includes the name and a hint about uniqueness.
+        let printed = format!("{err}");
+        assert!(printed.contains("dupe"));
+        assert!(printed.contains("already registered"));
+        // The original registration is still intact.
+        assert_eq!(r.len(), 1);
+        assert!(r.contains("dupe"));
+    }
+
+    #[test]
+    fn registry_registered_names_are_sorted() {
+        let mut r = PassRegistry::new();
+        // Register in deliberately scrambled order.
+        for name in &["zeta", "alpha", "mu", "beta"] {
+            let n = *name;
+            r.register(n, move || Box::new(NoOpPass::new(n))).unwrap();
+        }
+        assert_eq!(
+            r.registered_names(),
+            vec!["alpha".to_string(), "beta".to_string(), "mu".to_string(), "zeta".to_string()],
+        );
+    }
+
+    #[test]
+    fn registry_build_pipeline_preserves_input_order() {
+        let mut r = PassRegistry::new();
+        for name in &["a", "b", "c"] {
+            let n = *name;
+            r.register(n, move || Box::new(NoOpPass::new(n))).unwrap();
+        }
+        // Independent passes with no deps → input order is the
+        // tie-breaker, which proves build_pipeline preserved it.
+        let pipeline = r.build_pipeline(&["c", "a", "b"]).expect("ok");
+        let mut cv = CVLog::new(true);
+        let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
+        assert_eq!(
+            out.execution_order,
+            vec!["c".to_string(), "a".to_string(), "b".to_string()],
+        );
+    }
+
+    #[test]
+    fn registry_build_pipeline_unknown_name_errors() {
+        let mut r = PassRegistry::new();
+        r.register("known", || Box::new(NoOpPass::new("known")))
+            .unwrap();
+        let err = match r.build_pipeline(&["known", "ghost"]) {
+            Ok(_) => panic!("unknown name should error"),
+            Err(e) => e,
+        };
+        assert_eq!(err, RegistryError::UnknownPass("ghost".to_string()));
+        // Display includes the missing name.
+        let printed = format!("{err}");
+        assert!(printed.contains("ghost"));
+        assert!(printed.contains("no pass registered"));
+    }
+
+    #[test]
+    fn registry_factories_produce_fresh_instances() {
+        // Each build_pipeline call should re-invoke the factory.
+        // We verify by sharing an Arc<AtomicUsize> counter that
+        // increments on each construction.
+        use std::sync::Arc;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+
+        let mut r = PassRegistry::new();
+        let counter = Arc::new(AtomicUsize::new(0));
+        let counter_clone = Arc::clone(&counter);
+        r.register("counter", move || {
+            counter_clone.fetch_add(1, Ordering::SeqCst);
+            Box::new(NoOpPass::new("counter"))
+        })
+        .unwrap();
+
+        let _p1 = r.build_pipeline(&["counter"]).unwrap();
+        let _p2 = r.build_pipeline(&["counter"]).unwrap();
+        let _p3 = r.build_pipeline(&["counter", "counter"]).ok(); // would error
+        // Two successful single-pass builds → factory called twice;
+        // the third build fails (PassPipeline rejects duplicate names
+        // at run time, but build_pipeline itself does invoke the
+        // factory once per name before adding). We assert at least 2.
+        assert!(counter.load(Ordering::SeqCst) >= 2);
+    }
+
+    #[test]
+    fn registry_build_pipeline_empty_input_yields_empty_pipeline() {
+        let r = PassRegistry::new();
+        let pipeline = r.build_pipeline(&[]).expect("empty build ok");
+        assert!(pipeline.is_empty());
+    }
+
+    #[test]
+    fn registry_debug_lists_names() {
+        let mut r = PassRegistry::new();
+        r.register("alpha", || Box::new(NoOpPass::new("alpha")))
+            .unwrap();
+        let printed = format!("{r:?}");
+        assert!(printed.contains("PassRegistry"));
+        assert!(printed.contains("alpha"));
+    }
+
+    #[test]
+    fn registry_error_implements_std_error() {
+        let e: &dyn std::error::Error = &RegistryError::UnknownPass("x".into());
+        // Just exercising the trait — if it compiles, we're good.
+        let _ = e.to_string();
     }
 }
