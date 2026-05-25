@@ -2,6 +2,49 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.31.0] - 2026-05-25
+
+### Added (Phase 7d — Ruby 3.0 case/in pattern matching lowering)
+
+`lower_case_statement` now collects both `when_clause` and `in_clause` subnodes in source order.  Two new helpers:
+
+- `lower_when_clause_condition` — refactored out of the original Phase 6u lowerer for symmetry with `in_clause` dispatch (no behaviour change).
+- `lower_in_clause_pattern` — dispatches on pattern kind, returning `(cond, prefix_stmts)`.  Binding-pattern body-prefix stmts are prepended to the clause body so the bound local is visible from the first statement.
+
+### Pattern lowering
+
+| Pattern        | cond                                            | body-prefix stmts        |
+|----------------|-------------------------------------------------|--------------------------|
+| `in 1`         | `BuiltinCall("==", [scrut, IntLit(1)])`         | `[]`                     |
+| `in "s"`       | `BuiltinCall("==", [scrut, StrLit("s")])`       | `[]`                     |
+| `in :foo`      | `BuiltinCall("==", [scrut, SymLit("foo")])`     | `[]`                     |
+| `in nil`       | `BuiltinCall("==", [scrut, NilLit])`            | `[]`                     |
+| `in y`         | `BoolLit(true)`                                 | `[LetBinding(y, scrut)]` |
+| `in [1, 2]`    | `BuiltinCall("__pattern_match__", [scrut, StrLit(raw)])` | `[]`            |
+| `in {name: y}` | `BuiltinCall("__pattern_match__", [scrut, StrLit(raw)])` | `[]`            |
+
+The `__pattern_match__` marker carries the verbatim pattern text (joined Token values via depth-first walk) so downstream emitters can re-derive the structural matching at codegen time.  Same marker-builtin pattern as Phase 6v rescue/ensure, Phase 6y `__interp__`, Phase 7a `backtick`.
+
+The synthetic `StrLit` triggers `Feature::Strings`.
+
+A new helper `lower_pattern_literal` mirrors the factor-atom Token dispatch but narrowed to the patterns the `literal_pattern` rule admits (NUMBER, STRING, KEYWORD/`nil`/`true`/`false`, symbol_literal).  It reuses Phase 6z's `lower_numeric_literal` so every numeric shape (float/hex/bin/oct/dec) parses identically inside a pattern.
+
+### v0 deferred limitations
+
+- Array / hash patterns are kept as the `__pattern_match__` marker — no structural decomposition, no sub-bindings emitted.  A follow-up phase will walk the inner patterns and emit element comparisons + sub-`LetBinding`s.
+- Hash pattern shorthand `{name:}` doesn't bind `name` at SIR level.
+- Pin operators (`^x`), find patterns (`[…, *, …]`), and class patterns (`SomeClass(x)`) are not yet parsed.
+- Inside an `in` body, a bare-name statement (`in y; y; end`) hits a pre-existing grammar quirk where `method_call_no_paren` greedily consumes the closing `end` keyword as an argument.  Workaround in tests: use `puts(y)` rather than bare `y`.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 141 → **146** (+5):
+  - `case_in_literal_pattern_lowers_to_equality_check` — `in 1`.
+  - `case_in_binding_pattern_emits_letbinding_prefix` — `in y`.
+  - `case_in_array_pattern_lowers_to_pattern_match_marker` — `in [1, 2]`.
+  - `case_in_hash_pattern_lowers_to_pattern_match_marker` — `in {name: y}`.
+  - `case_in_with_else_clause_emits_else_branch` — `else` fallback.
+
 ## [0.30.0] - 2026-05-25
 
 ### Added (Phase 7c — Ruby 3.0 endless method definitions)

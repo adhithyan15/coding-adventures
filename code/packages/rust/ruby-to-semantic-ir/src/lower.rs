@@ -788,12 +788,19 @@ impl Lowerer {
             })?;
         let scrutinee = self.lower_expression(scrutinee_node)?;
 
-        // 2. Collect every when_clause subnode.
-        let when_clauses: Vec<&GrammarASTNode> = node
+        // 2. Collect every when_clause / in_clause subnode in source order.
+        // Phase 7d — `in_clause` is treated alongside `when_clause` and
+        // the two are unwound through the same If-chain pipeline.  The
+        // dispatch on clause type happens inside the unwind loop.
+        let clauses: Vec<&GrammarASTNode> = node
             .children
             .iter()
             .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "when_clause" => Some(n),
+                ASTNodeOrToken::Node(n)
+                    if n.rule_name == "when_clause" || n.rule_name == "in_clause" =>
+                {
+                    Some(n)
+                }
                 _ => None,
             })
             .collect();
@@ -816,57 +823,44 @@ impl Lowerer {
             }
         };
 
-        // 5. Unwind when_clauses in reverse, each wrapping the
-        //    accumulated tail as its else-branch.
-        for wc in when_clauses.iter().rev() {
-            // Collect this clause's value expressions (all `expression`
-            // Node children in order).
-            let value_nodes: Vec<&GrammarASTNode> = wc
-                .children
-                .iter()
-                .filter_map(|c| match c {
-                    ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
-                    _ => None,
-                })
-                .collect();
-            if value_nodes.is_empty() {
-                return Err(RubyLowerError {
-                    message: "when_clause missing value expression(s)".to_string(),
-                    line: wc.start_line.unwrap_or(0),
-                    column: wc.start_column.unwrap_or(0),
-                });
-            }
-
-            // Build the condition: `(scrutinee == v1) || (scrutinee == v2) || ...`.
-            // Lower each value, build an `==` BuiltinCall, then OR-fold
-            // left-to-right (matches Ruby's left-to-right when evaluation).
+        // 5. Unwind clauses in reverse, each wrapping the accumulated
+        //    tail as its else-branch.  Dispatch on clause type:
+        //    when_clause keeps the existing OR-of-`==` shape; in_clause
+        //    (Phase 7d) dispatches on pattern kind via
+        //    `lower_in_clause_pattern` which returns both a match
+        //    condition AND zero or more body-prefix statements (used
+        //    for binding patterns that introduce locals on a match).
+        for wc in clauses.iter().rev() {
             let span = self.span_of(wc);
-            let mut cond: Option<Expr> = None;
-            for vn in &value_nodes {
-                let val = self.lower_expression(vn)?;
-                // Clone the scrutinee fresh for every comparison —
-                // SIR is tree-shaped, no shared subexpressions.
-                let cmp = Expr::BuiltinCall {
-                    name: "==".to_string(),
-                    args: vec![scrutinee.clone(), val],
-                    effects: EffectSet::PURE,
-                    span: span.clone(),
-                };
-                cond = Some(match cond {
-                    None => cmp,
-                    Some(prev) => Expr::BuiltinCall {
-                        name: "or".to_string(),
-                        args: vec![prev, cmp],
-                        effects: EffectSet::PURE,
-                        span: span.clone(),
-                    },
-                });
-            }
-            let cond = cond.expect("at least one when value");
+            let (cond, mut prefix_stmts) = if wc.rule_name == "when_clause" {
+                let cond = self.lower_when_clause_condition(wc, &scrutinee)?;
+                (cond, Vec::<Stmt>::new())
+            } else {
+                // in_clause — find the single `pattern` subnode and
+                // dispatch on its inner shape.
+                let pattern_node = wc
+                    .children
+                    .iter()
+                    .find_map(|c| match c {
+                        ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                        _ => None,
+                    })
+                    .ok_or_else(|| RubyLowerError {
+                        message: "in_clause missing pattern".to_string(),
+                        line: wc.start_line.unwrap_or(0),
+                        column: wc.start_column.unwrap_or(0),
+                    })?;
+                self.lower_in_clause_pattern(pattern_node, &scrutinee)?
+            };
 
-            // Lower the when body — same shape as `lower_clause_statements`
-            // handles for if/elsif/else.
-            let then_block = self.lower_clause_statements(wc)?;
+            // Lower the clause body.  Binding-pattern bindings must
+            // execute BEFORE the body sees the new local, so prepend
+            // them to the body's stmts.
+            let mut then_block = self.lower_clause_statements(wc)?;
+            if !prefix_stmts.is_empty() {
+                prefix_stmts.extend(std::mem::take(&mut then_block.stmts));
+                then_block.stmts = prefix_stmts;
+            }
 
             // Wrap into an If and let `tail` become the else.
             tail = Block {
@@ -884,6 +878,264 @@ impl Lowerer {
         // The case expression is the chain's outermost If — which
         // currently sits as the `tail` Block's `value`.  Peel it out.
         Ok(tail.value)
+    }
+
+    /// Phase 6u helper — extract the OR-of-`==` condition for a single
+    /// `when_clause` (refactored out of `lower_case_statement` so that
+    /// Phase 7d's `in_clause` pattern dispatch can stay symmetric).
+    fn lower_when_clause_condition(
+        &mut self,
+        wc: &GrammarASTNode,
+        scrutinee: &Expr,
+    ) -> Result<Expr, RubyLowerError> {
+        let value_nodes: Vec<&GrammarASTNode> = wc
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .collect();
+        if value_nodes.is_empty() {
+            return Err(RubyLowerError {
+                message: "when_clause missing value expression(s)".to_string(),
+                line: wc.start_line.unwrap_or(0),
+                column: wc.start_column.unwrap_or(0),
+            });
+        }
+        let span = self.span_of(wc);
+        let mut cond: Option<Expr> = None;
+        for vn in &value_nodes {
+            let val = self.lower_expression(vn)?;
+            let cmp = Expr::BuiltinCall {
+                name: "==".to_string(),
+                args: vec![scrutinee.clone(), val],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            cond = Some(match cond {
+                None => cmp,
+                Some(prev) => Expr::BuiltinCall {
+                    name: "or".to_string(),
+                    args: vec![prev, cmp],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                },
+            });
+        }
+        Ok(cond.expect("at least one when value"))
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 7d — case/in pattern matching
+    // -------------------------------------------------------------------
+
+    /// Lower an `in_clause`'s pattern against a scrutinee expression.
+    ///
+    /// Returns `(cond, prefix_stmts)`:
+    /// - `cond`: the boolean expression that decides if this clause
+    ///   matches.  When `cond` evaluates true at runtime, the clause's
+    ///   body runs; otherwise control falls through to the next clause.
+    /// - `prefix_stmts`: zero or more statements (currently always
+    ///   `LetBinding`s) that must execute *before* the body sees them.
+    ///   Empty for literal / array / hash patterns; populated for
+    ///   binding patterns that introduce a fresh local.
+    ///
+    /// ## Pattern dispatch (v0)
+    ///
+    /// | Pattern        | cond                                           | prefix_stmts            |
+    /// |----------------|------------------------------------------------|-------------------------|
+    /// | literal `1`    | `scrutinee == 1`                               | `[]`                    |
+    /// | literal `nil`  | `scrutinee == nil`                             | `[]`                    |
+    /// | binding `x`    | `BoolLit(true)`                                | `[LetBinding(x, scrut)]`|
+    /// | array `[…]`    | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                  |
+    /// | hash `{…}`     | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                  |
+    ///
+    /// ## v0 deferred limitations
+    ///
+    /// - Array / hash patterns lower as a `__pattern_match__` marker
+    ///   builtin carrying the verbatim raw text of the pattern.  No
+    ///   structural decomposition or sub-bindings are emitted yet —
+    ///   downstream emitters can re-derive the pattern from the raw
+    ///   text.  Same marker-builtin pattern as Phase 6v rescue/ensure,
+    ///   Phase 6y `__interp__`, and Phase 7a `backtick`.
+    /// - Pin operators (`^x`), find patterns (`[…, *, …]`), and class
+    ///   patterns (`SomeClass(x)`) are not yet parsed.
+    /// - Hash pattern's shorthand `{name:}` doesn't bind `name` at SIR
+    ///   level (deferred along with structural decomposition).
+    fn lower_in_clause_pattern(
+        &mut self,
+        pattern_node: &GrammarASTNode,
+        scrutinee: &Expr,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        let inner = self.first_node_child(pattern_node).ok_or_else(|| {
+            RubyLowerError {
+                message: "pattern node had no inner rule child".to_string(),
+                line: pattern_node.start_line.unwrap_or(0),
+                column: pattern_node.start_column.unwrap_or(0),
+            }
+        })?;
+        let span = self.span_of(pattern_node);
+        match inner.rule_name.as_str() {
+            "literal_pattern" => {
+                // Lower the literal value, then build `scrutinee == lit`.
+                // The literal_pattern node carries exactly one Token
+                // child (NUMBER / STRING / KEYWORD) OR a symbol_literal
+                // subnode.  We delegate to lower_factor_atom by re-using
+                // the factor-atom Token dispatch.
+                let lit = self.lower_pattern_literal(inner)?;
+                Ok((
+                    Expr::BuiltinCall {
+                        name: "==".to_string(),
+                        args: vec![scrutinee.clone(), lit],
+                        effects: EffectSet::PURE,
+                        span,
+                    },
+                    Vec::new(),
+                ))
+            }
+            "binding_pattern" => {
+                // Bare NAME — matches any value and binds it.  The
+                // condition is trivially true (BoolLit(true)); the
+                // binding goes into the body's prefix stmts.
+                let name_tok = inner
+                    .children
+                    .iter()
+                    .find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                        _ => None,
+                    })
+                    .ok_or_else(|| RubyLowerError {
+                        message: "binding_pattern missing Name token".to_string(),
+                        line: inner.start_line.unwrap_or(0),
+                        column: inner.start_column.unwrap_or(0),
+                    })?;
+                let bind_name = name_tok.value.clone();
+                self.declared_locals.insert(bind_name.clone());
+                let bind_span = self.span_of_token(name_tok);
+                let prefix = Stmt::LetBinding {
+                    name: bind_name,
+                    sir_type: None,
+                    value: scrutinee.clone(),
+                    span: bind_span,
+                };
+                Ok((Expr::BoolLit { value: true, span }, vec![prefix]))
+            }
+            "array_pattern" | "hash_pattern" => {
+                // v0 marker: emit `BuiltinCall("__pattern_match__",
+                // [scrutinee, StrLit(<raw pattern text>)])`.  The raw
+                // text is reconstructed by joining the immediate Token
+                // children of the pattern node — good enough for
+                // round-tripping the pattern back to a Ruby emitter.
+                let raw = self.pattern_node_raw_text(inner);
+                self.features_used.insert(Feature::Strings);
+                Ok((
+                    Expr::BuiltinCall {
+                        name: "__pattern_match__".to_string(),
+                        args: vec![
+                            scrutinee.clone(),
+                            Expr::StrLit {
+                                value: raw,
+                                span: span.clone(),
+                            },
+                        ],
+                        effects: EffectSet::PURE,
+                        span,
+                    },
+                    Vec::new(),
+                ))
+            }
+            other => Err(RubyLowerError {
+                message: format!("unknown pattern kind `{}` in in_clause", other),
+                line: inner.start_line.unwrap_or(0),
+                column: inner.start_column.unwrap_or(0),
+            }),
+        }
+    }
+
+    /// Lower a `literal_pattern` Node into its `Expr` form.  Mirrors
+    /// the factor-atom token dispatch but narrowed to the patterns the
+    /// `literal_pattern` rule admits (NUMBER, STRING, symbol_literal,
+    /// KEYWORD).
+    fn lower_pattern_literal(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
+        // Walk children once to find either a literal Token or a
+        // symbol_literal subnode.
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Token(tok) => {
+                    let span = self.span_of_token(tok);
+                    match tok.type_ {
+                        TokenType::Number => {
+                            // Reuse the Phase-6z numeric dispatch so
+                            // every shape (float/hex/bin/oct/dec) is
+                            // handled identically here.
+                            return self.lower_numeric_literal(
+                                &tok.value,
+                                span,
+                                tok.line,
+                                tok.column,
+                            );
+                        }
+                        TokenType::String => {
+                            return Ok(Expr::StrLit {
+                                value: tok.value.clone(),
+                                span,
+                            });
+                        }
+                        TokenType::Keyword => match tok.value.as_str() {
+                            "nil" => return Ok(Expr::NilLit { span }),
+                            "true" => return Ok(Expr::BoolLit { value: true, span }),
+                            "false" => return Ok(Expr::BoolLit { value: false, span }),
+                            other => {
+                                return Err(RubyLowerError {
+                                    message: format!(
+                                        "literal_pattern: unexpected keyword `{}`",
+                                        other
+                                    ),
+                                    line: tok.line,
+                                    column: tok.column,
+                                });
+                            }
+                        },
+                        _ => {}
+                    }
+                }
+                ASTNodeOrToken::Node(sub) if sub.rule_name == "symbol_literal" => {
+                    // Reuse the existing symbol-literal lowering path
+                    // (defined as part of Phase 6e).  Delegating into
+                    // lower_factor_atom would re-enter the factor
+                    // dispatch unnecessarily — instead we just emit
+                    // the SymLit directly from the symbol token.
+                    return self.lower_symbol_literal(sub);
+                }
+                _ => {}
+            }
+        }
+        Err(RubyLowerError {
+            message: "literal_pattern had no recognisable child".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    /// Best-effort source-text reconstruction for an array/hash
+    /// pattern.  Walks the immediate Token children in source order,
+    /// joining their values without whitespace insertion — good enough
+    /// for the v0 marker (`BuiltinCall("__pattern_match__", …)`) where
+    /// the body is round-tripped to a Ruby emitter as-is.  This is
+    /// **not** a faithful reformatter; nested patterns are descended
+    /// into so their tokens contribute as well.
+    fn pattern_node_raw_text(&self, node: &GrammarASTNode) -> String {
+        let mut out = String::new();
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Token(t) => out.push_str(&t.value),
+                ASTNodeOrToken::Node(sub) => {
+                    out.push_str(&self.pattern_node_raw_text(sub));
+                }
+            }
+        }
+        out
     }
 
     // -------------------------------------------------------------------

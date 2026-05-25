@@ -2913,4 +2913,169 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7d — case/in pattern matching lowering
+    //
+    // case_statement walks both when_clause and in_clause subnodes in
+    // source order; in_clause pattern dispatch lives in
+    // `lower_in_clause_pattern`.
+    //
+    // Patterns covered here:
+    //   literal_pattern  → `==` comparison cond, no bindings
+    //   binding_pattern  → `BoolLit(true)` cond + LetBinding prefix
+    //   array_pattern    → `__pattern_match__` marker, no bindings
+    //   hash_pattern     → `__pattern_match__` marker, no bindings
+    // -----------------------------------------------------------------------
+
+    /// Helper: extract the `Expr::If` from a top-level `case` statement
+    /// — Phase 6u/7d lowers case to `Stmt::ExprStmt(Expr::If(...))`.
+    fn extract_case_if<'a>(b: &'a semantic_ir::Block) -> &'a Expr {
+        // The case is typically the second statement (first is the
+        // `x = ...` LetBinding from the test prelude).
+        match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt from case, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_literal_pattern_lowers_to_equality_check() {
+        // `case x; in 1; "one"; end` — literal pattern emits the same
+        // `scrutinee == 1` shape as a `when` clause.
+        let m = lower("x = 1\ncase x\nin 1\n  \"one\"\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If from case, got {:?}", other),
+        };
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "==");
+                assert_eq!(args.len(), 2);
+                // args[0] is the scrutinee (VarRef x); args[1] is IntLit(1).
+                assert!(matches!(&args[1], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected ==-BuiltinCall as cond, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_binding_pattern_emits_letbinding_prefix() {
+        // `case x; in y; puts(y); end` — binding pattern.  Cond is true;
+        // body has a LetBinding(y, scrutinee) prepended; body trailing
+        // value is the `puts(y)` call.  Body shape is `puts(y)` (and
+        // not bare `y`) because method_call_no_paren would otherwise
+        // greedily consume the closing `end` keyword as a one-arg
+        // method-call argument — a pre-existing grammar limitation
+        // unrelated to Phase 7d.
+        let m = lower("x = 1\ncase x\nin y\n  puts(y)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let (cond, then_branch) = match if_expr {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If from case, got {:?}", other),
+        };
+        // Condition is BoolLit(true).
+        assert!(
+            matches!(cond.as_ref(), Expr::BoolLit { value: true, .. }),
+            "expected BoolLit(true), got {:?}",
+            cond
+        );
+        // then_branch.stmts[0] should be LetBinding(y, …).
+        let prefix = then_branch
+            .stmts
+            .first()
+            .expect("expected LetBinding prefix stmt");
+        match prefix {
+            Stmt::LetBinding { name, .. } => {
+                assert_eq!(name, "y");
+            }
+            other => panic!("expected LetBinding(y), got {:?}", other),
+        }
+        // then_branch.value should be the `puts(y)` BuiltinCall whose
+        // single arg is the bound `y`.
+        match &then_branch.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "puts");
+                assert!(
+                    matches!(&args[0], Expr::VarRef { name, .. } if name == "y"),
+                    "expected puts(VarRef(y)), got args={:?}",
+                    args
+                );
+            }
+            other => panic!("expected puts BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_array_pattern_lowers_to_pattern_match_marker() {
+        // `case x; in [1, 2]; "pair"; end` — array pattern lowers as
+        // `BuiltinCall("__pattern_match__", [scrut, StrLit("<raw>")])`.
+        let m = lower("x = 1\ncase x\nin [1, 2]\n  \"pair\"\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__pattern_match__");
+                assert_eq!(args.len(), 2);
+                // args[1] is StrLit with the raw pattern text.
+                match &args[1] {
+                    Expr::StrLit { value, .. } => {
+                        assert!(
+                            value.contains('1') && value.contains('2'),
+                            "expected raw text to contain `1` and `2`, got `{}`",
+                            value
+                        );
+                    }
+                    other => panic!("expected StrLit raw pattern, got {:?}", other),
+                }
+            }
+            other => panic!("expected __pattern_match__ BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_hash_pattern_lowers_to_pattern_match_marker() {
+        // `case x; in {name: y}; "match"; end` — hash pattern uses the
+        // same `__pattern_match__` marker as array.
+        let m = lower("x = 1\ncase x\nin {name: y}\n  \"match\"\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__pattern_match__");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[1], Expr::StrLit { .. }));
+            }
+            other => panic!("expected __pattern_match__ BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_with_else_clause_emits_else_branch() {
+        // `case x; in 1; "one"; else; "other"; end` — else clause is
+        // the innermost If's else_branch.
+        let m = lower("x = 2\ncase x\nin 1\n  \"one\"\nelse\n  \"other\"\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let else_branch = match if_expr {
+            Expr::If { else_branch, .. } => else_branch,
+            other => panic!("expected If, got {:?}", other),
+        };
+        assert!(
+            matches!(&else_branch.value, Expr::StrLit { value, .. } if value == "other"),
+            "expected StrLit(\"other\") in else branch, got {:?}",
+            else_branch.value
+        );
+    }
 }
