@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.28.0] - 2026-05-25
+
+### Added (Phase 7a — backtick command literals in parser)
+
+The lexer's Phase-4m `backtick_body` state emits `` `cmd args` `` as a single `TokenType::String` token whose value is the verbatim source **including the surrounding backticks** (`` `cmd args` ``) — the same lexeme-prefix sentinel trick used by percent literals and heredocs.  Phase 7a is therefore **grammar-zero**: the existing STRING token at factor / call-arg / assignment-RHS positions already accepts backtick literals.  This phase adds the SIR lowering dispatch + explicit test coverage on both sides of the pipeline.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+A new helper `lower_backtick_command_literal` strips the wrapping backticks and emits:
+
+```
+BuiltinCall {
+    name: "backtick",
+    args: [StrLit(body)],
+    effects: MayBlock | MayPrint | MayThrow,
+}
+```
+
+The triple-effect set reflects that command execution may **block** on the child process, **print** stdout/stderr, and **throw** if the command can't be invoked (`Errno::ENOENT` and friends).
+
+The `String` case of `lower_factor_atom` dispatches by lexeme prefix:
+- starts with `` ` `` → backtick command literal (Phase 7a)
+- otherwise → string interpolation lowering (Phase 6y)
+
+### v0 deferred limitations
+
+- Interpolation inside the body (`` `echo #{name}` ``) is NOT split — the body lowers as a single `StrLit` with `#{...}` markers preserved verbatim.  A future phase will reuse the Phase 6y interpolation splitter inside the body.
+- Escape sequences inside the body (`` \` ``, `\n`, `\t`) are already resolved by the lexer (Phase 4m's body state).
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 122 → **125** (+3 grammar tests):
+  - `test_parse_backtick_command_literal_assignment` — `` x = `ls -la` ``.
+  - `test_parse_backtick_command_literal_in_call_arg` — `` puts(`pwd`) ``.
+  - `test_parse_empty_backtick_command_literal` — `` x = `` ``.
+
 ## [0.27.0] - 2026-05-25
 
 ### Added (Phase 6z — float / hex / bin / oct numeric literal parsing)

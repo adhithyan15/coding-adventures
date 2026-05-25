@@ -2094,5 +2094,53 @@ mod tests {
         assert!(find_descendant(&ast, "assignment").is_some());
         assert!(tree_has_token_value(&ast, "0o17"));
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7a — backtick command literals in parser
+    //
+    // The lexer's Phase-4m backtick_body state emits the whole `` `cmd` ``
+    // literal as a single `TokenType::String` token whose value is the
+    // body wrapped back in backticks (`` `body` ``).  The parser sees
+    // this as a regular STRING token at the factor position — no grammar
+    // changes needed.  These tests confirm the grammar accepts every
+    // statement context (assignment RHS, call arg, bare expression).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_backtick_command_literal_assignment() {
+        // `x = `ls -la`` — backtick on RHS of an assignment.
+        let ast = parse_ruby("x = `ls -la`");
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected assignment node for backtick RHS"
+        );
+        assert!(
+            tree_has_token_value(&ast, "`ls -la`"),
+            "expected backtick-wrapped lexeme `\\`ls -la\\`` in tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_backtick_command_literal_in_call_arg() {
+        // `puts(`pwd`)` — backtick as a method-call argument.
+        let ast = parse_ruby("puts(`pwd`)");
+        assert!(
+            find_descendant(&ast, "method_call").is_some(),
+            "expected method_call node"
+        );
+        assert!(tree_has_token_value(&ast, "`pwd`"));
+    }
+
+    #[test]
+    fn test_parse_empty_backtick_command_literal() {
+        // `x = ``` — empty body.  Lexer's backtick_body fuses both
+        // backticks into a single Token whose value is "``".
+        let ast = parse_ruby("x = ``");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        assert!(
+            tree_has_token_value(&ast, "``"),
+            "expected empty-body backtick lexeme"
+        );
+    }
 }
 
