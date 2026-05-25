@@ -113,6 +113,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // method name when packing into the `__method__` envelope.
         // StrLit usage triggers the `Strings` feature.
         Feature::Strings,
+        // Phase 6z — float literals (`1.5`, `1e10`, `1.5e-3`) lower
+        // to `Expr::FloatLit` and trigger the `Floats` feature.
+        Feature::Floats,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -2932,6 +2935,124 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
+    // Phase 6z — numeric literal lowering (float / hex / bin / oct / dec)
+    // -------------------------------------------------------------------
+
+    /// Lower a Ruby numeric literal token (Phase 6z).
+    ///
+    /// The lexer's Phase-4k / Phase-4l post-passes fuse the source-level
+    /// shapes below into a single `TokenType::Number` token whose value
+    /// is the verbatim source text (with underscore separators preserved).
+    /// This routine dispatches on the shape:
+    ///
+    /// | Source       | SIR shape                                |
+    /// |--------------|------------------------------------------|
+    /// | `42`         | `IntLit { value: 42 }`                   |
+    /// | `1_000_000`  | `IntLit { value: 1000000 }`              |
+    /// | `0x1F`       | `IntLit { value: 31 }` (radix 16)        |
+    /// | `0xDEAD_BEEF`| `IntLit { value: 3735928559 }`           |
+    /// | `0b1010`     | `IntLit { value: 10 }` (radix 2)         |
+    /// | `0o17`       | `IntLit { value: 15 }` (radix 8)         |
+    /// | `0d42`       | `IntLit { value: 42 }` (radix 10 explicit) |
+    /// | `1.5`        | `FloatLit { value: 1.5 }`                |
+    /// | `1e10`       | `FloatLit { value: 1e10 }`               |
+    /// | `1.5e-3`     | `FloatLit { value: 0.0015 }`             |
+    ///
+    /// Float detection is a single pass over the cleaned (underscore-
+    /// stripped) value: if `.` or `e` / `E` is present **anywhere**,
+    /// the literal is a float; otherwise it's an integer.  Radix
+    /// detection requires both the leading `0` *and* a radix-prefix
+    /// letter as the second character.  These two checks are mutually
+    /// exclusive in the Ruby grammar (radix prefixes start with a
+    /// letter, floats start with a digit run + `.` / `e`), so the
+    /// dispatch order doesn't matter — we test radix first because
+    /// it's the cheaper check.
+    ///
+    /// ## v0 deferred
+    ///
+    /// - Ruby's `r` / `i` numeric suffixes (Rational / Complex, lexed
+    ///   by Phase 4f) are still kept on the token as a trailing letter;
+    ///   the lowerer currently rejects those, since SIR has no
+    ///   Rational / Complex types.  A future phase will route those
+    ///   into `BuiltinCall("rational", [...])` / `BuiltinCall("complex", [...])`
+    ///   markers.
+    /// - Negative literals are still handled by the unary-minus path
+    ///   (Phase 6k); this routine sees only the magnitude.
+    fn lower_numeric_literal(
+        &mut self,
+        raw: &str,
+        span: Span,
+        err_line: usize,
+        err_column: usize,
+    ) -> Result<Expr, RubyLowerError> {
+        // Step 1: strip Ruby's `_` digit separators.  They're purely
+        // cosmetic (Ruby allows `1_000_000` to mean `1000000`).  We
+        // do this *before* the shape dispatch so both the float-parse
+        // and the radix-parse see clean digit strings.
+        let cleaned: String = raw.chars().filter(|c| *c != '_').collect();
+
+        // Step 2: radix-prefix detection (Phase 4l).  A Ruby radix
+        // literal is `0` followed by a radix letter then the digits:
+        //   0x | 0X  -> base 16
+        //   0b | 0B  -> base  2
+        //   0o | 0O  -> base  8
+        //   0d | 0D  -> base 10 (explicit decimal)
+        // Anything else starting with `0` is plain decimal (e.g. `0`,
+        // `017` would be Ruby's legacy octal — not supported in v0).
+        let bytes = cleaned.as_bytes();
+        if bytes.len() >= 3 && bytes[0] == b'0' {
+            let (radix, body_start): (u32, usize) = match bytes[1] {
+                b'x' | b'X' => (16, 2),
+                b'b' | b'B' => (2, 2),
+                b'o' | b'O' => (8, 2),
+                b'd' | b'D' => (10, 2),
+                _ => (0, 0),
+            };
+            if radix != 0 {
+                let body = &cleaned[body_start..];
+                // `i64::from_str_radix` rejects empty strings and bad
+                // digits — both of which would already be lexer bugs
+                // here, so propagate the error rather than panicking.
+                let v = i64::from_str_radix(body, radix).map_err(|_| RubyLowerError {
+                    message: format!("invalid radix-{} integer literal `{}`", radix, raw),
+                    line: err_line,
+                    column: err_column,
+                })?;
+                return Ok(Expr::IntLit { value: v, span });
+            }
+        }
+
+        // Step 3: float detection (Phase 4k).  A Ruby float literal has
+        // either a fractional part (`.` followed by digit) OR an
+        // exponent (`e` / `E`).  Both can appear together (`1.5e-3`).
+        // We use `contains` rather than `starts_with` because the dot
+        // / exponent can appear anywhere in the body.
+        //
+        // Note we cannot use a bare `.` check because the lexer's
+        // float fusion already guarantees the dot is between digits;
+        // we don't need to re-validate that here.
+        let has_fraction = cleaned.contains('.');
+        let has_exponent = cleaned.contains(['e', 'E']);
+        if has_fraction || has_exponent {
+            self.features_used.insert(Feature::Floats);
+            let v: f64 = cleaned.parse().map_err(|_| RubyLowerError {
+                message: format!("invalid float literal `{}`", raw),
+                line: err_line,
+                column: err_column,
+            })?;
+            return Ok(Expr::FloatLit { value: v, span });
+        }
+
+        // Step 4: plain decimal integer (pre-Phase-6z behaviour).
+        let v: i64 = cleaned.parse().map_err(|_| RubyLowerError {
+            message: format!("invalid integer literal `{}`", raw),
+            line: err_line,
+            column: err_column,
+        })?;
+        Ok(Expr::IntLit { value: v, span })
+    }
+
+    // -------------------------------------------------------------------
     // Phase 6y — string interpolation lowering
     // -------------------------------------------------------------------
 
@@ -3168,14 +3289,18 @@ impl Lowerer {
                     let span = self.span_of_token(tok);
                     match tok.type_ {
                         TokenType::Number => {
-                            let cleaned: String =
-                                tok.value.chars().filter(|c| *c != '_').collect();
-                            let v: i64 = cleaned.parse().map_err(|_| RubyLowerError {
-                                message: format!("invalid integer literal `{}`", tok.value),
-                                line: tok.line,
-                                column: tok.column,
-                            })?;
-                            return Ok(Expr::IntLit { value: v, span });
+                            // Phase 6z — float / hex / bin / oct / decimal-explicit
+                            // integer literal parsing.  The lexer (Phase 4k / 4l)
+                            // fuses these into a single `Number` token whose
+                            // value carries the verbatim source text.  The
+                            // parser sees them all uniformly at the factor
+                            // atom position — no grammar changes needed.
+                            return self.lower_numeric_literal(
+                                &tok.value,
+                                span,
+                                tok.line,
+                                tok.column,
+                            );
                         }
                         TokenType::String => {
                             // Phase 6y — string interpolation expression

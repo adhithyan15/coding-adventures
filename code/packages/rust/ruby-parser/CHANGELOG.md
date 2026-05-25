@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.27.0] - 2026-05-25
+
+### Added (Phase 6z — float / hex / bin / oct numeric literal parsing)
+
+The lexer's Phase-4k float fusion (`1.5`, `1e10`, `1.5e-3`) and Phase-4l radix-prefix fusion (`0x1F`, `0b1010`, `0o17`, `0d42`) emit each literal as a single `TokenType::Number` token whose value is the verbatim source text.  Phase 6z is therefore **grammar-zero**: the existing NUMBER token at factor position already accepts every shape.  This phase adds the SIR lowering dispatch + explicit test coverage on both sides of the pipeline.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+A new helper `lower_numeric_literal` dispatches on shape:
+
+| Source       | SIR shape                                |
+|--------------|------------------------------------------|
+| `42`         | `IntLit { value: 42 }`                   |
+| `1_000_000`  | `IntLit { value: 1000000 }`              |
+| `0x1F`       | `IntLit { value: 31 }` (radix 16)        |
+| `0xDEAD_BEEF`| `IntLit { value: 3735928559 }`           |
+| `0b1010`     | `IntLit { value: 10 }` (radix 2)         |
+| `0o17`       | `IntLit { value: 15 }` (radix 8)         |
+| `0d42`       | `IntLit { value: 42 }` (radix 10 explicit) |
+| `1.5`        | `FloatLit { value: 1.5 }` + Feature::Floats |
+| `1e10`       | `FloatLit { value: 1e10 }` + Feature::Floats |
+| `1.5e-3`     | `FloatLit { value: 0.0015 }` + Feature::Floats |
+
+Underscore separators (`_`) are stripped before parsing.  Radix detection checks `bytes[1] ∈ {x,X,b,B,o,O,d,D}` after a leading `0`.  Float detection is a single scan for `.` or `e`/`E` in the cleaned digit string; the two checks are mutually exclusive in the Ruby grammar.
+
+### v0 deferred limitations
+
+- Ruby's Rational (`r`) / Complex (`i`) numeric suffixes (lexed by Phase 4f) are rejected — a future phase will route those into `BuiltinCall("rational", ...)` / `BuiltinCall("complex", ...)` markers.
+- Negative literals are still handled by the unary-minus path (Phase 6k); this routine sees only the magnitude.
+- Ruby's legacy octal syntax (`017` without `0o` prefix) is not supported; use `0o17`.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 117 → **122** (+5 grammar tests):
+  - `test_parse_float_literal_assignment` — `x = 1.5`.
+  - `test_parse_float_literal_with_exponent` — `x = 1.5e-3`.
+  - `test_parse_hex_integer_literal` — `x = 0xDEAD_BEEF`.
+  - `test_parse_binary_integer_literal` — `x = 0b1010`.
+  - `test_parse_octal_integer_literal` — `x = 0o17`.
+
 ## [0.26.0] - 2026-05-25
 
 ### Added (Phase 6y — string interpolation expression parsing)

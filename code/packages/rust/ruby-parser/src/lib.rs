@@ -2027,5 +2027,72 @@ mod tests {
         assert!(find_descendant(&ast, "assignment").is_some());
         assert!(tree_has_token_value(&ast, "a=#{a}, b=#{b}"));
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6z — float / hex / bin / oct integer literal parsing
+    //
+    // The lexer's Phase-4k float fusion produces a single `Number` token for
+    // `1.5`, `1e10`, `1.5e-3`, etc., and Phase-4l's radix fusion produces a
+    // single `Number` token for `0x1F`, `0b1010`, `0o17`, `0d42`.  The
+    // parser sees them all uniformly at the factor position, so this phase
+    // is grammar-zero: these tests just confirm the existing NUMBER-at-
+    // factor handling accepts every shape and the SIR lowerer routes them.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_float_literal_assignment() {
+        // `x = 1.5` — float on RHS.  Lexer's float fusion collapses
+        // `1`/`.`/`5` into a single `Number("1.5")` token.
+        let ast = parse_ruby("x = 1.5");
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected assignment node for float RHS"
+        );
+        assert!(
+            tree_has_token_value(&ast, "1.5"),
+            "expected fused `1.5` NUMBER token in the tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_float_literal_with_exponent() {
+        // `x = 1.5e-3` — fractional + signed exponent.  Tests the
+        // full lexer fusion path through `Number`+`Name("e")`+`Op("-")`+`Int`.
+        let ast = parse_ruby("x = 1.5e-3");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        assert!(
+            tree_has_token_value(&ast, "1.5e-3"),
+            "expected fused `1.5e-3` NUMBER token"
+        );
+    }
+
+    #[test]
+    fn test_parse_hex_integer_literal() {
+        // `x = 0xDEAD_BEEF` — hex literal with underscore separator.
+        // Lexer Phase 4l fuses `Int("0")`+`Name("xDEAD_BEEF")` into a
+        // single `Number("0xDEAD_BEEF")` token.
+        let ast = parse_ruby("x = 0xDEAD_BEEF");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        assert!(
+            tree_has_token_value(&ast, "0xDEAD_BEEF"),
+            "expected fused hex literal in tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_binary_integer_literal() {
+        // `x = 0b1010` — binary literal.  Same fusion mechanism as hex.
+        let ast = parse_ruby("x = 0b1010");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        assert!(tree_has_token_value(&ast, "0b1010"));
+    }
+
+    #[test]
+    fn test_parse_octal_integer_literal() {
+        // `x = 0o17` — octal literal.  Decimal value 15.
+        let ast = parse_ruby("x = 0o17");
+        assert!(find_descendant(&ast, "assignment").is_some());
+        assert!(tree_has_token_value(&ast, "0o17"));
+    }
 }
 

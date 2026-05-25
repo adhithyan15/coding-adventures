@@ -2,6 +2,47 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.27.0] - 2026-05-25
+
+### Added (Phase 6z — float / hex / bin / oct numeric literal lowering)
+
+`lower_factor_atom` now hands every `TokenType::Number` token to a new helper, `lower_numeric_literal`, which dispatches on shape (radix-prefix → IntLit with chosen radix; float-shape → FloatLit; otherwise → decimal IntLit).
+
+### Lowering
+
+| Source       | SIR shape                                |
+|--------------|------------------------------------------|
+| `42`         | `IntLit { value: 42 }`                   |
+| `1_000_000`  | `IntLit { value: 1000000 }`              |
+| `0x1F`       | `IntLit { value: 31 }` (radix 16)        |
+| `0xDEAD_BEEF`| `IntLit { value: 3735928559 }`           |
+| `0b1010`     | `IntLit { value: 10 }` (radix 2)         |
+| `0o17`       | `IntLit { value: 15 }` (radix 8)         |
+| `0d42`       | `IntLit { value: 42 }` (radix 10 explicit) |
+| `1.5`        | `FloatLit { value: 1.5 }`                |
+| `1e10`       | `FloatLit { value: 1e10 }`               |
+| `1.5e-3`     | `FloatLit { value: 0.0015 }`             |
+
+Float literals additionally trigger `Feature::Floats` in the module manifest.  The manifest aggregator now propagates `Feature::Floats` alongside the prior set (`Strings`, `Closures`, `Symbols`, etc.).
+
+Underscore separators are stripped before parsing.  Radix detection checks `bytes[1] ∈ {x,X,b,B,o,O,d,D}` after a leading `0`.  Float detection is a single scan for `.` or `e`/`E` — mutually exclusive with radix prefixes in the Ruby grammar.
+
+### v0 deferred limitations
+
+- Rational (`r`) / Complex (`i`) numeric suffixes (lexed by Phase 4f) are rejected by the integer-parse path — a future phase will route those into `BuiltinCall("rational", ...)` / `BuiltinCall("complex", ...)` markers.
+- Negative literals continue to flow through the Phase 6k unary-minus path; this routine sees only the magnitude.
+- Legacy octal (`017` without `0o` prefix) is not supported by either the lexer or this lowerer.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 121 → **127** (+6):
+  - `float_literal_lowers_to_floatlit_and_triggers_floats_feature` — `1.5`.
+  - `float_literal_with_signed_exponent_lowers_correctly` — `1.5e-3`.
+  - `hex_literal_lowers_to_intlit_with_correct_value` — `0xDEAD_BEEF` + asserts Floats feature NOT triggered.
+  - `binary_literal_lowers_to_intlit` — `0b1010`.
+  - `octal_literal_lowers_to_intlit` — `0o17`.
+  - `float_literal_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.26.0] - 2026-05-25
 
 ### Added (Phase 6y — string interpolation lowering)
