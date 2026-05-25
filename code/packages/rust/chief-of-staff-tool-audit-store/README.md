@@ -295,6 +295,9 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries flatten host-run escalation dashboard
   lane queue action-rollup digest status, priority, and route flags for compact
   host-log queues
+- supervisor drain reports and summaries expose host-run escalation dashboard
+  lane queue action-rollup route keys that bind compact route buckets back to
+  action-rollup digests for host-log grouping and drift checks
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
