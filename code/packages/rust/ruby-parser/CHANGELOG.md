@@ -2,6 +2,52 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.18.0] - 2026-05-24
+
+### Added (Phase 6q — modifier conditionals/loops `x if y`, `x unless y`, `x while y`, `x until y`)
+
+Trailing-modifier surface syntax for one-line `if`/`unless`/`while`/`until`.
+
+#### Grammar change
+
+```
+statement          = ... | return_statement | break_statement | next_statement |
+                     modifier_statement | assignment | method_with_block | method_call |
+                     method_call_no_paren | expression_stmt ;
+modifier_statement = ( assignment | method_call_no_paren | method_call | expression_stmt )
+                     ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" )
+                     expression ;
+```
+
+Placement: AFTER the keyword-led statements (so `if y ... end` still wins) and BEFORE the bare statement forms (so we try the modifier wrapper before committing to a plain statement).  PEG-style alternation backtracking unwinds cleanly when the trailing keyword isn't present, falling through to the plain forms.
+
+#### Lexer-side disambiguation
+
+The trailing keyword tokens use special values (`if_modifier` etc., not bare `if`/etc.) because ruby-lexer's `tag_modifier_keywords` post-pass re-tags `if`/`unless`/`while`/`until` Keyword tokens to `*_modifier` when they follow an expression-ending token on the same line.  Leading-keyword forms keep the bare values and continue to match the existing `if_statement` / `unless_statement` / `while_statement` / `until_statement` rules.
+
+This sidesteps the grammar's newline-insensitive default mode (modifier syntax is intrinsically a same-line construct in Ruby).  Without the lexer split, two-line programs like `x = 1\nif y ... end` would mis-parse as `(x = 1) if y` followed by orphaned `end`.
+
+#### Lowering (in `ruby-to-semantic-ir`)
+
+| Source              | Lowered SIR                                              |
+|---------------------|----------------------------------------------------------|
+| `lhs if cond`       | `Stmt::ExprStmt(Expr::If(cond, [lhs], Nil))`             |
+| `lhs unless cond`   | `Stmt::ExprStmt(Expr::If(not(cond), [lhs], Nil))`        |
+| `lhs while cond`    | `Stmt::While(cond, [lhs])`                               |
+| `lhs until cond`    | `Stmt::While(not(cond), [lhs])`                          |
+
+Same `Expr::If` / `Stmt::While` shapes as the leading-keyword forms — downstream emitters (semantic-ir-to-python, -rust, -typescript, -go) need zero new code paths.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 78 → **84** (+6):
+  - `test_parse_if_modifier_simple` — `puts "hi" if cond` parses with `if_modifier`.
+  - `test_parse_unless_modifier_with_assignment_lhs` — `x = 1 unless cond`.
+  - `test_parse_while_modifier` — `puts "tick" while cond`.
+  - `test_parse_until_modifier_with_assignment_lhs` — `x = 1 until cond`.
+  - `test_parse_leading_if_not_tagged_as_modifier` — regression: `if y ... end` stays `if_statement`.
+  - `test_parse_two_statements_across_newline` — regression: `x = 1\nif y ... end` stays two statements.
+
 ## [0.17.0] - 2026-05-24
 
 ### Added (Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`)

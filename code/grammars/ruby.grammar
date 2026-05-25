@@ -25,7 +25,43 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+# Phase 6q — modifier conditionals/loops `x if y`, `x unless y`,
+# `x while y`, `x until y`.
+#
+# Placed AFTER the keyword-starting forms (`if_statement`, `while_statement`,
+# etc.) so they win first when a line *begins* with one of those keywords,
+# and BEFORE the bare statement forms (`assignment`, `method_call_no_paren`,
+# `expression_stmt`) so we try the modifier wrapper before committing to a
+# plain statement.  PEG-style backtracking on alternation failure unwinds
+# cleanly when the trailing `if|unless|while|until expression` clause isn't
+# present, falling through to the plain forms.
+#
+# The leading alternation duplicates the LHS forms that can sensibly carry
+# a trailing modifier:
+#   - assignment        — `x = 1 if cond`
+#   - method_call_no_paren — `puts "hi" if cond`
+#   - method_call       — `puts(1) if cond`
+#   - expression_stmt   — `x + 1 if cond`, `42 if cond`
+#
+# `method_with_block` is intentionally omitted; trailing modifiers on blocks
+# are rare in idiomatic Ruby and the AST shape doesn't need it.
+#
+# Lowering (in ruby-to-semantic-ir):
+#   `lhs if cond`    → ExprStmt(If(cond, Block{stmts:[lhs]}, NilLit))
+#   `lhs unless cond`→ ExprStmt(If(not cond, Block{stmts:[lhs]}, NilLit))
+#   `lhs while cond` → While(cond, Block{stmts:[lhs]})
+#   `lhs until cond` → While(not cond, Block{stmts:[lhs]})
+# The trailing keyword tokens are LEXER-DISAMBIGUATED: ruby-lexer's
+# `tag_modifier_keywords` post-pass re-tags `if`/`unless`/`while`/`until`
+# to `if_modifier`/`unless_modifier`/`while_modifier`/`until_modifier`
+# when they follow an expression-ending token on the same line.  The
+# leading-keyword statement rules (`if_statement`, etc.) match the bare
+# `"if"` literal — those tokens are never re-tagged because they sit at
+# the start of a line / after a semicolon / after a non-expression-ending
+# token.  This split sidesteps the grammar's newline-insensitive default
+# mode (modifier syntax is intrinsically a same-line construct in Ruby).
+modifier_statement = ( assignment | method_call_no_paren | method_call | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
 def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"end" statement } "end" ;
 # Phase 6f — class/module namespace declarations.  The body is a
 # sequence of statements (which may include nested `def`s).  Like

@@ -2,6 +2,36 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.18.0] - 2026-05-24
+
+### Added (Phase 6q — modifier conditionals/loops lowering)
+
+New `lower_modifier_statement` handler dispatches on the parser's `modifier_statement` node.
+
+Lowering table:
+
+| Source              | Lowered SIR                                              |
+|---------------------|----------------------------------------------------------|
+| `lhs if cond`       | `Stmt::ExprStmt(Expr::If(cond, [lhs], Nil))`             |
+| `lhs unless cond`   | `Stmt::ExprStmt(Expr::If(not(cond), [lhs], Nil))`        |
+| `lhs while cond`    | `Stmt::While(cond, [lhs])`                               |
+| `lhs until cond`    | `Stmt::While(not(cond), [lhs])`                          |
+
+The lowering produces the same canonical `Expr::If` / `Stmt::While` shapes as the leading-keyword `if_statement` / `while_statement` lowerings — every downstream emitter (semantic-ir-to-python, -rust, -typescript, -go) handles modifier forms transparently with no new code paths.
+
+`while`/`until` modifier variants set `Feature::Loops` automatically, matching the leading-keyword loop behaviour.
+
+The LHS statement is wrapped in a single-statement `Block` whose `value` is `NilLit` — the modifier form is never tail-promoted to an expression (it sits in statement position only).
+
+### Tests
+
+- `ruby-to-semantic-ir`: 81 → **86** (+5):
+  - `if_modifier_lowers_to_expr_if_statement` — produces `ExprStmt(If)` with bare cond.
+  - `unless_modifier_wraps_condition_in_not` — cond becomes `BuiltinCall(not, …)`.
+  - `while_modifier_lowers_to_stmt_while` — `Stmt::While` with bare cond.
+  - `until_modifier_negates_condition_in_while` — `Stmt::While` with `not(cond)`.
+  - `modifier_module_passes_sir_validator` — end-to-end validator smoke test across all four forms.
+
 ## [0.17.0] - 2026-05-24
 
 ### Added (Phase 6p — compound assignment lowering)

@@ -368,6 +368,14 @@ impl Lowerer {
                     span: self.span_of(node),
                 });
             }
+            "modifier_statement" => {
+                // Phase 6q: trailing-modifier conditionals/loops.
+                // `lhs if cond`    → ExprStmt(If(cond, [lhs], Nil))
+                // `lhs unless cond`→ ExprStmt(If(not cond, [lhs], Nil))
+                // `lhs while cond` → While(cond, [lhs])
+                // `lhs until cond` → While(not cond, [lhs])
+                self.lower_modifier_statement(node)
+            }
             "return_statement" | "break_statement" | "next_statement" => {
                 // Phase 6j: control-flow keywords lower to BuiltinCall
                 // with Effect::Divergent.  Optional trailing expression
@@ -611,6 +619,190 @@ impl Lowerer {
             body,
             span: self.span_of(node),
         })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6q — modifier conditionals/loops
+    // -------------------------------------------------------------------
+
+    /// Lower a `modifier_statement` node — Ruby's trailing-modifier
+    /// surface syntax for one-line `if`/`unless`/`while`/`until`.
+    ///
+    /// Grammar shape (per `ruby.grammar`):
+    /// ```text
+    /// modifier_statement = ( assignment
+    ///                      | method_call_no_paren
+    ///                      | method_call
+    ///                      | expression_stmt )
+    ///                      ( "if_modifier" | "unless_modifier"
+    ///                      | "while_modifier" | "until_modifier" )
+    ///                      expression ;
+    /// ```
+    ///
+    /// AST children layout: `[ lhs_node, modifier_kw_token, cond_node ]`
+    /// — the leading group lands a single inner-rule node (one of the
+    /// four LHS alternatives), then a keyword token whose value is
+    /// `if_modifier`/`unless_modifier`/`while_modifier`/`until_modifier`
+    /// (re-tagged by the lexer's `tag_modifier_keywords` post-pass),
+    /// then the trailing `expression` node for the condition.
+    ///
+    /// Lowering table (the table form is reproduced in `ruby.grammar`):
+    ///
+    /// | Source              | Lowered SIR                                              |
+    /// |---------------------|----------------------------------------------------------|
+    /// | `lhs if cond`       | `Stmt::ExprStmt(Expr::If(cond, [lhs], Nil))`             |
+    /// | `lhs unless cond`   | `Stmt::ExprStmt(Expr::If(not(cond), [lhs], Nil))`        |
+    /// | `lhs while cond`    | `Stmt::While(cond, [lhs])`                               |
+    /// | `lhs until cond`    | `Stmt::While(not(cond), [lhs])`                          |
+    ///
+    /// Lowering identity with the leading-keyword forms — same `Expr::If` /
+    /// `Stmt::While` shapes — means every downstream emitter
+    /// (semantic-ir-to-python / -rust / -typescript / -go) needs zero
+    /// new code paths.  The Ruby user sees a syntactic shortcut; the
+    /// SIR sees the canonical conditional/loop.
+    ///
+    /// The LHS body is wrapped in a single-statement `Block` (with
+    /// `value: NilLit` — the modifier form is statement-position only,
+    /// never tail-promoted to expression).
+    fn lower_modifier_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Stmt, RubyLowerError> {
+        // 1. Find the LHS inner-rule node.  It's the first child that's
+        //    one of the four LHS-eligible rules.
+        let lhs_node = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n)
+                    if matches!(
+                        n.rule_name.as_str(),
+                        "assignment"
+                            | "method_call"
+                            | "method_call_no_paren"
+                            | "expression_stmt"
+                    ) =>
+                {
+                    Some(n)
+                }
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "modifier_statement missing LHS inner-rule node".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+
+        // 2. Find the modifier keyword token value.  The lexer
+        //    guarantees one of the four `*_modifier` values lives in
+        //    a Keyword token between LHS and cond.
+        let modifier_kw = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(
+                        t.value.as_str(),
+                        "if_modifier"
+                            | "unless_modifier"
+                            | "while_modifier"
+                            | "until_modifier"
+                    ) =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "modifier_statement missing modifier keyword token".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+
+        // 3. Find the cond expression — the LAST `expression` rule
+        //    node among direct children.  (LHS may contain nested
+        //    `expression` nodes, but those are grand-children of
+        //    `modifier_statement`, not direct children.  Using the
+        //    last-direct-child position is robust against future
+        //    grammar tweaks that might insert intermediate nodes.)
+        let cond_node = node
+            .children
+            .iter()
+            .rev()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "modifier_statement missing condition expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+
+        // 4. Lower the LHS into a Stmt, then wrap in a single-stmt
+        //    Block.  Block.value is NilLit — modifier forms never sit
+        //    in tail position.
+        let lhs_stmt = self.lower_statement_inner(lhs_node)?;
+        let body_block = Block {
+            stmts: vec![lhs_stmt],
+            value: Expr::NilLit {
+                span: self.span_of(node),
+            },
+            span: self.span_of(node),
+        };
+
+        // 5. Lower the condition.  For `unless_modifier` / `until_modifier`,
+        //    wrap it in `not` — identical to the leading-keyword
+        //    `unless_statement` / `until_statement` lowerings.
+        let mut cond = self.lower_expression(cond_node)?;
+        let negate =
+            matches!(modifier_kw, "unless_modifier" | "until_modifier");
+        if negate {
+            cond = Expr::BuiltinCall {
+                name: "not".to_string(),
+                args: vec![cond],
+                effects: EffectSet::PURE,
+                span: self.span_of(cond_node),
+            };
+        }
+
+        // 6. Emit If (conditional modifiers) or While (loop modifiers).
+        match modifier_kw {
+            "if_modifier" | "unless_modifier" => {
+                let else_block = Block {
+                    stmts: Vec::new(),
+                    value: Expr::NilLit {
+                        span: self.span_of(node),
+                    },
+                    span: self.span_of(node),
+                };
+                Ok(Stmt::ExprStmt {
+                    expr: Expr::If {
+                        cond: Box::new(cond),
+                        then_branch: Box::new(body_block),
+                        else_branch: Box::new(else_block),
+                        span: self.span_of(node),
+                    },
+                    span: self.span_of(node),
+                })
+            }
+            "while_modifier" | "until_modifier" => {
+                self.features_used.insert(Feature::Loops);
+                Ok(Stmt::While {
+                    cond,
+                    body: body_block,
+                    span: self.span_of(node),
+                })
+            }
+            // The token-value filter above already rejected anything
+            // outside the four valid modifier values; this arm is
+            // unreachable.
+            other => Err(RubyLowerError {
+                message: format!("unknown modifier keyword `{other}`"),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            }),
+        }
     }
 
     // -------------------------------------------------------------------
