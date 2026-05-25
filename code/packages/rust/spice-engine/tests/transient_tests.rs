@@ -8,7 +8,7 @@ use spice_engine::{
     pss_with_tolerance, transient, transient_adaptive, transient_with_method,
     AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
     CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
-    Inductor, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
     PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
     PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
@@ -19,6 +19,56 @@ fn assert_close(actual: f64, expected: f64) {
     assert!(
         (actual - expected).abs() < 1.0e-9,
         "expected {expected}, got {actual}"
+    );
+}
+
+#[test]
+fn transient_jfet_source_follower_charges_output_capacitor() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vdd", "vdd", "0", 10.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vg",
+        "gate",
+        "0",
+        0.0,
+        Waveform::Pwl(PwlWaveform::new(vec![
+            (0.0, 0.0),
+            (1.0e-6, 1.0),
+            (2.0e-6, 1.0),
+        ])),
+    )));
+    circuit.add(Element::Jfet(Jfet::with_model(
+        "J1",
+        "vdd",
+        "gate",
+        "out",
+        JfetPolarity::Njf,
+        1.0e-3,
+        -2.0,
+        0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("Rs", "out", "0", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 1.0e-9,
+    )));
+
+    let points = transient(&circuit, 1.0e-7, 2.0e-6).unwrap();
+
+    let initial_out = points[0].voltage("out").unwrap();
+    let final_out = points.last().unwrap().voltage("out").unwrap();
+    assert!(
+        final_out > initial_out + 1.0,
+        "expected JFET output to charge from {initial_out}, got {final_out}"
+    );
+    assert!(
+        final_out > 1.5,
+        "expected JFET output to charge, got {final_out}"
+    );
+    assert!(
+        final_out < 2.0,
+        "expected source below gate plus threshold, got {final_out}"
     );
 }
 

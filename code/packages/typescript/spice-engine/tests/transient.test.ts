@@ -24,6 +24,7 @@ import {
   fourier,
   inductor,
   inductorWithInitialCurrent,
+  jfet,
   mutualInductor,
   pss,
   pssNewtonCandidate,
@@ -53,6 +54,31 @@ function expectClose(actual: number | undefined, expected: number): void {
 }
 
 describe("transient", () => {
+  it("lets a JFET source follower charge an output capacitor", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vg",
+        "gate",
+        "0",
+        0.0,
+        new PwlWaveform([[0.0, 0.0], [1.0e-6, 1.0], [2.0e-6, 1.0]]),
+      ),
+    );
+    circuit.add(jfet("J1", "vdd", "gate", "out", "NJF", 1.0e-3, -2.0));
+    circuit.add(resistor("Rs", "out", "0", 1_000.0));
+    circuit.add(capacitor("Cout", "out", "0", 1.0e-9));
+
+    const points = transient(circuit, 1.0e-7, 2.0e-6);
+
+    const initialOut = points[0].voltage("out");
+    const finalOut = points[points.length - 1].voltage("out");
+    expect(finalOut).toBeGreaterThan(initialOut! + 1.0);
+    expect(finalOut).toBeGreaterThan(1.5);
+    expect(finalOut).toBeLessThan(2.0);
+  });
+
   it("reports periods for periodic source waveforms", () => {
     expectClose(waveformPeriod(new SinWaveform(0.0, 1.0, 2.0)), 0.5);
     expect(waveformPeriod(new SinWaveform(0.0, 1.0, 2.0, 0.0, 1.0))).toBeUndefined();
