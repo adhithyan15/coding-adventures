@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.0.0 — 2026-05-25
+
+### Added
+
+- **Phase 62 — Two-Log × polynomial numerator** (`twoLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), polynomial..., bounded...)` as a
+  numerator that vanishes at infinity.  Effective degree = `poly_deg` (log²
+  contributes nothing).  Closes when `denDeg > twoLogPolyEffectiveDeg` or
+  denominator is non-polynomial diverging.  Sqrt factors refused.
+  - 4 new tests in the "Phase 62" describe block.
+
 ## 1.9.0 — 2026-05-25
 
 **Phase 61 — Two-Sqrt × polynomial numerator (TypeScript port).**
