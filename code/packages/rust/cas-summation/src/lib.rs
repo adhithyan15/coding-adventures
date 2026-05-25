@@ -1331,6 +1331,76 @@ fn bounded_log_poly_degree(node: &IRNode, k: &IRNode) -> Option<i64> {
     Some(poly_deg)
 }
 
+/// Return `sqrt_inner_deg + 2 * poly_deg` when `node` is a `Mul` with
+/// exactly one `Sqrt(positive-leading polynomial P)` factor, any polynomial
+/// factors (total degree `poly_deg`), and any number of bounded factors in
+/// `k`; `None` otherwise.
+///
+/// Phase 59 — Bounded × Sqrt(P) × polynomial numerator.
+///
+/// Fills the gap between:
+/// * **Phase 53** — `Mul(Sqrt, polynomial_only)`: refuses bounded factors.
+/// * **Phase 56** — `Mul(bounded, Sqrt)`: refuses polynomial factors.
+///
+/// Effective growth: `C · k^{deg(P)/2 + poly_deg}`.  Using the ×2 integer
+/// trick (same as Phase 51, 53, 56, 57): `effective_x2 = deg(P) + 2·poly_deg`.
+/// The caller checks `2 * den_deg > effective_x2` to avoid floating-point
+/// comparisons involving the half-integer degree.
+///
+/// Log factors are explicitly refused — that combination belongs to
+/// Phase 57 (`bounded × Log × Sqrt`).
+///
+/// Algorithm:
+///   1. Require `node = Mul(...)`.
+///   2. For each factor:
+///      - `Sqrt(positive-leading polynomial)` → record `×2` degree via
+///        `sqrt_effective_half_degree_x2`; refuse if a second appears.
+///      - `Log(diverging)` → immediately return `None` (Phase 57 territory).
+///      - polynomial in `k` → accumulate degree.
+///      - bounded (non-polynomial, non-Sqrt, non-Log) → accept silently.
+///      - Anything else → return `None`.
+///   3. Require exactly one Sqrt factor.
+///   4. Return `sqrt_inner_deg + 2 * poly_deg`.
+fn bounded_sqrt_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut sqrt_inner_deg: Option<i64> = None;
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        // Sqrt(positive-leading polynomial) factor?
+        if let Some(deg_x2) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_inner_deg.is_some() {
+                // Two Sqrt factors — refuse.
+                return None;
+            }
+            sqrt_inner_deg = Some(deg_x2);
+            continue;
+        }
+        // Log factor — refuse (belongs to Phase 57 territory).
+        if is_log_of_diverging_in_k(arg, k) {
+            return None;
+        }
+        // Polynomial factor?
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg += deg;
+            continue;
+        }
+        // Bounded (non-polynomial, non-Sqrt, non-Log)?
+        if is_bounded_in_k(arg, k) {
+            continue;
+        }
+        // Unrecognised factor — bail.
+        return None;
+    }
+    let sid = sqrt_inner_deg?;
+    Some(sid + 2 * poly_deg)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1445,6 +1515,20 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(blp_deg) = bounded_log_poly_degree(num, k) {
         if let Some(den_deg_blp) = polynomial_degree_in_k(den, k) {
             if den_deg_blp > blp_deg {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 59: `Mul(bounded, Sqrt(positive-poly), polynomial)` numerator.
+    // Bounded × Sqrt × polynomial: effective_x2 = sqrt_inner_deg + 2·poly_deg.
+    // Vanishes when `2·den_deg > effective_x2` (polynomial) or non-polynomial diverging denom.
+    // Closes the gap between Phase 53 (Sqrt×poly, refuses bounded) and
+    // Phase 56 (bounded×Sqrt, refuses poly).  Log factors are refused → Phase 57.
+    if let Some(bsp_x2) = bounded_sqrt_poly_effective_x2(num, k) {
+        if let Some(den_deg_bsp) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_bsp > bsp_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {
