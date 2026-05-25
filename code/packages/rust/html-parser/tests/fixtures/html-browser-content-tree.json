@@ -804,6 +804,20 @@
       }
     },
     {
+      "id": "image-map-nodes",
+      "description": "Image map and area elements expose map names, hit regions, and navigation metadata.",
+      "input": "<base href=\"https://example.test/gallery/index.html\"><body><img src=hero.jpg alt=Hero usemap=#hero-map><map id=map-node name=hero-map><area id=cta shape=rect coords=\"0,0,120,60\" href=details.html alt=\"Details\" target=preview rel=\"nofollow external\" ping=\"track.html\" hreflang=en><area id=logo coords=\"10,10,40,40\" href=#logo alt=Logo></map>",
+      "expected": {
+        "children": [
+          { "role": "image", "name": "img", "text": null, "href": null, "src": "hero.jpg", "resolved_src": "https://example.test/gallery/hero.jpg", "alt": "Hero", "resource_kind": "image", "control_type": null, "children": [] },
+          { "role": "image_map", "name": "map", "id": "map-node", "text": null, "href": null, "src": null, "alt": null, "image_map_name": "hero-map", "control_type": null, "children": [
+            { "role": "image_map_area", "name": "area", "id": "cta", "text": null, "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "hreflang": "en", "src": null, "alt": "Details", "image_map_shape": "rect", "image_map_coords": "0,0,120,60", "control_type": null, "children": [] },
+            { "role": "image_map_area", "name": "area", "id": "logo", "text": null, "href": "#logo", "resolved_href": "https://example.test/gallery/index.html#logo", "src": null, "alt": "Logo", "image_map_shape": "rect", "image_map_coords": "10,10,40,40", "control_type": null, "children": [] }
+          ] }
+        ]
+      }
+    },
+    {
       "id": "measurement-nodes",
       "description": "Meter and progress elements expose range/value metadata while behaving like labelable browser widgets.",
       "input": "<body><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7>72%</meter><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=indeterminate max=1>Loading</progress>",
