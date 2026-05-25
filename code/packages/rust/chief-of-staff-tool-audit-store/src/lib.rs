@@ -4627,6 +4627,143 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_run_escalation_route_key_labels_match()
     }
 
+    /// Return the host-run escalation queue priority.
+    pub fn host_run_escalation_queue_priority(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.host_run_escalation_route_key().queue_priority()
+    }
+
+    /// Return the stable host-run escalation queue priority label.
+    pub fn host_run_escalation_queue_priority_label(&self) -> &'static str {
+        self.host_run_escalation_queue_priority().as_str()
+    }
+
+    /// Return whether the escalation queue priority label parses back.
+    pub fn host_run_escalation_queue_priority_label_matches_priority(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueuePriority::from_label(
+            self.host_run_escalation_queue_priority_label(),
+        ) == Some(self.host_run_escalation_queue_priority())
+    }
+
+    /// Return whether escalation queue priority matches the route key.
+    pub fn host_run_escalation_queue_priority_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_priority()
+            == self.host_run_escalation_route_key().queue_priority()
+    }
+
+    /// Return the host-run escalation queue readiness.
+    pub fn host_run_escalation_queue_readiness(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.host_run_escalation_route_key().queue_readiness()
+    }
+
+    /// Return the stable host-run escalation queue readiness label.
+    pub fn host_run_escalation_queue_readiness_label(&self) -> &'static str {
+        self.host_run_escalation_queue_readiness().as_str()
+    }
+
+    /// Return whether the escalation queue readiness label parses back.
+    pub fn host_run_escalation_queue_readiness_label_matches_readiness(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(
+            self.host_run_escalation_queue_readiness_label(),
+        ) == Some(self.host_run_escalation_queue_readiness())
+    }
+
+    /// Return whether escalation queue readiness matches the route key.
+    pub fn host_run_escalation_queue_readiness_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_readiness()
+            == self.host_run_escalation_route_key().queue_readiness()
+    }
+
+    /// Return the compact host-run escalation queue key.
+    pub fn host_run_escalation_queue_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationQueueKey {
+        ToolAuditSupervisorDrainHostRunEscalationQueueKey::new(
+            self.host_run_escalation_route_key(),
+            self.host_run_escalation_queue_priority(),
+            self.host_run_escalation_queue_readiness(),
+        )
+    }
+
+    /// Return the stable host-run escalation queue-key label.
+    pub fn host_run_escalation_queue_key_label(&self) -> String {
+        self.host_run_escalation_queue_key().label()
+    }
+
+    /// Return whether the escalation queue-key label parses back to its typed key.
+    pub fn host_run_escalation_queue_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_label(
+            &self.host_run_escalation_queue_key_label(),
+        ) == Some(self.host_run_escalation_queue_key())
+    }
+
+    /// Return whether the queue key's route-key component matches the typed route key.
+    pub fn host_run_escalation_queue_key_route_key_matches_key(&self) -> bool {
+        self.host_run_escalation_queue_key()
+            .route_key_matches(self.host_run_escalation_route_key())
+    }
+
+    /// Return whether the queue key's priority component matches the typed priority.
+    pub fn host_run_escalation_queue_key_priority_matches_priority(&self) -> bool {
+        self.host_run_escalation_queue_key()
+            .priority_matches(self.host_run_escalation_queue_priority())
+    }
+
+    /// Return whether the queue key's readiness component matches the typed readiness.
+    pub fn host_run_escalation_queue_key_readiness_matches_readiness(&self) -> bool {
+        self.host_run_escalation_queue_key()
+            .readiness_matches(self.host_run_escalation_queue_readiness())
+    }
+
+    /// Return whether the queue key's priority component matches its route key.
+    pub fn host_run_escalation_queue_key_priority_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_key()
+            .priority_matches_route_key()
+    }
+
+    /// Return whether the queue key's readiness component matches its route key.
+    pub fn host_run_escalation_queue_key_readiness_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_key()
+            .readiness_matches_route_key()
+    }
+
+    /// Return whether every escalation queue-key component matches its source classifier.
+    pub fn host_run_escalation_queue_key_parts_match(&self) -> bool {
+        self.host_run_escalation_queue_key().parts_match(
+            self.host_run_escalation_route_key(),
+            self.host_run_escalation_queue_priority(),
+            self.host_run_escalation_queue_readiness(),
+        )
+    }
+
+    /// Return whether any escalation queue-key component drifted.
+    pub fn has_host_run_escalation_queue_key_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_queue_key_parts_match()
+            || !self.host_run_escalation_queue_key_priority_matches_route_key()
+            || !self.host_run_escalation_queue_key_readiness_matches_route_key()
+    }
+
+    /// Return whether host-run escalation queue-key labels match their source classifiers.
+    pub fn host_run_escalation_queue_key_labels_match(&self) -> bool {
+        self.host_run_escalation_route_key_labels_match()
+            && self.host_run_escalation_queue_priority_label_matches_priority()
+            && self.host_run_escalation_queue_priority_matches_route_key()
+            && self.host_run_escalation_queue_readiness_label_matches_readiness()
+            && self.host_run_escalation_queue_readiness_matches_route_key()
+            && self.host_run_escalation_queue_key_label_matches_key()
+            && self.host_run_escalation_queue_key_parts_match()
+            && self.host_run_escalation_queue_key_priority_matches_route_key()
+            && self.host_run_escalation_queue_key_readiness_matches_route_key()
+    }
+
+    /// Return whether any host-run escalation queue-key label drifted.
+    pub fn has_host_run_escalation_queue_key_label_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_queue_key_labels_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -5511,6 +5648,42 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_escalation_route_key_labels_match(),
             has_host_run_escalation_route_key_label_integrity_drift: self
                 .has_host_run_escalation_route_key_label_integrity_drift(),
+            host_run_escalation_queue_priority: self.host_run_escalation_queue_priority(),
+            host_run_escalation_queue_priority_label: self
+                .host_run_escalation_queue_priority_label(),
+            host_run_escalation_queue_priority_label_matches_priority: self
+                .host_run_escalation_queue_priority_label_matches_priority(),
+            host_run_escalation_queue_priority_matches_route_key: self
+                .host_run_escalation_queue_priority_matches_route_key(),
+            host_run_escalation_queue_readiness: self.host_run_escalation_queue_readiness(),
+            host_run_escalation_queue_readiness_label: self
+                .host_run_escalation_queue_readiness_label(),
+            host_run_escalation_queue_readiness_label_matches_readiness: self
+                .host_run_escalation_queue_readiness_label_matches_readiness(),
+            host_run_escalation_queue_readiness_matches_route_key: self
+                .host_run_escalation_queue_readiness_matches_route_key(),
+            host_run_escalation_queue_key: self.host_run_escalation_queue_key(),
+            host_run_escalation_queue_key_label: self.host_run_escalation_queue_key_label(),
+            host_run_escalation_queue_key_label_matches_key: self
+                .host_run_escalation_queue_key_label_matches_key(),
+            host_run_escalation_queue_key_route_key_matches_key: self
+                .host_run_escalation_queue_key_route_key_matches_key(),
+            host_run_escalation_queue_key_priority_matches_priority: self
+                .host_run_escalation_queue_key_priority_matches_priority(),
+            host_run_escalation_queue_key_readiness_matches_readiness: self
+                .host_run_escalation_queue_key_readiness_matches_readiness(),
+            host_run_escalation_queue_key_priority_matches_route_key: self
+                .host_run_escalation_queue_key_priority_matches_route_key(),
+            host_run_escalation_queue_key_readiness_matches_route_key: self
+                .host_run_escalation_queue_key_readiness_matches_route_key(),
+            host_run_escalation_queue_key_parts_match: self
+                .host_run_escalation_queue_key_parts_match(),
+            has_host_run_escalation_queue_key_integrity_drift: self
+                .has_host_run_escalation_queue_key_integrity_drift(),
+            host_run_escalation_queue_key_labels_match: self
+                .host_run_escalation_queue_key_labels_match(),
+            has_host_run_escalation_queue_key_label_integrity_drift: self
+                .has_host_run_escalation_queue_key_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -6988,6 +7161,46 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_route_key_labels_match: bool,
     /// Whether any host-run escalation route-key label drifted.
     pub has_host_run_escalation_route_key_label_integrity_drift: bool,
+    /// Host-run escalation queue priority.
+    pub host_run_escalation_queue_priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+    /// Stable host-run escalation queue priority label.
+    pub host_run_escalation_queue_priority_label: &'static str,
+    /// Whether the escalation queue priority label parses back.
+    pub host_run_escalation_queue_priority_label_matches_priority: bool,
+    /// Whether escalation queue priority matches the route key.
+    pub host_run_escalation_queue_priority_matches_route_key: bool,
+    /// Host-run escalation queue readiness.
+    pub host_run_escalation_queue_readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    /// Stable host-run escalation queue readiness label.
+    pub host_run_escalation_queue_readiness_label: &'static str,
+    /// Whether the escalation queue readiness label parses back.
+    pub host_run_escalation_queue_readiness_label_matches_readiness: bool,
+    /// Whether escalation queue readiness matches the route key.
+    pub host_run_escalation_queue_readiness_matches_route_key: bool,
+    /// Compact host-run escalation queue key.
+    pub host_run_escalation_queue_key: ToolAuditSupervisorDrainHostRunEscalationQueueKey,
+    /// Stable host-run escalation queue-key label.
+    pub host_run_escalation_queue_key_label: String,
+    /// Whether the escalation queue-key label parses back to its typed key.
+    pub host_run_escalation_queue_key_label_matches_key: bool,
+    /// Whether the queue key's route-key component matches the typed route key.
+    pub host_run_escalation_queue_key_route_key_matches_key: bool,
+    /// Whether the queue key's priority component matches the typed priority.
+    pub host_run_escalation_queue_key_priority_matches_priority: bool,
+    /// Whether the queue key's readiness component matches the typed readiness.
+    pub host_run_escalation_queue_key_readiness_matches_readiness: bool,
+    /// Whether the queue key's priority component matches its route key.
+    pub host_run_escalation_queue_key_priority_matches_route_key: bool,
+    /// Whether the queue key's readiness component matches its route key.
+    pub host_run_escalation_queue_key_readiness_matches_route_key: bool,
+    /// Whether every escalation queue-key component matches its source classifier.
+    pub host_run_escalation_queue_key_parts_match: bool,
+    /// Whether any escalation queue-key component drifted.
+    pub has_host_run_escalation_queue_key_integrity_drift: bool,
+    /// Whether host-run escalation queue-key labels match their source classifiers.
+    pub host_run_escalation_queue_key_labels_match: bool,
+    /// Whether any host-run escalation queue-key label drifted.
+    pub has_host_run_escalation_queue_key_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -9659,6 +9872,112 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any host-run escalation route-key label drifted.
     pub fn has_host_run_escalation_route_key_label_integrity_drift(&self) -> bool {
         self.has_host_run_escalation_route_key_label_integrity_drift
+    }
+
+    /// Return the host-run escalation queue priority.
+    pub fn host_run_escalation_queue_priority(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.host_run_escalation_queue_priority
+    }
+
+    /// Return the stable host-run escalation queue priority label.
+    pub fn host_run_escalation_queue_priority_label(&self) -> &'static str {
+        self.host_run_escalation_queue_priority_label
+    }
+
+    /// Return whether the escalation queue priority label parses back.
+    pub fn host_run_escalation_queue_priority_label_matches_priority(&self) -> bool {
+        self.host_run_escalation_queue_priority_label_matches_priority
+    }
+
+    /// Return whether escalation queue priority matches the route key.
+    pub fn host_run_escalation_queue_priority_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_priority_matches_route_key
+    }
+
+    /// Return the host-run escalation queue readiness.
+    pub fn host_run_escalation_queue_readiness(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.host_run_escalation_queue_readiness
+    }
+
+    /// Return the stable host-run escalation queue readiness label.
+    pub fn host_run_escalation_queue_readiness_label(&self) -> &'static str {
+        self.host_run_escalation_queue_readiness_label
+    }
+
+    /// Return whether the escalation queue readiness label parses back.
+    pub fn host_run_escalation_queue_readiness_label_matches_readiness(&self) -> bool {
+        self.host_run_escalation_queue_readiness_label_matches_readiness
+    }
+
+    /// Return whether escalation queue readiness matches the route key.
+    pub fn host_run_escalation_queue_readiness_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_readiness_matches_route_key
+    }
+
+    /// Return the compact host-run escalation queue key.
+    pub fn host_run_escalation_queue_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationQueueKey {
+        self.host_run_escalation_queue_key
+    }
+
+    /// Return the stable host-run escalation queue-key label.
+    pub fn host_run_escalation_queue_key_label(&self) -> &str {
+        &self.host_run_escalation_queue_key_label
+    }
+
+    /// Return whether the escalation queue-key label parses back to its typed key.
+    pub fn host_run_escalation_queue_key_label_matches_key(&self) -> bool {
+        self.host_run_escalation_queue_key_label_matches_key
+    }
+
+    /// Return whether the queue key's route-key component matches the typed route key.
+    pub fn host_run_escalation_queue_key_route_key_matches_key(&self) -> bool {
+        self.host_run_escalation_queue_key_route_key_matches_key
+    }
+
+    /// Return whether the queue key's priority component matches the typed priority.
+    pub fn host_run_escalation_queue_key_priority_matches_priority(&self) -> bool {
+        self.host_run_escalation_queue_key_priority_matches_priority
+    }
+
+    /// Return whether the queue key's readiness component matches the typed readiness.
+    pub fn host_run_escalation_queue_key_readiness_matches_readiness(&self) -> bool {
+        self.host_run_escalation_queue_key_readiness_matches_readiness
+    }
+
+    /// Return whether the queue key's priority component matches its route key.
+    pub fn host_run_escalation_queue_key_priority_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_key_priority_matches_route_key
+    }
+
+    /// Return whether the queue key's readiness component matches its route key.
+    pub fn host_run_escalation_queue_key_readiness_matches_route_key(&self) -> bool {
+        self.host_run_escalation_queue_key_readiness_matches_route_key
+    }
+
+    /// Return whether every escalation queue-key component matches its source classifier.
+    pub fn host_run_escalation_queue_key_parts_match(&self) -> bool {
+        self.host_run_escalation_queue_key_parts_match
+    }
+
+    /// Return whether any escalation queue-key component drifted.
+    pub fn has_host_run_escalation_queue_key_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_queue_key_integrity_drift
+    }
+
+    /// Return whether host-run escalation queue-key labels match their source classifiers.
+    pub fn host_run_escalation_queue_key_labels_match(&self) -> bool {
+        self.host_run_escalation_queue_key_labels_match
+    }
+
+    /// Return whether any host-run escalation queue-key label drifted.
+    pub fn has_host_run_escalation_queue_key_label_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_queue_key_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -13459,6 +13778,40 @@ impl ToolAuditSupervisorDrainHostRunEscalationRouteKey {
         self.route.priority_rank().max(self.digest.priority_rank())
     }
 
+    /// Return the escalation queue priority represented by this route key.
+    pub fn queue_priority(self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        if self.is_settled() {
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled
+        } else if self.requires_triage() {
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        } else if self.requires_integrity_investigation() {
+            ToolAuditSupervisorDrainHostRunQueuePriority::IntegrityInvestigation
+        } else if self.requires_investigation() {
+            ToolAuditSupervisorDrainHostRunQueuePriority::Investigation
+        } else if self.requires_manual_review() {
+            ToolAuditSupervisorDrainHostRunQueuePriority::ManualReview
+        } else {
+            ToolAuditSupervisorDrainHostRunQueuePriority::RoutineAction
+        }
+    }
+
+    /// Return the escalation queue readiness represented by this route key.
+    pub fn queue_readiness(self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        if self.is_settled() {
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
+        } else if self.requires_triage() {
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        } else if self.requires_integrity_investigation() {
+            ToolAuditSupervisorDrainHostRunQueueReadiness::IntegrityInvestigationReady
+        } else if self.requires_investigation() {
+            ToolAuditSupervisorDrainHostRunQueueReadiness::InvestigationReady
+        } else if self.requires_manual_review() {
+            ToolAuditSupervisorDrainHostRunQueueReadiness::ManualReviewReady
+        } else {
+            ToolAuditSupervisorDrainHostRunQueueReadiness::RoutineReady
+        }
+    }
+
     /// Return whether this key can route automatically.
     pub fn is_auto_routable(self) -> bool {
         self.route.is_auto_routable() && self.digest.is_auto_routable()
@@ -13492,6 +13845,184 @@ impl ToolAuditSupervisorDrainHostRunEscalationRouteKey {
 }
 
 impl Display for ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable compact queue key for host-run escalation queues.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationQueueKey {
+    route_key: ToolAuditSupervisorDrainHostRunEscalationRouteKey,
+    priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+    readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+}
+
+impl ToolAuditSupervisorDrainHostRunEscalationQueueKey {
+    /// Create an escalation queue key from a route key, priority, and readiness.
+    pub fn new(
+        route_key: ToolAuditSupervisorDrainHostRunEscalationRouteKey,
+        priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> Self {
+        Self {
+            route_key,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Create an escalation queue key from a route key.
+    pub fn from_route_key(route_key: ToolAuditSupervisorDrainHostRunEscalationRouteKey) -> Self {
+        Self::new(
+            route_key,
+            route_key.queue_priority(),
+            route_key.queue_readiness(),
+        )
+    }
+
+    /// Parse a stable compact host-run escalation queue-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("route_key=")?;
+        let (route_key_label, rest) = rest.split_once("|priority=")?;
+        let (priority_label, readiness_label) = rest.split_once("|readiness=")?;
+        let route_key =
+            ToolAuditSupervisorDrainHostRunEscalationRouteKey::from_label(route_key_label)?;
+        let priority = ToolAuditSupervisorDrainHostRunQueuePriority::from_label(priority_label)?;
+        let readiness = ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(readiness_label)?;
+        Some(Self::new(route_key, priority, readiness))
+    }
+
+    /// Return the escalation route key.
+    pub fn route_key(self) -> ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+        self.route_key
+    }
+
+    /// Return the escalation queue priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.priority
+    }
+
+    /// Return the escalation queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.readiness
+    }
+
+    /// Return a stable compact label for escalation queue grouping.
+    pub fn label(self) -> String {
+        format!(
+            "route_key={}|priority={}|readiness={}",
+            self.route_key.label(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this queue-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this key's route-key component matches the supplied route key.
+    pub fn route_key_matches(
+        self,
+        route_key: ToolAuditSupervisorDrainHostRunEscalationRouteKey,
+    ) -> bool {
+        self.route_key == route_key
+    }
+
+    /// Return whether this key's priority component matches the supplied priority.
+    pub fn priority_matches(self, priority: ToolAuditSupervisorDrainHostRunQueuePriority) -> bool {
+        self.priority == priority
+    }
+
+    /// Return whether this key's readiness component matches the supplied readiness.
+    pub fn readiness_matches(
+        self,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> bool {
+        self.readiness == readiness
+    }
+
+    /// Return whether this key's priority component matches its route key.
+    pub fn priority_matches_route_key(self) -> bool {
+        self.priority == self.route_key.queue_priority()
+    }
+
+    /// Return whether this key's readiness component matches its route key.
+    pub fn readiness_matches_route_key(self) -> bool {
+        self.readiness == self.route_key.queue_readiness()
+    }
+
+    /// Return whether every key component matches the supplied source classifiers.
+    pub fn parts_match(
+        self,
+        route_key: ToolAuditSupervisorDrainHostRunEscalationRouteKey,
+        priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> bool {
+        self.route_key_matches(route_key)
+            && self.priority_matches(priority)
+            && self.readiness_matches(readiness)
+    }
+
+    /// Return whether this key is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.route_key.is_settled() && self.priority.is_settled() && self.readiness.is_settled()
+    }
+
+    /// Return whether this key needs host action.
+    pub fn requires_action(self) -> bool {
+        self.route_key.requires_action() || self.readiness.is_actionable()
+    }
+
+    /// Return the sortable escalation queue-key priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.route_key.priority_rank().max(self.priority.rank())
+    }
+
+    /// Return whether this key can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.route_key.is_auto_routable()
+            && self.priority.is_routine_action()
+            && self.readiness.is_auto_routable()
+    }
+
+    /// Return whether this key requires manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.route_key.requires_manual_review()
+            || self.priority.requires_manual_review()
+            || self.readiness.requires_manual_review()
+    }
+
+    /// Return whether this key requires investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.route_key.requires_investigation()
+            || self.priority.requires_investigation()
+            || self.readiness.requires_investigation()
+    }
+
+    /// Return whether this key requires host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.route_key.requires_integrity_investigation()
+            || self.priority.requires_integrity_investigation()
+            || self.readiness.requires_integrity_investigation()
+    }
+
+    /// Return whether this key requires triage.
+    pub fn requires_triage(self) -> bool {
+        self.route_key.requires_triage()
+            || self.priority.requires_triage()
+            || self.readiness.requires_triage()
+    }
+
+    /// Return whether this key has a concrete escalation route.
+    pub fn has_route(self) -> bool {
+        self.route_key.has_route()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunEscalationQueueKey {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
     }
@@ -23314,6 +23845,95 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_escalation_queue_keys_are_stable() {
+        let supervision_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ),
+        );
+        let digest = ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+            supervision_key,
+        );
+        let route_key = ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+            digest,
+        );
+        let queue_key =
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_route_key(route_key);
+
+        assert_eq!(
+            queue_key.label(),
+            "route_key=route=triage|digest=escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|priority=triage|readiness=triage_required"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_label(&queue_key.label()),
+            Some(queue_key)
+        );
+        assert!(queue_key.label_matches_key());
+        assert_eq!(queue_key.route_key(), route_key);
+        assert_eq!(
+            queue_key.priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        );
+        assert_eq!(
+            queue_key.readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+        assert!(queue_key.route_key_matches(route_key));
+        assert!(queue_key.priority_matches(ToolAuditSupervisorDrainHostRunQueuePriority::Triage));
+        assert!(queue_key
+            .readiness_matches(ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired));
+        assert!(queue_key.priority_matches_route_key());
+        assert!(queue_key.readiness_matches_route_key());
+        assert!(queue_key.parts_match(
+            route_key,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+        ));
+        assert!(!queue_key.is_settled());
+        assert!(queue_key.requires_action());
+        assert_eq!(queue_key.priority_rank(), 90);
+        assert!(!queue_key.is_auto_routable());
+        assert!(queue_key.requires_manual_review());
+        assert!(!queue_key.requires_investigation());
+        assert!(!queue_key.requires_integrity_investigation());
+        assert!(queue_key.requires_triage());
+        assert!(queue_key.has_route());
+        assert_eq!(queue_key.to_string(), queue_key.label());
+
+        let stale_queue_key = ToolAuditSupervisorDrainHostRunEscalationQueueKey::new(
+            route_key,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+        );
+        assert!(!stale_queue_key.priority_matches_route_key());
+        assert!(!stale_queue_key.readiness_matches_route_key());
+        assert!(stale_queue_key.parts_match(
+            route_key,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+        ));
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_label(
+                "route_key=route=triage|digest=escalation=unknown|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=triage|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_label(
+                "route_key=route=triage|digest=escalation=triage|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=unknown|readiness=triage_required",
+            ),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_summary_flattens_host_run_supervision_flags() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -23601,6 +24221,84 @@ mod tests {
         assert!(idle_summary.host_run_escalation_route_key_labels_match());
         assert!(!idle_summary.has_host_run_escalation_route_key_label_integrity_drift);
         assert!(!idle_summary.has_host_run_escalation_route_key_label_integrity_drift());
+        let idle_escalation_queue_key =
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_route_key(idle_route_key);
+        assert_eq!(
+            idle_report.host_run_escalation_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled
+        );
+        assert_eq!(
+            idle_report.host_run_escalation_queue_priority_label(),
+            "settled"
+        );
+        assert!(idle_report.host_run_escalation_queue_priority_label_matches_priority());
+        assert!(idle_report.host_run_escalation_queue_priority_matches_route_key());
+        assert_eq!(
+            idle_report.host_run_escalation_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
+        );
+        assert_eq!(
+            idle_report.host_run_escalation_queue_readiness_label(),
+            "settled"
+        );
+        assert!(idle_report.host_run_escalation_queue_readiness_label_matches_readiness());
+        assert!(idle_report.host_run_escalation_queue_readiness_matches_route_key());
+        assert_eq!(
+            idle_report.host_run_escalation_queue_key(),
+            idle_escalation_queue_key
+        );
+        assert_eq!(
+            idle_report.host_run_escalation_queue_key_label(),
+            "route_key=route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=settled|readiness=settled"
+        );
+        assert!(idle_report.host_run_escalation_queue_key_label_matches_key());
+        assert!(idle_report.host_run_escalation_queue_key_route_key_matches_key());
+        assert!(idle_report.host_run_escalation_queue_key_priority_matches_priority());
+        assert!(idle_report.host_run_escalation_queue_key_readiness_matches_readiness());
+        assert!(idle_report.host_run_escalation_queue_key_priority_matches_route_key());
+        assert!(idle_report.host_run_escalation_queue_key_readiness_matches_route_key());
+        assert!(idle_report.host_run_escalation_queue_key_parts_match());
+        assert!(!idle_report.has_host_run_escalation_queue_key_integrity_drift());
+        assert!(idle_report.host_run_escalation_queue_key_labels_match());
+        assert!(!idle_report.has_host_run_escalation_queue_key_label_integrity_drift());
+        assert_eq!(
+            idle_summary.host_run_escalation_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_queue_priority_label(),
+            "settled"
+        );
+        assert!(idle_summary.host_run_escalation_queue_priority_label_matches_priority());
+        assert!(idle_summary.host_run_escalation_queue_priority_matches_route_key());
+        assert_eq!(
+            idle_summary.host_run_escalation_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_queue_readiness_label(),
+            "settled"
+        );
+        assert!(idle_summary.host_run_escalation_queue_readiness_label_matches_readiness());
+        assert!(idle_summary.host_run_escalation_queue_readiness_matches_route_key());
+        assert_eq!(
+            idle_summary.host_run_escalation_queue_key(),
+            idle_escalation_queue_key
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_queue_key_label(),
+            "route_key=route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=settled|readiness=settled"
+        );
+        assert!(idle_summary.host_run_escalation_queue_key_label_matches_key());
+        assert!(idle_summary.host_run_escalation_queue_key_route_key_matches_key());
+        assert!(idle_summary.host_run_escalation_queue_key_priority_matches_priority());
+        assert!(idle_summary.host_run_escalation_queue_key_readiness_matches_readiness());
+        assert!(idle_summary.host_run_escalation_queue_key_priority_matches_route_key());
+        assert!(idle_summary.host_run_escalation_queue_key_readiness_matches_route_key());
+        assert!(idle_summary.host_run_escalation_queue_key_parts_match());
+        assert!(!idle_summary.has_host_run_escalation_queue_key_integrity_drift());
+        assert!(idle_summary.host_run_escalation_queue_key_labels_match());
+        assert!(!idle_summary.has_host_run_escalation_queue_key_label_integrity_drift());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -23816,6 +24514,86 @@ mod tests {
         assert!(!continuation_summary.has_host_run_escalation_route_key_integrity_drift());
         assert!(continuation_summary.host_run_escalation_route_key_labels_match());
         assert!(!continuation_summary.has_host_run_escalation_route_key_label_integrity_drift());
+        let continuation_escalation_queue_key =
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_route_key(
+                continuation_route_key,
+            );
+        assert_eq!(
+            continuation_report.host_run_escalation_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_queue_priority_label(),
+            "triage"
+        );
+        assert!(continuation_report.host_run_escalation_queue_priority_label_matches_priority());
+        assert!(continuation_report.host_run_escalation_queue_priority_matches_route_key());
+        assert_eq!(
+            continuation_report.host_run_escalation_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_queue_readiness_label(),
+            "triage_required"
+        );
+        assert!(continuation_report.host_run_escalation_queue_readiness_label_matches_readiness());
+        assert!(continuation_report.host_run_escalation_queue_readiness_matches_route_key());
+        assert_eq!(
+            continuation_report.host_run_escalation_queue_key(),
+            continuation_escalation_queue_key
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_queue_key_label(),
+            "route_key=route=triage|digest=escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|priority=triage|readiness=triage_required"
+        );
+        assert!(continuation_report.host_run_escalation_queue_key_label_matches_key());
+        assert!(continuation_report.host_run_escalation_queue_key_route_key_matches_key());
+        assert!(continuation_report.host_run_escalation_queue_key_priority_matches_priority());
+        assert!(continuation_report.host_run_escalation_queue_key_readiness_matches_readiness());
+        assert!(continuation_report.host_run_escalation_queue_key_priority_matches_route_key());
+        assert!(continuation_report.host_run_escalation_queue_key_readiness_matches_route_key());
+        assert!(continuation_report.host_run_escalation_queue_key_parts_match());
+        assert!(!continuation_report.has_host_run_escalation_queue_key_integrity_drift());
+        assert!(continuation_report.host_run_escalation_queue_key_labels_match());
+        assert!(!continuation_report.has_host_run_escalation_queue_key_label_integrity_drift());
+        assert_eq!(
+            continuation_summary.host_run_escalation_queue_priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_queue_priority_label(),
+            "triage"
+        );
+        assert!(continuation_summary.host_run_escalation_queue_priority_label_matches_priority());
+        assert!(continuation_summary.host_run_escalation_queue_priority_matches_route_key());
+        assert_eq!(
+            continuation_summary.host_run_escalation_queue_readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_queue_readiness_label(),
+            "triage_required"
+        );
+        assert!(continuation_summary.host_run_escalation_queue_readiness_label_matches_readiness());
+        assert!(continuation_summary.host_run_escalation_queue_readiness_matches_route_key());
+        assert_eq!(
+            continuation_summary.host_run_escalation_queue_key(),
+            continuation_escalation_queue_key
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_queue_key_label(),
+            "route_key=route=triage|digest=escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|priority=triage|readiness=triage_required"
+        );
+        assert!(continuation_summary.host_run_escalation_queue_key_label_matches_key());
+        assert!(continuation_summary.host_run_escalation_queue_key_route_key_matches_key());
+        assert!(continuation_summary.host_run_escalation_queue_key_priority_matches_priority());
+        assert!(continuation_summary.host_run_escalation_queue_key_readiness_matches_readiness());
+        assert!(continuation_summary.host_run_escalation_queue_key_priority_matches_route_key());
+        assert!(continuation_summary.host_run_escalation_queue_key_readiness_matches_route_key());
+        assert!(continuation_summary.host_run_escalation_queue_key_parts_match());
+        assert!(!continuation_summary.has_host_run_escalation_queue_key_integrity_drift());
+        assert!(continuation_summary.host_run_escalation_queue_key_labels_match());
+        assert!(!continuation_summary.has_host_run_escalation_queue_key_label_integrity_drift());
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
@@ -23855,6 +24633,27 @@ mod tests {
         drift_summary.has_host_run_escalation_route_key_integrity_drift = true;
         drift_summary.host_run_escalation_route_key_labels_match = false;
         drift_summary.has_host_run_escalation_route_key_label_integrity_drift = true;
+        drift_summary.host_run_escalation_queue_priority =
+            ToolAuditSupervisorDrainHostRunQueuePriority::Settled;
+        drift_summary.host_run_escalation_queue_priority_label = "settled";
+        drift_summary.host_run_escalation_queue_priority_matches_route_key = false;
+        drift_summary.host_run_escalation_queue_readiness =
+            ToolAuditSupervisorDrainHostRunQueueReadiness::Settled;
+        drift_summary.host_run_escalation_queue_readiness_label = "settled";
+        drift_summary.host_run_escalation_queue_readiness_matches_route_key = false;
+        drift_summary.host_run_escalation_queue_key =
+            ToolAuditSupervisorDrainHostRunEscalationQueueKey::new(
+                drift_summary.host_run_escalation_route_key,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+            );
+        drift_summary.host_run_escalation_queue_key_label =
+            drift_summary.host_run_escalation_queue_key.label();
+        drift_summary.host_run_escalation_queue_key_priority_matches_route_key = false;
+        drift_summary.host_run_escalation_queue_key_readiness_matches_route_key = false;
+        drift_summary.has_host_run_escalation_queue_key_integrity_drift = true;
+        drift_summary.host_run_escalation_queue_key_labels_match = false;
+        drift_summary.has_host_run_escalation_queue_key_label_integrity_drift = true;
         assert!(drift_summary.host_run_supervision_key_label_matches_key());
         assert!(!drift_summary.host_run_supervision_attention_matches_kind());
         assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
@@ -23885,6 +24684,20 @@ mod tests {
         assert!(drift_summary.has_host_run_escalation_route_key_integrity_drift());
         assert!(!drift_summary.host_run_escalation_route_key_labels_match());
         assert!(drift_summary.has_host_run_escalation_route_key_label_integrity_drift());
+        assert!(drift_summary.host_run_escalation_queue_priority_label_matches_priority());
+        assert!(!drift_summary.host_run_escalation_queue_priority_matches_route_key());
+        assert!(drift_summary.host_run_escalation_queue_readiness_label_matches_readiness());
+        assert!(!drift_summary.host_run_escalation_queue_readiness_matches_route_key());
+        assert!(drift_summary.host_run_escalation_queue_key_label_matches_key());
+        assert!(drift_summary.host_run_escalation_queue_key_route_key_matches_key());
+        assert!(drift_summary.host_run_escalation_queue_key_priority_matches_priority());
+        assert!(drift_summary.host_run_escalation_queue_key_readiness_matches_readiness());
+        assert!(!drift_summary.host_run_escalation_queue_key_priority_matches_route_key());
+        assert!(!drift_summary.host_run_escalation_queue_key_readiness_matches_route_key());
+        assert!(drift_summary.host_run_escalation_queue_key_parts_match());
+        assert!(drift_summary.has_host_run_escalation_queue_key_integrity_drift());
+        assert!(!drift_summary.host_run_escalation_queue_key_labels_match());
+        assert!(drift_summary.has_host_run_escalation_queue_key_label_integrity_drift());
 
         let mut stale_label_summary = continuation_summary;
         stale_label_summary.host_run_supervision_key_label =
@@ -23910,6 +24723,15 @@ mod tests {
         stale_label_summary.host_run_escalation_route_key_label_matches_key = false;
         stale_label_summary.host_run_escalation_route_key_labels_match = false;
         stale_label_summary.has_host_run_escalation_route_key_label_integrity_drift = true;
+        stale_label_summary.host_run_escalation_queue_priority_label = "settled";
+        stale_label_summary.host_run_escalation_queue_priority_label_matches_priority = false;
+        stale_label_summary.host_run_escalation_queue_key_labels_match = false;
+        stale_label_summary.has_host_run_escalation_queue_key_label_integrity_drift = true;
+        stale_label_summary.host_run_escalation_queue_readiness_label = "settled";
+        stale_label_summary.host_run_escalation_queue_readiness_label_matches_readiness = false;
+        stale_label_summary.host_run_escalation_queue_key_label =
+            "route_key=route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=settled|readiness=settled".to_string();
+        stale_label_summary.host_run_escalation_queue_key_label_matches_key = false;
         assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
         assert!(!stale_label_summary.host_run_supervision_labels_match());
         assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
@@ -23925,6 +24747,11 @@ mod tests {
         assert!(!stale_label_summary.host_run_escalation_route_key_label_matches_key());
         assert!(!stale_label_summary.host_run_escalation_route_key_labels_match());
         assert!(stale_label_summary.has_host_run_escalation_route_key_label_integrity_drift());
+        assert!(!stale_label_summary.host_run_escalation_queue_priority_label_matches_priority());
+        assert!(!stale_label_summary.host_run_escalation_queue_readiness_label_matches_readiness());
+        assert!(!stale_label_summary.host_run_escalation_queue_key_label_matches_key());
+        assert!(!stale_label_summary.host_run_escalation_queue_key_labels_match());
+        assert!(stale_label_summary.has_host_run_escalation_queue_key_label_integrity_drift());
     }
 
     #[test]
