@@ -36,8 +36,7 @@ use std::io;
 // Errors
 // ---------------------------------------------------------------------------
 
-/// Reasons wrapper application can fail. The only failure path
-/// today is `fs::read_to_string` on `--output_wrapper_file`.
+/// Reasons wrapper application can fail.
 #[derive(Debug, Clone, PartialEq)]
 pub enum WrapperError {
     /// Failed to read the file pointed to by `--output_wrapper_file`.
@@ -46,6 +45,19 @@ pub enum WrapperError {
         kind: io::ErrorKind,
         message: String,
     },
+    /// `--output_wrapper` / `--output_wrapper_file` was set but the
+    /// resolved template contains no `%output%` placeholder. CC
+    /// emits the exact message "ERROR - No %output% placeholder in
+    /// the output wrapper" in this case (see
+    /// `AbstractCommandLineRunner.java`); we mirror that error.
+    ///
+    /// Why CC enforces this: a wrapper without `%output%` would
+    /// produce output that doesn't contain the compiled JS at
+    /// all. That's almost certainly a user mistake (they meant to
+    /// type the placeholder but didn't), and emitting JS-less
+    /// output silently would be a hard-to-debug surprise. Better
+    /// to fail loudly.
+    MissingOutputPlaceholder,
 }
 
 impl std::fmt::Display for WrapperError {
@@ -57,6 +69,12 @@ impl std::fmt::Display for WrapperError {
                     "failed to read --output_wrapper_file {}: {message}",
                     path.display()
                 )
+            }
+            WrapperError::MissingOutputPlaceholder => {
+                // Match CC's exact wording so toolchains that
+                // grep for this error string keep working when
+                // they swap closure-compiler.jar for closurec.
+                write!(f, "ERROR - No %output% placeholder in the output wrapper")
             }
         }
     }
@@ -101,6 +119,24 @@ pub fn apply_output_wrapper(
     // new String for the common case).
     if template.is_empty() {
         return Ok(compiled.to_string());
+    }
+
+    // CLOC11.32: validate that the resolved template contains the
+    // `%output%` placeholder. CC's
+    // `AbstractCommandLineRunner.checkFlags` performs this check
+    // and emits the exact error string we mirror in
+    // `WrapperError::MissingOutputPlaceholder`'s Display. Without
+    // it, a typo'd wrapper (e.g. `"(function(){%otput%})()"`)
+    // would silently produce output with no compiled JS in it,
+    // and the user would chase a confusing empty-bundle bug.
+    //
+    // The check is a literal substring match. Closure's own check
+    // is also a substring match (it's a `String.contains` on the
+    // Java side), and tools that rely on `%output%` appearing
+    // verbatim in the user-facing flag value can grep for it the
+    // same way.
+    if !template.contains("%output%") {
+        return Err(WrapperError::MissingOutputPlaceholder);
     }
 
     Ok(substitute_template(&template, compiled))
@@ -308,16 +344,19 @@ mod tests {
     }
 
     #[test]
-    fn wrapper_without_output_placeholder_drops_compiled_js() {
-        // CC accepts this (the wrapper is emitted as-is). It's
-        // unusual but not an error.
-        let out = apply_output_wrapper(
+    fn wrapper_without_output_placeholder_errors_per_cc() {
+        // CLOC11.32: superseded earlier "CC accepts this" behavior.
+        // A non-empty wrapper without `%output%` would silently
+        // drop the compiled JS, almost certainly a user typo.
+        // CC's `AbstractCommandLineRunner.checkFlags` raises a
+        // hard error; we mirror that.
+        let err = apply_output_wrapper(
             "var x=1;",
             "// just a banner",
             None,
         )
-        .expect("ok");
-        assert_eq!(out, "// just a banner");
+        .expect_err("must error per CC compat");
+        assert_eq!(err, WrapperError::MissingOutputPlaceholder);
     }
 
     #[test]
@@ -369,6 +408,7 @@ mod tests {
             WrapperError::WrapperFileReadError { kind, .. } => {
                 assert_eq!(kind, io::ErrorKind::NotFound);
             }
+            other => panic!("expected WrapperFileReadError, got {other:?}"),
         }
     }
 
@@ -449,6 +489,73 @@ mod tests {
         let out = apply_iife_wrap("x;");
         assert!(out.contains(".call(this)"), "got: {out}");
         assert!(!out.contains("}();"), "should NOT use bare invocation: {out}");
+    }
+
+    // -- CLOC11.32 missing-%output% validation tests ---------------------
+
+    #[test]
+    fn wrapper_missing_output_placeholder_errors() {
+        // A non-empty wrapper without `%output%` is a CC error.
+        let err = apply_output_wrapper("body", "(function(){})();", None)
+            .expect_err("must error");
+        assert_eq!(err, WrapperError::MissingOutputPlaceholder);
+    }
+
+    #[test]
+    fn wrapper_missing_output_placeholder_uses_cc_message() {
+        // Pin the exact wording: tools that grep CC's stderr for
+        // this string keep working when they swap in closurec.
+        let err = apply_output_wrapper("body", "no placeholder here", None)
+            .expect_err("must error");
+        let msg = err.to_string();
+        assert_eq!(msg, "ERROR - No %output% placeholder in the output wrapper");
+    }
+
+    #[test]
+    fn empty_wrapper_does_not_error_on_missing_placeholder() {
+        // The fast-path no-wrapper case must still pass through.
+        // Empty wrapper means "no wrapping requested," not "user
+        // supplied an invalid wrapper."
+        let out = apply_output_wrapper("body", "", None).expect("ok");
+        assert_eq!(out, "body");
+    }
+
+    #[test]
+    fn wrapper_file_missing_placeholder_also_errors() {
+        // Validation runs after file content is resolved, so a
+        // bad wrapper read from a file produces the same error.
+        let dir = std::env::temp_dir().join(format!("cloc11-32-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let p = dir.join("no-placeholder.txt");
+        std::fs::write(&p, "/* just a comment */").unwrap();
+        let err = apply_output_wrapper("body", "", Some(&p))
+            .expect_err("must error");
+        assert_eq!(err, WrapperError::MissingOutputPlaceholder);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn wrapper_with_placeholder_still_works() {
+        // Regression-guard the happy path so the new validation
+        // doesn't accidentally block legitimate wrappers.
+        let out = apply_output_wrapper("body", "before %output% after", None)
+            .expect("ok");
+        assert_eq!(out, "before body after");
+    }
+
+    #[test]
+    fn wrapper_with_placeholder_and_n_works() {
+        // %n% still expands alongside %output%.
+        let out = apply_output_wrapper("body", "//banner%n%%output%", None)
+            .expect("ok");
+        assert_eq!(out, "//banner\nbody");
+    }
+
+    #[test]
+    fn missing_placeholder_error_display_implements_std_error() {
+        let e = WrapperError::MissingOutputPlaceholder;
+        let _: &dyn std::error::Error = &e;
+        assert!(e.to_string().starts_with("ERROR -"));
     }
 
     #[test]
