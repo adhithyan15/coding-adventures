@@ -1782,6 +1782,86 @@ describe("Phase 65 — Two-Sqrt × Two-Log × polynomial numerator", () => {
   });
 });
 
+describe("Phase 66 — Three-Sqrt × polynomial numerator", () => {
+  it("√k·√k·√k / k² closes (effective=1.5, denDeg=2 > 1.5)", () => {
+    const k = sym("k");
+    const sqrt_k1 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrt_k2 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrt_k3 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const numK = { kind: "apply" as const, head: MUL, args: [sqrt_k1, sqrt_k2, sqrt_k3] };
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const sqrt_kp1_1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const sqrt_kp1_2 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const sqrt_kp1_3 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numKp1 = { kind: "apply" as const, head: MUL, args: [sqrt_kp1_1, sqrt_kp1_2, sqrt_kp1_3] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const gK = { kind: "apply" as const, head: DIV, args: [numK, k2] };
+    const gKp1 = { kind: "apply" as const, head: DIV, args: [numKp1, kp1_2] };
+    const f = { kind: "apply" as const, head: SUB, args: [gK, gKp1] };
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√(k³)·√k·√k / k³ closes (effective=2.5, denDeg=3 > 2.5)", () => {
+    const k = sym("k");
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const sqrt_k3 = { kind: "apply" as const, head: SQRT, args: [k3] };
+    const sqrt_k1 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrt_k2 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const numK = { kind: "apply" as const, head: MUL, args: [sqrt_k3, sqrt_k1, sqrt_k2] };
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const sqrt_kp1_3 = { kind: "apply" as const, head: SQRT, args: [kp1_3] };
+    const sqrt_kp1_1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const sqrt_kp1_2 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numKp1 = { kind: "apply" as const, head: MUL, args: [sqrt_kp1_3, sqrt_kp1_1, sqrt_kp1_2] };
+    const gK = { kind: "apply" as const, head: DIV, args: [numK, k3] };
+    const gKp1 = { kind: "apply" as const, head: DIV, args: [numKp1, kp1_3] };
+    const f = { kind: "apply" as const, head: SUB, args: [gK, gKp1] };
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√(k²)·√(k²)·√(k²) / k² refused (effective=3, denDeg=2 not > 3)", () => {
+    const k = sym("k");
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const sqrt_k2_1 = { kind: "apply" as const, head: SQRT, args: [k2] };
+    const sqrt_k2_2 = { kind: "apply" as const, head: SQRT, args: [k2] };
+    const sqrt_k2_3 = { kind: "apply" as const, head: SQRT, args: [k2] };
+    const numK = { kind: "apply" as const, head: MUL, args: [sqrt_k2_1, sqrt_k2_2, sqrt_k2_3] };
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const sqrt_kp1_2_1 = { kind: "apply" as const, head: SQRT, args: [kp1_2] };
+    const sqrt_kp1_2_2 = { kind: "apply" as const, head: SQRT, args: [kp1_2] };
+    const sqrt_kp1_2_3 = { kind: "apply" as const, head: SQRT, args: [kp1_2] };
+    const numKp1 = { kind: "apply" as const, head: MUL, args: [sqrt_kp1_2_1, sqrt_kp1_2_2, sqrt_kp1_2_3] };
+    const gK = { kind: "apply" as const, head: DIV, args: [numK, k2] };
+    const gKp1 = { kind: "apply" as const, head: DIV, args: [numKp1, kp1_2] };
+    const f = { kind: "apply" as const, head: SUB, args: [gK, gKp1] };
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√k·√k·√k / 2^k closes (exponential denominator)", () => {
+    const k = sym("k");
+    const sqrt_k1 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrt_k2 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrt_k3 = { kind: "apply" as const, head: SQRT, args: [k] };
+    const numK = { kind: "apply" as const, head: MUL, args: [sqrt_k1, sqrt_k2, sqrt_k3] };
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const sqrt_kp1_1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const sqrt_kp1_2 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const sqrt_kp1_3 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numKp1 = { kind: "apply" as const, head: MUL, args: [sqrt_kp1_1, sqrt_kp1_2, sqrt_kp1_3] };
+    const gK = { kind: "apply" as const, head: DIV, args: [numK, { kind: "apply" as const, head: POW, args: [int(2), k] }] };
+    const gKp1 = { kind: "apply" as const, head: DIV, args: [numKp1, { kind: "apply" as const, head: POW, args: [int(2), kp1] }] };
+    const f = { kind: "apply" as const, head: SUB, args: [gK, gKp1] };
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
 describe("Phase 64 — Two-Log × Sqrt × polynomial numerator", () => {
   it("log(k)²·√k / k² closes (effective=0.5, denDeg=2 > 0.5)", () => {
     const k = sym("k");

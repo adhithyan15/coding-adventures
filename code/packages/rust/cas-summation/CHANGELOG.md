@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.4.0 — 2026-05-25
+
+### Added
+
+- **Phase 66 — Three-Sqrt × polynomial numerator** (`three_sqrt_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), polynomial..., bounded...)`.
+  Log factors refused (use Phase 63/64/65 for sqrt+log combos);
+  `effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs`.
+
 ## 2.3.0 — 2026-05-25
 
 ### Added

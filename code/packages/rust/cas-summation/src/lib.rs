@@ -1653,6 +1653,36 @@ fn two_sqrt_two_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> 
     Some(sqrt_degs[0] + sqrt_degs[1] + 2 * poly_deg)
 }
 
+/// Phase 66 — Three-Sqrt × polynomial numerator.
+///
+/// Returns `deg(P1) + deg(P2) + deg(P3) + 2 * poly_deg` when `node` is a `Mul`
+/// with exactly three Sqrt factors, any polynomial factors, and any bounded
+/// factors; `None` otherwise.
+///
+/// Log factors are rejected immediately (use Phase 63/64/65 for sqrt+log combos).
+/// effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2 * poly_deg.
+/// Caller checks `2 * den_deg > effective_x2`.
+fn three_sqrt_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node { IRNode::Apply(a) => a, _ => return None };
+    if !head_is(&apply_node.head, MUL) { return None; }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        if let Some(deg_x2) = sqrt_effective_half_degree_x2(arg, k) {
+            sqrt_degs.push(deg_x2);
+            if sqrt_degs.len() > 3 { return None; }
+            continue;
+        }
+        // Log factors not handled here — bail so Phase 63/64/65 can catch them.
+        if is_log_of_diverging_in_k(arg, k) { return None; }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) { poly_deg += deg; continue; }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs.len() != 3 { return None; }
+    Some(sqrt_degs[0] + sqrt_degs[1] + sqrt_degs[2] + 2 * poly_deg)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1857,6 +1887,19 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(ts2l_x2) = two_sqrt_two_log_poly_effective_x2(num, k) {
         if let Some(den_deg_ts2l) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_ts2l > ts2l_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 66: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), polynomial..., bounded...) numerator.
+    // Three Sqrt factors; log factors refused (use Phase 63/64/65 for sqrt+log combos).
+    // effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2 * poly_deg.
+    // Closes when 2 * den_deg > effective_x2 or non-polynomial diverging denom.
+    if let Some(tsp_x2) = three_sqrt_poly_effective_x2(num, k) {
+        if let Some(den_deg_tsp) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_tsp > tsp_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {
