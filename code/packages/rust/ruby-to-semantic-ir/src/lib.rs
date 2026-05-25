@@ -2503,4 +2503,125 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6z — float / hex / bin / oct numeric literal lowering
+    //
+    // Shapes covered:
+    //   1.5          → FloatLit(1.5)   (+ Feature::Floats)
+    //   1e10         → FloatLit(1e10)
+    //   1.5e-3       → FloatLit(0.0015)
+    //   0x1F         → IntLit(31)
+    //   0xDEAD_BEEF  → IntLit(3735928559)
+    //   0b1010       → IntLit(10)
+    //   0o17         → IntLit(15)
+    //   42           → IntLit(42)      (regression — pre-Phase-6z path)
+    //   1_000_000    → IntLit(1000000) (underscore separator)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn float_literal_lowers_to_floatlit_and_triggers_floats_feature() {
+        // `x = 1.5` — fused single Number token by lexer Phase 4k.
+        let m = lower("x = 1.5");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, name, .. } => {
+                assert_eq!(name, "x");
+                match value {
+                    Expr::FloatLit { value, .. } => {
+                        // Exact comparison is fine for 1.5 (representable
+                        // exactly in IEEE-754); we use `==` directly.
+                        assert_eq!(*value, 1.5_f64);
+                    }
+                    other => panic!("expected FloatLit, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+        // Feature::Floats must be tracked in the module's manifest.
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Floats),
+            "expected Floats feature in manifest"
+        );
+    }
+
+    #[test]
+    fn float_literal_with_signed_exponent_lowers_correctly() {
+        // `x = 1.5e-3` — fractional + signed exponent.  Value is
+        // 0.0015 (NOT exactly representable in IEEE-754, so we use a
+        // tight tolerance instead of `==`).
+        let m = lower("x = 1.5e-3");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding {
+                value: Expr::FloatLit { value, .. },
+                ..
+            } => {
+                assert!(
+                    (*value - 0.0015_f64).abs() < 1e-12,
+                    "expected 0.0015, got {}",
+                    value
+                );
+            }
+            other => panic!("expected LetBinding(FloatLit), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn hex_literal_lowers_to_intlit_with_correct_value() {
+        // `x = 0xDEAD_BEEF` — hex with underscore separator.  Decimal
+        // value is 3,735,928,559.  Triggers the radix-detection
+        // branch in `lower_numeric_literal`.
+        let m = lower("x = 0xDEAD_BEEF");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding {
+                value: Expr::IntLit { value, .. },
+                ..
+            } => {
+                assert_eq!(*value, 0xDEAD_BEEF_i64);
+            }
+            other => panic!("expected LetBinding(IntLit), got {:?}", other),
+        }
+        // Hex integers must NOT trigger Feature::Floats.
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::Floats),
+            "hex integer literal should not trigger Floats feature"
+        );
+    }
+
+    #[test]
+    fn binary_literal_lowers_to_intlit() {
+        // `x = 0b1010` → IntLit(10).
+        let m = lower("x = 0b1010");
+        let b = main_body(&m);
+        assert!(matches!(
+            &b.stmts[0],
+            Stmt::LetBinding { value: Expr::IntLit { value: 10, .. }, .. }
+        ));
+    }
+
+    #[test]
+    fn octal_literal_lowers_to_intlit() {
+        // `x = 0o17` → IntLit(15).
+        let m = lower("x = 0o17");
+        let b = main_body(&m);
+        assert!(matches!(
+            &b.stmts[0],
+            Stmt::LetBinding { value: Expr::IntLit { value: 15, .. }, .. }
+        ));
+    }
+
+    #[test]
+    fn float_literal_module_passes_sir_validator() {
+        // End-to-end smoke: a module that uses float literals and
+        // declares the Floats feature passes the validator.
+        let m = lower("x = 1.5\nputs(x)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected float-using module: {:?}",
+            result
+        );
+    }
 }
