@@ -20,6 +20,8 @@ The initial slices implement:
   devices.
 - Backward-Euler, trapezoidal, Gear-2, and adaptive transient analysis for
   linear RC/RL circuits.
+- Periodic steady-state analysis for periodic source circuits, including named
+  corner sweeps.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, and THD results.

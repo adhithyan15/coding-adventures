@@ -3314,6 +3314,17 @@ pub struct PssResult {
     pub converged: bool,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerPssPoint {
+    pub corner_name: String,
+    pub result: PssResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerPssResult {
+    pub points: Vec<CornerPssPoint>,
+}
+
 impl DcResult {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -5622,6 +5633,14 @@ pub fn pss(circuit: &Circuit, steps_per_period: usize) -> Result<Option<PssResul
     pss_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6, 8)
 }
 
+pub fn pss_corners(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    corners: &[CornerSpec],
+) -> Result<Option<CornerPssResult>, SpiceError> {
+    pss_corners_with_tolerance(circuit, steps_per_period, 1.0e-6, 1.0e-6, 8, corners)
+}
+
 pub fn pss_with_tolerance(
     circuit: &Circuit,
     steps_per_period: usize,
@@ -5652,6 +5671,35 @@ pub fn pss_with_tolerance(
         solve,
         steady_state,
     }))
+}
+
+pub fn pss_corners_with_tolerance(
+    circuit: &Circuit,
+    steps_per_period: usize,
+    residual_tolerance: f64,
+    perturbation: f64,
+    max_newton_iterations: usize,
+    corners: &[CornerSpec],
+) -> Result<Option<CornerPssResult>, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        let Some(result) = pss_with_tolerance(
+            &corner_circuit,
+            steps_per_period,
+            residual_tolerance,
+            perturbation,
+            max_newton_iterations,
+        )?
+        else {
+            return Ok(None);
+        };
+        points.push(CornerPssPoint {
+            corner_name: corner.name.clone(),
+            result,
+        });
+    }
+    Ok(Some(CornerPssResult { points }))
 }
 
 fn validate_sweep(source_name: &str, start: f64, stop: f64, step: f64) -> Result<(), SpiceError> {

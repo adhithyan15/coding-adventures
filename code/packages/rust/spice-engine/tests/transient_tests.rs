@@ -3,18 +3,18 @@ use spice_engine::{
     format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
     format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
     pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
-    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
-    FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
-    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
-    Waveform,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
+    DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult,
+    Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -457,6 +457,55 @@ fn pss_returns_solved_steady_state_period() {
     assert_close(
         residual.residual_l2_norm,
         result.solve.final_residual.residual_l2_norm,
+    );
+}
+
+#[test]
+fn pss_corners_runs_analysis_per_corner() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "0", 1_000.0)));
+
+    let result = pss_corners_with_tolerance(
+        &circuit,
+        4,
+        1.0e-9,
+        1.0e-5,
+        2,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rload-high",
+                vec![CornerOverride::new("R1", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap()
+    .unwrap();
+
+    assert_eq!(result.points.len(), 2);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rload-high");
+    assert!(result.points.iter().all(|point| point.result.converged));
+    assert_close(result.points[0].result.period_seconds, 1.0e-3);
+    assert_close(result.points[1].result.time_step_seconds, 2.5e-4);
+    assert_close(
+        result.points[0].result.steady_state[0]
+            .branch_current("V1")
+            .unwrap(),
+        -1.0e-3,
+    );
+    assert_close(
+        result.points[1].result.steady_state[0]
+            .branch_current("V1")
+            .unwrap(),
+        -5.0e-4,
     );
 }
 
