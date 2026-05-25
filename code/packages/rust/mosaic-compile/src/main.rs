@@ -926,18 +926,51 @@ fn run_pipeline(
             )
             .map(|r| r.output),
         ),
-        "qt" => emit_single_file(
-            backend,
-            output_path,
-            &mosmodel_out.component.component,
-            "qml",
-            mosaic_emit_qt::pipeline::from_pipeline(
+        "qt" => {
+            // UI32-K-qt: route through `from_pipeline_with_options`
+            // so --emit-project activates the Qt6 + CMake shell.
+            // Bare invocation is byte-identical to pre-UI32.
+            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
+            qt_opts.emit_project = emit_project;
+            let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &qt_opts,
             )
-            .map(|r| r.output),
-        ),
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: qt pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.qml", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-qt: emit CMakeLists.txt + main.cpp + qmldir +
+            // README.md flat next to the .qml.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 4] = [
+                    (side_file_path("CMakeLists.txt"), &proj.cmake_lists),
+                    (side_file_path("main.cpp"), &proj.main_cpp),
+                    (side_file_path("qmldir"), &proj.qmldir),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+            }
+        }
         "flutter" => {
             // UI32-K-flutter: route through `from_pipeline_with_options`
             // so --emit-project activates the Flutter app shell.

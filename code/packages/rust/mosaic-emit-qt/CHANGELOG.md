@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI32-K-qt — `--emit-project` Qt6 + CMake desktop shell
+
+L6 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309, L4 WebComponent #4315, L5 Flutter #4319). `mosaic-compile --backend qt --emit-project` now produces a Qt6 + CMake desktop scaffold:
+
+- `CMakeLists.txt` — pinned Qt6 `6.7` + CMake `3.21` + C++17 per UI32 §3.6.3. `qt_add_executable` + `qt_add_qml_module` embed the component into a `Mosaic.<Component>` QML module.
+- `main.cpp` — `QGuiApplication` + `QQmlApplicationEngine` loading `qrc:/qt/qml/Mosaic/<Component>/<Component>.qml` (the path `qt_add_qml_module` exposes).
+- `qmldir` — `module Mosaic.<Component>` + `<Component> 1.0 <Component>.qml`.
+- `README.md` — `cmake -B build && cmake --build build && ./build/<Component>` recipe + file map.
+
+New public API (matches L2-L5 pattern):
+
+- `pub struct EmitOptions` — `emit_project`, `pinned_qt_version`, `pinned_cmake_min`, `pinned_cxx_standard`.
+- `pub struct ProjectFiles` — `cmake_lists`, `main_cpp`, `qmldir`, `readme`.
+- `pub struct PipelineEmitResultWithProject`.
+- `pub fn from_pipeline_with_options(...)`. Existing `from_pipeline(...)` unchanged.
+
+UI32 §3.6.2 Qt row: no per-PR constraint beyond upstream — CMake target names exclude `-` (already excluded by `validate_component_name`). qmldir module names follow PascalCase (component name already PascalCase).
+
+9 new tests cover the spec §3 gates plus a qrc-path test that verifies main.cpp loads the component from the embedded QML module via the correct `qrc:/qt/qml/Mosaic/<Component>/<Component>.qml` resource path. Total tests: 90 (was 81, +9).
+
 ### Added — UI31-K-qt — `HostTable` RTL contract
 
 The Qt `HostTable` lowering (which produces a structural
