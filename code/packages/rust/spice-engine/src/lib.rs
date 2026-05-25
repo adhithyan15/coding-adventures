@@ -1889,6 +1889,18 @@ impl SensResult {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerSensPoint {
+    pub corner_name: String,
+    pub result: SensResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerSensResult {
+    pub output_node: String,
+    pub points: Vec<CornerSensPoint>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Complex {
     pub real: f64,
@@ -4408,6 +4420,25 @@ pub fn sens_dc(circuit: &Circuit, output_node: &str) -> Result<SensResult, Spice
         output_node: output_node.to_string(),
         nominal_voltage,
         entries,
+    })
+}
+
+pub fn sens_dc_corners(
+    circuit: &Circuit,
+    output_node: &str,
+    corners: &[CornerSpec],
+) -> Result<CornerSensResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerSensPoint {
+            corner_name: corner.name.clone(),
+            result: sens_dc(&corner_circuit, output_node)?,
+        });
+    }
+    Ok(CornerSensResult {
+        output_node: output_node.to_string(),
+        points,
     })
 }
 

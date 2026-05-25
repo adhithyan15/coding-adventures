@@ -1,6 +1,6 @@
 use spice_engine::{
-    format_sens_table, sens_dc, Cccs, Ccvs, Circuit, CurrentSource, Element, Resistor, SensResult,
-    SpiceError, Vccs, Vcvs, VoltageSource,
+    format_sens_table, sens_dc, sens_dc_corners, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
+    CurrentSource, Element, Resistor, SensResult, SpiceError, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -79,6 +79,58 @@ fn sens_text_output_table_is_stable() {
 out\t5.000000e+00\tVin\tvoltage\t1.000000e+01\t5.000000e-01\t1.000000e+00\n\
 out\t5.000000e+00\tRbot\tresistance_ohms\t1.000000e+03\t2.499999e-03\t4.999998e-01\n\
 out\t5.000000e+00\tRtop\tresistance_ohms\t1.000000e+03\t-2.499999e-03\t-4.999998e-01\n"
+    );
+}
+
+#[test]
+fn sens_dc_corners_runs_analysis_per_corner() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = sens_dc_corners(
+        &circuit,
+        "out",
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "vin-high",
+                vec![CornerOverride::new("Vin", "voltage", 12.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.output_node, "out");
+    assert_eq!(result.points.len(), 3);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rbot-fast");
+    assert_eq!(result.points[2].corner_name, "vin-high");
+    assert_close(result.points[0].result.nominal_voltage, 5.0);
+    assert_close(result.points[1].result.nominal_voltage, 10.0 / 3.0);
+    assert_close(result.points[2].result.nominal_voltage, 6.0);
+    assert_close(
+        entry(&result.points[0].result, "Rbot", "resistance_ohms").sensitivity,
+        0.0025,
+    );
+    assert_close(
+        entry(&result.points[1].result, "Rbot", "resistance_ohms").nominal_value,
+        500.0,
+    );
+    assert_close(
+        entry(&result.points[2].result, "Vin", "voltage").sensitivity,
+        0.5,
     );
 }
 
