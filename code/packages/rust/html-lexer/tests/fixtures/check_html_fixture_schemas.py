@@ -329,11 +329,15 @@ def check_browser_expected_lists(
             "imagesrcset",
             "resolved_imagesrcset",
             "imagesizes",
+            "track_kind",
+            "srclang",
+            "track_label",
         ):
             require_optional_nullable_string(resource_path, resource, field, errors)
         require_optional_string_list(resource_path, resource, "sandbox", errors)
         require_optional_boolean(resource_path, resource, "allowfullscreen", errors)
         require_optional_boolean(resource_path, resource, "credentialless", errors)
+        require_optional_boolean(resource_path, resource, "default_track", errors)
         require_boolean(resource_path, resource, "async_script", errors)
         require_boolean(resource_path, resource, "defer_script", errors)
 
@@ -582,6 +586,12 @@ def check_browser_content_node(
         "image_map_name",
         "image_map_shape",
         "image_map_coords",
+        "srcset",
+        "resolved_srcset",
+        "sizes",
+        "track_kind",
+        "srclang",
+        "track_label",
         "media",
         "poster",
         "resolved_poster",
@@ -693,6 +703,7 @@ def check_browser_content_node(
         "playsinline",
         "allowfullscreen",
         "credentialless",
+        "default_track",
         "form_novalidate",
         "list_reversed",
         "aria_hidden",
@@ -770,6 +781,12 @@ def check_browser_render_node(
         "image_map_name",
         "image_map_shape",
         "image_map_coords",
+        "srcset",
+        "resolved_srcset",
+        "sizes",
+        "track_kind",
+        "srclang",
+        "track_label",
         "media",
         "poster",
         "resolved_poster",
@@ -881,6 +898,7 @@ def check_browser_render_node(
         "playsinline",
         "allowfullscreen",
         "credentialless",
+        "default_track",
         "form_novalidate",
         "list_reversed",
         "aria_hidden",
