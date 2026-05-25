@@ -855,6 +855,7 @@ pub struct BrowserDocumentMetadata {
     pub robots_directives: Vec<String>,
     pub color_scheme: Option<String>,
     pub http_equiv_hints: Vec<BrowserHttpEquivHint>,
+    pub resource_hints: Vec<BrowserResourceHint>,
     pub theme_colors: Vec<BrowserThemeColor>,
     pub refresh: Option<BrowserRefresh>,
     pub canonical_url: Option<String>,
@@ -873,6 +874,25 @@ pub struct BrowserMetadataDirective {
 pub struct BrowserHttpEquivHint {
     pub name: String,
     pub content: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserResourceHint {
+    pub kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel: Option<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub imagesrcset: Option<String>,
+    pub resolved_imagesrcset: Option<String>,
+    pub imagesizes: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8955,6 +8975,11 @@ fn collect_link_document_metadata(element: &Element, summary: &mut BrowserDocume
             summary.metadata.resolved_manifest_url =
                 resolve_browser_url(href, summary.base_href.as_deref());
         }
+        if let Some(resource_hint) =
+            browser_resource_hint_from_link(element, href, summary.base_href.as_deref())
+        {
+            summary.metadata.resource_hints.push(resource_hint);
+        }
     }
 }
 
@@ -9062,6 +9087,50 @@ fn browser_metadata_list(content: &str) -> Vec<String> {
         .map(trim_browser_metadata_token)
         .filter(|part| !part.is_empty())
         .collect()
+}
+
+fn browser_resource_hint_from_link(
+    element: &Element,
+    href: &str,
+    base_href: Option<&str>,
+) -> Option<BrowserResourceHint> {
+    let kind = browser_link_resource_hint_kind(element.attribute("rel"))?;
+    let imagesrcset = element.attribute("imagesrcset").map(ToOwned::to_owned);
+    Some(BrowserResourceHint {
+        kind,
+        url: href.to_string(),
+        resolved_url: resolve_browser_url(href, base_href),
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        as_hint: element.attribute("as").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        resolved_imagesrcset: imagesrcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        imagesrcset,
+        imagesizes: element.attribute("imagesizes").map(ToOwned::to_owned),
+    })
+}
+
+fn browser_link_resource_hint_kind(rel: Option<&str>) -> Option<String> {
+    let rel = rel?;
+    for token in rel.split_ascii_whitespace() {
+        match token.to_ascii_lowercase().as_str() {
+            "preconnect" => return Some("preconnect".to_string()),
+            "dns-prefetch" => return Some("dns-prefetch".to_string()),
+            "preload" => return Some("preload".to_string()),
+            "modulepreload" => return Some("modulepreload".to_string()),
+            "prefetch" => return Some("prefetch".to_string()),
+            "prerender" => return Some("prerender".to_string()),
+            _ => {}
+        }
+    }
+    None
 }
 
 fn trim_browser_metadata_token(value: &str) -> String {
@@ -13472,6 +13541,27 @@ mod tests {
             Some("https://example.test/app/late.js")
         );
         assert!(late_script.defer_script);
+
+        assert_eq!(summary.metadata.resource_hints.len(), 1);
+        let stylesheet_preload = &summary.metadata.resource_hints[0];
+        assert_eq!(stylesheet_preload.kind, "preload");
+        assert_eq!(
+            stylesheet_preload.rel.as_deref(),
+            Some("stylesheet preload")
+        );
+        assert_eq!(
+            stylesheet_preload.resolved_url.as_deref(),
+            Some("https://example.test/app/app.css")
+        );
+        assert_eq!(stylesheet_preload.media.as_deref(), Some("screen"));
+        assert_eq!(stylesheet_preload.integrity.as_deref(), Some("sha256-css"));
+        assert_eq!(stylesheet_preload.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(
+            stylesheet_preload.referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(stylesheet_preload.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(stylesheet_preload.blocking.as_deref(), Some("render"));
     }
 
     #[test]
@@ -13538,6 +13628,42 @@ mod tests {
             summary.resources[7].type_hint.as_deref(),
             Some("image/x-icon")
         );
+
+        assert_eq!(summary.metadata.resource_hints.len(), 5);
+        let preconnect_hint = &summary.metadata.resource_hints[0];
+        assert_eq!(preconnect_hint.kind, "preconnect");
+        assert_eq!(
+            preconnect_hint.resolved_url.as_deref(),
+            Some("https://cdn.example.test")
+        );
+        assert_eq!(preconnect_hint.crossorigin.as_deref(), Some(""));
+
+        let font_hint = &summary.metadata.resource_hints[1];
+        assert_eq!(font_hint.kind, "preload");
+        assert_eq!(font_hint.as_hint.as_deref(), Some("font"));
+        assert_eq!(font_hint.type_hint.as_deref(), Some("font/woff2"));
+        assert_eq!(font_hint.integrity.as_deref(), Some("sha384-font"));
+        assert_eq!(font_hint.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(font_hint.fetchpriority.as_deref(), Some("high"));
+
+        let module_hint = &summary.metadata.resource_hints[2];
+        assert_eq!(module_hint.kind, "modulepreload");
+        assert_eq!(module_hint.integrity.as_deref(), Some("sha384-module"));
+        assert_eq!(module_hint.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(module_hint.blocking.as_deref(), Some("render"));
+
+        let image_hint = &summary.metadata.resource_hints[3];
+        assert_eq!(image_hint.kind, "preload");
+        assert_eq!(image_hint.as_hint.as_deref(), Some("image"));
+        assert_eq!(
+            image_hint.resolved_imagesrcset.as_deref(),
+            Some("https://example.test/app/hero-small.jpg 480w, https://example.test/app/hero-large.jpg 960w")
+        );
+        assert_eq!(image_hint.imagesizes.as_deref(), Some("50vw"));
+
+        let prefetch_hint = &summary.metadata.resource_hints[4];
+        assert_eq!(prefetch_hint.kind, "prefetch");
+        assert_eq!(prefetch_hint.as_hint.as_deref(), Some("document"));
     }
 
     #[test]

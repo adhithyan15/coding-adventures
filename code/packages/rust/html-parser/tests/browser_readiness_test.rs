@@ -2,8 +2,8 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata, BrowserForm,
     BrowserFormControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
     BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh,
-    BrowserResource, BrowserScript, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserResource, BrowserResourceHint, BrowserScript, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -90,6 +90,8 @@ struct ExpectedDocumentMetadata {
     #[serde(default)]
     http_equiv_hints: Vec<ExpectedHttpEquivHint>,
     #[serde(default)]
+    resource_hints: Vec<ExpectedResourceHint>,
+    #[serde(default)]
     theme_colors: Vec<ExpectedThemeColor>,
     #[serde(default)]
     refresh: Option<ExpectedRefresh>,
@@ -114,6 +116,38 @@ struct ExpectedMetadataDirective {
 struct ExpectedHttpEquivHint {
     name: String,
     content: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedResourceHint {
+    kind: String,
+    url: String,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    as_hint: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    imagesrcset: Option<String>,
+    #[serde(default)]
+    resolved_imagesrcset: Option<String>,
+    #[serde(default)]
+    imagesizes: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -657,6 +691,11 @@ impl ExpectedDocumentMetadata {
                 .into_iter()
                 .map(ExpectedHttpEquivHint::into_browser_http_equiv_hint)
                 .collect(),
+            resource_hints: self
+                .resource_hints
+                .into_iter()
+                .map(ExpectedResourceHint::into_browser_resource_hint)
+                .collect(),
             theme_colors: self
                 .theme_colors
                 .into_iter()
@@ -685,6 +724,28 @@ impl ExpectedHttpEquivHint {
         BrowserHttpEquivHint {
             name: self.name,
             content: self.content,
+        }
+    }
+}
+
+impl ExpectedResourceHint {
+    fn into_browser_resource_hint(self) -> BrowserResourceHint {
+        BrowserResourceHint {
+            kind: self.kind,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            rel: self.rel,
+            as_hint: self.as_hint,
+            type_hint: self.type_hint,
+            media: self.media,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            imagesrcset: self.imagesrcset,
+            resolved_imagesrcset: self.resolved_imagesrcset,
+            imagesizes: self.imagesizes,
         }
     }
 }
