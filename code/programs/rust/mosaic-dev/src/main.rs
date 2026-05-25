@@ -174,6 +174,10 @@ fn build_and_wrap(
             package_root: package_root.to_path_buf(),
             output_root: work.to_path_buf(),
             backend: b,
+            // mosaic-dev only needs the per-component artifacts for
+            // its dummy-props preview; it doesn't care about the
+            // UI32-M project shell.
+            emit_project: false,
         };
         build_package(&opts).map_err(|e| e.to_string())?;
     } else {

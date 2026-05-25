@@ -76,6 +76,7 @@
 //!     package_root: PathBuf::from("code/packages/mosaic-pkg-grid"),
 //!     output_root:  PathBuf::from("/tmp/mosaic-pkg-grid-dist"),
 //!     backend:      Backend::React,
+//!     emit_project: false,
 //! };
 //! let result = build_package(&opts).expect("package compiles");
 //! for path in &result.artifacts {
@@ -177,6 +178,18 @@ pub struct BuildOptions {
     pub output_root: PathBuf,
     /// Which backend to compile for.
     pub backend: Backend,
+    /// UI32-M: when true, also emit the per-backend project shell
+    /// (Vite for React, `<!DOCTYPE>` doc for HTML, Custom Element
+    /// for WebComponent, SwiftPM for SwiftUI, etc.) into
+    /// `<output_root>/<backend>/` alongside the per-component
+    /// artifacts. Default `false` for back-compat.
+    ///
+    /// v1 mounts only the FIRST component declared in
+    /// `[components].exports` as the project root. Multi-component
+    /// routing/tabs UI is deferred to UI32-M.1 (per UI32 spec §5
+    /// open question 1). Documented as a deviation in the L8
+    /// CHANGELOG.
+    pub emit_project: bool,
 }
 
 /// What a successful build produced.
@@ -402,10 +415,280 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     let index_path = emit_index_file(&backend_dir, &components_built, opts.backend, &manifest.package.name)?;
     artifacts.push(index_path);
 
+    // ----- 6. UI32-M: optional project-shell emission ----------------------
+    //
+    // When `opts.emit_project` is true, route through each backend's
+    // `from_pipeline_with_options(emit_project: true)` to produce a
+    // runnable project shell alongside the per-component artifacts.
+    //
+    // v1 scope (deferred to UI32-M.1):
+    //   - Only the FIRST component in `manifest.components.exports`
+    //     is mounted as the shell's root. Authors with multi-component
+    //     packages who want a tab/route bar between components hit
+    //     this limitation; the spec §5 open question 1 picks
+    //     "first-export-default" as the v1 policy.
+    //   - XAML is excluded — it already has its own `--emit-project`
+    //     mechanism via `EmitOptions::emit_project` in the emitter
+    //     itself (PR #3917), bypassing the artifact-builder. UI32-M.1
+    //     unifies the two paths.
+    //
+    // The shell side-files (package.json, vite.config.ts, etc.) are
+    // written into `backend_dir` alongside the per-component
+    // artifacts. The per-emitter banner contract (UI32 spec §3.5)
+    // means a re-build overwrites them deterministically.
+    if opts.emit_project {
+        if let Some(first_component) = components_built.first() {
+            let shell_artifacts = emit_project_shell(
+                first_component,
+                &src_dir,
+                &backend_dir,
+                opts.backend,
+            )?;
+            artifacts.extend(shell_artifacts);
+        }
+        // Empty packages with emit_project: true don't emit a shell —
+        // there is no component to mount. The bare index file from
+        // step 5 still lands in `backend_dir`.
+    }
+
     Ok(BuildResult {
         artifacts,
         components_built,
     })
+}
+
+/// UI32-M: emit the per-backend project shell for the package's first
+/// component. Returns the list of side-file paths written into
+/// `backend_dir`.
+///
+/// Re-parses the first component's `.mil`/`.mll`/`.msl` triple and
+/// routes through the backend-specific `from_pipeline_with_options`
+/// with `emit_project: true`. The per-emitter `ProjectFiles` struct
+/// is then written to disk at fixed relative paths per UI32 spec
+/// §2.2 + §3.7.
+///
+/// XAML is intentionally not wired here — its emitter has its own
+/// `EmitOptions::emit_project` mechanism (PR #3917) that runs
+/// through `mosaic-compile` directly, bypassing the artifact-builder.
+/// Unifying the two paths is queued as UI32-M.1.
+fn emit_project_shell(
+    component: &str,
+    src_dir: &Path,
+    backend_dir: &Path,
+    backend: Backend,
+) -> Result<Vec<PathBuf>, BuildError> {
+    // Re-read the triple. This duplicates `compile_one_component`'s
+    // file-loading logic; we accept the redundancy because the shell
+    // emission lives outside the per-component compile loop and we'd
+    // rather not thread the parsed IRs through. The triple is small
+    // (typically < 1 KiB total), so reading + parsing again is
+    // cheap.
+    let mil_path = src_dir.join(format!("{component}.mil"));
+    let mll_path = src_dir.join(format!("{component}.mll"));
+    let msl_path = src_dir.join(format!("{component}.msl"));
+
+    if !mil_path.exists() || !mll_path.exists() {
+        return Err(BuildError::SourceNotFound {
+            component: component.to_string(),
+            expected_dir: src_dir.to_path_buf(),
+        });
+    }
+
+    let mil_src = read_to_string(&mil_path)?;
+    let mll_src = read_to_string(&mll_path)?;
+    let msl_src = if msl_path.exists() {
+        read_to_string(&msl_path)?
+    } else {
+        format!("style {component} {{ }}")
+    };
+
+    let mosmodel_out = mosmodel_compiler::compile(&mil_src)
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+
+    // Per-backend dispatch. Each branch builds an EmitOptions with
+    // emit_project: true, calls the appropriate from_pipeline_with_options,
+    // and writes the resulting ProjectFiles side-files into backend_dir
+    // at the fixed relative paths from UI32 spec §2.2.
+    let mut written: Vec<PathBuf> = Vec::new();
+    match backend {
+        Backend::React => {
+            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
+            react_opts.emit_project = true;
+            let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &react_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 4] = [
+                    ("package.json", &proj.package_json),
+                    ("vite.config.ts", &proj.vite_config),
+                    ("index.html", &proj.index_html),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+                let nested = backend_dir.join("src/main.tsx");
+                if let Some(parent) = nested.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&nested, proj.main_tsx.as_bytes())?;
+                written.push(nested);
+            }
+        }
+        Backend::Html => {
+            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
+            html_opts.emit_project = true;
+            let r = mosaic_emit_html::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &html_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                // HTML names the shell `index.html` (the bare
+                // manifest-only index from step 5 is at the same
+                // path, so this overwrites it — by design per UI32
+                // §3.4: with --emit-project, the shell IS the index).
+                let flat: [(&str, &str); 2] = [
+                    ("index.html", &proj.index_html),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
+        Backend::WebComponent => {
+            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
+            wc_opts.emit_project = true;
+            let r = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &wc_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 2] = [
+                    ("index.html", &proj.index_html),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
+        Backend::Flutter => {
+            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
+            fl_opts.emit_project = true;
+            let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &fl_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 2] = [
+                    ("pubspec.yaml", &proj.pubspec_yaml),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+                let nested = backend_dir.join("lib/main.dart");
+                if let Some(parent) = nested.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&nested, proj.main_dart.as_bytes())?;
+                written.push(nested);
+            }
+        }
+        Backend::Qt => {
+            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
+            qt_opts.emit_project = true;
+            let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &qt_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                // Qt's qmldir shell file would conflict with the
+                // step-5 qmldir (the module descriptor). The shell's
+                // qmldir is the same shape as the index path — UI32
+                // §3.4 says --emit-project's shell IS the qmldir.
+                let flat: [(&str, &str); 4] = [
+                    ("CMakeLists.txt", &proj.cmake_lists),
+                    ("main.cpp", &proj.main_cpp),
+                    ("qmldir", &proj.qmldir),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
+        Backend::SwiftUI => {
+            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
+            sw_opts.emit_project = true;
+            let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &sw_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 2] = [
+                    ("Package.swift", &proj.package_swift),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+                let nested = backend_dir.join("Sources/App/App.swift");
+                if let Some(parent) = nested.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&nested, proj.app_swift.as_bytes())?;
+                written.push(nested);
+            }
+        }
+        Backend::Xaml => {
+            // XAML's project shell flows through its own
+            // `EmitOptions::emit_project` from PR #3917, which is
+            // wired in `mosaic-compile`'s xaml branch (not in the
+            // artifact-builder). For UI32-M v1 the artifact-builder
+            // path silently no-ops for XAML — invoking
+            // `--backend xaml --emit-project` through `build_package`
+            // does nothing extra. UI32-M.1 unifies the two paths so
+            // this branch becomes a wired call like the others.
+        }
+    }
+    Ok(written)
 }
 
 // ===========================================================================
@@ -1232,6 +1515,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         };
         let result = build_package(&opts).expect("empty package should build");
         assert!(result.components_built.is_empty(), "no components expected");
@@ -1252,6 +1536,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .expect("react build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1270,6 +1555,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::SwiftUI,
+            emit_project: false,
         })
         .expect("swiftui build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1285,6 +1571,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Qt,
+            emit_project: false,
         })
         .expect("qt build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1313,6 +1600,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
+            emit_project: false,
         })
         .expect("html build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1351,6 +1639,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
+            emit_project: false,
         })
         .expect("html build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1399,6 +1688,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::WebComponent,
+            emit_project: false,
         })
         .expect("webcomponent build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1421,6 +1711,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Xaml,
+            emit_project: false,
         })
         .expect("xaml build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1456,6 +1747,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Flutter,
+            emit_project: false,
         })
         .expect("flutter build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1526,6 +1818,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .unwrap_err();
         assert!(
@@ -1546,6 +1839,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .unwrap_err();
         // The manifest parser may catch some of these earlier as a
@@ -1588,6 +1882,7 @@ version = "1"
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
                 backend: Backend::Html,
+                emit_project: false,
             })
             .unwrap_err();
             assert!(
@@ -1622,6 +1917,7 @@ version = "1"
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
                 backend: Backend::React,
+                emit_project: false,
             })
             .unwrap_err();
             assert!(
@@ -1671,6 +1967,7 @@ version = "1"
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
                 backend,
+                emit_project: false,
             })
             .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
             assert_eq!(result.components_built.len(), 2);
@@ -1701,6 +1998,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .unwrap_err();
         match err {
@@ -1727,6 +2025,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .unwrap_err();
         match err {
@@ -1747,6 +2046,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .expect("multi-component build");
         assert_eq!(result.components_built.len(), 3);
@@ -1767,6 +2067,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .expect("build without .msl");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -1788,6 +2089,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.clone(),
             backend: Backend::React,
+            emit_project: false,
         })
         .expect("build should create the output dir");
         assert!(out.join("react").join("Grid.tsx").exists());
@@ -1805,6 +2107,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .unwrap();
         let body = fs::read_to_string(out.path().join("react").join("index.ts")).unwrap();
@@ -1820,6 +2123,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::Qt,
+            emit_project: false,
         })
         .unwrap();
         let body = fs::read_to_string(out.path().join("qt").join("qmldir")).unwrap();
@@ -1839,6 +2143,7 @@ version = "1"
             package_root: tmp.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .unwrap_err();
         assert!(matches!(err, BuildError::Manifest(_)));
@@ -1961,6 +2266,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .expect("multi-variant build");
 
@@ -1992,6 +2298,7 @@ version = "1"
             package_root: pkg.path().to_path_buf(),
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
+            emit_project: false,
         })
         .expect("single-variant build");
 
@@ -2003,5 +2310,172 @@ version = "1"
             !out.path().join("react").join("Grid.touch.tsx").exists(),
             "no variant file should be created without explicit .touch.mll"
         );
+    }
+
+    // =====================================================================
+    // UI32-M — `emit_project` shell tests
+    //
+    // Covers per-PR gates from UI32 spec §3.1-§3.8 at the
+    // artifact-builder layer (the per-emitter L2-L7 PRs cover the
+    // shell-content gates already; these tests cover the build_package
+    // integration).
+    // =====================================================================
+
+    /// §3.4 Composable: default options (emit_project: false) leave
+    /// the build_package output bit-for-bit identical to pre-UI32-M.
+    /// No shell side-files appear in backend_dir.
+    #[test]
+    fn ui32_m_emit_project_false_does_not_emit_shell_side_files() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("react build with emit_project: false");
+        assert!(out.path().join("react").join("Grid.tsx").exists());
+        // None of the L2 React shell side-files should exist.
+        assert!(
+            !out.path().join("react").join("package.json").exists(),
+            "package.json must not exist when emit_project is false"
+        );
+        assert!(
+            !out.path().join("react").join("vite.config.ts").exists(),
+            "vite.config.ts must not exist when emit_project is false"
+        );
+        // No new artifacts beyond the per-component + index.ts.
+        assert_eq!(result.artifacts.len(), 2); // Grid.tsx + index.ts
+    }
+
+    /// §3.4 Composable: when emit_project is true, the React backend
+    /// produces a Vite project shell alongside the per-component
+    /// .tsx + the index.ts (no overwrite of the bare per-component
+    /// artifacts).
+    #[test]
+    fn ui32_m_emit_project_true_writes_react_vite_shell() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: true,
+        })
+        .expect("react build with emit_project: true");
+
+        let dir = out.path().join("react");
+        // Per-component artifacts still present.
+        assert!(dir.join("Grid.tsx").exists());
+        assert!(dir.join("index.ts").exists());
+        // L2 React shell side-files now present.
+        assert!(dir.join("package.json").exists(), "package.json missing");
+        assert!(dir.join("vite.config.ts").exists(), "vite.config.ts missing");
+        assert!(dir.join("index.html").exists(), "index.html missing");
+        assert!(dir.join("README.md").exists(), "README.md missing");
+        assert!(
+            dir.join("src/main.tsx").exists(),
+            "src/main.tsx missing (nested per Vite convention)"
+        );
+        // package.json carries the per-emitter banner.
+        let pkg_json = fs::read_to_string(dir.join("package.json")).unwrap();
+        assert!(
+            pkg_json.contains("AUTO-GENERATED by mosaic-compile --emit-project"),
+            "package.json missing UI32 §3.5 banner"
+        );
+        // The shell side-files appear in the returned artifacts list
+        // so callers can stream-upload them.
+        assert!(
+            result.artifacts.iter().any(|p| p.ends_with("package.json")),
+            "package.json must appear in result.artifacts"
+        );
+        assert!(
+            result.artifacts.iter().any(|p| p.ends_with("main.tsx")),
+            "src/main.tsx must appear in result.artifacts"
+        );
+    }
+
+    /// Per-backend smoke test: each non-XAML backend produces its
+    /// expected shell side-files when emit_project is true. Doesn't
+    /// re-test the banner/pinning/etc. contracts (the per-emitter
+    /// L2-L7 PRs do that); just confirms the artifact-builder
+    /// routes correctly.
+    #[test]
+    fn ui32_m_emit_project_true_produces_expected_shell_per_backend() {
+        for (backend, expected_files) in [
+            (Backend::React, vec!["package.json", "vite.config.ts", "index.html", "README.md", "src/main.tsx"]),
+            (Backend::Html, vec!["index.html", "README.md"]),
+            (Backend::WebComponent, vec!["index.html", "README.md"]),
+            (Backend::Flutter, vec!["pubspec.yaml", "README.md", "lib/main.dart"]),
+            (Backend::Qt, vec!["CMakeLists.txt", "main.cpp", "qmldir", "README.md"]),
+            (Backend::SwiftUI, vec!["Package.swift", "README.md", "Sources/App/App.swift"]),
+        ] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: true,
+            })
+            .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
+            let dir = out.path().join(backend.dir_name());
+            for rel in &expected_files {
+                assert!(
+                    dir.join(rel).exists(),
+                    "{backend:?}: expected shell file `{rel}` missing"
+                );
+            }
+        }
+    }
+
+    /// XAML's --emit-project is wired through its own emitter
+    /// EmitOptions (PR #3917), bypassing the artifact-builder. v1
+    /// of UI32-M intentionally no-ops on XAML at this layer.
+    /// Documented as a deviation; UI32-M.1 unifies the paths.
+    #[test]
+    fn ui32_m_emit_project_true_xaml_is_currently_a_noop_at_builder_layer() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+            emit_project: true,
+        })
+        .expect("xaml build (emit_project: true) must not error even though shell is no-op'd");
+        // The xaml/ dir has the per-component triple + MosaicPackage.props
+        // but NOT the .csproj/App.xaml/MainWindow.xaml — those come
+        // from the XAML emitter's own --emit-project (PR #3917)
+        // accessed via mosaic-compile, not build_package, in v1.
+        let dir = out.path().join("xaml");
+        assert!(dir.join("Grid.xaml").exists());
+        assert!(!dir.join("Grid.csproj").exists());
+        assert!(!dir.join("App.xaml").exists());
+        assert!(!dir.join("MainWindow.xaml").exists());
+    }
+
+    /// §3.1 Reproducible: two emit_project builds against the same
+    /// inputs produce bit-for-bit identical shell side-files.
+    #[test]
+    fn ui32_m_emit_project_shell_is_byte_deterministic() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out_a = TempDir::new().unwrap();
+        let out_b = TempDir::new().unwrap();
+        for out in [&out_a, &out_b] {
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::React,
+                emit_project: true,
+            })
+            .expect("react build");
+        }
+        for shell_file in ["package.json", "vite.config.ts", "index.html", "README.md", "src/main.tsx"] {
+            let a = fs::read_to_string(out_a.path().join("react").join(shell_file)).unwrap();
+            let b = fs::read_to_string(out_b.path().join("react").join(shell_file)).unwrap();
+            assert_eq!(a, b, "`{shell_file}` is not deterministic between runs");
+        }
     }
 }
