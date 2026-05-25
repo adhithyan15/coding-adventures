@@ -746,6 +746,28 @@
       }
     },
     {
+      "id": "description-menu-display",
+      "description": "Description lists, terms, details, and legacy menu-style lists preserve semantic metadata with block/list-item defaults.",
+      "input": "<body><dl id=glossary><dt id=term>Parser</dt><dd id=desc>Builds trees</dd><dt>Lexer</dt><dd>Builds tokens</dd></dl><menu id=actions><li value=3>Open</li><li>Save</li></menu><dir id=directory><li>Legacy item</li></dir>",
+      "expected": {
+        "children": [
+          { "display": "block", "role": "description_list", "name": "dl", "id": "glossary", "text": null, "href": null, "src": null, "alt": null, "description_list_kind": "description", "control_type": null, "children": [
+            { "display": "block", "role": "description_term", "name": "dt", "id": "term", "text": null, "href": null, "src": null, "alt": null, "term_kind": "term", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Parser", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "display": "block", "role": "description_details", "name": "dd", "id": "desc", "text": null, "href": null, "src": null, "alt": null, "term_kind": "description", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Builds trees", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "display": "block", "role": "description_term", "name": "dt", "text": null, "href": null, "src": null, "alt": null, "term_kind": "term", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Lexer", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "display": "block", "role": "description_details", "name": "dd", "text": null, "href": null, "src": null, "alt": null, "term_kind": "description", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Builds tokens", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+          ] },
+          { "display": "block", "role": "list", "name": "menu", "id": "actions", "text": null, "href": null, "src": null, "alt": null, "list_kind": "menu", "control_type": null, "children": [
+            { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "list_item_value": "3", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Open", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Save", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+          ] },
+          { "display": "block", "role": "list", "name": "dir", "id": "directory", "text": null, "href": null, "src": null, "alt": null, "list_kind": "directory", "control_type": null, "children": [
+            { "display": "list-item", "role": "list_item", "name": "li", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Legacy item", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+          ] }
+        ]
+      }
+    },
+    {
       "id": "measurement-display-metadata",
       "description": "Meter and progress render nodes keep range/value metadata as inline replaced browser widgets.",
       "input": "<body><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7>72%</meter><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=indeterminate max=1>Loading</progress>",

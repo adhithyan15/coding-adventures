@@ -1079,6 +1079,8 @@ pub struct BrowserContentNode {
     pub list_marker_type: Option<String>,
     pub list_reversed: bool,
     pub list_item_value: Option<String>,
+    pub description_list_kind: Option<String>,
+    pub term_kind: Option<String>,
     pub quote_cite: Option<String>,
     pub resolved_quote_cite: Option<String>,
     pub data_value: Option<String>,
@@ -1225,6 +1227,8 @@ pub struct BrowserRenderNode {
     pub list_marker_type: Option<String>,
     pub list_reversed: bool,
     pub list_item_value: Option<String>,
+    pub description_list_kind: Option<String>,
+    pub term_kind: Option<String>,
     pub quote_cite: Option<String>,
     pub resolved_quote_cite: Option<String>,
     pub data_value: Option<String>,
@@ -1605,6 +1609,8 @@ impl BrowserRenderNode {
             list_marker_type: content_node.list_marker_type.clone(),
             list_reversed: content_node.list_reversed,
             list_item_value: content_node.list_item_value.clone(),
+            description_list_kind: content_node.description_list_kind.clone(),
+            term_kind: content_node.term_kind.clone(),
             quote_cite: content_node.quote_cite.clone(),
             resolved_quote_cite: content_node.resolved_quote_cite.clone(),
             data_value: content_node.data_value.clone(),
@@ -9303,6 +9309,8 @@ fn collect_browser_content_nodes_with_mode(
                         list_marker_type: None,
                         list_reversed: false,
                         list_item_value: None,
+                        description_list_kind: None,
+                        term_kind: None,
                         quote_cite: None,
                         resolved_quote_cite: None,
                         data_value: None,
@@ -9521,6 +9529,8 @@ fn browser_content_node_for_element(
         list_marker_type: browser_list_marker_type(element),
         list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
         list_item_value: browser_list_item_value(element),
+        description_list_kind: browser_description_list_kind(element),
+        term_kind: browser_term_kind(element),
         resolved_quote_cite: quote_cite
             .as_deref()
             .and_then(|cite| resolve_browser_url(cite, base_href)),
@@ -9579,6 +9589,9 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "dialog" => Some("dialog"),
         "search" => Some("search"),
         "address" => Some("contact"),
+        "dl" => Some("description_list"),
+        "dt" => Some("description_term"),
+        "dd" => Some("description_details"),
         "p" => Some("paragraph"),
         "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
         "article" => Some("article"),
@@ -9599,7 +9612,7 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "optgroup" => Some("option_group"),
         "option" => Some("option"),
         "ul" | "ol" | "menu" | "dir" => Some("list"),
-        "li" | "dt" | "dd" => Some("list_item"),
+        "li" => Some("list_item"),
         "table" => Some("table"),
         "caption" => Some("table_caption"),
         "colgroup" => Some("table_column_group"),
@@ -10016,6 +10029,22 @@ fn browser_list_item_value(element: &Element) -> Option<String> {
         element.attribute("value").map(ToOwned::to_owned)
     } else {
         None
+    }
+}
+
+fn browser_description_list_kind(element: &Element) -> Option<String> {
+    if element.name == "dl" {
+        Some("description".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_term_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "dt" => Some("term".to_string()),
+        "dd" => Some("description".to_string()),
+        _ => None,
     }
 }
 
@@ -10911,10 +10940,33 @@ fn browser_render_display(role: &str) -> &'static str {
         "canvas" | "control" | "embed" | "frame" | "image" | "media" | "meter" | "object"
         | "progress" => "inline-replaced",
         "line_break" => "line-break",
-        "article" | "aside" | "contact" | "dialog" | "disclosure" | "figure" | "figure_caption"
-        | "footer" | "header" | "heading" | "heading_group" | "main" | "navigation"
-        | "paragraph" | "preformatted" | "search" | "section" | "block" | "form" | "form_group"
-        | "legend" | "list" | "quote_block" | "separator" => "block",
+        "article"
+        | "aside"
+        | "contact"
+        | "description_details"
+        | "description_list"
+        | "description_term"
+        | "dialog"
+        | "disclosure"
+        | "figure"
+        | "figure_caption"
+        | "footer"
+        | "header"
+        | "heading"
+        | "heading_group"
+        | "main"
+        | "navigation"
+        | "paragraph"
+        | "preformatted"
+        | "search"
+        | "section"
+        | "block"
+        | "form"
+        | "form_group"
+        | "legend"
+        | "list"
+        | "quote_block"
+        | "separator" => "block",
         "bidi_isolate"
         | "bidi_override"
         | "data"
@@ -11765,6 +11817,50 @@ mod tests {
             render_tree.children[4].children[0].children[1].display,
             "inline"
         );
+    }
+
+    #[test]
+    fn browser_description_menu_metadata_tracks_terms_and_list_kinds() {
+        let document = parse_html(
+            "<body><dl id=glossary><dt id=term>Parser</dt><dd id=desc>Builds trees</dd>\
+             <dt>Lexer</dt><dd>Builds tokens</dd></dl>\
+             <menu id=actions><li value=3>Open</li><li>Save</li></menu>\
+             <dir id=directory><li>Legacy item</li></dir>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let definitions = &content_tree.children[0];
+        assert_eq!(definitions.role, "description_list");
+        assert_eq!(
+            definitions.description_list_kind.as_deref(),
+            Some("description")
+        );
+        assert_eq!(definitions.children[0].role, "description_term");
+        assert_eq!(definitions.children[0].term_kind.as_deref(), Some("term"));
+        assert_eq!(definitions.children[1].role, "description_details");
+        assert_eq!(
+            definitions.children[1].term_kind.as_deref(),
+            Some("description")
+        );
+
+        let menu = &content_tree.children[1];
+        assert_eq!(menu.role, "list");
+        assert_eq!(menu.list_kind.as_deref(), Some("menu"));
+        assert_eq!(menu.children[0].role, "list_item");
+        assert_eq!(menu.children[0].list_item_value.as_deref(), Some("3"));
+
+        let directory = &content_tree.children[2];
+        assert_eq!(directory.role, "list");
+        assert_eq!(directory.list_kind.as_deref(), Some("directory"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[1].display, "block");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[1].children[0].display, "list-item");
+        assert_eq!(render_tree.children[2].children[0].display, "list-item");
     }
 
     #[test]
