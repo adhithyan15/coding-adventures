@@ -1,8 +1,8 @@
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity,
-    Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine,
-    Vcvs, VoltageSource,
+    ac_sweep, ac_sweep_corners, format_ac_table, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs,
+    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet,
+    JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError,
+    TransmissionLine, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -32,6 +32,34 @@ fn ac_resistive_divider_is_frequency_independent() {
         assert_close(mid.imag, 0.0);
         assert_close(mid.abs(), 0.5);
     }
+}
+
+#[test]
+fn ac_text_output_table_is_stable() {
+    let resistance = 1_000.0;
+    let capacitance = 1.0e-6;
+    let corner = 1.0 / (2.0 * std::f64::consts::PI * resistance * capacitance);
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "V1", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "in", "out", resistance,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "C1",
+        "out",
+        "0",
+        capacitance,
+    )));
+
+    let points = ac_sweep(&circuit, corner, corner, 10).unwrap();
+
+    assert_eq!(
+        format_ac_table(&points, &["V(out)", "I(V1)"]).unwrap(),
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n"
+    );
 }
 
 #[test]

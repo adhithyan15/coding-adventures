@@ -149,6 +149,7 @@ from spice_engine import (
     distortion_from_fourier,
     distortion_from_transient,
     estimate_period,
+    format_ac_table,
     format_dc_table,
     format_distortion_table,
     format_fourier_table,
@@ -6181,6 +6182,24 @@ def test_fourier_text_output_table_is_stable() -> None:
         "Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n"
         "V(out)\t1\t1.000000e+03\t1.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\t1.000000e-01\t2.500000e-02\n"
         "V(out)\t2\t2.000000e+03\t0.000000e+00\t-2.500000e-02\t2.500000e-02\t-9.000000e+01\t1.000000e-01\t2.500000e-02\n"
+    )
+
+
+def test_ac_text_output_table_is_stable() -> None:
+    result = AcResult(
+        points=[
+            AcPoint(
+                freq=1000.0,
+                node_voltages={"out": 0.5 - 0.5j},
+                branch_currents={"I(V1)": -0.001 + 0.001j},
+            )
+        ]
+    )
+
+    assert format_ac_table(result) == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "0\t1.000000e+03\tI(V1)\t-1.000000e-03\t1.000000e-03\t1.414214e-03\t1.350000e+02\n"
     )
 
 

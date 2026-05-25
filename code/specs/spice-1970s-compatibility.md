@@ -302,6 +302,9 @@ Status:
 - Stable text-output helpers for DC operating points and transient samples are
   implemented across Python, TypeScript, and Rust, with snapshot tests covering
   node-voltage and branch-current ordering.
+- `.AC` phasor results can now be rendered as stable tab-separated text tables
+  across Python, TypeScript, and Rust, covering real, imaginary, magnitude,
+  and phase rows for selected voltage/current probes.
 - `.FOUR` Fourier results can now be rendered as stable tab-separated text
   tables across Python, TypeScript, and Rust, covering harmonic coefficients,
   magnitude, phase, DC, and THD rows.
