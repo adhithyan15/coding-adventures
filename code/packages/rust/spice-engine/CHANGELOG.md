@@ -19,6 +19,8 @@
   magnitude, phase, and THD text output snapshots.
 - Add `format_fourier_table` for stable tab-separated `.FOUR` harmonic
   coefficient, magnitude, phase, DC, and THD text output snapshots.
+- Add `format_ac_table` for stable tab-separated `.AC` real, imaginary,
+  magnitude, and phase text output snapshots.
 - Add JFET source-follower transient fixtures covering nonlinear
   companion-model solves.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine

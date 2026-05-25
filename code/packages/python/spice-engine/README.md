@@ -8,8 +8,8 @@ sources (VCVS / VCCS / CCCS / CCVS).  Transient outputs can also be
 post-processed with SPICE-style Fourier (`.FOUR`) measurements and projected
 into a distortion result shape.  Constrained pole-zero helpers cover simple RC
 low-pass/high-pass and series RLC low-pass/high-pass/band-pass/notch fixtures,
-with stable Fourier, pole-zero, and distortion text output for `.FOUR` /
-`.PZ` / `.DISTO` snapshots.
+with stable AC, Fourier, pole-zero, and distortion text output for `.AC` /
+`.FOUR` / `.PZ` / `.DISTO` snapshots.
 
 See [`code/specs/spice-engine.md`](../../../specs/spice-engine.md).
 

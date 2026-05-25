@@ -3354,6 +3354,36 @@ pub fn format_transient_table(
     Ok(rows.join("\n"))
 }
 
+pub fn format_ac_table(points: &[AcPoint], probes: &[&str]) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_ac_output_probes(points)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec!["Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase".to_string()];
+    for (index, point) in points.iter().enumerate() {
+        for probe in &selected_probes {
+            let value = table_complex_probe_value(
+                &point.node_voltages,
+                &point.branch_currents,
+                probe,
+                "format_ac_table",
+            )?;
+            rows.push(format!(
+                "{index}\t{}\t{}\t{}\t{}\t{}\t{}",
+                format_table_number(point.frequency_hz),
+                probe,
+                format_table_number(value.real),
+                format_table_number(value.imag),
+                format_table_number(value.abs()),
+                format_table_number(value.phase().to_degrees())
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
     for (index, entry) in result.entries.iter().enumerate() {
@@ -3442,6 +3472,20 @@ fn default_transient_output_probes(points: &[TransientPoint]) -> Vec<String> {
         .collect()
 }
 
+fn default_ac_output_probes(points: &[AcPoint]) -> Vec<String> {
+    let mut node_names = BTreeSet::new();
+    let mut branch_names = BTreeSet::new();
+    for point in points {
+        node_names.extend(point.node_voltages.keys().cloned());
+        branch_names.extend(point.branch_currents.keys().cloned());
+    }
+    node_names
+        .iter()
+        .map(|name| format!("V({name})"))
+        .chain(branch_names)
+        .collect()
+}
+
 fn format_table_number(value: f64) -> String {
     let raw = format!("{value:.6e}");
     if let Some((mantissa, exponent_text)) = raw.split_once('e') {
@@ -3483,6 +3527,54 @@ fn table_probe_value(
         return table_voltage(node_voltages, text, context);
     }
     Err(table_error(context, "empty probe"))
+}
+
+fn table_complex_probe_value(
+    node_voltages: &BTreeMap<String, Complex>,
+    branch_currents: &BTreeMap<String, Complex>,
+    probe: &str,
+    context: &str,
+) -> Result<Complex, SpiceError> {
+    let text = probe.trim();
+    let lower = text.to_ascii_lowercase();
+    if lower.starts_with("v(") && text.ends_with(')') {
+        let args: Vec<&str> = text[2..text.len() - 1]
+            .split(',')
+            .map(|arg| arg.trim())
+            .collect();
+        if args.len() == 1 {
+            return table_complex_voltage(node_voltages, args[0], context);
+        }
+        if args.len() == 2 {
+            return Ok(table_complex_voltage(node_voltages, args[0], context)?
+                - table_complex_voltage(node_voltages, args[1], context)?);
+        }
+    }
+    if lower.starts_with("i(") && text.ends_with(')') {
+        let key = format!("I({})", text[2..text.len() - 1].trim());
+        return branch_currents
+            .get(&key)
+            .copied()
+            .ok_or_else(|| table_error(context, &format!("missing branch current probe {probe}")));
+    }
+    if !text.is_empty() {
+        return table_complex_voltage(node_voltages, text, context);
+    }
+    Err(table_error(context, "empty probe"))
+}
+
+fn table_complex_voltage(
+    node_voltages: &BTreeMap<String, Complex>,
+    node: &str,
+    context: &str,
+) -> Result<Complex, SpiceError> {
+    if is_ground(node) {
+        return Ok(Complex::zero());
+    }
+    node_voltages
+        .get(node)
+        .copied()
+        .ok_or_else(|| table_error(context, &format!("missing node voltage {node}")))
 }
 
 fn table_voltage(

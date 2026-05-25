@@ -1290,6 +1290,36 @@ def format_transient_table(
     return "\n".join(rows)
 
 
+def format_ac_table(result: AcResult | list[AcPoint], probes: list[str] | None = None) -> str:
+    """Format AC phasors as a stable SPICE-style text table."""
+    points = result.points if isinstance(result, AcResult) else result
+    selected_probes = probes or _default_ac_output_probes(points)
+    rows = ["Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase"]
+    for index, point in enumerate(points):
+        for probe in selected_probes:
+            value = _table_complex_probe_value(
+                point.node_voltages,
+                point.branch_currents,
+                probe,
+                "format_ac_table",
+            )
+            rows.append(
+                "\t".join(
+                    [
+                        str(index),
+                        _format_table_number(point.freq),
+                        probe,
+                        _format_table_number(value.real),
+                        _format_table_number(value.imag),
+                        _format_table_number(abs(value)),
+                        _format_table_number(math.degrees(cmath.phase(value))),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_pole_zero_table(result: PoleZeroResult) -> str:
     """Format pole-zero entries as a stable SPICE-style text table."""
     rows = ["Index\tKind\tReal\tImaginary\tFrequency\tDamping"]
@@ -1378,6 +1408,18 @@ def _default_transient_output_probes(points: list[TransientPoint]) -> list[str]:
     ]
 
 
+def _default_ac_output_probes(points: list[AcPoint]) -> list[str]:
+    node_names: set[str] = set()
+    branch_names: set[str] = set()
+    for point in points:
+        node_names.update(point.node_voltages)
+        branch_names.update(point.branch_currents)
+    return [
+        *(f"V({name})" for name in sorted(node_names)),
+        *sorted(branch_names),
+    ]
+
+
 def _format_table_number(value: float) -> str:
     return f"{value:.6e}"
 
@@ -1408,6 +1450,46 @@ def _table_probe_value(
     if text:
         return _table_voltage(node_voltages, text, context)
     raise ValueError(f"{context}: empty probe")
+
+
+def _table_complex_probe_value(
+    node_voltages: dict[str, complex],
+    branch_currents: dict[str, complex],
+    probe: str,
+    context: str,
+) -> complex:
+    text = probe.strip()
+    lower = text.lower()
+    if lower.startswith("v(") and text.endswith(")"):
+        args = [arg.strip() for arg in text[2:-1].split(",")]
+        if len(args) == 1:
+            return _table_complex_voltage(node_voltages, args[0], context)
+        if len(args) == 2:
+            return _table_complex_voltage(
+                node_voltages,
+                args[0],
+                context,
+            ) - _table_complex_voltage(node_voltages, args[1], context)
+    if lower.startswith("i(") and text.endswith(")"):
+        key = f"I({text[2:-1].strip()})"
+        if key not in branch_currents:
+            raise ValueError(f"{context}: missing branch current probe {probe}")
+        return branch_currents[key]
+    if text:
+        return _table_complex_voltage(node_voltages, text, context)
+    raise ValueError(f"{context}: empty probe")
+
+
+def _table_complex_voltage(
+    node_voltages: dict[str, complex],
+    node: str,
+    context: str,
+) -> complex:
+    if _is_ground(node):
+        return 0.0 + 0.0j
+    if node not in node_voltages:
+        raise ValueError(f"{context}: missing node voltage {node}")
+    return node_voltages[node]
 
 
 def _table_voltage(

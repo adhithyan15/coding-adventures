@@ -33,6 +33,10 @@
   tab-separated row set for `.FOUR` harmonic coefficients, magnitude, phase,
   DC, and THD snapshots.
 
+- **AC text output table** — `format_ac_table()` now emits stable
+  tab-separated real, imaginary, magnitude, and phase rows for `.AC` phasor
+  snapshots.
+
 - **JFET transient coverage** — source-follower transient fixtures now cover
   JFET participation in nonlinear companion-model solves.
 

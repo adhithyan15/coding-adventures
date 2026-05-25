@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   Circuit,
   SpiceError,
+  formatAcTable,
   acSweep,
   acSweepCorners,
   bjt,
@@ -49,6 +50,22 @@ describe("acSweep", () => {
       expectClose(mid!.imag, 0.0);
       expectClose(complexAbs(mid!), 0.5);
     }
+  });
+
+  it("formats stable text output tables for AC results", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSourceWithAc("V1", "in", "0", 0.0, 1.0, 0.0));
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitor("C1", "out", "0", 1.0e-6));
+
+    const corner = 1.0 / (2.0 * Math.PI * 1_000.0 * 1.0e-6);
+    const point = acSweep(circuit, corner, corner, 10)[0];
+
+    expect(formatAcTable([point], ["V(out)", "I(V1)"])).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n" +
+        "0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n",
+    );
   });
 
   it("places an RC low-pass at the minus-three-dB corner", () => {

@@ -2297,6 +2297,37 @@ export function formatTransientTable(
   return rows.join("\n");
 }
 
+export function formatAcTable(
+  points: readonly AcPoint[],
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultAcOutputProbes(points);
+  const rows = [["Index", "Frequency", "Probe", "Real", "Imaginary", "Magnitude", "Phase"].join("\t")];
+  points.forEach((point, index) => {
+    selectedProbes.forEach((probe) => {
+      const value = tableComplexProbeValue(
+        point.nodeVoltages,
+        point.branchCurrents,
+        probe,
+        "formatAcTable",
+      );
+      rows.push(
+        [
+          String(index),
+          formatTableNumber(point.frequencyHz),
+          probe,
+          formatTableNumber(value.real),
+          formatTableNumber(value.imag),
+          formatTableNumber(complexAbs(value)),
+          formatTableNumber(complexPhase(value) * 180.0 / Math.PI),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatPoleZeroTable(result: PoleZeroResult): string {
   const rows = [["Index", "Kind", "Real", "Imaginary", "Frequency", "Damping"].join("\t")];
   result.entries.forEach((entry, index) => {
@@ -2386,6 +2417,23 @@ function defaultTransientOutputProbes(points: readonly TransientPoint[]): string
   ];
 }
 
+function defaultAcOutputProbes(points: readonly AcPoint[]): string[] {
+  const nodeNames = new Set<string>();
+  const branchNames = new Set<string>();
+  for (const point of points) {
+    for (const name of point.nodeVoltages.keys()) {
+      nodeNames.add(name);
+    }
+    for (const name of point.branchCurrents.keys()) {
+      branchNames.add(name);
+    }
+  }
+  return [
+    ...Array.from(nodeNames).sort().map((name) => `V(${name})`),
+    ...Array.from(branchNames).sort(),
+  ];
+}
+
 function formatTableNumber(value: number): string {
   const [mantissa, exponentText] = value.toExponential(6).split("e");
   const exponent = Number.parseInt(exponentText, 10);
@@ -2424,6 +2472,54 @@ function tableProbeValue(
     return tableVoltage(nodeVoltages, text, context);
   }
   throw invalidElement(context, "empty probe");
+}
+
+function tableComplexProbeValue(
+  nodeVoltages: ReadonlyMap<string, Complex>,
+  branchCurrents: ReadonlyMap<string, Complex>,
+  probe: string,
+  context: string,
+): Complex {
+  const text = probe.trim();
+  const lower = text.toLowerCase();
+  if (lower.startsWith("v(") && text.endsWith(")")) {
+    const args = text.slice(2, -1).split(",").map((arg) => arg.trim());
+    if (args.length === 1) {
+      return tableComplexVoltage(nodeVoltages, args[0], context);
+    }
+    if (args.length === 2) {
+      const positive = tableComplexVoltage(nodeVoltages, args[0], context);
+      const negative = tableComplexVoltage(nodeVoltages, args[1], context);
+      return { real: positive.real - negative.real, imag: positive.imag - negative.imag };
+    }
+  }
+  if (lower.startsWith("i(") && text.endsWith(")")) {
+    const key = `I(${text.slice(2, -1).trim()})`;
+    const value = branchCurrents.get(key);
+    if (value === undefined) {
+      throw invalidElement(context, `missing branch current probe ${probe}`);
+    }
+    return value;
+  }
+  if (text.length > 0) {
+    return tableComplexVoltage(nodeVoltages, text, context);
+  }
+  throw invalidElement(context, "empty probe");
+}
+
+function tableComplexVoltage(
+  nodeVoltages: ReadonlyMap<string, Complex>,
+  node: string,
+  context: string,
+): Complex {
+  if (isGround(node)) {
+    return { real: 0.0, imag: 0.0 };
+  }
+  const value = nodeVoltages.get(node);
+  if (value === undefined) {
+    throw invalidElement(context, `missing node voltage ${node}`);
+  }
+  return value;
 }
 
 function tableVoltage(
