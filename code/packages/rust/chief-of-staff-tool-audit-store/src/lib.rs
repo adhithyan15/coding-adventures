@@ -5525,6 +5525,38 @@ impl ToolAuditSupervisorDrainRunReport {
             .has_route()
     }
 
+    /// Return whether the dashboard lane queue routes to routine action.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_routine_action(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_key()
+            .routes_to_routine_action()
+    }
+
+    /// Return whether the dashboard lane queue routes to manual review.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_manual_review(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_key()
+            .routes_to_manual_review()
+    }
+
+    /// Return whether the dashboard lane queue routes to non-integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_investigation(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_key()
+            .routes_to_investigation()
+    }
+
+    /// Return whether the dashboard lane queue routes to host-log integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_key()
+            .routes_to_integrity_investigation()
+    }
+
+    /// Return whether the dashboard lane queue routes to triage.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_triage(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_key()
+            .routes_to_triage()
+    }
+
     /// Return the escalation dashboard lane queue digest.
     pub fn host_run_escalation_dashboard_lane_queue_digest(
         &self,
@@ -5648,6 +5680,38 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn host_run_escalation_dashboard_lane_queue_digest_has_route(&self) -> bool {
         self.host_run_escalation_dashboard_lane_queue_digest()
             .has_route()
+    }
+
+    /// Return whether the dashboard lane queue digest routes to routine action.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .routes_to_routine_action()
+    }
+
+    /// Return whether the dashboard lane queue digest routes to manual review.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .routes_to_manual_review()
+    }
+
+    /// Return whether the dashboard lane queue digest routes to non-integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .routes_to_investigation()
+    }
+
+    /// Return whether the dashboard lane queue digest routes to host-log integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .routes_to_integrity_investigation()
+    }
+
+    /// Return whether the dashboard lane queue digest routes to triage.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_triage(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .routes_to_triage()
     }
 
     /// Return the reader or supervisor checkpoint name drained by this run.
@@ -6809,6 +6873,16 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_escalation_dashboard_lane_queue_requires_triage(),
             host_run_escalation_dashboard_lane_queue_has_route: self
                 .host_run_escalation_dashboard_lane_queue_has_route(),
+            host_run_escalation_dashboard_lane_queue_routes_to_routine_action: self
+                .host_run_escalation_dashboard_lane_queue_routes_to_routine_action(),
+            host_run_escalation_dashboard_lane_queue_routes_to_manual_review: self
+                .host_run_escalation_dashboard_lane_queue_routes_to_manual_review(),
+            host_run_escalation_dashboard_lane_queue_routes_to_investigation: self
+                .host_run_escalation_dashboard_lane_queue_routes_to_investigation(),
+            host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation: self
+                .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation(),
+            host_run_escalation_dashboard_lane_queue_routes_to_triage: self
+                .host_run_escalation_dashboard_lane_queue_routes_to_triage(),
             host_run_escalation_dashboard_lane_queue_digest: self
                 .host_run_escalation_dashboard_lane_queue_digest(),
             host_run_escalation_dashboard_lane_queue_digest_label: self
@@ -6847,6 +6921,17 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_escalation_dashboard_lane_queue_digest_requires_triage(),
             host_run_escalation_dashboard_lane_queue_digest_has_route: self
                 .host_run_escalation_dashboard_lane_queue_digest_has_route(),
+            host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action: self
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action(),
+            host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review: self
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review(),
+            host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation: self
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation(),
+            host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation: self
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation(
+                ),
+            host_run_escalation_dashboard_lane_queue_digest_routes_to_triage: self
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_triage(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -8617,6 +8702,16 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_dashboard_lane_queue_requires_triage: bool,
     /// Whether the dashboard lane queue has a concrete route.
     pub host_run_escalation_dashboard_lane_queue_has_route: bool,
+    /// Whether the dashboard lane queue routes to routine action.
+    pub host_run_escalation_dashboard_lane_queue_routes_to_routine_action: bool,
+    /// Whether the dashboard lane queue routes to manual review.
+    pub host_run_escalation_dashboard_lane_queue_routes_to_manual_review: bool,
+    /// Whether the dashboard lane queue routes to non-integrity investigation.
+    pub host_run_escalation_dashboard_lane_queue_routes_to_investigation: bool,
+    /// Whether the dashboard lane queue routes to host-log integrity investigation.
+    pub host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation: bool,
+    /// Whether the dashboard lane queue routes to triage.
+    pub host_run_escalation_dashboard_lane_queue_routes_to_triage: bool,
     /// Host-run escalation dashboard lane queue digest.
     pub host_run_escalation_dashboard_lane_queue_digest:
         ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest,
@@ -8656,6 +8751,16 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_dashboard_lane_queue_digest_requires_triage: bool,
     /// Whether the dashboard lane queue digest has a concrete route.
     pub host_run_escalation_dashboard_lane_queue_digest_has_route: bool,
+    /// Whether the dashboard lane queue digest routes to routine action.
+    pub host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action: bool,
+    /// Whether the dashboard lane queue digest routes to manual review.
+    pub host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review: bool,
+    /// Whether the dashboard lane queue digest routes to non-integrity investigation.
+    pub host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation: bool,
+    /// Whether the dashboard lane queue digest routes to host-log integrity investigation.
+    pub host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation: bool,
+    /// Whether the dashboard lane queue digest routes to triage.
+    pub host_run_escalation_dashboard_lane_queue_digest_routes_to_triage: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -12080,6 +12185,33 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.host_run_escalation_dashboard_lane_queue_has_route
     }
 
+    /// Return whether the dashboard lane queue routes to routine action.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_routine_action(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_routes_to_routine_action
+    }
+
+    /// Return whether the dashboard lane queue routes to manual review.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_manual_review(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_routes_to_manual_review
+    }
+
+    /// Return whether the dashboard lane queue routes to non-integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_investigation(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_routes_to_investigation
+    }
+
+    /// Return whether the dashboard lane queue routes to host-log integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation
+    }
+
+    /// Return whether the dashboard lane queue routes to triage.
+    pub fn host_run_escalation_dashboard_lane_queue_routes_to_triage(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_routes_to_triage
+    }
+
     /// Return the escalation dashboard lane queue digest.
     pub fn host_run_escalation_dashboard_lane_queue_digest(
         &self,
@@ -12183,6 +12315,33 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the dashboard lane queue digest has a concrete escalation route.
     pub fn host_run_escalation_dashboard_lane_queue_digest_has_route(&self) -> bool {
         self.host_run_escalation_dashboard_lane_queue_digest_has_route
+    }
+
+    /// Return whether the dashboard lane queue digest routes to routine action.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action
+    }
+
+    /// Return whether the dashboard lane queue digest routes to manual review.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review
+    }
+
+    /// Return whether the dashboard lane queue digest routes to non-integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation
+    }
+
+    /// Return whether the dashboard lane queue digest routes to host-log integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation
+    }
+
+    /// Return whether the dashboard lane queue digest routes to triage.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_routes_to_triage(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -17207,6 +17366,31 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
     pub fn has_route(self) -> bool {
         self.route.has_route()
     }
+
+    /// Return whether this lane queue key routes to routine action.
+    pub fn routes_to_routine_action(self) -> bool {
+        self.route.routes_to_routine_action()
+    }
+
+    /// Return whether this lane queue key routes to manual review.
+    pub fn routes_to_manual_review(self) -> bool {
+        self.route.routes_to_manual_review()
+    }
+
+    /// Return whether this lane queue key routes to non-integrity investigation.
+    pub fn routes_to_investigation(self) -> bool {
+        self.route.routes_to_investigation()
+    }
+
+    /// Return whether this lane queue key routes to host-log integrity investigation.
+    pub fn routes_to_integrity_investigation(self) -> bool {
+        self.route.routes_to_integrity_investigation()
+    }
+
+    /// Return whether this lane queue key routes to triage.
+    pub fn routes_to_triage(self) -> bool {
+        self.route.routes_to_triage()
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
@@ -17360,6 +17544,52 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
     /// Return whether this lane queue digest has a concrete escalation route.
     pub fn has_route(self) -> bool {
         self.lane_queue_key.has_route() || self.dashboard_key.has_route()
+    }
+
+    /// Return whether this lane queue digest routes to routine action.
+    pub fn routes_to_routine_action(self) -> bool {
+        self.lane_queue_key.routes_to_routine_action()
+            || self
+                .dashboard_key
+                .rollup_key()
+                .route()
+                .routes_to_routine_action()
+    }
+
+    /// Return whether this lane queue digest routes to manual review.
+    pub fn routes_to_manual_review(self) -> bool {
+        self.lane_queue_key.routes_to_manual_review()
+            || self
+                .dashboard_key
+                .rollup_key()
+                .route()
+                .routes_to_manual_review()
+    }
+
+    /// Return whether this lane queue digest routes to non-integrity investigation.
+    pub fn routes_to_investigation(self) -> bool {
+        self.lane_queue_key.routes_to_investigation()
+            || self
+                .dashboard_key
+                .rollup_key()
+                .route()
+                .routes_to_investigation()
+    }
+
+    /// Return whether this lane queue digest routes to host-log integrity investigation.
+    pub fn routes_to_integrity_investigation(self) -> bool {
+        self.lane_queue_key.routes_to_integrity_investigation()
+            || self
+                .dashboard_key
+                .rollup_key()
+                .route()
+                .routes_to_integrity_investigation()
+    }
+
+    /// Return whether this lane queue digest routes to triage.
+    pub fn routes_to_triage(self) -> bool {
+        self.lane_queue_key.routes_to_triage()
+            || self.dashboard_key.rollup_key().route().routes_to_triage()
     }
 }
 
@@ -17801,6 +18031,31 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardKey {
         self.lane_queue_key().has_route()
     }
 
+    /// Return whether this lane queue key routes to routine action.
+    pub fn lane_queue_routes_to_routine_action(self) -> bool {
+        self.lane_queue_key().routes_to_routine_action()
+    }
+
+    /// Return whether this lane queue key routes to manual review.
+    pub fn lane_queue_routes_to_manual_review(self) -> bool {
+        self.lane_queue_key().routes_to_manual_review()
+    }
+
+    /// Return whether this lane queue key routes to non-integrity investigation.
+    pub fn lane_queue_routes_to_investigation(self) -> bool {
+        self.lane_queue_key().routes_to_investigation()
+    }
+
+    /// Return whether this lane queue key routes to host-log integrity investigation.
+    pub fn lane_queue_routes_to_integrity_investigation(self) -> bool {
+        self.lane_queue_key().routes_to_integrity_investigation()
+    }
+
+    /// Return whether this lane queue key routes to triage.
+    pub fn lane_queue_routes_to_triage(self) -> bool {
+        self.lane_queue_key().routes_to_triage()
+    }
+
     /// Return the dashboard lane queue digest.
     pub fn lane_queue_digest(
         self,
@@ -17904,6 +18159,31 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardKey {
     /// Return whether this lane queue digest has a concrete escalation route.
     pub fn lane_queue_digest_has_route(self) -> bool {
         self.lane_queue_digest().has_route()
+    }
+
+    /// Return whether this lane queue digest routes to routine action.
+    pub fn lane_queue_digest_routes_to_routine_action(self) -> bool {
+        self.lane_queue_digest().routes_to_routine_action()
+    }
+
+    /// Return whether this lane queue digest routes to manual review.
+    pub fn lane_queue_digest_routes_to_manual_review(self) -> bool {
+        self.lane_queue_digest().routes_to_manual_review()
+    }
+
+    /// Return whether this lane queue digest routes to non-integrity investigation.
+    pub fn lane_queue_digest_routes_to_investigation(self) -> bool {
+        self.lane_queue_digest().routes_to_investigation()
+    }
+
+    /// Return whether this lane queue digest routes to host-log integrity investigation.
+    pub fn lane_queue_digest_routes_to_integrity_investigation(self) -> bool {
+        self.lane_queue_digest().routes_to_integrity_investigation()
+    }
+
+    /// Return whether this lane queue digest routes to triage.
+    pub fn lane_queue_digest_routes_to_triage(self) -> bool {
+        self.lane_queue_digest().routes_to_triage()
     }
 
     /// Return whether this key's supervision component matches.
@@ -29503,6 +29783,12 @@ mod tests {
             .host_run_escalation_dashboard_lane_queue_requires_integrity_investigation());
         assert!(!idle_report.host_run_escalation_dashboard_lane_queue_requires_triage());
         assert!(!idle_report.host_run_escalation_dashboard_lane_queue_has_route());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_routes_to_routine_action());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_routes_to_manual_review());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_routes_to_investigation());
+        assert!(!idle_report
+            .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_routes_to_triage());
         assert_eq!(
             idle_summary.host_run_escalation_dashboard_lane_queue_key,
             idle_lane_queue_key
@@ -29570,6 +29856,20 @@ mod tests {
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_requires_triage());
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_has_route);
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_has_route());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_routine_action);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_routine_action());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_manual_review);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_manual_review());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_investigation);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_investigation());
+        assert!(
+            !idle_summary
+                .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation
+        );
+        assert!(!idle_summary
+            .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_triage);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_routes_to_triage());
         let idle_lane_queue_digest =
             ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::new(
                 idle_lane_queue_key,
@@ -29613,6 +29913,18 @@ mod tests {
             .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation());
         assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_requires_triage());
         assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_has_route());
+        assert!(
+            !idle_report.host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action()
+        );
+        assert!(
+            !idle_report.host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review()
+        );
+        assert!(
+            !idle_report.host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation()
+        );
+        assert!(!idle_report
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage());
         assert_eq!(
             idle_summary.host_run_escalation_dashboard_lane_queue_digest,
             idle_lane_queue_digest
@@ -29690,6 +30002,31 @@ mod tests {
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_triage());
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_has_route);
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_has_route());
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action
+        );
+        assert!(!idle_summary
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action());
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review
+        );
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review()
+        );
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation
+        );
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation()
+        );
+        assert!(
+            !idle_summary
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation
+        );
+        assert!(!idle_summary
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -30520,6 +30857,17 @@ mod tests {
             .host_run_escalation_dashboard_lane_queue_requires_integrity_investigation());
         assert!(continuation_report.host_run_escalation_dashboard_lane_queue_requires_triage());
         assert!(continuation_report.host_run_escalation_dashboard_lane_queue_has_route());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_routes_to_routine_action());
+        assert!(
+            !continuation_report.host_run_escalation_dashboard_lane_queue_routes_to_manual_review()
+        );
+        assert!(
+            !continuation_report.host_run_escalation_dashboard_lane_queue_routes_to_investigation()
+        );
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation());
+        assert!(continuation_report.host_run_escalation_dashboard_lane_queue_routes_to_triage());
         assert_eq!(
             continuation_summary.host_run_escalation_dashboard_lane_queue_key,
             continuation_lane_queue_key
@@ -30615,6 +30963,29 @@ mod tests {
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_requires_triage());
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_has_route);
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_has_route());
+        assert!(
+            !continuation_summary.host_run_escalation_dashboard_lane_queue_routes_to_routine_action
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_routes_to_routine_action());
+        assert!(
+            !continuation_summary.host_run_escalation_dashboard_lane_queue_routes_to_manual_review
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_routes_to_manual_review());
+        assert!(
+            !continuation_summary.host_run_escalation_dashboard_lane_queue_routes_to_investigation
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_routes_to_investigation());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_routes_to_integrity_investigation());
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_routes_to_triage);
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_routes_to_triage());
         let continuation_lane_queue_digest =
             ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::new(
                 continuation_lane_queue_key,
@@ -30664,6 +31035,17 @@ mod tests {
             continuation_report.host_run_escalation_dashboard_lane_queue_digest_requires_triage()
         );
         assert!(continuation_report.host_run_escalation_dashboard_lane_queue_digest_has_route());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation());
+        assert!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage()
+        );
         assert_eq!(
             continuation_summary.host_run_escalation_dashboard_lane_queue_digest,
             continuation_lane_queue_digest
@@ -30767,6 +31149,36 @@ mod tests {
         );
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_has_route);
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_has_route());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_routine_action());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_manual_review());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_investigation());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_routes_to_integrity_investigation());
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage
+        );
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_routes_to_triage()
+        );
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
