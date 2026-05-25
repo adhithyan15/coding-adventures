@@ -350,13 +350,25 @@ struct ExpectedHeading {
 
 #[derive(Debug, Deserialize)]
 struct ExpectedLink {
+    #[serde(default)]
+    id: Option<String>,
     href: Option<String>,
     resolved_href: Option<String>,
     name: Option<String>,
     target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
     rel: Option<String>,
     #[serde(default)]
     rel_tokens: Vec<String>,
+    #[serde(default)]
+    rel_external: bool,
+    #[serde(default)]
+    rel_nofollow: bool,
+    #[serde(default)]
+    rel_noopener: bool,
+    #[serde(default)]
+    rel_noreferrer: bool,
     title: Option<String>,
     #[serde(default)]
     download: Option<String>,
@@ -368,6 +380,8 @@ struct ExpectedLink {
     hreflang: Option<String>,
     #[serde(default)]
     type_hint: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
     text: String,
 }
 
@@ -950,18 +964,25 @@ impl ExpectedHeading {
 impl ExpectedLink {
     fn into_browser_link(self) -> BrowserLink {
         BrowserLink {
+            id: self.id,
             href: self.href,
             resolved_href: self.resolved_href,
             name: self.name,
             target: self.target,
+            effective_target: self.effective_target,
             rel: self.rel,
             rel_tokens: self.rel_tokens,
+            rel_external: self.rel_external,
+            rel_nofollow: self.rel_nofollow,
+            rel_noopener: self.rel_noopener,
+            rel_noreferrer: self.rel_noreferrer,
             title: self.title,
             download: self.download,
             ping: self.ping,
             resolved_ping: self.resolved_ping,
             hreflang: self.hreflang,
             type_hint: self.type_hint,
+            referrerpolicy: self.referrerpolicy,
             text: self.text,
         }
     }

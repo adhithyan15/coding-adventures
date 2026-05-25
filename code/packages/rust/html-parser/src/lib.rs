@@ -1378,18 +1378,25 @@ pub struct BrowserHeading {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserLink {
+    pub id: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub name: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub rel: Option<String>,
     pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
     pub title: Option<String>,
     pub download: Option<String>,
     pub ping: Vec<String>,
     pub resolved_ping: Vec<String>,
     pub hreflang: Option<String>,
     pub type_hint: Option<String>,
+    pub referrerpolicy: Option<String>,
     pub text: String,
 }
 
@@ -8733,26 +8740,11 @@ fn collect_browser_facts(
         }
 
         match element.name.as_str() {
-            "a" => summary.links.push(BrowserLink {
-                href: element.attribute("href").map(ToOwned::to_owned),
-                resolved_href: element
-                    .attribute("href")
-                    .and_then(|href| resolve_browser_url(href, summary.base_href.as_deref())),
-                name: element.attribute("name").map(ToOwned::to_owned),
-                target: element.attribute("target").map(ToOwned::to_owned),
-                rel: element.attribute("rel").map(ToOwned::to_owned),
-                rel_tokens: browser_rel_tokens(element),
-                title: element.attribute("title").map(ToOwned::to_owned),
-                download: browser_anchor_download(element),
-                resolved_ping: browser_anchor_ping(element)
-                    .into_iter()
-                    .filter_map(|ping| resolve_browser_url(&ping, summary.base_href.as_deref()))
-                    .collect(),
-                ping: browser_anchor_ping(element),
-                hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
-                type_hint: element.attribute("type").map(ToOwned::to_owned),
-                text: visible_text_for_nodes(&element.children),
-            }),
+            "a" => summary.links.push(browser_link(
+                element,
+                summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
+            )),
             "picture" => {
                 collect_browser_facts(&element.children, summary, labels, &[], body_root);
                 continue;
@@ -9113,6 +9105,44 @@ fn browser_resource_hint_from_link(
         imagesrcset,
         imagesizes: element.attribute("imagesizes").map(ToOwned::to_owned),
     })
+}
+
+fn browser_link(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserLink {
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    let rel_tokens = browser_rel_tokens(element);
+    BrowserLink {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        href: element.attribute("href").map(ToOwned::to_owned),
+        resolved_href: element
+            .attribute("href")
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        title: element.attribute("title").map(ToOwned::to_owned),
+        download: browser_anchor_download(element),
+        resolved_ping: browser_anchor_ping(element)
+            .into_iter()
+            .filter_map(|ping| resolve_browser_url(&ping, base_href))
+            .collect(),
+        ping: browser_anchor_ping(element),
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        text: visible_text_for_nodes(&element.children),
+    }
 }
 
 fn browser_link_resource_hint_kind(rel: Option<&str>) -> Option<String> {
@@ -10316,7 +10346,11 @@ fn browser_link_is_stylesheet(element: &Element) -> bool {
 }
 
 fn browser_rel_contains(element: &Element, token: &str) -> bool {
-    browser_rel_tokens(element)
+    browser_rel_tokens_contain(&browser_rel_tokens(element), token)
+}
+
+fn browser_rel_tokens_contain(tokens: &[String], token: &str) -> bool {
+    tokens
         .iter()
         .any(|candidate| candidate.eq_ignore_ascii_case(token))
 }
@@ -12205,10 +12239,10 @@ mod tests {
     #[test]
     fn browser_anchor_navigation_metadata_tracks_targets_and_pings() {
         let document = parse_html(
-            "<base href=\"https://example.test/docs/current.html\">\
+            "<base href=\"https://example.test/docs/current.html\" target=_parent>\
              <body><p>Go <a id=next href=next.html target=_blank rel=\"next external noopener\" \
              title=\"Next page\" download=next.html ping=\"audit.html https://metrics.example/p\" \
-             hreflang=en-US type=text/html>Next</a></p>",
+             hreflang=en-US type=text/html>Next</a> and <a href=appendix.html>Appendix</a></p>",
         )
         .unwrap();
 
@@ -12219,9 +12253,15 @@ mod tests {
             link.resolved_href.as_deref(),
             Some("https://example.test/docs/next.html")
         );
+        assert_eq!(link.id.as_deref(), Some("next"));
         assert_eq!(link.target.as_deref(), Some("_blank"));
+        assert_eq!(link.effective_target.as_deref(), Some("_blank"));
         assert_eq!(link.rel.as_deref(), Some("next external noopener"));
         assert_eq!(link.rel_tokens, vec!["next", "external", "noopener"]);
+        assert!(link.rel_external);
+        assert!(!link.rel_nofollow);
+        assert!(link.rel_noopener);
+        assert!(!link.rel_noreferrer);
         assert_eq!(link.download.as_deref(), Some("next.html"));
         assert_eq!(link.ping, vec!["audit.html", "https://metrics.example/p"]);
         assert_eq!(
@@ -12233,6 +12273,10 @@ mod tests {
         );
         assert_eq!(link.hreflang.as_deref(), Some("en-US"));
         assert_eq!(link.type_hint.as_deref(), Some("text/html"));
+        assert_eq!(
+            summary.links[1].effective_target.as_deref(),
+            Some("_parent")
+        );
 
         let content_tree = BrowserContentTree::from_document(&document);
         let content_link = &content_tree.children[0].children[1];

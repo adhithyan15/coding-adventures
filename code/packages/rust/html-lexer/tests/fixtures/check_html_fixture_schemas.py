@@ -433,18 +433,23 @@ def check_browser_expected_lists(
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
         for field in (
+            "id",
             "href",
             "resolved_href",
             "name",
             "target",
+            "effective_target",
             "rel",
             "title",
             "download",
             "hreflang",
             "type_hint",
+            "referrerpolicy",
         ):
             require_optional_nullable_string(link_path, link, field, errors)
         require_optional_string_list(link_path, link, "rel_tokens", errors)
+        for field in ("rel_external", "rel_nofollow", "rel_noopener", "rel_noreferrer"):
+            require_optional_boolean(link_path, link, field, errors)
         require_optional_string_list(link_path, link, "ping", errors)
         require_optional_string_list(link_path, link, "resolved_ping", errors)
         require_string(link_path, link, "text", errors)
