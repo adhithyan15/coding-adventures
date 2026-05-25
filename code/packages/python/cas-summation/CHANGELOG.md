@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.7.0 — 2026-05-25
+
+**Phase 59 — Bounded × Sqrt(positive-poly) × polynomial numerator (Python).**
+
+Closes the three-way gap between Phase 53 (Sqrt × polynomial, refuses
+bounded factors), Phase 56 (bounded × Sqrt, refuses polynomial factors),
+and Phase 57 (bounded × Log × Sqrt, the Log specialisation).
+
+A numerator with one ``Sqrt(positive-leading polynomial P)`` factor, any
+polynomial factors (total degree ``m``), and any bounded factors has
+effective growth ``k^{deg(P)/2 + m}``.  Using the ×2 integer trick:
+``effective_x2 = deg(P) + 2·m``.  Vanishes when ``2·den_deg > effective_x2``
+(polynomial denominator) or when the denominator is non-polynomial diverging.
+
+### Added
+
+- **``_bounded_sqrt_poly_effective_x2``** — returns ``deg(P) + 2·poly_deg``
+  for ``Mul(bounded..., Sqrt(positive-poly), polynomial_factors...)``.
+  Refuses two-Sqrt, any Log (→ Phase 57), or unrecognised factors.
+- **Phase 59 branch** in ``_g_vanishes_at_infinity`` — checks
+  ``2·den_deg > bsp_x2`` for polynomial denominators; falls back to
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **6 new tests** in ``TestEvaluateSumPhase59BoundedSqrtPolyNumerator``.
+
 ## 1.6.0 — 2026-05-25
 
 **Phase 58 — Bounded × Log(diverging) × polynomial numerator (Python).**
