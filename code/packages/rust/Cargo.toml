@@ -368,6 +368,7 @@ members = [
     "data-matrix",
     "pdf417",
     "image-codec-bmp",
+    "image-codec-jpeg",
     "image-codec-ppm",
     "image-codec-qoi",
     "mosaic-analyzer",
