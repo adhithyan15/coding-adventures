@@ -63,7 +63,9 @@ use std::process::ExitCode;
 
 // CLOC11.01 added these three modules to give the previously-empty
 // CLI binary an actual body. See CLOC11 §5 for the architecture.
+// CLOC11.02 added `globs` for --js pattern expansion.
 pub mod config;
+pub mod globs;
 pub mod run;
 pub mod wire;
 

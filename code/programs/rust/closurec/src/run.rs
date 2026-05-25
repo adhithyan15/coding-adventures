@@ -20,6 +20,7 @@
 //! The function signature doesn't change; only the body grows.
 
 use crate::config::CompilerConfig;
+use crate::globs;
 use std::fs;
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -63,6 +64,10 @@ pub enum CompilerError {
         kind: io::ErrorKind,
         message: String,
     },
+    /// `--js` pattern expansion failed (invalid glob, no matches,
+    /// FS walk error). The inner [`globs::GlobError`] carries the
+    /// specific reason and the offending pattern.
+    GlobExpansion(globs::GlobError),
 }
 
 impl std::fmt::Display for CompilerError {
@@ -74,6 +79,7 @@ impl std::fmt::Display for CompilerError {
             CompilerError::OutputWriteError { path, message, .. } => {
                 write!(f, "failed to write output {}: {message}", path.display())
             }
+            CompilerError::GlobExpansion(e) => write!(f, "{e}"),
         }
     }
 }
@@ -84,17 +90,41 @@ impl std::error::Error for CompilerError {}
 // Public entry point
 // ---------------------------------------------------------------------------
 
+/// Resolve the list of input files from a `CompilerConfig`.
+///
+/// Extracted as its own function so glob behavior is unit-testable
+/// without touching output writing. v0.2.0 treated `js_patterns`
+/// as literal file paths; v0.3.0 (CLOC11.02) replaces that with
+/// real glob expansion (see [`crate::globs`]).
+pub fn resolve_inputs(config: &CompilerConfig) -> Result<Vec<PathBuf>, CompilerError> {
+    globs::expand_js_patterns(&config.io.js_patterns).map_err(CompilerError::GlobExpansion)
+}
+
 /// Run the compiler with `config`.
 ///
-/// v1: identity pipeline (concatenate inputs to output). See the
+/// CLOC11.02: glob-expanded inputs, identity pipeline body. See the
 /// module docstring for the future expansion plan.
 pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
-    // Step 1: read every input. CLOC11.02 will replace this loop
-    // with glob expansion; v1 treats --js values as literal paths.
+    // Step 0: identity-banner fallback. Empty argv → friendly
+    // banner so users running `closurec` with no flags get a
+    // useful response rather than a glob error.
+    if config.io.js_patterns.is_empty() {
+        return Ok(CompilerOutput {
+            stdout_text: "closurec v0.1.0 - identity pipeline\n".to_string(),
+            wrote_files: Vec::new(),
+        });
+    }
+
+    // Step 1: glob-expand --js patterns into a concrete list of
+    // files (CLOC11.02). Exclusion patterns (leading `!`) remove
+    // from the accumulator. Errors out if any inclusion pattern
+    // produces zero matches.
+    let inputs = resolve_inputs(config)?;
+
+    // Step 2: read every resolved input.
     let mut combined = String::new();
-    for raw in &config.io.js_patterns {
-        let path = PathBuf::from(raw);
-        let contents = fs::read_to_string(&path).map_err(|e| CompilerError::InputReadError {
+    for path in &inputs {
+        let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
             path: path.clone(),
             kind: e.kind(),
             message: e.to_string(),
@@ -102,27 +132,15 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         combined.push_str(&contents);
         // Closure separates concatenated inputs with a newline so
         // back-to-back files don't end up syntactically merged.
-        // (e.g. file1 ending mid-line + file2 starting mid-line
-        // would otherwise be a single source line.) We follow.
         if !contents.ends_with('\n') {
             combined.push('\n');
         }
     }
 
-    // Step 2: write the output. Three cases:
+    // Step 3: write the output. Three cases:
     //   a) --js_output_file set + non-empty path → write to disk.
     //   b) --js_output_file empty or absent → stdout via the
     //      returned `stdout_text`.
-    //   c) inputs were empty → return the identity banner so
-    //      existing tests continue to pass and users running
-    //      `closurec` with no args get the same friendly v1
-    //      behavior as before.
-    if config.io.js_patterns.is_empty() {
-        return Ok(CompilerOutput {
-            stdout_text: "closurec v0.1.0 - identity pipeline\n".to_string(),
-            wrote_files: Vec::new(),
-        });
-    }
 
     match &config.io.js_output_file {
         Some(path) => {
@@ -262,6 +280,12 @@ mod tests {
 
     #[test]
     fn missing_input_returns_typed_error() {
+        // CLOC11.02: a missing literal --js path now flows through
+        // glob expansion first, which produces a NoMatches error
+        // before we ever try to read the file. This matches CC's
+        // behavior (a literal `--js missing.js` errors with
+        // JSC_NO_JS_FILES_FOUND_FOR_PATTERN, not a low-level "file
+        // not found"). We assert the typed GlobExpansion wrapper.
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec!["/nonexistent/path/closurec/test/missing.js".to_string()],
@@ -271,10 +295,11 @@ mod tests {
         };
         let err = run_compiler(&cfg).expect_err("missing input must error");
         match err {
-            CompilerError::InputReadError { kind, .. } => {
-                assert_eq!(kind, io::ErrorKind::NotFound);
+            CompilerError::GlobExpansion(inner) => {
+                // Inner GlobError must be NoMatches for the literal.
+                assert!(format!("{inner}").contains("missing.js"));
             }
-            other => panic!("expected InputReadError, got {other:?}"),
+            other => panic!("expected GlobExpansion, got {other:?}"),
         }
     }
 
