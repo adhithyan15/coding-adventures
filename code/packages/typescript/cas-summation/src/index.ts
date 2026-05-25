@@ -1259,6 +1259,42 @@ function twoLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
   return polyDeg;
 }
 
+/**
+ * Phase 63 — Two-Sqrt × Log × polynomial numerator.
+ *
+ * Returns the effective degree when `node` is a `Mul` with exactly two
+ * Sqrt factors, exactly one Log(diverging) factor, any polynomial factors,
+ * and any bounded factors; `undefined` otherwise.
+ *
+ * Log is sub-polynomial; effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+ * Caller checks `denDeg > twoSqrtLogPolyEffectiveDeg(num, k)`.
+ */
+function twoSqrtLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const halfDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (halfDeg !== undefined) {
+      sqrtHalfDegs.push(halfDeg);
+      if (sqrtHalfDegs.length > 2) return undefined;
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 1) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 1) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1434,6 +1470,17 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegTlp = polynomialDegreeInK(den, k);
     if (denDegTlp !== undefined) {
       if (denDegTlp > tlpDeg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 63: Mul(Sqrt(P1), Sqrt(P2), Log(diverging), polynomial..., bounded...) numerator.
+  // Two Sqrts + one Log; log is sub-polynomial; effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+  const tslpDeg = twoSqrtLogPolyEffectiveDeg(num, k);
+  if (tslpDeg !== undefined) {
+    const denDegTslp = polynomialDegreeInK(den, k);
+    if (denDegTslp !== undefined) {
+      if (denDegTslp > tslpDeg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

@@ -1554,6 +1554,39 @@ fn two_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
     Some(2 * poly_deg)
 }
 
+/// Phase 63 — Two-Sqrt × Log × polynomial numerator.
+///
+/// Returns `deg(P1) + deg(P2) + 2 * poly_deg` when `node` is a `Mul` with
+/// **exactly two** Sqrt factors, **exactly one** Log(diverging) factor,
+/// any polynomial factors, and any bounded factors; `None` otherwise.
+///
+/// Log is sub-polynomial and doesn't change the effective degree.
+/// Caller checks `2 * den_deg > effective_x2`.
+fn two_sqrt_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node { IRNode::Apply(a) => a, _ => return None };
+    if !head_is(&apply_node.head, MUL) { return None; }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut log_count: usize = 0;
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        if let Some(deg_x2) = sqrt_effective_half_degree_x2(arg, k) {
+            sqrt_degs.push(deg_x2);
+            if sqrt_degs.len() > 2 { return None; }
+            continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 1 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) { poly_deg += deg; continue; }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs.len() != 2 || log_count != 1 { return None; }
+    Some(sqrt_degs[0] + sqrt_degs[1] + 2 * poly_deg)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1722,6 +1755,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(tlp_x2) = two_log_poly_effective_x2(num, k) {
         if let Some(den_deg_tlp) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_tlp > tlp_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 63: Mul(Sqrt(P1), Sqrt(P2), Log(diverging), polynomial..., bounded...) numerator.
+    // Two Sqrt + one Log; log is sub-polynomial; effective_x2 = deg(P1) + deg(P2) + 2*poly_deg.
+    // Closes when 2 * den_deg > effective_x2 or non-polynomial diverging denom.
+    if let Some(tslp_x2) = two_sqrt_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_tslp) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_tslp > tslp_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {
