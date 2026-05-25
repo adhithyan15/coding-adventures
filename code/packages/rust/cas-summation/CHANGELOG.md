@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.12.0 — 2026-05-25
+
+### Added
+
+- **Phase 74 — One-Sqrt × Four-Log × polynomial numerator** (`one_sqrt_four_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 4 Log factors required.  `log⁴(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = sqrt_inner_deg_x2 + 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs` (`phase74_*`).
+
 ## 2.11.0 — 2026-05-25
 
 ### Added
