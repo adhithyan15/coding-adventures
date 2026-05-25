@@ -71,6 +71,12 @@ struct ExpectedContentNode {
     #[serde(default)]
     type_hint: Option<String>,
     #[serde(default)]
+    image_map_name: Option<String>,
+    #[serde(default)]
+    image_map_shape: Option<String>,
+    #[serde(default)]
+    image_map_coords: Option<String>,
+    #[serde(default)]
     media: Option<String>,
     #[serde(default)]
     poster: Option<String>,
@@ -358,6 +364,9 @@ impl ExpectedContentNode {
             width: self.width,
             height: self.height,
             type_hint: self.type_hint,
+            image_map_name: self.image_map_name,
+            image_map_shape: self.image_map_shape,
+            image_map_coords: self.image_map_coords,
             media: self.media,
             poster: self.poster,
             resolved_poster: self.resolved_poster,

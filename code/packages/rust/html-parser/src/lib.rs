@@ -984,6 +984,9 @@ pub struct BrowserContentNode {
     pub width: Option<String>,
     pub height: Option<String>,
     pub type_hint: Option<String>,
+    pub image_map_name: Option<String>,
+    pub image_map_shape: Option<String>,
+    pub image_map_coords: Option<String>,
     pub media: Option<String>,
     pub poster: Option<String>,
     pub resolved_poster: Option<String>,
@@ -1132,6 +1135,9 @@ pub struct BrowserRenderNode {
     pub width: Option<String>,
     pub height: Option<String>,
     pub type_hint: Option<String>,
+    pub image_map_name: Option<String>,
+    pub image_map_shape: Option<String>,
+    pub image_map_coords: Option<String>,
     pub media: Option<String>,
     pub poster: Option<String>,
     pub resolved_poster: Option<String>,
@@ -1514,6 +1520,9 @@ impl BrowserRenderNode {
             width: content_node.width.clone(),
             height: content_node.height.clone(),
             type_hint: content_node.type_hint.clone(),
+            image_map_name: content_node.image_map_name.clone(),
+            image_map_shape: content_node.image_map_shape.clone(),
+            image_map_coords: content_node.image_map_coords.clone(),
             media: content_node.media.clone(),
             poster: content_node.poster.clone(),
             resolved_poster: content_node.resolved_poster.clone(),
@@ -9210,6 +9219,9 @@ fn collect_browser_content_nodes_with_mode(
                         width: None,
                         height: None,
                         type_hint: None,
+                        image_map_name: None,
+                        image_map_shape: None,
+                        image_map_coords: None,
                         media: None,
                         poster: None,
                         resolved_poster: None,
@@ -9427,6 +9439,9 @@ fn browser_content_node_for_element(
         width: element.attribute("width").map(ToOwned::to_owned),
         height: element.attribute("height").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
+        image_map_name: browser_image_map_name(element),
+        image_map_shape: browser_image_map_shape(element),
+        image_map_coords: browser_image_map_coords(element),
         media: element.attribute("media").map(ToOwned::to_owned),
         resolved_poster: poster
             .as_deref()
@@ -9556,11 +9571,11 @@ fn browser_content_node_for_element(
 
 fn browser_content_role(name: &str) -> Option<&'static str> {
     match name {
-        "area" | "base" | "link" | "meta" | "param" | "script" | "style" | "template" | "title" => {
-            None
-        }
+        "base" | "link" | "meta" | "param" | "script" | "style" | "template" | "title" => None,
         "a" => Some("link"),
+        "area" => Some("image_map_area"),
         "img" => Some("image"),
+        "map" => Some("image_map"),
         "iframe" | "frame" => Some("frame"),
         "embed" => Some("embed"),
         "object" => Some("object"),
@@ -10366,6 +10381,39 @@ fn browser_anchor_hreflang(element: &Element) -> Option<String> {
         .flatten()
 }
 
+fn browser_image_map_name(element: &Element) -> Option<String> {
+    if element.name == "map" {
+        element.attribute("name").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_image_map_shape(element: &Element) -> Option<String> {
+    if element.name == "area" {
+        Some(
+            element
+                .attribute("shape")
+                .map(collapse_html_whitespace)
+                .filter(|shape| !shape.is_empty())
+                .unwrap_or_else(|| "rect".to_string()),
+        )
+    } else {
+        None
+    }
+}
+
+fn browser_image_map_coords(element: &Element) -> Option<String> {
+    if element.name == "area" {
+        element
+            .attribute("coords")
+            .map(collapse_html_whitespace)
+            .filter(|coords| !coords.is_empty())
+    } else {
+        None
+    }
+}
+
 fn browser_editing_mode(element: &Element) -> Option<String> {
     let value = element.attribute("contenteditable")?;
     let normalized = collapse_html_whitespace(value);
@@ -10937,6 +10985,7 @@ fn browser_render_display(role: &str) -> &'static str {
     match role {
         "text" => "inline-text",
         "inline" | "link" => "inline",
+        "image_map" | "image_map_area" => "none",
         "canvas" | "control" | "embed" | "frame" | "image" | "media" | "meter" | "object"
         | "progress" => "inline-replaced",
         "line_break" => "line-break",
@@ -11716,6 +11765,60 @@ mod tests {
             Some("https://example.test/gallery/hero-wide.avif 1x, https://example.test/gallery/hero-wide@2x.avif 2x")
         );
         assert_eq!(image.sources[1].sizes.as_deref(), Some("100vw"));
+    }
+
+    #[test]
+    fn browser_image_map_metadata_tracks_map_areas_and_navigation() {
+        let document = parse_html(
+            "<base href=\"https://example.test/gallery/index.html\"><body>\
+             <img src=hero.jpg alt=Hero usemap=#hero-map>\
+             <map id=map-node name=hero-map>\
+               <area id=cta shape=rect coords=\"0,0,120,60\" href=details.html alt=\"Details\" target=preview rel=\"nofollow external\" ping=\"track.html\" hreflang=en>\
+               <area id=logo coords=\"10,10,40,40\" href=#logo alt=Logo>\
+             </map>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let image = &content_tree.children[0];
+        assert_eq!(image.role, "image");
+        assert_eq!(image.src.as_deref(), Some("hero.jpg"));
+
+        let map = &content_tree.children[1];
+        assert_eq!(map.role, "image_map");
+        assert_eq!(map.image_map_name.as_deref(), Some("hero-map"));
+
+        let area = &map.children[0];
+        assert_eq!(area.role, "image_map_area");
+        assert_eq!(area.image_map_shape.as_deref(), Some("rect"));
+        assert_eq!(area.image_map_coords.as_deref(), Some("0,0,120,60"));
+        assert_eq!(area.href.as_deref(), Some("details.html"));
+        assert_eq!(
+            area.resolved_href.as_deref(),
+            Some("https://example.test/gallery/details.html")
+        );
+        assert_eq!(area.alt.as_deref(), Some("Details"));
+        assert_eq!(area.target.as_deref(), Some("preview"));
+        assert_eq!(
+            area.rel_tokens,
+            vec!["nofollow".to_string(), "external".to_string()]
+        );
+        assert_eq!(area.ping, vec!["track.html".to_string()]);
+        assert_eq!(
+            area.resolved_ping,
+            vec!["https://example.test/gallery/track.html".to_string()]
+        );
+
+        let default_shape_area = &map.children[1];
+        assert_eq!(default_shape_area.image_map_shape.as_deref(), Some("rect"));
+        assert_eq!(
+            default_shape_area.resolved_href.as_deref(),
+            Some("https://example.test/gallery/index.html#logo")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[1].display, "none");
+        assert_eq!(render_tree.children[1].children[0].display, "none");
     }
 
     #[test]
