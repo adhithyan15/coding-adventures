@@ -239,6 +239,15 @@ pub enum ProjectShellError {
     /// fail-loud error rather than emit backtick-quoted Swift
     /// (which compiles but is non-idiomatic).
     SwiftKeywordCollision(String),
+
+    /// The component name is not a valid Swift identifier (e.g.
+    /// contains a hyphen — the mosmodel `NAME` grammar regex
+    /// permits hyphens, but Swift identifier syntax does not).
+    /// Without this guard, a name like `Foo-Bar` would produce
+    /// `Foo-BarView()` which `swift build` rejects with a
+    /// confusing "expected ')'" diagnostic. Defense-in-depth
+    /// flagged in L7's security review.
+    InvalidSwiftIdentifier(String),
 }
 
 impl std::fmt::Display for ProjectShellError {
@@ -247,6 +256,10 @@ impl std::fmt::Display for ProjectShellError {
             ProjectShellError::SwiftKeywordCollision(n) => write!(
                 f,
                 "component name '{n}' collides with a Swift reserved keyword; rename the component to avoid backtick-quoting"
+            ),
+            ProjectShellError::InvalidSwiftIdentifier(n) => write!(
+                f,
+                "component name '{n}' is not a valid Swift identifier (Swift identifier shape is [A-Za-z_][A-Za-z0-9_]*; the mosmodel grammar permits hyphens but Swift does not)"
             ),
         }
     }
@@ -302,6 +315,9 @@ fn build_swiftui_project_files(
     name: &str,
     options: &EmitOptions,
 ) -> Result<ProjectFiles, ProjectShellError> {
+    if !is_safe_swift_identifier(name) {
+        return Err(ProjectShellError::InvalidSwiftIdentifier(name.to_string()));
+    }
     if is_swift_keyword(name) {
         return Err(ProjectShellError::SwiftKeywordCollision(name.to_string()));
     }
@@ -4879,6 +4895,29 @@ mod tests {
         let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         assert_eq!(a.output, b.output, ".swift is not deterministic");
         assert_eq!(a.project, b.project, "project shell is not deterministic");
+    }
+
+    /// §3.6.1 + §3.6.2 SwiftUI row defense-in-depth: a component
+    /// name that's a valid mosmodel `NAME` (`/[A-Za-z][A-Za-z0-9]*(-...)*/`)
+    /// but NOT a valid Swift identifier (because hyphens are
+    /// allowed in mosmodel but rejected by Swift) MUST fail-loud
+    /// — otherwise `<Foo-Bar>View()` would produce an obscure
+    /// `swift build` error. Flagged by the L7 security review.
+    #[test]
+    fn ui32_hyphenated_component_name_returns_invalid_swift_identifier_error() {
+        let m = component("Foo-Bar", vec![], vec![]);
+        let l = layout_with("Foo-Bar", container_node("Box", vec![]));
+        let s = empty_style("Foo-Bar");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let err = from_pipeline_with_options(&m, &l, &s, &opts)
+            .expect_err("hyphenated name must error");
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("'Foo-Bar'") && msg.contains("Swift identifier"),
+            "expected invalid Swift identifier error, got: {msg}"
+        );
     }
 
     /// §3.6.1 + §3.6.2 SwiftUI row: a component name that's a Swift
