@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.7.0 — 2026-05-25
+
+### Added
+
+- **Phase 69 — One-Sqrt × Three-Log × polynomial numerator** (`one_sqrt_three_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 3 Log factors required; log³ sub-polynomial contributes 0
+  to effective degree; `effective_x2 = sqrt_deg + 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs`.
+
 ## 2.6.0 — 2026-05-25
 
 ### Added
