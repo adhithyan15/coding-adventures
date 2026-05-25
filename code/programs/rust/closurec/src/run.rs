@@ -237,6 +237,22 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
     }
 
+    // Step 2.5 (CLOC11.18): prepend `"use strict";` when
+    // `--emit_use_strict` is set. The directive must land at the
+    // top of whatever scope ultimately wraps the code, so we
+    // attach it to `combined` *before* the output wrapper and IIFE
+    // run — both of those build syntactic envelopes around the
+    // body, and a "use strict" directive only takes effect when
+    // it sits at the very top of the function body it's meant to
+    // govern. CC has the same ordering.
+    if config.language.emit_use_strict {
+        // Use double quotes to match CC's emission. A trailing
+        // newline keeps the directive on its own line, which is
+        // visually clearer in --output_wrapper templates that
+        // include their own newlines.
+        combined.insert_str(0, "\"use strict\";\n");
+    }
+
     // Step 3 (CLOC11.30): apply --output_wrapper / --output_wrapper_file.
     // When neither is set, `apply_output_wrapper` short-circuits to
     // a passthrough so the common no-wrapper case stays a simple
@@ -610,6 +626,124 @@ mod tests {
         let out = run_compiler(&cfg).expect("ok");
         assert!(out.wrote_files.is_empty());
         assert!(out.stdout_text.contains("// content"));
+        let _ = fs::remove_file(&in_path);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.18 — --emit_use_strict behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn emit_use_strict_prepends_directive() {
+        let in_path = temp_path("strict.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            language: crate::config::LanguageConfig {
+                emit_use_strict: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Directive lands at the very top.
+        assert!(
+            out.stdout_text.starts_with("\"use strict\";"),
+            "expected leading 'use strict'; got: {:?}",
+            out.stdout_text
+        );
+        // And the original content survives.
+        assert!(out.stdout_text.contains("var x=1;"));
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn emit_use_strict_default_does_not_prepend() {
+        // When the flag isn't set, no prelude.
+        let in_path = temp_path("no-strict.js");
+        fs::write(&in_path, "alert(1);").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(!out.stdout_text.contains("use strict"));
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn emit_use_strict_lands_inside_iife() {
+        // The directive must sit inside the IIFE body so it
+        // actually governs the wrapped code — i.e. *after* the
+        // `(function(){` opener.
+        let in_path = temp_path("strict-iife.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            language: crate::config::LanguageConfig {
+                emit_use_strict: true,
+                ..Default::default()
+            },
+            formatting: crate::config::FormattingConfig {
+                isolation_mode: crate::config::IsolationMode::Iife,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Verify the directive is *between* the IIFE opener and
+        // the user code — not before the opener.
+        let s = &out.stdout_text;
+        let iife_start = s.find("(function(){").expect("iife opener");
+        let directive = s.find("\"use strict\";").expect("directive");
+        let body = s.find("var x=1;").expect("body");
+        assert!(iife_start < directive, "got: {s}");
+        assert!(directive < body, "got: {s}");
+        assert!(s.ends_with("}).call(this);"), "got: {s}");
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn emit_use_strict_lands_inside_output_wrapper() {
+        // With a user --output_wrapper, the directive should
+        // appear inside the wrapper's `%output%` slot.
+        let in_path = temp_path("strict-wrapper.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            language: crate::config::LanguageConfig {
+                emit_use_strict: true,
+                ..Default::default()
+            },
+            formatting: crate::config::FormattingConfig {
+                output_wrapper: "PRE %output% POST".to_string(),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        let s = &out.stdout_text;
+        assert!(s.starts_with("PRE "), "got: {s}");
+        assert!(s.contains("\"use strict\";"), "got: {s}");
+        assert!(s.ends_with(" POST"), "got: {s}");
+        // Directive sits between PRE and the body.
+        let pre = s.find("PRE ").expect("pre");
+        let directive = s.find("\"use strict\";").expect("directive");
+        let body = s.find("var x=1;").expect("body");
+        assert!(pre < directive);
+        assert!(directive < body);
         let _ = fs::remove_file(&in_path);
     }
 }
