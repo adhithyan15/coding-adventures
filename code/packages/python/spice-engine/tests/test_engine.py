@@ -159,6 +159,7 @@ from spice_engine import (
     pss_newton_iteration,
     pss_newton_solve,
     pss_newton_update,
+    pole_zero_rlc_bandpass,
     pole_zero_rlc_highpass,
     pole_zero_rlc_lowpass,
     pole_zero_rc_highpass,
@@ -5816,6 +5817,48 @@ def test_pole_zero_rlc_highpass_returns_origin_zeros_and_complex_conjugate_poles
                 frequency=0.0,
                 damping=1.0,
             ),
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=-imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+        ],
+    )
+
+
+def test_pole_zero_rlc_bandpass_returns_origin_zero_and_complex_conjugate_poles() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Inductor("L1", "in", "mid", 1.0e-3),
+        Capacitor("C1", "mid", "out", 1.0e-6),
+        Resistor("R1", "out", "0", 10.0),
+    ])
+
+    result = pole_zero_rlc_bandpass(circuit, input_source="Vin", output_node="out")
+
+    alpha = 10.0 / (2.0 * 1.0e-3)
+    omega0 = 1.0 / math.sqrt(1.0e-3 * 1.0e-6)
+    imaginary = math.sqrt(omega0 * omega0 - alpha * alpha)
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
             PoleZeroEntry(
                 kind="zero",
                 real=0.0,

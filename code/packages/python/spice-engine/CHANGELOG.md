@@ -37,6 +37,10 @@
   the double origin zero plus second-order pole pair for a constrained series
   R-C / shunt-L high-pass fixture.
 
+- **RLC band-pass pole-zero helper** — `pole_zero_rlc_bandpass()` now returns
+  the origin zero plus second-order pole pair for a constrained series L-C /
+  shunt-R band-pass fixture.
+
 - **Transient distortion helper** — `distortion_from_transient()` now runs the
   Fourier extraction path and returns the Phase-8 distortion result shape
   directly from transient samples.

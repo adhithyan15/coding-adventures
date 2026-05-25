@@ -7,7 +7,7 @@ Monte Carlo (`.MC`), noise analysis (`.NOISE`), and all four SPICE controlled
 sources (VCVS / VCCS / CCCS / CCVS).  Transient outputs can also be
 post-processed with SPICE-style Fourier (`.FOUR`) measurements and projected
 into a distortion result shape.  Constrained pole-zero helpers cover simple RC
-low-pass/high-pass and series RLC low-pass/high-pass fixtures.
+low-pass/high-pass and series RLC low-pass/high-pass/band-pass fixtures.
 
 See [`code/specs/spice-engine.md`](../../../specs/spice-engine.md).
 
