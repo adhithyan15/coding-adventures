@@ -136,6 +136,38 @@ struct ExpectedContentNode {
     #[serde(default)]
     autocomplete: Option<String>,
     #[serde(default)]
+    accept: Option<String>,
+    #[serde(default)]
+    inputmode: Option<String>,
+    #[serde(default)]
+    pattern: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    step: Option<String>,
+    #[serde(default)]
+    minlength: Option<String>,
+    #[serde(default)]
+    maxlength: Option<String>,
+    #[serde(default)]
+    size: Option<String>,
+    #[serde(default)]
+    list: Option<String>,
+    #[serde(default)]
+    form_action: Option<String>,
+    #[serde(default)]
+    resolved_form_action: Option<String>,
+    #[serde(default)]
+    form_enctype: Option<String>,
+    #[serde(default)]
+    form_method: Option<String>,
+    #[serde(default)]
+    form_target: Option<String>,
+    #[serde(default)]
+    form_novalidate: bool,
+    #[serde(default)]
     value: Option<String>,
     #[serde(default)]
     disabled: bool,
@@ -287,6 +319,22 @@ impl ExpectedContentNode {
             popover: self.popover,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
+            accept: self.accept,
+            inputmode: self.inputmode,
+            pattern: self.pattern,
+            min: self.min,
+            max: self.max,
+            step: self.step,
+            minlength: self.minlength,
+            maxlength: self.maxlength,
+            size: self.size,
+            list: self.list,
+            form_action: self.form_action,
+            resolved_form_action: self.resolved_form_action,
+            form_enctype: self.form_enctype,
+            form_method: self.form_method,
+            form_target: self.form_target,
+            form_novalidate: self.form_novalidate,
             value: self.value,
             disabled: self.disabled,
             required: self.required,

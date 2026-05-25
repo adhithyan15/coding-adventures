@@ -324,9 +324,19 @@ struct ExpectedMedia {
 struct ExpectedForm {
     action: Option<String>,
     resolved_action: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
     method: String,
     enctype: Option<String>,
     target: Option<String>,
+    #[serde(default)]
+    accept_charset: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
     controls: Vec<ExpectedFormControl>,
 }
 
@@ -346,6 +356,38 @@ struct ExpectedFormControl {
     placeholder: Option<String>,
     #[serde(default)]
     autocomplete: Option<String>,
+    #[serde(default)]
+    accept: Option<String>,
+    #[serde(default)]
+    inputmode: Option<String>,
+    #[serde(default)]
+    pattern: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    step: Option<String>,
+    #[serde(default)]
+    minlength: Option<String>,
+    #[serde(default)]
+    maxlength: Option<String>,
+    #[serde(default)]
+    size: Option<String>,
+    #[serde(default)]
+    list: Option<String>,
+    #[serde(default)]
+    form_action: Option<String>,
+    #[serde(default)]
+    resolved_form_action: Option<String>,
+    #[serde(default)]
+    form_enctype: Option<String>,
+    #[serde(default)]
+    form_method: Option<String>,
+    #[serde(default)]
+    form_target: Option<String>,
+    #[serde(default)]
+    form_novalidate: bool,
     value: Option<String>,
     disabled: bool,
     #[serde(default)]
@@ -694,9 +736,14 @@ impl ExpectedForm {
         BrowserForm {
             action: self.action,
             resolved_action: self.resolved_action,
+            name: self.name,
             method: self.method,
             enctype: self.enctype,
             target: self.target,
+            accept_charset: self.accept_charset,
+            autocomplete: self.autocomplete,
+            rel: self.rel,
+            novalidate: self.novalidate,
             controls: self
                 .controls
                 .into_iter()
@@ -717,6 +764,22 @@ impl ExpectedFormControl {
             accessible_name: self.accessible_name,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
+            accept: self.accept,
+            inputmode: self.inputmode,
+            pattern: self.pattern,
+            min: self.min,
+            max: self.max,
+            step: self.step,
+            minlength: self.minlength,
+            maxlength: self.maxlength,
+            size: self.size,
+            list: self.list,
+            form_action: self.form_action,
+            resolved_form_action: self.resolved_form_action,
+            form_enctype: self.form_enctype,
+            form_method: self.form_method,
+            form_target: self.form_target,
+            form_novalidate: self.form_novalidate,
             value: self.value,
             disabled: self.disabled,
             required: self.required,

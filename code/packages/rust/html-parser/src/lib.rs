@@ -1017,6 +1017,22 @@ pub struct BrowserContentNode {
     pub popover: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub accept: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub list: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
     pub value: Option<String>,
     pub disabled: bool,
     pub required: bool,
@@ -1113,6 +1129,22 @@ pub struct BrowserRenderNode {
     pub popover: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub accept: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub list: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
     pub value: Option<String>,
     pub disabled: bool,
     pub required: bool,
@@ -1210,9 +1242,14 @@ pub struct BrowserMedia {
 pub struct BrowserForm {
     pub action: Option<String>,
     pub resolved_action: Option<String>,
+    pub name: Option<String>,
     pub method: String,
     pub enctype: Option<String>,
     pub target: Option<String>,
+    pub accept_charset: Option<String>,
+    pub autocomplete: Option<String>,
+    pub rel: Option<String>,
+    pub novalidate: bool,
     pub controls: Vec<BrowserFormControl>,
 }
 
@@ -1226,6 +1263,22 @@ pub struct BrowserFormControl {
     pub accessible_name: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub accept: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub list: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
     pub value: Option<String>,
     pub disabled: bool,
     pub required: bool,
@@ -1403,6 +1456,22 @@ impl BrowserRenderNode {
             popover: content_node.popover.clone(),
             placeholder: content_node.placeholder.clone(),
             autocomplete: content_node.autocomplete.clone(),
+            accept: content_node.accept.clone(),
+            inputmode: content_node.inputmode.clone(),
+            pattern: content_node.pattern.clone(),
+            min: content_node.min.clone(),
+            max: content_node.max.clone(),
+            step: content_node.step.clone(),
+            minlength: content_node.minlength.clone(),
+            maxlength: content_node.maxlength.clone(),
+            size: content_node.size.clone(),
+            list: content_node.list.clone(),
+            form_action: content_node.form_action.clone(),
+            resolved_form_action: content_node.resolved_form_action.clone(),
+            form_enctype: content_node.form_enctype.clone(),
+            form_method: content_node.form_method.clone(),
+            form_target: content_node.form_target.clone(),
+            form_novalidate: content_node.form_novalidate,
             value: content_node.value.clone(),
             disabled: content_node.disabled,
             required: content_node.required,
@@ -8406,13 +8475,22 @@ fn collect_browser_facts(
                 resolved_action: element
                     .attribute("action")
                     .and_then(|action| resolve_browser_url(action, summary.base_href.as_deref())),
+                name: element.attribute("name").map(ToOwned::to_owned),
                 method: element
                     .attribute("method")
                     .map(|method| method.to_ascii_lowercase())
                     .unwrap_or_else(|| "get".to_string()),
                 enctype: element.attribute("enctype").map(ToOwned::to_owned),
                 target: element.attribute("target").map(ToOwned::to_owned),
-                controls: collect_form_controls(&element.children, labels),
+                accept_charset: element.attribute("accept-charset").map(ToOwned::to_owned),
+                autocomplete: element.attribute("autocomplete").map(ToOwned::to_owned),
+                rel: element.attribute("rel").map(ToOwned::to_owned),
+                novalidate: element.attribute("novalidate").is_some(),
+                controls: collect_form_controls(
+                    &element.children,
+                    labels,
+                    summary.base_href.as_deref(),
+                ),
             }),
             "table" => summary.tables.push(BrowserTable {
                 caption: find_first_element_in_nodes(&element.children, "caption")
@@ -9020,6 +9098,22 @@ fn collect_browser_content_nodes_with_mode(
                         popover: None,
                         placeholder: None,
                         autocomplete: None,
+                        accept: None,
+                        inputmode: None,
+                        pattern: None,
+                        min: None,
+                        max: None,
+                        step: None,
+                        minlength: None,
+                        maxlength: None,
+                        size: None,
+                        list: None,
+                        form_action: None,
+                        resolved_form_action: None,
+                        form_enctype: None,
+                        form_method: None,
+                        form_target: None,
+                        form_novalidate: false,
                         value: None,
                         disabled: false,
                         required: false,
@@ -9183,6 +9277,24 @@ fn browser_content_node_for_element(
         popover: element.attribute("popover").map(ToOwned::to_owned),
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
+        accept: browser_control_accept(element),
+        inputmode: browser_control_inputmode(element),
+        pattern: browser_control_pattern(element),
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        step: browser_control_step(element),
+        minlength: browser_control_minlength(element),
+        maxlength: browser_control_maxlength(element),
+        size: browser_control_size(element),
+        list: browser_control_list(element),
+        resolved_form_action: browser_control_form_action(element)
+            .as_deref()
+            .and_then(|action| resolve_browser_url(action, base_href)),
+        form_action: browser_control_form_action(element),
+        form_enctype: browser_control_form_enctype(element),
+        form_method: browser_control_form_method(element),
+        form_target: browser_control_form_target(element),
+        form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
         disabled: element.attribute("disabled").is_some(),
         required: browser_required(element),
@@ -9953,6 +10065,125 @@ fn browser_autocomplete(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_control_accept(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("accept").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_inputmode(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("inputmode").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_pattern(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("pattern").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_min(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("min").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_max(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("max").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_step(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("step").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_minlength(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("minlength").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_maxlength(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("maxlength").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_size(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "select") {
+        element.attribute("size").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_list(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("list").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_action(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element.attribute("formaction").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_enctype(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element.attribute("formenctype").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_method(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element
+            .attribute("formmethod")
+            .map(|method| method.to_ascii_lowercase())
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_target(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element.attribute("formtarget").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_novalidate(element: &Element) -> bool {
+    matches!(element.name.as_str(), "button" | "input")
+        && element.attribute("formnovalidate").is_some()
+}
+
 fn browser_required(element: &Element) -> bool {
     matches!(element.name.as_str(), "input" | "select" | "textarea")
         && element.attribute("required").is_some()
@@ -10129,9 +10360,13 @@ fn browser_render_display(role: &str) -> &'static str {
     }
 }
 
-fn collect_form_controls(nodes: &[Node], labels: &[(String, String)]) -> Vec<BrowserFormControl> {
+fn collect_form_controls(
+    nodes: &[Node],
+    labels: &[(String, String)],
+    base_href: Option<&str>,
+) -> Vec<BrowserFormControl> {
     let mut controls = Vec::new();
-    collect_form_controls_into(nodes, &mut controls, labels, None);
+    collect_form_controls_into(nodes, &mut controls, labels, base_href, None);
     controls
 }
 
@@ -10139,6 +10374,7 @@ fn collect_form_controls_into(
     nodes: &[Node],
     controls: &mut Vec<BrowserFormControl>,
     labels: &[(String, String)],
+    base_href: Option<&str>,
     current_label_text: Option<&str>,
 ) {
     for node in nodes {
@@ -10153,9 +10389,20 @@ fn collect_form_controls_into(
 
         match element.name.as_str() {
             "input" | "button" | "select" | "textarea" => {
-                controls.push(browser_form_control(element, labels, current_label_text));
+                controls.push(browser_form_control(
+                    element,
+                    labels,
+                    base_href,
+                    current_label_text,
+                ));
             }
-            _ => collect_form_controls_into(&element.children, controls, labels, child_label_text),
+            _ => collect_form_controls_into(
+                &element.children,
+                controls,
+                labels,
+                base_href,
+                child_label_text,
+            ),
         }
     }
 }
@@ -10163,6 +10410,7 @@ fn collect_form_controls_into(
 fn browser_form_control(
     element: &Element,
     labels: &[(String, String)],
+    base_href: Option<&str>,
     current_label_text: Option<&str>,
 ) -> BrowserFormControl {
     let control_type = browser_content_control_type(element)
@@ -10183,6 +10431,24 @@ fn browser_form_control(
         labels: control_labels,
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
+        accept: browser_control_accept(element),
+        inputmode: browser_control_inputmode(element),
+        pattern: browser_control_pattern(element),
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        step: browser_control_step(element),
+        minlength: browser_control_minlength(element),
+        maxlength: browser_control_maxlength(element),
+        size: browser_control_size(element),
+        list: browser_control_list(element),
+        resolved_form_action: browser_control_form_action(element)
+            .as_deref()
+            .and_then(|action| resolve_browser_url(action, base_href)),
+        form_action: browser_control_form_action(element),
+        form_enctype: browser_control_form_enctype(element),
+        form_method: browser_control_form_method(element),
+        form_target: browser_control_form_target(element),
+        form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
         disabled: element.attribute("disabled").is_some(),
         required: browser_required(element),
@@ -10871,32 +11137,71 @@ mod tests {
     #[test]
     fn browser_form_accessibility_metadata_tracks_labels_and_control_state() {
         let document = parse_html(
-            "<body><form id=f aria-label=\"Search form\" autocomplete=on>\
+            "<base href=\"https://example.test/search/index.html\">\
+             <body><form id=f name=searchForm aria-label=\"Search form\" action=find.html \
+             method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate>\
              <label for=q>Query</label>\
-             <input id=q name=q placeholder=\"Search terms\" required autocomplete=search>\
-             <label>Notes<textarea id=notes name=notes readonly>Keep me</textarea></label>\
+             <input id=q name=q placeholder=\"Search terms\" required autocomplete=search \
+             inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions>\
+             <label>Notes<textarea id=notes name=notes readonly maxlength=500>Keep me</textarea></label>\
              <fieldset><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
-             <select id=kind name=kind title=Kind multiple><option selected>Books<option>Manuals</select>\
-             <button id=go type=submit aria-label=\"Run search\">Go</button></form>\
+             <select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select>\
+             <input id=upload type=file name=upload accept=\"image/png,image/jpeg\">\
+             <button id=go type=submit aria-label=\"Run search\" formaction=run.html \
+             formenctype=\"application/x-www-form-urlencoded\" formmethod=post \
+             formtarget=results formnovalidate>Go</button></form>\
              <input id=external form=f name=outside placeholder=Outside>",
         )
         .unwrap();
 
         let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.forms[0].action.as_deref(), Some("find.html"));
+        assert_eq!(
+            summary.forms[0].resolved_action.as_deref(),
+            Some("https://example.test/search/find.html")
+        );
+        assert_eq!(summary.forms[0].name.as_deref(), Some("searchForm"));
+        assert_eq!(summary.forms[0].method, "post");
+        assert_eq!(summary.forms[0].accept_charset.as_deref(), Some("utf-8"));
+        assert_eq!(summary.forms[0].autocomplete.as_deref(), Some("on"));
+        assert_eq!(summary.forms[0].rel.as_deref(), Some("noreferrer"));
+        assert!(summary.forms[0].novalidate);
         let controls = &summary.forms[0].controls;
         assert_eq!(controls[0].id.as_deref(), Some("q"));
         assert_eq!(controls[0].labels, vec!["Query"]);
         assert_eq!(controls[0].accessible_name.as_deref(), Some("Query"));
         assert_eq!(controls[0].placeholder.as_deref(), Some("Search terms"));
         assert_eq!(controls[0].autocomplete.as_deref(), Some("search"));
+        assert_eq!(controls[0].inputmode.as_deref(), Some("search"));
+        assert_eq!(controls[0].pattern.as_deref(), Some("[A-Za-z ]+"));
+        assert_eq!(controls[0].minlength.as_deref(), Some("2"));
+        assert_eq!(controls[0].maxlength.as_deref(), Some("80"));
+        assert_eq!(controls[0].size.as_deref(), Some("40"));
+        assert_eq!(controls[0].list.as_deref(), Some("query-suggestions"));
         assert!(controls[0].required);
         assert!(controls[1].readonly);
+        assert_eq!(controls[1].maxlength.as_deref(), Some("500"));
         assert_eq!(controls[1].labels, vec!["NotesKeep me"]);
         assert_eq!(controls[2].control_type, "checkbox");
         assert!(controls[2].checked);
         assert!(controls[3].multiple);
+        assert_eq!(controls[3].size.as_deref(), Some("5"));
         assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));
-        assert_eq!(controls[4].accessible_name.as_deref(), Some("Run search"));
+        assert_eq!(controls[4].control_type, "file");
+        assert_eq!(controls[4].accept.as_deref(), Some("image/png,image/jpeg"));
+        assert_eq!(controls[5].accessible_name.as_deref(), Some("Run search"));
+        assert_eq!(controls[5].form_action.as_deref(), Some("run.html"));
+        assert_eq!(
+            controls[5].resolved_form_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(
+            controls[5].form_enctype.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(controls[5].form_method.as_deref(), Some("post"));
+        assert_eq!(controls[5].form_target.as_deref(), Some("results"));
+        assert!(controls[5].form_novalidate);
 
         let content_tree = BrowserContentTree::from_document(&document);
         let form = &content_tree.children[0];
@@ -10909,6 +11214,10 @@ mod tests {
         let query = &form.children[1];
         assert_eq!(query.labels, vec!["Query"]);
         assert_eq!(query.accessible_name.as_deref(), Some("Query"));
+        assert_eq!(query.inputmode.as_deref(), Some("search"));
+        assert_eq!(query.pattern.as_deref(), Some("[A-Za-z ]+"));
+        assert_eq!(query.maxlength.as_deref(), Some("80"));
+        assert_eq!(query.list.as_deref(), Some("query-suggestions"));
         assert!(query.required);
         let notes = &form.children[2].children[1];
         assert_eq!(notes.labels, vec!["NotesKeep me"]);
@@ -10918,7 +11227,17 @@ mod tests {
         assert_eq!(fieldset.accessible_name.as_deref(), Some("Options"));
         let select = &form.children[4];
         assert!(select.multiple);
+        assert_eq!(select.size.as_deref(), Some("5"));
         assert_eq!(select.accessible_name.as_deref(), Some("Kind"));
+        let upload = &form.children[5];
+        assert_eq!(upload.accept.as_deref(), Some("image/png,image/jpeg"));
+        let button = &form.children[6];
+        assert_eq!(button.form_action.as_deref(), Some("run.html"));
+        assert_eq!(
+            button.resolved_form_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert!(button.form_novalidate);
         let external = &content_tree.children[1];
         assert_eq!(external.form_owner.as_deref(), Some("f"));
         assert_eq!(external.accessible_name.as_deref(), Some("Outside"));
