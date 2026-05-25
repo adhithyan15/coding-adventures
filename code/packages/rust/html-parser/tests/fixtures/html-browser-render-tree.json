@@ -5,8 +5,8 @@
   "cases": [
     {
       "id": "flow-inline-and-replaced",
-      "description": "Headings and paragraphs become block layout inputs while base-resolved text, links, images, and line breaks keep inline display categories.",
-      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1 id=page-title class=hero>Example</h1><p id=intro class=\"lede print\" title=\"Intro paragraph\">Hello <a href=next.html class=next lang=en>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
+      "description": "Headings and paragraphs become block layout inputs while base-resolved text, navigation links, images, and line breaks keep inline display categories.",
+      "input": "<base href=\"https://example.test/pages/current.html\"><body><h1 id=page-title class=hero>Example</h1><p id=intro class=\"lede print\" title=\"Intro paragraph\">Hello <a href=next.html class=next lang=en target=_blank rel=\"next noopener\" download=next.html ping=\"audit.html https://metrics.example/p\" hreflang=en-US type=text/html>Next</a><img src=../assets/logo.gif alt=Logo><br>Tail</p>",
       "expected": {
         "children": [
           {
@@ -48,6 +48,14 @@
                 "text": "Next",
                 "href": "next.html",
                 "resolved_href": "https://example.test/pages/next.html",
+                "target": "_blank",
+                "rel": "next noopener",
+                "rel_tokens": ["next", "noopener"],
+                "download": "next.html",
+                "ping": ["audit.html", "https://metrics.example/p"],
+                "resolved_ping": ["https://example.test/pages/audit.html", "https://metrics.example/p"],
+                "hreflang": "en-US",
+                "type_hint": "text/html",
                 "src": null,
                 "alt": null,
                 "control_type": null,

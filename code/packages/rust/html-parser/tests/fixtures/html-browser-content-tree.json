@@ -5,8 +5,8 @@
   "cases": [
     {
       "id": "classic-document-flow",
-      "description": "Head metadata is skipped while headings, paragraphs, base-resolved links, images, line breaks, and lists stay renderable.",
-      "input": "<!doctype html><title>Example</title><base href=\"https://example.test/docs/\"><link rel=stylesheet href=style.css><h1 id=top class=\"headline primary\" title=\"Directory\" lang=en dir=ltr>Example Directory</h1><p class=lede>Welcome to <a id=intro-link class=nav href=intro.html title=\"Read intro\">Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
+      "description": "Head metadata is skipped while headings, paragraphs, base-resolved navigation links, images, line breaks, and lists stay renderable.",
+      "input": "<!doctype html><title>Example</title><base href=\"https://example.test/docs/\"><link rel=stylesheet href=style.css><h1 id=top class=\"headline primary\" title=\"Directory\" lang=en dir=ltr>Example Directory</h1><p class=lede>Welcome to <a id=intro-link class=nav href=intro.html target=main rel=\"next external\" title=\"Read intro\" download=intro.html ping=\"track.html https://metrics.example/p\" hreflang=en type=text/html>Venture HTML</a>.<br><img src=logo.gif alt=Logo><ul><li>One<li>Two",
       "expected": {
         "children": [
           {
@@ -47,6 +47,14 @@
                 "text": "Venture HTML",
                 "href": "intro.html",
                 "resolved_href": "https://example.test/docs/intro.html",
+                "target": "main",
+                "rel": "next external",
+                "rel_tokens": ["next", "external"],
+                "download": "intro.html",
+                "ping": ["track.html", "https://metrics.example/p"],
+                "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"],
+                "hreflang": "en",
+                "type_hint": "text/html",
                 "src": null,
                 "alt": null,
                 "control_type": null,

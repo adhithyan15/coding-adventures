@@ -389,8 +389,21 @@ def check_browser_expected_lists(
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
-        for field in ("href", "resolved_href", "name", "target", "rel", "title"):
+        for field in (
+            "href",
+            "resolved_href",
+            "name",
+            "target",
+            "rel",
+            "title",
+            "download",
+            "hreflang",
+            "type_hint",
+        ):
             require_optional_nullable_string(link_path, link, field, errors)
+        require_optional_string_list(link_path, link, "rel_tokens", errors)
+        require_optional_string_list(link_path, link, "ping", errors)
+        require_optional_string_list(link_path, link, "resolved_ping", errors)
         require_string(link_path, link, "text", errors)
 
     for index, image in enumerate(object_list_items(expected, "images")):
@@ -542,6 +555,10 @@ def check_browser_content_node(
         "text",
         "href",
         "resolved_href",
+        "target",
+        "rel",
+        "download",
+        "hreflang",
         "src",
         "resolved_src",
         "alt",
@@ -617,6 +634,9 @@ def check_browser_content_node(
         require_optional_nullable_string(node_path, node, field, errors)
     require_optional_integer(node_path, node, "heading_level", errors)
     require_optional_string_list(node_path, node, "classes", errors)
+    require_optional_string_list(node_path, node, "rel_tokens", errors)
+    require_optional_string_list(node_path, node, "ping", errors)
+    require_optional_string_list(node_path, node, "resolved_ping", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
     require_optional_string_list(node_path, node, "sandbox", errors)
@@ -701,6 +721,10 @@ def check_browser_render_node(
         "text",
         "href",
         "resolved_href",
+        "target",
+        "rel",
+        "download",
+        "hreflang",
         "src",
         "resolved_src",
         "alt",
@@ -776,6 +800,9 @@ def check_browser_render_node(
         require_optional_nullable_string(node_path, node, field, errors)
     require_optional_integer(node_path, node, "heading_level", errors)
     require_optional_string_list(node_path, node, "classes", errors)
+    require_optional_string_list(node_path, node, "rel_tokens", errors)
+    require_optional_string_list(node_path, node, "ping", errors)
+    require_optional_string_list(node_path, node, "resolved_ping", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
     require_optional_string_list(node_path, node, "sandbox", errors)

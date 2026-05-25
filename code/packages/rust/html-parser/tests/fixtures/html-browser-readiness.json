@@ -5,8 +5,8 @@
   "cases": [
     {
       "id": "legacy-directory-page",
-      "description": "Omitted shell, title/base metadata, anchors, image attributes, and implied list-item endings.",
-      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\" target=_top><meta charset=utf-8><link rel=stylesheet href=\"style.css\" media=screen title=default><h1 id=index>Example Directory</h1><p>Welcome to <a href=\"intro.html\" target=main rel=next title=\"Intro\">Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
+      "description": "Omitted shell, title/base metadata, anchors, navigation attributes, image attributes, and implied list-item endings.",
+      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\" target=_top><meta charset=utf-8><link rel=stylesheet href=\"style.css\" media=screen title=default><h1 id=index>Example Directory</h1><p>Welcome to <a href=\"intro.html\" target=main rel=\"next external noreferrer\" title=\"Intro\" download=intro.html ping=\"track.html https://metrics.example/p\" hreflang=en type=text/html>Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
       "expected": {
         "title": "Example & Links",
         "base_href": "https://example.test/docs/",
@@ -30,7 +30,7 @@
           { "level": 1, "text": "Example Directory" }
         ],
         "links": [
-          { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "rel": "next", "title": "Intro", "text": "Venture HTML" }
+          { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "rel": "next external noreferrer", "rel_tokens": ["next", "external", "noreferrer"], "title": "Intro", "download": "intro.html", "ping": ["track.html", "https://metrics.example/p"], "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"], "hreflang": "en", "type_hint": "text/html", "text": "Venture HTML" }
         ],
         "images": [
           { "src": "logo.gif", "resolved_src": "https://example.test/docs/logo.gif", "alt": "Logo", "width": "88", "height": "31" }
