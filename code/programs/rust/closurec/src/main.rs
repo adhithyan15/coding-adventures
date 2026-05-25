@@ -70,6 +70,7 @@ use std::process::ExitCode;
 pub mod config;
 pub mod defines;
 pub mod globs;
+pub mod print_tree;
 pub mod run;
 pub mod whitespace_only;
 pub mod wire;
