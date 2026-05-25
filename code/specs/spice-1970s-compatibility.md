@@ -107,6 +107,17 @@ Acceptance:
 - Transient coupled-inductor smoke test.
 - Parser rejection for missing referenced inductors and non-finite coupling.
 
+Status:
+
+- `MutualInductor` / `mutualInductor` / `MutualInductor` element surfaces are
+  implemented across Python, TypeScript, and Rust.
+- `Kname L1 L2 coefficient` parser cards are implemented across Python,
+  TypeScript, and Rust, including subcircuit reference remapping and rejection
+  for missing referenced inductors or non-finite coupling.
+- AC transformer-ratio fixtures and transient coupled-inductor smoke fixtures
+  cover the mutual terms across Python, TypeScript, and Rust.
+- Phase 2 is complete for the current compatibility target.
+
 ### Phase 3 - Ideal Transmission Lines (`T` Cards)
 
 Add ideal lossless transmission-line support as the classic distributed element.
@@ -128,8 +139,15 @@ Acceptance:
 
 Status:
 
-- Parser support and AC phase-shift behavior are on `main`; this slice adds
-  transient delayed-step behavior across Python, TypeScript, and Rust.
+- `TransmissionLine` / `transmissionLine` / `TransmissionLine` element
+  surfaces are implemented across Python, TypeScript, and Rust.
+- Conservative `Tname n1 n2 n3 n4 Z0=<z> TD=<delay>` parser cards are
+  implemented across Python, TypeScript, and Rust, including subcircuit node
+  remapping and rejection for unsupported positional and non-positive parameter
+  forms.
+- AC phase-delay fixtures and transient delayed-step fixtures cover the
+  lossless line behavior across Python, TypeScript, and Rust.
+- Phase 3 is complete for the current compatibility target.
 
 ### Phase 4 - Gear-2 / BDF2 Transient Integration
 
