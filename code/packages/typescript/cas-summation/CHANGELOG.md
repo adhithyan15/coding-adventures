@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.0 — 2026-05-25
+
+### Added
+
+- **Phase 63 — Two-Sqrt × Log × polynomial numerator** (`twoSqrtLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h(k)), polynomial..., bounded...)`.
+  Log is sub-polynomial; effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+  Closes when `denDeg > twoSqrtLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 4 new tests in the "Phase 63" describe block.
+
 ## 2.0.0 — 2026-05-25
 
 ### Added

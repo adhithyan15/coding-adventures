@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.0 — 2026-05-25
+
+### Added
+
+- **Phase 63 — Two-Sqrt × Log × polynomial numerator** (`two_sqrt_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h(k)), polynomial..., bounded...)`.
+  Log is sub-polynomial; `effective_x2 = deg(P1) + deg(P2) + 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs`.
+
 ## 2.0.0 — 2026-05-25
 
 ### Added
