@@ -2088,3 +2088,55 @@ fn phase66_sqrt_k2_cubed_over_k_sq_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ── Phase 67: Three Logs × polynomial ────────────────────────────────────────
+
+#[test]
+fn phase67_log_k_cubed_over_k_closes() {
+    // log(k)³ / k: poly_deg=0, effective_x2=0; 2·1=2 > 0 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k.clone(), log_k]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1.clone(), log_kp1]);
+    let g_k = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase67_log_k_cubed_poly_over_k_sq_closes() {
+    // log(k)³·k / k²: poly_deg=1, effective_x2=2; 2·2=4 > 2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k.clone(), log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1.clone(), log_kp1, kp1.clone()]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(2)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let g_k = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase67_log_k_cubed_over_k_refused_when_equal() {
+    // log(k)³·k / k: poly_deg=1, effective_x2=2; 2·1=2 not > 2 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k.clone(), log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1.clone(), log_kp1, kp1.clone()]);
+    let g_k = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
