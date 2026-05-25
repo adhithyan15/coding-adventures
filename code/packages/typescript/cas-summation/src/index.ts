@@ -1094,6 +1094,77 @@ function boundedSqrtPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefine
   return sqrtHalfDeg + polyDeg;
 }
 
+/**
+ * Phase 60 (TypeScript port): Return the effective degree when ``node`` is a
+ * ``Mul`` with **exactly one** ``Log(diverging)`` factor, **exactly one**
+ * ``Sqrt(positive-leading polynomial P)``, any polynomial factors (total
+ * degree ``m``), and any number of bounded factors; ``undefined`` otherwise.
+ *
+ * Closes the gap left by Phase 57 (``Mul(bounded, Log, Sqrt)``; refuses
+ * polynomial factors).
+ *
+ * Effective growth: ``log(k) · k^{deg(P)/2 + m}`` — log is sub-polynomial so
+ * the dominant term is the Sqrt×poly part.  Effective degree:
+ *   ``sqrtHalfDeg + polyDeg``
+ *
+ * Caller compares ``denDeg > sqrtHalfDeg + polyDeg`` (strict), matching the
+ * TypeScript convention (actual half-degrees, no ×2).
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Log(diverging)`` → count; refuse if count > 1.
+ *      - ``Sqrt(positive-poly)`` → record half-degree; refuse if second one.
+ *      - polynomial → add degree to ``polyDeg``.
+ *      - ``bounded`` → accept silently.
+ *      - Unrecognised → return undefined.
+ *   3. Require exactly one Log AND exactly one Sqrt.
+ *   4. Return ``sqrtHalfDeg + polyDeg``.
+ */
+function boundedLogSqrtPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let sqrtHalfDeg: number | undefined = undefined;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    // Log(diverging) factor?
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 1) {
+        // Two or more Log factors — refuse.
+        return undefined;
+      }
+      continue;
+    }
+    // Sqrt(positive-poly) factor?
+    const halfDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (halfDeg !== undefined) {
+      if (sqrtHalfDeg !== undefined) {
+        // Two Sqrt factors — refuse (conservative).
+        return undefined;
+      }
+      sqrtHalfDeg = halfDeg;
+      continue;
+    }
+    // Polynomial factor?
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) {
+      polyDeg += deg;
+      continue;
+    }
+    // Bounded (non-polynomial, non-Sqrt, non-Log)?
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Unrecognised factor — bail.
+    return undefined;
+  }
+  if (logCount !== 1 || sqrtHalfDeg === undefined) {
+    return undefined;
+  }
+  return sqrtHalfDeg + polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1224,6 +1295,22 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegBsp = polynomialDegreeInK(den, k);
     if (denDegBsp !== undefined) {
       if (denDegBsp > bspDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 60: Mul(bounded, Log(diverging), Sqrt(positive-poly), polynomial)
+  // numerator.  Closes the gap left by Phase 57 (bounded×Log×Sqrt, refuses
+  // polynomial factors).  Effective degree: sqrtHalfDeg + polyDeg.  Vanishes
+  // when denDeg > sqrtHalfDeg + polyDeg (polynomial) or non-polynomial
+  // diverging denominator.
+  const blspDeg = boundedLogSqrtPolyEffectiveDeg(num, k);
+  if (blspDeg !== undefined) {
+    const denDegBlsp = polynomialDegreeInK(den, k);
+    if (denDegBlsp !== undefined) {
+      if (denDegBlsp > blspDeg) {
         return true;
       }
     } else if (hDivergesAtInfinity(den, k)) {

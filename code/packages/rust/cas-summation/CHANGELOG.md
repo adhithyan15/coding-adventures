@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.8.0 — 2026-05-24
+
+**Phase 60 — Bounded × Log(diverging) × Sqrt(positive-poly) × polynomial
+numerator (Rust port).**
+
+Ports Python ``cas-summation`` 1.8.0.  Closes the gap left by Phase 57
+(``Mul(bounded, Log, Sqrt)``; refuses polynomial factors).
+
+Effective growth: ``log(k)·k^{deg(P)/2 + m}`` — log is sub-polynomial so
+the dominant term is the Sqrt×poly part.  ×2 trick:
+``effective_x2 = deg(P) + 2·m``.  Vanishes when
+``2·den_deg > effective_x2`` (polynomial denominator) or non-polynomial
+diverging denominator.
+
+### Added
+
+- **`bounded_log_sqrt_poly_effective_x2(node, k) -> Option<i64>`** — returns
+  ``sqrt_inner_deg + 2·poly_deg`` for
+  ``Mul(bounded..., Log(diverging), Sqrt(positive-poly), poly_factors...)``.
+  Requires exactly one Log and exactly one Sqrt; refuses two of either.
+- **Phase 60 branch** in ``g_vanishes_at_infinity`` — checks
+  ``2·den_deg > blsp_x2`` for polynomial denominators; falls back to
+  ``h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **3 new tests**: ``phase60_*`` in ``tests/tests.rs``.
+
 ## 1.7.0 — 2026-05-25
 
 **Phase 59 — Bounded × Sqrt(positive-poly) × polynomial numerator (Rust port).**

@@ -1370,3 +1370,89 @@ describe("summation: Phase 59 bounded × Sqrt(positive-poly) × polynomial numer
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+describe("summation: Phase 60 bounded × Log(diverging) × Sqrt(positive-poly) × polynomial numerator", () => {
+  // Phase 60 closes the gap left by Phase 57 (bounded×Log×Sqrt, refuses poly).
+  // Effective growth: log(k)·k^{sqrtHalfDeg + polyDeg} = o(k^{sqrtHalfDeg+polyDeg+ε}).
+  // TypeScript convention: compare denDeg > sqrtHalfDeg + polyDeg (no ×2).
+
+  it("∑ [sin(k)·log(k)·√k·k/k³ − ...] closes (halfDeg=0.5, polyDeg=1, eff=1.5, denDeg=3)", () => {
+    // sqrtHalfDeg=0.5, polyDeg=1, effectiveDeg=1.5; denDeg=3 > 1.5 → closes.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(LOG, [k]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sinK, logK, sqrtK, k]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(LOG, [kp1]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, sqrtKp1, kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [cos(k)·log(k)·√(k²)·k²/k⁴ − ...] closes (halfDeg=1, polyDeg=2, eff=3, denDeg=4)", () => {
+    // sqrtHalfDeg=1, polyDeg=2, effectiveDeg=3; denDeg=4 > 3 → closes.
+    const k = sym("k");
+    const cosK = app(sym("Cos"), [k]);
+    const logK = app(LOG, [k]);
+    const sqrtK2 = app(sym("Sqrt"), [app(POW, [k, int(2)])]);
+    const numK = app(MUL, [cosK, logK, sqrtK2, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const cosKp1 = app(sym("Cos"), [kp1]);
+    const logKp1 = app(LOG, [kp1]);
+    const sqrtKp1_2 = app(sym("Sqrt"), [app(POW, [kp1, int(2)])]);
+    const numKp1 = app(MUL, [cosKp1, logKp1, sqrtKp1_2, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(4)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(4)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·log(k)·√k·k/2^k − ...] closes (exp denominator dominates)", () => {
+    // Non-polynomial diverging denominator dominates any poly×log×sqrt growth.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(LOG, [k]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sinK, logK, sqrtK, k]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(LOG, [kp1]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, sqrtKp1, kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·log(k)·√(k²)·k/k² stays unevaluated (equal: halfDeg=1, polyDeg=1, eff=2, denDeg=2)", () => {
+    // sqrtHalfDeg=1, polyDeg=1, effectiveDeg=2; denDeg=2 not > 2 → refused.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(LOG, [k]);
+    const sqrtK2 = app(sym("Sqrt"), [app(POW, [k, int(2)])]);
+    const numK = app(MUL, [sinK, logK, sqrtK2, k]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(LOG, [kp1]);
+    const sqrtKp1_2 = app(sym("Sqrt"), [app(POW, [kp1, int(2)])]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, sqrtKp1_2, kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
