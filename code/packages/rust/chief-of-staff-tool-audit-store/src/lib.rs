@@ -5525,6 +5525,131 @@ impl ToolAuditSupervisorDrainRunReport {
             .has_route()
     }
 
+    /// Return the escalation dashboard lane queue digest.
+    pub fn host_run_escalation_dashboard_lane_queue_digest(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
+        self.host_run_escalation_dashboard_key().lane_queue_digest()
+    }
+
+    /// Return the stable escalation dashboard lane queue digest label.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_label(&self) -> String {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .label()
+    }
+
+    /// Return whether the lane queue digest label parses back to its typed digest.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_label_matches_digest(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_label(
+            &self.host_run_escalation_dashboard_lane_queue_digest_label(),
+        ) == Some(self.host_run_escalation_dashboard_lane_queue_digest())
+    }
+
+    /// Return whether the lane queue digest key matches the compact queue key.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_key_matches_key(&self) -> bool {
+        self.host_run_escalation_dashboard_key()
+            .lane_queue_digest_key_matches_key()
+    }
+
+    /// Return whether the lane queue digest dashboard matches the expanded key.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_key()
+            .lane_queue_digest_dashboard_key_matches_key()
+    }
+
+    /// Return whether the lane queue digest key matches its dashboard key.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_key()
+            .lane_queue_digest_key_matches_dashboard_key()
+    }
+
+    /// Return whether every lane queue digest component matches its source keys.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_parts_match(&self) -> bool {
+        self.host_run_escalation_dashboard_key()
+            .lane_queue_digest_parts_match()
+    }
+
+    /// Return whether any escalation dashboard lane queue digest component drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift(&self) -> bool {
+        self.host_run_escalation_dashboard_key()
+            .has_lane_queue_digest_integrity_drift()
+    }
+
+    /// Return whether dashboard lane queue digest labels match their source keys.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_labels_match(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_key_labels_match()
+            && self.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest()
+            && self.host_run_escalation_dashboard_lane_queue_digest_parts_match()
+            && self.host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key()
+    }
+
+    /// Return whether any dashboard lane queue digest label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift(
+        &self,
+    ) -> bool {
+        !self.host_run_escalation_dashboard_lane_queue_digest_labels_match()
+    }
+
+    /// Return whether the dashboard lane queue digest is fully settled.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_is_settled(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .is_settled()
+    }
+
+    /// Return whether the dashboard lane queue digest requires host action.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_action(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .requires_action()
+    }
+
+    /// Return the sortable dashboard lane queue digest priority rank.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_priority_rank(&self) -> u8 {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .priority_rank()
+    }
+
+    /// Return whether the dashboard lane queue digest can route automatically.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_is_auto_routable(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .is_auto_routable()
+    }
+
+    /// Return whether the dashboard lane queue digest requires manual review.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_manual_review(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .requires_manual_review()
+    }
+
+    /// Return whether the dashboard lane queue digest requires investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_investigation(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .requires_investigation()
+    }
+
+    /// Return whether the dashboard lane queue digest requires host-log integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the dashboard lane queue digest requires triage.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_triage(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .requires_triage()
+    }
+
+    /// Return whether the dashboard lane queue digest has a concrete escalation route.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_has_route(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest()
+            .has_route()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -6684,6 +6809,44 @@ impl ToolAuditSupervisorDrainRunReport {
                 .host_run_escalation_dashboard_lane_queue_requires_triage(),
             host_run_escalation_dashboard_lane_queue_has_route: self
                 .host_run_escalation_dashboard_lane_queue_has_route(),
+            host_run_escalation_dashboard_lane_queue_digest: self
+                .host_run_escalation_dashboard_lane_queue_digest(),
+            host_run_escalation_dashboard_lane_queue_digest_label: self
+                .host_run_escalation_dashboard_lane_queue_digest_label(),
+            host_run_escalation_dashboard_lane_queue_digest_label_matches_digest: self
+                .host_run_escalation_dashboard_lane_queue_digest_label_matches_digest(),
+            host_run_escalation_dashboard_lane_queue_digest_key_matches_key: self
+                .host_run_escalation_dashboard_lane_queue_digest_key_matches_key(),
+            host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key: self
+                .host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key(),
+            host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key: self
+                .host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key(),
+            host_run_escalation_dashboard_lane_queue_digest_parts_match: self
+                .host_run_escalation_dashboard_lane_queue_digest_parts_match(),
+            has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift: self
+                .has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift(),
+            host_run_escalation_dashboard_lane_queue_digest_labels_match: self
+                .host_run_escalation_dashboard_lane_queue_digest_labels_match(),
+            has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift: self
+                .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift(),
+            host_run_escalation_dashboard_lane_queue_digest_is_settled: self
+                .host_run_escalation_dashboard_lane_queue_digest_is_settled(),
+            host_run_escalation_dashboard_lane_queue_digest_requires_action: self
+                .host_run_escalation_dashboard_lane_queue_digest_requires_action(),
+            host_run_escalation_dashboard_lane_queue_digest_priority_rank: self
+                .host_run_escalation_dashboard_lane_queue_digest_priority_rank(),
+            host_run_escalation_dashboard_lane_queue_digest_is_auto_routable: self
+                .host_run_escalation_dashboard_lane_queue_digest_is_auto_routable(),
+            host_run_escalation_dashboard_lane_queue_digest_requires_manual_review: self
+                .host_run_escalation_dashboard_lane_queue_digest_requires_manual_review(),
+            host_run_escalation_dashboard_lane_queue_digest_requires_investigation: self
+                .host_run_escalation_dashboard_lane_queue_digest_requires_investigation(),
+            host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation: self
+                .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation(),
+            host_run_escalation_dashboard_lane_queue_digest_requires_triage: self
+                .host_run_escalation_dashboard_lane_queue_digest_requires_triage(),
+            host_run_escalation_dashboard_lane_queue_digest_has_route: self
+                .host_run_escalation_dashboard_lane_queue_digest_has_route(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -8454,6 +8617,45 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_dashboard_lane_queue_requires_triage: bool,
     /// Whether the dashboard lane queue has a concrete route.
     pub host_run_escalation_dashboard_lane_queue_has_route: bool,
+    /// Host-run escalation dashboard lane queue digest.
+    pub host_run_escalation_dashboard_lane_queue_digest:
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest,
+    /// Stable host-run escalation dashboard lane queue digest label.
+    pub host_run_escalation_dashboard_lane_queue_digest_label: String,
+    /// Whether the dashboard lane queue digest label parses back to its digest.
+    pub host_run_escalation_dashboard_lane_queue_digest_label_matches_digest: bool,
+    /// Whether the lane queue digest key matches the compact queue key.
+    pub host_run_escalation_dashboard_lane_queue_digest_key_matches_key: bool,
+    /// Whether the lane queue digest dashboard matches the expanded key.
+    pub host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key: bool,
+    /// Whether the lane queue digest key matches the expanded dashboard key.
+    pub host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key: bool,
+    /// Whether every lane queue digest component matches its source keys.
+    pub host_run_escalation_dashboard_lane_queue_digest_parts_match: bool,
+    /// Whether any dashboard lane queue digest component drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift: bool,
+    /// Whether dashboard lane queue digest labels match their source keys.
+    pub host_run_escalation_dashboard_lane_queue_digest_labels_match: bool,
+    /// Whether any dashboard lane queue digest label drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift: bool,
+    /// Whether the dashboard lane queue digest is fully settled.
+    pub host_run_escalation_dashboard_lane_queue_digest_is_settled: bool,
+    /// Whether the dashboard lane queue digest requires host action.
+    pub host_run_escalation_dashboard_lane_queue_digest_requires_action: bool,
+    /// Sortable dashboard lane queue digest priority rank.
+    pub host_run_escalation_dashboard_lane_queue_digest_priority_rank: u8,
+    /// Whether the dashboard lane queue digest can route automatically.
+    pub host_run_escalation_dashboard_lane_queue_digest_is_auto_routable: bool,
+    /// Whether the dashboard lane queue digest requires manual review.
+    pub host_run_escalation_dashboard_lane_queue_digest_requires_manual_review: bool,
+    /// Whether the dashboard lane queue digest requires investigation.
+    pub host_run_escalation_dashboard_lane_queue_digest_requires_investigation: bool,
+    /// Whether the dashboard lane queue digest requires host-log integrity investigation.
+    pub host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation: bool,
+    /// Whether the dashboard lane queue digest requires triage.
+    pub host_run_escalation_dashboard_lane_queue_digest_requires_triage: bool,
+    /// Whether the dashboard lane queue digest has a concrete route.
+    pub host_run_escalation_dashboard_lane_queue_digest_has_route: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -11876,6 +12078,111 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the dashboard lane queue has a concrete escalation route.
     pub fn host_run_escalation_dashboard_lane_queue_has_route(&self) -> bool {
         self.host_run_escalation_dashboard_lane_queue_has_route
+    }
+
+    /// Return the escalation dashboard lane queue digest.
+    pub fn host_run_escalation_dashboard_lane_queue_digest(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
+        self.host_run_escalation_dashboard_lane_queue_digest
+    }
+
+    /// Return the stable escalation dashboard lane queue digest label.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_label(&self) -> &str {
+        &self.host_run_escalation_dashboard_lane_queue_digest_label
+    }
+
+    /// Return whether the lane queue digest label parses back to its typed digest.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_label_matches_digest(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest
+    }
+
+    /// Return whether the lane queue digest key matches the compact queue key.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_key_matches_key(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_key_matches_key
+    }
+
+    /// Return whether the lane queue digest dashboard matches the expanded key.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key
+    }
+
+    /// Return whether the lane queue digest key matches its dashboard key.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key
+    }
+
+    /// Return whether every lane queue digest component matches its source keys.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_parts_match(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_parts_match
+    }
+
+    /// Return whether any dashboard lane queue digest component drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift
+    }
+
+    /// Return whether dashboard lane queue digest labels match their source keys.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_labels_match(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_labels_match
+    }
+
+    /// Return whether any dashboard lane queue digest label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift
+    }
+
+    /// Return whether the dashboard lane queue digest is fully settled.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_is_settled(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_is_settled
+    }
+
+    /// Return whether the dashboard lane queue digest requires host action.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_action(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_requires_action
+    }
+
+    /// Return the sortable dashboard lane queue digest priority rank.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_priority_rank(&self) -> u8 {
+        self.host_run_escalation_dashboard_lane_queue_digest_priority_rank
+    }
+
+    /// Return whether the dashboard lane queue digest can route automatically.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_is_auto_routable(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_is_auto_routable
+    }
+
+    /// Return whether the dashboard lane queue digest requires manual review.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_manual_review(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_requires_manual_review
+    }
+
+    /// Return whether the dashboard lane queue digest requires investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_investigation(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_requires_investigation
+    }
+
+    /// Return whether the dashboard lane queue digest requires host-log integrity investigation.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation
+    }
+
+    /// Return whether the dashboard lane queue digest requires triage.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_requires_triage(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_requires_triage
+    }
+
+    /// Return whether the dashboard lane queue digest has a concrete escalation route.
+    pub fn host_run_escalation_dashboard_lane_queue_digest_has_route(&self) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_digest_has_route
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -16709,6 +17016,17 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
         )
     }
 
+    /// Create a dashboard lane queue key from an expanded dashboard key.
+    pub fn from_dashboard_key(
+        dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+    ) -> Self {
+        Self::from_lane_digest(
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneDigest::from_dashboard_key(
+                dashboard_key,
+            ),
+        )
+    }
+
     /// Parse a stable compact dashboard lane queue-key label.
     pub fn from_label(label: &str) -> Option<Self> {
         let rest = label.strip_prefix("route=")?;
@@ -16800,6 +17118,14 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
         self.readiness == self.lane_digest.queue_readiness()
     }
 
+    /// Return whether this lane queue key matches the expanded dashboard key.
+    pub fn dashboard_key_matches(
+        self,
+        dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+    ) -> bool {
+        Self::from_dashboard_key(dashboard_key) == self
+    }
+
     /// Return whether every queue-key component matches its source classifiers.
     pub fn parts_match(
         self,
@@ -16884,6 +17210,160 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
 }
 
 impl Display for ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable digest that binds a lane queue key back to the expanded dashboard key.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
+    lane_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey,
+    dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+}
+
+impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
+    /// Create a dashboard lane queue digest from compact and expanded keys.
+    pub fn new(
+        lane_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey,
+        dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+    ) -> Self {
+        Self {
+            lane_queue_key,
+            dashboard_key,
+        }
+    }
+
+    /// Create a dashboard lane queue digest from an expanded dashboard key.
+    pub fn from_dashboard_key(
+        dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+    ) -> Self {
+        Self::new(
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey::from_dashboard_key(
+                dashboard_key,
+            ),
+            dashboard_key,
+        )
+    }
+
+    /// Parse a stable dashboard lane queue digest label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("lane_queue=")?;
+        let (lane_queue_label, dashboard_label) = rest.split_once("|dashboard=")?;
+        let lane_queue_key =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey::from_label(
+                lane_queue_label,
+            )?;
+        let dashboard_key =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardKey::from_label(dashboard_label)?;
+        Some(Self::new(lane_queue_key, dashboard_key))
+    }
+
+    /// Return the compact dashboard lane queue key.
+    pub fn lane_queue_key(self) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey {
+        self.lane_queue_key
+    }
+
+    /// Return the expanded dashboard key.
+    pub fn dashboard_key(self) -> ToolAuditSupervisorDrainHostRunEscalationDashboardKey {
+        self.dashboard_key
+    }
+
+    /// Return a stable digest label for dashboard lane queue grouping.
+    pub fn label(self) -> String {
+        format!(
+            "lane_queue={}|dashboard={}",
+            self.lane_queue_key.label(),
+            self.dashboard_key.label()
+        )
+    }
+
+    /// Return whether this lane queue digest label parses back to this digest.
+    pub fn label_matches_digest(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this digest's lane queue key matches the supplied key.
+    pub fn lane_queue_key_matches(
+        self,
+        lane_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey,
+    ) -> bool {
+        self.lane_queue_key == lane_queue_key
+    }
+
+    /// Return whether this digest's dashboard key matches the supplied key.
+    pub fn dashboard_key_matches(
+        self,
+        dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+    ) -> bool {
+        self.dashboard_key == dashboard_key
+    }
+
+    /// Return whether this digest's lane queue key matches its dashboard key.
+    pub fn lane_queue_key_matches_dashboard_key(self) -> bool {
+        self.lane_queue_key
+            .dashboard_key_matches(self.dashboard_key)
+    }
+
+    /// Return whether every lane queue digest component matches its source keys.
+    pub fn parts_match(
+        self,
+        lane_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey,
+        dashboard_key: ToolAuditSupervisorDrainHostRunEscalationDashboardKey,
+    ) -> bool {
+        self.lane_queue_key_matches(lane_queue_key) && self.dashboard_key_matches(dashboard_key)
+    }
+
+    /// Return whether this lane queue digest is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.lane_queue_key.is_settled() && self.dashboard_key.is_settled()
+    }
+
+    /// Return whether this lane queue digest needs host action.
+    pub fn requires_action(self) -> bool {
+        self.lane_queue_key.requires_action() || self.dashboard_key.requires_action()
+    }
+
+    /// Return the sortable dashboard lane queue digest priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.lane_queue_key
+            .priority_rank()
+            .max(self.dashboard_key.priority_rank())
+    }
+
+    /// Return whether this lane queue digest can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.lane_queue_key.is_auto_routable() && self.dashboard_key.is_auto_routable()
+    }
+
+    /// Return whether this lane queue digest requires manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.lane_queue_key.requires_manual_review() || self.dashboard_key.requires_manual_review()
+    }
+
+    /// Return whether this lane queue digest requires investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.lane_queue_key.requires_investigation() || self.dashboard_key.requires_investigation()
+    }
+
+    /// Return whether this lane queue digest requires host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.lane_queue_key.requires_integrity_investigation()
+            || self.dashboard_key.requires_integrity_investigation()
+    }
+
+    /// Return whether this lane queue digest requires triage.
+    pub fn requires_triage(self) -> bool {
+        self.lane_queue_key.requires_triage() || self.dashboard_key.requires_triage()
+    }
+
+    /// Return whether this lane queue digest has a concrete escalation route.
+    pub fn has_route(self) -> bool {
+        self.lane_queue_key.has_route() || self.dashboard_key.has_route()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
     }
@@ -17319,6 +17799,111 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardKey {
     /// Return whether this lane queue key has a concrete escalation route.
     pub fn lane_queue_has_route(self) -> bool {
         self.lane_queue_key().has_route()
+    }
+
+    /// Return the dashboard lane queue digest.
+    pub fn lane_queue_digest(
+        self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_dashboard_key(self)
+    }
+
+    /// Return the stable dashboard lane queue digest label.
+    pub fn lane_queue_digest_label(self) -> String {
+        self.lane_queue_digest().label()
+    }
+
+    /// Return whether this dashboard lane queue digest label parses back to its digest.
+    pub fn lane_queue_digest_label_matches_digest(self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_label(
+            &self.lane_queue_digest_label(),
+        ) == Some(self.lane_queue_digest())
+    }
+
+    /// Return whether the lane queue digest key matches the compact queue key.
+    pub fn lane_queue_digest_key_matches_key(self) -> bool {
+        self.lane_queue_digest()
+            .lane_queue_key_matches(self.lane_queue_key())
+    }
+
+    /// Return whether the lane queue digest dashboard matches this key.
+    pub fn lane_queue_digest_dashboard_key_matches_key(self) -> bool {
+        self.lane_queue_digest().dashboard_key_matches(self)
+    }
+
+    /// Return whether the lane queue digest key matches its dashboard key.
+    pub fn lane_queue_digest_key_matches_dashboard_key(self) -> bool {
+        self.lane_queue_digest()
+            .lane_queue_key_matches_dashboard_key()
+    }
+
+    /// Return whether every lane queue digest component matches its source keys.
+    pub fn lane_queue_digest_parts_match(self) -> bool {
+        self.lane_queue_digest()
+            .parts_match(self.lane_queue_key(), self)
+    }
+
+    /// Return whether any lane queue digest component drifted from its sources.
+    pub fn has_lane_queue_digest_integrity_drift(self) -> bool {
+        !self.lane_queue_digest_parts_match() || !self.lane_queue_digest_key_matches_dashboard_key()
+    }
+
+    /// Return whether dashboard lane queue digest labels match their source keys.
+    pub fn lane_queue_digest_labels_match(self) -> bool {
+        self.lane_queue_key_labels_match()
+            && self.lane_queue_digest_label_matches_digest()
+            && self.lane_queue_digest_parts_match()
+            && self.lane_queue_digest_key_matches_dashboard_key()
+    }
+
+    /// Return whether any dashboard lane queue digest label drifted.
+    pub fn has_lane_queue_digest_label_integrity_drift(self) -> bool {
+        !self.lane_queue_digest_labels_match()
+    }
+
+    /// Return whether this lane queue digest is fully settled.
+    pub fn lane_queue_digest_is_settled(self) -> bool {
+        self.lane_queue_digest().is_settled()
+    }
+
+    /// Return whether this lane queue digest needs host action.
+    pub fn lane_queue_digest_requires_action(self) -> bool {
+        self.lane_queue_digest().requires_action()
+    }
+
+    /// Return the sortable lane queue digest priority rank.
+    pub fn lane_queue_digest_priority_rank(self) -> u8 {
+        self.lane_queue_digest().priority_rank()
+    }
+
+    /// Return whether this lane queue digest can route automatically.
+    pub fn lane_queue_digest_is_auto_routable(self) -> bool {
+        self.lane_queue_digest().is_auto_routable()
+    }
+
+    /// Return whether this lane queue digest requires manual review.
+    pub fn lane_queue_digest_requires_manual_review(self) -> bool {
+        self.lane_queue_digest().requires_manual_review()
+    }
+
+    /// Return whether this lane queue digest requires investigation.
+    pub fn lane_queue_digest_requires_investigation(self) -> bool {
+        self.lane_queue_digest().requires_investigation()
+    }
+
+    /// Return whether this lane queue digest requires host-log integrity investigation.
+    pub fn lane_queue_digest_requires_integrity_investigation(self) -> bool {
+        self.lane_queue_digest().requires_integrity_investigation()
+    }
+
+    /// Return whether this lane queue digest requires triage.
+    pub fn lane_queue_digest_requires_triage(self) -> bool {
+        self.lane_queue_digest().requires_triage()
+    }
+
+    /// Return whether this lane queue digest has a concrete escalation route.
+    pub fn lane_queue_digest_has_route(self) -> bool {
+        self.lane_queue_digest().has_route()
     }
 
     /// Return whether this key's supervision component matches.
@@ -27844,6 +28429,113 @@ mod tests {
                 lane_queue_key.requires_triage()
             );
             assert_eq!(key.lane_queue_has_route(), lane_queue_key.has_route());
+
+            let lane_queue_digest =
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_dashboard_key(
+                    key,
+                );
+            assert_eq!(lane_queue_digest.lane_queue_key(), lane_queue_key);
+            assert_eq!(lane_queue_digest.dashboard_key(), key);
+            assert_eq!(
+                lane_queue_digest.label(),
+                format!(
+                    "lane_queue={}|dashboard={}",
+                    lane_queue_key.label(),
+                    key.label()
+                )
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_label(
+                    &lane_queue_digest.label()
+                ),
+                Some(lane_queue_digest)
+            );
+            assert!(lane_queue_digest.label_matches_digest());
+            assert!(lane_queue_digest.lane_queue_key_matches(lane_queue_key));
+            assert!(lane_queue_digest.dashboard_key_matches(key));
+            assert!(lane_queue_digest.lane_queue_key_matches_dashboard_key());
+            assert!(lane_queue_digest.parts_match(lane_queue_key, key));
+            assert_eq!(
+                lane_queue_digest.is_settled(),
+                lane_queue_key.is_settled() && key.is_settled()
+            );
+            assert_eq!(
+                lane_queue_digest.requires_action(),
+                lane_queue_key.requires_action() || key.requires_action()
+            );
+            assert_eq!(lane_queue_digest.priority_rank(), expected_rank);
+            assert_eq!(
+                lane_queue_digest.is_auto_routable(),
+                lane_queue_key.is_auto_routable() && key.is_auto_routable()
+            );
+            assert_eq!(
+                lane_queue_digest.requires_manual_review(),
+                lane_queue_key.requires_manual_review() || key.requires_manual_review()
+            );
+            assert_eq!(
+                lane_queue_digest.requires_investigation(),
+                lane_queue_key.requires_investigation() || key.requires_investigation()
+            );
+            assert_eq!(
+                lane_queue_digest.requires_integrity_investigation(),
+                lane_queue_key.requires_integrity_investigation()
+                    || key.requires_integrity_investigation()
+            );
+            assert_eq!(
+                lane_queue_digest.requires_triage(),
+                lane_queue_key.requires_triage() || key.requires_triage()
+            );
+            assert_eq!(
+                lane_queue_digest.has_route(),
+                lane_queue_key.has_route() || key.has_route()
+            );
+            assert_eq!(lane_queue_digest.to_string(), lane_queue_digest.label());
+            assert_eq!(key.lane_queue_digest(), lane_queue_digest);
+            assert_eq!(key.lane_queue_digest_label(), lane_queue_digest.label());
+            assert!(key.lane_queue_digest_label_matches_digest());
+            assert!(key.lane_queue_digest_key_matches_key());
+            assert!(key.lane_queue_digest_dashboard_key_matches_key());
+            assert!(key.lane_queue_digest_key_matches_dashboard_key());
+            assert!(key.lane_queue_digest_parts_match());
+            assert!(!key.has_lane_queue_digest_integrity_drift());
+            assert!(key.lane_queue_digest_labels_match());
+            assert!(!key.has_lane_queue_digest_label_integrity_drift());
+            assert_eq!(
+                key.lane_queue_digest_is_settled(),
+                lane_queue_digest.is_settled()
+            );
+            assert_eq!(
+                key.lane_queue_digest_requires_action(),
+                lane_queue_digest.requires_action()
+            );
+            assert_eq!(
+                key.lane_queue_digest_priority_rank(),
+                lane_queue_digest.priority_rank()
+            );
+            assert_eq!(
+                key.lane_queue_digest_is_auto_routable(),
+                lane_queue_digest.is_auto_routable()
+            );
+            assert_eq!(
+                key.lane_queue_digest_requires_manual_review(),
+                lane_queue_digest.requires_manual_review()
+            );
+            assert_eq!(
+                key.lane_queue_digest_requires_investigation(),
+                lane_queue_digest.requires_investigation()
+            );
+            assert_eq!(
+                key.lane_queue_digest_requires_integrity_investigation(),
+                lane_queue_digest.requires_integrity_investigation()
+            );
+            assert_eq!(
+                key.lane_queue_digest_requires_triage(),
+                lane_queue_digest.requires_triage()
+            );
+            assert_eq!(
+                key.lane_queue_digest_has_route(),
+                lane_queue_digest.has_route()
+            );
         }
 
         let dashboard_lane_digest =
@@ -27866,6 +28558,14 @@ mod tests {
             ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
             dashboard_lane_digest,
         ));
+        assert!(!stale_lane_queue_key.dashboard_key_matches(dashboard_key));
+        let stale_lane_queue_digest =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::new(
+                stale_lane_queue_key,
+                dashboard_key,
+            );
+        assert!(!stale_lane_queue_digest.lane_queue_key_matches_dashboard_key());
+        assert!(stale_lane_queue_digest.parts_match(stale_lane_queue_key, dashboard_key,));
 
         let stale_queue_key = ToolAuditSupervisorDrainHostRunEscalationQueueKey::new(
             route_key,
@@ -27989,6 +28689,24 @@ mod tests {
         assert_eq!(
             ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueKey::from_label(
                 "routeish=triage|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_label(
+                "lane_queue=route=unknown|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required|dashboard=supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|rollup=escalation=triage|route=triage|priority=triage|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_label(
+                "lane_queue=route=triage|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required|dashboard=supervision=attention=unknown|queue=split_queues:mixed:triage:triage_required|rollup=escalation=triage|route=triage|priority=triage|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::from_label(
+                "lane_queueish=route=triage|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required|dashboard=supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|rollup=escalation=triage|route=triage|priority=triage|readiness=triage_required",
             ),
             None
         );
@@ -28852,6 +29570,126 @@ mod tests {
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_requires_triage());
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_has_route);
         assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_has_route());
+        let idle_lane_queue_digest =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::new(
+                idle_lane_queue_key,
+                idle_escalation_dashboard_key,
+            );
+        assert_eq!(
+            idle_report.host_run_escalation_dashboard_lane_queue_digest(),
+            idle_lane_queue_digest
+        );
+        assert_eq!(
+            idle_report.host_run_escalation_dashboard_lane_queue_digest_label(),
+            "lane_queue=route=no_route|priority=settled|readiness=settled|lane_digest=lane=settled|rollup=lane=settled|route=no_route|priority=settled|readiness=settled|dashboard=supervision=attention=no_attention|queue=no_route:no_action:settled:settled|rollup=escalation=settled|route=no_route|priority=settled|readiness=settled"
+        );
+        assert!(idle_report.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest());
+        assert!(idle_report.host_run_escalation_dashboard_lane_queue_digest_key_matches_key());
+        assert!(
+            idle_report.host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key()
+        );
+        assert!(
+            idle_report.host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key()
+        );
+        assert!(idle_report.host_run_escalation_dashboard_lane_queue_digest_parts_match());
+        assert!(!idle_report.has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift());
+        assert!(idle_report.host_run_escalation_dashboard_lane_queue_digest_labels_match());
+        assert!(!idle_report
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift());
+        assert!(idle_report.host_run_escalation_dashboard_lane_queue_digest_is_settled());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_requires_action());
+        assert_eq!(
+            idle_report.host_run_escalation_dashboard_lane_queue_digest_priority_rank(),
+            0
+        );
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_is_auto_routable());
+        assert!(
+            !idle_report.host_run_escalation_dashboard_lane_queue_digest_requires_manual_review()
+        );
+        assert!(
+            !idle_report.host_run_escalation_dashboard_lane_queue_digest_requires_investigation()
+        );
+        assert!(!idle_report
+            .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_requires_triage());
+        assert!(!idle_report.host_run_escalation_dashboard_lane_queue_digest_has_route());
+        assert_eq!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest,
+            idle_lane_queue_digest
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest(),
+            idle_lane_queue_digest
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest_label,
+            "lane_queue=route=no_route|priority=settled|readiness=settled|lane_digest=lane=settled|rollup=lane=settled|route=no_route|priority=settled|readiness=settled|dashboard=supervision=attention=no_attention|queue=no_route:no_action:settled:settled|rollup=escalation=settled|route=no_route|priority=settled|readiness=settled"
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest_label(),
+            "lane_queue=route=no_route|priority=settled|readiness=settled|lane_digest=lane=settled|rollup=lane=settled|route=no_route|priority=settled|readiness=settled|dashboard=supervision=attention=no_attention|queue=no_route:no_action:settled:settled|rollup=escalation=settled|route=no_route|priority=settled|readiness=settled"
+        );
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest);
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest());
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_key);
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_key());
+        assert!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key
+        );
+        assert!(idle_summary
+            .host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key());
+        assert!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key
+        );
+        assert!(idle_summary
+            .host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key());
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_parts_match);
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_parts_match());
+        assert!(!idle_summary.has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift);
+        assert!(!idle_summary.has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift());
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match);
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match());
+        assert!(
+            !idle_summary.has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift
+        );
+        assert!(!idle_summary
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift());
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_is_settled);
+        assert!(idle_summary.host_run_escalation_dashboard_lane_queue_digest_is_settled());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_action);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_action());
+        assert_eq!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest_priority_rank,
+            0
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_dashboard_lane_queue_digest_priority_rank(),
+            0
+        );
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_is_auto_routable);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_is_auto_routable());
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_manual_review
+        );
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_manual_review()
+        );
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_investigation
+        );
+        assert!(
+            !idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_investigation()
+        );
+        assert!(
+            !idle_summary
+                .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation
+        );
+        assert!(!idle_summary
+            .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_triage);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_requires_triage());
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_has_route);
+        assert!(!idle_summary.host_run_escalation_dashboard_lane_queue_digest_has_route());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -29777,6 +30615,158 @@ mod tests {
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_requires_triage());
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_has_route);
         assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_has_route());
+        let continuation_lane_queue_digest =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueDigest::new(
+                continuation_lane_queue_key,
+                continuation_escalation_dashboard_key,
+            );
+        assert_eq!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest(),
+            continuation_lane_queue_digest
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest_label(),
+            "lane_queue=route=triage|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required|dashboard=supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|rollup=escalation=triage|route=triage|priority=triage|readiness=triage_required"
+        );
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_label_matches_digest());
+        assert!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest_key_matches_key()
+        );
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key());
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key());
+        assert!(continuation_report.host_run_escalation_dashboard_lane_queue_digest_parts_match());
+        assert!(!continuation_report
+            .has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift());
+        assert!(continuation_report.host_run_escalation_dashboard_lane_queue_digest_labels_match());
+        assert!(!continuation_report
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift());
+        assert!(!continuation_report.host_run_escalation_dashboard_lane_queue_digest_is_settled());
+        assert!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest_requires_action()
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest_priority_rank(),
+            90
+        );
+        assert!(
+            !continuation_report.host_run_escalation_dashboard_lane_queue_digest_is_auto_routable()
+        );
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_requires_manual_review());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_requires_investigation());
+        assert!(!continuation_report
+            .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation());
+        assert!(
+            continuation_report.host_run_escalation_dashboard_lane_queue_digest_requires_triage()
+        );
+        assert!(continuation_report.host_run_escalation_dashboard_lane_queue_digest_has_route());
+        assert_eq!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest,
+            continuation_lane_queue_digest
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest(),
+            continuation_lane_queue_digest
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_label,
+            "lane_queue=route=triage|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required|dashboard=supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|rollup=escalation=triage|route=triage|priority=triage|readiness=triage_required"
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_label(),
+            "lane_queue=route=triage|priority=triage|readiness=triage_required|lane_digest=lane=triage|rollup=lane=triage|route=triage|priority=triage|readiness=triage_required|dashboard=supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required|rollup=escalation=triage|route=triage|priority=triage|readiness=triage_required"
+        );
+        assert!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_label_matches_digest
+        );
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_label_matches_digest());
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_key
+        );
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_key()
+        );
+        assert!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key
+        );
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key());
+        assert!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key
+        );
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key());
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_parts_match);
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_parts_match());
+        assert!(
+            !continuation_summary
+                .has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift
+        );
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift());
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match);
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match());
+        assert!(
+            !continuation_summary
+                .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift
+        );
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift());
+        assert!(!continuation_summary.host_run_escalation_dashboard_lane_queue_digest_is_settled);
+        assert!(!continuation_summary.host_run_escalation_dashboard_lane_queue_digest_is_settled());
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_requires_action
+        );
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_requires_action()
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_priority_rank,
+            90
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_priority_rank(),
+            90
+        );
+        assert!(
+            !continuation_summary.host_run_escalation_dashboard_lane_queue_digest_is_auto_routable
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_is_auto_routable());
+        assert!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_requires_manual_review
+        );
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_requires_manual_review());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_requires_investigation
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_requires_investigation());
+        assert!(
+            !continuation_summary
+                .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation
+        );
+        assert!(!continuation_summary
+            .host_run_escalation_dashboard_lane_queue_digest_requires_integrity_investigation());
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_requires_triage
+        );
+        assert!(
+            continuation_summary.host_run_escalation_dashboard_lane_queue_digest_requires_triage()
+        );
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_has_route);
+        assert!(continuation_summary.host_run_escalation_dashboard_lane_queue_digest_has_route());
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
@@ -29891,6 +30881,13 @@ mod tests {
         drift_summary.has_host_run_escalation_dashboard_lane_queue_key_integrity_drift = true;
         drift_summary.host_run_escalation_dashboard_lane_queue_key_labels_match = false;
         drift_summary.has_host_run_escalation_dashboard_lane_queue_key_label_integrity_drift = true;
+        drift_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key =
+            false;
+        drift_summary.host_run_escalation_dashboard_lane_queue_digest_parts_match = false;
+        drift_summary.has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift = true;
+        drift_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match = false;
+        drift_summary.has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift =
+            true;
         assert!(drift_summary.host_run_supervision_key_label_matches_key());
         assert!(!drift_summary.host_run_supervision_attention_matches_kind());
         assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
@@ -30001,6 +30998,19 @@ mod tests {
         assert!(
             drift_summary.has_host_run_escalation_dashboard_lane_queue_key_label_integrity_drift()
         );
+        assert!(
+            drift_summary.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest()
+        );
+        assert!(drift_summary.host_run_escalation_dashboard_lane_queue_digest_key_matches_key());
+        assert!(drift_summary
+            .host_run_escalation_dashboard_lane_queue_digest_dashboard_key_matches_key());
+        assert!(!drift_summary
+            .host_run_escalation_dashboard_lane_queue_digest_key_matches_dashboard_key());
+        assert!(!drift_summary.host_run_escalation_dashboard_lane_queue_digest_parts_match());
+        assert!(drift_summary.has_host_run_escalation_dashboard_lane_queue_digest_integrity_drift());
+        assert!(!drift_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match());
+        assert!(drift_summary
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift());
 
         let mut stale_label_summary = continuation_summary;
         stale_label_summary.host_run_supervision_key_label =
@@ -30069,6 +31079,14 @@ mod tests {
         stale_label_summary.host_run_escalation_dashboard_lane_queue_key_labels_match = false;
         stale_label_summary
             .has_host_run_escalation_dashboard_lane_queue_key_label_integrity_drift = true;
+        stale_label_summary.host_run_escalation_dashboard_lane_queue_digest_label =
+            "lane_queue=route=no_route|priority=settled|readiness=settled|lane_digest=lane=settled|rollup=lane=settled|route=no_route|priority=settled|readiness=settled|dashboard=supervision=attention=no_attention|queue=no_route:no_action:settled:settled|rollup=escalation=settled|route=no_route|priority=settled|readiness=settled"
+                .to_string();
+        stale_label_summary.host_run_escalation_dashboard_lane_queue_digest_label_matches_digest =
+            false;
+        stale_label_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match = false;
+        stale_label_summary
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift = true;
         assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
         assert!(!stale_label_summary.host_run_supervision_labels_match());
         assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
@@ -30116,6 +31134,11 @@ mod tests {
         assert!(!stale_label_summary.host_run_escalation_dashboard_lane_queue_key_labels_match());
         assert!(stale_label_summary
             .has_host_run_escalation_dashboard_lane_queue_key_label_integrity_drift());
+        assert!(!stale_label_summary
+            .host_run_escalation_dashboard_lane_queue_digest_label_matches_digest());
+        assert!(!stale_label_summary.host_run_escalation_dashboard_lane_queue_digest_labels_match());
+        assert!(stale_label_summary
+            .has_host_run_escalation_dashboard_lane_queue_digest_label_integrity_drift());
     }
 
     #[test]
