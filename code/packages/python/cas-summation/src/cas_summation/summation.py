@@ -927,6 +927,21 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 67: ``Mul(Log(diverging), Log(diverging), Log(diverging),
+    #           polynomial..., bounded...)`` numerator.
+    # Three Log factors; log³ is sub-polynomial: log³(k)·k^m = o(k^{m+ε}).
+    # effective_x2 = 2·poly_deg (log³ contributes nothing to effective degree).
+    # Sqrt factors are refused — use Phase 63/64/65 for sqrt+log combos.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    tlp3_x2 = _three_log_poly_effective_x2(num, k)
+    if tlp3_x2 is not None:
+        den_deg_tlp3 = _polynomial_degree_in_k(den, k)
+        if den_deg_tlp3 is not None:
+            if 2 * den_deg_tlp3 > tlp3_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1714,6 +1729,73 @@ def _two_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
         # Unrecognised factor — bail.
         return None
     if log_count != 2:
+        return None
+    return 2 * poly_deg_sum
+
+
+def _three_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``2·poly_deg`` when ``node`` is a ``Mul`` with **exactly three**
+    ``Log(diverging-in-k)`` factors, any polynomial factors (total degree
+    ``m``), and any number of bounded factors; ``None`` otherwise.
+
+    Phase 67 — Three-Log × polynomial numerator.
+
+    Effective growth:
+    ``log(k)³ · k^m ≈ o(k^{m + ε})`` for any ε > 0 (log³ is sub-polynomial).
+    Using the ×2 integer trick:
+    ``effective_x2 = 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    ``Sqrt`` factors are refused (belong to the Sqrt / log-Sqrt phases).
+
+    +-------------------------------------------+-----------+
+    | Input                                     | Return    |
+    +===========================================+===========+
+    | ``Mul(Log(k), Log(k), Log(k))``           | ``0``     |
+    | ``Mul(Log(k), Log(k), Log(k+1), k)``      | ``2``     |
+    | ``Mul(Log(k), Log(k), Log(k), k²)``       | ``4``     |
+    | ``Mul(Log(k), Log(k))``                   | None (2 Log)|
+    | ``Mul(Log(k), Log(k), Log(k), Log(k))``   | None (4 Log)|
+    | ``Mul(Log(k), Log(k), Log(k), Sqrt(k))``  | None (Sqrt)|
+    +-------------------------------------------+-----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Log(diverging)`` → count; bail after the third one.
+         - ``Sqrt(...)`` → bail immediately (sqrt patterns are separate).
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded (non-polynomial, non-Log, non-Sqrt) → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly three Log factors.
+      4. Return ``2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        # Log(diverging) factor?
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 3:
+                # Four or more Log factors — refuse (conservative).
+                return None
+            continue
+        # Sqrt factor — refuse (belongs to sqrt / log-Sqrt phases).
+        if _sqrt_effective_half_degree_x2(arg, k) is not None:
+            return None
+        # Polynomial factor?
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        # Bounded (non-polynomial, non-Log, non-Sqrt)?
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Unrecognised factor — bail.
+        return None
+    if log_count != 3:
         return None
     return 2 * poly_deg_sum
 

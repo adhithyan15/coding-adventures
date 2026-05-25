@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.0 — 2026-05-25
+
+### Added
+
+- **Phase 67 — Three-Log × polynomial numerator** (`threeLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Sqrt factors refused; log³ sub-polynomial; effective degree = polyDeg.
+  Closes when `denDeg > threeLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 4 new tests in the "Phase 67" describe block.
+
 ## 2.4.0 — 2026-05-25
 
 ### Added

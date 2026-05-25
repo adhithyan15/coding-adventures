@@ -1400,6 +1400,38 @@ function threeSqrtPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined 
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
 }
 
+/**
+ * Phase 67 — Three-Log × polynomial numerator.
+ *
+ * Returns the effective polynomial degree when `node` is a `Mul` with
+ * **exactly three** `Log(diverging-in-k)` factors, any polynomial factors,
+ * and any bounded factors; `undefined` otherwise.
+ *
+ * `log(k)³ · k^m` grows sub-polynomially, so the effective degree equals
+ * `poly_deg`. Caller checks `denDeg > threeLogPolyEffectiveDeg(num, k)`.
+ *
+ * Sqrt factors are refused (belong to the sqrt/log family).
+ */
+function threeLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 3) return undefined;
+      continue;
+    }
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined; // Sqrt → refuse
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 3) return undefined;
+  return polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1620,6 +1652,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegTsp3 = polynomialDegreeInK(den, k);
     if (denDegTsp3 !== undefined) {
       if (denDegTsp3 > tsp3Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 67: Mul(Log(diverging), Log(diverging), Log(diverging), polynomial..., bounded...) numerator.
+  // log³(k) is sub-polynomial; effective degree = poly_deg.
+  // Closes when denDeg > threeLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const tlp3Deg = threeLogPolyEffectiveDeg(num, k);
+  if (tlp3Deg !== undefined) {
+    const denDegTlp3 = polynomialDegreeInK(den, k);
+    if (denDegTlp3 !== undefined) {
+      if (denDegTlp3 > tlp3Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.0 — 2026-05-25
+
+### Added
+
+- **Phase 67 — Three-Log × polynomial numerator** (`_three_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Sqrt factors refused; log³ sub-polynomial; `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestEvaluateSumPhase67ThreeLogPolyNumerator`.
+
 ## 2.4.0 — 2026-05-25
 
 ### Added
