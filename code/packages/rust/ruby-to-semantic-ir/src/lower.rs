@@ -288,6 +288,7 @@ impl Lowerer {
     ) -> Result<Vec<Stmt>, RubyLowerError> {
         match node.rule_name.as_str() {
             "multi_assignment" => self.lower_multi_assignment(node),
+            "begin_statement" => self.lower_begin_statement(node),
             _ => Ok(vec![self.lower_statement_inner(node)?]),
         }
     }
@@ -1554,6 +1555,208 @@ impl Lowerer {
             };
             out.push(stmt);
         }
+        Ok(out)
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6v — `begin … rescue … ensure … end`
+    // -------------------------------------------------------------------
+
+    /// Lower a `begin_statement` node to a sequence of SIR statements.
+    ///
+    /// Grammar shape (per `ruby.grammar`):
+    /// ```text
+    /// begin_statement = "begin"
+    ///                   { !"rescue" !"ensure" !"end" statement }
+    ///                   { rescue_clause }
+    ///                   [ ensure_clause ]
+    ///                   "end" ;
+    /// rescue_clause   = "rescue" [ exception_list ] [ "=>" NAME ]
+    ///                        { !"rescue" !"ensure" !"end" statement } ;
+    /// exception_list  = NAME { COMMA NAME } ;
+    /// ensure_clause   = "ensure" { !"end" statement } ;
+    /// ```
+    ///
+    /// **v0 lossy lowering** — SIR has no exception-handling primitive.
+    /// We lower body, rescue, and ensure blocks INLINE (concatenated)
+    /// with synthetic `BuiltinCall` markers bracketing each rescue and
+    /// ensure section so downstream emitters can detect the form:
+    ///
+    /// ```text
+    /// begin
+    ///   body_stmts
+    /// rescue StandardError, IOError => e
+    ///   rescue_stmts
+    /// ensure
+    ///   ensure_stmts
+    /// end
+    /// ```
+    ///
+    /// → SIR sequence:
+    ///
+    /// ```text
+    /// body_stmts...
+    /// ExprStmt(BuiltinCall("__rescue_marker__", [
+    ///     StrLit("StandardError,IOError"),
+    ///     StrLit("e"),
+    /// ]))
+    /// rescue_stmts...
+    /// ExprStmt(BuiltinCall("__ensure_marker__", []))
+    /// ensure_stmts...
+    /// ```
+    ///
+    /// Semantics: the body always runs.  Without a real try/catch
+    /// primitive, the rescue body is unreachable in the SIR model
+    /// (exceptions can't propagate through SIR's effect lattice in
+    /// v0).  The ensure body runs unconditionally after the rescue
+    /// section (same effect as a plain sequence under "no exception"
+    /// semantics).  Downstream emitters that target languages with
+    /// real exceptions can re-stitch the form via the marker
+    /// `BuiltinCall`s; this is documented as a deferred limitation.
+    ///
+    /// `__rescue_marker__` and `__ensure_marker__` carry the
+    /// `Effect::MayThrow` tag so the validator allows exception-aware
+    /// programs without forcing the user to declare extra features.
+    fn lower_begin_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let mut out: Vec<Stmt> = Vec::new();
+        let outer_span = self.span_of(node);
+
+        // 1. Lower the body statements (direct `statement` children of
+        //    `begin_statement`).  The grammar's negative-lookahead
+        //    repetition stops collection at the first rescue/ensure/end,
+        //    so direct `statement` children are exactly the body.
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "statement" {
+                    if let Some(inner) = self.first_node_child(n) {
+                        out.extend(self.lower_statement_inner_multi(inner)?);
+                    }
+                }
+            }
+        }
+
+        // 2. Process each rescue_clause in order.
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "rescue_clause" {
+                    // Collect the exception type list (if present).
+                    let exc_list = n
+                        .children
+                        .iter()
+                        .find_map(|c| match c {
+                            ASTNodeOrToken::Node(en)
+                                if en.rule_name == "exception_list" =>
+                            {
+                                Some(en)
+                            }
+                            _ => None,
+                        })
+                        .map(|en| {
+                            en.children
+                                .iter()
+                                .filter_map(|cc| match cc {
+                                    ASTNodeOrToken::Token(t)
+                                        if t.type_ == TokenType::Name =>
+                                    {
+                                        Some(t.value.as_str())
+                                    }
+                                    _ => None,
+                                })
+                                .collect::<Vec<_>>()
+                                .join(",")
+                        })
+                        .unwrap_or_default();
+                    // Find the exception variable name (after `=>`).
+                    // The grammar `[ "=>" NAME ]` puts both inside the
+                    // rescue_clause's direct token children.  Walk to
+                    // find the `=>` token, then take the next Name.
+                    let var_name: String = {
+                        let mut saw_arrow = false;
+                        let mut found: Option<String> = None;
+                        for cc in &n.children {
+                            if let ASTNodeOrToken::Token(t) = cc {
+                                if t.value == "=>" {
+                                    saw_arrow = true;
+                                } else if saw_arrow
+                                    && t.type_ == TokenType::Name
+                                {
+                                    found = Some(t.value.clone());
+                                    break;
+                                }
+                            }
+                        }
+                        found.unwrap_or_default()
+                    };
+                    // Emit the marker.
+                    out.push(Stmt::ExprStmt {
+                        expr: Expr::BuiltinCall {
+                            name: "__rescue_marker__".to_string(),
+                            args: vec![
+                                Expr::StrLit {
+                                    value: exc_list,
+                                    span: outer_span.clone(),
+                                },
+                                Expr::StrLit {
+                                    value: var_name,
+                                    span: outer_span.clone(),
+                                },
+                            ],
+                            effects: EffectSet::PURE.with(Effect::MayThrow),
+                            span: outer_span.clone(),
+                        },
+                        span: outer_span.clone(),
+                    });
+                    // Strings feature is required because we emit StrLits.
+                    self.features_used.insert(Feature::Strings);
+                    // Lower the rescue body's statements inline.
+                    for cc in &n.children {
+                        if let ASTNodeOrToken::Node(nn) = cc {
+                            if nn.rule_name == "statement" {
+                                if let Some(inner) = self.first_node_child(nn)
+                                {
+                                    out.extend(
+                                        self.lower_statement_inner_multi(inner)?,
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. Process the optional ensure_clause.
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "ensure_clause" {
+                    out.push(Stmt::ExprStmt {
+                        expr: Expr::BuiltinCall {
+                            name: "__ensure_marker__".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE.with(Effect::MayThrow),
+                            span: outer_span.clone(),
+                        },
+                        span: outer_span.clone(),
+                    });
+                    for cc in &n.children {
+                        if let ASTNodeOrToken::Node(nn) = cc {
+                            if nn.rule_name == "statement" {
+                                if let Some(inner) = self.first_node_child(nn)
+                                {
+                                    out.extend(
+                                        self.lower_statement_inner_multi(inner)?,
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         Ok(out)
     }
 

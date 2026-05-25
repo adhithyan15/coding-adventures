@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.23.0] - 2026-05-25
+
+### Added (Phase 6v — `begin … rescue … ensure … end` lowering)
+
+New `lower_begin_statement` helper fans the source `begin_statement` into multiple SIR statements (via the existing `lower_statement_inner_multi` Vec<Stmt> dispatch from Phase 6r):
+
+- Body stmts inline.
+- ExprStmt(BuiltinCall("__rescue_marker__", [StrLit(exc_types_csv), StrLit(var_name)])) per `rescue_clause`, followed by that clause's body stmts inline.
+- ExprStmt(BuiltinCall("__ensure_marker__", [])) before the ensure body stmts inline (if `ensure_clause` present).
+
+Markers carry the `Effect::MayThrow` tag.  Strings feature is auto-set (markers emit StrLits).
+
+### v0 deferred limitations
+
+- SIR has no try/catch primitive — markers only signal the form's presence to downstream emitters that target languages with real exceptions.
+- Rescue body is *unreachable* in SIR's effect model; the marker is informational.
+- `else` clause inside `begin` (Ruby's "no-exception" branch) is not supported by the grammar.
+- Exception class hierarchy is not modelled — `rescue StandardError` (with `=>`) and bare `rescue` lower identically apart from the marker payload.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 104 → **108** (+4):
+  - `begin_without_rescue_lowers_body_inline` — no marker for plain `begin … end`.
+  - `begin_with_rescue_emits_rescue_marker` — `__rescue_marker__("StandardError", "e")`.
+  - `begin_with_ensure_emits_ensure_marker` — `__ensure_marker__()`.
+  - `begin_with_rescue_and_ensure_emits_both_markers_in_order` — full sequence shape.
+
 ## [0.22.0] - 2026-05-25
 
 ### Added (Phase 6u — `case … when … else … end` lowering)

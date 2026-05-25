@@ -1891,6 +1891,101 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 6v — `begin … rescue … ensure … end`
+    // -----------------------------------------------------------------
+    //
+    // SIR has no try/catch primitive.  v0 lowering is lossy: body,
+    // rescue, and ensure stmts emit inline with marker BuiltinCalls
+    // (`__rescue_marker__`, `__ensure_marker__`) bracketing the
+    // rescue/ensure sections.
+
+    #[test]
+    fn begin_without_rescue_lowers_body_inline() {
+        // `begin x = 1 end` → just LetBinding(x, 1).  No markers.
+        let m = lower("begin\n  x = 1\nend\n");
+        let b = main_body(&m);
+        assert_eq!(b.stmts.len(), 1);
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "x"));
+    }
+
+    #[test]
+    fn begin_with_rescue_emits_rescue_marker() {
+        let m = lower(
+            "begin\n  x = 1\nrescue StandardError => e\n  y = 2\nend\n",
+        );
+        let b = main_body(&m);
+        // Stmts: LetBinding(x,1), ExprStmt(BuiltinCall(__rescue_marker__, ["StandardError", "e"])), LetBinding(y,2).
+        assert_eq!(b.stmts.len(), 3);
+        let marker = match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt(rescue marker), got {:?}", other),
+        };
+        match marker {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__rescue_marker__");
+                assert_eq!(args.len(), 2);
+                assert!(
+                    matches!(&args[0], Expr::StrLit { value, .. } if value == "StandardError")
+                );
+                assert!(
+                    matches!(&args[1], Expr::StrLit { value, .. } if value == "e")
+                );
+            }
+            other => panic!("expected __rescue_marker__ builtin, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn begin_with_ensure_emits_ensure_marker() {
+        let m = lower("begin\n  x = 1\nensure\n  y = 2\nend\n");
+        let b = main_body(&m);
+        // Stmts: LetBinding(x,1), ExprStmt(BuiltinCall(__ensure_marker__, [])), LetBinding(y,2).
+        assert_eq!(b.stmts.len(), 3);
+        assert!(matches!(
+            &b.stmts[1],
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { name, args, .. },
+                ..
+            } if name == "__ensure_marker__" && args.is_empty()
+        ));
+    }
+
+    #[test]
+    fn begin_with_rescue_and_ensure_emits_both_markers_in_order() {
+        let m = lower(concat!(
+            "begin\n",
+            "  x = 1\n",
+            "rescue StandardError => e\n",
+            "  y = 2\n",
+            "ensure\n",
+            "  z = 3\n",
+            "end\n",
+        ));
+        let b = main_body(&m);
+        // Stmts in order:
+        //   0: LetBinding(x, 1)
+        //   1: ExprStmt(__rescue_marker__("StandardError", "e"))
+        //   2: LetBinding(y, 2)
+        //   3: ExprStmt(__ensure_marker__())
+        //   4: LetBinding(z, 3)
+        assert_eq!(b.stmts.len(), 5);
+        assert!(matches!(
+            &b.stmts[1],
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { name, .. },
+                ..
+            } if name == "__rescue_marker__"
+        ));
+        assert!(matches!(
+            &b.stmts[3],
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { name, .. },
+                ..
+            } if name == "__ensure_marker__"
+        ));
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6u — `case … when … else … end`
     // -----------------------------------------------------------------
     //

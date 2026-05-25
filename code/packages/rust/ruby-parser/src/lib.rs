@@ -1670,6 +1670,86 @@ mod tests {
     //                          { !"when" !"else" !"end" statement } ;
     // -----------------------------------------------------------------------
 
+    // -----------------------------------------------------------------------
+    // Phase 6v — `begin … rescue … ensure … end`
+    //
+    // Grammar:
+    //   begin_statement = "begin"
+    //                     { !"rescue" !"ensure" !"end" statement }
+    //                     { rescue_clause }
+    //                     [ ensure_clause ]
+    //                     "end" ;
+    //   rescue_clause   = "rescue" [ exception_list ] [ "=>" NAME ]
+    //                          { !"rescue" !"ensure" !"end" statement } ;
+    //   exception_list  = NAME { COMMA NAME } ;
+    //   ensure_clause   = "ensure" { !"end" statement } ;
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_begin_with_rescue() {
+        let ast = parse_ruby("begin\n  x = 1\nrescue\n  x = 2\nend");
+        let b = find_descendant(&ast, "begin_statement")
+            .expect("expected begin_statement node");
+        assert!(
+            find_descendant(b, "rescue_clause").is_some(),
+            "expected rescue_clause"
+        );
+        assert!(
+            find_descendant(b, "ensure_clause").is_none(),
+            "expected no ensure_clause"
+        );
+    }
+
+    #[test]
+    fn test_parse_begin_with_rescue_typed_and_var() {
+        // `rescue StandardError => e` — exception type and binding variable.
+        let ast = parse_ruby(
+            "begin\n  x = 1\nrescue StandardError => e\n  x = 2\nend",
+        );
+        let rc = find_descendant(&ast, "rescue_clause")
+            .expect("expected rescue_clause");
+        // Exception list present.
+        assert!(
+            find_descendant(rc, "exception_list").is_some(),
+            "expected exception_list under rescue_clause"
+        );
+        // Arrow token present.
+        assert!(tree_has_token_value(rc, "=>"), "expected `=>` token");
+        // The variable `e` is somewhere in the rescue subtree.
+        assert!(tree_has_token_value(rc, "e"), "expected `e` token");
+    }
+
+    #[test]
+    fn test_parse_begin_with_ensure() {
+        let ast = parse_ruby("begin\n  x = 1\nensure\n  cleanup = 1\nend");
+        let b = find_descendant(&ast, "begin_statement")
+            .expect("expected begin_statement node");
+        assert!(
+            find_descendant(b, "ensure_clause").is_some(),
+            "expected ensure_clause"
+        );
+    }
+
+    #[test]
+    fn test_parse_begin_with_rescue_and_ensure() {
+        // Full form: body + rescue + ensure.
+        let ast = parse_ruby(
+            "begin\n  x = 1\nrescue\n  x = 2\nensure\n  x = 3\nend",
+        );
+        let b = find_descendant(&ast, "begin_statement")
+            .expect("expected begin_statement node");
+        let rc_count = b
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "rescue_clause"))
+            .count();
+        assert_eq!(rc_count, 1, "expected 1 rescue_clause, got {rc_count}");
+        assert!(
+            find_descendant(b, "ensure_clause").is_some(),
+            "expected ensure_clause"
+        );
+    }
+
     #[test]
     fn test_parse_case_single_when() {
         // Smallest form: one when clause, no else.
