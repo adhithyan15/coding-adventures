@@ -1236,6 +1236,17 @@ impl RubyLexer {
                 let text = std::mem::take(&mut self.text_buffer);
                 self.push_token(TokenType::String, text);
             }
+            "PercentR" | "PercentS" | "PercentX" => {
+                // Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}`.
+                // Like the other percent literals (`%w[…]`, `%q{…}`),
+                // emit as `TokenType::String` carrying the verbatim
+                // source (`%r{pat}`, `%s{name}`, `%x{cmd}`).  The
+                // parser distinguishes them from plain strings by the
+                // leading `%` + type letter — same sentinel-by-prefix
+                // trick the rest of the percent family uses.
+                let text = std::mem::take(&mut self.text_buffer);
+                self.push_token(TokenType::String, text);
+            }
             "Backtick" => {
                 // Phase 4m — `` `cmd args` `` command-execution literal.
                 // The text buffer holds the *body* (without the
@@ -3554,6 +3565,99 @@ mod tests {
             kinds,
             vec![TokenType::String, TokenType::Plus, TokenType::Number],
             "got tokens {toks:?}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals
+    // -----------------------------------------------------------------
+    //
+    // The lexer emits each as a `TokenType::String` token whose value
+    // is the verbatim source (`%r{pat}`, `%s{name}`, `%x{cmd}`).
+    // Parser code distinguishes them from plain strings — and from
+    // each other — by the leading `%` + type letter.  Same encoding
+    // strategy as the existing `%w[…]` / `%q{…}` / `%i[…]` family.
+
+    /// Helper: pull all `TokenType::String` lexemes that start with a
+    /// given percent prefix (e.g. `"%r"` for regex literals).
+    fn percent_values(toks: &[Token], prefix: &str) -> Vec<String> {
+        toks.iter()
+            .filter(|t| t.type_ == TokenType::String && t.value.starts_with(prefix))
+            .map(|t| t.value.clone())
+            .collect()
+    }
+
+    #[test]
+    fn percent_r_regex_literal_lexes_as_string_with_prefix() {
+        let toks = tokenize_ruby_for_version("%r{hello}", "1.8").unwrap();
+        assert_eq!(percent_values(&toks, "%r"), vec!["%r{hello}"]);
+    }
+
+    #[test]
+    fn percent_s_symbol_literal_lexes_as_string_with_prefix() {
+        let toks = tokenize_ruby_for_version("%s{my_sym}", "1.8").unwrap();
+        assert_eq!(percent_values(&toks, "%s"), vec!["%s{my_sym}"]);
+    }
+
+    #[test]
+    fn percent_x_command_literal_lexes_as_string_with_prefix() {
+        let toks = tokenize_ruby_for_version("%x{ls -la}", "1.8").unwrap();
+        assert_eq!(percent_values(&toks, "%x"), vec!["%x{ls -la}"]);
+    }
+
+    #[test]
+    fn percent_r_empty_body_lexes() {
+        // `%r{}` — empty regex body.
+        let toks = tokenize_ruby_for_version("%r{}", "1.8").unwrap();
+        assert_eq!(percent_values(&toks, "%r"), vec!["%r{}"]);
+    }
+
+    #[test]
+    fn percent_r_s_x_lex_uniformly_across_all_eras() {
+        // The percent r/s/x family pre-dates the era split — every era
+        // (1.8, 1.9, 2.0, …) emits the same token shape.
+        let src = "%r{a} %s{b} %x{c}";
+        let baseline_r = percent_values(&tokenize_ruby_for_version(src, "1.8").unwrap(), "%r");
+        let baseline_s = percent_values(&tokenize_ruby_for_version(src, "1.8").unwrap(), "%s");
+        let baseline_x = percent_values(&tokenize_ruby_for_version(src, "1.8").unwrap(), "%x");
+        assert_eq!(baseline_r, vec!["%r{a}"]);
+        assert_eq!(baseline_s, vec!["%s{b}"]);
+        assert_eq!(baseline_x, vec!["%x{c}"]);
+        for v in machine::ERA_VERSIONS {
+            let toks = tokenize_ruby_for_version(src, v).unwrap();
+            assert_eq!(percent_values(&toks, "%r"), baseline_r, "%r diverged in era {v}");
+            assert_eq!(percent_values(&toks, "%s"), baseline_s, "%s diverged in era {v}");
+            assert_eq!(percent_values(&toks, "%x"), baseline_x, "%x diverged in era {v}");
+        }
+    }
+
+    #[test]
+    fn percent_x_does_not_swallow_following_tokens() {
+        // After the closing `}`, the dispatcher resumes normal lexing.
+        // `%x{pwd} + 1` should produce: String, Plus, Number.
+        let toks = tokenize_ruby_for_version("%x{pwd} + 1", "1.8").unwrap();
+        let kinds: Vec<TokenType> = toks
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| t.type_)
+            .collect();
+        assert_eq!(
+            kinds,
+            vec![TokenType::String, TokenType::Plus, TokenType::Number],
+            "got tokens {toks:?}"
+        );
+    }
+
+    #[test]
+    fn percent_r_unterminated_reports_diagnostic() {
+        let mut lx = RubyLexer::new("1.8").expect("lexer build");
+        lx.push("%r{unterminated\n").unwrap();
+        lx.finish().unwrap();
+        let diags = lx.diagnostics();
+        assert!(
+            diags.iter().any(|d| d.code.contains("unterminated_percent_r")),
+            "expected unterminated_percent_r diagnostic, got {:?}",
+            diags
         );
     }
 

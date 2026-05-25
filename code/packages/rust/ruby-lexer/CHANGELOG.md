@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.19.0] - 2026-05-24
+
+### Added (Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals)
+
+Extends the existing `%w[…]` / `%q{…}` / `%i[…]` / `%I[…]` family with the three remaining built-in percent-literal flavors:
+
+- `%r{…}` — regex literal (interpolation-free in v0).
+- `%s{…}` — symbol literal (non-interpolating).
+- `%x{…}` — command-execution literal (sibling of `` `…` ``).
+
+All three pre-date the era split — every era ≥ 1.8 emits the same token shape.
+
+#### Token shape
+
+Each emits as a `TokenType::String` whose value is the verbatim source (`%r{pat}`, `%s{name}`, `%x{cmd}`).  Parser code distinguishes them from plain strings — and from each other — by inspecting the leading `%` + type letter.  Same sentinel-by-prefix trick used by `%w[…]` / `%q{…}` / heredocs / backticks.
+
+#### State-machine additions
+
+- Alphabet: `s`, `x` added (`r` was already present for the `\r` escape).
+- New tokens: `PercentR`, `PercentS`, `PercentX` (all mapped to `TokenType::String` in the emit handler).
+- New states: `percent_{r,s,x}_open` (peek for `{`) and `percent_{r,s,x}_body` (slurp until `}`).
+- `after_percent` gains three new dispatch arms (`r` → `percent_r_open`, etc.).
+- Body states emit on the matching `}` and parse-error on EOF (`unterminated_percent_{r,s,x}`).
+- Open states parse-error if the follower isn't `{` (`percent_{r,s,x}_no_delim`) and fall back to `% is modulo, letter is identifier`.
+
+#### Out of scope (deferred to follow-up)
+
+- Alternate delimiters (`%r[…]`, `%r(…)`, `%r/…/`, etc.).  V0 supports only `{` to keep the state count down — matches the existing `%q{…}` convention.
+- `#{}` interpolation inside `%r{…}` / `%x{…}` (real Ruby allows it).  Parser-side phases can layer interpolation later.
+- Regex flags after `%r{…}imx` — out of scope; flag-letter slurping after `%r}` is a follow-up.
+
+### Tests (+7 new, total 156)
+- `percent_r_regex_literal_lexes_as_string_with_prefix`
+- `percent_s_symbol_literal_lexes_as_string_with_prefix`
+- `percent_x_command_literal_lexes_as_string_with_prefix`
+- `percent_r_empty_body_lexes` — `%r{}`
+- `percent_r_s_x_lex_uniformly_across_all_eras` — era invariance.
+- `percent_x_does_not_swallow_following_tokens` — `%x{pwd} + 1` lexes cleanly.
+- `percent_r_unterminated_reports_diagnostic` — `parse_error(unterminated_percent_r)` path.
+
 ## [0.18.0] - 2026-05-24
 
 ### Added (Phase 4m — backtick command literals `` `cmd args` ``)

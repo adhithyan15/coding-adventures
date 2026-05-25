@@ -65,7 +65,9 @@ alphabet = [
   # percent-literal type letters: `w` for `%w[...]`, `q` for `%q{...}`.
   # `i` and `I` (2.0+ symbol arrays) are recognised by the lexer
   # unconditionally; era < 2.0 downgrades them in the post-pass.
-  "w", "q", "i", "I",
+  # Phase 4n adds `s` (symbol), `x` (command).  `r` (regex) reuses the
+  # existing `r` alphabet entry (added earlier for the `\r` escape).
+  "w", "q", "i", "I", "s", "x",
 ]
 
 # ── Token vocabulary ──────────────────────────────────────────────
@@ -119,6 +121,20 @@ fields = ["value"]
 # the raw body (without the surrounding backticks).
 [[tokens]]
 name = "Backtick"      # `` `ls -la` `` — command-execution literal
+fields = ["value"]
+
+# Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals.
+# Emit handler maps these onto TokenType::String carrying the verbatim
+# source (`%r{pat}`, etc.) so the parser can distinguish them from
+# plain strings by lexeme prefix — same encoding as `%w[…]` / `%q{…}`.
+[[tokens]]
+name = "PercentR"      # %r{regex}   — interpolation-free regex literal
+fields = ["value"]
+[[tokens]]
+name = "PercentS"      # %s{symbol}  — symbol literal (no interpolation)
+fields = ["value"]
+[[tokens]]
+name = "PercentX"      # %x{cmd}     — command-execution literal
 fields = ["value"]
 
 [[tokens]]
@@ -258,6 +274,25 @@ id = "percent_i_body"    # inside `%i[...]` — accumulating symbol-array body.
 id = "percent_big_i_open"# saw `%I`, peeking for `[` opening delim (2.0+).
 [[states]]
 id = "percent_big_i_body"# inside `%I[...]` — accumulating interpolating symbol-array body.
+# Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}`.  Like `%q{…}`
+# these use `{` as the canonical v0 delimiter.  Open states peek
+# for the `{`; if absent, the `%` falls back to a modulo operator
+# (the action interpreter unwinds the buffer accordingly).  Body
+# states accumulate the literal up to the matching `}` and emit
+# the verbatim source (`%r{pat}` etc.) as a `TokenType::String`,
+# matching the existing percent-literal encoding.
+[[states]]
+id = "percent_r_open"    # saw `%r`, peeking for `{` opening delim.
+[[states]]
+id = "percent_r_body"    # inside `%r{...}` — accumulating regex body.
+[[states]]
+id = "percent_s_open"    # saw `%s`, peeking for `{` opening delim.
+[[states]]
+id = "percent_s_body"    # inside `%s{...}` — accumulating symbol body.
+[[states]]
+id = "percent_x_open"    # saw `%x`, peeking for `{` opening delim.
+[[states]]
+id = "percent_x_body"    # inside `%x{...}` — accumulating command body.
 
 [[states]]
 id = "comment_body"      # # to end-of-line
@@ -1071,6 +1106,28 @@ matcher = { literal = "I" }
 to = "percent_big_i_open"
 actions = ["append_text(current)"]
 
+# Phase 4n — `%r` (regex), `%s` (symbol), `%x` (command).  All three
+# dispatch to a `_open` peek state that requires `{` as the v0
+# canonical delimiter.  Any other follower falls through to the
+# catch-all below ("% is modulo, letter is identifier").
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "r" }
+to = "percent_r_open"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "s" }
+to = "percent_s_open"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "x" }
+to = "percent_x_open"
+actions = ["append_text(current)"]
+
 # Any other follower: `%` is a modulo operator.  Re-dispatch the
 # next char to `data` so it lexes normally.
 [[transitions]]
@@ -1252,6 +1309,132 @@ actions = ["parse_error(unterminated_percent_big_i)", "emit(Eof)"]
 from = "percent_big_i_body"
 matcher = { anything = true }
 to = "percent_big_i_body"
+actions = ["append_text(current)"]
+
+# ─── %r{…}, %s{…}, %x{…} (Phase 4n) ─────────────────────────────
+# All three share the same shape — open peek state requires `{`,
+# body slurps until matching `}`, emit verbatim source as the
+# corresponding PercentR/PercentS/PercentX token (which the emit
+# handler maps to TokenType::String with the verbatim lexeme).
+
+# %r{...} — regex literal
+[[transitions]]
+from = "percent_r_open"
+matcher = { literal = "{" }
+to = "percent_r_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_r_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_r_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_r_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_r_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentR)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_r)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { anything = true }
+to = "percent_r_body"
+actions = ["append_text(current)"]
+
+# %s{...} — symbol literal (no interpolation)
+[[transitions]]
+from = "percent_s_open"
+matcher = { literal = "{" }
+to = "percent_s_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_s_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_s_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_s_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_s_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentS)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_s)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { anything = true }
+to = "percent_s_body"
+actions = ["append_text(current)"]
+
+# %x{...} — command-execution literal
+[[transitions]]
+from = "percent_x_open"
+matcher = { literal = "{" }
+to = "percent_x_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_x_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_x_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_x_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_x_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentX)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_x)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { anything = true }
+to = "percent_x_body"
 actions = ["append_text(current)"]
 
 # ─────────────────────────────────────────────────────────────────
