@@ -1692,9 +1692,32 @@ fn emit_for(
                 }
             }
         }
+        // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing For's
+        // binding. The moslayout validator has already verified the
+        // name is in scope. XAML's existing `ctx.for_scope` tracks the
+        // matching `ForBinding`, so we can look up its `element_type`
+        // for richer downstream binding info. If the name isn't found
+        // in the scope (shouldn't happen since the validator gates it),
+        // default to `object` the same way the Expr path does.
+        Some(LayoutPropValue::Keyword(name)) => {
+            let pascal = kebab_to_pascal_case(name);
+            if !is_safe_identifier(&pascal) {
+                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            }
+            let elem_type = ctx
+                .for_scope
+                .iter()
+                .rev()
+                .find(|fb| fb.as_name == *name)
+                .map(|fb| fb.element_type.clone())
+                .unwrap_or_else(|| "object".to_string());
+            (pascal, elem_type)
+        }
         _ => {
             return Err(PipelineEmitError::UnsupportedPrimitive(
-                "For block must bind `each:` to a slot ref or expression".to_string(),
+                "For block must bind `each:` to a slot ref, an enclosing For binding, \
+                 or an expression"
+                    .to_string(),
             ));
         }
     };

@@ -1830,13 +1830,31 @@ fn emit_for_swift(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // `each:` — required. `validate_for_node` guarantees SlotRef or Expr,
-    // but the emitter is defensive: if neither, fall back to an empty
-    // array literal so the generated file still type-checks.
+    // `each:` — required. `validate_for_node` guarantees SlotRef,
+    // Expr, OR (UI29 §3.4) Keyword that names an enclosing For's
+    // `as:`/`index:` binding. The emitter is defensive: if none of
+    // those, fall back to an empty array literal so the generated
+    // file still type-checks.
     let coll_expr = match node.props.iter().find(|p| p.name == "each") {
         Some(p) => match &p.value {
             LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
             LayoutPropValue::Expr(text) => text.clone(),
+            // UI29 §3.4 — Keyword names an outer For's binding. The
+            // moslayout validator has already verified the name is in
+            // scope. The peer emitters (React, Qt, XAML) add an
+            // explicit identifier check after camel-casing as
+            // defense-in-depth; SwiftUI matches that pattern here.
+            // Today's NAME lexer (`[a-zA-Z_][a-zA-Z0-9_-]*`) +
+            // `to_camel_case_first_lower` cannot produce an unsafe
+            // Swift identifier, but the explicit gate keeps the
+            // emitter robust if the lexer's NAME ever loosens.
+            LayoutPropValue::Keyword(name) => {
+                let camel = to_camel_case_first_lower(name);
+                if !is_safe_swift_identifier(&camel) {
+                    return Err(PipelineEmitError::UnsafeSlotName(camel));
+                }
+                camel
+            }
             _ => "[]".to_string(),
         },
         None => "[]".to_string(),
