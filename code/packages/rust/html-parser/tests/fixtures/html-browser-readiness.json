@@ -67,6 +67,7 @@
         "images": [],
         "forms": [
           {
+            "id": null,
             "action": "/search",
             "resolved_action": null,
             "method": "post",
@@ -158,6 +159,7 @@
         "images": [],
         "forms": [
           {
+            "id": "search",
             "action": "find.html",
             "resolved_action": "https://example.test/search/find.html",
             "name": "searchForm",
@@ -175,7 +177,8 @@
               { "id": "kind", "control_type": "select", "name": "kind", "accessible_name": "Kind", "size": "5", "value": "Books", "disabled": false, "checked": false, "multiple": true, "text": "Books Manuals", "options": ["Books", "Manuals"] },
               { "id": "upload", "control_type": "file", "name": "upload", "accept": "image/png,image/jpeg", "capture": "environment", "value": null, "disabled": false, "checked": false, "text": "", "options": [] },
               { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "form_action": "run.html", "resolved_form_action": "https://example.test/search/run.html", "form_enctype": "application/x-www-form-urlencoded", "form_method": "post", "form_target": "results", "form_novalidate": true, "value": null, "disabled": false, "checked": false, "text": "Go", "options": [] },
-              { "id": "imageGo", "control_type": "image", "name": "image-go", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16", "value": null, "disabled": false, "checked": false, "text": "", "options": [] }
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16", "value": null, "disabled": false, "checked": false, "text": "", "options": [] },
+              { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "disabled": false, "checked": false, "text": "", "options": [] }
             ]
           }
         ],

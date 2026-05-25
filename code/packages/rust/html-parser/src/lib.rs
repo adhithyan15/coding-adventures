@@ -1290,6 +1290,7 @@ pub struct BrowserMedia {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserForm {
+    pub id: Option<String>,
     pub action: Option<String>,
     pub resolved_action: Option<String>,
     pub name: Option<String>,
@@ -1407,7 +1408,7 @@ impl BrowserDocument {
             collect_head_browser_facts(&head.children, &mut summary);
         }
         let labels = collect_label_texts_by_control_id(body_children);
-        collect_browser_facts(body_children, &mut summary, &labels, &[]);
+        collect_browser_facts(body_children, &mut summary, &labels, &[], body_children);
         summary
     }
 }
@@ -8499,6 +8500,7 @@ fn collect_browser_facts(
     summary: &mut BrowserDocument,
     labels: &[(String, String)],
     picture_sources: &[BrowserImageSource],
+    body_root: &[Node],
 ) {
     let mut pending_picture_sources = Vec::new();
     for node in nodes {
@@ -8531,7 +8533,7 @@ fn collect_browser_facts(
                 text: visible_text_for_nodes(&element.children),
             }),
             "picture" => {
-                collect_browser_facts(&element.children, summary, labels, &[]);
+                collect_browser_facts(&element.children, summary, labels, &[], body_root);
                 continue;
             }
             "source" => {
@@ -8562,6 +8564,7 @@ fn collect_browser_facts(
                 .stylesheets
                 .push(browser_style_element(element, summary.base_href.as_deref())),
             "form" => summary.forms.push(BrowserForm {
+                id: element.attribute("id").map(ToOwned::to_owned),
                 action: element.attribute("action").map(ToOwned::to_owned),
                 resolved_action: element
                     .attribute("action")
@@ -8577,8 +8580,9 @@ fn collect_browser_facts(
                 autocomplete: element.attribute("autocomplete").map(ToOwned::to_owned),
                 rel: element.attribute("rel").map(ToOwned::to_owned),
                 novalidate: element.attribute("novalidate").is_some(),
-                controls: collect_form_controls(
-                    &element.children,
+                controls: collect_form_controls_for_form(
+                    body_root,
+                    element,
                     labels,
                     summary.base_href.as_deref(),
                 ),
@@ -8599,7 +8603,13 @@ fn collect_browser_facts(
             _ => {}
         }
 
-        collect_browser_facts(&element.children, summary, labels, picture_sources);
+        collect_browser_facts(
+            &element.children,
+            summary,
+            labels,
+            picture_sources,
+            body_root,
+        );
         if element.name == "img" {
             pending_picture_sources.clear();
         }
@@ -10671,21 +10681,34 @@ fn browser_render_display(role: &str) -> &'static str {
     }
 }
 
-fn collect_form_controls(
-    nodes: &[Node],
+fn collect_form_controls_for_form(
+    body_root: &[Node],
+    target_form: &Element,
     labels: &[(String, String)],
     base_href: Option<&str>,
 ) -> Vec<BrowserFormControl> {
     let mut controls = Vec::new();
-    collect_form_controls_into(nodes, &mut controls, labels, base_href, None);
+    collect_form_controls_for_form_into(
+        body_root,
+        &mut controls,
+        labels,
+        base_href,
+        target_form as *const Element,
+        target_form.attribute("id"),
+        None,
+        None,
+    );
     controls
 }
 
-fn collect_form_controls_into(
+fn collect_form_controls_for_form_into(
     nodes: &[Node],
     controls: &mut Vec<BrowserFormControl>,
     labels: &[(String, String)],
     base_href: Option<&str>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
     current_label_text: Option<&str>,
 ) {
     for node in nodes {
@@ -10693,13 +10716,27 @@ fn collect_form_controls_into(
             continue;
         };
 
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
         let element_label_text = (element.name == "label")
             .then(|| visible_text_for_nodes(&element.children))
             .filter(|text| !text.is_empty());
         let child_label_text = element_label_text.as_deref().or(current_label_text);
 
-        match element.name.as_str() {
-            "input" | "button" | "select" | "textarea" => {
+        if matches!(
+            element.name.as_str(),
+            "input" | "button" | "select" | "textarea"
+        ) {
+            let form_owner = browser_form_owner(element);
+            let associated_with_target = match form_owner.as_deref() {
+                Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+                None => current_form.is_some_and(|form| form == target_form),
+            };
+
+            if associated_with_target {
                 controls.push(browser_form_control(
                     element,
                     labels,
@@ -10707,14 +10744,18 @@ fn collect_form_controls_into(
                     current_label_text,
                 ));
             }
-            _ => collect_form_controls_into(
-                &element.children,
-                controls,
-                labels,
-                base_href,
-                child_label_text,
-            ),
         }
+
+        collect_form_controls_for_form_into(
+            &element.children,
+            controls,
+            labels,
+            base_href,
+            target_form,
+            target_form_id,
+            element_form,
+            child_label_text,
+        );
     }
 }
 
@@ -11538,6 +11579,7 @@ mod tests {
         .unwrap();
 
         let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.forms[0].id.as_deref(), Some("f"));
         assert_eq!(summary.forms[0].action.as_deref(), Some("find.html"));
         assert_eq!(
             summary.forms[0].resolved_action.as_deref(),
@@ -11603,6 +11645,11 @@ mod tests {
         assert_eq!(controls[6].alt.as_deref(), Some("Search image"));
         assert_eq!(controls[6].width.as_deref(), Some("32"));
         assert_eq!(controls[6].height.as_deref(), Some("16"));
+        assert_eq!(controls[7].id.as_deref(), Some("external"));
+        assert_eq!(controls[7].name.as_deref(), Some("outside"));
+        assert_eq!(controls[7].form_owner.as_deref(), Some("f"));
+        assert_eq!(controls[7].accessible_name.as_deref(), Some("Outside"));
+        assert_eq!(controls[7].placeholder.as_deref(), Some("Outside"));
 
         let content_tree = BrowserContentTree::from_document(&document);
         let form = &content_tree.children[0];
