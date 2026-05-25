@@ -42,6 +42,10 @@ struct ExpectedBrowserDocument {
     body_lang: Option<String>,
     #[serde(default)]
     body_dir: Option<String>,
+    #[serde(default)]
+    document_event_handlers: Vec<String>,
+    #[serde(default)]
+    body_event_handlers: Vec<String>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -541,6 +545,8 @@ impl ExpectedBrowserDocument {
             body_classes: self.body_classes,
             body_lang: self.body_lang,
             body_dir: self.body_dir,
+            document_event_handlers: self.document_event_handlers,
+            body_event_handlers: self.body_event_handlers,
             body_text: self.body_text,
             metas: self
                 .metas

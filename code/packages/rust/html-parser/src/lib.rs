@@ -825,6 +825,8 @@ pub struct BrowserDocument {
     pub body_classes: Vec<String>,
     pub body_lang: Option<String>,
     pub body_dir: Option<String>,
+    pub document_event_handlers: Vec<String>,
+    pub body_event_handlers: Vec<String>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -1070,6 +1072,7 @@ pub struct BrowserContentNode {
     pub open: bool,
     pub tabindex: Option<String>,
     pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
     pub focusable: Option<bool>,
     pub contenteditable: Option<String>,
     pub editing_mode: Option<String>,
@@ -1243,6 +1246,7 @@ pub struct BrowserRenderNode {
     pub open: bool,
     pub tabindex: Option<String>,
     pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
     pub focusable: Option<bool>,
     pub contenteditable: Option<String>,
     pub editing_mode: Option<String>,
@@ -1514,6 +1518,8 @@ impl BrowserDocument {
             body_dir: body
                 .and_then(|element| element.attribute("dir"))
                 .map(ToOwned::to_owned),
+            document_event_handlers: html.map(browser_event_handlers).unwrap_or_default(),
+            body_event_handlers: body.map(browser_event_handlers).unwrap_or_default(),
             body_text: visible_text_for_nodes(body_children),
             ..Self::default()
         };
@@ -1650,6 +1656,7 @@ impl BrowserRenderNode {
             open: content_node.open,
             tabindex: content_node.tabindex.clone(),
             accesskey: content_node.accesskey.clone(),
+            event_handlers: content_node.event_handlers.clone(),
             focusable: content_node.focusable,
             contenteditable: content_node.contenteditable.clone(),
             editing_mode: content_node.editing_mode.clone(),
@@ -9394,6 +9401,7 @@ fn collect_browser_content_nodes_with_mode(
                         open: false,
                         tabindex: None,
                         accesskey: Vec::new(),
+                        event_handlers: Vec::new(),
                         focusable: None,
                         contenteditable: None,
                         editing_mode: None,
@@ -9643,6 +9651,7 @@ fn browser_content_node_for_element(
         open: browser_open(element),
         tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
         accesskey: browser_accesskey(element),
+        event_handlers: browser_event_handlers(element),
         focusable: browser_focusable(element),
         contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
         editing_mode: browser_editing_mode(element),
@@ -10567,6 +10576,17 @@ fn browser_accesskey(element: &Element) -> Vec<String> {
         .attribute("accesskey")
         .map(split_html_classes)
         .unwrap_or_default()
+}
+
+fn browser_event_handlers(element: &Element) -> Vec<String> {
+    element
+        .attributes
+        .iter()
+        .filter_map(|attribute| {
+            let name = attribute.name.as_str();
+            (name.len() > 2 && name.starts_with("on")).then(|| name.to_string())
+        })
+        .collect()
 }
 
 fn browser_popover_target(element: &Element) -> Option<String> {
@@ -13187,6 +13207,63 @@ mod tests {
         );
         assert!(render_tree.children[0].children[2].open);
         assert!(render_tree.children[0].children[3].open);
+    }
+
+    #[test]
+    fn browser_event_metadata_tracks_inline_handler_attributes() {
+        let html = "<html onreadystatechange=ready><body onload=boot onunload=teardown>\
+             <main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button>\
+             <video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback>\
+             <input value=Draft oninput=edit onchange=commit></main></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+        assert_eq!(
+            summary.document_event_handlers,
+            vec!["onreadystatechange".to_string()]
+        );
+        assert_eq!(
+            summary.body_event_handlers,
+            vec!["onload".to_string(), "onunload".to_string()]
+        );
+
+        let content_tree = parse_browser_content_tree(html).expect("content tree should parse");
+        let main = &content_tree.children[0];
+        assert_eq!(main.id.as_deref(), Some("app"));
+        assert_eq!(main.event_handlers, vec!["onclick".to_string()]);
+
+        let button = &main.children[0];
+        assert_eq!(button.role, "control");
+        assert_eq!(
+            button.event_handlers,
+            vec!["onclick".to_string(), "onkeydown".to_string()]
+        );
+
+        let video = &main.children[1];
+        assert_eq!(video.role, "media");
+        assert_eq!(
+            video.event_handlers,
+            vec!["onplay".to_string(), "onpause".to_string()]
+        );
+
+        let image = &main.children[2];
+        assert_eq!(image.role, "image");
+        assert_eq!(image.event_handlers, vec!["onerror".to_string()]);
+
+        let input = &main.children[3];
+        assert_eq!(input.control_type.as_deref(), Some("text"));
+        assert_eq!(
+            input.event_handlers,
+            vec!["oninput".to_string(), "onchange".to_string()]
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(
+            render_tree.children[0].children[0].event_handlers,
+            vec!["onclick".to_string(), "onkeydown".to_string()]
+        );
+        assert_eq!(
+            render_tree.children[0].children[1].event_handlers,
+            vec!["onplay".to_string(), "onpause".to_string()]
+        );
     }
 
     #[test]

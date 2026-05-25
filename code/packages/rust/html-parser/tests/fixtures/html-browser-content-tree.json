@@ -869,6 +869,21 @@
       }
     },
     {
+      "id": "event-handler-nodes",
+      "description": "Inline event handler attributes survive browser content-tree projection as metadata names only.",
+      "input": "<body><main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button><video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback><input value=Draft oninput=edit onchange=commit></main>",
+      "expected": {
+        "children": [
+          { "role": "main", "name": "main", "id": "app", "text": null, "href": null, "src": null, "alt": null, "section_kind": "main", "landmark_kind": "main", "event_handlers": ["onclick"], "control_type": null, "children": [
+            { "role": "control", "name": "button", "text": "Save", "href": null, "src": null, "alt": null, "control_type": "submit", "accessible_name": "Save", "event_handlers": ["onclick", "onkeydown"], "children": [] },
+            { "role": "media", "name": "video", "text": null, "href": null, "src": null, "alt": null, "resource_kind": "video", "controls": true, "event_handlers": ["onplay", "onpause"], "control_type": null, "children": [] },
+            { "role": "image", "name": "img", "text": null, "href": null, "src": "hero.jpg", "resolved_src": null, "alt": "Hero", "resource_kind": "image", "event_handlers": ["onerror"], "control_type": null, "children": [] },
+            { "role": "control", "name": "input", "text": "Draft", "href": null, "src": null, "alt": null, "control_type": "text", "event_handlers": ["oninput", "onchange"], "value": "Draft", "children": [] }
+          ] }
+        ]
+      }
+    },
+    {
       "id": "component-template-nodes",
       "description": "Custom elements, slot assignment, named slot fallback, and canvas fallback text survive content-tree extraction while template contents stay inert.",
       "input": "<body><template id=card-template shadowrootmode=open shadowrootdelegatesfocus><article><slot name=title>Untitled</slot></article></template><product-card id=card><span slot=title>Widget</span><canvas id=chart width=300 height=150>Chart fallback</canvas><button is=fancy-button>Save</button><slot name=footer>Fallback footer</slot></product-card>",
