@@ -330,6 +330,9 @@ Status:
 - AC noise analysis can now be evaluated across named corners in the live Rust
   SPICE package, reusing the existing corner override surface for the same
   output/input query and frequency grid.
+- Periodic steady-state analysis can now be evaluated across named corners in
+  the live Rust SPICE package, reusing the existing corner override surface
+  for the same shooting-Newton solve options.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
