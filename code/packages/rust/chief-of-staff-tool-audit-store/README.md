@@ -252,6 +252,9 @@ The crate keeps the boundary narrow:
   concise queue dashboards
 - supervisor drain reports and summaries flatten host-run escalation rollup
   integrity and routing flags beside the expanded escalation queue key
+- supervisor drain reports and summaries expose host-run escalation dashboard
+  keys that bind compact rollups back to source supervision keys for
+  dashboard integrity checks
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
