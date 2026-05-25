@@ -663,10 +663,18 @@ fn run_pipeline(
     // files (one per `For` block).
     match backend {
         "react" => {
-            let result = mosaic_emit_react::pipeline::from_pipeline(
+            // UI32-K-react: route through `from_pipeline_with_options`
+            // so the `--emit-project` flag activates the Vite shell
+            // emission. Bare invocation (emit_project: false) is
+            // behaviourally identical to the pre-UI32 single-file
+            // path — same TSX bytes, same exit code.
+            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
+            react_opts.emit_project = emit_project;
+            let result = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &react_opts,
             )
             .unwrap_or_else(|e| {
                 eprintln!("mosaic-compile: react pipeline emit error: {e}");
@@ -677,6 +685,47 @@ fn run_pipeline(
                 .unwrap_or_else(|| format!("{}.tsx", result.component_name));
             write_file_or_die(&out, &result.output);
             eprintln!("Written: {out}");
+
+            // UI32-K-react: when --emit-project is on, write the
+            // five Vite shell side-files into the same directory
+            // as the component TSX. Mirrors the XAML path below.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                // Flat side-files: package.json / vite.config.ts /
+                // index.html / README.md sit next to the .tsx.
+                let flat: [(String, &str); 4] = [
+                    (side_file_path("package.json"), &proj.package_json),
+                    (side_file_path("vite.config.ts"), &proj.vite_config),
+                    (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                // src/main.tsx is nested per Vite convention.
+                let main_tsx_path = side_file_path("src/main.tsx");
+                if let Some(parent) = std::path::Path::new(&main_tsx_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!(
+                                "mosaic-compile: failed to create {}: {e}",
+                                parent.display()
+                            );
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&main_tsx_path, &proj.main_tsx);
+                eprintln!("Written: {main_tsx_path}");
+            }
         }
         "xaml" => {
             let mut opts = mosaic_emit_xaml::EmitOptions::default();

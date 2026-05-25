@@ -169,6 +169,246 @@ impl std::fmt::Display for PipelineEmitError {
 
 impl std::error::Error for PipelineEmitError {}
 
+// =====================================================================
+// UI32-K-react — `--emit-project` Vite shell
+//
+// Mirrors the XAML pattern (UI32 spec §2.1, XAML PR #3917):
+// when `EmitOptions::emit_project` is on, `from_pipeline_with_options`
+// returns a `ProjectFiles` value alongside the component TSX. The
+// CLI writes the side-files into the same output directory so the
+// author can run `npm install && npm run dev` and see the component
+// without writing a single line of host code.
+// =====================================================================
+
+/// Options controlling the React emitter's behaviour.
+///
+/// Default: emits only the component TSX; no project shell. The
+/// `from_pipeline(...)` back-compat wrapper builds these defaults
+/// implicitly so existing callers continue to compile.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EmitOptions {
+    /// Also emit `package.json`, `vite.config.ts`, `index.html`,
+    /// `src/main.tsx`, `README.md` alongside the component TSX. The
+    /// emitted shell is a Vite + React-SWC project — author runs
+    /// `npm install && npm run dev` to see the component on
+    /// `http://localhost:5173`.
+    ///
+    /// Default `false`. Existing callers (and the bare
+    /// `mosaic-compile --backend react`) see no behaviour change.
+    pub emit_project: bool,
+
+    /// Pinned exact version of `react` + `react-dom` to write into
+    /// `package.json`. Per UI32 spec §3.6.3, pinning is mandatory
+    /// to defeat supply-chain drift.
+    pub pinned_react: String,
+    /// Pinned exact version of `vite`.
+    pub pinned_vite: String,
+    /// Pinned exact version of `@vitejs/plugin-react-swc`.
+    pub pinned_vite_react_plugin: String,
+    /// Pinned exact version of `typescript`.
+    pub pinned_typescript: String,
+    /// Pinned exact version of `@types/react` + `@types/react-dom`.
+    pub pinned_types_react: String,
+    pub pinned_types_react_dom: String,
+    /// Floor Node version for `engines.node`.
+    pub pinned_node_engines: String,
+    /// Package name to write into `package.json` `"name"`. If
+    /// `None`, derived from the component name by kebab-casing and
+    /// prefixing `mosaic-` (the single-component CLI fallback).
+    pub package_name: Option<String>,
+}
+
+impl Default for EmitOptions {
+    fn default() -> Self {
+        Self {
+            emit_project: false,
+            pinned_react: "18.3.1".to_string(),
+            pinned_vite: "5.4.10".to_string(),
+            pinned_vite_react_plugin: "3.7.1".to_string(),
+            pinned_typescript: "5.7.2".to_string(),
+            pinned_types_react: "18.3.18".to_string(),
+            pinned_types_react_dom: "18.3.5".to_string(),
+            pinned_node_engines: ">=18.0.0".to_string(),
+            package_name: None,
+        }
+    }
+}
+
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project`
+/// is on. With these in addition to the component TSX, the output
+/// directory is a `npm install && npm run dev`-able Vite project.
+///
+/// No transitive lockfile in v1 (deferred to L2.1 follow-up;
+/// UI32 spec §3.6.3 requires a vendored lockfile but generating
+/// one without shelling to `npm install` is non-trivial and out
+/// of scope for the L2 cycle — see PR description).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProjectFiles {
+    pub package_json: String,
+    pub vite_config: String,
+    pub index_html: String,
+    pub main_tsx: String,
+    pub readme: String,
+}
+
+/// Error shapes specific to the project-shell emission path.
+/// Surfaced as `PipelineEmitError::UnsafeSlotName` for callers
+/// (mosaic-compile prints PipelineEmitError verbatim).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProjectShellError {
+    /// The derived npm name fails the npm RFC: lower-case,
+    /// ≤214 chars, no leading `.` or `_`, URL-safe only.
+    InvalidNpmPackageName(String),
+}
+
+impl std::fmt::Display for ProjectShellError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProjectShellError::InvalidNpmPackageName(n) => write!(
+                f,
+                "derived npm package name '{n}' violates the npm RFC (lowercase, ≤214 chars, no leading dot/underscore, URL-safe chars only)"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ProjectShellError {}
+
+impl From<ProjectShellError> for PipelineEmitError {
+    fn from(e: ProjectShellError) -> Self {
+        PipelineEmitError::UnsafeSlotName(e.to_string())
+    }
+}
+
+/// Extended pipeline result — same as `PipelineEmitResult` but
+/// carries the optional `ProjectFiles` when `emit_project` is on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PipelineEmitResultWithProject {
+    pub output: String,
+    pub component_name: String,
+    pub project: Option<ProjectFiles>,
+}
+
+/// Compile a three-file Mosaic pipeline triple with explicit emit
+/// options. The bare `from_pipeline(...)` wrapper below calls this
+/// with `EmitOptions::default()` so existing single-file callers
+/// see no behaviour change.
+pub fn from_pipeline_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
+    let component = from_pipeline(interface, layout, style)?;
+
+    let project = if options.emit_project {
+        Some(build_react_project_files(&component.component_name, options)?)
+    } else {
+        None
+    };
+
+    Ok(PipelineEmitResultWithProject {
+        output: component.output,
+        component_name: component.component_name,
+        project,
+    })
+}
+
+/// Build the five Vite-shell side files for a single component.
+fn build_react_project_files(
+    name: &str,
+    options: &EmitOptions,
+) -> Result<ProjectFiles, ProjectShellError> {
+    let npm_name = match &options.package_name {
+        Some(p) => p.clone(),
+        None => format!("mosaic-{}", pascal_to_kebab_for_npm(name)),
+    };
+    if !is_valid_npm_name(&npm_name) {
+        return Err(ProjectShellError::InvalidNpmPackageName(npm_name));
+    }
+
+    Ok(ProjectFiles {
+        package_json: build_package_json(&npm_name, options),
+        vite_config: build_vite_config(),
+        index_html: build_index_html(name),
+        main_tsx: build_main_tsx(name),
+        readme: build_react_readme(&npm_name, name),
+    })
+}
+
+/// Kebab-case a PascalCase name for npm. 'HostTable' → 'host-table'.
+fn pascal_to_kebab_for_npm(name: &str) -> String {
+    let mut out = String::with_capacity(name.len() + 4);
+    for (i, c) in name.chars().enumerate() {
+        if c.is_ascii_uppercase() && i > 0 {
+            out.push('-');
+        }
+        for d in c.to_lowercase() {
+            out.push(d);
+        }
+    }
+    out
+}
+
+/// Validate npm package name per the security-relevant subset of
+/// the npm RFC: `[a-z0-9][a-z0-9._-]{0,213}`. Scoped names
+/// (`@scope/foo`) intentionally rejected — we don't auto-generate
+/// them and the spec disallows.
+fn is_valid_npm_name(s: &str) -> bool {
+    if s.is_empty() || s.len() > 214 {
+        return false;
+    }
+    let first = s.chars().next().unwrap();
+    if !(first.is_ascii_lowercase() || first.is_ascii_digit()) {
+        return false;
+    }
+    s.chars()
+        .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '.' || c == '_' || c == '-')
+}
+
+const BANNER_TS: &str = "// AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\n";
+const BANNER_HTML: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+
+fn build_package_json(npm_name: &str, options: &EmitOptions) -> String {
+    format!(
+        "{{\n  \"//\": \"AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. Fork the file (remove this comment) to customise.\",\n  \"name\": \"{}\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"scripts\": {{\n    \"dev\": \"vite\",\n    \"build\": \"tsc && vite build\",\n    \"preview\": \"vite preview\"\n  }},\n  \"engines\": {{\n    \"node\": \"{}\"\n  }},\n  \"dependencies\": {{\n    \"react\": \"{}\",\n    \"react-dom\": \"{}\"\n  }},\n  \"devDependencies\": {{\n    \"@types/react\": \"{}\",\n    \"@types/react-dom\": \"{}\",\n    \"@vitejs/plugin-react-swc\": \"{}\",\n    \"typescript\": \"{}\",\n    \"vite\": \"{}\"\n  }}\n}}\n",
+        npm_name,
+        options.pinned_node_engines,
+        options.pinned_react,
+        options.pinned_react,
+        options.pinned_types_react,
+        options.pinned_types_react_dom,
+        options.pinned_vite_react_plugin,
+        options.pinned_typescript,
+        options.pinned_vite,
+    )
+}
+
+fn build_vite_config() -> String {
+    format!(
+        "{BANNER_TS}import {{ defineConfig }} from \"vite\";\nimport react from \"@vitejs/plugin-react-swc\";\n\nexport default defineConfig({{\n  plugins: [react()],\n}});\n"
+    )
+}
+
+fn build_index_html(component_name: &str) -> String {
+    format!(
+        "<!DOCTYPE html>\n{BANNER_HTML}<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>{component_name}</title>\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"></script>\n  </body>\n</html>\n"
+    )
+}
+
+fn build_main_tsx(component_name: &str) -> String {
+    format!(
+        "{BANNER_TS}import {{ StrictMode }} from \"react\";\nimport {{ createRoot }} from \"react-dom/client\";\nimport {{ {component_name} }} from \"../{component_name}\";\n\nconst rootEl = document.getElementById(\"root\");\nif (rootEl === null) {{\n  throw new Error(\"#root not found in index.html\");\n}}\n\ncreateRoot(rootEl).render(\n  <StrictMode>\n    <{component_name} dispatch={{(ev) => console.log(\"event:\", ev)}} />\n  </StrictMode>\n);\n"
+    )
+}
+
+fn build_react_readme(npm_name: &str, component_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {component_name} — Vite + React shell\n\nAuto-generated by `mosaic-compile --backend react --emit-project`.\n\n## Prerequisites\n\n- Node.js ≥ 18 (run `node --version` to check).\n- npm or pnpm or yarn (Node ships with npm).\n\n## Run\n\n```sh\nnpm install\nnpm run dev\n```\n\nThen open <http://localhost:5173>.\n\n## Build for production\n\n```sh\nnpm run build\nnpm run preview\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.tsx` | The Mosaic-compiled component. |\n| `package.json` | npm package manifest. Pinned versions per UI32 spec §3.6.3. |\n| `vite.config.ts` | Vite 5 + React-SWC plugin. |\n| `index.html` | Vite root document. |\n| `src/main.tsx` | Mounts `<{component_name}>` into `#root`. |\n| `README.md` | This file. |\n\nnpm package name: `{npm_name}`.\n\n## Editing\n\nEvery file in this directory except `{component_name}.tsx` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
 /// Compile a three-file Mosaic pipeline triple to a React TSX file.
 ///
 /// This is the new (UI24-compliant) React backend entry point. It supersedes
@@ -9713,5 +9953,280 @@ mod tests {
             !result.output.contains(" ? ("),
             "no ternary should appear in a plain Box/Text tree"
         );
+    }
+
+    // =================================================================
+    // UI32-K-react — `--emit-project` Vite shell tests
+    //
+    // Covers per-PR gates from UI32 spec §3.1-§3.8:
+    //   §3.4 Composable     : default options = no project shell.
+    //   §3.5 Banner          : every emitted file starts with banner.
+    //   §3.1 Reproducible    : two runs produce byte-identical output.
+    //   §3.6.1 Validation    : invalid npm name → fail-loud error.
+    //   §3.6.2 React shape   : derived name satisfies npm RFC.
+    //   §3.6.3 Pinning       : package.json contains pinned exacts.
+    //   §3.7 Output paths    : only the spec §2.2 enumeration.
+    //   §3.8 No env reads    : no /Users/, $HOME, etc. in output.
+    // =================================================================
+
+    #[test]
+    fn ui32_emit_project_false_is_backward_compatible_with_from_pipeline() {
+        let m = component("X", vec![], vec![]);
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+
+        let legacy = from_pipeline(&m, &l, &s).unwrap();
+        let extended =
+            from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+
+        assert_eq!(legacy.output, extended.output, "TSX bytes diverged");
+        assert_eq!(legacy.component_name, extended.component_name);
+        assert!(
+            extended.project.is_none(),
+            "default options must NOT emit a project shell"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_true_returns_project_files() {
+        let m = component("Hello", vec![], vec![]);
+        let l = single_box_layout("Hello");
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert!(r.project.is_some(), "emit_project: true must produce a shell");
+    }
+
+    #[test]
+    fn ui32_every_emitted_side_file_carries_auto_generated_banner() {
+        let m = component("Hello", vec![], vec![]);
+        let l = single_box_layout("Hello");
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .expect("project shell expected");
+
+        const BANNER: &str = "AUTO-GENERATED by mosaic-compile --emit-project";
+
+        assert!(
+            proj.package_json.contains(BANNER),
+            "package.json missing banner"
+        );
+        assert!(
+            proj.vite_config.starts_with("// AUTO-GENERATED"),
+            "vite.config.ts must START with `// AUTO-GENERATED`"
+        );
+        assert!(
+            proj.main_tsx.starts_with("// AUTO-GENERATED"),
+            "src/main.tsx must START with `// AUTO-GENERATED`"
+        );
+        assert!(
+            proj.readme.starts_with("<!-- AUTO-GENERATED"),
+            "README.md must START with `<!-- AUTO-GENERATED`"
+        );
+        assert!(
+            proj.index_html.contains(BANNER),
+            "index.html must contain banner"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_is_byte_deterministic() {
+        let m = component("Deterministic", vec![], vec![]);
+        let l = single_box_layout("Deterministic");
+        let s = empty_style("Deterministic");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert_eq!(a.output, b.output, "component TSX is not deterministic");
+        assert_eq!(a.project, b.project, "project shell is not deterministic");
+    }
+
+    #[test]
+    fn ui32_invalid_explicit_package_name_returns_error() {
+        let m = component("X", vec![], vec![]);
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        opts.package_name = Some("Mosaic-Grid".to_string()); // uppercase = invalid
+
+        let err = from_pipeline_with_options(&m, &l, &s, &opts)
+            .expect_err("invalid npm name must error");
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("Mosaic-Grid") && msg.contains("npm RFC"),
+            "expected npm RFC violation error, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn ui32_derived_npm_name_kebab_cases_pascalcase() {
+        let m = component("HostTable", vec![], vec![]);
+        let l = single_box_layout("HostTable");
+        let s = empty_style("HostTable");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.package_json.contains("\"name\": \"mosaic-host-table\""),
+            "expected derived `mosaic-host-table` npm name, got:\n{}",
+            proj.package_json
+        );
+    }
+
+    #[test]
+    fn ui32_package_json_carries_pinned_default_versions_exactly() {
+        let m = component("X", vec![], vec![]);
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        for (key, version) in [
+            ("react", "18.3.1"),
+            ("react-dom", "18.3.1"),
+            ("vite", "5.4.10"),
+            ("@vitejs/plugin-react-swc", "3.7.1"),
+            ("typescript", "5.7.2"),
+            ("@types/react", "18.3.18"),
+            ("@types/react-dom", "18.3.5"),
+        ] {
+            let expected = format!("\"{key}\": \"{version}\"");
+            assert!(
+                proj.package_json.contains(&expected),
+                "package.json missing pinned `{key}@{version}`"
+            );
+        }
+        // §3.6.3: no caret/tilde/star/latest/>= forms inside the
+        // dependency blocks. The `engines.node` field legitimately
+        // uses `">=18.0.0"` to express a *floor*, not a dependency
+        // version — that's the right semantic per package.json
+        // spec — so the check is scoped to the dep blocks only.
+        let deps_block = extract_block(&proj.package_json, "\"dependencies\"");
+        let dev_deps_block = extract_block(&proj.package_json, "\"devDependencies\"");
+        for forbidden in ["\"^", "\"~", "\"*\"", "\"latest\"", "\">="] {
+            assert!(
+                !deps_block.contains(forbidden),
+                "dependencies contain forbidden `{forbidden}`:\n{deps_block}"
+            );
+            assert!(
+                !dev_deps_block.contains(forbidden),
+                "devDependencies contain forbidden `{forbidden}`:\n{dev_deps_block}"
+            );
+        }
+    }
+
+    /// Extract the `{ ... }` block immediately following the named
+    /// JSON key in a hand-rolled (pretty-printed) JSON document.
+    /// Naive but adequate for the deterministic single-format
+    /// package.json the emitter produces — uses brace-depth counting
+    /// from the first `{` after the key.
+    fn extract_block(json: &str, key: &str) -> String {
+        let start = match json.find(key) {
+            Some(i) => i,
+            None => return String::new(),
+        };
+        let after_key = &json[start..];
+        let open = match after_key.find('{') {
+            Some(i) => start + i,
+            None => return String::new(),
+        };
+        let mut depth = 0;
+        for (i, c) in json[open..].char_indices() {
+            match c {
+                '{' => depth += 1,
+                '}' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        return json[open..open + i + 1].to_string();
+                    }
+                }
+                _ => {}
+            }
+        }
+        String::new()
+    }
+
+    #[test]
+    fn ui32_project_files_struct_exposes_only_spec_22_files() {
+        // Tripwire: destructuring forces a spec amendment if a new
+        // field is added without spec §2.2 update.
+        let m = component("X", vec![], vec![]);
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let ProjectFiles {
+            package_json,
+            vite_config,
+            index_html,
+            main_tsx,
+            readme,
+        } = proj;
+        assert!(!package_json.is_empty());
+        assert!(!vite_config.is_empty());
+        assert!(!index_html.is_empty());
+        assert!(!main_tsx.is_empty());
+        assert!(!readme.is_empty());
+    }
+
+    #[test]
+    fn ui32_emitted_files_contain_no_environment_specific_strings() {
+        let m = component("X", vec![], vec![]);
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let all = format!(
+            "{}\n{}\n{}\n{}\n{}",
+            proj.package_json, proj.vite_config, proj.index_html, proj.main_tsx, proj.readme
+        );
+        for banned in ["/Users/", "/home/", "C:\\Users\\", "$HOME"] {
+            assert!(
+                !all.contains(banned),
+                "emitted shell contains environment-specific fragment `{banned}`"
+            );
+        }
+    }
+
+    #[test]
+    fn ui32_is_valid_npm_name_truth_table() {
+        // Accepts
+        assert!(is_valid_npm_name("react"));
+        assert!(is_valid_npm_name("react-dom"));
+        assert!(is_valid_npm_name("mosaic-grid"));
+        assert!(is_valid_npm_name("foo.bar"));
+        assert!(is_valid_npm_name("foo_bar"));
+        assert!(is_valid_npm_name("1foo"));
+        // Rejects
+        assert!(!is_valid_npm_name(""));
+        assert!(!is_valid_npm_name(".leading-dot"));
+        assert!(!is_valid_npm_name("_leading-underscore"));
+        assert!(!is_valid_npm_name("UpperCase"));
+        assert!(!is_valid_npm_name("has space"));
+        assert!(!is_valid_npm_name("has/slash"));
+        assert!(!is_valid_npm_name("@scope/foo"));
+        assert!(!is_valid_npm_name(&"a".repeat(215)));
     }
 }
