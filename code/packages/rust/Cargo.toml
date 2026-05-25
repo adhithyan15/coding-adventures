@@ -459,6 +459,7 @@ members = [
     "zstd",
     "huffman-tree",
     "huffman-compression",
+    "range-coder",
     "json-rpc",
     "ls00",
     "dap-adapter-core",
