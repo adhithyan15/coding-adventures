@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.15.0] - 2026-05-25
+
+### Changed — CLOC11.05: `--externs` is now glob-resolved + validates missing files
+
+Behavioral compat slice with CC's externs file handling. Previously closurec accepted `--externs <path>` as a literal `PathBuf` and never touched the filesystem to verify the path existed — a typo would silently drop the externs definitions and only manifest later (or never, at the current pipeline stage where externs aren't yet consumed).
+
+Now `--externs` goes through the same glob expansion as `--js`:
+
+- Patterns like `externs/*.js` are expanded against the filesystem.
+- Exclusion patterns (`!path/to/skip.js`) are respected.
+- A pattern that matches zero files errors out with `JSC_NO_JS_FILES_FOUND_FOR_PATTERN`-style behavior.
+- The error is prefixed `--externs: ...` so the user sees which flag's glob was bad without re-reading the command line.
+
+The resolved externs list is discarded today — the goal of this slice is to catch typos at config-validation time. When the typechecker bridge lands (CLOC11.07+), the resolved list will flow into the typecheck stage.
+
+### Internal: `IoConfig.externs` shape
+
+Refactored from `Vec<PathBuf>` to `Vec<String>` (raw pattern strings). Resolution happens in `run.rs::resolve_externs` rather than `wire.rs`, keeping `wire.rs` pure (no FS I/O during config build). Matches the `js_patterns`/`resolve_inputs` shape.
+
+- **New `CompilerError::ExternsGlobExpansion(GlobError)` variant** + Display arm with `--externs: ` prefix.
+- **New `resolve_externs(&CompilerConfig) -> Result<Vec<PathBuf>, CompilerError>`** helper. Empty-externs fast path (most invocations don't pass it) bypasses the glob machinery.
+- **Pipeline insertion**: Step 1.25 in `run_compiler`, right after `resolve_inputs`. So both `--js` and `--externs` patterns are validated before any transform pass runs.
+- **5 new unit tests** in `run::tests` (empty → empty, real-files → expanded, missing → typed error, end-to-end flag-prefix Display, happy path with both `--js` + `--externs`).
+- **Diff fixture** `tests/diff/externs-missing/` exercising the missing-pattern error path end-to-end.
+- **New integration test** `tests/diff_externs_missing.rs` pinning the `--externs:` flag prefix + missing-path in the error.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` globs
+2. **Resolve `--externs` globs (CLOC11.05, NEW) — validate-only today, flows into typecheck post-CLOC11.07**
+3. `--print_tree` short-circuit (CLOC11.52)
+4. `--print_tree_json` short-circuit (CLOC11.53)
+5. Per-input `transform_source` (level + defines)
+6. Concatenate transformed inputs
+7. `--checks_only` short-circuit (CLOC11.51)
+8. `--emit_use_strict` prepend (CLOC11.18)
+9. `--output_wrapper` substitution (CLOC11.30, validated CLOC11.32)
+10. `--isolation_mode IIFE` wrap (CLOC11.31)
+11. Write to `--js_output_file` or stdout
+
 ## [0.14.0] - 2026-05-25
 
 ### Changed — CLOC11.32: `--output_wrapper` missing `%output%` is now a typed error

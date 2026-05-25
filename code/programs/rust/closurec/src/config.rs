@@ -130,8 +130,14 @@ pub struct IoConfig {
     /// when the flag is empty or absent).
     pub js_output_file: Option<PathBuf>,
 
-    /// `--externs` files (extra externs beyond `--env`'s defaults).
-    pub externs: Vec<PathBuf>,
+    /// `--externs` file *patterns* (glob-expandable strings).
+    /// Held as strings rather than `PathBuf`s because they go
+    /// through `globs::expand_js_patterns` in `run_compiler`
+    /// (CLOC11.05) — same resolution rules as `--js`. CC's
+    /// `--externs` is documented as accepting glob patterns, so
+    /// storing the raw strings here preserves user intent until
+    /// resolution time.
+    pub externs: Vec<String>,
 
     /// `--env`. Selects which built-in externs to load.
     pub env: EnvKind,

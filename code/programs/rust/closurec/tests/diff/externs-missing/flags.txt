@@ -1,0 +1,4 @@
+--js
+tests/diff/externs-missing/input/a.js
+--externs
+tests/diff/externs-missing/this-file-does-not-exist.js

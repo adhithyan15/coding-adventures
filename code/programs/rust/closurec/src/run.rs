@@ -72,6 +72,14 @@ pub enum CompilerError {
     /// FS walk error). The inner [`globs::GlobError`] carries the
     /// specific reason and the offending pattern.
     GlobExpansion(globs::GlobError),
+    /// `--externs` pattern expansion failed (invalid glob, no
+    /// matches, FS walk error). Distinguished from
+    /// [`Self::GlobExpansion`] so the user sees which flag's
+    /// pattern was bad. The inner [`globs::GlobError`] carries
+    /// the offending pattern. CC produces a similar
+    /// "JSC_NO_JS_FILES_FOUND_FOR_PATTERN"-equivalent error for
+    /// externs that match nothing.
+    ExternsGlobExpansion(globs::GlobError),
     /// `--compilation_level WHITESPACE_ONLY` minification failed.
     /// Carries the underlying [`whitespace_only::MinifyError`].
     Minify(whitespace_only::MinifyError),
@@ -96,6 +104,12 @@ impl std::fmt::Display for CompilerError {
                 write!(f, "failed to write output {}: {message}", path.display())
             }
             CompilerError::GlobExpansion(e) => write!(f, "{e}"),
+            CompilerError::ExternsGlobExpansion(e) => {
+                // Prefix so the user sees which flag's pattern
+                // was bad. The inner GlobError already names the
+                // offending pattern.
+                write!(f, "--externs: {e}")
+            }
             CompilerError::Minify(e) => write!(f, "{e}"),
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
@@ -195,6 +209,39 @@ pub fn resolve_inputs(config: &CompilerConfig) -> Result<Vec<PathBuf>, CompilerE
     globs::expand_js_patterns(&config.io.js_patterns).map_err(CompilerError::GlobExpansion)
 }
 
+/// Resolve the list of `--externs` files from a `CompilerConfig`.
+///
+/// Same glob rules as `resolve_inputs` (CLOC11.02): `*`/`**`
+/// patterns, `!` exclusion, missing-pattern errors. Returns
+/// `Ok(vec![])` when no `--externs` were provided (empty
+/// patterns slice). Errors are tagged with
+/// [`CompilerError::ExternsGlobExpansion`] so users see which
+/// flag's glob failed.
+///
+/// # Why a separate function from `resolve_inputs`
+///
+/// 1. Different error variant lets us prefix `"--externs: "`
+///    instead of leaving the GlobError naked, so the user
+///    diagnoses without re-reading the command line.
+/// 2. Externs are not "inputs to compile"; conflating them
+///    today would invite mistakes when CLOC11.07+ starts
+///    actually using the resolved externs list for type
+///    checking. Two-function shape is the right separation.
+///
+/// # No-externs fast path
+///
+/// `expand_js_patterns` errors on empty input (treating "no
+/// patterns" as a user mistake). For `--externs`, an empty list
+/// is the normal case (most invocations don't pass it) — we
+/// short-circuit to `Ok(vec![])` before calling into the glob
+/// machinery so the user isn't punished for not opting in.
+pub fn resolve_externs(config: &CompilerConfig) -> Result<Vec<PathBuf>, CompilerError> {
+    if config.io.externs.is_empty() {
+        return Ok(Vec::new());
+    }
+    globs::expand_js_patterns(&config.io.externs).map_err(CompilerError::ExternsGlobExpansion)
+}
+
 /// Run the compiler with `config`.
 ///
 /// CLOC11.02: glob-expanded inputs, identity pipeline body. See the
@@ -215,6 +262,20 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // from the accumulator. Errors out if any inclusion pattern
     // produces zero matches.
     let inputs = resolve_inputs(config)?;
+
+    // Step 1.25 (CLOC11.05): validate --externs patterns by
+    // glob-expanding them. The expansion result is discarded
+    // today; the goal is to surface a JSC_NO_JS_FILES_FOUND_FOR
+    // _PATTERN-equivalent error if the user typo'd an externs
+    // path. When the typechecker bridge lands (CLOC11.07+),
+    // store the resolved list in `CompilerOutput` or pass it
+    // into the typecheck stage.
+    //
+    // Runs *after* --js resolution so a single invocation that
+    // bad-globs both produces the first error encountered (which
+    // matches CC: it stops at the first JSC_NO_JS_FILES error,
+    // not after collecting all of them).
+    let _resolved_externs = resolve_externs(config)?;
 
     // Step 1.5 (CLOC11.52/.53): --print_tree / --print_tree_json
     // short-circuit.
@@ -1183,5 +1244,104 @@ mod tests {
         let result = run_compiler(&cfg);
         assert!(result.is_err(), "expected lex error, got: {result:?}");
         let _ = fs::remove_file(&in_path);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.05 — --externs glob resolution
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn resolve_externs_returns_empty_when_no_externs_passed() {
+        let cfg = CompilerConfig::default();
+        let out = resolve_externs(&cfg).expect("ok");
+        assert!(out.is_empty());
+    }
+
+    #[test]
+    fn resolve_externs_glob_expands_real_files() {
+        let dir = temp_path("externs-real");
+        fs::create_dir_all(&dir).expect("setup");
+        let p = dir.join("e1.js");
+        fs::write(&p, "/** @const */ var GLOBAL_X = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                externs: vec![p.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = resolve_externs(&cfg).expect("ok");
+        assert_eq!(out, vec![p]);
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn resolve_externs_returns_typed_error_for_missing_pattern() {
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                externs: vec![
+                    "/nonexistent/path/closurec/test/missing-externs.js".to_string(),
+                ],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let err = resolve_externs(&cfg).expect_err("must error");
+        match err {
+            CompilerError::ExternsGlobExpansion(inner) => {
+                assert!(format!("{inner}").contains("missing-externs.js"));
+            }
+            other => panic!("expected ExternsGlobExpansion, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn run_compiler_surfaces_externs_glob_error_with_flag_prefix() {
+        // End-to-end: a bad --externs pattern errors out of
+        // run_compiler with a Display that names the --externs
+        // flag, so the user sees which glob was bad without
+        // re-reading argv.
+        let in_path = temp_path("ok-input.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                externs: vec!["/nonexistent/cloc11-05-externs.js".to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let err = run_compiler(&cfg).expect_err("must error");
+        assert!(
+            err.to_string().contains("--externs:"),
+            "error must mention --externs flag: {err}"
+        );
+        match err {
+            CompilerError::ExternsGlobExpansion(_) => {}
+            other => panic!("expected ExternsGlobExpansion, got {other:?}"),
+        }
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn run_compiler_succeeds_when_externs_resolve() {
+        // Happy-path: a real --externs file alongside a real
+        // --js input compiles cleanly.
+        let in_path = temp_path("with-externs.js");
+        let ext_path = temp_path("the-extern.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        fs::write(&ext_path, "/** @const */ var EXT;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                externs: vec![ext_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.stdout_text.contains("var x"));
+        let _ = fs::remove_file(&in_path);
+        let _ = fs::remove_file(&ext_path);
     }
 }
