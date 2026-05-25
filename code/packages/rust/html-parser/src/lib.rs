@@ -1378,6 +1378,7 @@ pub struct BrowserHeading {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserLink {
+    pub element: String,
     pub id: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
@@ -8739,12 +8740,15 @@ fn collect_browser_facts(
             ));
         }
 
-        match element.name.as_str() {
-            "a" => summary.links.push(browser_link(
+        if is_browser_document_link(element) {
+            summary.links.push(browser_link(
                 element,
                 summary.base_href.as_deref(),
                 summary.base_target.as_deref(),
-            )),
+            ));
+        }
+
+        match element.name.as_str() {
             "picture" => {
                 collect_browser_facts(&element.children, summary, labels, &[], body_root);
                 continue;
@@ -9115,6 +9119,7 @@ fn browser_link(
     let target = element.attribute("target").map(ToOwned::to_owned);
     let rel_tokens = browser_rel_tokens(element);
     BrowserLink {
+        element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
         href: element.attribute("href").map(ToOwned::to_owned),
         resolved_href: element
@@ -9141,7 +9146,23 @@ fn browser_link(
         hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
-        text: visible_text_for_nodes(&element.children),
+        text: browser_link_text(element),
+    }
+}
+
+fn is_browser_document_link(element: &Element) -> bool {
+    element.name == "a" || (element.name == "area" && element.attribute("href").is_some())
+}
+
+fn browser_link_text(element: &Element) -> String {
+    let text = visible_text_for_nodes(&element.children);
+    if text.is_empty() && element.name == "area" {
+        element
+            .attribute("alt")
+            .map(ToOwned::to_owned)
+            .unwrap_or_default()
+    } else {
+        text
     }
 }
 
@@ -12633,6 +12654,33 @@ mod tests {
             default_shape_area.resolved_href.as_deref(),
             Some("https://example.test/gallery/index.html#logo")
         );
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.links.len(), 2);
+        assert_eq!(summary.links[0].element, "area");
+        assert_eq!(summary.links[0].id.as_deref(), Some("cta"));
+        assert_eq!(summary.links[0].href.as_deref(), Some("details.html"));
+        assert_eq!(
+            summary.links[0].resolved_href.as_deref(),
+            Some("https://example.test/gallery/details.html")
+        );
+        assert_eq!(summary.links[0].text, "Details");
+        assert_eq!(summary.links[0].rel_tokens, vec!["nofollow", "external"]);
+        assert!(summary.links[0].rel_nofollow);
+        assert!(summary.links[0].rel_external);
+        assert_eq!(summary.links[0].target.as_deref(), Some("preview"));
+        assert_eq!(
+            summary.links[0].effective_target.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(summary.links[0].ping, vec!["track.html".to_string()]);
+        assert_eq!(
+            summary.links[0].resolved_ping,
+            vec!["https://example.test/gallery/track.html".to_string()]
+        );
+        assert_eq!(summary.links[1].element, "area");
+        assert_eq!(summary.links[1].href.as_deref(), Some("#logo"));
+        assert_eq!(summary.links[1].text, "Logo");
 
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         assert_eq!(render_tree.children[1].display, "none");

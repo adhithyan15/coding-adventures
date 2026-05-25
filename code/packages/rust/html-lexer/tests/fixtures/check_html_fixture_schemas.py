@@ -433,6 +433,7 @@ def check_browser_expected_lists(
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
         for field in (
+            "element",
             "id",
             "href",
             "resolved_href",
