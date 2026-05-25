@@ -4445,6 +4445,122 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_run_escalation_digest_labels_match()
     }
 
+    /// Return the host-run escalation route derived from the digest.
+    pub fn host_run_escalation_route(&self) -> ToolAuditSupervisorDrainHostRunEscalationRoute {
+        ToolAuditSupervisorDrainHostRunEscalationRoute::from_digest(
+            self.host_run_escalation_digest(),
+        )
+    }
+
+    /// Return the stable host-run escalation route label.
+    pub fn host_run_escalation_route_label(&self) -> &'static str {
+        self.host_run_escalation_route().as_str()
+    }
+
+    /// Return whether the escalation route label parses back to its typed route.
+    pub fn host_run_escalation_route_label_matches_route(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationRoute::from_label(
+            self.host_run_escalation_route_label(),
+        ) == Some(self.host_run_escalation_route())
+    }
+
+    /// Return whether the escalation route matches the current escalation kind.
+    pub fn host_run_escalation_route_kind_matches_kind(&self) -> bool {
+        self.host_run_escalation_route()
+            .escalation_kind_matches(self.host_run_escalation_kind())
+    }
+
+    /// Return whether the escalation route matches the current escalation digest.
+    pub fn host_run_escalation_route_matches_digest(&self) -> bool {
+        self.host_run_escalation_route()
+            .digest_matches(self.host_run_escalation_digest())
+    }
+
+    /// Return the escalation-route priority rank for host sorting.
+    pub fn host_run_escalation_route_priority_rank(&self) -> u8 {
+        self.host_run_escalation_route().priority_rank()
+    }
+
+    /// Return whether the escalation route is fully settled.
+    pub fn host_run_escalation_route_is_settled(&self) -> bool {
+        self.host_run_escalation_route().is_settled()
+    }
+
+    /// Return whether the escalation route requires host action.
+    pub fn host_run_escalation_route_requires_action(&self) -> bool {
+        self.host_run_escalation_route().requires_action()
+    }
+
+    /// Return whether the escalation route can route automatically.
+    pub fn host_run_escalation_route_is_auto_routable(&self) -> bool {
+        self.host_run_escalation_route().is_auto_routable()
+    }
+
+    /// Return whether the escalation route requires manual review.
+    pub fn host_run_escalation_route_requires_manual_review(&self) -> bool {
+        self.host_run_escalation_route().requires_manual_review()
+    }
+
+    /// Return whether the escalation route requires investigation.
+    pub fn host_run_escalation_route_requires_investigation(&self) -> bool {
+        self.host_run_escalation_route().requires_investigation()
+    }
+
+    /// Return whether the escalation route requires host-log integrity investigation.
+    pub fn host_run_escalation_route_requires_integrity_investigation(&self) -> bool {
+        self.host_run_escalation_route()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the escalation route requires triage.
+    pub fn host_run_escalation_route_requires_triage(&self) -> bool {
+        self.host_run_escalation_route().requires_triage()
+    }
+
+    /// Return whether the escalation route has a concrete target queue.
+    pub fn host_run_escalation_has_route(&self) -> bool {
+        self.host_run_escalation_route().has_route()
+    }
+
+    /// Return whether the escalation route points at the routine-action queue.
+    pub fn host_run_escalation_routes_to_routine_action(&self) -> bool {
+        self.host_run_escalation_route().routes_to_routine_action()
+    }
+
+    /// Return whether the escalation route points at the manual-review queue.
+    pub fn host_run_escalation_routes_to_manual_review(&self) -> bool {
+        self.host_run_escalation_route().routes_to_manual_review()
+    }
+
+    /// Return whether the escalation route points at a non-integrity investigation queue.
+    pub fn host_run_escalation_routes_to_investigation(&self) -> bool {
+        self.host_run_escalation_route().routes_to_investigation()
+    }
+
+    /// Return whether the escalation route points at the host-log integrity queue.
+    pub fn host_run_escalation_routes_to_integrity_investigation(&self) -> bool {
+        self.host_run_escalation_route()
+            .routes_to_integrity_investigation()
+    }
+
+    /// Return whether the escalation route points at the triage queue.
+    pub fn host_run_escalation_routes_to_triage(&self) -> bool {
+        self.host_run_escalation_route().routes_to_triage()
+    }
+
+    /// Return whether host-run escalation route labels match their source classifiers.
+    pub fn host_run_escalation_route_labels_match(&self) -> bool {
+        self.host_run_escalation_digest_labels_match()
+            && self.host_run_escalation_route_label_matches_route()
+            && self.host_run_escalation_route_kind_matches_kind()
+            && self.host_run_escalation_route_matches_digest()
+    }
+
+    /// Return whether any host-run escalation route label drifted.
+    pub fn has_host_run_escalation_route_label_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_route_labels_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -5276,6 +5392,41 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_escalation_digest_labels_match: self.host_run_escalation_digest_labels_match(),
             has_host_run_escalation_digest_label_integrity_drift: self
                 .has_host_run_escalation_digest_label_integrity_drift(),
+            host_run_escalation_route: self.host_run_escalation_route(),
+            host_run_escalation_route_label: self.host_run_escalation_route_label(),
+            host_run_escalation_route_label_matches_route: self
+                .host_run_escalation_route_label_matches_route(),
+            host_run_escalation_route_kind_matches_kind: self
+                .host_run_escalation_route_kind_matches_kind(),
+            host_run_escalation_route_matches_digest: self
+                .host_run_escalation_route_matches_digest(),
+            host_run_escalation_route_priority_rank: self.host_run_escalation_route_priority_rank(),
+            host_run_escalation_route_is_settled: self.host_run_escalation_route_is_settled(),
+            host_run_escalation_route_requires_action: self
+                .host_run_escalation_route_requires_action(),
+            host_run_escalation_route_is_auto_routable: self
+                .host_run_escalation_route_is_auto_routable(),
+            host_run_escalation_route_requires_manual_review: self
+                .host_run_escalation_route_requires_manual_review(),
+            host_run_escalation_route_requires_investigation: self
+                .host_run_escalation_route_requires_investigation(),
+            host_run_escalation_route_requires_integrity_investigation: self
+                .host_run_escalation_route_requires_integrity_investigation(),
+            host_run_escalation_route_requires_triage: self
+                .host_run_escalation_route_requires_triage(),
+            host_run_escalation_has_route: self.host_run_escalation_has_route(),
+            host_run_escalation_routes_to_routine_action: self
+                .host_run_escalation_routes_to_routine_action(),
+            host_run_escalation_routes_to_manual_review: self
+                .host_run_escalation_routes_to_manual_review(),
+            host_run_escalation_routes_to_investigation: self
+                .host_run_escalation_routes_to_investigation(),
+            host_run_escalation_routes_to_integrity_investigation: self
+                .host_run_escalation_routes_to_integrity_investigation(),
+            host_run_escalation_routes_to_triage: self.host_run_escalation_routes_to_triage(),
+            host_run_escalation_route_labels_match: self.host_run_escalation_route_labels_match(),
+            has_host_run_escalation_route_label_integrity_drift: self
+                .has_host_run_escalation_route_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -6691,6 +6842,48 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_digest_labels_match: bool,
     /// Whether any host-run escalation digest label drifted.
     pub has_host_run_escalation_digest_label_integrity_drift: bool,
+    /// Host-run escalation route derived from the digest.
+    pub host_run_escalation_route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+    /// Stable host-run escalation route label.
+    pub host_run_escalation_route_label: &'static str,
+    /// Whether the escalation route label parses back to its typed route.
+    pub host_run_escalation_route_label_matches_route: bool,
+    /// Whether the escalation route matches the current escalation kind.
+    pub host_run_escalation_route_kind_matches_kind: bool,
+    /// Whether the escalation route matches the current escalation digest.
+    pub host_run_escalation_route_matches_digest: bool,
+    /// Escalation-route priority rank for host sorting.
+    pub host_run_escalation_route_priority_rank: u8,
+    /// Whether the escalation route is fully settled.
+    pub host_run_escalation_route_is_settled: bool,
+    /// Whether the escalation route requires host action.
+    pub host_run_escalation_route_requires_action: bool,
+    /// Whether the escalation route can route automatically.
+    pub host_run_escalation_route_is_auto_routable: bool,
+    /// Whether the escalation route requires manual review.
+    pub host_run_escalation_route_requires_manual_review: bool,
+    /// Whether the escalation route requires investigation.
+    pub host_run_escalation_route_requires_investigation: bool,
+    /// Whether the escalation route requires host-log integrity investigation.
+    pub host_run_escalation_route_requires_integrity_investigation: bool,
+    /// Whether the escalation route requires triage.
+    pub host_run_escalation_route_requires_triage: bool,
+    /// Whether the escalation route has a concrete target queue.
+    pub host_run_escalation_has_route: bool,
+    /// Whether the escalation route points at the routine-action queue.
+    pub host_run_escalation_routes_to_routine_action: bool,
+    /// Whether the escalation route points at the manual-review queue.
+    pub host_run_escalation_routes_to_manual_review: bool,
+    /// Whether the escalation route points at a non-integrity investigation queue.
+    pub host_run_escalation_routes_to_investigation: bool,
+    /// Whether the escalation route points at the host-log integrity queue.
+    pub host_run_escalation_routes_to_integrity_investigation: bool,
+    /// Whether the escalation route points at the triage queue.
+    pub host_run_escalation_routes_to_triage: bool,
+    /// Whether host-run escalation route labels match their source classifiers.
+    pub host_run_escalation_route_labels_match: bool,
+    /// Whether any host-run escalation route label drifted.
+    pub has_host_run_escalation_route_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -9205,6 +9398,111 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any host-run escalation digest label drifted.
     pub fn has_host_run_escalation_digest_label_integrity_drift(&self) -> bool {
         self.has_host_run_escalation_digest_label_integrity_drift
+    }
+
+    /// Return the host-run escalation route derived from the digest.
+    pub fn host_run_escalation_route(&self) -> ToolAuditSupervisorDrainHostRunEscalationRoute {
+        self.host_run_escalation_route
+    }
+
+    /// Return the stable host-run escalation route label.
+    pub fn host_run_escalation_route_label(&self) -> &'static str {
+        self.host_run_escalation_route_label
+    }
+
+    /// Return whether the escalation route label parses back to its typed route.
+    pub fn host_run_escalation_route_label_matches_route(&self) -> bool {
+        self.host_run_escalation_route_label_matches_route
+    }
+
+    /// Return whether the escalation route matches the current escalation kind.
+    pub fn host_run_escalation_route_kind_matches_kind(&self) -> bool {
+        self.host_run_escalation_route_kind_matches_kind
+    }
+
+    /// Return whether the escalation route matches the current escalation digest.
+    pub fn host_run_escalation_route_matches_digest(&self) -> bool {
+        self.host_run_escalation_route_matches_digest
+    }
+
+    /// Return the escalation-route priority rank for host sorting.
+    pub fn host_run_escalation_route_priority_rank(&self) -> u8 {
+        self.host_run_escalation_route_priority_rank
+    }
+
+    /// Return whether the escalation route is fully settled.
+    pub fn host_run_escalation_route_is_settled(&self) -> bool {
+        self.host_run_escalation_route_is_settled
+    }
+
+    /// Return whether the escalation route requires host action.
+    pub fn host_run_escalation_route_requires_action(&self) -> bool {
+        self.host_run_escalation_route_requires_action
+    }
+
+    /// Return whether the escalation route can route automatically.
+    pub fn host_run_escalation_route_is_auto_routable(&self) -> bool {
+        self.host_run_escalation_route_is_auto_routable
+    }
+
+    /// Return whether the escalation route requires manual review.
+    pub fn host_run_escalation_route_requires_manual_review(&self) -> bool {
+        self.host_run_escalation_route_requires_manual_review
+    }
+
+    /// Return whether the escalation route requires investigation.
+    pub fn host_run_escalation_route_requires_investigation(&self) -> bool {
+        self.host_run_escalation_route_requires_investigation
+    }
+
+    /// Return whether the escalation route requires host-log integrity investigation.
+    pub fn host_run_escalation_route_requires_integrity_investigation(&self) -> bool {
+        self.host_run_escalation_route_requires_integrity_investigation
+    }
+
+    /// Return whether the escalation route requires triage.
+    pub fn host_run_escalation_route_requires_triage(&self) -> bool {
+        self.host_run_escalation_route_requires_triage
+    }
+
+    /// Return whether the escalation route has a concrete target queue.
+    pub fn host_run_escalation_has_route(&self) -> bool {
+        self.host_run_escalation_has_route
+    }
+
+    /// Return whether the escalation route points at the routine-action queue.
+    pub fn host_run_escalation_routes_to_routine_action(&self) -> bool {
+        self.host_run_escalation_routes_to_routine_action
+    }
+
+    /// Return whether the escalation route points at the manual-review queue.
+    pub fn host_run_escalation_routes_to_manual_review(&self) -> bool {
+        self.host_run_escalation_routes_to_manual_review
+    }
+
+    /// Return whether the escalation route points at a non-integrity investigation queue.
+    pub fn host_run_escalation_routes_to_investigation(&self) -> bool {
+        self.host_run_escalation_routes_to_investigation
+    }
+
+    /// Return whether the escalation route points at the host-log integrity queue.
+    pub fn host_run_escalation_routes_to_integrity_investigation(&self) -> bool {
+        self.host_run_escalation_routes_to_integrity_investigation
+    }
+
+    /// Return whether the escalation route points at the triage queue.
+    pub fn host_run_escalation_routes_to_triage(&self) -> bool {
+        self.host_run_escalation_routes_to_triage
+    }
+
+    /// Return whether host-run escalation route labels match their source classifiers.
+    pub fn host_run_escalation_route_labels_match(&self) -> bool {
+        self.host_run_escalation_route_labels_match
+    }
+
+    /// Return whether any host-run escalation route label drifted.
+    pub fn has_host_run_escalation_route_label_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_route_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -12740,6 +13038,180 @@ impl ToolAuditSupervisorDrainHostRunEscalationDigest {
 impl Display for ToolAuditSupervisorDrainHostRunEscalationDigest {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
+    }
+}
+
+/// Stable host action route derived from a host-run escalation digest.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainHostRunEscalationRoute {
+    /// The run is settled and should not enter an escalation queue.
+    NoRoute,
+    /// The run can enter the routine-action queue.
+    RoutineAction,
+    /// The run should enter the manual-review queue.
+    ManualReview,
+    /// The run should enter the non-integrity investigation queue.
+    Investigation,
+    /// The run should enter the host-log integrity investigation queue.
+    IntegrityInvestigation,
+    /// The run should enter the triage queue.
+    Triage,
+}
+
+impl ToolAuditSupervisorDrainHostRunEscalationRoute {
+    /// Classify escalation route from an escalation kind.
+    pub fn from_escalation_kind(kind: ToolAuditSupervisorDrainHostRunEscalationKind) -> Self {
+        match kind {
+            ToolAuditSupervisorDrainHostRunEscalationKind::Settled => Self::NoRoute,
+            ToolAuditSupervisorDrainHostRunEscalationKind::RoutineAction => Self::RoutineAction,
+            ToolAuditSupervisorDrainHostRunEscalationKind::ManualReview => Self::ManualReview,
+            ToolAuditSupervisorDrainHostRunEscalationKind::Investigation => Self::Investigation,
+            ToolAuditSupervisorDrainHostRunEscalationKind::IntegrityInvestigation => {
+                Self::IntegrityInvestigation
+            }
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage => Self::Triage,
+        }
+    }
+
+    /// Classify escalation route from a compact escalation digest.
+    pub fn from_digest(digest: ToolAuditSupervisorDrainHostRunEscalationDigest) -> Self {
+        Self::from_escalation_kind(digest.escalation_kind())
+    }
+
+    /// Return the escalation kind represented by this route.
+    pub fn escalation_kind(self) -> ToolAuditSupervisorDrainHostRunEscalationKind {
+        match self {
+            Self::NoRoute => ToolAuditSupervisorDrainHostRunEscalationKind::Settled,
+            Self::RoutineAction => ToolAuditSupervisorDrainHostRunEscalationKind::RoutineAction,
+            Self::ManualReview => ToolAuditSupervisorDrainHostRunEscalationKind::ManualReview,
+            Self::Investigation => ToolAuditSupervisorDrainHostRunEscalationKind::Investigation,
+            Self::IntegrityInvestigation => {
+                ToolAuditSupervisorDrainHostRunEscalationKind::IntegrityInvestigation
+            }
+            Self::Triage => ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+        }
+    }
+
+    /// Return a stable snake_case route label for host logs and queues.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoRoute => "no_route",
+            Self::RoutineAction => "routine_action",
+            Self::ManualReview => "manual_review",
+            Self::Investigation => "investigation",
+            Self::IntegrityInvestigation => "integrity_investigation",
+            Self::Triage => "triage",
+        }
+    }
+
+    /// Parse a stable host-run escalation route label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_route" => Some(Self::NoRoute),
+            "routine_action" => Some(Self::RoutineAction),
+            "manual_review" => Some(Self::ManualReview),
+            "investigation" => Some(Self::Investigation),
+            "integrity_investigation" => Some(Self::IntegrityInvestigation),
+            "triage" => Some(Self::Triage),
+            _ => None,
+        }
+    }
+
+    /// Return whether this route label parses back to this typed route.
+    pub fn label_matches_route(self) -> bool {
+        Self::from_label(self.as_str()) == Some(self)
+    }
+
+    /// Return whether this route matches the supplied escalation kind.
+    pub fn escalation_kind_matches(
+        self,
+        kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+    ) -> bool {
+        self.escalation_kind() == kind
+    }
+
+    /// Return whether this route matches the supplied escalation digest.
+    pub fn digest_matches(self, digest: ToolAuditSupervisorDrainHostRunEscalationDigest) -> bool {
+        Self::from_digest(digest) == self
+    }
+
+    /// Return whether this route points at a concrete host queue.
+    pub fn has_route(self) -> bool {
+        !matches!(self, Self::NoRoute)
+    }
+
+    /// Return whether this route is settled.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::NoRoute)
+    }
+
+    /// Return whether this route needs host action.
+    pub fn requires_action(self) -> bool {
+        self.has_route()
+    }
+
+    /// Return the sortable route priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.escalation_kind().rank()
+    }
+
+    /// Return whether this route can be handled automatically.
+    pub fn is_auto_routable(self) -> bool {
+        matches!(self, Self::RoutineAction)
+    }
+
+    /// Return whether this route needs manual review.
+    pub fn requires_manual_review(self) -> bool {
+        matches!(
+            self,
+            Self::ManualReview | Self::Investigation | Self::IntegrityInvestigation | Self::Triage
+        )
+    }
+
+    /// Return whether this route points at an investigation queue.
+    pub fn requires_investigation(self) -> bool {
+        matches!(self, Self::Investigation | Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this route points at host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this route points at triage.
+    pub fn requires_triage(self) -> bool {
+        matches!(self, Self::Triage)
+    }
+
+    /// Return whether this route points at the routine-action queue.
+    pub fn routes_to_routine_action(self) -> bool {
+        matches!(self, Self::RoutineAction)
+    }
+
+    /// Return whether this route points at the manual-review queue.
+    pub fn routes_to_manual_review(self) -> bool {
+        matches!(self, Self::ManualReview)
+    }
+
+    /// Return whether this route points at non-integrity investigation.
+    pub fn routes_to_investigation(self) -> bool {
+        matches!(self, Self::Investigation)
+    }
+
+    /// Return whether this route points at host-log integrity investigation.
+    pub fn routes_to_integrity_investigation(self) -> bool {
+        matches!(self, Self::IntegrityInvestigation)
+    }
+
+    /// Return whether this route points at triage.
+    pub fn routes_to_triage(self) -> bool {
+        matches!(self, Self::Triage)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunEscalationRoute {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -22316,6 +22788,174 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_escalation_routes_are_stable() {
+        let supervision_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::NoAttention,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+                ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+            ),
+        );
+        let cases = [
+            (
+                ToolAuditSupervisorDrainHostRunEscalationKind::Settled,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute,
+                "no_route",
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunEscalationKind::RoutineAction,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::RoutineAction,
+                "routine_action",
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunEscalationKind::ManualReview,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::ManualReview,
+                "manual_review",
+                true,
+                false,
+                true,
+                false,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunEscalationKind::Investigation,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::Investigation,
+                "investigation",
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunEscalationKind::IntegrityInvestigation,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::IntegrityInvestigation,
+                "integrity_investigation",
+                true,
+                false,
+                true,
+                true,
+                true,
+                false,
+            ),
+            (
+                ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+                "triage",
+                true,
+                false,
+                true,
+                false,
+                false,
+                true,
+            ),
+        ];
+
+        for (
+            kind,
+            route,
+            label,
+            has_route,
+            auto_routable,
+            manual_review,
+            investigation,
+            integrity_investigation,
+            triage,
+        ) in cases
+        {
+            let digest =
+                ToolAuditSupervisorDrainHostRunEscalationDigest::new(kind, supervision_key);
+
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationRoute::from_escalation_kind(kind),
+                route
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationRoute::from_digest(digest),
+                route
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationRoute::from_label(label),
+                Some(route)
+            );
+            assert_eq!(route.as_str(), label);
+            assert!(route.label_matches_route());
+            assert_eq!(route.escalation_kind(), kind);
+            assert!(route.escalation_kind_matches(kind));
+            assert!(route.digest_matches(digest));
+            assert_eq!(route.has_route(), has_route);
+            assert_eq!(route.is_settled(), !has_route);
+            assert_eq!(route.requires_action(), has_route);
+            assert_eq!(route.priority_rank(), kind.rank());
+            assert_eq!(route.is_auto_routable(), auto_routable);
+            assert_eq!(route.requires_manual_review(), manual_review);
+            assert_eq!(route.requires_investigation(), investigation);
+            assert_eq!(
+                route.requires_integrity_investigation(),
+                integrity_investigation
+            );
+            assert_eq!(route.requires_triage(), triage);
+            assert_eq!(
+                route.routes_to_routine_action(),
+                matches!(
+                    route,
+                    ToolAuditSupervisorDrainHostRunEscalationRoute::RoutineAction
+                )
+            );
+            assert_eq!(
+                route.routes_to_manual_review(),
+                matches!(
+                    route,
+                    ToolAuditSupervisorDrainHostRunEscalationRoute::ManualReview
+                )
+            );
+            assert_eq!(
+                route.routes_to_investigation(),
+                matches!(
+                    route,
+                    ToolAuditSupervisorDrainHostRunEscalationRoute::Investigation
+                )
+            );
+            assert_eq!(
+                route.routes_to_integrity_investigation(),
+                matches!(
+                    route,
+                    ToolAuditSupervisorDrainHostRunEscalationRoute::IntegrityInvestigation
+                )
+            );
+            assert_eq!(
+                route.routes_to_triage(),
+                matches!(
+                    route,
+                    ToolAuditSupervisorDrainHostRunEscalationRoute::Triage
+                )
+            );
+            assert_eq!(route.to_string(), label);
+        }
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::from_label("settled"),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_summary_flattens_host_run_supervision_flags() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -22488,6 +23128,78 @@ mod tests {
         assert!(idle_summary.host_run_escalation_digest_labels_match());
         assert!(!idle_summary.has_host_run_escalation_digest_label_integrity_drift);
         assert!(!idle_summary.has_host_run_escalation_digest_label_integrity_drift());
+        assert_eq!(
+            idle_report.host_run_escalation_route(),
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute
+        );
+        assert_eq!(idle_report.host_run_escalation_route_label(), "no_route");
+        assert!(idle_report.host_run_escalation_route_label_matches_route());
+        assert!(idle_report.host_run_escalation_route_kind_matches_kind());
+        assert!(idle_report.host_run_escalation_route_matches_digest());
+        assert_eq!(idle_report.host_run_escalation_route_priority_rank(), 0);
+        assert!(idle_report.host_run_escalation_route_is_settled());
+        assert!(!idle_report.host_run_escalation_route_requires_action());
+        assert!(!idle_report.host_run_escalation_route_is_auto_routable());
+        assert!(!idle_report.host_run_escalation_route_requires_manual_review());
+        assert!(!idle_report.host_run_escalation_route_requires_investigation());
+        assert!(!idle_report.host_run_escalation_route_requires_integrity_investigation());
+        assert!(!idle_report.host_run_escalation_route_requires_triage());
+        assert!(!idle_report.host_run_escalation_has_route());
+        assert!(!idle_report.host_run_escalation_routes_to_routine_action());
+        assert!(!idle_report.host_run_escalation_routes_to_manual_review());
+        assert!(!idle_report.host_run_escalation_routes_to_investigation());
+        assert!(!idle_report.host_run_escalation_routes_to_integrity_investigation());
+        assert!(!idle_report.host_run_escalation_routes_to_triage());
+        assert!(idle_report.host_run_escalation_route_labels_match());
+        assert!(!idle_report.has_host_run_escalation_route_label_integrity_drift());
+        assert_eq!(
+            idle_summary.host_run_escalation_route,
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_route(),
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute
+        );
+        assert_eq!(idle_summary.host_run_escalation_route_label, "no_route");
+        assert_eq!(idle_summary.host_run_escalation_route_label(), "no_route");
+        assert!(idle_summary.host_run_escalation_route_label_matches_route);
+        assert!(idle_summary.host_run_escalation_route_label_matches_route());
+        assert!(idle_summary.host_run_escalation_route_kind_matches_kind);
+        assert!(idle_summary.host_run_escalation_route_kind_matches_kind());
+        assert!(idle_summary.host_run_escalation_route_matches_digest);
+        assert!(idle_summary.host_run_escalation_route_matches_digest());
+        assert_eq!(idle_summary.host_run_escalation_route_priority_rank, 0);
+        assert_eq!(idle_summary.host_run_escalation_route_priority_rank(), 0);
+        assert!(idle_summary.host_run_escalation_route_is_settled);
+        assert!(idle_summary.host_run_escalation_route_is_settled());
+        assert!(!idle_summary.host_run_escalation_route_requires_action);
+        assert!(!idle_summary.host_run_escalation_route_requires_action());
+        assert!(!idle_summary.host_run_escalation_route_is_auto_routable);
+        assert!(!idle_summary.host_run_escalation_route_is_auto_routable());
+        assert!(!idle_summary.host_run_escalation_route_requires_manual_review);
+        assert!(!idle_summary.host_run_escalation_route_requires_manual_review());
+        assert!(!idle_summary.host_run_escalation_route_requires_investigation);
+        assert!(!idle_summary.host_run_escalation_route_requires_investigation());
+        assert!(!idle_summary.host_run_escalation_route_requires_integrity_investigation);
+        assert!(!idle_summary.host_run_escalation_route_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_escalation_route_requires_triage);
+        assert!(!idle_summary.host_run_escalation_route_requires_triage());
+        assert!(!idle_summary.host_run_escalation_has_route);
+        assert!(!idle_summary.host_run_escalation_has_route());
+        assert!(!idle_summary.host_run_escalation_routes_to_routine_action);
+        assert!(!idle_summary.host_run_escalation_routes_to_routine_action());
+        assert!(!idle_summary.host_run_escalation_routes_to_manual_review);
+        assert!(!idle_summary.host_run_escalation_routes_to_manual_review());
+        assert!(!idle_summary.host_run_escalation_routes_to_investigation);
+        assert!(!idle_summary.host_run_escalation_routes_to_investigation());
+        assert!(!idle_summary.host_run_escalation_routes_to_integrity_investigation);
+        assert!(!idle_summary.host_run_escalation_routes_to_integrity_investigation());
+        assert!(!idle_summary.host_run_escalation_routes_to_triage);
+        assert!(!idle_summary.host_run_escalation_routes_to_triage());
+        assert!(idle_summary.host_run_escalation_route_labels_match);
+        assert!(idle_summary.host_run_escalation_route_labels_match());
+        assert!(!idle_summary.has_host_run_escalation_route_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_escalation_route_label_integrity_drift());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -22607,6 +23319,66 @@ mod tests {
         assert!(!continuation_summary.has_host_run_escalation_digest_integrity_drift());
         assert!(continuation_summary.host_run_escalation_digest_labels_match());
         assert!(!continuation_summary.has_host_run_escalation_digest_label_integrity_drift());
+        assert_eq!(
+            continuation_report.host_run_escalation_route(),
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_route_label(),
+            "triage"
+        );
+        assert!(continuation_report.host_run_escalation_route_label_matches_route());
+        assert!(continuation_report.host_run_escalation_route_kind_matches_kind());
+        assert!(continuation_report.host_run_escalation_route_matches_digest());
+        assert_eq!(
+            continuation_report.host_run_escalation_route_priority_rank(),
+            90
+        );
+        assert!(!continuation_report.host_run_escalation_route_is_settled());
+        assert!(continuation_report.host_run_escalation_route_requires_action());
+        assert!(!continuation_report.host_run_escalation_route_is_auto_routable());
+        assert!(continuation_report.host_run_escalation_route_requires_manual_review());
+        assert!(!continuation_report.host_run_escalation_route_requires_investigation());
+        assert!(!continuation_report.host_run_escalation_route_requires_integrity_investigation());
+        assert!(continuation_report.host_run_escalation_route_requires_triage());
+        assert!(continuation_report.host_run_escalation_has_route());
+        assert!(!continuation_report.host_run_escalation_routes_to_routine_action());
+        assert!(!continuation_report.host_run_escalation_routes_to_manual_review());
+        assert!(!continuation_report.host_run_escalation_routes_to_investigation());
+        assert!(!continuation_report.host_run_escalation_routes_to_integrity_investigation());
+        assert!(continuation_report.host_run_escalation_routes_to_triage());
+        assert!(continuation_report.host_run_escalation_route_labels_match());
+        assert!(!continuation_report.has_host_run_escalation_route_label_integrity_drift());
+        assert_eq!(
+            continuation_summary.host_run_escalation_route(),
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_route_label(),
+            "triage"
+        );
+        assert!(continuation_summary.host_run_escalation_route_label_matches_route());
+        assert!(continuation_summary.host_run_escalation_route_kind_matches_kind());
+        assert!(continuation_summary.host_run_escalation_route_matches_digest());
+        assert_eq!(
+            continuation_summary.host_run_escalation_route_priority_rank(),
+            90
+        );
+        assert!(!continuation_summary.host_run_escalation_route_is_settled());
+        assert!(continuation_summary.host_run_escalation_route_requires_action());
+        assert!(!continuation_summary.host_run_escalation_route_is_auto_routable());
+        assert!(continuation_summary.host_run_escalation_route_requires_manual_review());
+        assert!(!continuation_summary.host_run_escalation_route_requires_investigation());
+        assert!(!continuation_summary.host_run_escalation_route_requires_integrity_investigation());
+        assert!(continuation_summary.host_run_escalation_route_requires_triage());
+        assert!(continuation_summary.host_run_escalation_has_route());
+        assert!(!continuation_summary.host_run_escalation_routes_to_routine_action());
+        assert!(!continuation_summary.host_run_escalation_routes_to_manual_review());
+        assert!(!continuation_summary.host_run_escalation_routes_to_investigation());
+        assert!(!continuation_summary.host_run_escalation_routes_to_integrity_investigation());
+        assert!(continuation_summary.host_run_escalation_routes_to_triage());
+        assert!(continuation_summary.host_run_escalation_route_labels_match());
+        assert!(!continuation_summary.has_host_run_escalation_route_label_integrity_drift());
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
@@ -22627,6 +23399,13 @@ mod tests {
         drift_summary.has_host_run_escalation_digest_integrity_drift = true;
         drift_summary.host_run_escalation_digest_labels_match = false;
         drift_summary.has_host_run_escalation_digest_label_integrity_drift = true;
+        drift_summary.host_run_escalation_route =
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute;
+        drift_summary.host_run_escalation_route_label = "no_route";
+        drift_summary.host_run_escalation_route_kind_matches_kind = false;
+        drift_summary.host_run_escalation_route_matches_digest = false;
+        drift_summary.host_run_escalation_route_labels_match = false;
+        drift_summary.has_host_run_escalation_route_label_integrity_drift = true;
         assert!(drift_summary.host_run_supervision_key_label_matches_key());
         assert!(!drift_summary.host_run_supervision_attention_matches_kind());
         assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
@@ -22644,6 +23423,11 @@ mod tests {
         assert!(drift_summary.has_host_run_escalation_digest_integrity_drift());
         assert!(!drift_summary.host_run_escalation_digest_labels_match());
         assert!(drift_summary.has_host_run_escalation_digest_label_integrity_drift());
+        assert!(drift_summary.host_run_escalation_route_label_matches_route());
+        assert!(!drift_summary.host_run_escalation_route_kind_matches_kind());
+        assert!(!drift_summary.host_run_escalation_route_matches_digest());
+        assert!(!drift_summary.host_run_escalation_route_labels_match());
+        assert!(drift_summary.has_host_run_escalation_route_label_integrity_drift());
 
         let mut stale_label_summary = continuation_summary;
         stale_label_summary.host_run_supervision_key_label =
@@ -22660,6 +23444,10 @@ mod tests {
         stale_label_summary.host_run_escalation_digest_label_matches_digest = false;
         stale_label_summary.host_run_escalation_digest_labels_match = false;
         stale_label_summary.has_host_run_escalation_digest_label_integrity_drift = true;
+        stale_label_summary.host_run_escalation_route_label = "no_route";
+        stale_label_summary.host_run_escalation_route_label_matches_route = false;
+        stale_label_summary.host_run_escalation_route_labels_match = false;
+        stale_label_summary.has_host_run_escalation_route_label_integrity_drift = true;
         assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
         assert!(!stale_label_summary.host_run_supervision_labels_match());
         assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
@@ -22669,6 +23457,9 @@ mod tests {
         assert!(!stale_label_summary.host_run_escalation_digest_label_matches_digest());
         assert!(!stale_label_summary.host_run_escalation_digest_labels_match());
         assert!(stale_label_summary.has_host_run_escalation_digest_label_integrity_drift());
+        assert!(!stale_label_summary.host_run_escalation_route_label_matches_route());
+        assert!(!stale_label_summary.host_run_escalation_route_labels_match());
+        assert!(stale_label_summary.has_host_run_escalation_route_label_integrity_drift());
     }
 
     #[test]
