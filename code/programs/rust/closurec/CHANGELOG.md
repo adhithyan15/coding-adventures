@@ -2,6 +2,44 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.8.0] - 2026-05-25
+
+### Added — CLOC11.31: `--isolation_mode IIFE` wrapping
+
+Companion to CLOC11.30 in Track 6. When `--isolation_mode IIFE` is passed, the compiled output is wrapped in `(function(){…}).call(this);` — matching CC's `CompilerOptions` IIFE behavior. `--isolation_mode NONE` (the default) is unchanged.
+
+- **New `wrapper::apply_iife_wrap(compiled) -> String`.** Emits `(function(){<compiled>}).call(this);` — using `.call(this)` rather than the simpler `()` form to preserve outer `this` binding the same way CC has since the option was introduced. Pinned by a test (`iife_wrap_uses_call_this_not_bare_invocation`) so a future "simplification" can't silently regress.
+- **Pipeline ordering.** IIFE wrapping runs *after* `--output_wrapper` template substitution but *before* writing to disk/stdout. So a `--output_wrapper '// banner%n%%output%'` + `--isolation_mode IIFE` produces `(function(){// banner\n<compiled>}).call(this);` — banner sits *inside* the IIFE, matching CC's layered behavior.
+- **Diff fixture** `tests/diff/isolation-iife/` per CLOC11 §3.
+- **New integration test** `tests/diff_isolation_iife.rs` drives the built binary against the fixture.
+- **4 new unit tests** in `wrapper::tests`: basic wrap, empty body, content-preservation, `.call(this)` form is pinned.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+After CLOC11.31 lands, `run_compiler` does:
+
+1. Per-input `transform_source`:
+   - 1a. `--compilation_level` (CLOC11.06: WHITESPACE_ONLY active)
+   - 1b. `--define / -D` substitution (CLOC11.19)
+2. Concatenate transformed inputs (`combined`)
+3. `--output_wrapper` template substitution (CLOC11.30)
+4. **`--isolation_mode IIFE` wrap (CLOC11.31, new)**
+5. Write to `--js_output_file` (auto-create parents) or stdout
+
+### Behavior changes (user-visible)
+
+- `closurec --isolation_mode IIFE --js app.js` now actually wraps. Previously the flag was parsed but ignored.
+
+### Tests
+
+113 unit + 7 integration tests passing. Clippy clean.
+
+### Version
+
+Bumps closurec 0.7.0 → 0.8.0 (Cargo.toml + cli.spec.json kept in sync).
+
+[CLOC11]: ../../specs/CLOC11-drop-in-closure-compat.md
+
 ## [0.7.0] - 2026-05-25
 
 ### Added — CLOC11.30: `--output_wrapper` template substitution
