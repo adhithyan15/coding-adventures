@@ -181,6 +181,10 @@ All notable changes to this package will be documented in this file.
   scheduler, host-investigation, and run-integrity work.
 - Stable aggregate host-run attention labels and label-integrity flags for
   supervisor drain run reports and summaries.
+- Compact host-run supervision keys that combine top-level attention and queue
+  grouping for supervisor drain run report and summary dashboards.
+- Flattened host-run supervision routing, priority, review, investigation,
+  triage, and label-integrity flags in supervisor drain run summaries.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host

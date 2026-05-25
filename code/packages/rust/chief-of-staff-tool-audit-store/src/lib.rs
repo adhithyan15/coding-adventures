@@ -4206,6 +4206,110 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_run_queue_labels_match()
     }
 
+    /// Return the compact host-run supervision key.
+    pub fn host_run_supervision_key(&self) -> ToolAuditSupervisorDrainHostRunSupervisionKey {
+        ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            self.host_run_attention_kind(),
+            self.host_run_queue_group_key(),
+        )
+    }
+
+    /// Return the stable compact host-run supervision-key label.
+    pub fn host_run_supervision_key_label(&self) -> String {
+        self.host_run_supervision_key().label()
+    }
+
+    /// Return whether the supervision-key label parses back to its typed key.
+    pub fn host_run_supervision_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunSupervisionKey::from_label(
+            &self.host_run_supervision_key_label(),
+        ) == Some(self.host_run_supervision_key())
+    }
+
+    /// Return whether the supervision key's attention component matches the typed attention.
+    pub fn host_run_supervision_attention_matches_kind(&self) -> bool {
+        self.host_run_supervision_key()
+            .attention_matches(self.host_run_attention_kind())
+    }
+
+    /// Return whether the supervision key's queue component matches the typed queue group.
+    pub fn host_run_supervision_queue_group_matches_key(&self) -> bool {
+        self.host_run_supervision_key()
+            .queue_group_key_matches(self.host_run_queue_group_key())
+    }
+
+    /// Return whether every supervision-key component matches its source classifier.
+    pub fn host_run_supervision_key_parts_match(&self) -> bool {
+        self.host_run_supervision_key().parts_match(
+            self.host_run_attention_kind(),
+            self.host_run_queue_group_key(),
+        )
+    }
+
+    /// Return whether any host-run supervision-key component drifted.
+    pub fn has_host_run_supervision_key_integrity_drift(&self) -> bool {
+        !self.host_run_supervision_key_parts_match()
+    }
+
+    /// Return whether the supervision key has top-level host-run attention.
+    pub fn host_run_supervision_requires_attention(&self) -> bool {
+        self.host_run_supervision_key().requires_attention()
+    }
+
+    /// Return whether the supervision key should enter any host action queue.
+    pub fn host_run_supervision_requires_action(&self) -> bool {
+        self.host_run_supervision_key().requires_action()
+    }
+
+    /// Return whether the host run is fully settled for supervision.
+    pub fn host_run_supervision_is_settled(&self) -> bool {
+        self.host_run_supervision_key().is_settled()
+    }
+
+    /// Return the supervision priority rank for host sorting.
+    pub fn host_run_supervision_priority_rank(&self) -> u8 {
+        self.host_run_supervision_key().priority_rank()
+    }
+
+    /// Return whether the supervision key can route without manual review.
+    pub fn host_run_supervision_is_auto_routable(&self) -> bool {
+        self.host_run_supervision_key().is_auto_routable()
+    }
+
+    /// Return whether the supervision key needs manual review.
+    pub fn host_run_supervision_requires_manual_review(&self) -> bool {
+        self.host_run_supervision_key().requires_manual_review()
+    }
+
+    /// Return whether the supervision key needs investigation.
+    pub fn host_run_supervision_requires_investigation(&self) -> bool {
+        self.host_run_supervision_key().requires_investigation()
+    }
+
+    /// Return whether the supervision key needs host-log integrity investigation.
+    pub fn host_run_supervision_requires_integrity_investigation(&self) -> bool {
+        self.host_run_supervision_key()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the supervision key needs triage.
+    pub fn host_run_supervision_requires_triage(&self) -> bool {
+        self.host_run_supervision_key().requires_triage()
+    }
+
+    /// Return whether host-run supervision labels and key parts are internally consistent.
+    pub fn host_run_supervision_labels_match(&self) -> bool {
+        self.host_run_attention_label_matches_kind()
+            && self.host_run_queue_labels_match()
+            && self.host_run_supervision_key_label_matches_key()
+            && self.host_run_supervision_key_parts_match()
+    }
+
+    /// Return whether any host-run supervision label or key component drifted.
+    pub fn has_host_run_supervision_label_integrity_drift(&self) -> bool {
+        !self.host_run_supervision_labels_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -4979,6 +5083,32 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_queue_labels_match: self.host_run_queue_labels_match(),
             has_host_run_queue_label_integrity_drift: self
                 .has_host_run_queue_label_integrity_drift(),
+            host_run_supervision_key: self.host_run_supervision_key(),
+            host_run_supervision_key_label: self.host_run_supervision_key_label(),
+            host_run_supervision_key_label_matches_key: self
+                .host_run_supervision_key_label_matches_key(),
+            host_run_supervision_attention_matches_kind: self
+                .host_run_supervision_attention_matches_kind(),
+            host_run_supervision_queue_group_matches_key: self
+                .host_run_supervision_queue_group_matches_key(),
+            host_run_supervision_key_parts_match: self.host_run_supervision_key_parts_match(),
+            has_host_run_supervision_key_integrity_drift: self
+                .has_host_run_supervision_key_integrity_drift(),
+            host_run_supervision_requires_attention: self.host_run_supervision_requires_attention(),
+            host_run_supervision_requires_action: self.host_run_supervision_requires_action(),
+            host_run_supervision_is_settled: self.host_run_supervision_is_settled(),
+            host_run_supervision_priority_rank: self.host_run_supervision_priority_rank(),
+            host_run_supervision_is_auto_routable: self.host_run_supervision_is_auto_routable(),
+            host_run_supervision_requires_manual_review: self
+                .host_run_supervision_requires_manual_review(),
+            host_run_supervision_requires_investigation: self
+                .host_run_supervision_requires_investigation(),
+            host_run_supervision_requires_integrity_investigation: self
+                .host_run_supervision_requires_integrity_investigation(),
+            host_run_supervision_requires_triage: self.host_run_supervision_requires_triage(),
+            host_run_supervision_labels_match: self.host_run_supervision_labels_match(),
+            has_host_run_supervision_label_integrity_drift: self
+                .has_host_run_supervision_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -6312,6 +6442,42 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_queue_labels_match: bool,
     /// Whether any aggregate host-run queue label or key component drifted.
     pub has_host_run_queue_label_integrity_drift: bool,
+    /// Compact supervision key for the full host run.
+    pub host_run_supervision_key: ToolAuditSupervisorDrainHostRunSupervisionKey,
+    /// Stable compact host-run supervision-key label.
+    pub host_run_supervision_key_label: String,
+    /// Whether the supervision-key label parses back to its typed key.
+    pub host_run_supervision_key_label_matches_key: bool,
+    /// Whether the supervision key's attention component matches the typed attention.
+    pub host_run_supervision_attention_matches_kind: bool,
+    /// Whether the supervision key's queue component matches the typed queue group.
+    pub host_run_supervision_queue_group_matches_key: bool,
+    /// Whether every supervision-key component matches its source classifier.
+    pub host_run_supervision_key_parts_match: bool,
+    /// Whether any host-run supervision-key component drifted.
+    pub has_host_run_supervision_key_integrity_drift: bool,
+    /// Whether the supervision key has top-level host-run attention.
+    pub host_run_supervision_requires_attention: bool,
+    /// Whether the supervision key should enter any host action queue.
+    pub host_run_supervision_requires_action: bool,
+    /// Whether the host run is fully settled for supervision.
+    pub host_run_supervision_is_settled: bool,
+    /// Supervision priority rank for host sorting.
+    pub host_run_supervision_priority_rank: u8,
+    /// Whether the supervision key can route without manual review.
+    pub host_run_supervision_is_auto_routable: bool,
+    /// Whether the supervision key needs manual review.
+    pub host_run_supervision_requires_manual_review: bool,
+    /// Whether the supervision key needs investigation.
+    pub host_run_supervision_requires_investigation: bool,
+    /// Whether the supervision key needs host-log integrity investigation.
+    pub host_run_supervision_requires_integrity_investigation: bool,
+    /// Whether the supervision key needs triage.
+    pub host_run_supervision_requires_triage: bool,
+    /// Whether host-run supervision labels and key parts are internally consistent.
+    pub host_run_supervision_labels_match: bool,
+    /// Whether any host-run supervision label or key component drifted.
+    pub has_host_run_supervision_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -8621,6 +8787,96 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any aggregate host-run queue label or key component drifted.
     pub fn has_host_run_queue_label_integrity_drift(&self) -> bool {
         self.has_host_run_queue_label_integrity_drift
+    }
+
+    /// Return the compact host-run supervision key.
+    pub fn host_run_supervision_key(&self) -> ToolAuditSupervisorDrainHostRunSupervisionKey {
+        self.host_run_supervision_key
+    }
+
+    /// Return the stable compact host-run supervision-key label.
+    pub fn host_run_supervision_key_label(&self) -> &str {
+        &self.host_run_supervision_key_label
+    }
+
+    /// Return whether the supervision-key label parses back to its typed key.
+    pub fn host_run_supervision_key_label_matches_key(&self) -> bool {
+        self.host_run_supervision_key_label_matches_key
+    }
+
+    /// Return whether the supervision key's attention component matches the typed attention.
+    pub fn host_run_supervision_attention_matches_kind(&self) -> bool {
+        self.host_run_supervision_attention_matches_kind
+    }
+
+    /// Return whether the supervision key's queue component matches the typed queue group.
+    pub fn host_run_supervision_queue_group_matches_key(&self) -> bool {
+        self.host_run_supervision_queue_group_matches_key
+    }
+
+    /// Return whether every supervision-key component matches its source classifier.
+    pub fn host_run_supervision_key_parts_match(&self) -> bool {
+        self.host_run_supervision_key_parts_match
+    }
+
+    /// Return whether any host-run supervision-key component drifted.
+    pub fn has_host_run_supervision_key_integrity_drift(&self) -> bool {
+        self.has_host_run_supervision_key_integrity_drift
+    }
+
+    /// Return whether the supervision key has top-level host-run attention.
+    pub fn host_run_supervision_requires_attention(&self) -> bool {
+        self.host_run_supervision_requires_attention
+    }
+
+    /// Return whether the supervision key should enter any host action queue.
+    pub fn host_run_supervision_requires_action(&self) -> bool {
+        self.host_run_supervision_requires_action
+    }
+
+    /// Return whether the host run is fully settled for supervision.
+    pub fn host_run_supervision_is_settled(&self) -> bool {
+        self.host_run_supervision_is_settled
+    }
+
+    /// Return the supervision priority rank for host sorting.
+    pub fn host_run_supervision_priority_rank(&self) -> u8 {
+        self.host_run_supervision_priority_rank
+    }
+
+    /// Return whether the supervision key can route without manual review.
+    pub fn host_run_supervision_is_auto_routable(&self) -> bool {
+        self.host_run_supervision_is_auto_routable
+    }
+
+    /// Return whether the supervision key needs manual review.
+    pub fn host_run_supervision_requires_manual_review(&self) -> bool {
+        self.host_run_supervision_requires_manual_review
+    }
+
+    /// Return whether the supervision key needs investigation.
+    pub fn host_run_supervision_requires_investigation(&self) -> bool {
+        self.host_run_supervision_requires_investigation
+    }
+
+    /// Return whether the supervision key needs host-log integrity investigation.
+    pub fn host_run_supervision_requires_integrity_investigation(&self) -> bool {
+        self.host_run_supervision_requires_integrity_investigation
+    }
+
+    /// Return whether the supervision key needs triage.
+    pub fn host_run_supervision_requires_triage(&self) -> bool {
+        self.host_run_supervision_requires_triage
+    }
+
+    /// Return whether host-run supervision labels and key parts are internally consistent.
+    pub fn host_run_supervision_labels_match(&self) -> bool {
+        self.host_run_supervision_labels_match
+    }
+
+    /// Return whether any host-run supervision label or key component drifted.
+    pub fn has_host_run_supervision_label_integrity_drift(&self) -> bool {
+        self.has_host_run_supervision_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -11768,6 +12024,143 @@ impl ToolAuditSupervisorDrainHostRunQueueKey {
 }
 
 impl Display for ToolAuditSupervisorDrainHostRunQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable compact supervision key for the full supervisor host run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunSupervisionKey {
+    attention_kind: ToolAuditSupervisorDrainHostRunAttentionKind,
+    queue_group_key: ToolAuditSupervisorDrainHostRunQueueGroupKey,
+}
+
+impl ToolAuditSupervisorDrainHostRunSupervisionKey {
+    /// Create a supervision key from top-level attention and queue grouping.
+    pub fn new(
+        attention_kind: ToolAuditSupervisorDrainHostRunAttentionKind,
+        queue_group_key: ToolAuditSupervisorDrainHostRunQueueGroupKey,
+    ) -> Self {
+        Self {
+            attention_kind,
+            queue_group_key,
+        }
+    }
+
+    /// Parse a stable compact host-run supervision-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("attention=")?;
+        let (attention_label, queue_label) = rest.split_once("|queue=")?;
+        let attention_kind =
+            ToolAuditSupervisorDrainHostRunAttentionKind::from_label(attention_label)?;
+        let queue_group_key =
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::from_label(queue_label)?;
+        Some(Self::new(attention_kind, queue_group_key))
+    }
+
+    /// Return the top-level host-run attention classifier.
+    pub fn attention_kind(self) -> ToolAuditSupervisorDrainHostRunAttentionKind {
+        self.attention_kind
+    }
+
+    /// Return the aggregate host-run queue grouping key.
+    pub fn queue_group_key(self) -> ToolAuditSupervisorDrainHostRunQueueGroupKey {
+        self.queue_group_key
+    }
+
+    /// Return a stable compact label for host-run supervision grouping.
+    pub fn label(self) -> String {
+        format!(
+            "attention={}|queue={}",
+            self.attention_kind.as_str(),
+            self.queue_group_key.label()
+        )
+    }
+
+    /// Return whether this supervision-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this key's attention component matches the supplied attention.
+    pub fn attention_matches(
+        self,
+        attention_kind: ToolAuditSupervisorDrainHostRunAttentionKind,
+    ) -> bool {
+        self.attention_kind == attention_kind
+    }
+
+    /// Return whether this key's queue component matches the supplied queue group.
+    pub fn queue_group_key_matches(
+        self,
+        queue_group_key: ToolAuditSupervisorDrainHostRunQueueGroupKey,
+    ) -> bool {
+        self.queue_group_key == queue_group_key
+    }
+
+    /// Return whether every key component matches the supplied source classifiers.
+    pub fn parts_match(
+        self,
+        attention_kind: ToolAuditSupervisorDrainHostRunAttentionKind,
+        queue_group_key: ToolAuditSupervisorDrainHostRunQueueGroupKey,
+    ) -> bool {
+        self.attention_matches(attention_kind) && self.queue_group_key_matches(queue_group_key)
+    }
+
+    /// Return whether this supervision key has top-level host-run attention.
+    pub fn requires_attention(self) -> bool {
+        self.attention_kind.requires_attention()
+    }
+
+    /// Return whether this supervision key should enter any host action queue.
+    pub fn requires_action(self) -> bool {
+        self.requires_attention() || self.queue_group_key.is_actionable()
+    }
+
+    /// Return whether this supervision key is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.attention_kind.is_no_attention() && self.queue_group_key.is_settled()
+    }
+
+    /// Return the sortable supervision priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.queue_group_key.priority_rank()
+    }
+
+    /// Return whether the supervision key can route without manual review.
+    pub fn is_auto_routable(self) -> bool {
+        self.requires_action()
+            && self.queue_group_key.is_auto_routable()
+            && !self.attention_kind.has_multiple_components()
+    }
+
+    /// Return whether the supervision key needs manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.attention_kind.has_multiple_components()
+            || self.queue_group_key.requires_manual_review()
+    }
+
+    /// Return whether the supervision key needs investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.attention_kind.includes_host_investigation()
+            || self.attention_kind.includes_run_integrity_investigation()
+            || self.queue_group_key.requires_investigation()
+    }
+
+    /// Return whether the supervision key needs host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.attention_kind.includes_run_integrity_investigation()
+            || self.queue_group_key.requires_integrity_investigation()
+    }
+
+    /// Return whether the supervision key needs triage.
+    pub fn requires_triage(self) -> bool {
+        self.attention_kind.has_multiple_components() || self.queue_group_key.requires_triage()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunSupervisionKey {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
     }
@@ -21052,6 +21445,247 @@ mod tests {
         assert!(!stale_readiness_summary.host_run_queue_readiness_label_matches_readiness());
         assert!(!stale_readiness_summary.host_run_queue_route_readiness_labels_match());
         assert!(stale_readiness_summary.has_host_run_queue_route_readiness_label_integrity_drift());
+    }
+
+    #[test]
+    fn supervisor_drain_host_run_supervision_keys_are_stable() {
+        let key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ),
+        );
+
+        assert_eq!(
+            key.label(),
+            "attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunSupervisionKey::from_label(&key.label()),
+            Some(key)
+        );
+        assert!(key.label_matches_key());
+        assert_eq!(
+            key.attention_kind(),
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction
+        );
+        assert_eq!(
+            key.queue_group_key(),
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            )
+        );
+        assert!(key.attention_matches(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction
+        ));
+        assert!(
+            key.queue_group_key_matches(ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ))
+        );
+        assert!(key.parts_match(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ),
+        ));
+        assert!(key.requires_attention());
+        assert!(key.requires_action());
+        assert!(!key.is_settled());
+        assert_eq!(key.priority_rank(), 90);
+        assert!(!key.is_auto_routable());
+        assert!(key.requires_manual_review());
+        assert!(!key.requires_investigation());
+        assert!(!key.requires_integrity_investigation());
+        assert!(key.requires_triage());
+        assert_eq!(key.to_string(), key.label());
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunSupervisionKey::from_label(
+                "attention=no_attention|queue=no_route:no_action:settled:settled:extra",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunSupervisionKey::from_label(
+                "attentionish=no_attention|queue=no_route:no_action:settled:settled",
+            ),
+            None
+        );
+    }
+
+    #[test]
+    fn supervisor_drain_summary_flattens_host_run_supervision_flags() {
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let mut idle_sink = InMemoryToolAuditSink::new();
+        let idle_report = empty_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 2, &mut idle_sink)
+            .unwrap();
+        let idle_summary = idle_report.summary();
+        let idle_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::NoAttention,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::NoRoute,
+                ToolAuditSupervisorDrainHostRunActionLane::NoAction,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::Settled,
+            ),
+        );
+
+        assert_eq!(idle_report.host_run_supervision_key(), idle_key);
+        assert_eq!(
+            idle_report.host_run_supervision_key_label(),
+            "attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert!(idle_report.host_run_supervision_key_label_matches_key());
+        assert!(idle_report.host_run_supervision_attention_matches_kind());
+        assert!(idle_report.host_run_supervision_queue_group_matches_key());
+        assert!(idle_report.host_run_supervision_key_parts_match());
+        assert!(!idle_report.has_host_run_supervision_key_integrity_drift());
+        assert!(!idle_report.host_run_supervision_requires_attention());
+        assert!(!idle_report.host_run_supervision_requires_action());
+        assert!(idle_report.host_run_supervision_is_settled());
+        assert_eq!(idle_report.host_run_supervision_priority_rank(), 0);
+        assert!(!idle_report.host_run_supervision_is_auto_routable());
+        assert!(!idle_report.host_run_supervision_requires_manual_review());
+        assert!(!idle_report.host_run_supervision_requires_investigation());
+        assert!(!idle_report.host_run_supervision_requires_integrity_investigation());
+        assert!(!idle_report.host_run_supervision_requires_triage());
+        assert!(idle_report.host_run_supervision_labels_match());
+        assert!(!idle_report.has_host_run_supervision_label_integrity_drift());
+
+        assert_eq!(idle_summary.host_run_supervision_key, idle_key);
+        assert_eq!(idle_summary.host_run_supervision_key(), idle_key);
+        assert_eq!(
+            idle_summary.host_run_supervision_key_label,
+            "attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert_eq!(
+            idle_summary.host_run_supervision_key_label(),
+            "attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert!(idle_summary.host_run_supervision_key_label_matches_key);
+        assert!(idle_summary.host_run_supervision_key_label_matches_key());
+        assert!(idle_summary.host_run_supervision_attention_matches_kind);
+        assert!(idle_summary.host_run_supervision_attention_matches_kind());
+        assert!(idle_summary.host_run_supervision_queue_group_matches_key);
+        assert!(idle_summary.host_run_supervision_queue_group_matches_key());
+        assert!(idle_summary.host_run_supervision_key_parts_match);
+        assert!(idle_summary.host_run_supervision_key_parts_match());
+        assert!(!idle_summary.has_host_run_supervision_key_integrity_drift);
+        assert!(!idle_summary.has_host_run_supervision_key_integrity_drift());
+        assert!(!idle_summary.host_run_supervision_requires_attention);
+        assert!(!idle_summary.host_run_supervision_requires_attention());
+        assert!(!idle_summary.host_run_supervision_requires_action);
+        assert!(!idle_summary.host_run_supervision_requires_action());
+        assert!(idle_summary.host_run_supervision_is_settled);
+        assert!(idle_summary.host_run_supervision_is_settled());
+        assert_eq!(idle_summary.host_run_supervision_priority_rank, 0);
+        assert_eq!(idle_summary.host_run_supervision_priority_rank(), 0);
+        assert!(!idle_summary.host_run_supervision_is_auto_routable);
+        assert!(!idle_summary.host_run_supervision_is_auto_routable());
+        assert!(!idle_summary.host_run_supervision_requires_manual_review);
+        assert!(!idle_summary.host_run_supervision_requires_manual_review());
+        assert!(!idle_summary.host_run_supervision_requires_investigation);
+        assert!(!idle_summary.host_run_supervision_requires_investigation());
+        assert!(!idle_summary.host_run_supervision_requires_integrity_investigation);
+        assert!(!idle_summary.host_run_supervision_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_supervision_requires_triage);
+        assert!(!idle_summary.host_run_supervision_requires_triage());
+        assert!(idle_summary.host_run_supervision_labels_match);
+        assert!(idle_summary.host_run_supervision_labels_match());
+        assert!(!idle_summary.has_host_run_supervision_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_supervision_label_integrity_drift());
+
+        let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(continuation_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+            ])
+            .completed_without_failures());
+        let mut continuation_sink = InMemoryToolAuditSink::new();
+        let continuation_report = continuation_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 1, &mut continuation_sink)
+            .unwrap();
+        let continuation_summary = continuation_report.summary();
+        let continuation_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ),
+        );
+
+        assert_eq!(
+            continuation_report.host_run_supervision_key(),
+            continuation_key
+        );
+        assert_eq!(
+            continuation_summary.host_run_supervision_key_label(),
+            "attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert!(continuation_summary.host_run_supervision_key_label_matches_key());
+        assert!(continuation_summary.host_run_supervision_attention_matches_kind());
+        assert!(continuation_summary.host_run_supervision_queue_group_matches_key());
+        assert!(continuation_summary.host_run_supervision_key_parts_match());
+        assert!(!continuation_summary.has_host_run_supervision_key_integrity_drift());
+        assert!(continuation_summary.host_run_supervision_requires_attention());
+        assert!(continuation_summary.host_run_supervision_requires_action());
+        assert!(!continuation_summary.host_run_supervision_is_settled());
+        assert_eq!(
+            continuation_summary.host_run_supervision_priority_rank(),
+            90
+        );
+        assert!(!continuation_summary.host_run_supervision_is_auto_routable());
+        assert!(continuation_summary.host_run_supervision_requires_manual_review());
+        assert!(!continuation_summary.host_run_supervision_requires_investigation());
+        assert!(!continuation_summary.host_run_supervision_requires_integrity_investigation());
+        assert!(continuation_summary.host_run_supervision_requires_triage());
+        assert!(continuation_summary.host_run_supervision_labels_match());
+        assert!(!continuation_summary.has_host_run_supervision_label_integrity_drift());
+
+        let mut drift_summary = continuation_summary.clone();
+        drift_summary.host_run_supervision_key = idle_key;
+        drift_summary.host_run_supervision_key_label = idle_key.label();
+        drift_summary.host_run_supervision_attention_matches_kind = false;
+        drift_summary.host_run_supervision_queue_group_matches_key = false;
+        drift_summary.host_run_supervision_key_parts_match = false;
+        drift_summary.has_host_run_supervision_key_integrity_drift = true;
+        drift_summary.host_run_supervision_labels_match = false;
+        drift_summary.has_host_run_supervision_label_integrity_drift = true;
+        assert!(drift_summary.host_run_supervision_key_label_matches_key());
+        assert!(!drift_summary.host_run_supervision_attention_matches_kind());
+        assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
+        assert!(!drift_summary.host_run_supervision_key_parts_match());
+        assert!(drift_summary.has_host_run_supervision_key_integrity_drift());
+        assert!(!drift_summary.host_run_supervision_labels_match());
+        assert!(drift_summary.has_host_run_supervision_label_integrity_drift());
+
+        let mut stale_label_summary = continuation_summary;
+        stale_label_summary.host_run_supervision_key_label =
+            "attention=no_attention|queue=no_route:no_action:settled:settled".to_string();
+        stale_label_summary.host_run_supervision_key_label_matches_key = false;
+        stale_label_summary.host_run_supervision_labels_match = false;
+        stale_label_summary.has_host_run_supervision_label_integrity_drift = true;
+        assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
+        assert!(!stale_label_summary.host_run_supervision_labels_match());
+        assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
     }
 
     #[test]
