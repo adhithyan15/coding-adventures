@@ -185,6 +185,9 @@ All notable changes to this package will be documented in this file.
   grouping for supervisor drain run report and summary dashboards.
 - Flattened host-run supervision routing, priority, review, investigation,
   triage, and label-integrity flags in supervisor drain run summaries.
+- Compact host-run escalation labels, ranks, routing flags, and
+  label-integrity checks for supervisor drain run report and summary
+  dashboards.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
