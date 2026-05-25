@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.5.0 — 2026-05-24
+
+**Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator
+(TypeScript port).**
+
+Ports Python ``cas-summation`` 1.5.0 (PR #4215).  Closes the mixed
+sub-polynomial gap left by Phase 55 (bounded × Log) and Phase 56
+(bounded × Sqrt).  The Log and Sqrt factors must both be present;
+one-only patterns continue to fall through to Phase 55 / 56.
+
+### Added
+
+- **`boundedLogSqrtHalfDegree(node, k)`** — returns the Sqrt half-degree
+  for ``Mul`` with exactly one ``Log(diverging)`` AND one ``Sqrt(positive-
+  poly)`` factor (plus optional bounded factors).  Returns ``undefined``
+  for zero/two-Log, zero/two-Sqrt, or unrecognised factors.
+
+### Changed
+
+- ``gVanishesAtInfinity`` adds Phase 57 branch after Phase 56, comparing
+  ``denDeg > halfDeg`` (polynomial) or short-circuiting on non-polynomial
+  diverging denominator.
+
+### Tests
+
+4 new ``summation: Phase 57 bounded × log × sqrt numerator`` cases.
+Full suite: **73 passed** (was 69; +4).
+
 ## 1.4.0 — 2026-05-23
 
 **Phase 56 — Bounded × Sqrt(diverging) numerator pattern (TypeScript port).**

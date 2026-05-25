@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.5.0 — 2026-05-24
+
+**Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator
+(Rust port).**
+
+Ports Python ``cas-summation`` 1.5.0 (PR #4215).  Closes the mixed
+sub-polynomial gap left by Phase 55 (bounded × Log) and Phase 56
+(bounded × Sqrt).
+
+### Added
+
+- **`bounded_log_sqrt_inner_deg(node, k) -> Option<i64>`** — returns
+  ``deg(P)`` (×2 half-degree to stay in i64 arithmetic) for ``Mul``
+  with exactly one ``Log(diverging)`` AND one ``Sqrt(positive-poly)``
+  factor (plus optional bounded factors).  Returns ``None`` for zero/
+  two-Log, zero/two-Sqrt, or unrecognised factors.
+
+### Changed
+
+- ``g_vanishes_at_infinity`` adds Phase 57 branch after Phase 56,
+  comparing ``2 * den_deg > deg(P)`` for polynomial denominators or
+  short-circuiting on non-polynomial divergence.
+
+### Tests
+
+3 new ``phase57_*`` cases.  Full suite: **72 passed** (was 69; +3).
+
 ## 1.4.0 — 2026-05-23
 
 **Phase 56 — Bounded × Sqrt(diverging) numerator pattern (Rust port).**
