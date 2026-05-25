@@ -1333,6 +1333,7 @@ pub struct BrowserFormControl {
     pub maxlength: Option<String>,
     pub size: Option<String>,
     pub list: Option<String>,
+    pub datalist_options: Vec<String>,
     pub form_action: Option<String>,
     pub resolved_form_action: Option<String>,
     pub form_enctype: Option<String>,
@@ -10562,6 +10563,51 @@ fn browser_content_options(element: &Element) -> Vec<String> {
     }
 }
 
+fn browser_control_datalist_options(element: &Element, body_root: &[Node]) -> Vec<String> {
+    browser_control_list(element)
+        .as_deref()
+        .and_then(|list_id| datalist_options_by_id(body_root, list_id))
+        .unwrap_or_default()
+}
+
+fn datalist_options_by_id(nodes: &[Node], list_id: &str) -> Option<Vec<String>> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "datalist" && element.attribute("id") == Some(list_id) {
+            return Some(collect_datalist_options(&element.children));
+        }
+
+        if let Some(options) = datalist_options_by_id(&element.children, list_id) {
+            return Some(options);
+        }
+    }
+
+    None
+}
+
+fn collect_datalist_options(nodes: &[Node]) -> Vec<String> {
+    let mut options = Vec::new();
+    collect_datalist_options_into(nodes, &mut options);
+    options
+}
+
+fn collect_datalist_options_into(nodes: &[Node], options: &mut Vec<String>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "option" {
+            options.push(browser_option_value(element));
+        } else {
+            collect_datalist_options_into(&element.children, options);
+        }
+    }
+}
+
 fn selected_option_value(nodes: &[Node]) -> Option<String> {
     let mut first = None;
     selected_option_value_in(nodes, &mut first).or(first)
@@ -10697,6 +10743,7 @@ fn collect_form_controls_for_form(
         target_form.attribute("id"),
         None,
         None,
+        body_root,
     );
     controls
 }
@@ -10710,6 +10757,7 @@ fn collect_form_controls_for_form_into(
     target_form_id: Option<&str>,
     current_form: Option<*const Element>,
     current_label_text: Option<&str>,
+    body_root: &[Node],
 ) {
     for node in nodes {
         let Node::Element(element) = node else {
@@ -10742,6 +10790,7 @@ fn collect_form_controls_for_form_into(
                     labels,
                     base_href,
                     current_label_text,
+                    body_root,
                 ));
             }
         }
@@ -10755,6 +10804,7 @@ fn collect_form_controls_for_form_into(
             target_form_id,
             element_form,
             child_label_text,
+            body_root,
         );
     }
 }
@@ -10764,6 +10814,7 @@ fn browser_form_control(
     labels: &[(String, String)],
     base_href: Option<&str>,
     current_label_text: Option<&str>,
+    body_root: &[Node],
 ) -> BrowserFormControl {
     let control_type = browser_content_control_type(element)
         .expect("browser_form_control is only called for form controls");
@@ -10804,6 +10855,7 @@ fn browser_form_control(
         maxlength: browser_control_maxlength(element),
         size: browser_control_size(element),
         list: browser_control_list(element),
+        datalist_options: browser_control_datalist_options(element, body_root),
         resolved_form_action: browser_control_form_action(element)
             .as_deref()
             .and_then(|action| resolve_browser_url(action, base_href)),
@@ -11037,7 +11089,7 @@ fn heading_level(name: &str) -> Option<u8> {
 fn is_browser_invisible_element(name: &str) -> bool {
     matches!(
         name,
-        "base" | "link" | "meta" | "script" | "style" | "template" | "title"
+        "base" | "datalist" | "link" | "meta" | "script" | "style" | "template" | "title"
     )
 }
 
@@ -11564,6 +11616,7 @@ mod tests {
              <input id=q name=q placeholder=\"Search terms\" required autocomplete=search \
              autocapitalize=words enterkeyhint=search dirname=q.dir autofocus \
              inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions>\
+             <datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist>\
              <label>Notes<textarea id=notes name=notes readonly maxlength=500 \
              autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
              <fieldset><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
@@ -11606,6 +11659,10 @@ mod tests {
         assert_eq!(controls[0].maxlength.as_deref(), Some("80"));
         assert_eq!(controls[0].size.as_deref(), Some("40"));
         assert_eq!(controls[0].list.as_deref(), Some("query-suggestions"));
+        assert_eq!(
+            controls[0].datalist_options,
+            vec!["Rust", "HTML", "Browser APIs"]
+        );
         assert!(controls[0].autofocus);
         assert!(controls[0].required);
         assert!(controls[1].readonly);

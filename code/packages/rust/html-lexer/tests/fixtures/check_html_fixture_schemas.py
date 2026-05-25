@@ -499,6 +499,7 @@ def check_browser_expected_lists(
             ):
                 require_optional_nullable_string(control_path, control, field, errors)
             require_optional_string_list(control_path, control, "labels", errors)
+            require_optional_string_list(control_path, control, "datalist_options", errors)
             require_optional_nullable_string(control_path, control, "value", errors)
             require_boolean(control_path, control, "disabled", errors)
             require_optional_boolean(control_path, control, "required", errors)
