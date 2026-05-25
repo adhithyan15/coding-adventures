@@ -938,18 +938,64 @@ fn run_pipeline(
             )
             .map(|r| r.output),
         ),
-        "flutter" => emit_single_file(
-            backend,
-            output_path,
-            &mosmodel_out.component.component,
-            "dart",
-            mosaic_emit_flutter::pipeline::from_pipeline(
+        "flutter" => {
+            // UI32-K-flutter: route through `from_pipeline_with_options`
+            // so --emit-project activates the Flutter app shell.
+            // Bare invocation is byte-identical to pre-UI32.
+            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
+            fl_opts.emit_project = emit_project;
+            let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &fl_opts,
             )
-            .map(|r| r.output),
-        ),
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: flutter pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.dart", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-flutter: emit pubspec.yaml + README.md flat
+            // next to .dart; lib/main.dart nested per Flutter
+            // convention.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("pubspec.yaml"), &proj.pubspec_yaml),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                let main_dart_path = side_file_path("lib/main.dart");
+                if let Some(parent) = std::path::Path::new(&main_dart_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!(
+                                "mosaic-compile: failed to create {}: {e}",
+                                parent.display()
+                            );
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&main_dart_path, &proj.main_dart);
+                eprintln!("Written: {main_dart_path}");
+            }
+        }
         _ => {
             eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");
             process::exit(1);
