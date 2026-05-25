@@ -1081,6 +1081,11 @@ pub struct BrowserContentNode {
     pub list_item_value: Option<String>,
     pub quote_cite: Option<String>,
     pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
     pub break_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub section_kind: Option<String>,
@@ -1218,6 +1223,11 @@ pub struct BrowserRenderNode {
     pub list_item_value: Option<String>,
     pub quote_cite: Option<String>,
     pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
     pub break_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub section_kind: Option<String>,
@@ -1589,6 +1599,11 @@ impl BrowserRenderNode {
             list_item_value: content_node.list_item_value.clone(),
             quote_cite: content_node.quote_cite.clone(),
             resolved_quote_cite: content_node.resolved_quote_cite.clone(),
+            data_value: content_node.data_value.clone(),
+            datetime: content_node.datetime.clone(),
+            edit_cite: content_node.edit_cite.clone(),
+            resolved_edit_cite: content_node.resolved_edit_cite.clone(),
+            edit_datetime: content_node.edit_datetime.clone(),
             break_kind: content_node.break_kind.clone(),
             heading_level: content_node.heading_level,
             section_kind: content_node.section_kind.clone(),
@@ -9278,6 +9293,11 @@ fn collect_browser_content_nodes_with_mode(
                         list_item_value: None,
                         quote_cite: None,
                         resolved_quote_cite: None,
+                        data_value: None,
+                        datetime: None,
+                        edit_cite: None,
+                        resolved_edit_cite: None,
+                        edit_datetime: None,
                         break_kind: None,
                         heading_level: None,
                         section_kind: None,
@@ -9342,6 +9362,7 @@ fn browser_content_node_for_element(
     let src = browser_content_src(element);
     let poster = browser_media_poster(element);
     let quote_cite = browser_quote_cite(element);
+    let edit_cite = browser_edit_cite(element);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let aria_label = browser_aria_label(element);
     let accessible_name = browser_accessible_name(element, role, &control_labels, id_texts);
@@ -9488,6 +9509,13 @@ fn browser_content_node_for_element(
             .as_deref()
             .and_then(|cite| resolve_browser_url(cite, base_href)),
         quote_cite,
+        data_value: browser_data_value(element),
+        datetime: browser_datetime(element),
+        resolved_edit_cite: edit_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        edit_cite,
+        edit_datetime: browser_edit_datetime(element),
         break_kind: browser_break_kind(element),
         heading_level: heading_level(&element.name),
         section_kind: browser_section_kind(element),
@@ -9512,6 +9540,11 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "hr" => Some("separator"),
         "blockquote" => Some("quote_block"),
         "q" => Some("quote"),
+        "data" => Some("data"),
+        "time" => Some("time"),
+        "mark" => Some("mark"),
+        "ins" => Some("inserted"),
+        "del" => Some("deleted"),
         "p" => Some("paragraph"),
         "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
         "article" => Some("article"),
@@ -9956,6 +9989,38 @@ fn browser_quote_cite(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "blockquote" | "q" => element.attribute("cite").map(ToOwned::to_owned),
         _ => None,
+    }
+}
+
+fn browser_data_value(element: &Element) -> Option<String> {
+    if element.name == "data" {
+        element.attribute("value").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_datetime(element: &Element) -> Option<String> {
+    if element.name == "time" {
+        element.attribute("datetime").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_edit_cite(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "ins" | "del") {
+        element.attribute("cite").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_edit_datetime(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "ins" | "del") {
+        element.attribute("datetime").map(ToOwned::to_owned)
+    } else {
+        None
     }
 }
 
@@ -10777,7 +10842,8 @@ fn browser_render_display(role: &str) -> &'static str {
         "article" | "aside" | "footer" | "header" | "heading" | "heading_group" | "main"
         | "navigation" | "paragraph" | "preformatted" | "section" | "block" | "form"
         | "form_group" | "legend" | "list" | "quote_block" | "separator" => "block",
-        "label" | "option" | "option_group" | "quote" => "inline",
+        "data" | "deleted" | "inserted" | "label" | "mark" | "option" | "option_group"
+        | "quote" | "time" => "inline",
         "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
@@ -11612,6 +11678,64 @@ mod tests {
             render_tree.children[4].children[0].children[1].display,
             "inline"
         );
+    }
+
+    #[test]
+    fn browser_inline_semantic_metadata_tracks_machine_readable_annotations() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/page.html\">\
+             <body><p>Version <data id=version value=\"2.1\">two point one</data> shipped \
+             <time id=date datetime=\"2026-05-25\">today</time>. \
+             <ins id=add cite=changes.html datetime=\"2026-05-25T06:00:00Z\">Added</ins> \
+             <del id=remove cite=\"#old\" datetime=\"2026-05-24\">Removed</del> \
+             <mark id=highlight>Important</mark></p>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+
+        let data = &paragraph.children[1];
+        assert_eq!(data.role, "data");
+        assert_eq!(data.data_value.as_deref(), Some("2.1"));
+        assert_eq!(data.children[0].text.as_deref(), Some("two point one"));
+
+        let time = &paragraph.children[3];
+        assert_eq!(time.role, "time");
+        assert_eq!(time.datetime.as_deref(), Some("2026-05-25"));
+        assert_eq!(time.children[0].text.as_deref(), Some("today"));
+
+        let inserted = &paragraph.children[5];
+        assert_eq!(inserted.role, "inserted");
+        assert_eq!(inserted.edit_cite.as_deref(), Some("changes.html"));
+        assert_eq!(
+            inserted.resolved_edit_cite.as_deref(),
+            Some("https://example.test/docs/changes.html")
+        );
+        assert_eq!(
+            inserted.edit_datetime.as_deref(),
+            Some("2026-05-25T06:00:00Z")
+        );
+
+        let deleted = &paragraph.children[6];
+        assert_eq!(deleted.role, "deleted");
+        assert_eq!(deleted.edit_cite.as_deref(), Some("#old"));
+        assert_eq!(
+            deleted.resolved_edit_cite.as_deref(),
+            Some("https://example.test/docs/page.html#old")
+        );
+        assert_eq!(deleted.edit_datetime.as_deref(), Some("2026-05-24"));
+
+        let mark = &paragraph.children[7];
+        assert_eq!(mark.role, "mark");
+        assert_eq!(mark.children[0].text.as_deref(), Some("Important"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].children[1].display, "inline");
+        assert_eq!(render_tree.children[0].children[3].display, "inline");
+        assert_eq!(render_tree.children[0].children[5].display, "inline");
+        assert_eq!(render_tree.children[0].children[6].display, "inline");
+        assert_eq!(render_tree.children[0].children[7].display, "inline");
     }
 
     #[test]
