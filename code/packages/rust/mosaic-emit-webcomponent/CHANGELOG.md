@@ -4,6 +4,40 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI32-K-webcomp — `--emit-project` standalone-HTML shell
+
+L4 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309). `mosaic-compile --backend webcomponent --emit-project` now produces an `index.html` shell alongside the component `.js`:
+
+- `index.html` — complete `<!DOCTYPE html>` document with
+  `<script type="module" src="./{Component}.js"></script>` and
+  `<mos-{kebab(Component)}></mos-{kebab(Component)}>` in `<body>`.
+  The shell tag matches the `customElements.define` registration
+  the emitter produces (same `to_kebab_case` helper + `mos-` prefix).
+- `README.md` — open-in-browser prose with the
+  `python3 -m http.server 8000` / `npx serve` recipes (ES modules
+  must be served over HTTP, not `file://`, due to CORS).
+
+New public API (matches L2 React / L3 HTML pattern):
+
+- `pub struct EmitOptions { emit_project: bool }`
+- `pub struct ProjectFiles { index_html, readme }`
+- `pub struct PipelineEmitResultWithProject { output,
+  component_name, project: Option<ProjectFiles> }`
+- `pub fn from_pipeline_with_options(...)` — new entry point.
+  Existing `from_pipeline(...)` is unchanged.
+
+UI32 §3.6.2 WebComponent row contract: the Custom Element tag
+name MUST contain a hyphen per HTML spec. The `mos-` prefix +
+`to_kebab_case` helper guarantee this for any PascalCase or
+single-word component (`Hello` → `mos-hello`, `ProfileCard` →
+`mos-profile-card`). The shell tag and the
+`customElements.define("mos-...", ...)` registration agree by
+construction.
+
+9 new tests cover the spec §3 gates plus a Custom Element
+hyphen-contract test that exercises single-word + multi-word
+component names. Total tests: 92 (was 83, +9).
+
 ### Added
 
 - **UI31-K-webcomp** — RTL contract for `HostTable`. The shadow-DOM
