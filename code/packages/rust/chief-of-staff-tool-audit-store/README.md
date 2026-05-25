@@ -280,6 +280,9 @@ The crate keeps the boundary narrow:
   lane queue action-lane labels that collapse queue keys and digests into
   settled, auto-route, review, investigation, integrity investigation, or
   triage queues
+- supervisor drain reports and summaries flatten host-run escalation dashboard
+  lane queue action-lane status flags and priority ranks for queue keys and
+  queue digests
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
