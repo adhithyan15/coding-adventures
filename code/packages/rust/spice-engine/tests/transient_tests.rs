@@ -11,7 +11,7 @@ use spice_engine::{
     Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
     DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult,
     Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
-    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
     PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
     TransmissionLine, VoltageSource, Waveform,
@@ -1072,6 +1072,40 @@ fn pole_zero_rc_lowpass_returns_simple_rc_pole() {
             }],
         }
     );
+}
+
+#[test]
+fn pole_zero_corners_runs_selected_topology_per_corner() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let result = spice_engine::pole_zero_corners(
+        &circuit,
+        "Vin",
+        "out",
+        PoleZeroTopology::RcLowpass,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "cap-high",
+                vec![CornerOverride::new("C1", "capacitance", 2.0e-6)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.input_source, "Vin");
+    assert_eq!(result.output_node, "out");
+    assert_eq!(result.topology, PoleZeroTopology::RcLowpass);
+    assert_eq!(result.points.len(), 2);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "cap-high");
+    assert_close(result.points[0].result.entries[0].real, -1.0e3);
+    assert_close(result.points[1].result.entries[0].real, -5.0e2);
 }
 
 #[test]

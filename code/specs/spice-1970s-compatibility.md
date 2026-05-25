@@ -333,6 +333,9 @@ Status:
 - Periodic steady-state analysis can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the same shooting-Newton solve options.
+- Constrained pole-zero analysis can now be evaluated across named corners in
+  the live Rust SPICE package, reusing the existing corner override surface
+  for the selected Phase 8 topology.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
