@@ -2,6 +2,60 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.22.0] - 2026-05-25
+
+### Added (Phase 6u — `case … when … else … end`)
+
+New grammar rules:
+
+```
+statement      = ... | until_statement | case_statement | return_statement | ... ;
+case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
+when_clause    = "when" expression { COMMA expression }
+                      { !"when" !"else" !"end" statement } ;
+```
+
+`else_clause` is reused from the existing `if_statement` definition — the else body parses identically to `if … else … end`.
+
+Multi-value `when` lists are supported (`when 1, 2, 3` parses with three expression children inside the clause).  Each when_clause's body uses the same negative-lookahead repetition (`{ !"when" !"else" !"end" statement }`) as if/else, so it stops cleanly at the next clause boundary.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+Chained `Expr::If` with `==` comparisons:
+
+```
+case x
+when v1, v2 then a
+when v3     then b
+else c
+end
+```
+
+becomes
+
+```
+if ((x == v1) || (x == v2)) then a
+else if (x == v3) then b
+else c
+```
+
+- Each when_clause becomes one nested `If` step.
+- Multi-value `when 1, 2, 3` lists OR-fold left-to-right using `BuiltinCall("or", ...)`.
+- The else_clause (or implicit `NilLit` block) caps the chain.
+
+### v0 deferred limitations
+
+- `when` uses `==` instead of Ruby's `===` (case-equality, class-aware).  Phase 7d will add full `case/in` pattern matching with proper match semantics.
+- Range/Regex/Class values in `when` lists parse syntactically but don't match Ruby's case-equality semantics under v0's `==` lowering.
+- Splat in `when` argument lists (`when *arr`) is not supported.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 98 → **101** (+3):
+  - `test_parse_case_single_when` — one when, no else.
+  - `test_parse_case_multiple_whens_and_else` — two whens + else.
+  - `test_parse_when_with_multiple_values` — `when 1, 2, 3`.
+
 ## [0.21.0] - 2026-05-25
 
 ### Added (Phase 6t — `yield` keyword with optional args)

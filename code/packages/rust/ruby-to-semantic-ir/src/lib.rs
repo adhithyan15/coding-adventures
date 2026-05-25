@@ -1891,6 +1891,125 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 6u — `case … when … else … end`
+    // -----------------------------------------------------------------
+    //
+    // case x
+    // when v1, v2 then a
+    // when v3     then b
+    // else c
+    // end
+    //
+    // lowers to a chained Expr::If with `==`-comparisons (joined by
+    // `or` for multi-value whens) and the else block as the chain's
+    // final tail.
+
+    #[test]
+    fn case_single_when_lowers_to_if_with_eq() {
+        // `case x; when 1; y = 1; end` — one when, no else.
+        let m = lower("x = 1\ncase x\nwhen 1\n  y = 1\nend\n");
+        let b = main_body(&m);
+        // Second stmt should be an ExprStmt(If) — the case lowering.
+        let if_expr = match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt(If) from case, got {:?}", other),
+        };
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If from case, got {:?}", other),
+        };
+        // The condition is BuiltinCall("==", [VarRef(x), IntLit(1)]).
+        assert!(
+            matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "=="),
+            "expected `==` builtin in when cond, got {:?}",
+            cond
+        );
+    }
+
+    #[test]
+    fn case_with_multi_value_when_lowers_to_or_chain() {
+        // `when 1, 2, 3` → cond is `(((x==1) || (x==2)) || (x==3))`.
+        let m = lower("x = 1\ncase x\nwhen 1, 2, 3\n  y = 1\nend\n");
+        let b = main_body(&m);
+        let if_expr = match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt(If), got {:?}", other),
+        };
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        // Outermost should be `or`.  Count `==` and `or` nodes.
+        fn count_builtin(e: &Expr, target: &str) -> usize {
+            match e {
+                Expr::BuiltinCall { name, args, .. } => {
+                    let mine = if name == target { 1 } else { 0 };
+                    mine + args.iter().map(|a| count_builtin(a, target)).sum::<usize>()
+                }
+                _ => 0,
+            }
+        }
+        assert_eq!(
+            count_builtin(cond.as_ref(), "=="),
+            3,
+            "expected three `==` comparisons for three when values"
+        );
+        assert_eq!(
+            count_builtin(cond.as_ref(), "or"),
+            2,
+            "expected two `or` joins for three values (left-fold)"
+        );
+    }
+
+    #[test]
+    fn case_with_else_terminates_chain() {
+        // `case x; when 1; a=1; else a=2; end` — else body sits in the
+        // chain's outermost else-branch.
+        let m = lower("x = 1\ncase x\nwhen 1\n  a = 1\nelse\n  a = 2\nend\n");
+        let b = main_body(&m);
+        let if_expr = match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt(If), got {:?}", other),
+        };
+        let else_branch = match if_expr {
+            Expr::If { else_branch, .. } => else_branch,
+            other => panic!("expected If, got {:?}", other),
+        };
+        // Else branch's stmts should carry the `a = 2` assignment.
+        // (a was first defined in the if's then-branch as a LetBinding;
+        // the else-branch sees it as already declared via the shared
+        // outer scope snapshot.)
+        assert!(
+            !else_branch.stmts.is_empty(),
+            "expected else block to carry the `a = 2` stmt, got empty"
+        );
+    }
+
+    #[test]
+    fn case_without_else_uses_nil_tail() {
+        // No else clause → else-branch is `Block{stmts: [], value: NilLit}`.
+        let m = lower("x = 1\ncase x\nwhen 1\n  a = 1\nend\n");
+        let b = main_body(&m);
+        let if_expr = match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt(If), got {:?}", other),
+        };
+        let else_branch = match if_expr {
+            Expr::If { else_branch, .. } => else_branch,
+            other => panic!("expected If, got {:?}", other),
+        };
+        assert!(
+            else_branch.stmts.is_empty(),
+            "expected empty else block when no else clause"
+        );
+        assert!(
+            matches!(&else_branch.value, Expr::NilLit { .. }),
+            "expected NilLit tail when no else clause, got {:?}",
+            else_branch.value
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6t — `yield` keyword
     // -----------------------------------------------------------------
     //

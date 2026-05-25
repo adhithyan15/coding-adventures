@@ -1661,6 +1661,67 @@ mod tests {
             "parenless form must not produce an LPAREN");
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 6u — `case … when … else … end`
+    //
+    // Grammar:
+    //   case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
+    //   when_clause    = "when" expression { COMMA expression }
+    //                          { !"when" !"else" !"end" statement } ;
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_case_single_when() {
+        // Smallest form: one when clause, no else.
+        let ast = parse_ruby("case x\nwhen 1\n  y = 1\nend");
+        let cs = find_descendant(&ast, "case_statement")
+            .expect("expected case_statement node");
+        let when_count = cs
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "when_clause"))
+            .count();
+        assert_eq!(when_count, 1, "expected 1 when_clause, got {when_count}");
+        // No else_clause.
+        assert!(
+            find_descendant(cs, "else_clause").is_none(),
+            "expected no else_clause"
+        );
+    }
+
+    #[test]
+    fn test_parse_case_multiple_whens_and_else() {
+        let ast = parse_ruby(
+            "case x\nwhen 1\n  a = 1\nwhen 2\n  a = 2\nelse\n  a = 3\nend",
+        );
+        let cs = find_descendant(&ast, "case_statement")
+            .expect("expected case_statement node");
+        let when_count = cs
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "when_clause"))
+            .count();
+        assert_eq!(when_count, 2, "expected 2 when_clauses, got {when_count}");
+        assert!(
+            find_descendant(cs, "else_clause").is_some(),
+            "expected else_clause"
+        );
+    }
+
+    #[test]
+    fn test_parse_when_with_multiple_values() {
+        // `when 1, 2, 3` — comma-separated value list inside one clause.
+        let ast = parse_ruby("case x\nwhen 1, 2, 3\n  a = 1\nend");
+        let wc = find_descendant(&ast, "when_clause")
+            .expect("expected when_clause node");
+        let value_count = wc
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .count();
+        assert_eq!(value_count, 3, "expected 3 when values, got {value_count}");
+    }
+
     #[test]
     fn test_parse_yield_with_splat_arg() {
         // `yield *arr` — splat arg reuses Phase 6s's call_arg shape.
