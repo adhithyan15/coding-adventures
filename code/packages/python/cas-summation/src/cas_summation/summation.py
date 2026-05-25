@@ -845,6 +845,19 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 61: ``Mul(Sqrt(P1), Sqrt(P2), polynomial..., bounded...)``
+    # numerator.  Extends Phases 53/56/59 to the case of two Sqrt factors.
+    # effective_x2 = deg(P1) + deg(P2) + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    tsp_x2 = _two_sqrt_poly_effective_x2(num, k)
+    if tsp_x2 is not None:
+        den_deg_tsp = _polynomial_degree_in_k(den, k)
+        if den_deg_tsp is not None:
+            if 2 * den_deg_tsp > tsp_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1489,6 +1502,83 @@ def _bounded_log_sqrt_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None
     if log_count != 1 or sqrt_inner_deg is None:
         return None
     return sqrt_inner_deg + 2 * poly_deg_sum
+
+
+def _two_sqrt_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``deg(P1) + deg(P2) + 2·poly_deg`` when ``node`` is a ``Mul``
+    with **exactly two** ``Sqrt(positive-leading polynomial)`` factors, any
+    polynomial factors (total degree ``m``), and any number of bounded
+    factors; ``None`` otherwise.
+
+    Phase 61 — Two-Sqrt × polynomial numerator.
+
+    Extends Phase 53 (``Mul(Sqrt(P), polynomial_only)``), Phase 56
+    (``bounded × Sqrt``), and Phase 59 (``bounded × Sqrt × poly``) to the
+    case where two distinct square-root factors appear, e.g.
+    ``Sqrt(k) · Sqrt(k + 1) · k`` (product of consecutive Sqrt factors).
+
+    Effective growth:
+    ``Sqrt(P1(k)) · Sqrt(P2(k)) · k^m ≈ k^{deg(P1)/2 + deg(P2)/2 + m}``.
+    Using the ×2 integer trick:
+    ``effective_x2 = deg(P1) + deg(P2) + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    ``Log`` factors are refused (belong to Phase 60 / a future phase).
+
+    +-----------------------------------------------------+-------------------+
+    | Input                                               | Return            |
+    +=====================================================+===================+
+    | ``Mul(Sqrt(k), Sqrt(k+1), k)``                      | ``1 + 1 + 2 = 4`` |
+    | ``Mul(Sqrt(k²), Sqrt(k), k²)``                      | ``2 + 1 + 4 = 7`` |
+    | ``Mul(Sin(k), Sqrt(k), Sqrt(k+1), k)``              | ``1 + 1 + 2 = 4`` |
+    | ``Mul(Sqrt(k), Sqrt(k))``                           | ``1 + 1 + 0 = 2`` |
+    | ``Mul(Sqrt(k), k)``                                 | None (only 1 Sqrt)|
+    | ``Mul(Sqrt(k), Sqrt(k), Sqrt(k))``                  | None (3 Sqrt)     |
+    | ``Mul(Log(k), Sqrt(k), Sqrt(k+1))``                 | None (Log present)|
+    +-----------------------------------------------------+-------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(positive-leading polynomial)`` → record ×2 degree in a
+           list; bail after the second one.
+         - ``Log(diverging)`` → bail immediately (log-bearing patterns
+           belong to Phase 60 and future log-Sqrt phases).
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded (non-polynomial, non-Log, non-Sqrt) → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly two Sqrt factors.
+      4. Return ``sqrt_deg1_x2 + sqrt_deg2_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs: list[int] = []
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        # Sqrt(positive-leading polynomial) factor?
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            sqrt_degs.append(deg_x2)
+            if len(sqrt_degs) > 2:
+                # Three or more Sqrt factors — refuse (conservative).
+                return None
+            continue
+        # Log(diverging) factor — refuse (belongs to phase 60+ territory).
+        if _is_log_of_diverging_in_k(arg, k):
+            return None
+        # Polynomial factor?
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        # Bounded (non-polynomial, non-Log, non-Sqrt)?
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Unrecognised factor — bail.
+        return None
+    if len(sqrt_degs) != 2:
+        return None
+    return sqrt_degs[0] + sqrt_degs[1] + 2 * poly_deg_sum
 
 
 def _try_power_of_k(

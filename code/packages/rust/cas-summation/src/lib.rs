@@ -1466,6 +1466,63 @@ fn bounded_log_sqrt_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> 
     Some(sid + 2 * poly_deg)
 }
 
+/// Phase 61 (Rust port): Return ``deg(P1) + deg(P2) + 2·poly_deg`` when
+/// ``node`` is a ``Mul`` with **exactly two** ``Sqrt(positive-leading
+/// polynomial)`` factors, any polynomial factors (total degree ``m``), and
+/// any number of bounded factors; ``None`` otherwise.
+///
+/// Closes the gap where Phases 51, 53, 56, 59, 60 each require exactly one
+/// Sqrt and hard-reject a second.
+///
+/// # Growth analysis (×2 trick)
+///
+/// ``Sqrt(P1(k)) · Sqrt(P2(k)) · k^m ≈ k^{deg(P1)/2 + deg(P2)/2 + m}``.
+/// ``effective_x2 = deg(P1) + deg(P2) + 2·m``.
+/// Caller checks ``2·den_deg > effective_x2``.
+///
+/// ``Log`` factors are refused (future Log×two-Sqrt phase territory).
+fn two_sqrt_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        // Sqrt(positive-leading polynomial) factor?
+        if let Some(deg_x2) = sqrt_effective_half_degree_x2(arg, k) {
+            sqrt_degs.push(deg_x2);
+            if sqrt_degs.len() > 2 {
+                // Three or more Sqrt factors — refuse.
+                return None;
+            }
+            continue;
+        }
+        // Log(diverging) factor — refuse.
+        if is_log_of_diverging_in_k(arg, k) {
+            return None;
+        }
+        // Polynomial factor?
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg += deg;
+            continue;
+        }
+        // Bounded (non-polynomial, non-Sqrt, non-Log)?
+        if is_bounded_in_k(arg, k) {
+            continue;
+        }
+        // Unrecognised factor — bail.
+        return None;
+    }
+    if sqrt_degs.len() != 2 {
+        return None;
+    }
+    Some(sqrt_degs[0] + sqrt_degs[1] + 2 * poly_deg)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -1608,6 +1665,20 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(blsp_x2) = bounded_log_sqrt_poly_effective_x2(num, k) {
         if let Some(den_deg_blsp) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_blsp > blsp_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 61: `Mul(Sqrt(P1), Sqrt(P2), polynomial..., bounded...)` numerator.
+    // Closes the gap where all prior Sqrt phases require exactly one Sqrt.
+    // effective_x2 = deg(P1) + deg(P2) + 2·poly_deg.
+    // Vanishes when `2·den_deg > effective_x2` (polynomial) or non-polynomial
+    // diverging denominator.
+    if let Some(tsp_x2) = two_sqrt_poly_effective_x2(num, k) {
+        if let Some(den_deg_tsp) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_tsp > tsp_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {

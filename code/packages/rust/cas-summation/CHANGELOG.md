@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.9.0 — 2026-05-25
+
+**Phase 61 — Two-Sqrt × polynomial numerator (Rust port).**
+
+Ports Python ``cas-summation`` 1.9.0.  Closes the gap where all prior Sqrt
+phases (51, 53, 56, 59, 60) hard-reject a second Sqrt operand.
+
+Effective growth: ``k^{deg(P1)/2 + deg(P2)/2 + m}``.
+×2 trick: ``effective_x2 = deg(P1) + deg(P2) + 2·m``.
+Vanishes when ``2·den_deg > effective_x2`` or non-polynomial diverging denom.
+
+### Added
+
+- **`two_sqrt_poly_effective_x2(node, k) -> Option<i64>`** — returns
+  ``deg(P1) + deg(P2) + 2·poly_deg`` for
+  ``Mul(Sqrt(P1), Sqrt(P2), poly_factors..., bounded_factors...)``.
+  Refuses three-or-more Sqrt, any Log factor, or unrecognised factors.
+- **Phase 61 branch** in ``g_vanishes_at_infinity`` — checks
+  ``2·den_deg > tsp_x2`` for polynomial denominators; falls back to
+  ``h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **3 new tests**: ``phase61_*`` in ``tests/tests.rs``.
+
 ## 1.8.0 — 2026-05-24
 
 **Phase 60 — Bounded × Log(diverging) × Sqrt(positive-poly) × polynomial

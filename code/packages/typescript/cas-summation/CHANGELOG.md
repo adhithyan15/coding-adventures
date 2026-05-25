@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.9.0 — 2026-05-25
+
+**Phase 61 — Two-Sqrt × polynomial numerator (TypeScript port).**
+
+Ports Python ``cas-summation`` 1.9.0.  Closes the gap where all prior Sqrt
+phases (51, 53, 56, 59, 60) hard-reject a second Sqrt operand.
+
+Effective growth: ``k^{sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg}``.
+TypeScript convention: compare ``denDeg > tspDeg`` (actual half-degrees, no ×2).
+
+### Added
+
+- **`twoSqrtPolyEffectiveDeg(node, k)`** — returns
+  ``sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg`` for
+  ``Mul(Sqrt(P1), Sqrt(P2), poly_factors..., bounded_factors...)``.
+  Refuses three-or-more Sqrt, any Log factor, or unrecognised factors.
+- **Phase 61 branch** in ``gVanishesAtInfinity`` — checks
+  ``denDeg > tspDeg`` for polynomial denominators; falls back to
+  ``hDivergesAtInfinity`` for non-polynomial diverging denominators.
+- **4 new tests** in the Phase 61 ``describe`` block.
+
 ## 1.8.0 — 2026-05-24
 
 **Phase 60 — Bounded × Log(diverging) × Sqrt(positive-poly) × polynomial

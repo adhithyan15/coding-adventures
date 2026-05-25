@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.9.0 — 2026-05-25
+
+**Phase 61 — Two-Sqrt × polynomial numerator (Python).**
+
+Closes the gap where all existing Sqrt phases (51, 53, 56, 59, 60) require
+exactly one Sqrt and hard-reject a second.  Handles numerators of the form
+``Mul(Sqrt(P1), Sqrt(P2), polynomial_factors..., bounded_factors...)``.
+
+Effective growth: ``k^{deg(P1)/2 + deg(P2)/2 + m}``.
+Using the ×2 integer trick: ``effective_x2 = deg(P1) + deg(P2) + 2·m``.
+Vanishes when ``2·den_deg > effective_x2`` (polynomial denominator) or
+when the denominator is non-polynomial diverging.
+
+``Log`` factors are refused (belong to future Log×two-Sqrt phases).
+
+### Added
+
+- **``_two_sqrt_poly_effective_x2``** — returns
+  ``deg(P1) + deg(P2) + 2·poly_deg`` for
+  ``Mul(Sqrt(P1), Sqrt(P2), polynomial_factors..., bounded_factors...)``.
+  Refuses three-or-more Sqrt, any Log factor, or unrecognised factors.
+- **Phase 61 branch** in ``_g_vanishes_at_infinity`` — checks
+  ``2·den_deg > tsp_x2`` for polynomial denominators; falls back to
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **6 new tests** in ``TestEvaluateSumPhase61TwoSqrtPolyNumerator``.
+
+### Changed
+
+- Renamed ``test_two_sqrt_factors_refused`` → ``test_two_sqrt_factors_now_closed_by_phase61``
+  in Phase 56 tests: Phase 61 now correctly closes what Phase 56 conservatively refused.
+
 ## 1.8.0 — 2026-05-24
 
 **Phase 60 — Bounded × Log(diverging) × Sqrt(positive-poly) × polynomial numerator (Python).**
