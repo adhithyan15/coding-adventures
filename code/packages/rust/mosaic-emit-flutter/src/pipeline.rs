@@ -2882,4 +2882,251 @@ mod tests {
             r.output
         );
     }
+
+    // =================================================================
+    // UI32-K-flutter — `--emit-project` Flutter shell tests
+    //
+    // Covers UI32 spec §3.1-§3.8 per-PR gates:
+    //   §3.4 Composable     : default options = no project shell.
+    //   §3.5 Banner          : every emitted file starts with banner.
+    //   §3.1 Reproducible    : two runs produce byte-identical output.
+    //   §3.6.1 Validation    : invalid pub name → fail-loud error.
+    //   §3.6.2 Flutter row   : derived name satisfies Dart pub RFC.
+    //   §3.6.3 Pinning       : pubspec.yaml contains pinned SDKs.
+    //   §3.7 Output paths    : only the spec §2.2 enumeration.
+    //   §3.8 No env reads    : no /Users/, $HOME, etc. in output.
+    // =================================================================
+
+    #[test]
+    fn ui32_emit_project_false_is_backward_compatible_with_from_pipeline() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+
+        let legacy = from_pipeline(&m, &l, &s).unwrap();
+        let extended =
+            from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+
+        assert_eq!(legacy.output, extended.output, ".dart bytes diverged");
+        assert_eq!(legacy.component_name, extended.component_name);
+        assert!(
+            extended.project.is_none(),
+            "default options must NOT emit a project shell"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_true_returns_project_files() {
+        let m = component("Hello", vec![], vec![]);
+        let l = layout("Hello", node("Box"));
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert!(r.project.is_some(), "emit_project: true must produce a shell");
+    }
+
+    #[test]
+    fn ui32_every_emitted_side_file_carries_auto_generated_banner() {
+        let m = component("Hello", vec![], vec![]);
+        let l = layout("Hello", node("Box"));
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .expect("project shell expected");
+
+        // YAML uses `#` for comments.
+        assert!(
+            proj.pubspec_yaml.starts_with("# AUTO-GENERATED"),
+            "pubspec.yaml must START with `# AUTO-GENERATED`, got:\n{}",
+            &proj.pubspec_yaml[..80.min(proj.pubspec_yaml.len())]
+        );
+        // Dart uses `//` for line comments.
+        assert!(
+            proj.main_dart.starts_with("// AUTO-GENERATED"),
+            "lib/main.dart must START with `// AUTO-GENERATED`"
+        );
+        // README uses HTML-comment syntax.
+        assert!(
+            proj.readme.starts_with("<!-- AUTO-GENERATED"),
+            "README.md must START with banner"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_is_byte_deterministic() {
+        let m = component("Deterministic", vec![], vec![]);
+        let l = layout("Deterministic", node("Box"));
+        let s = empty_style("Deterministic");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert_eq!(a.output, b.output, ".dart is not deterministic");
+        assert_eq!(a.project, b.project, "project shell is not deterministic");
+    }
+
+    /// §3.6.1 + §3.6.2 Flutter row. Invalid Dart pub name (uppercase,
+    /// hyphen, leading underscore/digit) MUST fail-loud, not silently
+    /// substitute.
+    #[test]
+    fn ui32_invalid_explicit_pub_name_returns_error() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        opts.package_name = Some("Mosaic-Grid".to_string()); // uppercase + hyphen
+
+        let err = from_pipeline_with_options(&m, &l, &s, &opts)
+            .expect_err("invalid pub name must error");
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("Mosaic-Grid") && msg.contains("pub naming convention"),
+            "expected Dart pub RFC violation error, got: {msg}"
+        );
+    }
+
+    /// §3.6.2 Flutter row: PascalCase component name → snake_case pub
+    /// name + `mosaic_` prefix.
+    #[test]
+    fn ui32_derived_pub_name_snake_cases_pascalcase() {
+        let m = component("ProfileCard", vec![], vec![]);
+        let l = layout("ProfileCard", node("Box"));
+        let s = empty_style("ProfileCard");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.pubspec_yaml.contains("name: mosaic_profile_card"),
+            "expected `mosaic_profile_card` pub name, got:\n{}",
+            proj.pubspec_yaml
+        );
+    }
+
+    /// §3.6.3 Pinning. pubspec.yaml carries the default pinned
+    /// SDK ranges verbatim.
+    #[test]
+    fn ui32_pubspec_carries_pinned_default_sdks_exactly() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.pubspec_yaml.contains("sdk: '>=3.5.0 <4.0.0'"),
+            "expected Dart SDK pin, got:\n{}",
+            proj.pubspec_yaml
+        );
+        assert!(
+            proj.pubspec_yaml.contains("flutter: '>=3.24.0 <4.0.0'"),
+            "expected Flutter SDK pin, got:\n{}",
+            proj.pubspec_yaml
+        );
+    }
+
+    /// §3.7 Output paths tripwire.
+    #[test]
+    fn ui32_project_files_struct_exposes_only_spec_22_flutter_files() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let ProjectFiles {
+            pubspec_yaml,
+            main_dart,
+            readme,
+        } = proj;
+        assert!(!pubspec_yaml.is_empty(), "pubspec.yaml empty");
+        assert!(!main_dart.is_empty(), "lib/main.dart empty");
+        assert!(!readme.is_empty(), "README.md empty");
+    }
+
+    #[test]
+    fn ui32_emitted_files_contain_no_environment_specific_strings() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let all = format!(
+            "{}\n{}\n{}",
+            proj.pubspec_yaml, proj.main_dart, proj.readme
+        );
+        for banned in ["/Users/", "/home/", "C:\\Users\\", "$HOME"] {
+            assert!(
+                !all.contains(banned),
+                "emitted shell contains environment-specific fragment `{banned}`"
+            );
+        }
+    }
+
+    /// lib/main.dart mounts the component as the MaterialApp's
+    /// `home:` widget. Verify the relative import + constructor
+    /// invocation.
+    #[test]
+    fn ui32_main_dart_mounts_component_in_material_app_home() {
+        let m = component("MyWidget", vec![], vec![]);
+        let l = layout("MyWidget", node("Box"));
+        let s = empty_style("MyWidget");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.main_dart.contains("import '../MyWidget.dart';"),
+            "main.dart must import sibling-relative, got:\n{}",
+            proj.main_dart
+        );
+        assert!(
+            proj.main_dart.contains("MyWidget()"),
+            "main.dart must invoke MyWidget() constructor"
+        );
+        assert!(
+            proj.main_dart.contains("MaterialApp("),
+            "main.dart must wrap in MaterialApp"
+        );
+    }
+
+    /// Truth table for is_valid_dart_pub_name.
+    #[test]
+    fn ui32_is_valid_dart_pub_name_truth_table() {
+        // Accepts (lowercase + underscores + digits, starts with letter)
+        assert!(is_valid_dart_pub_name("foo"));
+        assert!(is_valid_dart_pub_name("foo_bar"));
+        assert!(is_valid_dart_pub_name("mosaic_grid"));
+        assert!(is_valid_dart_pub_name("foo123"));
+        assert!(is_valid_dart_pub_name("a"));
+        // Rejects
+        assert!(!is_valid_dart_pub_name(""));
+        assert!(!is_valid_dart_pub_name("Foo")); // uppercase
+        assert!(!is_valid_dart_pub_name("foo-bar")); // hyphen
+        assert!(!is_valid_dart_pub_name("_foo")); // leading underscore
+        assert!(!is_valid_dart_pub_name("1foo")); // leading digit
+        assert!(!is_valid_dart_pub_name("foo bar")); // space
+        assert!(!is_valid_dart_pub_name("foo.bar")); // dot (Dart pub rejects)
+        assert!(!is_valid_dart_pub_name(&"a".repeat(65))); // over 64 char limit
+    }
 }
