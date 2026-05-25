@@ -126,7 +126,11 @@ fn read_io(p: &ParseResult) -> Result<IoConfig, ConfigError> {
         js_output_file: get_str(p, "js_output_file")?
             .filter(|s| !s.is_empty())
             .map(PathBuf::from),
-        externs: get_str_list(p, "externs")?.into_iter().map(PathBuf::from).collect(),
+        // CLOC11.05: keep externs as raw pattern strings; they go
+        // through `globs::expand_js_patterns` in `run_compiler`,
+        // same as `--js`. Errors on glob/missing-file surface as
+        // typed `CompilerError::ExternsGlobExpansion`.
+        externs: get_str_list(p, "externs")?,
         env: match get_str(p, "env")?.as_deref() {
             Some("CUSTOM") => EnvKind::Custom,
             // BROWSER is the default; absent flag → default.
