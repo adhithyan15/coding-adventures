@@ -19,6 +19,7 @@ import {
   distortionFromTransient,
   estimatePeriod,
   formatDcTable,
+  formatDistortionTable,
   formatPoleZeroTable,
   formatTransientTable,
   fourier,
@@ -1194,6 +1195,40 @@ describe("transient", () => {
       "Index\tKind\tReal\tImaginary\tFrequency\tDamping\n" +
         "0\tzero\t0.000000e+00\t1.000000e+03\t1.591549e+02\t0.000000e+00\n" +
         "1\tpole\t-5.000000e+00\t-9.999875e+02\t1.591549e+02\t5.000000e-03\n",
+    );
+  });
+
+  it("formats stable text output tables for distortion results", () => {
+    const result: DistortionResult = {
+      inputSource: "Vin",
+      outputProbe: "V(out)",
+      points: [
+        {
+          frequencyHz: 1000.0,
+          fundamentalMagnitude: 1.0,
+          harmonics: [
+            {
+              harmonic: 1,
+              frequencyHz: 1000.0,
+              magnitude: 1.0,
+              phaseDegrees: 0.0,
+            },
+            {
+              harmonic: 2,
+              frequencyHz: 2000.0,
+              magnitude: 0.025,
+              phaseDegrees: -1.5707963267948966,
+            },
+          ],
+          totalHarmonicDistortion: 0.025,
+        },
+      ],
+    };
+
+    expect(formatDistortionTable(result)).toBe(
+      "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n" +
+        "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n" +
+        "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n",
     );
   });
 

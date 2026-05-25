@@ -150,6 +150,7 @@ from spice_engine import (
     distortion_from_transient,
     estimate_period,
     format_dc_table,
+    format_distortion_table,
     format_pole_zero_table,
     format_transient_table,
     fourier,
@@ -6106,6 +6107,40 @@ def test_pole_zero_text_output_table_is_stable() -> None:
         "Index\tKind\tReal\tImaginary\tFrequency\tDamping\n"
         "0\tzero\t0.000000e+00\t1.000000e+03\t1.591549e+02\t0.000000e+00\n"
         "1\tpole\t-5.000000e+00\t-9.999875e+02\t1.591549e+02\t5.000000e-03\n"
+    )
+
+
+def test_distortion_text_output_table_is_stable() -> None:
+    result = DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1000.0,
+                fundamental_magnitude=1.0,
+                harmonics=[
+                    DistortionHarmonic(
+                        harmonic=1,
+                        frequency=1000.0,
+                        magnitude=1.0,
+                        phase_degrees=0.0,
+                    ),
+                    DistortionHarmonic(
+                        harmonic=2,
+                        frequency=2000.0,
+                        magnitude=0.025,
+                        phase_degrees=-1.5707963267948966,
+                    ),
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert format_distortion_table(result) == (
+        "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
+        "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
+        "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
     )
 
 

@@ -25,6 +25,10 @@
 - **Pole-zero text output table** — `format_pole_zero_table()` now emits a
   stable tab-separated row set for `.PZ` poles and zeros.
 
+- **Distortion text output table** — `format_distortion_table()` now emits a
+  stable tab-separated row set for `.DISTO` harmonic magnitude, phase, and THD
+  snapshots.
+
 - **JFET transient coverage** — source-follower transient fixtures now cover
   JFET participation in nonlinear companion-model solves.
 
