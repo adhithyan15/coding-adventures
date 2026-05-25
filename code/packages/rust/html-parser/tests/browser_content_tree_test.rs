@@ -260,6 +260,10 @@ struct ExpectedContentNode {
     #[serde(default)]
     list_item_value: Option<String>,
     #[serde(default)]
+    description_list_kind: Option<String>,
+    #[serde(default)]
+    term_kind: Option<String>,
+    #[serde(default)]
     quote_cite: Option<String>,
     #[serde(default)]
     resolved_quote_cite: Option<String>,
@@ -449,6 +453,8 @@ impl ExpectedContentNode {
             list_marker_type: self.list_marker_type,
             list_reversed: self.list_reversed,
             list_item_value: self.list_item_value,
+            description_list_kind: self.description_list_kind,
+            term_kind: self.term_kind,
             quote_cite: self.quote_cite,
             resolved_quote_cite: self.resolved_quote_cite,
             data_value: self.data_value,
