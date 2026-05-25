@@ -1878,6 +1878,36 @@ fn three_sqrt_three_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i
     Some(sqrt_degs.iter().sum::<i64>() + 2 * poly_deg)
 }
 
+/// Phase 73 — Four-Log × polynomial numerator.
+///
+/// Returns `2·poly_deg` when `node` is a `Mul` with exactly four
+/// `Log(diverging-in-k)` factors, any polynomial factors, and any bounded
+/// factors; `None` otherwise.
+///
+/// `log⁴(k)` is sub-polynomial (`o(k^ε)`), contributing 0 to the effective
+/// degree.  `effective_x2 = 2·poly_deg` (no Sqrt factors).
+/// Sqrt factors are refused — use Sqrt × log phases for mixed forms.
+/// Caller checks `2 * den_deg > effective_x2`.
+fn four_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node { IRNode::Apply(a) => a, _ => return None };
+    if !head_is(&apply_node.head, MUL) { return None; }
+    let mut log_count: usize = 0;
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 4 { return None; }
+            continue;
+        }
+        if sqrt_effective_half_degree_x2(arg, k).is_some() { return None; } // Sqrt → refuse
+        if let Some(deg) = polynomial_degree_in_k(arg, k) { poly_deg += deg; continue; }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if log_count != 4 { return None; }
+    Some(2 * poly_deg)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -2167,6 +2197,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(ts3l3_x2) = three_sqrt_three_log_poly_effective_x2(num, k) {
         if let Some(den_deg_ts3l3) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_ts3l3 > ts3l3_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 73: Mul(Log(diverging)×4, polynomial..., bounded...) numerator.
+    // Four Log factors; log⁴ sub-polynomial — effective_x2 = 2·poly_deg. Sqrt refused.
+    // Closes when 2 * den_deg > effective_x2 or non-polynomial diverging denom.
+    if let Some(flp4_x2) = four_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_flp4) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_flp4 > flp4_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {
