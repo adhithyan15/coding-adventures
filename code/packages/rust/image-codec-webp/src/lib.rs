@@ -1,9 +1,7 @@
 //! # image-codec-webp
 //!
 //! WebP image codec for the paint-instructions pixel pipeline.
-//! Implements VP8L (lossless) encoding and decoding.
-//! VP8 lossy encoding/decoding requires the `range-coder` crate and will be
-//! added in a future release.
+//! Implements VP8L (lossless) and VP8 lossy encoding and decoding.
 //!
 //! ## Architecture
 //!
@@ -50,9 +48,10 @@
 //! - WebP container spec: https://developers.google.com/speed/webp/docs/riff_container
 //! - VP8 lossy spec: https://www.rfc-editor.org/rfc/rfc6386
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 mod riff;
+pub mod vp8;
 pub mod vp8l;
 
 use paint_instructions::{ImageCodec, PixelContainer};
@@ -111,8 +110,7 @@ impl ImageCodec for WebPCodec {
         if self.lossless {
             encode_webp_lossless(pixels)
         } else {
-            // VP8 lossy requires range-coder crate — coming in next PR.
-            panic!("VP8 lossy not yet implemented: range-coder required")
+            encode_webp(pixels, self.quality)
         }
     }
 
@@ -144,12 +142,11 @@ pub fn encode_webp_lossless(pixels: &PixelContainer) -> Vec<u8> {
 
 /// Encode a `PixelContainer` as a lossy WebP file (VP8).
 ///
-/// # Panics
-///
-/// Always panics — VP8 lossy encoding requires the `range-coder` crate which
-/// will be added in a future PR.
-pub fn encode_webp(_pixels: &PixelContainer, _quality: u8) -> Vec<u8> {
-    panic!("VP8 lossy not yet implemented: range-coder required")
+/// `quality` is in [0, 100]; higher = better quality / larger file.
+/// Returns a complete RIFF/WEBP/VP8 container.
+pub fn encode_webp(pixels: &PixelContainer, quality: u8) -> Vec<u8> {
+    let vp8_data = vp8::encode(pixels, quality);
+    riff::build_riff(b"VP8 ", &vp8_data)
 }
 
 /// Decode a WebP file (RIFF container) into a `PixelContainer`.
@@ -191,9 +188,7 @@ pub fn decode_webp(bytes: &[u8]) -> Result<PixelContainer, String> {
 
     match chunk_type {
         b"VP8L" => vp8l::decode(chunk_data),
-        b"VP8 " => Err(
-            "WebP: VP8 lossy not yet implemented: range-coder required".to_string()
-        ),
+        b"VP8 " => vp8::decode(chunk_data),
         b"VP8X" => Err(
             "WebP: VP8X extended format not yet implemented".to_string()
         ),
@@ -217,7 +212,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     // ── WebPCodec ─────────────────────────────────────────────────────────────
@@ -333,20 +328,82 @@ mod tests {
         assert!(result.is_err());
     }
 
+    // ── VP8 lossy ─────────────────────────────────────────────────────────────
+
     #[test]
-    fn decode_vp8_lossy_returns_err() {
-        // Simulate a VP8 (lossy) chunk — should return a descriptive error.
-        let mut fake = vec![0u8; 24];
+    fn encode_webp_produces_riff_header() {
+        let pixels = PixelContainer::new(4, 4);
+        let bytes = encode_webp(&pixels, 75);
+        assert_eq!(&bytes[0..4], b"RIFF", "must start with RIFF");
+        assert_eq!(&bytes[8..12], b"WEBP", "must have WEBP fourCC");
+    }
+
+    #[test]
+    fn encode_webp_produces_vp8_chunk() {
+        let pixels = PixelContainer::new(4, 4);
+        let bytes = encode_webp(&pixels, 75);
+        assert_eq!(&bytes[12..16], b"VP8 ", "chunk type must be VP8 ");
+    }
+
+    #[test]
+    fn round_trip_lossy_solid() {
+        // Solid-colour image — DC prediction + skip residuals should be ±5
+        let mut pixels = PixelContainer::new(16, 16);
+        for y in 0..16u32 {
+            for x in 0..16u32 {
+                pixels.set_pixel(x, y, 180, 180, 180, 255);
+            }
+        }
+        let bytes = encode_webp(&pixels, 75);
+        let decoded = decode_webp(&bytes).expect("VP8 decode failed");
+        assert_eq!(decoded.width, 16);
+        assert_eq!(decoded.height, 16);
+        for y in 0..16u32 {
+            for x in 0..16u32 {
+                let (r, g, b, _) = decoded.pixel_at(x, y);
+                let orig_luma = 180i32;
+                let dec_luma  = r as i32; // grey image: R≈G≈B
+                assert!(
+                    (dec_luma - orig_luma).abs() <= 5,
+                    "pixel ({x},{y}): expected ~{orig_luma}, got {dec_luma}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn round_trip_lossy_quality_100() {
+        // quality=100 → qp=0 → step=4 → max error ≤ 2
+        let mut pixels = PixelContainer::new(16, 16);
+        for y in 0..16u32 {
+            for x in 0..16u32 {
+                pixels.set_pixel(x, y, 200, 200, 200, 255);
+            }
+        }
+        let bytes = encode_webp(&pixels, 100);
+        let decoded = decode_webp(&bytes).expect("VP8 decode failed");
+        for y in 0..16u32 {
+            for x in 0..16u32 {
+                let (r, _, _, _) = decoded.pixel_at(x, y);
+                assert!(
+                    (r as i32 - 200).abs() <= 2,
+                    "quality=100 round-trip error too large at ({x},{y}): got {r}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn decode_error_truncated() {
+        let mut fake = vec![0u8; 20];
         fake[0..4].copy_from_slice(b"RIFF");
-        fake[4..8].copy_from_slice(&16u32.to_le_bytes()); // file_size_field
+        fake[4..8].copy_from_slice(&12u32.to_le_bytes());
         fake[8..12].copy_from_slice(b"WEBP");
         fake[12..16].copy_from_slice(b"VP8 ");
-        fake[16..20].copy_from_slice(&4u32.to_le_bytes()); // chunk_size = 4
-        // chunk_data = 4 zero bytes
+        // chunk_size = 100, but we only provide 4 bytes
+        fake[16..20].copy_from_slice(&100u32.to_le_bytes());
         let result = decode_webp(&fake);
-        assert!(result.is_err());
-        let err = result.unwrap_err();
-        assert!(err.contains("VP8 lossy"), "expected 'VP8 lossy' in error: {err}");
+        assert!(result.is_err(), "truncated VP8 frame should return Err");
     }
 
     #[test]

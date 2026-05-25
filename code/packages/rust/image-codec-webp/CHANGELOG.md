@@ -7,6 +7,37 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] — 2026-05-25
+
+### Added
+
+- VP8 lossy encoder (`encode_webp(pixels, quality)`) — intra-only I-frames with
+  16×16 DC prediction, WHT-coded DC residuals, skip-all-AC, and one DCT partition
+- VP8 lossy decoder (`decode_webp` now handles `VP8 ` chunks) — reads the
+  bool-coded first partition and DCT partition, reconstructs via DC prediction
+- `src/vp8/mod.rs` — encode/decode entry points and the full macroblock loop
+- `src/vp8/quant.rs` — `qp_from_quality` (quadratic quality→QP curve),
+  `dc_quant_step` (128-entry RFC 6386 DC table), `quantize`/`dequantize`
+- `src/vp8/wht.rs` — 4×4 forward/inverse Walsh-Hadamard Transform (placeholder)
+- `range-coder` dependency added to `Cargo.toml`
+- 5 new tests: `encode_webp_produces_riff_header`, `encode_webp_produces_vp8_chunk`,
+  `round_trip_lossy_solid` (±5), `round_trip_lossy_quality_100` (±2),
+  `decode_error_truncated`
+
+### Changed
+
+- `encode_webp()` no longer panics; now produces a valid VP8 RIFF/WEBP container
+- `decode_webp()` now dispatches VP8 chunks to the real VP8 decoder
+- `WebPCodec::encode` with `lossless=false` now calls `encode_webp` (was panic)
+- `VERSION` bumped to `0.2.0`
+- Description updated to reflect full VP8L + VP8 capability
+
+### Removed
+
+- Panic stub for VP8 lossy in `encode_webp` and `WebPCodec::encode`
+
+---
+
 ## [0.1.0] — 2026-05-25
 
 ### Added
