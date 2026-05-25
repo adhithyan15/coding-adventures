@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.20.0] - 2026-05-25
+
+### Added (Phase 6s — splat / double-splat in params and call args)
+
+Grammar additions:
+
+```
+params   = param { COMMA param } ;
+param    = [ "*" | "**" ] NAME ;
+method_call = ( NAME | KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
+dot_call    = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] ;
+call_arg = [ "*" | "**" ] expression ;
+```
+
+`params` previously bound bare `NAME` tokens; each parameter is now wrapped in a `param` rule that admits the optional splat / double-splat prefix.  Similarly, `method_call` and `dot_call` argument slots are wrapped in a `call_arg` rule.
+
+`method_call_no_paren` intentionally keeps bare `expression` args — wrapping it in `call_arg` would create a grammar ambiguity with binary `*` at expression-start position (`a * b` would parse as `a(splat b)`).  Paren-less splat (`puts *arr`) is therefore a v0 deferred limitation; users can always fall back to the parenned form `puts(*arr)`.
+
+The lexer already emits `**` as one Name-typed Op token (1.8-baseline state machine coalesces it); `*` is a Star token.  Both match by literal value in the grammar.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+- **Call args**: `f(*arr)` → `BuiltinCall("splat", [VarRef(arr)])`; `f(**hsh)` → `BuiltinCall("double_splat", [VarRef(hsh)])`.  Bare args are unchanged.
+- **Params**: v0 lossy — `*args` and `**kwargs` lower to regular `Param { name: "args" / "kwargs" }`.  SIR's `Param` has no variadic flag, so splat-ness is dropped at the SIR level.  Downstream emitters treat the parameter as positional; correctness for variadic call sites is a deferred limitation.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 88 → **94** (+6):
+  - `test_parse_splat_param` — `def f(*args) end`.
+  - `test_parse_double_splat_param` — `def f(**kwargs) end`.
+  - `test_parse_mixed_params_with_splats` — `def f(a, *rest, **opts) end`.
+  - `test_parse_splat_call_arg` — `f(*arr)`.
+  - `test_parse_mixed_call_args_with_splats` — `f(1, *arr, **hsh)`.
+  - `test_parse_binary_star_still_parses_as_expression` — regression: `a * b` stays binary.
+
+Also updates two pre-existing tests to walk the new `param` / `call_arg` wrappers (`test_parse_def_with_params`, `test_parse_dot_call_with_args`).
+
 ## [0.19.0] - 2026-05-25
 
 ### Added (Phase 6r — multiple assignment `a, b = 1, 2`)

@@ -2,6 +2,39 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.20.0] - 2026-05-25
+
+### Added (Phase 6s — splat / double-splat lowering)
+
+#### Call args (preserved through SIR)
+
+| Source | Lowered |
+|---|---|
+| `f(*arr)` | `DirectCall(f, [BuiltinCall("splat", [VarRef(arr)])])` |
+| `f(**hsh)` | `DirectCall(f, [BuiltinCall("double_splat", [VarRef(hsh)])])` |
+| `f(1, *arr, **hsh)` | three positional args: `IntLit(1)`, `splat(arr)`, `double_splat(hsh)` |
+
+New helper `lower_call_arg` dispatches on the leading `*` / `**` token (if any) and wraps the inner expression in a `BuiltinCall` envelope.  No prefix → return the bare expression.  Downstream emitters can pattern-match the builtin name to convert back to splat syntax in target source.
+
+Renamed `head_call_expression_children` → `head_call_args` (returns `call_arg` Nodes instead of `expression` Nodes).  `lower_method_call` dispatches on the rule name: `method_call` uses the new `call_arg` shape; `method_call_no_paren` keeps the legacy bare-`expression` shape (paren-less splat is a deferred limitation — see ruby-parser changelog).
+
+`fold_one_dot_call` likewise routes through `lower_call_arg`.
+
+#### Params (lossy at SIR level)
+
+`*args` / `**kwargs` lower to regular `Param { name: "args" / "kwargs" }` — SIR's `Param` has no variadic flag, so the splat-ness is dropped.  The parameter-name extractor in `lower_def_statement` skips the splat-prefix tokens (`*` and `**`) when locating the identifier.
+
+**Downstream impact**: target source emitted for variadic functions will treat the parameter as positional.  Calls passing splat args (via the `BuiltinCall("splat", ...)` envelope) still preserve the variadic shape — the asymmetry only matters for definitions of variadic functions.  Tracked as a deferred limitation for a future SIR phase that adds variadic-aware `Param`.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 91 → **96** (+5):
+  - `splat_call_arg_lowers_to_splat_builtin`
+  - `double_splat_call_arg_lowers_to_double_splat_builtin`
+  - `mixed_call_args_with_splats_lower_in_order`
+  - `splat_param_lowers_to_bare_name_param` (asserts lossy v0 lowering)
+  - `splat_call_arg_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.19.0] - 2026-05-25
 
 ### Added (Phase 6r — multiple assignment lowering)

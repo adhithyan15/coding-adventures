@@ -925,9 +925,22 @@ impl Lowerer {
         })?;
         let name = name_token.value.clone();
 
-        // Collect parameters.  The optional `params` rule node lists
-        // each parameter name as a sequence of Name tokens separated
-        // by COMMA tokens — we only care about the names.
+        // Collect parameters.  The optional `params` rule node holds
+        // a sequence of `param` subnodes (Phase 6s — each param is
+        // wrapped in its own rule so the optional `*` / `**` splat
+        // prefix can sit inside the param slot).  We walk each `param`,
+        // detect the splat prefix from its leading Token (`*` or `**`,
+        // both with `value` set), and extract the parameter Name.
+        //
+        // v0 limitation: the splat-ness of a param is LOST at the SIR
+        // level.  Param has no variadic flag, so a splat param lowers
+        // to a regular Param with the bare Name (no `*` prefix in
+        // `name`).  Downstream emitters therefore treat the parameter
+        // as positional rather than variadic — a deferred correctness
+        // limitation tracked for a future SIR phase.  The grammar +
+        // parse round-trip is correct; the lossy SIR shape only
+        // matters when generating target source for a Ruby program
+        // that actually relies on variadic semantics.
         let params_node = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
             _ => None,
@@ -936,13 +949,27 @@ impl Lowerer {
             pn.children
                 .iter()
                 .filter_map(|c| match c {
-                    ASTNodeOrToken::Token(t)
-                        if matches!(t.type_, TokenType::Name) =>
-                    {
-                        Some(Param {
-                            name: t.value.clone(),
-                            sir_type: None,
-                            span: self.span_of_token(t),
+                    ASTNodeOrToken::Node(param_node) if param_node.rule_name == "param" => {
+                        // Find the parameter Name token, skipping the
+                        // optional `*`/`**` splat prefix.  Both the
+                        // prefix and the identifier land on Name-typed
+                        // tokens (the 1.8-baseline state machine
+                        // coalesces `**` into one Name token with value
+                        // `"**"`, and `*` is technically a Star token
+                        // but defensive value-filter covers both).
+                        param_node.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t)
+                                if matches!(t.type_, TokenType::Name)
+                                    && t.value != "*"
+                                    && t.value != "**" =>
+                            {
+                                Some(Param {
+                                    name: t.value.clone(),
+                                    sir_type: None,
+                                    span: self.span_of_token(t),
+                                })
+                            }
+                            _ => None,
                         })
                     }
                     _ => None,
@@ -1306,24 +1333,45 @@ impl Lowerer {
     // -------------------------------------------------------------------
 
     fn lower_method_call(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
-        // Shape: (NAME | KEYWORD) LPAREN [expression (COMMA expression)*]
-        //          RPAREN { dot_call }
+        // Shapes (Phase 6s-aware):
+        //   method_call          = (NAME|KEYWORD) LPAREN [ call_arg
+        //                          (COMMA call_arg)* ] RPAREN { dot_call }
+        //   method_call_no_paren = (NAME|KEYWORD) expression
+        //                          (COMMA expression)*
+        //
+        // The two shapes use *different* arg encodings: parenned calls
+        // wrap each arg in a `call_arg` rule (which admits `*`/`**`
+        // splat prefixes — Phase 6s); paren-less calls keep bare
+        // `expression` children (the call_arg wrapper would create a
+        // grammar ambiguity with binary `*` at expression-start
+        // position — `a * b` as a statement would parse as `a(splat b)`,
+        // which is wrong).  Paren-less splat (`puts *arr`) is therefore
+        // a v0 deferred limitation; users who need it can fall back to
+        // the parenned form `puts(*arr)`.
         //
         // Phase 6l: trailing `dot_call` repetitions chain method calls
         // onto the result.  Args before the first dot_call belong to
         // the head call; args inside each dot_call belong to that step.
-        // We collect only the direct `expression` children (which are
-        // the head call's args) here, then fold dot_calls via
-        // `apply_dot_chain`.
         let (callee, _callee_span) = self.expect_first_name_token(node)?;
-        // Collect argument expressions belonging to the head call —
-        // these are `expression` nodes that come BEFORE any dot_call
-        // (the dot_call subtree owns its own `expression` children).
-        let args: Vec<Expr> = self
-            .head_call_expression_children(node)
-            .into_iter()
-            .map(|n| self.lower_expression(n))
-            .collect::<Result<Vec<_>, _>>()?;
+        let args: Vec<Expr> = if node.rule_name == "method_call_no_paren" {
+            // Legacy shape: bare `expression` children directly.
+            node.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                    _ => None,
+                })
+                .map(|n| self.lower_expression(n))
+                .collect::<Result<Vec<_>, _>>()?
+        } else {
+            // Phase 6s shape: `call_arg` wrappers (with optional splat
+            // prefix), collected only from the head call's prefix
+            // siblings.
+            self.head_call_args(node)
+                .into_iter()
+                .map(|n| self.lower_call_arg(n))
+                .collect::<Result<Vec<_>, _>>()?
+        };
 
         let span = self.span_of(node);
         let head: Expr = if let Some(effects) = ruby_builtin_effects(&callee) {
@@ -1348,16 +1396,17 @@ impl Lowerer {
         self.apply_dot_chain(head, node)
     }
 
-    /// Phase 6l helper — return the `expression` Node children of
+    /// Phase 6l+6s helper — return the `call_arg` Node children of
     /// `method_call` that belong to the *head* call (i.e. those that
     /// come before any `dot_call` child).  Without this guard, args
     /// nested inside `dot_call` subtrees would leak into the head call.
     ///
-    /// Because `find_node_child` etc. walk only direct children (not
-    /// the full subtree), filtering by parent identity is sufficient —
-    /// we just stop collecting `expression` nodes as soon as a
-    /// `dot_call` node appears in the sibling list.
-    fn head_call_expression_children<'a>(
+    /// Phase 6s renamed the prior `head_call_expression_children`:
+    /// `method_call`'s grammar now wraps each arg in a `call_arg` rule
+    /// (so splat/double-splat prefixes have a slot).  Callers route
+    /// each returned `call_arg` through [`lower_call_arg`] to unwrap
+    /// the `*` / `**` envelope.
+    fn head_call_args<'a>(
         &self,
         node: &'a GrammarASTNode,
     ) -> Vec<&'a GrammarASTNode> {
@@ -1367,12 +1416,75 @@ impl Lowerer {
                 if n.rule_name == "dot_call" {
                     break;
                 }
-                if n.rule_name == "expression" {
+                if n.rule_name == "call_arg" {
                     out.push(n);
                 }
             }
         }
         out
+    }
+
+    /// Phase 6s — lower a single `call_arg` node.
+    ///
+    /// Grammar shape: `call_arg = [ "*" | "**" ] expression ;`
+    ///
+    /// Lowering:
+    /// - No prefix → return the lowered `expression` as-is.
+    /// - `*` prefix → wrap in `BuiltinCall("splat", [inner])` — a
+    ///   semantic marker that downstream emitters can detect to expand
+    ///   into target-language variadic forwarding.
+    /// - `**` prefix → wrap in `BuiltinCall("double_splat", [inner])`
+    ///   — same pattern, for keyword-argument spread.
+    ///
+    /// The BuiltinCall envelope preserves splat semantics through SIR
+    /// (where the lossy v0 Param shape can't represent variadic
+    /// parameters directly).  Callers downstream can pattern-match the
+    /// builtin name to convert back to splat syntax in target source.
+    fn lower_call_arg(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        // Detect the leading `*` / `**` token (if present).  Both
+        // forms land on Token children with their value preserved
+        // (the 1.8-baseline state machine coalesces `**` into one
+        // Name-typed Op token; `*` is a Star token).
+        let prefix = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(t.value.as_str(), "*" | "**") =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        });
+        let expr_node = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "call_arg missing expression child".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let inner = self.lower_expression(expr_node)?;
+        let span = self.span_of(node);
+        Ok(match prefix.as_deref() {
+            Some("*") => Expr::BuiltinCall {
+                name: "splat".to_string(),
+                args: vec![inner],
+                effects: EffectSet::PURE,
+                span,
+            },
+            Some("**") => Expr::BuiltinCall {
+                name: "double_splat".to_string(),
+                args: vec![inner],
+                effects: EffectSet::PURE,
+                span,
+            },
+            _ => inner,
+        })
     }
 
     // -------------------------------------------------------------------
@@ -2321,9 +2433,9 @@ impl Lowerer {
         Ok(recv)
     }
 
-    /// Lower a single `dot_call` step.  Grammar shape:
-    ///     dot_call = "." ( NAME | KEYWORD ) [ LPAREN [ expression
-    ///                  { COMMA expression } ] RPAREN ] ;
+    /// Lower a single `dot_call` step.  Grammar shape (Phase 6s):
+    ///     dot_call = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg
+    ///                  { COMMA call_arg } ] RPAREN ] ;
     fn fold_one_dot_call(
         &mut self,
         receiver: Expr,
@@ -2331,15 +2443,16 @@ impl Lowerer {
     ) -> Result<Expr, RubyLowerError> {
         // First Name/Keyword token under dot_node is the method name.
         let (method_name, name_span) = self.expect_first_name_token(dot_node)?;
-        // Optional argument expressions (the inner LPAREN…RPAREN).
+        // Optional argument list — each arg is wrapped in `call_arg`
+        // (Phase 6s) so the optional splat prefix has a slot.
         let args: Vec<Expr> = dot_node
             .children
             .iter()
             .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                ASTNodeOrToken::Node(n) if n.rule_name == "call_arg" => Some(n),
                 _ => None,
             })
-            .map(|n| self.lower_expression(n))
+            .map(|n| self.lower_call_arg(n))
             .collect::<Result<Vec<_>, _>>()?;
 
         let span = self.span_of(dot_node);
