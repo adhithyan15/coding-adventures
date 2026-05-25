@@ -2457,3 +2457,57 @@ fn phase72_sqrt_k_cubed_log3_k_over_k_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ── Phase 73: Four-Log × polynomial numerator ──────────────────────────────
+// g(k) = log(k)^4 * poly(k) / den(k); effective_x2 = 2·poly_deg.
+// Closes when 2·den_deg > effective_x2 (or denom is non-polynomial diverging).
+
+#[test]
+fn phase73_log4_k_over_k_closes() {
+    // log(k)^4 / k: effective_x2=0; 2·1=2 > 0 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k.clone(), log_k.clone(), log_k]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1]);
+    let g_k = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase73_log4_k_times_k_over_k2_closes() {
+    // log(k)^4·k / k²: effective_x2=2; 2·2=4 > 2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k.clone(), log_k.clone(), log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, kp1.clone()]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase73_log4_k_times_k_over_k_refused() {
+    // log(k)^4·k / k: effective_x2=2; 2·1=2 not > 2 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k.clone(), log_k.clone(), log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, kp1.clone()]);
+    let g_k = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

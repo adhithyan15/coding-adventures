@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.11.0 — 2026-05-25
+
+### Added
+
+- **Phase 73 — Four-Log × polynomial numerator** (`fourLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 4 Log factors; Sqrt factors refused.  `log⁴(k)` sub-polynomial — contributes 0 to
+  effective degree; effective degree = polyDeg.
+  Closes when `denDeg > fourLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 4 new tests in the "Phase 73" describe block.
+
 ## 2.10.0 — 2026-05-25
 
 ### Added

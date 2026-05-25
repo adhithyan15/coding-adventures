@@ -1012,6 +1012,21 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 73: ``Mul(Log(h1), Log(h2), Log(h3), Log(h4),
+    #           polynomial..., bounded...)`` numerator.
+    # Four Log factors; log⁴ sub-polynomial → contributes 0.
+    # effective_x2 = 2·poly_deg (no Sqrt factors).
+    # Sqrt factors refused — use Sqrt × log phases for mixed forms.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    flp4_x2 = _four_log_poly_effective_x2(num, k)
+    if flp4_x2 is not None:
+        den_deg_flp4 = _polynomial_degree_in_k(den, k)
+        if den_deg_flp4 is not None:
+            if 2 * den_deg_flp4 > flp4_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -2459,6 +2474,73 @@ def _three_sqrt_three_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | 
     if len(sqrt_degs) != 3 or log_count != 3:
         return None
     return sqrt_degs[0] + sqrt_degs[1] + sqrt_degs[2] + 2 * poly_deg_sum
+
+
+def _four_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``2·poly_deg`` when ``node`` is a ``Mul`` with **exactly four**
+    ``Log(diverging-in-k)`` factors, any polynomial factors (total degree
+    ``m``), and any number of bounded factors; ``None`` otherwise.
+
+    Phase 73 — Four-Log × polynomial numerator.
+
+    Effective growth:
+    ``log(k)⁴ · k^m ≈ o(k^{m + ε})`` for any ε > 0 (log⁴ is sub-polynomial).
+    Using the ×2 integer trick:
+    ``effective_x2 = 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    ``Sqrt`` factors are refused (belong to the Sqrt / log-Sqrt phases).
+
+    +---------------------------------------------+-----------+
+    | Input                                       | Return    |
+    +=============================================+===========+
+    | ``Mul(Log(k), Log(k), Log(k), Log(k))``     | ``0``     |
+    | ``Mul(Log(k), Log(k), Log(k), Log(k+1), k)``| ``2``     |
+    | ``Mul(Log(k)×4, k²)``                       | ``4``     |
+    | ``Mul(Log(k)×3)``                           | None (3 Logs) |
+    | ``Mul(Log(k)×5)``                           | None (5 Logs) |
+    | ``Mul(Log(k)×4, Sqrt(k))``                  | None (Sqrt)   |
+    +---------------------------------------------+-----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Log(diverging)`` → count; bail after the fourth one.
+         - ``Sqrt(...)`` → bail immediately (sqrt patterns are separate).
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded (non-polynomial, non-Log, non-Sqrt) → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly four Log factors.
+      4. Return ``2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        # Log(diverging) factor?
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 4:
+                # Five or more Log factors — refuse (conservative).
+                return None
+            continue
+        # Sqrt factor — refuse (belongs to sqrt / log-Sqrt phases).
+        if _sqrt_effective_half_degree_x2(arg, k) is not None:
+            return None
+        # Polynomial factor?
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        # Bounded (non-polynomial, non-Log, non-Sqrt)?
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Unrecognised factor — bail.
+        return None
+    if log_count != 4:
+        return None
+    return 2 * poly_deg_sum
 
 
 def _try_power_of_k(
