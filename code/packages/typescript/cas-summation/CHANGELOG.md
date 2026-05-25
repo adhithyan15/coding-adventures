@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.8.0 — 2026-05-24
+
+**Phase 60 — Bounded × Log(diverging) × Sqrt(positive-poly) × polynomial
+numerator (TypeScript port).**
+
+Ports Python ``cas-summation`` 1.8.0.  Closes the gap left by Phase 57
+(bounded × Log × Sqrt, refuses polynomial factors).
+
+Effective growth: ``log(k)·k^{sqrtHalfDeg + polyDeg} = o(k^{sqrtHalfDeg+polyDeg+ε})``.
+TypeScript convention: compare ``denDeg > sqrtHalfDeg + polyDeg`` (actual
+half-degree, no ×2).
+
+### Added
+
+- **`boundedLogSqrtPolyEffectiveDeg(node, k)`** — returns
+  ``sqrtHalfDeg + polyDeg`` for
+  ``Mul(bounded..., Log(diverging), Sqrt(positive-poly), polynomial_factors...)``.
+  Requires exactly one Log and exactly one Sqrt; refuses two of either.
+- **Phase 60 branch** in ``gVanishesAtInfinity`` — checks
+  ``denDeg > blspDeg`` for polynomial denominators; falls back to
+  ``hDivergesAtInfinity`` for non-polynomial diverging denominators.
+- **4 new tests** in the Phase 60 ``describe`` block.
+
 ## 1.7.0 — 2026-05-25
 
 **Phase 59 — Bounded × Sqrt(positive-poly) × polynomial numerator

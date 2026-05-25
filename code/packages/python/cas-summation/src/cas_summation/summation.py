@@ -829,6 +829,22 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 60: ``Mul(bounded..., Log(diverging), Sqrt(positive-poly), polynomial)``
+    # numerator pattern.  Extends Phase 57 (bounded × Log × Sqrt, refuses poly) by
+    # allowing polynomial factors alongside the Log and Sqrt.
+    # Effective growth: ``log(k) · k^{deg(P)/2 + poly_deg}``
+    # = ``o(k^{deg(P)/2 + poly_deg + ε})``.
+    # ×2 trick: ``effective_x2 = sqrt_inner_deg + 2·poly_deg``.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging.
+    blsp_x2 = _bounded_log_sqrt_poly_effective_x2(num, k)
+    if blsp_x2 is not None:
+        den_deg_blsp = _polynomial_degree_in_k(den, k)
+        if den_deg_blsp is not None:
+            if 2 * den_deg_blsp > blsp_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1392,6 +1408,85 @@ def _bounded_sqrt_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
         # Unrecognised factor — bail.
         return None
     if sqrt_inner_deg is None:
+        return None
+    return sqrt_inner_deg + 2 * poly_deg_sum
+
+
+def _bounded_log_sqrt_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt_inner_deg_x2 + 2 * poly_deg_sum`` when ``node`` is a
+    ``Mul`` with exactly one ``Log(diverging)`` factor, exactly one
+    ``Sqrt(positive-leading polynomial P)`` factor, any polynomial factors,
+    and any number of bounded factors; ``None`` otherwise.
+
+    Phase 60 — Bounded × Log(diverging) × Sqrt(P) × polynomial numerator.
+
+    Extends Phase 57 (``bounded × Log × Sqrt``, refuses polynomial factors)
+    by allowing polynomial factors alongside the ``Log`` and ``Sqrt``.
+
+    Effective growth:
+    ``|bounded · log(k) · Sqrt(P(k)) · k^m| = O(log(k) · k^{deg(P)/2 + m})``.
+    Since ``log(k) = o(k^ε)`` for any ``ε > 0``, this is
+    ``o(k^{deg(P)/2 + m + ε})``.  Using the ×2 trick:
+    ``effective_x2 = deg(P) + 2·m``.  Caller checks
+    ``2·den_deg > effective_x2``.
+
+    +--------------------------------------------------+-------------------+
+    | Input                                            | Return            |
+    +==================================================+===================+
+    | ``Mul(Sin(k), Log(k), Sqrt(k), k)``              | ``1 + 2 = 3``     |
+    | ``Mul(Cos(k), Log(k), Sqrt(k²), k²)``            | ``2 + 4 = 6``     |
+    | ``Mul(Sin(k), Cos(k), Log(k), Sqrt(k), k)``      | ``1 + 2 = 3``     |
+    | ``Mul(Sin(k), Log(k), Sqrt(k))``                 | ``1 + 0 = 1``     |
+    | ``Mul(Sin(k), Log(k), Log(k), Sqrt(k), k)``      | None (2 Log)      |
+    | ``Mul(Sin(k), Log(k), Sqrt(k), Sqrt(k), k)``     | None (2 Sqrt)     |
+    | ``Mul(Sin(k), Log(k), k)``                       | None (no Sqrt)    |
+    | ``Mul(Sin(k), Sqrt(k), k)``                      | None (no Log)     |
+    +--------------------------------------------------+-------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - Exactly one ``Log(diverging)`` → count; bail on second.
+         - Exactly one ``Sqrt(positive-leading polynomial)`` → record ×2
+           degree; bail on second.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded (non-polynomial, non-Log, non-Sqrt) → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly one Log AND exactly one Sqrt.
+      4. Return ``sqrt_inner_deg_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count = 0
+    sqrt_inner_deg: int | None = None
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        # Log(diverging) factor?
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 1:
+                # Two Log factors — refuse.
+                return None
+            continue
+        # Sqrt(positive-leading polynomial) factor?
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if sqrt_inner_deg is not None:
+                # Two Sqrt factors — refuse.
+                return None
+            sqrt_inner_deg = deg_x2
+            continue
+        # Polynomial factor (degree ≥ 0)?
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        # Bounded (non-polynomial, non-Log, non-Sqrt)?
+        if _is_bounded_in_k(arg, k):
+            continue
+        # Unrecognised factor — bail.
+        return None
+    if log_count != 1 or sqrt_inner_deg is None:
         return None
     return sqrt_inner_deg + 2 * poly_deg_sum
 
