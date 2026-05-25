@@ -377,6 +377,18 @@ struct ExpectedFormControl {
     #[serde(default)]
     accept: Option<String>,
     #[serde(default)]
+    capture: Option<String>,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
     inputmode: Option<String>,
     #[serde(default)]
     pattern: Option<String>,
@@ -794,6 +806,12 @@ impl ExpectedFormControl {
             enterkeyhint: self.enterkeyhint,
             dirname: self.dirname,
             accept: self.accept,
+            capture: self.capture,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            alt: self.alt,
+            width: self.width,
+            height: self.height,
             inputmode: self.inputmode,
             pattern: self.pattern,
             min: self.min,
