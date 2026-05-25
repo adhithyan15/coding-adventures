@@ -4561,6 +4561,72 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_run_escalation_route_labels_match()
     }
 
+    /// Return the compact host-run escalation route key.
+    pub fn host_run_escalation_route_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+        ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+            self.host_run_escalation_route(),
+            self.host_run_escalation_digest(),
+        )
+    }
+
+    /// Return the stable host-run escalation route-key label.
+    pub fn host_run_escalation_route_key_label(&self) -> String {
+        self.host_run_escalation_route_key().label()
+    }
+
+    /// Return whether the escalation route-key label parses back to its typed key.
+    pub fn host_run_escalation_route_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationRouteKey::from_label(
+            &self.host_run_escalation_route_key_label(),
+        ) == Some(self.host_run_escalation_route_key())
+    }
+
+    /// Return whether the route key's route component matches the typed route.
+    pub fn host_run_escalation_route_key_route_matches_route(&self) -> bool {
+        self.host_run_escalation_route_key()
+            .route_matches(self.host_run_escalation_route())
+    }
+
+    /// Return whether the route key's digest component matches the typed digest.
+    pub fn host_run_escalation_route_key_digest_matches_digest(&self) -> bool {
+        self.host_run_escalation_route_key()
+            .digest_matches(self.host_run_escalation_digest())
+    }
+
+    /// Return whether the route key's route component matches its digest.
+    pub fn host_run_escalation_route_key_route_matches_digest(&self) -> bool {
+        self.host_run_escalation_route_key().route_matches_digest()
+    }
+
+    /// Return whether every escalation route-key component matches its source classifier.
+    pub fn host_run_escalation_route_key_parts_match(&self) -> bool {
+        self.host_run_escalation_route_key().parts_match(
+            self.host_run_escalation_route(),
+            self.host_run_escalation_digest(),
+        )
+    }
+
+    /// Return whether any escalation route-key component drifted.
+    pub fn has_host_run_escalation_route_key_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_route_key_parts_match()
+            || !self.host_run_escalation_route_key_route_matches_digest()
+    }
+
+    /// Return whether host-run escalation route-key labels match their source classifiers.
+    pub fn host_run_escalation_route_key_labels_match(&self) -> bool {
+        self.host_run_escalation_route_labels_match()
+            && self.host_run_escalation_route_key_label_matches_key()
+            && self.host_run_escalation_route_key_parts_match()
+            && self.host_run_escalation_route_key_route_matches_digest()
+    }
+
+    /// Return whether any host-run escalation route-key label drifted.
+    pub fn has_host_run_escalation_route_key_label_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_route_key_labels_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -5427,6 +5493,24 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_escalation_route_labels_match: self.host_run_escalation_route_labels_match(),
             has_host_run_escalation_route_label_integrity_drift: self
                 .has_host_run_escalation_route_label_integrity_drift(),
+            host_run_escalation_route_key: self.host_run_escalation_route_key(),
+            host_run_escalation_route_key_label: self.host_run_escalation_route_key_label(),
+            host_run_escalation_route_key_label_matches_key: self
+                .host_run_escalation_route_key_label_matches_key(),
+            host_run_escalation_route_key_route_matches_route: self
+                .host_run_escalation_route_key_route_matches_route(),
+            host_run_escalation_route_key_digest_matches_digest: self
+                .host_run_escalation_route_key_digest_matches_digest(),
+            host_run_escalation_route_key_route_matches_digest: self
+                .host_run_escalation_route_key_route_matches_digest(),
+            host_run_escalation_route_key_parts_match: self
+                .host_run_escalation_route_key_parts_match(),
+            has_host_run_escalation_route_key_integrity_drift: self
+                .has_host_run_escalation_route_key_integrity_drift(),
+            host_run_escalation_route_key_labels_match: self
+                .host_run_escalation_route_key_labels_match(),
+            has_host_run_escalation_route_key_label_integrity_drift: self
+                .has_host_run_escalation_route_key_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -6884,6 +6968,26 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_route_labels_match: bool,
     /// Whether any host-run escalation route label drifted.
     pub has_host_run_escalation_route_label_integrity_drift: bool,
+    /// Compact host-run escalation route key.
+    pub host_run_escalation_route_key: ToolAuditSupervisorDrainHostRunEscalationRouteKey,
+    /// Stable host-run escalation route-key label.
+    pub host_run_escalation_route_key_label: String,
+    /// Whether the escalation route-key label parses back to its typed key.
+    pub host_run_escalation_route_key_label_matches_key: bool,
+    /// Whether the route key's route component matches the typed route.
+    pub host_run_escalation_route_key_route_matches_route: bool,
+    /// Whether the route key's digest component matches the typed digest.
+    pub host_run_escalation_route_key_digest_matches_digest: bool,
+    /// Whether the route key's route component matches its digest.
+    pub host_run_escalation_route_key_route_matches_digest: bool,
+    /// Whether every escalation route-key component matches its source classifier.
+    pub host_run_escalation_route_key_parts_match: bool,
+    /// Whether any escalation route-key component drifted.
+    pub has_host_run_escalation_route_key_integrity_drift: bool,
+    /// Whether host-run escalation route-key labels match their source classifiers.
+    pub host_run_escalation_route_key_labels_match: bool,
+    /// Whether any host-run escalation route-key label drifted.
+    pub has_host_run_escalation_route_key_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -9503,6 +9607,58 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any host-run escalation route label drifted.
     pub fn has_host_run_escalation_route_label_integrity_drift(&self) -> bool {
         self.has_host_run_escalation_route_label_integrity_drift
+    }
+
+    /// Return the compact host-run escalation route key.
+    pub fn host_run_escalation_route_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+        self.host_run_escalation_route_key
+    }
+
+    /// Return the stable host-run escalation route-key label.
+    pub fn host_run_escalation_route_key_label(&self) -> &str {
+        &self.host_run_escalation_route_key_label
+    }
+
+    /// Return whether the escalation route-key label parses back to its typed key.
+    pub fn host_run_escalation_route_key_label_matches_key(&self) -> bool {
+        self.host_run_escalation_route_key_label_matches_key
+    }
+
+    /// Return whether the route key's route component matches the typed route.
+    pub fn host_run_escalation_route_key_route_matches_route(&self) -> bool {
+        self.host_run_escalation_route_key_route_matches_route
+    }
+
+    /// Return whether the route key's digest component matches the typed digest.
+    pub fn host_run_escalation_route_key_digest_matches_digest(&self) -> bool {
+        self.host_run_escalation_route_key_digest_matches_digest
+    }
+
+    /// Return whether the route key's route component matches its digest.
+    pub fn host_run_escalation_route_key_route_matches_digest(&self) -> bool {
+        self.host_run_escalation_route_key_route_matches_digest
+    }
+
+    /// Return whether every escalation route-key component matches its source classifier.
+    pub fn host_run_escalation_route_key_parts_match(&self) -> bool {
+        self.host_run_escalation_route_key_parts_match
+    }
+
+    /// Return whether any escalation route-key component drifted.
+    pub fn has_host_run_escalation_route_key_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_route_key_integrity_drift
+    }
+
+    /// Return whether host-run escalation route-key labels match their source classifiers.
+    pub fn host_run_escalation_route_key_labels_match(&self) -> bool {
+        self.host_run_escalation_route_key_labels_match
+    }
+
+    /// Return whether any host-run escalation route-key label drifted.
+    pub fn has_host_run_escalation_route_key_label_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_route_key_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -13212,6 +13368,132 @@ impl ToolAuditSupervisorDrainHostRunEscalationRoute {
 impl Display for ToolAuditSupervisorDrainHostRunEscalationRoute {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
+    }
+}
+
+/// Stable compact route key for host-run escalation queues.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+    route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+    digest: ToolAuditSupervisorDrainHostRunEscalationDigest,
+}
+
+impl ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+    /// Create an escalation route key from a route and digest.
+    pub fn new(
+        route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+        digest: ToolAuditSupervisorDrainHostRunEscalationDigest,
+    ) -> Self {
+        Self { route, digest }
+    }
+
+    /// Parse a stable compact host-run escalation route-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("route=")?;
+        let (route_label, digest_label) = rest.split_once("|digest=")?;
+        let route = ToolAuditSupervisorDrainHostRunEscalationRoute::from_label(route_label)?;
+        let digest = ToolAuditSupervisorDrainHostRunEscalationDigest::from_label(digest_label)?;
+        Some(Self::new(route, digest))
+    }
+
+    /// Return the host-run escalation route.
+    pub fn route(self) -> ToolAuditSupervisorDrainHostRunEscalationRoute {
+        self.route
+    }
+
+    /// Return the compact host-run escalation digest.
+    pub fn digest(self) -> ToolAuditSupervisorDrainHostRunEscalationDigest {
+        self.digest
+    }
+
+    /// Return a stable compact label for escalation route grouping.
+    pub fn label(self) -> String {
+        format!(
+            "route={}|digest={}",
+            self.route.as_str(),
+            self.digest.label()
+        )
+    }
+
+    /// Return whether this route-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this key's route component matches the supplied route.
+    pub fn route_matches(self, route: ToolAuditSupervisorDrainHostRunEscalationRoute) -> bool {
+        self.route == route
+    }
+
+    /// Return whether this key's digest component matches the supplied digest.
+    pub fn digest_matches(self, digest: ToolAuditSupervisorDrainHostRunEscalationDigest) -> bool {
+        self.digest == digest
+    }
+
+    /// Return whether this key's route component matches its digest.
+    pub fn route_matches_digest(self) -> bool {
+        self.route.digest_matches(self.digest)
+    }
+
+    /// Return whether every key component matches the supplied source classifiers.
+    pub fn parts_match(
+        self,
+        route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+        digest: ToolAuditSupervisorDrainHostRunEscalationDigest,
+    ) -> bool {
+        self.route_matches(route) && self.digest_matches(digest)
+    }
+
+    /// Return whether this key is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.route.is_settled() && self.digest.is_settled()
+    }
+
+    /// Return whether this key needs host action.
+    pub fn requires_action(self) -> bool {
+        self.route.requires_action() || self.digest.requires_action()
+    }
+
+    /// Return the sortable escalation route-key priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.route.priority_rank().max(self.digest.priority_rank())
+    }
+
+    /// Return whether this key can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.route.is_auto_routable() && self.digest.is_auto_routable()
+    }
+
+    /// Return whether this key requires manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.route.requires_manual_review() || self.digest.requires_manual_review()
+    }
+
+    /// Return whether this key requires investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.route.requires_investigation() || self.digest.requires_investigation()
+    }
+
+    /// Return whether this key requires host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.route.requires_integrity_investigation()
+            || self.digest.requires_integrity_investigation()
+    }
+
+    /// Return whether this key requires triage.
+    pub fn requires_triage(self) -> bool {
+        self.route.requires_triage() || self.digest.requires_triage()
+    }
+
+    /// Return whether this key has a concrete escalation route.
+    pub fn has_route(self) -> bool {
+        self.route.has_route()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunEscalationRouteKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
     }
 }
 
@@ -22956,6 +23238,82 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_escalation_route_keys_are_stable() {
+        let supervision_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ),
+        );
+        let digest = ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+            supervision_key,
+        );
+        let key = ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+            digest,
+        );
+
+        assert_eq!(
+            key.label(),
+            "route=triage|digest=escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRouteKey::from_label(&key.label()),
+            Some(key)
+        );
+        assert!(key.label_matches_key());
+        assert_eq!(
+            key.route(),
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage
+        );
+        assert_eq!(key.digest(), digest);
+        assert!(key.route_matches(ToolAuditSupervisorDrainHostRunEscalationRoute::Triage));
+        assert!(key.digest_matches(digest));
+        assert!(key.route_matches_digest());
+        assert!(key.parts_match(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+            digest,
+        ));
+        assert!(!key.is_settled());
+        assert!(key.requires_action());
+        assert_eq!(key.priority_rank(), 90);
+        assert!(!key.is_auto_routable());
+        assert!(key.requires_manual_review());
+        assert!(!key.requires_investigation());
+        assert!(!key.requires_integrity_investigation());
+        assert!(key.requires_triage());
+        assert!(key.has_route());
+        assert_eq!(key.to_string(), key.label());
+
+        let stale_key = ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute,
+            digest,
+        );
+        assert!(!stale_key.route_matches_digest());
+        assert!(stale_key.parts_match(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute,
+            digest,
+        ));
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRouteKey::from_label(
+                "route=triage|digest=escalation=unknown|supervision=attention=no_attention|queue=no_route:no_action:settled:settled",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRouteKey::from_label(
+                "routeish=triage|digest=escalation=triage|supervision=attention=no_attention|queue=no_route:no_action:settled:settled",
+            ),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_summary_flattens_host_run_supervision_flags() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -23200,6 +23558,49 @@ mod tests {
         assert!(idle_summary.host_run_escalation_route_labels_match());
         assert!(!idle_summary.has_host_run_escalation_route_label_integrity_drift);
         assert!(!idle_summary.has_host_run_escalation_route_label_integrity_drift());
+        let idle_route_key = ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute,
+            idle_digest,
+        );
+        assert_eq!(idle_report.host_run_escalation_route_key(), idle_route_key);
+        assert_eq!(
+            idle_report.host_run_escalation_route_key_label(),
+            "route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert!(idle_report.host_run_escalation_route_key_label_matches_key());
+        assert!(idle_report.host_run_escalation_route_key_route_matches_route());
+        assert!(idle_report.host_run_escalation_route_key_digest_matches_digest());
+        assert!(idle_report.host_run_escalation_route_key_route_matches_digest());
+        assert!(idle_report.host_run_escalation_route_key_parts_match());
+        assert!(!idle_report.has_host_run_escalation_route_key_integrity_drift());
+        assert!(idle_report.host_run_escalation_route_key_labels_match());
+        assert!(!idle_report.has_host_run_escalation_route_key_label_integrity_drift());
+        assert_eq!(idle_summary.host_run_escalation_route_key, idle_route_key);
+        assert_eq!(idle_summary.host_run_escalation_route_key(), idle_route_key);
+        assert_eq!(
+            idle_summary.host_run_escalation_route_key_label,
+            "route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_route_key_label(),
+            "route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert!(idle_summary.host_run_escalation_route_key_label_matches_key);
+        assert!(idle_summary.host_run_escalation_route_key_label_matches_key());
+        assert!(idle_summary.host_run_escalation_route_key_route_matches_route);
+        assert!(idle_summary.host_run_escalation_route_key_route_matches_route());
+        assert!(idle_summary.host_run_escalation_route_key_digest_matches_digest);
+        assert!(idle_summary.host_run_escalation_route_key_digest_matches_digest());
+        assert!(idle_summary.host_run_escalation_route_key_route_matches_digest);
+        assert!(idle_summary.host_run_escalation_route_key_route_matches_digest());
+        assert!(idle_summary.host_run_escalation_route_key_parts_match);
+        assert!(idle_summary.host_run_escalation_route_key_parts_match());
+        assert!(!idle_summary.has_host_run_escalation_route_key_integrity_drift);
+        assert!(!idle_summary.has_host_run_escalation_route_key_integrity_drift());
+        assert!(idle_summary.host_run_escalation_route_key_labels_match);
+        assert!(idle_summary.host_run_escalation_route_key_labels_match());
+        assert!(!idle_summary.has_host_run_escalation_route_key_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_escalation_route_key_label_integrity_drift());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -23379,6 +23780,42 @@ mod tests {
         assert!(continuation_summary.host_run_escalation_routes_to_triage());
         assert!(continuation_summary.host_run_escalation_route_labels_match());
         assert!(!continuation_summary.has_host_run_escalation_route_label_integrity_drift());
+        let continuation_route_key = ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+            continuation_digest,
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_route_key(),
+            continuation_route_key
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_route_key_label(),
+            "route=triage|digest=escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert!(continuation_report.host_run_escalation_route_key_label_matches_key());
+        assert!(continuation_report.host_run_escalation_route_key_route_matches_route());
+        assert!(continuation_report.host_run_escalation_route_key_digest_matches_digest());
+        assert!(continuation_report.host_run_escalation_route_key_route_matches_digest());
+        assert!(continuation_report.host_run_escalation_route_key_parts_match());
+        assert!(!continuation_report.has_host_run_escalation_route_key_integrity_drift());
+        assert!(continuation_report.host_run_escalation_route_key_labels_match());
+        assert!(!continuation_report.has_host_run_escalation_route_key_label_integrity_drift());
+        assert_eq!(
+            continuation_summary.host_run_escalation_route_key(),
+            continuation_route_key
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_route_key_label(),
+            "route=triage|digest=escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert!(continuation_summary.host_run_escalation_route_key_label_matches_key());
+        assert!(continuation_summary.host_run_escalation_route_key_route_matches_route());
+        assert!(continuation_summary.host_run_escalation_route_key_digest_matches_digest());
+        assert!(continuation_summary.host_run_escalation_route_key_route_matches_digest());
+        assert!(continuation_summary.host_run_escalation_route_key_parts_match());
+        assert!(!continuation_summary.has_host_run_escalation_route_key_integrity_drift());
+        assert!(continuation_summary.host_run_escalation_route_key_labels_match());
+        assert!(!continuation_summary.has_host_run_escalation_route_key_label_integrity_drift());
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
@@ -23406,6 +23843,18 @@ mod tests {
         drift_summary.host_run_escalation_route_matches_digest = false;
         drift_summary.host_run_escalation_route_labels_match = false;
         drift_summary.has_host_run_escalation_route_label_integrity_drift = true;
+        drift_summary.host_run_escalation_route_key =
+            ToolAuditSupervisorDrainHostRunEscalationRouteKey::new(
+                ToolAuditSupervisorDrainHostRunEscalationRoute::NoRoute,
+                continuation_digest,
+            );
+        drift_summary.host_run_escalation_route_key_label =
+            drift_summary.host_run_escalation_route_key.label();
+        drift_summary.host_run_escalation_route_key_route_matches_digest = false;
+        drift_summary.host_run_escalation_route_key_parts_match = false;
+        drift_summary.has_host_run_escalation_route_key_integrity_drift = true;
+        drift_summary.host_run_escalation_route_key_labels_match = false;
+        drift_summary.has_host_run_escalation_route_key_label_integrity_drift = true;
         assert!(drift_summary.host_run_supervision_key_label_matches_key());
         assert!(!drift_summary.host_run_supervision_attention_matches_kind());
         assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
@@ -23428,6 +23877,14 @@ mod tests {
         assert!(!drift_summary.host_run_escalation_route_matches_digest());
         assert!(!drift_summary.host_run_escalation_route_labels_match());
         assert!(drift_summary.has_host_run_escalation_route_label_integrity_drift());
+        assert!(drift_summary.host_run_escalation_route_key_label_matches_key());
+        assert!(drift_summary.host_run_escalation_route_key_route_matches_route());
+        assert!(drift_summary.host_run_escalation_route_key_digest_matches_digest());
+        assert!(!drift_summary.host_run_escalation_route_key_route_matches_digest());
+        assert!(!drift_summary.host_run_escalation_route_key_parts_match());
+        assert!(drift_summary.has_host_run_escalation_route_key_integrity_drift());
+        assert!(!drift_summary.host_run_escalation_route_key_labels_match());
+        assert!(drift_summary.has_host_run_escalation_route_key_label_integrity_drift());
 
         let mut stale_label_summary = continuation_summary;
         stale_label_summary.host_run_supervision_key_label =
@@ -23448,6 +23905,11 @@ mod tests {
         stale_label_summary.host_run_escalation_route_label_matches_route = false;
         stale_label_summary.host_run_escalation_route_labels_match = false;
         stale_label_summary.has_host_run_escalation_route_label_integrity_drift = true;
+        stale_label_summary.host_run_escalation_route_key_label =
+            "route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled".to_string();
+        stale_label_summary.host_run_escalation_route_key_label_matches_key = false;
+        stale_label_summary.host_run_escalation_route_key_labels_match = false;
+        stale_label_summary.has_host_run_escalation_route_key_label_integrity_drift = true;
         assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
         assert!(!stale_label_summary.host_run_supervision_labels_match());
         assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
@@ -23460,6 +23922,9 @@ mod tests {
         assert!(!stale_label_summary.host_run_escalation_route_label_matches_route());
         assert!(!stale_label_summary.host_run_escalation_route_labels_match());
         assert!(stale_label_summary.has_host_run_escalation_route_label_integrity_drift());
+        assert!(!stale_label_summary.host_run_escalation_route_key_label_matches_key());
+        assert!(!stale_label_summary.host_run_escalation_route_key_labels_match());
+        assert!(stale_label_summary.has_host_run_escalation_route_key_label_integrity_drift());
     }
 
     #[test]

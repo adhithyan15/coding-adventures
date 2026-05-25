@@ -193,6 +193,9 @@ All notable changes to this package will be documented in this file.
   summary integrity checks.
 - Host-run escalation route labels and digest-match flags for queue routing and
   supervisor drain run summary integrity checks.
+- Compact host-run escalation route-key labels that bind routes back to
+  escalation digests for supervisor drain run summary grouping and integrity
+  checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host

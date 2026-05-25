@@ -238,6 +238,9 @@ The crate keeps the boundary narrow:
   for host-log integrity checks
 - supervisor drain reports and summaries expose host-run escalation route
   labels and digest-match flags for queue routing and host-log integrity checks
+- supervisor drain reports and summaries expose compact host-run escalation
+  route-key labels that bind routes back to escalation digests for queue
+  grouping and host-log integrity checks
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
