@@ -209,6 +209,9 @@ All notable changes to this package will be documented in this file.
   supervision keys for supervisor drain run dashboard integrity checks.
 - Stable host-run escalation dashboard lanes and lane-integrity flags for
   supervisor drain run queue filters.
+- Compact host-run escalation dashboard lane-rollup keys that group lane,
+  route, priority, and readiness for supervisor drain run dashboard rows and
+  integrity checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
