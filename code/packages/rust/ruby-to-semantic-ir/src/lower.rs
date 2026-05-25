@@ -406,6 +406,51 @@ impl Lowerer {
                 // `lhs until cond` → While(not cond, [lhs])
                 self.lower_modifier_statement(node)
             }
+            "yield_statement" => {
+                // Phase 6t — `yield` keyword.
+                //
+                // Grammar shape:
+                //   yield_statement = "yield" [ yield_args ] ;
+                //   yield_args      = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+                //                   | call_arg { COMMA call_arg } ;
+                //
+                // Lowering: `BuiltinCall("yield", lowered_args)` wrapped
+                // in `Stmt::ExprStmt`.  The `yield_args` wrapper (when
+                // present) holds the call_arg subnodes directly; we walk
+                // either the statement node or the yield_args wrapper.
+                //
+                // Effects: PURE.  `yield` invokes the caller-supplied
+                // block, whose effects bubble up through the call site's
+                // effect set when the block is constructed.  Modelling
+                // `yield` itself as PURE keeps the effect lattice from
+                // double-counting block effects.
+                let yield_args_node = self
+                    .find_node_child(node, "yield_args");
+                let call_arg_nodes: Vec<&GrammarASTNode> = if let Some(ya) = yield_args_node {
+                    ya.children
+                        .iter()
+                        .filter_map(|c| match c {
+                            ASTNodeOrToken::Node(n) if n.rule_name == "call_arg" => Some(n),
+                            _ => None,
+                        })
+                        .collect()
+                } else {
+                    Vec::new()
+                };
+                let args: Vec<Expr> = call_arg_nodes
+                    .into_iter()
+                    .map(|n| self.lower_call_arg(n))
+                    .collect::<Result<Vec<_>, _>>()?;
+                Ok(Stmt::ExprStmt {
+                    expr: Expr::BuiltinCall {
+                        name: "yield".to_string(),
+                        args,
+                        effects: EffectSet::PURE,
+                        span: self.span_of(node),
+                    },
+                    span: self.span_of(node),
+                })
+            }
             "return_statement" | "break_statement" | "next_statement" => {
                 // Phase 6j: control-flow keywords lower to BuiltinCall
                 // with Effect::Divergent.  Optional trailing expression

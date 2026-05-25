@@ -1889,4 +1889,76 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6t — `yield` keyword
+    // -----------------------------------------------------------------
+    //
+    // `yield ...` → ExprStmt(BuiltinCall("yield", lowered_args, PURE)).
+
+    #[test]
+    fn bare_yield_lowers_to_yield_builtin_no_args() {
+        let m = lower("yield\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "yield");
+                assert_eq!(args.len(), 0, "bare yield should have 0 args");
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(yield, [])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn yield_with_one_arg_lowers_to_builtin_with_one_arg() {
+        let m = lower("yield 42\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "yield");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::IntLit { value: 42, .. }));
+            }
+            other => panic!("expected yield builtin call, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn yield_with_paren_args_lowers_to_two_arg_builtin() {
+        let m = lower("yield(1, 2)\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "yield");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected yield builtin call with 2 args, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn yield_with_splat_arg_lowers_with_splat_envelope() {
+        // `yield(*arr)` — the splat reuses Phase 6s's BuiltinCall("splat", …)
+        // envelope, and yield itself sees that envelope as a single arg.
+        let m = lower("arr = [1]\nyield(*arr)\n");
+        let b = main_body(&m);
+        // Second stmt is the yield.
+        match &b.stmts[1] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "yield");
+                assert_eq!(args.len(), 1);
+                match &args[0] {
+                    Expr::BuiltinCall { name, args, .. } => {
+                        assert_eq!(name, "splat");
+                        assert_eq!(args.len(), 1);
+                        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "arr"));
+                    }
+                    other => panic!("expected splat envelope, got {:?}", other),
+                }
+            }
+            other => panic!("expected yield builtin call, got {:?}", other),
+        }
+    }
 }

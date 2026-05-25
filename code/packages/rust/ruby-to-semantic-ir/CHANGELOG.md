@@ -2,6 +2,24 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.21.0] - 2026-05-25
+
+### Added (Phase 6t — `yield` lowering)
+
+`yield ...` → `Stmt::ExprStmt(Expr::BuiltinCall("yield", lowered_args, EffectSet::PURE))`.
+
+Lowering walks the optional `yield_args` wrapper (when present), extracts its `call_arg` children, and routes each through Phase 6s's `lower_call_arg` helper.  Bare `yield` (no `yield_args` wrapper) lowers to an empty-arg BuiltinCall.
+
+Effects are PURE — `yield` invokes the caller-supplied block, whose effects are tracked at the *block construction* site (via `Expr::MakeClosure`'s captured effect set), not at the yield call site.  Modelling `yield` as PURE keeps the effect lattice from double-counting block effects.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 96 → **100** (+4):
+  - `bare_yield_lowers_to_yield_builtin_no_args`
+  - `yield_with_one_arg_lowers_to_builtin_with_one_arg`
+  - `yield_with_paren_args_lowers_to_two_arg_builtin`
+  - `yield_with_splat_arg_lowers_with_splat_envelope` — exercises Phase 6t × Phase 6s composition.
+
 ## [0.20.0] - 2026-05-25
 
 ### Added (Phase 6s — splat / double-splat lowering)
