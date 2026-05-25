@@ -1151,6 +1151,15 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
+    // UI32-M: read the same `--emit-project` flag that the single-
+    // component path uses. When on, the artifact-builder will write
+    // a per-backend project shell mounting the first component
+    // alongside the per-component artifacts.
+    let emit_project = flags
+        .get("emit-project")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+
     // Map the string to the typed `Backend`. The artifact builder accepts
     // the un-wired variants too (so callers can type the API surface
     // uniformly) but they return `UnsupportedBackend` immediately; we
@@ -1174,6 +1183,11 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         package_root: PathBuf::from(package_root),
         output_root: PathBuf::from(output),
         backend,
+        // UI32-M: forward the CLI's --emit-project flag into the
+        // artifact-builder. When on, the builder writes a per-
+        // backend project shell mounting the first component
+        // alongside the per-component artifacts.
+        emit_project,
     };
 
     match build_package(&opts) {
