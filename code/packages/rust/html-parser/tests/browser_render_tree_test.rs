@@ -275,6 +275,10 @@ struct ExpectedRenderNode {
     #[serde(default)]
     edit_datetime: Option<String>,
     #[serde(default)]
+    ruby_kind: Option<String>,
+    #[serde(default)]
+    bidi_kind: Option<String>,
+    #[serde(default)]
     break_kind: Option<String>,
     #[serde(default)]
     heading_level: Option<u8>,
@@ -450,6 +454,8 @@ impl ExpectedRenderNode {
             edit_cite: self.edit_cite,
             resolved_edit_cite: self.resolved_edit_cite,
             edit_datetime: self.edit_datetime,
+            ruby_kind: self.ruby_kind,
+            bidi_kind: self.bidi_kind,
             break_kind: self.break_kind,
             heading_level: self.heading_level,
             section_kind: self.section_kind,
