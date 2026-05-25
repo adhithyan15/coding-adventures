@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.24.0] - 2026-05-25
+
+### Added (Phase 6w — arrow-lambda literal `->(params){body}`)
+
+New grammar rule:
+
+```
+factor         = ( lambda_literal | method_call | NUMBER | ... ) { dot_call } ;
+lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
+```
+
+Placed BEFORE `method_call` in factor so the `->` literal wins.  Without this, `->` (a Name-typed Op token from the lexer) would be mis-matched by `method_call`'s `(NAME|KEYWORD) LPAREN` prefix when followed by parens.
+
+`lambda { … }` and `proc { … }` continue to lower via `method_with_block` (no new grammar — they're regular keyword-led calls).  The SIR lowerer now recognises `lambda` and `proc` as builtins so both shapes produce the same `BuiltinCall("lambda", …)` form.
+
+#### Parser default era bumped to "3.0"
+
+`create_ruby_parser` now invokes the lexer with `tokenize_ruby_for_version(source, "3.0")` so era-gated lexer fusions are visible to the parser by default.  Most importantly, `->` is now fused into a single Op token (1.9.1+ behaviour) so `lambda_literal` can match it.  Era-specific lexer tests still use the lower-level `tokenize_ruby_for_version` directly.
+
+New public constant: `DEFAULT_RUBY_ERA: &str = "3.0"`.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+Arrow lambda → `BuiltinCall("lambda", [MakeClosure { fn_name: "__block_<n>", captures: [] }])`.
+
+Body is hoisted to a top-level `Function` (named `__block_<n>`, reusing Phase 6g's counter).  Params are extracted from the parens-list (Phase 6s — splat supported) rather than from the block's `block_params` pipe header.
+
+### v0 deferred limitations
+
+- Block bodies that reference outer locals lose them — captures are NOT computed (same as Phase 6g).
+- If the user writes both `->(x) { |y| … }` (parens-params AND block_params), the latter is silently ignored.
+- `lambda { ... }` / `proc { ... }` works only at statement position, not as an expression RHS (because `method_with_block` is not in `factor`).  Arrow form (`->(...) { ... }`) is the recommended form for expression-position closures.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 105 → **109** (+4):
+  - `test_parse_arrow_lambda_no_params` — `-> { 1 }`.
+  - `test_parse_arrow_lambda_with_params` — `->(x, y) { x + y }`.
+  - `test_parse_arrow_lambda_inside_call` — `each(->(x) { x })`.
+  - `test_parse_lambda_keyword_with_brace_block` — `lambda { |x| x + 1 }` (regression: NOT a lambda_literal).
+
 ## [0.23.0] - 2026-05-25
 
 ### Added (Phase 6v — `begin … rescue … ensure … end`)
