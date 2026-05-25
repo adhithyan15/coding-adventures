@@ -25,7 +25,34 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+# Phase 6r — multiple assignment `a, b = 1, 2`.
+#
+# Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
+# form wins when the source begins with `NAME COMMA NAME`.  The rule
+# requires at least two LHS names (`NAME COMMA NAME { COMMA NAME }`)
+# so that single-NAME assignments still fall through to the existing
+# `assignment` rule unchanged.
+#
+# Shape:
+#   multi_assignment = NAME COMMA NAME { COMMA NAME }
+#                      EQUALS
+#                      expression { COMMA expression } ;
+#
+# Lowering (in ruby-to-semantic-ir):
+#   Each (lhs[i], rhs[i]) pair lowers to its own `LetBinding` /
+#   `Assign` — exactly as `lhs[i] = rhs[i]` would.  The lowerer
+#   returns a Vec<Stmt> from this one source statement.
+#
+# v0 restrictions (deferred to later phases):
+#   - LHS count must equal RHS count.  Mismatched arities (e.g.
+#     `a, b = 1, 2, 3` or `a, b, c = 1, 2`) → RubyLowerError.
+#   - Single-RHS auto-unpack `a, b = arr` is NOT supported.
+#   - Splat targets `a, *b = 1, 2, 3` ride with Phase 6s.
+#   - Multi-assignment LHS inside a `modifier_statement`
+#     (`a, b = 1, 2 if cond`) is NOT supported — modifier_statement's
+#     LHS alternation lists single-LHS forms only.
+multi_assignment = NAME COMMA NAME { COMMA NAME } EQUALS expression { COMMA expression } ;
 # Phase 6q — modifier conditionals/loops `x if y`, `x unless y`,
 # `x while y`, `x until y`.
 #

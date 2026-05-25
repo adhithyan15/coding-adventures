@@ -1677,4 +1677,101 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6r — multiple assignment
+    // -----------------------------------------------------------------
+    //
+    // `a, b = 1, 2` fans out into two independent SIR statements:
+    //   LetBinding(a, IntLit(1))
+    //   LetBinding(b, IntLit(2))
+    //
+    // Each pair follows the same LetBinding-vs-Assign decision as the
+    // single-LHS `assignment` lowerer.
+
+    #[test]
+    fn multi_assignment_lowers_to_independent_let_bindings() {
+        let m = lower("a, b = 1, 2\n");
+        let b = main_body(&m);
+        // The single `multi_assignment` source statement produced two
+        // independent SIR statements.
+        assert_eq!(b.stmts.len(), 2, "expected 2 SIR stmts, got {:?}", b.stmts);
+        match &b.stmts[0] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "a");
+                assert!(matches!(value, Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected LetBinding(a, 1), got {:?}", other),
+        }
+        match &b.stmts[1] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "b");
+                assert!(matches!(value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected LetBinding(b, 2), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn multi_assignment_redeclaration_uses_assign() {
+        // After `a = 1; b = 2`, subsequent `a, b = 3, 4` re-binds — so
+        // both targets must lower to `Stmt::Assign`, not `LetBinding`.
+        let m = lower("a = 1\nb = 2\na, b = 3, 4\n");
+        let b = main_body(&m);
+        // Stmts: LetBinding(a,1), LetBinding(b,2), Assign(a,3), Assign(b,4).
+        assert_eq!(b.stmts.len(), 4);
+        assert!(matches!(&b.stmts[2], Stmt::Assign { name, .. } if name == "a"));
+        assert!(matches!(&b.stmts[3], Stmt::Assign { name, .. } if name == "b"));
+    }
+
+    #[test]
+    fn multi_assignment_three_names_emits_three_stmts() {
+        // Three LHS / three RHS → three SIR stmts.
+        let m = lower("a, b, c = 1, 2, 3\n");
+        let b = main_body(&m);
+        assert_eq!(b.stmts.len(), 3);
+        for (i, (expect_name, expect_val)) in
+            [("a", 1i64), ("b", 2), ("c", 3)].iter().enumerate()
+        {
+            match &b.stmts[i] {
+                Stmt::LetBinding { name, value, .. } => {
+                    assert_eq!(name, expect_name);
+                    assert!(matches!(value, Expr::IntLit { value, .. } if value == expect_val));
+                }
+                other => panic!("expected LetBinding({}, {}), got {:?}",
+                    expect_name, expect_val, other),
+            }
+        }
+    }
+
+    #[test]
+    fn multi_assignment_arity_mismatch_errors() {
+        // v0 rejects mismatched LHS/RHS counts.  `a, b = 1, 2, 3`
+        // has 2 LHS and 3 RHS — the lowerer returns a RubyLowerError
+        // (surfaced through the `lower` test helper's `expect`).
+        let result = compile_source("a, b = 1, 2, 3\n", "test");
+        assert!(
+            result.is_err(),
+            "expected RubyLowerError for arity mismatch, got Ok"
+        );
+        let msg = result.unwrap_err().message;
+        assert!(
+            msg.contains("LHS count == RHS count") || msg.contains("multi_assignment"),
+            "expected arity-mismatch error, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn multi_assignment_module_passes_sir_validator() {
+        // End-to-end smoke check.  The `let`-based output requires no
+        // new feature beyond the existing `mutable-bindings` (which the
+        // first-sight LetBinding case doesn't need).
+        let m = lower("a, b = 1, 2\nputs(a + b)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected multi_assignment output: {:?}",
+            result
+        );
+    }
 }

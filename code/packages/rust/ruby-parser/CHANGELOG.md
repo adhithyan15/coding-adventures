@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.19.0] - 2026-05-25
+
+### Added (Phase 6r — multiple assignment `a, b = 1, 2`)
+
+New grammar rule:
+```
+statement        = ... | next_statement | multi_assignment | modifier_statement |
+                   assignment | method_with_block | method_call | method_call_no_paren |
+                   expression_stmt ;
+multi_assignment = NAME COMMA NAME { COMMA NAME }
+                   EQUALS
+                   expression { COMMA expression } ;
+```
+
+Placed BEFORE `modifier_statement` and `assignment` so `NAME COMMA NAME ... =` parses as a multi-assignment.  Requires at least two LHS names; single-LHS forms (`a = 1`) still flow through the existing `assignment` rule unchanged because `multi_assignment` fails immediately when only one NAME is present.
+
+#### Lowering (in `ruby-to-semantic-ir`)
+
+Each `(lhs[i], rhs[i])` pair lowers to its own `Stmt::LetBinding` / `Stmt::Assign` — exactly as `lhs[i] = rhs[i]` would.  The lowerer's new `lower_statement_inner_multi` wrapper returns a `Vec<Stmt>` so a single `multi_assignment` source node fans out to N SIR statements at every call site (`lower_program`, `lower_clause_statements`, `lower_def_statement` body, `lower_method_with_block` body).
+
+#### v0 restrictions (deferred)
+
+- LHS count must equal RHS count.  Mismatched arities are rejected with a `RubyLowerError`; the more permissive Ruby semantics (excess LHS gets `nil`, excess RHS dropped) ride with a future phase.
+- Single-RHS auto-unpack `a, b = arr` is NOT supported.
+- Splat targets `a, *b = 1, 2, 3` ride with Phase 6s.
+- Multi-assignment LHS inside a `modifier_statement` (`a, b = 1, 2 if cond`) is NOT supported.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 84 → **88** (+4):
+  - `test_parse_multi_assignment_two_names` — basic `a, b = 1, 2`.
+  - `test_parse_multi_assignment_three_names` — three LHS / three RHS.
+  - `test_parse_multi_assignment_with_complex_rhs` — `a, b = x + 1, y * 2`.
+  - `test_parse_single_assignment_not_consumed_by_multi` — regression: `a = 1` stays an `assignment`.
+
 ## [0.18.0] - 2026-05-24
 
 ### Added (Phase 6q — modifier conditionals/loops `x if y`, `x unless y`, `x while y`, `x until y`)

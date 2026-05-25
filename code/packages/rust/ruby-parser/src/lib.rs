@@ -1392,5 +1392,104 @@ mod tests {
         assert_eq!(count_value(r, ".."), 1);
         assert_eq!(count_value(r, "||"), 2, "expected `||` in both operand subtrees");
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6r — multiple assignment `a, b = 1, 2`
+    //
+    // The grammar rule is:
+    //   multi_assignment = NAME COMMA NAME { COMMA NAME }
+    //                      EQUALS
+    //                      expression { COMMA expression } ;
+    //
+    // Placed BEFORE `modifier_statement` and `assignment` in the statement
+    // alternation so that `NAME COMMA NAME ... =` parses as a multi-assignment
+    // and not as a `method_call_no_paren` (which couldn't match the second
+    // comma anyway).  Single-LHS assignments (`a = 1`) still flow through
+    // the existing `assignment` rule because `multi_assignment` requires
+    // at least two LHS names and falls through cleanly when only one is
+    // present.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_multi_assignment_two_names() {
+        // Smallest form: `a, b = 1, 2`.
+        let ast = parse_ruby("a, b = 1, 2");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        // Two NAME tokens on the LHS, two NUMBER tokens (or NUMBER-bearing
+        // expression nodes) on the RHS.
+        fn count_token_type<F: Fn(&lexer::token::Token) -> bool>(
+            node: &GrammarASTNode,
+            pred: F,
+        ) -> usize {
+            fn walk<F: Fn(&lexer::token::Token) -> bool>(
+                node: &GrammarASTNode,
+                pred: &F,
+                acc: &mut usize,
+            ) {
+                for c in &node.children {
+                    match c {
+                        ASTNodeOrToken::Token(t) if pred(t) => *acc += 1,
+                        ASTNodeOrToken::Node(sub) => walk(sub, pred, acc),
+                        _ => {}
+                    }
+                }
+            }
+            let mut n = 0;
+            walk(node, &pred, &mut n);
+            n
+        }
+        // The LHS NAME count should be exactly 2; the `EQUALS` token is
+        // also part of the multi_assignment node.
+        let name_count = count_token_type(m, |t| {
+            t.type_ == lexer::token::TokenType::Name && (t.value == "a" || t.value == "b")
+        });
+        assert_eq!(name_count, 2, "expected 2 LHS NAME tokens for a, b");
+        let eq_count = count_token_type(m, |t| {
+            t.type_ == lexer::token::TokenType::Equals
+        });
+        assert_eq!(eq_count, 1, "expected exactly one `=` token");
+    }
+
+    #[test]
+    fn test_parse_multi_assignment_three_names() {
+        // Three-LHS form: `a, b, c = 1, 2, 3`.
+        let ast = parse_ruby("a, b, c = 1, 2, 3");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node for 3-LHS");
+        // Three expression subtrees on the RHS.
+        let rhs_expr_count = m.children.iter().filter(|c| matches!(c,
+            ASTNodeOrToken::Node(n) if n.rule_name == "expression"
+        )).count();
+        assert_eq!(rhs_expr_count, 3, "expected 3 RHS expression nodes");
+    }
+
+    #[test]
+    fn test_parse_multi_assignment_with_complex_rhs() {
+        // RHS may be any expression — arithmetic, names, etc.
+        let ast = parse_ruby("a, b = x + 1, y * 2");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        // Each RHS expression carries its own operator.
+        assert!(tree_has_token_value(m, "+"), "expected `+` in first RHS");
+        assert!(tree_has_token_value(m, "*"), "expected `*` in second RHS");
+    }
+
+    #[test]
+    fn test_parse_single_assignment_not_consumed_by_multi() {
+        // Regression: `a = 1` (one LHS) must still parse as a plain
+        // `assignment`, not as a malformed `multi_assignment`.  The
+        // `multi_assignment` rule requires `NAME COMMA NAME` minimum,
+        // so single-NAME inputs fall through cleanly.
+        let ast = parse_ruby("a = 1");
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected `assignment` node for single-LHS form"
+        );
+        assert!(
+            find_descendant(&ast, "multi_assignment").is_none(),
+            "single-LHS must NOT parse as multi_assignment"
+        );
+    }
 }
 
