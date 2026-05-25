@@ -61,6 +61,12 @@ use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 use std::process::ExitCode;
 
+// CLOC11.01 added these three modules to give the previously-empty
+// CLI binary an actual body. See CLOC11 §5 for the architecture.
+pub mod config;
+pub mod run;
+pub mod wire;
+
 /// The cli-builder JSON spec, embedded at compile time. This is
 /// the single source of truth for closurec's flag surface; it
 /// declares every flag from `CommandLineRunner.java` plus their
@@ -114,27 +120,29 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
 
     let parser = Parser::new(spec);
     match parser.parse(&argv) {
-        Ok(ParserOutput::Parse(_result)) => {
-            // v1: identity pipeline. The args parsed cleanly; we
-            // accept every Closure Compiler flag the user threw
-            // at us, but the body that would actually compile
-            // them is still scaffolding.
+        Ok(ParserOutput::Parse(result)) => {
+            // Step 3 (CLOC11.01): turn the parsed flags into a
+            // typed CompilerConfig.
+            let cfg = match wire::config_from_parsed(&result) {
+                Ok(c) => c,
+                Err(e) => return (format!("{e}\n"), ExitCode::from(1)),
+            };
+
+            // Step 4 (CLOC11.01): run the compiler. v1 is an
+            // identity pipeline — read inputs, concatenate,
+            // write to --js_output_file or stdout. See run.rs.
             //
-            // When the AST grows nodes, this branch becomes:
-            //   1. resolve --js inputs into a Vec<PathBuf>
-            //   2. lex/parse each into a Program
-            //   3. seed the sidecar from JSDoc / .i.js
-            //   4. typecheck
-            //   5. configure PassPipeline from _result.flags
-            //      (compilation_level, jscomp_off, --define, etc.)
-            //   6. run the pipeline
-            //   7. emit() + source-map generation
-            //   8. write outputs
-            // The CLI surface this PR locks in doesn't change.
-            (
-                "closurec v0.1.0 - identity pipeline\n".to_string(),
-                ExitCode::SUCCESS,
-            )
+            // When the AST grows full lexing/parsing (CLOC11.06+),
+            // this branch stays the same; only `run_compiler`'s
+            // body grows.
+            match run::run_compiler(&cfg) {
+                Ok(out) => {
+                    // Closure exits 0 on success regardless of
+                    // whether output went to stdout or to a file.
+                    (out.stdout_text, ExitCode::SUCCESS)
+                }
+                Err(e) => (format!("{e}\n"), ExitCode::from(2)),
+            }
         }
         Ok(ParserOutput::Help(h)) => (h.text, ExitCode::SUCCESS),
         Ok(ParserOutput::Version(v)) => (format!("{}\n", v.version), ExitCode::SUCCESS),
@@ -220,13 +228,34 @@ mod tests {
 
     #[test]
     fn version_long_flag_returns_version() {
+        // The exact version is asserted by
+        // `version_string_matches_crate_version` below using
+        // env!("CARGO_PKG_VERSION"); here we just confirm a
+        // semver-looking string is in the output.
         let (text, _code) = parse_and_run(&args(&["--version"]));
-        assert!(text.contains("0.1.0"));
+        assert!(
+            text.contains('.'),
+            "expected version output to contain a dotted version; got: {text}"
+        );
     }
 
     // Note: the upstream Java Closure Compiler exposes only `--version`
     // (no `-V` short form), so there's no equivalent test here.
     // cli-builder's auto-injected builtin only adds `--version` long.
+
+    /// After CLOC11.01 the binary actually tries to *read* the
+    /// `--js` inputs, so passing a nonexistent path is no longer
+    /// a successful run — it's an I/O error (exit 2). The point of
+    /// these tests is to assert the *CLI surface* still parses
+    /// cleanly (no exit-1 / unknown-flag / invalid-enum failures);
+    /// the read failure is acceptable and expected.
+    fn assert_parsed_cleanly(text: &str) {
+        let lower = text.to_lowercase();
+        assert!(
+            !lower.contains("unknown") && !lower.contains("invalid"),
+            "expected clean parse; got: {text}"
+        );
+    }
 
     #[test]
     fn canonical_closure_invocation_parses_cleanly() {
@@ -242,11 +271,7 @@ mod tests {
             "--create_source_map",
             "out/out.js.map",
         ]));
-        assert!(
-            text.contains("identity pipeline"),
-            "expected v1 identity banner; got: {}",
-            text
-        );
+        assert_parsed_cleanly(&text);
     }
 
     #[test]
@@ -255,7 +280,7 @@ mod tests {
         let (text, _code) = parse_and_run(&args(&[
             "--js", "a.js", "--js", "b.js", "--js", "c.js",
         ]));
-        assert!(text.contains("identity pipeline"));
+        assert_parsed_cleanly(&text);
     }
 
     #[test]
@@ -294,14 +319,14 @@ mod tests {
         // --compilation_level. Spec sets it up via `short: "O"`.
         let (text, _code) =
             parse_and_run(&args(&["--js", "in.js", "-O", "SIMPLE"]));
-        assert!(text.contains("identity pipeline"));
+        assert_parsed_cleanly(&text);
     }
 
     #[test]
     fn short_warning_level_alias_works() {
         let (text, _code) =
             parse_and_run(&args(&["--js", "in.js", "-W", "VERBOSE"]));
-        assert!(text.contains("identity pipeline"));
+        assert_parsed_cleanly(&text);
     }
 
     #[test]
@@ -310,7 +335,7 @@ mod tests {
         let (text, _code) = parse_and_run(&args(&[
             "--js", "in.js", "-D", "FLAG_DEBUG=true", "-D", "VERSION=1",
         ]));
-        assert!(text.contains("identity pipeline"));
+        assert_parsed_cleanly(&text);
     }
 
     #[test]
@@ -325,7 +350,7 @@ mod tests {
             "--formatting",
             "SINGLE_QUOTES",
         ]));
-        assert!(text.contains("identity pipeline"));
+        assert_parsed_cleanly(&text);
     }
 
     #[test]
