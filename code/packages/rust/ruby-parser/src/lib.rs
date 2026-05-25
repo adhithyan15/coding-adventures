@@ -179,19 +179,27 @@ mod tests {
                 _ => None,
             })
             .expect("expected params subnode");
-        let names: Vec<&str> = params_node
+        // Phase 6s: each parameter is now wrapped in a `param` subnode
+        // (to admit the optional `*`/`**` splat prefix), so we walk
+        // the param children to extract Name tokens.
+        let names: Vec<String> = params_node
             .children
             .iter()
             .filter_map(|c| match c {
-                ASTNodeOrToken::Token(t)
-                    if matches!(t.type_, lexer::token::TokenType::Name) =>
-                {
-                    Some(t.value.as_str())
+                ASTNodeOrToken::Node(n) if n.rule_name == "param" => {
+                    n.children.iter().find_map(|cc| match cc {
+                        ASTNodeOrToken::Token(t)
+                            if matches!(t.type_, lexer::token::TokenType::Name) =>
+                        {
+                            Some(t.value.clone())
+                        }
+                        _ => None,
+                    })
                 }
                 _ => None,
             })
             .collect();
-        assert_eq!(names, vec!["x", "y"]);
+        assert_eq!(names, vec!["x".to_string(), "y".to_string()]);
     }
 
     #[test]
@@ -896,11 +904,12 @@ mod tests {
         // `foo.bar(1, 2)` — dot_call's optional arg list is populated.
         let ast = parse_ruby("foo.bar(1, 2)");
         let dot = find_descendant(&ast, "dot_call").expect("dot_call expected");
-        // Count `expression` direct children of the dot_call.
+        // Phase 6s: each argument is now wrapped in a `call_arg` rule
+        // (to admit optional `*`/`**` splat prefixes).
         let arg_count = dot
             .children
             .iter()
-            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
             .count();
         assert_eq!(arg_count, 2, "expected 2 dot_call args, got {arg_count}");
     }
@@ -1490,6 +1499,103 @@ mod tests {
             find_descendant(&ast, "multi_assignment").is_none(),
             "single-LHS must NOT parse as multi_assignment"
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 6s — splat / double-splat in params and call args
+    //
+    // Grammar additions:
+    //   params   = param { COMMA param } ;
+    //   param    = [ "*" | "**" ] NAME ;
+    //   call_arg = [ "*" | "**" ] expression ;
+    //   method_call's argument slot now uses call_arg instead of bare expression.
+    //
+    // method_call_no_paren intentionally still uses bare `expression` to
+    // avoid ambiguity with binary `*` at expression-start position
+    // (`a * b` would otherwise parse as `a(splat b)`).  Paren-less splat
+    // is a v0 deferred limitation; users can always fall back to `f(*arr)`.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_splat_param() {
+        // `def f(*args) end` — single splat param.
+        let ast = parse_ruby("def f(*args)\nend");
+        // The `param` subnode is present and carries the `*` token plus the name.
+        let param = find_descendant(&ast, "param").expect("expected param subnode");
+        assert!(tree_has_token_value(param, "*"), "expected `*` splat prefix");
+        assert!(tree_has_token_value(param, "args"), "expected `args` name");
+        // Regression: NO `**` prefix.
+        assert!(!tree_has_token_value(param, "**"),
+            "single splat must not produce a `**` token");
+    }
+
+    #[test]
+    fn test_parse_double_splat_param() {
+        // `def f(**kwargs) end` — single double-splat param.
+        let ast = parse_ruby("def f(**kwargs)\nend");
+        let param = find_descendant(&ast, "param").expect("expected param subnode");
+        assert!(tree_has_token_value(param, "**"), "expected `**` double-splat prefix");
+        assert!(tree_has_token_value(param, "kwargs"), "expected `kwargs` name");
+    }
+
+    #[test]
+    fn test_parse_mixed_params_with_splats() {
+        // `def f(a, *rest, **opts) end` — three params: positional, splat, double-splat.
+        let ast = parse_ruby("def f(a, *rest, **opts)\nend");
+        let params_node = find_descendant(&ast, "params").expect("expected params");
+        let param_count = params_node
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "param"))
+            .count();
+        assert_eq!(param_count, 3, "expected 3 param subnodes, got {param_count}");
+        // The whole tree should contain `*`, `**`, and the bare NAMEs.
+        assert!(tree_has_token_value(params_node, "*"));
+        assert!(tree_has_token_value(params_node, "**"));
+        assert!(tree_has_token_value(params_node, "rest"));
+        assert!(tree_has_token_value(params_node, "opts"));
+    }
+
+    #[test]
+    fn test_parse_splat_call_arg() {
+        // `f(*arr)` — splat call argument.
+        let ast = parse_ruby("f(*arr)");
+        let call_arg = find_descendant(&ast, "call_arg")
+            .expect("expected call_arg subnode");
+        assert!(tree_has_token_value(call_arg, "*"), "expected `*` in call_arg");
+        assert!(tree_has_token_value(call_arg, "arr"), "expected `arr` in call_arg");
+    }
+
+    #[test]
+    fn test_parse_mixed_call_args_with_splats() {
+        // `f(1, *arr, **hsh)` — three call_args: positional, splat, double-splat.
+        let ast = parse_ruby("f(1, *arr, **hsh)");
+        let call = find_descendant(&ast, "method_call").expect("expected method_call");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 3, "expected 3 call_args, got {arg_count}");
+        assert!(tree_has_token_value(call, "*"));
+        assert!(tree_has_token_value(call, "**"));
+    }
+
+    #[test]
+    fn test_parse_binary_star_still_parses_as_expression() {
+        // Regression: `a * b` as a statement must still parse as a
+        // bare expression-stmt with binary `*`, NOT as `a(splat b)`.
+        // method_call_no_paren intentionally keeps bare `expression`
+        // args to preserve this behaviour.
+        let ast = parse_ruby("a * b");
+        // No call_arg node should appear in the AST.
+        assert!(
+            find_descendant(&ast, "call_arg").is_none(),
+            "binary `a * b` must NOT produce a call_arg"
+        );
+        // A term node containing the `*` should exist.
+        let term = find_descendant(&ast, "term").expect("expected term node");
+        assert!(tree_has_token_value(term, "*"), "expected binary `*` in term");
     }
 }
 

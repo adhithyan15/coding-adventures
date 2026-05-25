@@ -1774,4 +1774,119 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6s — splat / double-splat
+    // -----------------------------------------------------------------
+    //
+    // Splat in CALL ARGS:
+    //   `f(*arr)`  → DirectCall(f, [BuiltinCall("splat",        [VarRef(arr)])])
+    //   `f(**hsh)` → DirectCall(f, [BuiltinCall("double_splat", [VarRef(hsh)])])
+    //
+    // Splat in DEF PARAMS:
+    //   v0 limitation — Param has no variadic flag.  Splat-ness is
+    //   LOST at the SIR level; `*args` lowers to `Param { name: "args" }`,
+    //   indistinguishable from a positional parameter.  Documented for
+    //   downstream emitter follow-up.
+
+    #[test]
+    fn splat_call_arg_lowers_to_splat_builtin() {
+        // `arr` must be a local first so the validator accepts the VarRef.
+        let m = lower("arr = [1, 2, 3]\nf(*arr)\n");
+        let b = main_body(&m);
+        // Find the DirectCall(f, …) — it's either the tail value
+        // (promoted) or the second body stmt.
+        let call_expr: &Expr = match &b.value {
+            Expr::DirectCall { fn_name, .. } if fn_name == "f" => &b.value,
+            _ => panic!("expected tail DirectCall(f, ...), got value={:?}", b.value),
+        };
+        match call_expr {
+            Expr::DirectCall { args, .. } => {
+                assert_eq!(args.len(), 1);
+                match &args[0] {
+                    Expr::BuiltinCall { name, args, .. } => {
+                        assert_eq!(name, "splat");
+                        assert_eq!(args.len(), 1);
+                        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "arr"));
+                    }
+                    other => panic!("expected BuiltinCall(splat, ...), got {:?}", other),
+                }
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    #[test]
+    fn double_splat_call_arg_lowers_to_double_splat_builtin() {
+        let m = lower("hsh = {a: 1}\nf(**hsh)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => args,
+            other => panic!("expected DirectCall(f, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1);
+        match &args[0] {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "double_splat");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "hsh"));
+            }
+            other => panic!("expected BuiltinCall(double_splat, ...), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn mixed_call_args_with_splats_lower_in_order() {
+        // `f(1, *arr, **hsh)` → three args:
+        //   IntLit(1), BuiltinCall(splat, [VarRef(arr)]),
+        //   BuiltinCall(double_splat, [VarRef(hsh)]).
+        let m = lower("arr = [1]\nhsh = {a: 1}\nf(1, *arr, **hsh)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => args,
+            other => panic!("expected tail DirectCall(f, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 3, "expected 3 args, got {}", args.len());
+        assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+        assert!(matches!(
+            &args[1],
+            Expr::BuiltinCall { name, .. } if name == "splat"
+        ));
+        assert!(matches!(
+            &args[2],
+            Expr::BuiltinCall { name, .. } if name == "double_splat"
+        ));
+    }
+
+    #[test]
+    fn splat_param_lowers_to_bare_name_param() {
+        // v0 lossy lowering: `*args` and `**kwargs` become regular
+        // Params with the bare name.  Confirms the parse round-trip
+        // doesn't crash and that the parameter name comes through
+        // (without `*` / `**` prefix in `Param.name`).
+        // Body uses a parens-wrapped expression to dodge the
+        // bare-NAME-led def body ambiguity (see lessons.md).
+        let m = lower("def f(a, *rest, **opts)\n  (a)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f")
+            .expect("expected user-defined function `f`");
+        let names: Vec<&str> = f.params.iter().map(|p| p.name.as_str()).collect();
+        assert_eq!(
+            names,
+            vec!["a", "rest", "opts"],
+            "expected bare param names (v0 lossy splat lowering)"
+        );
+    }
+
+    #[test]
+    fn splat_call_arg_module_passes_sir_validator() {
+        // End-to-end smoke check: a module that uses splat call args
+        // validates cleanly.
+        let m = lower("arr = [1, 2, 3]\nputs(*arr)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected splat call-arg output: {:?}",
+            result
+        );
+    }
 }

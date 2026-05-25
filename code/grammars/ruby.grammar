@@ -106,7 +106,21 @@ block_params = "|" NAME { COMMA NAME } "|" ;
 return_statement = "return" [ expression ] ;
 break_statement  = "break"  [ expression ] ;
 next_statement   = "next"   [ expression ] ;
-params       = NAME { COMMA NAME } ;
+# Phase 6s — splat (`*args`) and double-splat (`**kwargs`) parameters.
+#
+# `params` previously was `NAME { COMMA NAME }`.  We now wrap each
+# parameter in a `param` rule that admits an optional leading `*` /
+# `**` prefix.  The lexer emits `*` as a single Star token (value
+# "*"), and the 1.8-baseline state machine already coalesces `**` into
+# one Name-typed token with value "**".  Both forms match here by
+# literal value.
+#
+# Multiple splats or double-splats per signature are syntactically
+# accepted but semantically illegal in Ruby; the SIR lowerer accepts
+# the first of each and flags duplicates as a deferred limitation
+# (v0 keeps the grammar permissive and pushes shape validation up).
+params       = param { COMMA param } ;
+param        = [ "*" | "**" ] NAME ;
 if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
 elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
 else_clause  = "else" { !"end" statement } ;
@@ -143,8 +157,15 @@ assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expre
 #
 # Setter calls (`foo.bar = 1`) and bracket access (`arr[0]`) are
 # deliberately out of scope for this chunk — they get their own phases.
-method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN { dot_call } ;
-dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] ;
+method_call  = ( NAME | KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
+dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] ;
+# Phase 6s — splat call arguments.  `f(*arr)` and `f(**hsh)` (and the
+# mixed form `f(1, *arr, **hsh, named: x)`) flow through here.  The
+# optional `[ "*" | "**" ]` prefix sits inside a single call_arg slot,
+# so positional and splat args interleave naturally on the COMMA
+# separator.  Lowering wraps the prefixed forms in
+# `BuiltinCall("splat", …)` / `BuiltinCall("double_splat", …)`.
+call_arg     = [ "*" | "**" ] expression ;
 # Phase 6h — paren-less method call.  Idiomatic Ruby allows
 # `puts 1, 2` (no parens) when the call has at least one argument.
 #
