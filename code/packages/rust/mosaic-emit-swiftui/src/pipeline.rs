@@ -168,6 +168,211 @@ impl std::fmt::Display for PipelineEmitError {
 
 impl std::error::Error for PipelineEmitError {}
 
+// =====================================================================
+// UI32-K-swiftui — `--emit-project` Swift Package Manager shell
+//
+// L7 of UI32. Mirrors L2 (React #4297), L3 (HTML #4309),
+// L4 (WebComponent #4315), L5 (Flutter #4319), L6 (Qt #4325):
+// EmitOptions / ProjectFiles / from_pipeline_with_options.
+//
+// When `--emit-project` is on, emits a SwiftPM-shaped scaffold
+// alongside the component .swift. Author runs `swift run` to see
+// the component on macOS (the v1 target — iOS/Android need
+// xcrun + a separate iOS shell, deferred).
+// =====================================================================
+
+/// Options controlling the SwiftUI emitter's behaviour.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EmitOptions {
+    /// Also emit `Package.swift`, `Sources/App/App.swift`,
+    /// `README.md` alongside the component `.swift`. Default `false`.
+    pub emit_project: bool,
+
+    /// Pinned `swift-tools-version` for `Package.swift`. UI32 spec
+    /// §3.6.3 requires exact pinning. Default `"5.10"` — a
+    /// known-good Swift 5.10 LTS that supports macOS 14 SwiftUI.
+    pub pinned_swift_tools: String,
+
+    /// Pinned macOS deployment target. Default `".v13"` — the
+    /// lowest macOS that supports modern SwiftUI (`@Observable`,
+    /// the v3 `Sheet` API, etc.). Lower targets miss APIs.
+    pub pinned_macos_min: String,
+}
+
+impl Default for EmitOptions {
+    fn default() -> Self {
+        Self {
+            emit_project: false,
+            pinned_swift_tools: "5.10".to_string(),
+            pinned_macos_min: ".v13".to_string(),
+        }
+    }
+}
+
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project`
+/// is on. Three files — enough for `swift run` to launch a SwiftUI
+/// macOS app that mounts the component.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProjectFiles {
+    /// `Package.swift` — pinned `swift-tools-version`, single
+    /// executable target named `App` that depends on the component
+    /// source.
+    pub package_swift: String,
+    /// `Sources/App/App.swift` — SwiftUI `@main App` + `WindowGroup`
+    /// shell that mounts `{Component}View()` as the root view.
+    /// Imports the component sibling-relative (via SwiftPM target
+    /// dependency or `#include`-equivalent — for v1, the component
+    /// .swift sits in the same `Sources/App/` directory).
+    pub app_swift: String,
+    /// `README.md` — prereqs (Swift 5.10+, Xcode CLT or full
+    /// Xcode), `swift run` recipe, file map.
+    pub readme: String,
+}
+
+/// Error shapes specific to the SwiftUI project-shell emission path.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProjectShellError {
+    /// The component name collides with a Swift reserved keyword.
+    /// Per UI32 spec §3.6.2 SwiftUI row: Swift keywords (`Class`,
+    /// `Protocol`, `Actor`, `Self`, etc.) must be backtick-quoted
+    /// or avoided. We choose to reject them outright with a
+    /// fail-loud error rather than emit backtick-quoted Swift
+    /// (which compiles but is non-idiomatic).
+    SwiftKeywordCollision(String),
+
+    /// The component name is not a valid Swift identifier (e.g.
+    /// contains a hyphen — the mosmodel `NAME` grammar regex
+    /// permits hyphens, but Swift identifier syntax does not).
+    /// Without this guard, a name like `Foo-Bar` would produce
+    /// `Foo-BarView()` which `swift build` rejects with a
+    /// confusing "expected ')'" diagnostic. Defense-in-depth
+    /// flagged in L7's security review.
+    InvalidSwiftIdentifier(String),
+}
+
+impl std::fmt::Display for ProjectShellError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProjectShellError::SwiftKeywordCollision(n) => write!(
+                f,
+                "component name '{n}' collides with a Swift reserved keyword; rename the component to avoid backtick-quoting"
+            ),
+            ProjectShellError::InvalidSwiftIdentifier(n) => write!(
+                f,
+                "component name '{n}' is not a valid Swift identifier (Swift identifier shape is [A-Za-z_][A-Za-z0-9_]*; the mosmodel grammar permits hyphens but Swift does not)"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ProjectShellError {}
+
+impl From<ProjectShellError> for PipelineEmitError {
+    fn from(e: ProjectShellError) -> Self {
+        PipelineEmitError::UnsafeSlotName(e.to_string())
+    }
+}
+
+/// Extended pipeline result — carries the optional `ProjectFiles`
+/// when `emit_project` is on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PipelineEmitResultWithProject {
+    pub output: String,
+    pub component_name: String,
+    pub project: Option<ProjectFiles>,
+}
+
+/// Compile a three-file Mosaic pipeline triple to SwiftUI with
+/// explicit emit options.
+pub fn from_pipeline_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
+    let component = from_pipeline(interface, layout, style)?;
+
+    let project = if options.emit_project {
+        Some(build_swiftui_project_files(&component.component_name, options)?)
+    } else {
+        None
+    };
+
+    Ok(PipelineEmitResultWithProject {
+        output: component.output,
+        component_name: component.component_name,
+        project,
+    })
+}
+
+/// Build the three SwiftUI app-shell side files for a single
+/// component.
+///
+/// UI32 spec §3.6.2 SwiftUI row contract: Swift keywords (`Class`,
+/// `Protocol`, `Actor`, `Self`, `Any`, `Type`, etc.) must be
+/// rejected to avoid backtick-quoting in identifier positions.
+fn build_swiftui_project_files(
+    name: &str,
+    options: &EmitOptions,
+) -> Result<ProjectFiles, ProjectShellError> {
+    if !is_safe_swift_identifier(name) {
+        return Err(ProjectShellError::InvalidSwiftIdentifier(name.to_string()));
+    }
+    if is_swift_keyword(name) {
+        return Err(ProjectShellError::SwiftKeywordCollision(name.to_string()));
+    }
+
+    Ok(ProjectFiles {
+        package_swift: build_package_swift(options),
+        app_swift: build_app_swift(name),
+        readme: build_swiftui_readme(name),
+    })
+}
+
+/// Swift reserved keyword reject-list — the subset that's plausibly
+/// PascalCase (so we don't false-fire on lowercase keywords like
+/// `if`, `let`, `var` that the upstream validator already rejects
+/// at the first-char-must-be-uppercase check).
+///
+/// Sources: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/lexicalstructure
+/// — declaration keywords + type keywords that collide with the
+/// PascalCase namespace. We err on the strict side; the upstream
+/// validator already gates `[A-Z][A-Za-z0-9_]*` shape, so any
+/// remaining keyword collisions are these PascalCase names.
+const SWIFT_RESERVED_KEYWORDS: &[&str] = &[
+    "Any", "AnyObject", "Class", "Protocol", "Actor", "Self", "Type", "Module",
+    "Package", "Import", "Throws", "Rethrows", "True", "False",
+];
+
+fn is_swift_keyword(s: &str) -> bool {
+    SWIFT_RESERVED_KEYWORDS.contains(&s)
+}
+
+const BANNER_SWIFT: &str = "// AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\n";
+const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+
+fn build_package_swift(options: &EmitOptions) -> String {
+    format!(
+        "// swift-tools-version: {}\n{BANNER_SWIFT}import PackageDescription\n\nlet package = Package(\n  name: \"App\",\n  platforms: [.macOS({})],\n  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    ),\n  ]\n)\n",
+        options.pinned_swift_tools, options.pinned_macos_min,
+    )
+}
+
+fn build_app_swift(component_name: &str) -> String {
+    // The Mosaic SwiftUI emitter produces a `View` struct named
+    // `{component_name}View` (per pipeline.rs:120 doc comment), so
+    // mount that here.
+    format!(
+        "{BANNER_SWIFT}import SwiftUI\n\n@main\nstruct MosaicApp: App {{\n  var body: some Scene {{\n    WindowGroup(\"{component_name}\") {{\n      {component_name}View()\n    }}\n  }}\n}}\n"
+    )
+}
+
+fn build_swiftui_readme(component_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {component_name} — SwiftUI macOS shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later target machine.\n\n## Run\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View()`. The first run downloads no dependencies — the package only depends on the SwiftUI system framework.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component. Place inside `Sources/App/` for SwiftPM to pick it up. |\n| `Package.swift` | SwiftPM manifest. Pinned swift-tools-version per UI32 spec §3.6.3. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View()`. |\n| `README.md` | This file. |\n\n## Layout\n\nFor SwiftPM to compile the component, move `{component_name}.swift` into `Sources/App/` (next to `App.swift`):\n\n```sh\nmkdir -p Sources/App\nmv {component_name}.swift Sources/App/\nswift run\n```\n\n## Editing\n\nEvery file except `{component_name}.swift` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
 /// Compile a three-file Mosaic pipeline triple to a SwiftUI source file.
 ///
 /// The `style` argument is accepted to lock the signature (callers and the
@@ -4599,5 +4804,261 @@ mod tests {
             r.contains(".onChange(of: count) { dispatch(.set(value: count)) }"),
             "expected .onChange modifier with dispatch, got:\n{r}"
         );
+    }
+
+    // =================================================================
+    // UI32-K-swiftui — `--emit-project` SwiftPM shell tests
+    //
+    // Covers UI32 spec §3.1-§3.8 per-PR gates:
+    //   §3.4 Composable     : default options = no project shell.
+    //   §3.5 Banner          : every emitted file starts with banner.
+    //   §3.1 Reproducible    : two runs produce byte-identical output.
+    //   §3.6.1 Validation    : Swift keyword collision → fail-loud.
+    //   §3.6.2 SwiftUI row   : keyword reject-list enforced.
+    //   §3.6.3 Pinning       : Package.swift carries pinned versions.
+    //   §3.7 Output paths    : only the spec §2.2 enumeration.
+    //   §3.8 No env reads    : no /Users/, $HOME, etc. in output.
+    // =================================================================
+
+    #[test]
+    fn ui32_emit_project_false_is_backward_compatible_with_from_pipeline() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with("X", container_node("Box", vec![]));
+        let s = empty_style("X");
+
+        let legacy = from_pipeline(&m, &l, &s).unwrap();
+        let extended =
+            from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+
+        assert_eq!(legacy.output, extended.output, ".swift bytes diverged");
+        assert_eq!(legacy.component_name, extended.component_name);
+        assert!(
+            extended.project.is_none(),
+            "default options must NOT emit a project shell"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_true_returns_project_files() {
+        let m = component("Hello", vec![], vec![]);
+        let l = layout_with("Hello", container_node("Box", vec![]));
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert!(r.project.is_some(), "emit_project: true must produce a shell");
+    }
+
+    #[test]
+    fn ui32_every_emitted_side_file_carries_auto_generated_banner() {
+        let m = component("Hello", vec![], vec![]);
+        let l = layout_with("Hello", container_node("Box", vec![]));
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .expect("project shell expected");
+
+        // Package.swift starts with `// swift-tools-version:` per
+        // SwiftPM convention; the banner sits on line 2.
+        assert!(
+            proj.package_swift.starts_with("// swift-tools-version:"),
+            "Package.swift must start with `// swift-tools-version:`"
+        );
+        assert!(
+            proj.package_swift.contains("AUTO-GENERATED by mosaic-compile"),
+            "Package.swift missing banner"
+        );
+        // App.swift starts with the banner directly.
+        assert!(
+            proj.app_swift.starts_with("// AUTO-GENERATED"),
+            "Sources/App/App.swift must START with banner"
+        );
+        // README.md uses HTML-comment syntax.
+        assert!(
+            proj.readme.starts_with("<!-- AUTO-GENERATED"),
+            "README.md must START with banner"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_is_byte_deterministic() {
+        let m = component("Deterministic", vec![], vec![]);
+        let l = layout_with("Deterministic", container_node("Box", vec![]));
+        let s = empty_style("Deterministic");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert_eq!(a.output, b.output, ".swift is not deterministic");
+        assert_eq!(a.project, b.project, "project shell is not deterministic");
+    }
+
+    /// §3.6.1 + §3.6.2 SwiftUI row defense-in-depth: a component
+    /// name that's a valid mosmodel `NAME` (`/[A-Za-z][A-Za-z0-9]*(-...)*/`)
+    /// but NOT a valid Swift identifier (because hyphens are
+    /// allowed in mosmodel but rejected by Swift) MUST fail-loud
+    /// — otherwise `<Foo-Bar>View()` would produce an obscure
+    /// `swift build` error. Flagged by the L7 security review.
+    #[test]
+    fn ui32_hyphenated_component_name_returns_invalid_swift_identifier_error() {
+        let m = component("Foo-Bar", vec![], vec![]);
+        let l = layout_with("Foo-Bar", container_node("Box", vec![]));
+        let s = empty_style("Foo-Bar");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let err = from_pipeline_with_options(&m, &l, &s, &opts)
+            .expect_err("hyphenated name must error");
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("'Foo-Bar'") && msg.contains("Swift identifier"),
+            "expected invalid Swift identifier error, got: {msg}"
+        );
+    }
+
+    /// §3.6.1 + §3.6.2 SwiftUI row: a component name that's a Swift
+    /// reserved keyword (e.g., `Class`, `Protocol`, `Actor`) MUST
+    /// fail-loud, not silently emit backtick-quoted Swift.
+    #[test]
+    fn ui32_swift_keyword_component_name_returns_error() {
+        let m = component("Class", vec![], vec![]);
+        let l = layout_with("Class", container_node("Box", vec![]));
+        let s = empty_style("Class");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let err = from_pipeline_with_options(&m, &l, &s, &opts)
+            .expect_err("Swift keyword collision must error");
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("'Class'") && msg.contains("Swift reserved keyword"),
+            "expected Swift keyword collision error, got: {msg}"
+        );
+    }
+
+    /// §3.6.3 Pinning. Package.swift carries the default pinned
+    /// swift-tools-version and macOS deployment target.
+    #[test]
+    fn ui32_package_swift_carries_pinned_default_versions_exactly() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with("X", container_node("Box", vec![]));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.package_swift
+                .contains("// swift-tools-version: 5.10"),
+            "expected swift-tools-version 5.10, got:\n{}",
+            proj.package_swift
+        );
+        assert!(
+            proj.package_swift.contains("platforms: [.macOS(.v13)]"),
+            "expected macOS .v13 platform pin, got:\n{}",
+            proj.package_swift
+        );
+    }
+
+    /// §3.7 Output paths tripwire.
+    #[test]
+    fn ui32_project_files_struct_exposes_only_spec_22_swiftui_files() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with("X", container_node("Box", vec![]));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let ProjectFiles {
+            package_swift,
+            app_swift,
+            readme,
+        } = proj;
+        assert!(!package_swift.is_empty(), "Package.swift empty");
+        assert!(!app_swift.is_empty(), "Sources/App/App.swift empty");
+        assert!(!readme.is_empty(), "README.md empty");
+    }
+
+    #[test]
+    fn ui32_emitted_files_contain_no_environment_specific_strings() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with("X", container_node("Box", vec![]));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let all = format!(
+            "{}\n{}\n{}",
+            proj.package_swift, proj.app_swift, proj.readme
+        );
+        for banned in ["/Users/", "/home/", "C:\\Users\\", "$HOME"] {
+            assert!(
+                !all.contains(banned),
+                "emitted shell contains environment-specific fragment `{banned}`"
+            );
+        }
+    }
+
+    /// App.swift mounts the component's `View` struct in a
+    /// WindowGroup. The component-name suffix `View` comes from the
+    /// emitter's documented `{component_name}View` convention.
+    #[test]
+    fn ui32_app_swift_mounts_component_view_in_window_group() {
+        let m = component("MyWidget", vec![], vec![]);
+        let l = layout_with("MyWidget", container_node("Box", vec![]));
+        let s = empty_style("MyWidget");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        // Must use @main App + WindowGroup + the {Component}View()
+        // constructor.
+        assert!(
+            proj.app_swift.contains("@main"),
+            "App.swift must declare @main"
+        );
+        assert!(
+            proj.app_swift.contains("WindowGroup(\"MyWidget\")"),
+            "App.swift must wrap in WindowGroup titled with component name"
+        );
+        assert!(
+            proj.app_swift.contains("MyWidgetView()"),
+            "App.swift must instantiate MyWidgetView()"
+        );
+    }
+
+    /// Truth table for is_swift_keyword. Covers the
+    /// PascalCase subset of Swift reserved words.
+    #[test]
+    fn ui32_is_swift_keyword_truth_table() {
+        // Rejected (PascalCase Swift keywords)
+        assert!(is_swift_keyword("Class"));
+        assert!(is_swift_keyword("Protocol"));
+        assert!(is_swift_keyword("Actor"));
+        assert!(is_swift_keyword("Self"));
+        assert!(is_swift_keyword("Any"));
+        assert!(is_swift_keyword("Type"));
+        // Accepted (non-keyword PascalCase names)
+        assert!(!is_swift_keyword("Hello"));
+        assert!(!is_swift_keyword("HostTable"));
+        assert!(!is_swift_keyword("MyWidget"));
+        assert!(!is_swift_keyword("Component"));
+        // The check is case-sensitive; lowercase variants would never
+        // pass the upstream validator anyway (PascalCase required).
+        assert!(!is_swift_keyword("class")); // not in our PascalCase set
     }
 }

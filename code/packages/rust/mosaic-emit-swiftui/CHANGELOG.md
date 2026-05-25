@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI32-K-swiftui — `--emit-project` SwiftPM macOS shell
+
+L7 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2-L6: #4297, #4309, #4315, #4319, #4325). `mosaic-compile --backend swiftui --emit-project` now produces a SwiftPM scaffold:
+
+- `Package.swift` — pinned `swift-tools-version: 5.10` + `platforms: [.macOS(.v13)]` per UI32 §3.6.3. Single executable target `App` at `Sources/App/`.
+- `Sources/App/App.swift` — SwiftUI `@main App` + `WindowGroup` mounting `{Component}View()` (matches the emitter's `{name}View` struct convention).
+- `README.md` — `swift run` recipe + file map. Notes the user must move `{Component}.swift` into `Sources/App/` for SwiftPM to compile it (v1 layout doesn't auto-place the component file).
+
+New public API (matches L2-L6 pattern):
+
+- `pub struct EmitOptions` — `emit_project`, `pinned_swift_tools`, `pinned_macos_min`.
+- `pub struct ProjectFiles` — `package_swift`, `app_swift`, `readme`.
+- `pub enum ProjectShellError` — `SwiftKeywordCollision(String)` surfaced through `PipelineEmitError::UnsafeSlotName`.
+- `pub struct PipelineEmitResultWithProject`.
+- `pub fn from_pipeline_with_options(...)`. Existing `from_pipeline(...)` unchanged.
+
+UI32 §3.6.2 SwiftUI row contract: Swift reserved keywords (`Class`, `Protocol`, `Actor`, `Self`, `Any`, `Type`, etc. — PascalCase subset) MUST be rejected to avoid backtick-quoting in identifier positions. `SWIFT_RESERVED_KEYWORDS` reject-list enforces this; collision → fail-loud via `ProjectShellError::SwiftKeywordCollision`.
+
+10 new tests cover the spec §3 gates plus a Swift-keyword truth table (10 accept/reject vectors) and an App.swift structural test (@main + WindowGroup + `<Component>View()` mount). Total tests: 81 (was 71, +10).
+
 ### Added — UI31-K-swiftui — `HostTable` RTL contract
 
 The SwiftUI `HostTable` lowering (which produces a structural

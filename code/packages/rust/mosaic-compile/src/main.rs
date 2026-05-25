@@ -914,18 +914,63 @@ fn run_pipeline(
                 }
             }
         }
-        "swiftui" => emit_single_file(
-            backend,
-            output_path,
-            &mosmodel_out.component.component,
-            "swift",
-            mosaic_emit_swiftui::pipeline::from_pipeline(
+        "swiftui" => {
+            // UI32-K-swiftui: route through from_pipeline_with_options
+            // so --emit-project activates the SwiftPM macOS shell.
+            // Bare invocation is byte-identical to pre-UI32.
+            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
+            sw_opts.emit_project = emit_project;
+            let result = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &sw_opts,
             )
-            .map(|r| r.output),
-        ),
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: swiftui pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.swift", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-swiftui: emit Package.swift + README.md flat;
+            // Sources/App/App.swift nested per SwiftPM convention.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("Package.swift"), &proj.package_swift),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                let app_swift_path = side_file_path("Sources/App/App.swift");
+                if let Some(parent) = std::path::Path::new(&app_swift_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!(
+                                "mosaic-compile: failed to create {}: {e}",
+                                parent.display()
+                            );
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&app_swift_path, &proj.app_swift);
+                eprintln!("Written: {app_swift_path}");
+            }
+        }
         "qt" => {
             // UI32-K-qt: route through `from_pipeline_with_options`
             // so --emit-project activates the Qt6 + CMake shell.
