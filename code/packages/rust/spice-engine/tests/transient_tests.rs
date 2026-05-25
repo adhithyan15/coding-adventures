@@ -1,7 +1,7 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, estimate_period, format_dc_table,
     format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
@@ -1110,6 +1110,60 @@ fn pole_zero_rlc_bandpass_returns_origin_zero_and_complex_conjugate_poles() {
                     imaginary: 0.0,
                     frequency_hz: 0.0,
                     damping: 1.0,
+                },
+                PoleZeroEntry {
+                    kind: PoleZeroEntryKind::Pole,
+                    real: -alpha,
+                    imaginary,
+                    frequency_hz: omega0 / (2.0 * std::f64::consts::PI),
+                    damping: alpha / omega0,
+                },
+                PoleZeroEntry {
+                    kind: PoleZeroEntryKind::Pole,
+                    real: -alpha,
+                    imaginary: -imaginary,
+                    frequency_hz: omega0 / (2.0 * std::f64::consts::PI),
+                    damping: alpha / omega0,
+                },
+            ],
+        }
+    );
+}
+
+#[test]
+fn pole_zero_rlc_notch_returns_imaginary_axis_zeros_and_complex_conjugate_poles() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 10.0)));
+    circuit.add(Element::Inductor(Inductor::new("L1", "out", "mid", 1.0e-3)));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "mid", "0", 1.0e-6)));
+
+    let result = pole_zero_rlc_notch(&circuit, "Vin", "out").unwrap();
+
+    let alpha = 10.0 / (2.0 * 1.0e-3);
+    let omega0 = 1.0 / f64::sqrt(1.0e-3 * 1.0e-6);
+    let imaginary = f64::sqrt(omega0 * omega0 - alpha * alpha);
+    assert_eq!(
+        result,
+        PoleZeroResult {
+            input_source: "Vin".to_string(),
+            output_node: "out".to_string(),
+            entries: vec![
+                PoleZeroEntry {
+                    kind: PoleZeroEntryKind::Zero,
+                    real: 0.0,
+                    imaginary: omega0,
+                    frequency_hz: omega0 / (2.0 * std::f64::consts::PI),
+                    damping: 0.0,
+                },
+                PoleZeroEntry {
+                    kind: PoleZeroEntryKind::Zero,
+                    real: 0.0,
+                    imaginary: -omega0,
+                    frequency_hz: omega0 / (2.0 * std::f64::consts::PI),
+                    damping: 0.0,
                 },
                 PoleZeroEntry {
                     kind: PoleZeroEntryKind::Pole,

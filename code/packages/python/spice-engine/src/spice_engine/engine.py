@@ -1042,6 +1042,137 @@ def pole_zero_rlc_bandpass(
     )
 
 
+def pole_zero_rlc_notch(
+    circuit: Circuit,
+    input_source: str,
+    output_node: str,
+) -> PoleZeroResult:
+    """Return the notch zeros and two-pole result for a series R, shunt series-L-C fixture."""
+
+    source = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, VoltageSource) and element.name == input_source
+        ),
+        None,
+    )
+    if source is None:
+        raise ValueError(f"pole_zero_rlc_notch: missing input source {input_source!r}")
+    if not _is_ground(source.n_minus):
+        raise ValueError("pole_zero_rlc_notch: input source negative terminal must be ground")
+
+    resistor = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, Resistor)
+            and source.n_plus in {element.n_plus, element.n_minus}
+            and output_node in {element.n_plus, element.n_minus}
+        ),
+        None,
+    )
+    inductor: Inductor | None = None
+    intermediate: str | None = None
+    for element in circuit.elements:
+        if isinstance(element, Inductor) and output_node in {element.n_plus, element.n_minus}:
+            other = element.n_minus if element.n_plus == output_node else element.n_plus
+            if not _is_ground(other):
+                inductor = element
+                intermediate = other
+                break
+    capacitor = next(
+        (
+            element
+            for element in circuit.elements
+            if isinstance(element, Capacitor)
+            and intermediate is not None
+            and intermediate in {element.n_plus, element.n_minus}
+            and (_is_ground(element.n_plus) or _is_ground(element.n_minus))
+        ),
+        None,
+    )
+    if resistor is None or inductor is None or capacitor is None:
+        raise ValueError(
+            "pole_zero_rlc_notch: expected series resistor from input to output "
+            "plus a grounded series inductor-capacitor branch at output"
+        )
+    if not math.isfinite(resistor.resistance) or resistor.resistance <= 0.0:
+        raise ValueError("pole_zero_rlc_notch: resistance must be finite and positive")
+    if not math.isfinite(inductor.inductance) or inductor.inductance <= 0.0:
+        raise ValueError("pole_zero_rlc_notch: inductance must be finite and positive")
+    if not math.isfinite(capacitor.capacitance) or capacitor.capacitance <= 0.0:
+        raise ValueError("pole_zero_rlc_notch: capacitance must be finite and positive")
+
+    alpha = resistor.resistance / (2.0 * inductor.inductance)
+    omega0 = 1.0 / math.sqrt(inductor.inductance * capacitor.capacitance)
+    discriminant = alpha * alpha - omega0 * omega0
+    entries = [
+        PoleZeroEntry(
+            kind="zero",
+            real=0.0,
+            imaginary=omega0,
+            frequency=omega0 / (2.0 * math.pi),
+            damping=0.0,
+        ),
+        PoleZeroEntry(
+            kind="zero",
+            real=0.0,
+            imaginary=-omega0,
+            frequency=omega0 / (2.0 * math.pi),
+            damping=0.0,
+        ),
+    ]
+    if discriminant >= 0.0:
+        root = math.sqrt(discriminant)
+        entries.extend(
+            [
+                PoleZeroEntry(
+                    kind="pole",
+                    real=-alpha + root,
+                    imaginary=0.0,
+                    frequency=abs(-alpha + root) / (2.0 * math.pi),
+                    damping=1.0,
+                ),
+                PoleZeroEntry(
+                    kind="pole",
+                    real=-alpha - root,
+                    imaginary=0.0,
+                    frequency=abs(-alpha - root) / (2.0 * math.pi),
+                    damping=1.0,
+                ),
+            ]
+        )
+    else:
+        imaginary = math.sqrt(-discriminant)
+        damping = alpha / omega0
+        frequency = omega0 / (2.0 * math.pi)
+        entries.extend(
+            [
+                PoleZeroEntry(
+                    kind="pole",
+                    real=-alpha,
+                    imaginary=imaginary,
+                    frequency=frequency,
+                    damping=damping,
+                ),
+                PoleZeroEntry(
+                    kind="pole",
+                    real=-alpha,
+                    imaginary=-imaginary,
+                    frequency=frequency,
+                    damping=damping,
+                ),
+            ]
+        )
+
+    return PoleZeroResult(
+        input_source=input_source,
+        output_node=output_node,
+        entries=entries,
+    )
+
+
 def distortion_from_fourier(
     result: FourierResult,
     input_source: str,
