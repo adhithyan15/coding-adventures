@@ -1682,3 +1682,71 @@ fn phase60_sin_log_sqrt_k_sq_times_k_over_k_sq_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ── Phase 61: Mul(Sqrt(P1), Sqrt(P2), polynomial..., bounded...) ──────────────
+// effective_x2 = deg(P1) + deg(P2) + 2·poly_deg.
+// Vanishes when 2·den_deg > effective_x2 or non-polynomial diverging denom.
+// Closes the gap where all prior Sqrt phases require exactly one Sqrt.
+
+#[test]
+fn phase61_sqrt_k_times_sqrt_k3_over_k3_closes() {
+    // √k · √(k³) / k³: x2=1+3=4; 2·3=6 > 4 → closes.
+    let k = sym("k");
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![k3.clone()]);
+    let num_k = apply(sym(MUL), vec![sqrt_k, sqrt_k3]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![kp1_3.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![sqrt_kp1, sqrt_kp1_3]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, k3]),
+        apply(sym(DIV), vec![num_kp1, kp1_3]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase61_sin_sqrt_k_times_sqrt_k_over_k_sq_closes() {
+    // sin(k) · √k · √k / k²: x2=1+1=2; 2·2=4 > 2 → closes (bounded + two Sqrt).
+    let k = sym("k");
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sqrt_k1 = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_k2 = apply(sym("Sqrt"), vec![k.clone()]);
+    let num_k = apply(sym(MUL), vec![sin_k, sqrt_k1, sqrt_k2]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let sqrt_kp1_1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let sqrt_kp1_2 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, sqrt_kp1_1, sqrt_kp1_2]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, apply(sym(POW), vec![k.clone(), int(2)])]),
+        apply(sym(DIV), vec![num_kp1, apply(sym(POW), vec![kp1, int(2)])]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase61_sqrt_k2_times_sqrt_k2_over_k2_refused() {
+    // √(k²) · √(k²) / k²: x2=2+2=4; 2·2=4 not > 4 → equal, refused.
+    let k = sym("k");
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let sqrt_k2_1 = apply(sym("Sqrt"), vec![k2.clone()]);
+    let sqrt_k2_2 = apply(sym("Sqrt"), vec![k2.clone()]);
+    let num_k = apply(sym(MUL), vec![sqrt_k2_1, sqrt_k2_2]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let sqrt_kp1_2_1 = apply(sym("Sqrt"), vec![kp1_2.clone()]);
+    let sqrt_kp1_2_2 = apply(sym("Sqrt"), vec![kp1_2.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![sqrt_kp1_2_1, sqrt_kp1_2_2]);
+    let f = apply(sym(SUB), vec![
+        apply(sym(DIV), vec![num_k, k2]),
+        apply(sym(DIV), vec![num_kp1, kp1_2]),
+    ]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

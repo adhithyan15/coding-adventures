@@ -1456,3 +1456,87 @@ describe("summation: Phase 60 bounded × Log(diverging) × Sqrt(positive-poly) �
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
   });
 });
+
+describe("summation: Phase 61 two Sqrt × polynomial numerator", () => {
+  // Phase 61: Mul(Sqrt(P1), Sqrt(P2), poly..., bounded...) numerator.
+  // Effective degree: sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+  // Vanishes when denDeg > effectiveDeg or non-polynomial diverging denom.
+
+  it("∑ [√k · √(k³) / k³ − ...] closes (halfDeg1=0.5, halfDeg2=1.5, eff=2, denDeg=3)", () => {
+    // Two distinct Sqrt degrees: x2=1+3=4; TS: eff=0.5+1.5=2; denDeg=3 > 2 → closes.
+    const k = sym("k");
+    const k3 = app(POW, [k, int(3)]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [k3]);
+    const numK = app(MUL, [sqrtK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const kp1_3 = app(POW, [kp1, int(3)]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [kp1_3]);
+    const numKp1 = app(MUL, [sqrtKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, k3]),
+      app(DIV, [numKp1, kp1_3]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·√k·√k / k² − ...] closes (halfDeg1=0.5, halfDeg2=0.5, eff=1, denDeg=2)", () => {
+    // bounded × two Sqrt: eff=0.5+0.5=1; denDeg=2 > 1 → closes.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK1 = app(sym("Sqrt"), [k]);
+    const sqrtK2 = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sinK, sqrtK1, sqrtK2]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1_1 = app(sym("Sqrt"), [kp1]);
+    const sqrtKp1_2 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1_1, sqrtKp1_2]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [√k·√k / 2^k − ...] closes (exp denominator dominates)", () => {
+    // Non-polynomial diverging denominator dominates any two-Sqrt growth.
+    const k = sym("k");
+    const sqrtK1 = app(sym("Sqrt"), [k]);
+    const sqrtK2 = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sqrtK1, sqrtK2]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sqrtKp1_1 = app(sym("Sqrt"), [kp1]);
+    const sqrtKp1_2 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sqrtKp1_1, sqrtKp1_2]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: √(k²)·√(k²)/k² stays unevaluated (equal: eff=2, denDeg=2)", () => {
+    // halfDeg1=1, halfDeg2=1, polyDeg=0, eff=2; denDeg=2 not > 2 → refused.
+    const k = sym("k");
+    const k2 = app(POW, [k, int(2)]);
+    const sqrtK2_1 = app(sym("Sqrt"), [k2]);
+    const sqrtK2_2 = app(sym("Sqrt"), [k2]);
+    const numK = app(MUL, [sqrtK2_1, sqrtK2_2]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const kp1_2 = app(POW, [kp1, int(2)]);
+    const sqrtKp1_2_1 = app(sym("Sqrt"), [kp1_2]);
+    const sqrtKp1_2_2 = app(sym("Sqrt"), [kp1_2]);
+    const numKp1 = app(MUL, [sqrtKp1_2_1, sqrtKp1_2_2]);
+    const f = app(SUB, [
+      app(DIV, [numK, k2]),
+      app(DIV, [numKp1, kp1_2]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});

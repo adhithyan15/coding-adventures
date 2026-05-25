@@ -1865,12 +1865,10 @@ class TestEvaluateSumPhase56BoundedTimesSqrtNumerator:
         # half-deg(num) = 3/2 > 1 = deg(den) → does not vanish.
         assert isinstance(result, IRApply) and result.head == SUM
 
-    def test_two_sqrt_factors_refused(self):
+    def test_two_sqrt_factors_now_closed_by_phase61(self):
         """``Mul(sin(k), sqrt(k), sqrt(k))/k³`` — two sqrt factors.
-        Phase 56 refuses (would require combining growth rates we
-        haven't justified yet; multiplying sqrt(k)·sqrt(k) = k could
-        be simplified before reaching us, but Phase 56 stays
-        conservative).
+        Phase 56 used to refuse this conservatively.  Phase 61 now
+        handles it: effective_x2 = 1 + 1 = 2; 2·3 = 6 > 2 → closes.
         """
         from symbolic_ir import POW, SIN, SQRT, SUB
 
@@ -1885,8 +1883,8 @@ class TestEvaluateSumPhase56BoundedTimesSqrtNumerator:
         g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
-        # Phase 56 conservative: refuses two-sqrt patterns.
-        assert isinstance(result, IRApply) and result.head == SUM
+        # Phase 61 handles two-sqrt: x2=2, 2·3=6 > 2 → closes.
+        assert not (isinstance(result, IRApply) and result.head == SUM)
 
 
 # ---------------------------------------------------------------------------
@@ -2414,6 +2412,136 @@ class TestEvaluateSumPhase60BoundedLogSqrtPolyNumerator:
         kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
         num_kp1 = IRApply(MUL, (sin_kp1, log_kp1, sqrt_kp1, kp1_3))
         k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestEvaluateSumPhase61TwoSqrtPolyNumerator:
+    """Phase 61: Mul(Sqrt(P1), Sqrt(P2), polynomial..., bounded...) numerator.
+
+    effective_x2 = deg(P1) + deg(P2) + 2·poly_deg.
+    Vanishes when 2·den_deg > effective_x2 or non-polynomial diverging denom.
+    """
+
+    def test_sqrt_k_times_sqrt_k_cubed_over_k_cubed_closes(self):
+        """√k · √(k³) / k³: x2=1+3=4; 2·3=6 > 4 → closes.
+
+        g(k) = √k · √(k³) / k³ — all factors plain functions of k.
+        g(k+1) = √(k+1) · √((k+1)³) / (k+1)³  [clean substitution]
+        """
+        from symbolic_ir import SQRT, SUB
+
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_k3 = IRApply(SQRT, (k3,))
+        num_k = IRApply(MUL, (sqrt_k, sqrt_k3))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        sqrt_kp1_3 = IRApply(SQRT, (kp1_3,))
+        num_kp1 = IRApply(MUL, (sqrt_kp1, sqrt_kp1_3))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_sq_times_sqrt_k_times_k_over_k_cubed_closes(self):
+        """√(k²) · √k · k / k³: x2=2+1+2=5; 2·3=6 > 5 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        sqrt_k2 = IRApply(SQRT, (k2,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (sqrt_k2, sqrt_k, _k))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_kp1_2 = IRApply(SQRT, (kp1_2,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (sqrt_kp1_2, sqrt_kp1, kp1))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sin_sqrt_k_times_sqrt_k_over_k_sq_closes(self):
+        """sin(k) · √k · √k / k²: x2=1+1=2; 2·2=4 > 2 → closes (bounded factor)."""
+        from symbolic_ir import SIN, SQRT, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        sqrt_k1 = IRApply(SQRT, (_k,))
+        sqrt_k2 = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (sin_k, sqrt_k1, sqrt_k2))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        sqrt_kp1_1 = IRApply(SQRT, (kp1,))
+        sqrt_kp1_2 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (sin_kp1, sqrt_kp1_1, sqrt_kp1_2))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_times_sqrt_k_over_exponential_closes(self):
+        """√k · √k / 2^k: non-polynomial diverging denominator."""
+        from symbolic_ir import SQRT, SUB
+
+        sqrt_k1 = IRApply(SQRT, (_k,))
+        sqrt_k2 = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (sqrt_k1, sqrt_k2))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sqrt_kp1_1 = IRApply(SQRT, (kp1,))
+        sqrt_kp1_2 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (sqrt_kp1_1, sqrt_kp1_2))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (IRInteger(2), _k))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (IRInteger(2), kp1))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_sq_times_sqrt_k_sq_over_k_sq_refused(self):
+        """√(k²) · √(k²) / k²: x2=2+2=4; 2·2=4 not > 4 → equal, refused."""
+        from symbolic_ir import SQRT, SUB
+
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        sqrt_k2_1 = IRApply(SQRT, (k2,))
+        sqrt_k2_2 = IRApply(SQRT, (k2,))
+        num_k = IRApply(MUL, (sqrt_k2_1, sqrt_k2_2))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_kp1_2_1 = IRApply(SQRT, (kp1_2,))
+        sqrt_kp1_2_2 = IRApply(SQRT, (kp1_2,))
+        num_kp1 = IRApply(MUL, (sqrt_kp1_2_1, sqrt_kp1_2_2))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_sqrt_k_times_sqrt_k_cubed_over_k_sq_refused(self):
+        """√k · √(k³) / k²: x2=1+3=4; 2·2=4 not > 4 → equal, refused."""
+        from symbolic_ir import SQRT, SUB
+
+        sqrt_k = IRApply(SQRT, (_k,))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        sqrt_k3 = IRApply(SQRT, (k3,))
+        num_k = IRApply(MUL, (sqrt_k, sqrt_k3))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        sqrt_kp1_3 = IRApply(SQRT, (kp1_3,))
+        num_kp1 = IRApply(MUL, (sqrt_kp1, sqrt_kp1_3))
         kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
