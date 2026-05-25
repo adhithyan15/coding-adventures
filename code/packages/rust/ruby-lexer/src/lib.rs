@@ -124,6 +124,12 @@ pub struct RubyLexer {
     /// Phase 4c: scratch flag set on each whitespace consume and
     /// flushed into `whitespace_before_token` on the next emit.
     whitespace_pending: bool,
+    /// Phase 6p companion — set by `push` for one `step_char` call
+    /// when the upcoming character is `/` and its immediate follower
+    /// is `=`.  Forces `should_open_regex` to return `false` so the
+    /// state machine emits `/` as a plain Op token.  The compound-
+    /// assign fusion pass then folds `Op(/) Equals` → `Name("/=")`.
+    suppress_regex_open: bool,
 }
 
 /// Phase 3c — a heredoc opener whose body we still owe.
@@ -185,6 +191,7 @@ impl RubyLexer {
             era: canonical_era.to_string(),
             whitespace_before_token: Vec::new(),
             whitespace_pending: false,
+            suppress_regex_open: false,
         })
     }
 
@@ -210,7 +217,17 @@ impl RubyLexer {
         let mut i = 0;
         while i < chars.len() {
             let ch = chars[i];
+            // Phase 6p companion — `/=` compound-assignment guard.
+            // If we're about to feed a `/` whose immediate follower is
+            // `=`, suppress the regex-vs-divide decision and let the
+            // state machine emit `/` as a plain Op.  The compound-
+            // assign fusion pass then folds `Op(/) Equals` into a
+            // single `Name("/=")` token.  Without this guard, the
+            // oracle treats `x /= 1` as `x / <regex starting `=`...`
+            // which would never terminate.
+            self.suppress_regex_open = ch == '/' && chars.get(i + 1) == Some(&'=');
             self.step_char(ch)?;
+            self.suppress_regex_open = false;
             i += 1;
             if ch == '\n' && !self.pending_heredocs.is_empty() {
                 i = self.capture_heredoc_bodies(&chars, i)?;
@@ -379,6 +396,11 @@ impl RubyLexer {
         // so `1..5` (which the range pass converts to `Int ".." Int`)
         // doesn't get mistaken for a float.
         self.fuse_float_literals();
+        // Phase 6p companion — fuse compound-assignment operators
+        // (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  Pre-1.0 Ruby, so
+        // no era gating.  Runs AFTER float/radix fusions (which fold
+        // numeric forms) so `x +=` doesn't fight with `1e+10` etc.
+        self.fuse_compound_assigns();
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
@@ -663,6 +685,85 @@ impl RubyLexer {
                     flags: None,
                 };
             } else {
+                i += 1;
+            }
+        }
+    }
+
+    /// Phase 6p companion — fuse compound-assignment operators
+    /// `+=`, `-=`, `*=`, `/=`, `||=`, `&&=` into a single Name-typed
+    /// token whose value is the fused operator (`+=` etc.).
+    ///
+    /// The 1.8-baseline state machine emits compound assigns as two
+    /// tokens:
+    ///   - The op (Plus / Minus / Star / Slash for `+`/`-`/`*`/`/`,
+    ///     or Name for `||` / `&&` — classify_op_token's catch-all).
+    ///   - Equals for the trailing `=`.
+    ///
+    /// This pass folds the pair into a single token so the grammar
+    /// can match by value (`"+="`, `"-="`, etc.) the same way it
+    /// matches `"=>"`, `"<="`, `"&&"`.
+    ///
+    /// Adjacency gate: the `=` must NOT have whitespace before it.
+    /// `x + = 1` (with a space) stays two tokens — that's a syntax
+    /// error in real Ruby but it's not a compound assignment.
+    ///
+    /// Era: pre-1.0 Ruby — every era ≥ 1.8 emits the same fused
+    /// shape, so no gating.
+    fn fuse_compound_assigns(&mut self) {
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            let (left_lexeme, is_arith): (&str, bool) = {
+                let a = &self.tokens[i];
+                match a.type_ {
+                    TokenType::Plus => ("+", true),
+                    TokenType::Minus => ("-", true),
+                    TokenType::Star => ("*", true),
+                    TokenType::Slash => ("/", true),
+                    // `||` and `&&` come through as Name (catch-all
+                    // in classify_op_token).  Filter by value so we
+                    // don't accidentally fuse `foo =` into something.
+                    TokenType::Name if a.value == "||" || a.value == "&&" => {
+                        (if a.value == "||" { "||" } else { "&&" }, false)
+                    }
+                    _ => {
+                        i += 1;
+                        continue;
+                    }
+                }
+            };
+            let merge = {
+                let b = &self.tokens[i + 1];
+                let b_is_eq = b.type_ == TokenType::Equals;
+                let same_line = self.tokens[i].line == b.line;
+                // No whitespace gap between op and `=`.
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                b_is_eq && same_line && no_ws
+            };
+            if merge {
+                let span_line = self.tokens[i].line;
+                let span_col = self.tokens[i].column;
+                let new_value = format!("{left_lexeme}=");
+                self.tokens.remove(i + 1);
+                self.whitespace_before_token.remove(i + 1);
+                self.tokens[i] = Token {
+                    type_: TokenType::Name,
+                    value: new_value,
+                    line: span_line,
+                    column: span_col,
+                    type_name: None,
+                    flags: None,
+                };
+                // Don't advance — chained compounds are illegal but
+                // the next iteration's guard will handle it cleanly.
+            } else {
+                // Reference `is_arith` once so the compiler doesn't
+                // warn — the variable is documentary for now.
+                let _ = is_arith;
                 i += 1;
             }
         }
@@ -1058,6 +1159,14 @@ impl RubyLexer {
     ///   the local's value).  Not-local → regex (the name was a
     ///   method call and the regex is its argument).
     fn should_open_regex(&self) -> bool {
+        // Phase 6p companion — `push` sets `suppress_regex_open` for
+        // exactly one `step_char` call when the upcoming `/` is
+        // immediately followed by `=`.  Force a plain-Op emit so
+        // `fuse_compound_assigns` can fold `Op(/) Equals` into
+        // `Name("/=")`.
+        if self.suppress_regex_open {
+            return false;
+        }
         if self.lex_state.slash_is_regex() {
             return true;
         }
@@ -3585,6 +3694,59 @@ mod tests {
             .filter(|t| t.type_ == TokenType::String && t.value.starts_with(prefix))
             .map(|t| t.value.clone())
             .collect()
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6p companion — fuse compound-assign operators
+    // -----------------------------------------------------------------
+    //
+    // `fuse_compound_assigns` folds adjacent `Op` + `Equals` token
+    // pairs into a single Name-typed token carrying the fused
+    // operator value (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  For
+    // `/=`, `push` sets `suppress_regex_open` so the slash isn't
+    // mis-interpreted as a regex opener — without that gate `x /= 1`
+    // would lex as `x / <regex starting `=`...>` and never terminate.
+
+    #[test]
+    fn compound_assign_arithmetic_ops_fuse_into_single_token() {
+        for (src, fused) in [
+            ("x += 1", "+="),
+            ("x -= 1", "-="),
+            ("x *= 1", "*="),
+            ("x /= 1", "/="),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "1.8").unwrap();
+            let has_fused = toks
+                .iter()
+                .any(|t| t.type_ == TokenType::Name && t.value == fused);
+            assert!(has_fused, "expected {fused} token in {src:?}, got {toks:?}");
+        }
+    }
+
+    #[test]
+    fn compound_assign_logical_ops_fuse_into_single_token() {
+        for (src, fused) in [("x ||= 1", "||="), ("x &&= 1", "&&=")] {
+            let toks = tokenize_ruby_for_version(src, "1.8").unwrap();
+            let has_fused = toks
+                .iter()
+                .any(|t| t.type_ == TokenType::Name && t.value == fused);
+            assert!(has_fused, "expected {fused} token in {src:?}, got {toks:?}");
+        }
+    }
+
+    #[test]
+    fn compound_assign_does_not_fuse_with_whitespace_gap() {
+        // `x + = 1` with a space between `+` and `=` is two tokens —
+        // the fusion gate requires no whitespace between op and `=`.
+        let toks = tokenize_ruby_for_version("x + = 1", "1.8").unwrap();
+        // No fused `+=` token expected; instead we see Plus + Equals.
+        let has_fused = toks
+            .iter()
+            .any(|t| t.type_ == TokenType::Name && t.value == "+=");
+        assert!(!has_fused, "spaced `x + = 1` should NOT fuse, got {toks:?}");
+        let has_plus = toks.iter().any(|t| t.type_ == TokenType::Plus);
+        let has_eq = toks.iter().any(|t| t.type_ == TokenType::Equals);
+        assert!(has_plus && has_eq, "expected separate Plus + Equals, got {toks:?}");
     }
 
     #[test]

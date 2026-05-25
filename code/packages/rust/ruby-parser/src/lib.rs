@@ -1120,6 +1120,81 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
+    // -----------------------------------------------------------------------
+    //
+    // The lexer's `fuse_compound_assigns` post-pass folds adjacent
+    // `Op` + `Equals` token pairs into a single Name-typed token whose
+    // value is the fused operator (`+=`, etc.).  The grammar matches
+    // by value — every assignment node carries either an EQUALS token
+    // OR one of the compound-op tokens.
+
+    #[test]
+    fn test_parse_plus_equals_assignment() {
+        // `x += 1` parses as an assignment with a `+=` operator token.
+        let ast = parse_ruby("x += 1");
+        let assn = find_descendant(&ast, "assignment").expect("expected assignment");
+        assert!(
+            tree_has_token_value(assn, "+="),
+            "expected `+=` token in assignment, got {assn:?}"
+        );
+    }
+
+    #[test]
+    fn test_parse_all_arithmetic_compound_operators() {
+        // Each of `+=`, `-=`, `*=`, `/=` parses as an assignment.
+        for op in ["+=", "-=", "*=", "/="] {
+            let src = format!("x {op} 1");
+            let ast = parse_ruby(&src);
+            let assn = find_descendant(&ast, "assignment")
+                .unwrap_or_else(|| panic!("expected assignment for {src:?}"));
+            assert!(
+                tree_has_token_value(assn, op),
+                "expected `{op}` token in assignment for source {src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_parse_logical_compound_operators() {
+        // `||=` and `&&=` are short-circuiting compound assignments.
+        for op in ["||=", "&&="] {
+            let src = format!("x {op} 1");
+            let ast = parse_ruby(&src);
+            let assn = find_descendant(&ast, "assignment")
+                .unwrap_or_else(|| panic!("expected assignment for {src:?}"));
+            assert!(
+                tree_has_token_value(assn, op),
+                "expected `{op}` token in assignment for source {src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_parse_compound_assign_with_complex_rhs() {
+        // The RHS is a full `expression`, so arithmetic flows through.
+        let ast = parse_ruby("x += 1 + 2");
+        let assn = find_descendant(&ast, "assignment").expect("expected assignment");
+        assert!(tree_has_token_value(assn, "+="));
+        // Two `+` tokens overall: the `+=` operator counts because
+        // `+=` contains `+`, but tree_has_token_value matches by full
+        // value; we expect a separate `+` from the RHS sum chain.
+        fn count_value(node: &GrammarASTNode, val: &str) -> usize {
+            let mut n = 0;
+            for c in &node.children {
+                match c {
+                    ASTNodeOrToken::Token(t) if t.value == val => n += 1,
+                    ASTNodeOrToken::Node(sub) => n += count_value(sub, val),
+                    _ => {}
+                }
+            }
+            n
+        }
+        assert_eq!(count_value(assn, "+"), 1, "expected one bare `+` in the RHS");
+        assert_eq!(count_value(assn, "+="), 1, "expected one `+=` operator");
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b`
     // -----------------------------------------------------------------------
     //
