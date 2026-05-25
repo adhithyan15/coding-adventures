@@ -551,6 +551,39 @@
         "forms": [],
         "tables": []
       }
+    },
+    {
+      "id": "component-template-page",
+      "description": "Browser document summaries expose inert template content and declarative shadow root metadata for component hydration.",
+      "input": "<body><template id=card-template shadowrootmode=open shadowrootdelegatesfocus shadowrootclonable shadowrootserializable><article><slot name=title>Untitled</slot><slot>Body</slot></article></template><product-card id=card><span slot=title>Widget</span><canvas id=chart width=300 height=150>Chart fallback</canvas><button is=fancy-button>Save</button><slot name=footer>Fallback footer</slot></product-card>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Widget Chart fallback Save Fallback footer",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "card-template", "name": null, "text": "Untitled Body" },
+          { "id": "card", "name": null, "text": "Widget Chart fallback Save Fallback footer" },
+          { "id": "chart", "name": null, "text": "Chart fallback" }
+        ],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "templates": [
+          {
+            "id": "card-template",
+            "shadowrootmode": "open",
+            "shadowrootdelegatesfocus": true,
+            "shadowrootclonable": true,
+            "shadowrootserializable": true,
+            "content_text": "Untitled Body"
+          }
+        ],
+        "forms": [],
+        "tables": []
+      }
     }
   ]
 }

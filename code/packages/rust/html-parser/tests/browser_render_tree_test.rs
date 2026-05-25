@@ -66,6 +66,18 @@ struct ExpectedRenderNode {
     #[serde(default)]
     resource_kind: Option<String>,
     #[serde(default)]
+    slot: Option<String>,
+    #[serde(default)]
+    slot_name: Option<String>,
+    #[serde(default)]
+    custom_element: bool,
+    #[serde(default)]
+    custom_element_name: Option<String>,
+    #[serde(default)]
+    custom_element_is: Option<String>,
+    #[serde(default)]
+    canvas_fallback_text: Option<String>,
+    #[serde(default)]
     width: Option<String>,
     #[serde(default)]
     height: Option<String>,
@@ -395,6 +407,12 @@ impl ExpectedRenderNode {
             resolved_src: self.resolved_src,
             alt: self.alt,
             resource_kind: self.resource_kind,
+            slot: self.slot,
+            slot_name: self.slot_name,
+            custom_element: self.custom_element,
+            custom_element_name: self.custom_element_name,
+            custom_element_is: self.custom_element_is,
+            canvas_fallback_text: self.canvas_fallback_text,
             width: self.width,
             height: self.height,
             type_hint: self.type_hint,

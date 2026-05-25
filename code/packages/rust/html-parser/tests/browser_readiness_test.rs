@@ -3,7 +3,7 @@ use coding_adventures_html_parser::{
     BrowserFormControl, BrowserHeading, BrowserImage, BrowserImageSource, BrowserLink,
     BrowserMedia, BrowserMeta, BrowserRefresh, BrowserResource, BrowserScript,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserThemeColor,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -57,6 +57,8 @@ struct ExpectedBrowserDocument {
     media: Vec<ExpectedMedia>,
     #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
+    #[serde(default)]
+    templates: Vec<ExpectedTemplate>,
     forms: Vec<ExpectedForm>,
     tables: Vec<ExpectedTable>,
 }
@@ -142,6 +144,21 @@ struct ExpectedStructuredProperty {
     value_url: Option<String>,
     #[serde(default)]
     resolved_value_url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedTemplate {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    shadowrootmode: Option<String>,
+    #[serde(default)]
+    shadowrootdelegatesfocus: bool,
+    #[serde(default)]
+    shadowrootclonable: bool,
+    #[serde(default)]
+    shadowrootserializable: bool,
+    content_text: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -575,6 +592,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedStructuredItem::into_browser_structured_item)
                 .collect(),
+            templates: self
+                .templates
+                .into_iter()
+                .map(ExpectedTemplate::into_browser_template)
+                .collect(),
             forms: self
                 .forms
                 .into_iter()
@@ -668,6 +690,19 @@ impl ExpectedStructuredProperty {
             value: self.value,
             value_url: self.value_url,
             resolved_value_url: self.resolved_value_url,
+        }
+    }
+}
+
+impl ExpectedTemplate {
+    fn into_browser_template(self) -> BrowserTemplate {
+        BrowserTemplate {
+            id: self.id,
+            shadowrootmode: self.shadowrootmode,
+            shadowrootdelegatesfocus: self.shadowrootdelegatesfocus,
+            shadowrootclonable: self.shadowrootclonable,
+            shadowrootserializable: self.shadowrootserializable,
+            content_text: self.content_text,
         }
     }
 }
