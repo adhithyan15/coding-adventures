@@ -2,6 +2,57 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.2.0] - 2026-05-24
+
+### Added — real `Pass::run` body (final step of the autonomous chain)
+
+Replaces v0.1.0's identity body with a recursive walker over `Program → ProgramItem → Statement → Expression`. Final step in the autonomous-chain real-body rollout (after constant-fold, fold-control-flow, and the closure-emitter).
+
+Two cleanup categories per `BlockStatement.body`:
+
+- **Dead-after-terminator**: drop everything after a `ReturnStatement`. Phase 1 doesn't have `ThrowStatement` yet; `BreakStatement` / `ContinueStatement` only qualify in their enclosing loop scope (Phase 2 work).
+- **Empty-statement removal**: drop `EmptyStatement` nodes entirely. They're semantically a no-op (`;`) and clutter output.
+
+Recurses through every Phase 1 node so nested blocks (function bodies, if-bodies, while-bodies, for-bodies) get cleaned too. Records one `Contribution` per drop *category* per block (not per-statement — that'd be too noisy).
+
+### Why this overlaps with fold-control-flow's dead-after-return
+
+Intentional overlap:
+
+- `fold-control-flow` does the cleanup as part of its block rewrite when it observes the terminator while folding.
+- DCE runs **after** fold-control-flow per CLOC06 canonical order, and catches:
+  - Cases where fold-control-flow didn't enter the block (e.g. it was busy folding the surrounding `if`'s test);
+  - `EmptyStatement` nodes that fold-control-flow *produced* when it collapsed `if (false) { … }` with no alternate;
+  - Future cases where a Phase 2+ pass leaves dead code behind.
+
+### CV tracing — both modes per CLOC09 amendment
+
+- **Traced** (`cv: Some` on the block): `Contribution { source: "dce", tag: "removed-dead-code" | "removed-empty-statement", meta: {before, after, parent_cv} }` appended per category that triggered.
+- **Untraced** (`cv: None`): drops silently, no contributions emitted. `changed: true` still set.
+
+### Tests
+
+14 tests (up from 8 in v0.1.0):
+- pass metadata unchanged
+- empty program identity
+- `{x; return; y; z;}` → `{x; return;}` (drop y and z)
+- `{x; y;}` (no return) unchanged
+- `{x; ; y; ; ;}` → `{x; y;}` (drop empties)
+- Both categories in one block: `{x; ; return; y; ;}` → `{x; return;}` with two contributions
+- Nested blocks: outer kept, inner's dead-after-return cleaned
+- Untraced mode drops silently
+- Pipeline solo
+- **Full canonical pipeline**: `constant-fold + fold-control-flow + dce` on `if (1 < 2) {z;}` → `z;` (the whole chain cooperates correctly)
+- **End-to-end through the chain**: `function f() { if (false) {x;} return; y; }` → `function f() { return; }` after fold + fold-control-flow (drops if-false-branch and creates EmptyStatement, drops y after return) + dce (removes the leftover EmptyStatement)
+
+### Dependencies
+- Added `coding-adventures-closure-pass-fold-control-flow` as a dev-dep for the full-canonical-pipeline test.
+
+### Skipped (Phase 1.x / 2+)
+- Unreferenced `VariableDeclaration` removal — `closure-pass-remove-unused-vars`'s job.
+- Empty `BlockStatement` collapse to `EmptyStatement` — preserves debugging-step shape for now.
+- Phase 2: `ThrowStatement` as terminator, `BreakStatement` / `ContinueStatement` qualifying in their loop scope.
+
 ## [0.1.0] - 2026-05-23
 
 ### Added

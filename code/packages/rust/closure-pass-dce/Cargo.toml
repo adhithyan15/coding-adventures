@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-closure-pass-dce"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Dead-code elimination pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Walks the program from entry/exported declarations and deletes unreachable nodes."
+description = "Dead-code elimination pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Drops code after definite-terminator statements and removes EmptyStatement noise."
 
 [dependencies]
 coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
@@ -14,3 +14,4 @@ serde_json = "1"
 [dev-dependencies]
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
+coding-adventures-closure-pass-fold-control-flow = { path = "../closure-pass-fold-control-flow" }
