@@ -1,6 +1,6 @@
 use spice_engine::{
-    noise_ac, noise_ac_default, Capacitor, Circuit, CurrentSource, Element, Mosfet,
-    MosfetLevel1Params, MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
+    format_noise_table, noise_ac, noise_ac_default, Capacitor, Circuit, CurrentSource, Element,
+    Mosfet, MosfetLevel1Params, MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
 };
 
 const BOLTZMANN: f64 = 1.380_649e-23;
@@ -75,6 +75,31 @@ fn noise_ac_sorts_resistor_contributions_by_output_noise() {
         1.0e-30,
     );
     assert!(point.input_referred_psd > point.output_psd);
+}
+
+#[test]
+fn noise_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsource", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 2_000.0,
+    )));
+
+    let result = noise_ac(&circuit, "out", "Vin", &[10.0, 1_000.0], 300.0).unwrap();
+
+    assert_eq!(
+        format_noise_table(&result),
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n\
+0\t1.000000e+01\tout\tVin\t1.104519e-17\t2.485168e-17\tRsource\tthermal\t1.656779e-23\t7.363461e-18\n\
+0\t1.000000e+01\tout\tVin\t1.104519e-17\t2.485168e-17\tRload\tthermal\t8.283894e-24\t3.681731e-18\n\
+1\t1.000000e+03\tout\tVin\t1.104519e-17\t2.485168e-17\tRsource\tthermal\t1.656779e-23\t7.363461e-18\n\
+1\t1.000000e+03\tout\tVin\t1.104519e-17\t2.485168e-17\tRload\tthermal\t8.283894e-24\t3.681731e-18\n"
+    );
 }
 
 #[test]

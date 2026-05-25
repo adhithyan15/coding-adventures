@@ -311,6 +311,9 @@ Status:
 - `.TF` transfer-function results can now be rendered as stable tab-separated
   text tables across Python, TypeScript, and Rust, covering gain and
   input/output impedance rows.
+- `.NOISE` results can now be rendered as stable tab-separated text tables in
+  the live Rust SPICE package, covering total output noise, input-referred
+  noise, and per-source PSD contribution rows.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
