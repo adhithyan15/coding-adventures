@@ -143,6 +143,173 @@ impl std::fmt::Display for PipelineEmitError {
 
 impl std::error::Error for PipelineEmitError {}
 
+// =====================================================================
+// UI32-K-qt — `--emit-project` Qt6 + CMake app shell
+//
+// Mirrors L2 (React #4297), L3 (HTML #4309), L4 (WebComponent #4315),
+// L5 (Flutter #4319): EmitOptions / ProjectFiles /
+// from_pipeline_with_options.
+//
+// When `--emit-project` is on, emits a complete CMake-driven Qt6
+// project alongside the component .qml. Author runs `cmake -B build
+// && cmake --build build && ./build/<Component>` to see the
+// component on a desktop window.
+// =====================================================================
+
+/// Options controlling the Qt/QML emitter's behaviour.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EmitOptions {
+    /// Also emit `CMakeLists.txt`, `main.cpp`, `qmldir`, `README.md`
+    /// alongside the component `.qml`. Default `false`.
+    pub emit_project: bool,
+
+    /// Pinned Qt6 version constraint to write into `CMakeLists.txt`'s
+    /// `find_package(Qt6 REQUIRED ...)`. UI32 spec §3.6.3 requires
+    /// exact pinning. Default `"6.7"` — a known-good 6.7 LTS.
+    /// CMake accepts `6.7` as a major.minor constraint that resolves
+    /// to any installed 6.7.x.
+    pub pinned_qt_version: String,
+
+    /// Pinned CMake minimum-required version. Default `"3.21"` — the
+    /// floor Qt6 + AUTOUIC support requires.
+    pub pinned_cmake_min: String,
+
+    /// CMake C++ standard. Default `"17"` — Qt6's documented minimum.
+    pub pinned_cxx_standard: String,
+}
+
+impl Default for EmitOptions {
+    fn default() -> Self {
+        Self {
+            emit_project: false,
+            pinned_qt_version: "6.7".to_string(),
+            pinned_cmake_min: "3.21".to_string(),
+            pinned_cxx_standard: "17".to_string(),
+        }
+    }
+}
+
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project`
+/// is on. Four files — enough for `cmake -B build && cmake --build
+/// build && ./build/<Component>` to launch a Qt6 desktop window
+/// hosting the component.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProjectFiles {
+    /// `CMakeLists.txt` — pinned Qt6 + CMake versions, `find_package(Qt6
+    /// REQUIRED COMPONENTS Quick QmlImportScanner)`, executable
+    /// target that links Qt6::Quick and embeds the QML via
+    /// `qt_add_qml_module`. The component `.qml` lands inside the
+    /// QML module.
+    pub cmake_lists: String,
+    /// `main.cpp` — `QGuiApplication` + `QQmlApplicationEngine`
+    /// loading the component QML as the root from the embedded
+    /// QML module. Falls through gracefully if the engine fails
+    /// to instantiate (returns -1).
+    pub main_cpp: String,
+    /// `qmldir` — Qt's QML module descriptor. Lists the component
+    /// as the module's export. The module name is `Mosaic.<Component>`
+    /// (derived inline; the single-component CLI path doesn't have
+    /// a mosaic-package.toml so we can't use the artifact-builder's
+    /// `qmldir_module_name` helper directly).
+    pub qmldir: String,
+    /// `README.md` — prereqs (Qt6 6.7+, CMake 3.21+, a C++17
+    /// compiler), build + run commands, file map.
+    pub readme: String,
+}
+
+/// Extended pipeline result — carries the optional `ProjectFiles`
+/// when `emit_project` is on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PipelineEmitResultWithProject {
+    pub output: String,
+    pub component_name: String,
+    pub project: Option<ProjectFiles>,
+}
+
+/// Compile a three-file Mosaic pipeline triple to QML with explicit
+/// emit options.
+pub fn from_pipeline_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
+    let component = from_pipeline(interface, layout, style)?;
+
+    let project = if options.emit_project {
+        Some(build_qt_project_files(&component.component_name, options))
+    } else {
+        None
+    };
+
+    Ok(PipelineEmitResultWithProject {
+        output: component.output,
+        component_name: component.component_name,
+        project,
+    })
+}
+
+/// Build the four Qt-shell side files for a single component.
+///
+/// UI32 spec §3.6.2 Qt row: no per-PR identifier shape constraint
+/// beyond upstream — CMake target names exclude `-` (validated by
+/// `validate_component_name` upstream as ASCII identifier shape).
+/// The qmldir module name follows the QML PascalCase convention,
+/// which the upstream-validated component name already satisfies.
+fn build_qt_project_files(name: &str, options: &EmitOptions) -> ProjectFiles {
+    // Single-component QML module name: `Mosaic.<Component>`.
+    // (The artifact-builder's `qmldir_module_name` derives from
+    // package name; the single-component CLI path has no package
+    // context, so we inline the convention here.)
+    let module_name = format!("Mosaic.{name}");
+    ProjectFiles {
+        cmake_lists: build_cmake_lists(name, &module_name, options),
+        main_cpp: build_main_cpp(name, &module_name),
+        qmldir: build_qmldir(name, &module_name),
+        readme: build_qt_readme(name, &module_name),
+    }
+}
+
+const BANNER_CMAKE: &str = "# AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n# Fork the file (remove this banner) to customise.\n";
+const BANNER_CPP: &str = "// AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\n";
+const BANNER_QMLDIR: &str = "# AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n# Fork the file (remove this banner) to customise.\n";
+const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+
+fn build_cmake_lists(name: &str, module_name: &str, options: &EmitOptions) -> String {
+    format!(
+        "{BANNER_CMAKE}cmake_minimum_required(VERSION {})\nproject({} VERSION 0.1.0 LANGUAGES CXX)\n\nset(CMAKE_CXX_STANDARD {})\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_AUTOMOC ON)\n\nfind_package(Qt6 {} REQUIRED COMPONENTS Quick QmlImportScanner)\nqt_standard_project_setup(REQUIRES {})\n\nqt_add_executable({} main.cpp)\n\nqt_add_qml_module({}\n  URI {}\n  VERSION 1.0\n  QML_FILES {}.qml\n)\n\ntarget_link_libraries({} PRIVATE Qt6::Quick)\n",
+        options.pinned_cmake_min,
+        name,
+        options.pinned_cxx_standard,
+        options.pinned_qt_version,
+        options.pinned_qt_version,
+        name,
+        name,
+        module_name,
+        name,
+        name,
+    )
+}
+
+fn build_main_cpp(name: &str, module_name: &str) -> String {
+    format!(
+        "{BANNER_CPP}#include <QGuiApplication>\n#include <QQmlApplicationEngine>\n#include <QUrl>\n\nint main(int argc, char *argv[]) {{\n  QGuiApplication app(argc, argv);\n  QQmlApplicationEngine engine;\n\n  // Load the component as the root QML object from the embedded\n  // module. The qrc:// path is set up by qt_add_qml_module in\n  // CMakeLists.txt — the module URI is {module_name}, so the\n  // component resolves at qrc:/qt/qml/{module_name_slash}/{name}.qml.\n  const QUrl url(QStringLiteral(\"qrc:/qt/qml/{module_name_slash}/{name}.qml\"));\n  QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,\n                   &app, [](){{ qExit(-1); }}, Qt::QueuedConnection);\n  engine.load(url);\n  if (engine.rootObjects().isEmpty()) {{\n    return -1;\n  }}\n  return app.exec();\n}}\n",
+        module_name_slash = module_name.replace('.', "/"),
+    )
+}
+
+fn build_qmldir(name: &str, module_name: &str) -> String {
+    format!(
+        "{BANNER_QMLDIR}module {module_name}\n{name} 1.0 {name}.qml\n"
+    )
+}
+
+fn build_qt_readme(name: &str, module_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {name} — Qt6 + CMake desktop shell\n\nAuto-generated by `mosaic-compile --backend qt --emit-project`.\n\n## Prerequisites\n\n- Qt6 ≥ 6.7 (install via the official installer or your package manager).\n- CMake ≥ 3.21.\n- A C++17 compiler (GCC ≥ 9, Clang ≥ 10, MSVC 2019+).\n\n## Build + run\n\n```sh\ncmake -B build\ncmake --build build\n./build/{name}            # macOS / Linux\nbuild\\\\{name}.exe          # Windows\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{name}.qml` | The Mosaic-compiled QML component. |\n| `CMakeLists.txt` | CMake build definition. Pinned Qt6 + CMake versions per UI32 spec §3.6.3. |\n| `main.cpp` | `QGuiApplication` + `QQmlApplicationEngine` loading the component as root QML. |\n| `qmldir` | QML module descriptor. Module URI: `{module_name}`. |\n| `README.md` | This file. |\n\n## Editing\n\nEvery file except `{name}.qml` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
 /// Compile a three-file Mosaic pipeline triple to a QML source file.
 ///
 /// The `style` argument is accepted now (rather than added later) so that
