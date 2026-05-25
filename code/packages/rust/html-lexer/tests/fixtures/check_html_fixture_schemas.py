@@ -296,6 +296,27 @@ def check_browser_document_metadata(
         hint_path = f"{metadata_path}.http_equiv_hints[{index}]"
         require_string(hint_path, hint, "name", errors)
         require_string(hint_path, hint, "content", errors)
+    require_optional_object_list(metadata_path, metadata, "resource_hints", errors)
+    for index, hint in enumerate(object_list_items(metadata, "resource_hints")):
+        hint_path = f"{metadata_path}.resource_hints[{index}]"
+        require_string(hint_path, hint, "kind", errors)
+        require_string(hint_path, hint, "url", errors)
+        for field in (
+            "resolved_url",
+            "rel",
+            "as_hint",
+            "type_hint",
+            "media",
+            "integrity",
+            "crossorigin",
+            "referrerpolicy",
+            "fetchpriority",
+            "blocking",
+            "imagesrcset",
+            "resolved_imagesrcset",
+            "imagesizes",
+        ):
+            require_optional_nullable_string(hint_path, hint, field, errors)
 
     for index, theme_color in enumerate(object_list_items(metadata, "theme_colors")):
         theme_color_path = f"{metadata_path}.theme_colors[{index}]"
