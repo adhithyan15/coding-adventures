@@ -1086,6 +1086,8 @@ pub struct BrowserContentNode {
     pub edit_cite: Option<String>,
     pub resolved_edit_cite: Option<String>,
     pub edit_datetime: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
     pub break_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub section_kind: Option<String>,
@@ -1228,6 +1230,8 @@ pub struct BrowserRenderNode {
     pub edit_cite: Option<String>,
     pub resolved_edit_cite: Option<String>,
     pub edit_datetime: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
     pub break_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub section_kind: Option<String>,
@@ -1604,6 +1608,8 @@ impl BrowserRenderNode {
             edit_cite: content_node.edit_cite.clone(),
             resolved_edit_cite: content_node.resolved_edit_cite.clone(),
             edit_datetime: content_node.edit_datetime.clone(),
+            ruby_kind: content_node.ruby_kind.clone(),
+            bidi_kind: content_node.bidi_kind.clone(),
             break_kind: content_node.break_kind.clone(),
             heading_level: content_node.heading_level,
             section_kind: content_node.section_kind.clone(),
@@ -9298,6 +9304,8 @@ fn collect_browser_content_nodes_with_mode(
                         edit_cite: None,
                         resolved_edit_cite: None,
                         edit_datetime: None,
+                        ruby_kind: None,
+                        bidi_kind: None,
                         break_kind: None,
                         heading_level: None,
                         section_kind: None,
@@ -9516,6 +9524,8 @@ fn browser_content_node_for_element(
             .and_then(|cite| resolve_browser_url(cite, base_href)),
         edit_cite,
         edit_datetime: browser_edit_datetime(element),
+        ruby_kind: browser_ruby_kind(element),
+        bidi_kind: browser_bidi_kind(element),
         break_kind: browser_break_kind(element),
         heading_level: heading_level(&element.name),
         section_kind: browser_section_kind(element),
@@ -9545,6 +9555,13 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "mark" => Some("mark"),
         "ins" => Some("inserted"),
         "del" => Some("deleted"),
+        "ruby" => Some("ruby"),
+        "rb" => Some("ruby_base"),
+        "rt" => Some("ruby_text"),
+        "rp" => Some("ruby_fallback"),
+        "rtc" => Some("ruby_text_container"),
+        "bdi" => Some("bidi_isolate"),
+        "bdo" => Some("bidi_override"),
         "p" => Some("paragraph"),
         "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
         "article" => Some("article"),
@@ -10021,6 +10038,25 @@ fn browser_edit_datetime(element: &Element) -> Option<String> {
         element.attribute("datetime").map(ToOwned::to_owned)
     } else {
         None
+    }
+}
+
+fn browser_ruby_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ruby" => Some("ruby".to_string()),
+        "rb" => Some("base".to_string()),
+        "rt" => Some("text".to_string()),
+        "rp" => Some("fallback".to_string()),
+        "rtc" => Some("text_container".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_bidi_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "bdi" => Some("isolate".to_string()),
+        "bdo" => Some("override".to_string()),
+        _ => None,
     }
 }
 
@@ -10842,8 +10878,22 @@ fn browser_render_display(role: &str) -> &'static str {
         "article" | "aside" | "footer" | "header" | "heading" | "heading_group" | "main"
         | "navigation" | "paragraph" | "preformatted" | "section" | "block" | "form"
         | "form_group" | "legend" | "list" | "quote_block" | "separator" => "block",
-        "data" | "deleted" | "inserted" | "label" | "mark" | "option" | "option_group"
-        | "quote" | "time" => "inline",
+        "bidi_isolate"
+        | "bidi_override"
+        | "data"
+        | "deleted"
+        | "inserted"
+        | "label"
+        | "mark"
+        | "option"
+        | "option_group"
+        | "quote"
+        | "ruby"
+        | "ruby_base"
+        | "ruby_fallback"
+        | "ruby_text"
+        | "ruby_text_container"
+        | "time" => "inline",
         "list_item" => "list-item",
         "table" => "table",
         "table_caption" => "table-caption",
@@ -11736,6 +11786,68 @@ mod tests {
         assert_eq!(render_tree.children[0].children[5].display, "inline");
         assert_eq!(render_tree.children[0].children[6].display, "inline");
         assert_eq!(render_tree.children[0].children[7].display, "inline");
+    }
+
+    #[test]
+    fn browser_ruby_bidi_metadata_tracks_annotation_and_direction_nodes() {
+        let document = parse_html(
+            "<body><ruby id=term><rb>漢</rb><rt>kan</rt><rp>(</rp>\
+             <rtc><rt>group</rt></rtc></ruby> then <bdi id=name dir=auto>Name</bdi> \
+             and <bdo id=rtl dir=rtl>abc</bdo>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let ruby = &content_tree.children[0];
+        assert_eq!(ruby.role, "ruby");
+        assert_eq!(ruby.ruby_kind.as_deref(), Some("ruby"));
+
+        let ruby_base = &ruby.children[0];
+        assert_eq!(ruby_base.role, "ruby_base");
+        assert_eq!(ruby_base.ruby_kind.as_deref(), Some("base"));
+        assert_eq!(ruby_base.children[0].text.as_deref(), Some("漢"));
+
+        let ruby_text = &ruby.children[1];
+        assert_eq!(ruby_text.role, "ruby_text");
+        assert_eq!(ruby_text.ruby_kind.as_deref(), Some("text"));
+        assert_eq!(ruby_text.children[0].text.as_deref(), Some("kan"));
+
+        let ruby_fallback = &ruby.children[2];
+        assert_eq!(ruby_fallback.role, "ruby_fallback");
+        assert_eq!(ruby_fallback.ruby_kind.as_deref(), Some("fallback"));
+
+        let ruby_text_container = &ruby.children[3];
+        assert_eq!(ruby_text_container.role, "ruby_text_container");
+        assert_eq!(
+            ruby_text_container.ruby_kind.as_deref(),
+            Some("text_container")
+        );
+        assert_eq!(ruby_text_container.children[0].role, "ruby_text");
+
+        let bidi_isolate = &content_tree.children[2];
+        assert_eq!(bidi_isolate.role, "bidi_isolate");
+        assert_eq!(bidi_isolate.bidi_kind.as_deref(), Some("isolate"));
+        assert_eq!(bidi_isolate.dir.as_deref(), Some("auto"));
+
+        let bidi_override = &content_tree.children[4];
+        assert_eq!(bidi_override.role, "bidi_override");
+        assert_eq!(bidi_override.bidi_kind.as_deref(), Some("override"));
+        assert_eq!(bidi_override.dir.as_deref(), Some("rtl"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline");
+        assert_eq!(
+            render_tree.children[0].children[3].ruby_kind.as_deref(),
+            Some("text_container")
+        );
+        assert_eq!(
+            render_tree.children[2].bidi_kind.as_deref(),
+            Some("isolate")
+        );
+        assert_eq!(
+            render_tree.children[4].bidi_kind.as_deref(),
+            Some("override")
+        );
     }
 
     #[test]
