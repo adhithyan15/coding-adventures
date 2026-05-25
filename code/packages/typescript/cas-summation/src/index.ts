@@ -1367,6 +1367,39 @@ function twoSqrtTwoLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefi
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
 }
 
+/**
+ * Phase 66 — Three-Sqrt × polynomial numerator.
+ *
+ * Returns sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg when `node`
+ * is a `Mul` with exactly three Sqrt factors, any polynomial factors, and any
+ * bounded factors; `undefined` otherwise.
+ *
+ * Log factors are rejected immediately (use Phase 63/64/65 for sqrt+log combos).
+ * effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+ * Caller checks `denDeg > threeSqrtPolyEffectiveDeg(num, k)`.
+ */
+function threeSqrtPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const halfDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (halfDeg !== undefined) {
+      sqrtHalfDegs.push(halfDeg);
+      if (sqrtHalfDegs.length > 3) return undefined;
+      continue;
+    }
+    // Log factors not handled here — bail so Phase 63/64/65 can catch them.
+    if (isLogOfDivergingInK(arg, k)) return undefined;
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1575,6 +1608,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegTs2l = polynomialDegreeInK(den, k);
     if (denDegTs2l !== undefined) {
       if (denDegTs2l > ts2lDeg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 66: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), polynomial..., bounded...) numerator.
+  // Three Sqrt factors; log factors refused (use Phase 63/64/65 for sqrt+log combos).
+  // effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+  const tsp3Deg = threeSqrtPolyEffectiveDeg(num, k);
+  if (tsp3Deg !== undefined) {
+    const denDegTsp3 = polynomialDegreeInK(den, k);
+    if (denDegTsp3 !== undefined) {
+      if (denDegTsp3 > tsp3Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
