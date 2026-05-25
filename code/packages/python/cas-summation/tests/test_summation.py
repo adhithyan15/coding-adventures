@@ -1981,7 +1981,9 @@ class TestEvaluateSumPhase57BoundedLogSqrtNumerator:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
 
-    def test_two_log_factors_refused(self):
+    def test_two_log_factors_now_closed_by_phase64(self):
+        """sin(k) · log(k) · log(k+1) · √k / k²: Phase 57 conservatively refused two Logs,
+        but Phase 64 now correctly closes this — effective_x2=1; 2·2=4 > 1 → closes."""
         from symbolic_ir import POW, SIN, SQRT, SUB
 
         sin_k = IRApply(SIN, (_k,))
@@ -1999,7 +2001,7 @@ class TestEvaluateSumPhase57BoundedLogSqrtNumerator:
         g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
-        assert isinstance(result, IRApply) and result.head == SUM
+        assert not (isinstance(result, IRApply) and result.head == SUM)
 
     def test_no_sqrt_falls_through_to_phase55(self):
         from symbolic_ir import POW, SIN, SUB
@@ -2780,6 +2782,120 @@ class TestEvaluateSumPhase63TwoSqrtLogPolyNumerator:
         kp1_2b = IRApply(POW, (kp1, IRInteger(2)))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2b))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestEvaluateSumPhase64TwoLogSqrtPolyNumerator:
+    """Phase 64: Mul(Log(h1), Log(h2), Sqrt(P), polynomial..., bounded...) numerator.
+
+    effective_x2 = sqrt_inner_deg_x2 + 2·poly_deg.
+    log² is sub-polynomial; same effective degree formula as Phase 53.
+    Vanishes when 2·den_deg > effective_x2 or non-polynomial diverging denom.
+    """
+
+    def test_log_k_sq_sqrt_k_over_k_sq_closes(self):
+        """log(k)² · √k / k²: effective_x2=1; 2·2=4 > 1 → closes."""
+        from symbolic_ir import LOG, SQRT, SUB
+
+        log_k1 = IRApply(LOG, (_k,))
+        log_k2 = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (log_k1, log_k2, sqrt_k))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1_1 = IRApply(LOG, (kp1,))
+        log_kp1_2 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1_1, log_kp1_2, sqrt_kp1))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_k_sq_sqrt_k3_over_k3_closes(self):
+        """log(k)² · √(k³) / k³: effective_x2=3; 2·3=6 > 3 → closes."""
+        from symbolic_ir import LOG, SQRT, SUB
+
+        log_k1 = IRApply(LOG, (_k,))
+        log_k2 = IRApply(LOG, (_k,))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        sqrt_k3 = IRApply(SQRT, (k3,))
+        num_k = IRApply(MUL, (log_k1, log_k2, sqrt_k3))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1_1 = IRApply(LOG, (kp1,))
+        log_kp1_2 = IRApply(LOG, (kp1,))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_kp1_3 = IRApply(SQRT, (kp1_3,))
+        num_kp1 = IRApply(MUL, (log_kp1_1, log_kp1_2, sqrt_kp1_3))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sin_log_k_sq_sqrt_k_over_k_sq_closes(self):
+        """sin(k) · log(k)² · √k / k²: bounded + two Logs + Sqrt; effective_x2=1; 2·2=4 > 1 → closes."""
+        from symbolic_ir import LOG, SIN, SQRT, SUB
+
+        sin_k = IRApply(SIN, (_k,))
+        log_k1 = IRApply(LOG, (_k,))
+        log_k2 = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (sin_k, log_k1, log_k2, sqrt_k))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sin_kp1 = IRApply(SIN, (kp1,))
+        log_kp1_1 = IRApply(LOG, (kp1,))
+        log_kp1_2 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (sin_kp1, log_kp1_1, log_kp1_2, sqrt_kp1))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_k_sq_sqrt_k_over_exponential_closes(self):
+        """log(k)² · √k / 2^k: non-polynomial diverging denominator."""
+        from symbolic_ir import LOG, SQRT, SUB
+
+        log_k1 = IRApply(LOG, (_k,))
+        log_k2 = IRApply(LOG, (_k,))
+        sqrt_k = IRApply(SQRT, (_k,))
+        num_k = IRApply(MUL, (log_k1, log_k2, sqrt_k))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1_1 = IRApply(LOG, (kp1,))
+        log_kp1_2 = IRApply(LOG, (kp1,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_kp1 = IRApply(MUL, (log_kp1_1, log_kp1_2, sqrt_kp1))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (IRInteger(2), _k))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (IRInteger(2), kp1))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log_k_sq_sqrt_k2_over_k_refused(self):
+        """log(k)² · √(k²) / k: effective_x2=2; 2·1=2 not > 2 → refused (equal)."""
+        from symbolic_ir import LOG, SQRT, SUB
+
+        log_k1 = IRApply(LOG, (_k,))
+        log_k2 = IRApply(LOG, (_k,))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        sqrt_k2 = IRApply(SQRT, (k2,))
+        num_k = IRApply(MUL, (log_k1, log_k2, sqrt_k2))
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        log_kp1_1 = IRApply(LOG, (kp1,))
+        log_kp1_2 = IRApply(LOG, (kp1,))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_kp1_2 = IRApply(SQRT, (kp1_2,))
+        num_kp1 = IRApply(MUL, (log_kp1_1, log_kp1_2, sqrt_kp1_2))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
