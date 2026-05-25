@@ -207,6 +207,8 @@ All notable changes to this package will be documented in this file.
   expanded escalation queue key.
 - Host-run escalation dashboard keys that bind compact rollups back to source
   supervision keys for supervisor drain run dashboard integrity checks.
+- Stable host-run escalation dashboard lanes and lane-integrity flags for
+  supervisor drain run queue filters.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
