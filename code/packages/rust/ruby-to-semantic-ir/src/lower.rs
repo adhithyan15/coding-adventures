@@ -2931,6 +2931,218 @@ impl Lowerer {
         Ok(semantic_ir::nodes::MapEntry { key, value })
     }
 
+    // -------------------------------------------------------------------
+    // Phase 6y — string interpolation lowering
+    // -------------------------------------------------------------------
+
+    /// Lower a Ruby string literal whose raw content may contain
+    /// `#{...}` interpolation markers (Phase 6y).
+    ///
+    /// The lexer's Phase-3b state machine captures `"foo#{x}bar"` as a
+    /// single `TokenType::String` token whose `value` is the inner
+    /// content with the `#{...}` markers preserved verbatim and any
+    /// `{` / `}` inside the interpolation already brace-balanced by
+    /// the lexer's `interp_brace_depth` tracking.
+    ///
+    /// ## Split strategy
+    ///
+    /// Walk the content char-by-char.  When we hit `#{`, flush the
+    /// accumulated literal text as a `StrLit` segment, then scan the
+    /// interpolation body up to the matching `}` (tracking brace depth
+    /// so `#{ {a: 1} }` works).  Each interpolation body lowers via
+    /// [`lower_interp_expression`] — bare identifiers route to
+    /// `VarRef`, anything else lowers as a `BuiltinCall("__interp__",
+    /// [StrLit(raw)])` marker.  This matches the marker pattern used
+    /// by Phase 6v rescue/ensure.
+    ///
+    /// ## Output shapes
+    ///
+    /// | Source              | Lowered SIR shape                                                              |
+    /// |---------------------|--------------------------------------------------------------------------------|
+    /// | `"plain"`           | `StrLit("plain")`                                                              |
+    /// | `"#{x}"`            | `VarRef("x")` — single non-literal segment, no wrapper                         |
+    /// | `"hi #{name}"`      | `BuiltinCall("string_concat", [StrLit("hi "), VarRef("name")])`                |
+    /// | `"#{a}#{b}"`        | `BuiltinCall("string_concat", [VarRef("a"), VarRef("b")])`                     |
+    /// | `"sum is #{1+2}"`   | `BuiltinCall("string_concat", [StrLit("sum is "), BuiltinCall("__interp__", [StrLit("1+2")])])` |
+    ///
+    /// ## v0 deferred
+    ///
+    /// - Complex interpolation expressions are kept as the `__interp__`
+    ///   marker carrying the raw source text rather than being recursively
+    ///   parsed; downstream Ruby emitters can still reconstruct the
+    ///   original literal verbatim from the marker.  A future phase
+    ///   will recursively invoke the Ruby parser/lowerer on the body so
+    ///   the SIR carries proper semantic info.
+    /// - Escape sequences inside the literal (`\n`, `\t`, `\\`, `\"`)
+    ///   pass through unchanged — the lexer hasn't unescaped them yet.
+    fn lower_string_literal_with_interp(
+        &mut self,
+        raw: &str,
+        span: Span,
+        err_line: usize,
+        err_column: usize,
+    ) -> Result<Expr, RubyLowerError> {
+        let mut segments: Vec<Expr> = Vec::new();
+        let mut text_buf = String::new();
+        let mut chars = raw.char_indices().peekable();
+
+        while let Some((_, ch)) = chars.next() {
+            // Detect the `#{` interpolation opener — only when `#` is
+            // immediately followed by `{`.  Bare `#` inside a string
+            // (e.g. `"a#b"`) is just a literal character.
+            if ch == '#' {
+                if let Some(&(_, '{')) = chars.peek() {
+                    // Consume the `{`.
+                    chars.next();
+                    // Flush whatever literal text we've accumulated so
+                    // far as its own `StrLit` segment.  We do not push
+                    // empty segments (saves allocations and keeps the
+                    // emitted SIR clean for `"#{a}"`-style strings).
+                    if !text_buf.is_empty() {
+                        segments.push(Expr::StrLit {
+                            value: std::mem::take(&mut text_buf),
+                            span: span.clone(),
+                        });
+                    }
+                    // Scan up to the matching closing `}`, tracking
+                    // brace depth so nested `{...}` (e.g. inline hash
+                    // or block in the interp) is balanced correctly.
+                    let mut depth: usize = 1;
+                    let mut interp = String::new();
+                    let mut terminated = false;
+                    for (_, c) in chars.by_ref() {
+                        match c {
+                            '{' => {
+                                depth += 1;
+                                interp.push(c);
+                            }
+                            '}' => {
+                                depth -= 1;
+                                if depth == 0 {
+                                    terminated = true;
+                                    break;
+                                }
+                                interp.push(c);
+                            }
+                            other => interp.push(other),
+                        }
+                    }
+                    if !terminated {
+                        // Defensive: the lexer's Phase-3b state machine
+                        // would have rejected an unterminated `#{...`,
+                        // but propagate as a lower-error rather than
+                        // panicking if it ever slips through.
+                        return Err(RubyLowerError {
+                            message: format!(
+                                "unterminated `#{{...` interpolation in string literal `\"{}\"`",
+                                raw
+                            ),
+                            line: err_line,
+                            column: err_column,
+                        });
+                    }
+                    segments.push(self.lower_interp_expression(&interp, span.clone()));
+                    continue;
+                }
+            }
+            // Ordinary literal character.  push() copies one full
+            // UTF-8 char (not a byte) so multi-byte content stays
+            // intact.
+            text_buf.push(ch);
+        }
+        // Flush any trailing literal text after the last interp.
+        if !text_buf.is_empty() {
+            segments.push(Expr::StrLit {
+                value: text_buf,
+                span: span.clone(),
+            });
+        }
+
+        // Result-shape selection:
+        // - Empty string literal (`""`): emit a single empty `StrLit`.
+        // - Exactly one segment: hand it back directly (no concat
+        //   wrapper needed — keeps `"plain"` and `"#{x}"` lean).
+        // - Two or more segments: wrap in a `string_concat` builtin.
+        //
+        // Any path that emits one or more segments needs the `Strings`
+        // feature flag because we're producing `StrLit` data.
+        if segments.is_empty() {
+            return Ok(Expr::StrLit {
+                value: String::new(),
+                span,
+            });
+        }
+        self.features_used.insert(Feature::Strings);
+        if segments.len() == 1 {
+            return Ok(segments.into_iter().next().unwrap());
+        }
+        Ok(Expr::BuiltinCall {
+            name: "string_concat".to_string(),
+            args: segments,
+            effects: EffectSet::PURE,
+            span,
+        })
+    }
+
+    /// Lower the body of a single `#{...}` interpolation segment
+    /// (Phase 6y).
+    ///
+    /// v0 fast path: a bare identifier (no whitespace, no operators,
+    /// no sigils) routes to `VarRef` with the same `Scope::Param` /
+    /// `Scope::Local` dispatch as the regular factor-atom Name case.
+    /// This covers the overwhelmingly common shape `"hello #{name}"`.
+    ///
+    /// v0 fallback: anything else — arithmetic, method calls, nested
+    /// strings, sigil vars, etc. — lowers as a single marker
+    /// `BuiltinCall("__interp__", [StrLit(raw_body)])`.  Downstream
+    /// emitters that target Ruby can re-emit the marker as `#{<raw>}`
+    /// verbatim; emitters that target other languages can flag the
+    /// marker as a TODO for a future phase that re-parses the body.
+    ///
+    /// Same marker pattern as Phase 6v's `__rescue_marker__` /
+    /// `__ensure_marker__` — a known-name `BuiltinCall` whose arg
+    /// list carries the verbatim source text.
+    fn lower_interp_expression(&mut self, raw: &str, span: Span) -> Expr {
+        let trimmed = raw.trim();
+        // Bare-identifier check: starts with `_` or ASCII letter,
+        // and every following char is `_`/letter/digit.  We
+        // intentionally reject sigil vars (`@x`, `$x`, `@@x`) here
+        // because the Phase 6x routing happens at lex time, not at
+        // interp-split time — those would need their own special
+        // handling in a follow-up phase.
+        let mut chars_iter = trimmed.chars();
+        let is_bare_name = match chars_iter.next() {
+            Some(c) if c.is_ascii_alphabetic() || c == '_' => {
+                chars_iter.all(|c| c.is_ascii_alphanumeric() || c == '_')
+            }
+            _ => false,
+        };
+        if is_bare_name {
+            let scope = if self.current_params.contains(&trimmed.to_string()) {
+                Scope::Param
+            } else {
+                Scope::Local
+            };
+            return Expr::VarRef {
+                name: trimmed.to_string(),
+                scope,
+                span,
+            };
+        }
+        // Fallback marker.  Triggers `Strings` because we embed the
+        // raw text as a `StrLit`.
+        self.features_used.insert(Feature::Strings);
+        Expr::BuiltinCall {
+            name: "__interp__".to_string(),
+            args: vec![Expr::StrLit {
+                value: raw.to_string(),
+                span: span.clone(),
+            }],
+            effects: EffectSet::PURE,
+            span,
+        }
+    }
+
     fn lower_factor(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // factor ::= ( atom ) { dot_call }
         //
@@ -2966,10 +3178,21 @@ impl Lowerer {
                             return Ok(Expr::IntLit { value: v, span });
                         }
                         TokenType::String => {
-                            return Ok(Expr::StrLit {
-                                value: tok.value.clone(),
+                            // Phase 6y — string interpolation expression
+                            // lowering.  The lexer (Phase 3b) emits the
+                            // entire `"foo#{x}bar"` literal as a single
+                            // `String` token whose `value` holds the inner
+                            // content with `#{...}` markers preserved
+                            // verbatim.  When markers are present we split
+                            // into segments and emit a concat builtin;
+                            // when absent we fall through to a plain
+                            // `StrLit` (zero-cost fast path).
+                            return self.lower_string_literal_with_interp(
+                                &tok.value,
                                 span,
-                            });
+                                tok.line,
+                                tok.column,
+                            );
                         }
                         TokenType::Name => {
                             // Inside a function body, parameter

@@ -2,6 +2,41 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.26.0] - 2026-05-25
+
+### Added (Phase 6y — string interpolation lowering)
+
+`lower_factor_atom` now hands every `TokenType::String` token to a new helper, `lower_string_literal_with_interp`, which scans the raw content for `#{...}` interpolation markers and emits the appropriate SIR shape.
+
+### Lowering
+
+| Source              | SIR shape                                                                                       |
+|---------------------|-------------------------------------------------------------------------------------------------|
+| `"plain"`           | `StrLit("plain")` — zero-cost fast path                                                         |
+| `"#{x}"`            | `VarRef("x")` — single non-literal segment, no wrapper                                          |
+| `"hi #{name}"`      | `BuiltinCall("string_concat", [StrLit("hi "), VarRef("name")])`                                 |
+| `"#{a}#{b}"`        | `BuiltinCall("string_concat", [VarRef("a"), VarRef("b")])`                                      |
+| `"sum=#{1+2}"`      | `BuiltinCall("string_concat", [StrLit("sum="), BuiltinCall("__interp__", [StrLit("1+2")])])`    |
+
+Bare-identifier interp bodies route to `VarRef` with the same `Scope::Param` / `Scope::Local` dispatch as the regular factor-atom Name case.  Complex bodies emit a marker `BuiltinCall("__interp__", [StrLit(raw)])` — same marker pattern as Phase 6v's `__rescue_marker__` / `__ensure_marker__`.
+
+Brace depth is tracked while scanning the interp body so nested `{...}` (inline hash, block) is balanced correctly, matching the lexer's `interp_brace_depth` state.
+
+### v0 deferred limitations
+
+- Complex interp bodies (arithmetic, method calls, nested strings, sigil vars) are kept as a `__interp__` marker rather than being recursively parsed.  A future phase will invoke the Ruby parser/lowerer on the body so the SIR carries proper semantic info.
+- Escape sequences inside the string literal (`\n`, `\t`, `\\`, `\"`) pass through unchanged — the lexer hasn't unescaped them yet.
+- Sigil-prefixed vars (`@x`, `$x`, `@@x`) inside an interp body intentionally fall through to the `__interp__` marker; Phase 6x's sigil routing only fires at lex time, not at interp-split time.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 116 → **121** (+5):
+  - `plain_string_with_no_interp_remains_a_strlit` — regression for the zero-cost path.
+  - `interpolated_string_with_bare_name_lowers_to_string_concat` — happy path.
+  - `interpolated_string_that_is_only_interp_unwraps_to_a_single_segment` — `"#{name}"`.
+  - `interpolated_string_with_expression_uses_interp_marker` — `"sum=#{1+2}"`.
+  - `interpolated_string_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.25.0] - 2026-05-25
 
 ### Added (Phase 6x — sigil variable refs `@x`, `@@x`, `$x`)

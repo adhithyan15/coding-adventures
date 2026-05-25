@@ -1955,5 +1955,77 @@ mod tests {
         assert!(tree_has_token_value(ca, "*"), "expected `*` splat prefix in yield arg");
         assert!(tree_has_token_value(ca, "arr"));
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6y — string interpolation expression parsing
+    //
+    // The lexer's Phase-3b state machine emits `"hello #{name}"` as a single
+    // `TokenType::String` token whose value carries the `#{...}` markers
+    // verbatim.  These tests merely confirm that the existing grammar
+    // (STRING token at factor position) accepts interpolated forms in every
+    // statement / expression context the lowerer will touch: assignment
+    // RHS, argument position, and bare expression.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_interpolated_string_assignment() {
+        // `x = "hello #{name}"` — interpolation on the RHS of an
+        // assignment.  The whole literal is one STRING token, so the
+        // grammar treats it identically to a plain string.
+        let ast = parse_ruby(r##"x = "hello #{name}""##);
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected an assignment node for `x = \"...#{{name}}\"`"
+        );
+        // The raw token value (with `#{...}` preserved) must be present
+        // in the tree.
+        assert!(
+            tree_has_token_value(&ast, "hello #{name}"),
+            "expected the verbatim interpolated string token in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_interpolated_string_in_call_arg() {
+        // `puts("sum=#{1+2}")` — interpolation body is an arbitrary
+        // expression; lexer brace-tracking keeps the `{...}` balanced.
+        let ast = parse_ruby(r##"puts("sum=#{1+2}")"##);
+        assert!(
+            find_descendant(&ast, "method_call").is_some(),
+            "expected a method_call node wrapping puts(...)"
+        );
+        assert!(
+            tree_has_token_value(&ast, "sum=#{1+2}"),
+            "expected the verbatim interpolation-bearing string token"
+        );
+    }
+
+    #[test]
+    fn test_parse_interpolated_string_only_interp() {
+        // `x = "#{name}"` — the entire string is a single `#{...}`.
+        // Lowering should emit only the interp expression with no
+        // surrounding literal text; here we only verify the grammar
+        // accepts it.
+        let ast = parse_ruby(r##"x = "#{name}""##);
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected an assignment node"
+        );
+        assert!(
+            tree_has_token_value(&ast, "#{name}"),
+            "expected `#{{name}}` token value preserved verbatim"
+        );
+    }
+
+    #[test]
+    fn test_parse_interpolated_string_multiple_segments() {
+        // `x = "a=#{a}, b=#{b}"` — multiple `#{...}` interp markers
+        // with literal text bridging them.  Verifies the lexer's
+        // brace tracking handles back-to-back interps and the grammar
+        // accepts the resulting single token.
+        let ast = parse_ruby(r##"x = "a=#{a}, b=#{b}""##);
+        assert!(find_descendant(&ast, "assignment").is_some());
+        assert!(tree_has_token_value(&ast, "a=#{a}, b=#{b}"));
+    }
 }
 

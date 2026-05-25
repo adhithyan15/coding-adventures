@@ -2376,4 +2376,131 @@ mod tests {
             other => panic!("expected yield builtin call, got {:?}", other),
         }
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 6y — string interpolation lowering
+    //
+    // Output shapes covered:
+    //   "plain"              → StrLit("plain")
+    //   "#{x}"               → VarRef("x")
+    //   "hi #{name}"         → BuiltinCall("string_concat",
+    //                            [StrLit("hi "), VarRef("name")])
+    //   "sum=#{1+2}"         → BuiltinCall("string_concat",
+    //                            [StrLit("sum="),
+    //                             BuiltinCall("__interp__", [StrLit("1+2")])])
+    //
+    // Plus an end-to-end smoke test that an interpolated module passes
+    // the SIR validator (proves the BuiltinCall + StrLit shape is
+    // well-formed semantic IR).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn plain_string_with_no_interp_remains_a_strlit() {
+        // Regression: zero-cost path — no interpolation markers means
+        // we emit a plain `StrLit`, exactly as we did pre-Phase-6y.
+        let m = lower(r#"x = "hello""#);
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => match value {
+                Expr::StrLit { value, .. } => assert_eq!(value, "hello"),
+                other => panic!("expected plain StrLit, got {:?}", other),
+            },
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_string_with_bare_name_lowers_to_string_concat() {
+        // `"hi #{name}"` → string_concat(StrLit("hi "), VarRef("name"))
+        //
+        // The interpolated literal is in *trailing-value* position so
+        // it sees the prior LetBinding (the validator's parallel-let
+        // rule would otherwise reject the cross-binding reference).
+        let m = lower(r##"name = "world"
+"hi #{name}"
+"##);
+        let b = main_body(&m);
+        // Single LetBinding for `name`; the interpolated string is the
+        // block's trailing value expression.
+        assert_eq!(b.stmts.len(), 1);
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "name"));
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "string_concat");
+                assert_eq!(args.len(), 2, "expected 2 concat segments");
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "hi "));
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "name"));
+            }
+            other => panic!("expected string_concat BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_string_that_is_only_interp_unwraps_to_a_single_segment() {
+        // `"#{name}"` has no literal text — the lowerer should hand back
+        // the single segment directly (no `string_concat` wrapper).
+        // Trailing-value position so the VarRef sees the LetBinding.
+        let m = lower(r##"name = "world"
+"#{name}"
+"##);
+        let b = main_body(&m);
+        assert_eq!(b.stmts.len(), 1);
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "name"));
+        assert!(
+            matches!(&b.value, Expr::VarRef { name, .. } if name == "name"),
+            "expected bare VarRef without concat wrapper, got {:?}",
+            b.value
+        );
+    }
+
+    #[test]
+    fn interpolated_string_with_expression_uses_interp_marker() {
+        // `"sum=#{1+2}"` — the interp body `1+2` is not a bare name, so
+        // it must lower as the v0 `__interp__` marker carrying the raw
+        // body text.  Same marker pattern as Phase 6v rescue/ensure.
+        let m = lower(r##"x = "sum=#{1+2}""##);
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "string_concat");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "sum="));
+                match &args[1] {
+                    Expr::BuiltinCall { name, args, .. } => {
+                        assert_eq!(name, "__interp__");
+                        assert_eq!(args.len(), 1);
+                        assert!(
+                            matches!(&args[0], Expr::StrLit { value, .. } if value == "1+2"),
+                            "expected the raw interp body preserved in the marker"
+                        );
+                    }
+                    other => panic!("expected __interp__ marker, got {:?}", other),
+                }
+            }
+            other => panic!("expected string_concat, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_string_module_passes_sir_validator() {
+        // End-to-end smoke: the module produced from an interpolated
+        // string round-trips through the SIR validator.  This catches
+        // shape regressions (missing effects, wrong arg ordering,
+        // unbound names) that the unit assertions above might miss.
+        // Trailing-value placement so the interpolation's VarRef sees
+        // the prior LetBinding under the validator's parallel-let rule.
+        let m = lower(r##"name = "world"
+puts("hi #{name}")
+"##);
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected interpolated-string module: {:?}",
+            result
+        );
+    }
 }

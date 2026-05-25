@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.26.0] - 2026-05-25
+
+### Added (Phase 6y — string interpolation expression parsing)
+
+The lexer's Phase-3b state machine captures `"foo#{x}bar"` as a single `TokenType::String` token whose value carries the `#{...}` markers verbatim, with `{`/`}` already brace-balanced by the lexer's `interp_brace_depth` tracking.  Phase 6y is therefore **grammar-zero**: the existing STRING token at factor / call-arg / assignment-RHS positions already accepts interpolated forms.  This phase adds explicit test coverage for the parser side and the SIR lowering for the interpolation split.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+The SIR lowerer's String case now scans the raw content for `#{...}` segments and emits:
+
+| Source              | SIR shape                                                                                       |
+|---------------------|-------------------------------------------------------------------------------------------------|
+| `"plain"`           | `StrLit("plain")` (zero-cost fast path — unchanged)                                             |
+| `"#{x}"`            | `VarRef("x")` (single non-literal segment, no wrapper)                                          |
+| `"hi #{name}"`      | `BuiltinCall("string_concat", [StrLit("hi "), VarRef("name")])`                                 |
+| `"sum=#{1+2}"`      | `BuiltinCall("string_concat", [StrLit("sum="), BuiltinCall("__interp__", [StrLit("1+2")])])`    |
+
+Bare-identifier interp bodies lower to a `VarRef` with the same `Scope::Param` / `Scope::Local` dispatch as the regular factor-atom Name case.  More complex interp bodies (arithmetic, calls, nested strings) emit a marker `BuiltinCall("__interp__", [StrLit(raw_body)])`, matching the marker pattern used by Phase 6v rescue/ensure — downstream Ruby emitters can re-emit the marker verbatim as `#{<raw>}`.
+
+### v0 deferred limitations
+
+- Complex interp bodies are carried as the raw `__interp__` marker rather than being recursively parsed — a future phase will invoke the parser/lowerer on the body so the SIR carries semantic info.
+- Escape sequences inside the string literal pass through unchanged (the lexer hasn't unescaped them yet).
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 113 → **117** (+4):
+  - `test_parse_interpolated_string_assignment` — `x = "hello #{name}"`.
+  - `test_parse_interpolated_string_in_call_arg` — `puts("sum=#{1+2}")`.
+  - `test_parse_interpolated_string_only_interp` — `x = "#{name}"`.
+  - `test_parse_interpolated_string_multiple_segments` — `x = "a=#{a}, b=#{b}"`.
+
 ## [0.25.0] - 2026-05-25
 
 ### Added (Phase 6x — instance var `@x`, class var `@@x`, global var `$x` refs)
