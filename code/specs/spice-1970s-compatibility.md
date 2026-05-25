@@ -335,6 +335,9 @@ Status:
   the imaginary-axis zero pair plus the shared RLC pole pair.
 - `.PZ` pole-zero results can now be rendered as stable tab-separated text
   tables across Python, TypeScript, and Rust.
+- `.DISTO` distortion results can now be rendered as stable tab-separated text
+  tables across Python, TypeScript, and Rust, covering harmonic magnitude,
+  phase, and THD rows.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 

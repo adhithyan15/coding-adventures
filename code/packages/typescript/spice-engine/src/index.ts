@@ -2315,6 +2315,27 @@ export function formatPoleZeroTable(result: PoleZeroResult): string {
   return rows.join("\n");
 }
 
+export function formatDistortionTable(result: DistortionResult): string {
+  const rows = [["Frequency", "Input", "Output", "Harmonic", "Magnitude", "Phase", "THD"].join("\t")];
+  result.points.forEach((point) => {
+    point.harmonics.forEach((harmonic) => {
+      rows.push(
+        [
+          formatTableNumber(point.frequencyHz),
+          result.inputSource,
+          result.outputProbe,
+          String(harmonic.harmonic),
+          formatTableNumber(harmonic.magnitude),
+          formatTableNumber(harmonic.phaseDegrees),
+          formatTableNumber(point.totalHarmonicDistortion),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 function defaultOutputProbes(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: ReadonlyMap<string, number>,

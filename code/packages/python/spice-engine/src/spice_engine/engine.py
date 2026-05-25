@@ -1310,6 +1310,28 @@ def format_pole_zero_table(result: PoleZeroResult) -> str:
     return "\n".join(rows)
 
 
+def format_distortion_table(result: DistortionResult) -> str:
+    """Format distortion harmonics as a stable SPICE-style text table."""
+    rows = ["Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD"]
+    for point in result.points:
+        for harmonic in point.harmonics:
+            rows.append(
+                "\t".join(
+                    [
+                        _format_table_number(point.frequency),
+                        result.input_source,
+                        result.output_probe,
+                        str(harmonic.harmonic),
+                        _format_table_number(harmonic.magnitude),
+                        _format_table_number(harmonic.phase_degrees),
+                        _format_table_number(point.total_harmonic_distortion),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def _default_output_probes(
     node_voltages: dict[str, float],
     branch_currents: dict[str, float],

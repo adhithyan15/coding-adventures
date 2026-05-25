@@ -3374,6 +3374,26 @@ pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_distortion_table(result: &DistortionResult) -> String {
+    let mut rows = vec!["Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD".to_string()];
+    for point in &result.points {
+        for harmonic in &point.harmonics {
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                format_table_number(point.frequency_hz),
+                result.input_source,
+                result.output_probe,
+                harmonic.harmonic,
+                format_table_number(harmonic.magnitude),
+                format_table_number(harmonic.phase_degrees),
+                format_table_number(point.total_harmonic_distortion)
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 fn default_output_probes(
     node_voltages: &BTreeMap<String, f64>,
     branch_currents: &BTreeMap<String, f64>,

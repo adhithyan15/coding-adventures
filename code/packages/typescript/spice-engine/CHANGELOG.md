@@ -15,6 +15,8 @@
   node-voltage and branch-current text output snapshots.
 - Add `formatPoleZeroTable` for stable tab-separated `.PZ` pole-zero text
   output snapshots.
+- Add `formatDistortionTable` for stable tab-separated `.DISTO` harmonic
+  magnitude, phase, and THD text output snapshots.
 - Add JFET source-follower transient fixtures covering nonlinear
   companion-model solves.
 - Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine
