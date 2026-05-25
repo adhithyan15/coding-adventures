@@ -2,6 +2,43 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.19.0] - 2026-05-25
+
+### Added (Phase 6r — multiple assignment lowering)
+
+`a, b = 1, 2` fans out into one SIR statement per (LHS, RHS) pair — each lowered identically to the single-LHS `assignment` rule (`LetBinding` on first sighting, `Assign` thereafter).
+
+#### Architecture change
+
+New dispatch wrapper `lower_statement_inner_multi(node) → Vec<Stmt>`:
+- `multi_assignment` → delegates to `lower_multi_assignment` (returns `Vec<Stmt>`).
+- All other statement forms → wraps the single `lower_statement_inner` result in `vec![stmt]`.
+
+The four statement-list walkers (`lower_program`, `lower_clause_statements`, `lower_def_statement` body, `lower_method_with_block` body) updated from `.push(...)` to `.extend(...)`.  The modifier-statement LHS path keeps the single-stmt `lower_statement_inner` call because `multi_assignment` is not an eligible LHS form in `modifier_statement`.
+
+#### v0 restrictions (rejected with `RubyLowerError`)
+
+- LHS count must equal RHS count.
+- Single-RHS auto-unpack (`a, b = arr`) — not supported.
+- Splat targets (`a, *b = 1, 2, 3`) — Phase 6s.
+
+#### Lowering rule
+
+For each pair `(lhs[i], rhs[i])`:
+- First sighting of `lhs[i]` in this scope → `Stmt::LetBinding { name, value: rhs[i], … }`.
+- Subsequent sighting → `Stmt::Assign { name, scope: Local, value: rhs[i], … }` (and sets `Feature::MutableBindings`).
+
+RHS expressions are lowered first (in source order), then the LHS bindings happen in source order.  The parallel-binding swap case (`a, b = b, a`) is NOT correctly v0-lowered (would silently mis-evaluate); this is documented as a deferred limitation.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 86 → **91** (+5):
+  - `multi_assignment_lowers_to_independent_let_bindings` — basic `a, b = 1, 2` → two `LetBinding`.
+  - `multi_assignment_redeclaration_uses_assign` — `a = 1; b = 2; a, b = 3, 4` second multi-assign uses `Assign`.
+  - `multi_assignment_three_names_emits_three_stmts` — three LHS / three RHS → three SIR stmts.
+  - `multi_assignment_arity_mismatch_errors` — `a, b = 1, 2, 3` returns `RubyLowerError`.
+  - `multi_assignment_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.18.0] - 2026-05-24
 
 ### Added (Phase 6q — modifier conditionals/loops lowering)

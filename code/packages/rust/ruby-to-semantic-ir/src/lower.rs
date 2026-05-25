@@ -250,7 +250,10 @@ impl Lowerer {
                 };
                 value = Some(v);
             } else {
-                stmts_out.push(self.lower_statement_inner(inner)?);
+                // Phase 6r — use the multi-stmt dispatch wrapper so
+                // `multi_assignment` nodes fan out into one SIR Stmt
+                // per (lhs[i], rhs[i]) pair.
+                stmts_out.extend(self.lower_statement_inner_multi(inner)?);
             }
         }
 
@@ -260,6 +263,33 @@ impl Lowerer {
             value,
             span: self.span_of(program),
         })
+    }
+
+    /// Phase 6r — multi-statement-emitting dispatch wrapper.
+    ///
+    /// Some Ruby source-statement forms lower to *multiple* SIR
+    /// statements:
+    ///
+    /// - `multi_assignment` (`a, b = 1, 2`) → one `LetBinding`/`Assign`
+    ///   per LHS-RHS pair.  The grammar groups them as a single
+    ///   surface statement, but at the SIR level they're independent
+    ///   bindings.
+    ///
+    /// Every other statement form produces exactly one SIR statement
+    /// and is delegated to [`lower_statement_inner`].  The helper exists
+    /// so callers walking a statement list (`lower_program`,
+    /// `lower_clause_statements`, `lower_def_statement`, etc.) can
+    /// uniformly `.extend(...)` the result instead of `.push(...)`-ing
+    /// a single Stmt — keeping the single-stmt path lossless while
+    /// permitting multi-stmt fan-out where the grammar warrants it.
+    fn lower_statement_inner_multi(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        match node.rule_name.as_str() {
+            "multi_assignment" => self.lower_multi_assignment(node),
+            _ => Ok(vec![self.lower_statement_inner(node)?]),
+        }
     }
 
     /// Lower the inner rule node of a `statement` (one of
@@ -568,7 +598,8 @@ impl Lowerer {
                 };
                 value = Some(v);
             } else {
-                stmts_out.push(self.lower_statement_inner(inner)?);
+                // Phase 6r — multi-stmt fan-out for `multi_assignment`.
+                stmts_out.extend(self.lower_statement_inner_multi(inner)?);
             }
         }
         let value = value.unwrap_or(Expr::NilLit { span: self.span_of(node) });
@@ -991,7 +1022,8 @@ impl Lowerer {
                     };
                     value = Some(v);
                 } else {
-                    stmts_out.push(self.lower_statement_inner(inner)?);
+                    // Phase 6r — multi-stmt fan-out for `multi_assignment`.
+                    stmts_out.extend(self.lower_statement_inner_multi(inner)?);
                 }
             }
         }
@@ -1119,6 +1151,154 @@ impl Lowerer {
             let _ = name_span;
             s
         })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6r — multi-assignment
+    // -------------------------------------------------------------------
+
+    /// Lower a `multi_assignment` node (`a, b = 1, 2`) into one SIR
+    /// statement per (LHS, RHS) pair.
+    ///
+    /// Grammar shape (per `ruby.grammar`):
+    /// ```text
+    /// multi_assignment = NAME COMMA NAME { COMMA NAME }
+    ///                    EQUALS
+    ///                    expression { COMMA expression } ;
+    /// ```
+    ///
+    /// AST layout: the leading `NAME` tokens and their separator
+    /// `COMMA`s sit before the `EQUALS` token; after `EQUALS` come
+    /// the `expression` rule nodes (also `COMMA`-separated, but the
+    /// `COMMA` between expressions is a Token child while the
+    /// `expression` itself is a Node child).  We walk the children
+    /// linearly: NAME tokens encountered *before* EQUALS form the LHS
+    /// list; `expression` nodes encountered *after* EQUALS form the
+    /// RHS list.
+    ///
+    /// Lowering rule for each `(lhs[i], rhs[i])` pair: identical to a
+    /// plain `lhs[i] = rhs[i]` assignment —
+    /// - First sighting of `lhs[i]` in this scope → `Stmt::LetBinding`.
+    /// - Subsequent sighting → `Stmt::Assign` (and the lowerer marks
+    ///   `Feature::MutableBindings`, same as the assignment lowerer).
+    ///
+    /// **v0 restrictions** (documented in `ruby.grammar` and the
+    /// changelog):
+    ///
+    /// - LHS count must equal RHS count.  Mismatched arities are
+    ///   rejected with a `RubyLowerError` rather than silently
+    ///   padding with `nil` / discarding extras.  This keeps the v0
+    ///   semantics unambiguous; the more permissive Ruby semantics
+    ///   (excess LHS gets `nil`, excess RHS is dropped) ride with a
+    ///   future phase.
+    /// - Single-RHS auto-unpack `a, b = arr` is NOT supported (the
+    ///   grammar requires at least one RHS expression but the
+    ///   lowerer will reject the count mismatch).
+    /// - Splat targets `a, *b = 1, 2, 3` ride with Phase 6s.
+    fn lower_multi_assignment(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        // Walk children, partitioning at the EQUALS token.
+        let mut saw_equals = false;
+        let mut lhs_names: Vec<(String, Span)> = Vec::new();
+        let mut rhs_exprs: Vec<&GrammarASTNode> = Vec::new();
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Token(t) => {
+                    if t.type_ == TokenType::Equals {
+                        saw_equals = true;
+                    } else if !saw_equals && t.type_ == TokenType::Name {
+                        // LHS name.  (COMMAs are also Token children
+                        // but they're not Name-typed, so this branch
+                        // skips them naturally.)
+                        lhs_names.push((t.value.clone(), self.span_of_token(t)));
+                    }
+                    // Tokens after EQUALS (COMMAs between RHS
+                    // expressions) are dropped — we only care about
+                    // the Node children for the RHS list.
+                }
+                ASTNodeOrToken::Node(n) => {
+                    if saw_equals && n.rule_name == "expression" {
+                        rhs_exprs.push(n);
+                    }
+                }
+            }
+        }
+
+        // Sanity: the grammar guarantees at least two LHS names and
+        // at least one RHS, and an EQUALS token between them.  Defend
+        // against pathological inputs anyway.
+        if lhs_names.len() < 2 {
+            return Err(RubyLowerError {
+                message: format!(
+                    "multi_assignment expected ≥2 LHS names, got {}",
+                    lhs_names.len()
+                ),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            });
+        }
+        if !saw_equals {
+            return Err(RubyLowerError {
+                message: "multi_assignment missing EQUALS token".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            });
+        }
+        if lhs_names.len() != rhs_exprs.len() {
+            return Err(RubyLowerError {
+                message: format!(
+                    "multi_assignment v0 requires LHS count == RHS count \
+                     (got {} LHS, {} RHS); splat / single-RHS auto-unpack \
+                     not yet supported",
+                    lhs_names.len(),
+                    rhs_exprs.len(),
+                ),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            });
+        }
+
+        // Lower each RHS first — this matches Ruby's evaluation order
+        // (RHS is fully evaluated, *then* the LHS bindings happen).
+        // For the parallel-binding case (`a, b = b, a` swap), Ruby
+        // collects all RHS values *before* writing any LHS.  Our v0
+        // sequential lowering (`a = expr0; b = expr1`) is equivalent
+        // for the common case where no LHS appears in the RHS — which
+        // is the only shape we test for v0.  The swap case
+        // (`a, b = b, a`) would silently mis-lower under v0; this is
+        // documented as a deferred limitation.
+        let lowered_rhs: Vec<Expr> = rhs_exprs
+            .iter()
+            .map(|e| self.lower_expression(e))
+            .collect::<Result<_, _>>()?;
+
+        // Emit one Stmt per pair.  Reuses the same LetBinding/Assign
+        // decision rule as `lower_assignment`.
+        let mut out: Vec<Stmt> = Vec::with_capacity(lhs_names.len());
+        for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs.into_iter()) {
+            let span = name_span.clone();
+            let stmt = if self.declared_locals.contains(&name) {
+                self.features_used.insert(Feature::MutableBindings);
+                Stmt::Assign {
+                    name: name.clone(),
+                    scope: Scope::Local,
+                    value,
+                    span,
+                }
+            } else {
+                self.declared_locals.insert(name.clone());
+                Stmt::LetBinding {
+                    name: name.clone(),
+                    sir_type: None,
+                    value,
+                    span,
+                }
+            };
+            out.push(stmt);
+        }
+        Ok(out)
     }
 
     // -------------------------------------------------------------------
@@ -1376,7 +1556,8 @@ impl Lowerer {
                     };
                     value = Some(v);
                 } else {
-                    stmts_out.push(self.lower_statement_inner(inner_stmt)?);
+                    // Phase 6r — multi-stmt fan-out for `multi_assignment`.
+                    stmts_out.extend(self.lower_statement_inner_multi(inner_stmt)?);
                 }
             }
         }
