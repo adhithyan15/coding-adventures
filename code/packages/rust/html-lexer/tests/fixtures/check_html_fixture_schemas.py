@@ -571,6 +571,10 @@ def check_browser_content_node(
         "contenteditable",
         "draggable",
         "popover",
+        "popover_target",
+        "popover_target_action",
+        "command",
+        "command_for",
         "placeholder",
         "autocomplete",
         "accept",
@@ -612,6 +616,7 @@ def check_browser_content_node(
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
     require_optional_string_list(node_path, node, "sandbox", errors)
+    require_optional_string_list(node_path, node, "accesskey", errors)
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
@@ -634,6 +639,7 @@ def check_browser_content_node(
         "aria_hidden",
         "hidden",
         "inert",
+        "open",
         "focusable",
     ):
         require_optional_boolean(node_path, node, field, errors)
@@ -720,6 +726,10 @@ def check_browser_render_node(
         "contenteditable",
         "draggable",
         "popover",
+        "popover_target",
+        "popover_target_action",
+        "command",
+        "command_for",
         "placeholder",
         "autocomplete",
         "accept",
@@ -761,6 +771,7 @@ def check_browser_render_node(
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
     require_optional_string_list(node_path, node, "sandbox", errors)
+    require_optional_string_list(node_path, node, "accesskey", errors)
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
@@ -783,6 +794,7 @@ def check_browser_render_node(
         "aria_hidden",
         "hidden",
         "inert",
+        "open",
         "focusable",
     ):
         require_optional_boolean(node_path, node, field, errors)

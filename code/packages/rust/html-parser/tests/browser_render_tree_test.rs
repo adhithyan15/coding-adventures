@@ -123,7 +123,11 @@ struct ExpectedRenderNode {
     #[serde(default)]
     inert: bool,
     #[serde(default)]
+    open: bool,
+    #[serde(default)]
     tabindex: Option<String>,
+    #[serde(default)]
+    accesskey: Vec<String>,
     #[serde(default)]
     focusable: Option<bool>,
     #[serde(default)]
@@ -132,6 +136,14 @@ struct ExpectedRenderNode {
     draggable: Option<String>,
     #[serde(default)]
     popover: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
     #[serde(default)]
     placeholder: Option<String>,
     #[serde(default)]
@@ -314,11 +326,17 @@ impl ExpectedRenderNode {
             aria_hidden: self.aria_hidden,
             hidden: self.hidden,
             inert: self.inert,
+            open: self.open,
             tabindex: self.tabindex,
+            accesskey: self.accesskey,
             focusable: self.focusable,
             contenteditable: self.contenteditable,
             draggable: self.draggable,
             popover: self.popover,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            command: self.command,
+            command_for: self.command_for,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
             accept: self.accept,
