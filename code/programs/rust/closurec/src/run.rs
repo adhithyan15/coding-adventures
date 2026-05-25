@@ -19,8 +19,10 @@
 //! `read → lex → parse → typecheck → passes → emit → write`.
 //! The function signature doesn't change; only the body grows.
 
-use crate::config::CompilerConfig;
+use crate::config::{CompilationLevel, CompilerConfig};
 use crate::globs;
+use crate::whitespace_only;
+use coding_adventures_javascript_tokens::EsVersion;
 use std::fs;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -68,6 +70,9 @@ pub enum CompilerError {
     /// FS walk error). The inner [`globs::GlobError`] carries the
     /// specific reason and the offending pattern.
     GlobExpansion(globs::GlobError),
+    /// `--compilation_level WHITESPACE_ONLY` minification failed.
+    /// Carries the underlying [`whitespace_only::MinifyError`].
+    Minify(whitespace_only::MinifyError),
 }
 
 impl std::fmt::Display for CompilerError {
@@ -80,6 +85,7 @@ impl std::fmt::Display for CompilerError {
                 write!(f, "failed to write output {}: {message}", path.display())
             }
             CompilerError::GlobExpansion(e) => write!(f, "{e}"),
+            CompilerError::Minify(e) => write!(f, "{e}"),
         }
     }
 }
@@ -89,6 +95,65 @@ impl std::error::Error for CompilerError {}
 // ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
+
+/// Transform a single input source string per the config's
+/// `--compilation_level`.
+///
+/// # Level matrix (CLOC11.06)
+///
+/// | Level             | Transform                                   |
+/// |-------------------|---------------------------------------------|
+/// | `WhitespaceOnly`  | strip comments + collapse whitespace        |
+/// | `Simple`          | identity (CLOC11.07 lands real passes)      |
+/// | `Advanced`        | identity (CLOC11.08)                        |
+/// | `Bundle`          | identity (CLOC11.09)                        |
+/// | `TranspileOnly`   | identity (CLOC11.10)                        |
+///
+/// Mapping `config.language.language_in` → `EsVersion`:
+/// - `Stable` / `EcmascriptNext` / `Unstable` / anything missing →
+///   `EsVersion::latest()`.
+/// - A specific year → that EsVersion.
+///
+/// This mapping lives here (not in `wire.rs`) because it's
+/// transform-policy, not flag-mapping.
+pub fn transform_source(
+    source: &str,
+    config: &CompilerConfig,
+) -> Result<String, CompilerError> {
+    let es_version = map_language_in_to_es_version(config);
+    match config.compilation.level {
+        CompilationLevel::WhitespaceOnly => {
+            whitespace_only::whitespace_only_minify(source, es_version)
+                .map_err(CompilerError::Minify)
+        }
+        // CLOC11.07+ will replace each of these with real passes.
+        CompilationLevel::Simple
+        | CompilationLevel::Advanced
+        | CompilationLevel::Bundle
+        | CompilationLevel::TranspileOnly => Ok(source.to_string()),
+    }
+}
+
+/// Project the typed `LanguageVersion` enum into the
+/// `EsVersion` the lexer understands. Defaults to the latest
+/// known version for the shortcuts (`Stable`, `EcmascriptNext`,
+/// `Unstable`) so user code targeting "modern JS" never gets
+/// silently restricted.
+fn map_language_in_to_es_version(config: &CompilerConfig) -> EsVersion {
+    use crate::config::LanguageVersion as L;
+    match config.language.language_in {
+        L::Ecmascript3 => EsVersion::Es5, // closest available
+        L::Ecmascript5 | L::Ecmascript5Strict => EsVersion::Es5,
+        L::Ecmascript2015 => EsVersion::Es2015,
+        L::Ecmascript2016 => EsVersion::Es2016,
+        L::Ecmascript2017 => EsVersion::Es2017,
+        L::Ecmascript2018 => EsVersion::Es2018,
+        L::Ecmascript2019 => EsVersion::Es2019,
+        L::Ecmascript2020 => EsVersion::Es2020,
+        L::Ecmascript2021 => EsVersion::Es2021,
+        L::Stable | L::EcmascriptNext | L::Unstable | L::NoTranspile => EsVersion::latest(),
+    }
+}
 
 /// Resolve the list of input files from a `CompilerConfig`.
 ///
@@ -121,7 +186,16 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // produces zero matches.
     let inputs = resolve_inputs(config)?;
 
-    // Step 2: read every resolved input.
+    // Step 2: read every resolved input, then transform per
+    // --compilation_level (CLOC11.06+).
+    //
+    // Today's level dispatch:
+    //   - WHITESPACE_ONLY → strip comments + collapse whitespace
+    //     via the token-level minifier (whitespace_only.rs).
+    //   - All other levels → identity (concatenate verbatim).
+    //
+    // CLOC11.07+ replace the SIMPLE/ADVANCED arms with real
+    // lex/parse/typecheck/passes/emit pipelines.
     let mut combined = String::new();
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
@@ -129,10 +203,11 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             kind: e.kind(),
             message: e.to_string(),
         })?;
-        combined.push_str(&contents);
+        let transformed = transform_source(&contents, config)?;
+        combined.push_str(&transformed);
         // Closure separates concatenated inputs with a newline so
         // back-to-back files don't end up syntactically merged.
-        if !contents.ends_with('\n') {
+        if !transformed.ends_with('\n') {
             combined.push('\n');
         }
     }
