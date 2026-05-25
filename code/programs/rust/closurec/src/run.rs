@@ -216,19 +216,25 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // produces zero matches.
     let inputs = resolve_inputs(config)?;
 
-    // Step 1.5 (CLOC11.52): --print_tree short-circuit.
+    // Step 1.5 (CLOC11.52/.53): --print_tree / --print_tree_json
+    // short-circuit.
     //
     // CC's --print_tree dumps the parsed AST to stdout and exits
-    // without emitting JS. Until our parser produces the typed
-    // AST (CLOC11.07-ish bridges that), we emit the *token
-    // stream* — one significant token per line — which is the
-    // closest analogue the lexer can produce. Each input file
-    // gets a banner line so multi-file invocations are still
-    // navigable.
+    // without emitting JS. --print_tree_json does the same in
+    // JSON form. Until our parser produces the typed AST
+    // (CLOC11.07-ish bridges that), we emit the *token stream*
+    // — one significant token per line for text mode, an array
+    // of token objects for JSON mode — which is the closest
+    // analogue the lexer can produce.
     //
-    // No transform pipeline runs: --print_tree is purely a
+    // No transform pipeline runs: both flags are purely a
     // diagnostic readout of what the lexer sees, not what the
     // compilation level would do.
+    //
+    // If both flags are set, --print_tree (the older, simpler
+    // flag) wins. This is a defensive choice; CC errors on the
+    // conflict but emitting *something* is more useful than
+    // refusing.
     if config.special_modes.print_tree {
         let es_version = map_language_in_to_es_version(config);
         let mut dump = String::new();
@@ -250,6 +256,47 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     .map_err(CompilerError::PrintTree)?;
             dump.push_str(&one_file);
         }
+        return Ok(CompilerOutput {
+            stdout_text: dump,
+            wrote_files: Vec::new(),
+        });
+    }
+
+    if config.special_modes.print_tree_json {
+        let es_version = map_language_in_to_es_version(config);
+        let dump = if inputs.len() == 1 {
+            // Single-file: emit just the tokens array. This is
+            // what JSON consumers expect for the common case.
+            let path = &inputs[0];
+            let contents = fs::read_to_string(path).map_err(|e| {
+                CompilerError::InputReadError {
+                    path: path.clone(),
+                    kind: e.kind(),
+                    message: e.to_string(),
+                }
+            })?;
+            crate::print_tree::format_token_dump_json(&contents, es_version)
+                .map_err(CompilerError::PrintTree)?
+        } else {
+            // Multi-file: emit an array of file-objects (each
+            // carrying its path + tokens) so consumers can
+            // disambiguate. Reads all inputs upfront so a partial
+            // failure doesn't leave us with a half-formed JSON
+            // document on stdout.
+            let mut sources = Vec::with_capacity(inputs.len());
+            for path in &inputs {
+                let contents = fs::read_to_string(path).map_err(|e| {
+                    CompilerError::InputReadError {
+                        path: path.clone(),
+                        kind: e.kind(),
+                        message: e.to_string(),
+                    }
+                })?;
+                sources.push((path.to_string_lossy().into_owned(), contents));
+            }
+            crate::print_tree::format_token_dump_json_multi(&sources, es_version)
+                .map_err(CompilerError::PrintTree)?
+        };
         return Ok(CompilerOutput {
             stdout_text: dump,
             wrote_files: Vec::new(),
@@ -967,6 +1014,138 @@ mod tests {
             },
             special_modes: crate::config::SpecialModesConfig {
                 print_tree: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let err = run_compiler(&cfg).expect_err("lex error must surface");
+        match err {
+            CompilerError::PrintTree(_) => {}
+            other => panic!("expected PrintTree, got {other:?}"),
+        }
+        let _ = fs::remove_file(&in_path);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.53 — --print_tree_json behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn print_tree_json_single_file_emits_token_array() {
+        let in_path = temp_path("ptj-single.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree_json: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Single-file → just the array; no `path` wrapper.
+        assert!(out.stdout_text.starts_with("[\n"), "got: {:?}", out.stdout_text);
+        assert!(out.stdout_text.ends_with("]\n"));
+        assert!(!out.stdout_text.contains("\"path\""));
+        assert!(out.stdout_text.contains("\"type\""));
+        assert!(out.stdout_text.contains("\"value\": \"var\""));
+        assert!(out.wrote_files.is_empty());
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn print_tree_json_multi_file_wraps_in_file_objects() {
+        let a = temp_path("ptj-a.js");
+        let b = temp_path("ptj-b.js");
+        fs::write(&a, "var a;").expect("a");
+        fs::write(&b, "var b;").expect("b");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![
+                    a.to_string_lossy().to_string(),
+                    b.to_string_lossy().to_string(),
+                ],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree_json: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Multi-file → file-object wrappers with `path` + `tokens`.
+        assert!(out.stdout_text.contains("\"path\""));
+        assert!(out.stdout_text.contains("\"tokens\""));
+        assert_eq!(out.stdout_text.matches("\"path\"").count(), 2);
+        // Both files' identifiers appear.
+        assert!(out.stdout_text.contains("\"value\": \"a\""));
+        assert!(out.stdout_text.contains("\"value\": \"b\""));
+        let _ = fs::remove_file(&a);
+        let _ = fs::remove_file(&b);
+    }
+
+    #[test]
+    fn print_tree_json_skips_output_file_write() {
+        let in_path = temp_path("ptj-skip.js");
+        let out_path = temp_path("ptj-skip-out.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree_json: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.is_empty());
+        assert!(!out_path.exists());
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn print_tree_wins_when_both_flags_set() {
+        // Defensive precedence: --print_tree (older flag) wins
+        // when --print_tree_json is also set. Diagnoses by the
+        // banner-line marker, which JSON doesn't emit.
+        let in_path = temp_path("ptj-both.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree: true,
+                print_tree_json: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.stdout_text.contains("=== "), "text mode wins: {:?}", out.stdout_text);
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn print_tree_json_surfaces_lex_errors() {
+        let in_path = temp_path("ptj-broken.js");
+        fs::write(&in_path, "var s = \"unterminated").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                print_tree_json: true,
                 ..Default::default()
             },
             ..Default::default()

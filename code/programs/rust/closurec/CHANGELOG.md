@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.12.0] - 2026-05-25
+
+### Added — CLOC11.53: `--print_tree_json` JSON token-stream dump
+
+Third slice of Track 11 (special modes), companion to `--print_tree` from 0.11.0. When `--print_tree_json` is set, closurec dumps the lexer's token stream as a JSON document to stdout and exits. Same diagnostic intent as CC's `--print_tree_json` — until our parser produces the typed AST (CLOC11.07+ bridge), tokens are the closest analogue.
+
+- **Two wire shapes** depending on input count:
+  - **Single file** (typical): a bare JSON array of token objects:
+    ```json
+    [
+      {"type": "KEYWORD", "value": "var"},
+      {"type": "NAME", "value": "x"}
+    ]
+    ```
+  - **Multi-file**: an array of file-objects so consumers can disambiguate which tokens came from which file:
+    ```json
+    [
+      {"path": "a.js", "tokens": [{"type": "KEYWORD", "value": "var"}]},
+      {"path": "b.js", "tokens": [{"type": "KEYWORD", "value": "let"}]}
+    ]
+    ```
+- **Same trivia + EOF filter** as `--print_tree`. Comments/whitespace/newlines/indent/dedent never appear; significant tokens only.
+- **Hand-rolled JSON emission** (no `serde_json` dep) to keep the format byte-stable for diff fixtures. Escapes `"`, `\`, U+0000..U+001F (short forms for `\b \f \n \r \t`); non-ASCII printables pass through as UTF-8.
+- **Pipeline placement**: extends Step 1.5's short-circuit alongside `--print_tree`. If both flags are set, `--print_tree` (older, simpler) wins. Glob expansion still runs; the rest of the pipeline (transform, wrap, write) is skipped. `--js_output_file` is ignored.
+- **6 new unit tests** in `print_tree::tests` (empty → `[]`, one-object-per-token, trivia drop, quote/backslash escaping, control-char escape, bracket framing).
+- **5 new unit tests** in `run::tests` (single-file array, multi-file file-objects, no-write-when-output-file-set, both-flags-set precedence, lex-error surfaces).
+- **Diff fixture** `tests/diff/print-tree-json/` with `expected.stdout` pinned for `var x = 1;`.
+- **New integration test** `tests/diff_print_tree_json.rs`.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` glob patterns
+2. `--print_tree` short-circuit (CLOC11.52)
+3. **`--print_tree_json` short-circuit (CLOC11.53, NEW) — JSON token dump, return**
+4. Per-input `transform_source` (level + defines)
+5. Concatenate transformed inputs
+6. `--checks_only` short-circuit (CLOC11.51)
+7. `--emit_use_strict` prepend (CLOC11.18)
+8. `--output_wrapper` substitution (CLOC11.30)
+9. `--isolation_mode IIFE` wrap (CLOC11.31)
+10. Write to `--js_output_file` or stdout
+
 ## [0.11.0] - 2026-05-25
 
 ### Added — CLOC11.52: `--print_tree` token-stream dump
