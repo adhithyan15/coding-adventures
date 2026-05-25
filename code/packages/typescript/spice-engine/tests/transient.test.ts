@@ -29,6 +29,7 @@ import {
   pssNewtonIteration,
   pssNewtonSolve,
   pssNewtonUpdate,
+  poleZeroRlcHighpass,
   poleZeroRlcLowpass,
   poleZeroRcHighpass,
   poleZeroRcLowpass,
@@ -847,6 +848,54 @@ describe("transient", () => {
       inputSource: "Vin",
       outputNode: "out",
       entries: [
+        {
+          kind: "pole",
+          real: -alpha,
+          imaginary,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: alpha / omega0,
+        },
+        {
+          kind: "pole",
+          real: -alpha,
+          imaginary: -imaginary,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: alpha / omega0,
+        },
+      ],
+    });
+  });
+
+  it("computes origin zeros and complex conjugate poles for a series RLC high-pass fixture", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "mid", 10.0));
+    circuit.add(capacitor("C1", "mid", "out", 1.0e-6));
+    circuit.add(inductor("L1", "out", "0", 1.0e-3));
+
+    const result = poleZeroRlcHighpass(circuit, "Vin", "out");
+
+    const alpha = 10.0 / (2.0 * 1.0e-3);
+    const omega0 = 1.0 / Math.sqrt(1.0e-3 * 1.0e-6);
+    const imaginary = Math.sqrt(omega0 * omega0 - alpha * alpha);
+    expect(result).toEqual({
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: 0.0,
+          frequencyHz: 0.0,
+          damping: 1.0,
+        },
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: 0.0,
+          frequencyHz: 0.0,
+          damping: 1.0,
+        },
         {
           kind: "pole",
           real: -alpha,

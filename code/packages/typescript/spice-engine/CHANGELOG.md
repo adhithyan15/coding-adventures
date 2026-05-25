@@ -22,6 +22,9 @@
   constrained first-order high-pass fixture.
 - Add `poleZeroRlcLowpass`, which returns the second-order pole pair for a
   constrained series R-L / shunt-C low-pass fixture.
+- Add `poleZeroRlcHighpass`, which returns the double origin zero plus
+  second-order pole pair for a constrained series R-C / shunt-L high-pass
+  fixture.
 - Add MOS Level-1 capacitance support through `CGSO`, `CGDO`, `CGBO`, `CBS`,
   and `CBD`, contributing small-signal AC susceptance.
 - Add MOSFET channel thermal noise to `.NOISE` via the long-channel `4kTγgm`

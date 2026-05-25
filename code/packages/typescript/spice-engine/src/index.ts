@@ -949,6 +949,132 @@ export function poleZeroRlcLowpass(
   };
 }
 
+export function poleZeroRlcHighpass(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+): PoleZeroResult {
+  const source = circuit
+    .elements()
+    .find((element): element is VoltageSource => element.kind === "voltage-source" && element.name === inputSource);
+  if (source === undefined) {
+    throw new SpiceError(`poleZeroRlcHighpass: missing input source ${JSON.stringify(inputSource)}`, "INVALID_ELEMENT", inputSource);
+  }
+  if (!isGround(source.negative)) {
+    throw new SpiceError("poleZeroRlcHighpass: input source negative terminal must be ground", "INVALID_ELEMENT", inputSource);
+  }
+
+  let resistor: Resistor | undefined;
+  let intermediate: string | undefined;
+  for (const element of circuit.elements()) {
+    if (element.kind === "resistor" && (element.n1 === source.positive || element.n2 === source.positive)) {
+      const other = element.n1 === source.positive ? element.n2 : element.n1;
+      if (other !== outputNode && !isGround(other)) {
+        resistor = element;
+        intermediate = other;
+        break;
+      }
+    }
+  }
+  const capacitor = circuit
+    .elements()
+    .find(
+      (element): element is Capacitor =>
+        element.kind === "capacitor" &&
+        intermediate !== undefined &&
+        ((element.n1 === intermediate && element.n2 === outputNode) ||
+          (element.n2 === intermediate && element.n1 === outputNode)),
+    );
+  const inductor = circuit
+    .elements()
+    .find(
+      (element): element is Inductor =>
+        element.kind === "inductor" &&
+        (element.n1 === outputNode || element.n2 === outputNode) &&
+        (isGround(element.n1) || isGround(element.n2)),
+    );
+  if (resistor === undefined || capacitor === undefined || inductor === undefined) {
+    throw new SpiceError(
+      "poleZeroRlcHighpass: expected series resistor and capacitor from input to output plus one grounded output inductor",
+      "INVALID_ELEMENT",
+      outputNode,
+    );
+  }
+  if (!Number.isFinite(resistor.resistanceOhms) || resistor.resistanceOhms <= 0.0) {
+    throw new SpiceError("poleZeroRlcHighpass: resistance must be finite and positive", "INVALID_ELEMENT", resistor.name);
+  }
+  if (!Number.isFinite(capacitor.capacitanceFarads) || capacitor.capacitanceFarads <= 0.0) {
+    throw new SpiceError("poleZeroRlcHighpass: capacitance must be finite and positive", "INVALID_ELEMENT", capacitor.name);
+  }
+  if (!Number.isFinite(inductor.inductanceHenrys) || inductor.inductanceHenrys <= 0.0) {
+    throw new SpiceError("poleZeroRlcHighpass: inductance must be finite and positive", "INVALID_ELEMENT", inductor.name);
+  }
+
+  const alpha = resistor.resistanceOhms / (2.0 * inductor.inductanceHenrys);
+  const omega0 = 1.0 / Math.sqrt(inductor.inductanceHenrys * capacitor.capacitanceFarads);
+  const discriminant = alpha * alpha - omega0 * omega0;
+  const entries: PoleZeroEntry[] = [
+    {
+      kind: "zero",
+      real: 0.0,
+      imaginary: 0.0,
+      frequencyHz: 0.0,
+      damping: 1.0,
+    },
+    {
+      kind: "zero",
+      real: 0.0,
+      imaginary: 0.0,
+      frequencyHz: 0.0,
+      damping: 1.0,
+    },
+  ];
+  if (discriminant >= 0.0) {
+    const root = Math.sqrt(discriminant);
+    const first = -alpha + root;
+    const second = -alpha - root;
+    entries.push(
+      {
+        kind: "pole",
+        real: first,
+        imaginary: 0.0,
+        frequencyHz: Math.abs(first) / TWO_PI,
+        damping: 1.0,
+      },
+      {
+        kind: "pole",
+        real: second,
+        imaginary: 0.0,
+        frequencyHz: Math.abs(second) / TWO_PI,
+        damping: 1.0,
+      },
+    );
+  } else {
+    const imaginary = Math.sqrt(-discriminant);
+    entries.push(
+      {
+        kind: "pole",
+        real: -alpha,
+        imaginary,
+        frequencyHz: omega0 / TWO_PI,
+        damping: alpha / omega0,
+      },
+      {
+        kind: "pole",
+        real: -alpha,
+        imaginary: -imaginary,
+        frequencyHz: omega0 / TWO_PI,
+        damping: alpha / omega0,
+      },
+    );
+  }
+  return {
+    inputSource,
+    outputNode,
+    entries,
+  };
+}
+
 export function distortionFromFourier(
   result: FourierResult,
   inputSource: string,

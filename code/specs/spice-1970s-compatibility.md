@@ -294,6 +294,9 @@ Status:
 - The constrained Phase 8 pole-zero foothold now includes a second-order
   series R-L / shunt-C low-pass helper across Python, TypeScript, and Rust,
   including underdamped complex-conjugate pole fixtures.
+- The second-order Phase 8 pole-zero foothold now also covers a series R-C /
+  shunt-L high-pass helper across Python, TypeScript, and Rust, returning the
+  double origin zero plus the shared RLC pole pair.
 
 ### Phase 8 - Small-Signal Distortion and Pole-Zero
 
