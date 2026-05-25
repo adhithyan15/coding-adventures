@@ -1,6 +1,6 @@
 use spice_engine::{
-    mc_dc, Cccs, Ccvs, Circuit, CurrentSource, Element, McDistribution, McOptions, Resistor,
-    SpiceError, Vccs, Vcvs, VoltageSource,
+    mc_dc, mc_dc_corners, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Element,
+    McDistribution, McOptions, Resistor, SpiceError, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -129,6 +129,49 @@ fn mc_dc_reports_spread_near_nominal_divider_voltage() {
     assert!(result.mean > 4.5, "mean was {}", result.mean);
     assert!(result.mean < 5.5, "mean was {}", result.mean);
     assert!(result.std_dev > 0.0, "std_dev was {}", result.std_dev);
+}
+
+#[test]
+fn mc_dc_corners_runs_trials_per_corner() {
+    let result = mc_dc_corners(
+        &divider(),
+        "mid",
+        8,
+        McOptions {
+            tolerance: 0.0,
+            seed: Some(7),
+            ..McOptions::default()
+        },
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "vin-high",
+                vec![CornerOverride::new("Vin", "voltage", 12.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.output_node, "mid");
+    assert_eq!(result.points.len(), 3);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rbot-fast");
+    assert_eq!(result.points[2].corner_name, "vin-high");
+    assert_eq!(result.points[0].result.n_trials, 8);
+    assert_eq!(result.points[1].result.n_trials, 8);
+    assert_eq!(result.points[2].result.n_trials, 8);
+    assert_close(result.points[0].result.mean, 5.0);
+    assert_close(result.points[1].result.mean, 10.0 / 3.0);
+    assert_close(result.points[2].result.mean, 6.0);
+    assert!(result.points.iter().all(|point| point
+        .result
+        .points
+        .iter()
+        .all(|trial| trial.converged)));
 }
 
 #[test]
