@@ -151,6 +151,7 @@ from spice_engine import (
     estimate_period,
     format_dc_table,
     format_distortion_table,
+    format_fourier_table,
     format_pole_zero_table,
     format_transient_table,
     fourier,
@@ -6141,6 +6142,45 @@ def test_distortion_text_output_table_is_stable() -> None:
         "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
         "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
         "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+    )
+
+
+def test_fourier_text_output_table_is_stable() -> None:
+    result = FourierResult(
+        fundamental_frequency=1000.0,
+        start_time=0.0,
+        end_time=0.001,
+        probes=[
+            FourierProbeResult(
+                probe="V(out)",
+                dc=0.1,
+                harmonics=[
+                    FourierHarmonic(
+                        harmonic=1,
+                        frequency=1000.0,
+                        cosine=1.0,
+                        sine=0.0,
+                        magnitude=1.0,
+                        phase_degrees=0.0,
+                    ),
+                    FourierHarmonic(
+                        harmonic=2,
+                        frequency=2000.0,
+                        cosine=0.0,
+                        sine=-0.025,
+                        magnitude=0.025,
+                        phase_degrees=-90.0,
+                    ),
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert format_fourier_table(result) == (
+        "Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n"
+        "V(out)\t1\t1.000000e+03\t1.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\t1.000000e-01\t2.500000e-02\n"
+        "V(out)\t2\t2.000000e+03\t0.000000e+00\t-2.500000e-02\t2.500000e-02\t-9.000000e+01\t1.000000e-01\t2.500000e-02\n"
     )
 
 

@@ -29,6 +29,10 @@
   stable tab-separated row set for `.DISTO` harmonic magnitude, phase, and THD
   snapshots.
 
+- **Fourier text output table** — `format_fourier_table()` now emits a stable
+  tab-separated row set for `.FOUR` harmonic coefficients, magnitude, phase,
+  DC, and THD snapshots.
+
 - **JFET transient coverage** — source-follower transient fixtures now cover
   JFET participation in nonlinear companion-model solves.
 

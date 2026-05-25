@@ -15,8 +15,8 @@ source waveforms for transient analysis, ground aliases, node voltages,
 voltage source branch currents, Fourier post-processing for transient output,
 transient-to-distortion projection,
 constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
-stable text tables for selected node voltages, branch currents, pole-zero
-entries, and distortion harmonics,
+stable text tables for selected node voltages, branch currents, Fourier
+harmonics, pole-zero entries, and distortion harmonics,
 and backward-Euler reactive-element companion models.
 
 ```ts

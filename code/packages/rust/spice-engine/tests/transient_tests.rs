@@ -1,18 +1,20 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, estimate_period, format_dc_table,
-    format_distortion_table, format_pole_zero_table, format_transient_table, fourier,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element,
-    ExpWaveform, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
-    PoleZeroResult, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
-    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, VoltageSource, Waveform,
+    format_distortion_table, format_fourier_table, format_pole_zero_table, format_transient_table,
+    fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
+    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
+    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
+    CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
+    FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
+    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PssNewtonCandidateResult,
+    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
+    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
+    Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1424,6 +1426,43 @@ fn distortion_text_output_table_is_stable() {
     assert_eq!(
         format_distortion_table(&result),
         "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+    );
+}
+
+#[test]
+fn fourier_text_output_table_is_stable() {
+    let result = FourierResult {
+        fundamental_frequency_hz: 1000.0,
+        start_time: 0.0,
+        end_time: 0.001,
+        probes: vec![FourierProbeResult {
+            probe: "V(out)".to_string(),
+            dc: 0.1,
+            harmonics: vec![
+                FourierHarmonic {
+                    harmonic: 1,
+                    frequency_hz: 1000.0,
+                    cosine: 1.0,
+                    sine: 0.0,
+                    magnitude: 1.0,
+                    phase_degrees: 0.0,
+                },
+                FourierHarmonic {
+                    harmonic: 2,
+                    frequency_hz: 2000.0,
+                    cosine: 0.0,
+                    sine: -0.025,
+                    magnitude: 0.025,
+                    phase_degrees: -90.0,
+                },
+            ],
+            total_harmonic_distortion: 0.025,
+        }],
+    };
+
+    assert_eq!(
+        format_fourier_table(&result),
+        "Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\nV(out)\t1\t1.000000e+03\t1.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\t1.000000e-01\t2.500000e-02\nV(out)\t2\t2.000000e+03\t0.000000e+00\t-2.500000e-02\t2.500000e-02\t-9.000000e+01\t1.000000e-01\t2.500000e-02\n"
     );
 }
 
