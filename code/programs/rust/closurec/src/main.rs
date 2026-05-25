@@ -66,12 +66,14 @@ use std::process::ExitCode;
 // CLOC11.02 added `globs` for --js pattern expansion.
 // CLOC11.06 added `whitespace_only` for --compilation_level WHITESPACE_ONLY.
 // CLOC11.19 added `defines` for --define / -D value substitution.
+// CLOC11.30 added `wrapper` for --output_wrapper / --output_wrapper_file.
 pub mod config;
 pub mod defines;
 pub mod globs;
 pub mod run;
 pub mod whitespace_only;
 pub mod wire;
+pub mod wrapper;
 
 /// The cli-builder JSON spec, embedded at compile time. This is
 /// the single source of truth for closurec's flag surface; it

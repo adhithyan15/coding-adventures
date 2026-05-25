@@ -1,0 +1,4 @@
+--output_wrapper
+(function(){%output%})();
+--js
+tests/diff/output-wrapper/input/a.js
