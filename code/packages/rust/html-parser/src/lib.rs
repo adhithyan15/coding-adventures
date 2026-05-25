@@ -1038,6 +1038,7 @@ pub struct BrowserContentNode {
     pub enterkeyhint: Option<String>,
     pub dirname: Option<String>,
     pub accept: Option<String>,
+    pub capture: Option<String>,
     pub inputmode: Option<String>,
     pub pattern: Option<String>,
     pub min: Option<String>,
@@ -1171,6 +1172,7 @@ pub struct BrowserRenderNode {
     pub enterkeyhint: Option<String>,
     pub dirname: Option<String>,
     pub accept: Option<String>,
+    pub capture: Option<String>,
     pub inputmode: Option<String>,
     pub pattern: Option<String>,
     pub min: Option<String>,
@@ -1315,6 +1317,12 @@ pub struct BrowserFormControl {
     pub enterkeyhint: Option<String>,
     pub dirname: Option<String>,
     pub accept: Option<String>,
+    pub capture: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
     pub inputmode: Option<String>,
     pub pattern: Option<String>,
     pub min: Option<String>,
@@ -1529,6 +1537,7 @@ impl BrowserRenderNode {
             enterkeyhint: content_node.enterkeyhint.clone(),
             dirname: content_node.dirname.clone(),
             accept: content_node.accept.clone(),
+            capture: content_node.capture.clone(),
             inputmode: content_node.inputmode.clone(),
             pattern: content_node.pattern.clone(),
             min: content_node.min.clone(),
@@ -9201,6 +9210,7 @@ fn collect_browser_content_nodes_with_mode(
                         enterkeyhint: None,
                         dirname: None,
                         accept: None,
+                        capture: None,
                         inputmode: None,
                         pattern: None,
                         min: None,
@@ -9404,6 +9414,7 @@ fn browser_content_node_for_element(
         enterkeyhint: browser_enterkeyhint(element),
         dirname: browser_dirname(element),
         accept: browser_control_accept(element),
+        capture: browser_control_capture(element),
         inputmode: browser_control_inputmode(element),
         pattern: browser_control_pattern(element),
         min: browser_control_min(element),
@@ -10358,6 +10369,14 @@ fn browser_control_accept(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_control_capture(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("capture").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
 fn browser_control_inputmode(element: &Element) -> Option<String> {
     if matches!(element.name.as_str(), "input" | "textarea") {
         element.attribute("inputmode").map(ToOwned::to_owned)
@@ -10727,6 +10746,14 @@ fn browser_form_control(
         enterkeyhint: browser_enterkeyhint(element),
         dirname: browser_dirname(element),
         accept: browser_control_accept(element),
+        capture: browser_control_capture(element),
+        resolved_src: browser_content_src(element)
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src: browser_content_src(element),
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
         inputmode: browser_control_inputmode(element),
         pattern: browser_control_pattern(element),
         min: browser_control_min(element),
@@ -11500,10 +11527,12 @@ mod tests {
              autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
              <fieldset><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
              <select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select>\
-             <input id=upload type=file name=upload accept=\"image/png,image/jpeg\">\
+             <input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment>\
              <button id=go type=submit aria-label=\"Run search\" formaction=run.html \
              formenctype=\"application/x-www-form-urlencoded\" formmethod=post \
-             formtarget=results formnovalidate>Go</button></form>\
+             formtarget=results formnovalidate>Go</button>\
+             <input id=imageGo type=image name=image-go src=buttons/search.png \
+             alt=\"Search image\" width=32 height=16></form>\
              <input id=external form=f name=outside placeholder=Outside>",
         )
         .unwrap();
@@ -11550,6 +11579,7 @@ mod tests {
         assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));
         assert_eq!(controls[4].control_type, "file");
         assert_eq!(controls[4].accept.as_deref(), Some("image/png,image/jpeg"));
+        assert_eq!(controls[4].capture.as_deref(), Some("environment"));
         assert_eq!(controls[5].accessible_name.as_deref(), Some("Run search"));
         assert_eq!(controls[5].form_action.as_deref(), Some("run.html"));
         assert_eq!(
@@ -11563,6 +11593,16 @@ mod tests {
         assert_eq!(controls[5].form_method.as_deref(), Some("post"));
         assert_eq!(controls[5].form_target.as_deref(), Some("results"));
         assert!(controls[5].form_novalidate);
+        assert_eq!(controls[6].control_type, "image");
+        assert_eq!(controls[6].name.as_deref(), Some("image-go"));
+        assert_eq!(controls[6].src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            controls[6].resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(controls[6].alt.as_deref(), Some("Search image"));
+        assert_eq!(controls[6].width.as_deref(), Some("32"));
+        assert_eq!(controls[6].height.as_deref(), Some("16"));
 
         let content_tree = BrowserContentTree::from_document(&document);
         let form = &content_tree.children[0];
@@ -11599,6 +11639,7 @@ mod tests {
         assert_eq!(select.accessible_name.as_deref(), Some("Kind"));
         let upload = &form.children[5];
         assert_eq!(upload.accept.as_deref(), Some("image/png,image/jpeg"));
+        assert_eq!(upload.capture.as_deref(), Some("environment"));
         let button = &form.children[6];
         assert_eq!(button.form_action.as_deref(), Some("run.html"));
         assert_eq!(
@@ -11606,6 +11647,16 @@ mod tests {
             Some("https://example.test/search/run.html")
         );
         assert!(button.form_novalidate);
+        let image_button = &form.children[7];
+        assert_eq!(image_button.control_type.as_deref(), Some("image"));
+        assert_eq!(image_button.src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            image_button.resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(image_button.alt.as_deref(), Some("Search image"));
+        assert_eq!(image_button.width.as_deref(), Some("32"));
+        assert_eq!(image_button.height.as_deref(), Some("16"));
         let external = &content_tree.children[1];
         assert_eq!(external.form_owner.as_deref(), Some("f"));
         assert_eq!(external.accessible_name.as_deref(), Some("Outside"));
