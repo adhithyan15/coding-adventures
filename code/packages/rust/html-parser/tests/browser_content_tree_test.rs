@@ -44,6 +44,20 @@ struct ExpectedContentNode {
     href: Option<String>,
     #[serde(default)]
     resolved_href: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    download: Option<String>,
+    #[serde(default)]
+    ping: Vec<String>,
+    #[serde(default)]
+    resolved_ping: Vec<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
     src: Option<String>,
     #[serde(default)]
     resolved_src: Option<String>,
@@ -292,6 +306,13 @@ impl ExpectedContentNode {
             text: self.text,
             href: self.href,
             resolved_href: self.resolved_href,
+            target: self.target,
+            rel: self.rel,
+            rel_tokens: self.rel_tokens,
+            download: self.download,
+            ping: self.ping,
+            resolved_ping: self.resolved_ping,
+            hreflang: self.hreflang,
             src: self.src,
             resolved_src: self.resolved_src,
             alt: self.alt,

@@ -243,7 +243,19 @@ struct ExpectedLink {
     name: Option<String>,
     target: Option<String>,
     rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
     title: Option<String>,
+    #[serde(default)]
+    download: Option<String>,
+    #[serde(default)]
+    ping: Vec<String>,
+    #[serde(default)]
+    resolved_ping: Vec<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
     text: String,
 }
 
@@ -666,7 +678,13 @@ impl ExpectedLink {
             name: self.name,
             target: self.target,
             rel: self.rel,
+            rel_tokens: self.rel_tokens,
             title: self.title,
+            download: self.download,
+            ping: self.ping,
+            resolved_ping: self.resolved_ping,
+            hreflang: self.hreflang,
+            type_hint: self.type_hint,
             text: self.text,
         }
     }

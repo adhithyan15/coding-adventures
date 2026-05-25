@@ -970,6 +970,13 @@ pub struct BrowserContentNode {
     pub text: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
+    pub target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub hreflang: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
@@ -1092,6 +1099,13 @@ pub struct BrowserRenderNode {
     pub text: Option<String>,
     pub href: Option<String>,
     pub resolved_href: Option<String>,
+    pub target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub hreflang: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
@@ -1208,7 +1222,13 @@ pub struct BrowserLink {
     pub name: Option<String>,
     pub target: Option<String>,
     pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
     pub title: Option<String>,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub hreflang: Option<String>,
+    pub type_hint: Option<String>,
     pub text: String,
 }
 
@@ -1429,6 +1449,13 @@ impl BrowserRenderNode {
             text: content_node.text.clone(),
             href: content_node.href.clone(),
             resolved_href: content_node.resolved_href.clone(),
+            target: content_node.target.clone(),
+            rel: content_node.rel.clone(),
+            rel_tokens: content_node.rel_tokens.clone(),
+            download: content_node.download.clone(),
+            ping: content_node.ping.clone(),
+            resolved_ping: content_node.resolved_ping.clone(),
+            hreflang: content_node.hreflang.clone(),
             src: content_node.src.clone(),
             resolved_src: content_node.resolved_src.clone(),
             alt: content_node.alt.clone(),
@@ -8466,7 +8493,16 @@ fn collect_browser_facts(
                 name: element.attribute("name").map(ToOwned::to_owned),
                 target: element.attribute("target").map(ToOwned::to_owned),
                 rel: element.attribute("rel").map(ToOwned::to_owned),
+                rel_tokens: browser_rel_tokens(element),
                 title: element.attribute("title").map(ToOwned::to_owned),
+                download: browser_anchor_download(element),
+                resolved_ping: browser_anchor_ping(element)
+                    .into_iter()
+                    .filter_map(|ping| resolve_browser_url(&ping, summary.base_href.as_deref()))
+                    .collect(),
+                ping: browser_anchor_ping(element),
+                hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+                type_hint: element.attribute("type").map(ToOwned::to_owned),
                 text: visible_text_for_nodes(&element.children),
             }),
             "picture" => {
@@ -9081,6 +9117,13 @@ fn collect_browser_content_nodes_with_mode(
                         text: Some(text),
                         href: None,
                         resolved_href: None,
+                        target: None,
+                        rel: None,
+                        rel_tokens: Vec::new(),
+                        download: None,
+                        ping: Vec::new(),
+                        resolved_ping: Vec::new(),
+                        hreflang: None,
                         src: None,
                         resolved_src: None,
                         alt: None,
@@ -9266,6 +9309,16 @@ fn browser_content_node_for_element(
             .as_deref()
             .and_then(|href| resolve_browser_url(href, base_href)),
         href,
+        target: browser_anchor_target(element),
+        rel: browser_anchor_rel(element),
+        rel_tokens: browser_anchor_rel_tokens(element),
+        download: browser_anchor_download(element),
+        resolved_ping: browser_anchor_ping(element)
+            .into_iter()
+            .filter_map(|ping| resolve_browser_url(&ping, base_href))
+            .collect(),
+        ping: browser_anchor_ping(element),
+        hreflang: browser_anchor_hreflang(element),
         resolved_src: src
             .as_deref()
             .and_then(|src| resolve_browser_url(src, base_href)),
@@ -9698,12 +9751,16 @@ fn browser_link_is_stylesheet(element: &Element) -> bool {
 }
 
 fn browser_rel_contains(element: &Element, token: &str) -> bool {
+    browser_rel_tokens(element)
+        .iter()
+        .any(|candidate| candidate.eq_ignore_ascii_case(token))
+}
+
+fn browser_rel_tokens(element: &Element) -> Vec<String> {
     element
         .attribute("rel")
         .map(split_html_classes)
         .unwrap_or_default()
-        .iter()
-        .any(|candidate| candidate.eq_ignore_ascii_case(token))
 }
 
 fn element_text_if_non_empty(element: &Element) -> Option<String> {
@@ -10021,6 +10078,53 @@ fn browser_command(element: &Element) -> Option<String> {
 
 fn browser_command_for(element: &Element) -> Option<String> {
     element.attribute("commandfor").map(ToOwned::to_owned)
+}
+
+fn is_browser_anchor_navigation_element(element: &Element) -> bool {
+    matches!(element.name.as_str(), "a" | "area")
+}
+
+fn browser_anchor_target(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("target").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_anchor_rel(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("rel").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_anchor_rel_tokens(element: &Element) -> Vec<String> {
+    if is_browser_anchor_navigation_element(element) {
+        browser_rel_tokens(element)
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_anchor_download(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("download").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_anchor_ping(element: &Element) -> Vec<String> {
+    if is_browser_anchor_navigation_element(element) {
+        element
+            .attribute("ping")
+            .map(split_html_classes)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_anchor_hreflang(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("hreflang").map(ToOwned::to_owned))
+        .flatten()
 }
 
 fn browser_editing_mode(element: &Element) -> Option<String> {
@@ -10882,6 +10986,62 @@ mod tests {
             resolve_browser_url("relative.html", Some("/local/base/")),
             None
         );
+    }
+
+    #[test]
+    fn browser_anchor_navigation_metadata_tracks_targets_and_pings() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/current.html\">\
+             <body><p>Go <a id=next href=next.html target=_blank rel=\"next external noopener\" \
+             title=\"Next page\" download=next.html ping=\"audit.html https://metrics.example/p\" \
+             hreflang=en-US type=text/html>Next</a></p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let link = &summary.links[0];
+        assert_eq!(link.href.as_deref(), Some("next.html"));
+        assert_eq!(
+            link.resolved_href.as_deref(),
+            Some("https://example.test/docs/next.html")
+        );
+        assert_eq!(link.target.as_deref(), Some("_blank"));
+        assert_eq!(link.rel.as_deref(), Some("next external noopener"));
+        assert_eq!(link.rel_tokens, vec!["next", "external", "noopener"]);
+        assert_eq!(link.download.as_deref(), Some("next.html"));
+        assert_eq!(link.ping, vec!["audit.html", "https://metrics.example/p"]);
+        assert_eq!(
+            link.resolved_ping,
+            vec![
+                "https://example.test/docs/audit.html",
+                "https://metrics.example/p"
+            ]
+        );
+        assert_eq!(link.hreflang.as_deref(), Some("en-US"));
+        assert_eq!(link.type_hint.as_deref(), Some("text/html"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let content_link = &content_tree.children[0].children[1];
+        assert_eq!(content_link.target.as_deref(), Some("_blank"));
+        assert_eq!(
+            content_link.rel_tokens,
+            vec!["next", "external", "noopener"]
+        );
+        assert_eq!(content_link.download.as_deref(), Some("next.html"));
+        assert_eq!(
+            content_link.resolved_ping,
+            vec![
+                "https://example.test/docs/audit.html",
+                "https://metrics.example/p"
+            ]
+        );
+        assert_eq!(content_link.hreflang.as_deref(), Some("en-US"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let render_link = &render_tree.children[0].children[1];
+        assert_eq!(render_link.target.as_deref(), Some("_blank"));
+        assert_eq!(render_link.rel_tokens, vec!["next", "external", "noopener"]);
+        assert_eq!(render_link.download.as_deref(), Some("next.html"));
     }
 
     #[test]
