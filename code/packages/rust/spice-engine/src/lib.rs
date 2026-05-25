@@ -3428,6 +3428,27 @@ pub fn format_noise_table(result: &NoiseResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_sens_table(result: &SensResult) -> String {
+    let mut rows = vec![
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity"
+            .to_string(),
+    ];
+    for entry in &result.entries {
+        rows.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            result.output_node,
+            format_table_number(result.nominal_voltage),
+            entry.element_name,
+            entry.parameter,
+            format_table_number(entry.nominal_value),
+            format_table_number(entry.sensitivity),
+            format_table_number(entry.relative_sensitivity)
+        ));
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
     for (index, entry) in result.entries.iter().enumerate() {

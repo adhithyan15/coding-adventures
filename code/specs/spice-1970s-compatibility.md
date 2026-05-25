@@ -314,6 +314,9 @@ Status:
 - `.NOISE` results can now be rendered as stable tab-separated text tables in
   the live Rust SPICE package, covering total output noise, input-referred
   noise, and per-source PSD contribution rows.
+- `.SENS` results can now be rendered as stable tab-separated text tables in
+  the live Rust SPICE package, covering nominal values, absolute
+  sensitivities, and relative sensitivities.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
