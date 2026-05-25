@@ -5164,4 +5164,256 @@ mod tests {
             r.output
         );
     }
+
+    // =================================================================
+    // UI32-K-qt — `--emit-project` Qt6 + CMake shell tests
+    //
+    // Covers UI32 spec §3.1-§3.8 per-PR gates:
+    //   §3.4 Composable     : default options = no project shell.
+    //   §3.5 Banner          : every emitted file starts with banner.
+    //   §3.1 Reproducible    : two runs produce byte-identical output.
+    //   §3.6.2 Qt row        : CMake target + qmldir module name shape
+    //                          (PascalCase, no hyphen).
+    //   §3.6.3 Pinning       : CMakeLists.txt has pinned Qt6 + CMake +
+    //                          C++ standard.
+    //   §3.7 Output paths    : only the spec §2.2 enumeration.
+    //   §3.8 No env reads    : no /Users/, $HOME, etc. in output.
+    // =================================================================
+
+    /// Small helper for the UI32 tests: build a minimal HostScroll-
+    /// rooted layout (Qt's bare primitive set requires a root that
+    /// the emitter knows; Box is fine).
+    fn ui32_simple_layout(name: &str) -> LayoutDef {
+        LayoutDef {
+            component_name: name.to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        }
+    }
+
+    #[test]
+    fn ui32_emit_project_false_is_backward_compatible_with_from_pipeline() {
+        let m = component("X", vec![], vec![]);
+        let l = ui32_simple_layout("X");
+        let s = empty_style("X");
+
+        let legacy = from_pipeline(&m, &l, &s).unwrap();
+        let extended =
+            from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+
+        assert_eq!(legacy.output, extended.output, ".qml bytes diverged");
+        assert_eq!(legacy.component_name, extended.component_name);
+        assert!(
+            extended.project.is_none(),
+            "default options must NOT emit a project shell"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_true_returns_project_files() {
+        let m = component("Hello", vec![], vec![]);
+        let l = ui32_simple_layout("Hello");
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert!(r.project.is_some(), "emit_project: true must produce a shell");
+    }
+
+    #[test]
+    fn ui32_every_emitted_side_file_carries_auto_generated_banner() {
+        let m = component("Hello", vec![], vec![]);
+        let l = ui32_simple_layout("Hello");
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .expect("project shell expected");
+
+        // CMakeLists.txt uses `#` for comments.
+        assert!(
+            proj.cmake_lists.starts_with("# AUTO-GENERATED"),
+            "CMakeLists.txt must START with `# AUTO-GENERATED`"
+        );
+        // main.cpp uses `//` for comments.
+        assert!(
+            proj.main_cpp.starts_with("// AUTO-GENERATED"),
+            "main.cpp must START with `// AUTO-GENERATED`"
+        );
+        // qmldir uses `#` for comments.
+        assert!(
+            proj.qmldir.starts_with("# AUTO-GENERATED"),
+            "qmldir must START with `# AUTO-GENERATED`"
+        );
+        // README.md uses HTML-comment syntax.
+        assert!(
+            proj.readme.starts_with("<!-- AUTO-GENERATED"),
+            "README.md must START with banner"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_is_byte_deterministic() {
+        let m = component("Deterministic", vec![], vec![]);
+        let l = ui32_simple_layout("Deterministic");
+        let s = empty_style("Deterministic");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert_eq!(a.output, b.output, ".qml is not deterministic");
+        assert_eq!(a.project, b.project, "project shell is not deterministic");
+    }
+
+    /// §3.6.2 Qt row: the QML module URI is `Mosaic.<Component>`,
+    /// and the CMake target uses the bare component name. Both
+    /// flow from the upstream-validated ASCII identifier shape.
+    #[test]
+    fn ui32_qmldir_and_cmake_use_pascal_component_name() {
+        let m = component("ProfileCard", vec![], vec![]);
+        let l = ui32_simple_layout("ProfileCard");
+        let s = empty_style("ProfileCard");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        // qmldir carries the module URI + the component export.
+        assert!(
+            proj.qmldir.contains("module Mosaic.ProfileCard"),
+            "qmldir must declare module `Mosaic.ProfileCard`, got:\n{}",
+            proj.qmldir
+        );
+        assert!(
+            proj.qmldir.contains("ProfileCard 1.0 ProfileCard.qml"),
+            "qmldir must export ProfileCard at version 1.0, got:\n{}",
+            proj.qmldir
+        );
+        // CMake target uses the component name (no hyphen — the
+        // upstream validator excludes them, which keeps CMake happy).
+        assert!(
+            proj.cmake_lists.contains("project(ProfileCard"),
+            "CMakeLists.txt must declare `project(ProfileCard ...)`"
+        );
+        assert!(
+            proj.cmake_lists.contains("qt_add_executable(ProfileCard"),
+            "CMakeLists.txt must add executable `ProfileCard`"
+        );
+    }
+
+    /// §3.6.3 Pinning. CMakeLists.txt carries the default pinned
+    /// Qt + CMake + C++ versions.
+    #[test]
+    fn ui32_cmake_lists_carries_pinned_default_versions_exactly() {
+        let m = component("X", vec![], vec![]);
+        let l = ui32_simple_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.cmake_lists.contains("cmake_minimum_required(VERSION 3.21)"),
+            "expected CMake minimum 3.21"
+        );
+        assert!(
+            proj.cmake_lists.contains("find_package(Qt6 6.7 REQUIRED"),
+            "expected Qt6 6.7 pin"
+        );
+        assert!(
+            proj.cmake_lists.contains("set(CMAKE_CXX_STANDARD 17)"),
+            "expected C++17 standard"
+        );
+    }
+
+    /// §3.7 Output paths tripwire.
+    #[test]
+    fn ui32_project_files_struct_exposes_only_spec_22_qt_files() {
+        let m = component("X", vec![], vec![]);
+        let l = ui32_simple_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let ProjectFiles {
+            cmake_lists,
+            main_cpp,
+            qmldir,
+            readme,
+        } = proj;
+        assert!(!cmake_lists.is_empty(), "CMakeLists.txt empty");
+        assert!(!main_cpp.is_empty(), "main.cpp empty");
+        assert!(!qmldir.is_empty(), "qmldir empty");
+        assert!(!readme.is_empty(), "README.md empty");
+    }
+
+    #[test]
+    fn ui32_emitted_files_contain_no_environment_specific_strings() {
+        let m = component("X", vec![], vec![]);
+        let l = ui32_simple_layout("X");
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let all = format!(
+            "{}\n{}\n{}\n{}",
+            proj.cmake_lists, proj.main_cpp, proj.qmldir, proj.readme
+        );
+        for banned in ["/Users/", "/home/", "C:\\Users\\", "$HOME"] {
+            assert!(
+                !all.contains(banned),
+                "emitted shell contains environment-specific fragment `{banned}`"
+            );
+        }
+    }
+
+    /// main.cpp loads the component from the embedded QML module via
+    /// `qrc:/qt/qml/Mosaic/<Component>/<Component>.qml`. This is the
+    /// path `qt_add_qml_module` exposes when given URI `Mosaic.<X>`.
+    #[test]
+    fn ui32_main_cpp_loads_component_from_embedded_qml_module() {
+        let m = component("MyWidget", vec![], vec![]);
+        let l = ui32_simple_layout("MyWidget");
+        let s = empty_style("MyWidget");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        // The qrc path uses slashes (not dots) to navigate the
+        // embedded resource tree.
+        assert!(
+            proj.main_cpp
+                .contains("qrc:/qt/qml/Mosaic/MyWidget/MyWidget.qml"),
+            "main.cpp must reference qrc:/qt/qml/Mosaic/MyWidget/MyWidget.qml, got:\n{}",
+            proj.main_cpp
+        );
+        // Must use QGuiApplication + QQmlApplicationEngine (the
+        // bare-metal Qt6 GUI bootstrap).
+        assert!(
+            proj.main_cpp.contains("QGuiApplication"),
+            "main.cpp must use QGuiApplication"
+        );
+        assert!(
+            proj.main_cpp.contains("QQmlApplicationEngine"),
+            "main.cpp must use QQmlApplicationEngine"
+        );
+    }
 }
