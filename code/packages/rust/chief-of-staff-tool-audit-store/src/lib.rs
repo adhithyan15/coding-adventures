@@ -4388,6 +4388,63 @@ impl ToolAuditSupervisorDrainRunReport {
         !self.host_run_escalation_labels_match()
     }
 
+    /// Return the compact host-run escalation digest.
+    pub fn host_run_escalation_digest(&self) -> ToolAuditSupervisorDrainHostRunEscalationDigest {
+        ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            self.host_run_escalation_kind(),
+            self.host_run_supervision_key(),
+        )
+    }
+
+    /// Return the stable host-run escalation digest label.
+    pub fn host_run_escalation_digest_label(&self) -> String {
+        self.host_run_escalation_digest().label()
+    }
+
+    /// Return whether the escalation digest label parses back to the typed digest.
+    pub fn host_run_escalation_digest_label_matches_digest(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDigest::from_label(
+            &self.host_run_escalation_digest_label(),
+        ) == Some(self.host_run_escalation_digest())
+    }
+
+    /// Return whether the escalation digest's escalation component matches.
+    pub fn host_run_escalation_digest_kind_matches_kind(&self) -> bool {
+        self.host_run_escalation_digest()
+            .escalation_kind_matches(self.host_run_escalation_kind())
+    }
+
+    /// Return whether the escalation digest's supervision component matches.
+    pub fn host_run_escalation_digest_supervision_matches_key(&self) -> bool {
+        self.host_run_escalation_digest()
+            .supervision_key_matches(self.host_run_supervision_key())
+    }
+
+    /// Return whether every escalation digest component matches its source classifier.
+    pub fn host_run_escalation_digest_parts_match(&self) -> bool {
+        self.host_run_escalation_digest().parts_match(
+            self.host_run_escalation_kind(),
+            self.host_run_supervision_key(),
+        )
+    }
+
+    /// Return whether any escalation digest component drifted.
+    pub fn has_host_run_escalation_digest_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_digest_parts_match()
+    }
+
+    /// Return whether host-run escalation digest labels match their source classifiers.
+    pub fn host_run_escalation_digest_labels_match(&self) -> bool {
+        self.host_run_escalation_labels_match()
+            && self.host_run_escalation_digest_label_matches_digest()
+            && self.host_run_escalation_digest_parts_match()
+    }
+
+    /// Return whether any host-run escalation digest label drifted.
+    pub fn has_host_run_escalation_digest_label_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_digest_labels_match()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -5205,6 +5262,20 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_escalation_labels_match: self.host_run_escalation_labels_match(),
             has_host_run_escalation_label_integrity_drift: self
                 .has_host_run_escalation_label_integrity_drift(),
+            host_run_escalation_digest: self.host_run_escalation_digest(),
+            host_run_escalation_digest_label: self.host_run_escalation_digest_label(),
+            host_run_escalation_digest_label_matches_digest: self
+                .host_run_escalation_digest_label_matches_digest(),
+            host_run_escalation_digest_kind_matches_kind: self
+                .host_run_escalation_digest_kind_matches_kind(),
+            host_run_escalation_digest_supervision_matches_key: self
+                .host_run_escalation_digest_supervision_matches_key(),
+            host_run_escalation_digest_parts_match: self.host_run_escalation_digest_parts_match(),
+            has_host_run_escalation_digest_integrity_drift: self
+                .has_host_run_escalation_digest_integrity_drift(),
+            host_run_escalation_digest_labels_match: self.host_run_escalation_digest_labels_match(),
+            has_host_run_escalation_digest_label_integrity_drift: self
+                .has_host_run_escalation_digest_label_integrity_drift(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -6602,6 +6673,24 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_labels_match: bool,
     /// Whether any host-run escalation label drifted.
     pub has_host_run_escalation_label_integrity_drift: bool,
+    /// Compact escalation digest for the full host run.
+    pub host_run_escalation_digest: ToolAuditSupervisorDrainHostRunEscalationDigest,
+    /// Stable host-run escalation digest label.
+    pub host_run_escalation_digest_label: String,
+    /// Whether the escalation digest label parses back to the typed digest.
+    pub host_run_escalation_digest_label_matches_digest: bool,
+    /// Whether the escalation digest's escalation component matches.
+    pub host_run_escalation_digest_kind_matches_kind: bool,
+    /// Whether the escalation digest's supervision component matches.
+    pub host_run_escalation_digest_supervision_matches_key: bool,
+    /// Whether every escalation digest component matches its source classifier.
+    pub host_run_escalation_digest_parts_match: bool,
+    /// Whether any escalation digest component drifted.
+    pub has_host_run_escalation_digest_integrity_drift: bool,
+    /// Whether host-run escalation digest labels match their source classifiers.
+    pub host_run_escalation_digest_labels_match: bool,
+    /// Whether any host-run escalation digest label drifted.
+    pub has_host_run_escalation_digest_label_integrity_drift: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -9071,6 +9160,51 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any host-run escalation label drifted.
     pub fn has_host_run_escalation_label_integrity_drift(&self) -> bool {
         self.has_host_run_escalation_label_integrity_drift
+    }
+
+    /// Return the compact host-run escalation digest.
+    pub fn host_run_escalation_digest(&self) -> ToolAuditSupervisorDrainHostRunEscalationDigest {
+        self.host_run_escalation_digest
+    }
+
+    /// Return the stable host-run escalation digest label.
+    pub fn host_run_escalation_digest_label(&self) -> &str {
+        &self.host_run_escalation_digest_label
+    }
+
+    /// Return whether the escalation digest label parses back to the typed digest.
+    pub fn host_run_escalation_digest_label_matches_digest(&self) -> bool {
+        self.host_run_escalation_digest_label_matches_digest
+    }
+
+    /// Return whether the escalation digest's escalation component matches.
+    pub fn host_run_escalation_digest_kind_matches_kind(&self) -> bool {
+        self.host_run_escalation_digest_kind_matches_kind
+    }
+
+    /// Return whether the escalation digest's supervision component matches.
+    pub fn host_run_escalation_digest_supervision_matches_key(&self) -> bool {
+        self.host_run_escalation_digest_supervision_matches_key
+    }
+
+    /// Return whether every escalation digest component matches its source classifier.
+    pub fn host_run_escalation_digest_parts_match(&self) -> bool {
+        self.host_run_escalation_digest_parts_match
+    }
+
+    /// Return whether any escalation digest component drifted.
+    pub fn has_host_run_escalation_digest_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_digest_integrity_drift
+    }
+
+    /// Return whether host-run escalation digest labels match their source classifiers.
+    pub fn host_run_escalation_digest_labels_match(&self) -> bool {
+        self.host_run_escalation_digest_labels_match
+    }
+
+    /// Return whether any host-run escalation digest label drifted.
+    pub fn has_host_run_escalation_digest_label_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_digest_label_integrity_drift
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -12474,6 +12608,138 @@ impl ToolAuditSupervisorDrainHostRunEscalationKind {
 impl Display for ToolAuditSupervisorDrainHostRunEscalationKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
+    }
+}
+
+/// Stable compact escalation digest for the full supervisor host run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationDigest {
+    escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+    supervision_key: ToolAuditSupervisorDrainHostRunSupervisionKey,
+}
+
+impl ToolAuditSupervisorDrainHostRunEscalationDigest {
+    /// Create an escalation digest from the escalation kind and supervision key.
+    pub fn new(
+        escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+        supervision_key: ToolAuditSupervisorDrainHostRunSupervisionKey,
+    ) -> Self {
+        Self {
+            escalation_kind,
+            supervision_key,
+        }
+    }
+
+    /// Parse a stable compact host-run escalation digest label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("escalation=")?;
+        let (escalation_label, supervision_label) = rest.split_once("|supervision=")?;
+        let escalation_kind =
+            ToolAuditSupervisorDrainHostRunEscalationKind::from_label(escalation_label)?;
+        let supervision_key =
+            ToolAuditSupervisorDrainHostRunSupervisionKey::from_label(supervision_label)?;
+        Some(Self::new(escalation_kind, supervision_key))
+    }
+
+    /// Return the host-run escalation classification.
+    pub fn escalation_kind(self) -> ToolAuditSupervisorDrainHostRunEscalationKind {
+        self.escalation_kind
+    }
+
+    /// Return the compact host-run supervision key.
+    pub fn supervision_key(self) -> ToolAuditSupervisorDrainHostRunSupervisionKey {
+        self.supervision_key
+    }
+
+    /// Return a stable compact label for host-run escalation digest grouping.
+    pub fn label(self) -> String {
+        format!(
+            "escalation={}|supervision={}",
+            self.escalation_kind.as_str(),
+            self.supervision_key.label()
+        )
+    }
+
+    /// Return whether this escalation digest label parses back to this typed digest.
+    pub fn label_matches_digest(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this digest's escalation component matches the supplied kind.
+    pub fn escalation_kind_matches(
+        self,
+        escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+    ) -> bool {
+        self.escalation_kind == escalation_kind
+    }
+
+    /// Return whether this digest's supervision component matches the supplied key.
+    pub fn supervision_key_matches(
+        self,
+        supervision_key: ToolAuditSupervisorDrainHostRunSupervisionKey,
+    ) -> bool {
+        self.supervision_key == supervision_key
+    }
+
+    /// Return whether every digest component matches the supplied source classifiers.
+    pub fn parts_match(
+        self,
+        escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+        supervision_key: ToolAuditSupervisorDrainHostRunSupervisionKey,
+    ) -> bool {
+        self.escalation_kind_matches(escalation_kind)
+            && self.supervision_key_matches(supervision_key)
+    }
+
+    /// Return whether the digest is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.escalation_kind.is_settled() && self.supervision_key.is_settled()
+    }
+
+    /// Return whether this digest needs host action.
+    pub fn requires_action(self) -> bool {
+        self.escalation_kind.requires_action() || self.supervision_key.requires_action()
+    }
+
+    /// Return the sortable escalation priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.escalation_kind
+            .rank()
+            .max(self.supervision_key.priority_rank())
+    }
+
+    /// Return whether the digest can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.escalation_kind.is_auto_routable() && self.supervision_key.is_auto_routable()
+    }
+
+    /// Return whether the digest requires manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.escalation_kind.requires_manual_review()
+            || self.supervision_key.requires_manual_review()
+    }
+
+    /// Return whether the digest requires investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.escalation_kind.requires_investigation()
+            || self.supervision_key.requires_investigation()
+    }
+
+    /// Return whether the digest requires host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.escalation_kind.requires_integrity_investigation()
+            || self.supervision_key.requires_integrity_investigation()
+    }
+
+    /// Return whether the digest requires triage.
+    pub fn requires_triage(self) -> bool {
+        self.escalation_kind.requires_triage() || self.supervision_key.requires_triage()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunEscalationDigest {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
     }
 }
 
@@ -21972,6 +22238,84 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_drain_host_run_escalation_digests_are_stable() {
+        let supervision_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardActionAndSchedulerAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::SplitQueues,
+                ToolAuditSupervisorDrainHostRunActionLane::Mixed,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            ),
+        );
+        let digest = ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+            supervision_key,
+        );
+
+        assert_eq!(
+            digest.label(),
+            "escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationDigest::from_label(&digest.label()),
+            Some(digest)
+        );
+        assert!(digest.label_matches_digest());
+        assert_eq!(
+            digest.escalation_kind(),
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage
+        );
+        assert_eq!(digest.supervision_key(), supervision_key);
+        assert!(
+            digest.escalation_kind_matches(ToolAuditSupervisorDrainHostRunEscalationKind::Triage)
+        );
+        assert!(digest.supervision_key_matches(supervision_key));
+        assert!(digest.parts_match(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+            supervision_key,
+        ));
+        assert!(!digest.is_settled());
+        assert!(digest.requires_action());
+        assert_eq!(digest.priority_rank(), 90);
+        assert!(!digest.is_auto_routable());
+        assert!(digest.requires_manual_review());
+        assert!(!digest.requires_investigation());
+        assert!(!digest.requires_integrity_investigation());
+        assert!(digest.requires_triage());
+        assert_eq!(digest.to_string(), digest.label());
+
+        let routine_supervision_key = ToolAuditSupervisorDrainHostRunSupervisionKey::new(
+            ToolAuditSupervisorDrainHostRunAttentionKind::HealthDashboardAction,
+            ToolAuditSupervisorDrainHostRunQueueGroupKey::new(
+                ToolAuditSupervisorDrainHostRunQueueRoute::HealthDashboard,
+                ToolAuditSupervisorDrainHostRunActionLane::Drain,
+                ToolAuditSupervisorDrainHostRunQueuePriority::RoutineAction,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::RoutineReady,
+            ),
+        );
+        let routine_digest = ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            ToolAuditSupervisorDrainHostRunEscalationKind::RoutineAction,
+            routine_supervision_key,
+        );
+        assert!(routine_digest.is_auto_routable());
+        assert_eq!(routine_digest.priority_rank(), 20);
+
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationDigest::from_label(
+                "escalation=triage|supervision=attention=no_attention|queue=no_route:no_action:settled:settled:extra",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationDigest::from_label(
+                "escalationish=triage|supervision=attention=no_attention|queue=no_route:no_action:settled:settled",
+            ),
+            None
+        );
+    }
+
+    #[test]
     fn supervisor_drain_summary_flattens_host_run_supervision_flags() {
         let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         let mut idle_sink = InMemoryToolAuditSink::new();
@@ -22104,6 +22448,46 @@ mod tests {
         assert!(idle_summary.host_run_escalation_labels_match());
         assert!(!idle_summary.has_host_run_escalation_label_integrity_drift);
         assert!(!idle_summary.has_host_run_escalation_label_integrity_drift());
+        let idle_digest = ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Settled,
+            idle_key,
+        );
+        assert_eq!(idle_report.host_run_escalation_digest(), idle_digest);
+        assert_eq!(
+            idle_report.host_run_escalation_digest_label(),
+            "escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert!(idle_report.host_run_escalation_digest_label_matches_digest());
+        assert!(idle_report.host_run_escalation_digest_kind_matches_kind());
+        assert!(idle_report.host_run_escalation_digest_supervision_matches_key());
+        assert!(idle_report.host_run_escalation_digest_parts_match());
+        assert!(!idle_report.has_host_run_escalation_digest_integrity_drift());
+        assert!(idle_report.host_run_escalation_digest_labels_match());
+        assert!(!idle_report.has_host_run_escalation_digest_label_integrity_drift());
+        assert_eq!(idle_summary.host_run_escalation_digest, idle_digest);
+        assert_eq!(idle_summary.host_run_escalation_digest(), idle_digest);
+        assert_eq!(
+            idle_summary.host_run_escalation_digest_label,
+            "escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_digest_label(),
+            "escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled"
+        );
+        assert!(idle_summary.host_run_escalation_digest_label_matches_digest);
+        assert!(idle_summary.host_run_escalation_digest_label_matches_digest());
+        assert!(idle_summary.host_run_escalation_digest_kind_matches_kind);
+        assert!(idle_summary.host_run_escalation_digest_kind_matches_kind());
+        assert!(idle_summary.host_run_escalation_digest_supervision_matches_key);
+        assert!(idle_summary.host_run_escalation_digest_supervision_matches_key());
+        assert!(idle_summary.host_run_escalation_digest_parts_match);
+        assert!(idle_summary.host_run_escalation_digest_parts_match());
+        assert!(!idle_summary.has_host_run_escalation_digest_integrity_drift);
+        assert!(!idle_summary.has_host_run_escalation_digest_integrity_drift());
+        assert!(idle_summary.host_run_escalation_digest_labels_match);
+        assert!(idle_summary.host_run_escalation_digest_labels_match());
+        assert!(!idle_summary.has_host_run_escalation_digest_label_integrity_drift);
+        assert!(!idle_summary.has_host_run_escalation_digest_label_integrity_drift());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -22189,6 +22573,40 @@ mod tests {
         assert!(continuation_summary.host_run_escalation_requires_triage());
         assert!(continuation_summary.host_run_escalation_labels_match());
         assert!(!continuation_summary.has_host_run_escalation_label_integrity_drift());
+        let continuation_digest = ToolAuditSupervisorDrainHostRunEscalationDigest::new(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+            continuation_key,
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_digest(),
+            continuation_digest
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_digest_label(),
+            "escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert!(continuation_report.host_run_escalation_digest_label_matches_digest());
+        assert!(continuation_report.host_run_escalation_digest_kind_matches_kind());
+        assert!(continuation_report.host_run_escalation_digest_supervision_matches_key());
+        assert!(continuation_report.host_run_escalation_digest_parts_match());
+        assert!(!continuation_report.has_host_run_escalation_digest_integrity_drift());
+        assert!(continuation_report.host_run_escalation_digest_labels_match());
+        assert!(!continuation_report.has_host_run_escalation_digest_label_integrity_drift());
+        assert_eq!(
+            continuation_summary.host_run_escalation_digest(),
+            continuation_digest
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_digest_label(),
+            "escalation=triage|supervision=attention=health_dashboard_action_and_scheduler_action|queue=split_queues:mixed:triage:triage_required"
+        );
+        assert!(continuation_summary.host_run_escalation_digest_label_matches_digest());
+        assert!(continuation_summary.host_run_escalation_digest_kind_matches_kind());
+        assert!(continuation_summary.host_run_escalation_digest_supervision_matches_key());
+        assert!(continuation_summary.host_run_escalation_digest_parts_match());
+        assert!(!continuation_summary.has_host_run_escalation_digest_integrity_drift());
+        assert!(continuation_summary.host_run_escalation_digest_labels_match());
+        assert!(!continuation_summary.has_host_run_escalation_digest_label_integrity_drift());
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
@@ -22202,6 +22620,13 @@ mod tests {
         drift_summary.host_run_escalation_matches_supervision = false;
         drift_summary.host_run_escalation_labels_match = false;
         drift_summary.has_host_run_escalation_label_integrity_drift = true;
+        drift_summary.host_run_escalation_digest = continuation_digest;
+        drift_summary.host_run_escalation_digest_label = continuation_digest.label();
+        drift_summary.host_run_escalation_digest_supervision_matches_key = false;
+        drift_summary.host_run_escalation_digest_parts_match = false;
+        drift_summary.has_host_run_escalation_digest_integrity_drift = true;
+        drift_summary.host_run_escalation_digest_labels_match = false;
+        drift_summary.has_host_run_escalation_digest_label_integrity_drift = true;
         assert!(drift_summary.host_run_supervision_key_label_matches_key());
         assert!(!drift_summary.host_run_supervision_attention_matches_kind());
         assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
@@ -22212,6 +22637,13 @@ mod tests {
         assert!(!drift_summary.host_run_escalation_matches_supervision());
         assert!(!drift_summary.host_run_escalation_labels_match());
         assert!(drift_summary.has_host_run_escalation_label_integrity_drift());
+        assert!(drift_summary.host_run_escalation_digest_label_matches_digest());
+        assert!(drift_summary.host_run_escalation_digest_kind_matches_kind());
+        assert!(!drift_summary.host_run_escalation_digest_supervision_matches_key());
+        assert!(!drift_summary.host_run_escalation_digest_parts_match());
+        assert!(drift_summary.has_host_run_escalation_digest_integrity_drift());
+        assert!(!drift_summary.host_run_escalation_digest_labels_match());
+        assert!(drift_summary.has_host_run_escalation_digest_label_integrity_drift());
 
         let mut stale_label_summary = continuation_summary;
         stale_label_summary.host_run_supervision_key_label =
@@ -22223,12 +22655,20 @@ mod tests {
         stale_label_summary.host_run_escalation_label_matches_kind = false;
         stale_label_summary.host_run_escalation_labels_match = false;
         stale_label_summary.has_host_run_escalation_label_integrity_drift = true;
+        stale_label_summary.host_run_escalation_digest_label =
+            "escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled".to_string();
+        stale_label_summary.host_run_escalation_digest_label_matches_digest = false;
+        stale_label_summary.host_run_escalation_digest_labels_match = false;
+        stale_label_summary.has_host_run_escalation_digest_label_integrity_drift = true;
         assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
         assert!(!stale_label_summary.host_run_supervision_labels_match());
         assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
         assert!(!stale_label_summary.host_run_escalation_label_matches_kind());
         assert!(!stale_label_summary.host_run_escalation_labels_match());
         assert!(stale_label_summary.has_host_run_escalation_label_integrity_drift());
+        assert!(!stale_label_summary.host_run_escalation_digest_label_matches_digest());
+        assert!(!stale_label_summary.host_run_escalation_digest_labels_match());
+        assert!(stale_label_summary.has_host_run_escalation_digest_label_integrity_drift());
     }
 
     #[test]

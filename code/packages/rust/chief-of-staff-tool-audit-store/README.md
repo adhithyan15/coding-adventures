@@ -233,6 +233,9 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries expose compact host-run escalation
   labels, ranks, routing flags, and label-integrity checks for supervision
   queues
+- supervisor drain reports and summaries expose compact host-run escalation
+  digest labels that bind escalation classifications back to supervision keys
+  for host-log integrity checks
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
