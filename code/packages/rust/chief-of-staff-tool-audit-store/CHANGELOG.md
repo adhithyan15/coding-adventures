@@ -7,6 +7,8 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Initial storage-backed D18D tool audit store.
+- Flattened host-run escalation dashboard lane queue action-rollup digest status
+  and routing flags for compact host-log queues.
 - JSON encoding/decoding for payload-free `ToolAuditRecord` rows.
 - Query and inventory helpers over persisted audit records.
 - Deterministic checkpoint pages for incremental audit replay.
