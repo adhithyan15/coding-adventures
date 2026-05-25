@@ -1034,6 +1034,9 @@ pub struct BrowserContentNode {
     pub command_for: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
     pub accept: Option<String>,
     pub inputmode: Option<String>,
     pub pattern: Option<String>,
@@ -1051,6 +1054,7 @@ pub struct BrowserContentNode {
     pub form_target: Option<String>,
     pub form_novalidate: bool,
     pub value: Option<String>,
+    pub autofocus: bool,
     pub disabled: bool,
     pub required: bool,
     pub readonly: bool,
@@ -1163,6 +1167,9 @@ pub struct BrowserRenderNode {
     pub command_for: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
     pub accept: Option<String>,
     pub inputmode: Option<String>,
     pub pattern: Option<String>,
@@ -1180,6 +1187,7 @@ pub struct BrowserRenderNode {
     pub form_target: Option<String>,
     pub form_novalidate: bool,
     pub value: Option<String>,
+    pub autofocus: bool,
     pub disabled: bool,
     pub required: bool,
     pub readonly: bool,
@@ -1303,6 +1311,9 @@ pub struct BrowserFormControl {
     pub accessible_name: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
     pub accept: Option<String>,
     pub inputmode: Option<String>,
     pub pattern: Option<String>,
@@ -1320,6 +1331,7 @@ pub struct BrowserFormControl {
     pub form_target: Option<String>,
     pub form_novalidate: bool,
     pub value: Option<String>,
+    pub autofocus: bool,
     pub disabled: bool,
     pub required: bool,
     pub readonly: bool,
@@ -1513,6 +1525,9 @@ impl BrowserRenderNode {
             command_for: content_node.command_for.clone(),
             placeholder: content_node.placeholder.clone(),
             autocomplete: content_node.autocomplete.clone(),
+            autocapitalize: content_node.autocapitalize.clone(),
+            enterkeyhint: content_node.enterkeyhint.clone(),
+            dirname: content_node.dirname.clone(),
             accept: content_node.accept.clone(),
             inputmode: content_node.inputmode.clone(),
             pattern: content_node.pattern.clone(),
@@ -1530,6 +1545,7 @@ impl BrowserRenderNode {
             form_target: content_node.form_target.clone(),
             form_novalidate: content_node.form_novalidate,
             value: content_node.value.clone(),
+            autofocus: content_node.autofocus,
             disabled: content_node.disabled,
             required: content_node.required,
             readonly: content_node.readonly,
@@ -9181,6 +9197,9 @@ fn collect_browser_content_nodes_with_mode(
                         command_for: None,
                         placeholder: None,
                         autocomplete: None,
+                        autocapitalize: None,
+                        enterkeyhint: None,
+                        dirname: None,
                         accept: None,
                         inputmode: None,
                         pattern: None,
@@ -9198,6 +9217,7 @@ fn collect_browser_content_nodes_with_mode(
                         form_target: None,
                         form_novalidate: false,
                         value: None,
+                        autofocus: false,
                         disabled: false,
                         required: false,
                         readonly: false,
@@ -9380,6 +9400,9 @@ fn browser_content_node_for_element(
         command_for: browser_command_for(element),
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
+        autocapitalize: browser_autocapitalize(element),
+        enterkeyhint: browser_enterkeyhint(element),
+        dirname: browser_dirname(element),
         accept: browser_control_accept(element),
         inputmode: browser_control_inputmode(element),
         pattern: browser_control_pattern(element),
@@ -9399,6 +9422,7 @@ fn browser_content_node_for_element(
         form_target: browser_control_form_target(element),
         form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
+        autofocus: browser_autofocus(element),
         disabled: element.attribute("disabled").is_some(),
         required: browser_required(element),
         readonly: browser_readonly(element),
@@ -10302,6 +10326,30 @@ fn browser_autocomplete(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_autocapitalize(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("autocapitalize").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_enterkeyhint(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("enterkeyhint").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_dirname(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("dirname").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
 fn browser_control_accept(element: &Element) -> Option<String> {
     if element.name == "input" {
         element.attribute("accept").map(ToOwned::to_owned)
@@ -10428,6 +10476,13 @@ fn browser_required(element: &Element) -> bool {
 
 fn browser_readonly(element: &Element) -> bool {
     matches!(element.name.as_str(), "input" | "textarea") && element.attribute("readonly").is_some()
+}
+
+fn browser_autofocus(element: &Element) -> bool {
+    matches!(
+        element.name.as_str(),
+        "button" | "input" | "select" | "textarea"
+    ) && element.attribute("autofocus").is_some()
 }
 
 fn browser_multiple(element: &Element) -> bool {
@@ -10668,6 +10723,9 @@ fn browser_form_control(
         labels: control_labels,
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
+        autocapitalize: browser_autocapitalize(element),
+        enterkeyhint: browser_enterkeyhint(element),
+        dirname: browser_dirname(element),
         accept: browser_control_accept(element),
         inputmode: browser_control_inputmode(element),
         pattern: browser_control_pattern(element),
@@ -10687,6 +10745,7 @@ fn browser_form_control(
         form_target: browser_control_form_target(element),
         form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
+        autofocus: browser_autofocus(element),
         disabled: element.attribute("disabled").is_some(),
         required: browser_required(element),
         readonly: browser_readonly(element),
@@ -11435,8 +11494,10 @@ mod tests {
              method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate>\
              <label for=q>Query</label>\
              <input id=q name=q placeholder=\"Search terms\" required autocomplete=search \
+             autocapitalize=words enterkeyhint=search dirname=q.dir autofocus \
              inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions>\
-             <label>Notes<textarea id=notes name=notes readonly maxlength=500>Keep me</textarea></label>\
+             <label>Notes<textarea id=notes name=notes readonly maxlength=500 \
+             autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
              <fieldset><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
              <select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select>\
              <input id=upload type=file name=upload accept=\"image/png,image/jpeg\">\
@@ -11465,14 +11526,21 @@ mod tests {
         assert_eq!(controls[0].accessible_name.as_deref(), Some("Query"));
         assert_eq!(controls[0].placeholder.as_deref(), Some("Search terms"));
         assert_eq!(controls[0].autocomplete.as_deref(), Some("search"));
+        assert_eq!(controls[0].autocapitalize.as_deref(), Some("words"));
+        assert_eq!(controls[0].enterkeyhint.as_deref(), Some("search"));
+        assert_eq!(controls[0].dirname.as_deref(), Some("q.dir"));
         assert_eq!(controls[0].inputmode.as_deref(), Some("search"));
         assert_eq!(controls[0].pattern.as_deref(), Some("[A-Za-z ]+"));
         assert_eq!(controls[0].minlength.as_deref(), Some("2"));
         assert_eq!(controls[0].maxlength.as_deref(), Some("80"));
         assert_eq!(controls[0].size.as_deref(), Some("40"));
         assert_eq!(controls[0].list.as_deref(), Some("query-suggestions"));
+        assert!(controls[0].autofocus);
         assert!(controls[0].required);
         assert!(controls[1].readonly);
+        assert_eq!(controls[1].autocapitalize.as_deref(), Some("sentences"));
+        assert_eq!(controls[1].enterkeyhint.as_deref(), Some("done"));
+        assert_eq!(controls[1].dirname.as_deref(), Some("notes.dir"));
         assert_eq!(controls[1].maxlength.as_deref(), Some("500"));
         assert_eq!(controls[1].labels, vec!["NotesKeep me"]);
         assert_eq!(controls[2].control_type, "checkbox");
@@ -11507,14 +11575,21 @@ mod tests {
         let query = &form.children[1];
         assert_eq!(query.labels, vec!["Query"]);
         assert_eq!(query.accessible_name.as_deref(), Some("Query"));
+        assert_eq!(query.autocapitalize.as_deref(), Some("words"));
+        assert_eq!(query.enterkeyhint.as_deref(), Some("search"));
+        assert_eq!(query.dirname.as_deref(), Some("q.dir"));
         assert_eq!(query.inputmode.as_deref(), Some("search"));
         assert_eq!(query.pattern.as_deref(), Some("[A-Za-z ]+"));
         assert_eq!(query.maxlength.as_deref(), Some("80"));
         assert_eq!(query.list.as_deref(), Some("query-suggestions"));
+        assert!(query.autofocus);
         assert!(query.required);
         let notes = &form.children[2].children[1];
         assert_eq!(notes.labels, vec!["NotesKeep me"]);
         assert!(notes.readonly);
+        assert_eq!(notes.autocapitalize.as_deref(), Some("sentences"));
+        assert_eq!(notes.enterkeyhint.as_deref(), Some("done"));
+        assert_eq!(notes.dirname.as_deref(), Some("notes.dir"));
         let fieldset = &form.children[3];
         assert_eq!(fieldset.role, "form_group");
         assert_eq!(fieldset.accessible_name.as_deref(), Some("Options"));

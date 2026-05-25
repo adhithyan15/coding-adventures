@@ -171,6 +171,12 @@ struct ExpectedRenderNode {
     #[serde(default)]
     autocomplete: Option<String>,
     #[serde(default)]
+    autocapitalize: Option<String>,
+    #[serde(default)]
+    enterkeyhint: Option<String>,
+    #[serde(default)]
+    dirname: Option<String>,
+    #[serde(default)]
     accept: Option<String>,
     #[serde(default)]
     inputmode: Option<String>,
@@ -204,6 +210,8 @@ struct ExpectedRenderNode {
     form_novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+    #[serde(default)]
+    autofocus: bool,
     #[serde(default)]
     disabled: bool,
     #[serde(default)]
@@ -372,6 +380,9 @@ impl ExpectedRenderNode {
             command_for: self.command_for,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
+            autocapitalize: self.autocapitalize,
+            enterkeyhint: self.enterkeyhint,
+            dirname: self.dirname,
             accept: self.accept,
             inputmode: self.inputmode,
             pattern: self.pattern,
@@ -389,6 +400,7 @@ impl ExpectedRenderNode {
             form_target: self.form_target,
             form_novalidate: self.form_novalidate,
             value: self.value,
+            autofocus: self.autofocus,
             disabled: self.disabled,
             required: self.required,
             readonly: self.readonly,

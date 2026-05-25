@@ -471,6 +471,9 @@ def check_browser_expected_lists(
                 "accessible_name",
                 "placeholder",
                 "autocomplete",
+                "autocapitalize",
+                "enterkeyhint",
+                "dirname",
                 "accept",
                 "inputmode",
                 "pattern",
@@ -495,6 +498,7 @@ def check_browser_expected_lists(
             require_optional_boolean(control_path, control, "readonly", errors)
             require_boolean(control_path, control, "checked", errors)
             require_optional_boolean(control_path, control, "multiple", errors)
+            require_optional_boolean(control_path, control, "autofocus", errors)
             require_optional_boolean(control_path, control, "form_novalidate", errors)
             require_string(control_path, control, "text", errors)
             require_string_list(control_path, control, "options", errors)
@@ -598,6 +602,9 @@ def check_browser_content_node(
         "command_for",
         "placeholder",
         "autocomplete",
+        "autocapitalize",
+        "enterkeyhint",
+        "dirname",
         "accept",
         "inputmode",
         "pattern",
@@ -651,6 +658,7 @@ def check_browser_content_node(
         "checked",
         "selected",
         "multiple",
+        "autofocus",
         "controls",
         "autoplay",
         "loop_media",
@@ -764,6 +772,9 @@ def check_browser_render_node(
         "command_for",
         "placeholder",
         "autocomplete",
+        "autocapitalize",
+        "enterkeyhint",
+        "dirname",
         "accept",
         "inputmode",
         "pattern",
@@ -817,6 +828,7 @@ def check_browser_render_node(
         "checked",
         "selected",
         "multiple",
+        "autofocus",
         "controls",
         "autoplay",
         "loop_media",
