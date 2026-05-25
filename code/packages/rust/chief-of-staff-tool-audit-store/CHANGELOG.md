@@ -196,6 +196,8 @@ All notable changes to this package will be documented in this file.
 - Compact host-run escalation route-key labels that bind routes back to
   escalation digests for supervisor drain run summary grouping and integrity
   checks.
+- Compact host-run escalation queue keys that add priority and readiness labels
+  to route keys for supervisor drain run summary grouping and integrity checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
