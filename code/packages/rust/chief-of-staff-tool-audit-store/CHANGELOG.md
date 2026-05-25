@@ -188,6 +188,9 @@ All notable changes to this package will be documented in this file.
 - Compact host-run escalation labels, ranks, routing flags, and
   label-integrity checks for supervisor drain run report and summary
   dashboards.
+- Compact host-run escalation digest labels that bind escalation
+  classifications back to supervision keys for supervisor drain run report and
+  summary integrity checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
