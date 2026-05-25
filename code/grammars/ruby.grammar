@@ -179,8 +179,36 @@ until_statement = "until" expression { !"end" statement } "end" ;
 #     pattern matching with the proper match semantics.
 #   - `when *splat` argument splat in the value list — deferred
 #     (the grammar accepts only positional values via `expression`).
-case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
-when_clause    = "when" expression { COMMA expression } { !"when" !"else" !"end" statement } ;
+case_statement = "case" expression { when_clause | in_clause } [ else_clause ] "end" ;
+when_clause    = "when" expression { COMMA expression } { !"when" !"in" !"else" !"end" statement } ;
+# Phase 7d — Ruby 3.0 case/in pattern matching.
+#
+# `case/in` is structurally similar to `case/when` — the same scrutinee
+# expression sits in front, followed by a sequence of clauses, each with
+# a body.  The difference is the pattern language: `when` does a simple
+# `==` (well, `===`) test against a value, while `in` introduces a
+# structural pattern that can bind locals on a successful match.
+#
+# Supported v0 patterns (sufficient for the most common use-cases):
+#   literal_pattern   :  NUMBER | STRING | symbol_literal | KEYWORD
+#                        (KEYWORD covers `nil` / `true` / `false`)
+#   binding_pattern   :  NAME — matches anything and binds the value
+#                        to that local
+#   array_pattern     :  LBRACKET [ pattern { COMMA pattern } ] RBRACKET
+#   hash_pattern      :  LBRACE [ hash_pattern_pair { COMMA hash_pattern_pair } ] RBRACE
+#   hash_pattern_pair :  NAME COLON [ pattern ]  — `name:` shorthand
+#                        binds; `name: <pattern>` matches sub-pattern
+#
+# Order matters: array/hash come first so their `[`/`{` openers shadow
+# the literal/binding forms; literal comes before binding so concrete
+# constants don't get swallowed as bindings.
+in_clause      = "in" pattern { !"when" !"in" !"else" !"end" statement } ;
+pattern        = array_pattern | hash_pattern | literal_pattern | binding_pattern ;
+literal_pattern   = NUMBER | STRING | symbol_literal | KEYWORD ;
+binding_pattern   = NAME ;
+array_pattern     = LBRACKET [ pattern { COMMA pattern } ] RBRACKET ;
+hash_pattern      = LBRACE [ hash_pattern_pair { COMMA hash_pattern_pair } ] RBRACE ;
+hash_pattern_pair = NAME COLON [ pattern ] ;
 # Phase 6v — `begin … rescue … ensure … end`.
 #
 # Shape:

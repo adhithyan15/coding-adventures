@@ -2257,5 +2257,93 @@ mod tests {
             "block-bodied def must not match endless_def_statement"
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7d — Ruby 3.0 `case/in` pattern matching
+    //
+    // Grammar extends case_statement to accept either `when_clause` or
+    // `in_clause` repetitions in any source order:
+    //   case_statement = "case" expression { when_clause | in_clause }
+    //                    [ else_clause ] "end" ;
+    //   in_clause      = "in" pattern { … statement } ;
+    //   pattern        = array_pattern | hash_pattern
+    //                  | literal_pattern | binding_pattern ;
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_case_in_with_literal_pattern() {
+        // `case x; in 1; puts("one"); end` — literal-pattern clause.
+        let ast = parse_ruby("case x\nin 1\n  puts(\"one\")\nend");
+        let cs = find_descendant(&ast, "case_statement")
+            .expect("expected case_statement node");
+        let inc = find_descendant(cs, "in_clause")
+            .expect("expected in_clause for `in 1`");
+        let pat = find_descendant(inc, "pattern").expect("expected pattern node");
+        assert!(
+            find_descendant(pat, "literal_pattern").is_some(),
+            "expected literal_pattern for `in 1`"
+        );
+    }
+
+    #[test]
+    fn test_parse_case_in_with_binding_pattern() {
+        // `case x; in y; puts(y); end` — bare-name binding pattern.
+        let ast = parse_ruby("case x\nin y\n  puts(y)\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        let inc = find_descendant(cs, "in_clause").expect("in_clause");
+        let pat = find_descendant(inc, "pattern").expect("pattern");
+        assert!(
+            find_descendant(pat, "binding_pattern").is_some(),
+            "expected binding_pattern for `in y`"
+        );
+    }
+
+    #[test]
+    fn test_parse_case_in_with_array_pattern() {
+        // `case x; in [1, 2]; puts("pair"); end` — array pattern.
+        let ast = parse_ruby("case x\nin [1, 2]\n  puts(\"pair\")\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        let inc = find_descendant(cs, "in_clause").expect("in_clause");
+        let pat = find_descendant(inc, "pattern").expect("pattern");
+        assert!(
+            find_descendant(pat, "array_pattern").is_some(),
+            "expected array_pattern for `in [1, 2]`"
+        );
+    }
+
+    #[test]
+    fn test_parse_case_in_with_hash_pattern() {
+        // `case x; in {name: y}; puts(y); end` — hash pattern.
+        let ast = parse_ruby("case x\nin {name: y}\n  puts(y)\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        let inc = find_descendant(cs, "in_clause").expect("in_clause");
+        let pat = find_descendant(inc, "pattern").expect("pattern");
+        assert!(
+            find_descendant(pat, "hash_pattern").is_some(),
+            "expected hash_pattern for `in {{name: y}}`"
+        );
+    }
+
+    #[test]
+    fn test_parse_case_when_still_works_after_in_clause_addition() {
+        // Regression: extending the case_statement rule to accept `in_clause`
+        // alongside `when_clause` must not break the original Phase-6u
+        // `case … when … end` form.
+        let ast = parse_ruby("case x\nwhen 1\n  puts(1)\nwhen 2\n  puts(2)\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        // Two when_clauses, zero in_clauses.
+        let when_count = cs
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "when_clause"))
+            .count();
+        let in_count = cs
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "in_clause"))
+            .count();
+        assert_eq!(when_count, 2, "expected 2 when_clauses");
+        assert_eq!(in_count, 0, "expected 0 in_clauses");
+    }
 }
 

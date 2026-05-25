@@ -2,6 +2,59 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.31.0] - 2026-05-25
+
+### Added (Phase 7d — Ruby 3.0 `case/in` pattern matching)
+
+The existing `case_statement` rule is extended to accept either `when_clause` or `in_clause` repetitions in any source order:
+
+```ebnf
+case_statement = "case" expression { when_clause | in_clause } [ else_clause ] "end" ;
+in_clause      = "in" pattern { !"when" !"in" !"else" !"end" statement } ;
+pattern        = array_pattern | hash_pattern | literal_pattern | binding_pattern ;
+literal_pattern   = NUMBER | STRING | symbol_literal | KEYWORD ;
+binding_pattern   = NAME ;
+array_pattern     = LBRACKET [ pattern { COMMA pattern } ] RBRACKET ;
+hash_pattern      = LBRACE [ hash_pattern_pair { COMMA hash_pattern_pair } ] RBRACE ;
+hash_pattern_pair = NAME COLON [ pattern ] ;
+```
+
+Order in `pattern`: array/hash come first so their `[`/`{` openers shadow the literal/binding forms; literal comes before binding so concrete constants don't get swallowed as bindings.
+
+Regenerated `_grammar.rs` via `grammar-tools compile-grammar`.
+
+The `when_clause` body lookaheads were extended with `!"in"` so `when`/`in` can interleave cleanly in the rule's repetition (even though semantically Ruby disallows mixing — this is a grammar concern, not a semantic one).
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+`lower_case_statement` now collects both `when_clause` and `in_clause` subnodes in source order.  A new helper `lower_in_clause_pattern` dispatches on pattern kind:
+
+| Pattern        | cond                                            | body-prefix stmts        |
+|----------------|-------------------------------------------------|--------------------------|
+| `in 1`         | `BuiltinCall("==", [scrut, IntLit(1)])`         | `[]`                     |
+| `in nil`       | `BuiltinCall("==", [scrut, NilLit])`            | `[]`                     |
+| `in y`         | `BoolLit(true)`                                 | `[LetBinding(y, scrut)]` |
+| `in [1, 2]`    | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                    |
+| `in {name: y}` | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                    |
+
+The `__pattern_match__` marker carries the raw source text of the pattern (joined Token values via a depth-first walk) so downstream emitters can re-derive the structural matching at codegen time.  Same marker-builtin pattern as Phase 6v rescue/ensure, Phase 6y `__interp__`, Phase 7a `backtick`.
+
+### v0 deferred limitations
+
+- Array / hash patterns lower as a `__pattern_match__` marker — no structural decomposition or sub-bindings yet.  Downstream emitters can re-parse the marker's StrLit raw text.
+- Hash pattern shorthand `{name:}` doesn't bind `name` at SIR level (deferred along with structural decomposition).
+- Pin operators (`^x`), find patterns (`[…, *, …]`), and class patterns (`SomeClass(x)`) are not yet parsed.
+- A bare-name body inside `in` (e.g. `in y; y; end`) hits a pre-existing grammar quirk where `method_call_no_paren` greedily consumes the closing `end` as a one-arg method-call argument — unrelated to Phase 7d, observable since Phase 6h.  Workaround: wrap the body in a paren-call (`puts(y)`) or any non-bare form.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 131 → **136** (+5 grammar tests):
+  - `test_parse_case_in_with_literal_pattern` — `in 1`.
+  - `test_parse_case_in_with_binding_pattern` — `in y`.
+  - `test_parse_case_in_with_array_pattern` — `in [1, 2]`.
+  - `test_parse_case_in_with_hash_pattern` — `in {name: y}`.
+  - `test_parse_case_when_still_works_after_in_clause_addition` — regression.
+
 ## [0.30.0] - 2026-05-25
 
 ### Added (Phase 7c — Ruby 3.0 endless method definitions `def foo = expr`)
