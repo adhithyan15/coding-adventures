@@ -218,6 +218,9 @@ All notable changes to this package will be documented in this file.
 - Host-run escalation dashboard lane queue keys that bind lane digests to route,
   priority, and readiness queues for supervisor drain run host-log grouping and
   drift checks.
+- Host-run escalation dashboard lane queue digests that bind lane queue keys
+  back to expanded dashboard keys for supervisor drain run host-log grouping and
+  drift checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
