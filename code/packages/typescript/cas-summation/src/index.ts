@@ -1227,6 +1227,38 @@ function twoSqrtPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
 }
 
+/**
+ * Phase 62 — Two-Log × polynomial numerator.
+ *
+ * Returns the effective polynomial degree when `node` is a `Mul` with
+ * **exactly two** `Log(diverging-in-k)` factors, any polynomial factors,
+ * and any bounded factors; `undefined` otherwise.
+ *
+ * `log(k)² · k^m` grows sub-polynomially, so the effective degree equals
+ * `poly_deg`. Caller checks `denDeg > twoLogPolyEffectiveDeg(num, k)`.
+ *
+ * Sqrt factors are refused (belong to the two-Sqrt / log-Sqrt family).
+ */
+function twoLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 2) return undefined;
+      continue;
+    }
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined; // Sqrt → refuse
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 2) return undefined;
+  return polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1390,6 +1422,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
       if (denDegTsp > tspDeg) {
         return true;
       }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 62: Mul(Log(diverging), Log(diverging), polynomial..., bounded...) numerator.
+  // log²(k) is sub-polynomial; effective degree = poly_deg.
+  // Closes when denDeg > twoLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const tlpDeg = twoLogPolyEffectiveDeg(num, k);
+  if (tlpDeg !== undefined) {
+    const denDegTlp = polynomialDegreeInK(den, k);
+    if (denDegTlp !== undefined) {
+      if (denDegTlp > tlpDeg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

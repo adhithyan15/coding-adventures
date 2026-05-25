@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.0 — 2026-05-25
+
+### Added
+
+- **Phase 62 — Two-Log × polynomial numerator** (`_two_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), polynomial..., bounded...)` as a
+  numerator that vanishes at infinity.  `log²(k)` grows sub-polynomially
+  (`log²(k) = o(k^ε)` for any ε > 0), so the effective polynomial degree is
+  unchanged by the two log factors.  `effective_x2 = 2·poly_deg`; closes when
+  `2·den_deg > effective_x2` (polynomial denominator) or the denominator is
+  non-polynomial diverging.  Sqrt factors are refused (belong to two-Sqrt /
+  log-Sqrt family).
+  - 6 new unit tests in `TestEvaluateSumPhase62TwoLogPolyNumerator`.
+
 ## 1.9.0 — 2026-05-25
 
 **Phase 61 — Two-Sqrt × polynomial numerator (Python).**

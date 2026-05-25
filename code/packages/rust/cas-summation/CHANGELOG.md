@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.0.0 — 2026-05-25
+
+### Added
+
+- **Phase 62 — Two-Log × polynomial numerator** (`two_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), polynomial..., bounded...)` as a
+  numerator that vanishes at infinity.  `effective_x2 = 2 * poly_deg` (log²
+  grows sub-polynomially).  Closes when `2 * den_deg > effective_x2` or
+  denominator is non-polynomial diverging.  Sqrt factors refused.
+  - 3 new integration tests in `tests/tests.rs`.
+
 ## 1.9.0 — 2026-05-25
 
 **Phase 61 — Two-Sqrt × polynomial numerator (Rust port).**

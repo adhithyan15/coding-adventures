@@ -1750,3 +1750,62 @@ fn phase61_sqrt_k2_times_sqrt_k2_over_k2_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ── Phase 62: Mul(Log(diverging), Log(diverging), polynomial..., bounded...) ─
+// effective_x2 = 2 * poly_deg.  log²(k) grows sub-polynomially (o(k^ε) for
+// any ε > 0).  Vanishes when 2·den_deg > effective_x2 or non-polynomial
+// diverging denominator.  Sqrt factors are refused.
+
+#[test]
+fn phase62_log_k_sq_over_k_sq_closes() {
+    // log(k)·log(k) / k²: poly_deg=0, effective_x2=0; 2·2=4 > 0 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(2)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let g_k = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase62_log_k_sq_times_k_over_k_cubed_closes() {
+    // log(k)²·k / k³: poly_deg=1, effective_x2=2; 2·3=6 > 2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k, k.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1, kp1.clone()]);
+    let den_k = apply(sym(POW), vec![k.clone(), int(3)]);
+    let den_kp1 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let g_k = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase62_log_k_sq_times_k_sq_over_k_sq_refused() {
+    // log(k)²·k² / k²: poly_deg=2, effective_x2=4; 2·2=4 not > 4 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![log_k.clone(), log_k, k2.clone()]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1.clone(), log_kp1, kp1_2.clone()]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
