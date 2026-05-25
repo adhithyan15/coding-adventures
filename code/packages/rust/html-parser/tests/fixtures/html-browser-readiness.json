@@ -191,19 +191,32 @@
     {
       "id": "document-metadata-policy-page",
       "description": "Browser document metadata extracts head policy hints from meta tags and canonical/manifest links.",
-      "input": "<base href=\"https://example.test/app/page.html\"><meta http-equiv=content-type content=\"text/html; charset=windows-1252\"><meta charset=utf-8><meta name=viewport content=\"width=device-width, initial-scale=1\"><meta name=description content=\"HTML parser workbench\"><meta name=application-name content=Venture><meta name=referrer content=no-referrer><meta name=robots content=\"index,follow\"><meta name=color-scheme content=\"light dark\"><meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\"><meta name=theme-color content=\"#111111\" media=\"(prefers-color-scheme: dark)\"><meta http-equiv=refresh content=\"5; url=next.html\"><link rel=canonical href=\"https://example.test/app/\"><link rel=manifest href=\"site.webmanifest\">",
+      "input": "<base href=\"https://example.test/app/page.html\"><meta http-equiv=content-type content=\"text/html; charset=windows-1252\"><meta charset=utf-8><meta name=viewport content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=description content=\"HTML parser workbench\"><meta name=application-name content=Venture><meta name=referrer content=no-referrer><meta name=robots content=\"index, follow, max-image-preview:large\"><meta name=color-scheme content=\"light dark\"><meta http-equiv=Content-Security-Policy content=\"default-src 'self'; img-src https:\"><meta http-equiv=Permissions-Policy content=\"geolocation=(), camera=()\"><meta http-equiv=Origin-Trial content=trial-token><meta http-equiv=Accept-CH content=\"Sec-CH-UA-Platform, DPR\"><meta http-equiv=x-dns-prefetch-control content=off><meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\"><meta name=theme-color content=\"#111111\" media=\"(prefers-color-scheme: dark)\"><meta http-equiv=refresh content=\"5; url=next.html\"><link rel=canonical href=\"https://example.test/app/\"><link rel=manifest href=\"site.webmanifest\">",
       "expected": {
         "title": null,
         "base_href": "https://example.test/app/page.html",
         "base_target": null,
         "metadata": {
           "charset": "windows-1252",
-          "viewport": "width=device-width, initial-scale=1",
+          "viewport": "width=device-width, initial-scale=1, viewport-fit=cover",
+          "viewport_directives": [
+            { "name": "width", "value": "device-width" },
+            { "name": "initial-scale", "value": "1" },
+            { "name": "viewport-fit", "value": "cover" }
+          ],
           "description": "HTML parser workbench",
           "application_name": "Venture",
           "referrer_policy": "no-referrer",
-          "robots": "index,follow",
+          "robots": "index, follow, max-image-preview:large",
+          "robots_directives": ["index", "follow", "max-image-preview:large"],
           "color_scheme": "light dark",
+          "http_equiv_hints": [
+            { "name": "content-security-policy", "content": "default-src 'self'; img-src https:" },
+            { "name": "permissions-policy", "content": "geolocation=(), camera=()" },
+            { "name": "origin-trial", "content": "trial-token" },
+            { "name": "accept-ch", "content": "Sec-CH-UA-Platform, DPR" },
+            { "name": "x-dns-prefetch-control", "content": "off" }
+          ],
           "theme_colors": [
             { "color": "#ffffff", "media": "(prefers-color-scheme: light)" },
             { "color": "#111111", "media": "(prefers-color-scheme: dark)" }
@@ -218,12 +231,17 @@
         "metas": [
           { "name": null, "http_equiv": "content-type", "property": null, "charset": null, "content": "text/html; charset=windows-1252" },
           { "name": null, "http_equiv": null, "property": null, "charset": "utf-8", "content": null },
-          { "name": "viewport", "http_equiv": null, "property": null, "charset": null, "content": "width=device-width, initial-scale=1" },
+          { "name": "viewport", "http_equiv": null, "property": null, "charset": null, "content": "width=device-width, initial-scale=1, viewport-fit=cover" },
           { "name": "description", "http_equiv": null, "property": null, "charset": null, "content": "HTML parser workbench" },
           { "name": "application-name", "http_equiv": null, "property": null, "charset": null, "content": "Venture" },
           { "name": "referrer", "http_equiv": null, "property": null, "charset": null, "content": "no-referrer" },
-          { "name": "robots", "http_equiv": null, "property": null, "charset": null, "content": "index,follow" },
+          { "name": "robots", "http_equiv": null, "property": null, "charset": null, "content": "index, follow, max-image-preview:large" },
           { "name": "color-scheme", "http_equiv": null, "property": null, "charset": null, "content": "light dark" },
+          { "name": null, "http_equiv": "Content-Security-Policy", "property": null, "charset": null, "content": "default-src 'self'; img-src https:" },
+          { "name": null, "http_equiv": "Permissions-Policy", "property": null, "charset": null, "content": "geolocation=(), camera=()" },
+          { "name": null, "http_equiv": "Origin-Trial", "property": null, "charset": null, "content": "trial-token" },
+          { "name": null, "http_equiv": "Accept-CH", "property": null, "charset": null, "content": "Sec-CH-UA-Platform, DPR" },
+          { "name": null, "http_equiv": "x-dns-prefetch-control", "property": null, "charset": null, "content": "off" },
           { "name": "theme-color", "http_equiv": null, "property": null, "charset": null, "content": "#ffffff" },
           { "name": "theme-color", "http_equiv": null, "property": null, "charset": null, "content": "#111111" },
           { "name": null, "http_equiv": "refresh", "property": null, "charset": null, "content": "5; url=next.html" }

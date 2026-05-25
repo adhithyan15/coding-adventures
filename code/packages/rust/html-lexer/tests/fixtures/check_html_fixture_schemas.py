@@ -285,6 +285,18 @@ def check_browser_document_metadata(
         require_optional_nullable_string(metadata_path, metadata, field, errors)
 
     require_optional_object_list(metadata_path, metadata, "theme_colors", errors)
+    require_optional_object_list(metadata_path, metadata, "viewport_directives", errors)
+    for index, directive in enumerate(object_list_items(metadata, "viewport_directives")):
+        directive_path = f"{metadata_path}.viewport_directives[{index}]"
+        require_string(directive_path, directive, "name", errors)
+        require_optional_nullable_string(directive_path, directive, "value", errors)
+    require_optional_string_list(metadata_path, metadata, "robots_directives", errors)
+    require_optional_object_list(metadata_path, metadata, "http_equiv_hints", errors)
+    for index, hint in enumerate(object_list_items(metadata, "http_equiv_hints")):
+        hint_path = f"{metadata_path}.http_equiv_hints[{index}]"
+        require_string(hint_path, hint, "name", errors)
+        require_string(hint_path, hint, "content", errors)
+
     for index, theme_color in enumerate(object_list_items(metadata, "theme_colors")):
         theme_color_path = f"{metadata_path}.theme_colors[{index}]"
         require_string(theme_color_path, theme_color, "color", errors)

@@ -847,17 +847,32 @@ pub struct BrowserDocument {
 pub struct BrowserDocumentMetadata {
     pub charset: Option<String>,
     pub viewport: Option<String>,
+    pub viewport_directives: Vec<BrowserMetadataDirective>,
     pub description: Option<String>,
     pub application_name: Option<String>,
     pub referrer_policy: Option<String>,
     pub robots: Option<String>,
+    pub robots_directives: Vec<String>,
     pub color_scheme: Option<String>,
+    pub http_equiv_hints: Vec<BrowserHttpEquivHint>,
     pub theme_colors: Vec<BrowserThemeColor>,
     pub refresh: Option<BrowserRefresh>,
     pub canonical_url: Option<String>,
     pub resolved_canonical_url: Option<String>,
     pub manifest_url: Option<String>,
     pub resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMetadataDirective {
+    pub name: String,
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserHttpEquivHint {
+    pub name: String,
+    pub content: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8881,8 +8896,18 @@ fn collect_meta_document_metadata(element: &Element, summary: &mut BrowserDocume
     }
 
     if let Some(content) = element.attribute("content") {
+        if let Some(name) = browser_meta_policy_http_equiv_name(element) {
+            summary
+                .metadata
+                .http_equiv_hints
+                .push(BrowserHttpEquivHint {
+                    name,
+                    content: content.to_string(),
+                });
+        }
         if browser_meta_name_is(element, "viewport") && summary.metadata.viewport.is_none() {
             summary.metadata.viewport = Some(content.to_string());
+            summary.metadata.viewport_directives = browser_metadata_directives(content);
         }
         if browser_meta_name_is(element, "description") && summary.metadata.description.is_none() {
             summary.metadata.description = Some(content.to_string());
@@ -8897,6 +8922,7 @@ fn collect_meta_document_metadata(element: &Element, summary: &mut BrowserDocume
         }
         if browser_meta_name_is(element, "robots") && summary.metadata.robots.is_none() {
             summary.metadata.robots = Some(content.to_string());
+            summary.metadata.robots_directives = browser_metadata_list(content);
         }
         if browser_meta_name_is(element, "color-scheme") && summary.metadata.color_scheme.is_none()
         {
@@ -8942,6 +8968,19 @@ fn browser_meta_http_equiv_is(element: &Element, expected: &str) -> bool {
     element
         .attribute("http-equiv")
         .is_some_and(|name| name.eq_ignore_ascii_case(expected))
+}
+
+fn browser_meta_http_equiv_name(element: &Element) -> Option<String> {
+    element
+        .attribute("http-equiv")
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .map(str::to_ascii_lowercase)
+}
+
+fn browser_meta_policy_http_equiv_name(element: &Element) -> Option<String> {
+    let name = browser_meta_http_equiv_name(element)?;
+    (!matches!(name.as_str(), "content-type" | "refresh")).then_some(name)
 }
 
 fn browser_meta_charset(element: &Element) -> Option<String> {
@@ -8991,6 +9030,38 @@ fn browser_refresh_url(part: &str) -> Option<String> {
     }
     let url = trim_browser_metadata_token(value);
     (!url.is_empty()).then_some(url)
+}
+
+fn browser_metadata_directives(content: &str) -> Vec<BrowserMetadataDirective> {
+    content
+        .split(',')
+        .filter_map(|part| {
+            let part = part.trim();
+            if part.is_empty() {
+                return None;
+            }
+            let (name, value) = match part.split_once('=') {
+                Some((name, value)) => (
+                    name.trim(),
+                    Some(trim_browser_metadata_token(value)).filter(|value| !value.is_empty()),
+                ),
+                None => (part, None),
+            };
+            let name = name.trim();
+            (!name.is_empty()).then(|| BrowserMetadataDirective {
+                name: name.to_ascii_lowercase(),
+                value,
+            })
+        })
+        .collect()
+}
+
+fn browser_metadata_list(content: &str) -> Vec<String> {
+    content
+        .split(',')
+        .map(trim_browser_metadata_token)
+        .filter(|part| !part.is_empty())
+        .collect()
 }
 
 fn trim_browser_metadata_token(value: &str) -> String {
@@ -12035,12 +12106,17 @@ mod tests {
             "<base href=\"https://example.test/app/page.html\">\
              <meta http-equiv=content-type content=\"text/html; charset=windows-1252\">\
              <meta charset=utf-8>\
-             <meta name=viewport content=\"width=device-width, initial-scale=1\">\
+             <meta name=viewport content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\
              <meta name=description content=\"HTML parser workbench\">\
              <meta name=application-name content=Venture>\
              <meta name=referrer content=no-referrer>\
-             <meta name=robots content=\"index,follow\">\
+             <meta name=robots content=\"index, follow, max-image-preview:large\">\
              <meta name=color-scheme content=\"light dark\">\
+             <meta http-equiv=Content-Security-Policy content=\"default-src 'self'; img-src https:\">\
+             <meta http-equiv=Permissions-Policy content=\"geolocation=(), camera=()\">\
+             <meta http-equiv=Origin-Trial content=trial-token>\
+             <meta http-equiv=Accept-CH content=\"Sec-CH-UA-Platform, DPR\">\
+             <meta http-equiv=x-dns-prefetch-control content=off>\
              <meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\">\
              <meta name=theme-color content=\"#111111\" media=\"(prefers-color-scheme: dark)\">\
              <meta http-equiv=refresh content=\"5; url=next.html\">\
@@ -12053,7 +12129,24 @@ mod tests {
         assert_eq!(summary.metadata.charset.as_deref(), Some("windows-1252"));
         assert_eq!(
             summary.metadata.viewport.as_deref(),
-            Some("width=device-width, initial-scale=1")
+            Some("width=device-width, initial-scale=1, viewport-fit=cover")
+        );
+        assert_eq!(
+            summary.metadata.viewport_directives,
+            vec![
+                BrowserMetadataDirective {
+                    name: "width".to_string(),
+                    value: Some("device-width".to_string()),
+                },
+                BrowserMetadataDirective {
+                    name: "initial-scale".to_string(),
+                    value: Some("1".to_string()),
+                },
+                BrowserMetadataDirective {
+                    name: "viewport-fit".to_string(),
+                    value: Some("cover".to_string()),
+                },
+            ]
         );
         assert_eq!(
             summary.metadata.description.as_deref(),
@@ -12067,7 +12160,39 @@ mod tests {
             summary.metadata.referrer_policy.as_deref(),
             Some("no-referrer")
         );
-        assert_eq!(summary.metadata.robots.as_deref(), Some("index,follow"));
+        assert_eq!(
+            summary.metadata.robots.as_deref(),
+            Some("index, follow, max-image-preview:large")
+        );
+        assert_eq!(
+            summary.metadata.robots_directives,
+            vec!["index", "follow", "max-image-preview:large"]
+        );
+        assert_eq!(
+            summary.metadata.http_equiv_hints,
+            vec![
+                BrowserHttpEquivHint {
+                    name: "content-security-policy".to_string(),
+                    content: "default-src 'self'; img-src https:".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "permissions-policy".to_string(),
+                    content: "geolocation=(), camera=()".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "origin-trial".to_string(),
+                    content: "trial-token".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "accept-ch".to_string(),
+                    content: "Sec-CH-UA-Platform, DPR".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "x-dns-prefetch-control".to_string(),
+                    content: "off".to_string(),
+                },
+            ]
+        );
         assert_eq!(summary.metadata.color_scheme.as_deref(), Some("light dark"));
         assert_eq!(summary.metadata.theme_colors.len(), 2);
         assert_eq!(summary.metadata.theme_colors[0].color, "#ffffff");
