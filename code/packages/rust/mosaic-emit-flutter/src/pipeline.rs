@@ -585,16 +585,41 @@ fn emit_widget_tree(
     }
 
     // --- Routing: meta-primitives ---
-    // For/If/Else are deferred to a follow-up — emit a placeholder
-    // widget so the output type-checks. The grammar accepts these
-    // primitives today but Flutter-specific lowering needs a clean
-    // story for sibling-pair walking (which Dart's expression form
-    // makes awkward inside a `children: [...]` list).
-    if matches!(node.tag.as_str(), "For" | "If" | "Else") {
-        return Ok(format!(
-            "{pad}/* TODO: {} not yet wired in the Flutter emitter (UI29-FU) */ const SizedBox.shrink()\n",
-            node.tag
-        ));
+    //
+    // `For` / `If` / `Else` are control-flow primitives (UI29 §3.1
+    // and §3.2). They lower to Dart control-flow expressions wrapped
+    // in a self-contained widget so they slot into any parent that
+    // expects a single child:
+    //
+    //   - `For`        → `Column(children: <coll>.map(...).toList())`
+    //   - `If`         → `(<cond>) ? <then> : const SizedBox.shrink()`
+    //   - `If`+`Else`  → `(<cond>) ? <then> : <else>` — but the
+    //     pairing happens at the parent (see `emit_paired_children`)
+    //     because we need the next sibling to combine them.
+    //
+    // A bare `Else` here means the moslayout analyzer let through an
+    // orphan (the validator should reject this, but the emitter is
+    // defensive). Emit a comment widget so the file still compiles.
+    //
+    // The standalone routes here cover the case where `For`/`If`
+    // appear as the SINGLE child of a parent (`child: For(...)`) —
+    // i.e. when the parent's emitter calls `emit_widget_tree` directly
+    // on the meta-primitive instead of routing through
+    // `emit_paired_children`. The container walker
+    // (`emit_container_paired_children`) handles the multi-child case
+    // where `If`/`Else` siblings need to combine.
+    match node.tag.as_str() {
+        "For" => return emit_for_dart(node, indent, part_styles),
+        // Standalone If — no Else paired. The container walker fuses
+        // sibling pairs, so this branch fires only when If is the lone
+        // child or the parent didn't pair-walk.
+        "If" => return emit_if_dart(node, None, indent, part_styles),
+        "Else" => {
+            return Ok(format!(
+                "{pad}/* orphan Else — analyzer should have rejected this */ const SizedBox.shrink()\n"
+            ));
+        }
+        _ => {}
     }
 
     // --- Component reference fallback ---
@@ -677,32 +702,247 @@ fn emit_container(
             ));
         }
         // Multiple children — wrap in Column inside the Container.
-        let mut children = String::new();
-        for child in &node.children {
-            let sub = emit_widget_tree(child, indent + 4, part_styles)?;
-            let sub = sub.trim_end_matches('\n');
-            children.push_str(sub);
-            children.push_str(",\n");
-        }
+        let children = emit_paired_children(&node.children, indent + 4, part_styles)?;
         return Ok(format!(
             "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
         ));
     }
 
     // Row / Column / Stack — direct Flutter widgets with a children list.
-    let mut children = String::new();
-    for child in &node.children {
-        let sub = emit_widget_tree(child, indent + 4, part_styles)?;
-        let sub = sub.trim_end_matches('\n').to_string();
-        children.push_str(&sub);
-        children.push_str(",\n");
-    }
+    let children = emit_paired_children(&node.children, indent + 4, part_styles)?;
 
     if children.is_empty() {
         return Ok(format!("{pad}const {widget}(children: [])\n"));
     }
     Ok(format!(
         "{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n"
+    ))
+}
+
+/// Walk a sibling list with two pieces of sibling-aware behaviour:
+///
+/// 1. An `If` followed immediately by `Else` is consumed as a pair
+///    and lowered via [`emit_if_dart`] with the Else branch wired
+///    in. The Else is skipped on the next loop step.
+/// 2. Everything else delegates to [`emit_widget_tree`].
+///
+/// Returns the comma-joined widget list ready to splice into a
+/// `children: [...]` argument. Each emitted child has the trailing
+/// comma and newline appended by this function — the caller does
+/// **not** add them again.
+///
+/// Mirrors `emit_children` in the SwiftUI backend; the routing logic
+/// is identical because both languages model `If`/`Else` as
+/// expression-form conditionals returning a view.
+fn emit_paired_children(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            // Peek for `Else` immediately after; pair if present.
+            let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
+            let if_src = emit_if_dart(child, else_node, indent, part_styles)?;
+            let trimmed = if_src.trim_end_matches('\n');
+            out.push_str(trimmed);
+            out.push_str(",\n");
+            i += if else_node.is_some() { 2 } else { 1 };
+            continue;
+        }
+        // Orphan Else falls through to the standalone routing in
+        // `emit_widget_tree`, which emits a documenting placeholder.
+        let sub = emit_widget_tree(child, indent, part_styles)?;
+        let sub = sub.trim_end_matches('\n');
+        out.push_str(sub);
+        out.push_str(",\n");
+        i += 1;
+    }
+    Ok(out)
+}
+
+/// Lower a UI29 `For` (§3.1) to a Dart `Column` whose `children:`
+/// list is built by mapping over the iterated collection.
+///
+/// Three shapes, depending on which optional bindings are present:
+///
+/// | `For` shape                       | Dart output                                         |
+/// |-----------------------------------|-----------------------------------------------------|
+/// | `For ( each: X, as: y )`          | `Column(children: X.map((y) => <body>).toList())`   |
+/// | `For ( each: X, as: y, index: i)` | `Column(children: X.asMap().entries.map((entry) {`  |
+/// |                                   | `  final i = entry.key;`                            |
+/// |                                   | `  final y = entry.value;`                          |
+/// |                                   | `  return KeyedSubtree(key: ValueKey(i), child: <body>);`|
+/// |                                   | `}).toList())`                                      |
+///
+/// The wrapping `KeyedSubtree` carrying `ValueKey(i)` is what gives
+/// Flutter's element tree a stable identity for each iteration —
+/// roughly the equivalent of React's `key={i}` (UI28-1 §5
+/// performance property). Without it, Flutter's diff would mis-
+/// associate widget state when rows reorder.
+///
+/// `each:` may be a `SlotRef` (lowered to its camelCase name) or an
+/// `Expr` (passed through verbatim — author-controlled). A defensive
+/// fall-back to `<dynamic>[]` keeps the file type-checking when the
+/// validator somehow allowed a bad shape.
+fn emit_for_dart(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // `each:` — required. `validate_for_node` guarantees SlotRef or
+    // Expr; fall back to `<dynamic>[]` so the generated file still
+    // type-checks if validation was somehow skipped.
+    let coll_expr = match node.props.iter().find(|p| p.name == "each") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Expr(text) => text.clone(),
+            _ => "<dynamic>[]".to_string(),
+        },
+        None => "<dynamic>[]".to_string(),
+    };
+
+    // `as:` — required, always a Keyword per UI29 §3.1. Defensive
+    // fallback to `item` matches SwiftUI.
+    let as_name = find_keyword_prop(node, "as")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+
+    // `index:` — optional, always a Keyword when present.
+    let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
+
+    // Body is the children of the For. May be empty (rare but legal)
+    // — emit `const SizedBox.shrink()` so the closure returns a Widget.
+    let body_pad = indent + 6;
+    let body = if node.children.is_empty() {
+        format!("{}const SizedBox.shrink()", " ".repeat(body_pad))
+    } else if node.children.len() == 1 {
+        emit_widget_tree(&node.children[0], body_pad, part_styles)?
+            .trim_end_matches('\n')
+            .to_string()
+    } else {
+        // Multiple children — wrap in a Column so the map closure
+        // returns a single Widget.
+        let inner = emit_paired_children(&node.children, body_pad + 4, part_styles)?;
+        format!(
+            "{}Column(children: [\n{}{}])",
+            " ".repeat(body_pad),
+            inner,
+            " ".repeat(body_pad + 2),
+        )
+    };
+
+    let body_trimmed = body.trim_start();
+
+    match index_name {
+        Some(idx) => {
+            // Indexed form: enumerate via .asMap().entries, bind key+value,
+            // wrap the body in a KeyedSubtree so the index becomes the
+            // element-tree stable key (UI28-1 §5).
+            Ok(format!(
+                "{pad}Column(children: {coll}.asMap().entries.map((entry) {{\n\
+                 {p2}final {idx} = entry.key;\n\
+                 {p2}final {asn} = entry.value;\n\
+                 {p2}return KeyedSubtree(key: ValueKey({idx}), child: {body});\n\
+                 {pad}}}).toList())\n",
+                coll = coll_expr,
+                idx = idx,
+                asn = as_name,
+                body = body_trimmed,
+                p2 = " ".repeat(indent + 2),
+            ))
+        }
+        None => {
+            // Plain form: single-arg arrow function returning the body.
+            // No key — the author opted out by not binding `index:`.
+            Ok(format!(
+                "{pad}Column(children: {coll}.map(({asn}) => {body}).toList())\n",
+                coll = coll_expr,
+                asn = as_name,
+                body = body_trimmed,
+            ))
+        }
+    }
+}
+
+/// Lower a UI29 `If` (§3.2) — optionally paired with a following
+/// `Else` sibling — to a Dart ternary returning a Widget.
+///
+/// | shape                   | Dart                                       |
+/// |-------------------------|--------------------------------------------|
+/// | `If { then }`           | `(<cond>) ? <then> : const SizedBox.shrink()` |
+/// | `If { then } Else { e }`| `(<cond>) ? <then> : <else>`              |
+///
+/// `<cond>` is the camelCased name for a `SlotRef`, or the
+/// expression source text verbatim for an `Expr` (author-controlled).
+/// The ternary's branches are recursed through [`emit_widget_tree`]
+/// so nested `If`/`Else` still pairs naturally.
+///
+/// Empty branches collapse to `const SizedBox.shrink()` so the
+/// ternary always returns a concrete Widget.
+fn emit_if_dart(
+    if_node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    // `when:` — required. `validate_if_node` guarantees SlotRef or
+    // Expr; fall back to `false` so the file compiles even if
+    // validation was skipped.
+    let cond_expr = match if_node.props.iter().find(|p| p.name == "when") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Expr(text) => text.clone(),
+            _ => "false".to_string(),
+        },
+        None => "false".to_string(),
+    };
+
+    let body_pad = indent + 2;
+    let then_branch = render_branch(&if_node.children, body_pad, part_styles)?;
+    let else_branch = match else_node {
+        Some(en) => render_branch(&en.children, body_pad, part_styles)?,
+        None => "const SizedBox.shrink()".to_string(),
+    };
+
+    Ok(format!(
+        "{pad}(({cond}) ? {then_b} : {else_b})\n",
+        cond = cond_expr,
+        then_b = then_branch,
+        else_b = else_branch,
+    ))
+}
+
+/// Render a single conditional branch (the body of an `If` or `Else`)
+/// as a single-Widget expression suitable as a ternary operand.
+///
+/// - Empty body → `const SizedBox.shrink()`
+/// - Single child → recurse, trimming the trailing newline
+/// - Multiple children → wrap in `Column(children: [...])`
+fn render_branch(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    if children.is_empty() {
+        return Ok("const SizedBox.shrink()".to_string());
+    }
+    if children.len() == 1 {
+        let s = emit_widget_tree(&children[0], indent, part_styles)?;
+        return Ok(s.trim_end_matches('\n').trim_start().to_string());
+    }
+    let inner = emit_paired_children(children, indent + 2, part_styles)?;
+    Ok(format!(
+        "Column(children: [\n{}{}])",
+        inner,
+        " ".repeat(indent),
     ))
 }
 
@@ -1041,13 +1281,10 @@ fn emit_host_scroll(
             "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
         ));
     }
-    let mut children = String::new();
-    for c in &node.children {
-        let sub = emit_widget_tree(c, indent + 6, part_styles)?;
-        let sub = sub.trim_end_matches('\n');
-        children.push_str(sub);
-        children.push_str(",\n");
-    }
+    // Multi-child path. Use the paired walker so an `If`/`Else`
+    // sibling pair (Cell-style conditionals inside a scroll viewport)
+    // is consumed correctly.
+    let children = emit_paired_children(&node.children, indent + 6, part_styles)?;
     Ok(format!(
         "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
     ))
@@ -1321,13 +1558,9 @@ fn emit_host_tooltip(
         emit_widget_tree(&node.children[0], indent + 2, part_styles)?
     } else {
         // Multiple children — wrap in Column. Shouldn't happen for a
-        // spec-conformant HostTooltip but we handle it defensively.
-        let mut children = String::new();
-        for c in &node.children {
-            let sub = emit_widget_tree(c, indent + 6, part_styles)?;
-            children.push_str(sub.trim_end_matches('\n'));
-            children.push_str(",\n");
-        }
+        // spec-conformant HostTooltip but we handle it defensively
+        // (and through the paired walker so `If`/`Else` still fuses).
+        let children = emit_paired_children(&node.children, indent + 6, part_styles)?;
         format!(
             "{inner_pad}Column(\n{inner_pad}  children: [\n{children}{inner_pad}  ],\n{inner_pad})\n"
         )
@@ -3128,5 +3361,376 @@ mod tests {
         assert!(!is_valid_dart_pub_name("foo bar")); // space
         assert!(!is_valid_dart_pub_name("foo.bar")); // dot (Dart pub rejects)
         assert!(!is_valid_dart_pub_name(&"a".repeat(65))); // over 64 char limit
+    }
+
+    // =====================================================================
+    // UI29-FU / Phase 2 — Flutter For / If / Else lowering
+    //
+    // These tests pin the Dart shapes emitted for the three control-flow
+    // primitives. The grammar already accepts For / If / Else (UI29 §3.1
+    // and §3.2); UI28-1 §6.2 calls out that the Flutter emitter was a
+    // placeholder until this PR, blocking mosaic-pkg-grid v0.2.0 on the
+    // Flutter backend.
+    // =====================================================================
+
+    // ----- Helpers (control-flow specific) -----------------------------------
+
+    fn for_node(
+        each_value: LayoutPropValue,
+        as_name: &str,
+        index_name: Option<&str>,
+        body: Vec<LayoutNode>,
+    ) -> LayoutNode {
+        let mut props = vec![
+            LayoutProp {
+                name: "each".into(),
+                value: each_value,
+            },
+            LayoutProp {
+                name: "as".into(),
+                value: LayoutPropValue::Keyword(as_name.into()),
+            },
+        ];
+        if let Some(idx) = index_name {
+            props.push(LayoutProp {
+                name: "index".into(),
+                value: LayoutPropValue::Keyword(idx.into()),
+            });
+        }
+        LayoutNode {
+            tag: "For".into(),
+            part_name: None,
+            props,
+            children: body,
+        }
+    }
+
+    fn if_node(when_value: LayoutPropValue, body: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "If".into(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".into(),
+                value: when_value,
+            }],
+            children: body,
+        }
+    }
+
+    fn else_node(body: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Else".into(),
+            part_name: None,
+            props: vec![],
+            children: body,
+        }
+    }
+
+    fn text_node(content: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".into(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".into(),
+                value: LayoutPropValue::String(content.into()),
+            }],
+            children: vec![],
+        }
+    }
+
+    // ----- For: slot-ref each, as-only (no index) ---------------------------
+
+    #[test]
+    fn for_with_slot_ref_each_and_as_only_emits_simple_map_to_list() {
+        // For ( each: slot: rows , as: r ) { Text(content: "x") }
+        let m = component("X", vec![slot("rows", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::SlotRef("rows".into()),
+                "r",
+                None,
+                vec![text_node("x")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        // SlotRef lowers via to_camel_case_first_lower; "rows" stays "rows".
+        assert!(
+            out.contains("Column(children: rows.map((r) =>"),
+            "expected unindexed map form, got:\n{}",
+            out
+        );
+        // No ValueKey when index is absent.
+        assert!(
+            !out.contains("ValueKey"),
+            "did not expect ValueKey without index: binding, got:\n{}",
+            out
+        );
+    }
+
+    // ----- For: with index — emits KeyedSubtree(ValueKey(i), child: ...) ----
+
+    #[test]
+    fn for_with_index_binding_emits_keyed_subtree_for_stable_keys() {
+        // For ( each: slot: rows , as: row , index: r ) { Text(content: "x") }
+        let m = component("X", vec![slot("rows", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::SlotRef("rows".into()),
+                "row",
+                Some("r"),
+                vec![text_node("x")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        assert!(
+            out.contains("rows.asMap().entries.map((entry)"),
+            "expected enumerated map form, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("final r = entry.key;"),
+            "expected `final r = entry.key;`, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("final row = entry.value;"),
+            "expected `final row = entry.value;`, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("KeyedSubtree(key: ValueKey(r)"),
+            "expected stable KeyedSubtree per UI28-1 §5, got:\n{}",
+            out
+        );
+    }
+
+    // ----- For: Expr each — passes through verbatim -------------------------
+
+    #[test]
+    fn for_with_expr_each_passes_through_expression_text() {
+        // For ( each: <expr 'cols.visible'> , as: c ) { Text(...) }
+        // The validator accepts Expr; the emitter passes it through.
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::Expr("cols.visible".into()),
+                "c",
+                None,
+                vec![text_node("col")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output.contains("Column(children: cols.visible.map((c) =>"),
+            "expected the Expr text verbatim as the collection, got:\n{}",
+            r.output
+        );
+    }
+
+    // ----- For: kebab-case binding names lower to camelCase ---------------
+
+    #[test]
+    fn for_with_kebab_case_index_name_lowers_to_camel_case() {
+        // For ( each: ... , as: row-data , index: row-idx ) { Text(...) }
+        // The Dart-side bindings must be camelCase identifiers — not raw
+        // kebab-case (which is illegal Dart syntax).
+        let m = component("X", vec![slot("rows", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::SlotRef("rows".into()),
+                "row-data",
+                Some("row-idx"),
+                vec![text_node("x")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        assert!(out.contains("final rowIdx = entry.key;"));
+        assert!(out.contains("final rowData = entry.value;"));
+        assert!(out.contains("ValueKey(rowIdx)"));
+    }
+
+    // ----- If: standalone (no Else) -----------------------------------------
+
+    #[test]
+    fn if_standalone_emits_ternary_with_sizedbox_else() {
+        // If ( when: slot: editing ) { Text("yes") }   — no Else
+        let m = component("X", vec![slot("editing", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            if_node(
+                LayoutPropValue::SlotRef("editing".into()),
+                vec![text_node("yes")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        assert!(
+            out.contains("((editing) ?"),
+            "expected ternary on the camelCased slot ref, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains(": const SizedBox.shrink())"),
+            "expected SizedBox.shrink() in the empty-else branch, got:\n{}",
+            out
+        );
+    }
+
+    // ----- If + Else inside a Box: sibling pairing fires --------------------
+
+    #[test]
+    fn if_else_pair_inside_container_emits_full_ternary() {
+        // Box {
+        //   If ( when: slot: editing ) { Text("editor") }
+        //   Else                       { Text("display") }
+        // }
+        // This shape mirrors Cell.mll exactly.
+        let m = component("X", vec![slot("editing", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Box",
+                vec![],
+                vec![
+                    if_node(
+                        LayoutPropValue::SlotRef("editing".into()),
+                        vec![text_node("editor")],
+                    ),
+                    else_node(vec![text_node("display")]),
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        assert!(
+            out.contains("((editing) ?"),
+            "expected the conditional ternary, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("Text(\"editor\")"),
+            "expected the then-branch Text widget, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("Text(\"display\")"),
+            "expected the else-branch Text widget instead of SizedBox, got:\n{}",
+            out
+        );
+        // The post-Else SizedBox fallback must NOT appear when an Else is paired.
+        assert!(
+            !out.contains("SizedBox.shrink"),
+            "did not expect a fallback SizedBox.shrink when Else was paired, got:\n{}",
+            out
+        );
+    }
+
+    // ----- If when: is an Expr — passes through verbatim --------------------
+
+    #[test]
+    fn if_with_expr_when_passes_through_expression_text() {
+        // If ( when: <expr 'cellRow == editRow && cellCol == editCol'> )
+        // This is the Cell.mll predicate shape — verifies the Cell case
+        // works after this PR even without UI29 §3.4 (since the names
+        // resolve to Cell's own slots).
+        let m = component(
+            "X",
+            vec![
+                slot("cellRow", SlotType::Number, true),
+                slot("editRow", SlotType::Number, true),
+                slot("cellCol", SlotType::Number, true),
+                slot("editCol", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            if_node(
+                LayoutPropValue::Expr(
+                    "cellRow == editRow && cellCol == editCol".into(),
+                ),
+                vec![text_node("editing")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output
+                .contains("((cellRow == editRow && cellCol == editCol) ?"),
+            "expected the Expr source threaded into the ternary, got:\n{}",
+            r.output
+        );
+    }
+
+    // ----- Empty For body — yields a SizedBox.shrink in the closure -------
+
+    #[test]
+    fn for_with_empty_body_emits_sizedbox_shrink_in_closure() {
+        let m = component("X", vec![slot("rows", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::SlotRef("rows".into()),
+                "r",
+                None,
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output
+                .contains("Column(children: rows.map((r) => const SizedBox.shrink())"),
+            "expected SizedBox.shrink() body for empty For, got:\n{}",
+            r.output
+        );
+    }
+
+    // ----- Nested For (Grid.mll shape) compiles end-to-end ----------------
+    //
+    // This is the v0.2.0 Grid composition: outer For over rows,
+    // inner For over a hardcoded Expr (we can't reference outer
+    // bindings until UI29 §3.4 lands). The Expr-as-each form
+    // sidesteps §3.4 — useful as a sanity check that the inner
+    // emit_for_dart recursion works.
+
+    #[test]
+    fn nested_for_inside_row_compiles_with_expr_inner_each() {
+        let m = component("X", vec![slot("rows", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::SlotRef("rows".into()),
+                "row",
+                Some("r"),
+                vec![node_with(
+                    "Row",
+                    vec![],
+                    vec![for_node(
+                        // §3.4 placeholder: pretend `row` is an Expr.
+                        // The real fix lands when scoping enables NAME refs.
+                        LayoutPropValue::Expr("row".into()),
+                        "cell",
+                        Some("c"),
+                        vec![text_node("cell")],
+                    )],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        // Outer For shape.
+        assert!(out.contains("rows.asMap().entries.map((entry)"));
+        assert!(out.contains("final r = entry.key;"));
+        assert!(out.contains("final row = entry.value;"));
+        // Inner For shape — uses the Expr text 'row' as the collection.
+        assert!(out.contains("row.asMap().entries.map((entry)"));
+        assert!(out.contains("final c = entry.key;"));
+        assert!(out.contains("final cell = entry.value;"));
     }
 }
