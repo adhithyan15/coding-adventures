@@ -201,6 +201,10 @@ All notable changes to this package will be documented in this file.
 - Flattened host-run escalation queue settled, action, rank, routing, review,
   investigation, triage, and route-presence flags for supervisor drain run
   summary dashboards.
+- Compact host-run escalation rollup keys that group escalation kind, route,
+  priority, and readiness for concise supervisor drain run queue dashboards.
+- Flattened host-run escalation rollup integrity and routing flags beside the
+  expanded escalation queue key.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
