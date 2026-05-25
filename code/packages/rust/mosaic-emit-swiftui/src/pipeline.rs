@@ -168,6 +168,195 @@ impl std::fmt::Display for PipelineEmitError {
 
 impl std::error::Error for PipelineEmitError {}
 
+// =====================================================================
+// UI32-K-swiftui — `--emit-project` Swift Package Manager shell
+//
+// L7 of UI32. Mirrors L2 (React #4297), L3 (HTML #4309),
+// L4 (WebComponent #4315), L5 (Flutter #4319), L6 (Qt #4325):
+// EmitOptions / ProjectFiles / from_pipeline_with_options.
+//
+// When `--emit-project` is on, emits a SwiftPM-shaped scaffold
+// alongside the component .swift. Author runs `swift run` to see
+// the component on macOS (the v1 target — iOS/Android need
+// xcrun + a separate iOS shell, deferred).
+// =====================================================================
+
+/// Options controlling the SwiftUI emitter's behaviour.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EmitOptions {
+    /// Also emit `Package.swift`, `Sources/App/App.swift`,
+    /// `README.md` alongside the component `.swift`. Default `false`.
+    pub emit_project: bool,
+
+    /// Pinned `swift-tools-version` for `Package.swift`. UI32 spec
+    /// §3.6.3 requires exact pinning. Default `"5.10"` — a
+    /// known-good Swift 5.10 LTS that supports macOS 14 SwiftUI.
+    pub pinned_swift_tools: String,
+
+    /// Pinned macOS deployment target. Default `".v13"` — the
+    /// lowest macOS that supports modern SwiftUI (`@Observable`,
+    /// the v3 `Sheet` API, etc.). Lower targets miss APIs.
+    pub pinned_macos_min: String,
+}
+
+impl Default for EmitOptions {
+    fn default() -> Self {
+        Self {
+            emit_project: false,
+            pinned_swift_tools: "5.10".to_string(),
+            pinned_macos_min: ".v13".to_string(),
+        }
+    }
+}
+
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project`
+/// is on. Three files — enough for `swift run` to launch a SwiftUI
+/// macOS app that mounts the component.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProjectFiles {
+    /// `Package.swift` — pinned `swift-tools-version`, single
+    /// executable target named `App` that depends on the component
+    /// source.
+    pub package_swift: String,
+    /// `Sources/App/App.swift` — SwiftUI `@main App` + `WindowGroup`
+    /// shell that mounts `{Component}View()` as the root view.
+    /// Imports the component sibling-relative (via SwiftPM target
+    /// dependency or `#include`-equivalent — for v1, the component
+    /// .swift sits in the same `Sources/App/` directory).
+    pub app_swift: String,
+    /// `README.md` — prereqs (Swift 5.10+, Xcode CLT or full
+    /// Xcode), `swift run` recipe, file map.
+    pub readme: String,
+}
+
+/// Error shapes specific to the SwiftUI project-shell emission path.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProjectShellError {
+    /// The component name collides with a Swift reserved keyword.
+    /// Per UI32 spec §3.6.2 SwiftUI row: Swift keywords (`Class`,
+    /// `Protocol`, `Actor`, `Self`, etc.) must be backtick-quoted
+    /// or avoided. We choose to reject them outright with a
+    /// fail-loud error rather than emit backtick-quoted Swift
+    /// (which compiles but is non-idiomatic).
+    SwiftKeywordCollision(String),
+}
+
+impl std::fmt::Display for ProjectShellError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProjectShellError::SwiftKeywordCollision(n) => write!(
+                f,
+                "component name '{n}' collides with a Swift reserved keyword; rename the component to avoid backtick-quoting"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ProjectShellError {}
+
+impl From<ProjectShellError> for PipelineEmitError {
+    fn from(e: ProjectShellError) -> Self {
+        PipelineEmitError::UnsafeSlotName(e.to_string())
+    }
+}
+
+/// Extended pipeline result — carries the optional `ProjectFiles`
+/// when `emit_project` is on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PipelineEmitResultWithProject {
+    pub output: String,
+    pub component_name: String,
+    pub project: Option<ProjectFiles>,
+}
+
+/// Compile a three-file Mosaic pipeline triple to SwiftUI with
+/// explicit emit options.
+pub fn from_pipeline_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
+    let component = from_pipeline(interface, layout, style)?;
+
+    let project = if options.emit_project {
+        Some(build_swiftui_project_files(&component.component_name, options)?)
+    } else {
+        None
+    };
+
+    Ok(PipelineEmitResultWithProject {
+        output: component.output,
+        component_name: component.component_name,
+        project,
+    })
+}
+
+/// Build the three SwiftUI app-shell side files for a single
+/// component.
+///
+/// UI32 spec §3.6.2 SwiftUI row contract: Swift keywords (`Class`,
+/// `Protocol`, `Actor`, `Self`, `Any`, `Type`, etc.) must be
+/// rejected to avoid backtick-quoting in identifier positions.
+fn build_swiftui_project_files(
+    name: &str,
+    options: &EmitOptions,
+) -> Result<ProjectFiles, ProjectShellError> {
+    if is_swift_keyword(name) {
+        return Err(ProjectShellError::SwiftKeywordCollision(name.to_string()));
+    }
+
+    Ok(ProjectFiles {
+        package_swift: build_package_swift(options),
+        app_swift: build_app_swift(name),
+        readme: build_swiftui_readme(name),
+    })
+}
+
+/// Swift reserved keyword reject-list — the subset that's plausibly
+/// PascalCase (so we don't false-fire on lowercase keywords like
+/// `if`, `let`, `var` that the upstream validator already rejects
+/// at the first-char-must-be-uppercase check).
+///
+/// Sources: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/lexicalstructure
+/// — declaration keywords + type keywords that collide with the
+/// PascalCase namespace. We err on the strict side; the upstream
+/// validator already gates `[A-Z][A-Za-z0-9_]*` shape, so any
+/// remaining keyword collisions are these PascalCase names.
+const SWIFT_RESERVED_KEYWORDS: &[&str] = &[
+    "Any", "AnyObject", "Class", "Protocol", "Actor", "Self", "Type", "Module",
+    "Package", "Import", "Throws", "Rethrows", "True", "False",
+];
+
+fn is_swift_keyword(s: &str) -> bool {
+    SWIFT_RESERVED_KEYWORDS.contains(&s)
+}
+
+const BANNER_SWIFT: &str = "// AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\n";
+const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+
+fn build_package_swift(options: &EmitOptions) -> String {
+    format!(
+        "// swift-tools-version: {}\n{BANNER_SWIFT}import PackageDescription\n\nlet package = Package(\n  name: \"App\",\n  platforms: [.macOS({})],\n  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    ),\n  ]\n)\n",
+        options.pinned_swift_tools, options.pinned_macos_min,
+    )
+}
+
+fn build_app_swift(component_name: &str) -> String {
+    // The Mosaic SwiftUI emitter produces a `View` struct named
+    // `{component_name}View` (per pipeline.rs:120 doc comment), so
+    // mount that here.
+    format!(
+        "{BANNER_SWIFT}import SwiftUI\n\n@main\nstruct MosaicApp: App {{\n  var body: some Scene {{\n    WindowGroup(\"{component_name}\") {{\n      {component_name}View()\n    }}\n  }}\n}}\n"
+    )
+}
+
+fn build_swiftui_readme(component_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {component_name} — SwiftUI macOS shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later target machine.\n\n## Run\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View()`. The first run downloads no dependencies — the package only depends on the SwiftUI system framework.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component. Place inside `Sources/App/` for SwiftPM to pick it up. |\n| `Package.swift` | SwiftPM manifest. Pinned swift-tools-version per UI32 spec §3.6.3. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View()`. |\n| `README.md` | This file. |\n\n## Layout\n\nFor SwiftPM to compile the component, move `{component_name}.swift` into `Sources/App/` (next to `App.swift`):\n\n```sh\nmkdir -p Sources/App\nmv {component_name}.swift Sources/App/\nswift run\n```\n\n## Editing\n\nEvery file except `{component_name}.swift` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
 /// Compile a three-file Mosaic pipeline triple to a SwiftUI source file.
 ///
 /// The `style` argument is accepted to lock the signature (callers and the
