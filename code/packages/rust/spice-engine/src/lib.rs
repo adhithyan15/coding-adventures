@@ -3449,6 +3449,44 @@ pub fn format_sens_table(result: &SensResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_pss_table(result: &PssResult, probes: &[&str]) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_transient_output_probes(&result.steady_state)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Index\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\t{}",
+        selected_probes.join("\t")
+    )];
+    for (index, point) in result.steady_state.iter().enumerate() {
+        let values: Result<Vec<String>, SpiceError> = selected_probes
+            .iter()
+            .map(|probe| {
+                table_probe_value(
+                    &point.node_voltages,
+                    &point.branch_currents,
+                    probe,
+                    "format_pss_table",
+                )
+                .map(format_table_number)
+            })
+            .collect();
+        rows.push(format!(
+            "{index}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            format_table_number(result.period_seconds),
+            format_table_number(result.time_step_seconds),
+            result.converged,
+            result.solve.iteration_count,
+            format_table_number(result.solve.final_residual.residual_l2_norm),
+            format_table_number(point.time),
+            values?.join("\t")
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
     for (index, entry) in result.entries.iter().enumerate() {

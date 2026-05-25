@@ -317,6 +317,10 @@ Status:
 - `.SENS` results can now be rendered as stable tab-separated text tables in
   the live Rust SPICE package, covering nominal values, absolute
   sensitivities, and relative sensitivities.
+- Direct PSS results can now be rendered as stable tab-separated text tables
+  in the live Rust SPICE package, covering period, time step, convergence,
+  Newton iteration count, final residual norm, steady-state time, and selected
+  voltage/current probes.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
