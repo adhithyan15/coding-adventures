@@ -1506,6 +1506,44 @@ function oneSqrtThreeLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | unde
   return sqrtHalfDeg + polyDeg;
 }
 
+/**
+ * Phase 70 — Three-Sqrt × Two-Log × polynomial numerator.
+ *
+ * Returns `sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg` when
+ * `node` is a `Mul` with exactly three `Sqrt` factors, exactly two
+ * `Log(diverging)` factors, any polynomial factors, and any bounded
+ * factors; `undefined` otherwise.
+ *
+ * `log²(k)` is sub-polynomial (`o(k^ε)`), so it contributes 0 to effective
+ * degree. effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+ * Caller checks `denDeg > threeSqrtTwoLogPolyEffectiveDeg(num, k)`.
+ */
+function threeSqrtTwoLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const halfDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (halfDeg !== undefined) {
+      sqrtHalfDegs.push(halfDeg);
+      if (sqrtHalfDegs.length > 3) return undefined; // more than three Sqrts — refuse
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 2) return undefined; // more than two Logs — refuse
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3 || logCount !== 2) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -1764,6 +1802,19 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS1l3 = polynomialDegreeInK(den, k);
     if (denDegS1l3 !== undefined) {
       if (denDegS1l3 > s1l3Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 70: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(diverging), Log(diverging), polynomial..., bounded...) numerator.
+  // Three Sqrt factors + two Log factors; log² is sub-polynomial — contributes 0 to effective degree.
+  // effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+  // Closes when denDeg > threeSqrtTwoLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const ts3l2Deg = threeSqrtTwoLogPolyEffectiveDeg(num, k);
+  if (ts3l2Deg !== undefined) {
+    const denDegTs3l2 = polynomialDegreeInK(den, k);
+    if (denDegTs3l2 !== undefined) {
+      if (denDegTs3l2 > ts3l2Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
