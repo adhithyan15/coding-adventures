@@ -2,6 +2,69 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.23.0] - 2026-05-25
+
+### Added (Phase 6v — `begin … rescue … ensure … end`)
+
+New grammar rules:
+
+```
+statement       = ... | case_statement | begin_statement | return_statement | ... ;
+begin_statement = "begin"
+                  { !"rescue" !"ensure" !"end" statement }
+                  { rescue_clause }
+                  [ ensure_clause ]
+                  "end" ;
+rescue_clause   = "rescue" [ exception_list "=>" NAME ]
+                       { !"rescue" !"ensure" !"end" statement } ;
+exception_list  = NAME { COMMA NAME } ;
+ensure_clause   = "ensure" { !"end" statement } ;
+```
+
+#### Grammar design decision
+
+`rescue_clause` accepts the optional exception header ONLY when paired with `=>` binding (`rescue StandardError => e`).  Bare `rescue ExceptionType` (no `=>`) would create grammar ambiguity with the rescue body's first NAME-led statement — `rescue x = 2` would otherwise parse `x` as an exception type and fail at `=`.  Workaround for users wanting bare-type rescue: write `rescue ExceptionType => _`.
+
+#### Lowering (in `ruby-to-semantic-ir`)
+
+SIR has no try/catch primitive.  v0 lowering is lossy: body, rescue, and ensure stmts emit inline with synthetic marker `BuiltinCall`s:
+
+```
+begin body
+rescue StandardError, IOError => e rescue_body
+ensure ensure_body
+end
+```
+
+→
+
+```
+body_stmts...
+ExprStmt(BuiltinCall("__rescue_marker__", [StrLit("StandardError,IOError"), StrLit("e")]))
+rescue_stmts...
+ExprStmt(BuiltinCall("__ensure_marker__", []))
+ensure_stmts...
+```
+
+Markers carry the `Effect::MayThrow` tag.  Downstream emitters targeting languages with real exceptions can re-stitch the form via marker detection; for v0 the rescue body is unreachable in SIR's effect model.
+
+`lower_statement_inner_multi` (already routing `multi_assignment` to a Vec<Stmt> path from Phase 6r) is extended to dispatch `begin_statement` to a new `lower_begin_statement` helper.
+
+#### v0 deferred limitations
+
+- Bare `rescue ExceptionType` (no `=>`) — see grammar design note.
+- `else` clause inside begin (executes when no exception raised) — not supported.
+- Real try/catch propagation through SIR's effect lattice — markers only.
+- `retry` / `raise` inside rescue body lower like any other call.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 101 → **105** (+4):
+  - `test_parse_begin_with_rescue` — bare `rescue` body.
+  - `test_parse_begin_with_rescue_typed_and_var` — `rescue StandardError => e`.
+  - `test_parse_begin_with_ensure` — `begin … ensure … end`.
+  - `test_parse_begin_with_rescue_and_ensure` — full three-section form.
+
 ## [0.22.0] - 2026-05-25
 
 ### Added (Phase 6u — `case … when … else … end`)

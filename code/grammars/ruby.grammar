@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -175,6 +175,38 @@ until_statement = "until" expression { !"end" statement } "end" ;
 #     (the grammar accepts only positional values via `expression`).
 case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
 when_clause    = "when" expression { COMMA expression } { !"when" !"else" !"end" statement } ;
+# Phase 6v — `begin … rescue … ensure … end`.
+#
+# Shape:
+#   begin_statement = "begin"
+#                     { !"rescue" !"ensure" !"end" statement }
+#                     { rescue_clause }
+#                     [ ensure_clause ]
+#                     "end" ;
+#   rescue_clause   = "rescue" [ exception_list ] [ "=>" NAME ]
+#                            { !"rescue" !"ensure" !"end" statement } ;
+#   exception_list  = NAME { COMMA NAME } ;
+#   ensure_clause   = "ensure" { !"end" statement } ;
+#
+# v0 deferred:
+#   - `else` clause inside begin (executes when no exception raised)
+#     is NOT supported — typical Ruby code uses ensure for cleanup.
+#   - retry / raise inside rescue body lowers like any other statement
+#     (the SIR validator may emit warnings for unrecognised `retry`).
+#   - Exception class hierarchy is NOT modelled — `rescue StandardError`
+#     and `rescue` (bare) lower identically.
+begin_statement = "begin" { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
+# `rescue_clause` accepts either the bare form (`rescue`) or the
+# typed-with-binding form (`rescue ExceptionType[, OtherType] => var`).
+# The exception types and `=> var` MUST appear together — bare
+# `rescue ExceptionType` (no `=>`) would create grammar ambiguity with
+# the rescue body's first NAME-led statement (e.g. `rescue x = 2`
+# would parse `x` as an exception type, then fail at `=`).
+# v0 deferred: write `rescue ExceptionType => _` as a workaround for
+# bare exception-type rescue.
+rescue_clause   = "rescue" [ exception_list "=>" NAME ] { !"rescue" !"ensure" !"end" statement } ;
+exception_list  = NAME { COMMA NAME } ;
+ensure_clause   = "ensure" { !"end" statement } ;
 # Phase 6p — compound assignment (`x += 1`, `x ||= 1`, etc.).
 #
 # The lexer's `fuse_compound_assigns` post-pass folds `Op =` adjacent
