@@ -1688,6 +1688,43 @@ function oneSqrtFourLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undef
   return sqrtHalfDeg + polyDeg;
 }
 
+/**
+ * Phase 75 — Two-Sqrt × Four-Log × polynomial numerator.
+ *
+ * Returns `sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg` when `node` is a `Mul`
+ * with exactly two `Sqrt` factors, exactly four `Log(diverging-in-k)` factors,
+ * any polynomial factors, and any bounded factors; `undefined` otherwise.
+ *
+ * `log⁴(k)` is sub-polynomial (`o(k^ε)`), contributing 0 to effective
+ * polynomial degree.  effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+ * Caller checks `denDeg > twoSqrtFourLogPolyEffectiveDeg(num, k)`.
+ */
+function twoSqrtFourLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 2) return undefined; // third Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 4) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 4) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -2011,6 +2048,19 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS1l4 = polynomialDegreeInK(den, k);
     if (denDegS1l4 !== undefined) {
       if (denDegS1l4 > s1l4Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 75: Mul(Sqrt(P1), Sqrt(P2), Log(diverging)×4, polynomial..., bounded...) numerator.
+  // Two Sqrt + four Log factors; log⁴ sub-polynomial — contributes 0.
+  // effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+  // Closes when denDeg > twoSqrtFourLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s2l4Deg = twoSqrtFourLogPolyEffectiveDeg(num, k);
+  if (s2l4Deg !== undefined) {
+    const denDegS2l4 = polynomialDegreeInK(den, k);
+    if (denDegS2l4 !== undefined) {
+      if (denDegS2l4 > s2l4Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
