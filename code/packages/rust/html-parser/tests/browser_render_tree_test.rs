@@ -175,6 +175,8 @@ struct ExpectedRenderNode {
     #[serde(default)]
     accesskey: Vec<String>,
     #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
     focusable: Option<bool>,
     #[serde(default)]
     contenteditable: Option<String>,
@@ -462,6 +464,7 @@ impl ExpectedRenderNode {
             open: self.open,
             tabindex: self.tabindex,
             accesskey: self.accesskey,
+            event_handlers: self.event_handlers,
             focusable: self.focusable,
             contenteditable: self.contenteditable,
             editing_mode: self.editing_mode,
