@@ -655,6 +655,8 @@ def check_browser_content_node(
         "ruby_kind",
         "bidi_kind",
         "break_kind",
+        "grouping_kind",
+        "disclosure_kind",
         "section_kind",
         "landmark_kind",
     ):
@@ -836,6 +838,8 @@ def check_browser_render_node(
         "ruby_kind",
         "bidi_kind",
         "break_kind",
+        "grouping_kind",
+        "disclosure_kind",
         "section_kind",
         "landmark_kind",
     ):
