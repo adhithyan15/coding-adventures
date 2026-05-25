@@ -285,8 +285,8 @@
     },
     {
       "id": "aria-interaction-metadata",
-      "description": "Authored ARIA roles, labelled-by naming, state attributes, hidden/inert flags, and explicit focus metadata survive content-tree extraction.",
-      "input": "<body><main id=app aria-label=\"App shell\"><button id=menu aria-expanded=false aria-controls=panel tabindex=0>Menu</button><section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert><h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p><div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=true draggable=true popover=manual>Inline action</div></section><p hidden>Hidden copy</p><span aria-hidden=true>Decorative</span></main>",
+      "description": "Authored ARIA roles, labelled-by naming, state attributes, hidden/inert flags, focus metadata, and interactive command hints survive content-tree extraction.",
+      "input": "<body><main id=app aria-label=\"App shell\"><button id=menu aria-expanded=false aria-controls=panel tabindex=0 accesskey=\"m /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog>Menu</button><section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert><h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p><div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=true draggable=true popover=manual>Inline action</div></section><dialog id=dialog open aria-label=\"Dialog\" accesskey=\"d x\"><p>Dialog copy</p></dialog><details id=more open><summary>More</summary><p>Extra</p></details><p hidden>Hidden copy</p><span aria-hidden=true>Decorative</span></main>",
       "expected": {
         "children": [
           {
@@ -303,7 +303,7 @@
             "accessible_name": "App shell",
             "aria_label": "App shell",
             "children": [
-              { "role": "control", "name": "button", "id": "menu", "text": "Menu", "href": null, "src": null, "alt": null, "control_type": "submit", "accessible_name": "Menu", "aria_controls": ["panel"], "aria_expanded": "false", "tabindex": "0", "focusable": true, "children": [] },
+              { "role": "control", "name": "button", "id": "menu", "text": "Menu", "href": null, "src": null, "alt": null, "control_type": "submit", "accessible_name": "Menu", "aria_controls": ["panel"], "aria_expanded": "false", "tabindex": "0", "accesskey": ["m", "/"], "focusable": true, "popover_target": "panel-pop", "popover_target_action": "toggle", "command": "show-modal", "command_for": "dialog", "children": [] },
               {
                 "role": "section",
                 "name": "section",
@@ -325,6 +325,8 @@
                   { "role": "block", "name": "div", "authored_role": "button", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "aria_current": "page", "aria_pressed": "mixed", "tabindex": "-1", "focusable": false, "contenteditable": "true", "draggable": "true", "popover": "manual", "children": [{ "role": "text", "name": null, "text": "Inline action", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               },
+              { "role": "block", "name": "dialog", "id": "dialog", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "accessible_name": "Dialog", "aria_label": "Dialog", "open": true, "accesskey": ["d", "x"], "children": [{ "role": "paragraph", "name": "p", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Dialog copy", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }] },
+              { "role": "block", "name": "details", "id": "more", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "open": true, "children": [{ "role": "block", "name": "summary", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "More", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }, { "role": "paragraph", "name": "p", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Extra", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }] },
               { "role": "paragraph", "name": "p", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "hidden": true, "children": [{ "role": "text", "name": null, "text": "Hidden copy", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
               { "role": "inline", "name": "span", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "aria_hidden": true, "children": [{ "role": "text", "name": null, "text": "Decorative", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
             ]

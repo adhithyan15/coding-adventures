@@ -1010,11 +1010,17 @@ pub struct BrowserContentNode {
     pub aria_hidden: bool,
     pub hidden: bool,
     pub inert: bool,
+    pub open: bool,
     pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
     pub focusable: Option<bool>,
     pub contenteditable: Option<String>,
     pub draggable: Option<String>,
     pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
     pub accept: Option<String>,
@@ -1122,11 +1128,17 @@ pub struct BrowserRenderNode {
     pub aria_hidden: bool,
     pub hidden: bool,
     pub inert: bool,
+    pub open: bool,
     pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
     pub focusable: Option<bool>,
     pub contenteditable: Option<String>,
     pub draggable: Option<String>,
     pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
     pub accept: Option<String>,
@@ -1449,11 +1461,17 @@ impl BrowserRenderNode {
             aria_hidden: content_node.aria_hidden,
             hidden: content_node.hidden,
             inert: content_node.inert,
+            open: content_node.open,
             tabindex: content_node.tabindex.clone(),
+            accesskey: content_node.accesskey.clone(),
             focusable: content_node.focusable,
             contenteditable: content_node.contenteditable.clone(),
             draggable: content_node.draggable.clone(),
             popover: content_node.popover.clone(),
+            popover_target: content_node.popover_target.clone(),
+            popover_target_action: content_node.popover_target_action.clone(),
+            command: content_node.command.clone(),
+            command_for: content_node.command_for.clone(),
             placeholder: content_node.placeholder.clone(),
             autocomplete: content_node.autocomplete.clone(),
             accept: content_node.accept.clone(),
@@ -9091,11 +9109,17 @@ fn collect_browser_content_nodes_with_mode(
                         aria_hidden: false,
                         hidden: false,
                         inert: false,
+                        open: false,
                         tabindex: None,
+                        accesskey: Vec::new(),
                         focusable: None,
                         contenteditable: None,
                         draggable: None,
                         popover: None,
+                        popover_target: None,
+                        popover_target_action: None,
+                        command: None,
+                        command_for: None,
                         placeholder: None,
                         autocomplete: None,
                         accept: None,
@@ -9270,11 +9294,17 @@ fn browser_content_node_for_element(
         aria_hidden: browser_aria_hidden(element),
         hidden: browser_hidden(element),
         inert: browser_inert(element),
+        open: browser_open(element),
         tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey: browser_accesskey(element),
         focusable: browser_focusable(element),
         contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
         draggable: element.attribute("draggable").map(ToOwned::to_owned),
         popover: element.attribute("popover").map(ToOwned::to_owned),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
         accept: browser_control_accept(element),
@@ -9938,6 +9968,39 @@ fn browser_hidden(element: &Element) -> bool {
 
 fn browser_inert(element: &Element) -> bool {
     element.attribute("inert").is_some()
+}
+
+fn browser_open(element: &Element) -> bool {
+    matches!(element.name.as_str(), "details" | "dialog") && element.attribute("open").is_some()
+}
+
+fn browser_accesskey(element: &Element) -> Vec<String> {
+    element
+        .attribute("accesskey")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_popover_target(element: &Element) -> Option<String> {
+    element.attribute("popovertarget").map(ToOwned::to_owned)
+}
+
+fn browser_popover_target_action(element: &Element) -> Option<String> {
+    element
+        .attribute("popovertargetaction")
+        .map(collapse_html_whitespace)
+        .filter(|action| !action.is_empty())
+}
+
+fn browser_command(element: &Element) -> Option<String> {
+    element
+        .attribute("command")
+        .map(collapse_html_whitespace)
+        .filter(|command| !command.is_empty())
+}
+
+fn browser_command_for(element: &Element) -> Option<String> {
+    element.attribute("commandfor").map(ToOwned::to_owned)
 }
 
 fn browser_focusable(element: &Element) -> Option<bool> {
@@ -11260,11 +11323,13 @@ mod tests {
     fn browser_aria_interaction_metadata_tracks_roles_states_and_focus() {
         let document = parse_html(
             "<body><main id=app aria-label=\"App shell\">\
-             <button id=menu aria-expanded=false aria-controls=panel tabindex=0>Menu</button>\
+             <button id=menu aria-expanded=false aria-controls=panel tabindex=0 accesskey=\"m /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog>Menu</button>\
              <section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert>\
                <h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p>\
                <div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=true draggable=true popover=manual>Inline action</div>\
              </section>\
+             <dialog id=dialog open aria-label=\"Dialog\" accesskey=\"d x\"><p>Dialog copy</p></dialog>\
+             <details id=more open><summary>More</summary><p>Extra</p></details>\
              <p hidden>Hidden copy</p><span aria-hidden=true>Decorative</span></main>",
         )
         .unwrap();
@@ -11281,7 +11346,12 @@ mod tests {
         assert_eq!(menu.aria_expanded.as_deref(), Some("false"));
         assert_eq!(menu.aria_controls, vec!["panel"]);
         assert_eq!(menu.tabindex.as_deref(), Some("0"));
+        assert_eq!(menu.accesskey, vec!["m", "/"]);
         assert_eq!(menu.focusable, Some(true));
+        assert_eq!(menu.popover_target.as_deref(), Some("panel-pop"));
+        assert_eq!(menu.popover_target_action.as_deref(), Some("toggle"));
+        assert_eq!(menu.command.as_deref(), Some("show-modal"));
+        assert_eq!(menu.command_for.as_deref(), Some("dialog"));
 
         let panel = &main.children[1];
         assert_eq!(panel.role, "section");
@@ -11302,8 +11372,17 @@ mod tests {
         assert_eq!(action.draggable.as_deref(), Some("true"));
         assert_eq!(action.popover.as_deref(), Some("manual"));
 
-        assert!(main.children[2].hidden);
-        assert!(main.children[3].aria_hidden);
+        let dialog = &main.children[2];
+        assert_eq!(dialog.role, "block");
+        assert!(dialog.open);
+        assert_eq!(dialog.accesskey, vec!["d", "x"]);
+
+        let details = &main.children[3];
+        assert_eq!(details.role, "block");
+        assert!(details.open);
+
+        assert!(main.children[4].hidden);
+        assert!(main.children[5].aria_hidden);
 
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         let render_panel = &render_tree.children[0].children[1];
@@ -11311,6 +11390,14 @@ mod tests {
         assert_eq!(render_panel.accessible_name.as_deref(), Some("Settings"));
         assert!(render_panel.inert);
         assert_eq!(render_tree.children[0].children[0].focusable, Some(true));
+        assert_eq!(
+            render_tree.children[0].children[0]
+                .popover_target
+                .as_deref(),
+            Some("panel-pop")
+        );
+        assert!(render_tree.children[0].children[2].open);
+        assert!(render_tree.children[0].children[3].open);
     }
 
     #[test]
