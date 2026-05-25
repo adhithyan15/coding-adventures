@@ -27,6 +27,9 @@
   fixture.
 - Add `poleZeroRlcBandpass`, which returns the origin zero plus second-order
   pole pair for a constrained series L-C / shunt-R band-pass fixture.
+- Add `poleZeroRlcNotch`, which returns the imaginary-axis zero pair plus
+  second-order pole pair for a constrained series-R / shunt-series-L-C notch
+  fixture.
 - Add MOS Level-1 capacitance support through `CGSO`, `CGDO`, `CGBO`, `CBS`,
   and `CBD`, contributing small-signal AC susceptance.
 - Add MOSFET channel thermal noise to `.NOISE` via the long-channel `4kTγgm`

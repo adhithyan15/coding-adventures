@@ -24,7 +24,7 @@ The initial slices implement:
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, and THD results.
 - Transient-to-distortion projection through the Fourier extraction path.
-- Constrained RC and RLC low-pass/high-pass/band-pass pole-zero helpers.
+- Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers.
 - Stable text output tables for selected node voltages and branch currents.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,

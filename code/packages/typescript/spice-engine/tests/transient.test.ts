@@ -32,6 +32,7 @@ import {
   poleZeroRlcBandpass,
   poleZeroRlcHighpass,
   poleZeroRlcLowpass,
+  poleZeroRlcNotch,
   poleZeroRcHighpass,
   poleZeroRcLowpass,
   pssResidualJacobian,
@@ -937,6 +938,54 @@ describe("transient", () => {
           imaginary: 0.0,
           frequencyHz: 0.0,
           damping: 1.0,
+        },
+        {
+          kind: "pole",
+          real: -alpha,
+          imaginary,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: alpha / omega0,
+        },
+        {
+          kind: "pole",
+          real: -alpha,
+          imaginary: -imaginary,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: alpha / omega0,
+        },
+      ],
+    });
+  });
+
+  it("computes notch zeros and complex conjugate poles for a series RLC notch fixture", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", 10.0));
+    circuit.add(inductor("L1", "out", "mid", 1.0e-3));
+    circuit.add(capacitor("C1", "mid", "0", 1.0e-6));
+
+    const result = poleZeroRlcNotch(circuit, "Vin", "out");
+
+    const alpha = 10.0 / (2.0 * 1.0e-3);
+    const omega0 = 1.0 / Math.sqrt(1.0e-3 * 1.0e-6);
+    const imaginary = Math.sqrt(omega0 * omega0 - alpha * alpha);
+    expect(result).toEqual({
+      inputSource: "Vin",
+      outputNode: "out",
+      entries: [
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: omega0,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: 0.0,
+        },
+        {
+          kind: "zero",
+          real: 0.0,
+          imaginary: -omega0,
+          frequencyHz: omega0 / (2.0 * Math.PI),
+          damping: 0.0,
         },
         {
           kind: "pole",
