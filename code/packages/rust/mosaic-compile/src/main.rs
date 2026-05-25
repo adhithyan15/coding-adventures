@@ -822,18 +822,52 @@ fn run_pipeline(
         // backend's `pipeline::from_pipeline` returns one string, we
         // write it to `output_path` (or `<Component>.<ext>` if omitted).
         // Output extensions per backend match the artifact-builder.
-        "html" => emit_single_file(
-            backend,
-            output_path,
-            &mosmodel_out.component.component,
-            "html",
-            mosaic_emit_html::pipeline::from_pipeline(
+        "html" => {
+            // UI32-K-html: route through `from_pipeline_with_options`
+            // so the `--emit-project` flag activates the standalone-
+            // HTML shell emission. Bare invocation (emit_project:
+            // false) is byte-identical to pre-UI32 behaviour — same
+            // .html fragment, same exit code.
+            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
+            html_opts.emit_project = emit_project;
+            let result = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &html_opts,
             )
-            .map(|r| r.output),
-        ),
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: html pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.html", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-html: when --emit-project is on, write the two
+            // shell side-files (index.html + README.md) flat next to
+            // the component .html fragment.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+            }
+        }
         "webcomponent" => emit_single_file(
             backend,
             output_path,
