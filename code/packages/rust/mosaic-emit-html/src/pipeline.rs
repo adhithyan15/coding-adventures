@@ -1428,12 +1428,31 @@ fn emit_table_node(
         (_, Some(cell)) => {
             // thead/tbody/tfoot: each direct `Row` child becomes a
             // `<tr>` whose direct children become `<th>` or `<td>`.
-            // Non-`Row` children (For, If, etc.) pass through to the
-            // generic walker; their template markers carry the row
-            // structure inside themselves.
+            //
+            // UI31-L10 seam — a `For (each:…, as: r) { Row { … } }`
+            // child becomes the same template-bracket form as a bare
+            // For, but with the inner Row pre-lowered through
+            // `emit_table_row` so the body emits `<tr>` rather than
+            // a flex-`<div>`. The generic walker (the else branch)
+            // would have produced the latter — structurally invalid
+            // inside a `<tbody>` and rejected by the HTML parser.
             for child in &node.children {
                 if child.tag == "Row" {
                     out.push_str(&emit_table_row(child, indent + 2, cell, part_styles)?);
+                } else if child.tag == "For" {
+                    if let Some(for_block) = try_emit_table_for_row_html(
+                        child,
+                        cell,
+                        indent + 2,
+                        part_styles,
+                    )? {
+                        out.push_str(&for_block);
+                        continue;
+                    }
+                    // Pattern didn't match — recurse via the generic
+                    // walker (preserves the bracket but with a
+                    // structurally-broken body — author error path).
+                    out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
                 } else {
                     out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
                 }
@@ -1473,12 +1492,35 @@ fn emit_table_row(
     for cell in &row.children {
         if cell.tag == "Text" {
             // Unwrap Text so the cell text is content-only.
+            //
+            // UI31-L10 — Keyword content (`Text (content: header)`)
+            // carries the name of a For-binding in scope; lower it to
+            // `{{name}}` (same shape as SlotRef) so the downstream
+            // template engine substitutes the bound value at render
+            // time. Without this the cell would render blank.
             let body = match find_prop(cell, "content") {
                 Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+                Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
                 Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
                 _ => String::new(),
             };
             writeln!(out, "{cell_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+        } else if cell.tag == "For" {
+            // UI31-L10 seam — `For` inside a Row. Emit the canonical
+            // template marker bracket so the downstream template
+            // engine iterates over `each`'s collection at render
+            // time, producing one `<th>`/`<td>` per item. For shapes
+            // that don't match (multi-child, Row-child) fall through
+            // to wrapping the whole For in a single cell.
+            if let Some(for_block) =
+                try_emit_table_for_cell_html(cell, cell_tag, indent + 2, part_styles)?
+            {
+                out.push_str(&for_block);
+                continue;
+            }
+            writeln!(out, "{cell_pad}<{cell_tag}>").unwrap();
+            out.push_str(&emit_html_tree(cell, indent + 4, part_styles)?);
+            writeln!(out, "{cell_pad}</{cell_tag}>").unwrap();
         } else {
             writeln!(out, "{cell_pad}<{cell_tag}>").unwrap();
             out.push_str(&emit_html_tree(cell, indent + 4, part_styles)?);
@@ -1487,6 +1529,151 @@ fn emit_table_row(
     }
     writeln!(out, "{pad}</tr>").unwrap();
     Ok(out)
+}
+
+/// Try to lower `For (each: …, as: r) { Row { … } }` inside a section
+/// (`thead` / `tbody` / `tfoot`) to:
+///
+/// ```html
+/// <!-- mosaic-for each="rows" as="row" -->
+///   <tr>
+///     <td>{{row}}</td>
+///   </tr>
+/// <!-- /mosaic-for -->
+/// ```
+///
+/// Returns `Ok(Some(html))` when the For's body is exactly one Row,
+/// `Ok(None)` otherwise (caller falls back to generic recursion,
+/// which would produce a `<div>` body — invalid inside `<tbody>`).
+///
+/// The downstream template engine sees the bracketed comments and
+/// expands the loop, producing one `<tr>` per element.
+fn try_emit_table_for_row_html(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
+        return Ok(None);
+    }
+    let row = &for_node.children[0];
+
+    let each_str = match find_prop(for_node, "each") {
+        Some(LayoutPropValue::SlotRef(s)) => camel(s),
+        Some(LayoutPropValue::Expr(e)) => e.clone(),
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        _ => return Ok(None),
+    };
+    let as_str = match find_prop(for_node, "as") {
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        Some(LayoutPropValue::SlotRef(s)) => s.clone(),
+        _ => return Ok(None),
+    };
+    let index_str = match find_prop(for_node, "index") {
+        Some(LayoutPropValue::Keyword(k)) => Some(k.clone()),
+        Some(LayoutPropValue::SlotRef(s)) => Some(s.clone()),
+        _ => None,
+    };
+
+    let pad = " ".repeat(indent);
+
+    let mut header = format!(
+        "<!-- mosaic-for each=\"{}\" as=\"{}\"",
+        escape_html_attr(&each_str),
+        escape_html_attr(&as_str)
+    );
+    if let Some(idx) = &index_str {
+        write!(header, " index=\"{}\"", escape_html_attr(idx)).unwrap();
+    }
+    header.push_str(" -->");
+
+    let mut out = String::new();
+    writeln!(out, "{pad}{header}").unwrap();
+    out.push_str(&emit_table_row(row, indent + 2, cell_tag, part_styles)?);
+    writeln!(out, "{pad}<!-- /mosaic-for -->").unwrap();
+    Ok(Some(out))
+}
+
+/// Try to lower `For (each: …, as: c) { <cell-leaf> }` inside a Row
+/// to the Mustache-loop bracket form:
+///
+/// ```html
+/// <!-- mosaic-for each="coll" as="c" -->
+///   <th>{{c}}</th>
+/// <!-- /mosaic-for -->
+/// ```
+///
+/// Returns `Ok(Some(html))` when the For's body is a single non-Row
+/// leaf (Text, HostButton, etc.), `Ok(None)` otherwise (caller falls
+/// back to wrapping the For in a single cell, which is structurally
+/// invalid HTML inside a `<tr>` but preserves the For's intent).
+///
+/// The downstream template engine sees the bracketed comments and
+/// expands the loop, producing one `<th>` / `<td>` per element. The
+/// engine must support Mustache-style `{{name}}` interpolation
+/// inside For-binding scope — same contract `emit_for_node` relies
+/// on for non-table contexts.
+fn try_emit_table_for_cell_html(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag == "Row" {
+        return Ok(None);
+    }
+    let leaf = &for_node.children[0];
+
+    let each_str = match find_prop(for_node, "each") {
+        Some(LayoutPropValue::SlotRef(s)) => camel(s),
+        Some(LayoutPropValue::Expr(e)) => e.clone(),
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        _ => return Ok(None),
+    };
+    let as_str = match find_prop(for_node, "as") {
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        Some(LayoutPropValue::SlotRef(s)) => s.clone(),
+        _ => return Ok(None),
+    };
+    let index_str = match find_prop(for_node, "index") {
+        Some(LayoutPropValue::Keyword(k)) => Some(k.clone()),
+        Some(LayoutPropValue::SlotRef(s)) => Some(s.clone()),
+        _ => None,
+    };
+
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 2);
+
+    let mut header = format!(
+        "<!-- mosaic-for each=\"{}\" as=\"{}\"",
+        escape_html_attr(&each_str),
+        escape_html_attr(&as_str)
+    );
+    if let Some(idx) = &index_str {
+        write!(header, " index=\"{}\"", escape_html_attr(idx)).unwrap();
+    }
+    header.push_str(" -->");
+
+    let mut out = String::new();
+    writeln!(out, "{pad}{header}").unwrap();
+
+    if leaf.tag == "Text" {
+        let body = match find_prop(leaf, "content") {
+            Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+            Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
+            Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
+            _ => String::new(),
+        };
+        writeln!(out, "{inner_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+    } else {
+        writeln!(out, "{inner_pad}<{cell_tag}>").unwrap();
+        out.push_str(&emit_html_tree(leaf, indent + 4, part_styles)?);
+        writeln!(out, "{inner_pad}</{cell_tag}>").unwrap();
+    }
+
+    writeln!(out, "{pad}<!-- /mosaic-for -->").unwrap();
+    Ok(Some(out))
 }
 
 // =====================================================================
@@ -2503,6 +2690,122 @@ mod tests {
             out.matches("<col>").count(),
             2,
             "expected two <col> void elements, got:\n{out}"
+        );
+    }
+
+    // =====================================================================
+    // UI31-L10 — For-in-HostTable section seam (HTML backend)
+    //
+    // Without these seams `HostTableBody { For (each:…, as: row) { Row
+    // { … } } }` produced `<tbody><div>…</div></tbody>` (the generic
+    // walker's Row → flex-div mapping inside a For-comment bracket).
+    // That's structurally invalid inside `<tbody>` — browsers reject
+    // `<div>` as a direct child of `<tbody>`. The seam recognises For-
+    // of-Row in a section and emits `<!-- mosaic-for … --> <tr>…</tr>
+    // <!-- /mosaic-for -->`, which the downstream template engine
+    // expands to one `<tr>` per row.
+    //
+    // Companion seam (For-in-Row) handles per-cell iteration in
+    // header / body rows: `Row { For (as: c) { Text (content: c) } }`
+    // → `<!-- mosaic-for … --> <th>{{c}}</th> <!-- /mosaic-for -->`.
+    //
+    // Keyword-content extension on the Text branch lowers `content:
+    // <binding>` to `{{binding}}` (the Mustache template form) so
+    // cells iterated by a For actually render the bound value rather
+    // than blank.
+    // =====================================================================
+
+    /// L10 §1 — `For (each:…, as: row) { Row { … } }` inside a
+    /// `HostTableBody` lowers to a `<!-- mosaic-for … -->` bracket
+    /// whose body is a `<tr>` (not a flex-`<div>`).
+    #[test]
+    fn host_table_for_of_row_in_body_emits_for_bracket_around_tr() {
+        let row = node_with_props_and_children(
+            "Row",
+            vec![],
+            vec![node_with_props("Text", vec![prop_keyword("content", "row")])],
+        );
+        let for_of_row = node_with_props_and_children(
+            "For",
+            vec![prop_slot("each", "viewport-rows"), prop_keyword("as", "row")],
+            vec![row],
+        );
+        let body = node_with_props_and_children("HostTableBody", vec![], vec![for_of_row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![body]);
+        let out = from_pipeline(&component("T", vec![]), &layout("T", table), &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<!-- mosaic-for each=\"viewportRows\" as=\"row\" -->"),
+            "expected mosaic-for bracket, got:\n{out}"
+        );
+        assert!(
+            out.contains("<tr>"),
+            "expected `<tr>` inside the For body, got:\n{out}"
+        );
+        assert!(
+            out.contains("<td>{{row}}</td>"),
+            "expected `<td>{{row}}</td>` Mustache cell, got:\n{out}"
+        );
+        // The pipeline-path output wraps the component in a
+        // `<div data-mosaic-component="…">`, so a bare `!contains("<div")`
+        // false-fires on the wrapper. We want the more specific
+        // regression check: no flex-direction div inside the For body.
+        assert!(
+            !out.contains("flex-direction: row"),
+            "for-of-Row in tbody must NOT emit a flex-direction `<div>` body, got:\n{out}"
+        );
+    }
+
+    /// L10 §2 — `For (each:…, as: header) { Text (content: header) }`
+    /// inside a head Row lowers to `<!-- mosaic-for … --> <th>{{header}}</th>
+    /// <!-- /mosaic-for -->`. The seam produces one `<th>` per item;
+    /// the generic walker would have wrapped the entire For in a
+    /// single `<th>` instead.
+    #[test]
+    fn host_table_for_of_cell_in_head_row_emits_for_bracket_around_th() {
+        let for_of_text = node_with_props_and_children(
+            "For",
+            vec![
+                prop_slot("each", "column-headers"),
+                prop_keyword("as", "header"),
+            ],
+            vec![node_with_props("Text", vec![prop_keyword("content", "header")])],
+        );
+        let head_row = node_with_props_and_children("Row", vec![], vec![for_of_text]);
+        let head = node_with_props_and_children("HostTableHead", vec![], vec![head_row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![head]);
+        let out = from_pipeline(&component("T", vec![]), &layout("T", table), &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<!-- mosaic-for each=\"columnHeaders\" as=\"header\" -->"),
+            "expected mosaic-for bracket inside <tr>, got:\n{out}"
+        );
+        assert!(
+            out.contains("<th>{{header}}</th>"),
+            "expected per-iteration `<th>{{header}}</th>`, got:\n{out}"
+        );
+    }
+
+    /// L10 §3 — Text content as a For-binding name (Keyword form)
+    /// lowers to `{{name}}` (Mustache) in cell contexts, matching the
+    /// SlotRef form. Without it the cell rendered blank.
+    #[test]
+    fn text_with_keyword_content_in_cell_lowers_to_mustache_placeholder() {
+        let row = node_with_props_and_children(
+            "Row",
+            vec![],
+            vec![node_with_props("Text", vec![prop_keyword("content", "row")])],
+        );
+        let body = node_with_props_and_children("HostTableBody", vec![], vec![row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![body]);
+        let out = from_pipeline(&component("T", vec![]), &layout("T", table), &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<td>{{row}}</td>"),
+            "expected `<td>{{row}}</td>` Mustache cell, got:\n{out}"
         );
     }
 
