@@ -4,6 +4,48 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI31-L10 — For-in-HostTable section + Keyword content seam
+
+Three coordinated extensions that let `HostTable` compositions drive
+dynamic row data through For loops while keeping semantic
+`<table>`/`<thead>`/`<tbody>`/`<tr>`/`<th>`/`<td>` markup:
+
+- **For-of-Row in a section** — `HostTableBody { For (each:…, as: row)
+  { Row { … } } }` now lowers to
+  `<tbody>{rows.map((row) => <tr>…</tr>)}</tbody>`. Without this
+  seam the generic walker would have produced
+  `<tbody>{rows.map((row) => <div>…</div>)}</tbody>` — `<div>`
+  inside `<tbody>` is HTML-parser-invalid and breaks every
+  backend's table semantics.
+
+- **For-of-cell in a Row** — `Row { For (each:…, as: header) { Text
+  (content: header) } }` now lowers to
+  `<tr>{cols.map((header) => <th><span>{header}</span></th>)}</tr>`.
+  The seam produces one `<th>`/`<td>` per item rather than wrapping
+  the entire `.map(...)` in a single cell.
+
+- **Keyword content in Text** — `Text (content: <For-binding>)` now
+  interpolates as `<span>{binding}</span>`. Previously the Text
+  emitter only handled SlotRef content; Keyword content fell
+  through to the generic emit (empty `<span></span>`), so cells
+  iterated by a For rendered blank. Slot names pass through
+  `is_safe_js_identifier` so an unsafe keyword like `"x; alert(1)"`
+  drops silently rather than landing in the JSX interpolation.
+
+Together these enable the L10 VisiCalc Grid migration: the demo's
+`Grid.desktop.mll` + `Grid.touch.mll` now compose from HostTable*
+kernel primitives instead of the legacy built-in `Grid` primitive,
+producing semantic table markup on every backend that has the UI31
+HostTable lowering (React + HTML get this PR's For seams; the
+WebComponent + Flutter + Qt + SwiftUI + XAML backends still produce
+broken For-in-section output and are tracked as follow-ups).
+
+4 new tests, total 183 (was 179):
+- `host_table_for_of_row_in_body_emits_map_of_tr`
+- `host_table_for_of_cell_in_head_row_emits_map_of_th`
+- `text_with_keyword_content_lowers_to_span_with_binding_expr`
+- `text_with_unsafe_keyword_content_drops_silently`
+
 ### Added — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-react)
 
 Three new kernel primitives lower to React widgets:

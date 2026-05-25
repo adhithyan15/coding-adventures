@@ -2340,43 +2340,344 @@ fn emit_host_table_section_jsx(
     }
 
     let mut out = format!("{pad}<{html_tag}>\n");
+    let _ = row_pad; // factored into emit_table_row_jsx; left as a sentinel.
+    let _ = cell_pad;
     for child in &section_node.children {
         if child.tag == "Row" {
-            out.push_str(&format!("{row_pad}<tr>\n"));
-            for cell in &child.children {
-                // Wrap each Row child in <th>/<td>. The cell body is
-                // produced by the general JSX emitter — that gives us
-                // Text-leaf → `<span>{slot}</span>` for free and keeps
-                // composition open (a Row of HostButtons works the same).
-                let inner = emit_jsx_tree(cell, indent + 6, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?;
-                // Strip the trailing newline emit_jsx_tree adds so the
-                // cell content stays on the same line as its <th>/<td>
-                // when it's a single line, but keeps its own indentation
-                // when it's multi-line.
-                let inner_trimmed = inner.trim_end_matches('\n');
-                if inner_trimmed.contains('\n') {
-                    out.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
-                    out.push_str(inner_trimmed);
-                    out.push('\n');
-                    out.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
-                } else {
-                    // Single-line cell content — collapse to
-                    // `<th>...content...</th>` with the inner indent
-                    // stripped, matching the inline-leaf style the rest
-                    // of the emitter uses.
-                    let single = inner_trimmed.trim_start();
-                    out.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
-                }
+            out.push_str(&emit_table_row_jsx(
+                child,
+                cell_tag,
+                indent + 2,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )?);
+        } else if child.tag == "For" {
+            // UI31-L10 seam — `For` inside a section. Recognise the
+            // canonical `For (each: …, as: r) { Row { … } }` shape and
+            // lower it to `{collection.map((r) => <tr>…</tr>)}` so
+            // dynamic rows still emit native `<tr>`s (not the flex-
+            // `<div>` the generic walker would produce). Any For shape
+            // that isn't a single-Row body falls through to the generic
+            // recurse below.
+            if let Some(map_jsx) = try_emit_table_for_row_jsx(
+                child,
+                cell_tag,
+                indent + 2,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )? {
+                out.push_str(&map_jsx);
+                continue;
             }
-            out.push_str(&format!("{row_pad}</tr>\n"));
+            // Not the recognised pattern — recurse generically. The
+            // For-emitter will still produce `.map((row) => …)`, but
+            // the `…` body won't have the row-context that gives a
+            // `Row` inside the For body its `<tr>` shape.
+            out.push_str(&emit_jsx_tree(child, indent + 2, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
         } else {
-            // Non-Row child — recurse through the standard emitter.
-            // This is the seam the For-emitter sibling PR plugs into.
+            // Non-Row, non-For child — recurse through the standard
+            // emitter. Lets a static comment, a conditional row block
+            // (`If { Row { … } }`), or a future seam compose cleanly.
             out.push_str(&emit_jsx_tree(child, indent + 2, part_styles, dialog_nodes, indeterminate_checkbox_nodes)?);
         }
     }
     out.push_str(&format!("{pad}</{html_tag}>\n"));
     Ok(out)
+}
+
+/// Emit a single static `Row` node as `<tr>…</tr>`. Factored out so
+/// the direct-child path (`HostTableBody { Row { … } }`) and the
+/// For-of-Row path (`HostTableBody { For (…) { Row { … } } }`) share
+/// one implementation.
+///
+/// `cell_tag` is `"th"` (head section) or `"td"` (body / foot).
+/// Each immediate child of the Row is wrapped in the corresponding
+/// cell element; the inner JSX comes from the general tree walker
+/// so a Text leaf, a HostButton, or any other primitive composes
+/// cleanly.
+fn emit_table_row_jsx(
+    row_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    dialog_nodes: &[*const LayoutNode],
+    indeterminate_checkbox_nodes: &[*const LayoutNode],
+) -> Result<String, PipelineEmitError> {
+    let row_pad = " ".repeat(indent);
+    let cell_pad = " ".repeat(indent + 2);
+    let mut out = format!("{row_pad}<tr>\n");
+    for cell in &row_node.children {
+        // UI31-L10 seam — `For` inside a Row. Recognise the canonical
+        // `For (each: …, as: c) { Text (content: c) }` shape and lower
+        // it to `{coll.map((c) => <th>{c}</th>)}` so dynamic header
+        // (or body-cell) lists emit one `<th>`/`<td>` per item. The
+        // generic walker would have wrapped the entire map in a
+        // single `<th>` containing a span-per-item — wrong shape.
+        if cell.tag == "For" {
+            if let Some(map_jsx) = try_emit_table_for_cell_jsx(
+                cell,
+                cell_tag,
+                indent + 2,
+                part_styles,
+                dialog_nodes,
+                indeterminate_checkbox_nodes,
+            )? {
+                out.push_str(&map_jsx);
+                continue;
+            }
+        }
+
+        let inner = emit_jsx_tree(
+            cell,
+            indent + 4,
+            part_styles,
+            dialog_nodes,
+            indeterminate_checkbox_nodes,
+        )?;
+        let inner_trimmed = inner.trim_end_matches('\n');
+        if inner_trimmed.contains('\n') {
+            out.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
+            out.push_str(inner_trimmed);
+            out.push('\n');
+            out.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
+        } else {
+            let single = inner_trimmed.trim_start();
+            out.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
+        }
+    }
+    out.push_str(&format!("{row_pad}</tr>\n"));
+    Ok(out)
+}
+
+/// Try to lower `For (each: …, as: c [, index: i]) { <leaf> }` to
+/// `{coll.map((c [, i]) => <td>…</td>)}` where `<leaf>` is the per-
+/// iteration cell body (a Text leaf, a HostButton, etc.). Returns
+/// `Ok(Some(jsx))` when the For matches the canonical "one leaf per
+/// iteration" pattern, `Ok(None)` otherwise (caller falls back to
+/// generic per-child emission), or `Err(...)` on validation
+/// failures.
+///
+/// Pattern guards:
+///   - Exactly one child (the per-iteration cell body). A For with
+///     zero or two-plus children isn't a clean cell-iterator
+///     (multi-child shape could mean Row, not Cell — handled by the
+///     sibling helper `try_emit_table_for_row_jsx`).
+///   - The child is NOT itself a `Row` — that case belongs to the
+///     row-level seam (`For { Row { … } }` → multiple `<tr>`s, not
+///     multiple cells inside one `<tr>`).
+///   - `each:`, `as:`, `index:` same rules as `emit_for_jsx`.
+fn try_emit_table_for_cell_jsx(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    dialog_nodes: &[*const LayoutNode],
+    indeterminate_checkbox_nodes: &[*const LayoutNode],
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 {
+        return Ok(None);
+    }
+    let leaf = &for_node.children[0];
+    if leaf.tag == "Row" {
+        // Row-level For-of-Row pattern handled by
+        // `try_emit_table_for_row_jsx` at the section level — we should
+        // not reach here for that shape, but defensively fall through.
+        return Ok(None);
+    }
+
+    let each_prop = for_node
+        .props
+        .iter()
+        .find(|p| p.name == "each")
+        .ok_or_else(|| {
+            PipelineEmitError::UnsafeSlotName(
+                "For: missing required prop `each:`".to_string(),
+            )
+        })?;
+    let collection_expr: String = match &each_prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(text) => text.clone(),
+        _ => {
+            return Err(PipelineEmitError::UnsafeSlotName(
+                "For prop `each:` must be a slot ref or expression".to_string(),
+            ));
+        }
+    };
+
+    let as_name = find_keyword_prop(for_node, "as").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("For: missing required prop `as:`".to_string())
+    })?;
+    let as_ident = to_camel_case_first_lower(as_name);
+    if !is_safe_js_identifier(&as_ident) {
+        return Err(PipelineEmitError::UnsafeSlotName(as_ident));
+    }
+
+    let index_ident: Option<String> = match find_keyword_prop(for_node, "index") {
+        Some(idx) => {
+            let camel = to_camel_case_first_lower(idx);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            Some(camel)
+        }
+        None => None,
+    };
+
+    let params = match &index_ident {
+        Some(idx) => format!("({as_ident}, {idx})"),
+        None => format!("({as_ident})"),
+    };
+
+    // Emit the per-iteration cell. The leaf flows through the general
+    // walker so a Text leaf carrying `content: <binding>` interpolates
+    // correctly (jsx_text_content recognises Keyword content matching
+    // a known For-binding in addition to SlotRef).
+    let pad = " ".repeat(indent);
+    let body_indent = indent + 2;
+    let inner = emit_jsx_tree(
+        leaf,
+        body_indent + 2,
+        part_styles,
+        dialog_nodes,
+        indeterminate_checkbox_nodes,
+    )?;
+    let inner_trimmed = inner.trim_end_matches('\n');
+    let cell_pad = " ".repeat(body_indent);
+
+    let mut cell_block = String::new();
+    if inner_trimmed.contains('\n') {
+        cell_block.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
+        cell_block.push_str(inner_trimmed);
+        cell_block.push('\n');
+        cell_block.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
+    } else {
+        let single = inner_trimmed.trim_start();
+        cell_block.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!("{pad}{{{collection_expr}.map({params} => (\n"));
+    out.push_str(cell_block.trim_end_matches('\n'));
+    out.push('\n');
+    out.push_str(&format!("{pad}))}}\n"));
+    Ok(Some(out))
+}
+
+/// Try to lower `For (each: …, as: r [, index: i]) { Row { … } }` to
+/// `{coll.map((r [, i]) => <tr>…</tr>)}`. Returns `Ok(Some(jsx))`
+/// when the For matches the canonical pattern, `Ok(None)` otherwise
+/// (caller falls back to generic recursion), or `Err(...)` on
+/// validation failures (unsafe slot / `as:` identifiers, missing
+/// `each:` prop).
+///
+/// The pattern guards are tight on purpose:
+///   - Exactly one child, tagged `Row`. A For wrapping two Rows or
+///     a non-Row child is rejected so we don't silently
+///     misinterpret it as a single-row map.
+///   - The Row's cells flow through `emit_table_row_jsx` so their
+///     inner content (Text leaf with binding-name content, slot
+///     ref, HostButton, etc.) emits exactly as it would in the
+///     direct child case.
+///   - `each:` must be a SlotRef or Expr (matching `emit_for_jsx`).
+///     `as:` must be a NAME (Keyword). `index:` is optional.
+///
+/// Why this pattern in particular?  HostTable is the family that
+/// promotes "real `<table>` semantics" to a cross-backend kernel
+/// contract (UI31). The recurring author idiom for dynamic row
+/// data is `HostTableBody { For (each: slot: rows, as: row) { Row
+/// { … } } }`; without this seam every backend that lowers
+/// HostTable to a native table widget would emit `<tbody>{rows.map(
+/// (row) => <div>…</div>)}` — structurally invalid (a `<div>`
+/// inside `<tbody>` is parse-error territory in HTML and breaks
+/// the table semantics on every other backend too).
+fn try_emit_table_for_row_jsx(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    dialog_nodes: &[*const LayoutNode],
+    indeterminate_checkbox_nodes: &[*const LayoutNode],
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
+        return Ok(None);
+    }
+    let row = &for_node.children[0];
+
+    let each_prop = for_node
+        .props
+        .iter()
+        .find(|p| p.name == "each")
+        .ok_or_else(|| {
+            PipelineEmitError::UnsafeSlotName(
+                "For: missing required prop `each:`".to_string(),
+            )
+        })?;
+    let collection_expr: String = match &each_prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(text) => text.clone(),
+        _ => {
+            return Err(PipelineEmitError::UnsafeSlotName(
+                "For prop `each:` must be a slot ref or expression".to_string(),
+            ));
+        }
+    };
+
+    let as_name = find_keyword_prop(for_node, "as").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("For: missing required prop `as:`".to_string())
+    })?;
+    let as_ident = to_camel_case_first_lower(as_name);
+    if !is_safe_js_identifier(&as_ident) {
+        return Err(PipelineEmitError::UnsafeSlotName(as_ident));
+    }
+
+    let index_ident: Option<String> = match find_keyword_prop(for_node, "index") {
+        Some(idx) => {
+            let camel = to_camel_case_first_lower(idx);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            Some(camel)
+        }
+        None => None,
+    };
+
+    let params = match &index_ident {
+        Some(idx) => format!("({as_ident}, {idx})"),
+        None => format!("({as_ident})"),
+    };
+
+    let pad = " ".repeat(indent);
+    let row_indent = indent + 2;
+    let inner_row = emit_table_row_jsx(
+        row,
+        cell_tag,
+        row_indent,
+        part_styles,
+        dialog_nodes,
+        indeterminate_checkbox_nodes,
+    )?;
+    let inner_row_trimmed = inner_row.trim_end_matches('\n');
+
+    let mut out = String::new();
+    out.push_str(&format!("{pad}{{{collection_expr}.map({params} => (\n"));
+    out.push_str(inner_row_trimmed);
+    out.push('\n');
+    out.push_str(&format!("{pad}))}}\n"));
+    Ok(Some(out))
 }
 
 /// Lower a `HostTableColGroup` to `<colgroup>...<col />...</colgroup>`.
@@ -3941,6 +4242,35 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 
 /// If a node looks like a `Text { content: @slot; }` leaf, return the JSX
 /// expression for the content (e.g. `{slotName}`). Otherwise return None.
+///
+/// Recognised forms:
+///   - `content: slot: name`     → `{name}`  (the JSX interpolation
+///                                  the rest of the emitter assumes;
+///                                  the receiver chooses how to render).
+///   - `content: <NAME>`         → `{name}`  (a bare keyword name, which
+///                                  the For-emitter binds as the
+///                                  iteration variable. We can't tell
+///                                  here whether the binding actually
+///                                  exists in scope — that's a runtime
+///                                  ReferenceError if the author got it
+///                                  wrong — but for the cell-body case
+///                                  `Text (content: row)` inside a
+///                                  `For (as: row) { … }` the JS engine
+///                                  resolves it just like any other
+///                                  closure variable).
+///   - `content: "string"`       → None (a literal string is rendered
+///                                  by the standard Text walker as its
+///                                  own `<span>literal</span>`; this
+///                                  helper only surfaces the JSX-
+///                                  expression form so the cell flatten
+///                                  path can inline it).
+///
+/// The Keyword arm is the L10 wiring that lets HostTable composers
+/// write `For (as: row) { Text (content: row) }` and have the row
+/// binding actually appear in the rendered cell instead of an empty
+/// `<span></span>`. Without it, the v0.1.0 mosaic-pkg-grid Grid.mll
+/// (and the migrated VisiCalc demo Grid) would emit semantically
+/// correct table markup with cells that render as blank text.
 fn jsx_text_content(node: &LayoutNode) -> Option<String> {
     if node.tag != "Text" {
         return None;
@@ -3950,6 +4280,14 @@ fn jsx_text_content(node: &LayoutNode) -> Option<String> {
             return match &prop.value {
                 LayoutPropValue::SlotRef(slot) => {
                     Some(format!("{{{}}}", to_camel_case_first_lower(slot)))
+                }
+                LayoutPropValue::Keyword(name) => {
+                    let camel = to_camel_case_first_lower(name);
+                    if is_safe_js_identifier(&camel) {
+                        Some(format!("{{{camel}}}"))
+                    } else {
+                        None
+                    }
                 }
                 _ => None,
             };
@@ -8537,6 +8875,204 @@ mod tests {
             !out.contains("role=\"grid\""),
             "UI31 a11y gate: HostTable must NOT emit `role=\"grid\"` div-soup, got:\n{out}"
         );
+    }
+
+    // =================================================================
+    // UI31-L10 — For-in-HostTable section seam
+    //
+    // Without this seam, `HostTableBody { For (each:…, as: r) { Row {
+    // … } } }` produced `<tbody>{rows.map((r) => <div>…</div>)}</tbody>`
+    // — `<div>` inside `<tbody>` is HTML-parser-invalid and breaks
+    // table semantics on every backend. The seam recognises the
+    // For-of-Row pattern and lowers it to
+    // `<tbody>{rows.map((r) => <tr>…</tr>)}</tbody>`, which is the
+    // shape every backend's HostTable lowering can render.
+    //
+    // The companion For-in-Row seam handles `Row { For (each:…, as: c)
+    // { Text … } }` → `<tr>{cols.map((c) => <th>…</th>)}</tr>`, so
+    // dynamic header lists also work.
+    //
+    // The Keyword-content extension to `jsx_text_content` is the third
+    // piece: it lets `Text (content: <binding>)` interpolate the
+    // For-binding value into `{binding}` JSX expression form. Without
+    // it the cells render blank even when the structure is correct.
+    // =================================================================
+
+    /// L10 §1 — `For (each: slot: …, as: row) { Row { … } }` inside
+    /// a `HostTableBody` lowers to `{rows.map((row) => <tr>…</tr>)}`.
+    /// This is the row-level seam; without it the For-body Row would
+    /// emit as a `<div>` (the generic walker's Row → flex-div mapping)
+    /// inside `<tbody>` — structurally invalid HTML.
+    #[test]
+    fn host_table_for_of_row_in_body_emits_map_of_tr() {
+        let m = component(
+            "X",
+            vec![slot("viewport-rows", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let for_of_row = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("viewport-rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+            ],
+            children: vec![row_node(vec![text_keyword_node("row")])],
+        };
+        let l = host_table_layout(vec![section_node(
+            "HostTableBody",
+            vec![for_of_row],
+        )]);
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("{viewportRows.map((row) => ("),
+            "expected `.map((row) => (` callback, got:\n{out}"
+        );
+        assert!(
+            out.contains("<tr>"),
+            "expected `<tr>` inside .map(), got:\n{out}"
+        );
+        assert!(
+            out.contains("<td><span>{row}</span></td>"),
+            "expected `<td><span>{{row}}</span></td>` cell, got:\n{out}"
+        );
+        // Negative check — must NOT lower to a flex-div, which is
+        // what the generic walker would produce and what mainline
+        // HTML parsers reject inside `<tbody>`.
+        assert!(
+            !out.contains("display: \"flex\", flexDirection: \"row\""),
+            "for-of-Row in tbody must NOT emit a flex-div, got:\n{out}"
+        );
+    }
+
+    /// L10 §2 — `For (each: slot: …, as: header) { Text (content:
+    /// header) }` inside a `HostTableHead`'s `Row` lowers to
+    /// `{columns.map((header) => <th><span>{header}</span></th>)}`.
+    /// The cell-level seam: without it, the For would wrap the
+    /// entire `.map(...)` in a single `<th>` containing N `<span>`s
+    /// (the generic walker's "For child of any element" path) rather
+    /// than producing one `<th>` per element.
+    #[test]
+    fn host_table_for_of_cell_in_head_row_emits_map_of_th() {
+        let m = component(
+            "X",
+            vec![slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true)],
+            vec![],
+        );
+        let for_of_text = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("column-headers".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("header".to_string()),
+                },
+            ],
+            children: vec![text_keyword_node("header")],
+        };
+        let l = host_table_layout(vec![section_node(
+            "HostTableHead",
+            vec![row_node(vec![for_of_text])],
+        )]);
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("{columnHeaders.map((header) => ("),
+            "expected `.map((header) => (` callback, got:\n{out}"
+        );
+        assert!(
+            out.contains("<th><span>{header}</span></th>"),
+            "expected per-iteration `<th><span>{{header}}</span></th>`, got:\n{out}"
+        );
+    }
+
+    /// L10 §3 — `Text (content: <keyword>)` where the keyword is the
+    /// name of an in-scope For-binding (or any JS identifier the
+    /// receiver makes available) lowers to `<span>{keyword}</span>`.
+    /// Pre-L10 this fell through to the generic emitter and produced
+    /// an empty `<span></span>` — structurally correct but blank.
+    #[test]
+    fn text_with_keyword_content_lowers_to_span_with_binding_expr() {
+        let m = component("X", vec![], vec![]);
+        // Wrap the Text in a layout so from_pipeline accepts it.
+        let l = single_box_layout("X");
+        // Replace the box's content with our text node — easier to
+        // build by tweaking layout directly.
+        let mut layout = l;
+        layout.root.children = vec![LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::Keyword("row".to_string()),
+            }],
+            children: Vec::new(),
+        }];
+        let r = from_pipeline(&m, &layout, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("<span>{row}</span>"),
+            "expected `<span>{{row}}</span>`, got:\n{out}"
+        );
+    }
+
+    /// L10 §4 — security gate. Keyword content goes through
+    /// `is_safe_js_identifier` after camel-casing, so an attacker-
+    /// controlled Keyword like `"x; alert(1)"` (which would
+    /// camel-case to a non-identifier) MUST NOT reach the JSX
+    /// interpolation. The Text leaf falls through to the standard
+    /// walker, which emits a bare `<span></span>` rather than
+    /// injecting the bad name.
+    #[test]
+    fn text_with_unsafe_keyword_content_drops_silently() {
+        let m = component("X", vec![], vec![]);
+        let mut layout = single_box_layout("X");
+        layout.root.children = vec![LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                // The semicolon kills `is_safe_js_identifier`.
+                value: LayoutPropValue::Keyword("x; alert(1)".to_string()),
+            }],
+            children: Vec::new(),
+        }];
+        let r = from_pipeline(&m, &layout, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(
+            !out.contains("alert(1)"),
+            "unsafe keyword content must not reach output, got:\n{out}"
+        );
+        assert!(
+            out.contains("<span></span>"),
+            "expected fallback empty `<span></span>`, got:\n{out}"
+        );
+    }
+
+    /// Helper: a `Text` leaf with `content: <keyword>` (a For-binding
+    /// name in scope, not a slot reference). Lowers to `<span>{name}</span>`
+    /// once the L10 Keyword wiring is in place.
+    fn text_keyword_node(keyword: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::Keyword(keyword.to_string()),
+            }],
+            children: Vec::new(),
+        }
     }
 
     /// UI31 RTL gate — a HostTable with `dir: rtl` keyword MUST emit

@@ -2,6 +2,37 @@
 
 ## [Unreleased]
 
+### Added — UI31-L10 — For-in-HostTable section + Keyword content seam
+
+Mirrors the React backend's L10 wiring with HTML's Mustache-bracket
+idiom (`<!-- mosaic-for each="…" as="…" -->` … `<!-- /mosaic-for -->`):
+
+- **For-of-Row in a section** — `HostTableBody { For (each:…, as: row)
+  { Row { … } } }` now lowers to
+  `<tbody><!-- mosaic-for each="rows" as="row" --><tr>…</tr><!-- /mosaic-for --></tbody>`,
+  where the inner `<tr>` flows through `emit_table_row` so cells
+  emit as native `<th>`/`<td>` (not the flex-`<div>` the generic
+  walker would have produced).
+
+- **For-of-cell in a Row** — `Row { For (each:…, as: header) { Text
+  (content: header) } }` now lowers to
+  `<tr><!-- mosaic-for each="cols" as="header" --><th>{{header}}</th><!-- /mosaic-for --></tr>`.
+  The downstream template engine expands the loop to one cell per
+  item rather than wrapping the entire iteration in a single cell.
+
+- **Keyword content in Text** — `Text (content: <For-binding>)` now
+  lowers to the same `{{binding}}` Mustache form that SlotRef
+  content uses, so cells iterated by a For actually render the
+  bound value rather than blank.
+
+Together these unblock the L10 VisiCalc Grid migration on the HTML
+backend.
+
+3 new tests, total 82 (was 79):
+- `host_table_for_of_row_in_body_emits_for_bracket_around_tr`
+- `host_table_for_of_cell_in_head_row_emits_for_bracket_around_th`
+- `text_with_keyword_content_in_cell_lowers_to_mustache_placeholder`
+
 ### Added — U29-4-K-html — `HostLink` + `HostTooltip` + `HostNumberInput` kernel primitive lowerings
 
 Three new kernel primitives lower to native HTML elements:
