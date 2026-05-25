@@ -188,8 +188,9 @@ files.
 | v0.8.0 | #2359 | Monte Carlo (`.MC`) — Gaussian + uniform tolerance distributions |
 | v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist, MOSFET channel thermal, and shot noise; adjoint method |
 
-**Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `VoltageSource`,
-`CurrentSource`, `BSource`, `Diode`, `Mosfet`, `BJT`
+**Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `MutualInductor`,
+`TransmissionLine`, `VoltageSource`, `CurrentSource`, `BSource`, `Diode`,
+`Mosfet`, `BJT`, `JFET`
 
 **Analyses on main:** `dc_op`, `transient`, `ac_sweep`, `tf`, `dc_sweep`,
 `sens_dc`, `mc_dc`, `noise_ac`
@@ -197,7 +198,8 @@ files.
 **Waveforms on main:** `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`
 
 **Netlist parser on main:** `spice-netlist-parser` 0.2.0 — parses R, C, L, V,
-I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), `.subckt` / X instances,
+I, M (MOSFET), D, Q (BJT), J (JFET), K (mutual inductor), T (lossless
+transmission line), E/G/F/H (controlled sources), `.subckt` / X instances,
 `.tran`, `.dc`, `.ac`, `.op`, `.tf`, `.sens`, `.mc`, `.noise`, `.model` cards;
 IC parameters for C/L; AC phasor specs for V/I sources.
 
@@ -205,11 +207,12 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- 1970s SPICE compatibility planning: the next workstream is tracked in
-  `spice-1970s-compatibility.md`, starting with JFET device/model-card support,
-  then mutual inductors, ideal transmission lines, Gear-2 transient integration,
-  pseudo-transient DC continuation, model-card depth, classic text output cards,
-  and the remaining SPICE2 small-signal analysis surface.
+- 1970s SPICE compatibility planning: the active workstream is tracked in
+  `spice-1970s-compatibility.md`. JFET device/model-card support, mutual
+  inductors, ideal transmission lines, Gear-2 transient integration,
+  pseudo-transient DC continuation, 1970s model-card depth, classic text output
+  cards, and the first Phase 8 small-signal distortion / pole-zero footholds
+  are now reflected there with per-phase status.
 
 ---
 
@@ -238,11 +241,12 @@ and the sparse real solver path landed in PR #3391.
 
 #### SPICE 1970s compatibility
 
-The compatibility workstream is now split into concrete phases in
+The compatibility workstream is split into concrete phases in
 `code/specs/spice-1970s-compatibility.md`. This is the plan to move the current
 solver from a strong SPICE-compatible educational engine toward a recognizable
-Berkeley SPICE1/SPICE2-era simulator surface. The first implementation phase is
-JFET device and `.model` / `J` card support.
+Berkeley SPICE1/SPICE2-era simulator surface. Phase 1 JFET support, Phase 2
+mutual inductors, and Phase 3 ideal transmission lines are complete for the
+current compatibility target.
 
 ---
 
