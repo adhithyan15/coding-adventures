@@ -130,6 +130,213 @@ impl std::fmt::Display for PipelineEmitError {
 impl std::error::Error for PipelineEmitError {}
 
 // =====================================================================
+// UI32-K-flutter — `--emit-project` Flutter app shell
+//
+// Mirrors L2 (React, PR #4297), L3 (HTML, PR #4309), L4
+// (WebComponent, PR #4315): EmitOptions / ProjectFiles /
+// from_pipeline_with_options.
+//
+// When `--emit-project` is on, emits a flutter-create-shaped
+// scaffold alongside the component .dart. Author runs
+// `flutter pub get && flutter run -d <device>` to see the
+// component on a connected simulator/emulator/desktop window.
+// =====================================================================
+
+/// Options controlling the Flutter emitter's behaviour.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EmitOptions {
+    /// Also emit `pubspec.yaml`, `lib/main.dart`, `README.md`
+    /// alongside the component `.dart` file. Default `false`.
+    pub emit_project: bool,
+
+    /// Pinned Flutter SDK constraint to write into
+    /// `pubspec.yaml`'s `environment.flutter`. UI32 spec §3.6.3
+    /// requires exact pinning. Default `">=3.24.0 <4.0.0"` — a
+    /// known-good Flutter 3.24+ stable that supports Dart 3.5.
+    /// Caret-pinning is not idiomatic for Flutter SDK constraints
+    /// (which use range syntax), so this is the closest exact
+    /// equivalent.
+    pub pinned_flutter_sdk: String,
+
+    /// Pinned Dart SDK constraint to write into
+    /// `pubspec.yaml`'s `environment.sdk`. Default
+    /// `">=3.5.0 <4.0.0"` — paired with the Flutter 3.24 pin.
+    pub pinned_dart_sdk: String,
+
+    /// Pubspec package name to write into `pubspec.yaml` `name:`.
+    /// If `None`, derived from the component name by kebab→snake
+    /// casing and prefixing `mosaic_` (Dart pub requires snake_case
+    /// per §3.6.2 Flutter row; the prefix avoids collisions with
+    /// Dart's own packages).
+    pub package_name: Option<String>,
+}
+
+impl Default for EmitOptions {
+    fn default() -> Self {
+        Self {
+            emit_project: false,
+            pinned_flutter_sdk: ">=3.24.0 <4.0.0".to_string(),
+            pinned_dart_sdk: ">=3.5.0 <4.0.0".to_string(),
+            package_name: None,
+        }
+    }
+}
+
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project`
+/// is on. Three files — enough for `flutter pub get && flutter run`
+/// to start a MaterialApp that mounts the component.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProjectFiles {
+    /// `pubspec.yaml` — pinned Flutter + Dart SDK constraints,
+    /// `flutter:` block with the SDK dep. Package name follows
+    /// Dart pub rules (snake_case).
+    pub pubspec_yaml: String,
+    /// `lib/main.dart` — `MaterialApp` shell that mounts the
+    /// component as the `home:` widget. Imports the component
+    /// sibling-relative from the project root.
+    pub main_dart: String,
+    /// `README.md` — prereqs (Flutter SDK), `flutter pub get` +
+    /// `flutter run` commands, file map.
+    pub readme: String,
+}
+
+/// Error shapes specific to the project-shell emission path.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProjectShellError {
+    /// The derived Dart-pub name fails the Dart pub naming
+    /// convention: lowercase letters/digits/underscores,
+    /// MUST start with a letter, no leading underscore.
+    /// Per UI32 spec §3.6.2 Flutter row.
+    InvalidDartPubName(String),
+}
+
+impl std::fmt::Display for ProjectShellError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProjectShellError::InvalidDartPubName(n) => write!(
+                f,
+                "derived Dart pub name '{n}' violates the pub naming convention (snake_case: lowercase + digits + underscores, must start with letter)"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ProjectShellError {}
+
+impl From<ProjectShellError> for PipelineEmitError {
+    fn from(e: ProjectShellError) -> Self {
+        PipelineEmitError::UnsafeSlotName(e.to_string())
+    }
+}
+
+/// Extended pipeline result — same as `PipelineEmitResult` but
+/// carries the optional `ProjectFiles` when `emit_project` is on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PipelineEmitResultWithProject {
+    pub output: String,
+    pub component_name: String,
+    pub project: Option<ProjectFiles>,
+}
+
+/// Compile a three-file Mosaic pipeline triple to Dart with
+/// explicit emit options.
+pub fn from_pipeline_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
+    let component = from_pipeline(interface, layout, style)?;
+
+    let project = if options.emit_project {
+        Some(build_flutter_project_files(&component.component_name, options)?)
+    } else {
+        None
+    };
+
+    Ok(PipelineEmitResultWithProject {
+        output: component.output,
+        component_name: component.component_name,
+        project,
+    })
+}
+
+/// Build the three Flutter app-shell side files for a single
+/// component.
+fn build_flutter_project_files(
+    name: &str,
+    options: &EmitOptions,
+) -> Result<ProjectFiles, ProjectShellError> {
+    let pub_name = match &options.package_name {
+        Some(p) => p.clone(),
+        None => format!("mosaic_{}", pascal_to_snake_for_pub(name)),
+    };
+    if !is_valid_dart_pub_name(&pub_name) {
+        return Err(ProjectShellError::InvalidDartPubName(pub_name));
+    }
+
+    Ok(ProjectFiles {
+        pubspec_yaml: build_pubspec_yaml(&pub_name, options),
+        main_dart: build_main_dart(name),
+        readme: build_flutter_readme(&pub_name, name),
+    })
+}
+
+/// PascalCase → snake_case for Dart pub naming. `Hello` → `hello`;
+/// `ProfileCard` → `profile_card`.
+fn pascal_to_snake_for_pub(name: &str) -> String {
+    let mut out = String::with_capacity(name.len() + 4);
+    for (i, c) in name.chars().enumerate() {
+        if c.is_ascii_uppercase() && i > 0 {
+            out.push('_');
+        }
+        for d in c.to_lowercase() {
+            out.push(d);
+        }
+    }
+    out
+}
+
+/// Validate Dart pub name per §3.6.2 Flutter row:
+/// `[a-z][a-z0-9_]*` (lowercase, digits, underscores; must start
+/// with letter; no leading underscore). Dart pub rejects names
+/// with hyphens, uppercase, or leading digit/underscore.
+fn is_valid_dart_pub_name(s: &str) -> bool {
+    if s.is_empty() || s.len() > 64 {
+        return false;
+    }
+    let first = s.chars().next().unwrap();
+    if !first.is_ascii_lowercase() {
+        return false;
+    }
+    s.chars()
+        .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '_')
+}
+
+const BANNER_DART: &str = "// AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\n";
+const BANNER_YAML: &str = "# AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n# Fork the file (remove this banner) to customise.\n";
+const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+
+fn build_pubspec_yaml(pub_name: &str, options: &EmitOptions) -> String {
+    format!(
+        "{BANNER_YAML}name: {pub_name}\ndescription: Auto-generated Flutter shell for a Mosaic component.\npublish_to: 'none'\nversion: 0.0.0\n\nenvironment:\n  sdk: '{}'\n  flutter: '{}'\n\ndependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n\nflutter:\n  uses-material-design: true\n",
+        options.pinned_dart_sdk, options.pinned_flutter_sdk,
+    )
+}
+
+fn build_main_dart(component_name: &str) -> String {
+    format!(
+        "{BANNER_DART}import 'package:flutter/material.dart';\nimport '../{component_name}.dart';\n\nvoid main() {{\n  runApp(const _MosaicApp());\n}}\n\nclass _MosaicApp extends StatelessWidget {{\n  const _MosaicApp();\n\n  @override\n  Widget build(BuildContext context) {{\n    return MaterialApp(\n      title: '{component_name}',\n      home: Scaffold(\n        appBar: AppBar(title: const Text('{component_name}')),\n        body: const Center(child: {component_name}()),\n      ),\n    );\n  }}\n}}\n"
+    )
+}
+
+fn build_flutter_readme(pub_name: &str, component_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}()` as `home`. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
+// =====================================================================
 // Entry point
 // =====================================================================
 
