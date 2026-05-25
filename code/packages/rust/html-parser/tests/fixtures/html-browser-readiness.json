@@ -473,6 +473,67 @@
       }
     },
     {
+      "id": "structured-data-microdata-page",
+      "description": "Browser document summaries expose microdata item scopes, URL-valued properties, nested items, and referenced properties.",
+      "input": "<base href=\"https://example.test/catalog/\"><body><article id=product itemscope itemtype=\"https://schema.org/Product\" itemid=\"items/widget\" itemref=\"external-rating\"><h2 itemprop=name>Widget Pro</h2><img itemprop=image src=\"images/widget.png\" alt=Widget><a itemprop=\"url sameAs\" href=\"../products/widget\">Product page</a><data itemprop=sku value=WID-001>Widget SKU</data><time itemprop=releaseDate datetime=\"2026-05-25\">today</time><meta itemprop=category content=Tools><div itemprop=offers itemscope itemtype=\"https://schema.org/Offer\" itemid=\"offers/widget\"><span itemprop=price>19.99</span><link itemprop=availability href=\"https://schema.org/InStock\"></div></article><p id=external-rating itemprop=aggregateRating>4.8 stars</p>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/catalog/",
+        "base_target": null,
+        "body_text": "Widget Pro Product page Widget SKU today 19.99 4.8 stars",
+        "metas": [],
+        "resources": [
+          { "kind": "image", "url": "images/widget.png", "resolved_url": "https://example.test/catalog/images/widget.png", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
+        ],
+        "anchors": [
+          { "id": "product", "name": null, "text": "Widget Pro Product page Widget SKU today 19.99" },
+          { "id": "external-rating", "name": null, "text": "4.8 stars" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Widget Pro" }
+        ],
+        "links": [
+          { "href": "../products/widget", "resolved_href": "https://example.test/products/widget", "name": null, "target": null, "rel": null, "title": null, "text": "Product page" }
+        ],
+        "images": [
+          { "src": "images/widget.png", "resolved_src": "https://example.test/catalog/images/widget.png", "alt": "Widget" }
+        ],
+        "structured_items": [
+          {
+            "id": "product",
+            "item_type": ["https://schema.org/Product"],
+            "item_id": "items/widget",
+            "resolved_item_id": "https://example.test/catalog/items/widget",
+            "item_ref": ["external-rating"],
+            "properties": [
+              { "name": "name", "value": "Widget Pro" },
+              { "name": "image", "value": "images/widget.png", "value_url": "images/widget.png", "resolved_value_url": "https://example.test/catalog/images/widget.png" },
+              { "name": "url", "value": "../products/widget", "value_url": "../products/widget", "resolved_value_url": "https://example.test/products/widget" },
+              { "name": "sameAs", "value": "../products/widget", "value_url": "../products/widget", "resolved_value_url": "https://example.test/products/widget" },
+              { "name": "sku", "value": "WID-001" },
+              { "name": "releaseDate", "value": "2026-05-25" },
+              { "name": "category", "value": "Tools" },
+              { "name": "offers", "value": "19.99" },
+              { "name": "aggregateRating", "value": "4.8 stars" }
+            ]
+          },
+          {
+            "id": null,
+            "item_type": ["https://schema.org/Offer"],
+            "item_id": "offers/widget",
+            "resolved_item_id": "https://example.test/catalog/offers/widget",
+            "item_ref": [],
+            "properties": [
+              { "name": "price", "value": "19.99" },
+              { "name": "availability", "value": "https://schema.org/InStock", "value_url": "https://schema.org/InStock", "resolved_value_url": "https://schema.org/InStock" }
+            ]
+          }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "text-flow-list-quote-page",
       "description": "Browser document facts keep the visible prose around lists, preformatted blocks, quotes, and break elements stable.",
       "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Intro<br>line<wbr>word</p><hr><ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol><pre>  keep\nspace</pre><blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",

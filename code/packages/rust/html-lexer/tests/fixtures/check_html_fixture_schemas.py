@@ -243,6 +243,9 @@ def check_browser_readiness_case(
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "media", errors)
+    require_optional_object_list(
+        f"{case_path}.expected", expected, "structured_items", errors
+    )
     require_object_list(f"{case_path}.expected", expected, "forms", errors)
     require_object_list(f"{case_path}.expected", expected, "tables", errors)
     check_browser_expected_lists(case_path, expected, errors)
@@ -451,6 +454,21 @@ def check_browser_expected_lists(
             require_optional_nullable_string(media_path, media, field, errors)
         for field in ("controls", "autoplay", "loop_media", "muted", "playsinline"):
             require_optional_boolean(media_path, media, field, errors)
+
+    for index, item in enumerate(object_list_items(expected, "structured_items")):
+        item_path = f"{case_path}.expected.structured_items[{index}]"
+        for field in ("id", "item_id", "resolved_item_id"):
+            require_optional_nullable_string(item_path, item, field, errors)
+        require_optional_string_list(item_path, item, "item_type", errors)
+        require_optional_string_list(item_path, item, "item_ref", errors)
+        require_optional_object_list(item_path, item, "properties", errors)
+        for property_index, property_value in enumerate(
+            object_list_items(item, "properties")
+        ):
+            property_path = f"{item_path}.properties[{property_index}]"
+            require_string(property_path, property_value, "name", errors)
+            for field in ("value", "value_url", "resolved_value_url"):
+                require_optional_nullable_string(property_path, property_value, field, errors)
 
     for index, form in enumerate(object_list_items(expected, "forms")):
         form_path = f"{case_path}.expected.forms[{index}]"
@@ -667,6 +685,11 @@ def check_browser_content_node(
         "edit_cite",
         "resolved_edit_cite",
         "edit_datetime",
+        "item_id",
+        "resolved_item_id",
+        "item_value",
+        "item_value_url",
+        "resolved_item_value_url",
         "ruby_kind",
         "bidi_kind",
         "break_kind",
@@ -688,6 +711,9 @@ def check_browser_content_node(
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
+    require_optional_string_list(node_path, node, "item_type", errors)
+    require_optional_string_list(node_path, node, "item_ref", errors)
+    require_optional_string_list(node_path, node, "itemprop", errors)
     for field in (
         "disabled",
         "required",
@@ -711,6 +737,7 @@ def check_browser_content_node(
         "inert",
         "open",
         "focusable",
+        "item_scope",
     ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
@@ -862,6 +889,11 @@ def check_browser_render_node(
         "edit_cite",
         "resolved_edit_cite",
         "edit_datetime",
+        "item_id",
+        "resolved_item_id",
+        "item_value",
+        "item_value_url",
+        "resolved_item_value_url",
         "ruby_kind",
         "bidi_kind",
         "break_kind",
@@ -883,6 +915,9 @@ def check_browser_render_node(
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
+    require_optional_string_list(node_path, node, "item_type", errors)
+    require_optional_string_list(node_path, node, "item_ref", errors)
+    require_optional_string_list(node_path, node, "itemprop", errors)
     for field in (
         "disabled",
         "required",
@@ -906,6 +941,7 @@ def check_browser_render_node(
         "inert",
         "open",
         "focusable",
+        "item_scope",
     ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)

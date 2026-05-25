@@ -835,6 +835,7 @@ pub struct BrowserDocument {
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub media: Vec<BrowserMedia>,
+    pub structured_items: Vec<BrowserStructuredItem>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
 }
@@ -954,6 +955,24 @@ pub struct BrowserAnchor {
     pub id: Option<String>,
     pub name: Option<String>,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredItem {
+    pub id: Option<String>,
+    pub item_type: Vec<String>,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub properties: Vec<BrowserStructuredProperty>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredProperty {
+    pub name: String,
+    pub value: Option<String>,
+    pub value_url: Option<String>,
+    pub resolved_value_url: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -1102,6 +1121,15 @@ pub struct BrowserContentNode {
     pub edit_cite: Option<String>,
     pub resolved_edit_cite: Option<String>,
     pub edit_datetime: Option<String>,
+    pub item_scope: bool,
+    pub item_type: Vec<String>,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub itemprop: Vec<String>,
+    pub item_value: Option<String>,
+    pub item_value_url: Option<String>,
+    pub resolved_item_value_url: Option<String>,
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
     pub break_kind: Option<String>,
@@ -1260,6 +1288,15 @@ pub struct BrowserRenderNode {
     pub edit_cite: Option<String>,
     pub resolved_edit_cite: Option<String>,
     pub edit_datetime: Option<String>,
+    pub item_scope: bool,
+    pub item_type: Vec<String>,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub itemprop: Vec<String>,
+    pub item_value: Option<String>,
+    pub item_value_url: Option<String>,
+    pub resolved_item_value_url: Option<String>,
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
     pub break_kind: Option<String>,
@@ -1652,6 +1689,15 @@ impl BrowserRenderNode {
             edit_cite: content_node.edit_cite.clone(),
             resolved_edit_cite: content_node.resolved_edit_cite.clone(),
             edit_datetime: content_node.edit_datetime.clone(),
+            item_scope: content_node.item_scope,
+            item_type: content_node.item_type.clone(),
+            item_id: content_node.item_id.clone(),
+            resolved_item_id: content_node.resolved_item_id.clone(),
+            item_ref: content_node.item_ref.clone(),
+            itemprop: content_node.itemprop.clone(),
+            item_value: content_node.item_value.clone(),
+            item_value_url: content_node.item_value_url.clone(),
+            resolved_item_value_url: content_node.resolved_item_value_url.clone(),
             ruby_kind: content_node.ruby_kind.clone(),
             bidi_kind: content_node.bidi_kind.clone(),
             break_kind: content_node.break_kind.clone(),
@@ -8588,6 +8634,13 @@ fn collect_browser_facts(
 
         collect_anchor_target(element, summary);
         collect_body_resource(element, summary);
+        if browser_item_scope(element) {
+            summary.structured_items.push(browser_structured_item(
+                element,
+                summary.base_href.as_deref(),
+                body_root,
+            ));
+        }
 
         match element.name.as_str() {
             "a" => summary.links.push(BrowserLink {
@@ -9374,6 +9427,15 @@ fn collect_browser_content_nodes_with_mode(
                         edit_cite: None,
                         resolved_edit_cite: None,
                         edit_datetime: None,
+                        item_scope: false,
+                        item_type: Vec::new(),
+                        item_id: None,
+                        resolved_item_id: None,
+                        item_ref: Vec::new(),
+                        itemprop: Vec::new(),
+                        item_value: None,
+                        item_value_url: None,
+                        resolved_item_value_url: None,
                         ruby_kind: None,
                         bidi_kind: None,
                         break_kind: None,
@@ -9444,6 +9506,8 @@ fn browser_content_node_for_element(
     let poster = browser_media_poster(element);
     let quote_cite = browser_quote_cite(element);
     let edit_cite = browser_edit_cite(element);
+    let item_id = browser_item_id(element);
+    let item_value_url = browser_item_value_url(element);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let aria_label = browser_aria_label(element);
     let accessible_name = browser_accessible_name(element, role, &control_labels, id_texts);
@@ -9611,6 +9675,19 @@ fn browser_content_node_for_element(
             .and_then(|cite| resolve_browser_url(cite, base_href)),
         edit_cite,
         edit_datetime: browser_edit_datetime(element),
+        item_scope: browser_item_scope(element),
+        item_type: browser_item_type(element),
+        resolved_item_id: item_id
+            .as_deref()
+            .and_then(|item_id| resolve_browser_url(item_id, base_href)),
+        item_id,
+        item_ref: browser_item_ref(element),
+        itemprop: browser_itemprop(element),
+        item_value: browser_item_value(element),
+        resolved_item_value_url: item_value_url
+            .as_deref()
+            .and_then(|url| resolve_browser_url(url, base_href)),
+        item_value_url,
         ruby_kind: browser_ruby_kind(element),
         bidi_kind: browser_bidi_kind(element),
         break_kind: browser_break_kind(element),
@@ -10933,6 +11010,184 @@ fn browser_content_value(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_item_scope(element: &Element) -> bool {
+    element.attribute("itemscope").is_some()
+}
+
+fn browser_item_type(element: &Element) -> Vec<String> {
+    element
+        .attribute("itemtype")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_item_id(element: &Element) -> Option<String> {
+    element.attribute("itemid").map(ToOwned::to_owned)
+}
+
+fn browser_item_ref(element: &Element) -> Vec<String> {
+    element
+        .attribute("itemref")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_itemprop(element: &Element) -> Vec<String> {
+    element
+        .attribute("itemprop")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_item_value(element: &Element) -> Option<String> {
+    if browser_itemprop(element).is_empty() {
+        return None;
+    }
+
+    if let Some(url) = browser_item_value_url(element) {
+        return Some(url);
+    }
+
+    match element.name.as_str() {
+        "data" | "meter" => element.attribute("value").map(ToOwned::to_owned),
+        "meta" => element.attribute("content").map(ToOwned::to_owned),
+        "time" => element
+            .attribute("datetime")
+            .map(ToOwned::to_owned)
+            .or_else(|| non_empty_string(element_text(element))),
+        _ => non_empty_string(element_text(element)),
+    }
+}
+
+fn browser_item_value_url(element: &Element) -> Option<String> {
+    if browser_itemprop(element).is_empty() {
+        return None;
+    }
+
+    match element.name.as_str() {
+        "a" | "area" | "link" => element.attribute("href").map(ToOwned::to_owned),
+        "audio" | "embed" | "iframe" | "img" | "source" | "track" | "video" => {
+            element.attribute("src").map(ToOwned::to_owned)
+        }
+        "object" => element.attribute("data").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_structured_item(
+    element: &Element,
+    base_href: Option<&str>,
+    body_root: &[Node],
+) -> BrowserStructuredItem {
+    let item_id = browser_item_id(element);
+    let item_ref = browser_item_ref(element);
+    BrowserStructuredItem {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        item_type: browser_item_type(element),
+        resolved_item_id: item_id
+            .as_deref()
+            .and_then(|item_id| resolve_browser_url(item_id, base_href)),
+        item_id,
+        item_ref: item_ref.clone(),
+        properties: browser_structured_properties(element, &item_ref, base_href, body_root),
+    }
+}
+
+fn browser_structured_properties(
+    element: &Element,
+    item_ref: &[String],
+    base_href: Option<&str>,
+    body_root: &[Node],
+) -> Vec<BrowserStructuredProperty> {
+    let mut properties = Vec::new();
+    collect_browser_structured_properties(&element.children, base_href, &mut properties);
+    for id in item_ref {
+        if let Some(referenced_element) = find_element_by_id(body_root, id) {
+            collect_browser_structured_properties_from_element(
+                referenced_element,
+                base_href,
+                &mut properties,
+            );
+        }
+    }
+    properties
+}
+
+fn collect_browser_structured_properties(
+    nodes: &[Node],
+    base_href: Option<&str>,
+    properties: &mut Vec<BrowserStructuredProperty>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        collect_browser_structured_properties_from_element(element, base_href, properties);
+    }
+}
+
+fn collect_browser_structured_properties_from_element(
+    element: &Element,
+    base_href: Option<&str>,
+    properties: &mut Vec<BrowserStructuredProperty>,
+) {
+    collect_browser_structured_property(element, base_href, properties);
+
+    if !browser_item_scope(element) {
+        collect_browser_structured_properties(&element.children, base_href, properties);
+    }
+}
+
+fn collect_browser_structured_property(
+    element: &Element,
+    base_href: Option<&str>,
+    properties: &mut Vec<BrowserStructuredProperty>,
+) {
+    let itemprop = browser_itemprop(element);
+    if itemprop.is_empty() {
+        return;
+    }
+
+    let value_url = browser_item_value_url(element);
+    let property = BrowserStructuredProperty {
+        name: String::new(),
+        value: browser_item_value(element),
+        resolved_value_url: value_url
+            .as_deref()
+            .and_then(|url| resolve_browser_url(url, base_href)),
+        value_url,
+    };
+    for name in itemprop {
+        properties.push(BrowserStructuredProperty {
+            name,
+            ..property.clone()
+        });
+    }
+}
+
+fn find_element_by_id<'a>(nodes: &'a [Node], id: &str) -> Option<&'a Element> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.attribute("id") == Some(id) {
+            return Some(element);
+        }
+
+        if let Some(element) = find_element_by_id(&element.children, id) {
+            return Some(element);
+        }
+    }
+
+    None
+}
+
+fn non_empty_string(value: String) -> Option<String> {
+    (!value.is_empty()).then_some(value)
+}
+
 fn browser_content_options(element: &Element) -> Vec<String> {
     match element.name.as_str() {
         "select" => collect_select_options(&element.children),
@@ -12134,6 +12389,132 @@ mod tests {
         assert_eq!(render_tree.children[0].children[5].display, "inline");
         assert_eq!(render_tree.children[0].children[6].display, "inline");
         assert_eq!(render_tree.children[0].children[7].display, "inline");
+    }
+
+    #[test]
+    fn browser_structured_data_metadata_tracks_items_and_properties() {
+        let document = parse_html(
+            "<base href=\"https://example.test/catalog/\">\
+             <body><article id=product itemscope itemtype=\"https://schema.org/Product\" \
+             itemid=\"items/widget\" itemref=\"external-rating\">\
+             <h2 itemprop=name>Widget Pro</h2>\
+             <img itemprop=image src=\"images/widget.png\" alt=Widget>\
+             <a itemprop=\"url sameAs\" href=\"../products/widget\">Product page</a>\
+             <data itemprop=sku value=WID-001>Widget SKU</data>\
+             <time itemprop=releaseDate datetime=\"2026-05-25\">today</time>\
+             <meta itemprop=category content=Tools>\
+             <div itemprop=offers itemscope itemtype=\"https://schema.org/Offer\" \
+             itemid=\"offers/widget\"><span itemprop=price>19.99</span>\
+             <link itemprop=availability href=\"https://schema.org/InStock\"></div>\
+             </article><p id=external-rating itemprop=aggregateRating>4.8 stars</p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.structured_items.len(), 2);
+
+        let product = &summary.structured_items[0];
+        assert_eq!(product.id.as_deref(), Some("product"));
+        assert_eq!(product.item_type, vec!["https://schema.org/Product"]);
+        assert_eq!(product.item_id.as_deref(), Some("items/widget"));
+        assert_eq!(
+            product.resolved_item_id.as_deref(),
+            Some("https://example.test/catalog/items/widget")
+        );
+        assert_eq!(product.item_ref, vec!["external-rating"]);
+
+        let product_property = |name: &str| {
+            product
+                .properties
+                .iter()
+                .find(|property| property.name == name)
+                .unwrap_or_else(|| panic!("missing product property {name}"))
+        };
+        assert_eq!(
+            product_property("name").value.as_deref(),
+            Some("Widget Pro")
+        );
+        assert_eq!(
+            product_property("image").value_url.as_deref(),
+            Some("images/widget.png")
+        );
+        assert_eq!(
+            product_property("image").resolved_value_url.as_deref(),
+            Some("https://example.test/catalog/images/widget.png")
+        );
+        assert_eq!(
+            product_property("sameAs").resolved_value_url.as_deref(),
+            Some("https://example.test/products/widget")
+        );
+        assert_eq!(product_property("sku").value.as_deref(), Some("WID-001"));
+        assert_eq!(
+            product_property("releaseDate").value.as_deref(),
+            Some("2026-05-25")
+        );
+        assert_eq!(product_property("category").value.as_deref(), Some("Tools"));
+        assert_eq!(product_property("offers").value.as_deref(), Some("19.99"));
+        assert_eq!(
+            product_property("aggregateRating").value.as_deref(),
+            Some("4.8 stars")
+        );
+
+        let offer = &summary.structured_items[1];
+        assert_eq!(offer.item_type, vec!["https://schema.org/Offer"]);
+        assert_eq!(offer.item_id.as_deref(), Some("offers/widget"));
+        assert_eq!(
+            offer.resolved_item_id.as_deref(),
+            Some("https://example.test/catalog/offers/widget")
+        );
+        assert_eq!(offer.properties[0].name, "price");
+        assert_eq!(offer.properties[0].value.as_deref(), Some("19.99"));
+        assert_eq!(offer.properties[1].name, "availability");
+        assert_eq!(
+            offer.properties[1].resolved_value_url.as_deref(),
+            Some("https://schema.org/InStock")
+        );
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let article = &content_tree.children[0];
+        assert!(article.item_scope);
+        assert_eq!(article.item_type, vec!["https://schema.org/Product"]);
+        assert_eq!(article.item_id.as_deref(), Some("items/widget"));
+        assert_eq!(
+            article.resolved_item_id.as_deref(),
+            Some("https://example.test/catalog/items/widget")
+        );
+        assert_eq!(article.item_ref, vec!["external-rating"]);
+
+        let name = &article.children[0];
+        assert_eq!(name.itemprop, vec!["name"]);
+        assert_eq!(name.item_value.as_deref(), Some("Widget Pro"));
+        let image = &article.children[1];
+        assert_eq!(image.itemprop, vec!["image"]);
+        assert_eq!(image.item_value_url.as_deref(), Some("images/widget.png"));
+        assert_eq!(
+            image.resolved_item_value_url.as_deref(),
+            Some("https://example.test/catalog/images/widget.png")
+        );
+        let link = &article.children[2];
+        assert_eq!(link.itemprop, vec!["url", "sameAs"]);
+        assert_eq!(
+            link.resolved_item_value_url.as_deref(),
+            Some("https://example.test/products/widget")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let rendered_article = &render_tree.children[0];
+        assert!(rendered_article.item_scope);
+        assert_eq!(
+            rendered_article.item_type,
+            vec!["https://schema.org/Product"]
+        );
+        assert_eq!(rendered_article.children[1].itemprop, vec!["image"]);
+        assert_eq!(
+            rendered_article.children[1]
+                .resolved_item_value_url
+                .as_deref(),
+            Some("https://example.test/catalog/images/widget.png")
+        );
     }
 
     #[test]
