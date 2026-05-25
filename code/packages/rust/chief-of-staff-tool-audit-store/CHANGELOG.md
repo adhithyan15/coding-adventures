@@ -221,6 +221,9 @@ All notable changes to this package will be documented in this file.
 - Host-run escalation dashboard lane queue digests that bind lane queue keys
   back to expanded dashboard keys for supervisor drain run host-log grouping and
   drift checks.
+- Flattened host-run escalation dashboard lane queue route flags for routing
+  lane queues and their digests to routine action, manual review,
+  investigation, integrity investigation, or triage host queues.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
