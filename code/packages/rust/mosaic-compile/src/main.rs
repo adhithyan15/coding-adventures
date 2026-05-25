@@ -868,18 +868,52 @@ fn run_pipeline(
                 }
             }
         }
-        "webcomponent" => emit_single_file(
-            backend,
-            output_path,
-            &mosmodel_out.component.component,
-            "js",
-            mosaic_emit_webcomponent::pipeline::from_pipeline(
+        "webcomponent" => {
+            // UI32-K-webcomp: route through `from_pipeline_with_options`
+            // so the `--emit-project` flag activates the standalone-
+            // HTML shell. Bare invocation (emit_project: false) is
+            // byte-identical to pre-UI32 behaviour — same .js, no
+            // new files.
+            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
+            wc_opts.emit_project = emit_project;
+            let result = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &wc_opts,
             )
-            .map(|r| r.output),
-        ),
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: webcomponent pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.js", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-webcomp: when --emit-project is on, write the
+            // two shell side-files (index.html + README.md) flat
+            // next to the component .js.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+            }
+        }
         "swiftui" => emit_single_file(
             backend,
             output_path,
