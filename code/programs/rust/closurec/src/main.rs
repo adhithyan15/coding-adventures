@@ -70,6 +70,7 @@ use std::process::ExitCode;
 pub mod config;
 pub mod defines;
 pub mod globs;
+pub mod help_markdown;
 pub mod print_tree;
 pub mod run;
 pub mod whitespace_only;
@@ -127,6 +128,13 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
     argv.push("closurec".to_string());
     argv.extend(args.iter().cloned());
 
+    // Keep a clone of the spec so the --help_markdown
+    // short-circuit (CLOC11.54) can iterate the flag list after
+    // Parser::new consumes the original. A CliSpec is ~10 KB of
+    // owned strings, so the clone is cheap compared to the
+    // user-visible work that follows.
+    let spec_for_help_md = spec.clone();
+
     let parser = Parser::new(spec);
     match parser.parse(&argv) {
         Ok(ParserOutput::Parse(result)) => {
@@ -136,6 +144,21 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
                 Ok(c) => c,
                 Err(e) => return (format!("{e}\n"), ExitCode::from(1)),
             };
+
+            // Step 3.5 (CLOC11.54): --help_markdown short-circuit.
+            //
+            // Emit the markdown flag dump and exit successfully.
+            // This sits *after* config-building so a user-error in
+            // a sibling flag still surfaces (matches the behavior
+            // users expect from --help: the flag is honored even
+            // when other flags are wonky, but cli-builder catches
+            // outright unknown flags before we get here at all).
+            if cfg.special_modes.help_markdown {
+                return (
+                    help_markdown::format_help_markdown(&spec_for_help_md),
+                    ExitCode::SUCCESS,
+                );
+            }
 
             // Step 4 (CLOC11.01): run the compiler. v1 is an
             // identity pipeline — read inputs, concatenate,
@@ -393,6 +416,44 @@ mod tests {
         // accepts an empty invocation too.)
         let (text, _code) = parse_and_run(&args(&[]));
         assert!(text.contains("identity pipeline"));
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.54 — --help_markdown behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn help_markdown_flag_emits_markdown_and_exits_clean() {
+        let (text, _code) = parse_and_run(&args(&["--help_markdown"]));
+        // Title comes from spec.name.
+        assert!(text.starts_with("# closurec\n"), "leading title: {text:?}");
+        // The "Flags" section header is present.
+        assert!(text.contains("## Flags\n"));
+        // Specific known flags appear as section headings.
+        assert!(text.contains("### `--js`"));
+        assert!(text.contains("### `--checks_only`"));
+        assert!(text.contains("### `--print_tree`"));
+        // Version line wired up.
+        assert!(text.contains("Version: "));
+    }
+
+    #[test]
+    fn help_markdown_does_not_run_compiler_pipeline() {
+        // Even with --js inputs and --js_output_file, the markdown
+        // emission must short-circuit without trying to read any
+        // files or write any output.
+        let (text, _code) = parse_and_run(&args(&[
+            "--help_markdown",
+            "--js",
+            "/tmp/does-not-exist-cloc11-54.js",
+            "--js_output_file",
+            "/tmp/nope.js",
+        ]));
+        assert!(text.starts_with("# closurec\n"));
+        // No "failed to read input" or "GlobError" surfaced — we
+        // never got to the pipeline.
+        assert!(!text.contains("failed to read input"));
+        assert!(!text.contains("GlobError"));
     }
 
     #[test]
