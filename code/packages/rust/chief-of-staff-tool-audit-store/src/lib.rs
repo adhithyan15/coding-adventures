@@ -4812,6 +4812,137 @@ impl ToolAuditSupervisorDrainRunReport {
         self.host_run_escalation_queue_key().has_route()
     }
 
+    /// Return the compact host-run escalation rollup key.
+    pub fn host_run_escalation_rollup_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationRollupKey {
+        ToolAuditSupervisorDrainHostRunEscalationRollupKey::new(
+            self.host_run_escalation_kind(),
+            self.host_run_escalation_route(),
+            self.host_run_escalation_queue_priority(),
+            self.host_run_escalation_queue_readiness(),
+        )
+    }
+
+    /// Return the stable host-run escalation rollup-key label.
+    pub fn host_run_escalation_rollup_key_label(&self) -> String {
+        self.host_run_escalation_rollup_key().label()
+    }
+
+    /// Return whether the escalation rollup-key label parses back to its typed key.
+    pub fn host_run_escalation_rollup_key_label_matches_key(&self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_label(
+            &self.host_run_escalation_rollup_key_label(),
+        ) == Some(self.host_run_escalation_rollup_key())
+    }
+
+    /// Return whether the rollup key's escalation component matches.
+    pub fn host_run_escalation_rollup_key_kind_matches_kind(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .escalation_kind_matches(self.host_run_escalation_kind())
+    }
+
+    /// Return whether the rollup key's route component matches.
+    pub fn host_run_escalation_rollup_key_route_matches_route(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .route_matches(self.host_run_escalation_route())
+    }
+
+    /// Return whether the rollup key's priority component matches.
+    pub fn host_run_escalation_rollup_key_priority_matches_priority(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .priority_matches(self.host_run_escalation_queue_priority())
+    }
+
+    /// Return whether the rollup key's readiness component matches.
+    pub fn host_run_escalation_rollup_key_readiness_matches_readiness(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .readiness_matches(self.host_run_escalation_queue_readiness())
+    }
+
+    /// Return whether every escalation rollup-key component matches its source classifier.
+    pub fn host_run_escalation_rollup_key_parts_match(&self) -> bool {
+        self.host_run_escalation_rollup_key().parts_match(
+            self.host_run_escalation_kind(),
+            self.host_run_escalation_route(),
+            self.host_run_escalation_queue_priority(),
+            self.host_run_escalation_queue_readiness(),
+        )
+    }
+
+    /// Return whether the rollup key matches the compact escalation queue key.
+    pub fn host_run_escalation_rollup_key_matches_queue_key(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .queue_key_matches(self.host_run_escalation_queue_key())
+    }
+
+    /// Return whether any escalation rollup-key component drifted.
+    pub fn has_host_run_escalation_rollup_key_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_rollup_key_parts_match()
+            || !self.host_run_escalation_rollup_key_matches_queue_key()
+    }
+
+    /// Return whether host-run escalation rollup labels match their source classifiers.
+    pub fn host_run_escalation_rollup_key_labels_match(&self) -> bool {
+        self.host_run_escalation_queue_key_labels_match()
+            && self.host_run_escalation_rollup_key_label_matches_key()
+            && self.host_run_escalation_rollup_key_parts_match()
+            && self.host_run_escalation_rollup_key_matches_queue_key()
+    }
+
+    /// Return whether any host-run escalation rollup label drifted.
+    pub fn has_host_run_escalation_rollup_key_label_integrity_drift(&self) -> bool {
+        !self.host_run_escalation_rollup_key_labels_match()
+    }
+
+    /// Return whether the escalation rollup is fully settled.
+    pub fn host_run_escalation_rollup_is_settled(&self) -> bool {
+        self.host_run_escalation_rollup_key().is_settled()
+    }
+
+    /// Return whether the escalation rollup requires host action.
+    pub fn host_run_escalation_rollup_requires_action(&self) -> bool {
+        self.host_run_escalation_rollup_key().requires_action()
+    }
+
+    /// Return the sortable escalation rollup priority rank.
+    pub fn host_run_escalation_rollup_priority_rank(&self) -> u8 {
+        self.host_run_escalation_rollup_key().priority_rank()
+    }
+
+    /// Return whether the escalation rollup can route automatically.
+    pub fn host_run_escalation_rollup_is_auto_routable(&self) -> bool {
+        self.host_run_escalation_rollup_key().is_auto_routable()
+    }
+
+    /// Return whether the escalation rollup requires manual review.
+    pub fn host_run_escalation_rollup_requires_manual_review(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .requires_manual_review()
+    }
+
+    /// Return whether the escalation rollup requires investigation.
+    pub fn host_run_escalation_rollup_requires_investigation(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .requires_investigation()
+    }
+
+    /// Return whether the escalation rollup requires host-log integrity investigation.
+    pub fn host_run_escalation_rollup_requires_integrity_investigation(&self) -> bool {
+        self.host_run_escalation_rollup_key()
+            .requires_integrity_investigation()
+    }
+
+    /// Return whether the escalation rollup requires triage.
+    pub fn host_run_escalation_rollup_requires_triage(&self) -> bool {
+        self.host_run_escalation_rollup_key().requires_triage()
+    }
+
+    /// Return whether the escalation rollup has a concrete route.
+    pub fn host_run_escalation_rollup_has_route(&self) -> bool {
+        self.host_run_escalation_rollup_key().has_route()
+    }
+
     /// Return the reader or supervisor checkpoint name drained by this run.
     pub fn checkpoint_name(&self) -> &str {
         &self.plan.checkpoint_name
@@ -5747,6 +5878,44 @@ impl ToolAuditSupervisorDrainRunReport {
             host_run_escalation_queue_requires_triage: self
                 .host_run_escalation_queue_requires_triage(),
             host_run_escalation_queue_has_route: self.host_run_escalation_queue_has_route(),
+            host_run_escalation_rollup_key: self.host_run_escalation_rollup_key(),
+            host_run_escalation_rollup_key_label: self.host_run_escalation_rollup_key_label(),
+            host_run_escalation_rollup_key_label_matches_key: self
+                .host_run_escalation_rollup_key_label_matches_key(),
+            host_run_escalation_rollup_key_kind_matches_kind: self
+                .host_run_escalation_rollup_key_kind_matches_kind(),
+            host_run_escalation_rollup_key_route_matches_route: self
+                .host_run_escalation_rollup_key_route_matches_route(),
+            host_run_escalation_rollup_key_priority_matches_priority: self
+                .host_run_escalation_rollup_key_priority_matches_priority(),
+            host_run_escalation_rollup_key_readiness_matches_readiness: self
+                .host_run_escalation_rollup_key_readiness_matches_readiness(),
+            host_run_escalation_rollup_key_parts_match: self
+                .host_run_escalation_rollup_key_parts_match(),
+            host_run_escalation_rollup_key_matches_queue_key: self
+                .host_run_escalation_rollup_key_matches_queue_key(),
+            has_host_run_escalation_rollup_key_integrity_drift: self
+                .has_host_run_escalation_rollup_key_integrity_drift(),
+            host_run_escalation_rollup_key_labels_match: self
+                .host_run_escalation_rollup_key_labels_match(),
+            has_host_run_escalation_rollup_key_label_integrity_drift: self
+                .has_host_run_escalation_rollup_key_label_integrity_drift(),
+            host_run_escalation_rollup_is_settled: self.host_run_escalation_rollup_is_settled(),
+            host_run_escalation_rollup_requires_action: self
+                .host_run_escalation_rollup_requires_action(),
+            host_run_escalation_rollup_priority_rank: self
+                .host_run_escalation_rollup_priority_rank(),
+            host_run_escalation_rollup_is_auto_routable: self
+                .host_run_escalation_rollup_is_auto_routable(),
+            host_run_escalation_rollup_requires_manual_review: self
+                .host_run_escalation_rollup_requires_manual_review(),
+            host_run_escalation_rollup_requires_investigation: self
+                .host_run_escalation_rollup_requires_investigation(),
+            host_run_escalation_rollup_requires_integrity_investigation: self
+                .host_run_escalation_rollup_requires_integrity_investigation(),
+            host_run_escalation_rollup_requires_triage: self
+                .host_run_escalation_rollup_requires_triage(),
+            host_run_escalation_rollup_has_route: self.host_run_escalation_rollup_has_route(),
             matches_planned_record_count: self.matches_planned_record_count(),
             matches_record_count: self.matches_record_count(),
             matches_planned_follow_up_record_count: self.matches_planned_follow_up_record_count(),
@@ -7282,6 +7451,48 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub host_run_escalation_queue_requires_triage: bool,
     /// Whether the escalation queue has a concrete route.
     pub host_run_escalation_queue_has_route: bool,
+    /// Compact host-run escalation rollup key.
+    pub host_run_escalation_rollup_key: ToolAuditSupervisorDrainHostRunEscalationRollupKey,
+    /// Stable host-run escalation rollup-key label.
+    pub host_run_escalation_rollup_key_label: String,
+    /// Whether the escalation rollup-key label parses back to its typed key.
+    pub host_run_escalation_rollup_key_label_matches_key: bool,
+    /// Whether the rollup key's escalation component matches.
+    pub host_run_escalation_rollup_key_kind_matches_kind: bool,
+    /// Whether the rollup key's route component matches.
+    pub host_run_escalation_rollup_key_route_matches_route: bool,
+    /// Whether the rollup key's priority component matches.
+    pub host_run_escalation_rollup_key_priority_matches_priority: bool,
+    /// Whether the rollup key's readiness component matches.
+    pub host_run_escalation_rollup_key_readiness_matches_readiness: bool,
+    /// Whether every escalation rollup-key component matches its source classifier.
+    pub host_run_escalation_rollup_key_parts_match: bool,
+    /// Whether the rollup key matches the compact escalation queue key.
+    pub host_run_escalation_rollup_key_matches_queue_key: bool,
+    /// Whether any escalation rollup-key component drifted.
+    pub has_host_run_escalation_rollup_key_integrity_drift: bool,
+    /// Whether host-run escalation rollup labels match their source classifiers.
+    pub host_run_escalation_rollup_key_labels_match: bool,
+    /// Whether any host-run escalation rollup label drifted.
+    pub has_host_run_escalation_rollup_key_label_integrity_drift: bool,
+    /// Whether the escalation rollup is fully settled.
+    pub host_run_escalation_rollup_is_settled: bool,
+    /// Whether the escalation rollup requires host action.
+    pub host_run_escalation_rollup_requires_action: bool,
+    /// Sortable escalation rollup priority rank.
+    pub host_run_escalation_rollup_priority_rank: u8,
+    /// Whether the escalation rollup can route automatically.
+    pub host_run_escalation_rollup_is_auto_routable: bool,
+    /// Whether the escalation rollup requires manual review.
+    pub host_run_escalation_rollup_requires_manual_review: bool,
+    /// Whether the escalation rollup requires investigation.
+    pub host_run_escalation_rollup_requires_investigation: bool,
+    /// Whether the escalation rollup requires host-log integrity investigation.
+    pub host_run_escalation_rollup_requires_integrity_investigation: bool,
+    /// Whether the escalation rollup requires triage.
+    pub host_run_escalation_rollup_requires_triage: bool,
+    /// Whether the escalation rollup has a concrete route.
+    pub host_run_escalation_rollup_has_route: bool,
     /// Whether the actual run delivered the planned number of rows.
     pub matches_planned_record_count: bool,
     /// Whether planned and replayed row counts match.
@@ -10104,6 +10315,113 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether the escalation queue has a concrete route.
     pub fn host_run_escalation_queue_has_route(&self) -> bool {
         self.host_run_escalation_queue_has_route
+    }
+
+    /// Return the compact host-run escalation rollup key.
+    pub fn host_run_escalation_rollup_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationRollupKey {
+        self.host_run_escalation_rollup_key
+    }
+
+    /// Return the stable host-run escalation rollup-key label.
+    pub fn host_run_escalation_rollup_key_label(&self) -> &str {
+        &self.host_run_escalation_rollup_key_label
+    }
+
+    /// Return whether the escalation rollup-key label parses back to its typed key.
+    pub fn host_run_escalation_rollup_key_label_matches_key(&self) -> bool {
+        self.host_run_escalation_rollup_key_label_matches_key
+    }
+
+    /// Return whether the rollup key's escalation component matches.
+    pub fn host_run_escalation_rollup_key_kind_matches_kind(&self) -> bool {
+        self.host_run_escalation_rollup_key_kind_matches_kind
+    }
+
+    /// Return whether the rollup key's route component matches.
+    pub fn host_run_escalation_rollup_key_route_matches_route(&self) -> bool {
+        self.host_run_escalation_rollup_key_route_matches_route
+    }
+
+    /// Return whether the rollup key's priority component matches.
+    pub fn host_run_escalation_rollup_key_priority_matches_priority(&self) -> bool {
+        self.host_run_escalation_rollup_key_priority_matches_priority
+    }
+
+    /// Return whether the rollup key's readiness component matches.
+    pub fn host_run_escalation_rollup_key_readiness_matches_readiness(&self) -> bool {
+        self.host_run_escalation_rollup_key_readiness_matches_readiness
+    }
+
+    /// Return whether every escalation rollup-key component matches its source classifier.
+    pub fn host_run_escalation_rollup_key_parts_match(&self) -> bool {
+        self.host_run_escalation_rollup_key_parts_match
+    }
+
+    /// Return whether the rollup key matches the compact escalation queue key.
+    pub fn host_run_escalation_rollup_key_matches_queue_key(&self) -> bool {
+        self.host_run_escalation_rollup_key_matches_queue_key
+    }
+
+    /// Return whether any escalation rollup-key component drifted.
+    pub fn has_host_run_escalation_rollup_key_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_rollup_key_integrity_drift
+    }
+
+    /// Return whether host-run escalation rollup labels match their source classifiers.
+    pub fn host_run_escalation_rollup_key_labels_match(&self) -> bool {
+        self.host_run_escalation_rollup_key_labels_match
+    }
+
+    /// Return whether any host-run escalation rollup label drifted.
+    pub fn has_host_run_escalation_rollup_key_label_integrity_drift(&self) -> bool {
+        self.has_host_run_escalation_rollup_key_label_integrity_drift
+    }
+
+    /// Return whether the escalation rollup is fully settled.
+    pub fn host_run_escalation_rollup_is_settled(&self) -> bool {
+        self.host_run_escalation_rollup_is_settled
+    }
+
+    /// Return whether the escalation rollup requires host action.
+    pub fn host_run_escalation_rollup_requires_action(&self) -> bool {
+        self.host_run_escalation_rollup_requires_action
+    }
+
+    /// Return the sortable escalation rollup priority rank.
+    pub fn host_run_escalation_rollup_priority_rank(&self) -> u8 {
+        self.host_run_escalation_rollup_priority_rank
+    }
+
+    /// Return whether the escalation rollup can route automatically.
+    pub fn host_run_escalation_rollup_is_auto_routable(&self) -> bool {
+        self.host_run_escalation_rollup_is_auto_routable
+    }
+
+    /// Return whether the escalation rollup requires manual review.
+    pub fn host_run_escalation_rollup_requires_manual_review(&self) -> bool {
+        self.host_run_escalation_rollup_requires_manual_review
+    }
+
+    /// Return whether the escalation rollup requires investigation.
+    pub fn host_run_escalation_rollup_requires_investigation(&self) -> bool {
+        self.host_run_escalation_rollup_requires_investigation
+    }
+
+    /// Return whether the escalation rollup requires host-log integrity investigation.
+    pub fn host_run_escalation_rollup_requires_integrity_investigation(&self) -> bool {
+        self.host_run_escalation_rollup_requires_integrity_investigation
+    }
+
+    /// Return whether the escalation rollup requires triage.
+    pub fn host_run_escalation_rollup_requires_triage(&self) -> bool {
+        self.host_run_escalation_rollup_requires_triage
+    }
+
+    /// Return whether the escalation rollup has a concrete route.
+    pub fn host_run_escalation_rollup_has_route(&self) -> bool {
+        self.host_run_escalation_rollup_has_route
     }
 
     /// Return whether the actual run replayed more rows than planned.
@@ -14149,6 +14467,211 @@ impl ToolAuditSupervisorDrainHostRunEscalationQueueKey {
 }
 
 impl Display for ToolAuditSupervisorDrainHostRunEscalationQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable compact rollup key for host-run escalation queues.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationRollupKey {
+    escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+    route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+    priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+    readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+}
+
+impl ToolAuditSupervisorDrainHostRunEscalationRollupKey {
+    /// Create an escalation rollup key from compact queue classifiers.
+    pub fn new(
+        escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+        route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+        priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> Self {
+        Self {
+            escalation_kind,
+            route,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Create an escalation rollup key from the expanded escalation queue key.
+    pub fn from_queue_key(key: ToolAuditSupervisorDrainHostRunEscalationQueueKey) -> Self {
+        Self::new(
+            key.route_key().digest().escalation_kind(),
+            key.route_key().route(),
+            key.priority(),
+            key.readiness(),
+        )
+    }
+
+    /// Parse a stable compact host-run escalation rollup-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("escalation=")?;
+        let (escalation_label, rest) = rest.split_once("|route=")?;
+        let (route_label, rest) = rest.split_once("|priority=")?;
+        let (priority_label, readiness_label) = rest.split_once("|readiness=")?;
+        let escalation_kind =
+            ToolAuditSupervisorDrainHostRunEscalationKind::from_label(escalation_label)?;
+        let route = ToolAuditSupervisorDrainHostRunEscalationRoute::from_label(route_label)?;
+        let priority = ToolAuditSupervisorDrainHostRunQueuePriority::from_label(priority_label)?;
+        let readiness = ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(readiness_label)?;
+        Some(Self::new(escalation_kind, route, priority, readiness))
+    }
+
+    /// Return the host-run escalation classification.
+    pub fn escalation_kind(self) -> ToolAuditSupervisorDrainHostRunEscalationKind {
+        self.escalation_kind
+    }
+
+    /// Return the host-run escalation route.
+    pub fn route(self) -> ToolAuditSupervisorDrainHostRunEscalationRoute {
+        self.route
+    }
+
+    /// Return the host-run escalation queue priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.priority
+    }
+
+    /// Return the host-run escalation queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.readiness
+    }
+
+    /// Return a stable compact label for escalation queue rollup grouping.
+    pub fn label(self) -> String {
+        format!(
+            "escalation={}|route={}|priority={}|readiness={}",
+            self.escalation_kind.as_str(),
+            self.route.as_str(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this rollup-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this key's escalation component matches the supplied kind.
+    pub fn escalation_kind_matches(
+        self,
+        escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+    ) -> bool {
+        self.escalation_kind == escalation_kind
+    }
+
+    /// Return whether this key's route component matches the supplied route.
+    pub fn route_matches(self, route: ToolAuditSupervisorDrainHostRunEscalationRoute) -> bool {
+        self.route == route
+    }
+
+    /// Return whether this key's priority component matches the supplied priority.
+    pub fn priority_matches(self, priority: ToolAuditSupervisorDrainHostRunQueuePriority) -> bool {
+        self.priority == priority
+    }
+
+    /// Return whether this key's readiness component matches the supplied readiness.
+    pub fn readiness_matches(
+        self,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> bool {
+        self.readiness == readiness
+    }
+
+    /// Return whether every key component matches the supplied source classifiers.
+    pub fn parts_match(
+        self,
+        escalation_kind: ToolAuditSupervisorDrainHostRunEscalationKind,
+        route: ToolAuditSupervisorDrainHostRunEscalationRoute,
+        priority: ToolAuditSupervisorDrainHostRunQueuePriority,
+        readiness: ToolAuditSupervisorDrainHostRunQueueReadiness,
+    ) -> bool {
+        self.escalation_kind_matches(escalation_kind)
+            && self.route_matches(route)
+            && self.priority_matches(priority)
+            && self.readiness_matches(readiness)
+    }
+
+    /// Return whether this rollup key matches the expanded queue key.
+    pub fn queue_key_matches(self, key: ToolAuditSupervisorDrainHostRunEscalationQueueKey) -> bool {
+        Self::from_queue_key(key) == self
+    }
+
+    /// Return whether this rollup key is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.escalation_kind.is_settled()
+            && self.route.is_settled()
+            && self.priority.is_settled()
+            && self.readiness.is_settled()
+    }
+
+    /// Return whether this rollup key needs host action.
+    pub fn requires_action(self) -> bool {
+        self.escalation_kind.requires_action()
+            || self.route.requires_action()
+            || self.readiness.is_actionable()
+    }
+
+    /// Return the sortable escalation rollup priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.escalation_kind
+            .rank()
+            .max(self.route.priority_rank())
+            .max(self.priority.rank())
+    }
+
+    /// Return whether this rollup key can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.escalation_kind.is_auto_routable()
+            && self.route.is_auto_routable()
+            && self.priority.is_routine_action()
+            && self.readiness.is_auto_routable()
+    }
+
+    /// Return whether this rollup key requires manual review.
+    pub fn requires_manual_review(self) -> bool {
+        self.escalation_kind.requires_manual_review()
+            || self.route.requires_manual_review()
+            || self.priority.requires_manual_review()
+            || self.readiness.requires_manual_review()
+    }
+
+    /// Return whether this rollup key requires investigation.
+    pub fn requires_investigation(self) -> bool {
+        self.escalation_kind.requires_investigation()
+            || self.route.requires_investigation()
+            || self.priority.requires_investigation()
+            || self.readiness.requires_investigation()
+    }
+
+    /// Return whether this rollup key requires host-log integrity investigation.
+    pub fn requires_integrity_investigation(self) -> bool {
+        self.escalation_kind.requires_integrity_investigation()
+            || self.route.requires_integrity_investigation()
+            || self.priority.requires_integrity_investigation()
+            || self.readiness.requires_integrity_investigation()
+    }
+
+    /// Return whether this rollup key requires triage.
+    pub fn requires_triage(self) -> bool {
+        self.escalation_kind.requires_triage()
+            || self.route.requires_triage()
+            || self.priority.requires_triage()
+            || self.readiness.requires_triage()
+    }
+
+    /// Return whether this rollup key has a concrete escalation route.
+    pub fn has_route(self) -> bool {
+        self.route.has_route()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainHostRunEscalationRollupKey {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
     }
@@ -24032,6 +24555,66 @@ mod tests {
         assert!(queue_key.has_route());
         assert_eq!(queue_key.to_string(), queue_key.label());
 
+        let rollup_key =
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_queue_key(queue_key);
+        assert_eq!(
+            rollup_key,
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::new(
+                ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+                ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+                ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+                ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+            )
+        );
+        assert_eq!(
+            rollup_key.label(),
+            "escalation=triage|route=triage|priority=triage|readiness=triage_required"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_label(&rollup_key.label()),
+            Some(rollup_key)
+        );
+        assert!(rollup_key.label_matches_key());
+        assert_eq!(
+            rollup_key.escalation_kind(),
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage
+        );
+        assert_eq!(
+            rollup_key.route(),
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage
+        );
+        assert_eq!(
+            rollup_key.priority(),
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage
+        );
+        assert_eq!(
+            rollup_key.readiness(),
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired
+        );
+        assert!(rollup_key
+            .escalation_kind_matches(ToolAuditSupervisorDrainHostRunEscalationKind::Triage));
+        assert!(rollup_key.route_matches(ToolAuditSupervisorDrainHostRunEscalationRoute::Triage));
+        assert!(rollup_key.priority_matches(ToolAuditSupervisorDrainHostRunQueuePriority::Triage));
+        assert!(rollup_key
+            .readiness_matches(ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired));
+        assert!(rollup_key.parts_match(
+            ToolAuditSupervisorDrainHostRunEscalationKind::Triage,
+            ToolAuditSupervisorDrainHostRunEscalationRoute::Triage,
+            ToolAuditSupervisorDrainHostRunQueuePriority::Triage,
+            ToolAuditSupervisorDrainHostRunQueueReadiness::TriageRequired,
+        ));
+        assert!(rollup_key.queue_key_matches(queue_key));
+        assert!(!rollup_key.is_settled());
+        assert!(rollup_key.requires_action());
+        assert_eq!(rollup_key.priority_rank(), 90);
+        assert!(!rollup_key.is_auto_routable());
+        assert!(rollup_key.requires_manual_review());
+        assert!(!rollup_key.requires_investigation());
+        assert!(!rollup_key.requires_integrity_investigation());
+        assert!(rollup_key.requires_triage());
+        assert!(rollup_key.has_route());
+        assert_eq!(rollup_key.to_string(), rollup_key.label());
+
         let stale_queue_key = ToolAuditSupervisorDrainHostRunEscalationQueueKey::new(
             route_key,
             ToolAuditSupervisorDrainHostRunQueuePriority::Settled,
@@ -24054,6 +24637,24 @@ mod tests {
         assert_eq!(
             ToolAuditSupervisorDrainHostRunEscalationQueueKey::from_label(
                 "route_key=route=triage|digest=escalation=triage|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=unknown|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_label(
+                "escalation=unknown|route=triage|priority=triage|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_label(
+                "escalation=triage|route=triage|priority=unknown|readiness=triage_required",
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_label(
+                "escalation=triage|route=triage|priority=triage|readiness=triage_required|extra=yes",
             ),
             None
         );
@@ -24452,6 +25053,73 @@ mod tests {
         assert!(!idle_summary.host_run_escalation_queue_requires_triage());
         assert!(!idle_summary.host_run_escalation_queue_has_route);
         assert!(!idle_summary.host_run_escalation_queue_has_route());
+        let idle_escalation_rollup_key =
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_queue_key(
+                idle_escalation_queue_key,
+            );
+        assert_eq!(
+            idle_report.host_run_escalation_rollup_key(),
+            idle_escalation_rollup_key
+        );
+        assert_eq!(
+            idle_report.host_run_escalation_rollup_key_label(),
+            "escalation=settled|route=no_route|priority=settled|readiness=settled"
+        );
+        assert!(idle_report.host_run_escalation_rollup_key_label_matches_key());
+        assert!(idle_report.host_run_escalation_rollup_key_kind_matches_kind());
+        assert!(idle_report.host_run_escalation_rollup_key_route_matches_route());
+        assert!(idle_report.host_run_escalation_rollup_key_priority_matches_priority());
+        assert!(idle_report.host_run_escalation_rollup_key_readiness_matches_readiness());
+        assert!(idle_report.host_run_escalation_rollup_key_parts_match());
+        assert!(idle_report.host_run_escalation_rollup_key_matches_queue_key());
+        assert!(!idle_report.has_host_run_escalation_rollup_key_integrity_drift());
+        assert!(idle_report.host_run_escalation_rollup_key_labels_match());
+        assert!(!idle_report.has_host_run_escalation_rollup_key_label_integrity_drift());
+        assert!(idle_report.host_run_escalation_rollup_is_settled());
+        assert!(!idle_report.host_run_escalation_rollup_requires_action());
+        assert_eq!(idle_report.host_run_escalation_rollup_priority_rank(), 0);
+        assert!(!idle_report.host_run_escalation_rollup_is_auto_routable());
+        assert!(!idle_report.host_run_escalation_rollup_requires_manual_review());
+        assert!(!idle_report.host_run_escalation_rollup_requires_investigation());
+        assert!(!idle_report.host_run_escalation_rollup_requires_integrity_investigation());
+        assert!(!idle_report.host_run_escalation_rollup_requires_triage());
+        assert!(!idle_report.host_run_escalation_rollup_has_route());
+        assert_eq!(
+            idle_summary.host_run_escalation_rollup_key(),
+            idle_escalation_rollup_key
+        );
+        assert_eq!(
+            idle_summary.host_run_escalation_rollup_key_label(),
+            "escalation=settled|route=no_route|priority=settled|readiness=settled"
+        );
+        assert!(idle_summary.host_run_escalation_rollup_key_label_matches_key());
+        assert!(idle_summary.host_run_escalation_rollup_key_kind_matches_kind());
+        assert!(idle_summary.host_run_escalation_rollup_key_route_matches_route());
+        assert!(idle_summary.host_run_escalation_rollup_key_priority_matches_priority());
+        assert!(idle_summary.host_run_escalation_rollup_key_readiness_matches_readiness());
+        assert!(idle_summary.host_run_escalation_rollup_key_parts_match());
+        assert!(idle_summary.host_run_escalation_rollup_key_matches_queue_key());
+        assert!(!idle_summary.has_host_run_escalation_rollup_key_integrity_drift());
+        assert!(idle_summary.host_run_escalation_rollup_key_labels_match());
+        assert!(!idle_summary.has_host_run_escalation_rollup_key_label_integrity_drift());
+        assert!(idle_summary.host_run_escalation_rollup_is_settled);
+        assert!(idle_summary.host_run_escalation_rollup_is_settled());
+        assert!(!idle_summary.host_run_escalation_rollup_requires_action);
+        assert!(!idle_summary.host_run_escalation_rollup_requires_action());
+        assert_eq!(idle_summary.host_run_escalation_rollup_priority_rank, 0);
+        assert_eq!(idle_summary.host_run_escalation_rollup_priority_rank(), 0);
+        assert!(!idle_summary.host_run_escalation_rollup_is_auto_routable);
+        assert!(!idle_summary.host_run_escalation_rollup_is_auto_routable());
+        assert!(!idle_summary.host_run_escalation_rollup_requires_manual_review);
+        assert!(!idle_summary.host_run_escalation_rollup_requires_manual_review());
+        assert!(!idle_summary.host_run_escalation_rollup_requires_investigation);
+        assert!(!idle_summary.host_run_escalation_rollup_requires_investigation());
+        assert!(!idle_summary.host_run_escalation_rollup_requires_integrity_investigation);
+        assert!(!idle_summary.host_run_escalation_rollup_requires_integrity_investigation());
+        assert!(!idle_summary.host_run_escalation_rollup_requires_triage);
+        assert!(!idle_summary.host_run_escalation_rollup_requires_triage());
+        assert!(!idle_summary.host_run_escalation_rollup_has_route);
+        assert!(!idle_summary.host_run_escalation_rollup_has_route());
 
         let continuation_store = ToolAuditStore::new(InMemoryStorageBackend::new());
         assert!(continuation_store
@@ -24783,6 +25451,82 @@ mod tests {
         assert!(continuation_summary.host_run_escalation_queue_requires_triage());
         assert!(continuation_summary.host_run_escalation_queue_has_route);
         assert!(continuation_summary.host_run_escalation_queue_has_route());
+        let continuation_escalation_rollup_key =
+            ToolAuditSupervisorDrainHostRunEscalationRollupKey::from_queue_key(
+                continuation_escalation_queue_key,
+            );
+        assert_eq!(
+            continuation_report.host_run_escalation_rollup_key(),
+            continuation_escalation_rollup_key
+        );
+        assert_eq!(
+            continuation_report.host_run_escalation_rollup_key_label(),
+            "escalation=triage|route=triage|priority=triage|readiness=triage_required"
+        );
+        assert!(continuation_report.host_run_escalation_rollup_key_label_matches_key());
+        assert!(continuation_report.host_run_escalation_rollup_key_kind_matches_kind());
+        assert!(continuation_report.host_run_escalation_rollup_key_route_matches_route());
+        assert!(continuation_report.host_run_escalation_rollup_key_priority_matches_priority());
+        assert!(continuation_report.host_run_escalation_rollup_key_readiness_matches_readiness());
+        assert!(continuation_report.host_run_escalation_rollup_key_parts_match());
+        assert!(continuation_report.host_run_escalation_rollup_key_matches_queue_key());
+        assert!(!continuation_report.has_host_run_escalation_rollup_key_integrity_drift());
+        assert!(continuation_report.host_run_escalation_rollup_key_labels_match());
+        assert!(!continuation_report.has_host_run_escalation_rollup_key_label_integrity_drift());
+        assert!(!continuation_report.host_run_escalation_rollup_is_settled());
+        assert!(continuation_report.host_run_escalation_rollup_requires_action());
+        assert_eq!(
+            continuation_report.host_run_escalation_rollup_priority_rank(),
+            90
+        );
+        assert!(!continuation_report.host_run_escalation_rollup_is_auto_routable());
+        assert!(continuation_report.host_run_escalation_rollup_requires_manual_review());
+        assert!(!continuation_report.host_run_escalation_rollup_requires_investigation());
+        assert!(!continuation_report.host_run_escalation_rollup_requires_integrity_investigation());
+        assert!(continuation_report.host_run_escalation_rollup_requires_triage());
+        assert!(continuation_report.host_run_escalation_rollup_has_route());
+        assert_eq!(
+            continuation_summary.host_run_escalation_rollup_key(),
+            continuation_escalation_rollup_key
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_rollup_key_label(),
+            "escalation=triage|route=triage|priority=triage|readiness=triage_required"
+        );
+        assert!(continuation_summary.host_run_escalation_rollup_key_label_matches_key());
+        assert!(continuation_summary.host_run_escalation_rollup_key_kind_matches_kind());
+        assert!(continuation_summary.host_run_escalation_rollup_key_route_matches_route());
+        assert!(continuation_summary.host_run_escalation_rollup_key_priority_matches_priority());
+        assert!(continuation_summary.host_run_escalation_rollup_key_readiness_matches_readiness());
+        assert!(continuation_summary.host_run_escalation_rollup_key_parts_match());
+        assert!(continuation_summary.host_run_escalation_rollup_key_matches_queue_key());
+        assert!(!continuation_summary.has_host_run_escalation_rollup_key_integrity_drift());
+        assert!(continuation_summary.host_run_escalation_rollup_key_labels_match());
+        assert!(!continuation_summary.has_host_run_escalation_rollup_key_label_integrity_drift());
+        assert!(!continuation_summary.host_run_escalation_rollup_is_settled);
+        assert!(!continuation_summary.host_run_escalation_rollup_is_settled());
+        assert!(continuation_summary.host_run_escalation_rollup_requires_action);
+        assert!(continuation_summary.host_run_escalation_rollup_requires_action());
+        assert_eq!(
+            continuation_summary.host_run_escalation_rollup_priority_rank,
+            90
+        );
+        assert_eq!(
+            continuation_summary.host_run_escalation_rollup_priority_rank(),
+            90
+        );
+        assert!(!continuation_summary.host_run_escalation_rollup_is_auto_routable);
+        assert!(!continuation_summary.host_run_escalation_rollup_is_auto_routable());
+        assert!(continuation_summary.host_run_escalation_rollup_requires_manual_review);
+        assert!(continuation_summary.host_run_escalation_rollup_requires_manual_review());
+        assert!(!continuation_summary.host_run_escalation_rollup_requires_investigation);
+        assert!(!continuation_summary.host_run_escalation_rollup_requires_investigation());
+        assert!(!continuation_summary.host_run_escalation_rollup_requires_integrity_investigation);
+        assert!(!continuation_summary.host_run_escalation_rollup_requires_integrity_investigation());
+        assert!(continuation_summary.host_run_escalation_rollup_requires_triage);
+        assert!(continuation_summary.host_run_escalation_rollup_requires_triage());
+        assert!(continuation_summary.host_run_escalation_rollup_has_route);
+        assert!(continuation_summary.host_run_escalation_rollup_has_route());
 
         let mut drift_summary = continuation_summary.clone();
         drift_summary.host_run_supervision_key = idle_key;
@@ -24843,6 +25587,14 @@ mod tests {
         drift_summary.has_host_run_escalation_queue_key_integrity_drift = true;
         drift_summary.host_run_escalation_queue_key_labels_match = false;
         drift_summary.has_host_run_escalation_queue_key_label_integrity_drift = true;
+        drift_summary.host_run_escalation_rollup_key = idle_escalation_rollup_key;
+        drift_summary.host_run_escalation_rollup_key_label = idle_escalation_rollup_key.label();
+        drift_summary.host_run_escalation_rollup_key_kind_matches_kind = false;
+        drift_summary.host_run_escalation_rollup_key_parts_match = false;
+        drift_summary.host_run_escalation_rollup_key_matches_queue_key = false;
+        drift_summary.has_host_run_escalation_rollup_key_integrity_drift = true;
+        drift_summary.host_run_escalation_rollup_key_labels_match = false;
+        drift_summary.has_host_run_escalation_rollup_key_label_integrity_drift = true;
         assert!(drift_summary.host_run_supervision_key_label_matches_key());
         assert!(!drift_summary.host_run_supervision_attention_matches_kind());
         assert!(!drift_summary.host_run_supervision_queue_group_matches_key());
@@ -24887,6 +25639,16 @@ mod tests {
         assert!(drift_summary.has_host_run_escalation_queue_key_integrity_drift());
         assert!(!drift_summary.host_run_escalation_queue_key_labels_match());
         assert!(drift_summary.has_host_run_escalation_queue_key_label_integrity_drift());
+        assert!(drift_summary.host_run_escalation_rollup_key_label_matches_key());
+        assert!(!drift_summary.host_run_escalation_rollup_key_kind_matches_kind());
+        assert!(drift_summary.host_run_escalation_rollup_key_route_matches_route());
+        assert!(drift_summary.host_run_escalation_rollup_key_priority_matches_priority());
+        assert!(drift_summary.host_run_escalation_rollup_key_readiness_matches_readiness());
+        assert!(!drift_summary.host_run_escalation_rollup_key_parts_match());
+        assert!(!drift_summary.host_run_escalation_rollup_key_matches_queue_key());
+        assert!(drift_summary.has_host_run_escalation_rollup_key_integrity_drift());
+        assert!(!drift_summary.host_run_escalation_rollup_key_labels_match());
+        assert!(drift_summary.has_host_run_escalation_rollup_key_label_integrity_drift());
 
         let mut stale_label_summary = continuation_summary;
         stale_label_summary.host_run_supervision_key_label =
@@ -24921,6 +25683,11 @@ mod tests {
         stale_label_summary.host_run_escalation_queue_key_label =
             "route_key=route=no_route|digest=escalation=settled|supervision=attention=no_attention|queue=no_route:no_action:settled:settled|priority=settled|readiness=settled".to_string();
         stale_label_summary.host_run_escalation_queue_key_label_matches_key = false;
+        stale_label_summary.host_run_escalation_rollup_key_label =
+            "escalation=settled|route=no_route|priority=settled|readiness=settled".to_string();
+        stale_label_summary.host_run_escalation_rollup_key_label_matches_key = false;
+        stale_label_summary.host_run_escalation_rollup_key_labels_match = false;
+        stale_label_summary.has_host_run_escalation_rollup_key_label_integrity_drift = true;
         assert!(!stale_label_summary.host_run_supervision_key_label_matches_key());
         assert!(!stale_label_summary.host_run_supervision_labels_match());
         assert!(stale_label_summary.has_host_run_supervision_label_integrity_drift());
@@ -24941,6 +25708,9 @@ mod tests {
         assert!(!stale_label_summary.host_run_escalation_queue_key_label_matches_key());
         assert!(!stale_label_summary.host_run_escalation_queue_key_labels_match());
         assert!(stale_label_summary.has_host_run_escalation_queue_key_label_integrity_drift());
+        assert!(!stale_label_summary.host_run_escalation_rollup_key_label_matches_key());
+        assert!(!stale_label_summary.host_run_escalation_rollup_key_labels_match());
+        assert!(stale_label_summary.has_host_run_escalation_rollup_key_label_integrity_drift());
     }
 
     #[test]
