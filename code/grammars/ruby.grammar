@@ -142,7 +142,29 @@ expression_stmt = expression ;
 # Operator alternation lists `"..."` before `".."` defensively, but
 # the lexer already pre-fuses the two forms into distinct tokens so
 # the order is not actually significant.
-expression   = range ;
+# Phase 6o — ternary `cond ? a : b`.
+#
+# Precedence: ternary sits ABOVE range (looser than `..`/`...`)
+# and below assignment.  In Ruby:
+#   a..b ? c : d         parses as  (a..b) ? c : d
+#   a = b ? c : d        parses as  a = (b ? c : d)
+# Our `assignment` rule is statement-level (not in the expression
+# hierarchy), so we only need to slot ternary above range:
+#
+#   expression = ternary
+#   ternary    = range [ "?" expression ":" expression ]
+#
+# Right-associativity (`a ? b : c ? d : e` → `a ? b : (c ? d : e)`)
+# falls out naturally because the false-branch recurses into
+# `expression` (which is `ternary` at the top).
+#
+# Colon ambiguity note: `:foo` opens a symbol literal in `factor`.
+# But by the time the ternary `:` is reached, the true-branch
+# (`b` in `a ? b : c`) has already completed its `factor` parse —
+# control has unwound back to the ternary rule, so the `:` it
+# consumes is the ternary separator, not a symbol opener.
+expression   = ternary ;
+ternary      = range [ "?" expression ":" expression ] ;
 range        = logical_or [ ( "..." | ".." ) logical_or ] ;
 logical_or   = logical_and { ( "||" | "or" ) logical_and } ;
 logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;

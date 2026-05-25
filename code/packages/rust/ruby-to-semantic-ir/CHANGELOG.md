@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.16.0] - 2026-05-24
+
+### Added (Phase 6o — ternary lowering)
+
+SIR encoding:
+```
+cond ? a : b  →  Expr::If {
+                   cond,
+                   then_branch: Block { stmts: [], value: a },
+                   else_branch: Block { stmts: [], value: b },
+                 }
+```
+
+Lowering identically to `if cond then a else b end` means downstream emitters (semantic-ir-to-python, semantic-ir-to-rust, etc.) need no new code path — the existing if-lowering paths handle both syntactic forms transparently.
+
+**Right-associativity** falls out of the grammar: `a ? b : c ? d : e` parses as `a ? b : (c ? d : e)`, so the inner ternary nests inside the outer's else-branch as another `Expr::If`.
+
+### Lowerer changes
+- `lower_expression` gained a `"ternary"` dispatch arm.
+- New helper `lower_ternary(node)` filters operand sub-nodes: one operand (pass-through) or three (cond/then/else → `Expr::If`).
+
+### Tests (+3 new, total 77)
+- `ternary_lowers_to_if_expr_with_branch_blocks` — `x = 1 ? 2 : 3` → `LetBinding { value: If { cond=1, then=2, else=3 } }`.
+- `ternary_right_associative_nests_in_else_branch` — `x = 1 ? 2 : 3 ? 4 : 5` produces a nested If in the outer else.
+- `ternary_module_passes_sir_validator` — end-to-end validator smoke test.
+
 ## [0.15.0] - 2026-05-24
 
 ### Added (Phase 6n — range expressions lowering)
