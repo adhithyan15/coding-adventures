@@ -439,9 +439,14 @@ def check_browser_expected_lists(
         form_path = f"{case_path}.expected.forms[{index}]"
         require_optional_nullable_string(form_path, form, "action", errors)
         require_optional_nullable_string(form_path, form, "resolved_action", errors)
+        require_optional_nullable_string(form_path, form, "name", errors)
         require_string(form_path, form, "method", errors)
         require_optional_nullable_string(form_path, form, "enctype", errors)
         require_optional_nullable_string(form_path, form, "target", errors)
+        require_optional_nullable_string(form_path, form, "accept_charset", errors)
+        require_optional_nullable_string(form_path, form, "autocomplete", errors)
+        require_optional_nullable_string(form_path, form, "rel", errors)
+        require_optional_boolean(form_path, form, "novalidate", errors)
         require_object_list(form_path, form, "controls", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):
             control_path = f"{form_path}.controls[{control_index}]"
@@ -453,6 +458,21 @@ def check_browser_expected_lists(
                 "accessible_name",
                 "placeholder",
                 "autocomplete",
+                "accept",
+                "inputmode",
+                "pattern",
+                "min",
+                "max",
+                "step",
+                "minlength",
+                "maxlength",
+                "size",
+                "list",
+                "form_action",
+                "resolved_form_action",
+                "form_enctype",
+                "form_method",
+                "form_target",
             ):
                 require_optional_nullable_string(control_path, control, field, errors)
             require_optional_string_list(control_path, control, "labels", errors)
@@ -462,6 +482,7 @@ def check_browser_expected_lists(
             require_optional_boolean(control_path, control, "readonly", errors)
             require_boolean(control_path, control, "checked", errors)
             require_optional_boolean(control_path, control, "multiple", errors)
+            require_optional_boolean(control_path, control, "form_novalidate", errors)
             require_string(control_path, control, "text", errors)
             require_string_list(control_path, control, "options", errors)
 
@@ -552,6 +573,21 @@ def check_browser_content_node(
         "popover",
         "placeholder",
         "autocomplete",
+        "accept",
+        "inputmode",
+        "pattern",
+        "min",
+        "max",
+        "step",
+        "minlength",
+        "maxlength",
+        "size",
+        "list",
+        "form_action",
+        "resolved_form_action",
+        "form_enctype",
+        "form_method",
+        "form_target",
         "value",
         "table_section_kind",
         "colspan",
@@ -593,6 +629,7 @@ def check_browser_content_node(
         "playsinline",
         "allowfullscreen",
         "credentialless",
+        "form_novalidate",
         "list_reversed",
         "aria_hidden",
         "hidden",
@@ -685,6 +722,21 @@ def check_browser_render_node(
         "popover",
         "placeholder",
         "autocomplete",
+        "accept",
+        "inputmode",
+        "pattern",
+        "min",
+        "max",
+        "step",
+        "minlength",
+        "maxlength",
+        "size",
+        "list",
+        "form_action",
+        "resolved_form_action",
+        "form_enctype",
+        "form_method",
+        "form_target",
         "value",
         "table_section_kind",
         "colspan",
@@ -726,6 +778,7 @@ def check_browser_render_node(
         "playsinline",
         "allowfullscreen",
         "credentialless",
+        "form_novalidate",
         "list_reversed",
         "aria_hidden",
         "hidden",
