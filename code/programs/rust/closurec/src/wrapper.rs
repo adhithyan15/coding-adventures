@@ -107,6 +107,47 @@ pub fn apply_output_wrapper(
 }
 
 // ---------------------------------------------------------------------------
+// `--isolation_mode IIFE` (CLOC11.31)
+// ---------------------------------------------------------------------------
+
+/// Wrap `compiled` in an immediately-invoked function expression
+/// (IIFE) per `--isolation_mode IIFE`.
+///
+/// The exact wrapper string we emit matches CC's `CompilerOptions`
+/// IIFE wrapping: `(function(){<body>}).call(this);`. Using
+/// `.call(this)` rather than the simpler `()` form preserves the
+/// outer `this` binding inside the IIFE, which is what callers
+/// rely on for browser globals vs strict mode and what CC has
+/// emitted since the option was introduced.
+///
+/// # Layering with `--output_wrapper`
+///
+/// IIFE wrapping runs *after* the user-supplied
+/// `--output_wrapper` (CC's pipeline order). So with both
+/// flags:
+///
+/// - `--output_wrapper '// banner%n%%output%'`
+/// - `--isolation_mode IIFE`
+///
+/// the output is:
+///
+/// ```text
+/// (function(){// banner
+/// <compiled>}).call(this);
+/// ```
+///
+/// The banner sits *inside* the IIFE, not outside. Users who
+/// want the banner outside should not pair these two flags;
+/// they'd put the IIFE in their own `--output_wrapper`.
+pub fn apply_iife_wrap(compiled: &str) -> String {
+    let mut out = String::with_capacity(compiled.len() + 24);
+    out.push_str("(function(){");
+    out.push_str(compiled);
+    out.push_str("}).call(this);");
+    out
+}
+
+// ---------------------------------------------------------------------------
 // Template substitution
 // ---------------------------------------------------------------------------
 
@@ -371,6 +412,43 @@ mod tests {
         assert!(s.contains("/x/y"));
         assert!(s.contains("permission denied"));
         let _: &dyn std::error::Error = &e;
+    }
+
+    // -- CLOC11.31 IIFE wrap tests -----------------------------------------
+
+    #[test]
+    fn iife_wrap_basic() {
+        assert_eq!(
+            apply_iife_wrap("var x=1;"),
+            "(function(){var x=1;}).call(this);",
+        );
+    }
+
+    #[test]
+    fn iife_wrap_empty_body() {
+        // CC happily emits the IIFE wrapper around empty content.
+        assert_eq!(apply_iife_wrap(""), "(function(){}).call(this);");
+    }
+
+    #[test]
+    fn iife_wrap_preserves_content_verbatim() {
+        // No escaping happens — the compiled JS is inserted as-is.
+        let body = "var s = \"hello\"; if (true) { x++; }";
+        let wrapped = apply_iife_wrap(body);
+        assert!(wrapped.contains(body));
+        assert!(wrapped.starts_with("(function(){"));
+        assert!(wrapped.ends_with("}).call(this);"));
+    }
+
+    #[test]
+    fn iife_wrap_uses_call_this_not_bare_invocation() {
+        // CC emits `.call(this)`, not bare `()`. This matters for
+        // preserving outer `this` binding. Pin the form so a
+        // future refactor that "simplifies" the wrapper to `()`
+        // breaks loudly.
+        let out = apply_iife_wrap("x;");
+        assert!(out.contains(".call(this)"), "got: {out}");
+        assert!(!out.contains("}();"), "should NOT use bare invocation: {out}");
     }
 
     #[test]

@@ -19,7 +19,7 @@
 //! `read → lex → parse → typecheck → passes → emit → write`.
 //! The function signature doesn't change; only the body grows.
 
-use crate::config::{CompilationLevel, CompilerConfig};
+use crate::config::{CompilationLevel, CompilerConfig, IsolationMode};
 use crate::defines;
 use crate::globs;
 use crate::whitespace_only;
@@ -252,19 +252,29 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     )
     .map_err(CompilerError::Wrapper)?;
 
+    // Step 3.5 (CLOC11.31): apply --isolation_mode IIFE if set.
+    // Layered after the user wrapper, matching CC's pipeline:
+    // user wrapper runs first, IIFE wraps the result. So the
+    // user's banner sits *inside* the IIFE — same semantics as
+    // CC, and the behavior users requesting IIFE expect.
+    let isolated = match config.formatting.isolation_mode {
+        IsolationMode::Iife => wrapper::apply_iife_wrap(&wrapped),
+        IsolationMode::None => wrapped,
+    };
+
     // Step 4: write the output. Two cases:
     //   a) --js_output_file set → write to disk via write_output_file.
     //   b) absent → stdout via the returned `stdout_text`.
     match &config.io.js_output_file {
         Some(path) => {
-            write_output_file(path, &wrapped)?;
+            write_output_file(path, &isolated)?;
             Ok(CompilerOutput {
                 stdout_text: String::new(),
                 wrote_files: vec![path.clone()],
             })
         }
         None => Ok(CompilerOutput {
-            stdout_text: wrapped,
+            stdout_text: isolated,
             wrote_files: Vec::new(),
         }),
     }
