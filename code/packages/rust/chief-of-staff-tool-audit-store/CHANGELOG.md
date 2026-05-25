@@ -231,6 +231,9 @@ All notable changes to this package will be documented in this file.
   investigation, integrity investigation, or triage host queues.
 - Flattened host-run escalation dashboard lane queue action-lane status flags
   and priority ranks for queue keys and queue digests.
+- Stable host-run escalation dashboard lane queue action keys and digests that
+  bind action lanes back to queue keys and queue digests for host-log grouping
+  and drift checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
