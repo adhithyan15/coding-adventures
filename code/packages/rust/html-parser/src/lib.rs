@@ -1015,7 +1015,11 @@ pub struct BrowserContentNode {
     pub accesskey: Vec<String>,
     pub focusable: Option<bool>,
     pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
     pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
     pub popover: Option<String>,
     pub popover_target: Option<String>,
     pub popover_target_action: Option<String>,
@@ -1133,7 +1137,11 @@ pub struct BrowserRenderNode {
     pub accesskey: Vec<String>,
     pub focusable: Option<bool>,
     pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
     pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
     pub popover: Option<String>,
     pub popover_target: Option<String>,
     pub popover_target_action: Option<String>,
@@ -1466,7 +1474,11 @@ impl BrowserRenderNode {
             accesskey: content_node.accesskey.clone(),
             focusable: content_node.focusable,
             contenteditable: content_node.contenteditable.clone(),
+            editing_mode: content_node.editing_mode.clone(),
             draggable: content_node.draggable.clone(),
+            draggable_state: content_node.draggable_state.clone(),
+            spellcheck: content_node.spellcheck.clone(),
+            translate: content_node.translate.clone(),
             popover: content_node.popover.clone(),
             popover_target: content_node.popover_target.clone(),
             popover_target_action: content_node.popover_target_action.clone(),
@@ -9114,7 +9126,11 @@ fn collect_browser_content_nodes_with_mode(
                         accesskey: Vec::new(),
                         focusable: None,
                         contenteditable: None,
+                        editing_mode: None,
                         draggable: None,
+                        draggable_state: None,
+                        spellcheck: None,
+                        translate: None,
                         popover: None,
                         popover_target: None,
                         popover_target_action: None,
@@ -9299,7 +9315,11 @@ fn browser_content_node_for_element(
         accesskey: browser_accesskey(element),
         focusable: browser_focusable(element),
         contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        editing_mode: browser_editing_mode(element),
         draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        draggable_state: browser_draggable_state(element),
+        spellcheck: browser_spellcheck_state(element),
+        translate: browser_translate_state(element),
         popover: element.attribute("popover").map(ToOwned::to_owned),
         popover_target: browser_popover_target(element),
         popover_target_action: browser_popover_target_action(element),
@@ -10001,6 +10021,56 @@ fn browser_command(element: &Element) -> Option<String> {
 
 fn browser_command_for(element: &Element) -> Option<String> {
     element.attribute("commandfor").map(ToOwned::to_owned)
+}
+
+fn browser_editing_mode(element: &Element) -> Option<String> {
+    let value = element.attribute("contenteditable")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.is_empty() || normalized.eq_ignore_ascii_case("true") {
+        Some("richtext".to_string())
+    } else if normalized.eq_ignore_ascii_case("plaintext-only") {
+        Some("plaintext".to_string())
+    } else if normalized.eq_ignore_ascii_case("false") {
+        Some("false".to_string())
+    } else {
+        Some("inherit".to_string())
+    }
+}
+
+fn browser_draggable_state(element: &Element) -> Option<String> {
+    let value = element.attribute("draggable")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.eq_ignore_ascii_case("true") {
+        Some("true".to_string())
+    } else if normalized.eq_ignore_ascii_case("false") {
+        Some("false".to_string())
+    } else {
+        Some("auto".to_string())
+    }
+}
+
+fn browser_spellcheck_state(element: &Element) -> Option<String> {
+    let value = element.attribute("spellcheck")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.eq_ignore_ascii_case("true") {
+        Some("true".to_string())
+    } else if normalized.eq_ignore_ascii_case("false") {
+        Some("false".to_string())
+    } else {
+        Some("default".to_string())
+    }
+}
+
+fn browser_translate_state(element: &Element) -> Option<String> {
+    let value = element.attribute("translate")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.eq_ignore_ascii_case("yes") {
+        Some("yes".to_string())
+    } else if normalized.eq_ignore_ascii_case("no") {
+        Some("no".to_string())
+    } else {
+        Some("default".to_string())
+    }
 }
 
 fn browser_focusable(element: &Element) -> Option<bool> {
@@ -11326,7 +11396,8 @@ mod tests {
              <button id=menu aria-expanded=false aria-controls=panel tabindex=0 accesskey=\"m /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog>Menu</button>\
              <section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert>\
                <h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p>\
-               <div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=true draggable=true popover=manual>Inline action</div>\
+               <div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=plaintext-only draggable=auto spellcheck=false translate=no popover=manual>Inline action</div>\
+               <p id=editable contenteditable spellcheck=true translate=yes>Editable copy</p>\
              </section>\
              <dialog id=dialog open aria-label=\"Dialog\" accesskey=\"d x\"><p>Dialog copy</p></dialog>\
              <details id=more open><summary>More</summary><p>Extra</p></details>\
@@ -11368,9 +11439,21 @@ mod tests {
         assert_eq!(action.aria_current.as_deref(), Some("page"));
         assert_eq!(action.tabindex.as_deref(), Some("-1"));
         assert_eq!(action.focusable, Some(false));
-        assert_eq!(action.contenteditable.as_deref(), Some("true"));
-        assert_eq!(action.draggable.as_deref(), Some("true"));
+        assert_eq!(action.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(action.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(action.draggable.as_deref(), Some("auto"));
+        assert_eq!(action.draggable_state.as_deref(), Some("auto"));
+        assert_eq!(action.spellcheck.as_deref(), Some("false"));
+        assert_eq!(action.translate.as_deref(), Some("no"));
         assert_eq!(action.popover.as_deref(), Some("manual"));
+
+        let editable = &panel.children[3];
+        assert_eq!(editable.role, "paragraph");
+        assert_eq!(editable.contenteditable.as_deref(), Some(""));
+        assert_eq!(editable.editing_mode.as_deref(), Some("richtext"));
+        assert_eq!(editable.spellcheck.as_deref(), Some("true"));
+        assert_eq!(editable.translate.as_deref(), Some("yes"));
+        assert_eq!(editable.focusable, Some(true));
 
         let dialog = &main.children[2];
         assert_eq!(dialog.role, "block");
@@ -11395,6 +11478,16 @@ mod tests {
                 .popover_target
                 .as_deref(),
             Some("panel-pop")
+        );
+        assert_eq!(
+            render_tree.children[0].children[1].children[2]
+                .editing_mode
+                .as_deref(),
+            Some("plaintext")
+        );
+        assert_eq!(
+            render_tree.children[0].children[1].children[3].focusable,
+            Some(true)
         );
         assert!(render_tree.children[0].children[2].open);
         assert!(render_tree.children[0].children[3].open);

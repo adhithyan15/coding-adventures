@@ -133,7 +133,15 @@ struct ExpectedRenderNode {
     #[serde(default)]
     contenteditable: Option<String>,
     #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
     draggable: Option<String>,
+    #[serde(default)]
+    draggable_state: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    translate: Option<String>,
     #[serde(default)]
     popover: Option<String>,
     #[serde(default)]
@@ -331,7 +339,11 @@ impl ExpectedRenderNode {
             accesskey: self.accesskey,
             focusable: self.focusable,
             contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
             draggable: self.draggable,
+            draggable_state: self.draggable_state,
+            spellcheck: self.spellcheck,
+            translate: self.translate,
             popover: self.popover,
             popover_target: self.popover_target,
             popover_target_action: self.popover_target_action,
