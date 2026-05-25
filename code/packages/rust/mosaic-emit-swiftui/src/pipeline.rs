@@ -1840,11 +1840,21 @@ fn emit_for_swift(
             LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
             LayoutPropValue::Expr(text) => text.clone(),
             // UI29 §3.4 — Keyword names an outer For's binding. The
-            // validator has already verified the name is in scope,
-            // so we lower it to the camelCased Swift identifier
-            // (matching the binding name as declared in the outer
-            // ForEach's closure signature).
-            LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
+            // moslayout validator has already verified the name is in
+            // scope. The peer emitters (React, Qt, XAML) add an
+            // explicit identifier check after camel-casing as
+            // defense-in-depth; SwiftUI matches that pattern here.
+            // Today's NAME lexer (`[a-zA-Z_][a-zA-Z0-9_-]*`) +
+            // `to_camel_case_first_lower` cannot produce an unsafe
+            // Swift identifier, but the explicit gate keeps the
+            // emitter robust if the lexer's NAME ever loosens.
+            LayoutPropValue::Keyword(name) => {
+                let camel = to_camel_case_first_lower(name);
+                if !is_safe_swift_identifier(&camel) {
+                    return Err(PipelineEmitError::UnsafeSlotName(camel));
+                }
+                camel
+            }
             _ => "[]".to_string(),
         },
         None => "[]".to_string(),
