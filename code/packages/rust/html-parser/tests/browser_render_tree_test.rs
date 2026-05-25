@@ -299,6 +299,24 @@ struct ExpectedRenderNode {
     #[serde(default)]
     edit_datetime: Option<String>,
     #[serde(default)]
+    item_scope: bool,
+    #[serde(default)]
+    item_type: Vec<String>,
+    #[serde(default)]
+    item_id: Option<String>,
+    #[serde(default)]
+    resolved_item_id: Option<String>,
+    #[serde(default)]
+    item_ref: Vec<String>,
+    #[serde(default)]
+    itemprop: Vec<String>,
+    #[serde(default)]
+    item_value: Option<String>,
+    #[serde(default)]
+    item_value_url: Option<String>,
+    #[serde(default)]
+    resolved_item_value_url: Option<String>,
+    #[serde(default)]
     ruby_kind: Option<String>,
     #[serde(default)]
     bidi_kind: Option<String>,
@@ -494,6 +512,15 @@ impl ExpectedRenderNode {
             edit_cite: self.edit_cite,
             resolved_edit_cite: self.resolved_edit_cite,
             edit_datetime: self.edit_datetime,
+            item_scope: self.item_scope,
+            item_type: self.item_type,
+            item_id: self.item_id,
+            resolved_item_id: self.resolved_item_id,
+            item_ref: self.item_ref,
+            itemprop: self.itemprop,
+            item_value: self.item_value,
+            item_value_url: self.item_value_url,
+            resolved_item_value_url: self.resolved_item_value_url,
             ruby_kind: self.ruby_kind,
             bidi_kind: self.bidi_kind,
             break_kind: self.break_kind,

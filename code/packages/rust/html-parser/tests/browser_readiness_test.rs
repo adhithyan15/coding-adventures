@@ -1,8 +1,9 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata, BrowserForm,
     BrowserFormControl, BrowserHeading, BrowserImage, BrowserImageSource, BrowserLink,
-    BrowserMedia, BrowserMeta, BrowserRefresh, BrowserResource, BrowserScript, BrowserStylesheet,
-    BrowserTable, BrowserThemeColor,
+    BrowserMedia, BrowserMeta, BrowserRefresh, BrowserResource, BrowserScript,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -54,6 +55,8 @@ struct ExpectedBrowserDocument {
     images: Vec<ExpectedImage>,
     #[serde(default)]
     media: Vec<ExpectedMedia>,
+    #[serde(default)]
+    structured_items: Vec<ExpectedStructuredItem>,
     forms: Vec<ExpectedForm>,
     tables: Vec<ExpectedTable>,
 }
@@ -112,6 +115,33 @@ struct ExpectedMeta {
     property: Option<String>,
     charset: Option<String>,
     content: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedStructuredItem {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    item_type: Vec<String>,
+    #[serde(default)]
+    item_id: Option<String>,
+    #[serde(default)]
+    resolved_item_id: Option<String>,
+    #[serde(default)]
+    item_ref: Vec<String>,
+    #[serde(default)]
+    properties: Vec<ExpectedStructuredProperty>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedStructuredProperty {
+    name: String,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    value_url: Option<String>,
+    #[serde(default)]
+    resolved_value_url: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -540,6 +570,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedMedia::into_browser_media)
                 .collect(),
+            structured_items: self
+                .structured_items
+                .into_iter()
+                .map(ExpectedStructuredItem::into_browser_structured_item)
+                .collect(),
             forms: self
                 .forms
                 .into_iter()
@@ -605,6 +640,34 @@ impl ExpectedMeta {
             property: self.property,
             charset: self.charset,
             content: self.content,
+        }
+    }
+}
+
+impl ExpectedStructuredItem {
+    fn into_browser_structured_item(self) -> BrowserStructuredItem {
+        BrowserStructuredItem {
+            id: self.id,
+            item_type: self.item_type,
+            item_id: self.item_id,
+            resolved_item_id: self.resolved_item_id,
+            item_ref: self.item_ref,
+            properties: self
+                .properties
+                .into_iter()
+                .map(ExpectedStructuredProperty::into_browser_structured_property)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedStructuredProperty {
+    fn into_browser_structured_property(self) -> BrowserStructuredProperty {
+        BrowserStructuredProperty {
+            name: self.name,
+            value: self.value,
+            value_url: self.value_url,
+            resolved_value_url: self.resolved_value_url,
         }
     }
 }

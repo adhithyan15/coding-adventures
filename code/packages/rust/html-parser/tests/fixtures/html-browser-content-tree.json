@@ -837,6 +837,24 @@
       }
     },
     {
+      "id": "structured-data-nodes",
+      "description": "Microdata attributes survive the browser content projection on scopes, properties, and URL-valued property nodes.",
+      "input": "<base href=\"https://example.test/catalog/\"><body><article id=product itemscope itemtype=\"https://schema.org/Product\" itemid=\"items/widget\" itemref=\"external-rating\"><h2 itemprop=name>Widget Pro</h2><img itemprop=image src=\"images/widget.png\" alt=Widget><a itemprop=\"url sameAs\" href=\"../products/widget\">Product page</a><data itemprop=sku value=WID-001>Widget SKU</data><time itemprop=releaseDate datetime=\"2026-05-25\">today</time><div itemprop=offers itemscope itemtype=\"https://schema.org/Offer\" itemid=\"offers/widget\"><span itemprop=price>19.99</span></div></article><p id=external-rating itemprop=aggregateRating>4.8 stars</p>",
+      "expected": {
+        "children": [
+          { "role": "article", "name": "article", "id": "product", "text": null, "href": null, "src": null, "alt": null, "item_scope": true, "item_type": ["https://schema.org/Product"], "item_id": "items/widget", "resolved_item_id": "https://example.test/catalog/items/widget", "item_ref": ["external-rating"], "section_kind": "article", "control_type": null, "children": [
+            { "role": "heading", "name": "h2", "text": "Widget Pro", "href": null, "src": null, "alt": null, "heading_level": 2, "itemprop": ["name"], "item_value": "Widget Pro", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Widget Pro", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "role": "image", "name": "img", "text": null, "href": null, "src": "images/widget.png", "resolved_src": "https://example.test/catalog/images/widget.png", "alt": "Widget", "resource_kind": "image", "itemprop": ["image"], "item_value": "images/widget.png", "item_value_url": "images/widget.png", "resolved_item_value_url": "https://example.test/catalog/images/widget.png", "control_type": null, "children": [] },
+            { "role": "link", "name": "a", "text": "Product page", "href": "../products/widget", "resolved_href": "https://example.test/products/widget", "src": null, "alt": null, "itemprop": ["url", "sameAs"], "item_value": "../products/widget", "item_value_url": "../products/widget", "resolved_item_value_url": "https://example.test/products/widget", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Product page", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "role": "data", "name": "data", "text": null, "href": null, "src": null, "alt": null, "data_value": "WID-001", "itemprop": ["sku"], "item_value": "WID-001", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Widget SKU", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "role": "time", "name": "time", "text": null, "href": null, "src": null, "alt": null, "datetime": "2026-05-25", "itemprop": ["releaseDate"], "item_value": "2026-05-25", "control_type": null, "children": [{ "role": "text", "name": null, "text": "today", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "role": "block", "name": "div", "text": null, "href": null, "src": null, "alt": null, "item_scope": true, "item_type": ["https://schema.org/Offer"], "item_id": "offers/widget", "resolved_item_id": "https://example.test/catalog/offers/widget", "itemprop": ["offers"], "item_value": "19.99", "control_type": null, "children": [{ "role": "inline", "name": "span", "text": null, "href": null, "src": null, "alt": null, "itemprop": ["price"], "item_value": "19.99", "control_type": null, "children": [{ "role": "text", "name": null, "text": "19.99", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }] }
+          ] },
+          { "role": "paragraph", "name": "p", "id": "external-rating", "text": null, "href": null, "src": null, "alt": null, "itemprop": ["aggregateRating"], "item_value": "4.8 stars", "control_type": null, "children": [{ "role": "text", "name": null, "text": "4.8 stars", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+        ]
+      }
+    },
+    {
       "id": "measurement-nodes",
       "description": "Meter and progress elements expose range/value metadata while behaving like labelable browser widgets.",
       "input": "<body><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7>72%</meter><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=indeterminate max=1>Loading</progress>",
