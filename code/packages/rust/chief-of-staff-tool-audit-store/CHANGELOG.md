@@ -237,6 +237,8 @@ All notable changes to this package will be documented in this file.
 - Stable host-run escalation dashboard lane queue action rollup keys and
   digests that group action lane, route, priority, and readiness for compact
   host-log buckets and drift checks.
+- Flattened host-run escalation dashboard lane queue action-rollup digest
+  classifier labels for host-log filtering and label drift checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
