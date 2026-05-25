@@ -212,6 +212,9 @@ All notable changes to this package will be documented in this file.
 - Compact host-run escalation dashboard lane-rollup keys that group lane,
   route, priority, and readiness for supervisor drain run dashboard rows and
   integrity checks.
+- Host-run escalation dashboard lane digests that bind lane classifiers back
+  to compact rollup keys for supervisor drain run host-log grouping and drift
+  checks.
 - Aggregate health-label integrity helpers for inventory, write, replay,
   checkpoint replay, and checkpoint page summaries.
 - Stable, parseable supervisor drain scheduler action recommendations for host
