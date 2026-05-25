@@ -65,7 +65,9 @@ use std::process::ExitCode;
 // CLI binary an actual body. See CLOC11 §5 for the architecture.
 // CLOC11.02 added `globs` for --js pattern expansion.
 // CLOC11.06 added `whitespace_only` for --compilation_level WHITESPACE_ONLY.
+// CLOC11.19 added `defines` for --define / -D value substitution.
 pub mod config;
+pub mod defines;
 pub mod globs;
 pub mod run;
 pub mod whitespace_only;

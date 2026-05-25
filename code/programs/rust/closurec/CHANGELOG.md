@@ -2,6 +2,51 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.6.0] - 2026-05-25
+
+### Added — CLOC11.19: `--define / -D` value substitution
+
+Second behavioral slice of [CLOC11]. Users can now pass `--define NAME=value` (or `-D NAME=value`) and closurec will substitute every reference to `NAME` with `value` in the output.
+
+- **New `defines` module.** Token-level substitution: tokenize via `javascript-lexer`, walk tokens, replace any identifier-type token whose value matches a `--define` key with the typed value rendered as JS source. Keywords (`if`, `var`, etc.) are explicitly NOT eligible. String-literal content is NOT substituted — `"DEBUG"` stays a string even if `DEBUG` is defined.
+- **`DefineValue` rendering** for each variant of [`crate::config::DefineValue`]:
+  - `Bool(true)` → `true`
+  - `Bool(false)` → `false`
+  - `Null` → `null`
+  - `Number(42.0)` → `42` (integer-valued doubles emit without trailing `.0`, matching CC)
+  - `Number(3.14)` → `3.14`
+  - `Number(NaN)` → `NaN` sentinel
+  - `Number(Infinity)` → `Infinity` (or `-Infinity`)
+  - `String("hi")` → `"hi"` (re-quoted with JS escapes for `"`, `\`, LF, CR, TAB)
+- **`transform_source` now runs in two phases:**
+  1. **Level transform** — WHITESPACE_ONLY / identity per the compilation level (CLOC11.06 behavior).
+  2. **Define substitution** — applies `cfg.defines.defines` over the level's output.
+  This ordering means `--define DEBUG=false` composes naturally with `--compilation_level WHITESPACE_ONLY` (or with any future level transform).
+- **Fast path:** when `cfg.defines.defines` is empty, `apply_defines` is a string-copy no-op (skips tokenization entirely).
+- **New `CompilerError::Define(defines::DefineError)`** variant for substitution failures (currently only "tokenizer rejected the source").
+- **Diff fixture `tests/diff/define/`** per CLOC11 §3.
+- **New integration test `tests/diff_define.rs`** drives the actual binary against the fixture.
+- **17 new unit tests in `defines::tests`** covering: empty defines passthrough, every DefineValue variant (bool/integer/fractional/string/null), case-sensitive identifier matching (`DEBUG` doesn't match `debug`), string-literal content protection, word-boundary preservation (`return DEBUG` → `return false`, not `returnfalse`), no-space-around-punctuation, multiple defines, keyword non-substitution, NaN/Infinity sentinels, embedded-quote re-escape, error display.
+
+### Looseness vs. real CC
+
+This is v1: we substitute *every* reference to a `--define` name, not only references to `goog.define`-annotated variables. In practice this matches what users expect when they pass `--define FLAG_DEBUG=false` for a flag they own. The cases where CC would NOT substitute (e.g. a `var FLAG_DEBUG` shadowing the same name) are rare in real builds. CLOC11.21+ will tighten the rule once we have JSDoc `@define`-aware metadata.
+
+### Behavior changes (user-visible)
+
+- `closurec --define DEBUG=false --js app.js` now actually substitutes `DEBUG` references in the output. Previously the flag was parsed but ignored.
+- As a side-effect of routing through the tokenizer, the substitution output is already minified (single-space gap between word-like tokens, no spaces elsewhere). CC's WHITESPACE_ONLY does the same thing; we just get it for free.
+
+### Tests
+
+95 unit + 5 integration tests passing. Clippy clean.
+
+### Version
+
+Bumps closurec 0.5.0 → 0.6.0 (Cargo.toml + cli.spec.json kept in sync).
+
+[CLOC11]: ../../specs/CLOC11-drop-in-closure-compat.md
+
 ## [0.5.0] - 2026-05-25
 
 ### Added — CLOC11.06: `--compilation_level WHITESPACE_ONLY` wired
