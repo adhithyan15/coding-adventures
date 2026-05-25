@@ -246,6 +246,7 @@ def check_browser_readiness_case(
     require_optional_object_list(
         f"{case_path}.expected", expected, "structured_items", errors
     )
+    require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
     require_object_list(f"{case_path}.expected", expected, "forms", errors)
     require_object_list(f"{case_path}.expected", expected, "tables", errors)
     check_browser_expected_lists(case_path, expected, errors)
@@ -470,6 +471,18 @@ def check_browser_expected_lists(
             for field in ("value", "value_url", "resolved_value_url"):
                 require_optional_nullable_string(property_path, property_value, field, errors)
 
+    for index, template in enumerate(object_list_items(expected, "templates")):
+        template_path = f"{case_path}.expected.templates[{index}]"
+        for field in ("id", "shadowrootmode"):
+            require_optional_nullable_string(template_path, template, field, errors)
+        for field in (
+            "shadowrootdelegatesfocus",
+            "shadowrootclonable",
+            "shadowrootserializable",
+        ):
+            require_optional_boolean(template_path, template, field, errors)
+        require_string(template_path, template, "content_text", errors)
+
     for index, form in enumerate(object_list_items(expected, "forms")):
         form_path = f"{case_path}.expected.forms[{index}]"
         require_optional_nullable_string(form_path, form, "id", errors)
@@ -598,6 +611,11 @@ def check_browser_content_node(
         "resolved_src",
         "alt",
         "resource_kind",
+        "slot",
+        "slot_name",
+        "custom_element_name",
+        "custom_element_is",
+        "canvas_fallback_text",
         "width",
         "height",
         "type_hint",
@@ -738,6 +756,7 @@ def check_browser_content_node(
         "open",
         "focusable",
         "item_scope",
+        "custom_element",
     ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)
@@ -802,6 +821,11 @@ def check_browser_render_node(
         "resolved_src",
         "alt",
         "resource_kind",
+        "slot",
+        "slot_name",
+        "custom_element_name",
+        "custom_element_is",
+        "canvas_fallback_text",
         "width",
         "height",
         "type_hint",
@@ -942,6 +966,7 @@ def check_browser_render_node(
         "open",
         "focusable",
         "item_scope",
+        "custom_element",
     ):
         require_optional_boolean(node_path, node, field, errors)
     require_optional_string_list(node_path, node, "options", errors)

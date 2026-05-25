@@ -831,6 +831,21 @@
           { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "indeterminate", "text": null, "href": null, "src": null, "alt": null, "max": "1", "control_type": null, "children": [] }
         ]
       }
+    },
+    {
+      "id": "component-template-display",
+      "description": "Custom element, slot, and canvas metadata survive render-tree projection with stable display categories.",
+      "input": "<body><template id=card-template shadowrootmode=open shadowrootdelegatesfocus><article><slot name=title>Untitled</slot></article></template><product-card id=card><span slot=title>Widget</span><canvas id=chart width=300 height=150>Chart fallback</canvas><button is=fancy-button>Save</button><slot name=footer>Fallback footer</slot></product-card>",
+      "expected": {
+        "children": [
+          { "display": "inline", "role": "inline", "name": "product-card", "id": "card", "text": null, "href": null, "src": null, "alt": null, "custom_element": true, "custom_element_name": "product-card", "control_type": null, "children": [
+            { "display": "inline", "role": "inline", "name": "span", "text": null, "href": null, "src": null, "alt": null, "slot": "title", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Widget", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "display": "inline-replaced", "role": "canvas", "name": "canvas", "id": "chart", "text": null, "href": null, "src": null, "alt": null, "resource_kind": "canvas", "canvas_fallback_text": "Chart fallback", "width": "300", "height": "150", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Chart fallback", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+            { "display": "inline-replaced", "role": "control", "name": "button", "text": "Save", "href": null, "src": null, "alt": null, "custom_element": true, "custom_element_is": "fancy-button", "control_type": "submit", "accessible_name": "Save", "children": [] },
+            { "display": "inline", "role": "slot", "name": "slot", "text": null, "href": null, "src": null, "alt": null, "slot_name": "footer", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Fallback footer", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
+          ] }
+        ]
+      }
     }
   ]
 }

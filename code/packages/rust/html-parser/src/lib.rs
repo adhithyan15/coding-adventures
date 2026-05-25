@@ -836,6 +836,7 @@ pub struct BrowserDocument {
     pub images: Vec<BrowserImage>,
     pub media: Vec<BrowserMedia>,
     pub structured_items: Vec<BrowserStructuredItem>,
+    pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
 }
@@ -975,6 +976,16 @@ pub struct BrowserStructuredProperty {
     pub resolved_value_url: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTemplate {
+    pub id: Option<String>,
+    pub shadowrootmode: Option<String>,
+    pub shadowrootdelegatesfocus: bool,
+    pub shadowrootclonable: bool,
+    pub shadowrootserializable: bool,
+    pub content_text: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct BrowserContentTree {
     pub children: Vec<BrowserContentNode>,
@@ -1004,6 +1015,12 @@ pub struct BrowserContentNode {
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
     pub resource_kind: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub canvas_fallback_text: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
     pub type_hint: Option<String>,
@@ -1171,6 +1188,12 @@ pub struct BrowserRenderNode {
     pub resolved_src: Option<String>,
     pub alt: Option<String>,
     pub resource_kind: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub canvas_fallback_text: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
     pub type_hint: Option<String>,
@@ -1572,6 +1595,12 @@ impl BrowserRenderNode {
             resolved_src: content_node.resolved_src.clone(),
             alt: content_node.alt.clone(),
             resource_kind: content_node.resource_kind.clone(),
+            slot: content_node.slot.clone(),
+            slot_name: content_node.slot_name.clone(),
+            custom_element: content_node.custom_element,
+            custom_element_name: content_node.custom_element_name.clone(),
+            custom_element_is: content_node.custom_element_is.clone(),
+            canvas_fallback_text: content_node.canvas_fallback_text.clone(),
             width: content_node.width.clone(),
             height: content_node.height.clone(),
             type_hint: content_node.type_hint.clone(),
@@ -8634,6 +8663,9 @@ fn collect_browser_facts(
 
         collect_anchor_target(element, summary);
         collect_body_resource(element, summary);
+        if element.name == "template" {
+            summary.templates.push(browser_template(element));
+        }
         if browser_item_scope(element) {
             summary.structured_items.push(browser_structured_item(
                 element,
@@ -8819,6 +8851,7 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             "style" => summary
                 .stylesheets
                 .push(browser_style_element(element, summary.base_href.as_deref())),
+            "template" => summary.templates.push(browser_template(element)),
             _ => {}
         }
 
@@ -9306,6 +9339,12 @@ fn collect_browser_content_nodes_with_mode(
                         resolved_src: None,
                         alt: None,
                         resource_kind: None,
+                        slot: None,
+                        slot_name: None,
+                        custom_element: false,
+                        custom_element_name: None,
+                        custom_element_is: None,
+                        canvas_fallback_text: None,
                         width: None,
                         height: None,
                         type_hint: None,
@@ -9545,6 +9584,12 @@ fn browser_content_node_for_element(
         src,
         alt: element.attribute("alt").map(ToOwned::to_owned),
         resource_kind: browser_content_resource_kind(element),
+        slot: browser_slot_assignment(element),
+        slot_name: browser_slot_name(element),
+        custom_element: browser_custom_element(element),
+        custom_element_name: browser_custom_element_name(element),
+        custom_element_is: browser_custom_element_is(element),
+        canvas_fallback_text: browser_canvas_fallback_text(element),
         width: element.attribute("width").map(ToOwned::to_owned),
         height: element.attribute("height").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
@@ -9715,6 +9760,7 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "object" => Some("object"),
         "audio" | "video" => Some("media"),
         "canvas" => Some("canvas"),
+        "slot" => Some("slot"),
         "br" | "wbr" => Some("line_break"),
         "hr" => Some("separator"),
         "blockquote" => Some("quote_block"),
@@ -9850,6 +9896,64 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "canvas" => Some("canvas".to_string()),
         _ => None,
     }
+}
+
+fn browser_template(element: &Element) -> BrowserTemplate {
+    BrowserTemplate {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        shadowrootmode: element.attribute("shadowrootmode").map(ToOwned::to_owned),
+        shadowrootdelegatesfocus: element.attribute("shadowrootdelegatesfocus").is_some(),
+        shadowrootclonable: element.attribute("shadowrootclonable").is_some(),
+        shadowrootserializable: element.attribute("shadowrootserializable").is_some(),
+        content_text: visible_text_for_nodes(&element.children),
+    }
+}
+
+fn browser_slot_assignment(element: &Element) -> Option<String> {
+    element.attribute("slot").map(ToOwned::to_owned)
+}
+
+fn browser_slot_name(element: &Element) -> Option<String> {
+    if element.name == "slot" {
+        element.attribute("name").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_custom_element(element: &Element) -> bool {
+    browser_custom_element_name(element).is_some() || browser_custom_element_is(element).is_some()
+}
+
+fn browser_custom_element_name(element: &Element) -> Option<String> {
+    is_browser_custom_element_name(&element.name).then(|| element.name.clone())
+}
+
+fn browser_custom_element_is(element: &Element) -> Option<String> {
+    element.attribute("is").map(ToOwned::to_owned)
+}
+
+fn is_browser_custom_element_name(name: &str) -> bool {
+    name.contains('-')
+        && !matches!(
+            name,
+            "annotation-xml"
+                | "color-profile"
+                | "font-face"
+                | "font-face-src"
+                | "font-face-uri"
+                | "font-face-format"
+                | "font-face-name"
+                | "missing-glyph"
+        )
+}
+
+fn browser_canvas_fallback_text(element: &Element) -> Option<String> {
+    if element.name != "canvas" {
+        return None;
+    }
+    let text = visible_text_for_nodes(&element.children);
+    (!text.is_empty()).then_some(text)
 }
 
 fn is_browser_browsing_context_element(element: &Element) -> bool {
@@ -11349,7 +11453,7 @@ fn is_browser_block_element(name: &str) -> bool {
 fn browser_render_display(role: &str) -> &'static str {
     match role {
         "text" => "inline-text",
-        "inline" | "link" => "inline",
+        "inline" | "link" | "slot" => "inline",
         "image_map" | "image_map_area" => "none",
         "media_source" | "media_track" => "none",
         "picture" => "inline",
@@ -12515,6 +12619,78 @@ mod tests {
                 .as_deref(),
             Some("https://example.test/catalog/images/widget.png")
         );
+    }
+
+    #[test]
+    fn browser_component_metadata_tracks_templates_slots_canvas_and_custom_elements() {
+        let document = parse_html(
+            "<body><template id=card-template shadowrootmode=open shadowrootdelegatesfocus \
+             shadowrootclonable shadowrootserializable><article><slot name=title>Untitled</slot>\
+             <slot>Body</slot></article></template><product-card id=card>\
+             <span slot=title>Widget</span><canvas id=chart width=300 height=150>Chart fallback</canvas>\
+             <button is=fancy-button>Save</button><slot name=footer>Fallback footer</slot></product-card>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.templates.len(), 1);
+        let template = &summary.templates[0];
+        assert_eq!(template.id.as_deref(), Some("card-template"));
+        assert_eq!(template.shadowrootmode.as_deref(), Some("open"));
+        assert!(template.shadowrootdelegatesfocus);
+        assert!(template.shadowrootclonable);
+        assert!(template.shadowrootserializable);
+        assert_eq!(template.content_text, "Untitled Body");
+        assert_eq!(
+            summary.body_text,
+            "Widget Chart fallback Save Fallback footer"
+        );
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        assert_eq!(content_tree.children.len(), 1);
+        let custom = &content_tree.children[0];
+        assert_eq!(custom.name.as_deref(), Some("product-card"));
+        assert!(custom.custom_element);
+        assert_eq!(custom.custom_element_name.as_deref(), Some("product-card"));
+        assert!(custom.custom_element_is.is_none());
+
+        let slotted_title = &custom.children[0];
+        assert_eq!(slotted_title.slot.as_deref(), Some("title"));
+        assert_eq!(slotted_title.children[0].text.as_deref(), Some("Widget"));
+
+        let canvas = &custom.children[1];
+        assert_eq!(canvas.role, "canvas");
+        assert_eq!(canvas.resource_kind.as_deref(), Some("canvas"));
+        assert_eq!(
+            canvas.canvas_fallback_text.as_deref(),
+            Some("Chart fallback")
+        );
+        assert_eq!(canvas.width.as_deref(), Some("300"));
+        assert_eq!(canvas.height.as_deref(), Some("150"));
+
+        let customized_button = &custom.children[2];
+        assert!(customized_button.custom_element);
+        assert_eq!(
+            customized_button.custom_element_is.as_deref(),
+            Some("fancy-button")
+        );
+
+        let slot = &custom.children[3];
+        assert_eq!(slot.role, "slot");
+        assert_eq!(slot.slot_name.as_deref(), Some("footer"));
+        assert_eq!(slot.children[0].text.as_deref(), Some("Fallback footer"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let rendered = &render_tree.children[0];
+        assert!(rendered.custom_element);
+        assert_eq!(rendered.display, "inline");
+        assert_eq!(rendered.children[1].display, "inline-replaced");
+        assert_eq!(
+            rendered.children[1].canvas_fallback_text.as_deref(),
+            Some("Chart fallback")
+        );
+        assert_eq!(rendered.children[3].role, "slot");
+        assert_eq!(rendered.children[3].display, "inline");
     }
 
     #[test]
