@@ -23,7 +23,7 @@ use crate::config::CompilerConfig;
 use crate::globs;
 use std::fs;
 use std::io::{self, Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 // ---------------------------------------------------------------------------
 // Output type
@@ -137,18 +137,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
     }
 
-    // Step 3: write the output. Three cases:
-    //   a) --js_output_file set + non-empty path → write to disk.
-    //   b) --js_output_file empty or absent → stdout via the
-    //      returned `stdout_text`.
-
+    // Step 3: write the output. Two cases:
+    //   a) --js_output_file set → write to disk via write_output_file.
+    //   b) absent → stdout via the returned `stdout_text`.
     match &config.io.js_output_file {
         Some(path) => {
-            fs::write(path, combined.as_bytes()).map_err(|e| CompilerError::OutputWriteError {
-                path: path.clone(),
-                kind: e.kind(),
-                message: e.to_string(),
-            })?;
+            write_output_file(path, &combined)?;
             Ok(CompilerOutput {
                 stdout_text: String::new(),
                 wrote_files: vec![path.clone()],
@@ -159,6 +153,56 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             wrote_files: Vec::new(),
         }),
     }
+}
+
+/// Write `contents` to `path`, creating any missing parent
+/// directories first.
+///
+/// # Why auto-create parents
+///
+/// The upstream Java Closure Compiler creates the
+/// `--js_output_file`'s parent directory tree if it doesn't
+/// exist. Mirroring that here means a script using
+/// `closurec --js_output_file build/dist/app.min.js` works
+/// without a preceding `mkdir -p build/dist`. Without this
+/// behavior, `fs::write` would fail with
+/// `io::ErrorKind::NotFound` on every fresh build.
+///
+/// # What we deliberately don't do
+///
+/// - We don't try to expand `~` or `$HOME` in the path; the
+///   shell does that. A path the user passes through e.g.
+///   `--js_output_file=~/out.js` reaches us as literally `~/out.js`
+///   only if the shell didn't expand it (uncommon — usually
+///   means the value was quoted), and CC has the same limitation.
+/// - We don't `chmod` the created directories; default umask
+///   applies (matches CC).
+/// - We don't atomically write via a tempfile + rename. CC writes
+///   directly too; the disk-half-full scenario is rare enough
+///   and CC's behavior is already what users expect.
+///
+/// Extracted as its own function so the directory-creation
+/// behavior is unit-testable independently of `run_compiler`'s
+/// glob expansion + concatenation logic.
+pub fn write_output_file(path: &Path, contents: &str) -> Result<(), CompilerError> {
+    // Create the parent directory tree if needed. `parent()` of
+    // a bare filename like `"out.js"` is `Some("")` (the empty
+    // path), so we skip the create when the parent is empty —
+    // `fs::create_dir_all("")` would error needlessly.
+    if let Some(parent) = path.parent() {
+        if !parent.as_os_str().is_empty() && !parent.exists() {
+            fs::create_dir_all(parent).map_err(|e| CompilerError::OutputWriteError {
+                path: parent.to_path_buf(),
+                kind: e.kind(),
+                message: format!("failed to create parent directory: {e}"),
+            })?;
+        }
+    }
+    fs::write(path, contents.as_bytes()).map_err(|e| CompilerError::OutputWriteError {
+        path: path.to_path_buf(),
+        kind: e.kind(),
+        message: e.to_string(),
+    })
 }
 
 /// Convenience wrapper for `main` — runs the compiler and prints
@@ -332,5 +376,115 @@ mod tests {
         assert!(s.contains("/x/y.js"));
         assert!(s.contains("permission denied"));
         let _: &dyn std::error::Error = &e;
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.03 — write_output_file behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn write_output_file_creates_missing_parent_directories() {
+        // The signature use case: a fresh build that targets
+        // `build/dist/app.min.js` without a prior `mkdir -p`.
+        let base = temp_path("autocreate");
+        let nested = base.join("a").join("b").join("c");
+        let out_path = nested.join("result.js");
+        assert!(!nested.exists(), "parent dir must not exist pre-write");
+
+        write_output_file(&out_path, "// generated\n").expect("write ok");
+
+        assert!(nested.is_dir(), "parent dir should now exist");
+        let written = fs::read_to_string(&out_path).expect("read written file");
+        assert_eq!(written, "// generated\n");
+        let _ = fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn write_output_file_bare_filename_does_not_create_dot() {
+        // `parent()` of a bare filename is `Some("")`. We must
+        // skip the create_dir_all call rather than asking the OS
+        // to create the empty path.
+        let dir = temp_path("bare");
+        fs::create_dir_all(&dir).expect("setup");
+        let bare = dir.join("only.js");
+        write_output_file(&bare, "// bare\n").expect("write ok");
+        let written = fs::read_to_string(&bare).expect("read");
+        assert_eq!(written, "// bare\n");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn write_output_file_reports_create_dir_failure_as_typed_error() {
+        // Attempting to create a directory underneath a regular
+        // file should surface as an OutputWriteError pointing at
+        // the *parent* — not silently truncate the user's file or
+        // panic.
+        let blocker = temp_path("blocker.txt");
+        fs::write(&blocker, "i am not a directory").expect("setup");
+        // Try to write a child under a path that's actually a file.
+        let bad = blocker.join("child").join("output.js");
+        let err = write_output_file(&bad, "// won't land").expect_err("must error");
+        match err {
+            CompilerError::OutputWriteError { path, .. } => {
+                // Either the create_dir_all hits the blocking
+                // file (parent ends in /child) or the write itself
+                // does. Either is a meaningful, typed error.
+                assert!(
+                    path.to_string_lossy().contains("blocker"),
+                    "error path should mention the blocker: {path:?}"
+                );
+            }
+            other => panic!("expected OutputWriteError, got {other:?}"),
+        }
+        let _ = fs::remove_file(&blocker);
+    }
+
+    #[test]
+    fn run_compiler_autocreates_output_parent_dirs() {
+        // End-to-end variant of the auto-create test: drive the
+        // whole pipeline (config -> run_compiler -> write) and
+        // verify the parent dir got created.
+        let base = temp_path("e2e");
+        let in_path = base.join("src").join("a.js");
+        fs::create_dir_all(in_path.parent().unwrap()).expect("setup in");
+        fs::write(&in_path, "var x = 1;\n").expect("write in");
+
+        let out_path = base.join("build").join("dist").join("app.js");
+        assert!(!out_path.parent().unwrap().exists());
+
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert_eq!(out.wrote_files, vec![out_path.clone()]);
+        let written = fs::read_to_string(&out_path).expect("read out");
+        assert_eq!(written, "var x = 1;\n");
+        let _ = fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn run_compiler_stdout_fallback_when_output_file_absent() {
+        // CLOC11.01 already supported this; pin it as a CLOC11.03
+        // regression test so we can't accidentally break stdout
+        // fallback when the output-file path grows new behavior.
+        let in_path = temp_path("stdout-fallback.js");
+        fs::write(&in_path, "// content\n").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: None,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.is_empty());
+        assert!(out.stdout_text.contains("// content"));
+        let _ = fs::remove_file(&in_path);
     }
 }
