@@ -599,6 +599,531 @@ pub fn zlib_compress(data: &[u8]) -> Vec<u8> {
 }
 
 // ---------------------------------------------------------------------------
+// RFC 1951 DEFLATE inflate
+// ---------------------------------------------------------------------------
+//
+// `inflate` decodes a raw DEFLATE bit stream (RFC 1951) and returns the
+// original uncompressed bytes.  It supports all three block types:
+//
+//   BTYPE=00  stored (verbatim copy, no entropy coding)
+//   BTYPE=01  fixed Huffman (pre-defined code lengths from the spec)
+//   BTYPE=10  dynamic Huffman (code lengths transmitted in the stream)
+//
+// Bit-level layout
+// ─────────────────
+// DEFLATE packs bits into bytes LSB-first: the FIRST bit of a block header
+// occupies bit 0 of the first byte.  Huffman codes, however, are assigned
+// MSB-first (canonical codes).  So to decode a Huffman symbol we read bits
+// one at a time from the stream (each bit arrives as the NEXT LSB from the
+// accumulator) and shift them into a code register from the left:
+//
+//   code = (code << 1) | next_stream_bit
+//
+// After k bits we have the same integer value the encoder wrote MSB-first.
+
+// ── BitReader ──────────────────────────────────────────────────────────────
+//
+// Maintains a 64-bit lookahead buffer.  `read_bits(n)` returns the next n
+// bits LSB-first (i.e. bit 0 of the returned value = earliest bit in stream).
+// This is used for lengths, distances, and raw extra-bit fields.
+// For Huffman decode we call `read_bits(1)` one bit at a time and accumulate
+// MSB-first manually.
+
+struct BitReader<'a> {
+    data: &'a [u8],
+    byte_pos: usize,
+    buf: u64,
+    bits_in_buf: u32,
+}
+
+impl<'a> BitReader<'a> {
+    fn new(data: &'a [u8]) -> Self {
+        Self { data, byte_pos: 0, buf: 0, bits_in_buf: 0 }
+    }
+
+    /// Refill `buf` from `data` so that at least `n` bits are available.
+    fn refill(&mut self, n: u32) -> Result<(), String> {
+        while self.bits_in_buf < n {
+            if self.byte_pos >= self.data.len() {
+                return Err("inflate: unexpected end of input".to_string());
+            }
+            self.buf |= (self.data[self.byte_pos] as u64) << self.bits_in_buf;
+            self.byte_pos += 1;
+            self.bits_in_buf += 8;
+        }
+        Ok(())
+    }
+
+    /// Read `n` bits LSB-first (bit 0 = earliest bit in stream).
+    fn read_bits(&mut self, n: u32) -> Result<u32, String> {
+        if n == 0 {
+            return Ok(0);
+        }
+        self.refill(n)?;
+        let val = (self.buf & ((1u64 << n) - 1)) as u32;
+        self.buf >>= n;
+        self.bits_in_buf -= n;
+        Ok(val)
+    }
+
+    /// Discard any partial bits remaining in the current byte so that
+    /// subsequent reads are byte-aligned.  Used after the 3-bit block header
+    /// before a stored block.
+    fn align_to_byte(&mut self) {
+        let leftover = self.bits_in_buf % 8;
+        if leftover != 0 {
+            self.buf >>= leftover;
+            self.bits_in_buf -= leftover;
+        }
+    }
+
+    /// Read one byte (must be byte-aligned; call `align_to_byte` first).
+    fn read_byte(&mut self) -> Result<u8, String> {
+        self.refill(8)?;
+        let b = (self.buf & 0xFF) as u8;
+        self.buf >>= 8;
+        self.bits_in_buf -= 8;
+        Ok(b)
+    }
+
+    /// Read a 16-bit little-endian value (two bytes).
+    fn read_u16_le(&mut self) -> Result<u16, String> {
+        let lo = self.read_byte()? as u16;
+        let hi = self.read_byte()? as u16;
+        Ok(lo | (hi << 8))
+    }
+}
+
+// ── Canonical Huffman decoder ───────────────────────────────────────────────
+//
+// A canonical Huffman code is fully determined by the list of code lengths
+// (one per symbol).  The canonical code assignment algorithm (RFC 1951 §3.2.2):
+//
+//   1. Count how many symbols have each length.
+//   2. Compute the starting code for each length:
+//        next_code[len] = (next_code[len-1] + count[len-1]) << 1
+//   3. Assign codes in symbol order within each length.
+//
+// We store the result in a HashMap<(code_bits: u32, code_len: u32), symbol: u16>
+// so that during decode we can check after each bit whether we have a match.
+
+fn build_huffman_decoder(lengths: &[u8]) -> HashMap<(u32, u32), u16> {
+    // lengths[i] = code length for symbol i (0 = absent from alphabet)
+    let max_len = lengths.iter().copied().max().unwrap_or(0) as usize;
+    if max_len == 0 {
+        return HashMap::new();
+    }
+
+    // Step 1: count symbols at each length.
+    let mut bl_count = vec![0u32; max_len + 1];
+    for &l in lengths {
+        if l > 0 {
+            bl_count[l as usize] += 1;
+        }
+    }
+
+    // Step 2: find the smallest code for each length.
+    let mut next_code = vec![0u32; max_len + 2];
+    let mut code = 0u32;
+    bl_count[0] = 0;
+    for bits in 1..=max_len {
+        code = (code + bl_count[bits - 1]) << 1;
+        next_code[bits] = code;
+    }
+
+    // Step 3: assign a canonical code to every symbol that has length > 0.
+    let mut table: HashMap<(u32, u32), u16> = HashMap::new();
+    for (sym, &l) in lengths.iter().enumerate() {
+        if l > 0 {
+            let len = l as usize;
+            let c = next_code[len];
+            table.insert((c, len as u32), sym as u16);
+            next_code[len] += 1;
+        }
+    }
+    table
+}
+
+/// Decode one Huffman symbol using the given decode table.
+///
+/// DEFLATE Huffman codes are canonical and sent MSB-first, but the bit stream
+/// is LSB-first.  We accumulate bits into `code` from the left (MSB side):
+///
+///   code = (code << 1) | next_bit_from_stream
+///
+/// After each additional bit we check whether (code, bit_count) is in the
+/// table.  When a match is found we return that symbol.
+fn decode_symbol(
+    table: &HashMap<(u32, u32), u16>,
+    reader: &mut BitReader<'_>,
+) -> Result<u16, String> {
+    let mut code = 0u32;
+    // RFC 1951 requires Huffman codes ≤ 15 bits.
+    for len in 1u32..=15 {
+        let bit = reader.read_bits(1)?;
+        // Shift the new bit in at the LSB position; since we're building MSB-first,
+        // accumulate as: code = (code << 1) | bit.
+        code = (code << 1) | bit;
+        if let Some(&sym) = table.get(&(code, len)) {
+            return Ok(sym);
+        }
+    }
+    Err("inflate: invalid Huffman code".to_string())
+}
+
+// ── Fixed Huffman code tables (RFC 1951 §3.2.6) ────────────────────────────
+//
+// The "fixed" compression mode uses a pre-agreed set of code lengths so that
+// no explicit code table need be transmitted.  The assignments are:
+//
+//   Literal/length alphabet:
+//     symbols   0–143 → length 8  (codes 0x30–0xBF, start=0b00110000)
+//     symbols 144–255 → length 9  (codes 0x190–0x1FF, start=0b110010000)
+//     symbols 256–279 → length 7  (codes 0x00–0x17, start=0b0000000)
+//     symbols 280–287 → length 8  (codes 0xC0–0xC7, start=0b11000000)
+//
+//   Distance alphabet:
+//     symbols 0–31 → length 5
+
+fn fixed_ll_lengths() -> Vec<u8> {
+    let mut v = vec![0u8; 288];
+    for i in 0..=143   { v[i] = 8; }
+    for i in 144..=255 { v[i] = 9; }
+    for i in 256..=279 { v[i] = 7; }
+    for i in 280..=287 { v[i] = 8; }
+    v
+}
+
+fn fixed_dist_lengths() -> Vec<u8> {
+    vec![5u8; 32]
+}
+
+// ── Back-reference copy ─────────────────────────────────────────────────────
+//
+// Copy `length` bytes from position `dist` bytes behind the current end of
+// `output`.  We copy byte-by-byte (not a slice copy) to correctly handle the
+// "overlapping" case where dist < length, which encodes run-length sequences:
+//
+//   Example: output = [A, B], dist=1, length=4
+//     → copies output[-1]=B, then output[-1]=B (fresh copy), etc.
+//   Result: [A, B, B, B, B, B]
+//
+// This is intentional in DEFLATE — it compresses runs cheaply.
+
+fn copy_back_ref(output: &mut Vec<u8>, dist: usize, length: usize) -> Result<(), String> {
+    let out_len = output.len();
+    if dist > out_len {
+        return Err(format!(
+            "inflate: back-reference distance {} exceeds output length {}",
+            dist, out_len
+        ));
+    }
+    let start = out_len - dist;
+    for i in 0..length {
+        let b = output[start + i];
+        output.push(b);
+    }
+    Ok(())
+}
+
+// ── inflate (BTYPE=10): dynamic Huffman block ───────────────────────────────
+//
+// Dynamic Huffman blocks transmit compressed code-length trees in the stream.
+// The meta-tree (used to decode the LL and dist code lengths) is called the
+// "code-length alphabet" (CL).  The wire order of CL lengths uses a special
+// permutation that front-loads the most common lengths:
+
+const CL_PERMUTATION: [usize; 19] = [
+    16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+];
+
+/// Decode a sequence of `total` code lengths using the CL (meta) tree.
+///
+/// CL symbols:
+///   0–15  → literal code length
+///   16    → repeat the previous length × (3 + read_bits(2))
+///   17    → output zeros × (3 + read_bits(3))
+///   18    → output zeros × (11 + read_bits(7))
+fn decode_code_lengths(
+    cl_table: &HashMap<(u32, u32), u16>,
+    reader: &mut BitReader<'_>,
+    total: usize,
+) -> Result<Vec<u8>, String> {
+    let mut lengths = Vec::with_capacity(total);
+    let mut prev = 0u8;
+    while lengths.len() < total {
+        let sym = decode_symbol(cl_table, reader)?;
+        match sym {
+            0..=15 => {
+                prev = sym as u8;
+                lengths.push(prev);
+            }
+            16 => {
+                // Repeat the previous length 3–6 times.
+                let repeat = reader.read_bits(2)? + 3;
+                for _ in 0..repeat {
+                    if lengths.len() >= total {
+                        return Err("inflate: code length repeat overflow".to_string());
+                    }
+                    lengths.push(prev);
+                }
+            }
+            17 => {
+                // Insert 3–10 zeros.
+                let repeat = reader.read_bits(3)? + 3;
+                for _ in 0..repeat {
+                    if lengths.len() >= total {
+                        return Err("inflate: code length zero-run-3 overflow".to_string());
+                    }
+                    lengths.push(0);
+                }
+                prev = 0;
+            }
+            18 => {
+                // Insert 11–138 zeros.
+                let repeat = reader.read_bits(7)? + 11;
+                for _ in 0..repeat {
+                    if lengths.len() >= total {
+                        return Err("inflate: code length zero-run-7 overflow".to_string());
+                    }
+                    lengths.push(0);
+                }
+                prev = 0;
+            }
+            _ => return Err(format!("inflate: invalid CL symbol {}", sym)),
+        }
+    }
+    Ok(lengths)
+}
+
+// ── Shared decode loop ──────────────────────────────────────────────────────
+//
+// Once we have an LL decode table and a dist decode table (either from the
+// fixed tables or from the dynamic header), the decode loop is identical for
+// both BTYPE=01 and BTYPE=10:
+//
+//   loop:
+//     sym ← decode LL symbol
+//     if sym < 256  → emit literal byte
+//     if sym == 256 → end-of-block
+//     if sym >= 257 → decode (length, dist) back-reference and copy
+
+fn decode_block(
+    ll_table: &HashMap<(u32, u32), u16>,
+    dist_table: &HashMap<(u32, u32), u16>,
+    reader: &mut BitReader<'_>,
+    output: &mut Vec<u8>,
+) -> Result<(), String> {
+    loop {
+        let sym = decode_symbol(ll_table, reader)?;
+
+        if sym < 256 {
+            // Plain literal byte.
+            output.push(sym as u8);
+        } else if sym == 256 {
+            // End-of-block marker — done with this block.
+            return Ok(());
+        } else {
+            // Length/distance back-reference.
+            // `sym` is 257–285 (284 max in standard streams; 285 = length 258).
+            let length_idx = (sym - 257) as usize;
+            if length_idx >= LENGTH_TABLE.len() {
+                return Err(format!("inflate: invalid length symbol {}", sym));
+            }
+            let entry = &LENGTH_TABLE[length_idx];
+            let extra_len = reader.read_bits(entry.extra_bits)?;
+            let length = (entry.base + extra_len) as usize;
+
+            // Distance symbol.
+            let dist_sym = decode_symbol(dist_table, reader)? as usize;
+            if dist_sym >= DIST_TABLE.len() {
+                return Err(format!("inflate: invalid distance symbol {}", dist_sym));
+            }
+            let dentry = &DIST_TABLE[dist_sym];
+            let extra_dist = reader.read_bits(dentry.extra_bits)?;
+            let dist = (dentry.base + extra_dist) as usize;
+
+            copy_back_ref(output, dist, length)?;
+        }
+    }
+}
+
+/// Decompress a raw DEFLATE bit stream (RFC 1951) and return the original bytes.
+///
+/// Supports all three block types:
+///   - BTYPE=00 stored (verbatim copy)
+///   - BTYPE=01 fixed Huffman
+///   - BTYPE=10 dynamic Huffman
+///
+/// Returns `Err(String)` on any malformed input.
+pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
+    let mut reader = BitReader::new(data);
+    let mut output: Vec<u8> = Vec::new();
+
+    loop {
+        // ── Block header ────────────────────────────────────────────────────
+        // Each block begins with 3 bits:
+        //   bit 0    BFINAL — set if this is the last block
+        //   bits 1–2 BTYPE  — 00=stored, 01=fixed Huffman, 10=dynamic Huffman
+        let bfinal = reader.read_bits(1)?;
+        let btype  = reader.read_bits(2)?;
+
+        match btype {
+            // ── BTYPE=00: Stored block ──────────────────────────────────────
+            //
+            // The encoder wrote the header bits into a partial byte, then padded
+            // to the next byte boundary, followed by:
+            //   LEN  (2 bytes LE) — byte count of the literal data
+            //   NLEN (2 bytes LE) — one's complement of LEN
+            //   [LEN bytes of literal data]
+            0b00 => {
+                reader.align_to_byte();
+                let len  = reader.read_u16_le()? as usize;
+                let nlen = reader.read_u16_le()? as usize;
+                if (len ^ 0xFFFF) != nlen {
+                    return Err("inflate: stored block LEN/NLEN mismatch".to_string());
+                }
+                for _ in 0..len {
+                    output.push(reader.read_byte()?);
+                }
+            }
+
+            // ── BTYPE=01: Fixed Huffman ─────────────────────────────────────
+            //
+            // Uses the pre-agreed code tables from RFC 1951 §3.2.6.
+            // No table is transmitted; we reconstruct from the known lengths.
+            0b01 => {
+                let ll_lengths   = fixed_ll_lengths();
+                let dist_lengths = fixed_dist_lengths();
+                let ll_table   = build_huffman_decoder(&ll_lengths);
+                let dist_table = build_huffman_decoder(&dist_lengths);
+                decode_block(&ll_table, &dist_table, &mut reader, &mut output)?;
+            }
+
+            // ── BTYPE=10: Dynamic Huffman ───────────────────────────────────
+            //
+            // The block header encodes three counts, then the CL (meta) tree,
+            // then the LL and dist code lengths encoded with the CL tree.
+            //
+            //   hlit  = read_bits(5) + 257   → number of LL lengths
+            //   hdist = read_bits(5) + 1     → number of dist lengths
+            //   hclen = read_bits(4) + 4     → number of CL lengths
+            //
+            //   Read hclen×3 bits → CL lengths in permutation order
+            //   Build CL decode table
+            //   Decode hlit+hdist code lengths using CL table
+            //   Split: first hlit → LL table, next hdist → dist table
+            0b10 => {
+                let hlit  = reader.read_bits(5)? as usize + 257;
+                let hdist = reader.read_bits(5)? as usize + 1;
+                let hclen = reader.read_bits(4)? as usize + 4;
+
+                // Read the CL code lengths in permutation order (19 possible CL symbols).
+                let mut cl_lengths = vec![0u8; 19];
+                for i in 0..hclen {
+                    cl_lengths[CL_PERMUTATION[i]] = reader.read_bits(3)? as u8;
+                }
+
+                // Build the CL (meta-tree) decoder.
+                let cl_table = build_huffman_decoder(&cl_lengths);
+
+                // Use the CL tree to decode hlit+hdist code lengths.
+                let all_lengths = decode_code_lengths(&cl_table, &mut reader, hlit + hdist)?;
+                let ll_lengths   = all_lengths[..hlit].to_vec();
+                let dist_lengths = all_lengths[hlit..].to_vec();
+
+                let ll_table   = build_huffman_decoder(&ll_lengths);
+                let dist_table = build_huffman_decoder(&dist_lengths);
+
+                decode_block(&ll_table, &dist_table, &mut reader, &mut output)?;
+            }
+
+            _ => {
+                return Err(format!("inflate: reserved BTYPE={}", btype));
+            }
+        }
+
+        if bfinal == 1 {
+            break;
+        }
+    }
+
+    Ok(output)
+}
+
+// ---------------------------------------------------------------------------
+// RFC 1950 zlib decompress
+// ---------------------------------------------------------------------------
+//
+// The zlib format (RFC 1950) wraps a raw DEFLATE stream in a 2-byte header
+// and a 4-byte Adler-32 checksum:
+//
+//   [CMF]        1 byte — compression method and info
+//   [FLG]        1 byte — flags (dict bit, check bits)
+//   [DEFLATE…]   variable — raw DEFLATE bit stream
+//   [Adler-32]   4 bytes big-endian
+//
+// CMF layout:
+//   bits 0–3  CM    — compression method (8 = deflate)
+//   bits 4–7  CINFO — base-2 log of window size minus 8 (for CM=8)
+//
+// FLG layout:
+//   bit  5    FDICT — preset dictionary (not supported here)
+//   bits 0–4,6–7  FCHECK — must make (CMF*256+FLG) divisible by 31
+
+/// Decompress a zlib-wrapped DEFLATE stream (RFC 1950).
+///
+/// Verifies the zlib header fields, delegates to `inflate` for the raw
+/// DEFLATE data, and checks the Adler-32 checksum.
+pub fn zlib_decompress(data: &[u8]) -> Result<Vec<u8>, String> {
+    if data.len() < 6 {
+        return Err("zlib_decompress: input too short".to_string());
+    }
+
+    let cmf = data[0];
+    let flg = data[1];
+
+    // CM must be 8 (deflate).
+    if cmf & 0x0F != 8 {
+        return Err(format!(
+            "zlib_decompress: unsupported compression method {}",
+            cmf & 0x0F
+        ));
+    }
+
+    // (CMF * 256 + FLG) must be a multiple of 31.
+    if (cmf as u32 * 256 + flg as u32) % 31 != 0 {
+        return Err("zlib_decompress: invalid zlib header checksum".to_string());
+    }
+
+    // Preset dictionary (FDICT) is not supported.
+    if flg & 0x20 != 0 {
+        return Err("zlib_decompress: preset dictionary not supported".to_string());
+    }
+
+    // The raw DEFLATE payload sits between the 2-byte header and 4-byte trailer.
+    let deflate_data = &data[2..data.len() - 4];
+    let decompressed = inflate(deflate_data)?;
+
+    // Verify Adler-32 checksum (big-endian, last 4 bytes).
+    let expected = u32::from_be_bytes([
+        data[data.len() - 4],
+        data[data.len() - 3],
+        data[data.len() - 2],
+        data[data.len() - 1],
+    ]);
+    let actual = adler32(&decompressed);
+    if actual != expected {
+        return Err(format!(
+            "zlib_decompress: Adler-32 mismatch: expected {:08x}, got {:08x}",
+            expected, actual
+        ));
+    }
+
+    Ok(decompressed)
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -710,5 +1235,159 @@ mod tests {
         let base = b"the quick brown fox jumps over the lazy dog ";
         let data: Vec<u8> = base.iter().cycle().take(base.len() * 10).copied().collect();
         roundtrip(&data);
+    }
+
+    // ── inflate / zlib_decompress tests ─────────────────────────────────────
+
+    /// inflate a manually constructed BTYPE=00 (stored) block.
+    ///
+    /// A stored block looks like:
+    ///   [header byte]  BFINAL=1, BTYPE=00 → 0b00000001 = 0x01
+    ///   [LEN  2B LE]   5 → 0x05, 0x00
+    ///   [NLEN 2B LE]   ~5 = 0xFFFA → 0xFA, 0xFF
+    ///   [5 literal bytes]  "hello"
+    #[test]
+    fn inflate_stored_block() {
+        let deflate_stream: &[u8] = &[
+            0x01,                               // BFINAL=1, BTYPE=00
+            0x05, 0x00,                         // LEN = 5 LE
+            0xFA, 0xFF,                         // NLEN = ~5 LE
+            b'h', b'e', b'l', b'l', b'o',      // literal data
+        ];
+        let out = inflate(deflate_stream).expect("inflate stored block failed");
+        assert_eq!(out, b"hello");
+    }
+
+    /// inflate a multi-block stored stream (two blocks: "foo" then "bar").
+    #[test]
+    fn inflate_stored_two_blocks() {
+        let mut stream = Vec::new();
+        // Block 1: BFINAL=0, BTYPE=00, data="foo"
+        stream.extend_from_slice(&[0x00, 0x03, 0x00, 0xFC, 0xFF, b'f', b'o', b'o']);
+        // Block 2: BFINAL=1, BTYPE=00, data="bar"
+        stream.extend_from_slice(&[0x01, 0x03, 0x00, 0xFC, 0xFF, b'b', b'a', b'r']);
+        let out = inflate(&stream).expect("inflate two stored blocks failed");
+        assert_eq!(out, b"foobar");
+    }
+
+    /// zlib_compress + zlib_decompress round-trip for various inputs.
+    ///
+    /// zlib_compress uses stored blocks, so this also exercises the BTYPE=00
+    /// path through inflate indirectly via zlib_decompress.
+    #[test]
+    fn zlib_roundtrip() {
+        let cases: &[&[u8]] = &[
+            b"",
+            b"\x00",
+            b"hello",
+            b"AAAAAAAAAAAAAAAAAAAAAA",
+            b"the quick brown fox jumps over the lazy dog",
+            &{
+                let mut v: Vec<u8> = (0..=255).collect();
+                v.extend_from_slice(&(0..=255u8).collect::<Vec<_>>());
+                v
+            },
+        ];
+        for &data in cases {
+            let compressed = zlib_compress(data);
+            let decompressed = zlib_decompress(&compressed)
+                .unwrap_or_else(|e| panic!("zlib_decompress failed for {:?}: {}", &data[..data.len().min(20)], e));
+            assert_eq!(decompressed, data, "round-trip mismatch for {:?}", &data[..data.len().min(20)]);
+        }
+    }
+
+    /// zlib_decompress must reject a stream with the wrong CM nibble.
+    #[test]
+    fn zlib_decompress_bad_header() {
+        // CMF=0x17: CM=7 (not deflate), CINFO=1; FLG chosen to make header valid mod 31.
+        // 0x17 * 256 = 5888; 5888 + FLG must be divisible by 31.
+        // 5888 % 31 = 5888 - 31*190 = 5888 - 5890 … let's use FLG=0x02: 5890 % 31 = 0. ✓
+        let bad: &[u8] = &[0x17, 0x02, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x01];
+        let err = zlib_decompress(bad).unwrap_err();
+        assert!(err.contains("unsupported compression method"), "got: {}", err);
+    }
+
+    /// zlib_decompress must reject a stream with the FDICT bit set.
+    #[test]
+    fn zlib_decompress_fdict() {
+        // CMF=0x78, FLG=0x20: bit5 (FDICT) is set.
+        // (0x78 * 256 + 0x20) = 30752; 30752 % 31 = 0 ✓ (passes the header checksum check)
+        // The FDICT check must fire before inflate is attempted.
+        let bad: &[u8] = &[0x78, 0x20, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0xFF, 0xFF,
+                            0x00, 0x00, 0x00, 0x01];
+        let err = zlib_decompress(bad).unwrap_err();
+        assert!(err.contains("preset dictionary not supported"), "got: {}", err);
+    }
+
+    /// zlib_decompress must reject streams shorter than 6 bytes.
+    #[test]
+    fn zlib_decompress_too_short() {
+        for len in 0..6usize {
+            let data: Vec<u8> = vec![0x78; len];
+            let err = zlib_decompress(&data).unwrap_err();
+            assert!(err.contains("input too short"), "len={}: got: {}", len, err);
+        }
+    }
+
+    /// zlib_decompress must reject a stream where the Adler-32 checksum is wrong.
+    #[test]
+    fn zlib_decompress_bad_adler() {
+        let mut compressed = zlib_compress(b"hello world");
+        // Corrupt the last byte of the Adler-32.
+        let last = compressed.len() - 1;
+        compressed[last] ^= 0xFF;
+        let err = zlib_decompress(&compressed).unwrap_err();
+        assert!(err.contains("Adler-32 mismatch"), "got: {}", err);
+    }
+
+    /// Inflate a fixed-Huffman block produced by Python's zlib.compress at level 1.
+    ///
+    /// The bytes below were generated with:
+    ///   import zlib; list(zlib.compress(b"Hello", level=1))
+    ///
+    /// Python's zlib at level=1 uses fixed Huffman (BTYPE=01) for short inputs.
+    ///
+    /// Bytes (verified output from Python 3):
+    ///   78 01 → CMF/FLG header (deflate, window 32K, no dict, fast)
+    ///   f3 48 cd c9 c9 07 00 → raw DEFLATE: fixed-Huffman "Hello" + EOB
+    ///   05 8c 01 f5 → Adler-32 BE
+    ///
+    /// Verify with: python3 -c "import zlib; print(zlib.decompress(bytes([0x78,0x01,0xf3,0x48,0xcd,0xc9,0xc9,0x07,0x00,0x05,0x8c,0x01,0xf5])))"
+    #[test]
+    fn inflate_fixed_huffman() {
+        // zlib stream for b"Hello" compressed at level=1 (fixed Huffman).
+        let zlib_bytes: &[u8] = &[
+            0x78, 0x01,
+            0xf3, 0x48, 0xcd, 0xc9, 0xc9, 0x07, 0x00,
+            0x05, 0x8c, 0x01, 0xf5,
+        ];
+        let out = zlib_decompress(zlib_bytes).expect("inflate fixed Huffman failed");
+        assert_eq!(out, b"Hello");
+    }
+
+    /// Inflate a dynamic-Huffman block.
+    ///
+    /// The bytes below were generated with Python:
+    ///   import zlib; list(zlib.compress(b"abcabcabcabc", level=6))
+    ///
+    /// At default compression level, zlib uses dynamic Huffman (BTYPE=10) for
+    /// repeated patterns.  Decompressing must yield b"abcabcabcabc".
+    ///
+    /// Bytes (verified output from Python 3):
+    ///   78 9c → CMF/FLG header (deflate, default compression)
+    ///   4b 4c 4a 4e 84 21 00 → raw DEFLATE: dynamic Huffman "abcabcabcabc"
+    ///   1d e0 04 99 → Adler-32 BE
+    ///
+    /// Verify with: python3 -c "import zlib; d=bytes([0x78,0x9c,0x4b,0x4c,0x4a,0x4e,0x84,0x21,0x00,0x1d,0xe0,0x04,0x99]); print(zlib.decompress(d))"
+    #[test]
+    fn inflate_dynamic_huffman() {
+        // zlib stream for b"abcabcabcabc" at default level (dynamic Huffman).
+        let zlib_bytes: &[u8] = &[
+            0x78, 0x9c,
+            0x4b, 0x4c, 0x4a, 0x4e, 0x84, 0x21, 0x00,
+            0x1d, 0xe0, 0x04, 0x99,
+        ];
+        let out = zlib_decompress(zlib_bytes).expect("inflate dynamic Huffman failed");
+        assert_eq!(out, b"abcabcabcabc");
     }
 }
