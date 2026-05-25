@@ -2,6 +2,47 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.30.0] - 2026-05-25
+
+### Added (Phase 7c — Ruby 3.0 endless method definitions)
+
+A new helper `lower_endless_def_statement` lowers `def foo = expr` / `def foo(x, y) = expr` into a top-level `Function`.  The shape:
+
+```
+Function {
+    name,
+    params,
+    body: Block { stmts: [], value: <lowered expression> },
+    return_type: None,
+    captures: [],
+    effects: PURE,
+    metadata: Metadata::new(),
+}
+```
+
+The `lower_statement_inner` `def_statement` match now also matches `endless_def_statement` (both hoist to a top-level Function and emit a `NilLit` ExprStmt placeholder in the main body).  Both pre-passes — `collect_def_statements` (program-level) and `collect_def_statements_from_body` (class/module-level) — dispatch on rule name so either form gets hoisted.
+
+### Lowering details
+
+- Parameter extraction reuses the same `params` → `param` Node walk as `lower_def_statement`, with the same lossy-splat v0 limitation: `*args` / `**kw` params drop the splat prefix.
+- A fresh `declared_locals` / `current_params` scope is opened for the body expression so a parameter reference inside the body resolves to `Scope::Param` (validator-correct).
+- The body is the single `expression` Node child (PEG guarantees exactly one, after the EQUALS token).  `Block.stmts` is empty; `Block.value` is the lowered expression.
+- Function `effects` default to `PURE`; if the lowered expression contains effectful calls (e.g. `puts`), the SIR's `effects_of` inference will pick them up at validation time.
+
+### v0 deferred limitations
+
+- Lossy splat (inherited from Phase 6s): `def foo(*args) = ...` loses the `*` prefix.
+- Endless defs inside classes / modules are hoisted to top level (no class scoping in SIR v0 — same caveat as the block-bodied def).
+- No method visibility markers (`private`, `protected`) — same as block-bodied defs.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 137 → **141** (+4):
+  - `endless_def_no_params_hoists_to_top_level_function` — happy path.
+  - `endless_def_with_params_carries_param_scope` — asserts `Scope::Param` for body VarRefs.
+  - `endless_def_does_not_emit_main_body_stmt` — confirms hoisting + NilLit placeholder.
+  - `endless_def_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.29.0] - 2026-05-25
 
 ### Added (Phase 7b — heredoc literal lowering)

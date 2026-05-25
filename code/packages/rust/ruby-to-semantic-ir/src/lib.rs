@@ -2810,4 +2810,107 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7c — Ruby 3.0 endless method definitions
+    //
+    // `def foo = expr` and `def foo(x, y) = expr` both hoist to a top-level
+    // Function whose Block has `stmts=[]` and `value=<lowered expr>`.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn endless_def_no_params_hoists_to_top_level_function() {
+        // `def hello = 1` → top-level Function named "hello" with no
+        // params and body value = IntLit(1).
+        let m = lower("def hello = 1");
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "hello")
+            .expect("expected top-level `hello` Function");
+        assert!(f.params.is_empty(), "expected no params");
+        assert!(f.body.stmts.is_empty(), "endless def body has no stmts");
+        assert!(
+            matches!(f.body.value, Expr::IntLit { value: 1, .. }),
+            "expected IntLit(1) as body value, got {:?}",
+            f.body.value
+        );
+    }
+
+    #[test]
+    fn endless_def_with_params_carries_param_scope() {
+        // `def add(x, y) = x + y` — params should bind to Scope::Param
+        // inside the body expression.
+        let m = lower("def add(x, y) = x + y");
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "add")
+            .expect("expected top-level `add` Function");
+        assert_eq!(f.params.len(), 2);
+        assert_eq!(f.params[0].name, "x");
+        assert_eq!(f.params[1].name, "y");
+        // Body value should be the `x + y` BuiltinCall with VarRefs
+        // both at Scope::Param.
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert_eq!(args.len(), 2);
+                assert!(
+                    matches!(&args[0], Expr::VarRef { name, scope, .. }
+                        if name == "x" && *scope == Scope::Param),
+                    "expected VarRef(x, Param), got {:?}",
+                    &args[0]
+                );
+                assert!(
+                    matches!(&args[1], Expr::VarRef { name, scope, .. }
+                        if name == "y" && *scope == Scope::Param),
+                    "expected VarRef(y, Param), got {:?}",
+                    &args[1]
+                );
+            }
+            other => panic!("expected +-BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn endless_def_does_not_emit_main_body_stmt() {
+        // The endless def hoists to a top-level Function; the
+        // main-body statement stream should NOT contain an
+        // assignment / call for it (just the synthetic NilLit
+        // ExprStmt placeholder, same as block-bodied def).
+        let m = lower("def hello = 1\nputs(hello())");
+        // Expect at least two functions: main + hello.
+        assert!(
+            m.functions.iter().any(|f| f.name == "hello"),
+            "expected hello Function"
+        );
+        let main = m
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("expected main");
+        // The first stmt is the no-op placeholder for the endless def.
+        match &main.body.stmts[0] {
+            Stmt::ExprStmt {
+                expr: Expr::NilLit { .. },
+                ..
+            } => {} // OK
+            other => panic!("expected NilLit ExprStmt placeholder, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn endless_def_module_passes_sir_validator() {
+        // End-to-end smoke: a module with an endless def passes
+        // the validator.  The function body's lowering must produce
+        // a well-formed Block (stmts + value).
+        let m = lower("def square(n) = n * n\nputs(square(3))\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected endless-def module: {:?}",
+            result
+        );
+    }
 }

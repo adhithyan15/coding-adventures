@@ -337,12 +337,13 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
-            "def_statement" => {
-                // `def` declarations were hoisted to top-level
-                // Functions in the pre-pass; here we drop them from
-                // the main-body statement stream.  Returning a no-op
-                // ExprStmt keeps the `Block.stmts` slot occupied but
-                // valid SIR-wise.
+            "def_statement" | "endless_def_statement" => {
+                // `def` declarations (both the block-bodied form and the
+                // Phase-7c endless `def foo = expr` form) were hoisted
+                // to top-level Functions in the pre-pass; here we drop
+                // them from the main-body statement stream.  Returning
+                // a no-op ExprStmt keeps the `Block.stmts` slot occupied
+                // but valid SIR-wise.
                 Ok(Stmt::ExprStmt {
                     expr: Expr::NilLit {
                         span: self.span_of(node),
@@ -1091,11 +1092,20 @@ impl Lowerer {
                 Some(n) => n,
                 None => continue,
             };
-            if inner.rule_name != "def_statement" {
-                continue;
+            // Phase 7c — endless `def foo = expr` is also hoisted as a
+            // top-level Function.  Both forms produce a `Function`
+            // value; the helper below dispatches on rule name.
+            match inner.rule_name.as_str() {
+                "def_statement" => {
+                    let func = self.lower_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                "endless_def_statement" => {
+                    let func = self.lower_endless_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                _ => {}
             }
-            let func = self.lower_def_statement(inner)?;
-            self.user_functions.push(func);
         }
         Ok(())
     }
@@ -1122,18 +1132,153 @@ impl Lowerer {
                 Some(n) => n,
                 None => continue,
             };
-            if inner.rule_name == "def_statement" {
-                let func = self.lower_def_statement(inner)?;
-                self.user_functions.push(func);
-            } else if inner.rule_name == "class_statement"
-                || inner.rule_name == "module_statement"
-            {
-                // Nested class/module — recurse so deeply-nested
-                // `def`s still get hoisted.
-                self.collect_def_statements_from_body(inner)?;
+            // Phase 7c — both `def_statement` and `endless_def_statement`
+            // are hoisted from inside class / module bodies.
+            match inner.rule_name.as_str() {
+                "def_statement" => {
+                    let func = self.lower_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                "endless_def_statement" => {
+                    let func = self.lower_endless_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                "class_statement" | "module_statement" => {
+                    // Nested class/module — recurse so deeply-nested
+                    // `def`s still get hoisted.
+                    self.collect_def_statements_from_body(inner)?;
+                }
+                _ => {}
             }
         }
         Ok(())
+    }
+
+    /// Phase 7c — lower an endless method definition `def foo = expr`
+    /// (or `def foo(x, y) = expr`) into a top-level `Function`.
+    ///
+    /// Endless methods are Ruby 3.0's terser one-liner syntax for
+    /// pure functions: the entire method body is a single expression
+    /// after the `=`, with no `end` keyword.  The parse-tree shape is:
+    ///
+    /// ```text
+    /// endless_def_statement
+    ///   ├─ Keyword("def")
+    ///   ├─ Name(method_name)
+    ///   ├─ [params]   (optional)
+    ///   ├─ Equals
+    ///   └─ expression (node)
+    /// ```
+    ///
+    /// We reuse the parameter-extraction logic from `lower_def_statement`
+    /// (identical shape) and then collect the single trailing
+    /// `expression` Node as the function's tail value.  No statements
+    /// in the body — `Block.stmts` is empty, `Block.value` is the
+    /// lowered expression.
+    fn lower_endless_def_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Function, RubyLowerError> {
+        // Method name — first Name-typed token (skips the `def` keyword).
+        let name_token = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "endless_def_statement missing method-name token".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let name = name_token.value.clone();
+
+        // Parameter list — same `params` rule shape as `def_statement`.
+        // Reuse the same extraction (find each `param` subnode, skip
+        // splat-prefix Token, take the identifier Name).  See the
+        // matching code in `lower_def_statement` for the lossy-splat
+        // v0 limitation.
+        let params_node = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
+            _ => None,
+        });
+        let params: Vec<Param> = if let Some(pn) = params_node {
+            pn.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(param_node) if param_node.rule_name == "param" => {
+                        param_node.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t)
+                                if matches!(t.type_, TokenType::Name)
+                                    && t.value != "*"
+                                    && t.value != "**" =>
+                            {
+                                Some(Param {
+                                    name: t.value.clone(),
+                                    sir_type: None,
+                                    span: self.span_of_token(t),
+                                })
+                            }
+                            _ => None,
+                        })
+                    }
+                    _ => None,
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
+
+        if !params.is_empty() {
+            self.features_used.insert(Feature::DynamicTyping);
+        }
+
+        // Set up a fresh locals + params scope for the body expression
+        // — identical to `lower_def_statement` so any VarRef to a
+        // parameter inside the expression resolves as `Scope::Param`.
+        let saved_locals = std::mem::take(&mut self.declared_locals);
+        let saved_params = std::mem::take(&mut self.current_params);
+        for p in &params {
+            self.declared_locals.insert(p.name.clone());
+            self.current_params.insert(p.name.clone());
+        }
+
+        // The body is the single `expression` Node child.  PEG
+        // guarantees exactly one such child (the grammar rule has it
+        // as a non-repeated, non-optional element after the `EQUALS`).
+        let expr_node = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "endless_def_statement missing body expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let value = self.lower_expression(expr_node)?;
+
+        // Restore the outer scope.
+        self.declared_locals = saved_locals;
+        self.current_params = saved_params;
+
+        Ok(Function {
+            name,
+            params,
+            return_type: None,
+            captures: Vec::new(),
+            body: Block {
+                stmts: Vec::new(),
+                value,
+                span: self.span_of(node),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: self.span_of(node),
+        })
     }
 
     fn lower_def_statement(
