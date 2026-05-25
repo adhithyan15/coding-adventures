@@ -159,6 +159,14 @@ struct ExpectedResource {
     resolved_imagesrcset: Option<String>,
     #[serde(default)]
     imagesizes: Option<String>,
+    #[serde(default)]
+    track_kind: Option<String>,
+    #[serde(default)]
+    srclang: Option<String>,
+    #[serde(default)]
+    track_label: Option<String>,
+    #[serde(default)]
+    default_track: bool,
     async_script: bool,
     defer_script: bool,
 }
@@ -629,6 +637,10 @@ impl ExpectedResource {
             imagesrcset: self.imagesrcset,
             resolved_imagesrcset: self.resolved_imagesrcset,
             imagesizes: self.imagesizes,
+            track_kind: self.track_kind,
+            srclang: self.srclang,
+            track_label: self.track_label,
+            default_track: self.default_track,
             async_script: self.async_script,
             defer_script: self.defer_script,
         }

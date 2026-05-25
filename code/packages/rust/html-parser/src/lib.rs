@@ -905,6 +905,10 @@ pub struct BrowserResource {
     pub imagesrcset: Option<String>,
     pub resolved_imagesrcset: Option<String>,
     pub imagesizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
     pub async_script: bool,
     pub defer_script: bool,
 }
@@ -987,6 +991,13 @@ pub struct BrowserContentNode {
     pub image_map_name: Option<String>,
     pub image_map_shape: Option<String>,
     pub image_map_coords: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
     pub media: Option<String>,
     pub poster: Option<String>,
     pub resolved_poster: Option<String>,
@@ -1138,6 +1149,13 @@ pub struct BrowserRenderNode {
     pub image_map_name: Option<String>,
     pub image_map_shape: Option<String>,
     pub image_map_coords: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
     pub media: Option<String>,
     pub poster: Option<String>,
     pub resolved_poster: Option<String>,
@@ -1523,6 +1541,13 @@ impl BrowserRenderNode {
             image_map_name: content_node.image_map_name.clone(),
             image_map_shape: content_node.image_map_shape.clone(),
             image_map_coords: content_node.image_map_coords.clone(),
+            srcset: content_node.srcset.clone(),
+            resolved_srcset: content_node.resolved_srcset.clone(),
+            sizes: content_node.sizes.clone(),
+            track_kind: content_node.track_kind.clone(),
+            srclang: content_node.srclang.clone(),
+            track_label: content_node.track_label.clone(),
+            default_track: content_node.default_track,
             media: content_node.media.clone(),
             poster: content_node.poster.clone(),
             resolved_poster: content_node.resolved_poster.clone(),
@@ -8725,6 +8750,10 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         imagesrcset: None,
                         resolved_imagesrcset: None,
                         imagesizes: None,
+                        track_kind: None,
+                        srclang: None,
+                        track_label: None,
+                        default_track: false,
                         async_script: element.attribute("async").is_some(),
                         defer_script: element.attribute("defer").is_some(),
                     });
@@ -8923,6 +8952,10 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         imagesrcset: None,
         resolved_imagesrcset: None,
         imagesizes: None,
+        track_kind: browser_track_kind(element),
+        srclang: browser_track_srclang(element),
+        track_label: browser_track_label(element),
+        default_track: browser_track_default(element),
         async_script: element.name == "script" && element.attribute("async").is_some(),
         defer_script: element.name == "script" && element.attribute("defer").is_some(),
     });
@@ -9158,6 +9191,10 @@ fn browser_link_resource(
             .map(|srcset| resolve_browser_srcset(srcset, base_href)),
         imagesrcset,
         imagesizes: element.attribute("imagesizes").map(ToOwned::to_owned),
+        track_kind: None,
+        srclang: None,
+        track_label: None,
+        default_track: false,
         async_script: false,
         defer_script: false,
     }
@@ -9222,6 +9259,13 @@ fn collect_browser_content_nodes_with_mode(
                         image_map_name: None,
                         image_map_shape: None,
                         image_map_coords: None,
+                        srcset: None,
+                        resolved_srcset: None,
+                        sizes: None,
+                        track_kind: None,
+                        srclang: None,
+                        track_label: None,
+                        default_track: false,
                         media: None,
                         poster: None,
                         resolved_poster: None,
@@ -9396,6 +9440,7 @@ fn browser_content_node_for_element(
 
     let href = element.attribute("href").map(ToOwned::to_owned);
     let src = browser_content_src(element);
+    let srcset = browser_content_srcset(element);
     let poster = browser_media_poster(element);
     let quote_cite = browser_quote_cite(element);
     let edit_cite = browser_edit_cite(element);
@@ -9442,6 +9487,15 @@ fn browser_content_node_for_element(
         image_map_name: browser_image_map_name(element),
         image_map_shape: browser_image_map_shape(element),
         image_map_coords: browser_image_map_coords(element),
+        resolved_srcset: srcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        srcset,
+        sizes: browser_content_sizes(element),
+        track_kind: browser_track_kind(element),
+        srclang: browser_track_srclang(element),
+        track_label: browser_track_label(element),
+        default_track: browser_track_default(element),
         media: element.attribute("media").map(ToOwned::to_owned),
         resolved_poster: poster
             .as_deref()
@@ -9576,6 +9630,9 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "area" => Some("image_map_area"),
         "img" => Some("image"),
         "map" => Some("image_map"),
+        "picture" => Some("picture"),
+        "source" => Some("media_source"),
+        "track" => Some("media_track"),
         "iframe" | "frame" => Some("frame"),
         "embed" => Some("embed"),
         "object" => Some("object"),
@@ -9659,6 +9716,8 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "meta"
             | "param"
             | "progress"
+            | "source"
+            | "track"
             | "textarea"
             | "wbr"
     )
@@ -9687,6 +9746,22 @@ fn browser_content_src(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_content_srcset(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "img" | "source") {
+        element.attribute("srcset").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_content_sizes(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "img" | "source") {
+        element.attribute("sizes").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
 fn browser_content_resource_kind(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "img" => Some("image".to_string()),
@@ -9694,6 +9769,7 @@ fn browser_content_resource_kind(element: &Element) -> Option<String> {
         "embed" => Some("embed".to_string()),
         "object" => Some("object".to_string()),
         "audio" | "video" => Some(element.name.clone()),
+        "source" | "track" => Some(element.name.clone()),
         "canvas" => Some("canvas".to_string()),
         _ => None,
     }
@@ -10414,6 +10490,40 @@ fn browser_image_map_coords(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_track_kind(element: &Element) -> Option<String> {
+    if element.name == "track" {
+        Some(
+            element
+                .attribute("kind")
+                .map(collapse_html_whitespace)
+                .filter(|kind| !kind.is_empty())
+                .unwrap_or_else(|| "subtitles".to_string()),
+        )
+    } else {
+        None
+    }
+}
+
+fn browser_track_srclang(element: &Element) -> Option<String> {
+    if element.name == "track" {
+        element.attribute("srclang").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_track_label(element: &Element) -> Option<String> {
+    if element.name == "track" {
+        element.attribute("label").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_track_default(element: &Element) -> bool {
+    element.name == "track" && element.attribute("default").is_some()
+}
+
 fn browser_editing_mode(element: &Element) -> Option<String> {
     let value = element.attribute("contenteditable")?;
     let normalized = collapse_html_whitespace(value);
@@ -10986,6 +11096,8 @@ fn browser_render_display(role: &str) -> &'static str {
         "text" => "inline-text",
         "inline" | "link" => "inline",
         "image_map" | "image_map_area" => "none",
+        "media_source" | "media_track" => "none",
+        "picture" => "inline",
         "canvas" | "control" | "embed" | "frame" | "image" | "media" | "meter" | "object"
         | "progress" => "inline-replaced",
         "line_break" => "line-break",
@@ -12712,6 +12824,78 @@ mod tests {
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         assert_eq!(render_tree.children[0].display, "inline-replaced");
         assert!(render_tree.children[0].controls);
+    }
+
+    #[test]
+    fn browser_media_source_track_metadata_tracks_fallbacks_and_captions() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\"><body>\
+             <picture>\
+               <source media=\"(min-width: 900px)\" type=image/avif srcset=\"poster-wide.avif 1x, poster-wide@2x.avif 2x\" sizes=\"80vw\">\
+               <img src=poster.jpg srcset=\"poster-small.jpg 480w, poster-large.jpg 960w\" sizes=\"100vw\" alt=Poster>\
+             </picture>\
+             <video controls>\
+               <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+               <source src=movie.mp4 type=video/mp4>\
+               <track kind=captions src=captions.vtt srclang=en label=English default>\
+               <track src=descriptions.vtt label=Descriptions>\
+             </video>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let source_resource = &summary.resources[1];
+        assert_eq!(source_resource.kind, "source");
+        assert_eq!(
+            source_resource.resolved_url.as_deref(),
+            Some("https://example.test/watch/movie.webm")
+        );
+        assert_eq!(source_resource.type_hint.as_deref(), Some("video/webm"));
+        assert_eq!(source_resource.media.as_deref(), Some("(min-width: 700px)"));
+        let captions = &summary.resources[3];
+        assert_eq!(captions.kind, "track");
+        assert_eq!(captions.track_kind.as_deref(), Some("captions"));
+        assert_eq!(captions.srclang.as_deref(), Some("en"));
+        assert_eq!(captions.track_label.as_deref(), Some("English"));
+        assert!(captions.default_track);
+        let descriptions = &summary.resources[4];
+        assert_eq!(descriptions.track_kind.as_deref(), Some("subtitles"));
+        assert_eq!(descriptions.track_label.as_deref(), Some("Descriptions"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let picture = &content_tree.children[0];
+        assert_eq!(picture.role, "picture");
+        let picture_source = &picture.children[0];
+        assert_eq!(picture_source.role, "media_source");
+        assert_eq!(
+            picture_source.resolved_srcset.as_deref(),
+            Some("https://example.test/watch/poster-wide.avif 1x, https://example.test/watch/poster-wide@2x.avif 2x")
+        );
+        assert_eq!(picture_source.sizes.as_deref(), Some("80vw"));
+        let picture_image = &picture.children[1];
+        assert_eq!(
+            picture_image.resolved_srcset.as_deref(),
+            Some("https://example.test/watch/poster-small.jpg 480w, https://example.test/watch/poster-large.jpg 960w")
+        );
+
+        let video = &content_tree.children[1];
+        assert_eq!(video.role, "media");
+        assert_eq!(video.children[0].role, "media_source");
+        assert_eq!(video.children[0].src.as_deref(), Some("movie.webm"));
+        assert_eq!(
+            video.children[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.webm")
+        );
+        assert_eq!(video.children[2].role, "media_track");
+        assert_eq!(video.children[2].track_kind.as_deref(), Some("captions"));
+        assert!(video.children[2].default_track);
+        assert_eq!(video.children[3].track_kind.as_deref(), Some("subtitles"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline");
+        assert_eq!(render_tree.children[0].children[0].display, "none");
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
+        assert_eq!(render_tree.children[1].children[2].display, "none");
     }
 
     #[test]

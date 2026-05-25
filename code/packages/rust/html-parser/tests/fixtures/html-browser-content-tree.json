@@ -715,6 +715,25 @@
       }
     },
     {
+      "id": "media-source-track-nodes",
+      "description": "Picture sources, media fallback sources, and tracks expose responsive selection and caption metadata.",
+      "input": "<base href=\"https://example.test/watch/index.html\"><body><picture><source media=\"(min-width: 900px)\" type=image/avif srcset=\"poster-wide.avif 1x, poster-wide@2x.avif 2x\" sizes=\"80vw\"><img src=poster.jpg srcset=\"poster-small.jpg 480w, poster-large.jpg 960w\" sizes=\"100vw\" alt=Poster></picture><video controls><source src=movie.webm type=video/webm media=\"(min-width: 700px)\"><source src=movie.mp4 type=video/mp4><track kind=captions src=captions.vtt srclang=en label=English default><track src=descriptions.vtt label=Descriptions></video>",
+      "expected": {
+        "children": [
+          { "role": "picture", "name": "picture", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [
+            { "role": "media_source", "name": "source", "text": null, "href": null, "src": null, "alt": null, "resource_kind": "source", "type_hint": "image/avif", "media": "(min-width: 900px)", "srcset": "poster-wide.avif 1x, poster-wide@2x.avif 2x", "resolved_srcset": "https://example.test/watch/poster-wide.avif 1x, https://example.test/watch/poster-wide@2x.avif 2x", "sizes": "80vw", "control_type": null, "children": [] },
+            { "role": "image", "name": "img", "text": null, "href": null, "src": "poster.jpg", "resolved_src": "https://example.test/watch/poster.jpg", "alt": "Poster", "resource_kind": "image", "srcset": "poster-small.jpg 480w, poster-large.jpg 960w", "resolved_srcset": "https://example.test/watch/poster-small.jpg 480w, https://example.test/watch/poster-large.jpg 960w", "sizes": "100vw", "control_type": null, "children": [] }
+          ] },
+          { "role": "media", "name": "video", "text": null, "href": null, "src": null, "alt": null, "resource_kind": "video", "controls": true, "control_type": null, "children": [
+            { "role": "media_source", "name": "source", "text": null, "href": null, "src": "movie.webm", "resolved_src": "https://example.test/watch/movie.webm", "alt": null, "resource_kind": "source", "type_hint": "video/webm", "media": "(min-width: 700px)", "control_type": null, "children": [] },
+            { "role": "media_source", "name": "source", "text": null, "href": null, "src": "movie.mp4", "resolved_src": "https://example.test/watch/movie.mp4", "alt": null, "resource_kind": "source", "type_hint": "video/mp4", "control_type": null, "children": [] },
+            { "role": "media_track", "name": "track", "text": null, "href": null, "src": "captions.vtt", "resolved_src": "https://example.test/watch/captions.vtt", "alt": null, "resource_kind": "track", "track_kind": "captions", "srclang": "en", "track_label": "English", "default_track": true, "control_type": null, "children": [] },
+            { "role": "media_track", "name": "track", "text": null, "href": null, "src": "descriptions.vtt", "resolved_src": "https://example.test/watch/descriptions.vtt", "alt": null, "resource_kind": "track", "track_kind": "subtitles", "track_label": "Descriptions", "control_type": null, "children": [] }
+          ] }
+        ]
+      }
+    },
+    {
       "id": "inline-semantic-annotations",
       "description": "Inline semantic annotations expose machine-readable values, dates, and edit provenance metadata.",
       "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Version <data id=version value=\"2.1\">two point one</data> shipped <time id=date datetime=\"2026-05-25\">today</time>. <ins id=add cite=changes.html datetime=\"2026-05-25T06:00:00Z\">Added</ins> <del id=remove cite=\"#old\" datetime=\"2026-05-24\">Removed</del> <mark id=highlight>Important</mark></p>",

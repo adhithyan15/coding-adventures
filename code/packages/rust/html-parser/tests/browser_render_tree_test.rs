@@ -78,6 +78,20 @@ struct ExpectedRenderNode {
     #[serde(default)]
     image_map_coords: Option<String>,
     #[serde(default)]
+    srcset: Option<String>,
+    #[serde(default)]
+    resolved_srcset: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    track_kind: Option<String>,
+    #[serde(default)]
+    srclang: Option<String>,
+    #[serde(default)]
+    track_label: Option<String>,
+    #[serde(default)]
+    default_track: bool,
+    #[serde(default)]
     media: Option<String>,
     #[serde(default)]
     poster: Option<String>,
@@ -369,6 +383,13 @@ impl ExpectedRenderNode {
             image_map_name: self.image_map_name,
             image_map_shape: self.image_map_shape,
             image_map_coords: self.image_map_coords,
+            srcset: self.srcset,
+            resolved_srcset: self.resolved_srcset,
+            sizes: self.sizes,
+            track_kind: self.track_kind,
+            srclang: self.srclang,
+            track_label: self.track_label,
+            default_track: self.default_track,
             media: self.media,
             poster: self.poster,
             resolved_poster: self.resolved_poster,
