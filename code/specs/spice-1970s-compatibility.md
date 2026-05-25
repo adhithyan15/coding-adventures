@@ -77,6 +77,18 @@ Acceptance:
 - Cross-language AC tests for a small-signal common-source JFET stage.
 - Parser tests for model cards, device cards, and subcircuit terminal remapping.
 
+Status:
+
+- JFET element data structures, `.model <name> NJF(...)` /
+  `.model <name> PJF(...)` cards, and `J` device cards are implemented across
+  Python, TypeScript, and Rust.
+- JFET nonlinear DC operating-point stamping and small-signal AC stamping are
+  implemented across Python, TypeScript, and Rust.
+- JFET transient participation through the shared nonlinear transient solve path
+  is covered across Python, TypeScript, and Rust with source-follower output
+  capacitor fixtures.
+- Phase 1 is complete for the current compatibility target.
+
 ### Phase 2 - Mutual Inductors (`K` Cards)
 
 Add classic coupled inductors.

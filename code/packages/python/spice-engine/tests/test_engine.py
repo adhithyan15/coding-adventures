@@ -1354,6 +1354,31 @@ def test_jfet_common_source_ac_gain_from_bias_point() -> None:
     assert out.imag == pytest.approx(0.0, abs=1.0e-12)
 
 
+def test_jfet_transient_source_follower_charges_output_capacitor() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
+    c.add(
+        VoltageSource(
+            "Vg",
+            "gate",
+            "0",
+            voltage=0.0,
+            waveform=PwlWaveform([(0.0, 0.0), (1.0e-6, 1.0), (2.0e-6, 1.0)]),
+        )
+    )
+    c.add(JFET("J1", "vdd", "gate", "out", beta=1.0e-3, vto=-2.0))
+    c.add(Resistor("Rs", "out", "0", 1_000.0))
+    c.add(Capacitor("Cout", "out", "0", 1.0e-9))
+
+    result = transient(c, t_step=1.0e-7, t_stop=2.0e-6)
+
+    initial_out = result.points[0].node_voltages["out"]
+    final_out = result.points[-1].node_voltages["out"]
+    assert final_out > initial_out + 1.0
+    assert final_out > 1.5
+    assert final_out < 2.0
+
+
 def test_bjt_npn_off():
     """NPN BJT with zero base voltage — device is off (no collector current).
 
