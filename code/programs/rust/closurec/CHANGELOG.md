@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.9.0] - 2026-05-25
+
+### Added — CLOC11.18: `--emit_use_strict` prelude
+
+First slice of Track 3 (language level). When `--emit_use_strict` is passed, closurec prepends `"use strict";` to the compiled output. Matches CC's behavior.
+
+- **Pipeline ordering.** The directive is prepended to `combined` *before* both `--output_wrapper` template substitution and `--isolation_mode IIFE` wrapping. Reason: a `"use strict"` directive only takes effect when it's the *first* directive of the function body it governs. Both wrapping layers build syntactic envelopes around the body, so the directive has to sit just inside the innermost wrapper — which means we attach it to `combined` and let the outer wrappers wrap *around* it. Matches CC.
+- **No `--output_wrapper_file` interaction.** Same ordering — the directive is part of the body that gets substituted into `%output%`.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Per-input `transform_source`:
+   - 1a. `--compilation_level` (WHITESPACE_ONLY active)
+   - 1b. `--define / -D` substitution (CLOC11.19)
+2. Concatenate transformed inputs (`combined`)
+3. **`--emit_use_strict` prepend (CLOC11.18, new)**
+4. `--output_wrapper` template substitution (CLOC11.30)
+5. `--isolation_mode IIFE` wrap (CLOC11.31)
+6. Write to `--js_output_file` (auto-create parents) or stdout
+
+### Tests
+
+4 new unit tests in `run::tests`:
+- `emit_use_strict_prepends_directive` — basic prelude at top of output.
+- `emit_use_strict_default_does_not_prepend` — flag off → no directive.
+- `emit_use_strict_lands_inside_iife` — pipeline order pinned: directive sits between the IIFE opener and the body.
+- `emit_use_strict_lands_inside_output_wrapper` — directive sits inside the `%output%` slot of a user template.
+
+Plus diff fixture `tests/diff/emit-use-strict/` + new integration test `tests/diff_emit_use_strict.rs`.
+
+117 unit + 8 integration tests passing. Clippy clean.
+
+### Behavior changes (user-visible)
+
+- `closurec --emit_use_strict --js app.js` now actually emits the directive. Previously parsed but ignored.
+
+### Version
+
+Bumps closurec 0.8.0 → 0.9.0 (Cargo.toml + cli.spec.json kept in sync).
+
+[CLOC11]: ../../specs/CLOC11-drop-in-closure-compat.md
+
 ## [0.8.0] - 2026-05-25
 
 ### Added — CLOC11.31: `--isolation_mode IIFE` wrapping
