@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.20.0] - 2026-05-24
+
+### Added (Phase 6p companion — compound-assignment operator fusion)
+
+New post-pass `fuse_compound_assigns` folds adjacent `Op` + `Equals` token pairs into a single `Name`-typed token whose value is the fused operator:
+
+| Source | Lexed before fusion | After fusion |
+|---|---|---|
+| `x += 1` | `Name(x)`, `Plus`, `Equals`, `Number(1)` | `Name(x)`, `Name("+=")`, `Number(1)` |
+| `x -= 1` | `Name(x)`, `Minus`, `Equals`, `Number(1)` | `Name(x)`, `Name("-=")`, `Number(1)` |
+| `x *= 1` | `Name(x)`, `Star`, `Equals`, `Number(1)` | `Name(x)`, `Name("*=")`, `Number(1)` |
+| `x /= 1` | `Name(x)`, `Slash`, `Equals`, `Number(1)` | `Name(x)`, `Name("/=")`, `Number(1)` |
+| `x ||= 1` | `Name(x)`, `Name("||")`, `Equals`, `Number(1)` | `Name(x)`, `Name("||=")`, `Number(1)` |
+| `x &&= 1` | `Name(x)`, `Name("&&")`, `Equals`, `Number(1)` | `Name(x)`, `Name("&&=")`, `Number(1)` |
+
+The parser's `assignment` rule matches these by literal value (`"+="`, etc.) — same convention as `"=>"`, `"<="`, `"&&"`.
+
+**Adjacency gate**: the fusion requires no whitespace between the op and `=`.  `x + = 1` (with a space) stays two tokens — that's a syntax error in real Ruby but it's not a compound assignment.
+
+**Era**: pre-1.0 Ruby — every era ≥ 1.8 emits the same fused shape, so no gating.
+
+### `/=` regex disambiguation guard
+
+`x /= 1` previously lexed as `Name(x)` followed by an unterminated regex (`/...`) because the `/` after a non-local name triggers the regex-vs-divide oracle.  New `suppress_regex_open` flag set by `push` for exactly one `step_char` call when the upcoming `/` is immediately followed by `=` — forces the state machine to emit `/` as a plain Op so `fuse_compound_assigns` can fold it.
+
+### Tests (+3 new, total 159)
+- `compound_assign_arithmetic_ops_fuse_into_single_token` — `+=`, `-=`, `*=`, `/=`.
+- `compound_assign_logical_ops_fuse_into_single_token` — `||=`, `&&=`.
+- `compound_assign_does_not_fuse_with_whitespace_gap` — `x + = 1` stays two tokens.
+
 ## [0.19.0] - 2026-05-24
 
 ### Added (Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals)

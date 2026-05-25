@@ -1462,4 +1462,101 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6p — compound assignment lowering
+    // -----------------------------------------------------------------
+    //
+    // SIR encoding (for each `x op= rhs`):
+    //   Stmt::Assign {
+    //     name: "x",
+    //     scope: Local,
+    //     value: Expr::BuiltinCall {
+    //       name: "<op>",   // "+", "-", "*", "/", "or", "and"
+    //       args: [VarRef("x"), <rhs>],
+    //     },
+    //   }
+    //
+    // Compound forms ALWAYS produce Assign (never LetBinding) even on
+    // first sighting — the read of `x` before the write means the
+    // binding semantically pre-exists.
+
+    #[test]
+    fn plus_equals_lowers_to_assign_with_plus_builtin() {
+        // `x = 1\nx += 2` — first `x = 1` is LetBinding, second `x += 2`
+        // is Assign with value = `+(x, 2)`.
+        let m = lower("x = 1\nx += 2\n");
+        let b = main_body(&m);
+        assert_eq!(b.stmts.len(), 2);
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "x"));
+        match &b.stmts[1] {
+            Stmt::Assign { name, value, .. } => {
+                assert_eq!(name, "x");
+                match value {
+                    Expr::BuiltinCall { name: op, args, .. } => {
+                        assert_eq!(op, "+");
+                        assert_eq!(args.len(), 2);
+                        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                        assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+                    }
+                    other => panic!("expected BuiltinCall(+, …), got {:?}", other),
+                }
+            }
+            other => panic!("expected Assign, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn all_arithmetic_compound_assigns_lower_correctly() {
+        // Each of +=, -=, *=, /= maps to the corresponding binary
+        // op builtin.
+        for (op_src, op_builtin) in [("+=", "+"), ("-=", "-"), ("*=", "*"), ("/=", "/")] {
+            let src = format!("x = 1\nx {op_src} 2\n");
+            let m = lower(&src);
+            let b = main_body(&m);
+            match &b.stmts[1] {
+                Stmt::Assign { value, .. } => match value {
+                    Expr::BuiltinCall { name, .. } => {
+                        assert_eq!(name, op_builtin, "wrong builtin for {op_src}");
+                    }
+                    other => panic!("expected BuiltinCall for {op_src}, got {:?}", other),
+                },
+                other => panic!("expected Assign for {op_src}, got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn logical_compound_assigns_lower_to_or_and_builtins() {
+        // ||= → "or"; &&= → "and".  Same binary-op encoding as the
+        // arithmetic forms.
+        for (op_src, op_builtin) in [("||=", "or"), ("&&=", "and")] {
+            let src = format!("x = 1\nx {op_src} 2\n");
+            let m = lower(&src);
+            let b = main_body(&m);
+            match &b.stmts[1] {
+                Stmt::Assign { value, .. } => match value {
+                    Expr::BuiltinCall { name, .. } => {
+                        assert_eq!(name, op_builtin, "wrong builtin for {op_src}");
+                    }
+                    other => panic!("expected BuiltinCall for {op_src}, got {:?}", other),
+                },
+                other => panic!("expected Assign for {op_src}, got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn compound_assign_module_passes_sir_validator() {
+        // End-to-end smoke check: validator accepts the compound-assign
+        // lowering (requires `mutable-bindings` feature, which the
+        // lowerer marks automatically).
+        let m = lower("x = 1\nx += 2\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected compound-assign output: {:?}",
+            result
+        );
+    }
 }

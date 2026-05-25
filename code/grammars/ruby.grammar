@@ -50,7 +50,26 @@ else_clause  = "else" { !"end" statement } ;
 unless_statement = "unless" expression { !"else" !"end" statement } [ else_clause ] "end" ;
 while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
-assignment   = NAME EQUALS expression ;
+# Phase 6p — compound assignment (`x += 1`, `x ||= 1`, etc.).
+#
+# The lexer's `fuse_compound_assigns` post-pass folds `Op =` adjacent
+# token pairs into a single `Name`-typed token whose value is the
+# fused operator (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  The grammar
+# matches by literal value — same convention as `"=>"`, `"<="`,
+# `"&&"`, etc.
+#
+# `EQUALS` (token-type match) handles the plain `=` case; the literal
+# alternatives below handle each compound form.  Lowerer dispatches
+# on the operator token to decide between LetBinding/Assign of the
+# RHS (`=`) versus assign-of-binary-op (the compound forms).
+#
+# Note: `==`, `!=`, `<=`, `>=`, `===` are intentionally excluded —
+# those are comparison operators, not assignments, and are handled
+# at the `comparison` layer.  The fusion pass deliberately runs only
+# on Op tokens (Plus/Minus/Star/Slash) and the two Name-typed
+# logicals (`||`/`&&`) to avoid colliding with comparison ops which
+# the lexer fuses directly.
+assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression ;
 # Phase 6l — method receiver chains.  `foo.bar`, `foo.bar.baz`,
 # `foo.bar(args)`, `foo(1).bar`, `foo.bar(args).baz(more)`, etc.
 #

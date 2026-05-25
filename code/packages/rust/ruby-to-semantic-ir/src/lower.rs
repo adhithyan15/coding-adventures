@@ -833,7 +833,7 @@ impl Lowerer {
     // -------------------------------------------------------------------
 
     fn lower_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
-        // Shape: NAME EQUALS expression
+        // Shape (post-6p): NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression
         let (name, name_span) = self.expect_first_name_token(node)?;
         let expr_node = self.find_node_child(node, "expression").ok_or_else(|| {
             RubyLowerError {
@@ -842,14 +842,68 @@ impl Lowerer {
                 column: node.start_column.unwrap_or(0),
             }
         })?;
-        let value = self.lower_expression(expr_node)?;
+        let rhs = self.lower_expression(expr_node)?;
+
+        // Phase 6p — detect compound-assign operator.  The lexer
+        // pre-fuses `+=`, `-=`, `*=`, `/=`, `||=`, `&&=` into single
+        // Name-typed tokens; here we read the operator token (skipping
+        // the leading NAME) to dispatch.
+        let op_token = node.children.iter().skip(1).find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => {
+                let v = t.value.as_str();
+                if matches!(v, "+=" | "-=" | "*=" | "/=" | "||=" | "&&=") {
+                    Some(v.to_string())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
 
         let span = self.span_of(node);
-        if self.declared_locals.contains(&name) {
-            // Phase 6b: `Stmt::Assign` re-binds an existing local —
-            // the SIR validator requires the manifest to declare
-            // `mutable-bindings` whenever this node appears.
+        // Build the effective RHS.  For plain `=`, it's just `rhs`.
+        // For compound forms, wrap it as `BuiltinCall(op, [VarRef(x), rhs])`
+        // where `op` is the underlying binary operator (`+` for `+=`,
+        // `or` for `||=`, etc.).  Lowering identically to
+        // `x = x op rhs` keeps downstream emitters simple — no new
+        // compound-assign-aware code paths required.
+        let value = if let Some(op) = op_token.as_deref() {
+            let (builtin_name, effects) = match op {
+                "+=" => ("+", EffectSet::PURE),
+                "-=" => ("-", EffectSet::PURE),
+                "*=" => ("*", EffectSet::PURE),
+                "/=" => ("/", EffectSet::PURE),
+                "||=" => ("or", EffectSet::PURE),
+                "&&=" => ("and", EffectSet::PURE),
+                _ => unreachable!("op_token matched only the six compound forms above"),
+            };
+            let lhs_ref = Expr::VarRef {
+                name: name.clone(),
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            Expr::BuiltinCall {
+                name: builtin_name.to_string(),
+                args: vec![lhs_ref, rhs],
+                effects,
+                span: span.clone(),
+            }
+        } else {
+            rhs
+        };
+
+        // A compound assignment ALWAYS reads then re-binds, so it
+        // must emit `Stmt::Assign` (never `LetBinding`).  Plain `=`
+        // keeps the original "first sighting → LetBinding, subsequent
+        // → Assign" behaviour.
+        let is_compound = op_token.is_some();
+        if is_compound || self.declared_locals.contains(&name) {
+            // Re-bind path: mutable-bindings feature required.
             self.features_used.insert(Feature::MutableBindings);
+            // Compound `x ||= 1` without a prior `x = …` is still
+            // valid Ruby (treats `x` as nil), but we record it as a
+            // local so any subsequent `x = 1` doesn't re-binding-error.
+            self.declared_locals.insert(name.clone());
             Ok(Stmt::Assign {
                 name,
                 scope: Scope::Local,

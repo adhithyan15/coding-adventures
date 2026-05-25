@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.17.0] - 2026-05-24
+
+### Added (Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`)
+
+Grammar change:
+
+```
+assignment = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression ;
+```
+
+The lexer's companion `fuse_compound_assigns` post-pass folds adjacent `Op` + `Equals` token pairs into single Name-typed tokens carrying the fused operator value (`+=`, etc.), so the grammar matches by literal value — same convention as `"=>"`, `"<="`, `"&&"`.
+
+Excludes `==`, `!=`, `<=`, `>=`, `===` — those are comparison operators handled at the `comparison` layer.  The fusion pass deliberately only runs on Op tokens (`Plus`/`Minus`/`Star`/`Slash`) and the two Name-typed logicals (`||`/`&&`) to avoid colliding with comparison ops which the lexer fuses directly.
+
+### Tests (+4 new, total 78)
+- `test_parse_plus_equals_assignment` — `x += 1` carries `+=` token.
+- `test_parse_all_arithmetic_compound_operators` — `+=`, `-=`, `*=`, `/=` all parse.
+- `test_parse_logical_compound_operators` — `||=`, `&&=` parse.
+- `test_parse_compound_assign_with_complex_rhs` — `x += 1 + 2` parses with one `+=` and one `+`.
+
 ## [0.16.0] - 2026-05-24
 
 ### Added (Phase 6o — ternary `cond ? a : b`)

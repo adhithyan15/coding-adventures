@@ -2,6 +2,43 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.17.0] - 2026-05-24
+
+### Added (Phase 6p — compound assignment lowering)
+
+SIR encoding (for each `x op= rhs`):
+```
+Stmt::Assign {
+  name: "x",
+  scope: Local,
+  value: Expr::BuiltinCall {
+    name: "<op>",   // "+", "-", "*", "/", "or", "and"
+    args: [VarRef("x"), <rhs>],
+  },
+}
+```
+
+| Source | Lowered as |
+|---|---|
+| `x += y` | `x = x + y` |
+| `x -= y` | `x = x - y` |
+| `x *= y` | `x = x * y` |
+| `x /= y` | `x = x / y` |
+| `x \|\|= y` | `x = x or y` |
+| `x &&= y` | `x = x and y` |
+
+Lowering identically to `x = x op y` means downstream emitters (semantic-ir-to-python, -rust, -typescript, -go) need no new code path — the existing assignment + binary-op lowering handles both forms.
+
+### Lowerer changes
+- `lower_assignment` now reads the operator token (skipping the leading NAME) to dispatch on `EQUALS` vs the six compound forms.
+- Compound forms always emit `Stmt::Assign` (never `LetBinding`) even on first sighting — the read of `x` before the write means the binding semantically pre-exists.  Sets `Feature::MutableBindings` automatically.
+
+### Tests (+4 new, total 81)
+- `plus_equals_lowers_to_assign_with_plus_builtin`
+- `all_arithmetic_compound_assigns_lower_correctly` — `+=`, `-=`, `*=`, `/=`.
+- `logical_compound_assigns_lower_to_or_and_builtins` — `||=` → `"or"`, `&&=` → `"and"`.
+- `compound_assign_module_passes_sir_validator` — end-to-end validator smoke test.
+
 ## [0.16.0] - 2026-05-24
 
 ### Added (Phase 6o — ternary lowering)
