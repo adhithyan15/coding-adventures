@@ -451,6 +451,20 @@ impl RubyLexer {
         // no era gating.  Runs AFTER float/radix fusions (which fold
         // numeric forms) so `x +=` doesn't fight with `1e+10` etc.
         self.fuse_compound_assigns();
+        // Phase 6q companion — re-tag the trailing-modifier keywords
+        // (`if`, `unless`, `while`, `until`) to `if_modifier`,
+        // `unless_modifier`, `while_modifier`, `until_modifier` when
+        // they appear after an expression-ending token on the same
+        // line.  The grammar's `modifier_statement` rule keys off the
+        // re-tagged values; the leading-keyword statement rules
+        // (`if_statement`, etc.) still key off the bare `if`/`while`
+        // values.  This lexer-side disambiguation sidesteps the
+        // grammar's newline-insensitive default mode (modifier syntax
+        // is a same-line construct in Ruby).  Pre-1.0 Ruby — no era
+        // gating.  Runs LAST among the fusions so it sees the final
+        // fused-token shape (notably `end` of a same-line block
+        // already in place if relevant).
+        self.tag_modifier_keywords();
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
         }
@@ -816,6 +830,91 @@ impl RubyLexer {
                 let _ = is_arith;
                 i += 1;
             }
+        }
+    }
+
+    /// Phase 6q companion — re-tag trailing-modifier keywords.
+    ///
+    /// Ruby's modifier conditionals and loops (`x if y`, `x unless y`,
+    /// `x while y`, `x until y`) are a same-line surface syntax that's
+    /// semantically distinct from the leading-keyword statement forms
+    /// (`if y\n  x\nend`).  The lexer needs to disambiguate the two
+    /// surface forms because the grammar runs in newline-insensitive
+    /// mode — a naive `modifier_statement = expression (...) expression`
+    /// rule would greedily eat newlines and mis-parse two-line
+    /// programs like:
+    ///
+    /// ```text
+    /// x = 1
+    /// if x ...
+    /// ```
+    ///
+    /// as `(x = 1) if x` rather than two statements.
+    ///
+    /// Trigger:
+    /// - Token is `Keyword("if"|"unless"|"while"|"until")`.
+    /// - The preceding non-`Newline` token exists, AND
+    /// - That preceding token is on the *same* `line`, AND
+    /// - That preceding token is an expression-ending token (numbers,
+    ///   strings, names, closers `)`/`]`/`}`, and the
+    ///   expression-ending keywords `nil`/`true`/`false`/`self`/`end`).
+    ///
+    /// Effect: the token's `value` is rewritten to
+    /// `if_modifier` / `unless_modifier` / `while_modifier` /
+    /// `until_modifier`.  Its `type_` stays `Keyword`.
+    ///
+    /// The grammar literal matches by value, so:
+    ///   - `if_statement = "if" expression { ... } "end" ;` continues
+    ///     to match the BARE `if` token at statement-start position.
+    ///   - `modifier_statement = ... ( "if_modifier" | ... ) expression ;`
+    ///     matches the RE-TAGGED `if_modifier` token after an
+    ///     expression on the same line.
+    ///
+    /// Era: pre-1.0 Ruby (modifier `if` predates 1.0).  No gating.
+    fn tag_modifier_keywords(&mut self) {
+        let n = self.tokens.len();
+        for i in 0..n {
+            // Cheap value match first.
+            let is_target = matches!(
+                self.tokens[i].value.as_str(),
+                "if" | "unless" | "while" | "until"
+            ) && self.tokens[i].type_ == TokenType::Keyword;
+            if !is_target {
+                continue;
+            }
+            // Find the preceding non-Newline token (if any).
+            let prev_idx = (0..i).rev().find(|&k| {
+                self.tokens[k].type_ != TokenType::Newline
+            });
+            let Some(j) = prev_idx else { continue; };
+            // Same line?  Different line ⇒ statement-start position,
+            // not a modifier.
+            if self.tokens[j].line != self.tokens[i].line {
+                continue;
+            }
+            // Is the preceding token expression-ending?  This is what
+            // gates `x ; if y ... end` (semicolon is NOT
+            // expression-ending) versus `puts 1 if y` (the `1` IS
+            // expression-ending).
+            let prev_ends_expr = match self.tokens[j].type_ {
+                TokenType::Number
+                | TokenType::String
+                | TokenType::Name
+                | TokenType::RParen
+                | TokenType::RBracket
+                | TokenType::RBrace => true,
+                TokenType::Keyword => matches!(
+                    self.tokens[j].value.as_str(),
+                    "nil" | "true" | "false" | "self" | "end"
+                ),
+                _ => false,
+            };
+            if !prev_ends_expr {
+                continue;
+            }
+            // Re-tag.  Mutating `value` only — `type_` stays Keyword.
+            let new_value = format!("{}_modifier", self.tokens[i].value);
+            self.tokens[i].value = new_value;
         }
     }
 
@@ -4045,6 +4144,102 @@ mod tests {
             "expected unterminated_percent_r diagnostic, got {:?}",
             diags
         );
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 6q companion — re-tag trailing-modifier keywords
+    // -----------------------------------------------------------------
+    //
+    // `tag_modifier_keywords` rewrites `if`/`unless`/`while`/`until`
+    // Keyword tokens to `if_modifier`/`unless_modifier`/`while_modifier`/
+    // `until_modifier` when they follow an expression-ending token on
+    // the same line.  The leading-keyword forms (`if y ... end`) are
+    // never re-tagged — at statement-start position the preceding
+    // non-Newline token is either absent or not expression-ending.
+    //
+    // Pre-1.0 Ruby — modifier conditionals predate the era split, so
+    // all eras emit the same shape (covered by the cross-era test).
+
+    fn has_token(toks: &[Token], type_: TokenType, value: &str) -> bool {
+        toks.iter().any(|t| t.type_ == type_ && t.value == value)
+    }
+
+    #[test]
+    fn modifier_if_after_method_call_no_paren_is_retagged() {
+        // `puts "hi" if cond` — the `if` follows a String token on the
+        // same line, so it's re-tagged.
+        let toks = tokenize_ruby_for_version("puts \"hi\" if cond", "1.8").unwrap();
+        assert!(
+            has_token(&toks, TokenType::Keyword, "if_modifier"),
+            "expected `if_modifier` token, got {toks:?}"
+        );
+        assert!(
+            !has_token(&toks, TokenType::Keyword, "if"),
+            "bare `if` token should be gone, got {toks:?}"
+        );
+    }
+
+    #[test]
+    fn modifier_unless_while_until_all_retagged() {
+        // Smoke-test all four modifier forms on the same shape.
+        for (src, expected) in [
+            ("x = 1 if y",     "if_modifier"),
+            ("x = 1 unless y", "unless_modifier"),
+            ("x = 1 while y",  "while_modifier"),
+            ("x = 1 until y",  "until_modifier"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "1.8").unwrap();
+            assert!(
+                has_token(&toks, TokenType::Keyword, expected),
+                "expected `{expected}` in {src:?}, got {toks:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn leading_if_at_statement_start_is_not_retagged() {
+        // `if y\n  x = 1\nend` — the `if` is at the start of the file,
+        // no preceding token, so NOT re-tagged.  The trailing `end`
+        // is also untouched (no modifier after it).
+        let toks = tokenize_ruby_for_version("if y\n  x = 1\nend", "1.8").unwrap();
+        assert!(
+            has_token(&toks, TokenType::Keyword, "if"),
+            "bare `if` should survive at line start, got {toks:?}"
+        );
+        assert!(
+            !has_token(&toks, TokenType::Keyword, "if_modifier"),
+            "leading `if` must NOT be re-tagged, got {toks:?}"
+        );
+    }
+
+    #[test]
+    fn newline_between_expr_and_if_prevents_retag() {
+        // `x = 1\nif y` — two statements.  Even though `1` is an
+        // expression-ending token, the newline shifts `if` to a
+        // different line, so the same-line guard prevents re-tagging.
+        let toks = tokenize_ruby_for_version("x = 1\nif y\nend", "1.8").unwrap();
+        assert!(
+            has_token(&toks, TokenType::Keyword, "if"),
+            "expected bare `if` across newline, got {toks:?}"
+        );
+        assert!(
+            !has_token(&toks, TokenType::Keyword, "if_modifier"),
+            "newline must block re-tag, got {toks:?}"
+        );
+    }
+
+    #[test]
+    fn modifier_retag_uniform_across_all_eras() {
+        // Trailing modifiers predate the era split — every era ≥ 1.8
+        // must emit the same `*_modifier` token shape.
+        let src = "x = 1 if y";
+        for era in ["1.8", "1.9.1", "2.0", "2.3", "2.7", "3.0"] {
+            let toks = tokenize_ruby_for_version(src, era).unwrap();
+            assert!(
+                has_token(&toks, TokenType::Keyword, "if_modifier"),
+                "expected `if_modifier` in era {era}, got {toks:?}"
+            );
+        }
     }
 
     #[test]

@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.22.0] - 2026-05-24
+
+### Added (Phase 6q companion — re-tag trailing-modifier keywords)
+
+New post-pass `tag_modifier_keywords` rewrites `if`/`unless`/`while`/`until` Keyword tokens to `if_modifier`/`unless_modifier`/`while_modifier`/`until_modifier` when they appear after an expression-ending token on the same line.  This is the lexer-side disambiguation that lets the grammar distinguish trailing-modifier syntax (`x if y`) from leading-keyword statement forms (`if y\n  x\nend`) without making newlines globally significant.
+
+Re-tag trigger:
+
+- Token value is `if`, `unless`, `while`, or `until` (Keyword type).
+- A preceding non-Newline token exists on the same `line`.
+- That preceding token's type is one of: `Number`, `String`, `Name`, `RParen`, `RBracket`, `RBrace`, or `Keyword` with value in `{nil, true, false, self, end}`.
+
+Effect: only the token's `value` is mutated (to `<kw>_modifier`); the `type_` stays `Keyword`.  Leading-position keywords (at file start, after a newline, after `;`/`,`/`(`/etc.) are untouched and continue to drive the `if_statement` / `while_statement` / etc. grammar rules.
+
+Era: pre-1.0 Ruby (modifier conditionals predate 1.0).  No era gating.
+
+### Tests
+
+- `coding-adventures-ruby-lexer`: 164 → **169** (+5):
+  - `modifier_if_after_method_call_no_paren_is_retagged` — `puts "hi" if cond` produces `if_modifier`.
+  - `modifier_unless_while_until_all_retagged` — all four forms re-tag uniformly.
+  - `leading_if_at_statement_start_is_not_retagged` — `if y ... end` survives bare.
+  - `newline_between_expr_and_if_prevents_retag` — `x = 1\nif y...` keeps bare `if`.
+  - `modifier_retag_uniform_across_all_eras` — same shape from 1.8 through 3.0.
+
 ## [0.21.0] - 2026-05-24
 
 ### Added (Phase 4o — heredoc opener variants `<<-TAG` and `<<~TAG`)

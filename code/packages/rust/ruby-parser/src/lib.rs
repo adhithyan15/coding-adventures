@@ -1247,6 +1247,127 @@ mod tests {
         assert!(tree_has_token_value(arr, ":"));
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 6q — modifier conditionals/loops `x if y`, `x unless y`,
+    // `x while y`, `x until y`.
+    //
+    // The grammar rule is:
+    //   modifier_statement = ( assignment | method_call_no_paren
+    //                        | method_call | expression_stmt )
+    //                        ( "if_modifier" | ... )
+    //                        expression ;
+    //
+    // The trailing keyword's value is `if_modifier`/etc. (not bare
+    // `if`/etc.) because ruby-lexer's `tag_modifier_keywords` post-pass
+    // rewrites `if`/`unless`/`while`/`until` tokens that follow an
+    // expression-ending token on the same line.  Tests below assert the
+    // rewrite happened by looking for the `*_modifier` value in the AST.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_if_modifier_simple() {
+        // `puts "hi" if cond` — paren-less method call + trailing if.
+        let ast = parse_ruby("puts \"hi\" if cond");
+        let m = find_descendant(&ast, "modifier_statement")
+            .expect("expected modifier_statement node");
+        assert!(
+            tree_has_token_value(m, "if_modifier"),
+            "expected `if_modifier` re-tagged keyword"
+        );
+        // The LHS should be a `method_call_no_paren` child.
+        assert!(
+            find_descendant(m, "method_call_no_paren").is_some(),
+            "expected method_call_no_paren as LHS"
+        );
+    }
+
+    #[test]
+    fn test_parse_unless_modifier_with_assignment_lhs() {
+        // `x = 1 unless cond` — the LHS is an assignment.
+        let ast = parse_ruby("x = 1 unless cond");
+        let m = find_descendant(&ast, "modifier_statement")
+            .expect("expected modifier_statement node");
+        assert!(
+            tree_has_token_value(m, "unless_modifier"),
+            "expected `unless_modifier` re-tagged keyword"
+        );
+        assert!(
+            find_descendant(m, "assignment").is_some(),
+            "expected assignment as LHS"
+        );
+    }
+
+    #[test]
+    fn test_parse_while_modifier() {
+        // `puts "tick" while cond`.
+        let ast = parse_ruby("puts \"tick\" while cond");
+        let m = find_descendant(&ast, "modifier_statement")
+            .expect("expected modifier_statement node");
+        assert!(
+            tree_has_token_value(m, "while_modifier"),
+            "expected `while_modifier` re-tagged keyword"
+        );
+    }
+
+    #[test]
+    fn test_parse_until_modifier_with_assignment_lhs() {
+        // `x = 1 until cond` — until modifier on an assignment.
+        let ast = parse_ruby("x = 1 until cond");
+        let m = find_descendant(&ast, "modifier_statement")
+            .expect("expected modifier_statement node");
+        assert!(
+            tree_has_token_value(m, "until_modifier"),
+            "expected `until_modifier` re-tagged keyword"
+        );
+    }
+
+    #[test]
+    fn test_parse_leading_if_not_tagged_as_modifier() {
+        // Regression: `if y\n  x\nend` is a leading-keyword
+        // if_statement, NOT a modifier_statement.  The lexer's re-tag
+        // only fires when the modifier keyword follows an
+        // expression-ending token on the same line — at statement
+        // start (after a newline) it's left alone.
+        let ast = parse_ruby("if y\n  x = 1\nend");
+        assert!(
+            find_descendant(&ast, "if_statement").is_some(),
+            "expected if_statement (leading keyword form)"
+        );
+        assert!(
+            find_descendant(&ast, "modifier_statement").is_none(),
+            "must NOT parse leading-keyword `if` as a modifier_statement"
+        );
+        // And the bare `if` token value must survive (no re-tag).
+        assert!(
+            tree_has_token_value(&ast, "if"),
+            "leading `if` token value should be untouched"
+        );
+        assert!(
+            !tree_has_token_value(&ast, "if_modifier"),
+            "leading `if` must NOT be re-tagged to `if_modifier`"
+        );
+    }
+
+    #[test]
+    fn test_parse_two_statements_across_newline() {
+        // Regression: `x = 1\nif y ... end` is TWO statements
+        // (assignment + if_statement), not one modifier_statement.
+        // Without the lexer's same-line guard, the grammar's
+        // newline-insensitive default mode would otherwise mis-parse
+        // this as `(x = 1) if y` followed by an orphaned `end`.
+        let ast = parse_ruby("x = 1\nif y\n  z = 2\nend");
+        let stmts = count_statements(&ast);
+        assert_eq!(stmts, 2, "expected 2 top-level statements, got {stmts}");
+        assert!(
+            find_descendant(&ast, "if_statement").is_some(),
+            "second statement should be if_statement"
+        );
+        assert!(
+            find_descendant(&ast, "modifier_statement").is_none(),
+            "must NOT collapse two statements into a modifier_statement"
+        );
+    }
+
     #[test]
     fn test_parse_range_with_paren_logical_operands() {
         // `(a || b)..(c || d)` — explicit parens make precedence

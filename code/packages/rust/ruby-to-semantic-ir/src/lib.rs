@@ -1559,4 +1559,122 @@ mod tests {
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 6q — modifier conditionals/loops
+    // -----------------------------------------------------------------
+    //
+    // `lhs if cond`    → ExprStmt(If(cond, [lhs], Nil))
+    // `lhs unless cond`→ ExprStmt(If(not(cond), [lhs], Nil))
+    // `lhs while cond` → While(cond, [lhs])
+    // `lhs until cond` → While(not(cond), [lhs])
+    //
+    // Lowering identity: the modifier forms emit the same canonical
+    // `Expr::If` / `Stmt::While` shapes as the leading-keyword forms,
+    // so every downstream emitter sees them transparently.
+
+    #[test]
+    fn if_modifier_lowers_to_expr_if_statement() {
+        // `puts "hi" if cond` → ExprStmt(If(VarRef(cond),
+        //    Block{stmts:[ExprStmt(BuiltinCall(puts, ...))], value:Nil},
+        //    Block{stmts:[], value:Nil}))
+        let m = lower("cond = true\nputs \"hi\" if cond\n");
+        let b = main_body(&m);
+        // The second statement is the modifier's lowered form.
+        match &b.stmts[1] {
+            Stmt::ExprStmt {
+                expr: Expr::If { cond, then_branch, else_branch, .. },
+                ..
+            } => {
+                // Cond is a bare VarRef("cond") — no `not` wrapper.
+                assert!(
+                    matches!(cond.as_ref(), Expr::VarRef { name, .. } if name == "cond"),
+                    "expected VarRef(cond), got {:?}",
+                    cond
+                );
+                // then_branch carries the LHS statement.
+                assert_eq!(then_branch.stmts.len(), 1, "expected one stmt in then-branch");
+                // else_branch is empty.
+                assert!(else_branch.stmts.is_empty(), "expected empty else-branch");
+            }
+            other => panic!("expected ExprStmt(If), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unless_modifier_wraps_condition_in_not() {
+        // `x = 1 unless cond` — cond becomes `not(cond)`.
+        let m = lower("cond = true\nx = 1 unless cond\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::ExprStmt {
+                expr: Expr::If { cond, .. },
+                ..
+            } => {
+                assert!(
+                    matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "not"),
+                    "expected BuiltinCall(not, ...), got {:?}",
+                    cond
+                );
+            }
+            other => panic!("expected ExprStmt(If) for unless modifier, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn while_modifier_lowers_to_stmt_while() {
+        // `puts "tick" while cond` → Stmt::While(cond, [puts]).
+        let m = lower("cond = true\nputs \"tick\" while cond\n");
+        let b = main_body(&m);
+        let while_cond = b.stmts.iter().find_map(|s| match s {
+            Stmt::While { cond, body, .. } => Some((cond, body)),
+            _ => None,
+        }).expect("expected While stmt from `while` modifier");
+        // Cond is bare VarRef (no `not`).
+        assert!(
+            matches!(while_cond.0, Expr::VarRef { name, .. } if name == "cond"),
+            "expected VarRef(cond) for while modifier, got {:?}",
+            while_cond.0
+        );
+        // Body carries the LHS as its one statement.
+        assert_eq!(while_cond.1.stmts.len(), 1, "expected one stmt in body");
+    }
+
+    #[test]
+    fn until_modifier_negates_condition_in_while() {
+        // `x = 1 until cond` → Stmt::While(not(cond), [x = 1]).
+        let m = lower("cond = false\nx = 1 until cond\n");
+        let b = main_body(&m);
+        let while_cond = b.stmts.iter().find_map(|s| match s {
+            Stmt::While { cond, .. } => Some(cond),
+            _ => None,
+        }).expect("expected While stmt from `until` modifier");
+        assert!(
+            matches!(while_cond, Expr::BuiltinCall { name, .. } if name == "not"),
+            "expected `until` to negate cond, got {:?}",
+            while_cond
+        );
+    }
+
+    #[test]
+    fn modifier_module_passes_sir_validator() {
+        // End-to-end smoke check: every modifier form goes through
+        // the validator cleanly.  The `while` modifier sets the
+        // `loops` feature automatically (just like the leading
+        // `while_statement` form).
+        let m = lower(concat!(
+            "cond = true\n",
+            "y = 0\n",
+            "y = 1 if cond\n",
+            "y = 2 unless cond\n",
+            "y = 3 while cond\n",
+            "y = 4 until cond\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected modifier-statement output: {:?}",
+            result
+        );
+    }
 }
