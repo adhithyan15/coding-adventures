@@ -676,6 +676,20 @@
           }
         ]
       }
+    },
+    {
+      "id": "measurement-display-metadata",
+      "description": "Meter and progress render nodes keep range/value metadata as inline replaced browser widgets.",
+      "input": "<body><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7>72%</meter><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=indeterminate max=1>Loading</progress>",
+      "expected": {
+        "children": [
+          { "display": "inline", "role": "label", "name": "label", "text": "Disk", "href": null, "src": null, "alt": null, "label_for": "disk", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Disk", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+          { "display": "inline-replaced", "role": "meter", "name": "meter", "id": "disk", "text": null, "href": null, "src": null, "alt": null, "labels": ["Disk"], "accessible_name": "Disk", "value": "0.72", "min": "0", "max": "1", "low": "0.25", "high": "0.9", "optimum": "0.7", "control_type": null, "children": [] },
+          { "display": "inline", "role": "label", "name": "label", "text": "Upload", "href": null, "src": null, "alt": null, "label_for": "upload", "control_type": null, "children": [{ "display": "inline-text", "role": "text", "name": null, "text": "Upload", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+          { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "upload", "text": null, "href": null, "src": null, "alt": null, "labels": ["Upload"], "accessible_name": "Upload", "value": "30", "max": "100", "control_type": null, "children": [] },
+          { "display": "inline-replaced", "role": "progress", "name": "progress", "id": "indeterminate", "text": null, "href": null, "src": null, "alt": null, "max": "1", "control_type": null, "children": [] }
+        ]
+      }
     }
   ]
 }

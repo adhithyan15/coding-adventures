@@ -189,6 +189,12 @@ struct ExpectedRenderNode {
     #[serde(default)]
     max: Option<String>,
     #[serde(default)]
+    low: Option<String>,
+    #[serde(default)]
+    high: Option<String>,
+    #[serde(default)]
+    optimum: Option<String>,
+    #[serde(default)]
     step: Option<String>,
     #[serde(default)]
     minlength: Option<String>,
@@ -391,6 +397,9 @@ impl ExpectedRenderNode {
             pattern: self.pattern,
             min: self.min,
             max: self.max,
+            low: self.low,
+            high: self.high,
+            optimum: self.optimum,
             step: self.step,
             minlength: self.minlength,
             maxlength: self.maxlength,

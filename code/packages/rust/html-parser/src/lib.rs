@@ -1043,6 +1043,9 @@ pub struct BrowserContentNode {
     pub pattern: Option<String>,
     pub min: Option<String>,
     pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
     pub step: Option<String>,
     pub minlength: Option<String>,
     pub maxlength: Option<String>,
@@ -1177,6 +1180,9 @@ pub struct BrowserRenderNode {
     pub pattern: Option<String>,
     pub min: Option<String>,
     pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
     pub step: Option<String>,
     pub minlength: Option<String>,
     pub maxlength: Option<String>,
@@ -1545,6 +1551,9 @@ impl BrowserRenderNode {
             pattern: content_node.pattern.clone(),
             min: content_node.min.clone(),
             max: content_node.max.clone(),
+            low: content_node.low.clone(),
+            high: content_node.high.clone(),
+            optimum: content_node.optimum.clone(),
             step: content_node.step.clone(),
             minlength: content_node.minlength.clone(),
             maxlength: content_node.maxlength.clone(),
@@ -9227,6 +9236,9 @@ fn collect_browser_content_nodes_with_mode(
                         pattern: None,
                         min: None,
                         max: None,
+                        low: None,
+                        high: None,
+                        optimum: None,
                         step: None,
                         minlength: None,
                         maxlength: None,
@@ -9431,6 +9443,9 @@ fn browser_content_node_for_element(
         pattern: browser_control_pattern(element),
         min: browser_control_min(element),
         max: browser_control_max(element),
+        low: browser_meter_low(element),
+        high: browser_meter_high(element),
+        optimum: browser_meter_optimum(element),
         step: browser_control_step(element),
         minlength: browser_control_minlength(element),
         maxlength: browser_control_maxlength(element),
@@ -9511,6 +9526,8 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         "fieldset" => Some("form_group"),
         "label" => Some("label"),
         "legend" => Some("legend"),
+        "meter" => Some("meter"),
+        "progress" => Some("progress"),
         "input" | "button" | "select" | "textarea" => Some("control"),
         "optgroup" => Some("option_group"),
         "option" => Some("option"),
@@ -9543,8 +9560,10 @@ fn should_collect_browser_content_children(name: &str) -> bool {
             | "img"
             | "input"
             | "link"
+            | "meter"
             | "meta"
             | "param"
+            | "progress"
             | "textarea"
             | "wbr"
     )
@@ -10022,12 +10041,19 @@ fn is_browser_form_control_element(name: &str) -> bool {
     matches!(name, "button" | "input" | "output" | "select" | "textarea")
 }
 
+fn is_browser_labelable_element(name: &str) -> bool {
+    matches!(
+        name,
+        "button" | "input" | "meter" | "output" | "progress" | "select" | "textarea"
+    )
+}
+
 fn browser_control_labels(
     element: &Element,
     labels: &[(String, String)],
     current_label_text: Option<&str>,
 ) -> Vec<String> {
-    if !is_browser_form_control_element(&element.name) {
+    if !is_browser_labelable_element(&element.name) {
         return Vec::new();
     }
 
@@ -10406,7 +10432,7 @@ fn browser_control_pattern(element: &Element) -> Option<String> {
 }
 
 fn browser_control_min(element: &Element) -> Option<String> {
-    if element.name == "input" {
+    if matches!(element.name.as_str(), "input" | "meter") {
         element.attribute("min").map(ToOwned::to_owned)
     } else {
         None
@@ -10414,8 +10440,32 @@ fn browser_control_min(element: &Element) -> Option<String> {
 }
 
 fn browser_control_max(element: &Element) -> Option<String> {
-    if element.name == "input" {
+    if matches!(element.name.as_str(), "input" | "meter" | "progress") {
         element.attribute("max").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_meter_low(element: &Element) -> Option<String> {
+    if element.name == "meter" {
+        element.attribute("low").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_meter_high(element: &Element) -> Option<String> {
+    if element.name == "meter" {
+        element.attribute("high").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_meter_optimum(element: &Element) -> Option<String> {
+    if element.name == "meter" {
+        element.attribute("optimum").map(ToOwned::to_owned)
     } else {
         None
     }
@@ -10550,6 +10600,7 @@ fn browser_content_value(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "button" => element.attribute("value").map(ToOwned::to_owned),
         "input" => browser_input_value(element),
+        "meter" | "progress" => element.attribute("value").map(ToOwned::to_owned),
         "option" => Some(browser_option_value(element)),
         "output" => Some(element_text(element)),
         "select" => selected_option_value(&element.children),
@@ -10720,9 +10771,8 @@ fn browser_render_display(role: &str) -> &'static str {
     match role {
         "text" => "inline-text",
         "inline" | "link" => "inline",
-        "canvas" | "embed" | "frame" | "image" | "media" | "object" | "control" => {
-            "inline-replaced"
-        }
+        "canvas" | "control" | "embed" | "frame" | "image" | "media" | "meter" | "object"
+        | "progress" => "inline-replaced",
         "line_break" => "line-break",
         "article" | "aside" | "footer" | "header" | "heading" | "heading_group" | "main"
         | "navigation" | "paragraph" | "preformatted" | "section" | "block" | "form"
@@ -10787,10 +10837,7 @@ fn collect_form_controls_for_form_into(
             .filter(|text| !text.is_empty());
         let child_label_text = element_label_text.as_deref().or(current_label_text);
 
-        if matches!(
-            element.name.as_str(),
-            "input" | "button" | "output" | "select" | "textarea"
-        ) {
+        if is_browser_form_control_element(&element.name) {
             let form_owner = browser_form_owner(element);
             let associated_with_target = match form_owner.as_deref() {
                 Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
@@ -11800,6 +11847,48 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_measurement_metadata_tracks_meter_and_progress_ranges() {
+        let document = parse_html(
+            "<body><label for=disk>Disk</label>\
+             <meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7>72%</meter>\
+             <label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress>\
+             <progress id=indeterminate max=1>Loading</progress>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let meter = &content_tree.children[1];
+        assert_eq!(meter.role, "meter");
+        assert_eq!(meter.labels, vec!["Disk"]);
+        assert_eq!(meter.accessible_name.as_deref(), Some("Disk"));
+        assert_eq!(meter.value.as_deref(), Some("0.72"));
+        assert_eq!(meter.min.as_deref(), Some("0"));
+        assert_eq!(meter.max.as_deref(), Some("1"));
+        assert_eq!(meter.low.as_deref(), Some("0.25"));
+        assert_eq!(meter.high.as_deref(), Some("0.9"));
+        assert_eq!(meter.optimum.as_deref(), Some("0.7"));
+        assert!(meter.children.is_empty());
+
+        let progress = &content_tree.children[3];
+        assert_eq!(progress.role, "progress");
+        assert_eq!(progress.labels, vec!["Upload"]);
+        assert_eq!(progress.accessible_name.as_deref(), Some("Upload"));
+        assert_eq!(progress.value.as_deref(), Some("30"));
+        assert_eq!(progress.max.as_deref(), Some("100"));
+        assert!(progress.children.is_empty());
+
+        let indeterminate = &content_tree.children[4];
+        assert_eq!(indeterminate.role, "progress");
+        assert_eq!(indeterminate.value, None);
+        assert_eq!(indeterminate.max.as_deref(), Some("1"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
+        assert_eq!(render_tree.children[3].display, "inline-replaced");
+        assert_eq!(render_tree.children[4].display, "inline-replaced");
     }
 
     #[test]
