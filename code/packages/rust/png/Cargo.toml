@@ -1,8 +1,8 @@
 [package]
 name = "png"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Zero-dependency PNG file format encoder"
+description = "Zero-dependency PNG file format encoder/decoder"
 
 [dependencies]
 deflate = { path = "../deflate" }
