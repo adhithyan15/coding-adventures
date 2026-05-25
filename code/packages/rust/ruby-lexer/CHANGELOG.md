@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.21.0] - 2026-05-24
+
+### Added (Phase 4o — heredoc opener variants `<<-TAG` and `<<~TAG`)
+
+Extends the existing Phase 3c `<<TAG` plain heredoc support with the two modifier forms:
+
+| Form | Since | Terminator | Body |
+|---|---|---|---|
+| `<<TAG` | 1.0 | exact at col 0 | verbatim |
+| `<<-TAG` | 1.9 | indent-tolerant | verbatim |
+| `<<~TAG` | 2.3 | indent-tolerant | common leading-ws stripped |
+
+The token shape is unchanged: a single `TokenType::String` token whose value is the reconstructed source (`<<TAG\nBODY\nTAG`, `<<-TAG\n…\nTAG`, or `<<~TAG\n…\nTAG`).  Parser distinguishes by the leading `<<` / `<<-` / `<<~` prefix.
+
+#### State-machine additions
+
+- New state: `after_lt_lt` (saw `<<`, peeks for `-` or `~`).
+- `after_lt → <` no longer emits immediately; instead enters `after_lt_lt`.
+- `after_lt_lt → -` emits `Op("<<-")`.
+- `after_lt_lt → ~` emits `Op("<<~")`.
+- Catch-all: emit plain `Op("<<")` and re-dispatch the follower.
+
+#### Action interpreter additions
+
+- `is_heredoc_open` now accepts `<<`, `<<-`, `<<~` as openers (was: `<<` only).
+- `PendingHeredoc` gains a `variant: HeredocVariant` field tracking which opener form was seen.
+- `capture_heredoc_bodies` matches terminator lines against the front heredoc's variant:
+  - `Plain`: line == tag (exact).
+  - `DashIndent` / `TildeIndent`: `line.trim_start()` == tag.
+- `finalize_heredoc` invokes `strip_common_leading_whitespace` on the body when the variant is `TildeIndent` and emits the appropriate `<<` / `<<-` / `<<~` prefix in the reconstructed token value.
+
+#### New helper
+
+- `strip_common_leading_whitespace(body) -> String` — computes the minimum leading-ws prefix across all non-empty body lines and strips it from every non-empty line; empty lines pass through unchanged.
+
+### Tests (+5 new, total 164)
+- `heredoc_dash_indent_terminator_allows_leading_whitespace`
+- `heredoc_tilde_indent_strips_common_leading_whitespace`
+- `heredoc_tilde_indent_uses_minimum_prefix_across_lines` — `2 vs 4 spaces → 2-space strip`.
+- `heredoc_plain_form_still_requires_exact_terminator` — leading-ws on `<<EOF` terminator → unterminated-heredoc diagnostic.
+- `heredoc_dash_and_tilde_variants_lex_uniformly_across_eras` — era invariance check.
+
 ## [0.20.0] - 2026-05-24
 
 ### Added (Phase 6p companion — compound-assignment operator fusion)

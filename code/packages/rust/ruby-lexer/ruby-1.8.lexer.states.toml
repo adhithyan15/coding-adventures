@@ -305,6 +305,12 @@ id = "after_eq_eq"       # saw `==`, peeking for `===`
 id = "after_bang"        # saw `!`, peeking for `!=`
 [[states]]
 id = "after_lt"          # saw `<`, peeking for `<=` (no `<<` yet — Phase 3 heredocs)
+# Phase 4o — `<<-EOF` and `<<~EOF` heredoc opener variants.
+# After `<<` we peek one more char: `-` → emit `<<-` (indent-tolerant
+# terminator), `~` → emit `<<~` (indent-stripping body); otherwise
+# emit plain `<<` and re-dispatch the follower as before.
+[[states]]
+id = "after_lt_lt"       # saw `<<`, peeking for `-` or `~` (heredoc opener modifiers)
 [[states]]
 id = "after_gt"          # saw `>`, peeking for `>=`
 [[states]]
@@ -1539,11 +1545,44 @@ actions = ["set_text(<=)", "emit(Op)"]
 # combination with the prior lex_state to decide whether to start a
 # heredoc capture (expression-start positions) or treat it as plain
 # left-shift (anywhere else).
+#
+# Phase 4o — defer the emit by one peek: enter `after_lt_lt` so we
+# can fold `<<-` and `<<~` into single tokens.
 [[transitions]]
 from = "after_lt"
 matcher = { literal = "<" }
+to = "after_lt_lt"
+
+# Phase 4o — `<<-TAG` (indent-tolerant terminator).
+[[transitions]]
+from = "after_lt_lt"
+matcher = { literal = "-" }
 to = "data"
+actions = ["set_text(<<-)", "emit(Op)"]
+
+# Phase 4o — `<<~TAG` (indent-stripping body + indent-tolerant terminator).
+[[transitions]]
+from = "after_lt_lt"
+matcher = { literal = "~" }
+to = "data"
+actions = ["set_text(<<~)", "emit(Op)"]
+
+# Anything else: plain `<<` (heredoc opener OR left-shift, decided
+# downstream by lex-state and follower kind).  Re-dispatch the
+# follower so it lexes normally.
+[[transitions]]
+from = "after_lt_lt"
+matcher = { anything = true }
+to = "data"
+consume = false
 actions = ["set_text(<<)", "emit(Op)"]
+
+[[transitions]]
+from = "after_lt_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(<<)", "emit(Op)", "emit(Eof)"]
 
 [[transitions]]
 from = "after_lt"

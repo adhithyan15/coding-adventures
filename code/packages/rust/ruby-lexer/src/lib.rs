@@ -151,6 +151,27 @@ struct PendingHeredoc {
     /// trailing newline and the terminator line, including embedded
     /// newlines.
     body: String,
+    /// Phase 4o — opener variant: plain `<<`, `<<-` (indent-tolerant
+    /// terminator), or `<<~` (indent-stripping body + indent-tolerant
+    /// terminator).  Captured at open time so finalize knows which
+    /// post-processing to apply.
+    variant: HeredocVariant,
+}
+
+/// Phase 4o — heredoc opener form.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum HeredocVariant {
+    /// `<<EOF` — terminator must start at column 0 with no leading
+    /// whitespace, body captured verbatim.
+    Plain,
+    /// `<<-EOF` (since Ruby 1.9) — terminator may have leading
+    /// whitespace; body captured verbatim.
+    DashIndent,
+    /// `<<~EOF` (since Ruby 2.3) — terminator may have leading
+    /// whitespace; body has its common leading whitespace stripped
+    /// from every line (the smallest leading-ws prefix across all
+    /// non-empty body lines).
+    TildeIndent,
 }
 
 impl RubyLexer {
@@ -282,10 +303,22 @@ impl RubyLexer {
                 self.column = 1;
             }
 
-            // Terminator check uses exact-equality (v0): no leading
-            // whitespace tolerance.  `<<-`/`<<~` arrive in Phase 3d.
-            let front_tag = self.pending_heredocs.front().unwrap().tag.clone();
-            if line == front_tag {
+            // Phase 4o — terminator match depends on the opener
+            // variant:
+            //   Plain (`<<EOF`):    exact line == tag.
+            //   DashIndent (`<<-`): line stripped of leading ws == tag.
+            //   TildeIndent (`<<~`): line stripped of leading ws == tag.
+            let front = self.pending_heredocs.front().unwrap();
+            let front_tag = front.tag.clone();
+            let front_variant = front.variant;
+            let trimmed_line = line.trim_start();
+            let is_terminator = match front_variant {
+                HeredocVariant::Plain => line == front_tag,
+                HeredocVariant::DashIndent | HeredocVariant::TildeIndent => {
+                    trimmed_line == front_tag
+                }
+            };
+            if is_terminator {
                 let h = self.pending_heredocs.pop_front().unwrap();
                 finalized.push(h);
             } else {
@@ -307,10 +340,27 @@ impl RubyLexer {
 
     /// Splice a captured heredoc into the token stream.  The `<<` Op
     /// token at `h.op_idx` becomes a `String` token carrying the
-    /// verbatim heredoc source (`<<TAG\n<body>TAG`); the following
-    /// `Name` token at `h.tag_idx` (the tag lexeme) is removed.
+    /// reconstructed heredoc source.
+    ///
+    /// Phase 4o variants:
+    /// - `Plain` (`<<TAG\n<body>TAG`): body captured verbatim.
+    /// - `DashIndent` (`<<-TAG\n<body>TAG`): body captured verbatim;
+    ///   the only change is the `<<-` prefix in the reconstructed
+    ///   source so downstream tooling can detect the modifier.
+    /// - `TildeIndent` (`<<~TAG\n<body>TAG`): strip the common
+    ///   leading-whitespace prefix from every non-empty body line.
+    ///   That prefix is the minimum across all non-empty lines.
     fn finalize_heredoc(&mut self, h: PendingHeredoc) {
-        let value = format!("<<{}\n{}{}", h.tag, h.body, h.tag);
+        let body = match h.variant {
+            HeredocVariant::Plain | HeredocVariant::DashIndent => h.body.clone(),
+            HeredocVariant::TildeIndent => strip_common_leading_whitespace(&h.body),
+        };
+        let prefix = match h.variant {
+            HeredocVariant::Plain => "<<",
+            HeredocVariant::DashIndent => "<<-",
+            HeredocVariant::TildeIndent => "<<~",
+        };
+        let value = format!("{prefix}{}\n{body}{}", h.tag, h.tag);
         // Remove the tag Name first (higher index) so op_idx stays
         // valid.  Both indices were captured at emit time and the
         // tokens between them have not moved (body capture inserts
@@ -1297,11 +1347,22 @@ impl RubyLexer {
                         matches!(kind, TokenType::Name | TokenType::Keyword);
                     if lexeme_kind_ok && is_heredoc_tag(&text) {
                         let tag_idx = self.tokens.len() - 1;
+                        // Phase 4o — inspect the opener's text to
+                        // pick the variant.  The state machine emits
+                        // exactly one of `<<` / `<<-` / `<<~` for the
+                        // Op token; defaulting to Plain on unexpected
+                        // shapes keeps the lowering total.
+                        let variant = match self.tokens[op_idx].value.as_str() {
+                            "<<-" => HeredocVariant::DashIndent,
+                            "<<~" => HeredocVariant::TildeIndent,
+                            _ => HeredocVariant::Plain,
+                        };
                         self.pending_heredocs.push_back(PendingHeredoc {
                             tag: text,
                             op_idx,
                             tag_idx,
                             body: String::new(),
+                            variant,
                         });
                     }
                 }
@@ -1372,7 +1433,9 @@ impl RubyLexer {
             "Op" => {
                 let text = std::mem::take(&mut self.text_buffer);
                 let kind = classify_op_token(&text);
-                let is_heredoc_open = text == "<<"
+                // Phase 4o — accept `<<`, `<<-`, `<<~` as heredoc
+                // openers when the lex-state is expression-start.
+                let is_heredoc_open = matches!(text.as_str(), "<<" | "<<-" | "<<~")
                     && matches!(prev_state, LexState::ExprBeg | LexState::ExprMid);
                 self.push_token(kind, text);
                 // Phase 3c: arm the heredoc detector.  The very next
@@ -1686,6 +1749,74 @@ fn is_heredoc_tag(s: &str) -> bool {
         _ => return false,
     }
     chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
+
+/// Phase 4o helper — strip the common leading-whitespace prefix from
+/// every non-empty line of `body`.  The prefix is the minimum across
+/// all non-empty lines (mirrors Ruby's `<<~` semantics).
+///
+/// Empty lines do NOT contribute to the prefix length (so a single
+/// blank line in the middle doesn't force-zero the indent), but they
+/// also don't get whitespace prepended.  Final trailing newline (if
+/// any) is preserved.
+fn strip_common_leading_whitespace(body: &str) -> String {
+    // Determine the common prefix length.  We look at the leading
+    // run of space/tab characters on every non-empty line and take
+    // the minimum.
+    let prefix_len = body
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .map(|line| {
+            line.chars()
+                .take_while(|c| *c == ' ' || *c == '\t')
+                .count()
+        })
+        .min()
+        .unwrap_or(0);
+    if prefix_len == 0 {
+        return body.to_string();
+    }
+    // Strip exactly `prefix_len` leading whitespace chars from each
+    // non-empty line.  Preserve the line endings (`body.lines()` drops
+    // them, so we reconstruct from the original `body`).
+    let mut out = String::with_capacity(body.len());
+    let mut start = 0;
+    let bytes = body.as_bytes();
+    while start < bytes.len() {
+        // Find the next `\n` (or EOF).
+        let mut end = start;
+        while end < bytes.len() && bytes[end] != b'\n' {
+            end += 1;
+        }
+        let line = &body[start..end];
+        let line_is_empty = line.trim().is_empty();
+        if line_is_empty {
+            out.push_str(line);
+        } else {
+            // Strip up to prefix_len leading ws chars.  Use char
+            // iteration to be safe with multi-byte UTF-8 (though
+            // tabs/spaces are ASCII so the count == byte count in
+            // practice).
+            let mut stripped = line;
+            for _ in 0..prefix_len {
+                match stripped.chars().next() {
+                    Some(c) if c == ' ' || c == '\t' => {
+                        stripped = &stripped[c.len_utf8()..];
+                    }
+                    _ => break,
+                }
+            }
+            out.push_str(stripped);
+        }
+        // Re-attach the newline (if present).
+        if end < bytes.len() {
+            out.push('\n');
+            start = end + 1;
+        } else {
+            start = end;
+        }
+    }
+    out
 }
 
 fn is_ruby_keyword(s: &str) -> bool {
@@ -3675,6 +3806,99 @@ mod tests {
             vec![TokenType::String, TokenType::Plus, TokenType::Number],
             "got tokens {toks:?}"
         );
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 4o — heredoc opener variants `<<-TAG` and `<<~TAG`
+    // -----------------------------------------------------------------
+    //
+    // Builds on the existing Phase 3c `<<TAG` plain heredoc support.
+    //
+    //   <<-TAG  (1.9+)   indent-tolerant terminator (body verbatim)
+    //   <<~TAG  (2.3+)   indent-tolerant terminator + indent-stripped body
+    //
+    // The token shape is unchanged: a single `TokenType::String` token
+    // whose value is the reconstructed source (`<<TAG\nBODY\nTAG`,
+    // `<<-TAG\n…\nTAG`, or `<<~TAG\n…\nTAG`).  The parser distinguishes
+    // by inspecting the leading `<<` / `<<-` / `<<~` prefix.
+
+    /// Helper: pull all heredoc String tokens (values starting with `<<`).
+    fn heredoc_values(toks: &[Token]) -> Vec<String> {
+        toks.iter()
+            .filter(|t| t.type_ == TokenType::String && t.value.starts_with("<<"))
+            .map(|t| t.value.clone())
+            .collect()
+    }
+
+    #[test]
+    fn heredoc_dash_indent_terminator_allows_leading_whitespace() {
+        // `<<-EOF` permits leading whitespace on the terminator line.
+        let src = "x = <<-EOF\n  body line\n  EOF\n";
+        let toks = tokenize_ruby_for_version(src, "1.8").unwrap();
+        let here = heredoc_values(&toks);
+        assert_eq!(here.len(), 1, "expected one heredoc, got {here:?}");
+        assert!(here[0].starts_with("<<-EOF"), "got {here:?}");
+        // Body retains the leading whitespace (DashIndent does NOT
+        // strip — only TildeIndent does).
+        assert!(here[0].contains("  body line"), "got {here:?}");
+    }
+
+    #[test]
+    fn heredoc_tilde_indent_strips_common_leading_whitespace() {
+        // `<<~EOF` strips the common leading-ws prefix from every
+        // non-empty line.  Input has 4 spaces of common prefix.
+        let src = "x = <<~EOF\n    body line one\n    body line two\n    EOF\n";
+        let toks = tokenize_ruby_for_version(src, "1.8").unwrap();
+        let here = heredoc_values(&toks);
+        assert_eq!(here.len(), 1);
+        assert!(here[0].starts_with("<<~EOF"));
+        // Body lines should have the 4-space prefix stripped.
+        assert!(here[0].contains("body line one\n"), "got {:?}", here[0]);
+        assert!(!here[0].contains("    body line one"), "got {:?}", here[0]);
+    }
+
+    #[test]
+    fn heredoc_tilde_indent_uses_minimum_prefix_across_lines() {
+        // Mixed indents — body takes the smallest leading-ws prefix.
+        // 2 spaces on first line, 4 on second; common = 2 spaces.
+        let src = "x = <<~EOF\n  two\n    four\n  EOF\n";
+        let toks = tokenize_ruby_for_version(src, "1.8").unwrap();
+        let here = heredoc_values(&toks);
+        assert_eq!(here.len(), 1);
+        // After stripping 2 spaces: "two\n  four\n".
+        assert!(here[0].contains("two\n  four\n"), "got {:?}", here[0]);
+    }
+
+    #[test]
+    fn heredoc_plain_form_still_requires_exact_terminator() {
+        // `<<EOF` still demands the terminator at column 0.
+        // Leading whitespace on `EOF` line means the heredoc never
+        // terminates — diagnostic + body absorbs everything.
+        let src = "x = <<EOF\nbody\n  EOF\n";
+        let mut lx = RubyLexer::new("1.8").expect("lexer build");
+        lx.push(src).unwrap();
+        lx.finish().unwrap();
+        let diags = lx.diagnostics();
+        assert!(
+            diags.iter().any(|d| d.code.contains("unterminated-heredoc")),
+            "expected unterminated-heredoc diagnostic for indented terminator after <<EOF, got {:?}",
+            diags
+        );
+    }
+
+    #[test]
+    fn heredoc_dash_and_tilde_variants_lex_uniformly_across_eras() {
+        // The new openers should produce a heredoc String in every
+        // era ≥ 1.8 (even though `<<-` was 1.9 and `<<~` was 2.3 in
+        // real Ruby — the lexer is permissive; era gating belongs to
+        // downstream tooling if needed).
+        let src = "x = <<-EOF\nhello\n  EOF\n";
+        let baseline = heredoc_values(&tokenize_ruby_for_version(src, "1.8").unwrap());
+        assert_eq!(baseline.len(), 1);
+        for v in machine::ERA_VERSIONS {
+            let actual = heredoc_values(&tokenize_ruby_for_version(src, v).unwrap());
+            assert_eq!(actual, baseline, "heredoc lexing diverged in era {v}");
+        }
     }
 
     // -----------------------------------------------------------------
