@@ -369,6 +369,12 @@ struct ExpectedFormControl {
     #[serde(default)]
     autocomplete: Option<String>,
     #[serde(default)]
+    autocapitalize: Option<String>,
+    #[serde(default)]
+    enterkeyhint: Option<String>,
+    #[serde(default)]
+    dirname: Option<String>,
+    #[serde(default)]
     accept: Option<String>,
     #[serde(default)]
     inputmode: Option<String>,
@@ -401,6 +407,8 @@ struct ExpectedFormControl {
     #[serde(default)]
     form_novalidate: bool,
     value: Option<String>,
+    #[serde(default)]
+    autofocus: bool,
     disabled: bool,
     #[serde(default)]
     required: bool,
@@ -782,6 +790,9 @@ impl ExpectedFormControl {
             accessible_name: self.accessible_name,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
+            autocapitalize: self.autocapitalize,
+            enterkeyhint: self.enterkeyhint,
+            dirname: self.dirname,
             accept: self.accept,
             inputmode: self.inputmode,
             pattern: self.pattern,
@@ -799,6 +810,7 @@ impl ExpectedFormControl {
             form_target: self.form_target,
             form_novalidate: self.form_novalidate,
             value: self.value,
+            autofocus: self.autofocus,
             disabled: self.disabled,
             required: self.required,
             readonly: self.readonly,
