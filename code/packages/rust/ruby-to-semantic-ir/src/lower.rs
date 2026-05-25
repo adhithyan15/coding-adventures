@@ -384,6 +384,32 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "case_statement" => {
+                // Phase 6u — `case x; when v1[,v2,...] then body; else end`.
+                //
+                // Lower to a chained `Expr::If`:
+                //
+                //   case x
+                //   when 1, 2 then a
+                //   when 3    then b
+                //   else c
+                //   end
+                //
+                // becomes
+                //
+                //   if (x == 1 || x == 2) then a
+                //   else if x == 3 then b
+                //   else c
+                //
+                // wrapped in `Stmt::ExprStmt`.  Each `when_clause`
+                // becomes a single `If` step; the else_clause (or
+                // implicit `NilLit` block) terminates the chain.
+                let expr = self.lower_case_statement(node)?;
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
             "while_statement" | "until_statement" => {
                 // Phase 6c: SIR's `Stmt::While` is the canonical
                 // top-level loop — `until cond` lowers to
@@ -695,6 +721,164 @@ impl Lowerer {
             body,
             span: self.span_of(node),
         })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 6u — `case … when … else … end`
+    // -------------------------------------------------------------------
+
+    /// Lower a `case_statement` node to a chained `Expr::If`.
+    ///
+    /// Grammar shape (per `ruby.grammar`):
+    /// ```text
+    /// case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
+    /// when_clause    = "when" expression { COMMA expression }
+    ///                       { !"when" !"else" !"end" statement } ;
+    /// ```
+    ///
+    /// Lowering rule:
+    ///
+    /// ```text
+    /// case x
+    /// when v1, v2 then body_a
+    /// when v3     then body_b
+    /// else body_c
+    /// end
+    /// ```
+    ///
+    /// becomes
+    ///
+    /// ```text
+    /// if ((x == v1) || (x == v2)) then body_a
+    /// else if (x == v3) then body_b
+    /// else body_c
+    /// ```
+    ///
+    /// Each `when_clause` produces one nested `If` step.  Multiple values
+    /// in a single `when` (`when 1, 2, 3`) chain through `BuiltinCall("or", ...)`
+    /// inside that step's condition.  The else terminator (or an empty
+    /// `NilLit` block when absent) caps the chain.
+    ///
+    /// v0 caveats (deferred):
+    /// - Ruby's `when` uses `===` (case-equality, class-aware) — this
+    ///   v0 lowers to `==`.  Phase 7d adds full `case/in` pattern
+    ///   matching with proper match semantics.
+    /// - Range/Regex/Class values in `when` lists work syntactically
+    ///   (they parse as expressions) but the `==` comparison won't
+    ///   match Ruby's case-equality semantics.
+    fn lower_case_statement(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        // 1. Scrutinee — the first `expression` direct child of the
+        //    case_statement.  (subsequent `expression` children belong
+        //    to when_clause descendants, but they're inside subnodes,
+        //    not direct children.)
+        let scrutinee_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "case_statement missing scrutinee expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let scrutinee = self.lower_expression(scrutinee_node)?;
+
+        // 2. Collect every when_clause subnode.
+        let when_clauses: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "when_clause" => Some(n),
+                _ => None,
+            })
+            .collect();
+
+        // 3. Find the optional else_clause (reused from if_statement).
+        let else_clause = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "else_clause" => Some(n),
+            _ => None,
+        });
+
+        // 4. Build the tail: the else block, or an empty NilLit block
+        //    if no else clause was provided.
+        let mut tail: Block = if let Some(ec) = else_clause {
+            self.lower_clause_statements(ec)?
+        } else {
+            Block {
+                stmts: Vec::new(),
+                value: Expr::NilLit { span: self.span_of(node) },
+                span: self.span_of(node),
+            }
+        };
+
+        // 5. Unwind when_clauses in reverse, each wrapping the
+        //    accumulated tail as its else-branch.
+        for wc in when_clauses.iter().rev() {
+            // Collect this clause's value expressions (all `expression`
+            // Node children in order).
+            let value_nodes: Vec<&GrammarASTNode> = wc
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                    _ => None,
+                })
+                .collect();
+            if value_nodes.is_empty() {
+                return Err(RubyLowerError {
+                    message: "when_clause missing value expression(s)".to_string(),
+                    line: wc.start_line.unwrap_or(0),
+                    column: wc.start_column.unwrap_or(0),
+                });
+            }
+
+            // Build the condition: `(scrutinee == v1) || (scrutinee == v2) || ...`.
+            // Lower each value, build an `==` BuiltinCall, then OR-fold
+            // left-to-right (matches Ruby's left-to-right when evaluation).
+            let span = self.span_of(wc);
+            let mut cond: Option<Expr> = None;
+            for vn in &value_nodes {
+                let val = self.lower_expression(vn)?;
+                // Clone the scrutinee fresh for every comparison —
+                // SIR is tree-shaped, no shared subexpressions.
+                let cmp = Expr::BuiltinCall {
+                    name: "==".to_string(),
+                    args: vec![scrutinee.clone(), val],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                };
+                cond = Some(match cond {
+                    None => cmp,
+                    Some(prev) => Expr::BuiltinCall {
+                        name: "or".to_string(),
+                        args: vec![prev, cmp],
+                        effects: EffectSet::PURE,
+                        span: span.clone(),
+                    },
+                });
+            }
+            let cond = cond.expect("at least one when value");
+
+            // Lower the when body — same shape as `lower_clause_statements`
+            // handles for if/elsif/else.
+            let then_block = self.lower_clause_statements(wc)?;
+
+            // Wrap into an If and let `tail` become the else.
+            tail = Block {
+                stmts: Vec::new(),
+                value: Expr::If {
+                    cond: Box::new(cond),
+                    then_branch: Box::new(then_block),
+                    else_branch: Box::new(tail),
+                    span: span.clone(),
+                },
+                span,
+            };
+        }
+
+        // The case expression is the chain's outermost If — which
+        // currently sits as the `tail` Block's `value`.  Peel it out.
+        Ok(tail.value)
     }
 
     // -------------------------------------------------------------------

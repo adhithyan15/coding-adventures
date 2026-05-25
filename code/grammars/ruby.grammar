@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -151,6 +151,30 @@ else_clause  = "else" { !"end" statement } ;
 unless_statement = "unless" expression { !"else" !"end" statement } [ else_clause ] "end" ;
 while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
+# Phase 6u — `case … when … else … end`.
+#
+# Shape:
+#   case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
+#   when_clause    = "when" expression { COMMA expression }
+#                          { !"when" !"else" !"end" statement } ;
+#
+# Reuses the existing `else_clause` rule (defined for if_statement)
+# so the else body parses the same way it does in `if … else … end`.
+#
+# Each `when_clause` may list multiple values (`when 1, 2, 3`); the
+# SIR lowerer expands them as an `||` chain inside the synthetic
+# `if` condition.  The result of a `case` expression is the value of
+# the matched `when` body (or `else` body, or NilLit) — matching
+# Ruby semantics.
+#
+# v0 deferred:
+#   - `when` doesn't accept ranges/regexes/class patterns (uses `==`
+#     instead of Ruby's `===`).  Phase 7d adds full `case/in`
+#     pattern matching with the proper match semantics.
+#   - `when *splat` argument splat in the value list — deferred
+#     (the grammar accepts only positional values via `expression`).
+case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
+when_clause    = "when" expression { COMMA expression } { !"when" !"else" !"end" statement } ;
 # Phase 6p — compound assignment (`x += 1`, `x ||= 1`, etc.).
 #
 # The lexer's `fuse_compound_assigns` post-pass folds `Op =` adjacent

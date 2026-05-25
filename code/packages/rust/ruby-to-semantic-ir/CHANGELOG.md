@@ -2,6 +2,45 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.22.0] - 2026-05-25
+
+### Added (Phase 6u — `case … when … else … end` lowering)
+
+New `lower_case_statement` helper folds the source `case_statement` into a chained `Expr::If`:
+
+```
+case x
+when v1, v2 then a
+when v3     then b
+else c
+end
+```
+
+→
+
+```
+if ((x == v1) || (x == v2)) then a
+else if (x == v3) then b
+else c
+```
+
+Each when_clause becomes one nested `If`; multi-value `when 1, 2, 3` lists OR-fold left-to-right using `BuiltinCall("or", ...)`.  The else clause (or implicit `NilLit` block) caps the chain.  Comparisons use `BuiltinCall("==", [scrutinee, value])` — see v0 deferred caveats below.
+
+The result is wrapped in `Stmt::ExprStmt`.
+
+### v0 deferred limitations
+
+- Comparisons use `==` not `===`.  Ruby's case-equality (class-aware: `Integer === 1`, range membership, regex match) is NOT modelled.  Phase 7d adds full `case/in` pattern matching.
+- Range/Regex/Class values in `when` lists work syntactically but don't behave as Ruby would.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 100 → **104** (+4):
+  - `case_single_when_lowers_to_if_with_eq` — basic shape check.
+  - `case_with_multi_value_when_lowers_to_or_chain` — `==` × 3 + `or` × 2.
+  - `case_with_else_terminates_chain` — else body lands in chain tail.
+  - `case_without_else_uses_nil_tail` — no else → NilLit tail.
+
 ## [0.21.0] - 2026-05-25
 
 ### Added (Phase 6t — `yield` lowering)
