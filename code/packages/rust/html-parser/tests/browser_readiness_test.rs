@@ -1,8 +1,8 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata, BrowserForm,
-    BrowserFormControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh,
-    BrowserResource, BrowserResourceHint, BrowserScript, BrowserStructuredItem,
+    BrowserFormControl, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserStructuredItem,
     BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
@@ -464,6 +464,8 @@ struct ExpectedForm {
     #[serde(default)]
     novalidate: bool,
     controls: Vec<ExpectedFormControl>,
+    #[serde(default)]
+    submitters: Vec<ExpectedFormSubmitter>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -549,6 +551,30 @@ struct ExpectedFormControl {
     multiple: bool,
     text: String,
     options: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormSubmitter {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    value: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1019,6 +1045,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormControl::into_browser_form_control)
                 .collect(),
+            submitters: self
+                .submitters
+                .into_iter()
+                .map(ExpectedFormSubmitter::into_browser_form_submitter)
+                .collect(),
         }
     }
 }
@@ -1070,6 +1101,24 @@ impl ExpectedFormControl {
             multiple: self.multiple,
             text: self.text,
             options: self.options,
+        }
+    }
+}
+
+impl ExpectedFormSubmitter {
+    fn into_browser_form_submitter(self) -> BrowserFormSubmitter {
+        BrowserFormSubmitter {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            accessible_name: self.accessible_name,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            novalidate: self.novalidate,
+            value: self.value,
         }
     }
 }

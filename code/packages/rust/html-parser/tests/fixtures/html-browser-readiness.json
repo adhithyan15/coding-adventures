@@ -81,6 +81,9 @@
               { "control_type": "select", "name": "section", "value": "manuals", "disabled": false, "checked": false, "text": "Books Manuals", "options": ["Books", "Manuals"] },
               { "control_type": "textarea", "name": "notes", "value": "Line one Line two", "disabled": false, "checked": false, "text": "Line one Line two", "options": [] },
               { "control_type": "submit", "name": "go", "accessible_name": "Search", "value": null, "disabled": false, "checked": false, "text": "Search", "options": [] }
+            ],
+            "submitters": [
+              { "id": null, "control_type": "submit", "name": "go", "accessible_name": "Search", "action": "/search", "resolved_action": null, "method": "post", "enctype": "multipart/form-data", "target": "results", "novalidate": false, "value": null }
             ]
           }
         ],
@@ -182,6 +185,10 @@
               { "id": "imageGo", "control_type": "image", "name": "image-go", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16", "value": null, "disabled": false, "checked": false, "text": "", "options": [] },
               { "id": "total", "control_type": "output", "name": "total", "output_for": ["q", "kind"], "value": "Ready", "disabled": false, "checked": false, "text": "Ready", "options": [] },
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "disabled": false, "checked": false, "text": "", "options": [] }
+            ],
+            "submitters": [
+              { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "novalidate": true, "value": null },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "enctype": null, "target": null, "novalidate": true, "value": null }
             ]
           }
         ],

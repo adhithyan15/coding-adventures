@@ -1453,6 +1453,7 @@ pub struct BrowserForm {
     pub rel: Option<String>,
     pub novalidate: bool,
     pub controls: Vec<BrowserFormControl>,
+    pub submitters: Vec<BrowserFormSubmitter>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1501,6 +1502,21 @@ pub struct BrowserFormControl {
     pub multiple: bool,
     pub text: String,
     pub options: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSubmitter {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub accessible_name: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8768,30 +8784,12 @@ fn collect_browser_facts(
             "style" => summary
                 .stylesheets
                 .push(browser_style_element(element, summary.base_href.as_deref())),
-            "form" => summary.forms.push(BrowserForm {
-                id: element.attribute("id").map(ToOwned::to_owned),
-                action: element.attribute("action").map(ToOwned::to_owned),
-                resolved_action: element
-                    .attribute("action")
-                    .and_then(|action| resolve_browser_url(action, summary.base_href.as_deref())),
-                name: element.attribute("name").map(ToOwned::to_owned),
-                method: element
-                    .attribute("method")
-                    .map(|method| method.to_ascii_lowercase())
-                    .unwrap_or_else(|| "get".to_string()),
-                enctype: element.attribute("enctype").map(ToOwned::to_owned),
-                target: element.attribute("target").map(ToOwned::to_owned),
-                accept_charset: element.attribute("accept-charset").map(ToOwned::to_owned),
-                autocomplete: element.attribute("autocomplete").map(ToOwned::to_owned),
-                rel: element.attribute("rel").map(ToOwned::to_owned),
-                novalidate: element.attribute("novalidate").is_some(),
-                controls: collect_form_controls_for_form(
-                    body_root,
-                    element,
-                    labels,
-                    summary.base_href.as_deref(),
-                ),
-            }),
+            "form" => summary.forms.push(browser_form(
+                body_root,
+                element,
+                labels,
+                summary.base_href.as_deref(),
+            )),
             "table" => summary.tables.push(BrowserTable {
                 caption: find_first_element_in_nodes(&element.children, "caption")
                     .map(element_text),
@@ -11696,6 +11694,97 @@ fn collect_form_controls_for_form(
     controls
 }
 
+fn browser_form(
+    body_root: &[Node],
+    element: &Element,
+    labels: &[(String, String)],
+    base_href: Option<&str>,
+) -> BrowserForm {
+    let action = element.attribute("action").map(ToOwned::to_owned);
+    let resolved_action = action
+        .as_deref()
+        .and_then(|action| resolve_browser_url(action, base_href));
+    let method = element
+        .attribute("method")
+        .map(|method| method.to_ascii_lowercase())
+        .unwrap_or_else(|| "get".to_string());
+    let enctype = element.attribute("enctype").map(ToOwned::to_owned);
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    let novalidate = element.attribute("novalidate").is_some();
+    let controls = collect_form_controls_for_form(body_root, element, labels, base_href);
+    let submitters = browser_form_submitters(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        novalidate,
+    );
+    BrowserForm {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        action,
+        resolved_action,
+        name: element.attribute("name").map(ToOwned::to_owned),
+        method,
+        enctype,
+        target,
+        accept_charset: element.attribute("accept-charset").map(ToOwned::to_owned),
+        autocomplete: element.attribute("autocomplete").map(ToOwned::to_owned),
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        novalidate,
+        controls,
+        submitters,
+    }
+}
+
+fn browser_form_submitters(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormSubmitter> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_submitter(control))
+        .map(|control| BrowserFormSubmitter {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            accessible_name: control.accessible_name.clone().or_else(|| control.alt.clone()),
+            action: control
+                .form_action
+                .clone()
+                .or_else(|| action.map(ToOwned::to_owned)),
+            resolved_action: control
+                .resolved_form_action
+                .clone()
+                .or_else(|| resolved_action.map(ToOwned::to_owned)),
+            method: control
+                .form_method
+                .clone()
+                .unwrap_or_else(|| method.to_string()),
+            enctype: control
+                .form_enctype
+                .clone()
+                .or_else(|| enctype.map(ToOwned::to_owned)),
+            target: control
+                .form_target
+                .clone()
+                .or_else(|| target.map(ToOwned::to_owned)),
+            novalidate: novalidate || control.form_novalidate,
+            value: control.value.clone(),
+        })
+        .collect()
+}
+
+fn is_browser_form_submitter(control: &BrowserFormControl) -> bool {
+    !control.disabled && matches!(control.control_type.as_str(), "submit" | "image")
+}
+
 fn collect_form_controls_for_form_into(
     nodes: &[Node],
     controls: &mut Vec<BrowserFormControl>,
@@ -13129,6 +13218,38 @@ mod tests {
         assert_eq!(controls[8].form_owner.as_deref(), Some("f"));
         assert_eq!(controls[8].accessible_name.as_deref(), Some("Outside"));
         assert_eq!(controls[8].placeholder.as_deref(), Some("Outside"));
+
+        let submitters = &summary.forms[0].submitters;
+        assert_eq!(submitters.len(), 2);
+        assert_eq!(submitters[0].id.as_deref(), Some("go"));
+        assert_eq!(submitters[0].control_type, "submit");
+        assert_eq!(submitters[0].accessible_name.as_deref(), Some("Run search"));
+        assert_eq!(submitters[0].action.as_deref(), Some("run.html"));
+        assert_eq!(
+            submitters[0].resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(submitters[0].method, "post");
+        assert_eq!(
+            submitters[0].enctype.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(submitters[0].target.as_deref(), Some("results"));
+        assert!(submitters[0].novalidate);
+        assert_eq!(submitters[1].id.as_deref(), Some("imageGo"));
+        assert_eq!(submitters[1].control_type, "image");
+        assert_eq!(submitters[1].name.as_deref(), Some("image-go"));
+        assert_eq!(
+            submitters[1].accessible_name.as_deref(),
+            Some("Search image")
+        );
+        assert_eq!(submitters[1].action.as_deref(), Some("find.html"));
+        assert_eq!(
+            submitters[1].resolved_action.as_deref(),
+            Some("https://example.test/search/find.html")
+        );
+        assert_eq!(submitters[1].method, "post");
+        assert!(submitters[1].novalidate);
 
         let content_tree = BrowserContentTree::from_document(&document);
         let form = &content_tree.children[0];
