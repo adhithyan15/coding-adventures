@@ -3393,6 +3393,41 @@ pub fn format_tf_table(result: &TfResult) -> String {
     )
 }
 
+pub fn format_noise_table(result: &NoiseResult) -> String {
+    let mut rows = vec![
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD"
+            .to_string(),
+    ];
+    for (index, point) in result.points.iter().enumerate() {
+        for entry in &point.entries {
+            rows.push(format!(
+                "{index}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                format_table_number(point.frequency_hz),
+                result.output_node,
+                result.input_source,
+                format_table_number(point.output_psd),
+                format_table_number(point.input_referred_psd),
+                entry.element_name,
+                format_noise_type(entry.noise_type),
+                format_table_number(entry.source_psd),
+                format_table_number(entry.output_psd)
+            ));
+        }
+        if point.entries.is_empty() {
+            rows.push(format!(
+                "{index}\t{}\t{}\t{}\t{}\t{}\t\t\t\t",
+                format_table_number(point.frequency_hz),
+                result.output_node,
+                result.input_source,
+                format_table_number(point.output_psd),
+                format_table_number(point.input_referred_psd)
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
     for (index, entry) in result.entries.iter().enumerate() {
@@ -3454,6 +3489,12 @@ pub fn format_fourier_table(result: &FourierResult) -> String {
     }
     rows.push(String::new());
     rows.join("\n")
+}
+
+fn format_noise_type(noise_type: NoiseType) -> &'static str {
+    match noise_type {
+        NoiseType::Thermal => "thermal",
+    }
 }
 
 fn default_output_probes(

@@ -27,7 +27,7 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers.
 - Stable text output tables for selected node voltages, branch currents, and
   AC phasors, Fourier harmonics, transfer-function results, pole-zero entries,
-  and distortion harmonics.
+  noise PSD contributions, and distortion harmonics.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
