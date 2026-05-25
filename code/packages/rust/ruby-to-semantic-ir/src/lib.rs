@@ -1891,6 +1891,88 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 6w — arrow-lambda literal `->(params){body}`
+    // -----------------------------------------------------------------
+    //
+    // Lowers to BuiltinCall("lambda", [MakeClosure { fn_name: "__block_<n>", captures: [] }]).
+    // Body is hoisted to a top-level Function with the parens-params.
+
+    #[test]
+    fn arrow_lambda_no_params_lowers_to_lambda_builtin() {
+        let m = lower("f = -> { 1 }\n");
+        // Outer body should have LetBinding(f, BuiltinCall("lambda", [MakeClosure])).
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { name, value, .. } if name == "f" => value,
+            other => panic!("expected LetBinding(f, ...), got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "lambda");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::MakeClosure { .. }));
+            }
+            other => panic!("expected BuiltinCall(lambda, [MakeClosure]), got {:?}", other),
+        }
+        // The hoisted Function should have zero params.
+        let hoisted = m.functions.iter().find(|f| f.name.starts_with("__block_"));
+        assert!(hoisted.is_some(), "expected a __block_<n> hoisted Function");
+        assert_eq!(
+            hoisted.unwrap().params.len(),
+            0,
+            "expected zero params on bare arrow"
+        );
+    }
+
+    #[test]
+    fn arrow_lambda_with_params_hoists_body_with_params() {
+        let m = lower("f = ->(x, y) { x + y }\n");
+        // Locate the hoisted block function.
+        let hoisted = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block_"))
+            .expect("expected hoisted block function");
+        let names: Vec<&str> = hoisted.params.iter().map(|p| p.name.as_str()).collect();
+        assert_eq!(names, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn lambda_keyword_form_lowers_via_method_with_block() {
+        // `lambda { |x| x + 1 }` at top level uses method_with_block +
+        // the `lambda` builtin (Phase 6w added "lambda"/"proc" to the
+        // builtin map).  v0 limitation: `lambda { ... }` doesn't work
+        // as an expression RHS (e.g. `f = lambda { ... }`) because
+        // method_with_block isn't in `factor` — only at statement level.
+        let m = lower("lambda { |x| x + 1 }\n");
+        let b = main_body(&m);
+        // method_with_block lowers to an ExprStmt(BuiltinCall(lambda, [MakeClosure]))
+        // (not tail-promoted by `lower_program`).
+        assert_eq!(b.stmts.len(), 1);
+        let expr = match &b.stmts[0] {
+            Stmt::ExprStmt { expr, .. } => expr,
+            other => panic!("expected ExprStmt, got {:?}", other),
+        };
+        match expr {
+            Expr::BuiltinCall { name, .. } => {
+                assert_eq!(name, "lambda", "expected `lambda` builtin");
+            }
+            other => panic!("expected BuiltinCall(lambda, ...), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_module_passes_sir_validator() {
+        let m = lower("f = ->(x) { x + 1 }\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected arrow-lambda output: {:?}",
+            result
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6v — `begin … rescue … ensure … end`
     // -----------------------------------------------------------------
     //

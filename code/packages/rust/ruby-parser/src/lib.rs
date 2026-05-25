@@ -1,12 +1,27 @@
 //! Ruby parser backed by compiled parser grammar.
 
-use coding_adventures_ruby_lexer::tokenize_ruby;
+use coding_adventures_ruby_lexer::tokenize_ruby_for_version;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Default Ruby era for the parser.  Phase 6w bumped this from "1.8"
+/// (the lexer's default) to "3.0" so that era-gated lexer fusions
+/// — most importantly `->` (Op("->") fused via `fuse_lambda_arrow`,
+/// 1.9.1+) and the 2.x-era literal/operator fusions — are visible
+/// to the parser by default.  Without this bump, `->(x) { x }` would
+/// lex as `-`, `>`, ... and never match the `lambda_literal` rule.
+///
+/// "3.0" is chosen as the floor for "modern Ruby" — every 2.x and
+/// 3.0 lexer fusion is on; later 3.x eras add nothing the parser
+/// currently keys off.  Era-specific behaviour tests (e.g. lexer
+/// crate tests asserting 1.8 emits `-`+`>` separately) can still use
+/// the lower-level `tokenize_ruby_for_version` directly.
+pub const DEFAULT_RUBY_ERA: &str = "3.0";
+
 pub fn create_ruby_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_ruby(source);
+    let tokens = tokenize_ruby_for_version(source, DEFAULT_RUBY_ERA)
+        .expect("ruby lexer: DEFAULT_RUBY_ERA is a recognised era");
     let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
@@ -1684,6 +1699,74 @@ mod tests {
     //   exception_list  = NAME { COMMA NAME } ;
     //   ensure_clause   = "ensure" { !"end" statement } ;
     // -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
+    // Phase 6w — arrow-lambda literal `->(params){body}`
+    //
+    // Grammar:
+    //   lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
+    //
+    // Placed inside `factor` so lambdas are valid in any expression
+    // position.  `lambda { … }` / `proc { … }` still flow through
+    // `method_with_block` (no separate grammar).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_arrow_lambda_no_params() {
+        // `-> { 1 }` — no params, brace block.  We wrap in an
+        // assignment to dodge the bare-NAME-led statement ambiguity.
+        let ast = parse_ruby("f = -> { 1 }");
+        let ll = find_descendant(&ast, "lambda_literal")
+            .expect("expected lambda_literal node");
+        assert!(tree_has_token_value(ll, "->"), "expected `->` token");
+        // No params subnode.
+        assert!(
+            find_descendant(ll, "params").is_none(),
+            "expected no params subnode for bare arrow"
+        );
+        assert!(find_descendant(ll, "block").is_some());
+    }
+
+    #[test]
+    fn test_parse_arrow_lambda_with_params() {
+        // `->(x, y) { x + y }` — two parens-params, brace block.
+        let ast = parse_ruby("f = ->(x, y) { x + y }");
+        let ll = find_descendant(&ast, "lambda_literal")
+            .expect("expected lambda_literal node");
+        let p = find_descendant(ll, "params").expect("expected params subnode");
+        let param_count = p
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "param"))
+            .count();
+        assert_eq!(param_count, 2, "expected 2 params, got {param_count}");
+    }
+
+    #[test]
+    fn test_parse_arrow_lambda_inside_call() {
+        // `each(->(x) { x })` — arrow lambda as a call arg.
+        let ast = parse_ruby("each(->(x) { x })");
+        assert!(
+            find_descendant(&ast, "lambda_literal").is_some(),
+            "expected lambda_literal inside call args"
+        );
+    }
+
+    #[test]
+    fn test_parse_lambda_keyword_with_brace_block() {
+        // `lambda { |x| x + 1 }` — keyword form, uses method_with_block.
+        let ast = parse_ruby("lambda { |x| x + 1 }");
+        // Should NOT be a lambda_literal (that's the arrow form);
+        // it's a method_with_block instead.
+        assert!(
+            find_descendant(&ast, "lambda_literal").is_none(),
+            "lambda keyword form should NOT parse as lambda_literal"
+        );
+        assert!(
+            find_descendant(&ast, "method_with_block").is_some(),
+            "expected method_with_block for lambda keyword form"
+        );
+    }
 
     #[test]
     fn test_parse_begin_with_rescue() {

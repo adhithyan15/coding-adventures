@@ -370,7 +370,26 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # leaving `(1).bar` unconsumed.  When no parens follow the name, the
 # method_call alternative fails (requires LPAREN) and we fall through to
 # the bare-NAME branch.
-factor       = ( method_call | NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call } ;
+factor       = ( lambda_literal | method_call | NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call } ;
+# Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
+#
+# Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter
+# list is parenthesised and BEFORE the block; the body is a brace_block
+# or do_block.  v0 reuses the existing `params` rule (Phase 6s aware,
+# so splat is supported in arrow params) and the existing `block` rule
+# (which also admits a redundant `|...|` block_params header — we
+# ignore that case in lowering).
+#
+# Place in `factor` BEFORE the bare NAME / KEYWORD alternatives so that
+# the leading `->` literal wins (NAME alone can't start with `-`, but
+# the literal match is checked first regardless).
+#
+# `lambda { … }` and `proc { … }` are already handled by the existing
+# `method_with_block` rule (no new grammar needed — they're just NAME +
+# brace_block calls).  The SIR lowerer marks both as
+# `BuiltinCall("lambda", …)` via `ruby_builtin_effects` to give
+# downstream emitters a single closure-construction shape.
+lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
 unary_minus  = MINUS factor ;
 symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;
 array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;

@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.24.0] - 2026-05-25
+
+### Added (Phase 6w — arrow-lambda lowering)
+
+New `lower_lambda_literal` helper handles `->(params){body}`:
+
+- Extracts params from the leading parens-list (Phase 6s — splat names preserved bare).
+- Hoists the block body to a top-level `Function` named `__block_<n>` (reusing Phase 6g's counter) via new `hoist_lambda_body` helper.
+- Emits `Expr::BuiltinCall { name: "lambda", args: [MakeClosure { fn_name, captures: [] }], effects: PURE }`.
+- Auto-sets `Feature::Closures` (and `Feature::DynamicTyping` if any params present).
+
+`ruby_builtin_effects` extended to recognise `lambda` and `proc` so `lambda { ... }` and `proc { ... }` (keyword forms going through `method_with_block`) also emit `BuiltinCall("lambda"|"proc", ...)`.  Downstream emitters see a single closure-construction shape.
+
+### v0 deferred limitations
+
+- Captures from the enclosing scope are NOT computed for arrow lambda bodies (same limitation as Phase 6g blocks).
+- `lambda { … }` / `proc { … }` work at statement position only — they can't be used as an expression RHS because `method_with_block` is not part of `factor`.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 108 → **112** (+4):
+  - `arrow_lambda_no_params_lowers_to_lambda_builtin` — bare `-> { 1 }`.
+  - `arrow_lambda_with_params_hoists_body_with_params` — params propagate to hoisted Function.
+  - `lambda_keyword_form_lowers_via_method_with_block` — `lambda { |x| x + 1 }` keyword form.
+  - `arrow_lambda_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.23.0] - 2026-05-25
 
 ### Added (Phase 6v — `begin … rescue … ensure … end` lowering)

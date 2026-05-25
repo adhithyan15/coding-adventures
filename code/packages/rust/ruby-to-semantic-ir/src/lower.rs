@@ -2141,6 +2141,214 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
+    // Phase 6w — arrow-lambda literal `->(params){body}`
+    // -------------------------------------------------------------------
+
+    /// Lower a `lambda_literal` node (`->(params){body}`) into a
+    /// `BuiltinCall("lambda", [MakeClosure])` expression.
+    ///
+    /// Grammar shape (per `ruby.grammar`):
+    /// ```text
+    /// lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
+    /// ```
+    ///
+    /// The body is hoisted to a top-level `Function` (named `__block_<n>`,
+    /// reusing the same counter as `method_with_block` blocks).  Params
+    /// are extracted from the leading `params` subnode (Phase 6s — splat
+    /// supported) rather than from `block_params` (the `|x|` form inside
+    /// the block), because in `->` syntax the parens-list IS the
+    /// parameter list.
+    ///
+    /// **v0 deferred limitations**:
+    /// - Block bodies that reference outer locals lose them — captures
+    ///   are NOT computed for v0 (same limitation as Phase 6g blocks).
+    /// - If the user writes both `->(x) { |y| … }` (params in parens
+    ///   AND a block_params header), the latter is silently ignored;
+    ///   only the parens-list is honoured.
+    /// - `lambda { … }` and `proc { … }` continue to lower via
+    ///   `method_with_block` — they're regular keyword-led calls.
+    ///   The SIR builtin table tags both as `BuiltinCall("lambda", …)`
+    ///   so downstream emitters see a single closure-construction shape.
+    fn lower_lambda_literal(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        // 1. Find the `block` subnode (mandatory).
+        let block_node = self
+            .find_node_child(node, "block")
+            .ok_or_else(|| RubyLowerError {
+                message: "lambda_literal missing block subnode".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+
+        // 2. Extract arrow-lambda params from the optional `params`
+        //    subnode (Phase 6s: param = [ "*"|"**" ] NAME).
+        let params_node = self.find_node_child(node, "params");
+        let params: Vec<Param> = if let Some(pn) = params_node {
+            pn.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(param_node)
+                        if param_node.rule_name == "param" =>
+                    {
+                        // Skip splat-prefix tokens; pick the bare NAME.
+                        param_node.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t)
+                                if matches!(t.type_, TokenType::Name)
+                                    && t.value != "*"
+                                    && t.value != "**" =>
+                            {
+                                Some(Param {
+                                    name: t.value.clone(),
+                                    sir_type: None,
+                                    span: self.span_of_token(t),
+                                })
+                            }
+                            _ => None,
+                        })
+                    }
+                    _ => None,
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
+        if !params.is_empty() {
+            self.features_used.insert(Feature::DynamicTyping);
+        }
+
+        // 3. Hoist the block body to a Function with these params.
+        //    Reuse the same machinery as `hoist_block_to_function` but
+        //    using OUR `params` (from the parens-list), not the inner
+        //    block's `block_params` pipe form.
+        let fn_name = self.hoist_lambda_body(block_node, params)?;
+
+        // 4. Emit BuiltinCall("lambda", [MakeClosure]).  Closures
+        //    feature auto-set so the validator accepts MakeClosure.
+        self.features_used.insert(Feature::Closures);
+        let span = self.span_of(node);
+        Ok(Expr::BuiltinCall {
+            name: "lambda".to_string(),
+            args: vec![Expr::MakeClosure {
+                fn_name,
+                captures: Vec::new(),
+                span: span.clone(),
+            }],
+            effects: EffectSet::PURE,
+            span,
+        })
+    }
+
+    /// Phase 6w helper — hoist a `block` (do_block/brace_block) body
+    /// to a top-level Function, taking the params list from the caller
+    /// (the arrow lambda's parens-list) rather than from the block's
+    /// own `|...|` `block_params` header.
+    ///
+    /// This is structurally parallel to `hoist_block_to_function` but
+    /// with the params source swapped.  Returns the synthesised
+    /// function name.
+    fn hoist_lambda_body(
+        &mut self,
+        block_node: &GrammarASTNode,
+        params: Vec<Param>,
+    ) -> Result<String, RubyLowerError> {
+        let inner = self.first_node_child(block_node).ok_or_else(|| RubyLowerError {
+            message: "block missing do_block/brace_block child".to_string(),
+            line: block_node.start_line.unwrap_or(0),
+            column: block_node.start_column.unwrap_or(0),
+        })?;
+
+        // Lower body with fresh scope (params pre-declared as locals
+        // + tracked in current_params so VarRefs get Scope::Param).
+        let saved_locals = std::mem::take(&mut self.declared_locals);
+        let saved_params = std::mem::take(&mut self.current_params);
+        for p in &params {
+            self.declared_locals.insert(p.name.clone());
+            self.current_params.insert(p.name.clone());
+        }
+
+        // Body statements (same tail-expression promotion rule as the
+        // method_with_block hoister).
+        let body_stmts: Vec<&GrammarASTNode> = inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        let mut stmts_out: Vec<Stmt> = Vec::new();
+        let mut value: Option<Expr> = None;
+        if body_stmts.is_empty() {
+            value = Some(Expr::NilLit {
+                span: self.span_of(inner),
+            });
+        } else {
+            let last_idx = body_stmts.len() - 1;
+            for (i, s) in body_stmts.iter().enumerate() {
+                let inner_stmt = self.first_node_child(s).ok_or_else(|| RubyLowerError {
+                    message: "statement node had no child rule".to_string(),
+                    line: s.start_line.unwrap_or(0),
+                    column: s.start_column.unwrap_or(0),
+                })?;
+                let is_tail = i == last_idx;
+                let kind = inner_stmt.rule_name.as_str();
+                if is_tail && matches!(kind, "expression_stmt" | "method_call") {
+                    let v = match kind {
+                        "expression_stmt" => {
+                            let en = self.first_node_child(inner_stmt).ok_or_else(|| {
+                                RubyLowerError {
+                                    message: "expression_stmt had no expression child"
+                                        .to_string(),
+                                    line: inner_stmt.start_line.unwrap_or(0),
+                                    column: inner_stmt.start_column.unwrap_or(0),
+                                }
+                            })?;
+                            self.lower_expression(en)?
+                        }
+                        "method_call" => self.lower_method_call(inner_stmt)?,
+                        _ => unreachable!(),
+                    };
+                    value = Some(v);
+                } else {
+                    stmts_out.extend(self.lower_statement_inner_multi(inner_stmt)?);
+                }
+            }
+        }
+        let value = value.unwrap_or(Expr::NilLit {
+            span: self.span_of(inner),
+        });
+
+        // Restore outer scope.
+        self.declared_locals = saved_locals;
+        self.current_params = saved_params;
+
+        // Mint a synthetic function name (shares the same counter as
+        // method_with_block-hoisted blocks).
+        let n = self.block_counter;
+        self.block_counter += 1;
+        let fn_name = format!("__block_{n}");
+
+        self.user_functions.push(Function {
+            name: fn_name.clone(),
+            params,
+            return_type: None,
+            captures: Vec::new(),
+            body: Block {
+                stmts: stmts_out,
+                value,
+                span: self.span_of(inner),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: self.span_of(block_node),
+        });
+
+        Ok(fn_name)
+    }
+
+    // -------------------------------------------------------------------
     // expression / term / factor
     // -------------------------------------------------------------------
 
@@ -2214,6 +2422,8 @@ impl Lowerer {
             // `factor`.  Reuse the statement-level lowerer; it handles
             // the trailing `{ dot_call }` chain transparently.
             "method_call" => self.lower_method_call(node),
+            // Phase 6w — arrow-lambda literal `->(params){body}`.
+            "lambda_literal" => self.lower_lambda_literal(node),
             // The parser sometimes wraps a bare token into an "expression_stmt"
             // when reached as the RHS of an assignment.  Recurse into it.
             "expression_stmt" => {
@@ -3017,6 +3227,12 @@ fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
         // we just declare PURE here.  Adding them to the builtin
         // table makes `each { … }` lower cleanly without forcing
         // every consumer to declare `each` as a user function.
+        // Phase 6w — explicit closure-construction builtins.  `lambda { ... }`
+        // and `proc { ... }` go through `method_with_block` and pass their
+        // hoisted closure as the trailing arg.  Tagging both as known
+        // builtins (PURE) gives downstream emitters a single
+        // closure-construction shape — same as Phase 6w's arrow-lambda.
+        "lambda" | "proc" => Some(EffectSet::PURE),
         "each" | "map" | "select" | "reject" | "filter"
         | "each_with_index" | "each_with_object" | "times"
         | "tap" | "then" | "yield_self" | "loop"
