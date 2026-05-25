@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.6.0 — 2026-05-25
+
+### Added
+
+- **Phase 68 — Three-Sqrt × Log × polynomial numerator** (`threeSqrtLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(diverging), polynomial..., bounded...)`.
+  Log sub-polynomial; effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+  Closes when `denDeg > threeSqrtLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 4 new tests in the "Phase 68" describe block.
+
 ## 2.5.0 — 2026-05-25
 
 ### Added
