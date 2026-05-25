@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.3.0] - 2026-05-25
+
+### Added — CLOC11.02: `--js` glob expansion + `!` exclusion
+
+Second implementation slice of [CLOC11] (drop-in Closure Compiler compatibility). CLOC11.01 read `--js` values as literal file paths; this release replaces that with a real glob expander matching Closure's documented semantics.
+
+- **New module `globs`.** Hand-rolled (zero-dep) glob matcher supporting:
+  - `*` — matches any sequence within a single path segment.
+  - `**` — matches zero or more whole path segments. Only special as a full segment per CC's docs; `src/**.js` is literal.
+  - `?` — exactly one character within a segment.
+  - `[abc]` / `[a-z]` / `[!abc]` — character classes with range and negation.
+  - Literal text otherwise.
+- **`!` exclusion.** A `--js` value starting with `!` removes everything it matches from the running included set. Mirrors Closure's behavior: `--js 'src/**/*.js' --js '!src/legacy/**'` includes all `src/` JS then drops the legacy subtree.
+- **Walk strategy.** For each inclusion pattern we identify the longest fixed (glob-free) prefix and walk under it only — same optimisation as upstream `CommandLineRunner.findJsFiles`. Directory entries are sorted lexicographically before recursion so expansion is deterministic.
+- **`resolve_inputs(config)`** extracted as its own pub function so glob behavior is unit-testable without going through full `run_compiler`. Result: `run_compiler` calls `resolve_inputs` first, then reads the resolved paths.
+- **New `CompilerError::GlobExpansion(globs::GlobError)` variant** carrying the typed glob failure (NoMatches / InvalidPattern / WalkError) with the offending pattern.
+- **Diff fixture `tests/diff/js-glob/`** per CLOC11 §3:
+  - `input/` directory tree with 4 .js files including one excluded subtree.
+  - `flags.txt` invoking `--js 'tests/diff/js-glob/input/**/*.js' --js '!tests/diff/js-glob/input/excluded/**'`.
+  - `expected.stdout` with the concatenated content of the surviving 3 files in lex order.
+- **`tests/diff_glob.rs`** integration test that runs the actual built binary against the fixture and asserts byte-equal output.
+
+### Behavior changes (potentially user-visible)
+
+- **Missing literal paths now error with `GlobExpansion(NoMatches)` instead of `InputReadError(NotFound)`**. Matches Closure's behavior (it emits `JSC_NO_JS_FILES_FOUND_FOR_PATTERN` regardless of whether the input was a glob or a literal). The `missing_input_returns_typed_error` test was updated to assert the new variant.
+- **A `--js` invocation that produces zero matches is now a hard error** (exit code 2), even for literal paths. Closure does the same.
+
+### Tests
+
+21 new unit tests in `globs::tests`:
+- 6 pure-function tests: literal vs glob detection, fixed-prefix splitting (including absolute paths), segment-matcher behavior for literals, `*`, `**`, `?`, char classes (positive, range, negative), invalid char class, error display.
+- 9 filesystem-backed tests: literal-path passthrough, missing literal errors, `*.js`, `**/*.js` recursion, exclusion, no-matches error, invalid-pattern error, dedupe across overlapping inclusions, order preservation across patterns, subtree exclusion via `**`.
+
+Plus the integration diff test brings the binary's total to 60 tests passing.
+
+### Architecture
+
+`globs.rs` is a single self-contained module under `code/programs/rust/closurec/src/`. No new crate dependencies. Per the repo's zero-dep working principle, this implements just enough of POSIX glob to match Closure's documented surface. Brace expansion (`{a,b}`), capture groups, and other features beyond Closure's surface are not supported and are not part of the v1 scope.
+
+[CLOC11]: ../../specs/CLOC11-drop-in-closure-compat.md
+
 ## [0.2.0] - 2026-05-24
 
 ### Added — CLOC11.01: CompilerConfig + identity build wiring
