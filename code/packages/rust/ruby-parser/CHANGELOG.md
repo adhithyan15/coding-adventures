@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.30.0] - 2026-05-25
+
+### Added (Phase 7c — Ruby 3.0 endless method definitions `def foo = expr`)
+
+New grammar rule:
+
+```
+endless_def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] EQUALS expression ;
+```
+
+Placed **before** `def_statement` in the `statement` alternation so PEG tries the endless form first; when the `=` isn't present the parser falls through to the block-bodied `def`.  The two forms cannot conflict because the endless form requires `=` immediately after the signature, while the block form expects a newline + body statements + `end`.
+
+Regenerated `_grammar.rs` via `grammar-tools compile-grammar`.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+A new helper `lower_endless_def_statement` mirrors `lower_def_statement`'s parameter extraction and scope-isolation logic, but the body is the single trailing `expression` Node:
+
+```
+endless_def_statement → Function {
+    name,
+    params,
+    body: Block { stmts: [], value: <lowered expression> },
+    ...
+}
+```
+
+Both the program-level pre-pass (`collect_def_statements`) and the class/module nested pass (`collect_def_statements_from_body`) now dispatch on rule name to handle both `def_statement` and `endless_def_statement`.
+
+### v0 deferred limitations
+
+- Inherits Phase 6s's lossy-splat limitation: `def foo(*args) = args.sum` parses but the `*` prefix on the param is dropped at SIR level (`Param` has no variadic flag).
+- The endless form is not nested under classes / modules in any SIR-significant way (matches the block-bodied def's v0 limitation).
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 128 → **131** (+3 grammar tests):
+  - `test_parse_endless_def_no_params` — `def hello = 1`.
+  - `test_parse_endless_def_with_params` — `def add(x, y) = x + y`.
+  - `test_parse_endless_def_does_not_break_block_def` — regression for the block-bodied form.
+
 ## [0.29.0] - 2026-05-25
 
 ### Added (Phase 7b — heredocs in parser)

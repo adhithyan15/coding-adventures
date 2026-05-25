@@ -2197,5 +2197,65 @@ mod tests {
             "expected canonical <<~ heredoc with indent stripped"
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7c — Ruby 3.0 endless method definitions `def foo = expr`
+    //
+    // Grammar adds:
+    //   endless_def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] EQUALS expression ;
+    //
+    // Placed BEFORE def_statement in the statement alternation so PEG tries
+    // the endless form first; if `=` isn't present the parser falls through
+    // to the block-bodied def.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_endless_def_no_params() {
+        // `def hello = 1` — endless method with no parameters.
+        let ast = parse_ruby("def hello = 1");
+        let d = find_descendant(&ast, "endless_def_statement")
+            .expect("expected endless_def_statement node");
+        // The method-name Name token should be present.
+        assert!(tree_has_token_value(d, "hello"));
+        // No params subnode for the bare form.
+        assert!(
+            find_descendant(d, "params").is_none(),
+            "expected no params subnode for `def hello = 1`"
+        );
+    }
+
+    #[test]
+    fn test_parse_endless_def_with_params() {
+        // `def add(x, y) = x + y` — endless method with two parameters.
+        let ast = parse_ruby("def add(x, y) = x + y");
+        let d = find_descendant(&ast, "endless_def_statement")
+            .expect("expected endless_def_statement node");
+        let p = find_descendant(d, "params").expect("expected params subnode");
+        let param_count = p
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "param"))
+            .count();
+        assert_eq!(param_count, 2, "expected 2 params, got {param_count}");
+        // The body expression should be present.
+        assert!(find_descendant(d, "expression").is_some());
+    }
+
+    #[test]
+    fn test_parse_endless_def_does_not_break_block_def() {
+        // Regression: putting `endless_def_statement` first in the
+        // alternation must not break the existing block-bodied def
+        // form when there's no `=` after the signature.
+        let ast = parse_ruby("def greet\n  puts(1)\nend");
+        assert!(
+            find_descendant(&ast, "def_statement").is_some(),
+            "expected def_statement (block-bodied) — endless variant must fall through"
+        );
+        // The endless form should NOT have matched.
+        assert!(
+            find_descendant(&ast, "endless_def_statement").is_none(),
+            "block-bodied def must not match endless_def_statement"
+        );
+    }
 }
 
