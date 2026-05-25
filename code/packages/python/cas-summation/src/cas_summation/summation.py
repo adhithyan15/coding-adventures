@@ -901,6 +901,19 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 65: ``Mul(Sqrt(P1), Sqrt(P2), Log(diverging), Log(diverging),
+    #           polynomial..., bounded...)`` numerator.
+    # Two Sqrt + two Log; log² sub-polynomial; effective_x2 = deg(P1) + deg(P2) + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    ts2l_x2 = _two_sqrt_two_log_poly_effective_x2(num, k)
+    if ts2l_x2 is not None:
+        den_deg_ts2l = _polynomial_degree_in_k(den, k)
+        if den_deg_ts2l is not None:
+            if 2 * den_deg_ts2l > ts2l_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -1816,6 +1829,68 @@ def _two_log_sqrt_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
     if log_count != 2 or sqrt_deg_x2 is None:
         return None
     return sqrt_deg_x2 + 2 * poly_deg_sum
+
+
+def _two_sqrt_two_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``deg(P1) + deg(P2) + 2·poly_deg`` when ``node`` is a ``Mul``
+    with **exactly two** ``Sqrt(positive-leading polynomial)`` factors,
+    **exactly two** ``Log(diverging-in-k)`` factors, any polynomial factors,
+    and any bounded factors; ``None`` otherwise.
+
+    Phase 65 — Two-Sqrt × Two-Log × polynomial numerator.
+
+    ``log²(k)`` is sub-polynomial and does not change the effective degree.
+    ``effective_x2 = deg(P1) + deg(P2) + 2·poly_deg`` (same as Phase 61).
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +------------------------------------------------------+-------------------+
+    | Input                                                | Return            |
+    +======================================================+===================+
+    | ``Mul(Sqrt(k), Sqrt(k), Log(k), Log(k))``            | ``1 + 1 = 2``     |
+    | ``Mul(Sqrt(k³), Sqrt(k), Log(k), Log(k+1))``         | ``3 + 1 = 4``     |
+    | ``Mul(Sin(k), Sqrt(k), Sqrt(k), Log(k), Log(k), k)`` | ``1+1+2 = 4``     |
+    | ``Mul(Sqrt(k), Log(k), Log(k))``                     | None (1 Sqrt)     |
+    | ``Mul(Sqrt(k), Sqrt(k), Log(k))``                    | None (1 Log)      |
+    +------------------------------------------------------+-------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(positive-leading polynomial)`` → record ×2 degree; bail after 2.
+         - ``Log(diverging)`` → count; bail after 2.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 2 Sqrt and exactly 2 Log.
+      4. Return ``sqrt_deg1_x2 + sqrt_deg2_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            sqrt_degs.append(deg_x2)
+            if len(sqrt_degs) > 2:
+                return None
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 2:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs) != 2 or log_count != 2:
+        return None
+    return sqrt_degs[0] + sqrt_degs[1] + 2 * poly_deg_sum
 
 
 def _try_power_of_k(
