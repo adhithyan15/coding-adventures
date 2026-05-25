@@ -100,6 +100,9 @@
   in a later compatibility slice.
 - Add `pss`, which runs the bounded shooting-Newton solve and returns one
   steady-state transient period from the solved circuit.
+- Add `format_pss_table`, which renders the direct PSS result as a stable
+  tab-separated steady-state table with period, step, convergence, iteration,
+  residual, time, and selected voltage/current probes.
 - Add `pss_newton_solve`, which runs bounded accepted Newton iterations until
   residual convergence, no improvement, or the iteration cap.
 - Add `pss_newton_iteration`, which runs one candidate update, accepts it only

@@ -25,10 +25,10 @@ The initial slices implement:
   magnitude/phase, and THD results.
 - Transient-to-distortion projection through the Fourier extraction path.
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers.
-- Stable text output tables for selected node voltages, branch currents, and
-  AC phasors, sensitivity entries, Fourier harmonics, transfer-function
-  results, pole-zero entries, noise PSD contributions, and distortion
-  harmonics.
+- Stable text output tables for selected node voltages, branch currents, AC
+  phasors, PSS steady-state periods, sensitivity entries, Fourier harmonics,
+  transfer-function results, pole-zero entries, noise PSD contributions, and
+  distortion harmonics.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
