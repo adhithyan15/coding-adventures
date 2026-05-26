@@ -1111,6 +1111,21 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 82: ``Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Sqrt(P5), Log(h1), Log(h2),
+    #           Log(h3), Log(h4), Log(h5), polynomial..., bounded...)`` numerator.
+    # Five Sqrt factors + five Log factors; log⁵ sub-polynomial → 0.
+    # effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + sqrt5_deg_x2
+    #              + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s5l5p_x2 = _five_sqrt_five_log_poly_effective_x2(num, k)
+    if s5l5p_x2 is not None:
+        den_deg_s5l5 = _polynomial_degree_in_k(den, k)
+        if den_deg_s5l5 is not None:
+            if 2 * den_deg_s5l5 > s5l5p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -2899,6 +2914,76 @@ def _two_sqrt_five_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | Non
     if len(sqrt_degs_x2) != 2 or log_count != 5:
         return None
     return sqrt_degs_x2[0] + sqrt_degs_x2[1] + 2 * poly_deg_sum
+
+
+def _five_sqrt_five_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + sqrt5_deg_x2 + 2·poly_deg``
+    when ``node`` is a ``Mul`` with **exactly five** ``Sqrt(positive-leading polynomial)``
+    factors, **exactly five** ``Log(diverging-in-k)`` factors, any polynomial factors,
+    and any bounded factors; ``None`` otherwise.
+
+    Phase 82 — Five-Sqrt × Five-Log × polynomial numerator.
+
+    Effective growth:
+    ``sqrt(k^a₁) · sqrt(k^a₂) · sqrt(k^a₃) · sqrt(k^a₄) · sqrt(k^a₅) · log(k)⁵ · k^m
+    ≈ k^{(a₁+a₂+a₃+a₄+a₅)/2} · log⁵(k) · k^m``.
+    ``log⁵(k)`` is sub-polynomial (``o(k^ε)``), contributing 0.
+    Using the ×2 integer trick:
+    ``effective_x2 = a₁ + a₂ + a₃ + a₄ + a₅ + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +--------------------------------------------------------------------------+---------------------+
+    | Input                                                                    | Return              |
+    +==========================================================================+=====================+
+    | ``Mul(Sqrt(k)×5, Log(k)×5)``                                            | ``1+1+1+1+1 = 5``   |
+    | ``Mul(Sqrt(k³)×5, Log(k)×5)``                                           | ``3+3+3+3+3 = 15``  |
+    | ``Mul(Sqrt(k)×5, Log(k)×5, k)``                                         | ``1+1+1+1+1+2 = 7`` |
+    | ``Mul(Sqrt(k)×4, Log(k)×5)``                                            | None (4 Sqrts)      |
+    | ``Mul(Sqrt(k)×6, Log(k)×5)``                                            | None (6 Sqrts)      |
+    | ``Mul(Sqrt(k)×5, Log(k)×4)``                                            | None (4 Logs)       |
+    +--------------------------------------------------------------------------+---------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(positive-leading polynomial)`` → record ×2 degree; bail after 5.
+         - ``Log(diverging)`` → count; bail after 5.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 5 Sqrt AND exactly 5 Log factors.
+      4. Return ``sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + sqrt5_deg_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 5:
+                # Sixth Sqrt factor — not this phase.
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 5:
+                # Six or more Log factors — refuse.
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 5 or log_count != 5:
+        return None
+    return (sqrt_degs_x2[0] + sqrt_degs_x2[1] + sqrt_degs_x2[2]
+            + sqrt_degs_x2[3] + sqrt_degs_x2[4] + 2 * poly_deg_sum)
 
 
 def _three_sqrt_four_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
