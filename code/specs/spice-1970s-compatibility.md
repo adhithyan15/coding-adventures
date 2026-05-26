@@ -330,6 +330,9 @@ Status:
 - DC sensitivity analysis can now be evaluated across named corners in the
   live Rust SPICE package, reusing the existing corner override surface for
   the same output-node query.
+- Named-corner `.SENS` results can now be rendered as stable tab-separated
+  text tables in the live Rust SPICE package, preserving corner order and
+  covering nominal values, absolute sensitivities, and relative sensitivities.
 - AC noise analysis can now be evaluated across named corners in the live Rust
   SPICE package, reusing the existing corner override surface for the same
   output/input query and frequency grid.

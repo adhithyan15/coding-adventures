@@ -1,6 +1,7 @@
 use spice_engine::{
-    format_sens_table, sens_dc, sens_dc_corners, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
-    CurrentSource, Element, Resistor, SensResult, SpiceError, Vccs, Vcvs, VoltageSource,
+    format_corner_sens_table, format_sens_table, sens_dc, sens_dc_corners, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Element, Resistor, SensResult, SpiceError, Vccs,
+    Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -131,6 +132,44 @@ fn sens_dc_corners_runs_analysis_per_corner() {
     assert_close(
         entry(&result.points[2].result, "Vin", "voltage").sensitivity,
         0.5,
+    );
+}
+
+#[test]
+fn corner_sens_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "vin", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = sens_dc_corners(
+        &circuit,
+        "out",
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_sens_table(&result),
+        "Corner\tOutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n\
+nominal\tout\t5.000000e+00\tVin\tvoltage\t1.000000e+01\t5.000000e-01\t1.000000e+00\n\
+nominal\tout\t5.000000e+00\tRbot\tresistance_ohms\t1.000000e+03\t2.499999e-03\t4.999998e-01\n\
+nominal\tout\t5.000000e+00\tRtop\tresistance_ohms\t1.000000e+03\t-2.499999e-03\t-4.999998e-01\n\
+rbot-fast\tout\t3.333333e+00\tVin\tvoltage\t1.000000e+01\t3.333333e-01\t1.000000e+00\n\
+rbot-fast\tout\t3.333333e+00\tRbot\tresistance_ohms\t5.000000e+02\t4.444443e-03\t6.666664e-01\n\
+rbot-fast\tout\t3.333333e+00\tRtop\tresistance_ohms\t1.000000e+03\t-2.222221e-03\t-6.666662e-01\n"
     );
 }
 
