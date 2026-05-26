@@ -7,6 +7,34 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.8] — 2026-05-25
+
+### Added
+
+- **VP8X extended container decoder** — `decode_webp` now fully handles the
+  `VP8X` chunk format used by libwebp when ICC/EXIF/XMP metadata is present
+  or when an alpha plane is stored separately from lossy color.
+  - Sub-chunk scanner: iterates through all chunks after `VP8X`, dispatching
+    `VP8L` (lossless ARGB) or `VP8 ` (lossy RGB) for image data.
+  - Metadata chunks (`ICCP`, `EXIF`, `XMP `) are silently skipped.
+  - `ALPH` chunk decoder: reads the 1-byte compression header; supports
+    both uncompressed (method=0) and VP8L-compressed (method=1) alpha planes.
+  - `apply_alph_chunk` merges decoded alpha values into the A channel of the
+    reconstructed image (used when `VP8 ` lossy color + separate alpha).
+  - Returns a descriptive error for animated WebP (`ANIM`/`ANMF` chunks).
+- `vp8l::decode_as_alpha(data, width, height)` — decodes a VP8L-compressed
+  alpha plane and returns a flat `Vec<u8>` of alpha values extracted from the
+  green channel of the decoded image.
+- 3 new tests: `vp8x_wrapping_vp8l_round_trips`, `vp8x_with_metadata_chunks_skipped`,
+  `vp8x_anim_returns_error`.
+
+### Changed
+
+- `decode_webp` doc comment updated to list all supported container formats.
+- `VERSION` bumped to `0.3.8`.
+
+---
+
 ## [0.3.7] — 2026-05-25
 
 ### Added
