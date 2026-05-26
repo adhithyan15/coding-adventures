@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.21.0 — 2026-05-25
+
+### Added
+
+- **Phase 81 — Four-Sqrt × Five-Log × polynomial numerator** (`fourSqrtFiveLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 4 Sqrt and exactly 5 Log factors; `log⁵(k)` sub-polynomial — contributes 0 to effective
+  degree; effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + sqrtHalfDeg4 + polyDeg.
+  Closes when `denDeg > fourSqrtFiveLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 81" describe block.
+
 ## 2.20.0 — 2026-05-25
 
 ### Added
