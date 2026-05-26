@@ -2,6 +2,26 @@
 
 All notable changes to this crate are documented here.
 
+## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` + `mov` for ref types)
+
+### Changed — `ref<any>` widens the supported reference types; `mov` for refs
+
+Companion to Twig path-A increment 6c.  The Phase 2 heap-lowering
+convention is `field_load dest, pair, idx [ref<any>]`.  CLR lowers
+this to `ldelem.ref`, which returns `System.Object` — the same type
+cons-cell fields are declared as in the `System.Object[2]` Phase 2
+representation.
+
+Two validator changes:
+
+1. `ref<any>` is now accepted alongside `ref<LispyPair>`.
+2. `mov` is added to the list of supported ops for reference types
+   (matches the `emit_move` path that twig-ir-compiler uses to flow
+   a `ref<any>` value through a register-to-register copy).
+
+All other `ref<X>` types continue to be rejected.  No lowering
+changes — `ldelem.ref` and `stloc` already work for both types.
+
 ## [0.5.0] — 2026-05-22 (Brainfuck — `byte[]` tape + I/O via env.BFRuntime)
 
 ### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering

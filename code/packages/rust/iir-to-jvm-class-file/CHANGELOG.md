@@ -3,6 +3,23 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` for `field_load`)
+
+### Changed — `ref<any>` widens the supported reference types
+
+Companion to Twig path-A increment 6c.  The Phase 2 heap-lowering
+convention is `field_load dest, pair, idx [ref<any>]`.  JVM lowers
+this to `aaload`, which returns `Object` — the same type cons-cell
+fields are declared as in the `Object[2]` Phase 2 representation.
+
+This release widens the JVM validator's UnsupportedType check: in
+addition to `ref<LispyPair>` (the `Object[2]` cons cell), `ref<any>`
+is now accepted (mapping to `Object`).  All other `ref<X>` continue
+to be rejected.
+
+No lowering changes — `aaload` already returns the right type for
+both `ref<LispyPair>` (Object[]) and `ref<any>` (Object).
+
 ## [0.5.0] — 2026-05-22 (Brainfuck — `byte[]` tape + I/O via env/BFRuntime)
 
 ### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering

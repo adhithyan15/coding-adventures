@@ -1211,6 +1211,12 @@ fn dispatch(
                 exec_field_store(instr, &mut frame)?;
                 pc += 1;
             }
+            // Path A increment 6c: typed `field_load[idx]` replaces
+            // `call_builtin "car"` / `call_builtin "cdr"`.
+            "field_load" => {
+                exec_field_load(instr, &mut frame)?;
+                pc += 1;
+            }
 
             "add" | "sub" | "mul" | "div"
             | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le" | "cmp_ge"
@@ -1481,6 +1487,63 @@ fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError>
                 "field_store: {e}"
             )))?;
     }
+    Ok(())
+}
+
+/// ── Path A increment 6c: `field_load dest, pair, idx [ref<any>]` ─────
+///
+/// Reads `car` (idx 0) or `cdr` (idx 1) from a cons cell.  This is the
+/// runtime companion to twig-ir-compiler's increment 6c typed accessor
+/// emission, matching the Phase 2 heap-lowering convention used by the
+/// IIR-to-{wasm,jvm,clr,beam} backends.
+///
+/// srcs layout: `[Var(pair_register), Int(idx)]`
+fn exec_field_load(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("field_load requires dest".into())
+    })?;
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "field_load requires 2 srcs [pair, idx]; got {}",
+            instr.srcs.len()
+        )));
+    }
+    let pair_name = match &instr.srcs[0] {
+        Operand::Var(name) => name,
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_load srcs[0] must be Var(pair_register); got {other:?}"
+        ))),
+    };
+    let pair = frame.get(pair_name).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!(
+            "field_load: undefined pair register {pair_name:?}"
+        )))
+    })?;
+    let value = match &instr.srcs[1] {
+        Operand::Int(0) => {
+            // SAFETY: `pair` came from `alloc_cons` (via exec_alloc or a
+            // heap-allocating builtin).  In PR 2's Box::leak model every
+            // such value is a live cons forever.  `heap::car` returns
+            // None on non-cons input, which we surface as Err.
+            unsafe { lispy_runtime::heap::car(pair) }.ok_or_else(|| {
+                RunError::Runtime(RuntimeError::TypeError(format!(
+                    "field_load[0] (car): {pair_name:?} is not a cons cell"
+                )))
+            })?
+        }
+        Operand::Int(1) => {
+            // SAFETY: same as above for `cdr`.
+            unsafe { lispy_runtime::heap::cdr(pair) }.ok_or_else(|| {
+                RunError::Runtime(RuntimeError::TypeError(format!(
+                    "field_load[1] (cdr): {pair_name:?} is not a cons cell"
+                )))
+            })?
+        }
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_load srcs[1] must be Int(0|1); got {other:?}"
+        ))),
+    };
+    frame.set(dest.clone(), value)?;
     Ok(())
 }
 

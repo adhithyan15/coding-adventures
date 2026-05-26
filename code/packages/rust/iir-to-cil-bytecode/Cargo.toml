@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-cil-bytecode"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "IIR → CIL bytecode backend — lowers IIRModule to CILProgramArtifact (now with Brainfuck tape + I/O via env.BFRuntime)"
+description = "IIR → CIL bytecode backend — lowers IIRModule to CILProgramArtifact (now with Brainfuck tape + I/O via env.BFRuntime).  Path A increment 6c: validator accepts `ref<any>` (lowers to System.Object) and `mov` for ref types."
 
 [lib]
 name = "iir_to_cil_bytecode"
