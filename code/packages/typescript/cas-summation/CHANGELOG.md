@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.18.0 — 2026-05-25
+## 2.19.0 — 2026-05-25
 
 ### Added
 
@@ -10,6 +10,12 @@
   degree; effective degree = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3+sqrtHalfDeg4+sqrtHalfDeg5 + polyDeg.
   Closes when `denDeg > fiveSqrtFiveLogPolyEffectiveDeg` or non-polynomial diverging denominator.
   - 3 new tests in the "Phase 82" describe block.
+- **Phase 83 — Six-Log × polynomial numerator** (`sixLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 6 Log factors and zero Sqrt factors; `log⁶(k)` sub-polynomial — contributes 0 to
+  effective degree; effective degree = polyDeg.
+  Closes when `denDeg > sixLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 83" describe block.
 
 ## 2.17.0 — 2026-05-25
 
