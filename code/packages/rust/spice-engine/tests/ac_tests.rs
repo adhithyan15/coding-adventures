@@ -1,8 +1,8 @@
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, format_ac_table, s_parameters, Bjt, BjtPolarity, Capacitor, Cccs,
-    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet,
-    JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError,
-    TransmissionLine, Vcvs, VoltageSource,
+    ac_sweep, ac_sweep_corners, format_ac_table, s_parameters, s_parameters_corners, Bjt,
+    BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Diode,
+    Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
+    Resistor, SpiceError, TransmissionLine, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -770,4 +770,44 @@ fn s_parameters_series_resistor_two_port() {
     assert_close(point.s12.real, 2.0 / 3.0);
     assert_close(point.s11.imag, 0.0);
     assert_close(point.s21.imag, 0.0);
+}
+
+#[test]
+fn s_parameters_corners_runs_two_port_extraction_per_corner() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P1", "p1", "0", 0.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P2", "p2", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rseries", "p1", "p2", 50.0,
+    )));
+
+    let result = s_parameters_corners(
+        &circuit,
+        "P1",
+        "P2",
+        &[1.0e6],
+        50.0,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "series-high",
+                vec![CornerOverride::new("Rseries", "resistance", 100.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.port1_source, "P1");
+    assert_eq!(result.port2_source, "P2");
+    assert_close(result.reference_impedance_ohms, 50.0);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "series-high");
+    assert_close(result.points[0].result.points[0].s21.real, 2.0 / 3.0);
+    assert_close(result.points[1].result.points[0].s21.real, 0.5);
+    assert_close(result.points[0].result.points[0].s11.real, 1.0 / 3.0);
+    assert_close(result.points[1].result.points[0].s11.real, 0.5);
 }

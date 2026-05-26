@@ -18,6 +18,7 @@ The initial slices implement:
 - AC small-signal frequency sweeps for linear RC/RL circuits and explicit AC
   source phasors with DC-bias operating-point linearization for nonlinear
   devices.
+- S-parameter extraction for two-port networks, including named corner sweeps.
 - Backward-Euler, trapezoidal, Gear-2, and adaptive transient analysis for
   linear RC/RL circuits.
 - Periodic steady-state analysis for periodic source circuits, including named

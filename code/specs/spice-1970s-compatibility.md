@@ -339,6 +339,9 @@ Status:
 - Transient-to-distortion projection can now be evaluated across named corners
   in the live Rust SPICE package, reusing the existing corner override surface
   for the same transient sampling and `.DISTO` output-probe query.
+- Two-port S-parameter extraction can now be evaluated across named corners in
+  the live Rust SPICE package, reusing the existing corner override surface
+  for the same port pair, frequency grid, and reference impedance.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
