@@ -26,15 +26,14 @@
 //!
 //! ## Current status
 //!
-//! This initial release does **not** apply any transforms (the encoder writes
-//! `has_transform = 0`).  The infrastructure types and inverse-transform stubs
-//! are here to document the intended extension points and make it clear where
-//! future transform support will be wired in.
+//! **Currently active transforms:**
+//! - **Subtract-green** — wired in as of v0.3.2; the encoder applies it before
+//!   LZ77 and writes `has_transform=1, type=2` in the bitstream header.
 //!
-//! Implement transforms in a future PR:
-//! - Subtract-green is trivial and adds ~5-10 % compression.
-//! - Predictor transform gives the biggest gains on natural images.
-//! - Color-index is critical for synthetic/graphic images with few colours.
+//! **Not yet implemented:**
+//! - Predictor transform — biggest gains on natural images.
+//! - Color transform — per-block linear colour correction.
+//! - Color-index transform — palette coding for synthetic images.
 
 use pixel_container::PixelContainer;
 
@@ -71,10 +70,6 @@ pub enum TransformKind {
 /// This is one of the simplest transforms and exploits the fact that in most
 /// images R and B are correlated with G.  After the transform the residuals
 /// R' and B' tend to cluster near 0, which compresses better.
-///
-/// # Note
-/// Not called in the current encoder (no transforms mode). Provided for
-/// future use.
 pub fn apply_subtract_green(pixels: &mut PixelContainer) {
     for chunk in pixels.data.chunks_exact_mut(4) {
         let g = chunk[1];

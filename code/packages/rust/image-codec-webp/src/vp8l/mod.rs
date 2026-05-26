@@ -41,6 +41,7 @@ use huffman::{
     DIST_ALPHABET_SIZE, G_ALPHABET_SIZE, RGBA_ALPHABET_SIZE,
 };
 use pixel_container::PixelContainer;
+use transforms::apply_subtract_green;
 
 // ---------------------------------------------------------------------------
 // LZ77 types and helpers
@@ -147,8 +148,15 @@ pub fn encode(pixels: &PixelContainer) -> Vec<u8> {
     let h = pixels.height as u64;
     let num = (pixels.width as usize) * (pixels.height as usize);
 
+    // ── Apply subtract-green transform ───────────────────────────────────────
+    // Clone the pixel data so the caller's PixelContainer is not mutated.
+    // subtract-green: R' = (R - G) & 0xFF, B' = (B - G) & 0xFF.
+    // The residuals cluster near 0, improving Huffman compression.
+    let mut transformed = pixels.clone();
+    apply_subtract_green(&mut transformed);
+
     // ── Phase 1: LZ77 match pass ─────────────────────────────────────────────
-    let syms = lz77_match(&pixels.data, num);
+    let syms = lz77_match(&transformed.data, num);
 
     // ── Phase 2: Count symbol frequencies ───────────────────────────────────
     let mut g_freq = vec![0u32; G_ALPHABET_SIZE];
@@ -198,7 +206,10 @@ pub fn encode(pixels: &PixelContainer) -> Vec<u8> {
     bw.write_bits(1, 1); // alpha_is_used = 1
     bw.write_bits(0, 3); // version_number = 0
 
-    bw.write_bits(0, 1); // has_transform = 0
+    // has_transform=1 → type=2 (SubtractGreen) → has_transform=0 (no more).
+    bw.write_bits(1, 1); // has_transform = 1
+    bw.write_bits(2, 2); // transform_type = SubtractGreen
+    bw.write_bits(0, 1); // has_transform = 0 (no further transforms)
     bw.write_bits(0, 4); // color_cache_code_bits = 0
 
     write_huffman_code(&mut bw, &g_lens);

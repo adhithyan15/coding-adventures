@@ -7,6 +7,24 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.2] — 2026-05-25
+
+### Added
+
+- **VP8L subtract-green transform wired into encoder** — `encode()` now clones
+  the pixel buffer, applies `apply_subtract_green` (R' = R-G, B' = B-G), and
+  runs LZ77 on the transformed data.  The bitstream header now writes
+  `has_transform=1, transform_type=2 (SubtractGreen), has_transform=0`.
+  The decoder already handled `transform_type=2` via `inverse_subtract_green`;
+  no decoder change required.  Compression improves ~5-10% on colour images.
+
+### Changed
+
+- `VERSION` bumped to `0.3.2`.
+- `transforms.rs` module doc updated to reflect subtract-green is now active.
+
+---
+
 ## [0.3.1] — 2026-05-25
 
 ### Added
