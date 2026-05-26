@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.15.0 — 2026-05-25
+
+### Added
+
+- **Phase 77 — Five-Log × polynomial numerator** (`fiveLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 5 Log factors; Sqrt factors explicitly refused so Sqrt-bearing phases (73–76, 78+) are
+  not shadowed.  `log⁵(k)` sub-polynomial — contributes 0 to effective degree;
+  effective degree = polyDeg.
+  Closes when `denDeg > fiveLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 77" describe block.
+
 ## 2.14.0 — 2026-05-25
 
 ### Added

@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.15.0 — 2026-05-25
+
+### Added
+
+- **Phase 77 — Five-Log × polynomial numerator** (`_five_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 5 Log factors required; Sqrt factors explicitly refused so this phase does not shadow
+  the Sqrt-bearing phases (73–76, 78+).  `log⁵(k)` is sub-polynomial (`o(k^ε)`),
+  contributing 0 to effective degree;
+  `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase77FiveLogPoly`.
+
 ## 2.14.0 — 2026-05-25
 
 ### Added
