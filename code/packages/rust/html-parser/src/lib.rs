@@ -1602,6 +1602,8 @@ pub struct BrowserFormControl {
     pub form_target: Option<String>,
     pub form_novalidate: bool,
     pub value: Option<String>,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
     pub autofocus: bool,
     pub disabled: bool,
     pub required: bool,
@@ -1609,6 +1611,7 @@ pub struct BrowserFormControl {
     pub will_validate: bool,
     pub checked: bool,
     pub multiple: bool,
+    pub selected_options: Vec<String>,
     pub text: String,
     pub options: Vec<String>,
 }
@@ -11640,6 +11643,40 @@ fn browser_control_will_validate(control_type: &str, element: &Element, disabled
     }
 }
 
+fn browser_control_successful(control_type: &str, element: &Element, disabled: bool) -> bool {
+    if disabled || element.attribute("name").map_or(true, str::is_empty) {
+        return false;
+    }
+
+    match element.name.as_str() {
+        "input" => match control_type {
+            "button" | "image" | "reset" | "submit" => false,
+            "checkbox" | "radio" => element.attribute("checked").is_some(),
+            _ => true,
+        },
+        "select" | "textarea" => true,
+        _ => false,
+    }
+}
+
+fn browser_control_submission_values(
+    control_type: &str,
+    element: &Element,
+    successful: bool,
+) -> Vec<String> {
+    if !successful {
+        return Vec::new();
+    }
+
+    match element.name.as_str() {
+        "input" if control_type == "file" => Vec::new(),
+        "input" => vec![browser_input_value(element).unwrap_or_default()],
+        "select" => selected_option_values(element),
+        "textarea" => vec![element_text(element)],
+        _ => Vec::new(),
+    }
+}
+
 fn browser_autofocus(element: &Element) -> bool {
     matches!(
         element.name.as_str(),
@@ -11875,6 +11912,14 @@ fn browser_content_options(element: &Element) -> Vec<String> {
     }
 }
 
+fn browser_control_selected_options(element: &Element) -> Vec<String> {
+    if element.name == "select" {
+        selected_option_values(element)
+    } else {
+        Vec::new()
+    }
+}
+
 fn browser_control_datalist_options(element: &Element, body_root: &[Node]) -> Vec<String> {
     browser_control_list(element)
         .as_deref()
@@ -11934,6 +11979,40 @@ fn collect_datalist_options_into(nodes: &[Node], options: &mut Vec<String>) {
 fn selected_option_value(nodes: &[Node]) -> Option<String> {
     let mut first = None;
     selected_option_value_in(nodes, &mut first).or(first)
+}
+
+fn selected_option_values(element: &Element) -> Vec<String> {
+    let mut first = None;
+    let mut selected = Vec::new();
+    collect_selected_option_values(&element.children, &mut first, &mut selected);
+    if selected.is_empty() && !browser_multiple(element) {
+        first.into_iter().collect()
+    } else {
+        selected
+    }
+}
+
+fn collect_selected_option_values(
+    nodes: &[Node],
+    first: &mut Option<String>,
+    selected: &mut Vec<String>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "option" {
+            let value = browser_option_value(element);
+            if first.is_none() {
+                *first = Some(value.clone());
+            }
+            if element.attribute("selected").is_some() {
+                selected.push(value);
+            }
+        } else {
+            collect_selected_option_values(&element.children, first, selected);
+        }
+    }
 }
 
 fn selected_option_value_in(nodes: &[Node], first: &mut Option<String>) -> Option<String> {
@@ -12317,6 +12396,8 @@ fn browser_form_control(
         .expect("browser_form_control is only called for form controls");
     let disabled = disabled_fieldset_ancestor || element.attribute("disabled").is_some();
     let will_validate = browser_control_will_validate(&control_type, element, disabled);
+    let successful = browser_control_successful(&control_type, element, disabled);
+    let submission_values = browser_control_submission_values(&control_type, element, successful);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let text = match element.name.as_str() {
         "button" | "output" | "select" => visible_text_for_nodes(&element.children),
@@ -12365,6 +12446,8 @@ fn browser_form_control(
         form_target: browser_control_form_target(element),
         form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
+        successful,
+        submission_values,
         autofocus: browser_autofocus(element),
         disabled,
         required: browser_required(element),
@@ -12372,6 +12455,7 @@ fn browser_form_control(
         will_validate,
         checked: element.attribute("checked").is_some(),
         multiple: browser_multiple(element),
+        selected_options: browser_control_selected_options(element),
         text,
         options: browser_content_options(element),
     }
@@ -13684,8 +13768,12 @@ mod tests {
         assert!(controls[0].autofocus);
         assert!(controls[0].required);
         assert!(controls[0].will_validate);
+        assert!(controls[0].successful);
+        assert_eq!(controls[0].submission_values, vec![""]);
         assert!(controls[1].readonly);
         assert!(!controls[1].will_validate);
+        assert!(controls[1].successful);
+        assert_eq!(controls[1].submission_values, vec!["Keep me"]);
         assert_eq!(controls[1].autocapitalize.as_deref(), Some("sentences"));
         assert_eq!(controls[1].enterkeyhint.as_deref(), Some("done"));
         assert_eq!(controls[1].dirname.as_deref(), Some("notes.dir"));
@@ -13695,14 +13783,21 @@ mod tests {
         assert!(controls[2].disabled);
         assert!(controls[2].checked);
         assert!(!controls[2].will_validate);
+        assert!(!controls[2].successful);
+        assert!(controls[2].submission_values.is_empty());
         assert!(controls[3].multiple);
         assert_eq!(controls[3].size.as_deref(), Some("5"));
         assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));
         assert!(controls[3].will_validate);
+        assert!(controls[3].successful);
+        assert_eq!(controls[3].selected_options, vec!["Books"]);
+        assert_eq!(controls[3].submission_values, vec!["Books"]);
         assert_eq!(controls[4].control_type, "file");
         assert_eq!(controls[4].accept.as_deref(), Some("image/png,image/jpeg"));
         assert_eq!(controls[4].capture.as_deref(), Some("environment"));
         assert!(controls[4].will_validate);
+        assert!(controls[4].successful);
+        assert!(controls[4].submission_values.is_empty());
         assert_eq!(controls[5].accessible_name.as_deref(), Some("Run search"));
         assert_eq!(controls[5].form_action.as_deref(), Some("run.html"));
         assert_eq!(
@@ -13717,6 +13812,7 @@ mod tests {
         assert_eq!(controls[5].form_target.as_deref(), Some("results"));
         assert!(controls[5].form_novalidate);
         assert!(controls[5].will_validate);
+        assert!(!controls[5].successful);
         assert_eq!(controls[6].control_type, "image");
         assert_eq!(controls[6].name.as_deref(), Some("image-go"));
         assert_eq!(controls[6].src.as_deref(), Some("buttons/search.png"));
@@ -13728,18 +13824,22 @@ mod tests {
         assert_eq!(controls[6].width.as_deref(), Some("32"));
         assert_eq!(controls[6].height.as_deref(), Some("16"));
         assert!(!controls[6].will_validate);
+        assert!(!controls[6].successful);
         assert_eq!(controls[7].control_type, "output");
         assert_eq!(controls[7].name.as_deref(), Some("total"));
         assert_eq!(controls[7].output_for, vec!["q", "kind"]);
         assert_eq!(controls[7].value.as_deref(), Some("Ready"));
         assert_eq!(controls[7].text, "Ready");
         assert!(!controls[7].will_validate);
+        assert!(!controls[7].successful);
         assert_eq!(controls[8].id.as_deref(), Some("external"));
         assert_eq!(controls[8].name.as_deref(), Some("outside"));
         assert_eq!(controls[8].form_owner.as_deref(), Some("f"));
         assert_eq!(controls[8].accessible_name.as_deref(), Some("Outside"));
         assert_eq!(controls[8].placeholder.as_deref(), Some("Outside"));
         assert!(controls[8].will_validate);
+        assert!(controls[8].successful);
+        assert_eq!(controls[8].submission_values, vec![""]);
 
         let submitters = &summary.forms[0].submitters;
         assert_eq!(submitters.len(), 2);

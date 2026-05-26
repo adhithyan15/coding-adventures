@@ -698,6 +698,8 @@ def check_browser_expected_lists(
             require_optional_string_list(control_path, control, "datalist_options", errors)
             require_optional_string_list(control_path, control, "output_for", errors)
             require_optional_nullable_string(control_path, control, "value", errors)
+            require_optional_boolean(control_path, control, "successful", errors)
+            require_optional_string_list(control_path, control, "submission_values", errors)
             require_boolean(control_path, control, "disabled", errors)
             require_optional_boolean(control_path, control, "required", errors)
             require_optional_boolean(control_path, control, "readonly", errors)
@@ -706,6 +708,7 @@ def check_browser_expected_lists(
             require_optional_boolean(control_path, control, "multiple", errors)
             require_optional_boolean(control_path, control, "autofocus", errors)
             require_optional_boolean(control_path, control, "form_novalidate", errors)
+            require_optional_string_list(control_path, control, "selected_options", errors)
             require_string(control_path, control, "text", errors)
             require_string_list(control_path, control, "options", errors)
         for submitter_index, submitter in enumerate(object_list_items(form, "submitters")):
