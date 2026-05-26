@@ -19,6 +19,8 @@
   query evaluated under each named corner.
 - Add multi-corner S-parameter extraction with `s_parameters_corners`,
   returning the same two-port query evaluated under each named corner.
+- Add `format_s_parameter_table` for stable tab-separated S-parameter real,
+  imaginary, magnitude, and phase text output snapshots.
 - Add `diode_at_temperature` and `circuit_at_temperature` helpers, which adjust
   diode thermal voltage and saturation current for an operating temperature
   using a SPICE-style silicon energy-gap foothold.
