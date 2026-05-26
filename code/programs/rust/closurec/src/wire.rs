@@ -68,6 +68,13 @@ pub enum ConfigError {
     /// prior behavior) caused users to wonder why their source
     /// map chain didn't apply.
     InvalidSourceMapInput { raw: String },
+    /// `--source_map_location_mapping` was passed without the
+    /// required `filesystem|web` separator (CLOC11.41). Sibling
+    /// of [`Self::InvalidSourceMapInput`] — same silent-drop bug
+    /// in the sibling parser. Pre-CLOC11.41 typo'd `--source_map_
+    /// location_mapping src/` would vanish, leaving the user
+    /// puzzled why their map URLs didn't rewrite. Now errors.
+    InvalidSourceMapLocationMapping { raw: String },
 }
 
 impl std::fmt::Display for ConfigError {
@@ -82,6 +89,10 @@ impl std::fmt::Display for ConfigError {
             ConfigError::InvalidSourceMapInput { raw } => write!(
                 f,
                 "--source_map_input {raw}: missing required `|` separator (expected `input-file-path|input-source-map`)"
+            ),
+            ConfigError::InvalidSourceMapLocationMapping { raw } => write!(
+                f,
+                "--source_map_location_mapping {raw}: missing required `|` separator (expected `filesystem-path|web-server-path`)"
             ),
         }
     }
@@ -239,16 +250,22 @@ fn read_formatting(p: &ParseResult) -> Result<FormattingConfig, ConfigError> {
 }
 
 fn read_source_map(p: &ParseResult) -> Result<SourceMapConfig, ConfigError> {
-    let location_mappings = get_str_list(p, "source_map_location_mapping")?
-        .into_iter()
-        .filter_map(|s| {
-            let (fs, web) = s.split_once('|')?;
-            Some(LocationMapping {
-                filesystem_path: fs.to_string(),
-                web_server_path: web.to_string(),
-            })
-        })
-        .collect();
+    // CLOC11.41: error on malformed --source_map_location_mapping
+    // entries rather than silently dropping them. Sibling fix to
+    // CLOC11.40's --source_map_input handling — same silent-drop
+    // bug, same shape, same fix. Empty halves (e.g. `|/static/`)
+    // remain well-formed; only the *presence* of the pipe is
+    // required.
+    let mut location_mappings: Vec<LocationMapping> = Vec::new();
+    for raw in get_str_list(p, "source_map_location_mapping")? {
+        let Some((fs, web)) = raw.split_once('|') else {
+            return Err(ConfigError::InvalidSourceMapLocationMapping { raw });
+        };
+        location_mappings.push(LocationMapping {
+            filesystem_path: fs.to_string(),
+            web_server_path: web.to_string(),
+        });
+    }
 
     // CLOC11.40: error on malformed --source_map_input entries
     // rather than silently dropping them via filter_map. The
@@ -801,6 +818,9 @@ mod tests {
         assert!(ConfigError::InvalidSourceMapInput { raw: "RAW".into() }
             .to_string()
             .contains("--source_map_input RAW"));
+        assert!(ConfigError::InvalidSourceMapLocationMapping { raw: "BAD".into() }
+            .to_string()
+            .contains("--source_map_location_mapping BAD"));
         let _: &dyn std::error::Error = &ConfigError::SpecMismatch("x".into());
     }
 
@@ -890,6 +910,78 @@ mod tests {
         assert_eq!(
             cfg.source_map.inputs[0].map_file,
             std::path::PathBuf::from("map.map")
+        );
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.41 — --source_map_location_mapping validation
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn source_map_location_mapping_missing_pipe_errors() {
+        // Prior behavior: silently dropped. CLOC11.41: typed error.
+        let err = config_from_parsed(&parse(&[
+            "--source_map_location_mapping",
+            "src-without-separator",
+        ]))
+        .expect_err("must error");
+        match err {
+            ConfigError::InvalidSourceMapLocationMapping { raw } => {
+                assert_eq!(raw, "src-without-separator");
+            }
+            other => panic!("expected InvalidSourceMapLocationMapping, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn source_map_location_mapping_error_message_names_flag_and_value() {
+        let err = ConfigError::InvalidSourceMapLocationMapping {
+            raw: "no-pipe-here".to_string(),
+        };
+        let msg = err.to_string();
+        assert!(msg.contains("--source_map_location_mapping"));
+        assert!(msg.contains("no-pipe-here"));
+        assert!(msg.contains("missing required `|`"));
+        assert!(msg.contains("filesystem-path|web-server-path"));
+    }
+
+    #[test]
+    fn source_map_location_mapping_one_good_one_bad_errors_on_the_bad_one() {
+        // Process in argv order. The first bad entry surfaces so
+        // users fix typos one at a time. Matches the
+        // --source_map_input policy from CLOC11.40.
+        let err = config_from_parsed(&parse(&[
+            "--source_map_location_mapping", "src/|/static/js/",
+            "--source_map_location_mapping", "broken-no-pipe",
+        ]))
+        .expect_err("must error");
+        match err {
+            ConfigError::InvalidSourceMapLocationMapping { raw } => {
+                assert_eq!(raw, "broken-no-pipe");
+            }
+            other => panic!("expected InvalidSourceMapLocationMapping, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn source_map_location_mapping_empty_halves_still_well_formed() {
+        // `|web/` and `fs/|` are well-formed under the pipe rule
+        // — only the presence of the pipe is required. Empty
+        // halves are accepted by CC; the actual path-rewriting
+        // step would catch any issues later when source maps
+        // emit (post-CLOC11.07).
+        let cfg = config_from_parsed(&parse(&[
+            "--source_map_location_mapping", "|/static/js/",
+        ]))
+        .expect("ok");
+        assert_eq!(cfg.source_map.location_mappings.len(), 1);
+        assert_eq!(
+            cfg.source_map.location_mappings[0].filesystem_path,
+            ""
+        );
+        assert_eq!(
+            cfg.source_map.location_mappings[0].web_server_path,
+            "/static/js/"
         );
     }
 }
