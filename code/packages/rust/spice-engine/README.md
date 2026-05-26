@@ -31,13 +31,13 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents, AC
-  phasors, PSS steady-state periods, sensitivity entries, Fourier harmonics,
-  transfer-function results, S-parameter entries, cornered S-parameter
-  entries, pole-zero entries, noise PSD contributions, cornered noise PSD
-  contributions, cornered sensitivity entries, cornered PSS steady-state
-  periods, cornered pole-zero entries, distortion harmonics, and cornered
-  distortion harmonics, Monte Carlo trials, cornered Monte Carlo trials, DC
-  source sweeps, and cornered DC source sweeps.
+  phasors, cornered AC phasors, PSS steady-state periods, sensitivity entries,
+  Fourier harmonics, transfer-function results, S-parameter entries, cornered
+  S-parameter entries, pole-zero entries, noise PSD contributions, cornered
+  noise PSD contributions, cornered sensitivity entries, cornered PSS
+  steady-state periods, cornered pole-zero entries, distortion harmonics, and
+  cornered distortion harmonics, Monte Carlo trials, cornered Monte Carlo
+  trials, DC source sweeps, and cornered DC source sweeps.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled

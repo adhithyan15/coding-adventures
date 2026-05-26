@@ -1,9 +1,9 @@
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, format_ac_table, format_corner_s_parameter_table,
-    format_s_parameter_table, s_parameters, s_parameters_corners, Bjt, BjtPolarity, Capacitor,
-    Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet,
-    JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError,
-    TransmissionLine, Vcvs, VoltageSource,
+    ac_sweep, ac_sweep_corners, format_ac_table, format_corner_ac_table,
+    format_corner_s_parameter_table, format_s_parameter_table, s_parameters, s_parameters_corners,
+    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource,
+    Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
+    MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -60,6 +60,47 @@ fn ac_text_output_table_is_stable() {
     assert_eq!(
         format_ac_table(&points, &["V(out)", "I(V1)"]).unwrap(),
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n"
+    );
+}
+
+#[test]
+fn ac_corner_text_output_table_is_stable() {
+    let resistance = 1_000.0;
+    let capacitance = 1.0e-6;
+    let corner = 1.0 / (2.0 * std::f64::consts::PI * resistance * capacitance);
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "V1", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "in", "out", resistance,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "C1",
+        "out",
+        "0",
+        capacitance,
+    )));
+
+    let result = ac_sweep_corners(
+        &circuit,
+        corner,
+        corner,
+        10,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "r-fast",
+                vec![CornerOverride::new("R1", "resistance", 500.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_ac_table(&result, &["V(out)", "I(V1)"]).unwrap(),
+        "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\nnominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\nnominal\t0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\nr-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\nr-fast\t0\t1.591549e+02\tI(V1)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\n"
     );
 }
 
