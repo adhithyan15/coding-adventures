@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.17.0] - 2026-05-26
+
+### Changed — CLOC11.41: `--source_map_location_mapping` malformed values now error
+
+Sibling fix to CLOC11.40. The same silent-drop `filter_map` bug existed in `read_source_map`'s `source_map_location_mapping` parser. Pre-CLOC11.41, a typo'd `--source_map_location_mapping src/` (no `|`) silently vanished, leaving the user wondering why their map URLs didn't rewrite.
+
+Now the parser errors out with a typed `ConfigError::InvalidSourceMapLocationMapping { raw }`:
+
+```
+--source_map_location_mapping <raw>: missing required `|` separator (expected `filesystem-path|web-server-path`)
+```
+
+Argv-order processing — first bad entry surfaces, matching the CLOC11.40 policy.
+
+Edge cases preserved (match CC):
+- `|web/` and `fs/|` remain well-formed (only pipe presence is checked).
+
+- **New `ConfigError::InvalidSourceMapLocationMapping { raw }` variant** + Display arm.
+- **`filter_map` replaced** with an explicit `for` loop that propagates the typed error.
+- **4 new unit tests** in `wire::tests` (missing-pipe errors, error message format, multi-entry first-bad-wins, empty halves still well-formed).
+- **Diff fixture** `tests/diff/source-map-location-mapping-bad/`.
+- **New integration test** `tests/diff_source_map_location_mapping_bad.rs`.
+
+### Pipeline matrix (unchanged)
+
+Same 11-step pipeline; change is config-build validation only.
+
 ## [0.16.0] - 2026-05-25
 
 ### Changed — CLOC11.40: `--source_map_input` malformed values now error
