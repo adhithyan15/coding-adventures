@@ -736,6 +736,8 @@ struct ExpectedFormControl {
     required: bool,
     #[serde(default)]
     readonly: bool,
+    #[serde(default)]
+    will_validate: bool,
     checked: bool,
     #[serde(default)]
     multiple: bool,
@@ -832,6 +834,26 @@ fn browser_script_style_security_metadata_tracks_nonces_and_fetch_policy() {
     assert_eq!(
         actual.stylesheets, expected.stylesheets,
         "stylesheets should preserve CSP nonces and loading policy metadata",
+    );
+}
+
+#[test]
+fn browser_form_validation_metadata_tracks_constraint_candidates() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.forms,
+        case.expected.into_browser_document().forms,
+        "form controls should preserve validation candidate metadata",
     );
 }
 
@@ -1553,6 +1575,7 @@ impl ExpectedFormControl {
             disabled: self.disabled,
             required: self.required,
             readonly: self.readonly,
+            will_validate: self.will_validate,
             checked: self.checked,
             multiple: self.multiple,
             text: self.text,

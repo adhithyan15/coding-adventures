@@ -1606,6 +1606,7 @@ pub struct BrowserFormControl {
     pub disabled: bool,
     pub required: bool,
     pub readonly: bool,
+    pub will_validate: bool,
     pub checked: bool,
     pub multiple: bool,
     pub text: String,
@@ -11627,6 +11628,18 @@ fn browser_readonly(element: &Element) -> bool {
     matches!(element.name.as_str(), "input" | "textarea") && element.attribute("readonly").is_some()
 }
 
+fn browser_control_will_validate(control_type: &str, element: &Element, disabled: bool) -> bool {
+    if disabled || browser_readonly(element) {
+        return false;
+    }
+    match element.name.as_str() {
+        "button" => control_type == "submit",
+        "input" => !matches!(control_type, "hidden" | "reset" | "button" | "image"),
+        "select" | "textarea" => true,
+        _ => false,
+    }
+}
+
 fn browser_autofocus(element: &Element) -> bool {
     matches!(
         element.name.as_str(),
@@ -12275,6 +12288,8 @@ fn browser_form_control(
 ) -> BrowserFormControl {
     let control_type = browser_content_control_type(element)
         .expect("browser_form_control is only called for form controls");
+    let disabled = element.attribute("disabled").is_some();
+    let will_validate = browser_control_will_validate(&control_type, element, disabled);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let text = match element.name.as_str() {
         "button" | "output" | "select" => visible_text_for_nodes(&element.children),
@@ -12324,9 +12339,10 @@ fn browser_form_control(
         form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
         autofocus: browser_autofocus(element),
-        disabled: element.attribute("disabled").is_some(),
+        disabled,
         required: browser_required(element),
         readonly: browser_readonly(element),
+        will_validate,
         checked: element.attribute("checked").is_some(),
         multiple: browser_multiple(element),
         text,
@@ -13631,7 +13647,9 @@ mod tests {
         );
         assert!(controls[0].autofocus);
         assert!(controls[0].required);
+        assert!(controls[0].will_validate);
         assert!(controls[1].readonly);
+        assert!(!controls[1].will_validate);
         assert_eq!(controls[1].autocapitalize.as_deref(), Some("sentences"));
         assert_eq!(controls[1].enterkeyhint.as_deref(), Some("done"));
         assert_eq!(controls[1].dirname.as_deref(), Some("notes.dir"));
@@ -13639,12 +13657,15 @@ mod tests {
         assert_eq!(controls[1].labels, vec!["NotesKeep me"]);
         assert_eq!(controls[2].control_type, "checkbox");
         assert!(controls[2].checked);
+        assert!(controls[2].will_validate);
         assert!(controls[3].multiple);
         assert_eq!(controls[3].size.as_deref(), Some("5"));
         assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));
+        assert!(controls[3].will_validate);
         assert_eq!(controls[4].control_type, "file");
         assert_eq!(controls[4].accept.as_deref(), Some("image/png,image/jpeg"));
         assert_eq!(controls[4].capture.as_deref(), Some("environment"));
+        assert!(controls[4].will_validate);
         assert_eq!(controls[5].accessible_name.as_deref(), Some("Run search"));
         assert_eq!(controls[5].form_action.as_deref(), Some("run.html"));
         assert_eq!(
@@ -13658,6 +13679,7 @@ mod tests {
         assert_eq!(controls[5].form_method.as_deref(), Some("post"));
         assert_eq!(controls[5].form_target.as_deref(), Some("results"));
         assert!(controls[5].form_novalidate);
+        assert!(controls[5].will_validate);
         assert_eq!(controls[6].control_type, "image");
         assert_eq!(controls[6].name.as_deref(), Some("image-go"));
         assert_eq!(controls[6].src.as_deref(), Some("buttons/search.png"));
@@ -13668,16 +13690,19 @@ mod tests {
         assert_eq!(controls[6].alt.as_deref(), Some("Search image"));
         assert_eq!(controls[6].width.as_deref(), Some("32"));
         assert_eq!(controls[6].height.as_deref(), Some("16"));
+        assert!(!controls[6].will_validate);
         assert_eq!(controls[7].control_type, "output");
         assert_eq!(controls[7].name.as_deref(), Some("total"));
         assert_eq!(controls[7].output_for, vec!["q", "kind"]);
         assert_eq!(controls[7].value.as_deref(), Some("Ready"));
         assert_eq!(controls[7].text, "Ready");
+        assert!(!controls[7].will_validate);
         assert_eq!(controls[8].id.as_deref(), Some("external"));
         assert_eq!(controls[8].name.as_deref(), Some("outside"));
         assert_eq!(controls[8].form_owner.as_deref(), Some("f"));
         assert_eq!(controls[8].accessible_name.as_deref(), Some("Outside"));
         assert_eq!(controls[8].placeholder.as_deref(), Some("Outside"));
+        assert!(controls[8].will_validate);
 
         let submitters = &summary.forms[0].submitters;
         assert_eq!(submitters.len(), 2);
