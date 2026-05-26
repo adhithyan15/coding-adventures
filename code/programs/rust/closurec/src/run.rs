@@ -453,19 +453,36 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         IsolationMode::None => wrapped,
     };
 
+    // Step 3.75 (CLOC11.16): apply --charset normalization.
+    //
+    // CC's documented default is "UTF-8 in, US_ASCII out": every
+    // non-ASCII character in the final output is escaped as
+    // `\uXXXX` (or a UTF-16 surrogate pair for astral
+    // codepoints) so the emitted JS is pure 7-bit ASCII and
+    // safe in any transport. We match that default.
+    //
+    // Runs last in the transform chain so any non-ASCII the
+    // user injected via `--output_wrapper` (e.g. a `©` in a
+    // banner) gets escaped alongside the body. See
+    // `crate::charset` for the table of accepted values.
+    let encoded = crate::charset::apply_charset(
+        &isolated,
+        crate::charset::OutputCharset::from_raw(&config.io.charset),
+    );
+
     // Step 4: write the output. Two cases:
     //   a) --js_output_file set → write to disk via write_output_file.
     //   b) absent → stdout via the returned `stdout_text`.
     match &config.io.js_output_file {
         Some(path) => {
-            write_output_file(path, &isolated)?;
+            write_output_file(path, &encoded)?;
             Ok(CompilerOutput {
                 stdout_text: String::new(),
                 wrote_files: vec![path.clone()],
             })
         }
         None => Ok(CompilerOutput {
-            stdout_text: isolated,
+            stdout_text: encoded,
             wrote_files: Vec::new(),
         }),
     }

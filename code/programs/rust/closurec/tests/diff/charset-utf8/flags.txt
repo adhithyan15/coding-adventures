@@ -1,0 +1,4 @@
+--js
+tests/diff/charset-utf8/input/a.js
+--charset
+UTF-8

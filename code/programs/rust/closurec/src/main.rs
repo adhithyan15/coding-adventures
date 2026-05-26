@@ -67,6 +67,7 @@ use std::process::ExitCode;
 // CLOC11.06 added `whitespace_only` for --compilation_level WHITESPACE_ONLY.
 // CLOC11.19 added `defines` for --define / -D value substitution.
 // CLOC11.30 added `wrapper` for --output_wrapper / --output_wrapper_file.
+pub mod charset;
 pub mod config;
 pub mod defines;
 pub mod globs;
