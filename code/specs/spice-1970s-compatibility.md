@@ -333,6 +333,10 @@ Status:
 - AC noise analysis can now be evaluated across named corners in the live Rust
   SPICE package, reusing the existing corner override surface for the same
   output/input query and frequency grid.
+- Named-corner `.NOISE` results can now be rendered as stable tab-separated
+  text tables in the live Rust SPICE package, preserving corner order and
+  covering total output noise, input-referred noise, and per-source PSD
+  contribution rows.
 - Periodic steady-state analysis can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the same shooting-Newton solve options.

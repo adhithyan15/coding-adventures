@@ -1,7 +1,7 @@
 use spice_engine::{
-    format_noise_table, noise_ac, noise_ac_corners, noise_ac_default, Capacitor, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType,
-    NoiseType, Resistor, SpiceError, VoltageSource,
+    format_corner_noise_table, format_noise_table, noise_ac, noise_ac_corners, noise_ac_default,
+    Capacitor, Circuit, CornerOverride, CornerSpec, CurrentSource, Element, Mosfet,
+    MosfetLevel1Params, MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
 };
 
 const BOLTZMANN: f64 = 1.380_649e-23;
@@ -149,6 +149,40 @@ fn noise_ac_corners_runs_analysis_per_corner() {
         result.points[1].result.points[0].input_referred_psd,
         result.points[0].result.points[0].input_referred_psd / 2.0,
         1.0e-32,
+    );
+}
+
+#[test]
+fn corner_noise_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::CurrentSource(CurrentSource::new(
+        "Iin", "0", "out", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+
+    let result = noise_ac_corners(
+        &circuit,
+        "out",
+        "Iin",
+        &[1_000.0],
+        300.0,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rload-high",
+                vec![CornerOverride::new("Rload", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_noise_table(&result),
+        "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n\
+nominal\t0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\tRload\tthermal\t1.656779e-23\t1.656779e-17\n\
+rload-high\t0\t1.000000e+03\tout\tIin\t3.313558e-17\t8.283894e-24\tRload\tthermal\t8.283894e-24\t3.313558e-17\n"
     );
 }
 
