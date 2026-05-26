@@ -7,6 +7,36 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.0] — 2026-05-25
+
+### Added
+
+- Full YCbCr 4:2:0 color support in VP8 encoder and decoder
+  - `rgb_to_ycbcr` / `ycbcr_to_rgb` — BT.601 full-range integer conversion
+  - Each macroblock now carries Y DC (16×16 luma) + Cb DC + Cr DC (8×8 chroma)
+  - Separate 8×8 DC predictor and context for Cb and Cr planes
+  - `vp8::quant::uv_quant_step` — named alias of `dc_quant_step` for chroma
+- New test: `round_trip_lossy_color` — non-grey (200, 80, 40) 16×16 image
+  round-trips within ±15 per channel at quality=75
+
+### Changed
+
+- `decode_dct_partition` now converts reconstructed YCbCr back to RGB; output
+  is correct color for any input (previously luma-only → grey output)
+- `encode_dct_partition` now encodes three coefficients per non-skipped MB
+  (Y, Cb, Cr) instead of one
+- `compute_mb_skips` now checks all three channels; skip=true only when
+  Y, Cb, and Cr residuals all quantize to zero
+- `fill_macroblock` now takes (y, cb, cr: u8) and applies `ycbcr_to_rgb`
+- `VERSION` bumped to `0.3.0`
+
+### Removed
+
+- Grey-only output (Cb=Cr=128 assumption) from `fill_macroblock` — replaced
+  by proper YCbCr→RGB conversion
+
+---
+
 ## [0.2.0] — 2026-05-25
 
 ### Added

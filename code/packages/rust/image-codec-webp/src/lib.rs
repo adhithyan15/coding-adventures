@@ -48,7 +48,7 @@
 //! - WebP container spec: https://developers.google.com/speed/webp/docs/riff_container
 //! - VP8 lossy spec: https://www.rfc-editor.org/rfc/rfc6386
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 mod riff;
 pub mod vp8;
@@ -212,7 +212,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.2.0");
+        assert_eq!(VERSION, "0.3.0");
     }
 
     // ── WebPCodec ─────────────────────────────────────────────────────────────
@@ -360,7 +360,7 @@ mod tests {
         assert_eq!(decoded.height, 16);
         for y in 0..16u32 {
             for x in 0..16u32 {
-                let (r, g, b, _) = decoded.pixel_at(x, y);
+                let (r, _, _, _) = decoded.pixel_at(x, y);
                 let orig_luma = 180i32;
                 let dec_luma  = r as i32; // grey image: R≈G≈B
                 assert!(
@@ -389,6 +389,31 @@ mod tests {
                     (r as i32 - 200).abs() <= 2,
                     "quality=100 round-trip error too large at ({x},{y}): got {r}"
                 );
+            }
+        }
+    }
+
+    #[test]
+    fn round_trip_lossy_color() {
+        // Non-grey solid color: (R=200, G=80, B=40) → significant Cb and Cr residuals.
+        // Tolerance: ±15 per channel (accounts for YCbCr quantization spread into RGB).
+        let mut pixels = PixelContainer::new(16, 16);
+        for y in 0..16u32 {
+            for x in 0..16u32 {
+                pixels.set_pixel(x, y, 200, 80, 40, 255);
+            }
+        }
+        let bytes = encode_webp(&pixels, 75);
+        let decoded = decode_webp(&bytes).expect("VP8 color decode failed");
+        assert_eq!(decoded.width, 16);
+        assert_eq!(decoded.height, 16);
+        for y in 0..16u32 {
+            for x in 0..16u32 {
+                let (r, g, b, a) = decoded.pixel_at(x, y);
+                assert_eq!(a, 255);
+                assert!((r as i32 - 200).abs() <= 15, "R error at ({x},{y}): got {r}");
+                assert!((g as i32 -  80).abs() <= 15, "G error at ({x},{y}): got {g}");
+                assert!((b as i32 -  40).abs() <= 15, "B error at ({x},{y}): got {b}");
             }
         }
     }
