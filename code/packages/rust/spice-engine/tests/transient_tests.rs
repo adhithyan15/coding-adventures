@@ -1,9 +1,9 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
-    estimate_period, format_dc_table, format_distortion_table, format_fourier_table,
-    format_pole_zero_table, format_pss_table, format_transient_table, fourier,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    estimate_period, format_corner_pss_table, format_dc_table, format_distortion_table,
+    format_fourier_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
+    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
@@ -533,6 +533,49 @@ fn pss_text_output_table_is_stable() {
 1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n\
 2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n\
 3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+    );
+}
+
+#[test]
+fn corner_pss_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "0", 1_000.0)));
+
+    let result = pss_corners_with_tolerance(
+        &circuit,
+        4,
+        1.0e-9,
+        1.0e-5,
+        2,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rload-high",
+                vec![CornerOverride::new("R1", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap()
+    .unwrap();
+
+    assert_eq!(
+        format_corner_pss_table(&result, &["V(in)", "I(V1)"]).unwrap(),
+        "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n\
+nominal\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n\
+nominal\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n\
+nominal\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n\
+nominal\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n\
+rload-high\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t2.500000e-04\t1.000000e+00\t-5.000000e-04\n\
+rload-high\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t5.000000e-04\t1.224647e-16\t-6.123234e-20\n\
+rload-high\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t7.500000e-04\t-1.000000e+00\t5.000000e-04\n\
+rload-high\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t1.000000e-03\t-2.449294e-16\t1.224647e-19\n"
     );
 }
 
