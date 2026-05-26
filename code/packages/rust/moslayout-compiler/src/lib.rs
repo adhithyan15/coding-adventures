@@ -84,11 +84,29 @@ mod _grammar;
 ///
 /// UI29 §2.1 froze the kernel at 15 primitives. `For` is one of the two
 /// meta-primitives in that set (the other is `If`, landing in U29-G2).
-/// `Grid` is retained in this list for backwards-compatibility with the
-/// pre-UI29 backends and will be removed by U29-X1 once the userland
-/// `mosaic-pkg-grid` package proves the new architecture end-to-end.
+///
+/// **U29-X1 milestone (PR landing this comment block):** the legacy
+/// `Grid` built-in primitive has been removed. It survived through
+/// UI31-L10 as a backwards-compat shim for VisiCalc's pre-UI28-1
+/// Grid.{desktop,touch}.mll, and through UI28-1 v0.2.0 as a "just
+/// in case some demo we forgot still uses it" safety net. Both of
+/// those reasons are gone now:
+///
+///   - mosaic-pkg-grid v0.2.0 (#4408) ships the userland Grid
+///     composition that proves Cell-and-Column userland composition
+///     end-to-end.
+///   - VisiCalc's Grid.{desktop,touch}.mll (#4411) was rewired to
+///     use the v0.2.0 composition shape directly (inlined until the
+///     cross-package resolver lands).
+///   - A grep across the entire repo confirms ZERO `.mll` files use
+///     `Grid` as a tag — the primitive is dead in the source layer.
+///
+/// Per-emitter `"Grid" => ...` special-case dispatch is now dead
+/// code; a follow-up PR will sweep it. This PR removes the
+/// registration so any future use of `Grid` resolves as a userland
+/// component reference (matching the userland v0.2.0 package).
 const PRIMITIVES: &[&str] = &[
-    "Box", "Row", "Column", "Text", "Image", "Spacer", "Grid",
+    "Box", "Row", "Column", "Text", "Image", "Spacer",
     // Extended set from earlier specs (kept for completeness):
     "Scroll", "Divider", "Stack", "Icon",
     // U29-G1 — control-flow meta-primitive. See `validate_for_node` for the
