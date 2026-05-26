@@ -249,6 +249,9 @@ def check_browser_readiness_case(
         f"{case_path}.expected", expected, "embedded_contexts", errors
     )
     require_optional_object_list(
+        f"{case_path}.expected", expected, "interactive_elements", errors
+    )
+    require_optional_object_list(
         f"{case_path}.expected", expected, "structured_items", errors
     )
     require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
@@ -521,6 +524,52 @@ def check_browser_expected_lists(
         for field in ("allowfullscreen", "credentialless"):
             require_optional_boolean(context_path, context, field, errors)
         require_optional_string(context_path, context, "fallback_text", errors)
+
+    for index, element in enumerate(object_list_items(expected, "interactive_elements")):
+        element_path = f"{case_path}.expected.interactive_elements[{index}]"
+        require_string(element_path, element, "element", errors)
+        for field in (
+            "id",
+            "role",
+            "authored_role",
+            "accessible_name",
+            "aria_label",
+            "aria_current",
+            "aria_expanded",
+            "aria_pressed",
+            "aria_selected",
+            "tabindex",
+            "contenteditable",
+            "editing_mode",
+            "draggable",
+            "draggable_state",
+            "spellcheck",
+            "translate",
+            "popover",
+            "popover_target",
+            "popover_target_action",
+            "command",
+            "command_for",
+        ):
+            require_optional_nullable_string(element_path, element, field, errors)
+        require_optional_string(element_path, element, "text", errors)
+        for field in (
+            "aria_labelledby",
+            "aria_describedby",
+            "aria_controls",
+            "accesskey",
+            "event_handlers",
+        ):
+            require_optional_string_list(element_path, element, field, errors)
+        for field in (
+            "aria_hidden",
+            "hidden",
+            "inert",
+            "open",
+            "focusable",
+            "disabled",
+        ):
+            require_optional_boolean(element_path, element, field, errors)
 
     for index, item in enumerate(object_list_items(expected, "structured_items")):
         item_path = f"{case_path}.expected.structured_items[{index}]"

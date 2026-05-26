@@ -628,6 +628,58 @@
         "media": [
           { "kind": "video", "src": null, "resolved_src": null, "controls": true }
         ],
+        "interactive_elements": [
+          { "element": "main", "id": "app", "role": "main", "text": "Save", "event_handlers": ["onclick"] },
+          { "element": "button", "role": "control", "text": "Save", "accessible_name": "Save", "event_handlers": ["onclick", "onkeydown"] },
+          { "element": "video", "role": "media", "text": "", "event_handlers": ["onplay", "onpause"] },
+          { "element": "img", "role": "image", "text": "", "event_handlers": ["onerror"] },
+          { "element": "input", "role": "control", "text": "", "event_handlers": ["oninput", "onchange"] }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "interactive-element-state-page",
+      "description": "Browser document summaries expose focus, editing, popover, command, hidden, inert, and inline handler metadata as a flat interactive inventory.",
+      "input": "<body><main id=app aria-label=\"App shell\"><button id=menu aria-expanded=false aria-controls=panel tabindex=0 accesskey=\"m /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog onclick=showMenu()>Menu</button><section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert><h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p><div id=action role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=plaintext-only draggable=auto spellcheck=false translate=no popover=manual onkeydown=keyAction()>Inline action</div><p id=editable contenteditable spellcheck=true translate=yes>Editable copy</p></section><dialog id=dialog open aria-label=\"Dialog\" accesskey=\"d x\"><p>Dialog copy</p></dialog><details id=more open><summary>More</summary><p>Extra</p></details><p id=secret hidden>Hidden copy</p><span id=decorative aria-hidden=true>Decorative</span><input id=disabled disabled value=no></main>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "app", "name": null, "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative" },
+          { "id": "menu", "name": null, "text": "Menu" },
+          { "id": "panel", "name": null, "text": "Settings Choose options Inline action Editable copy" },
+          { "id": "panel-title", "name": null, "text": "Settings" },
+          { "id": "panel-help", "name": null, "text": "Choose options" },
+          { "id": "action", "name": null, "text": "Inline action" },
+          { "id": "editable", "name": null, "text": "Editable copy" },
+          { "id": "dialog", "name": null, "text": "Dialog copy" },
+          { "id": "more", "name": null, "text": "More Extra" },
+          { "id": "secret", "name": null, "text": "Hidden copy" },
+          { "id": "decorative", "name": null, "text": "Decorative" },
+          { "id": "disabled", "name": null, "text": "" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Settings" }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [
+          { "element": "button", "id": "menu", "role": "control", "text": "Menu", "accessible_name": "Menu", "aria_controls": ["panel"], "aria_expanded": "false", "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "focusable": true, "popover_target": "panel-pop", "popover_target_action": "toggle", "command": "show-modal", "command_for": "dialog" },
+          { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "inert": true },
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "text": "Inline action", "aria_current": "page", "aria_pressed": "mixed", "tabindex": "-1", "event_handlers": ["onkeydown"], "focusable": false, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "popover": "manual" },
+          { "element": "p", "id": "editable", "role": "paragraph", "text": "Editable copy", "focusable": true, "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes" },
+          { "element": "dialog", "id": "dialog", "role": "dialog", "text": "Dialog copy", "accessible_name": "Dialog", "aria_label": "Dialog", "open": true, "accesskey": ["d", "x"] },
+          { "element": "details", "id": "more", "role": "disclosure", "text": "More Extra", "open": true },
+          { "element": "summary", "role": "disclosure_summary", "text": "More" },
+          { "element": "p", "id": "secret", "role": "paragraph", "text": "Hidden copy", "hidden": true },
+          { "element": "span", "id": "decorative", "role": "inline", "text": "Decorative", "aria_hidden": true }
+        ],
         "forms": [],
         "tables": []
       }
