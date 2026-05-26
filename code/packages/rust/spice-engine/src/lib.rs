@@ -2196,6 +2196,73 @@ pub struct PoleZeroResult {
     pub entries: Vec<PoleZeroEntry>,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum PoleZeroTopology {
+    RcLowpass,
+    RcHighpass,
+    RlcLowpass,
+    RlcHighpass,
+    RlcBandpass,
+    RlcNotch,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerPoleZeroPoint {
+    pub corner_name: String,
+    pub result: PoleZeroResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerPoleZeroResult {
+    pub input_source: String,
+    pub output_node: String,
+    pub topology: PoleZeroTopology,
+    pub points: Vec<CornerPoleZeroPoint>,
+}
+
+pub fn pole_zero_corners(
+    circuit: &Circuit,
+    input_source: &str,
+    output_node: &str,
+    topology: PoleZeroTopology,
+    corners: &[CornerSpec],
+) -> Result<CornerPoleZeroResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        let result = match topology {
+            PoleZeroTopology::RcLowpass => {
+                pole_zero_rc_lowpass(&corner_circuit, input_source, output_node)?
+            }
+            PoleZeroTopology::RcHighpass => {
+                pole_zero_rc_highpass(&corner_circuit, input_source, output_node)?
+            }
+            PoleZeroTopology::RlcLowpass => {
+                pole_zero_rlc_lowpass(&corner_circuit, input_source, output_node)?
+            }
+            PoleZeroTopology::RlcHighpass => {
+                pole_zero_rlc_highpass(&corner_circuit, input_source, output_node)?
+            }
+            PoleZeroTopology::RlcBandpass => {
+                pole_zero_rlc_bandpass(&corner_circuit, input_source, output_node)?
+            }
+            PoleZeroTopology::RlcNotch => {
+                pole_zero_rlc_notch(&corner_circuit, input_source, output_node)?
+            }
+        };
+        points.push(CornerPoleZeroPoint {
+            corner_name: corner.name.clone(),
+            result,
+        });
+    }
+    Ok(CornerPoleZeroResult {
+        input_source: input_source.to_string(),
+        output_node: output_node.to_string(),
+        topology,
+        points,
+    })
+}
+
 pub fn pole_zero_rc_lowpass(
     circuit: &Circuit,
     input_source: &str,
