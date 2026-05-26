@@ -133,6 +133,79 @@ pub fn length_symbol_to_base(symbol: u32) -> (u32, u32) {
 }
 
 // ---------------------------------------------------------------------------
+// Distance prefix coding — 40-symbol Dist alphabet with extra bits
+// ---------------------------------------------------------------------------
+
+/// Number of extra bits for each of the 40 Dist prefix symbols.
+///
+/// After decoding a Dist symbol, read this many additional bits and add them
+/// to `DIST_BASE[symbol]` to get the final decoded distance.
+pub const DIST_BITS: [u32; 40] = [
+    0, 0, 0, 0,                    // symbols  0- 3: distances 1-4
+    1, 1, 2, 2, 3, 3,              // symbols  4- 9
+    4, 4, 5, 5, 6, 6,              // symbols 10-15
+    7, 7, 8, 8, 9, 9,              // symbols 16-21
+    10, 10, 11, 11, 12, 12,        // symbols 22-27
+    13, 13, 14, 14, 15, 15,        // symbols 28-33
+    16, 16, 17, 17, 18, 18,        // symbols 34-39
+];
+
+/// Base distance for each of the 40 Dist prefix symbols (before extra bits).
+pub const DIST_BASE: [u32; 40] = [
+    1, 2, 3, 4,
+    5, 7, 9, 13, 17, 25,
+    33, 49, 65, 97, 129, 193,
+    257, 385, 513, 769,
+    1025, 1537, 2049, 3073,
+    4097, 6145, 8193, 12289,
+    16385, 24577, 32769, 49153,
+    65537, 98305, 131073, 196609,
+    262145, 393217, 524289, 786433,
+];
+
+/// Maximum dist_code encodable by the 40-symbol Dist alphabet.
+///
+/// `DIST_BASE[39] + 2^DIST_BITS[39] - 1 = 786433 + 262143 = 1048576`.
+pub const MAX_DIST_CODE: u32 = 786_433 + (1 << 18) - 1;
+
+/// Decode a final distance from a (symbol, extra-bits-value) pair.
+pub fn decode_dist(symbol: u32, extra: u32) -> u32 {
+    DIST_BASE[symbol as usize] + extra
+}
+
+/// Encode a decoded distance value into `(symbol, n_extra_bits, extra_bits_val)`.
+///
+/// This is the inverse of `decode_dist`: find the Dist symbol and extra bits
+/// that, when decoded, reproduce `dist_code`.  Clamps to `MAX_DIST_CODE`.
+pub fn encode_dist_code(dist_code: u32) -> (u32, u32, u32) {
+    let dist_code = dist_code.max(1).min(MAX_DIST_CODE);
+    let symbol = DIST_BASE.partition_point(|&base| base <= dist_code).saturating_sub(1);
+    let n_extra = DIST_BITS[symbol];
+    let extra_val = dist_code - DIST_BASE[symbol];
+    (symbol as u32, n_extra, extra_val)
+}
+
+/// Encode a copy length [2, 133] into `(g_symbol, n_extra_bits, extra_bits_val)`.
+///
+/// `g_symbol` is in [256, 279] (G-group length prefix codes).
+pub fn encode_length(length: u32) -> (u32, u32, u32) {
+    if length <= 9 {
+        (256 + length - 2, 0, 0)
+    } else if length <= 13 {
+        (256 + 8 + (length - 10) / 2, 1, (length - 10) % 2)
+    } else if length <= 21 {
+        (256 + 10 + (length - 14) / 4, 2, (length - 14) % 4)
+    } else if length <= 37 {
+        (256 + 12 + (length - 22) / 8, 3, (length - 22) % 8)
+    } else if length <= 69 {
+        (256 + 14 + (length - 38) / 16, 4, (length - 38) % 16)
+    } else {
+        let code = (16 + (length - 70) / 8).min(23);
+        (256 + code, 3, (length - 70) % 8)
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -172,5 +245,45 @@ mod tests {
     fn length_symbol_base_cases() {
         assert_eq!(length_symbol_to_base(256), (2, 0));
         assert_eq!(length_symbol_to_base(263), (9, 0));
+    }
+
+    #[test]
+    fn dist_bits_and_base_size() {
+        assert_eq!(DIST_BITS.len(), 40);
+        assert_eq!(DIST_BASE.len(), 40);
+    }
+
+    #[test]
+    fn decode_dist_no_extra() {
+        assert_eq!(decode_dist(0, 0), 1);
+        assert_eq!(decode_dist(3, 0), 4);
+    }
+
+    #[test]
+    fn decode_dist_with_extra() {
+        // Symbol 4: base=5, 1 extra bit; extra=1 → distance 6
+        assert_eq!(decode_dist(4, 1), 6);
+        // Symbol 6: base=9, 2 extra bits; extra=3 → distance 12
+        assert_eq!(decode_dist(6, 3), 12);
+    }
+
+    #[test]
+    fn encode_dist_code_round_trip() {
+        for dist_code in [1u32, 2, 4, 5, 8, 9, 16, 100, 500] {
+            let (sym, _n_extra, extra_val) = encode_dist_code(dist_code);
+            let decoded = decode_dist(sym, extra_val);
+            assert_eq!(decoded, dist_code, "dist_code={dist_code} round-trip failed");
+        }
+    }
+
+    #[test]
+    fn encode_length_round_trip() {
+        for length in [2u32, 3, 9, 10, 13, 14, 21, 22, 37, 38, 69, 70, 128] {
+            let (g_sym, n_extra, extra_val) = encode_length(length);
+            let (base, n_check) = length_symbol_to_base(g_sym);
+            let decoded = base + extra_val;
+            assert_eq!(decoded, length, "length={length} round-trip failed");
+            assert_eq!(n_check, n_extra, "extra bits mismatch for length={length}");
+        }
     }
 }

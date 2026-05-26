@@ -264,10 +264,24 @@ pub fn write_huffman_code(bw: &mut BitWriter, code_lengths: &[u32]) {
         .map(|(i, &l)| (i, l))
         .collect();
 
+    // Simple codes only support 8-bit symbol values (0..=255).  If any active
+    // symbol is ≥ 256 (G-group length codes 256..=279), use complex code format.
     match active.len() {
         0 => write_simple_1(bw, 0),
-        1 => write_simple_1(bw, active[0].0 as u32),
-        2 => write_simple_2(bw, active[0].0 as u32, active[1].0 as u32),
+        1 => {
+            if active[0].0 < 256 {
+                write_simple_1(bw, active[0].0 as u32)
+            } else {
+                write_complex_code(bw, code_lengths)
+            }
+        }
+        2 => {
+            if active[0].0 < 256 && active[1].0 < 256 {
+                write_simple_2(bw, active[0].0 as u32, active[1].0 as u32)
+            } else {
+                write_complex_code(bw, code_lengths)
+            }
+        }
         _ => write_complex_code(bw, code_lengths),
     }
 }
