@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_mc_table` and `format_corner_mc_table` for stable tab-separated
+  `.MC` output-node trial, mean, standard-deviation, and convergence snapshots.
 - Add `format_corner_distortion_table` for stable tab-separated named-corner
   `.DISTO` harmonic magnitude, phase, and THD text output snapshots.
 - Add `format_corner_pole_zero_table` for stable tab-separated named-corner

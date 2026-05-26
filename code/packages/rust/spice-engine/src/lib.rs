@@ -3554,6 +3554,60 @@ pub fn format_transient_table(
     Ok(rows.join("\n"))
 }
 
+pub fn format_mc_table(result: &McResult) -> String {
+    let mut rows = vec!["Trial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged".to_string()];
+    for point in &result.points {
+        let output_value = if point.converged {
+            point
+                .voltage(&result.output_node)
+                .map(format_table_number)
+                .unwrap_or_default()
+        } else {
+            String::new()
+        };
+        rows.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}",
+            point.trial,
+            result.output_node,
+            output_value,
+            format_table_number(result.mean),
+            format_table_number(result.std_dev),
+            point.converged
+        ));
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
+pub fn format_corner_mc_table(result: &CornerMcResult) -> String {
+    let mut rows =
+        vec!["Corner\tTrial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged".to_string()];
+    for corner in &result.points {
+        for point in &corner.result.points {
+            let output_value = if point.converged {
+                point
+                    .voltage(&result.output_node)
+                    .map(format_table_number)
+                    .unwrap_or_default()
+            } else {
+                String::new()
+            };
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                corner.corner_name,
+                point.trial,
+                result.output_node,
+                output_value,
+                format_table_number(corner.result.mean),
+                format_table_number(corner.result.std_dev),
+                point.converged
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_ac_table(points: &[AcPoint], probes: &[&str]) -> Result<String, SpiceError> {
     let selected_probes = if probes.is_empty() {
         default_ac_output_probes(points)

@@ -1,6 +1,7 @@
 use spice_engine::{
-    mc_dc, mc_dc_corners, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Element,
-    McDistribution, McOptions, Resistor, SpiceError, Vccs, Vcvs, VoltageSource,
+    format_corner_mc_table, format_mc_table, mc_dc, mc_dc_corners, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Element, McDistribution, McOptions, Resistor,
+    SpiceError, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -172,6 +173,53 @@ fn mc_dc_corners_runs_trials_per_corner() {
         .points
         .iter()
         .all(|trial| trial.converged)));
+}
+
+#[test]
+fn mc_dc_text_output_table_is_stable() {
+    let result = mc_dc(
+        &divider(),
+        "mid",
+        2,
+        McOptions {
+            tolerance: 0.0,
+            seed: Some(7),
+            ..McOptions::default()
+        },
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_mc_table(&result),
+        "Trial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+    );
+}
+
+#[test]
+fn corner_mc_dc_text_output_table_is_stable() {
+    let result = mc_dc_corners(
+        &divider(),
+        "mid",
+        2,
+        McOptions {
+            tolerance: 0.0,
+            seed: Some(7),
+            ..McOptions::default()
+        },
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_mc_table(&result),
+        "Corner\tTrial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\nnominal\t0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\nnominal\t1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\nrbot-fast\t0\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\nrbot-fast\t1\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n"
+    );
 }
 
 #[test]
