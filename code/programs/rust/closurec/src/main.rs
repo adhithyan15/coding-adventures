@@ -74,6 +74,7 @@ pub mod globs;
 pub mod help_markdown;
 pub mod print_tree;
 pub mod run;
+pub mod source_map;
 pub mod whitespace_only;
 pub mod wire;
 pub mod wrapper;
