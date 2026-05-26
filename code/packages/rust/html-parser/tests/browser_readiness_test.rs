@@ -730,6 +730,10 @@ struct ExpectedFormControl {
     form_novalidate: bool,
     value: Option<String>,
     #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
     autofocus: bool,
     disabled: bool,
     #[serde(default)]
@@ -741,6 +745,8 @@ struct ExpectedFormControl {
     checked: bool,
     #[serde(default)]
     multiple: bool,
+    #[serde(default)]
+    selected_options: Vec<String>,
     text: String,
     options: Vec<String>,
 }
@@ -874,6 +880,26 @@ fn browser_form_fieldset_metadata_disables_descendant_controls() {
     assert_eq!(
         actual.forms, expected.forms,
         "form controls should reflect disabled fieldset ancestry",
+    );
+}
+
+#[test]
+fn browser_form_successful_control_metadata_tracks_submission_values() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "catalog-form-table-page")
+        .expect("catalog form fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("catalog form fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "form controls should preserve successful-control and submission value metadata",
     );
 }
 
@@ -1591,6 +1617,8 @@ impl ExpectedFormControl {
             form_target: self.form_target,
             form_novalidate: self.form_novalidate,
             value: self.value,
+            successful: self.successful,
+            submission_values: self.submission_values,
             autofocus: self.autofocus,
             disabled: self.disabled,
             required: self.required,
@@ -1598,6 +1626,7 @@ impl ExpectedFormControl {
             will_validate: self.will_validate,
             checked: self.checked,
             multiple: self.multiple,
+            selected_options: self.selected_options,
             text: self.text,
             options: self.options,
         }
