@@ -1,9 +1,10 @@
 use spice_engine::{
     circuit_at_temperature, dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
-    BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource,
-    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError, SubcircuitDefinition,
-    SubcircuitElement, Vccs, Vcvs, VoltageSource, Waveform, XInstance,
+    format_corner_dc_sweep_table, format_dc_sweep_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
+    Circuit, CornerOverride, CornerSpec, CurrentSource, DcConvergenceAid, DcOpOptions, Diode,
+    Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
+    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource,
+    Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -762,6 +763,25 @@ fn dc_sweep_supports_current_sources() {
 }
 
 #[test]
+fn dc_sweep_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+
+    let points = dc_sweep(&circuit, "V1", 0.0, 2.0, 1.0).unwrap();
+
+    assert_eq!(
+        format_dc_sweep_table("V1", &points, &["V(mid)", "I(V1)"]).unwrap(),
+        "Index\tSource\tValue\tV(mid)\tI(V1)\n0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n2\tV1\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n"
+    );
+}
+
+#[test]
 fn dc_sweep_rejects_step_that_does_not_reach_stop() {
     let circuit = Circuit::new();
 
@@ -1086,5 +1106,40 @@ fn dc_sweep_corners_runs_source_sweeps_per_corner() {
     assert_close(
         result.points[1].points[2].result.voltage("out").unwrap(),
         10.0 / 3.0,
+    );
+}
+
+#[test]
+fn corner_dc_sweep_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_sweep_corners(
+        &circuit,
+        "Vin",
+        0.0,
+        10.0,
+        5.0,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_dc_sweep_table(&result, &["V(out)", "I(Vin)"]).unwrap(),
+        "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\nnominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\nnominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\nnominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\nrbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\nrbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\nrbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\n"
     );
 }
