@@ -8878,6 +8878,22 @@ impl ToolAuditSupervisorDrainRunReport {
             .action_lane_readiness_label_matches_readiness()
     }
 
+    /// Return whether every queue-key action-lane classifier label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key()
+            .action_lane_classifier_labels_match()
+    }
+
+    /// Return whether any queue-key action-lane classifier label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key()
+            .has_action_lane_classifier_label_integrity_drift()
+    }
+
     /// Return whether the route digest queue action route digest queue key is fully settled.
     pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_settled(
         &self,
@@ -9313,6 +9329,22 @@ impl ToolAuditSupervisorDrainRunReport {
     ) -> bool {
         self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest()
             .action_lane_readiness_label_matches_readiness()
+    }
+
+    /// Return whether every queue digest action-lane classifier label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest()
+            .action_lane_classifier_labels_match()
+    }
+
+    /// Return whether any queue digest action-lane classifier label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest()
+            .has_action_lane_classifier_label_integrity_drift()
     }
 
     /// Return whether the route digest queue action route digest queue digest is fully settled.
@@ -11453,6 +11485,10 @@ impl ToolAuditSupervisorDrainRunReport {
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_readiness_label(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_readiness_label_matches_readiness:
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_readiness_label_matches_readiness(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match(),
+            has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift:
+                self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_settled:
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_settled(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_auto_routable:
@@ -11545,6 +11581,10 @@ impl ToolAuditSupervisorDrainRunReport {
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_readiness_label(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_readiness_label_matches_readiness:
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_readiness_label_matches_readiness(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match(),
+            has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift:
+                self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_is_settled:
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_is_settled(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_requires_action:
@@ -14407,6 +14447,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     /// Whether the route digest queue action route digest queue-key action-lane readiness label parses back.
     pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_readiness_label_matches_readiness:
         bool,
+    /// Whether all route digest queue action route digest queue-key action-lane classifier labels match.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match:
+        bool,
+    /// Whether any route digest queue action route digest queue-key action-lane classifier label drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift:
+        bool,
     /// Whether the route digest queue action route digest queue key is fully settled.
     pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_settled:
         bool,
@@ -14544,6 +14590,12 @@ pub struct ToolAuditSupervisorDrainRunSummary {
         &'static str,
     /// Whether the route digest queue action route digest queue digest action-lane readiness label parses back.
     pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_readiness_label_matches_readiness:
+        bool,
+    /// Whether all route digest queue action route digest queue digest action-lane classifier labels match.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match:
+        bool,
+    /// Whether any route digest queue action route digest queue digest action-lane classifier label drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift:
         bool,
     /// Whether the route digest queue action route digest queue digest is fully settled.
     pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_is_settled:
@@ -14944,6 +14996,20 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_readiness_label_matches_readiness
     }
 
+    /// Return whether every queue-key action-lane classifier label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match
+    }
+
+    /// Return whether any queue-key action-lane classifier label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift
+    }
+
     /// Return whether the route digest queue action route digest queue key is fully settled.
     pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_settled(
         &self,
@@ -15265,6 +15331,20 @@ impl ToolAuditSupervisorDrainRunSummary {
         &self,
     ) -> bool {
         self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_readiness_label_matches_readiness
+    }
+
+    /// Return whether every queue digest action-lane classifier label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match
+    }
+
+    /// Return whether any queue digest action-lane classifier label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift
     }
 
     /// Return whether the route digest queue action route digest queue digest is fully settled.
@@ -30148,6 +30228,19 @@ impl
         ) == Some(self.action_lane_readiness())
     }
 
+    /// Return whether all action-lane classifier labels match their typed values.
+    pub fn action_lane_classifier_labels_match(self) -> bool {
+        self.action_lane_labels_match()
+            && self.action_lane_route_label_matches_route()
+            && self.action_lane_priority_label_matches_priority()
+            && self.action_lane_readiness_label_matches_readiness()
+    }
+
+    /// Return whether any action-lane classifier label drifted.
+    pub fn has_action_lane_classifier_label_integrity_drift(self) -> bool {
+        !self.action_lane_classifier_labels_match()
+    }
+
     /// Return whether this queue key routes to routine action.
     pub fn routes_to_routine_action(self) -> bool {
         self.action_route_digest.routes_to_routine_action()
@@ -30541,6 +30634,19 @@ impl
         ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(
             self.action_lane_readiness_label(),
         ) == Some(self.action_lane_readiness())
+    }
+
+    /// Return whether all action-lane classifier labels match their typed values.
+    pub fn action_lane_classifier_labels_match(self) -> bool {
+        self.action_lane_labels_match()
+            && self.action_lane_route_label_matches_route()
+            && self.action_lane_priority_label_matches_priority()
+            && self.action_lane_readiness_label_matches_readiness()
+    }
+
+    /// Return whether any action-lane classifier label drifted.
+    pub fn has_action_lane_classifier_label_integrity_drift(self) -> bool {
+        !self.action_lane_classifier_labels_match()
     }
 
     /// Return whether this queue digest routes to routine action.
@@ -49767,6 +49873,32 @@ mod tests {
         );
         assert_eq!(
             continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key
+                .action_lane_classifier_labels_match()
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_labels_match(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key
+                .action_lane_classifier_labels_match()
+        );
+        assert_eq!(
+            continuation_summary
+                .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key
+                .has_action_lane_classifier_label_integrity_drift()
+        );
+        assert_eq!(
+            continuation_summary
+                .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_action_lane_classifier_label_integrity_drift(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key
+                .has_action_lane_classifier_label_integrity_drift()
+        );
+        assert_eq!(
+            continuation_summary
                 .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key_is_settled,
             continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_key
                 .is_settled()
@@ -50288,6 +50420,32 @@ mod tests {
                 ),
             continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest
                 .action_lane_readiness_label_matches_readiness()
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest
+                .action_lane_classifier_labels_match()
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_labels_match(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest
+                .action_lane_classifier_labels_match()
+        );
+        assert_eq!(
+            continuation_summary
+                .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest
+                .has_action_lane_classifier_label_integrity_drift()
+        );
+        assert_eq!(
+            continuation_summary
+                .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest_action_lane_classifier_label_integrity_drift(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_route_digest_queue_digest
+                .has_action_lane_classifier_label_integrity_drift()
         );
         assert_eq!(
             continuation_summary
