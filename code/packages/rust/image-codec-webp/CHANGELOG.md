@@ -7,6 +7,146 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.7] — 2026-05-25
+
+### Added
+
+- **VP8L meta-Huffman decoder** — `use_meta_huffman = 1` in the main image
+  entropy header is now fully supported.  After reading `meta_code_bits`
+  (3 bits, tile_size = 1 << (bits+2)), a meta image is decoded as a
+  single-group entropy segment; each tile's Huffman group index is packed
+  into `G | (R << 8)` of the meta pixel.  All Huffman group sets are then
+  read sequentially, and during pixel decode the correct group is looked
+  up per pixel position.  VP8L files produced by libwebp (which uses
+  meta-Huffman for most natural images) can now be decoded.
+
+### Changed
+
+- `encode()` and `write_entropy_segment()` now write `use_meta_huffman = 0`
+  (1 bit) after `color_cache_code_bits`, keeping the bitstream in sync
+  with the full entropy-coded-image format.
+- `read_entropy_segment()` reads the `use_meta_huffman` bit and returns an
+  error if set (sub-images do not need meta-Huffman in practice).
+- `VERSION` bumped to `0.3.7`.
+
+---
+
+## [0.3.6] — 2026-05-25
+
+### Added
+
+- **VP8L color-index transform decoder (type 3)** — reads the palette
+  (1–256 ARGB entries, delta-coded per channel), computes `pack_bits`
+  from the palette size, decodes the pixel data using the reduced
+  `effective_width = ceil(orig_width / pack_bits)`, and applies
+  `inverse_color_index` to expand packed G-channel indices back to full
+  ARGB pixels.  VP8L files produced by libwebp or other encoders that
+  use the color-index (palette) transform can now be decoded.
+- `inverse_color_index` in `transforms.rs` — expands a packed-index
+  image (1/2/4/8 indices per G byte, LSB-first) using a palette.
+- `AppliedTransform::ColorIndex` variant carrying palette, pack_bits, and
+  orig_width for the inverse pass.
+- `effective_width` tracking in `decode()` — updated when a ColorIndex
+  transform is read so that the pixel data section uses the correct
+  reduced width.
+- 3 new tests: `color_index_inverse_no_packing`,
+  `color_index_inverse_pack4`, `color_index_inverse_two_rows`.
+
+### Changed
+
+- `VERSION` bumped to `0.3.6`.
+
+---
+
+## [0.3.5] — 2026-05-25
+
+### Added
+
+- **VP8L color cache decoder** — `color_cache_code_bits > 0` is now fully
+  supported.  G symbols ≥ 280 are decoded as cache references
+  (`slot = sym - 280`).  Cache slots are updated after every literal pixel and
+  every back-reference copy using the hash
+  `(0x1e35a7bd * ARGB) >> (32 - cache_bits)`.  The G Huffman alphabet is
+  extended to `280 + 2^cache_bits` symbols automatically.  VP8L files produced
+  by libwebp and other encoders that enable color cache can now be decoded.
+
+### Changed
+
+- `decode()` no longer returns an error when `color_cache_code_bits > 0`.
+- `VERSION` bumped to `0.3.5`.
+
+---
+
+## [0.3.4] — 2026-05-25
+
+### Added
+
+- **VP8L color transform decoder (type 1)** — reads block_bits and the
+  coefficient sub-image, then applies `inverse_color` per pixel:
+  `new_red = red + delta(green_to_red, green)` and
+  `new_blue = blue + delta(green_to_blue, green) + delta(red_to_blue, new_red)`.
+  Externally-produced VP8L files that use the color transform can now be decoded.
+- `inverse_color` and `color_transform_delta` in `transforms.rs`.
+- `AppliedTransform::Color` variant carrying the color sub-image data.
+- 2 new tests: `color_transform_zero_coefficients_is_noop`, `color_transform_round_trip`.
+
+### Changed
+
+- `VERSION` bumped to `0.3.4`.
+
+---
+
+## [0.3.3] — 2026-05-25
+
+### Added
+
+- **VP8L predictor transform (type 0)** — encoder uses **mode 1 (left prediction)**
+  for all 16-pixel blocks (`block_bits = 4`).  The predictor sub-image is written
+  inline as an entropy segment (color_cache=0, own Huffman groups, pixel data).
+- **All 14 predictor modes implemented for decoding** — modes 0-13 including
+  Select (mode 11), ClampedAddSubFull (mode 12), ClampedAddSubHalf (mode 13),
+  and all avg-family modes (5-10).  Any externally-produced VP8L stream using
+  the predictor transform can now be decoded.
+- `compute_predictor` — public helper computing the predictor pixel for any
+  `(x, y, mode)` triple, correctly handling first-pixel and edge-pixel sentinel
+  rules (`0xFF000000`).
+- `apply_predictor` and `inverse_predictor` in `transforms.rs`.
+- `write_entropy_segment` and `read_entropy_segment` in `mod.rs` — shared helpers
+  for encoding/decoding both the main image and predictor sub-images.
+- `AppliedTransform` enum in `mod.rs` — replaces the bare `Vec<u8>` and carries
+  the predictor sub-image data needed for the inverse pass.
+- 7 new tests: `predictor_round_trip_mode1_solid`, `predictor_round_trip_mode1_gradient`,
+  `predictor_first_pixel_sentinel`, `predictor_left_edge_mode1_uses_sentinel`,
+  `predictor_mode7_avg_left_top`, `predictor_all_modes_do_not_panic_1x1`,
+  `round_trip_large_image`.
+
+### Changed
+
+- Encoding order is now: raw → predictor(mode 1) → subtract-green → LZ77 → Huffman.
+  Bitstream transform header: `[Predictor type=0, block_bits=4, sub-image]`
+  then `[SubtractGreen type=2]` then `has_transform=0`.
+- `VERSION` bumped to `0.3.3`.
+
+---
+
+## [0.3.2] — 2026-05-25
+
+### Added
+
+- **VP8L subtract-green transform wired into encoder** — `encode()` now clones
+  the pixel buffer, applies `apply_subtract_green` (R' = R-G, B' = B-G), and
+  runs LZ77 on the transformed data.  The bitstream header now writes
+  `has_transform=1, transform_type=2 (SubtractGreen), has_transform=0`.
+  The decoder already handled `transform_type=2` via `inverse_subtract_green`;
+  no decoder change required.  Compression improves ~5-10% on colour images.
+
+### Changed
+
+- `VERSION` bumped to `0.3.2`.
+- `transforms.rs` module doc updated to reflect subtract-green is now active.
+
+---
+
 ## [0.3.1] — 2026-05-25
 
 ### Added
