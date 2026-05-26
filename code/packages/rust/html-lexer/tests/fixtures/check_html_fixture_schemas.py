@@ -462,6 +462,8 @@ def check_browser_expected_lists(
             require_optional_boolean(link_path, link, field, errors)
         require_optional_string_list(link_path, link, "ping", errors)
         require_optional_string_list(link_path, link, "resolved_ping", errors)
+        require_optional_string_list(link_path, link, "attributionsrc", errors)
+        require_optional_string_list(link_path, link, "resolved_attributionsrc", errors)
         require_string(link_path, link, "text", errors)
 
     for index, image in enumerate(object_list_items(expected, "images")):
@@ -637,9 +639,18 @@ def check_browser_expected_lists(
         require_string(form_path, form, "method", errors)
         require_optional_nullable_string(form_path, form, "enctype", errors)
         require_optional_nullable_string(form_path, form, "target", errors)
+        require_optional_nullable_string(form_path, form, "effective_target", errors)
         require_optional_nullable_string(form_path, form, "accept_charset", errors)
         require_optional_nullable_string(form_path, form, "autocomplete", errors)
         require_optional_nullable_string(form_path, form, "rel", errors)
+        require_optional_string_list(form_path, form, "rel_tokens", errors)
+        for field in (
+            "rel_external",
+            "rel_nofollow",
+            "rel_noopener",
+            "rel_noreferrer",
+        ):
+            require_optional_boolean(form_path, form, field, errors)
         require_optional_boolean(form_path, form, "novalidate", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
@@ -704,6 +715,7 @@ def check_browser_expected_lists(
                 "resolved_action",
                 "enctype",
                 "target",
+                "effective_target",
                 "value",
             ):
                 require_optional_nullable_string(submitter_path, submitter, field, errors)
@@ -884,6 +896,8 @@ def check_browser_content_node(
     require_optional_string_list(node_path, node, "rel_tokens", errors)
     require_optional_string_list(node_path, node, "ping", errors)
     require_optional_string_list(node_path, node, "resolved_ping", errors)
+    require_optional_string_list(node_path, node, "attributionsrc", errors)
+    require_optional_string_list(node_path, node, "resolved_attributionsrc", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
     require_optional_string_list(node_path, node, "sandbox", errors)
@@ -1095,6 +1109,8 @@ def check_browser_render_node(
     require_optional_string_list(node_path, node, "rel_tokens", errors)
     require_optional_string_list(node_path, node, "ping", errors)
     require_optional_string_list(node_path, node, "resolved_ping", errors)
+    require_optional_string_list(node_path, node, "attributionsrc", errors)
+    require_optional_string_list(node_path, node, "resolved_attributionsrc", errors)
     require_optional_string_list(node_path, node, "headers", errors)
     require_optional_string_list(node_path, node, "labels", errors)
     require_optional_string_list(node_path, node, "sandbox", errors)

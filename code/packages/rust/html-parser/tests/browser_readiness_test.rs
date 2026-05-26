@@ -423,6 +423,10 @@ struct ExpectedLink {
     #[serde(default)]
     resolved_ping: Vec<String>,
     #[serde(default)]
+    attributionsrc: Vec<String>,
+    #[serde(default)]
+    resolved_attributionsrc: Vec<String>,
+    #[serde(default)]
     hreflang: Option<String>,
     #[serde(default)]
     type_hint: Option<String>,
@@ -622,11 +626,23 @@ struct ExpectedForm {
     enctype: Option<String>,
     target: Option<String>,
     #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
     accept_charset: Option<String>,
     #[serde(default)]
     autocomplete: Option<String>,
     #[serde(default)]
     rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    rel_external: bool,
+    #[serde(default)]
+    rel_nofollow: bool,
+    #[serde(default)]
+    rel_noopener: bool,
+    #[serde(default)]
+    rel_noreferrer: bool,
     #[serde(default)]
     novalidate: bool,
     controls: Vec<ExpectedFormControl>,
@@ -738,6 +754,8 @@ struct ExpectedFormSubmitter {
     #[serde(default)]
     target: Option<String>,
     #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
@@ -814,6 +832,40 @@ fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
         actual.interactive_elements,
         case.expected.into_browser_document().interactive_elements,
         "interactive elements should preserve focus, editing, popover, command, hidden, and event metadata",
+    );
+}
+
+#[test]
+fn browser_navigation_attribution_metadata_tracks_links_areas_and_form_targets() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+
+    let legacy = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "legacy-directory-page")
+        .expect("legacy directory fixture case should exist");
+    let legacy_actual = parse_browser_document(&legacy.input)
+        .expect("legacy directory fixture should parse into browser document facts");
+    assert_eq!(
+        legacy_actual.links,
+        legacy.expected.into_browser_document().links,
+        "link metadata should preserve attribution source registration URLs",
+    );
+
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let forms = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+    let forms_actual = parse_browser_document(&forms.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    assert_eq!(
+        forms_actual.forms,
+        forms.expected.into_browser_document().forms,
+        "form metadata should preserve rel tokens and base-target effective submitter targets",
     );
 }
 
@@ -1243,6 +1295,8 @@ impl ExpectedLink {
             download: self.download,
             ping: self.ping,
             resolved_ping: self.resolved_ping,
+            attributionsrc: self.attributionsrc,
+            resolved_attributionsrc: self.resolved_attributionsrc,
             hreflang: self.hreflang,
             type_hint: self.type_hint,
             referrerpolicy: self.referrerpolicy,
@@ -1388,9 +1442,15 @@ impl ExpectedForm {
             method: self.method,
             enctype: self.enctype,
             target: self.target,
+            effective_target: self.effective_target,
             accept_charset: self.accept_charset,
             autocomplete: self.autocomplete,
             rel: self.rel,
+            rel_tokens: self.rel_tokens,
+            rel_external: self.rel_external,
+            rel_nofollow: self.rel_nofollow,
+            rel_noopener: self.rel_noopener,
+            rel_noreferrer: self.rel_noreferrer,
             novalidate: self.novalidate,
             controls: self
                 .controls
@@ -1469,6 +1529,7 @@ impl ExpectedFormSubmitter {
             method: self.method,
             enctype: self.enctype,
             target: self.target,
+            effective_target: self.effective_target,
             novalidate: self.novalidate,
             value: self.value,
         }

@@ -6,7 +6,7 @@
     {
       "id": "legacy-directory-page",
       "description": "Omitted shell, title/base metadata, anchors, navigation attributes, image attributes, and implied list-item endings.",
-      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\" target=_top><meta charset=utf-8><link rel=stylesheet href=\"style.css\" media=screen title=default><h1 id=index>Example Directory</h1><p>Welcome to <a href=\"intro.html\" target=main rel=\"next external noreferrer\" title=\"Intro\" download=intro.html ping=\"track.html https://metrics.example/p\" hreflang=en type=text/html referrerpolicy=no-referrer>Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
+      "input": "<!doctype html><title>Example &amp; Links</title><base href=\"https://example.test/docs/\" target=_top><meta charset=utf-8><link rel=stylesheet href=\"style.css\" media=screen title=default><h1 id=index>Example Directory</h1><p>Welcome to <a href=\"intro.html\" target=main rel=\"next external noreferrer\" title=\"Intro\" download=intro.html ping=\"track.html https://metrics.example/p\" attributionsrc=\"attr/register https://ad.example/register\" hreflang=en type=text/html referrerpolicy=no-referrer>Venture HTML</a>.<img src=\"logo.gif\" alt=\"Logo\" width=88 height=31><ul><li>One<li>Two",
       "expected": {
         "title": "Example & Links",
         "base_href": "https://example.test/docs/",
@@ -30,7 +30,7 @@
           { "level": 1, "text": "Example Directory" }
         ],
         "links": [
-          { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "effective_target": "main", "rel": "next external noreferrer", "rel_tokens": ["next", "external", "noreferrer"], "rel_external": true, "rel_noreferrer": true, "title": "Intro", "download": "intro.html", "ping": ["track.html", "https://metrics.example/p"], "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"], "hreflang": "en", "type_hint": "text/html", "referrerpolicy": "no-referrer", "text": "Venture HTML" }
+          { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "effective_target": "main", "rel": "next external noreferrer", "rel_tokens": ["next", "external", "noreferrer"], "rel_external": true, "rel_noreferrer": true, "title": "Intro", "download": "intro.html", "ping": ["track.html", "https://metrics.example/p"], "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"], "attributionsrc": ["attr/register", "https://ad.example/register"], "resolved_attributionsrc": ["https://example.test/docs/attr/register", "https://ad.example/register"], "hreflang": "en", "type_hint": "text/html", "referrerpolicy": "no-referrer", "text": "Venture HTML" }
         ],
         "images": [
           { "src": "logo.gif", "resolved_src": "https://example.test/docs/logo.gif", "alt": "Logo", "width": "88", "height": "31" }
@@ -73,6 +73,7 @@
             "method": "post",
             "enctype": "multipart/form-data",
             "target": "results",
+            "effective_target": "results",
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "disabled": false, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "disabled": false, "checked": false, "text": "", "options": [] },
@@ -83,7 +84,7 @@
               { "control_type": "submit", "name": "go", "accessible_name": "Search", "value": null, "disabled": false, "checked": false, "text": "Search", "options": [] }
             ],
             "submitters": [
-              { "id": null, "control_type": "submit", "name": "go", "accessible_name": "Search", "action": "/search", "resolved_action": null, "method": "post", "enctype": "multipart/form-data", "target": "results", "novalidate": false, "value": null }
+              { "id": null, "control_type": "submit", "name": "go", "accessible_name": "Search", "action": "/search", "resolved_action": null, "method": "post", "enctype": "multipart/form-data", "target": "results", "effective_target": "results", "novalidate": false, "value": null }
             ]
           }
         ],
@@ -95,7 +96,7 @@
     {
       "id": "responsive-image-metadata-page",
       "description": "Browser document image summaries expose responsive source selection metadata and loading hints.",
-      "input": "<base href=\"https://example.test/gallery/index.html\"><body><picture><source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\"><source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\"><img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap></picture><map name=hero-map><area shape=rect coords=\"0,0,120,60\" href=details.html alt=\"Details\" target=preview rel=\"nofollow external\" ping=\"track.html\" hreflang=en></map>",
+      "input": "<base href=\"https://example.test/gallery/index.html\"><body><picture><source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\"><source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\"><img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap></picture><map name=hero-map><area shape=rect coords=\"0,0,120,60\" href=details.html alt=\"Details\" target=preview rel=\"nofollow external\" ping=\"track.html\" attributionsrc=\"area-attr.html\" hreflang=en></map>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/gallery/index.html",
@@ -108,7 +109,7 @@
         "anchors": [],
         "headings": [],
         "links": [
-          { "element": "area", "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "name": null, "target": "preview", "effective_target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "rel_external": true, "rel_nofollow": true, "title": null, "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "hreflang": "en", "text": "Details" }
+          { "element": "area", "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "name": null, "target": "preview", "effective_target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "rel_external": true, "rel_nofollow": true, "title": null, "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "attributionsrc": ["area-attr.html"], "resolved_attributionsrc": ["https://example.test/gallery/area-attr.html"], "hreflang": "en", "text": "Details" }
         ],
         "images": [
           {
@@ -140,11 +141,11 @@
     {
       "id": "form-accessibility-document-page",
       "description": "Browser document form summaries include labels, accessible names, submission metadata, validation hints, autocomplete, and control state.",
-      "input": "<base href=\"https://example.test/search/index.html\"><body><form id=search name=searchForm aria-label=\"Search form\" action=find.html method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search autocapitalize=words enterkeyhint=search dirname=q.dir autofocus inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions><datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist><label>Notes<textarea id=notes name=notes placeholder=Details readonly maxlength=500 autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select><input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment><button id=go type=submit aria-label=\"Run search\" formaction=run.html formenctype=\"application/x-www-form-urlencoded\" formmethod=post formtarget=results formnovalidate>Go</button><input id=imageGo type=image name=image-go src=buttons/search.png alt=\"Search image\" width=32 height=16><output id=total name=total for=\"q kind\">Ready</output></form><input id=external form=search name=outside placeholder=Outside>",
+      "input": "<base href=\"https://example.test/search/index.html\" target=_search><body><form id=search name=searchForm aria-label=\"Search form\" action=find.html method=post accept-charset=utf-8 autocomplete=on rel=\"noreferrer external\" novalidate><label for=q>Query</label><input id=q name=q placeholder=\"Search terms\" required autocomplete=search autocapitalize=words enterkeyhint=search dirname=q.dir autofocus inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions><datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist><label>Notes<textarea id=notes name=notes placeholder=Details readonly maxlength=500 autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label><fieldset><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select><input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment><button id=go type=submit aria-label=\"Run search\" formaction=run.html formenctype=\"application/x-www-form-urlencoded\" formmethod=post formtarget=results formnovalidate>Go</button><input id=imageGo type=image name=image-go src=buttons/search.png alt=\"Search image\" width=32 height=16><output id=total name=total for=\"q kind\">Ready</output></form><input id=external form=search name=outside placeholder=Outside>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/search/index.html",
-        "base_target": null,
+        "base_target": "_search",
         "body_text": "Query NotesKeep me Options Fast Books Manuals Go Ready",
         "metas": [],
         "resources": [],
@@ -173,9 +174,13 @@
             "method": "post",
             "enctype": null,
             "target": null,
+            "effective_target": "_search",
             "accept_charset": "utf-8",
             "autocomplete": "on",
-            "rel": "noreferrer",
+            "rel": "noreferrer external",
+            "rel_tokens": ["noreferrer", "external"],
+            "rel_external": true,
+            "rel_noreferrer": true,
             "novalidate": true,
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "placeholder": "Search terms", "autocomplete": "search", "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "autofocus": true, "disabled": false, "required": true, "checked": false, "text": "", "options": [] },
@@ -189,8 +194,8 @@
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "disabled": false, "checked": false, "text": "", "options": [] }
             ],
             "submitters": [
-              { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "novalidate": true, "value": null },
-              { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "enctype": null, "target": null, "novalidate": true, "value": null }
+              { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "effective_target": "results", "novalidate": true, "value": null },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "enctype": null, "target": null, "effective_target": "_search", "novalidate": true, "value": null }
             ]
           }
         ],
