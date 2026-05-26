@@ -336,6 +336,9 @@ Status:
 - Constrained pole-zero analysis can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the selected Phase 8 topology.
+- Transient-to-distortion projection can now be evaluated across named corners
+  in the live Rust SPICE package, reusing the existing corner override surface
+  for the same transient sampling and `.DISTO` output-probe query.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

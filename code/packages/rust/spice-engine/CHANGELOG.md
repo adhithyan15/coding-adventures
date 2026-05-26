@@ -14,6 +14,9 @@
   the same PSS solve evaluated under each named corner.
 - Add multi-corner pole-zero analysis with `pole_zero_corners`, returning the
   selected constrained `.PZ` topology evaluated under each named corner.
+- Add multi-corner distortion projection with
+  `distortion_from_transient_corners`, returning the same transient-to-`.DISTO`
+  query evaluated under each named corner.
 - Add `diode_at_temperature` and `circuit_at_temperature` helpers, which adjust
   diode thermal voltage and saturation current for an operating temperature
   using a SPICE-style silicon energy-gap foothold.

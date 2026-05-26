@@ -25,7 +25,8 @@ The initial slices implement:
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, and THD results.
-- Transient-to-distortion projection through the Fourier extraction path.
+- Transient-to-distortion projection through the Fourier extraction path,
+  including named corner sweeps.
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents, AC
