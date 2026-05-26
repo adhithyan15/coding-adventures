@@ -837,6 +837,7 @@ pub struct BrowserDocument {
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub media: Vec<BrowserMedia>,
+    pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
@@ -1445,6 +1446,26 @@ pub struct BrowserMedia {
     pub muted: bool,
     pub playsinline: bool,
     pub preload: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserEmbeddedContext {
+    pub element: String,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub browsing_context_name: Option<String>,
+    pub title: Option<String>,
+    pub type_hint: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub fallback_text: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -8729,6 +8750,9 @@ fn collect_browser_facts(
 
         collect_anchor_target(element, summary);
         collect_body_resource(element, summary);
+        if let Some(context) = browser_embedded_context(element, summary.base_href.as_deref()) {
+            summary.embedded_contexts.push(context);
+        }
         if element.name == "template" {
             summary.templates.push(browser_template(element));
         }
@@ -9268,6 +9292,46 @@ fn body_resource(element: &Element) -> Option<(String, String)> {
             .map(|src| (element.name.clone(), src.to_string())),
         _ => None,
     }
+}
+
+fn browser_embedded_context(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserEmbeddedContext> {
+    if !matches!(
+        element.name.as_str(),
+        "iframe" | "frame" | "object" | "embed"
+    ) {
+        return None;
+    }
+
+    let url = match element.name.as_str() {
+        "iframe" | "frame" | "embed" => element.attribute("src"),
+        "object" => element.attribute("data"),
+        _ => None,
+    }
+    .map(ToOwned::to_owned);
+
+    Some(BrowserEmbeddedContext {
+        element: element.name.clone(),
+        resolved_url: url
+            .as_deref()
+            .and_then(|url| resolve_browser_url(url, base_href)),
+        url,
+        browsing_context_name: browser_browsing_context_name(element),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        loading: browser_browsing_context_loading(element),
+        sandbox: browser_browsing_context_sandbox(element),
+        allow: browser_browsing_context_allow(element),
+        allowfullscreen: browser_browsing_context_allowfullscreen(element),
+        referrerpolicy: browser_browsing_context_referrerpolicy(element),
+        srcdoc: browser_browsing_context_srcdoc(element),
+        credentialless: browser_browsing_context_credentialless(element),
+        fallback_text: visible_text_for_nodes(&element.children),
+    })
 }
 
 fn resolve_browser_url(url: &str, base_href: Option<&str>) -> Option<String> {
