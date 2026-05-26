@@ -151,6 +151,8 @@ struct ExpectedRenderNode {
     #[serde(default)]
     accessible_name: Option<String>,
     #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
     aria_label: Option<String>,
     #[serde(default)]
     aria_labelledby: Vec<String>,
@@ -456,6 +458,7 @@ impl ExpectedRenderNode {
             label_for: self.label_for,
             labels: self.labels,
             accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
             aria_label: self.aria_label,
             aria_labelledby: self.aria_labelledby,
             aria_describedby: self.aria_describedby,
