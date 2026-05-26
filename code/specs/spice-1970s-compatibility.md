@@ -327,6 +327,9 @@ Status:
 - Monte Carlo DC analysis can now be evaluated across named corners in the
   live Rust SPICE package, reusing the existing corner override surface with a
   shared seeded tolerance trial configuration.
+- `.MC` Monte Carlo DC results can now be rendered as stable tab-separated
+  text tables in the live Rust SPICE package for direct and named-corner runs,
+  covering output-node trial values, summary statistics, and convergence.
 - DC sensitivity analysis can now be evaluated across named corners in the
   live Rust SPICE package, reusing the existing corner override surface for
   the same output-node query.
