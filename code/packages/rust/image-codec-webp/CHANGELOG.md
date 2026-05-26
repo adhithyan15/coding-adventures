@@ -7,6 +7,30 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.7] — 2026-05-25
+
+### Added
+
+- **VP8L meta-Huffman decoder** — `use_meta_huffman = 1` in the main image
+  entropy header is now fully supported.  After reading `meta_code_bits`
+  (3 bits, tile_size = 1 << (bits+2)), a meta image is decoded as a
+  single-group entropy segment; each tile's Huffman group index is packed
+  into `G | (R << 8)` of the meta pixel.  All Huffman group sets are then
+  read sequentially, and during pixel decode the correct group is looked
+  up per pixel position.  VP8L files produced by libwebp (which uses
+  meta-Huffman for most natural images) can now be decoded.
+
+### Changed
+
+- `encode()` and `write_entropy_segment()` now write `use_meta_huffman = 0`
+  (1 bit) after `color_cache_code_bits`, keeping the bitstream in sync
+  with the full entropy-coded-image format.
+- `read_entropy_segment()` reads the `use_meta_huffman` bit and returns an
+  error if set (sub-images do not need meta-Huffman in practice).
+- `VERSION` bumped to `0.3.7`.
+
+---
+
 ## [0.3.6] — 2026-05-25
 
 ### Added

@@ -220,6 +220,7 @@ fn write_entropy_segment(bw: &mut BitWriter, data: &[u8], num_pixels: usize) {
     let d_enc = build_encode_table(&d_lens);
 
     bw.write_bits(0, 4); // color_cache_code_bits = 0
+    bw.write_bits(0, 1); // use_meta_huffman = 0 (single group)
 
     write_huffman_code(bw, &g_lens);
     write_huffman_code(bw, &r_lens);
@@ -259,6 +260,13 @@ fn read_entropy_segment(
         return Err(format!(
             "VP8L sub-image: color cache (code_bits={color_cache_bits}) not supported"
         ));
+    }
+    // Sub-images follow the same entropy-coded-image format: after the
+    // color_cache_code_bits field comes the meta-Huffman flag.  Sub-images
+    // written by our encoder always use a single group (flag=0).
+    let sub_use_meta = br.read_bits(1) != 0;
+    if sub_use_meta {
+        return Err("VP8L sub-image: meta-Huffman in sub-images not supported".to_string());
     }
 
     let g_table = read_huffman_code(br, G_ALPHABET_SIZE)?;
@@ -413,6 +421,7 @@ pub fn encode(pixels: &PixelContainer) -> Vec<u8> {
 
     bw.write_bits(0, 1); // has_transform = 0 — no further transforms
     bw.write_bits(0, 4); // color_cache_code_bits = 0
+    bw.write_bits(0, 1); // use_meta_huffman = 0 (single group)
 
     write_huffman_code(&mut bw, &g_lens);
     write_huffman_code(&mut bw, &r_lens);
@@ -563,12 +572,46 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     let mut color_cache: Vec<(u8, u8, u8, u8)> =
         if color_cache_code_bits > 0 { vec![(0, 0, 0, 0); 1 << color_cache_code_bits] } else { Vec::new() };
 
-    // ── Huffman code tables ──────────────────────────────────────────────────
-    let g_table = read_huffman_code(&mut br, g_alpha_size)?;
-    let r_table = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
-    let b_table = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
-    let a_table = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
-    let d_table = read_huffman_code(&mut br, DIST_ALPHABET_SIZE)?;
+    // ── Meta-Huffman (spatially varying Huffman groups) ──────────────────────
+    // The bitstream may declare multiple sets of 5 Huffman tables, one per tile
+    // of the image.  A small "meta image" at reduced resolution stores the
+    // group index (packed into G | (R<<8)) for each tile.
+    let use_meta = br.read_bits(1) != 0;
+    // meta_bits: log2 of the tile size. meta_w: meta image width (in tiles).
+    // meta_img: flat RGBA bytes of the meta image (R=group_hi, G=group_lo).
+    // huffman_groups: Vec of (g,r,b,a,d) table tuples, one per distinct group.
+    let (meta_bits, meta_w, meta_img, huffman_groups) = if use_meta {
+        let raw = br.read_bits(3);
+        let mb = raw + 2; // actual tile-size log2
+        let mw = (effective_width + (1 << mb) - 1) >> mb;
+        let mh = (height + (1 << mb) - 1) >> mb;
+        let meta_px = (mw * mh) as usize;
+        // The meta image itself is always a single-group entropy segment.
+        let mimg = read_entropy_segment(&mut br, meta_px, mw)?;
+        let num_groups = mimg.chunks(4)
+            .map(|p| (p[1] as usize) | ((p[0] as usize) << 8))
+            .max()
+            .unwrap_or(0)
+            + 1;
+        let mut grps = Vec::with_capacity(num_groups);
+        for _ in 0..num_groups {
+            let g = read_huffman_code(&mut br, g_alpha_size)?;
+            let r = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
+            let b = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
+            let a = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
+            let d = read_huffman_code(&mut br, DIST_ALPHABET_SIZE)?;
+            grps.push((g, r, b, a, d));
+        }
+        (mb, mw, mimg, grps)
+    } else {
+        // Single Huffman group: read the 5 tables, store as group 0.
+        let g = read_huffman_code(&mut br, g_alpha_size)?;
+        let r = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
+        let b = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
+        let a = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
+        let d = read_huffman_code(&mut br, DIST_ALPHABET_SIZE)?;
+        (0u32, 1u32, Vec::<u8>::new(), vec![(g, r, b, a, d)])
+    };
 
     // ── Pixel data ───────────────────────────────────────────────────────────
     // When ColorIndex is active, effective_width < width (packed image).
@@ -585,6 +628,20 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     };
 
     while pos < pixel_count {
+        // Resolve the Huffman group for the current pixel position.
+        let hg_idx = if use_meta && !meta_img.is_empty() {
+            let px = (pos % effective_width as usize) as u32;
+            let py = (pos / effective_width as usize) as u32;
+            let tx = px >> meta_bits;
+            let ty = py >> meta_bits;
+            let mi = (ty * meta_w + tx) as usize;
+            let idx = (meta_img[mi * 4 + 1] as usize) | ((meta_img[mi * 4] as usize) << 8);
+            idx.min(huffman_groups.len() - 1)
+        } else {
+            0
+        };
+        let (g_table, r_table, b_table, a_table, d_table) = &huffman_groups[hg_idx];
+
         let g_sym = g_table.decode(&mut br)?;
 
         match g_sym {
@@ -607,7 +664,7 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 let len_extra = if nextra > 0 { br.read_bits(nextra) } else { 0 };
                 let copy_len = (base_len + len_extra) as usize;
 
-                // Distance from Dist group.
+                // Distance from Dist group (same group as the G symbol).
                 let d_sym = d_table.decode(&mut br)? as u32;
                 let d_nextra = lz77::DIST_BITS[d_sym as usize];
                 let d_extra = if d_nextra > 0 { br.read_bits(d_nextra) } else { 0 };
