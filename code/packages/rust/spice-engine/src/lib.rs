@@ -2023,6 +2023,20 @@ pub struct SParameterResult {
     pub points: Vec<SParameterPoint>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerSParameterPoint {
+    pub corner_name: String,
+    pub result: SParameterResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerSParameterResult {
+    pub port1_source: String,
+    pub port2_source: String,
+    pub reference_impedance_ohms: f64,
+    pub points: Vec<CornerSParameterPoint>,
+}
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum NoiseType {
     Thermal,
@@ -4722,6 +4736,36 @@ pub fn s_parameters(
     }
 
     Ok(SParameterResult {
+        port1_source: port1_source.to_string(),
+        port2_source: port2_source.to_string(),
+        reference_impedance_ohms,
+        points,
+    })
+}
+
+pub fn s_parameters_corners(
+    circuit: &Circuit,
+    port1_source: &str,
+    port2_source: &str,
+    frequencies_hz: &[f64],
+    reference_impedance_ohms: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerSParameterResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerSParameterPoint {
+            corner_name: corner.name.clone(),
+            result: s_parameters(
+                &corner_circuit,
+                port1_source,
+                port2_source,
+                frequencies_hz,
+                reference_impedance_ohms,
+            )?,
+        });
+    }
+    Ok(CornerSParameterResult {
         port1_source: port1_source.to_string(),
         port2_source: port2_source.to_string(),
         reference_impedance_ohms,
