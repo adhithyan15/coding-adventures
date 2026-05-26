@@ -1140,6 +1140,20 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 84: ``Mul(Sqrt(P), Log(h1), Log(h2), Log(h3), Log(h4), Log(h5), Log(h6),
+    #           polynomial..., bounded...)`` numerator.
+    # One Sqrt factor + six Log factors; log⁶ sub-polynomial → 0.
+    # effective_x2 = sqrt_deg_x2 + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s1l6p_x2 = _one_sqrt_six_log_poly_effective_x2(num, k)
+    if s1l6p_x2 is not None:
+        den_deg_s1l6 = _polynomial_degree_in_k(den, k)
+        if den_deg_s1l6 is not None:
+            if 2 * den_deg_s1l6 > s1l6p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -3196,6 +3210,72 @@ def _six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
     if log_count != 6:
         return None
     return 2 * poly_deg_sum
+
+
+def _one_sqrt_six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt_deg_x2 + 2·poly_deg`` when ``node`` is a ``Mul`` with
+    **exactly one** ``Sqrt(positive-polynomial)`` factor, **exactly six**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 84 — One-Sqrt × Six-Log × polynomial numerator.
+
+    Effective growth:
+    ``sqrt(k^a) · log(k)⁶ · k^m``.  ``log⁶(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick: ``effective_x2 = a + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +----------------------------------------------------------+----------+
+    | Input                                                    | Return   |
+    +==========================================================+==========+
+    | ``Mul(Sqrt(k), Log(k)×6)``                               | ``1``    |
+    | ``Mul(Sqrt(k²), Log(k)×6, k)``                           | ``4``    |
+    | ``Mul(Sqrt(k), Log(k)×6, k², 3)``                        | ``5``    |
+    | ``Mul(Log(k)×6)``                                        | None     |
+    | ``Mul(Sqrt(k), Sqrt(k), Log(k)×6)``                      | None (2) |
+    | ``Mul(Sqrt(k), Log(k)×5)``                               | None (5) |
+    +----------------------------------------------------------+----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(P)`` → record ``sqrt_effective_half_degree_x2``; bail on second Sqrt.
+         - ``Log(diverging)`` → count; bail after 6.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 1 Sqrt and exactly 6 Log factors.
+      4. Return ``sqrt_deg_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_deg_x2: int | None = None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        s_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if s_x2 is not None:
+            if sqrt_deg_x2 is not None:
+                # Second Sqrt — not this phase.
+                return None
+            sqrt_deg_x2 = s_x2
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 6:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if sqrt_deg_x2 is None or log_count != 6:
+        return None
+    return sqrt_deg_x2 + 2 * poly_deg_sum
 
 
 def _try_power_of_k(
