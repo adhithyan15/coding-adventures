@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_corner_s_parameter_table` for stable tab-separated named-corner
+  S-parameter real, imaginary, magnitude, and phase text output snapshots.
 - Add `format_sens_table` for stable tab-separated `.SENS` nominal,
   absolute-sensitivity, and relative-sensitivity text output snapshots.
 - Add multi-corner DC sensitivity analysis with `sens_dc_corners`, returning
