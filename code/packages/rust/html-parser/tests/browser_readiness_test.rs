@@ -565,6 +565,8 @@ struct ExpectedInteractiveElement {
     #[serde(default)]
     accessible_name: Option<String>,
     #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
     aria_label: Option<String>,
     #[serde(default)]
     aria_labelledby: Vec<String>,
@@ -670,6 +672,8 @@ struct ExpectedFormControl {
     labels: Vec<String>,
     #[serde(default)]
     accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
     #[serde(default)]
     placeholder: Option<String>,
     #[serde(default)]
@@ -940,6 +944,39 @@ fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
         actual.interactive_elements,
         case.expected.into_browser_document().interactive_elements,
         "interactive elements should preserve focus, editing, popover, command, hidden, and event metadata",
+    );
+}
+
+#[test]
+fn browser_accessible_description_metadata_tracks_describedby_text() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+
+    let mut cases = suite.cases.into_iter();
+    let form = cases
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form describedby fixture case should exist");
+    let interactive = cases
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive describedby fixture case should exist");
+
+    let actual_interactive = parse_browser_document(&interactive.input)
+        .expect("interactive describedby fixture should parse into browser document facts");
+    assert_eq!(
+        actual_interactive.interactive_elements,
+        interactive
+            .expected
+            .into_browser_document()
+            .interactive_elements,
+        "interactive summaries should resolve aria-describedby text into accessible descriptions",
+    );
+
+    let actual_form = parse_browser_document(&form.input)
+        .expect("form describedby fixture should parse into browser document facts");
+    assert_eq!(
+        actual_form.forms,
+        form.expected.into_browser_document().forms,
+        "form controls should resolve aria-describedby text into accessible descriptions",
     );
 }
 
@@ -1512,6 +1549,7 @@ impl ExpectedInteractiveElement {
             authored_role: self.authored_role,
             text: self.text,
             accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
             aria_label: self.aria_label,
             aria_labelledby: self.aria_labelledby,
             aria_describedby: self.aria_describedby,
@@ -1587,6 +1625,7 @@ impl ExpectedFormControl {
             form_owner: self.form_owner,
             labels: self.labels,
             accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
             autocapitalize: self.autocapitalize,

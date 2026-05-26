@@ -328,6 +328,7 @@
                 "accessible_name": "Settings",
                 "aria_labelledby": ["panel-title"],
                 "aria_describedby": ["panel-help"],
+                "accessible_description": "Choose options",
                 "inert": true,
                 "children": [
                   { "role": "heading", "name": "h2", "id": "panel-title", "heading_level": 2, "text": "Settings", "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Settings", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },

@@ -1125,6 +1125,7 @@ pub struct BrowserContentNode {
     pub label_for: Option<String>,
     pub labels: Vec<String>,
     pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
     pub aria_label: Option<String>,
     pub aria_labelledby: Vec<String>,
     pub aria_describedby: Vec<String>,
@@ -1301,6 +1302,7 @@ pub struct BrowserRenderNode {
     pub label_for: Option<String>,
     pub labels: Vec<String>,
     pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
     pub aria_label: Option<String>,
     pub aria_labelledby: Vec<String>,
     pub aria_describedby: Vec<String>,
@@ -1511,6 +1513,7 @@ pub struct BrowserInteractiveElement {
     pub authored_role: Option<String>,
     pub text: String,
     pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
     pub aria_label: Option<String>,
     pub aria_labelledby: Vec<String>,
     pub aria_describedby: Vec<String>,
@@ -1572,6 +1575,7 @@ pub struct BrowserFormControl {
     pub form_owner: Option<String>,
     pub labels: Vec<String>,
     pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
     pub autocapitalize: Option<String>,
@@ -1816,6 +1820,7 @@ impl BrowserRenderNode {
             label_for: content_node.label_for.clone(),
             labels: content_node.labels.clone(),
             accessible_name: content_node.accessible_name.clone(),
+            accessible_description: content_node.accessible_description.clone(),
             aria_label: content_node.aria_label.clone(),
             aria_labelledby: content_node.aria_labelledby.clone(),
             aria_describedby: content_node.aria_describedby.clone(),
@@ -8909,6 +8914,7 @@ fn collect_browser_facts(
                 body_root,
                 element,
                 labels,
+                id_texts,
                 summary.base_href.as_deref(),
                 summary.base_target.as_deref(),
             )),
@@ -9464,6 +9470,7 @@ fn browser_interactive_element(
         accessible_name: role
             .as_deref()
             .and_then(|role| browser_accessible_name(element, role, &control_labels, id_texts)),
+        accessible_description: browser_accessible_description(element, id_texts),
         role,
         authored_role: element.attribute("role").map(ToOwned::to_owned),
         text,
@@ -9835,6 +9842,7 @@ fn collect_browser_content_nodes_with_mode(
                         label_for: None,
                         labels: Vec::new(),
                         accessible_name: None,
+                        accessible_description: None,
                         aria_label: None,
                         aria_labelledby: Vec::new(),
                         aria_describedby: Vec::new(),
@@ -10006,6 +10014,7 @@ fn browser_content_node_for_element(
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let aria_label = browser_aria_label(element);
     let accessible_name = browser_accessible_name(element, role, &control_labels, id_texts);
+    let accessible_description = browser_accessible_description(element, id_texts);
 
     Some(BrowserContentNode {
         role: role.to_string(),
@@ -10090,6 +10099,7 @@ fn browser_content_node_for_element(
         label_for: browser_label_for(element),
         labels: control_labels,
         accessible_name,
+        accessible_description,
         aria_label,
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
@@ -11409,6 +11419,24 @@ fn browser_accessible_name(
     (!text.is_empty()).then_some(text)
 }
 
+fn browser_accessible_description(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<String> {
+    let describedby = browser_aria_idrefs(element, "aria-describedby");
+    if describedby.is_empty() {
+        return None;
+    }
+
+    let mut parts = Vec::new();
+    for id in describedby {
+        if let Some((_, text)) = id_texts.iter().find(|(candidate, _)| candidate == &id) {
+            push_unique_string(&mut parts, collapse_html_whitespace(text));
+        }
+    }
+    (!parts.is_empty()).then(|| parts.join(" "))
+}
+
 fn browser_form_owner(element: &Element) -> Option<String> {
     if matches!(
         element.name.as_str(),
@@ -12174,6 +12202,7 @@ fn collect_form_controls_for_form(
     body_root: &[Node],
     target_form: &Element,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     base_href: Option<&str>,
 ) -> Vec<BrowserFormControl> {
     let mut controls = Vec::new();
@@ -12181,6 +12210,7 @@ fn collect_form_controls_for_form(
         body_root,
         &mut controls,
         labels,
+        id_texts,
         base_href,
         target_form as *const Element,
         target_form.attribute("id"),
@@ -12196,6 +12226,7 @@ fn browser_form(
     body_root: &[Node],
     element: &Element,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     base_href: Option<&str>,
     base_target: Option<&str>,
 ) -> BrowserForm {
@@ -12214,7 +12245,7 @@ fn browser_form(
         .or_else(|| base_target.map(ToOwned::to_owned));
     let rel_tokens = browser_rel_tokens(element);
     let novalidate = element.attribute("novalidate").is_some();
-    let controls = collect_form_controls_for_form(body_root, element, labels, base_href);
+    let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12305,6 +12336,7 @@ fn collect_form_controls_for_form_into(
     nodes: &[Node],
     controls: &mut Vec<BrowserFormControl>,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     base_href: Option<&str>,
     target_form: *const Element,
     target_form_id: Option<&str>,
@@ -12339,6 +12371,7 @@ fn collect_form_controls_for_form_into(
                 controls.push(browser_form_control(
                     element,
                     labels,
+                    id_texts,
                     base_href,
                     current_label_text,
                     disabled_fieldset_ancestor,
@@ -12372,6 +12405,7 @@ fn collect_form_controls_for_form_into(
                 std::slice::from_ref(child),
                 controls,
                 labels,
+                id_texts,
                 base_href,
                 target_form,
                 target_form_id,
@@ -12387,6 +12421,7 @@ fn collect_form_controls_for_form_into(
 fn browser_form_control(
     element: &Element,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     base_href: Option<&str>,
     current_label_text: Option<&str>,
     disabled_fieldset_ancestor: bool,
@@ -12410,7 +12445,8 @@ fn browser_form_control(
         control_type,
         name: element.attribute("name").map(ToOwned::to_owned),
         form_owner: browser_form_owner(element),
-        accessible_name: browser_accessible_name(element, "control", &control_labels, &[]),
+        accessible_name: browser_accessible_name(element, "control", &control_labels, id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
         labels: control_labels,
         placeholder: browser_placeholder(element),
         autocomplete: browser_autocomplete(element),
@@ -13713,10 +13749,11 @@ mod tests {
             "<base href=\"https://example.test/search/index.html\">\
              <body><form id=f name=searchForm aria-label=\"Search form\" action=find.html \
              method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate>\
-             <label for=q>Query</label>\
+             <label id=q-help for=q>Query</label>\
              <input id=q name=q placeholder=\"Search terms\" required autocomplete=search \
              autocapitalize=words enterkeyhint=search dirname=q.dir autofocus \
-             inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions>\
+             inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 \
+             list=query-suggestions aria-describedby=q-help>\
              <datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist>\
              <label>Notes<textarea id=notes name=notes readonly maxlength=500 \
              autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
@@ -13750,6 +13787,7 @@ mod tests {
         assert_eq!(controls[0].id.as_deref(), Some("q"));
         assert_eq!(controls[0].labels, vec!["Query"]);
         assert_eq!(controls[0].accessible_name.as_deref(), Some("Query"));
+        assert_eq!(controls[0].accessible_description.as_deref(), Some("Query"));
         assert_eq!(controls[0].placeholder.as_deref(), Some("Search terms"));
         assert_eq!(controls[0].autocomplete.as_deref(), Some("search"));
         assert_eq!(controls[0].autocapitalize.as_deref(), Some("words"));
@@ -13880,10 +13918,12 @@ mod tests {
         assert_eq!(form.autocomplete.as_deref(), Some("on"));
         let explicit_label = &form.children[0];
         assert_eq!(explicit_label.role, "label");
+        assert_eq!(explicit_label.id.as_deref(), Some("q-help"));
         assert_eq!(explicit_label.label_for.as_deref(), Some("q"));
         let query = &form.children[1];
         assert_eq!(query.labels, vec!["Query"]);
         assert_eq!(query.accessible_name.as_deref(), Some("Query"));
+        assert_eq!(query.accessible_description.as_deref(), Some("Query"));
         assert_eq!(query.autocapitalize.as_deref(), Some("words"));
         assert_eq!(query.enterkeyhint.as_deref(), Some("search"));
         assert_eq!(query.dirname.as_deref(), Some("q.dir"));
@@ -14081,6 +14121,10 @@ mod tests {
         assert_eq!(panel.aria_labelledby, vec!["panel-title"]);
         assert_eq!(panel.aria_describedby, vec!["panel-help"]);
         assert_eq!(panel.accessible_name.as_deref(), Some("Settings"));
+        assert_eq!(
+            panel.accessible_description.as_deref(),
+            Some("Choose options")
+        );
         assert!(panel.inert);
 
         let action = &panel.children[2];
@@ -14124,6 +14168,10 @@ mod tests {
         let render_panel = &render_tree.children[0].children[1];
         assert_eq!(render_panel.authored_role.as_deref(), Some("region"));
         assert_eq!(render_panel.accessible_name.as_deref(), Some("Settings"));
+        assert_eq!(
+            render_panel.accessible_description.as_deref(),
+            Some("Choose options")
+        );
         assert!(render_panel.inert);
         assert_eq!(render_tree.children[0].children[0].focusable, Some(true));
         assert_eq!(
