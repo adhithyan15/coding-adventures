@@ -2,6 +2,53 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.20.0] - 2026-05-26
+
+### Added — CLOC11.42: `--create_source_map` writes minimal v3 source map
+
+Behavioral compat slice with CC's `--create_source_map=path` flag. Previously closurec parsed the flag and stored the path but never wrote any file — build scripts expecting a source map at the path saw nothing. Now writes a minimal valid v3 source map JSON at the path.
+
+Wire format:
+
+```json
+{
+  "version": 3,
+  "file": "<--js_output_file basename or empty>",
+  "lineCount": 0,
+  "sourceRoot": "",
+  "sources": [],
+  "sourcesContent": [],
+  "names": [],
+  "mappings": ""
+}
+```
+
+The mappings are intentionally empty — real position tracking lands with the parser-bridge in CLOC11.07+. The goal of this slice is that build pipelines (Bazel rules, webpack `source-map-loader` shims, etc.) expecting a file at the path see one with the right shape. Debuggers that try to use the map for position lookup get the correct response of "no information available" rather than a broken document.
+
+- **New `source_map` module** with `format_minimal_v3(Option<&Path>) -> String`. Pure function: no I/O, fully deterministic.
+- **Pipeline placement**: Step 5 in `run_compiler`, after the JS output write. Source map write runs *after* the JS write so callers get a consistent on-disk pair (or no source map at all if the flag is unset).
+- **Source-map writing works even when `--js_output_file` is absent** (compiled JS goes to stdout). In that case the map's `file` field is empty.
+- **`file` field is the basename** of the compiled-output path, not the full path — keeps the map portable across CDN paths.
+- **9 new unit tests** in `source_map::tests` (empty-path → empty file key, basename extraction, version-3 marker, eight required keys present, empty arrays well-formed, empty mappings string, trailing newline, JSON escaping of weird file names, byte-stable output).
+- **4 new unit tests** in `run::tests` (writes file when path set, no-write when path empty, stdout+map combination, basename-only `file` field).
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` globs
+2. Resolve `--externs` globs
+3. `--print_tree` short-circuit
+4. `--print_tree_json` short-circuit
+5. Per-input `transform_source`
+6. Concatenate transformed inputs
+7. `--checks_only` short-circuit
+8. `--emit_use_strict` prepend
+9. `--output_wrapper` substitution
+10. `--isolation_mode IIFE` wrap
+11. `--charset` US_ASCII escape
+12. Write JS to `--js_output_file` or stdout
+13. **Write source map to `--create_source_map` path if set (CLOC11.42, NEW)**
+
 ## [0.19.0] - 2026-05-26
 
 ### Changed — CLOC11.16: `--charset` US_ASCII output escaping (BEHAVIOR DEFAULT CHANGE)

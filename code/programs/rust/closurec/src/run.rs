@@ -473,19 +473,44 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // Step 4: write the output. Two cases:
     //   a) --js_output_file set → write to disk via write_output_file.
     //   b) absent → stdout via the returned `stdout_text`.
-    match &config.io.js_output_file {
+    //
+    // Step 5 (CLOC11.42): when --create_source_map=path is set,
+    // write a minimal v3 source map at that path. Today the
+    // mappings are empty (real position tracking lands with the
+    // parser-bridge in CLOC11.07+); the goal of this slice is
+    // that build pipelines expecting a file at the path see one.
+    // The source-map write runs *after* the JS write so callers
+    // get a consistent on-disk pair (or no source map at all if
+    // the flag is unset).
+    let result = match &config.io.js_output_file {
         Some(path) => {
             write_output_file(path, &encoded)?;
-            Ok(CompilerOutput {
+            CompilerOutput {
                 stdout_text: String::new(),
                 wrote_files: vec![path.clone()],
-            })
+            }
         }
-        None => Ok(CompilerOutput {
+        None => CompilerOutput {
             stdout_text: encoded,
             wrote_files: Vec::new(),
-        }),
+        },
+    };
+
+    if !config.source_map.path_template.is_empty() {
+        let map_path = std::path::PathBuf::from(&config.source_map.path_template);
+        let map_body = crate::source_map::format_minimal_v3(
+            config.io.js_output_file.as_deref(),
+        );
+        write_output_file(&map_path, &map_body)?;
+        let mut wrote_files = result.wrote_files;
+        wrote_files.push(map_path);
+        return Ok(CompilerOutput {
+            stdout_text: result.stdout_text,
+            wrote_files,
+        });
     }
+
+    Ok(result)
 }
 
 /// Write `contents` to `path`, creating any missing parent
@@ -1360,5 +1385,123 @@ mod tests {
         assert!(out.stdout_text.contains("var x"));
         let _ = fs::remove_file(&in_path);
         let _ = fs::remove_file(&ext_path);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.42 — --create_source_map minimal v3 emission
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn create_source_map_writes_file_when_path_set() {
+        let in_path = temp_path("smap-input.js");
+        let out_path = temp_path("smap-out.js");
+        let map_path = temp_path("smap-out.js.map");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.contains(&out_path), "JS written");
+        assert!(out.wrote_files.contains(&map_path), "map written");
+        let map_body = fs::read_to_string(&map_path).expect("read map");
+        assert!(map_body.contains("\"version\": 3"));
+        assert!(map_body.contains("\"file\": \""));
+        assert!(map_body.contains("\"mappings\": \"\""));
+        let _ = fs::remove_file(&in_path);
+        let _ = fs::remove_file(&out_path);
+        let _ = fs::remove_file(&map_path);
+    }
+
+    #[test]
+    fn create_source_map_empty_path_writes_no_map() {
+        // Default behavior: --create_source_map unset → no map
+        // file written. Pin this regression so a future refactor
+        // of the gate doesn't accidentally emit one always.
+        let in_path = temp_path("no-smap.js");
+        let out_path = temp_path("no-smap-out.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Only the JS output file is written.
+        assert_eq!(out.wrote_files, vec![out_path.clone()]);
+        let _ = fs::remove_file(&in_path);
+        let _ = fs::remove_file(&out_path);
+    }
+
+    #[test]
+    fn create_source_map_with_stdout_output_writes_map_with_empty_file_key() {
+        // Source-map writing works even when there's no
+        // --js_output_file (compiled JS goes to stdout). In that
+        // case the map's `file` field is empty per the
+        // source_map module's contract.
+        let in_path = temp_path("stdout-smap.js");
+        let map_path = temp_path("stdout-smap.js.map");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: None,
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.stdout_text.contains("var x"));
+        assert!(out.wrote_files.contains(&map_path));
+        let map_body = fs::read_to_string(&map_path).expect("read map");
+        assert!(map_body.contains("\"file\": \"\""));
+        let _ = fs::remove_file(&in_path);
+        let _ = fs::remove_file(&map_path);
+    }
+
+    #[test]
+    fn create_source_map_uses_basename_of_output_file() {
+        // The map's `file` field should be the basename of the
+        // compiled-output path, not the full path. Lets the map
+        // be served from a different directory than the JS.
+        let dir = temp_path("smap-basename-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("nested").join("out.min.js");
+        let map_path = dir.join("nested").join("out.min.js.map");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let map_body = fs::read_to_string(&map_path).expect("read map");
+        // Basename only — no directory components.
+        assert!(map_body.contains("\"file\": \"out.min.js\""), "got: {map_body}");
+        assert!(!map_body.contains("\"file\": \"nested/"));
+        let _ = fs::remove_dir_all(&dir);
     }
 }
