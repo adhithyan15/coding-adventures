@@ -7,6 +7,39 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.3] — 2026-05-25
+
+### Added
+
+- **VP8L predictor transform (type 0)** — encoder uses **mode 1 (left prediction)**
+  for all 16-pixel blocks (`block_bits = 4`).  The predictor sub-image is written
+  inline as an entropy segment (color_cache=0, own Huffman groups, pixel data).
+- **All 14 predictor modes implemented for decoding** — modes 0-13 including
+  Select (mode 11), ClampedAddSubFull (mode 12), ClampedAddSubHalf (mode 13),
+  and all avg-family modes (5-10).  Any externally-produced VP8L stream using
+  the predictor transform can now be decoded.
+- `compute_predictor` — public helper computing the predictor pixel for any
+  `(x, y, mode)` triple, correctly handling first-pixel and edge-pixel sentinel
+  rules (`0xFF000000`).
+- `apply_predictor` and `inverse_predictor` in `transforms.rs`.
+- `write_entropy_segment` and `read_entropy_segment` in `mod.rs` — shared helpers
+  for encoding/decoding both the main image and predictor sub-images.
+- `AppliedTransform` enum in `mod.rs` — replaces the bare `Vec<u8>` and carries
+  the predictor sub-image data needed for the inverse pass.
+- 7 new tests: `predictor_round_trip_mode1_solid`, `predictor_round_trip_mode1_gradient`,
+  `predictor_first_pixel_sentinel`, `predictor_left_edge_mode1_uses_sentinel`,
+  `predictor_mode7_avg_left_top`, `predictor_all_modes_do_not_panic_1x1`,
+  `round_trip_large_image`.
+
+### Changed
+
+- Encoding order is now: raw → predictor(mode 1) → subtract-green → LZ77 → Huffman.
+  Bitstream transform header: `[Predictor type=0, block_bits=4, sub-image]`
+  then `[SubtractGreen type=2]` then `has_transform=0`.
+- `VERSION` bumped to `0.3.3`.
+
+---
+
 ## [0.3.2] — 2026-05-25
 
 ### Added
