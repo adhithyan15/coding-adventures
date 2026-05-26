@@ -145,6 +145,8 @@ struct ExpectedResourceHint {
     #[serde(default)]
     crossorigin: Option<String>,
     #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
     referrerpolicy: Option<String>,
     #[serde(default)]
     fetchpriority: Option<String>,
@@ -282,6 +284,8 @@ struct ExpectedResource {
     #[serde(default)]
     crossorigin: Option<String>,
     #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
     referrerpolicy: Option<String>,
     #[serde(default)]
     fetchpriority: Option<String>,
@@ -337,6 +341,8 @@ struct ExpectedScript {
     #[serde(default)]
     crossorigin: Option<String>,
     #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
     referrerpolicy: Option<String>,
     #[serde(default)]
     fetchpriority: Option<String>,
@@ -369,6 +375,8 @@ struct ExpectedStylesheet {
     integrity: Option<String>,
     #[serde(default)]
     crossorigin: Option<String>,
+    #[serde(default)]
+    nonce: Option<String>,
     #[serde(default)]
     referrerpolicy: Option<String>,
     #[serde(default)]
@@ -796,6 +804,38 @@ fn browser_readiness_cases_extract_browser_document_facts() {
 }
 
 #[test]
+fn browser_script_style_security_metadata_tracks_nonces_and_fetch_policy() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "script-style-loading-page")
+        .expect("script/style loading fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("script/style loading fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.metadata.resource_hints, expected.metadata.resource_hints,
+        "resource hints should preserve CSP nonces and fetch policy metadata",
+    );
+    assert_eq!(
+        actual.resources, expected.resources,
+        "resources should preserve script and stylesheet security metadata",
+    );
+    assert_eq!(
+        actual.scripts, expected.scripts,
+        "scripts should preserve CSP nonces and loading policy metadata",
+    );
+    assert_eq!(
+        actual.stylesheets, expected.stylesheets,
+        "stylesheets should preserve CSP nonces and loading policy metadata",
+    );
+}
+
+#[test]
 fn browser_embedded_context_metadata_tracks_frame_object_embed_and_srcdoc() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -1061,6 +1101,7 @@ impl ExpectedResourceHint {
             media: self.media,
             integrity: self.integrity,
             crossorigin: self.crossorigin,
+            nonce: self.nonce,
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
@@ -1191,6 +1232,7 @@ impl ExpectedResource {
             height: self.height,
             integrity: self.integrity,
             crossorigin: self.crossorigin,
+            nonce: self.nonce,
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
@@ -1226,6 +1268,7 @@ impl ExpectedScript {
             nomodule: self.nomodule,
             integrity: self.integrity,
             crossorigin: self.crossorigin,
+            nonce: self.nonce,
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
@@ -1248,6 +1291,7 @@ impl ExpectedStylesheet {
             alternate: self.alternate,
             integrity: self.integrity,
             crossorigin: self.crossorigin,
+            nonce: self.nonce,
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,

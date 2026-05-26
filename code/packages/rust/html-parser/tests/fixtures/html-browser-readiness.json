@@ -437,34 +437,34 @@
     },
     {
       "id": "script-style-loading-page",
-      "description": "Browser document summaries expose stylesheet and script loading metadata for early fetch, execution, and style planning.",
-      "input": "<base href=\"https://example.test/app/index.html\"><link rel=\"stylesheet preload\" href=app.css media=screen title=main integrity=sha256-css crossorigin=anonymous referrerpolicy=no-referrer fetchpriority=high blocking=render><link rel=\"alternate stylesheet\" href=print.css title=print disabled><style media=print title=print>body { color: black; }</style><script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials referrerpolicy=origin fetchpriority=low blocking=render></script><script nomodule defer>legacy();</script><body><script src=late.js defer></script>",
+      "description": "Browser document summaries expose stylesheet and script security/loading metadata for CSP, early fetch, execution, and style planning.",
+      "input": "<base href=\"https://example.test/app/index.html\"><link rel=\"stylesheet preload\" href=app.css media=screen title=main integrity=sha256-css crossorigin=anonymous nonce=styleNonce referrerpolicy=no-referrer fetchpriority=high blocking=render><link rel=\"alternate stylesheet\" href=print.css title=print disabled><style media=print title=print nonce=inlineStyleNonce>body { color: black; }</style><script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials nonce=moduleNonce referrerpolicy=origin fetchpriority=low blocking=render></script><script nomodule defer nonce=legacyNonce>legacy();</script><body><script src=late.js defer nonce=lateNonce></script>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/app/index.html",
         "base_target": null,
         "metadata": {
           "resource_hints": [
-            { "kind": "preload", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "media": "screen", "integrity": "sha256-css", "crossorigin": "anonymous", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render" }
+            { "kind": "preload", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "media": "screen", "integrity": "sha256-css", "crossorigin": "anonymous", "nonce": "styleNonce", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render" }
           ]
         },
         "body_text": "",
         "metas": [],
         "resources": [
-          { "kind": "stylesheet", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "type_hint": null, "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render", "async_script": false, "defer_script": false },
+          { "kind": "stylesheet", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "rel": "stylesheet preload", "type_hint": null, "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "nonce": "styleNonce", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render", "async_script": false, "defer_script": false },
           { "kind": "stylesheet", "url": "print.css", "resolved_url": "https://example.test/app/print.css", "rel": "alternate stylesheet", "type_hint": null, "media": null, "title": "print", "async_script": false, "defer_script": false },
-          { "kind": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "rel": null, "type_hint": "module", "media": null, "title": null, "integrity": "sha384-js", "crossorigin": "use-credentials", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render", "async_script": true, "defer_script": false },
-          { "kind": "script", "url": "late.js", "resolved_url": "https://example.test/app/late.js", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": true }
+          { "kind": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "rel": null, "type_hint": "module", "media": null, "title": null, "integrity": "sha384-js", "crossorigin": "use-credentials", "nonce": "moduleNonce", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render", "async_script": true, "defer_script": false },
+          { "kind": "script", "url": "late.js", "resolved_url": "https://example.test/app/late.js", "rel": null, "type_hint": null, "media": null, "title": null, "nonce": "lateNonce", "async_script": false, "defer_script": true }
         ],
         "scripts": [
-          { "script_kind": "module", "src": "app.js", "resolved_src": "https://example.test/app/app.js", "type_hint": "module", "async_script": true, "integrity": "sha384-js", "crossorigin": "use-credentials", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render" },
-          { "script_kind": "classic", "src": null, "resolved_src": null, "type_hint": null, "defer_script": true, "nomodule": true, "text": "legacy();" },
-          { "script_kind": "classic", "src": "late.js", "resolved_src": "https://example.test/app/late.js", "type_hint": null, "defer_script": true }
+          { "script_kind": "module", "src": "app.js", "resolved_src": "https://example.test/app/app.js", "type_hint": "module", "async_script": true, "integrity": "sha384-js", "crossorigin": "use-credentials", "nonce": "moduleNonce", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render" },
+          { "script_kind": "classic", "src": null, "resolved_src": null, "type_hint": null, "defer_script": true, "nomodule": true, "nonce": "legacyNonce", "text": "legacy();" },
+          { "script_kind": "classic", "src": "late.js", "resolved_src": "https://example.test/app/late.js", "type_hint": null, "nonce": "lateNonce", "defer_script": true }
         ],
         "stylesheets": [
-          { "source": "link", "href": "app.css", "resolved_href": "https://example.test/app/app.css", "rel": "stylesheet preload", "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render" },
+          { "source": "link", "href": "app.css", "resolved_href": "https://example.test/app/app.css", "rel": "stylesheet preload", "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "nonce": "styleNonce", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render" },
           { "source": "link", "href": "print.css", "resolved_href": "https://example.test/app/print.css", "rel": "alternate stylesheet", "title": "print", "disabled": true, "alternate": true },
-          { "source": "style", "media": "print", "title": "print", "text": "body { color: black; }" }
+          { "source": "style", "media": "print", "title": "print", "nonce": "inlineStyleNonce", "text": "body { color: black; }" }
         ],
         "anchors": [],
         "headings": [],
