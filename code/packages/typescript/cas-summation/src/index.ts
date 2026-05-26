@@ -1689,6 +1689,44 @@ function oneSqrtFourLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undef
 }
 
 /**
+ * Phase 78 — One-Sqrt × Five-Log × polynomial numerator.
+ *
+ * Returns `sqrtHalfDeg + polyDeg` when `node` is a `Mul` with exactly one
+ * `Sqrt(positive-leading polynomial)` factor, exactly five `Log(diverging-in-k)`
+ * factors, any polynomial factors, and any bounded factors; `undefined` otherwise.
+ *
+ * `log⁵(k)` is sub-polynomial (`o(k^ε)`), contributing 0 to effective degree.
+ * TypeScript stores the actual half-degree (not ×2), so:
+ *   `effectiveDeg = sqrtHalfDeg + polyDeg`.
+ * Caller checks `denDeg > oneSqrtFiveLogPolyEffectiveDeg(num, k)`.
+ */
+function oneSqrtFiveLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDeg !== undefined) return undefined; // second Sqrt — refuse
+      sqrtHalfDeg = hd;
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 5) return undefined; // six or more Logs — refuse
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDeg === undefined || logCount !== 5) return undefined;
+  return sqrtHalfDeg + polyDeg;
+}
+
+/**
  * Phase 75 — Two-Sqrt × Four-Log × polynomial numerator.
  *
  * Returns `sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg` when `node` is a `Mul`
@@ -2161,6 +2199,19 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegFl5 = polynomialDegreeInK(den, k);
     if (denDegFl5 !== undefined) {
       if (denDegFl5 > fl5Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 78: Mul(Sqrt(P), Log(diverging)×5, polynomial..., bounded...) numerator.
+  // One Sqrt + five Log factors; log⁵ sub-polynomial — contributes 0.
+  // effective degree = sqrtHalfDeg + polyDeg.
+  // Closes when denDeg > oneSqrtFiveLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s1l5Deg = oneSqrtFiveLogPolyEffectiveDeg(num, k);
+  if (s1l5Deg !== undefined) {
+    const denDegS1l5 = polynomialDegreeInK(den, k);
+    if (denDegS1l5 !== undefined) {
+      if (denDegS1l5 > s1l5Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

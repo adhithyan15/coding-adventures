@@ -2985,3 +2985,92 @@ describe("Phase 77 — Five-Log × polynomial numerator", () => {
     expect(result).toMatchObject({ kind: "apply", head: SUM });
   });
 });
+
+describe("Phase 78 — One-Sqrt × Five-Log × polynomial numerator", () => {
+  it("√k·log(k)⁵/k² closes (effective=0.5, denDeg=2 > 0.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const numK78a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+    ]};
+    const numKp178a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+    ]};
+    const gK78a = { kind: "apply" as const, head: DIV, args: [numK78a, k2] };
+    const gKp178a = { kind: "apply" as const, head: DIV, args: [numKp178a, kp1_2] };
+    const f78a = { kind: "apply" as const, head: SUB, args: [gK78a, gKp178a] };
+    const result = evaluateSum(f78a, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf=0.5, log⁵ sub-poly → effective=0.5; denDeg=2 > 0.5 → closes
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√(k³)·log(k)⁵/k refused (effective=1.5, denDeg=1 not > 1.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const numK78b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k3] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+    ]};
+    const numKp178b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_3] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+    ]};
+    const gK78b = { kind: "apply" as const, head: DIV, args: [numK78b, k] };
+    const gKp178b = { kind: "apply" as const, head: DIV, args: [numKp178b, kp1] };
+    const f78b = { kind: "apply" as const, head: SUB, args: [gK78b, gKp178b] };
+    const result = evaluateSum(f78b, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf=1.5; denDeg=1 not > 1.5 → refused
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√k·log(k)⁵·k/k refused (effective=1.5, denDeg=1 not > 1.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const numK78r = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      k,
+    ]};
+    const numKp178r = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      kp1,
+    ]};
+    const gK78r = { kind: "apply" as const, head: DIV, args: [numK78r, k] };
+    const gKp178r = { kind: "apply" as const, head: DIV, args: [numKp178r, kp1] };
+    const f78r = { kind: "apply" as const, head: SUB, args: [gK78r, gKp178r] };
+    const result = evaluateSum(f78r, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf=0.5, polyDeg=1 → effective=1.5; denDeg=1 not > 1.5 → refused
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
