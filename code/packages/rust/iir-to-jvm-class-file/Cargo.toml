@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-jvm-class-file"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile (now with Brainfuck tape + I/O via env/BFRuntime)"
+description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile (now with Brainfuck tape + I/O via env/BFRuntime).  Path A increment 6c: validator accepts `ref<any>` (lowers to Object, matches cons-cell field type)."
 
 [lib]
 name = "iir_to_jvm_class_file"

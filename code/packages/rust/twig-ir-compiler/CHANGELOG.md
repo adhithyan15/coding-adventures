@@ -1,5 +1,65 @@
 # Changelog — twig-ir-compiler
 
+## [0.22.0] — 2026-05-26 (Path A increment 6c — typed `car` / `cdr`)
+
+### Added — `car` / `cdr` emit `field_load [ref<any>]`
+
+Increment 6c — the closing piece of Twig's list-handling vocabulary.
+Replaces every `call_builtin "car" pair [any]` / `call_builtin "cdr" pair [any]`
+with the typed Phase 2 form `field_load dest, pair, idx [ref<any>]`
+(idx 0 = car, idx 1 = cdr).
+
+After this PR, **zero `call_builtin "car"` / `"cdr"` emission sites**
+remain in twig-ir-compiler.  Combined with 6a (typed `make_nil`) and
+6b (typed `cons`), the entire cons-cell vocabulary is now typed and
+Twig record / union constructors + accessors flow through every
+backend.
+
+#### Sites converted (8 total)
+
+| Site | Function context |
+|------|------------------|
+| `(car matched)` for variant tag extraction | `compile_match` |
+| `(cdr cur_cdr)` step in variant field binding | `compile_match` |
+| `(car cur_cdr)` to extract field after cdr chain | `compile_match` |
+| `(cdr cur)` step in record accessor body | `compile_record_constructor` (record accessor) |
+| `(car cur)` to extract field in record accessor | `compile_record_constructor` (record accessor) |
+| `(car v)` for union variant tag extraction | `compile_record_constructor` (variant predicate) |
+| `(cdr cur)` step in union variant accessor | `compile_record_constructor` (variant accessor) |
+| `(car cur)` to extract field in variant accessor | `compile_record_constructor` (variant accessor) |
+
+#### Companion changes
+
+- **twig-vm 0.22.0**: new `exec_field_load` dispatch arm.  Reads
+  `car` (idx 0) or `cdr` (idx 1) from a cons cell via
+  `lispy_runtime::heap::car` / `cdr`.  Surfaces non-cons input as
+  `RuntimeError::TypeError`.
+- **iir-to-wasm 0.6.0**: validator accepts `ref<any>` in addition to
+  `ref<LispyPair>` for `field_load` results.  WasmGC lowering already
+  uses `anyref` for cons-cell fields, so this matches the actual code
+  shape.
+- **iir-to-jvm-class-file 0.6.0**: validator accepts `ref<any>` for
+  `field_load` results (lowers to `Object`).
+- **iir-to-cil-bytecode 0.6.0**: validator accepts `ref<any>` (lowers
+  to `System.Object`) and adds `mov` to the supported-ops list for
+  reference types.
+
+#### What this unlocks
+
+- Record programs like `(record Point (x : int) (y : int))` now flow
+  end-to-end through wasm/jvm/clr/beam (constructor + accessors).
+- Union variant programs (constructor + accessor + variant predicate
+  body) similarly accept-after-6c (the `pair?` predicate still uses
+  `call_builtin "pair?"`, which is out of scope for Path A).
+
+#### Tests
+
+- 1 new backend acceptance test
+  (`twig_full_record_program_accepted_by_every_backend`) — asserts
+  the constructor + both accessors validate cleanly on every backend.
+- All 73 lib + 14 backend e2e + 179 twig-vm + 88 iir-to-wasm +
+  86 iir-to-jvm + 83 iir-to-cil + 65 iir-to-beam tests pass.
+
 ## [0.21.0] — 2026-05-24 (Path A increment 6b — typed `cons`)
 
 ### Added — `cons` cells emit `alloc` + `field_store` triples

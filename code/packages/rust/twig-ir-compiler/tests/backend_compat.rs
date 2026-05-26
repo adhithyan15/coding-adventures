@@ -400,6 +400,55 @@ fn twig_record_constructor_emits_typed_alloc_and_field_store() {
     }
 }
 
+/// Path-A increment 6c: `car` / `cdr` now lower to typed `field_load`
+/// instead of `call_builtin "car"` / `"cdr"`.  Combined with 6a (nil)
+/// and 6b (cons), the entire cons-cell vocabulary used by record /
+/// union constructors and accessors is now typed, and the full record
+/// program flows through every backend.
+#[test]
+fn twig_full_record_program_accepted_by_every_backend() {
+    let m = compile_source(
+        "(record Point (x : int) (y : int))",
+        "compat",
+    ).expect("Twig must compile");
+
+    // The Point constructor and the point-x / point-y accessors should
+    // contain typed `field_load [ref<any>]` (and zero `call_builtin
+    // "car"` / `"cdr"`).
+    let any_field_load = m.functions.iter()
+        .flat_map(|f| f.instructions.iter())
+        .any(|i| i.op == "field_load" && i.type_hint == "ref<any>");
+    assert!(any_field_load,
+        "increment 6c: expected at least one `field_load [ref<any>]` \
+         in the record module");
+
+    let leftover_car_cdr = m.functions.iter()
+        .flat_map(|f| f.instructions.iter())
+        .any(|i| i.op == "call_builtin" && matches!(
+            &i.srcs[0], Operand::Var(s) if s == "car" || s == "cdr"
+        ));
+    assert!(!leftover_car_cdr,
+        "increment 6c: legacy `call_builtin \"car\"`/\"cdr\" must be gone");
+
+    // The full module must now satisfy every backend's validator.  We
+    // exclude the `pair?` predicate function, which still uses
+    // `call_builtin "pair?"` (out of scope for 6c).
+    let mut without_pair_pred = m.clone();
+    without_pair_pred.functions.retain(|f| !f.name.ends_with('?'));
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&without_pair_pred)),
+        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&without_pair_pred)),
+        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&without_pair_pred)),
+        ("beam", iir_to_beam::validate::validate_for_beam(&without_pair_pred)),
+    ] {
+        assert!(errs.is_empty(),
+            "[{name}] validator should accept Twig record program \
+             (constructor + accessors, predicate excluded) after path-A \
+             increment 6c; got {} error(s): {errs:?}",
+            errs.len());
+    }
+}
+
 /// Pin the *current* boundary: arithmetic where at least one operand
 /// has a dynamic type (comes from a `call_builtin` like `car`) still
 /// emits `call_builtin "+"` and gets rejected by every backend.  When

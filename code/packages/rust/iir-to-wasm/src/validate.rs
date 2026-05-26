@@ -57,10 +57,16 @@ use interpreter_ir::IIRModule;
 // Currently we support only `ref<LispyPair>` — the 2-field GC cons cell
 // used by the Lispy runtime.  Future work can add more struct types here.
 
-const SUPPORTED_REF_TYPES: &[&str] = &["ref<LispyPair>"];
+const SUPPORTED_REF_TYPES: &[&str] = &["ref<LispyPair>", "ref<any>"];
 
 /// Return `true` if `type_hint` is a reference type that this backend can
 /// lower to a WasmGC struct reference.
+///
+/// `ref<LispyPair>` lowers to `(ref $LispyPair)` — a typed cons-cell
+/// reference.  `ref<any>` lowers to `anyref` — used as the result type
+/// of `field_load` since cons-cell fields are declared as
+/// `(mut (ref null any))`.  This matches BEAM's convention (loaded
+/// field has type `ref<any>`).
 pub fn is_supported_ref_type(type_hint: &str) -> bool {
     SUPPORTED_REF_TYPES.contains(&type_hint)
 }
@@ -319,15 +325,29 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         ));
                     }
                 }
-            } else if instr.op == "alloc" || instr.op == "field_load" {
-                // These GC ops require the instruction's type_hint to be a
-                // supported reference type.  They allocate or access fields
-                // of a specific struct type; without the correct type hint
-                // we cannot determine which struct to use.
-                if !is_supported_ref_type(&instr.type_hint) {
+            } else if instr.op == "alloc" {
+                // `alloc` requires the instruction's type_hint to be a
+                // CONCRETE struct ref — currently only `ref<LispyPair>`.
+                // We can't allocate `ref<any>` because we don't know which
+                // struct shape to create.
+                if instr.type_hint != "ref<LispyPair>" {
                     errors.push(format!(
                         "UnsupportedOp: function {:?}, op {:?} (GC op) requires \
                          type_hint \"ref<LispyPair>\" but got {:?}",
+                        func.name, instr.op, instr.type_hint
+                    ));
+                }
+            } else if instr.op == "field_load" {
+                // `field_load` follows iir-builtin-lowering's Phase 2
+                // convention: the loaded value's type is `"ref<any>"`
+                // because cons-cell fields can hold any Lisp value.  We
+                // additionally accept `"ref<LispyPair>"` for forward
+                // compatibility with frontends that propagate the typed
+                // tail of a cons chain back into the field_load.
+                if instr.type_hint != "ref<any>" && !is_supported_ref_type(&instr.type_hint) {
+                    errors.push(format!(
+                        "UnsupportedOp: function {:?}, op {:?} (GC op) requires \
+                         type_hint \"ref<any>\" or \"ref<LispyPair>\" but got {:?}",
                         func.name, instr.op, instr.type_hint
                     ));
                 }

@@ -347,20 +347,24 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
-                // Phase 2: `ref<LispyPair>` is supported for specific ops.
-                let is_pair = instr.type_hint == LISTY_PAIR_TYPE;
+                // Phase 2: `ref<LispyPair>` lowers to System.Object[2].
+                // `ref<any>` lowers to System.Object (the field-load result
+                // type — cons-cell fields are System.Object, matching
+                // iir-builtin-lowering's Phase 2 convention and BEAM).
+                let is_supported_ref = instr.type_hint == LISTY_PAIR_TYPE
+                    || instr.type_hint == "ref<any>";
                 let is_heap_op = matches!(
                     instr.op.as_str(),
                     "alloc" | "field_load" | "field_store" | "is_null"
                     | "const" | "ret" | "load_reg" | "store_reg"
-                    | "jmp_if_true" | "jmp_if_false"
+                    | "jmp_if_true" | "jmp_if_false" | "mov"
                 );
-                if !(is_pair && is_heap_op) {
+                if !(is_supported_ref && is_heap_op) {
                     errors.push(format!(
                         "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                         heap pointer types require ref<LispyPair> and a supported heap op \
-                         (alloc, field_load, field_store, is_null, const, ret, load_reg, \
-                         store_reg, jmp_if_true, jmp_if_false)",
+                         heap pointer types require ref<LispyPair> or ref<any> and a \
+                         supported heap op (alloc, field_load, field_store, is_null, \
+                         const, ret, load_reg, store_reg, jmp_if_true, jmp_if_false, mov)",
                         func.name, instr.op, instr.type_hint
                     ));
                 }

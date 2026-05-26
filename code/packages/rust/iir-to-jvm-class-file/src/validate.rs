@@ -275,13 +275,17 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                 ));
             } else if instr.type_hint.starts_with("ref<")
                 && instr.type_hint != "ref<LispyPair>"
+                && instr.type_hint != "ref<any>"
             {
-                // Only ref<LispyPair> is supported (Phase 2 Object[] cons cells).
-                // Any other ref<T> — raw pointers, struct refs, etc. — is still
-                // unsupported because we have no Java class to represent them.
+                // `ref<LispyPair>` lowers to the Phase 2 `Object[]` cons cell.
+                // `ref<any>` lowers to `Object` (the field-load result type,
+                // matching iir-builtin-lowering's Phase 2 convention and the
+                // BEAM backend).  Any other ref<T> — raw pointers, struct
+                // refs, etc. — is still unsupported because we have no Java
+                // class to represent them.
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                     only ref<LispyPair> is supported in this JVM backend (Phase 2)",
+                     only ref<LispyPair> and ref<any> are supported in this JVM backend (Phase 2)",
                     func.name, instr.op, instr.type_hint
                 ));
             }

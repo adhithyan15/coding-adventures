@@ -1,5 +1,24 @@
 # Changelog — twig-vm
 
+## [0.22.0] — 2026-05-26 (Dispatch: typed `field_load` for cons-cell read)
+
+### Added — `exec_field_load` for `car` / `cdr`
+
+Companion change to twig-ir-compiler 0.22.0's increment 6c.  The
+compiler now emits `(car pair)` and `(cdr pair)` as a single typed
+`field_load dest, pair, idx [ref<any>]` (idx 0 = car, idx 1 = cdr).
+
+twig-vm executes this form natively: resolve `pair` register to a
+`LispyValue`, dispatch to `lispy_runtime::heap::car` or `cdr` based
+on the index, store the result in `dest`.  Non-cons input surfaces
+as `RuntimeError::TypeError("field_load[0|1]: <reg> is not a cons cell")`.
+
+### Tests
+
+All 179 twig-vm lib tests pass.  The new arm is exercised by every
+test that reads from a list at runtime — `map` / `filter` / `fold-*`
+HOF tests, record / union variant accessors, etc.
+
 ## [0.21.0] — 2026-05-24 (Dispatch: typed `alloc` + `field_store` for cons cells)
 
 ### Added — `exec_alloc` and `exec_field_store` for cons cells

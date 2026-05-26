@@ -3,6 +3,31 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` for `field_load`)
+
+### Changed — `ref<any>` joins `SUPPORTED_REF_TYPES`
+
+Companion to Twig path-A increment 6c.  The Phase 2 heap-lowering
+convention is `field_load dest, pair, idx [ref<any>]` — the loaded
+value's type is `ref<any>` because cons-cell fields can hold any
+Lisp value.  WasmGC lowering already declares cons-cell fields as
+`(mut (ref null any))`, so the actual code shape is `struct.get`
+returning `anyref`, which matches `ref<any>`.
+
+This release widens the WASM validator:
+
+- `SUPPORTED_REF_TYPES` now includes `ref<any>` (in addition to
+  `ref<LispyPair>`).
+- `alloc` continues to require `ref<LispyPair>` only (we can't
+  allocate an unknown struct shape).
+- `field_load` accepts either `ref<any>` (canonical Phase 2) or
+  `ref<LispyPair>` (forward-compat).
+- Other ops with `ref<any>` type_hint flow through Check 4
+  (UnsupportedType) without rejection.
+
+No lowering changes — `struct.get` already produces an `anyref`-
+compatible value.
+
 ## [0.5.0] — 2026-05-24 (Validator accepts `field_store [void]`)
 
 ### Changed — `validate_for_wasm` now accepts `field_store [void]`

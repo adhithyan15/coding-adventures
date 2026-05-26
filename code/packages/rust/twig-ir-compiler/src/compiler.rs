@@ -1501,13 +1501,19 @@ impl Compiler {
                     };
 
                     // Emit: tag_reg = (car matched)
+                    //
+                    // Path A increment 6c: typed `field_load[0]` instead of
+                    // `call_builtin "car"`.  The Phase 2 heap-lowering
+                    // convention is `field_load [ref<any>]` (the loaded
+                    // field can hold any Lisp value).
                     let tag_reg = ctx.fresh_var("tag");
                     ctx.emit(IIRInstr::new(
-                        "call_builtin",
+                        "field_load",
                         Some(tag_reg.clone()),
-                        vec![Operand::Var("car".into()), Operand::Var(matched.clone())],
-                        "any",
+                        vec![Operand::Var(matched.clone()), Operand::Int(0)],
+                        "ref<any>",
                     ), arm_loc);
+                    ctx.record_type(&tag_reg, "ref<any>");
 
                     // Emit: tag_int = integer constant for this variant
                     let tag_int_reg = ctx.fresh_var("tag_val");
@@ -1554,27 +1560,33 @@ impl Compiler {
                     // arm body follows immediately (fall-through when cond is true)
 
                     // Bind fields: field_i = (car (cdr^(i+1) matched))
+                    //
+                    // Path A increment 6c: typed `field_load[1]` (cdr) and
+                    // `field_load[0]` (car) instead of `call_builtin "cdr"`
+                    // and `call_builtin "car"`.  Phase 2 convention.
                     let mut added_names: Vec<String> = Vec::new();
                     let mut cur_cdr = matched.clone();
                     for binding in bindings {
                         // Advance one cdr step
                         let next_cdr = ctx.fresh_var("cdr");
                         ctx.emit(IIRInstr::new(
-                            "call_builtin",
+                            "field_load",
                             Some(next_cdr.clone()),
-                            vec![Operand::Var("cdr".into()), Operand::Var(cur_cdr.clone())],
-                            "any",
+                            vec![Operand::Var(cur_cdr.clone()), Operand::Int(1)],
+                            "ref<any>",
                         ), arm_loc);
+                        ctx.record_type(&next_cdr, "ref<any>");
                         cur_cdr = next_cdr;
 
                         // Extract field: car of the cdr chain
                         let field_reg = ctx.fresh_var("field");
                         ctx.emit(IIRInstr::new(
-                            "call_builtin",
+                            "field_load",
                             Some(field_reg.clone()),
-                            vec![Operand::Var("car".into()), Operand::Var(cur_cdr.clone())],
-                            "any",
+                            vec![Operand::Var(cur_cdr.clone()), Operand::Int(0)],
+                            "ref<any>",
                         ), arm_loc);
+                        ctx.record_type(&field_reg, "ref<any>");
 
                         // Bind field to name in ctx.locals via typed `mov`.
                         if ctx.locals.insert(binding.clone()) {
@@ -1783,6 +1795,9 @@ impl Compiler {
         }
 
         // ── Accessors: <prefix>-<field>(r) → car(cdr^i(r)) ───────────
+        //
+        // Path A increment 6c: typed `field_load[0]` / `field_load[1]`
+        // instead of `call_builtin "car"` / `"cdr"`.  Phase 2 convention.
         for (i, field) in rec.fields.iter().enumerate() {
             let mut ctx = FnCtx::new();
             ctx.locals.insert("r".to_string());
@@ -1792,22 +1807,24 @@ impl Compiler {
             for _ in 0..i {
                 let next = ctx.fresh_var("cdr");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "field_load",
                     Some(next.clone()),
-                    vec![Operand::Var("cdr".into()), Operand::Var(cur)],
-                    "any",
+                    vec![Operand::Var(cur), Operand::Int(1)],
+                    "ref<any>",
                 ), loc);
+                ctx.record_type(&next, "ref<any>");
                 cur = next;
             }
             // Then take car.
             let field_val = ctx.fresh_var("fv");
             ctx.emit(IIRInstr::new(
-                "call_builtin",
+                "field_load",
                 Some(field_val.clone()),
-                vec![Operand::Var("car".into()), Operand::Var(cur)],
-                "any",
+                vec![Operand::Var(cur), Operand::Int(0)],
+                "ref<any>",
             ), loc);
-            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(field_val)], "any"), loc);
+            ctx.record_type(&field_val, "ref<any>");
+            ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(field_val)], "ref<any>"), loc);
 
             self.functions.push(IIRFunction {
                 name: format!("{prefix}-{}", field.name),
@@ -1988,13 +2005,16 @@ impl Compiler {
                 let mut ctx = FnCtx::new();
                 ctx.locals.insert("v".to_string());
 
+                // Path A increment 6c: typed `field_load[0]` instead of
+                // `call_builtin "car"`.
                 let car_v = ctx.fresh_var("hd");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "field_load",
                     Some(car_v.clone()),
-                    vec![Operand::Var("car".into()), Operand::Var("v".to_string())],
-                    "any",
+                    vec![Operand::Var("v".to_string()), Operand::Int(0)],
+                    "ref<any>",
                 ), loc);
+                ctx.record_type(&car_v, "ref<any>");
 
                 let tag_reg = ctx.fresh_var("tag");
                 ctx.emit(IIRInstr::new(
@@ -2034,6 +2054,9 @@ impl Compiler {
 
             // ── Accessors: <vprefix>-<field>(v) → car(cdr^(k+1) v) ────
             // Field k is at position k+1 (after the tag at cdr^0/car).
+            //
+            // Path A increment 6c: typed `field_load[1]` (cdr) and
+            // `field_load[0]` (car) instead of `call_builtin`.
             for (k, field) in variant.fields.iter().enumerate() {
                 let mut ctx = FnCtx::new();
                 ctx.locals.insert("v".to_string());
@@ -2043,21 +2066,23 @@ impl Compiler {
                 for _ in 0..=(k) {
                     let next = ctx.fresh_var("cdr");
                     ctx.emit(IIRInstr::new(
-                        "call_builtin",
+                        "field_load",
                         Some(next.clone()),
-                        vec![Operand::Var("cdr".into()), Operand::Var(cur)],
-                        "any",
+                        vec![Operand::Var(cur), Operand::Int(1)],
+                        "ref<any>",
                     ), loc);
+                    ctx.record_type(&next, "ref<any>");
                     cur = next;
                 }
                 let fval = ctx.fresh_var("fv");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "field_load",
                     Some(fval.clone()),
-                    vec![Operand::Var("car".into()), Operand::Var(cur)],
-                    "any",
+                    vec![Operand::Var(cur), Operand::Int(0)],
+                    "ref<any>",
                 ), loc);
-                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(fval)], "any"), loc);
+                ctx.record_type(&fval, "ref<any>");
+                ctx.emit(IIRInstr::new("ret", None, vec![Operand::Var(fval)], "ref<any>"), loc);
 
                 self.functions.push(IIRFunction {
                     name: format!("{vprefix}-{}", field.name),
