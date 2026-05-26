@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.20.0 — 2026-05-25
+
+### Added
+
+- **Phase 80 — Three-Sqrt × Five-Log × polynomial numerator** (`_three_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1(k)), ..., Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 5 Log factors required.
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase80ThreeSqrtFiveLogPoly`.
+
 ## 2.19.0 — 2026-05-25
 
 ### Added

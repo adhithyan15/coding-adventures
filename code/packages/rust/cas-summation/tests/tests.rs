@@ -2955,6 +2955,88 @@ fn phase79_two_sqrt_k_log5_k_times_k_over_k2_refused() {
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
 
+// ── Phase 80: Three-Sqrt × Five-Log × polynomial numerator ───────────────────
+
+#[test]
+fn phase80_three_sqrt_k_log5_k_over_k2_closes() {
+    // √k·√k·√k·log(k)^5 / k²: effective_x2=1+1+1=3; 2·2=4 > 3 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1,
+    ]);
+    let g_k80a = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp180a = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k80a, g_kp180a]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase80_three_sqrt_k3_log5_k_over_k_refused() {
+    // √(k³)·√(k³)·√(k³)·log(k)^5 / k: effective_x2=3+3+3=9; 2·1=2 not > 9 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![k3]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![kp1_3]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k3.clone(), sqrt_k3.clone(), sqrt_k3,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1_3.clone(), sqrt_kp1_3.clone(), sqrt_kp1_3,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1,
+    ]);
+    let g_k80b = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp180b = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f = apply(sym(SUB), vec![g_k80b, g_kp180b]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase80_three_sqrt_k_log5_k_times_k_over_k2_refused() {
+    // √k·√k·√k·log(k)^5·k / k²: effective_x2=1+1+1+2=5; 2·2=4 not > 5 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k80c = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp180c = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k80c, g_kp180c]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
 // ── Phase 82: Five-Sqrt × Five-Log × polynomial numerator ────────────────────
 
 #[test]

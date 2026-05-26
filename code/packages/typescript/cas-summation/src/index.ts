@@ -1872,6 +1872,40 @@ function twoSqrtFiveLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undef
 }
 
 /**
+ * Phase 80 — Three-Sqrt × Five-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a) · sqrt(k^b) · sqrt(k^c) · log(k)⁵ · k^m ≈ k^{(a+b+c)/2} · log⁵(k) · k^m`.
+ * `log⁵(k)` is sub-polynomial (`o(k^ε)`), contributing 0 to effective
+ * polynomial degree.  effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+ * Caller checks `denDeg > threeSqrtFiveLogPolyEffectiveDeg(num, k)`.
+ */
+function threeSqrtFiveLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 3) return undefined; // fourth Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 5) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3 || logCount !== 5) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
+/**
  * Phase 82 — Five-Sqrt × Five-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a₁)·…·sqrt(k^a₅)·log(k)⁵·k^m ≈ k^{(a₁+…+a₅)/2}·log⁵(k)·k^m`.
@@ -2321,6 +2355,19 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l5 = polynomialDegreeInK(den, k);
     if (denDegS2l5 !== undefined) {
       if (denDegS2l5 > s2l5Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 80: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(diverging)×5, polynomial..., bounded...) numerator.
+  // Three Sqrt + five Log factors; log⁵ sub-polynomial — contributes 0.
+  // effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+  // Closes when denDeg > threeSqrtFiveLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s3l5Deg = threeSqrtFiveLogPolyEffectiveDeg(num, k);
+  if (s3l5Deg !== undefined) {
+    const denDegS3l5 = polynomialDegreeInK(den, k);
+    if (denDegS3l5 !== undefined) {
+      if (denDegS3l5 > s3l5Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
