@@ -447,4 +447,4 @@ unary_minus  = MINUS factor ;
 symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;
 array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
 hash_literal = LBRACE [ hash_entry { COMMA hash_entry } ] RBRACE ;
-hash_entry   = NAME COLON expression | expression "=>" expression ;
+hash_entry   = NAME COLON expression | NAME COLON | expression "=>" expression ;

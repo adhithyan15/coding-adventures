@@ -2416,5 +2416,118 @@ mod tests {
         assert_eq!(when_count, 2, "expected 2 when_clauses");
         assert_eq!(in_count, 0, "expected 0 in_clauses");
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7f — Ruby 3.1 hash value-omitted shorthand `{x:, y:}`
+    //
+    // When a hash entry is written as `NAME COLON` (no value expression),
+    // Ruby 3.1+ treats it as a punned shorthand for `NAME COLON NAME`,
+    // i.e. the value is a local variable lookup with the same name as
+    // the symbol key.  Grammar accepts this via a new alternation
+    // `NAME COLON` placed AFTER `NAME COLON expression` so the parser
+    // tries the longer form first (PEG ordered-choice semantics).
+    //
+    // The three tests below cover (1) pure shorthand `{x:, y:}`, (2)
+    // mixed shorthand + explicit forms `{x:, y: 5}`, and (3) regression
+    // that ordinary `{x: 1, y: 2}` still parses with two `expression`
+    // children per entry (i.e. case (1) parses to ZERO `expression`
+    // children — the value-omitted shape — not one).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_hash_value_shorthand_pure() {
+        // `{x:, y:}` — two value-omitted entries.  Each `hash_entry`
+        // should have a Name token + COLON token + NO `expression`
+        // subnode (the new value-omitted shape).
+        let ast = parse_ruby("h = {x:, y:}");
+        let h = find_descendant(&ast, "hash_literal").expect("expected hash_literal");
+        let entries: Vec<&GrammarASTNode> = h
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "hash_entry" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(entries.len(), 2, "expected 2 hash_entry subnodes");
+        for ent in &entries {
+            let expr_count = ent
+                .children
+                .iter()
+                .filter(|c| {
+                    matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")
+                })
+                .count();
+            assert_eq!(
+                expr_count, 0,
+                "value-omitted shorthand: expected 0 expression children, got {expr_count}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_parse_hash_value_shorthand_mixed() {
+        // `{x:, y: 5}` — first entry is value-omitted, second is
+        // explicit.  Test that the parser correctly distinguishes the
+        // two shapes within a single hash literal.
+        let ast = parse_ruby("h = {x:, y: 5}");
+        let h = find_descendant(&ast, "hash_literal").expect("expected hash_literal");
+        let entries: Vec<&GrammarASTNode> = h
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "hash_entry" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(entries.len(), 2, "expected 2 hash_entry subnodes");
+        let expr_counts: Vec<usize> = entries
+            .iter()
+            .map(|ent| {
+                ent.children
+                    .iter()
+                    .filter(|c| {
+                        matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")
+                    })
+                    .count()
+            })
+            .collect();
+        assert_eq!(
+            expr_counts,
+            vec![0, 1],
+            "expected first entry value-omitted (0 expr), second explicit (1 expr)"
+        );
+    }
+
+    #[test]
+    fn test_parse_hash_value_shorthand_regression_existing_form() {
+        // Regression: extending hash_entry with `NAME COLON` must NOT
+        // break the existing `{x: 1, y: 2}` form.  Each entry must
+        // still parse with exactly one `expression` child (the value).
+        let ast = parse_ruby("h = {x: 1, y: 2}");
+        let h = find_descendant(&ast, "hash_literal").expect("expected hash_literal");
+        let entries: Vec<&GrammarASTNode> = h
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "hash_entry" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(entries.len(), 2);
+        for ent in &entries {
+            let expr_count = ent
+                .children
+                .iter()
+                .filter(|c| {
+                    matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")
+                })
+                .count();
+            assert_eq!(
+                expr_count, 1,
+                "explicit shorthand: expected 1 expression child, got {expr_count}"
+            );
+        }
+    }
 }
 

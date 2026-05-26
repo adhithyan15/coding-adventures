@@ -3154,4 +3154,164 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 7f — Ruby 3.1 hash value-omitted shorthand `{x:, y:}`.
+    //
+    // When a hash entry omits its value (`NAME COLON` with no trailing
+    // expression), the lowerer must emit a `MapEntry` whose key is
+    // `SymLit(name)` (same as the explicit `NAME COLON expression`
+    // form) AND whose value is `VarRef(name, scope)`, where `scope`
+    // follows the same Param-vs-Local dispatch used by bare-name
+    // factor lowering.
+    //
+    // Five tests below cover (1) basic shorthand emits VarRef value,
+    // (2) the value's scope follows current_params, (3) mixed
+    // shorthand + explicit forms keep their respective shapes, (4) the
+    // existing `{x: 1}` form is unchanged (regression), and (5) an
+    // end-to-end validator smoke that exercises name resolution.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn hash_value_shorthand_emits_var_ref_value() {
+        // `name = "ada"; {name:}` — the shorthand entry's value should
+        // be VarRef("name", Local), not the SymLit it would be for the
+        // key.  Key is SymLit("name") as usual.
+        let m = lower("name = \"ada\"\nh = {name:}\n");
+        let main = main_body(&m);
+        let entries = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::LetBinding { name: n, value: Expr::MapLit { entries, .. }, .. }
+                    if n == "h" =>
+                {
+                    Some(entries)
+                }
+                _ => None,
+            })
+            .expect("expected MapLit bound to h");
+        assert_eq!(entries.len(), 1);
+        assert!(
+            matches!(&entries[0].key, Expr::SymLit { name, .. } if name == "name"),
+            "key should be SymLit(\"name\"), got {:?}",
+            entries[0].key
+        );
+        assert!(
+            matches!(
+                &entries[0].value,
+                Expr::VarRef { name, scope, .. }
+                    if name == "name" && *scope == Scope::Local
+            ),
+            "value should be VarRef(\"name\", Local), got {:?}",
+            entries[0].value
+        );
+    }
+
+    #[test]
+    fn hash_value_shorthand_inside_method_uses_param_scope() {
+        // Inside `def f(x); {x:}; end`, the shorthand value `x` should
+        // be VarRef("x", Param) — same scoping rule as bare-name
+        // factor references.
+        let m = lower("def f(x)\n  {x:}\nend\n");
+        // Locate the `f` function definition.
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "f")
+            .expect("expected def f/1 in module");
+        // The hash literal is the tail expression of f's body — it
+        // appears as Block.value (Expr::MapLit) directly because the
+        // single-expression method has no preceding statements.
+        let entries = match &f.body.value {
+            Expr::MapLit { entries, .. } => entries,
+            other => panic!("expected MapLit as tail value of f, got {:?}", other),
+        };
+        assert_eq!(entries.len(), 1);
+        assert!(
+            matches!(
+                &entries[0].value,
+                Expr::VarRef { name, scope, .. }
+                    if name == "x" && *scope == Scope::Param
+            ),
+            "value should be VarRef(\"x\", Param) inside method body, got {:?}",
+            entries[0].value
+        );
+    }
+
+    #[test]
+    fn hash_value_shorthand_mixed_with_explicit_form() {
+        // `name = "ada"; {name:, age: 30}` — first entry's value is
+        // VarRef (shorthand), second entry's value is IntLit
+        // (explicit `NAME COLON expression`).  Verifies the lowerer
+        // correctly dispatches per-entry inside a single hash literal.
+        let m = lower("name = \"ada\"\nh = {name:, age: 30}\n");
+        let main = main_body(&m);
+        let entries = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::LetBinding { name: n, value: Expr::MapLit { entries, .. }, .. }
+                    if n == "h" =>
+                {
+                    Some(entries)
+                }
+                _ => None,
+            })
+            .expect("expected MapLit bound to h");
+        assert_eq!(entries.len(), 2);
+        assert!(
+            matches!(
+                &entries[0].value,
+                Expr::VarRef { name, .. } if name == "name"
+            ),
+            "first entry value should be VarRef(\"name\"), got {:?}",
+            entries[0].value
+        );
+        assert!(
+            matches!(&entries[1].value, Expr::IntLit { value: 30, .. }),
+            "second entry value should be IntLit(30), got {:?}",
+            entries[1].value
+        );
+    }
+
+    #[test]
+    fn hash_explicit_form_unchanged_after_phase_7f() {
+        // Regression: extending hash_entry with `NAME COLON` must NOT
+        // change the SIR shape for the existing `{x: 1, y: 2}` form.
+        // Each value must still be an IntLit, not a VarRef.
+        let m = lower("h = {x: 1, y: 2}\n");
+        let main = main_body(&m);
+        let entries = main
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::LetBinding { value: Expr::MapLit { entries, .. }, .. } => Some(entries),
+                _ => None,
+            })
+            .expect("expected MapLit");
+        assert_eq!(entries.len(), 2);
+        assert!(matches!(&entries[0].value, Expr::IntLit { value: 1, .. }));
+        assert!(matches!(&entries[1].value, Expr::IntLit { value: 2, .. }));
+    }
+
+    #[test]
+    fn hash_value_shorthand_module_passes_sir_validator() {
+        // End-to-end smoke: a module that binds `name`, then builds
+        // `{name:}` in tail position, must pass the SIR validator —
+        // the VarRef generated for the shorthand value must
+        // successfully resolve to the prior LetBinding.
+        //
+        // We use tail-expression position (not another LetBinding) so
+        // that the parallel-let validator sees `name` in scope before
+        // the shorthand's RHS is checked — same workaround pattern as
+        // the Phase 6y interpolation smoke test.
+        let m = lower("name = \"ada\"\nputs({name:})\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected hash-shorthand module: {:?}",
+            result
+        );
+    }
 }
