@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.18.0] - 2026-05-26
+
+### Changed — CLOC11.55: `--version` emits CC-style banner
+
+Drop-in compat surface fix. Previously `--version` printed just `0.18.0\n` — a bare semver with no marker that tools could grep for to identify this binary as a Closure Compiler drop-in. Now matches the shape of CC's `closure-compiler.jar --version`:
+
+```
+Closure Compiler (closurec — drop-in replacement, https://github.com/adhithyan15/coding-adventures)
+Version: 0.18.0
+```
+
+Why this shape:
+- First line starts with `Closure Compiler ` — toolchains that grep CC's stdout for that marker (e.g. Bazel rules that pin a compiler identity) keep working.
+- Second line is `Version: <semver>` — standard hook for version-extracting scripts.
+- Project URL points at this clone rather than upstream so users know what they're running.
+- No `Built on:` line (CC has one) — we don't embed build timestamps. The two `grep`-worthy lines are what tools actually depend on.
+
+- **Updated `ParserOutput::Version` arm** in `main::parse_and_run`. cli-builder still surfaces `--version` as `ParserOutput::Version(v)`; we just format `v.version` differently.
+- **4 new unit tests** in `main::tests` (starts-with-marker, Version-colon line, embedded semver still present, trailing-newline cleanliness).
+- **Diff fixture** `tests/diff/version-banner/` with `flags.txt` driving the integration test.
+- **New integration test** `tests/diff_version_banner.rs` pinning the structural invariants. We don't pin byte-for-byte because the embedded semver changes every release.
+
+### Pipeline matrix (unchanged)
+
+Same 11-step pipeline; change is in `main.rs`'s top-level dispatch, not `run_compiler`.
+
 ## [0.17.0] - 2026-05-26
 
 ### Changed — CLOC11.41: `--source_map_location_mapping` malformed values now error

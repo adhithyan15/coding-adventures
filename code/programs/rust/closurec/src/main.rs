@@ -177,7 +177,35 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
             }
         }
         Ok(ParserOutput::Help(h)) => (h.text, ExitCode::SUCCESS),
-        Ok(ParserOutput::Version(v)) => (format!("{}\n", v.version), ExitCode::SUCCESS),
+        Ok(ParserOutput::Version(v)) => {
+            // CLOC11.55: emit a CC-compat banner.
+            //
+            // CC's `closure-compiler.jar --version` prints:
+            //
+            //   Closure Compiler (https://github.com/google/closure-compiler)
+            //   Version: vYYYYMMDD
+            //   Built on: 2024-MM-DD HH:MM
+            //
+            // Toolchains that grep stdout for `Closure Compiler` or
+            // `Version:` (e.g. Bazel rules that pin a compiler
+            // version) need to see those strings to recognise this
+            // binary as a drop-in.
+            //
+            // We diverge from CC in three ways:
+            //  - Project URL points at this clone, not upstream
+            //    (transparency: the user knows what they're running).
+            //  - Version is semver (we don't date-stamp releases).
+            //  - No `Built on:` line — we don't currently embed
+            //    build timestamps. The two `grep`-worthy lines are
+            //    what tools actually depend on.
+            (
+                format!(
+                    "Closure Compiler (closurec — drop-in replacement, https://github.com/adhithyan15/coding-adventures)\nVersion: {}\n",
+                    v.version
+                ),
+                ExitCode::SUCCESS,
+            )
+        }
         Err(e) => {
             // cli-builder's Display for CliBuilderError already
             // formats nicely (multi-line if there are multiple
@@ -467,6 +495,45 @@ mod tests {
             "version output {:?} should contain crate version {:?}",
             text,
             env!("CARGO_PKG_VERSION")
+        );
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.55 — --version Closure-Compiler-style banner
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn version_output_starts_with_closure_compiler_marker() {
+        // Drop-in compat: tools that grep CC's stdout for
+        // `Closure Compiler` must see the same string here.
+        let (text, _code) = parse_and_run(&args(&["--version"]));
+        assert!(
+            text.starts_with("Closure Compiler "),
+            "expected CC-marker prefix, got: {text:?}"
+        );
+    }
+
+    #[test]
+    fn version_output_contains_version_colon_line() {
+        // The `Version: ` line is the second canonical hook for
+        // version-extracting tools. Pin its presence so future
+        // refactors of the banner format don't quietly drop it.
+        let (text, _code) = parse_and_run(&args(&["--version"]));
+        assert!(
+            text.contains("\nVersion: "),
+            "expected `Version: ` line, got: {text:?}"
+        );
+    }
+
+    #[test]
+    fn version_output_ends_with_single_newline() {
+        // No trailing-blank-line drift: clean newline policy at
+        // the end of the output, matches CC.
+        let (text, _code) = parse_and_run(&args(&["--version"]));
+        assert!(text.ends_with("\n"));
+        assert!(
+            !text.ends_with("\n\n"),
+            "should not have a trailing blank line: {text:?}"
         );
     }
 }
