@@ -7,6 +7,25 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.5] — 2026-05-25
+
+### Added
+
+- **VP8L color cache decoder** — `color_cache_code_bits > 0` is now fully
+  supported.  G symbols ≥ 280 are decoded as cache references
+  (`slot = sym - 280`).  Cache slots are updated after every literal pixel and
+  every back-reference copy using the hash
+  `(0x1e35a7bd * ARGB) >> (32 - cache_bits)`.  The G Huffman alphabet is
+  extended to `280 + 2^cache_bits` symbols automatically.  VP8L files produced
+  by libwebp and other encoders that enable color cache can now be decoded.
+
+### Changed
+
+- `decode()` no longer returns an error when `color_cache_code_bits > 0`.
+- `VERSION` bumped to `0.3.5`.
+
+---
+
 ## [0.3.4] — 2026-05-25
 
 ### Added

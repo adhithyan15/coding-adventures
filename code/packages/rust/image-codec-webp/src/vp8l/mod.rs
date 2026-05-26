@@ -519,14 +519,15 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
 
     // ── Color cache ──────────────────────────────────────────────────────────
     let color_cache_code_bits = br.read_bits(4);
-    if color_cache_code_bits > 0 {
-        return Err(format!(
-            "VP8L: color cache (code_bits={color_cache_code_bits}) not yet implemented"
-        ));
-    }
+    // G alphabet is extended by 2^cache_bits cache-reference symbols when cache > 0.
+    let g_alpha_size = G_ALPHABET_SIZE
+        + if color_cache_code_bits > 0 { 1 << color_cache_code_bits } else { 0 };
+    // Cache array: color_cache[slot] = (r, g, b, a) last stored at that hash slot.
+    let mut color_cache: Vec<(u8, u8, u8, u8)> =
+        if color_cache_code_bits > 0 { vec![(0, 0, 0, 0); 1 << color_cache_code_bits] } else { Vec::new() };
 
     // ── Huffman code tables ──────────────────────────────────────────────────
-    let g_table = read_huffman_code(&mut br, G_ALPHABET_SIZE)?;
+    let g_table = read_huffman_code(&mut br, g_alpha_size)?;
     let r_table = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
     let b_table = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
     let a_table = read_huffman_code(&mut br, RGBA_ALPHABET_SIZE)?;
@@ -536,6 +537,14 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     let pixel_count = (width as usize) * (height as usize);
     let mut data_out = Vec::with_capacity(pixel_count * 4);
     let mut pos = 0usize;
+
+    // Helper: insert pixel into the color cache.
+    let cache_insert = |cache: &mut Vec<(u8, u8, u8, u8)>, cache_bits: u32, r: u8, g: u8, b: u8, a: u8| {
+        if cache_bits == 0 { return; }
+        let argb = ((a as u32) << 24) | ((r as u32) << 16) | ((g as u32) << 8) | b as u32;
+        let idx = (0x1e35a7bd_u32.wrapping_mul(argb) >> (32 - cache_bits)) as usize;
+        cache[idx] = (r, g, b, a);
+    };
 
     while pos < pixel_count {
         let g_sym = g_table.decode(&mut br)?;
@@ -551,6 +560,7 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 data_out.push(g);
                 data_out.push(b);
                 data_out.push(a);
+                cache_insert(&mut color_cache, color_cache_code_bits, r, g, b, a);
                 pos += 1;
             }
             256..=279 => {
@@ -585,13 +595,26 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                     data_out.push(g);
                     data_out.push(b);
                     data_out.push(a);
+                    // Back-ref copies also update the color cache.
+                    cache_insert(&mut color_cache, color_cache_code_bits, r, g, b, a);
                 }
                 pos += copy_len;
             }
             _ => {
-                return Err(format!(
-                    "VP8L: unrecognized G symbol {g_sym} (color-cache not implemented)"
-                ));
+                // Color cache reference: sym = 280 + cache_index.
+                let cache_index = (g_sym as usize).saturating_sub(G_ALPHABET_SIZE);
+                if color_cache_code_bits == 0 || cache_index >= (1 << color_cache_code_bits) {
+                    return Err(format!(
+                        "VP8L: unrecognized G symbol {g_sym}"
+                    ));
+                }
+                let (r, g, b, a) = color_cache[cache_index];
+                data_out.push(r);
+                data_out.push(g);
+                data_out.push(b);
+                data_out.push(a);
+                // Cache hit does NOT update the cache (the slot already holds this value).
+                pos += 1;
             }
         }
     }
