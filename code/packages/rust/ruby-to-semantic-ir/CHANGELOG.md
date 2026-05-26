@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.32.0] - 2026-05-25
+
+### Added (Phase 7e — Ruby 3.0 rightward assignment lowering)
+
+A new helper `lower_rightward_assignment` mirrors the `lower_assignment` LetBinding-on-first-sight / Assign-on-rebind dispatch.  Rightward assignment is purely syntactic — `expr => var` and `var = expr` produce identical SIR.
+
+### Lowering
+
+| Source              | SIR shape                                                |
+|---------------------|----------------------------------------------------------|
+| `1 + 2 => sum`      | `LetBinding(sum, BuiltinCall("+", [IntLit 1, IntLit 2]))` |
+| `42 => x`           | `LetBinding(x, IntLit 42)`                               |
+| `[1, 2] => arr`     | `LetBinding(arr, SeqLit([IntLit 1, IntLit 2]))`          |
+| (re-bind) `5 => x`  | `Assign(x, IntLit 5)` + `Feature::MutableBindings`       |
+
+`lower_statement_inner` dispatches `rightward_assignment` to the new helper alongside `assignment`.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 146 → **150** (+4):
+  - `rightward_assignment_lowers_to_let_binding_on_first_sight` — `1 + 2 => sum`.
+  - `rightward_assignment_with_literal_lowers_to_int_let_binding` — `42 => x`.
+  - `rightward_assignment_rebind_emits_assign_with_mutable_bindings_feature` — `Assign` + manifest gating.
+  - `rightward_assignment_module_passes_sir_validator` — end-to-end smoke.
+
 ## [0.31.0] - 2026-05-25
 
 ### Added (Phase 7d — Ruby 3.0 case/in pattern matching lowering)

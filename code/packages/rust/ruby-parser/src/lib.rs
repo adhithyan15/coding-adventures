@@ -2324,6 +2324,77 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 7e — Ruby 3.0 rightward assignment `expr => var`
+    //
+    // Grammar adds:
+    //   rightward_assignment = expression "=>" NAME ;
+    //
+    // Placed AFTER modifier_statement and BEFORE assignment in the
+    // statement alternation.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_rightward_assignment_with_literal() {
+        // `1 => x` — value `1` is bound to `x`.
+        let ast = parse_ruby("1 => x");
+        let ra = find_descendant(&ast, "rightward_assignment")
+            .expect("expected rightward_assignment node");
+        assert!(
+            tree_has_token_value(ra, "x"),
+            "expected binding name `x` in rightward_assignment"
+        );
+        assert!(
+            find_descendant(ra, "expression").is_some(),
+            "expected expression node holding the value"
+        );
+    }
+
+    #[test]
+    fn test_parse_rightward_assignment_with_binary_expression() {
+        // `1 + 2 => sum` — the LHS expression is a binary +.
+        let ast = parse_ruby("1 + 2 => sum");
+        let ra = find_descendant(&ast, "rightward_assignment")
+            .expect("expected rightward_assignment node");
+        assert!(tree_has_token_value(ra, "sum"));
+        // The expression child must hold the binary form (sum node).
+        let expr = find_descendant(ra, "expression").expect("expression");
+        assert!(
+            find_descendant(expr, "sum").is_some(),
+            "expected sum node inside rightward_assignment expression"
+        );
+    }
+
+    #[test]
+    fn test_parse_rightward_assignment_with_call() {
+        // `foo(1, 2) => result` — call as LHS value.
+        let ast = parse_ruby("foo(1, 2) => result");
+        let ra = find_descendant(&ast, "rightward_assignment")
+            .expect("expected rightward_assignment node");
+        assert!(tree_has_token_value(ra, "result"));
+        let expr = find_descendant(ra, "expression").expect("expression");
+        // The expression contains a method_call somewhere inside.
+        assert!(
+            find_descendant(expr, "method_call").is_some(),
+            "expected method_call inside the LHS expression"
+        );
+    }
+
+    #[test]
+    fn test_parse_rightward_assignment_does_not_break_normal_assignment() {
+        // Regression: `x = 1` must still match `assignment`, not
+        // rightward_assignment (which requires `=>`).
+        let ast = parse_ruby("x = 1");
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected normal assignment to still match"
+        );
+        assert!(
+            find_descendant(&ast, "rightward_assignment").is_none(),
+            "normal assignment must NOT match rightward_assignment"
+        );
+    }
+
     #[test]
     fn test_parse_case_when_still_works_after_in_clause_addition() {
         // Regression: extending the case_statement rule to accept `in_clause`
