@@ -1,9 +1,9 @@
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, format_ac_table, format_s_parameter_table, s_parameters,
-    s_parameters_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride,
-    CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs,
-    VoltageSource,
+    ac_sweep, ac_sweep_corners, format_ac_table, format_corner_s_parameter_table,
+    format_s_parameter_table, s_parameters, s_parameters_corners, Bjt, BjtPolarity, Capacitor,
+    Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet,
+    JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError,
+    TransmissionLine, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -832,4 +832,39 @@ fn s_parameters_corners_runs_two_port_extraction_per_corner() {
     assert_close(result.points[1].result.points[0].s21.real, 0.5);
     assert_close(result.points[0].result.points[0].s11.real, 1.0 / 3.0);
     assert_close(result.points[1].result.points[0].s11.real, 0.5);
+}
+
+#[test]
+fn corner_s_parameter_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P1", "p1", "0", 0.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P2", "p2", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rseries", "p1", "p2", 50.0,
+    )));
+
+    let result = s_parameters_corners(
+        &circuit,
+        "P1",
+        "P2",
+        &[1.0e6],
+        50.0,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "series-high",
+                vec![CornerOverride::new("Rseries", "resistance", 100.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_s_parameter_table(&result),
+        "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\nnominal\t0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
 }

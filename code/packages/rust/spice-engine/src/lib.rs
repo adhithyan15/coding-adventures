@@ -3621,6 +3621,38 @@ pub fn format_s_parameter_table(result: &SParameterResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_corner_s_parameter_table(result: &CornerSParameterResult) -> String {
+    let mut rows = vec![
+        "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase"
+            .to_string(),
+    ];
+    for point in &result.points {
+        for (index, s_parameter_point) in point.result.points.iter().enumerate() {
+            for (parameter, value) in [
+                ("S11", s_parameter_point.s11),
+                ("S21", s_parameter_point.s21),
+                ("S12", s_parameter_point.s12),
+                ("S22", s_parameter_point.s22),
+            ] {
+                rows.push(format!(
+                    "{}\t{index}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    point.corner_name,
+                    format_table_number(s_parameter_point.frequency_hz),
+                    result.port1_source,
+                    result.port2_source,
+                    parameter,
+                    format_table_number(value.real),
+                    format_table_number(value.imag),
+                    format_table_number(value.abs()),
+                    format_table_number(value.phase().to_degrees())
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_noise_table(result: &NoiseResult) -> String {
     let mut rows = vec![
         "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD"

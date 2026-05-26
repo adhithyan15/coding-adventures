@@ -345,6 +345,10 @@ Status:
 - Two-port S-parameter extraction can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the same port pair, frequency grid, and reference impedance.
+- Named-corner S-parameter results can now be rendered as stable tab-separated
+  text tables in the live Rust SPICE package, preserving corner order and
+  covering real, imaginary, magnitude, and phase rows for S11/S21/S12/S22
+  entries.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
