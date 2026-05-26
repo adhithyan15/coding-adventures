@@ -1069,6 +1069,20 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 77: ``Mul(Log(h1), Log(h2), Log(h3), Log(h4), Log(h5),
+    #           polynomial..., bounded...)`` numerator.
+    # Five Log factors; no Sqrt; log⁵ sub-polynomial → 0.
+    # effective_x2 = 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    flp5_x2 = _five_log_poly_effective_x2(num, k)
+    if flp5_x2 is not None:
+        den_deg_fl5 = _polynomial_degree_in_k(den, k)
+        if den_deg_fl5 is not None:
+            if 2 * den_deg_fl5 > flp5_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -2788,6 +2802,71 @@ def _three_sqrt_four_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | N
     if len(sqrt_degs_x2) != 3 or log_count != 4:
         return None
     return sqrt_degs_x2[0] + sqrt_degs_x2[1] + sqrt_degs_x2[2] + 2 * poly_deg_sum
+
+
+def _five_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``2·poly_deg`` when ``node`` is a ``Mul`` with **exactly five**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 77 — Five-Log × polynomial numerator.
+
+    Effective growth:
+    ``log(k)⁵ · k^m``.  ``log⁵(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick (no Sqrt factors present):
+    ``effective_x2 = 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    Sqrt factors are explicitly refused so that this function does not
+    shadow the Sqrt-bearing phases (73–76, 78+).
+
+    +-----------------------------------------------------+----------+
+    | Input                                               | Return   |
+    +=====================================================+==========+
+    | ``Mul(Log(k)×5)``                                   | ``0``    |
+    | ``Mul(Log(k)×5, k)``                                | ``2``    |
+    | ``Mul(Log(k)×5, k², 3)``                            | ``4``    |
+    | ``Mul(Log(k)×4)``                                   | None (4) |
+    | ``Mul(Log(k)×6)``                                   | None (6) |
+    | ``Mul(Sqrt(k), Log(k)×5)``                          | None     |
+    +-----------------------------------------------------+----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Log(diverging)`` → count; bail after 5.
+         - ``Sqrt(...)`` → refuse (return ``None``).
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 5 Log factors.
+      4. Return ``2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 5:
+                # Six or more Log factors — not this phase.
+                return None
+            continue
+        if _sqrt_effective_half_degree_x2(arg, k) is not None:
+            # Sqrt factor present — refuse so Sqrt-bearing phases handle it.
+            return None
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if log_count != 5:
+        return None
+    return 2 * poly_deg_sum
 
 
 def _try_power_of_k(

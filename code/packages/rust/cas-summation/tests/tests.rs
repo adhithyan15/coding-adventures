@@ -2724,3 +2724,77 @@ fn phase76_three_sqrt_k_log4_k_times_k_over_k2_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ── Phase 77: Five-Log × polynomial numerator ────────────────────────────────
+
+#[test]
+fn phase77_log5_k_over_k2_closes() {
+    // log(k)^5 / k²: effective_x2=0; 2·2=4 > 0 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1,
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f77a = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f77a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase77_log5_k_times_k2_over_k3_closes() {
+    // log(k)^5 · k² / k³: effective_x2=4; 2·3=6 > 4 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k,
+        k2,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1,
+        kp1_2,
+    ]);
+    let g_k77b = apply(sym(DIV), vec![num_k, k3]);
+    let g_kp177b = apply(sym(DIV), vec![num_kp1, kp1_3]);
+    let f77b = apply(sym(SUB), vec![g_k77b, g_kp177b]);
+    let out = evaluate_sum(f77b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase77_log5_k_times_k3_over_k3_refused() {
+    // log(k)^5 · k³ / k³: effective_x2=6; 2·3=6 not > 6 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k,
+        k3.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1,
+        kp1_3.clone(),
+    ]);
+    let g_k77r = apply(sym(DIV), vec![num_k, k3]);
+    let g_kp177r = apply(sym(DIV), vec![num_kp1, kp1_3]);
+    let f77r = apply(sym(SUB), vec![g_k77r, g_kp177r]);
+    let out = evaluate_sum(f77r, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
