@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_corner_pss_table` for stable tab-separated named-corner PSS
+  steady-state period, convergence, residual, and probe text output snapshots.
 - Add `format_corner_sens_table` for stable tab-separated named-corner `.SENS`
   nominal, absolute-sensitivity, and relative-sensitivity text output snapshots.
 - Add `format_corner_noise_table` for stable tab-separated named-corner

@@ -3810,6 +3810,54 @@ pub fn format_pss_table(result: &PssResult, probes: &[&str]) -> Result<String, S
     Ok(rows.join("\n"))
 }
 
+pub fn format_corner_pss_table(
+    result: &CornerPssResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .first()
+            .map(|point| default_transient_output_probes(&point.result.steady_state))
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\t{}",
+        selected_probes.join("\t")
+    )];
+    for point in &result.points {
+        for (index, sample) in point.result.steady_state.iter().enumerate() {
+            let values: Result<Vec<String>, SpiceError> = selected_probes
+                .iter()
+                .map(|probe| {
+                    table_probe_value(
+                        &sample.node_voltages,
+                        &sample.branch_currents,
+                        probe,
+                        "format_corner_pss_table",
+                    )
+                    .map(format_table_number)
+                })
+                .collect();
+            rows.push(format!(
+                "{}\t{index}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                point.corner_name,
+                format_table_number(point.result.period_seconds),
+                format_table_number(point.result.time_step_seconds),
+                point.result.converged,
+                point.result.solve.iteration_count,
+                format_table_number(point.result.solve.final_residual.residual_l2_norm),
+                format_table_number(sample.time),
+                values?.join("\t")
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     let mut rows = vec!["Index\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
     for (index, entry) in result.entries.iter().enumerate() {

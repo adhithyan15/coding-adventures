@@ -343,6 +343,10 @@ Status:
 - Periodic steady-state analysis can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the same shooting-Newton solve options.
+- Named-corner PSS results can now be rendered as stable tab-separated text
+  tables in the live Rust SPICE package, preserving corner order and covering
+  period, time step, convergence, Newton iteration count, final residual norm,
+  steady-state time, and selected voltage/current probes.
 - Constrained pole-zero analysis can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the selected Phase 8 topology.
