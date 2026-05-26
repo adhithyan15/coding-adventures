@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.14.0 — 2026-05-25
+
+### Added
+
+- **Phase 76 — Three-Sqrt × Four-Log × polynomial numerator** (`_three_sqrt_four_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 4 Log factors required.  `log⁴(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase76ThreeSqrtFourLogPoly`.
+
 ## 2.13.0 — 2026-05-25
 
 ### Added
