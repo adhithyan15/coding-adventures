@@ -1,10 +1,10 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata,
     BrowserEmbeddedContext, BrowserForm, BrowserFormControl, BrowserFormSubmitter, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
+    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -62,6 +62,8 @@ struct ExpectedBrowserDocument {
     media: Vec<ExpectedMedia>,
     #[serde(default)]
     embedded_contexts: Vec<ExpectedEmbeddedContext>,
+    #[serde(default)]
+    interactive_elements: Vec<ExpectedInteractiveElement>,
     #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
     #[serde(default)]
@@ -499,6 +501,77 @@ struct ExpectedEmbeddedContext {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedInteractiveElement {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_current: Option<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_pressed: Option<String>,
+    #[serde(default)]
+    aria_selected: Option<String>,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    open: bool,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    accesskey: Vec<String>,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    focusable: Option<bool>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    draggable: Option<String>,
+    #[serde(default)]
+    draggable_state: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    translate: Option<String>,
+    #[serde(default)]
+    popover: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedForm {
     #[serde(default)]
     id: Option<String>,
@@ -685,6 +758,26 @@ fn browser_embedded_context_metadata_tracks_frame_object_embed_and_srcdoc() {
     );
 }
 
+#[test]
+fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive element fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive element fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.interactive_elements,
+        case.expected.into_browser_document().interactive_elements,
+        "interactive elements should preserve focus, editing, popover, command, hidden, and event metadata",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         BrowserDocument {
@@ -750,6 +843,11 @@ impl ExpectedBrowserDocument {
                 .embedded_contexts
                 .into_iter()
                 .map(ExpectedEmbeddedContext::into_browser_embedded_context)
+                .collect(),
+            interactive_elements: self
+                .interactive_elements
+                .into_iter()
+                .map(ExpectedInteractiveElement::into_browser_interactive_element)
                 .collect(),
             structured_items: self
                 .structured_items
@@ -1136,6 +1234,47 @@ impl ExpectedEmbeddedContext {
             srcdoc: self.srcdoc,
             credentialless: self.credentialless,
             fallback_text: self.fallback_text,
+        }
+    }
+}
+
+impl ExpectedInteractiveElement {
+    fn into_browser_interactive_element(self) -> BrowserInteractiveElement {
+        BrowserInteractiveElement {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_controls: self.aria_controls,
+            aria_current: self.aria_current,
+            aria_expanded: self.aria_expanded,
+            aria_pressed: self.aria_pressed,
+            aria_selected: self.aria_selected,
+            aria_hidden: self.aria_hidden,
+            hidden: self.hidden,
+            inert: self.inert,
+            open: self.open,
+            tabindex: self.tabindex,
+            accesskey: self.accesskey,
+            event_handlers: self.event_handlers,
+            focusable: self.focusable,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            draggable: self.draggable,
+            draggable_state: self.draggable_state,
+            spellcheck: self.spellcheck,
+            translate: self.translate,
+            popover: self.popover,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            command: self.command,
+            command_for: self.command_for,
+            disabled: self.disabled,
         }
     }
 }

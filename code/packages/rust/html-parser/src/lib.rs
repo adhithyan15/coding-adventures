@@ -838,6 +838,7 @@ pub struct BrowserDocument {
     pub images: Vec<BrowserImage>,
     pub media: Vec<BrowserMedia>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
+    pub interactive_elements: Vec<BrowserInteractiveElement>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
@@ -1469,6 +1470,44 @@ pub struct BrowserEmbeddedContext {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserInteractiveElement {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_current: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_hidden: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub open: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub focusable: Option<bool>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserForm {
     pub id: Option<String>,
     pub action: Option<String>,
@@ -1608,7 +1647,15 @@ impl BrowserDocument {
             collect_head_browser_facts(&head.children, &mut summary);
         }
         let labels = collect_label_texts_by_control_id(body_children);
-        collect_browser_facts(body_children, &mut summary, &labels, &[], body_children);
+        let id_texts = collect_element_texts_by_id(body_children);
+        collect_browser_facts(
+            body_children,
+            &mut summary,
+            &labels,
+            &id_texts,
+            &[],
+            body_children,
+        );
         summary
     }
 }
@@ -8739,6 +8786,7 @@ fn collect_browser_facts(
     nodes: &[Node],
     summary: &mut BrowserDocument,
     labels: &[(String, String)],
+    id_texts: &[(String, String)],
     picture_sources: &[BrowserImageSource],
     body_root: &[Node],
 ) {
@@ -8752,6 +8800,9 @@ fn collect_browser_facts(
         collect_body_resource(element, summary);
         if let Some(context) = browser_embedded_context(element, summary.base_href.as_deref()) {
             summary.embedded_contexts.push(context);
+        }
+        if let Some(interactive) = browser_interactive_element(element, labels, id_texts) {
+            summary.interactive_elements.push(interactive);
         }
         if element.name == "template" {
             summary.templates.push(browser_template(element));
@@ -8774,7 +8825,7 @@ fn collect_browser_facts(
 
         match element.name.as_str() {
             "picture" => {
-                collect_browser_facts(&element.children, summary, labels, &[], body_root);
+                collect_browser_facts(&element.children, summary, labels, id_texts, &[], body_root);
                 continue;
             }
             "source" => {
@@ -8830,6 +8881,7 @@ fn collect_browser_facts(
             &element.children,
             summary,
             labels,
+            id_texts,
             picture_sources,
             body_root,
         );
@@ -9332,6 +9384,87 @@ fn browser_embedded_context(
         credentialless: browser_browsing_context_credentialless(element),
         fallback_text: visible_text_for_nodes(&element.children),
     })
+}
+
+fn browser_interactive_element(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> Option<BrowserInteractiveElement> {
+    let event_handlers = browser_event_handlers(element);
+    if !is_browser_interactive_summary_element(element, &event_handlers) {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).map(ToOwned::to_owned);
+    let control_labels = browser_control_labels(element, labels, None);
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    Some(BrowserInteractiveElement {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: role
+            .as_deref()
+            .and_then(|role| browser_accessible_name(element, role, &control_labels, id_texts)),
+        role,
+        authored_role: element.attribute("role").map(ToOwned::to_owned),
+        text,
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_pressed: browser_aria_state(element, "aria-pressed"),
+        aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_hidden: browser_aria_hidden(element),
+        hidden: browser_hidden(element),
+        inert: browser_inert(element),
+        open: browser_open(element),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey: browser_accesskey(element),
+        event_handlers,
+        focusable: browser_focusable(element),
+        contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        editing_mode: browser_editing_mode(element),
+        draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        draggable_state: browser_draggable_state(element),
+        spellcheck: browser_spellcheck_state(element),
+        translate: browser_translate_state(element),
+        popover: element.attribute("popover").map(ToOwned::to_owned),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        disabled: element.attribute("disabled").is_some(),
+    })
+}
+
+fn is_browser_interactive_summary_element(element: &Element, event_handlers: &[String]) -> bool {
+    if matches!(element.name.as_str(), "details" | "dialog" | "summary") {
+        return true;
+    }
+
+    !event_handlers.is_empty()
+        || element.attribute("role").is_some()
+        || element.attribute("aria-controls").is_some()
+        || element.attribute("aria-current").is_some()
+        || element.attribute("aria-expanded").is_some()
+        || element.attribute("aria-pressed").is_some()
+        || element.attribute("aria-selected").is_some()
+        || element.attribute("aria-hidden").is_some()
+        || element.attribute("hidden").is_some()
+        || element.attribute("inert").is_some()
+        || element.attribute("tabindex").is_some()
+        || element.attribute("accesskey").is_some()
+        || element.attribute("contenteditable").is_some()
+        || element.attribute("draggable").is_some()
+        || element.attribute("spellcheck").is_some()
+        || element.attribute("translate").is_some()
+        || element.attribute("popover").is_some()
+        || element.attribute("popovertarget").is_some()
+        || element.attribute("popovertargetaction").is_some()
+        || element.attribute("command").is_some()
+        || element.attribute("commandfor").is_some()
 }
 
 fn resolve_browser_url(url: &str, base_href: Option<&str>) -> Option<String> {
