@@ -120,11 +120,20 @@ export function App() {
         // (WA5, UI27 §6), the Grid wraps its `<table>` in a scroll div
         // and pins the `<thead>`. 600px keeps roughly 26 visible rows
         // at the 22px row height declared in Grid.dark.msl.
+        //
+        // UI28-1 / U29-D1 note: sticky-header is deferred per UI28-1
+        // §2 constraint 5. `totalHeight` is still a Grid.mil slot for
+        // forward compatibility, but the v0.2.0 Grid.mll doesn't
+        // consume it — the header scrolls away with the body until
+        // UI28-2 brings sticky-header back via HostScroll composition.
         totalHeight={600}
         selectedRow={state.selectedRow - state.viewportOffset}
         selectedCol={state.selectedCol}
         editRow={state.editRow - state.viewportOffset}
         editCol={state.editCol}
+        // UI28-1 / U29-D1 — the live edit buffer Grid threads into the
+        // inline <input value=...> when the user is editing a cell.
+        editContent={state.editContent}
         dispatch={dispatch}
       />
     </div>
