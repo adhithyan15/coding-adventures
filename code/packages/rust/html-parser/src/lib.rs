@@ -12107,6 +12107,7 @@ fn collect_form_controls_for_form(
         target_form.attribute("id"),
         None,
         None,
+        false,
         body_root,
     );
     controls
@@ -12230,6 +12231,7 @@ fn collect_form_controls_for_form_into(
     target_form_id: Option<&str>,
     current_form: Option<*const Element>,
     current_label_text: Option<&str>,
+    disabled_fieldset_ancestor: bool,
     body_root: &[Node],
 ) {
     for node in nodes {
@@ -12260,22 +12262,46 @@ fn collect_form_controls_for_form_into(
                     labels,
                     base_href,
                     current_label_text,
+                    disabled_fieldset_ancestor,
                     body_root,
                 ));
             }
         }
 
-        collect_form_controls_for_form_into(
-            &element.children,
-            controls,
-            labels,
-            base_href,
-            target_form,
-            target_form_id,
-            element_form,
-            child_label_text,
-            body_root,
-        );
+        let disabled_fieldset =
+            element.name == "fieldset" && element.attribute("disabled").is_some();
+        let first_legend = if disabled_fieldset {
+            first_direct_child_named(element, "legend")
+        } else {
+            None
+        };
+
+        for child in &element.children {
+            let child_disabled_fieldset_ancestor = match child {
+                Node::Element(child_element)
+                    if disabled_fieldset
+                        && first_legend.is_some_and(|legend| {
+                            std::ptr::eq(legend, child_element as *const Element)
+                        }) =>
+                {
+                    disabled_fieldset_ancestor
+                }
+                _ => disabled_fieldset_ancestor || disabled_fieldset,
+            };
+
+            collect_form_controls_for_form_into(
+                std::slice::from_ref(child),
+                controls,
+                labels,
+                base_href,
+                target_form,
+                target_form_id,
+                element_form,
+                child_label_text,
+                child_disabled_fieldset_ancestor,
+                body_root,
+            );
+        }
     }
 }
 
@@ -12284,11 +12310,12 @@ fn browser_form_control(
     labels: &[(String, String)],
     base_href: Option<&str>,
     current_label_text: Option<&str>,
+    disabled_fieldset_ancestor: bool,
     body_root: &[Node],
 ) -> BrowserFormControl {
     let control_type = browser_content_control_type(element)
         .expect("browser_form_control is only called for form controls");
-    let disabled = element.attribute("disabled").is_some();
+    let disabled = disabled_fieldset_ancestor || element.attribute("disabled").is_some();
     let will_validate = browser_control_will_validate(&control_type, element, disabled);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let text = match element.name.as_str() {
@@ -12348,6 +12375,15 @@ fn browser_form_control(
         text,
         options: browser_content_options(element),
     }
+}
+
+fn first_direct_child_named<'a>(element: &'a Element, name: &str) -> Option<*const Element> {
+    element.children.iter().find_map(|child| match child {
+        Node::Element(child_element) if child_element.name == name => {
+            Some(child_element as *const Element)
+        }
+        _ => None,
+    })
 }
 
 fn collect_select_options(nodes: &[Node]) -> Vec<String> {
@@ -13600,7 +13636,7 @@ mod tests {
              <datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist>\
              <label>Notes<textarea id=notes name=notes readonly maxlength=500 \
              autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
-             <fieldset><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
+             <fieldset disabled><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
              <select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select>\
              <input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment>\
              <button id=go type=submit aria-label=\"Run search\" formaction=run.html \
@@ -13656,8 +13692,9 @@ mod tests {
         assert_eq!(controls[1].maxlength.as_deref(), Some("500"));
         assert_eq!(controls[1].labels, vec!["NotesKeep me"]);
         assert_eq!(controls[2].control_type, "checkbox");
+        assert!(controls[2].disabled);
         assert!(controls[2].checked);
-        assert!(controls[2].will_validate);
+        assert!(!controls[2].will_validate);
         assert!(controls[3].multiple);
         assert_eq!(controls[3].size.as_deref(), Some("5"));
         assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));

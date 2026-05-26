@@ -858,6 +858,26 @@ fn browser_form_validation_metadata_tracks_constraint_candidates() {
 }
 
 #[test]
+fn browser_form_fieldset_metadata_disables_descendant_controls() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "form controls should reflect disabled fieldset ancestry",
+    );
+}
+
+#[test]
 fn browser_embedded_context_metadata_tracks_frame_object_embed_and_srcdoc() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
