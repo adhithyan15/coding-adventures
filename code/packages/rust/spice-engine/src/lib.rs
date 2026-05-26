@@ -3688,6 +3688,45 @@ pub fn format_noise_table(result: &NoiseResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_corner_noise_table(result: &CornerNoiseResult) -> String {
+    let mut rows = vec![
+        "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD"
+            .to_string(),
+    ];
+    for point in &result.points {
+        for (index, noise_point) in point.result.points.iter().enumerate() {
+            for entry in &noise_point.entries {
+                rows.push(format!(
+                    "{}\t{index}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    point.corner_name,
+                    format_table_number(noise_point.frequency_hz),
+                    result.output_node,
+                    result.input_source,
+                    format_table_number(noise_point.output_psd),
+                    format_table_number(noise_point.input_referred_psd),
+                    entry.element_name,
+                    format_noise_type(entry.noise_type),
+                    format_table_number(entry.source_psd),
+                    format_table_number(entry.output_psd)
+                ));
+            }
+            if noise_point.entries.is_empty() {
+                rows.push(format!(
+                    "{}\t{index}\t{}\t{}\t{}\t{}\t{}\t\t\t\t",
+                    point.corner_name,
+                    format_table_number(noise_point.frequency_hz),
+                    result.output_node,
+                    result.input_source,
+                    format_table_number(noise_point.output_psd),
+                    format_table_number(noise_point.input_referred_psd)
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_sens_table(result: &SensResult) -> String {
     let mut rows = vec![
         "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity"

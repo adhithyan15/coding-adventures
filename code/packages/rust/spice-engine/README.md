@@ -33,8 +33,8 @@ The initial slices implement:
 - Stable text output tables for selected node voltages, branch currents, AC
   phasors, PSS steady-state periods, sensitivity entries, Fourier harmonics,
   transfer-function results, S-parameter entries, cornered S-parameter
-  entries, pole-zero entries, noise PSD contributions, and distortion
-  harmonics.
+  entries, pole-zero entries, noise PSD contributions, cornered noise PSD
+  contributions, and distortion harmonics.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
