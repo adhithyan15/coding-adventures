@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.19.0] - 2026-05-26
+
+### Changed — CLOC11.16: `--charset` US_ASCII output escaping (BEHAVIOR DEFAULT CHANGE)
+
+Behavioral compat slice with CC's documented `--charset` default. Previously closurec accepted `--charset` and stored it but never escaped non-ASCII characters in the output — every non-ASCII codepoint passed through verbatim regardless of flag value. That diverged from CC's documented default of "UTF-8 in, US_ASCII out".
+
+Now matches CC:
+
+| `--charset` value | Output behavior                              |
+|-------------------|----------------------------------------------|
+| (unset)           | **US_ASCII — escape non-ASCII as `\uXXXX`** (matches CC default) |
+| `US_ASCII`        | same as unset                                |
+| `US-ASCII`        | accepted alias                               |
+| `UTF-8` / `UTF8`  | pass-through (raw UTF-8 bytes)               |
+| anything else     | pass-through (CC ignores unknown values)     |
+
+**This is a default-behavior change**: existing users who relied on raw-UTF-8 output and didn't pass `--charset` will now see `\uXXXX` escapes. To restore prior behavior, pass `--charset UTF-8` explicitly. CC users get this default already, so closurec invocations that worked against CC will continue to work against closurec.
+
+Escape format: BMP codepoints (`U+0000..U+FFFF`) emit `\uXXXX`. Astral codepoints (`U+10000..U+10FFFF`) emit a UTF-16 surrogate pair (`\uXXXX\uXXXX`) — not the ES2015 `\u{XXXXX}` form — for maximum compatibility with legacy minifiers / ES5-only environments.
+
+- **New `charset` module** with `OutputCharset::from_raw(&str)` + `apply_charset(&str, OutputCharset) -> String`. Pure-function, no I/O, fully deterministic.
+- **Pipeline placement**: Step 3.75 in `run_compiler`, between IIFE wrap and write. Runs *after* the output wrapper so any non-ASCII the user injected via `--output_wrapper` (e.g. a `©` banner) gets escaped too.
+- **12 new unit tests** in `charset::tests` (default → US_ASCII, value parsing for all aliases + case-insensitive, unknown → UTF-8 fallback, UTF-8 pass-through, US_ASCII pass-through for pure-ASCII text, BMP escape, CJK escape, surrogate pair, lowercase hex, byte-identical ASCII).
+- **Diff fixtures** `tests/diff/charset-us-ascii/` (default) and `tests/diff/charset-utf8/` (opt-out).
+- **New integration test** `tests/diff_charset.rs` pinning both ends of the toggle, including `is_ascii()` invariant under default.
+- **`tests/diff/js-glob/expected.stdout` regenerated**: em-dashes in test input comments now appear as `—`. This is the new default; the test continues to exercise glob expansion logic.
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` globs
+2. Resolve `--externs` globs
+3. `--print_tree` short-circuit
+4. `--print_tree_json` short-circuit
+5. Per-input `transform_source`
+6. Concatenate transformed inputs
+7. `--checks_only` short-circuit
+8. `--emit_use_strict` prepend
+9. `--output_wrapper` substitution (validated)
+10. `--isolation_mode IIFE` wrap
+11. **`--charset` US_ASCII escape (CLOC11.16, NEW)**
+12. Write to `--js_output_file` or stdout
+
 ## [0.18.0] - 2026-05-26
 
 ### Changed — CLOC11.55: `--version` emits CC-style banner
