@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_corner_distortion_table` for stable tab-separated named-corner
+  `.DISTO` harmonic magnitude, phase, and THD text output snapshots.
 - Add `format_corner_pole_zero_table` for stable tab-separated named-corner
   `.PZ` pole-zero text output snapshots.
 - Add `format_corner_pss_table` for stable tab-separated named-corner PSS

@@ -3921,6 +3921,30 @@ pub fn format_distortion_table(result: &DistortionResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_corner_distortion_table(result: &CornerDistortionResult) -> String {
+    let mut rows =
+        vec!["Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD".to_string()];
+    for point in &result.points {
+        for distortion_point in &point.result.points {
+            for harmonic in &distortion_point.harmonics {
+                rows.push(format!(
+                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    point.corner_name,
+                    format_table_number(distortion_point.frequency_hz),
+                    result.input_source,
+                    result.output_probe,
+                    harmonic.harmonic,
+                    format_table_number(harmonic.magnitude),
+                    format_table_number(harmonic.phase_degrees),
+                    format_table_number(distortion_point.total_harmonic_distortion)
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_fourier_table(result: &FourierResult) -> String {
     let mut rows =
         vec!["Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD".to_string()];

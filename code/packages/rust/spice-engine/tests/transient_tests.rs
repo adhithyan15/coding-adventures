@@ -1,21 +1,23 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
-    estimate_period, format_corner_pole_zero_table, format_corner_pss_table, format_dc_table,
-    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
-    DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult,
-    Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
-    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
-    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, VoltageSource, Waveform,
+    estimate_period, format_corner_distortion_table, format_corner_pole_zero_table,
+    format_corner_pss_table, format_dc_table, format_distortion_table, format_fourier_table,
+    format_pole_zero_table, format_pss_table, format_transient_table, fourier,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
+    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
+    CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource,
+    DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic,
+    FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry,
+    PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult,
+    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
+    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
+    Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1659,6 +1661,65 @@ fn distortion_text_output_table_is_stable() {
     assert_eq!(
         format_distortion_table(&result),
         "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+    );
+}
+
+#[test]
+fn corner_distortion_text_output_table_is_stable() {
+    let result = CornerDistortionResult {
+        input_source: "Vin".to_string(),
+        output_probe: "V(out)".to_string(),
+        points: vec![
+            CornerDistortionPoint {
+                corner_name: "nominal".to_string(),
+                result: DistortionResult {
+                    input_source: "Vin".to_string(),
+                    output_probe: "V(out)".to_string(),
+                    points: vec![DistortionPoint {
+                        frequency_hz: 1000.0,
+                        fundamental_magnitude: 1.0,
+                        harmonics: vec![
+                            DistortionHarmonic {
+                                harmonic: 1,
+                                frequency_hz: 1000.0,
+                                magnitude: 1.0,
+                                phase_degrees: 0.0,
+                            },
+                            DistortionHarmonic {
+                                harmonic: 2,
+                                frequency_hz: 2000.0,
+                                magnitude: 0.025,
+                                phase_degrees: -1.5707963267948966,
+                            },
+                        ],
+                        total_harmonic_distortion: 0.025,
+                    }],
+                },
+            },
+            CornerDistortionPoint {
+                corner_name: "slow".to_string(),
+                result: DistortionResult {
+                    input_source: "Vin".to_string(),
+                    output_probe: "V(out)".to_string(),
+                    points: vec![DistortionPoint {
+                        frequency_hz: 1000.0,
+                        fundamental_magnitude: 0.8,
+                        harmonics: vec![DistortionHarmonic {
+                            harmonic: 2,
+                            frequency_hz: 2000.0,
+                            magnitude: 0.04,
+                            phase_degrees: 12.5,
+                        }],
+                        total_harmonic_distortion: 0.05,
+                    }],
+                },
+            },
+        ],
+    };
+
+    assert_eq!(
+        format_corner_distortion_table(&result),
+        "Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\nnominal\t1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\nnominal\t1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\nslow\t1.000000e+03\tVin\tV(out)\t2\t4.000000e-02\t1.250000e+01\t5.000000e-02\n"
     );
 }
 

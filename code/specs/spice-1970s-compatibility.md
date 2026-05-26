@@ -356,6 +356,9 @@ Status:
 - Transient-to-distortion projection can now be evaluated across named corners
   in the live Rust SPICE package, reusing the existing corner override surface
   for the same transient sampling and `.DISTO` output-probe query.
+- Named-corner `.DISTO` results can now be rendered as stable tab-separated
+  text tables in the live Rust SPICE package, preserving corner order and
+  covering harmonic magnitude, phase, and THD rows.
 - Two-port S-parameter extraction can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the same port pair, frequency grid, and reference impedance.
