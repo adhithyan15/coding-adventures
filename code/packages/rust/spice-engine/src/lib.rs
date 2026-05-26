@@ -3748,6 +3748,30 @@ pub fn format_sens_table(result: &SensResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_corner_sens_table(result: &CornerSensResult) -> String {
+    let mut rows = vec![
+        "Corner\tOutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity"
+            .to_string(),
+    ];
+    for point in &result.points {
+        for entry in &point.result.entries {
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                point.corner_name,
+                result.output_node,
+                format_table_number(point.result.nominal_voltage),
+                entry.element_name,
+                entry.parameter,
+                format_table_number(entry.nominal_value),
+                format_table_number(entry.sensitivity),
+                format_table_number(entry.relative_sensitivity)
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_pss_table(result: &PssResult, probes: &[&str]) -> Result<String, SpiceError> {
     let selected_probes = if probes.is_empty() {
         default_transient_output_probes(&result.steady_state)

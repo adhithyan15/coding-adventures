@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_corner_sens_table` for stable tab-separated named-corner `.SENS`
+  nominal, absolute-sensitivity, and relative-sensitivity text output snapshots.
 - Add `format_corner_noise_table` for stable tab-separated named-corner
   `.NOISE` total and per-source PSD text output snapshots.
 - Add `format_corner_s_parameter_table` for stable tab-separated named-corner
