@@ -1073,6 +1073,8 @@ pub struct BrowserContentNode {
     pub download: Option<String>,
     pub ping: Vec<String>,
     pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
     pub hreflang: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
@@ -1247,6 +1249,8 @@ pub struct BrowserRenderNode {
     pub download: Option<String>,
     pub ping: Vec<String>,
     pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
     pub hreflang: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
@@ -1421,6 +1425,8 @@ pub struct BrowserLink {
     pub download: Option<String>,
     pub ping: Vec<String>,
     pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
     pub hreflang: Option<String>,
     pub type_hint: Option<String>,
     pub referrerpolicy: Option<String>,
@@ -1540,9 +1546,15 @@ pub struct BrowserForm {
     pub method: String,
     pub enctype: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub accept_charset: Option<String>,
     pub autocomplete: Option<String>,
     pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
     pub novalidate: bool,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
@@ -1607,6 +1619,7 @@ pub struct BrowserFormSubmitter {
     pub method: String,
     pub enctype: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub novalidate: bool,
     pub value: Option<String>,
 }
@@ -1747,6 +1760,8 @@ impl BrowserRenderNode {
             download: content_node.download.clone(),
             ping: content_node.ping.clone(),
             resolved_ping: content_node.resolved_ping.clone(),
+            attributionsrc: content_node.attributionsrc.clone(),
+            resolved_attributionsrc: content_node.resolved_attributionsrc.clone(),
             hreflang: content_node.hreflang.clone(),
             src: content_node.src.clone(),
             resolved_src: content_node.resolved_src.clone(),
@@ -8887,6 +8902,7 @@ fn collect_browser_facts(
                 element,
                 labels,
                 summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
             )),
             "table" => summary.tables.push(BrowserTable {
                 caption: find_first_element_in_nodes(&element.children, "caption")
@@ -9246,6 +9262,11 @@ fn browser_link(
             .filter_map(|ping| resolve_browser_url(&ping, base_href))
             .collect(),
         ping: browser_anchor_ping(element),
+        resolved_attributionsrc: browser_anchor_attributionsrc(element)
+            .into_iter()
+            .filter_map(|attributionsrc| resolve_browser_url(&attributionsrc, base_href))
+            .collect(),
+        attributionsrc: browser_anchor_attributionsrc(element),
         hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
@@ -9754,6 +9775,8 @@ fn collect_browser_content_nodes_with_mode(
                         download: None,
                         ping: Vec::new(),
                         resolved_ping: Vec::new(),
+                        attributionsrc: Vec::new(),
+                        resolved_attributionsrc: Vec::new(),
                         hreflang: None,
                         src: None,
                         resolved_src: None,
@@ -9998,6 +10021,11 @@ fn browser_content_node_for_element(
             .filter_map(|ping| resolve_browser_url(&ping, base_href))
             .collect(),
         ping: browser_anchor_ping(element),
+        resolved_attributionsrc: browser_anchor_attributionsrc(element)
+            .into_iter()
+            .filter_map(|attributionsrc| resolve_browser_url(&attributionsrc, base_href))
+            .collect(),
+        attributionsrc: browser_anchor_attributionsrc(element),
         hreflang: browser_anchor_hreflang(element),
         resolved_src: src
             .as_deref()
@@ -11146,6 +11174,17 @@ fn browser_anchor_ping(element: &Element) -> Vec<String> {
     }
 }
 
+fn browser_anchor_attributionsrc(element: &Element) -> Vec<String> {
+    if is_browser_anchor_navigation_element(element) {
+        element
+            .attribute("attributionsrc")
+            .map(split_html_classes)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    }
+}
+
 fn browser_anchor_hreflang(element: &Element) -> Option<String> {
     is_browser_anchor_navigation_element(element)
         .then(|| element.attribute("hreflang").map(ToOwned::to_owned))
@@ -12055,6 +12094,7 @@ fn browser_form(
     element: &Element,
     labels: &[(String, String)],
     base_href: Option<&str>,
+    base_target: Option<&str>,
 ) -> BrowserForm {
     let action = element.attribute("action").map(ToOwned::to_owned);
     let resolved_action = action
@@ -12066,6 +12106,10 @@ fn browser_form(
         .unwrap_or_else(|| "get".to_string());
     let enctype = element.attribute("enctype").map(ToOwned::to_owned);
     let target = element.attribute("target").map(ToOwned::to_owned);
+    let effective_target = target
+        .clone()
+        .or_else(|| base_target.map(ToOwned::to_owned));
+    let rel_tokens = browser_rel_tokens(element);
     let novalidate = element.attribute("novalidate").is_some();
     let controls = collect_form_controls_for_form(body_root, element, labels, base_href);
     let submitters = browser_form_submitters(
@@ -12075,6 +12119,7 @@ fn browser_form(
         &method,
         enctype.as_deref(),
         target.as_deref(),
+        base_target,
         novalidate,
     );
     BrowserForm {
@@ -12085,9 +12130,15 @@ fn browser_form(
         method,
         enctype,
         target,
+        effective_target,
         accept_charset: element.attribute("accept-charset").map(ToOwned::to_owned),
         autocomplete: element.attribute("autocomplete").map(ToOwned::to_owned),
         rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
         novalidate,
         controls,
         submitters,
@@ -12101,6 +12152,7 @@ fn browser_form_submitters(
     method: &str,
     enctype: Option<&str>,
     target: Option<&str>,
+    base_target: Option<&str>,
     novalidate: bool,
 ) -> Vec<BrowserFormSubmitter> {
     controls
@@ -12131,6 +12183,11 @@ fn browser_form_submitters(
                 .form_target
                 .clone()
                 .or_else(|| target.map(ToOwned::to_owned)),
+            effective_target: control
+                .form_target
+                .clone()
+                .or_else(|| target.map(ToOwned::to_owned))
+                .or_else(|| base_target.map(ToOwned::to_owned)),
             novalidate: novalidate || control.form_novalidate,
             value: control.value.clone(),
         })

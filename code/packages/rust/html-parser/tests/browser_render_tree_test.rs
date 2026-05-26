@@ -58,6 +58,10 @@ struct ExpectedRenderNode {
     #[serde(default)]
     resolved_ping: Vec<String>,
     #[serde(default)]
+    attributionsrc: Vec<String>,
+    #[serde(default)]
+    resolved_attributionsrc: Vec<String>,
+    #[serde(default)]
     hreflang: Option<String>,
     src: Option<String>,
     #[serde(default)]
@@ -404,6 +408,8 @@ impl ExpectedRenderNode {
             download: self.download,
             ping: self.ping,
             resolved_ping: self.resolved_ping,
+            attributionsrc: self.attributionsrc,
+            resolved_attributionsrc: self.resolved_attributionsrc,
             hreflang: self.hreflang,
             src: self.src,
             resolved_src: self.resolved_src,
