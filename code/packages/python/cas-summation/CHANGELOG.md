@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.16.0 — 2026-05-25
+
+### Added
+
+- **Phase 78 — One-Sqrt × Five-Log × polynomial numerator** (`_one_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 5 Log factors required.  `log⁵(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = sqrt_inner_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase78OneSqrtFiveLogPoly`.
+
 ## 2.15.0 — 2026-05-25
 
 ### Added

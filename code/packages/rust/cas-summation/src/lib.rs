@@ -1944,6 +1944,41 @@ fn one_sqrt_four_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64>
     Some(d + 2 * poly_deg)
 }
 
+/// Phase 78 — One-Sqrt × Five-Log × polynomial numerator.
+///
+/// Returns `sqrt_deg_x2 + 2·poly_deg` when `node` is a `Mul` with exactly one
+/// `Sqrt(positive-leading polynomial)` factor, exactly five `Log(diverging-in-k)`
+/// factors, any polynomial factors, and any bounded factors; `None` otherwise.
+///
+/// `log⁵(k)` is sub-polynomial (`o(k^ε)`), contributing 0.
+/// `effective_x2 = sqrt_inner_deg_x2 + 2·m`.
+/// Caller checks `2 * den_deg > effective_x2`.
+fn one_sqrt_five_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node { IRNode::Apply(a) => a, _ => return None };
+    if !head_is(&apply_node.head, MUL) { return None; }
+    let mut sqrt_deg_x2: Option<i64> = None;
+    let mut log_count: usize = 0;
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        if let Some(d) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_deg_x2.is_some() { return None; } // second Sqrt — refuse
+            sqrt_deg_x2 = Some(d);
+            continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 5 { return None; } // six or more Logs — refuse
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) { poly_deg += deg; continue; }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    let d = sqrt_deg_x2?;
+    if log_count != 5 { return None; }
+    Some(d + 2 * poly_deg)
+}
+
 /// Phase 75 — Two-Sqrt × Four-Log × polynomial numerator.
 ///
 /// Returns `sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg` when `node` is a `Mul` with
@@ -2394,6 +2429,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(fl5_x2) = five_log_poly_effective_x2(num, k) {
         if let Some(den_deg_fl5) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_fl5 > fl5_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 78: Mul(Sqrt(P), Log(diverging)×5, polynomial..., bounded...) numerator.
+    // One Sqrt + five Log factors; log⁵ sub-polynomial — effective_x2 = sqrt_deg_x2 + 2·poly_deg.
+    // Closes when 2 * den_deg > effective_x2 or non-polynomial diverging denom.
+    if let Some(s1l5_x2) = one_sqrt_five_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s1l5) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s1l5 > s1l5_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {
