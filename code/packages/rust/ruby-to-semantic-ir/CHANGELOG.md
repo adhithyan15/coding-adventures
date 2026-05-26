@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.33.0] - 2026-05-26
+
+### Added (Phase 7f — Ruby 3.1 hash value-omitted shorthand lowering)
+
+`lower_hash_entry` learns a third dispatch arm: when a `hash_entry` node has a `NAME` token, a `COLON` token, and ZERO `expression` children, the entry's value is emitted as `VarRef(name, scope)` — a same-named local variable lookup.  Key remains `SymLit(name)` (matching the existing keyword-style shorthand).
+
+The `scope` follows the same Param-vs-Local dispatch as bare-name factor lowering: if the binding exists in `current_params`, mark it `Param`; otherwise mark it `Local`.  This means `{x:}` inside `def f(x); …; end` correctly emits `VarRef("x", Param)`.
+
+### Lowering dispatch summary
+
+| Source            | Shape                                                                        |
+|-------------------|------------------------------------------------------------------------------|
+| `{x: 1}`          | `MapEntry { key: SymLit("x"), value: IntLit(1) }` (unchanged)               |
+| `{x => 1}`        | `MapEntry { key: <lowered x>, value: IntLit(1) }` (unchanged)               |
+| **`{x:}`**        | **`MapEntry { key: SymLit("x"), value: VarRef("x", Local/Param) }` (new)** |
+
+The change is purely additive — no existing SIR shape changes.  Both `Feature::Symbols` (for the key) and (transitively) any feature for the value expression are still recorded as before.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 150 → **155** (+5):
+  - `hash_value_shorthand_emits_var_ref_value` — `{name:}` value is `VarRef("name", Local)`.
+  - `hash_value_shorthand_inside_method_uses_param_scope` — `def f(x); {x:}; end` value is `VarRef("x", Param)`.
+  - `hash_value_shorthand_mixed_with_explicit_form` — `{name:, age: 30}` first entry is VarRef, second is IntLit.
+  - `hash_explicit_form_unchanged_after_phase_7f` — `{x: 1, y: 2}` regression (still IntLit values).
+  - `hash_value_shorthand_module_passes_sir_validator` — end-to-end validator smoke.
+
 ## [0.32.0] - 2026-05-25
 
 ### Added (Phase 7e — Ruby 3.0 rightward assignment lowering)

@@ -3372,10 +3372,14 @@ impl Lowerer {
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<semantic_ir::nodes::MapEntry, RubyLowerError> {
-        // Two shapes are possible:
-        //   1. `NAME COLON expression` — shorthand.  The Name token
-        //      is the symbol key.
-        //   2. `expression "=>" expression` — hash-rocket.  Two
+        // Three shapes are possible:
+        //   1. `NAME COLON expression` — keyword-style shorthand.  The
+        //      Name token is the symbol key; the trailing expression
+        //      is the value.
+        //   2. `NAME COLON` — Ruby 3.1 value-omitted shorthand (Phase
+        //      7f).  The Name token is the symbol key AND the value is
+        //      a `VarRef` to a same-named local variable in scope.
+        //   3. `expression "=>" expression` — hash-rocket.  Two
         //      `expression` rule children.
         let expression_subnodes: Vec<&GrammarASTNode> = node
             .children
@@ -3391,7 +3395,7 @@ impl Lowerer {
             let value = self.lower_expression(expression_subnodes[1])?;
             return Ok(semantic_ir::nodes::MapEntry { key, value });
         }
-        // Shorthand form — find the leading Name token.
+        // Shorthand form (cases 1 and 2) — find the leading Name token.
         let key_tok = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
             _ => None,
@@ -3401,17 +3405,34 @@ impl Lowerer {
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         })?;
+        let key_span = self.span_of_token(key_tok);
         let key = Expr::SymLit {
             name: key_tok.value.clone(),
-            span: self.span_of_token(key_tok),
+            span: key_span.clone(),
         };
         self.features_used.insert(Feature::Symbols);
-        let value_node = expression_subnodes.first().ok_or_else(|| RubyLowerError {
-            message: "hash_entry shorthand missing value expression".to_string(),
-            line: node.start_line.unwrap_or(0),
-            column: node.start_column.unwrap_or(0),
-        })?;
-        let value = self.lower_expression(value_node)?;
+        let value = if let Some(value_node) = expression_subnodes.first() {
+            // Case 1 — explicit value expression follows the colon.
+            self.lower_expression(value_node)?
+        } else {
+            // Case 2 — Ruby 3.1 value-omitted shorthand `{name:}`.
+            // Value is a `VarRef` to the same-named local variable.
+            // The scope follows the same Param-vs-Local dispatch used
+            // by the bare-name factor lowering above: if the binding
+            // exists in `current_params`, mark it `Param`; otherwise
+            // mark it `Local` and let the validator catch any unbound
+            // reference.
+            let scope = if self.current_params.contains(&key_tok.value) {
+                Scope::Param
+            } else {
+                Scope::Local
+            };
+            Expr::VarRef {
+                name: key_tok.value.clone(),
+                scope,
+                span: key_span,
+            }
+        };
         Ok(semantic_ir::nodes::MapEntry { key, value })
     }
 

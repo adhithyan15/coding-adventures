@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.33.0] - 2026-05-26
+
+### Added (Phase 7f — Ruby 3.1 hash value-omitted shorthand `{x:, y:}`)
+
+Extended grammar rule:
+
+```ebnf
+hash_entry = NAME COLON expression | NAME COLON | expression "=>" expression ;
+```
+
+The new `NAME COLON` alternative (no trailing expression) is placed AFTER `NAME COLON expression` so PEG ordered-choice tries the longer form first.  When the longer form fails (e.g. `x:` followed by `,` or `}`), the parser cleanly backtracks to the value-omitted shape.
+
+The grammar change is purely additive — every prior shape (`{x: 1}`, `{a => b}`, `{x: 1, y: 2}`) parses identically.
+
+Regenerated `_grammar.rs` via `grammar-tools compile-grammar`.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 140 → **143** (+3):
+  - `test_parse_hash_value_shorthand_pure` — `{x:, y:}` produces two `hash_entry` subnodes each with ZERO `expression` children.
+  - `test_parse_hash_value_shorthand_mixed` — `{x:, y: 5}` produces one entry with 0 expression children and one with 1.
+  - `test_parse_hash_value_shorthand_regression_existing_form` — `{x: 1, y: 2}` still produces entries with 1 expression child each.
+
 ## [0.32.0] - 2026-05-25
 
 ### Added (Phase 7e — Ruby 3.0 rightward assignment `expr => var`)

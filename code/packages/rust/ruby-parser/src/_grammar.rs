@@ -847,6 +847,10 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                 ] },
                 GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
+                ] },
+                GrammarElement::Sequence { elements: vec![
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                     GrammarElement::Literal { value: r#"=>"#.to_string() },
                     GrammarElement::RuleReference { name: r#"expression"#.to_string() },
