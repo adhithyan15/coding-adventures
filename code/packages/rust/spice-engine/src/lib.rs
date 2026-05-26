@@ -3593,6 +3593,34 @@ pub fn format_tf_table(result: &TfResult) -> String {
     )
 }
 
+pub fn format_s_parameter_table(result: &SParameterResult) -> String {
+    let mut rows = vec![
+        "Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase".to_string(),
+    ];
+    for (index, point) in result.points.iter().enumerate() {
+        for (parameter, value) in [
+            ("S11", point.s11),
+            ("S21", point.s21),
+            ("S12", point.s12),
+            ("S22", point.s22),
+        ] {
+            rows.push(format!(
+                "{index}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                format_table_number(point.frequency_hz),
+                result.port1_source,
+                result.port2_source,
+                parameter,
+                format_table_number(value.real),
+                format_table_number(value.imag),
+                format_table_number(value.abs()),
+                format_table_number(value.phase().to_degrees())
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_noise_table(result: &NoiseResult) -> String {
     let mut rows = vec![
         "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD"

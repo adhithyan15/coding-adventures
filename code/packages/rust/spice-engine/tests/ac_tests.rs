@@ -1,8 +1,9 @@
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, format_ac_table, s_parameters, s_parameters_corners, Bjt,
-    BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Diode,
-    Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor,
-    Resistor, SpiceError, TransmissionLine, Vcvs, VoltageSource,
+    ac_sweep, ac_sweep_corners, format_ac_table, format_s_parameter_table, s_parameters,
+    s_parameters_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride,
+    CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs,
+    VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -770,6 +771,27 @@ fn s_parameters_series_resistor_two_port() {
     assert_close(point.s12.real, 2.0 / 3.0);
     assert_close(point.s11.imag, 0.0);
     assert_close(point.s21.imag, 0.0);
+}
+
+#[test]
+fn s_parameter_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P1", "p1", "0", 0.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P2", "p2", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rseries", "p1", "p2", 50.0,
+    )));
+
+    let result = s_parameters(&circuit, "P1", "P2", &[1.0e6], 50.0).unwrap();
+
+    assert_eq!(
+        format_s_parameter_table(&result),
+        "Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\n0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\n0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\n0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\n"
+    );
 }
 
 #[test]
