@@ -7,6 +7,34 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.1] — 2026-05-25
+
+### Added
+
+- **VP8L LZ77 back-reference encoding** — `lz77_match` uses a 65 536-slot
+  direct-mapped hash chain with greedy matching up to `MAX_LEN=128` pixels;
+  matches of length ≥ 2 are emitted as back-references.
+- **VP8L LZ77 back-reference decoding** — the decode loop now handles G-group
+  symbols 256..=279 (copy-length codes); reads distance from the Dist group;
+  supports overlapping copies (RLE) via a one-pixel-at-a-time copy loop.
+- **40-symbol Dist prefix alphabet** in `lz77.rs` — `DIST_BITS`, `DIST_BASE`,
+  `MAX_DIST_CODE`, `decode_dist`, `encode_dist_code`, `encode_length`.
+- 5 new tests: `round_trip_lz77_rle`, `round_trip_lz77_repeating_pattern`,
+  `lz77_encoding_is_smaller_than_literal_for_solid`, plus `dist_bits_and_base_size`,
+  `encode_dist_code_round_trip`, `encode_length_round_trip` in `lz77::tests`.
+
+### Fixed
+
+- **`write_huffman_code` truncated G-group symbols ≥ 256** — simple-1/2 codes
+  only support 8-bit symbol values; length codes 256..=279 were silently
+  truncated (266 → 10).  Now falls through to complex code format when any
+  active symbol ≥ 256, making back-reference round-trips correct.
+- **`encode_dist_code` out-of-range clamping** — pixel offsets > 1,048,456 now
+  clamp to `MAX_DIST_CODE` instead of silently overflowing the 40-symbol Dist
+  alphabet's extra-bits field.
+
+---
+
 ## [0.3.0] — 2026-05-25
 
 ### Added
