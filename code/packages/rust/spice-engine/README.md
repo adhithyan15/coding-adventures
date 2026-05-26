@@ -36,7 +36,8 @@ The initial slices implement:
   entries, pole-zero entries, noise PSD contributions, cornered noise PSD
   contributions, cornered sensitivity entries, cornered PSS steady-state
   periods, cornered pole-zero entries, distortion harmonics, and cornered
-  distortion harmonics, Monte Carlo trials, and cornered Monte Carlo trials.
+  distortion harmonics, Monte Carlo trials, cornered Monte Carlo trials, DC
+  source sweeps, and cornered DC source sweeps.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled

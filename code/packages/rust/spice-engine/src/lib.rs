@@ -3521,6 +3521,96 @@ pub fn format_dc_table(result: &DcResult, probes: &[&str]) -> Result<String, Spi
     ))
 }
 
+pub fn format_dc_sweep_table(
+    source_name: &str,
+    points: &[DcSweepPoint],
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        points
+            .first()
+            .map(|point| {
+                default_output_probes(&point.result.node_voltages, &point.result.branch_currents)
+            })
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Index\tSource\tValue\t{}",
+        selected_probes.join("\t")
+    )];
+    for (index, point) in points.iter().enumerate() {
+        let values: Result<Vec<String>, SpiceError> = selected_probes
+            .iter()
+            .map(|probe| {
+                table_probe_value(
+                    &point.result.node_voltages,
+                    &point.result.branch_currents,
+                    probe,
+                    "format_dc_sweep_table",
+                )
+                .map(format_table_number)
+            })
+            .collect();
+        rows.push(format!(
+            "{index}\t{}\t{}\t{}",
+            source_name,
+            format_table_number(point.value),
+            values?.join("\t")
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_corner_dc_sweep_table(
+    result: &CornerDcSweepResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .first()
+            .and_then(|corner| corner.points.first())
+            .map(|point| {
+                default_output_probes(&point.result.node_voltages, &point.result.branch_currents)
+            })
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Corner\tIndex\tSource\tValue\t{}",
+        selected_probes.join("\t")
+    )];
+    for corner in &result.points {
+        for (index, point) in corner.points.iter().enumerate() {
+            let values: Result<Vec<String>, SpiceError> = selected_probes
+                .iter()
+                .map(|probe| {
+                    table_probe_value(
+                        &point.result.node_voltages,
+                        &point.result.branch_currents,
+                        probe,
+                        "format_corner_dc_sweep_table",
+                    )
+                    .map(format_table_number)
+                })
+                .collect();
+            rows.push(format!(
+                "{}\t{index}\t{}\t{}\t{}",
+                corner.corner_name,
+                result.source_name,
+                format_table_number(point.value),
+                values?.join("\t")
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_transient_table(
     points: &[TransientPoint],
     probes: &[&str],
