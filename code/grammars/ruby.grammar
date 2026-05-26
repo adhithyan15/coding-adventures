@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | yield_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -261,6 +261,25 @@ ensure_clause   = "ensure" { !"end" statement } ;
 # logicals (`||`/`&&`) to avoid colliding with comparison ops which
 # the lexer fuses directly.
 assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression ;
+# Phase 7e — Ruby 3.0 rightward (single-line) assignment `expr => var`.
+#
+# Mirror image of the normal `var = expr` assignment: the value is on
+# the left, the binding name is on the right after `=>`.  In practice
+# it's nearly always used with the case/in pattern-match payload, but
+# Ruby 3.0 made the bare form a first-class statement.
+#
+# Placed AFTER `modifier_statement` (so `x = 1 if cond` still wins) and
+# BEFORE `assignment` (so `x = 1` falls through cleanly), and BEFORE
+# `expression_stmt` (otherwise `expr` alone would consume the entire
+# token stream before `=>` is seen).
+#
+# Conflict safety: `=>` is also the hash-rocket inside hash literals
+# (`{ "a" => 1 }`).  Rightward-assign is at the statement level — a
+# hash literal as a bare statement would parse as `expression_stmt`,
+# which sits later in the alternation; PEG backtracks cleanly because
+# rightward_assignment requires `=>` to come *after* a complete
+# expression at the statement boundary, not inside a `{...}` body.
+rightward_assignment = expression "=>" NAME ;
 # Phase 6l — method receiver chains.  `foo.bar`, `foo.bar.baz`,
 # `foo.bar(args)`, `foo(1).bar`, `foo.bar(args).baz(more)`, etc.
 #

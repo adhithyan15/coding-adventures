@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.32.0] - 2026-05-25
+
+### Added (Phase 7e — Ruby 3.0 rightward assignment `expr => var`)
+
+New grammar rule:
+
+```ebnf
+rightward_assignment = expression "=>" NAME ;
+```
+
+Placed AFTER `modifier_statement` (so `x = 1 if cond` still wins) and BEFORE `assignment` in the `statement` alternation.
+
+The `=>` token is shared with hash literals (`{ "a" => 1 }`), but the rightward-assignment rule only matches at the statement level — PEG cleanly backtracks when `=>` sits inside `{...}`.
+
+Regenerated `_grammar.rs` via `grammar-tools compile-grammar`.
+
+### Lowering (in `ruby-to-semantic-ir`)
+
+A new helper `lower_rightward_assignment` lowers identically to a regular `assignment`:
+
+| Source              | SIR shape                                                |
+|---------------------|----------------------------------------------------------|
+| `1 + 2 => sum`      | `LetBinding(sum, BuiltinCall("+", [IntLit 1, IntLit 2]))` |
+| `42 => x`           | `LetBinding(x, IntLit 42)`                               |
+| (re-bind) `5 => x`  | `Assign(x, IntLit 5)` + `Feature::MutableBindings`       |
+
+Rightward assignment is purely syntactic — `expr => var` and `var = expr` produce identical SIR — so downstream emitters need no new code paths.
+
+### v0 deferred limitations
+
+- Compound rightward forms (`expr += var`, etc.) are NOT supported in Ruby itself.
+- Modifier-suffix combinations like `expr => var if cond` are deferred (modifier_statement only accepts `assignment | method_call_no_paren | method_call | expression_stmt` as its LHS).
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 136 → **140** (+4 grammar tests):
+  - `test_parse_rightward_assignment_with_literal` — `1 => x`.
+  - `test_parse_rightward_assignment_with_binary_expression` — `1 + 2 => sum`.
+  - `test_parse_rightward_assignment_with_call` — `foo(1, 2) => result`.
+  - `test_parse_rightward_assignment_does_not_break_normal_assignment` — regression.
+
 ## [0.31.0] - 2026-05-25
 
 ### Added (Phase 7d — Ruby 3.0 `case/in` pattern matching)

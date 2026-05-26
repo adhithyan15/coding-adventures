@@ -305,6 +305,7 @@ impl Lowerer {
     ) -> Result<Stmt, RubyLowerError> {
         match node.rule_name.as_str() {
             "assignment" => self.lower_assignment(node),
+            "rightward_assignment" => self.lower_rightward_assignment(node),
             "method_call" => {
                 let expr = self.lower_method_call(node)?;
                 Ok(Stmt::ExprStmt {
@@ -1808,6 +1809,89 @@ impl Lowerer {
             let _ = name_span;
             s
         })
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 7e — Ruby 3.0 rightward assignment `expr => var`
+    // -------------------------------------------------------------------
+
+    /// Lower a `rightward_assignment` node into the same `Stmt` shape
+    /// as a regular `assignment`.  Ruby 3.0's rightward form is purely
+    /// syntactic — `expr => var` and `var = expr` produce identical
+    /// runtime bindings — so we lower identically to the `=`-form's
+    /// LetBinding-on-first-sighting / Assign-on-rebind dispatch.
+    ///
+    /// Grammar shape:
+    ///
+    /// ```text
+    /// rightward_assignment = expression "=>" NAME ;
+    /// ```
+    ///
+    /// AST children layout: `[ expression_node, "=>" token, name_token ]`.
+    ///
+    /// Lowering table:
+    ///
+    /// | Source              | SIR shape                                          |
+    /// |---------------------|----------------------------------------------------|
+    /// | `1 + 2 => x`        | `LetBinding(x, BuiltinCall("+", [IntLit 1, IntLit 2]))` |
+    /// | `[1,2] => arr`      | `LetBinding(arr, SeqLit([IntLit 1, IntLit 2]))`    |
+    /// | (re-bind) `5 => x`  | `Assign(x, IntLit 5)` + Feature::MutableBindings   |
+    fn lower_rightward_assignment(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Stmt, RubyLowerError> {
+        // Step 1: the LHS-as-source (Ruby left side) is the value
+        // expression — the `expression` Node child.
+        let expr_node = self.find_node_child(node, "expression").ok_or_else(|| {
+            RubyLowerError {
+                message: "rightward_assignment missing LHS expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            }
+        })?;
+        let value = self.lower_expression(expr_node)?;
+
+        // Step 2: the binding name is the trailing `NAME` token.  Walk
+        // children in reverse to find the *last* Name-typed token (the
+        // expression itself may have contained Name tokens, but those
+        // are inside the expression Node — direct children of the
+        // rightward_assignment node are the expression Node, the `=>`
+        // Op token, and the final Name token).
+        let name_token = node
+            .children
+            .iter()
+            .rev()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "rightward_assignment missing binding name".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let name = name_token.value.clone();
+        let span = self.span_of(node);
+
+        // Step 3: dispatch on whether the local is already declared —
+        // same first-sighting / re-bind split as `lower_assignment`.
+        if self.declared_locals.contains(&name) {
+            self.features_used.insert(Feature::MutableBindings);
+            Ok(Stmt::Assign {
+                name,
+                scope: Scope::Local,
+                value,
+                span,
+            })
+        } else {
+            self.declared_locals.insert(name.clone());
+            Ok(Stmt::LetBinding {
+                name,
+                sir_type: None,
+                value,
+                span,
+            })
+        }
     }
 
     // -------------------------------------------------------------------

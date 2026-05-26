@@ -3078,4 +3078,80 @@ puts("hi #{name}")
             else_branch.value
         );
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 7e — Ruby 3.0 rightward assignment `expr => var`
+    //
+    // Lowers identically to `var = expr` — LetBinding on first sight of
+    // the name, Assign on re-bind (with Feature::MutableBindings).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn rightward_assignment_lowers_to_let_binding_on_first_sight() {
+        // `1 + 2 => sum` → LetBinding(sum, BuiltinCall("+", [1, 2])).
+        let m = lower("1 + 2 => sum");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "sum");
+                match value {
+                    Expr::BuiltinCall { name, args, .. } => {
+                        assert_eq!(name, "+");
+                        assert_eq!(args.len(), 2);
+                        assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+                        assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+                    }
+                    other => panic!("expected +-BuiltinCall, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn rightward_assignment_with_literal_lowers_to_int_let_binding() {
+        // `42 => x` → LetBinding(x, IntLit(42)).
+        let m = lower("42 => x");
+        let b = main_body(&m);
+        assert!(matches!(
+            &b.stmts[0],
+            Stmt::LetBinding { name, value: Expr::IntLit { value: 42, .. }, .. } if name == "x"
+        ));
+    }
+
+    #[test]
+    fn rightward_assignment_rebind_emits_assign_with_mutable_bindings_feature() {
+        // `x = 1; 2 => x` — second statement is a re-bind, so it must
+        // emit Stmt::Assign (not LetBinding) and the module manifest
+        // must declare Feature::MutableBindings.
+        let m = lower("x = 1\n2 => x\n");
+        let b = main_body(&m);
+        // stmts[0] = LetBinding(x, 1)
+        // stmts[1] = Assign(x, 2) — the rightward re-bind
+        match &b.stmts[1] {
+            Stmt::Assign { name, value, .. } => {
+                assert_eq!(name, "x");
+                assert!(matches!(value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected Assign on re-bind, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::MutableBindings),
+            "expected MutableBindings feature in manifest after a re-bind"
+        );
+    }
+
+    #[test]
+    fn rightward_assignment_module_passes_sir_validator() {
+        // End-to-end smoke: a module with a rightward-assign statement
+        // passes the SIR validator.  Bound name must be visible to
+        // subsequent statements.
+        let m = lower("1 + 2 => sum\nputs(sum)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected rightward-assign module: {:?}",
+            result
+        );
+    }
 }
