@@ -496,21 +496,61 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         },
     };
 
+    // Step 5 (CLOC11.42): source map write.
+    let mut wrote_files = result.wrote_files;
     if !config.source_map.path_template.is_empty() {
         let map_path = std::path::PathBuf::from(&config.source_map.path_template);
         let map_body = crate::source_map::format_minimal_v3(
             config.io.js_output_file.as_deref(),
         );
         write_output_file(&map_path, &map_body)?;
-        let mut wrote_files = result.wrote_files;
         wrote_files.push(map_path);
-        return Ok(CompilerOutput {
-            stdout_text: result.stdout_text,
-            wrote_files,
-        });
     }
 
-    Ok(result)
+    // Step 6 (CLOC11.34): --output_manifest write.
+    //
+    // CC's --output_manifest=path writes a newline-separated list
+    // of every input file the compilation considered. The flag is
+    // commonly used by build systems (Bazel rules_closure) to
+    // verify that the compiler saw the same input set the build
+    // graph said it should.
+    //
+    // We write the resolved `--js` patterns (post-glob expansion),
+    // one absolute or normalized path per line. CC writes paths
+    // exactly as supplied to `--js`; for closurec we use the
+    // glob-resolved form because that's what the compilation
+    // *actually consumed* (the user can see exactly which files
+    // their wildcards matched).
+    //
+    // Empty inputs (banner mode) produce an empty manifest file
+    // — still valid, still useful as a "compilation ran" marker.
+    if let Some(manifest_path) = &config.chunks.output_manifest_file {
+        let body = format_manifest(&inputs);
+        write_output_file(manifest_path, &body)?;
+        wrote_files.push(manifest_path.clone());
+    }
+
+    Ok(CompilerOutput {
+        stdout_text: result.stdout_text,
+        wrote_files,
+    })
+}
+
+/// Format the contents of an `--output_manifest` file from a
+/// resolved input list. One path per line, trailing newline so
+/// `wc -l` reports the right count and concatenation is
+/// well-formed. Returns an empty string when the input list is
+/// empty (consumer still gets a 0-byte marker file).
+fn format_manifest(inputs: &[PathBuf]) -> String {
+    if inputs.is_empty() {
+        return String::new();
+    }
+    let mut out = String::with_capacity(inputs.len() * 64);
+    for p in inputs {
+        out.push_str(&p.to_string_lossy());
+        out.push('\n');
+    }
+    out
 }
 
 /// Write `contents` to `path`, creating any missing parent
@@ -1502,6 +1542,117 @@ mod tests {
         // Basename only — no directory components.
         assert!(map_body.contains("\"file\": \"out.min.js\""), "got: {map_body}");
         assert!(!map_body.contains("\"file\": \"nested/"));
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.34 — --output_manifest behavior
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn format_manifest_empty_inputs_yields_empty_string() {
+        assert_eq!(format_manifest(&[]), "");
+    }
+
+    #[test]
+    fn format_manifest_one_path_per_line_with_trailing_newline() {
+        let inputs = vec![
+            PathBuf::from("src/a.js"),
+            PathBuf::from("src/b.js"),
+            PathBuf::from("src/c.js"),
+        ];
+        let out = format_manifest(&inputs);
+        assert_eq!(out, "src/a.js\nsrc/b.js\nsrc/c.js\n");
+        // Pin the line count to match `wc -l`'s reading.
+        assert_eq!(out.matches('\n').count(), 3);
+    }
+
+    #[test]
+    fn output_manifest_writes_resolved_input_paths() {
+        let dir = temp_path("manifest-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let manifest_path = dir.join("manifest.txt");
+        let out_path = dir.join("out.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            chunks: crate::config::ChunksConfig {
+                output_manifest_file: Some(manifest_path.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.contains(&manifest_path), "manifest written");
+        let body = fs::read_to_string(&manifest_path).expect("read manifest");
+        // Manifest contains the resolved input path (the user-supplied
+        // pattern after glob expansion).
+        assert!(
+            body.contains(&in_path.to_string_lossy().to_string()),
+            "manifest missing input path. got: {body}"
+        );
+        assert!(body.ends_with('\n'));
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn output_manifest_unset_writes_no_manifest() {
+        // Default behavior: --output_manifest unset → no manifest
+        // file written. Pin so a future refactor doesn't
+        // accidentally emit one always.
+        let in_path = temp_path("no-manifest-in.js");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.is_empty(), "no files written (stdout only)");
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn output_manifest_combines_with_js_output_file_and_source_map() {
+        // All three writes coexist: JS output, source map, and
+        // manifest. Order in `wrote_files`: JS, then source map,
+        // then manifest (matches pipeline ordering).
+        let dir = temp_path("manifest-trifecta");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let map_path = dir.join("out.js.map");
+        let manifest_path = dir.join("manifest.txt");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            chunks: crate::config::ChunksConfig {
+                output_manifest_file: Some(manifest_path.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert_eq!(
+            out.wrote_files,
+            vec![out_path, map_path, manifest_path.clone()],
+            "wrote_files in pipeline order: JS, source map, manifest"
+        );
         let _ = fs::remove_dir_all(&dir);
     }
 }

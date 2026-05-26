@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.21.0] - 2026-05-26
+
+### Added — CLOC11.34: `--output_manifest` writes input file list
+
+Behavioral compat slice with CC's `--output_manifest=path` flag. Previously closurec parsed the flag and stored the path but never wrote any file — build systems (Bazel `rules_closure`, ninja-driven builds) that read the manifest to verify input set saw nothing.
+
+Now writes a newline-separated list of every input the compilation consumed (post-glob expansion), one path per line, with a trailing newline so `wc -l` and concatenation behave.
+
+- **Pipeline placement**: Step 6 in `run_compiler`, after JS write + source-map write. So `wrote_files` in `CompilerOutput` lists outputs in pipeline order: JS, source map (if `--create_source_map`), manifest (if `--output_manifest`).
+- **Empty inputs case** (banner mode): writes an empty manifest file (0 bytes) — still useful as a "compilation ran" marker, matches CC.
+- **Paths in the manifest are the resolved form** (after glob expansion), not the raw user patterns. This lets the user see exactly which files the compilation consumed.
+- **New `format_manifest(&[PathBuf]) -> String`** private helper. Pure function: no I/O.
+- **5 new unit tests** in `run::tests` (empty-inputs format, multi-line format with newline count, end-to-end write with resolved path verification, no-write when flag unset, trifecta with JS + source map + manifest in pipeline order).
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` globs
+2. Resolve `--externs` globs
+3. `--print_tree` short-circuit
+4. `--print_tree_json` short-circuit
+5. Per-input `transform_source`
+6. Concatenate transformed inputs
+7. `--checks_only` short-circuit
+8. `--emit_use_strict` prepend
+9. `--output_wrapper` substitution
+10. `--isolation_mode IIFE` wrap
+11. `--charset` US_ASCII escape
+12. Write JS to `--js_output_file` or stdout
+13. Write source map to `--create_source_map` path if set
+14. **Write input list to `--output_manifest` path if set (CLOC11.34, NEW)**
+
 ## [0.20.0] - 2026-05-26
 
 ### Added — CLOC11.42: `--create_source_map` writes minimal v3 source map
