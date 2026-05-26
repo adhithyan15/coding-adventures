@@ -7667,6 +7667,201 @@ impl ToolAuditSupervisorDrainRunReport {
             .action_lane_requires_triage()
     }
 
+    /// Return the route digest queue action key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey
+    {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_route_digest_queue_key(
+            self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_key(),
+        )
+    }
+
+    /// Return the stable route digest queue action-key label.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label(
+        &self,
+    ) -> String {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key()
+            .label()
+    }
+
+    /// Return whether the route digest queue action-key label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key(
+        &self,
+    ) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_label(
+            &self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label(),
+        ) == Some(self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key())
+    }
+
+    /// Return whether the route digest queue action-key lane matches its queue key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key()
+            .action_lane_matches_key()
+    }
+
+    /// Return whether the action-key queue component matches the typed queue key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key()
+            .route_digest_queue_key_matches(
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_key(
+                ),
+            )
+    }
+
+    /// Return whether every route digest queue action-key component matches its sources.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key()
+            .parts_match(
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane(),
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_key(),
+            )
+    }
+
+    /// Return whether route digest queue action-key labels match.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_labels_match()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_key_labels_match()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match()
+    }
+
+    /// Return whether any route digest queue action-key component drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift(
+        &self,
+    ) -> bool {
+        !self
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key()
+            || !self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key()
+            || !self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match()
+    }
+
+    /// Return whether any route digest queue action-key label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift(
+        &self,
+    ) -> bool {
+        !self
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match()
+    }
+
+    /// Return the route digest queue action digest.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest
+    {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest::from_route_digest_queue_digest(
+            self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest(),
+        )
+    }
+
+    /// Return the stable route digest queue action digest label.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label(
+        &self,
+    ) -> String {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest()
+            .label()
+    }
+
+    /// Return whether the route digest queue action digest label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest(
+        &self,
+    ) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest::from_label(
+            &self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label(),
+        ) == Some(self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest())
+    }
+
+    /// Return whether the action digest action key matches the typed action key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest()
+            .action_key_matches(
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(),
+            )
+    }
+
+    /// Return whether the action digest queue digest matches the source digest.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest()
+            .route_digest_queue_digest_matches(
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest(),
+            )
+    }
+
+    /// Return whether the action digest action key matches its queue digest.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest()
+            .action_key_matches_digest()
+    }
+
+    /// Return whether every route digest queue action digest component matches its sources.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest()
+            .parts_match(
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(),
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest(),
+            )
+    }
+
+    /// Return whether route digest queue action digest labels match.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_labels_match()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest()
+            && self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match()
+    }
+
+    /// Return whether any route digest queue action digest component drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift(
+        &self,
+    ) -> bool {
+        !self
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key()
+            || !self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest()
+            || !self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest()
+            || !self
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match()
+    }
+
+    /// Return whether any route digest queue action digest label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift(
+        &self,
+    ) -> bool {
+        !self
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match()
+    }
+
     /// Return whether the route digest queue digest routes to routine action.
     pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_routine_action(
         &self,
@@ -9435,6 +9630,44 @@ impl ToolAuditSupervisorDrainRunReport {
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_integrity_investigation(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage:
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match(),
+            has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift:
+                self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift(),
+            has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift:
+                self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match(),
+            host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match:
+                self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match(),
+            has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift:
+                self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift(),
+            has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift:
+                self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_routine_action:
                 self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_routine_action(),
             host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_manual_review:
@@ -11883,6 +12116,63 @@ pub struct ToolAuditSupervisorDrainRunSummary {
         bool,
     /// Whether the route digest queue digest action lane requires triage.
     pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage:
+        bool,
+    /// Host-run escalation dashboard lane queue action-rollup route digest queue action key.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key:
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey,
+    /// Stable action-rollup route digest queue action-key label.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label:
+        String,
+    /// Whether the route digest queue action-key label parses back.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key:
+        bool,
+    /// Whether the route digest queue action-key lane matches its queue key.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key:
+        bool,
+    /// Whether the route digest queue action-key queue key matches the typed queue key.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key:
+        bool,
+    /// Whether every route digest queue action-key component matches its sources.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match:
+        bool,
+    /// Whether route digest queue action-key labels match.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match:
+        bool,
+    /// Whether any route digest queue action-key component drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift:
+        bool,
+    /// Whether any route digest queue action-key label drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift:
+        bool,
+    /// Host-run escalation dashboard lane queue action-rollup route digest queue action digest.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest:
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest,
+    /// Stable action-rollup route digest queue action digest label.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label:
+        String,
+    /// Whether the route digest queue action digest label parses back.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest:
+        bool,
+    /// Whether the route digest queue action digest key matches the typed key.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key:
+        bool,
+    /// Whether the route digest queue action digest queue digest matches its source.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest:
+        bool,
+    /// Whether the route digest queue action digest key matches its queue digest.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest:
+        bool,
+    /// Whether every route digest queue action digest component matches its sources.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match:
+        bool,
+    /// Whether route digest queue action digest labels match.
+    pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match:
+        bool,
+    /// Whether any route digest queue action digest component drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift:
+        bool,
+    /// Whether any route digest queue action digest label drifted.
+    pub has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift:
         bool,
     /// Whether the action-rollup route digest queue digest routes to routine action.
     pub host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_routine_action:
@@ -17085,6 +17375,141 @@ impl ToolAuditSupervisorDrainRunSummary {
         &self,
     ) -> bool {
         self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage
+    }
+
+    /// Return the route digest queue action key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey
+    {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key
+    }
+
+    /// Return the stable route digest queue action-key label.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label(
+        &self,
+    ) -> &str {
+        &self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label
+    }
+
+    /// Return whether the route digest queue action-key label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key
+    }
+
+    /// Return whether the route digest queue action-key lane matches its queue key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key
+    }
+
+    /// Return whether the route digest queue action-key queue key matches the typed queue key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key
+    }
+
+    /// Return whether every route digest queue action-key component matches its sources.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match
+    }
+
+    /// Return whether route digest queue action-key labels match.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match
+    }
+
+    /// Return whether any route digest queue action-key component drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift
+    }
+
+    /// Return whether any route digest queue action-key label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift
+    }
+
+    /// Return the route digest queue action digest.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest(
+        &self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest
+    {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest
+    }
+
+    /// Return the stable route digest queue action digest label.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label(
+        &self,
+    ) -> &str {
+        &self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label
+    }
+
+    /// Return whether the route digest queue action digest label parses back.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest
+    }
+
+    /// Return whether the route digest queue action digest key matches the typed key.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key
+    }
+
+    /// Return whether the route digest queue action digest queue digest matches its source.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest
+    }
+
+    /// Return whether the route digest queue action digest key matches its queue digest.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest
+    }
+
+    /// Return whether every route digest queue action digest component matches its sources.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match
+    }
+
+    /// Return whether route digest queue action digest labels match.
+    pub fn host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match(
+        &self,
+    ) -> bool {
+        self.host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match
+    }
+
+    /// Return whether any route digest queue action digest component drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift
+    }
+
+    /// Return whether any route digest queue action digest label drifted.
+    pub fn has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift(
+        &self,
+    ) -> bool {
+        self.has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift
     }
 
     /// Return whether the route digest queue digest routes to routine action.
@@ -24699,6 +25124,371 @@ impl ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRout
 
 impl Display
     for ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable action key that binds a route digest queue action lane to its queue key.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey
+{
+    action_lane: ToolAuditSupervisorDrainHostRunEscalationDashboardLane,
+    route_digest_queue_key:
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey,
+}
+
+impl
+    ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey
+{
+    /// Create a route digest queue action key from action lane and queue key.
+    pub fn new(
+        action_lane: ToolAuditSupervisorDrainHostRunEscalationDashboardLane,
+        route_digest_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey,
+    ) -> Self {
+        Self {
+            action_lane,
+            route_digest_queue_key,
+        }
+    }
+
+    /// Create a route digest queue action key from a queue key.
+    pub fn from_route_digest_queue_key(
+        route_digest_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey,
+    ) -> Self {
+        Self::new(route_digest_queue_key.action_lane(), route_digest_queue_key)
+    }
+
+    /// Create a route digest queue action key from a queue digest.
+    pub fn from_route_digest_queue_digest(
+        route_digest_queue_digest: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest,
+    ) -> Self {
+        Self::from_route_digest_queue_key(route_digest_queue_digest.queue_key())
+    }
+
+    /// Parse a stable route digest queue action-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("action_lane=")?;
+        let (action_lane_label, queue_key_label) = rest.split_once("|route_digest_queue_key=")?;
+        let action_lane =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLane::from_label(action_lane_label)?;
+        let route_digest_queue_key =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey::from_label(
+                queue_key_label,
+            )?;
+        Some(Self::new(action_lane, route_digest_queue_key))
+    }
+
+    /// Return the route digest queue action lane.
+    pub fn action_lane(self) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLane {
+        self.action_lane
+    }
+
+    /// Return the stable route digest queue action-lane label.
+    pub fn action_lane_label(self) -> &'static str {
+        self.action_lane.as_str()
+    }
+
+    /// Return whether this action-lane label parses back to its typed lane.
+    pub fn action_lane_label_matches_lane(self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLane::from_label(self.action_lane_label())
+            == Some(self.action_lane)
+    }
+
+    /// Return the compact route digest queue key.
+    pub fn route_digest_queue_key(
+        self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey
+    {
+        self.route_digest_queue_key
+    }
+
+    /// Return the stable route digest queue-key label.
+    pub fn route_digest_queue_key_label(self) -> String {
+        self.route_digest_queue_key.label()
+    }
+
+    /// Return a stable label for route digest queue action grouping.
+    pub fn label(self) -> String {
+        format!(
+            "action_lane={}|route_digest_queue_key={}",
+            self.action_lane_label(),
+            self.route_digest_queue_key.label()
+        )
+    }
+
+    /// Return whether this action-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this key's action lane matches the supplied lane.
+    pub fn action_lane_matches(
+        self,
+        action_lane: ToolAuditSupervisorDrainHostRunEscalationDashboardLane,
+    ) -> bool {
+        self.action_lane == action_lane
+    }
+
+    /// Return whether this key's queue key matches the supplied queue key.
+    pub fn route_digest_queue_key_matches(
+        self,
+        route_digest_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey,
+    ) -> bool {
+        self.route_digest_queue_key == route_digest_queue_key
+    }
+
+    /// Return whether this key's action lane matches its queue key.
+    pub fn action_lane_matches_key(self) -> bool {
+        self.action_lane == self.route_digest_queue_key.action_lane()
+    }
+
+    /// Return whether every action-key component matches its source values.
+    pub fn parts_match(
+        self,
+        action_lane: ToolAuditSupervisorDrainHostRunEscalationDashboardLane,
+        route_digest_queue_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueKey,
+    ) -> bool {
+        self.action_lane_matches(action_lane)
+            && self.route_digest_queue_key_matches(route_digest_queue_key)
+    }
+
+    /// Return whether action-key labels match their source queue key.
+    pub fn labels_match(self) -> bool {
+        self.action_lane_label_matches_lane()
+            && self.route_digest_queue_key.labels_match()
+            && self.label_matches_key()
+            && self.action_lane_matches_key()
+    }
+
+    /// Return whether any action-key component drifted from its source queue key.
+    pub fn has_integrity_drift(self) -> bool {
+        !self.action_lane_matches_key()
+    }
+
+    /// Return whether any action-key label drifted from its source queue key.
+    pub fn has_label_integrity_drift(self) -> bool {
+        !self.labels_match()
+    }
+}
+
+impl Display
+    for ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable digest that binds a route digest queue action key to its queue digest.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest
+{
+    action_key:
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey,
+    route_digest_queue_digest:
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest,
+}
+
+impl
+    ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest
+{
+    /// Create a route digest queue action digest from action key and queue digest.
+    pub fn new(
+        action_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey,
+        route_digest_queue_digest: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest,
+    ) -> Self {
+        Self {
+            action_key,
+            route_digest_queue_digest,
+        }
+    }
+
+    /// Create a route digest queue action digest from a queue digest.
+    pub fn from_route_digest_queue_digest(
+        route_digest_queue_digest: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest,
+    ) -> Self {
+        Self::new(
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_route_digest_queue_digest(
+                route_digest_queue_digest,
+            ),
+            route_digest_queue_digest,
+        )
+    }
+
+    /// Parse a stable route digest queue action digest label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("action_key=")?;
+        let (action_key_label, queue_digest_label) =
+            rest.split_once("|route_digest_queue_digest=")?;
+        let action_key =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_label(
+                action_key_label,
+            )?;
+        let route_digest_queue_digest =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest::from_label(
+                queue_digest_label,
+            )?;
+        Some(Self::new(action_key, route_digest_queue_digest))
+    }
+
+    /// Return the compact route digest queue action key.
+    pub fn action_key(
+        self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey
+    {
+        self.action_key
+    }
+
+    /// Return the stable route digest queue action-key label.
+    pub fn action_key_label(self) -> String {
+        self.action_key.label()
+    }
+
+    /// Return the expanded route digest queue digest.
+    pub fn route_digest_queue_digest(
+        self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest
+    {
+        self.route_digest_queue_digest
+    }
+
+    /// Return the stable route digest queue digest label.
+    pub fn route_digest_queue_digest_label(self) -> String {
+        self.route_digest_queue_digest.label()
+    }
+
+    /// Return the route digest queue action lane.
+    pub fn action_lane(self) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLane {
+        self.action_key.action_lane()
+    }
+
+    /// Return the stable route digest queue action-lane label.
+    pub fn action_lane_label(self) -> &'static str {
+        self.action_lane().as_str()
+    }
+
+    /// Return whether this action-lane label parses back to its typed lane.
+    pub fn action_lane_label_matches_lane(self) -> bool {
+        ToolAuditSupervisorDrainHostRunEscalationDashboardLane::from_label(self.action_lane_label())
+            == Some(self.action_lane())
+    }
+
+    /// Return the source route digest carried by this action digest.
+    pub fn route_digest(
+        self,
+    ) -> ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigest {
+        self.route_digest_queue_digest.route_digest()
+    }
+
+    /// Return the stable source route-digest label.
+    pub fn route_digest_label(self) -> String {
+        self.route_digest_queue_digest.route_digest_label()
+    }
+
+    /// Return the route digest queue priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainHostRunQueuePriority {
+        self.route_digest_queue_digest.queue_key().priority()
+    }
+
+    /// Return the stable route digest queue priority label.
+    pub fn priority_label(self) -> &'static str {
+        self.priority().as_str()
+    }
+
+    /// Return whether this priority label parses back to its typed priority.
+    pub fn priority_label_matches_priority(self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueuePriority::from_label(self.priority_label())
+            == Some(self.priority())
+    }
+
+    /// Return the route digest queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainHostRunQueueReadiness {
+        self.route_digest_queue_digest.queue_key().readiness()
+    }
+
+    /// Return the stable route digest queue readiness label.
+    pub fn readiness_label(self) -> &'static str {
+        self.readiness().as_str()
+    }
+
+    /// Return whether this readiness label parses back to its typed readiness.
+    pub fn readiness_label_matches_readiness(self) -> bool {
+        ToolAuditSupervisorDrainHostRunQueueReadiness::from_label(self.readiness_label())
+            == Some(self.readiness())
+    }
+
+    /// Return a stable digest label for route digest queue action grouping.
+    pub fn label(self) -> String {
+        format!(
+            "action_key={}|route_digest_queue_digest={}",
+            self.action_key.label(),
+            self.route_digest_queue_digest.label()
+        )
+    }
+
+    /// Return whether this action digest label parses back to this typed digest.
+    pub fn label_matches_digest(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this digest's action key matches the supplied key.
+    pub fn action_key_matches(
+        self,
+        action_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey,
+    ) -> bool {
+        self.action_key == action_key
+    }
+
+    /// Return whether this digest's queue digest matches the supplied digest.
+    pub fn route_digest_queue_digest_matches(
+        self,
+        route_digest_queue_digest: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest,
+    ) -> bool {
+        self.route_digest_queue_digest == route_digest_queue_digest
+    }
+
+    /// Return whether this digest's action key matches its queue digest.
+    pub fn action_key_matches_digest(self) -> bool {
+        self.action_key
+            .route_digest_queue_key_matches(self.route_digest_queue_digest.queue_key())
+            && self
+                .action_key
+                .action_lane_matches(self.route_digest_queue_digest.action_lane())
+    }
+
+    /// Return whether every action digest component matches its source values.
+    pub fn parts_match(
+        self,
+        action_key: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey,
+        route_digest_queue_digest: ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueDigest,
+    ) -> bool {
+        self.action_key_matches(action_key)
+            && self.route_digest_queue_digest_matches(route_digest_queue_digest)
+    }
+
+    /// Return whether action digest labels match their source keys.
+    pub fn labels_match(self) -> bool {
+        self.action_key.labels_match()
+            && self.route_digest_queue_digest.labels_match()
+            && self.label_matches_digest()
+            && self.action_key_matches_digest()
+    }
+
+    /// Return whether any action digest component drifted from its source digest.
+    pub fn has_integrity_drift(self) -> bool {
+        !self.action_key_matches_digest()
+    }
+
+    /// Return whether any action digest label drifted from its source digest.
+    pub fn has_label_integrity_drift(self) -> bool {
+        !self.labels_match()
+    }
+}
+
+impl Display
+    for ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
@@ -36817,6 +37607,184 @@ mod tests {
                 lane_queue_action_rollup_route_digest_queue_digest.action_lane_requires_triage(),
                 lane_queue_action_rollup_route_digest_queue_digest_action_lane.requires_triage()
             );
+
+            let lane_queue_action_rollup_route_digest_queue_action_key =
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_route_digest_queue_key(
+                    lane_queue_action_rollup_route_digest_queue_key,
+                );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_key.action_lane(),
+                lane_queue_action_rollup_route_digest_queue_key.action_lane()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_key.action_lane_label(),
+                lane_queue_action_rollup_route_digest_queue_key.action_lane_label()
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_key
+                .action_lane_label_matches_lane());
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_key.route_digest_queue_key(),
+                lane_queue_action_rollup_route_digest_queue_key
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_key
+                    .route_digest_queue_key_label(),
+                lane_queue_action_rollup_route_digest_queue_key.label()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_key.label(),
+                format!(
+                    "action_lane={}|route_digest_queue_key={}",
+                    lane_queue_action_rollup_route_digest_queue_key.action_lane_label(),
+                    lane_queue_action_rollup_route_digest_queue_key.label()
+                )
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_label(
+                    &lane_queue_action_rollup_route_digest_queue_action_key.label()
+                ),
+                Some(lane_queue_action_rollup_route_digest_queue_action_key)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_label(
+                    "action_lane=triage|route_digest_queue_key=not_a_queue_key"
+                ),
+                None
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_key.label_matches_key());
+            assert!(
+                lane_queue_action_rollup_route_digest_queue_action_key.action_lane_matches(
+                    lane_queue_action_rollup_route_digest_queue_key.action_lane()
+                )
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_key
+                .route_digest_queue_key_matches(lane_queue_action_rollup_route_digest_queue_key));
+            assert!(
+                lane_queue_action_rollup_route_digest_queue_action_key.action_lane_matches_key()
+            );
+            assert!(
+                lane_queue_action_rollup_route_digest_queue_action_key.parts_match(
+                    lane_queue_action_rollup_route_digest_queue_key.action_lane(),
+                    lane_queue_action_rollup_route_digest_queue_key
+                )
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_key.labels_match());
+            assert!(!lane_queue_action_rollup_route_digest_queue_action_key.has_integrity_drift());
+            assert!(
+                !lane_queue_action_rollup_route_digest_queue_action_key.has_label_integrity_drift()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_key.to_string(),
+                lane_queue_action_rollup_route_digest_queue_action_key.label()
+            );
+
+            let lane_queue_action_rollup_route_digest_queue_action_digest =
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest::from_route_digest_queue_digest(
+                    lane_queue_action_rollup_route_digest_queue_digest,
+                );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.action_key(),
+                lane_queue_action_rollup_route_digest_queue_action_key
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.action_key_label(),
+                lane_queue_action_rollup_route_digest_queue_action_key.label()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest
+                    .route_digest_queue_digest(),
+                lane_queue_action_rollup_route_digest_queue_digest
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest
+                    .route_digest_queue_digest_label(),
+                lane_queue_action_rollup_route_digest_queue_digest.label()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.label(),
+                format!(
+                    "action_key={}|route_digest_queue_digest={}",
+                    lane_queue_action_rollup_route_digest_queue_action_key.label(),
+                    lane_queue_action_rollup_route_digest_queue_digest.label()
+                )
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest::from_label(
+                    &lane_queue_action_rollup_route_digest_queue_action_digest.label()
+                ),
+                Some(lane_queue_action_rollup_route_digest_queue_action_digest)
+            );
+            assert_eq!(
+                ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest::from_label(
+                    "action_key=not_an_action_key|route_digest_queue_digest=not_a_digest"
+                ),
+                None
+            );
+            assert!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.label_matches_digest()
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest
+                .action_key_matches(lane_queue_action_rollup_route_digest_queue_action_key));
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest
+                .route_digest_queue_digest_matches(
+                    lane_queue_action_rollup_route_digest_queue_digest
+                ));
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest
+                .action_key_matches_digest());
+            assert!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.parts_match(
+                    lane_queue_action_rollup_route_digest_queue_action_key,
+                    lane_queue_action_rollup_route_digest_queue_digest
+                )
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest.labels_match());
+            assert!(
+                !lane_queue_action_rollup_route_digest_queue_action_digest.has_integrity_drift()
+            );
+            assert!(!lane_queue_action_rollup_route_digest_queue_action_digest
+                .has_label_integrity_drift());
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.action_lane(),
+                lane_queue_action_rollup_route_digest_queue_digest.action_lane()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.action_lane_label(),
+                lane_queue_action_rollup_route_digest_queue_digest.action_lane_label()
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest
+                .action_lane_label_matches_lane());
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.route_digest(),
+                lane_queue_action_rollup_route_digest_queue_digest.route_digest()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.route_digest_label(),
+                lane_queue_action_rollup_route_digest_queue_digest.route_digest_label()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.priority(),
+                lane_queue_action_rollup_route_digest_queue_key.priority()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.priority_label(),
+                lane_queue_action_rollup_route_digest_queue_key.priority_label()
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest
+                .priority_label_matches_priority());
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.readiness(),
+                lane_queue_action_rollup_route_digest_queue_key.readiness()
+            );
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.readiness_label(),
+                lane_queue_action_rollup_route_digest_queue_key.readiness_label()
+            );
+            assert!(lane_queue_action_rollup_route_digest_queue_action_digest
+                .readiness_label_matches_readiness());
+            assert_eq!(
+                lane_queue_action_rollup_route_digest_queue_action_digest.to_string(),
+                lane_queue_action_rollup_route_digest_queue_action_digest.label()
+            );
             assert_eq!(
                 lane_queue_action_rollup_route_digest_queue_digest.is_auto_routable(),
                 lane_queue_action_rollup_route_digest_queue_key.is_auto_routable()
@@ -41727,6 +42695,83 @@ mod tests {
         assert!(continuation_report
             .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage(
             ));
+        let continuation_lane_queue_action_rollup_route_digest_queue_action_key =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionKey::from_route_digest_queue_key(
+                continuation_lane_queue_action_rollup_route_digest_queue_key,
+            );
+        assert_eq!(
+            continuation_report
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_key
+        );
+        assert_eq!(
+            continuation_report
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_key.label()
+        );
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match(
+            ));
+        assert!(!continuation_report
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift(
+            ));
+        assert!(!continuation_report
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift(
+            ));
+        let continuation_lane_queue_action_rollup_route_digest_queue_action_digest =
+            ToolAuditSupervisorDrainHostRunEscalationDashboardLaneQueueActionRollupRouteDigestQueueActionDigest::from_route_digest_queue_digest(
+                continuation_lane_queue_action_rollup_route_digest_queue_digest,
+            );
+        assert_eq!(
+            continuation_report
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_digest
+        );
+        assert_eq!(
+            continuation_report
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_digest.label()
+        );
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match(
+            ));
+        assert!(continuation_report
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match(
+            ));
+        assert!(!continuation_report
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift(
+            ));
+        assert!(!continuation_report
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift(
+            ));
         assert!(continuation_report
             .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_triage(
             ));
@@ -41908,6 +42953,125 @@ mod tests {
             .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage);
         assert!(continuation_summary
             .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_action_lane_requires_triage(
+            ));
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_key
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_key
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_key.label()
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_key.label()
+        );
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_matches_key(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_action_lane_matches_key(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_queue_key_matches_key(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_parts_match(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_labels_match(
+            ));
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift);
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_integrity_drift(
+            ));
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift);
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_key_label_integrity_drift(
+            ));
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_digest
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_digest
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label,
+            continuation_lane_queue_action_rollup_route_digest_queue_action_digest.label()
+        );
+        assert_eq!(
+            continuation_summary
+                .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label(
+                ),
+            continuation_lane_queue_action_rollup_route_digest_queue_action_digest.label()
+        );
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_matches_digest(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_key(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_queue_digest_matches_digest(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_action_key_matches_digest(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_parts_match(
+            ));
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match);
+        assert!(continuation_summary
+            .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_labels_match(
+            ));
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift);
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_integrity_drift(
+            ));
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift);
+        assert!(!continuation_summary
+            .has_host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_action_digest_label_integrity_drift(
             ));
         assert!(continuation_summary
             .host_run_escalation_dashboard_lane_queue_action_rollup_route_digest_queue_digest_routes_to_triage);
