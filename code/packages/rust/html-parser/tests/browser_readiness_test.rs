@@ -1,9 +1,10 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata, BrowserForm,
-    BrowserFormControl, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata,
+    BrowserEmbeddedContext, BrowserForm, BrowserFormControl, BrowserFormSubmitter, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -59,6 +60,8 @@ struct ExpectedBrowserDocument {
     images: Vec<ExpectedImage>,
     #[serde(default)]
     media: Vec<ExpectedMedia>,
+    #[serde(default)]
+    embedded_contexts: Vec<ExpectedEmbeddedContext>,
     #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
     #[serde(default)]
@@ -461,6 +464,41 @@ struct ExpectedMedia {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedEmbeddedContext {
+    element: String,
+    #[serde(default)]
+    url: Option<String>,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    browsing_context_name: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    sandbox: Vec<String>,
+    #[serde(default)]
+    allow: Option<String>,
+    #[serde(default)]
+    allowfullscreen: bool,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    srcdoc: Option<String>,
+    #[serde(default)]
+    credentialless: bool,
+    #[serde(default)]
+    fallback_text: String,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedForm {
     #[serde(default)]
     id: Option<String>,
@@ -627,6 +665,26 @@ fn browser_readiness_cases_extract_browser_document_facts() {
     }
 }
 
+#[test]
+fn browser_embedded_context_metadata_tracks_frame_object_embed_and_srcdoc() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "embedded-resource-page")
+        .expect("embedded resource fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("embedded resource fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.embedded_contexts,
+        case.expected.into_browser_document().embedded_contexts,
+        "embedded contexts should preserve frame, object, embed, and srcdoc-only iframe metadata",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         BrowserDocument {
@@ -687,6 +745,11 @@ impl ExpectedBrowserDocument {
                 .media
                 .into_iter()
                 .map(ExpectedMedia::into_browser_media)
+                .collect(),
+            embedded_contexts: self
+                .embedded_contexts
+                .into_iter()
+                .map(ExpectedEmbeddedContext::into_browser_embedded_context)
                 .collect(),
             structured_items: self
                 .structured_items
@@ -1050,6 +1113,29 @@ impl ExpectedMedia {
             muted: self.muted,
             playsinline: self.playsinline,
             preload: self.preload,
+        }
+    }
+}
+
+impl ExpectedEmbeddedContext {
+    fn into_browser_embedded_context(self) -> BrowserEmbeddedContext {
+        BrowserEmbeddedContext {
+            element: self.element,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            browsing_context_name: self.browsing_context_name,
+            title: self.title,
+            type_hint: self.type_hint,
+            width: self.width,
+            height: self.height,
+            loading: self.loading,
+            sandbox: self.sandbox,
+            allow: self.allow,
+            allowfullscreen: self.allowfullscreen,
+            referrerpolicy: self.referrerpolicy,
+            srcdoc: self.srcdoc,
+            credentialless: self.credentialless,
+            fallback_text: self.fallback_text,
         }
     }
 }

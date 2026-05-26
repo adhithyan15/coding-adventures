@@ -246,6 +246,9 @@ def check_browser_readiness_case(
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "media", errors)
     require_optional_object_list(
+        f"{case_path}.expected", expected, "embedded_contexts", errors
+    )
+    require_optional_object_list(
         f"{case_path}.expected", expected, "structured_items", errors
     )
     require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
@@ -496,6 +499,28 @@ def check_browser_expected_lists(
             require_optional_nullable_string(media_path, media, field, errors)
         for field in ("controls", "autoplay", "loop_media", "muted", "playsinline"):
             require_optional_boolean(media_path, media, field, errors)
+
+    for index, context in enumerate(object_list_items(expected, "embedded_contexts")):
+        context_path = f"{case_path}.expected.embedded_contexts[{index}]"
+        require_string(context_path, context, "element", errors)
+        for field in (
+            "url",
+            "resolved_url",
+            "browsing_context_name",
+            "title",
+            "type_hint",
+            "width",
+            "height",
+            "loading",
+            "allow",
+            "referrerpolicy",
+            "srcdoc",
+        ):
+            require_optional_nullable_string(context_path, context, field, errors)
+        require_optional_string_list(context_path, context, "sandbox", errors)
+        for field in ("allowfullscreen", "credentialless"):
+            require_optional_boolean(context_path, context, field, errors)
+        require_optional_string(context_path, context, "fallback_text", errors)
 
     for index, item in enumerate(object_list_items(expected, "structured_items")):
         item_path = f"{case_path}.expected.structured_items[{index}]"
