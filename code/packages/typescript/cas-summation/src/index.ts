@@ -1905,6 +1905,34 @@ function fiveSqrtFiveLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | unde
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
 }
 
+/**
+ * Phase 83 — Six-Log × polynomial numerator.
+ *
+ * Effective growth: `log(k)⁶ · k^m`. `log⁶(k)` is sub-polynomial (`o(k^ε)`),
+ * contributing 0 to effective polynomial degree.
+ * effective degree = polyDeg.
+ * Caller checks `denDeg > sixLogPolyEffectiveDeg(num, k)`.
+ */
+function sixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 6) return undefined; // seven or more Logs — not this phase
+      continue;
+    }
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined; // Sqrt present — refuse
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 6) return undefined;
+  return polyDeg;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
@@ -2306,6 +2334,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS5l5 = polynomialDegreeInK(den, k);
     if (denDegS5l5 !== undefined) {
       if (denDegS5l5 > s5l5Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 83: Mul(Log(h1)×6, polynomial..., bounded...) numerator — zero Sqrt factors.
+  // log⁶ sub-polynomial → effective degree = polyDeg.
+  // Closes when denDeg > sixLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const sl6Deg = sixLogPolyEffectiveDeg(num, k);
+  if (sl6Deg !== undefined) {
+    const denDegSl6 = polynomialDegreeInK(den, k);
+    if (denDegSl6 !== undefined) {
+      if (denDegSl6 > sl6Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

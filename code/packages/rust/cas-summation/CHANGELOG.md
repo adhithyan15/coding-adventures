@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.18.0 — 2026-05-25
+## 2.19.0 — 2026-05-25
 
 ### Added
 
@@ -11,6 +11,12 @@
   `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + sqrt5_deg_x2 + 2 * poly_deg`.
   Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
   - 3 new integration tests in `tests/tests.rs` (`phase82_*`).
+- **Phase 83 — Six-Log × polynomial numerator** (`six_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 6 Log factors and zero Sqrt factors required.  `log⁶(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs` (`phase83_*`).
 
 ## 2.17.0 — 2026-05-25
 
