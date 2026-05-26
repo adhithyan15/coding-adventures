@@ -3878,6 +3878,29 @@ pub fn format_pole_zero_table(result: &PoleZeroResult) -> String {
     rows.join("\n")
 }
 
+pub fn format_corner_pole_zero_table(result: &CornerPoleZeroResult) -> String {
+    let mut rows = vec!["Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping".to_string()];
+    for point in &result.points {
+        for (index, entry) in point.result.entries.iter().enumerate() {
+            let kind = match entry.kind {
+                PoleZeroEntryKind::Pole => "pole",
+                PoleZeroEntryKind::Zero => "zero",
+            };
+            rows.push(format!(
+                "{}\t{index}\t{}\t{}\t{}\t{}\t{}",
+                point.corner_name,
+                kind,
+                format_table_number(entry.real),
+                format_table_number(entry.imaginary),
+                format_table_number(entry.frequency_hz),
+                format_table_number(entry.damping)
+            ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_distortion_table(result: &DistortionResult) -> String {
     let mut rows = vec!["Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD".to_string()];
     for point in &result.points {

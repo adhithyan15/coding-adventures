@@ -350,6 +350,9 @@ Status:
 - Constrained pole-zero analysis can now be evaluated across named corners in
   the live Rust SPICE package, reusing the existing corner override surface
   for the selected Phase 8 topology.
+- Named-corner `.PZ` results can now be rendered as stable tab-separated text
+  tables in the live Rust SPICE package, preserving corner order and covering
+  pole/zero kind, real and imaginary parts, frequency, and damping.
 - Transient-to-distortion projection can now be evaluated across named corners
   in the live Rust SPICE package, reusing the existing corner override surface
   for the same transient sampling and `.DISTO` output-probe query.

@@ -1,15 +1,15 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
-    estimate_period, format_corner_pss_table, format_dc_table, format_distortion_table,
-    format_fourier_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
-    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
-    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
+    estimate_period, format_corner_pole_zero_table, format_corner_pss_table, format_dc_table,
+    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
+    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
     DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult,
     Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
     PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
@@ -1150,6 +1150,38 @@ fn pole_zero_corners_runs_selected_topology_per_corner() {
     assert_eq!(result.points[1].corner_name, "cap-high");
     assert_close(result.points[0].result.entries[0].real, -1.0e3);
     assert_close(result.points[1].result.entries[0].real, -5.0e2);
+}
+
+#[test]
+fn corner_pole_zero_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Capacitor(Capacitor::new("C1", "out", "0", 1.0e-6)));
+
+    let result = spice_engine::pole_zero_corners(
+        &circuit,
+        "Vin",
+        "out",
+        PoleZeroTopology::RcLowpass,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "cap-high",
+                vec![CornerOverride::new("C1", "capacitance", 2.0e-6)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_pole_zero_table(&result),
+        "Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping\n\
+nominal\t0\tpole\t-1.000000e+03\t0.000000e+00\t1.591549e+02\t1.000000e+00\n\
+cap-high\t0\tpole\t-5.000000e+02\t0.000000e+00\t7.957747e+01\t1.000000e+00\n"
+    );
 }
 
 #[test]
