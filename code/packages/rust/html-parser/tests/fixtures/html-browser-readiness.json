@@ -95,7 +95,7 @@
     {
       "id": "responsive-image-metadata-page",
       "description": "Browser document image summaries expose responsive source selection metadata and loading hints.",
-      "input": "<base href=\"https://example.test/gallery/index.html\"><body><picture><source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\"><source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\"><img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap></picture>",
+      "input": "<base href=\"https://example.test/gallery/index.html\"><body><picture><source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\"><source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\"><img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap></picture><map name=hero-map><area shape=rect coords=\"0,0,120,60\" href=details.html alt=\"Details\" target=preview rel=\"nofollow external\" ping=\"track.html\" hreflang=en></map>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/gallery/index.html",
@@ -107,7 +107,9 @@
         ],
         "anchors": [],
         "headings": [],
-        "links": [],
+        "links": [
+          { "element": "area", "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "name": null, "target": "preview", "effective_target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "rel_external": true, "rel_nofollow": true, "title": null, "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "hreflang": "en", "text": "Details" }
+        ],
         "images": [
           {
             "src": "hero.jpg",

@@ -350,6 +350,8 @@ struct ExpectedHeading {
 
 #[derive(Debug, Deserialize)]
 struct ExpectedLink {
+    #[serde(default = "default_browser_link_element")]
+    element: String,
     #[serde(default)]
     id: Option<String>,
     href: Option<String>,
@@ -964,6 +966,7 @@ impl ExpectedHeading {
 impl ExpectedLink {
     fn into_browser_link(self) -> BrowserLink {
         BrowserLink {
+            element: self.element,
             id: self.id,
             href: self.href,
             resolved_href: self.resolved_href,
@@ -986,6 +989,10 @@ impl ExpectedLink {
             text: self.text,
         }
     }
+}
+
+fn default_browser_link_element() -> String {
+    "a".to_string()
 }
 
 impl ExpectedImage {
