@@ -45,6 +45,16 @@ pub fn dc_quant_step(qp: u8) -> i32 {
     DC_TABLE[qp.min(127) as usize]
 }
 
+/// UV (chroma) DC quantization step.
+///
+/// VP8 uses the same DC step table for chroma as for luma when all delta
+/// offsets are zero (our encoder writes delta_present=0 for all).  This
+/// function is a named alias of `dc_quant_step` so call-sites are explicit
+/// about which plane they are quantizing.
+pub fn uv_quant_step(qp: u8) -> i32 {
+    dc_quant_step(qp)
+}
+
 /// Quantize a coefficient by the given step size.
 /// Uses round-to-nearest (add half step before dividing).
 pub fn quantize(coeff: i32, step: i32) -> i32 {
