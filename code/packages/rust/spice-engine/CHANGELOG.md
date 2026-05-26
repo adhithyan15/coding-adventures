@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_corner_ac_table` for stable tab-separated named-corner `.AC`
+  real, imaginary, magnitude, and phase text output snapshots.
 - Add `format_dc_sweep_table` and `format_corner_dc_sweep_table` for stable
   tab-separated `.DC` source-sweep value and selected-probe snapshots.
 - Add `format_mc_table` and `format_corner_mc_table` for stable tab-separated

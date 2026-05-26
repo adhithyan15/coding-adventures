@@ -3728,6 +3728,47 @@ pub fn format_ac_table(points: &[AcPoint], probes: &[&str]) -> Result<String, Sp
     Ok(rows.join("\n"))
 }
 
+pub fn format_corner_ac_table(
+    result: &CornerAcSweepResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .first()
+            .map(|corner| default_ac_output_probes(&corner.points))
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows =
+        vec!["Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase".to_string()];
+    for corner in &result.points {
+        for (index, point) in corner.points.iter().enumerate() {
+            for probe in &selected_probes {
+                let value = table_complex_probe_value(
+                    &point.node_voltages,
+                    &point.branch_currents,
+                    probe,
+                    "format_corner_ac_table",
+                )?;
+                rows.push(format!(
+                    "{}\t{index}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    corner.corner_name,
+                    format_table_number(point.frequency_hz),
+                    probe,
+                    format_table_number(value.real),
+                    format_table_number(value.imag),
+                    format_table_number(value.abs()),
+                    format_table_number(value.phase().to_degrees())
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_tf_table(result: &TfResult) -> String {
     format!(
         "TransferRatio\tInputImpedance\tOutputImpedance\n{}\t{}\t{}\n",

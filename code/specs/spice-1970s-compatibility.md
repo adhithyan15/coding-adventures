@@ -308,6 +308,10 @@ Status:
 - `.AC` phasor results can now be rendered as stable tab-separated text tables
   across Python, TypeScript, and Rust, covering real, imaginary, magnitude,
   and phase rows for selected voltage/current probes.
+- Named-corner `.AC` phasor results can now be rendered as stable
+  tab-separated text tables in the live Rust SPICE package, preserving corner
+  order and covering real, imaginary, magnitude, and phase rows for selected
+  voltage/current probes.
 - `.FOUR` Fourier results can now be rendered as stable tab-separated text
   tables across Python, TypeScript, and Rust, covering harmonic coefficients,
   magnitude, phase, DC, and THD rows.
