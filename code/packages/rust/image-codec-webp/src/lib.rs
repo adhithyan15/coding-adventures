@@ -48,7 +48,7 @@
 //! - WebP container spec: https://developers.google.com/speed/webp/docs/riff_container
 //! - VP8 lossy spec: https://www.rfc-editor.org/rfc/rfc6386
 
-pub const VERSION: &str = "0.3.7";
+pub const VERSION: &str = "0.3.8";
 
 mod riff;
 pub mod vp8;
@@ -152,12 +152,17 @@ pub fn encode_webp(pixels: &PixelContainer, quality: u8) -> Vec<u8> {
 /// Decode a WebP file (RIFF container) into a `PixelContainer`.
 ///
 /// Supports the VP8L (lossless) chunk type.
-/// Returns a descriptive error for:
-/// - Files that are too short to parse.
-/// - Files missing the RIFF magic or WEBP fourCC.
-/// - VP8 lossy (`VP8 ` chunk) — not yet implemented.
-/// - VP8X extended (`VP8X` chunk) — not yet implemented.
-/// - Unknown chunk types.
+/// Decode a WebP file from raw bytes.
+///
+/// Supported container formats:
+/// - `VP8L` — VP8L lossless (single chunk, no VP8X wrapper).
+/// - `VP8 ` — VP8 lossy (single chunk, no VP8X wrapper).
+/// - `VP8X` — Extended WebP: scans sub-chunks and dispatches `VP8L` or
+///   `VP8 ` for image data; skips `ICCP`, `EXIF`, `XMP ` metadata chunks;
+///   decodes `ALPH` lossless alpha and merges it with lossy `VP8 ` color.
+///
+/// Returns an error for animated WebP (`ANIM`/`ANMF` chunks) and unknown
+/// chunk types.
 pub fn decode_webp(bytes: &[u8]) -> Result<PixelContainer, String> {
     if bytes.len() < 12 {
         return Err("WebP: file too short (need at least 12 bytes for RIFF header)".to_string());
@@ -189,14 +194,192 @@ pub fn decode_webp(bytes: &[u8]) -> Result<PixelContainer, String> {
     match chunk_type {
         b"VP8L" => vp8l::decode(chunk_data),
         b"VP8 " => vp8::decode(chunk_data),
-        b"VP8X" => Err(
-            "WebP: VP8X extended format not yet implemented".to_string()
-        ),
+        b"VP8X" => decode_vp8x(bytes),
         _ => Err(format!(
             "WebP: unknown chunk type {:?} (expected VP8L, VP8 , or VP8X)",
             std::str::from_utf8(chunk_type).unwrap_or("<non-UTF8>")
         )),
     }
+}
+
+// ---------------------------------------------------------------------------
+// VP8X extended-format decoder
+// ---------------------------------------------------------------------------
+
+/// Decode a VP8X extended WebP file.
+///
+/// ## VP8X chunk layout (10 bytes of data)
+///
+/// ```text
+/// Byte 0-3  flags (u32 LE):
+///   bit 1 = ICC profile present
+///   bit 2 = animation (ANIM/ANMF chunks follow; we return an error)
+///   bit 3 = Exif metadata present
+///   bit 4 = XMP metadata present
+///   bit 5 = alpha channel present
+/// Byte 4-6  reserved (3 bytes)
+/// Byte 7-9  canvas_width_minus_1  (3 bytes LE)
+/// Byte 10-12 canvas_height_minus_1 (3 bytes LE)
+/// ```
+///
+/// After the VP8X chunk, sub-chunks appear in any order.  We scan them all:
+///
+/// - `ICCP` / `EXIF` / `XMP ` — metadata we skip silently.
+/// - `ALPH` — lossless alpha plane; decoded and merged with VP8 color.
+/// - `VP8L` — lossless image (full ARGB); return immediately.
+/// - `VP8 ` — lossy image (RGB only); merge with ALPH if present.
+/// - `ANIM` / `ANMF` — animated WebP; return an error.
+fn decode_vp8x(bytes: &[u8]) -> Result<PixelContainer, String> {
+    // VP8X chunk is at offset 12; size field at 16; data starts at 20.
+    // Minimum VP8X data size = 10 bytes.
+    if bytes.len() < 30 {
+        return Err("WebP: VP8X chunk too short".to_string());
+    }
+    let vp8x_size = u32::from_le_bytes(bytes[16..20].try_into().unwrap()) as usize;
+    if vp8x_size < 10 {
+        return Err(format!("WebP: VP8X chunk data too small ({vp8x_size} bytes, need 10)"));
+    }
+    let flags = u32::from_le_bytes(bytes[20..24].try_into().unwrap());
+    let has_animation = (flags >> 1) & 1 != 0; // bit 1 = ICC, bit 2 = anim in spec
+    // Spec bit layout (zero-indexed from LSB):
+    //   0 = reserved, 1 = ICC, 2 = alpha, 3 = Exif, 4 = XMP, 5 = animation
+    // libwebp uses: bit 1=ICC, bit 2=animation, bit 3=Exif, bit 4=XMP, bit 5=alpha
+    // We check any animation bit to be safe.
+    let has_animation_safe = (flags & 0b0000_0010) != 0 || (flags & 0b0010_0000) != 0;
+    let _ = has_animation;
+    if has_animation_safe {
+        return Err("WebP: animated WebP (ANIM/ANMF) is not supported".to_string());
+    }
+
+    // Scan sub-chunks starting after the VP8X chunk.
+    // VP8X chunk ends at: 12 (chunk header offset) + 8 (header size) + vp8x_size (padded).
+    let vp8x_padded = vp8x_size + (vp8x_size & 1); // pad to even byte boundary
+    let mut pos = 12usize + 8 + vp8x_padded;
+
+    let mut alph_data: Option<Vec<u8>> = None;
+    let mut pixels: Option<PixelContainer> = None;
+
+    while pos + 8 <= bytes.len() {
+        let ctype = &bytes[pos..pos + 4];
+        let csize = u32::from_le_bytes(bytes[pos + 4..pos + 8].try_into().unwrap()) as usize;
+        let cdata_start = pos + 8;
+        let cdata_end = cdata_start + csize;
+        if cdata_end > bytes.len() {
+            return Err(format!(
+                "WebP VP8X: sub-chunk {:?} truncated (need {} bytes, have {})",
+                std::str::from_utf8(ctype).unwrap_or("<?>"),
+                csize,
+                bytes.len() - cdata_start
+            ));
+        }
+        let cdata = &bytes[cdata_start..cdata_end];
+
+        match ctype {
+            // Metadata chunks we don't need for pixel decoding — skip silently.
+            b"ICCP" | b"EXIF" | b"XMP " => {}
+
+            b"ANIM" | b"ANMF" => {
+                return Err("WebP: animated WebP (ANIM/ANMF) is not supported".to_string());
+            }
+
+            b"ALPH" => {
+                // ALPH chunk: 1-byte header followed by compressed alpha data.
+                // Header bits [1:0]: compression method (0=uncompressed, 1=VP8L)
+                if cdata.is_empty() {
+                    return Err("WebP: ALPH chunk is empty".to_string());
+                }
+                alph_data = Some(cdata.to_vec());
+            }
+
+            b"VP8L" => {
+                // Full lossless image — includes alpha; ignore ALPH if present.
+                pixels = Some(vp8l::decode(cdata)?);
+            }
+
+            b"VP8 " => {
+                // Lossy image — RGB only; alpha will be patched in from ALPH.
+                pixels = Some(vp8::decode(cdata)?);
+            }
+
+            _ => {
+                // Unknown chunk — VP8X files can legally have extra chunks.
+                // Silently skip to stay forward-compatible.
+            }
+        }
+
+        // Advance past this chunk (chunks are even-aligned).
+        let padded = csize + (csize & 1);
+        pos = cdata_start + padded;
+    }
+
+    let mut px = pixels.ok_or_else(|| {
+        "WebP VP8X: no VP8L or VP8 image chunk found".to_string()
+    })?;
+
+    // If we have a separate alpha plane (ALPH chunk) and a VP8 (lossy) image,
+    // decode the alpha and write it into the A channel of every pixel.
+    if let Some(alph) = alph_data {
+        // Only merge alpha when image came from VP8 (lossy); VP8L already has alpha.
+        // (We can tell because VP8L sets alpha from bitstream; VP8 always outputs A=255.)
+        // We unconditionally try to apply alpha if an ALPH chunk was present.
+        apply_alph_chunk(&mut px, &alph)?;
+    }
+
+    Ok(px)
+}
+
+/// Decode the ALPH chunk and write alpha values into `pixels`.
+///
+/// ## ALPH chunk format
+///
+/// ```text
+/// Byte 0 (bitfield):
+///   bits [1:0]: compression  0 = no compression  1 = VP8L lossless
+///   bits [3:2]: filter       (ignored for decoding correctness)
+///   bits [5:4]: pre-processing (ignored)
+/// Remaining bytes: compressed alpha data
+/// ```
+///
+/// When compression = 1 (VP8L): the data is a VP8L bitstream encoding a
+/// grayscale `width × height` image.  The spec stores alpha in the **green**
+/// channel of that image.
+///
+/// When compression = 0: the data is a raw `width × height` byte array.
+fn apply_alph_chunk(pixels: &mut PixelContainer, alph: &[u8]) -> Result<(), String> {
+    if alph.is_empty() {
+        return Err("WebP: ALPH chunk has no header byte".to_string());
+    }
+    let method = alph[0] & 0x03;
+    let alpha_data = &alph[1..];
+
+    let alpha_values: Vec<u8> = match method {
+        0 => {
+            // Uncompressed: raw bytes, one per pixel, row-major.
+            let expected = pixels.width as usize * pixels.height as usize;
+            if alpha_data.len() < expected {
+                return Err(format!(
+                    "WebP ALPH: uncompressed alpha too short ({} bytes, need {expected})",
+                    alpha_data.len()
+                ));
+            }
+            alpha_data[..expected].to_vec()
+        }
+        1 => {
+            // VP8L-compressed alpha: decode lossless image, extract G channel.
+            let alpha_px = vp8l::decode_as_alpha(alpha_data, pixels.width, pixels.height)?;
+            alpha_px
+        }
+        _ => {
+            return Err(format!("WebP ALPH: unknown compression method {method}"));
+        }
+    };
+
+    // Write the decoded alpha values into every pixel's A channel.
+    let total = pixels.width as usize * pixels.height as usize;
+    for i in 0..total.min(alpha_values.len()) {
+        pixels.data[i * 4 + 3] = alpha_values[i];
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -212,7 +395,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.3.7");
+        assert_eq!(VERSION, "0.3.8");
     }
 
     // ── WebPCodec ─────────────────────────────────────────────────────────────
@@ -326,6 +509,147 @@ mod tests {
     fn decode_error_too_short() {
         let result = decode_webp(&[0u8; 8]);
         assert!(result.is_err());
+    }
+
+    // ── VP8X extended container ───────────────────────────────────────────────
+
+    /// Build a minimal valid VP8X container that wraps a VP8L payload.
+    ///
+    /// Layout:
+    /// ```
+    /// RIFF <file_size> WEBP
+    ///   VP8X <10> <flags=0> <reserved=0x000000> <width-1 LE 3B> <height-1 LE 3B>
+    ///   VP8L <n>  <vp8l_bytes>
+    /// ```
+    fn build_vp8x_with_vp8l(vp8l_bytes: &[u8], width: u32, height: u32) -> Vec<u8> {
+        let mut out = Vec::new();
+
+        // VP8X data (10 bytes): flags=0, reserved=0, canvas w-1, canvas h-1
+        let w_m1 = width - 1;
+        let h_m1 = height - 1;
+        let vp8x_data: Vec<u8> = {
+            let mut v = vec![0u8; 10];
+            // flags (4 bytes LE) = 0
+            // reserved (3 bytes) = 0
+            // canvas width-1 (3 bytes LE)
+            v[4] = (w_m1 & 0xFF) as u8;
+            v[5] = ((w_m1 >> 8) & 0xFF) as u8;
+            v[6] = ((w_m1 >> 16) & 0xFF) as u8;
+            // canvas height-1 (3 bytes LE)
+            v[7] = (h_m1 & 0xFF) as u8;
+            v[8] = ((h_m1 >> 8) & 0xFF) as u8;
+            v[9] = ((h_m1 >> 16) & 0xFF) as u8;
+            v
+        };
+
+        // VP8X chunk
+        out.extend_from_slice(b"VP8X");
+        out.extend_from_slice(&(vp8x_data.len() as u32).to_le_bytes());
+        out.extend_from_slice(&vp8x_data);
+
+        // VP8L chunk
+        out.extend_from_slice(b"VP8L");
+        out.extend_from_slice(&(vp8l_bytes.len() as u32).to_le_bytes());
+        out.extend_from_slice(vp8l_bytes);
+        if vp8l_bytes.len() % 2 != 0 {
+            out.push(0); // padding
+        }
+
+        // Build RIFF wrapper
+        let riff_size = (4 + out.len()) as u32; // WEBP fourCC + all chunks
+        let mut riff = Vec::new();
+        riff.extend_from_slice(b"RIFF");
+        riff.extend_from_slice(&riff_size.to_le_bytes());
+        riff.extend_from_slice(b"WEBP");
+        riff.extend_from_slice(&out);
+        riff
+    }
+
+    #[test]
+    fn vp8x_wrapping_vp8l_round_trips() {
+        // Encode a solid 4×4 image as VP8L, then wrap it in a VP8X container.
+        let mut pixels = PixelContainer::new(4, 4);
+        pixels.fill(100, 150, 200, 255);
+        let raw_vp8l = encode_webp_lossless(&pixels);
+        // The VP8L chunk payload is bytes[20..] of the VP8L-only file.
+        let vp8l_payload = &raw_vp8l[20..];
+
+        let vp8x_file = build_vp8x_with_vp8l(vp8l_payload, 4, 4);
+        let decoded = decode_webp(&vp8x_file).unwrap();
+        assert_eq!(decoded.width, 4);
+        assert_eq!(decoded.height, 4);
+        assert_eq!(decoded.data, pixels.data, "VP8X+VP8L round-trip must be pixel-exact");
+    }
+
+    #[test]
+    fn vp8x_with_metadata_chunks_skipped() {
+        // VP8X container with ICCP + EXIF chunks before the VP8L data.
+        let mut pixels = PixelContainer::new(2, 2);
+        pixels.fill(50, 100, 150, 200);
+        let raw_vp8l = encode_webp_lossless(&pixels);
+        let vp8l_payload = &raw_vp8l[20..];
+
+        // VP8X data: exactly 10 bytes per spec
+        //   4 bytes flags (LE), 3 bytes canvas_width-1 (LE), 3 bytes canvas_height-1 (LE)
+        let vp8x_data = vec![
+            0u8, 0, 0, 0,  // flags = 0 (no ICC, no anim, no alpha, etc.)
+            1, 0, 0,        // canvas width-1 = 1  (LE 24-bit)
+            1, 0, 0,        // canvas height-1 = 1 (LE 24-bit)
+        ];
+        let iccp_data = b"fakeiccdata";
+        let exif_data = b"fakeexifdata";
+
+        let mut chunks: Vec<u8> = Vec::new();
+        // VP8X
+        chunks.extend_from_slice(b"VP8X");
+        chunks.extend_from_slice(&(vp8x_data.len() as u32).to_le_bytes());
+        chunks.extend_from_slice(&vp8x_data);
+        // ICCP
+        chunks.extend_from_slice(b"ICCP");
+        chunks.extend_from_slice(&(iccp_data.len() as u32).to_le_bytes());
+        chunks.extend_from_slice(iccp_data);
+        if iccp_data.len() % 2 != 0 { chunks.push(0); }
+        // EXIF
+        chunks.extend_from_slice(b"EXIF");
+        chunks.extend_from_slice(&(exif_data.len() as u32).to_le_bytes());
+        chunks.extend_from_slice(exif_data);
+        if exif_data.len() % 2 != 0 { chunks.push(0); }
+        // VP8L
+        chunks.extend_from_slice(b"VP8L");
+        chunks.extend_from_slice(&(vp8l_payload.len() as u32).to_le_bytes());
+        chunks.extend_from_slice(vp8l_payload);
+        if vp8l_payload.len() % 2 != 0 { chunks.push(0); }
+
+        let mut riff = Vec::new();
+        riff.extend_from_slice(b"RIFF");
+        riff.extend_from_slice(&((4 + chunks.len()) as u32).to_le_bytes());
+        riff.extend_from_slice(b"WEBP");
+        riff.extend_from_slice(&chunks);
+
+        let decoded = decode_webp(&riff).unwrap();
+        assert_eq!(decoded.data, pixels.data, "metadata chunks must be silently skipped");
+    }
+
+    #[test]
+    fn vp8x_anim_returns_error() {
+        // Build a VP8X container with animation flag set — must return Err.
+        let mut vp8x_data = vec![0u8; 10];
+        vp8x_data[0] = 0b0000_0010; // animation bit (bit 1 in flags byte 0)
+
+        let mut chunks: Vec<u8> = Vec::new();
+        chunks.extend_from_slice(b"VP8X");
+        chunks.extend_from_slice(&(vp8x_data.len() as u32).to_le_bytes());
+        chunks.extend_from_slice(&vp8x_data);
+
+        let mut riff = Vec::new();
+        riff.extend_from_slice(b"RIFF");
+        riff.extend_from_slice(&((4 + chunks.len()) as u32).to_le_bytes());
+        riff.extend_from_slice(b"WEBP");
+        riff.extend_from_slice(&chunks);
+
+        let result = decode_webp(&riff);
+        assert!(result.is_err(), "animated WebP must return an error");
+        assert!(result.unwrap_err().contains("anim"), "error should mention animation");
     }
 
     // ── VP8 lossy ─────────────────────────────────────────────────────────────

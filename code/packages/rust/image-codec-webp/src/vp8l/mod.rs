@@ -737,6 +737,32 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     Ok(pixels)
 }
 
+/// Decode a VP8L-compressed alpha plane from an ALPH chunk payload.
+///
+/// The VP8L bitstream encodes a `width × height` image where the **green**
+/// channel holds the alpha value for each pixel (the spec stores alpha in the
+/// green position so that the full Huffman + transform machinery applies).
+///
+/// Returns a flat `Vec<u8>` of length `width × height` in row-major order,
+/// or an error if the bitstream cannot be decoded or the decoded image does
+/// not match the expected dimensions.
+pub fn decode_as_alpha(data: &[u8], width: u32, height: u32) -> Result<Vec<u8>, String> {
+    let px = decode(data)?;
+    if px.width != width || px.height != height {
+        return Err(format!(
+            "WebP ALPH: alpha image size {}×{} does not match canvas {}×{}",
+            px.width, px.height, width, height
+        ));
+    }
+    // Extract the G channel (index 1 in RGBA layout) as the alpha byte.
+    let total = width as usize * height as usize;
+    let mut alpha = Vec::with_capacity(total);
+    for i in 0..total {
+        alpha.push(px.data[i * 4 + 1]); // G = alpha in VP8L alpha planes
+    }
+    Ok(alpha)
+}
+
 // ---------------------------------------------------------------------------
 // Private helpers
 // ---------------------------------------------------------------------------
