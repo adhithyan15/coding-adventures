@@ -701,6 +701,7 @@ def check_browser_expected_lists(
             require_boolean(control_path, control, "disabled", errors)
             require_optional_boolean(control_path, control, "required", errors)
             require_optional_boolean(control_path, control, "readonly", errors)
+            require_optional_boolean(control_path, control, "will_validate", errors)
             require_boolean(control_path, control, "checked", errors)
             require_optional_boolean(control_path, control, "multiple", errors)
             require_optional_boolean(control_path, control, "autofocus", errors)
