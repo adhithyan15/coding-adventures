@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.16.0] - 2026-05-25
+
+### Changed — CLOC11.40: `--source_map_input` malformed values now error
+
+Behavioral compat slice with CC's source-map-input handling. Previously closurec parsed `--source_map_input` entries via `filter_map(|s| s.split_once('|'))`, which silently dropped malformed values that lacked the required `|` separator. Effect on users: typo'd separator → entry quietly vanishes → user wonders why their source map chain didn't apply.
+
+Now the parser errors out with a typed `ConfigError::InvalidSourceMapInput { raw }`. The error message names both the flag and the offending value:
+
+```
+--source_map_input <raw>: missing required `|` separator (expected `input-file-path|input-source-map`)
+```
+
+Processing order: argv-order, first bad entry surfaces. So a user fixes typos one at a time rather than playing whack-a-mole after each retry.
+
+Edge cases preserved:
+- `|map.map` and `input.js|` are still well-formed (only the *presence* of the pipe is checked; empty halves are accepted, matching CC). When the source-map chain step lands later, the FS resolver will catch missing files separately.
+
+- **New `ConfigError::InvalidSourceMapInput { raw }` variant** + Display arm.
+- **`filter_map` replaced** with an explicit `for` loop that propagates the typed error.
+- **5 new unit tests** in `wire::tests` (happy path two paths, missing pipe errors, error message format, multi-entry first-bad-wins, empty-halves still well-formed).
+- **Diff fixture** `tests/diff/source-map-input-bad/` exercising the error path.
+- **New integration test** `tests/diff_source_map_input_bad.rs` pinning that both the flag and the offending value appear in the error.
+
+### Pipeline matrix (unchanged)
+
+Same 11-step pipeline as 0.15.0; the change is config-build validation (`wire.rs::read_source_map`), not pipeline behavior.
+
 ## [0.15.0] - 2026-05-25
 
 ### Changed — CLOC11.05: `--externs` is now glob-resolved + validates missing files

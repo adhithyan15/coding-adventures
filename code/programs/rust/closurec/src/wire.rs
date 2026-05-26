@@ -61,6 +61,13 @@ pub enum ConfigError {
     /// A flag combination that Closure rejects.
     /// E.g. `--renaming false` together with `--compilation_level ADVANCED`.
     Conflict(String),
+    /// `--source_map_input` was passed without the required
+    /// `input|map` separator (CLOC11.40). CC errors on this;
+    /// without the pipe we can't tell which side is the JS input
+    /// and which is the map. Silently dropping the entry (the
+    /// prior behavior) caused users to wonder why their source
+    /// map chain didn't apply.
+    InvalidSourceMapInput { raw: String },
 }
 
 impl std::fmt::Display for ConfigError {
@@ -72,6 +79,10 @@ impl std::fmt::Display for ConfigError {
                 "--define {name}={raw}: value is not a valid JS literal (expected number, string, bool, or null)"
             ),
             ConfigError::Conflict(s) => write!(f, "incompatible flags: {s}"),
+            ConfigError::InvalidSourceMapInput { raw } => write!(
+                f,
+                "--source_map_input {raw}: missing required `|` separator (expected `input-file-path|input-source-map`)"
+            ),
         }
     }
 }
@@ -239,16 +250,21 @@ fn read_source_map(p: &ParseResult) -> Result<SourceMapConfig, ConfigError> {
         })
         .collect();
 
-    let inputs = get_str_list(p, "source_map_input")?
-        .into_iter()
-        .filter_map(|s| {
-            let (input, map) = s.split_once('|')?;
-            Some(InputSourceMap {
-                input_file: PathBuf::from(input),
-                map_file: PathBuf::from(map),
-            })
-        })
-        .collect();
+    // CLOC11.40: error on malformed --source_map_input entries
+    // rather than silently dropping them via filter_map. The
+    // prior behavior — typo'd separator → entry quietly vanishes
+    // → user wonders why their source map chain didn't apply —
+    // was a CC-incompat surprise. CC errors, we now match.
+    let mut inputs: Vec<InputSourceMap> = Vec::new();
+    for raw in get_str_list(p, "source_map_input")? {
+        let Some((input, map)) = raw.split_once('|') else {
+            return Err(ConfigError::InvalidSourceMapInput { raw });
+        };
+        inputs.push(InputSourceMap {
+            input_file: PathBuf::from(input),
+            map_file: PathBuf::from(map),
+        });
+    }
 
     Ok(SourceMapConfig {
         path_template: get_str(p, "create_source_map")?.unwrap_or_default(),
@@ -782,6 +798,98 @@ mod tests {
         }
         .to_string()
         .contains("N=R"));
+        assert!(ConfigError::InvalidSourceMapInput { raw: "RAW".into() }
+            .to_string()
+            .contains("--source_map_input RAW"));
         let _: &dyn std::error::Error = &ConfigError::SpecMismatch("x".into());
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.40 — --source_map_input validation
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn source_map_input_splits_on_pipe_into_two_paths() {
+        let cfg = config_from_parsed(&parse(&[
+            "--source_map_input",
+            "src/a.js|src/a.js.map",
+        ]))
+        .expect("ok");
+        assert_eq!(cfg.source_map.inputs.len(), 1);
+        assert_eq!(
+            cfg.source_map.inputs[0].input_file,
+            std::path::PathBuf::from("src/a.js")
+        );
+        assert_eq!(
+            cfg.source_map.inputs[0].map_file,
+            std::path::PathBuf::from("src/a.js.map")
+        );
+    }
+
+    #[test]
+    fn source_map_input_missing_pipe_errors() {
+        // Prior behavior: silently dropped. CLOC11.40: typed error.
+        let err = config_from_parsed(&parse(&[
+            "--source_map_input",
+            "src/a.js-no-separator",
+        ]))
+        .expect_err("must error");
+        match err {
+            ConfigError::InvalidSourceMapInput { raw } => {
+                assert_eq!(raw, "src/a.js-no-separator");
+            }
+            other => panic!("expected InvalidSourceMapInput, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn source_map_input_error_message_names_flag_and_value() {
+        let err = ConfigError::InvalidSourceMapInput {
+            raw: "bad-value".to_string(),
+        };
+        let msg = err.to_string();
+        assert!(msg.contains("--source_map_input"));
+        assert!(msg.contains("bad-value"));
+        assert!(msg.contains("missing required `|`"));
+    }
+
+    #[test]
+    fn source_map_input_one_good_one_bad_errors_on_the_bad_one() {
+        // Process in argv order; the first bad entry surfaces.
+        // Useful so users fix typos one at a time rather than
+        // playing whack-a-mole after each retry.
+        let err = config_from_parsed(&parse(&[
+            "--source_map_input", "ok.js|ok.js.map",
+            "--source_map_input", "broken-no-pipe",
+        ]))
+        .expect_err("must error");
+        match err {
+            ConfigError::InvalidSourceMapInput { raw } => {
+                assert_eq!(raw, "broken-no-pipe");
+            }
+            other => panic!("expected InvalidSourceMapInput, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn source_map_input_empty_left_or_right_is_still_well_formed() {
+        // `|map.map` and `input.js|` are both well-formed under
+        // the pipe rule — only the presence of the pipe is
+        // checked. Garbage-in-garbage-out for empty halves; the
+        // file system step (CLOC11.40+) will catch missing files
+        // later. CC treats them the same way.
+        let cfg = config_from_parsed(&parse(&[
+            "--source_map_input", "|map.map",
+        ]))
+        .expect("ok");
+        assert_eq!(cfg.source_map.inputs.len(), 1);
+        assert_eq!(
+            cfg.source_map.inputs[0].input_file,
+            std::path::PathBuf::from("")
+        );
+        assert_eq!(
+            cfg.source_map.inputs[0].map_file,
+            std::path::PathBuf::from("map.map")
+        );
     }
 }
