@@ -4,6 +4,18 @@
 
 ### Added
 
+- **Phase 84 — One-Sqrt × Six-Log × polynomial numerator** (`_one_sqrt_six_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 6 Log factors required.  `log⁶(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase84OneSqrtSixLogPoly`.
+
+## 2.18.0 — 2026-05-25
+
+### Added
+
 - **Phase 82 — Five-Sqrt × Five-Log × polynomial numerator** (`_five_sqrt_five_log_poly_effective_x2`):
   recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Sqrt(P5), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
   Exactly 5 Sqrt factors and exactly 5 Log factors required.  `log⁵(k)` is sub-polynomial
