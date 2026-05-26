@@ -839,6 +839,7 @@ pub struct BrowserDocument {
     pub media: Vec<BrowserMedia>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
+    pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
@@ -1023,6 +1024,29 @@ pub struct BrowserTemplate {
     pub shadowrootclonable: bool,
     pub shadowrootserializable: bool,
     pub content_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserComponentHydrationTarget {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attributes: Vec<BrowserDataAttribute>,
+    pub canvas_fallback_text: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDataAttribute {
+    pub name: String,
+    pub value: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -8804,6 +8828,9 @@ fn collect_browser_facts(
         if let Some(interactive) = browser_interactive_element(element, labels, id_texts) {
             summary.interactive_elements.push(interactive);
         }
+        if let Some(target) = browser_component_hydration_target(element) {
+            summary.component_hydration_targets.push(target);
+        }
         if element.name == "template" {
             summary.templates.push(browser_template(element));
         }
@@ -10304,6 +10331,55 @@ fn browser_template(element: &Element) -> BrowserTemplate {
     }
 }
 
+fn browser_component_hydration_target(
+    element: &Element,
+) -> Option<BrowserComponentHydrationTarget> {
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let part = browser_part_tokens(element);
+    let exportparts = browser_exportparts(element);
+    let data_attributes = browser_data_attributes(element);
+    let is_shadowroot_template =
+        element.name == "template" && element.attribute("shadowrootmode").is_some();
+    let is_canvas = element.name == "canvas";
+    let is_slot_element = element.name == "slot";
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+
+    if !custom_element
+        && slot.is_none()
+        && slot_name.is_none()
+        && part.is_empty()
+        && exportparts.is_none()
+        && data_attributes.is_empty()
+        && !is_shadowroot_template
+        && !is_canvas
+        && !is_slot_element
+    {
+        return None;
+    }
+
+    Some(BrowserComponentHydrationTarget {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot,
+        slot_name,
+        part,
+        exportparts,
+        data_attributes,
+        canvas_fallback_text: is_canvas.then(|| visible_text_for_nodes(&element.children)),
+        text: visible_text_for_nodes(&element.children),
+    })
+}
+
 fn browser_slot_assignment(element: &Element) -> Option<String> {
     element.attribute("slot").map(ToOwned::to_owned)
 }
@@ -10326,6 +10402,34 @@ fn browser_custom_element_name(element: &Element) -> Option<String> {
 
 fn browser_custom_element_is(element: &Element) -> Option<String> {
     element.attribute("is").map(ToOwned::to_owned)
+}
+
+fn browser_part_tokens(element: &Element) -> Vec<String> {
+    element
+        .attribute("part")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_exportparts(element: &Element) -> Option<String> {
+    element
+        .attribute("exportparts")
+        .map(collapse_html_whitespace)
+        .filter(|exportparts| !exportparts.is_empty())
+}
+
+fn browser_data_attributes(element: &Element) -> Vec<BrowserDataAttribute> {
+    element
+        .attributes
+        .iter()
+        .filter(|attribute| {
+            attribute.name.starts_with("data-") && attribute.name != FRAGMENT_CONTEXT_MARKER
+        })
+        .map(|attribute| BrowserDataAttribute {
+            name: attribute.name.clone(),
+            value: Some(attribute.value.clone()),
+        })
+        .collect()
 }
 
 fn is_browser_custom_element_name(name: &str) -> bool {

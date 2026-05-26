@@ -1,10 +1,11 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserAnchor, BrowserDocument, BrowserDocumentMetadata,
-    BrowserEmbeddedContext, BrowserForm, BrowserFormControl, BrowserFormSubmitter, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
-    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
+    BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext, BrowserForm,
+    BrowserFormControl, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -64,6 +65,8 @@ struct ExpectedBrowserDocument {
     embedded_contexts: Vec<ExpectedEmbeddedContext>,
     #[serde(default)]
     interactive_elements: Vec<ExpectedInteractiveElement>,
+    #[serde(default)]
+    component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
     #[serde(default)]
@@ -221,6 +224,42 @@ struct ExpectedTemplate {
     #[serde(default)]
     shadowrootserializable: bool,
     content_text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedComponentHydrationTarget {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    custom_element: bool,
+    #[serde(default)]
+    custom_element_name: Option<String>,
+    #[serde(default)]
+    custom_element_is: Option<String>,
+    #[serde(default)]
+    slot: Option<String>,
+    #[serde(default)]
+    slot_name: Option<String>,
+    #[serde(default)]
+    part: Vec<String>,
+    #[serde(default)]
+    exportparts: Option<String>,
+    #[serde(default)]
+    data_attributes: Vec<ExpectedDataAttribute>,
+    #[serde(default)]
+    canvas_fallback_text: Option<String>,
+    #[serde(default)]
+    text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedDataAttribute {
+    name: String,
+    #[serde(default)]
+    value: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -778,6 +817,28 @@ fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
     );
 }
 
+#[test]
+fn browser_component_hydration_metadata_tracks_custom_elements_slots_parts_and_data() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.component_hydration_targets,
+        case.expected
+            .into_browser_document()
+            .component_hydration_targets,
+        "component hydration metadata should preserve custom elements, slots, parts, data attributes, and canvas fallback text",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         BrowserDocument {
@@ -848,6 +909,11 @@ impl ExpectedBrowserDocument {
                 .interactive_elements
                 .into_iter()
                 .map(ExpectedInteractiveElement::into_browser_interactive_element)
+                .collect(),
+            component_hydration_targets: self
+                .component_hydration_targets
+                .into_iter()
+                .map(ExpectedComponentHydrationTarget::into_browser_component_hydration_target)
                 .collect(),
             structured_items: self
                 .structured_items
@@ -1021,6 +1087,39 @@ impl ExpectedTemplate {
             shadowrootclonable: self.shadowrootclonable,
             shadowrootserializable: self.shadowrootserializable,
             content_text: self.content_text,
+        }
+    }
+}
+
+impl ExpectedComponentHydrationTarget {
+    fn into_browser_component_hydration_target(self) -> BrowserComponentHydrationTarget {
+        BrowserComponentHydrationTarget {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            custom_element: self.custom_element,
+            custom_element_name: self.custom_element_name,
+            custom_element_is: self.custom_element_is,
+            slot: self.slot,
+            slot_name: self.slot_name,
+            part: self.part,
+            exportparts: self.exportparts,
+            data_attributes: self
+                .data_attributes
+                .into_iter()
+                .map(ExpectedDataAttribute::into_browser_data_attribute)
+                .collect(),
+            canvas_fallback_text: self.canvas_fallback_text,
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedDataAttribute {
+    fn into_browser_data_attribute(self) -> BrowserDataAttribute {
+        BrowserDataAttribute {
+            name: self.name,
+            value: self.value,
         }
     }
 }

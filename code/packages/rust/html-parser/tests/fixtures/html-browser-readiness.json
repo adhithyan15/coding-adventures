@@ -686,8 +686,8 @@
     },
     {
       "id": "component-template-page",
-      "description": "Browser document summaries expose inert template content and declarative shadow root metadata for component hydration.",
-      "input": "<body><template id=card-template shadowrootmode=open shadowrootdelegatesfocus shadowrootclonable shadowrootserializable><article><slot name=title>Untitled</slot><slot>Body</slot></article></template><product-card id=card><span slot=title>Widget</span><canvas id=chart width=300 height=150>Chart fallback</canvas><button is=fancy-button>Save</button><slot name=footer>Fallback footer</slot></product-card>",
+      "description": "Browser document summaries expose inert template content, declarative shadow root metadata, and component hydration targets.",
+      "input": "<body><template id=card-template data-template=card shadowrootmode=open shadowrootdelegatesfocus shadowrootclonable shadowrootserializable><article part=frame><slot name=title>Untitled</slot><slot>Body</slot></article></template><product-card id=card data-controller=product data-state=ready part=host exportparts=\"header:title, chart\"><span slot=title data-field=name part=title>Widget</span><canvas id=chart width=300 height=150 data-renderer=canvas part=chart>Chart fallback</canvas><button is=fancy-button data-action=save part=action>Save</button><slot name=footer part=footer>Fallback footer</slot></product-card>",
       "expected": {
         "title": null,
         "base_href": null,
@@ -712,6 +712,17 @@
             "shadowrootserializable": true,
             "content_text": "Untitled Body"
           }
+        ],
+        "component_hydration_targets": [
+          { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
+          { "element": "article", "part": ["frame"], "text": "Untitled Body" },
+          { "element": "slot", "slot_name": "title", "text": "Untitled" },
+          { "element": "slot", "text": "Body" },
+          { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "exportparts": "header:title, chart", "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "span", "slot": "title", "part": ["title"], "data_attributes": [{ "name": "data-field", "value": "name" }], "text": "Widget" },
+          { "element": "canvas", "id": "chart", "part": ["chart"], "data_attributes": [{ "name": "data-renderer", "value": "canvas" }], "canvas_fallback_text": "Chart fallback", "text": "Chart fallback" },
+          { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" },
+          { "element": "slot", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
         ],
         "forms": [],
         "tables": []

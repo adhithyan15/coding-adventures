@@ -252,6 +252,9 @@ def check_browser_readiness_case(
         f"{case_path}.expected", expected, "interactive_elements", errors
     )
     require_optional_object_list(
+        f"{case_path}.expected", expected, "component_hydration_targets", errors
+    )
+    require_optional_object_list(
         f"{case_path}.expected", expected, "structured_items", errors
     )
     require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
@@ -570,6 +573,33 @@ def check_browser_expected_lists(
             "disabled",
         ):
             require_optional_boolean(element_path, element, field, errors)
+
+    for index, target in enumerate(
+        object_list_items(expected, "component_hydration_targets")
+    ):
+        target_path = f"{case_path}.expected.component_hydration_targets[{index}]"
+        require_string(target_path, target, "element", errors)
+        for field in (
+            "id",
+            "custom_element_name",
+            "custom_element_is",
+            "slot",
+            "slot_name",
+            "exportparts",
+            "canvas_fallback_text",
+        ):
+            require_optional_nullable_string(target_path, target, field, errors)
+        require_optional_string(target_path, target, "text", errors)
+        for field in ("classes", "part"):
+            require_optional_string_list(target_path, target, field, errors)
+        require_optional_boolean(target_path, target, "custom_element", errors)
+        require_optional_object_list(target_path, target, "data_attributes", errors)
+        for data_index, data_attribute in enumerate(
+            object_list_items(target, "data_attributes")
+        ):
+            data_path = f"{target_path}.data_attributes[{data_index}]"
+            require_string(data_path, data_attribute, "name", errors)
+            require_optional_nullable_string(data_path, data_attribute, "value", errors)
 
     for index, item in enumerate(object_list_items(expected, "structured_items")):
         item_path = f"{case_path}.expected.structured_items[{index}]"
