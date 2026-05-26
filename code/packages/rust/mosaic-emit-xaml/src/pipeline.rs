@@ -2854,6 +2854,27 @@ impl<'a, 'b> ExprParser<'a, 'b> {
                 self.pos += 1;
                 Ok("False".to_string())
             }
+            // UI28-1 / U29-D1 — accept a parenthesised primary so that
+            // single-NAME grouping like `( h )` (used by mosaic-pkg-grid
+            // v0.2.0's Grid.mll and the VisiCalc demo's inlined copy)
+            // resolves cleanly through the XAML {x:Bind} path. The
+            // moslayout parser turns `( h )` into Expr because the
+            // `(...)` grouping triggers the Expr branch (UI29 §3.3);
+            // the XAML emitter previously rejected the resulting
+            // LParen primary as "unsupported primary token". A
+            // parenthesised primary is just its inner primary —
+            // recurse and consume the matching RParen.
+            ExprTok::LParen => {
+                self.pos += 1;
+                let inner = self.parse_primary_bindable()?;
+                if !self.consume(&ExprTok::RParen) {
+                    return Err(format!(
+                        "expression {:?} has unmatched LParen — expected RParen after {:?}",
+                        self.src, inner
+                    ));
+                }
+                Ok(inner)
+            }
             other => Err(format!(
                 "expression {:?} has unsupported primary token {other:?}",
                 self.src

@@ -1331,11 +1331,26 @@ fn emit_input_jsx(
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
 
-    // value={slotName}
+    // value={slotName} OR value={<expr>} (parenthesised For-bound
+    // identifiers like `value: ( v )`, used by mosaic-pkg-grid v0.2.0
+    // Cell.mll and the VisiCalc Grid.{desktop,touch}.mll inlined copy).
     if let Some(slot) = find_slot_ref_prop(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         attrs.push_str(&format!(" value={{{camel}}}"));
+    } else if let Some(expr_text) = node
+        .props
+        .iter()
+        .find(|p| p.name == "value")
+        .and_then(|p| match &p.value {
+            LayoutPropValue::Expr(t) => Some(t.as_str()),
+            _ => None,
+        })
+    {
+        // Expr passes verbatim into a JSX `{...}` interpolation,
+        // matching the trust model UI29 §3.3 establishes for Expr
+        // values (author-controlled, backend-language-flavoured).
+        attrs.push_str(&format!(" value={{{expr_text}}}"));
     }
 
     // readOnly={slotName} OR readOnly={true|false} when given as a keyword.
@@ -1453,11 +1468,26 @@ fn emit_host_input_jsx(
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
 
-    // value={slotName}
+    // value={slotName} OR value={<expr>} (parenthesised For-bound
+    // identifiers like `value: ( v )`, used by mosaic-pkg-grid v0.2.0
+    // Cell.mll and the VisiCalc Grid.{desktop,touch}.mll inlined copy).
     if let Some(slot) = find_slot_ref_prop(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         attrs.push_str(&format!(" value={{{camel}}}"));
+    } else if let Some(expr_text) = node
+        .props
+        .iter()
+        .find(|p| p.name == "value")
+        .and_then(|p| match &p.value {
+            LayoutPropValue::Expr(t) => Some(t.as_str()),
+            _ => None,
+        })
+    {
+        // Expr passes verbatim into a JSX `{...}` interpolation,
+        // matching the trust model UI29 §3.3 establishes for Expr
+        // values (author-controlled, backend-language-flavoured).
+        attrs.push_str(&format!(" value={{{expr_text}}}"));
     }
 
     // readOnly={slotName} OR readOnly={true|false} when given as a keyword.
@@ -2818,9 +2848,30 @@ fn try_emit_table_for_cell_jsx(
             camel
         }
         LayoutPropValue::Expr(text) => text.clone(),
+        // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing For's
+        // `as:`/`index:` binding. The moslayout validator gates this
+        // upstream; the emitter just camelCases and identifier-validates
+        // the binding name so it lowers to a bare JS identifier in the
+        // outer .map's callback scope. This is the same arm as
+        // `emit_for_jsx`'s main path — duplicated here because the
+        // HostTable-specific For lowerings (`try_emit_table_for_*`) have
+        // their own match expressions, not a shared helper. Without this
+        // arm the inner `For ( each: row , as: v , index: c )` shape
+        // that mosaic-pkg-grid v0.2.0 Grid.mll (and the VisiCalc demo's
+        // inlined copy) depends on is rejected by the table-specific
+        // path even though the validator accepts it.
+        LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
         _ => {
             return Err(PipelineEmitError::UnsafeSlotName(
-                "For prop `each:` must be a slot ref or expression".to_string(),
+                "For prop `each:` must be a slot ref, an enclosing For binding, \
+                 or an expression"
+                    .to_string(),
             ));
         }
     };
@@ -2844,9 +2895,16 @@ fn try_emit_table_for_cell_jsx(
         None => None,
     };
 
-    let params = match &index_ident {
-        Some(idx) => format!("({as_ident}, {idx})"),
-        None => format!("({as_ident})"),
+    // UI28-1 §6.3 / §5 — stable iteration keys via key={index} on the
+    // emitted <th>/<td>. Author-bound `index:` becomes the key source;
+    // when omitted, inject an implicit `_idx` parameter into the .map
+    // callback for the same purpose.
+    let (params, key_source) = match &index_ident {
+        Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
+        None => (
+            format!("({as_ident}, _idx)"),
+            "_idx".to_string(),
+        ),
     };
 
     // Emit the per-iteration cell. The leaf flows through the general
@@ -2867,13 +2925,15 @@ fn try_emit_table_for_cell_jsx(
 
     let mut cell_block = String::new();
     if inner_trimmed.contains('\n') {
-        cell_block.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
+        cell_block.push_str(&format!("{cell_pad}<{cell_tag} key={{{key_source}}}>\n"));
         cell_block.push_str(inner_trimmed);
         cell_block.push('\n');
         cell_block.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
     } else {
         let single = inner_trimmed.trim_start();
-        cell_block.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
+        cell_block.push_str(&format!(
+            "{cell_pad}<{cell_tag} key={{{key_source}}}>{single}</{cell_tag}>\n"
+        ));
     }
 
     let mut out = String::new();
@@ -2942,9 +3002,30 @@ fn try_emit_table_for_row_jsx(
             camel
         }
         LayoutPropValue::Expr(text) => text.clone(),
+        // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing For's
+        // `as:`/`index:` binding. The moslayout validator gates this
+        // upstream; the emitter just camelCases and identifier-validates
+        // the binding name so it lowers to a bare JS identifier in the
+        // outer .map's callback scope. This is the same arm as
+        // `emit_for_jsx`'s main path — duplicated here because the
+        // HostTable-specific For lowerings (`try_emit_table_for_*`) have
+        // their own match expressions, not a shared helper. Without this
+        // arm the inner `For ( each: row , as: v , index: c )` shape
+        // that mosaic-pkg-grid v0.2.0 Grid.mll (and the VisiCalc demo's
+        // inlined copy) depends on is rejected by the table-specific
+        // path even though the validator accepts it.
+        LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
         _ => {
             return Err(PipelineEmitError::UnsafeSlotName(
-                "For prop `each:` must be a slot ref or expression".to_string(),
+                "For prop `each:` must be a slot ref, an enclosing For binding, \
+                 or an expression"
+                    .to_string(),
             ));
         }
     };
@@ -2968,13 +3049,21 @@ fn try_emit_table_for_row_jsx(
         None => None,
     };
 
-    let params = match &index_ident {
-        Some(idx) => format!("({as_ident}, {idx})"),
-        None => format!("({as_ident})"),
+    // UI28-1 §6.3 / UI28-1 §5 — stable iteration keys. Same shape as
+    // `emit_for_jsx`: when the author binds `index:`, that name doubles
+    // as the React.Fragment key source. Otherwise inject an implicit
+    // `_idx` parameter. The Fragment is DOM-transparent so wrapping
+    // <tr> inside it doesn't disrupt the <tbody><tr> hierarchy.
+    let (params, key_source) = match &index_ident {
+        Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
+        None => (
+            format!("({as_ident}, _idx)"),
+            "_idx".to_string(),
+        ),
     };
 
     let pad = " ".repeat(indent);
-    let row_indent = indent + 2;
+    let row_indent = indent + 4;
     let inner_row = emit_table_row_jsx(
         row,
         cell_tag,
@@ -2987,8 +3076,10 @@ fn try_emit_table_for_row_jsx(
 
     let mut out = String::new();
     out.push_str(&format!("{pad}{{{collection_expr}.map({params} => (\n"));
+    out.push_str(&format!("{pad}  <React.Fragment key={{{key_source}}}>\n"));
     out.push_str(inner_row_trimmed);
     out.push('\n');
+    out.push_str(&format!("{pad}  </React.Fragment>\n"));
     out.push_str(&format!("{pad}))}}\n"));
     Ok(Some(out))
 }
@@ -3016,6 +3107,23 @@ fn emit_host_table_colgroup_jsx(
 
     let mut out = format!("{pad}<colgroup>\n");
     for child in &cg_node.children {
+        // UI28-1 / U29-D1 — `HostTableColGroup { For (each: slot: widths,
+        // as: w, index: cw) { Col [col] (width: ( w )) } }` is the
+        // mosaic-pkg-grid v0.2.0 shape. Recognise the For-wraps-Col
+        // pattern and expand it into a `.map((w, cw) => <col style=...>)`
+        // so dynamic column widths actually emit one <col> per entry.
+        if child.tag == "For"
+            && child.children.len() == 1
+            && child.children[0].tag == "Col"
+        {
+            if let Some(expanded) =
+                try_emit_colgroup_for_col_jsx(child, indent + 2)?
+            {
+                out.push_str(&expanded);
+                continue;
+            }
+        }
+
         // A `width: <number>` prop on the col lowers to a CSS pixel width.
         // Authors who want a more elaborate style can drop down to a part
         // name + mosstyle rule in a follow-up; for the first cut just the
@@ -3037,6 +3145,108 @@ fn emit_host_table_colgroup_jsx(
     }
     out.push_str(&format!("{pad}</colgroup>\n"));
     Ok(out)
+}
+
+/// Lower `For (each: ..., as: w [, index: cw]) { Col (width: ( w )) }`
+/// to `{widths.map((w, cw) => <col key={cw} style={{ width: ... }} />)}`.
+///
+/// Mirrors the table-row + table-cell For seams in shape: pulls the
+/// loop's `each:`/`as:`/`index:` triple, validates identifiers, and
+/// emits a single `.map(...)` whose callback returns the per-iteration
+/// <col>. The inner Col's `width:` is the only prop we recognise today;
+/// SlotRef / Number / Expr widths all lower to a CSS pixel width string
+/// (Expr passes through verbatim so `width: ( w )` becomes JSX
+/// `style={{ width: `${w}px` }}` via template-literal interpolation).
+fn try_emit_colgroup_for_col_jsx(
+    for_node: &LayoutNode,
+    indent: usize,
+) -> Result<Option<String>, PipelineEmitError> {
+    let col_node = &for_node.children[0];
+
+    let each_prop = for_node.props.iter().find(|p| p.name == "each").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("For: missing required prop `each:`".to_string())
+    })?;
+    let coll = match &each_prop.value {
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(t) => t.clone(),
+        LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        _ => return Ok(None),
+    };
+
+    let as_ident = match find_keyword_prop(for_node, "as") {
+        Some(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        None => return Ok(None),
+    };
+
+    let index_ident = match find_keyword_prop(for_node, "index") {
+        Some(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if !is_safe_js_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            Some(camel)
+        }
+        None => None,
+    };
+
+    let (params, key_source) = match &index_ident {
+        Some(idx) => (format!("({as_ident}, {idx})"), idx.clone()),
+        None => (format!("({as_ident}, _idx)"), "_idx".to_string()),
+    };
+
+    // Resolve the width attribute. We accept SlotRef (camelCased
+    // identifier), Number (literal pixel value), Expr (verbatim
+    // template-literal interpolation), and Keyword (For-bound NAME).
+    let width_attr = match col_node.props.iter().find(|p| p.name == "width") {
+        Some(p) => match &p.value {
+            LayoutPropValue::Number(n) => {
+                let s = if n.fract() == 0.0 { format!("{}", *n as i64) } else { format!("{n}") };
+                format!(" style={{{{ width: \"{s}px\" }}}}")
+            }
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                if !is_safe_js_identifier(&camel) {
+                    return Err(PipelineEmitError::UnsafeSlotName(camel));
+                }
+                format!(" style={{{{ width: `${{{camel}}}px` }}}}")
+            }
+            LayoutPropValue::Keyword(name) => {
+                let camel = to_camel_case_first_lower(name);
+                if !is_safe_js_identifier(&camel) {
+                    return Err(PipelineEmitError::UnsafeSlotName(camel));
+                }
+                format!(" style={{{{ width: `${{{camel}}}px` }}}}")
+            }
+            LayoutPropValue::Expr(t) => {
+                format!(" style={{{{ width: `${{{}}}px` }}}}", t)
+            }
+            _ => String::new(),
+        },
+        None => String::new(),
+    };
+
+    let pad = " ".repeat(indent);
+    Ok(Some(format!(
+        "{pad}{{{coll}.map({params} => (\n{pad}  <col key={{{key_source}}}{width_attr} />\n{pad}))}}\n"
+    )))
 }
 
 /// Find the *first* immediate child of `node` whose tag matches
@@ -4602,6 +4812,15 @@ fn jsx_text_content(node: &LayoutNode) -> Option<String> {
                         None
                     }
                 }
+                // UI28-1 / U29-D1 — `Text ( content: ( v ) )` shape that
+                // mosaic-pkg-grid v0.2.0 + the VisiCalc demo's inlined
+                // Grid.{desktop,touch}.mll use to interpolate a For-bound
+                // value into a cell or header label. The `(...)` grouping
+                // forces the parser into the Expr branch; the emitter
+                // here passes the expression text verbatim into a JSX
+                // `{...}` interpolation. Author-controlled text — same
+                // trust model as Expr text elsewhere (UI29 §3.3).
+                LayoutPropValue::Expr(text) => Some(format!("{{{text}}}")),
                 _ => None,
             };
         }
@@ -9244,9 +9463,17 @@ mod tests {
         )]);
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &r.output;
+        // UI28-1 §5 / §6.3 — implicit `_idx` injection for stable keys
+        // when the author didn't bind `index:`. Each row is wrapped in
+        // a keyed React.Fragment (DOM-transparent, so the <tbody><tr>
+        // hierarchy is preserved).
         assert!(
-            out.contains("{viewportRows.map((row) => ("),
-            "expected `.map((row) => (` callback, got:\n{out}"
+            out.contains("{viewportRows.map((row, _idx) => ("),
+            "expected `.map((row, _idx) => (` callback with implicit _idx for keying, got:\n{out}"
+        );
+        assert!(
+            out.contains("<React.Fragment key={_idx}>"),
+            "expected `<React.Fragment key={{_idx}}>` wrapping each <tr> for stable keys, got:\n{out}"
         );
         assert!(
             out.contains("<tr>"),
@@ -9300,13 +9527,17 @@ mod tests {
         )]);
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &r.output;
+        // UI28-1 §5 / §6.3 — implicit `_idx` injection for stable keys
+        // when the author didn't bind `index:`. The `<th>` now also
+        // carries `key={_idx}` so React's reconciler tracks each
+        // header cell across re-renders.
         assert!(
-            out.contains("{columnHeaders.map((header) => ("),
-            "expected `.map((header) => (` callback, got:\n{out}"
+            out.contains("{columnHeaders.map((header, _idx) => ("),
+            "expected `.map((header, _idx) => (` callback with implicit _idx for keying, got:\n{out}"
         );
         assert!(
-            out.contains("<th><span>{header}</span></th>"),
-            "expected per-iteration `<th><span>{{header}}</span></th>`, got:\n{out}"
+            out.contains("<th key={_idx}><span>{header}</span></th>"),
+            "expected keyed per-iteration `<th key={{_idx}}><span>{{header}}</span></th>`, got:\n{out}"
         );
     }
 

@@ -1,52 +1,60 @@
-// Grid.touch.mll — touch / mobile layout for the spreadsheet grid (UI30).
+// Grid.touch.mll — touch / mobile layout for the VisiCalc grid (UI30).
 //
-// UI31-L10 migration: rewritten from the legacy built-in `Grid`
-// primitive to the UI31 HostTable kernel family. See
-// `Grid.desktop.mll`'s top comment for the full migration rationale
-// and the list of features the degraded migration drops.
+// UI28-1 / U29-D1 rewrite — see Grid.desktop.mll's top comment for the
+// full composition rationale.  The touch layout shares the same shape
+// as the desktop layout in v0.2.0: HostTable + HostTableColGroup +
+// HostTableHead + HostTableBody + nested For + inline cell with
+// HostInput / Text under an If(when: predicate).
 //
-// Why a separate touch variant at all?
-// ------------------------------------
-// Pre-migration, the desktop variant pinned the header row via
-// `sticky-header: true` and the touch variant explicitly set
-// `sticky-header: false` (so the header scrolls away on small
-// screens, returning the full viewport to the user as they scroll).
-// Post-migration, sticky-header is dropped from both variants (it
-// belonged to the legacy `Grid` primitive's emitter, not to
-// HostTable* yet), so the desktop and touch trees are byte-for-byte
-// identical today.
+// Why identical to desktop?
+// -------------------------
 //
-// We keep this separate variant file rather than deleting it because:
+// UI30 §1: "different layouts ... keeping the interface mostly the
+// same."  The desktop and touch layouts can DIFFER (touch might want
+// larger cells, different scroll behaviour, etc.) but neither
+// requires diverging primitives.  v0.2.0 establishes the kernel-
+// only composition; layout-specific tweaks (cell padding, touch-
+// target sizing) belong in the .msl files, not here.
 //
-//   1. The UI30 multi-layout convention treats per-variant `.mll`
-//      files as a stable extension surface. Future work that
-//      reintroduces sticky-header via a HostTable extension, or that
-//      adds touch-specific cell sizing (≥44 px tap-targets per Apple
-//      HIG), or that picks a smaller row-height for narrow phones,
-//      slots in here without changing the build pipeline.
-//   2. Deleting the file would re-merge desktop/touch into one
-//      variant, which the artifact-builder discovers by absence —
-//      tools wired to expect `Grid.touch.<ext>` artifacts would
-//      silently fall back to `Grid.<ext>` (the variant-resolution
-//      back-compat path). That's a subtle behaviour change worth
-//      avoiding.
-//
-// What this variant changes vs. .desktop.mll today: NOTHING. Both
-// emit the same HostTable tree. The diff lives in the comments only.
+// When the touch layout actually needs to render differently from
+// desktop — for example, swiping a row to dismiss, or a long-press-
+// to-edit gesture instead of double-click — this file diverges.
+// Until then, the layouts are isomorphic and the difference shows up
+// in Grid.dark.msl + a future Grid.touch.msl.
 
 layout Grid {
-  HostTable [sheet] {
+  HostTable [ sheet ] {
+    HostTableColGroup {
+      For ( each: slot: column-widths , as: w , index: cw ) {
+        Col [ col ] ( width: ( w ) )
+      }
+    }
     HostTableHead {
-      Row {
-        For ( each: slot: column-headers , as: header ) {
-          Text ( content: header )
+      Row [ header-row ] {
+        For ( each: slot: column-headers , as: h , index: ch ) {
+          Box [ header-cell ] {
+            Text ( content: ( h ) )
+          }
         }
       }
     }
     HostTableBody {
-      For ( each: slot: viewport-rows , as: row ) {
-        Row {
-          Text ( content: row )
+      For ( each: slot: viewport-rows , as: row , index: r ) {
+        Row [ data-row ] {
+          For ( each: row , as: v , index: c ) {
+            Box [ cell ] {
+              If ( when: ( r == editRow && c == editCol ) ) {
+                HostInput (
+                  value:    ( v ) ,
+                  onCommit: emit: onEditCommit ,
+                  onCancel: emit: onEditCancel
+                )
+              }
+              Else {
+                Text ( content: ( v ) )
+              }
+            }
+          }
         }
       }
     }
