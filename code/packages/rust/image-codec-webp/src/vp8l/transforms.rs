@@ -87,6 +87,52 @@ pub fn inverse_subtract_green(pixels: &mut PixelContainer) {
 }
 
 // ---------------------------------------------------------------------------
+// Color-index transform — inverse only (decoder side)
+// ---------------------------------------------------------------------------
+
+/// Apply the inverse color-index (palette) transform in-place.
+///
+/// Each pixel's **G channel** contains packed palette indices — the number of
+/// indices per pixel is `pack_bits` (1, 2, 4, or 8).  Indices are packed
+/// LSB-first within the G byte.  The function expands the packed image back
+/// to `orig_width` columns by looking up each index in `palette`.
+///
+/// After this call `pixels.width == orig_width` and `pixels.data` has been
+/// rebuilt with the palette RGBA values.
+pub fn inverse_color_index(
+    pixels: &mut PixelContainer,
+    palette: &[(u8, u8, u8, u8)],
+    pack_bits: u32,
+    orig_width: u32,
+) {
+    let height      = pixels.height;
+    let packed_width = pixels.width;
+    let bits_per_index = 8u32 / pack_bits; // 1, 2, 4, or 8
+    let index_mask  = ((1u32 << bits_per_index) - 1) as u8;
+    let total = (orig_width * height) as usize;
+    let mut out = Vec::with_capacity(total * 4);
+
+    for y in 0..height {
+        let mut x_out = 0u32;
+        for x in 0..packed_width {
+            let base = ((y * packed_width + x) as usize) * 4;
+            let g = pixels.data[base + 1]; // G channel holds packed indices
+            let mut bit_offset = 0u32;
+            while bit_offset < 8 && x_out < orig_width {
+                let idx = ((g >> bit_offset) & index_mask) as usize;
+                let (r, pg, b, a) = *palette.get(idx).unwrap_or(&(0, 0, 0, 255));
+                out.push(r); out.push(pg); out.push(b); out.push(a);
+                x_out  += 1;
+                bit_offset += bits_per_index;
+            }
+        }
+    }
+
+    pixels.width = orig_width;
+    pixels.data  = out;
+}
+
+// ---------------------------------------------------------------------------
 // Predictor transform — private helpers
 // ---------------------------------------------------------------------------
 
@@ -495,5 +541,86 @@ mod tests {
                 "mode {mode}: first pixel must return sentinel"
             );
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Color-index inverse tests
+    // -----------------------------------------------------------------------
+
+    /// pack_bits=1 means 1 index per pixel (no bit-packing).  The G channel
+    /// of each packed pixel is the palette index directly.
+    #[test]
+    fn color_index_inverse_no_packing() {
+        // Palette: index 0 → red, index 1 → blue
+        let palette: Vec<(u8, u8, u8, u8)> = vec![(255, 0, 0, 255), (0, 0, 255, 255)];
+        // Packed image: 2 pixels wide, 1 pixel tall.  G=0 → red, G=1 → blue.
+        // pack_bits=1 so packed_width == orig_width == 2; no expansion.
+        let mut packed = PixelContainer::from_data(
+            2, 1,
+            vec![
+                0, 0, 0, 255, // G=0 → palette[0] = red
+                0, 1, 0, 255, // G=1 → palette[1] = blue
+            ],
+        );
+        inverse_color_index(&mut packed, &palette, 1, 2);
+        assert_eq!(packed.width, 2);
+        assert_eq!(packed.height, 1);
+        // First pixel = red (255, 0, 0, 255)
+        assert_eq!(&packed.data[0..4], &[255, 0, 0, 255], "pixel 0 should be red");
+        // Second pixel = blue (0, 0, 255, 255)
+        assert_eq!(&packed.data[4..8], &[0, 0, 255, 255], "pixel 1 should be blue");
+    }
+
+    /// pack_bits=4 means 4 indices packed into one G byte (2 bits each, LSB-first).
+    /// A 1×1 packed image expands to a 4×1 output.
+    #[test]
+    fn color_index_inverse_pack4() {
+        // Palette: 0=red, 1=green, 2=blue, 3=yellow
+        let palette: Vec<(u8, u8, u8, u8)> = vec![
+            (255, 0, 0, 255),
+            (0, 255, 0, 255),
+            (0, 0, 255, 255),
+            (255, 255, 0, 255),
+        ];
+        // Pack 4 indices (2 bits each) into one byte, LSB-first:
+        //   bits [1:0]=0 (red), [3:2]=1 (green), [5:4]=2 (blue), [7:6]=3 (yellow)
+        //   g = 0b11_10_01_00 = 0xE4
+        let g: u8 = 0b11_10_01_00;
+        let mut packed = PixelContainer::from_data(
+            1, 1,
+            vec![0, g, 0, 255],
+        );
+        inverse_color_index(&mut packed, &palette, 4, 4);
+        assert_eq!(packed.width, 4);
+        assert_eq!(packed.height, 1);
+        assert_eq!(&packed.data[0..4],  &[255, 0, 0, 255],   "pixel 0 = red");
+        assert_eq!(&packed.data[4..8],  &[0, 255, 0, 255],   "pixel 1 = green");
+        assert_eq!(&packed.data[8..12], &[0, 0, 255, 255],   "pixel 2 = blue");
+        assert_eq!(&packed.data[12..16], &[255, 255, 0, 255], "pixel 3 = yellow");
+    }
+
+    /// pack_bits=1, 2 rows — verify rows are handled independently.
+    #[test]
+    fn color_index_inverse_two_rows() {
+        let palette: Vec<(u8, u8, u8, u8)> = vec![(10, 20, 30, 255), (40, 50, 60, 255)];
+        // 3 pixels wide, 2 rows tall.  Row 0: [0,1,0]; row 1: [1,0,1].
+        let mut packed = PixelContainer::from_data(
+            3, 2,
+            vec![
+                0, 0, 0, 255,  0, 1, 0, 255,  0, 0, 0, 255,  // row 0
+                0, 1, 0, 255,  0, 0, 0, 255,  0, 1, 0, 255,  // row 1
+            ],
+        );
+        inverse_color_index(&mut packed, &palette, 1, 3);
+        assert_eq!(packed.width, 3);
+        assert_eq!(packed.height, 2);
+        // Row 0
+        assert_eq!(&packed.data[0..4],  &[10, 20, 30, 255], "r0p0");
+        assert_eq!(&packed.data[4..8],  &[40, 50, 60, 255], "r0p1");
+        assert_eq!(&packed.data[8..12], &[10, 20, 30, 255], "r0p2");
+        // Row 1
+        assert_eq!(&packed.data[12..16], &[40, 50, 60, 255], "r1p0");
+        assert_eq!(&packed.data[16..20], &[10, 20, 30, 255], "r1p1");
+        assert_eq!(&packed.data[20..24], &[40, 50, 60, 255], "r1p2");
     }
 }

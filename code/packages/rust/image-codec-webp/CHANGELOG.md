@@ -7,6 +7,33 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.6] — 2026-05-25
+
+### Added
+
+- **VP8L color-index transform decoder (type 3)** — reads the palette
+  (1–256 ARGB entries, delta-coded per channel), computes `pack_bits`
+  from the palette size, decodes the pixel data using the reduced
+  `effective_width = ceil(orig_width / pack_bits)`, and applies
+  `inverse_color_index` to expand packed G-channel indices back to full
+  ARGB pixels.  VP8L files produced by libwebp or other encoders that
+  use the color-index (palette) transform can now be decoded.
+- `inverse_color_index` in `transforms.rs` — expands a packed-index
+  image (1/2/4/8 indices per G byte, LSB-first) using a palette.
+- `AppliedTransform::ColorIndex` variant carrying palette, pack_bits, and
+  orig_width for the inverse pass.
+- `effective_width` tracking in `decode()` — updated when a ColorIndex
+  transform is read so that the pixel data section uses the correct
+  reduced width.
+- 3 new tests: `color_index_inverse_no_packing`,
+  `color_index_inverse_pack4`, `color_index_inverse_two_rows`.
+
+### Changed
+
+- `VERSION` bumped to `0.3.6`.
+
+---
+
 ## [0.3.5] — 2026-05-25
 
 ### Added

@@ -43,7 +43,7 @@ use huffman::{
 };
 use pixel_container::PixelContainer;
 use transforms::{apply_predictor, apply_subtract_green,
-                 inverse_color, inverse_predictor, inverse_subtract_green,
+                 inverse_color, inverse_color_index, inverse_predictor, inverse_subtract_green,
                  PREDICTOR_BLOCK_BITS};
 
 // ---------------------------------------------------------------------------
@@ -63,6 +63,14 @@ enum AppliedTransform {
         /// Raw RGBA bytes of the color transform sub-image.
         /// R = green_to_red, G = green_to_blue, B = red_to_blue (all as int8_t).
         sub_image_data: Vec<u8>,
+    },
+    ColorIndex {
+        /// RGBA palette (delta-decoded); indexed by the G channel of each pixel.
+        palette: Vec<(u8, u8, u8, u8)>,
+        /// Number of pixels packed into each literal (1, 2, 4, or 8).
+        pack_bits: u32,
+        /// Original (unpacked) image width — restored by the inverse transform.
+        orig_width: u32,
     },
 }
 
@@ -471,6 +479,9 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     }
 
     // ── Transform section ────────────────────────────────────────────────────
+    // ColorIndex may reduce the image width for pixel-data decoding.
+    // All other transforms leave width unchanged.
+    let mut effective_width = width;
     let mut applied_transforms: Vec<AppliedTransform> = Vec::new();
     loop {
         let has_transform = br.read_bits(1);
@@ -509,9 +520,35 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 applied_transforms.push(AppliedTransform::Color { block_bits, sub_image_data });
             }
             3 => {
-                return Err(
-                    "VP8L: color-index transform not yet implemented".to_string()
-                );
+                // Color-index (palette) transform.
+                // num_colors = stored_value + 1 (8-bit, values 1..=256).
+                let num_colors = br.read_bits(8) + 1;
+                // Palette is stored as a 1×num_colors entropy segment (delta-coded).
+                let palette_raw = read_entropy_segment(&mut br, num_colors as usize, num_colors)?;
+                // Delta-decode: each color adds to the previous (wrapping per channel).
+                let mut palette: Vec<(u8, u8, u8, u8)> = Vec::with_capacity(num_colors as usize);
+                let mut prev = (0u8, 0u8, 0u8, 0u8);
+                for i in 0..num_colors as usize {
+                    let b = i * 4;
+                    let d = (palette_raw[b], palette_raw[b + 1], palette_raw[b + 2], palette_raw[b + 3]);
+                    let c = (d.0.wrapping_add(prev.0), d.1.wrapping_add(prev.1),
+                             d.2.wrapping_add(prev.2), d.3.wrapping_add(prev.3));
+                    palette.push(c);
+                    prev = c;
+                }
+                // Number of original pixels packed into each literal.
+                let pack_bits: u32 = if num_colors <= 2 { 8 }
+                    else if num_colors <= 4 { 4 }
+                    else if num_colors <= 16 { 2 }
+                    else { 1 };
+                // Pixel data is encoded with this reduced width.
+                let packed_width = (width + pack_bits - 1) / pack_bits;
+                effective_width = packed_width;
+                applied_transforms.push(AppliedTransform::ColorIndex {
+                    palette,
+                    pack_bits,
+                    orig_width: width,
+                });
             }
             _ => unreachable!(),
         }
@@ -534,7 +571,8 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     let d_table = read_huffman_code(&mut br, DIST_ALPHABET_SIZE)?;
 
     // ── Pixel data ───────────────────────────────────────────────────────────
-    let pixel_count = (width as usize) * (height as usize);
+    // When ColorIndex is active, effective_width < width (packed image).
+    let pixel_count = (effective_width as usize) * (height as usize);
     let mut data_out = Vec::with_capacity(pixel_count * 4);
     let mut pos = 0usize;
 
@@ -574,7 +612,7 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 let d_nextra = lz77::DIST_BITS[d_sym as usize];
                 let d_extra = if d_nextra > 0 { br.read_bits(d_nextra) } else { 0 };
                 let dist_code = lz77::decode_dist(d_sym, d_extra);
-                let pixel_offset = lz77::dist_code_to_offset(dist_code, width);
+                let pixel_offset = lz77::dist_code_to_offset(dist_code, effective_width);
 
                 if pixel_offset > pos {
                     return Err(format!(
@@ -621,7 +659,9 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
 
     // ── Apply inverse transforms ─────────────────────────────────────────────
     // Transforms were written in the order they are decoded; invert in reverse.
-    let mut pixels = PixelContainer::from_data(width, height, data_out);
+    // If ColorIndex is active, the decoded data has effective_width columns;
+    // the ColorIndex inverse expands it back to width.
+    let mut pixels = PixelContainer::from_data(effective_width, height, data_out);
     for t in applied_transforms.iter().rev() {
         match t {
             AppliedTransform::SubtractGreen => inverse_subtract_green(&mut pixels),
@@ -630,6 +670,9 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
             }
             AppliedTransform::Color { block_bits, sub_image_data } => {
                 inverse_color(&mut pixels, *block_bits, sub_image_data);
+            }
+            AppliedTransform::ColorIndex { palette, pack_bits, orig_width } => {
+                inverse_color_index(&mut pixels, palette, *pack_bits, *orig_width);
             }
         }
     }
