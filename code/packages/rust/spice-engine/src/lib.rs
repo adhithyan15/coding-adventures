@@ -2174,6 +2174,19 @@ pub struct DistortionResult {
     pub points: Vec<DistortionPoint>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerDistortionPoint {
+    pub corner_name: String,
+    pub result: DistortionResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerDistortionResult {
+    pub input_source: String,
+    pub output_probe: String,
+    pub points: Vec<CornerDistortionPoint>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum PoleZeroEntryKind {
     Pole,
@@ -3091,6 +3104,64 @@ pub fn distortion_from_transient_with_start_time(
         start_time,
     )?;
     distortion_from_fourier(&fourier_result, input_source, output_probe)
+}
+
+pub fn distortion_from_transient_corners(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    fundamental_frequency_hz: f64,
+    input_source: &str,
+    output_probe: &str,
+    harmonics: usize,
+    corners: &[CornerSpec],
+) -> Result<CornerDistortionResult, SpiceError> {
+    distortion_from_transient_corners_with_start_time(
+        circuit,
+        time_step,
+        stop_time,
+        fundamental_frequency_hz,
+        input_source,
+        output_probe,
+        harmonics,
+        corners,
+        None,
+    )
+}
+
+pub fn distortion_from_transient_corners_with_start_time(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    fundamental_frequency_hz: f64,
+    input_source: &str,
+    output_probe: &str,
+    harmonics: usize,
+    corners: &[CornerSpec],
+    start_time: Option<f64>,
+) -> Result<CornerDistortionResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        let transient_points = transient(&corner_circuit, time_step, stop_time)?;
+        let result = distortion_from_transient_with_start_time(
+            &transient_points,
+            fundamental_frequency_hz,
+            input_source,
+            output_probe,
+            harmonics,
+            start_time,
+        )?;
+        points.push(CornerDistortionPoint {
+            corner_name: corner.name.clone(),
+            result,
+        });
+    }
+    Ok(CornerDistortionResult {
+        input_source: input_source.to_string(),
+        output_probe: output_probe.to_string(),
+        points,
+    })
 }
 
 pub fn fourier(

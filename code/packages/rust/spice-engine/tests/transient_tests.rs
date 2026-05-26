@@ -1,14 +1,15 @@
 use spice_engine::{
-    dc_op, distortion_from_fourier, distortion_from_transient, estimate_period, format_dc_table,
-    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
+    dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
+    estimate_period, format_dc_table, format_distortion_table, format_fourier_table,
+    format_pole_zero_table, format_pss_table, format_transient_table, fourier,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
+    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint,
     DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult,
     Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
     PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
@@ -1447,6 +1448,54 @@ fn distortion_from_transient_extracts_harmonic_content() {
     assert_eq!(point.harmonics[0].harmonic, 2);
     assert!((point.harmonics[0].magnitude - 0.1).abs() < 2.0e-3);
     assert!((point.total_harmonic_distortion - 0.1).abs() < 2.0e-3);
+}
+
+#[test]
+fn distortion_from_transient_corners_projects_each_corner() {
+    let freq = 1.0e3;
+    let period = 1.0 / freq;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, freq)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = distortion_from_transient_corners(
+        &circuit,
+        period / 64.0,
+        2.0 * period,
+        freq,
+        "Vin",
+        "V(out)",
+        3,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-high",
+                vec![CornerOverride::new("Rbot", "resistance", 3_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.input_source, "Vin");
+    assert_eq!(result.output_probe, "V(out)");
+    assert_eq!(result.points.len(), 2);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rbot-high");
+    assert!((result.points[0].result.points[0].fundamental_magnitude - 0.5).abs() < 2.0e-3);
+    assert!((result.points[1].result.points[0].fundamental_magnitude - 0.75).abs() < 2.0e-3);
+    assert!(result.points[0].result.points[0].total_harmonic_distortion < 2.0e-3);
+    assert!(result.points[1].result.points[0].total_harmonic_distortion < 2.0e-3);
 }
 
 #[test]
