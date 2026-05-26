@@ -209,6 +209,66 @@ pub fn compute_predictor(data: &[u8], width: u32, x: u32, y: u32, mode: u8) -> P
 // Predictor transform — public API
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Color transform — inverse only (decoder side)
+// ---------------------------------------------------------------------------
+
+/// VP8L ColorTransformDelta (spec section 2.4.4).
+///
+/// `pred` is a signed 8-bit coefficient; `color` is the channel value.
+/// Result: `(int8_t)(((int32_t)pred * (int32_t)color) >> 5)`, returned as `u8`
+/// for wrapping addition into the destination channel.
+#[inline(always)]
+pub(crate) fn color_transform_delta(pred: i8, color: u8) -> u8 {
+    (((pred as i32 * color as i32) >> 5) as i8) as u8
+}
+
+/// Apply the inverse color transform in-place (during decoding).
+///
+/// The predictor sub-image pixels encode coefficients in the R, G, B channels:
+/// - `R` = `green_to_red`  (int8\_t)
+/// - `G` = `green_to_blue` (int8\_t)
+/// - `B` = `red_to_blue`   (int8\_t)
+///
+/// Inverse formula (spec section 2.4.4):
+/// ```text
+/// new_red  = red  + delta(green_to_red,  green)
+/// new_blue = blue + delta(green_to_blue, green) + delta(red_to_blue, new_red)
+/// ```
+pub fn inverse_color(pixels: &mut PixelContainer, block_bits: u32, sub_image_data: &[u8]) {
+    let width  = pixels.width;
+    let height = pixels.height;
+    let block_size = 1u32 << block_bits;
+    let sub_w = (width + block_size - 1) / block_size;
+    let n = (width * height) as usize;
+
+    for i in 0..n {
+        let x  = (i as u32) % width;
+        let y  = (i as u32) / width;
+        let bx = x / block_size;
+        let by = y / block_size;
+        let si = ((by * sub_w + bx) as usize) * 4;
+        // R channel of sub-image = green_to_red, G = green_to_blue, B = red_to_blue.
+        let green_to_red  = sub_image_data[si    ] as i8;
+        let green_to_blue = sub_image_data[si + 1] as i8;
+        let red_to_blue   = sub_image_data[si + 2] as i8;
+
+        let b = i * 4;
+        let r = pixels.data[b    ];
+        let g = pixels.data[b + 1];
+        let new_r = r.wrapping_add(color_transform_delta(green_to_red, g));
+        let new_b = pixels.data[b + 2]
+            .wrapping_add(color_transform_delta(green_to_blue, g))
+            .wrapping_add(color_transform_delta(red_to_blue, new_r));
+        pixels.data[b    ] = new_r;
+        pixels.data[b + 2] = new_b;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Predictor transform — public API
+// ---------------------------------------------------------------------------
+
 /// Block size in pixels used by the encoder's predictor transform.
 ///
 /// `block_bits = 4` → block_size = 16 pixels.  The sub-image that stores
@@ -380,6 +440,47 @@ mod tests {
         assert_eq!(pred.0, 5);
         assert_eq!(pred.1, 10);
         assert_eq!(pred.2, 15);
+    }
+
+    #[test]
+    fn color_transform_zero_coefficients_is_noop() {
+        // All-zero sub-image → every ColorTransformDelta = 0 → pixel unchanged.
+        let mut pixels = PixelContainer::new(2, 2);
+        pixels.set_pixel(0, 0, 200, 100, 50, 255);
+        pixels.set_pixel(1, 0, 10, 20, 30, 128);
+        let snapshot = pixels.clone();
+
+        // Sub-image: 1 block, all channels = 0.
+        let sub_data = vec![0u8; 4]; // R=G=B=A=0
+        inverse_color(&mut pixels, 4, &sub_data); // block_bits=4, 16-pixel blocks
+        assert_eq!(pixels.data, snapshot.data, "zero-coeff color transform must be no-op");
+    }
+
+    #[test]
+    fn color_transform_round_trip() {
+        // Build a non-trivial sub-image with one coefficient set.
+        // green_to_red = 16 (int8), green_to_blue = 0, red_to_blue = 0.
+        // For pixel (R=100, G=50, B=200, A=255):
+        //   delta(16_i8, 50_u8) = ((16 * 50) >> 5) as i8 = (800 >> 5) as i8 = 25 as i8 = 25.
+        //   new_red  = 100 + 25 = 125
+        //   new_blue = 200 + 0 + 0 = 200
+        // Inverse of forward: store (125, 50, 200, 255) in the pixel, then inverse_color
+        // should give us back 100 for red.
+        //
+        // Actually we test forward (subtract delta) then inverse (add delta) round-trip.
+        let mut pixels = PixelContainer::new(1, 1);
+        pixels.set_pixel(0, 0, 100, 50, 200, 255);
+        let original_data = pixels.data.clone();
+
+        // Forward color transform (manual): R' = R - delta(g2r, G) = 100 - 25 = 75.
+        let g2r: i8 = 16;
+        let delta = color_transform_delta(g2r, 50);
+        pixels.data[0] = pixels.data[0].wrapping_sub(delta);
+
+        // Sub-image: R channel = 16 (= 16u8 = int8_t 16 → green_to_red = 16).
+        let sub_data = vec![16u8, 0, 0, 0]; // R=16(green_to_red), G=0, B=0, A=0
+        inverse_color(&mut pixels, 4, &sub_data);
+        assert_eq!(pixels.data, original_data, "color transform round-trip failed");
     }
 
     #[test]

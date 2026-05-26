@@ -43,7 +43,8 @@ use huffman::{
 };
 use pixel_container::PixelContainer;
 use transforms::{apply_predictor, apply_subtract_green,
-                 inverse_predictor, inverse_subtract_green, PREDICTOR_BLOCK_BITS};
+                 inverse_color, inverse_predictor, inverse_subtract_green,
+                 PREDICTOR_BLOCK_BITS};
 
 // ---------------------------------------------------------------------------
 // Applied-transform record — carries extra data needed for inverse pass
@@ -55,6 +56,12 @@ enum AppliedTransform {
     Predictor {
         block_bits: u32,
         /// Raw RGBA bytes of the predictor sub-image (G channel = mode for each block).
+        sub_image_data: Vec<u8>,
+    },
+    Color {
+        block_bits: u32,
+        /// Raw RGBA bytes of the color transform sub-image.
+        /// R = green_to_red, G = green_to_blue, B = red_to_blue (all as int8_t).
         sub_image_data: Vec<u8>,
     },
 }
@@ -491,10 +498,20 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 // SubtractGreen: no extra data in the bitstream.
                 applied_transforms.push(AppliedTransform::SubtractGreen);
             }
-            1 | 3 => {
-                return Err(format!(
-                    "VP8L: transform type {transform_type} not yet implemented in decoder"
-                ));
+            1 => {
+                // Color transform.
+                let block_bits = br.read_bits(3) + 2;
+                let block_size = 1u32 << block_bits;
+                let sub_w = (width  + block_size - 1) / block_size;
+                let sub_h = (height + block_size - 1) / block_size;
+                let num_sub = (sub_w * sub_h) as usize;
+                let sub_image_data = read_entropy_segment(&mut br, num_sub, sub_w)?;
+                applied_transforms.push(AppliedTransform::Color { block_bits, sub_image_data });
+            }
+            3 => {
+                return Err(
+                    "VP8L: color-index transform not yet implemented".to_string()
+                );
             }
             _ => unreachable!(),
         }
@@ -587,6 +604,9 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
             AppliedTransform::SubtractGreen => inverse_subtract_green(&mut pixels),
             AppliedTransform::Predictor { block_bits, sub_image_data } => {
                 inverse_predictor(&mut pixels, *block_bits, sub_image_data);
+            }
+            AppliedTransform::Color { block_bits, sub_image_data } => {
+                inverse_color(&mut pixels, *block_bits, sub_image_data);
             }
         }
     }

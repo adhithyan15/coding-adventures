@@ -7,6 +7,25 @@ and this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.4] — 2026-05-25
+
+### Added
+
+- **VP8L color transform decoder (type 1)** — reads block_bits and the
+  coefficient sub-image, then applies `inverse_color` per pixel:
+  `new_red = red + delta(green_to_red, green)` and
+  `new_blue = blue + delta(green_to_blue, green) + delta(red_to_blue, new_red)`.
+  Externally-produced VP8L files that use the color transform can now be decoded.
+- `inverse_color` and `color_transform_delta` in `transforms.rs`.
+- `AppliedTransform::Color` variant carrying the color sub-image data.
+- 2 new tests: `color_transform_zero_coefficients_is_noop`, `color_transform_round_trip`.
+
+### Changed
+
+- `VERSION` bumped to `0.3.4`.
+
+---
+
 ## [0.3.3] — 2026-05-25
 
 ### Added
