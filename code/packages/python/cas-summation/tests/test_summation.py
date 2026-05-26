@@ -4298,6 +4298,86 @@ class TestPhase79TwoSqrtFiveLogPoly:
         assert isinstance(result, IRApply) and result.head == SUM
 
 
+class TestPhase80ThreeSqrtFiveLogPoly:
+    """Phase 80 — Three-Sqrt × Five-Log × polynomial numerator.
+
+    Convergence criterion: numerator = √P₁(k) · √P₂(k) · √P₃(k) · log⁵(k) · poly(k),
+    denominator = polynomial or exponential.
+    effective_x2 = deg1_x2 + deg2_x2 + deg3_x2 + 2·poly_deg.
+    Closes iff 2·den_deg > effective_x2 (polynomial denom)
+              or denom is a non-polynomial diverging function (exponential, etc.).
+    """
+
+    def test_three_sqrt_k_log5_k_over_k2_closes(self):
+        """√k·√k·√k·log(k)⁵/k²: eff_x2=1+1+1=3; 2·2=4 > 3 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,))))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k80a = IRApply(DIV, (num_k, k2))
+        g_kp180a = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k80a, g_kp180a))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_k3_log5_k_over_k_refused(self):
+        """√(k³)·√(k³)·√(k³)·log(k)⁵/k: eff_x2=3+3+3=9; 2·1=2 not > 9 → refused."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (k3,)), IRApply(SQRT, (k3,)),
+                              IRApply(SQRT, (k3,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1_3,)), IRApply(SQRT, (kp1_3,)),
+                                IRApply(SQRT, (kp1_3,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,))))
+        g_k80b = IRApply(DIV, (num_k, _k))
+        g_kp180b = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k80b, g_kp180b))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_three_sqrt_k_log5_k_times_k_over_k2_refused(self):
+        """√k·√k·√k·log(k)⁵·k/k²: eff_x2=1+1+1+2=5; 2·2=4 not > 5 → refused."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                              IRApply(SQRT, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                IRApply(SQRT, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), kp1))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        g_k80c = IRApply(DIV, (num_k, k2))
+        g_kp180c = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k80c, g_kp180c))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
 class TestPhase82FiveSqrtFiveLogPoly:
     """Phase 82 — Five-Sqrt × Five-Log × polynomial numerator.
 

@@ -3172,6 +3172,109 @@ describe("Phase 79 — Two-Sqrt × Five-Log × polynomial numerator", () => {
   });
 });
 
+describe("Phase 80 — Three-Sqrt × Five-Log × polynomial numerator", () => {
+  it("√k·√k·√k·log(k)⁵/k² closes (effective=1.5, denDeg=2 > 1.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const numK80a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+    ]};
+    const numKp180a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+    ]};
+    const gK80a = { kind: "apply" as const, head: DIV, args: [numK80a, k2] };
+    const gKp180a = { kind: "apply" as const, head: DIV, args: [numKp180a, kp1_2] };
+    const f80a = { kind: "apply" as const, head: SUB, args: [gK80a, gKp180a] };
+    const result = evaluateSum(f80a, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf1=0.5, sqrtHalf2=0.5, sqrtHalf3=0.5, polyDeg=0 → effective=1.5; denDeg=2 > 1.5 → closes
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√(k³)·√(k³)·√(k³)·log(k)⁵/k refused (effective=4.5, denDeg=1 not > 4.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const numK80b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k3] },
+      { kind: "apply" as const, head: SQRT, args: [k3] },
+      { kind: "apply" as const, head: SQRT, args: [k3] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+    ]};
+    const numKp180b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_3] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_3] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_3] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+    ]};
+    const gK80b = { kind: "apply" as const, head: DIV, args: [numK80b, k] };
+    const gKp180b = { kind: "apply" as const, head: DIV, args: [numKp180b, kp1] };
+    const f80b = { kind: "apply" as const, head: SUB, args: [gK80b, gKp180b] };
+    const result = evaluateSum(f80b, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf1=1.5, sqrtHalf2=1.5, sqrtHalf3=1.5 → effective=4.5; denDeg=1 not > 4.5 → refused
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√k·√k·√k·log(k)⁵·k/k² refused (effective=2.5, denDeg=2 not > 2.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const numK80c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      k,
+    ]};
+    const numKp180c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      kp1,
+    ]};
+    const gK80c = { kind: "apply" as const, head: DIV, args: [numK80c, k2] };
+    const gKp180c = { kind: "apply" as const, head: DIV, args: [numKp180c, kp1_2] };
+    const f80c = { kind: "apply" as const, head: SUB, args: [gK80c, gKp180c] };
+    const result = evaluateSum(f80c, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf1=0.5, sqrtHalf2=0.5, sqrtHalf3=0.5, polyDeg=1 → effective=2.5; denDeg=2 not > 2.5 → refused
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
 describe("Phase 82 — Five-Sqrt × Five-Log × polynomial numerator", () => {
   it("√k·√k·√k·√k·√k·log(k)⁵/k³ closes (effective=2.5, denDeg=3 > 2.5)", () => {
     const k = sym("k");
