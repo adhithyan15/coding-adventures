@@ -3246,6 +3246,181 @@ function fiveSqrtNineteenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | 
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
 }
 
+/**
+ * Phase 167 — Twenty-Log × polynomial numerator.
+ * Caller checks `denDeg > twentyLogPolyEffectiveDeg(num, k)`.
+ */
+function twentyLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined;
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 20) return undefined; // twenty-one or more Logs — not this phase
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 20) return undefined;
+  return polyDeg;
+}
+
+/**
+ * Phase 168 — One-Sqrt × Twenty-Log × polynomial numerator.
+ * Caller checks `denDeg > oneSqrtTwentyLogPolyEffectiveDeg(num, k)`.
+ */
+function oneSqrtTwentyLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sd = sqrtEffectiveHalfDegree(arg, k);
+    if (sd !== undefined) {
+      if (sqrtHalfDeg !== undefined) return undefined;
+      sqrtHalfDeg = sd;
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 20) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDeg === undefined || logCount !== 20) return undefined;
+  return sqrtHalfDeg + polyDeg;
+}
+
+/**
+ * Phase 169 — Two-Sqrt × Twenty-Log × polynomial numerator.
+ * Caller checks `denDeg > twoSqrtTwentyLogPolyEffectiveDeg(num, k)`.
+ */
+function twoSqrtTwentyLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sd = sqrtEffectiveHalfDegree(arg, k);
+    if (sd !== undefined) {
+      if (sqrtHalfDegs.length >= 2) return undefined;
+      sqrtHalfDegs.push(sd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 20) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 20) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
+/**
+ * Phase 170 — Three-Sqrt × Twenty-Log × polynomial numerator.
+ * Caller checks `denDeg > threeSqrtTwentyLogPolyEffectiveDeg(num, k)`.
+ */
+function threeSqrtTwentyLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sd = sqrtEffectiveHalfDegree(arg, k);
+    if (sd !== undefined) {
+      if (sqrtHalfDegs.length >= 3) return undefined;
+      sqrtHalfDegs.push(sd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 20) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3 || logCount !== 20) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
+/**
+ * Phase 171 — Four-Sqrt × Twenty-Log × polynomial numerator.
+ * Caller checks `denDeg > fourSqrtTwentyLogPolyEffectiveDeg(num, k)`.
+ */
+function fourSqrtTwentyLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sd = sqrtEffectiveHalfDegree(arg, k);
+    if (sd !== undefined) {
+      if (sqrtHalfDegs.length >= 4) return undefined;
+      sqrtHalfDegs.push(sd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 20) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 4 || logCount !== 20) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + polyDeg;
+}
+
+/**
+ * Phase 172 — Five-Sqrt × Twenty-Log × polynomial numerator.
+ * Completes the Twenty-Log family (Phases 167-172).
+ * Caller checks `denDeg > fiveSqrtTwentyLogPolyEffectiveDeg(num, k)`.
+ */
+function fiveSqrtTwentyLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sd = sqrtEffectiveHalfDegree(arg, k);
+    if (sd !== undefined) {
+      if (sqrtHalfDegs.length >= 5) return undefined;
+      sqrtHalfDegs.push(sd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 20) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 5 || logCount !== 20) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
+}
+
 function tenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
   if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
   let logCount = 0;
@@ -4456,6 +4631,68 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 172: Mul(Sqrt(P1)×5, Log(h1)×20, polynomial..., bounded...) numerator.
+  // Five Sqrt + twenty Log factors; log²⁰ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > fiveSqrtTwentyLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s5l20Deg = fiveSqrtTwentyLogPolyEffectiveDeg(num, k);
+  if (s5l20Deg !== undefined) {
+    const denDegS5l20 = polynomialDegreeInK(den, k);
+    if (denDegS5l20 !== undefined) {
+      if (denDegS5l20 > s5l20Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 171: Mul(Sqrt(P1)×4, Log(h1)×20, polynomial..., bounded...) numerator.
+  const s4l20Deg = fourSqrtTwentyLogPolyEffectiveDeg(num, k);
+  if (s4l20Deg !== undefined) {
+    const denDegS4l20 = polynomialDegreeInK(den, k);
+    if (denDegS4l20 !== undefined) {
+      if (denDegS4l20 > s4l20Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 170: Mul(Sqrt(P1)×3, Log(h1)×20, polynomial..., bounded...) numerator.
+  const s3l20Deg = threeSqrtTwentyLogPolyEffectiveDeg(num, k);
+  if (s3l20Deg !== undefined) {
+    const denDegS3l20 = polynomialDegreeInK(den, k);
+    if (denDegS3l20 !== undefined) {
+      if (denDegS3l20 > s3l20Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 169: Mul(Sqrt(P1), Sqrt(P2), Log(h1)×20, polynomial..., bounded...) numerator.
+  const s2l20Deg = twoSqrtTwentyLogPolyEffectiveDeg(num, k);
+  if (s2l20Deg !== undefined) {
+    const denDegS2l20 = polynomialDegreeInK(den, k);
+    if (denDegS2l20 !== undefined) {
+      if (denDegS2l20 > s2l20Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 168: Mul(Sqrt(P), Log(h1)×20, polynomial..., bounded...) numerator.
+  const s1l20Deg = oneSqrtTwentyLogPolyEffectiveDeg(num, k);
+  if (s1l20Deg !== undefined) {
+    const denDegS1l20 = polynomialDegreeInK(den, k);
+    if (denDegS1l20 !== undefined) {
+      if (denDegS1l20 > s1l20Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 167: Closes when denDeg > twentyLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const sl20Deg = twentyLogPolyEffectiveDeg(num, k);
+  if (sl20Deg !== undefined) {
+    const denDegSl20 = polynomialDegreeInK(den, k);
+    if (denDegSl20 !== undefined) {
+      if (denDegSl20 > sl20Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
