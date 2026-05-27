@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.139.0 — 2026-05-27
+
+### Added
+
+- **Phase 202 — Five-Sqrt × Twenty-Five-Log × polynomial** (`_five_sqrt_twenty_five_log_poly_effective_x2`):
+  Completes the Twenty-Five-Log family (Phases 197–202).
+- **Phase 201 — Four-Sqrt × Twenty-Five-Log × polynomial** (`_four_sqrt_twenty_five_log_poly_effective_x2`).
+- **Phase 200 — Three-Sqrt × Twenty-Five-Log × polynomial** (`_three_sqrt_twenty_five_log_poly_effective_x2`).
+- **Phase 199 — Two-Sqrt × Twenty-Five-Log × polynomial** (`_two_sqrt_twenty_five_log_poly_effective_x2`).
+- **Phase 198 — One-Sqrt × Twenty-Five-Log × polynomial** (`_one_sqrt_twenty_five_log_poly_effective_x2`).
+- **Phase 197 — Zero-Sqrt × Twenty-Five-Log × polynomial** (`_twenty_five_log_poly_effective_x2`).
+
+### Changed
+
+- Boundary tests in Phases 191–196 (and prior phases 167–190) updated from 25-log
+  "refused" to 26-log "refused" now that Phase 197–202 handles exactly 25 logs.
+
 ## 2.133.0 — 2026-05-27
 
 ### Added

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.139.0 — 2026-05-27
+
+### Added
+
+- **Phases 197–202 — Twenty-Five-Log convergence recognizer family**:
+  Adds exactly-25-log numerator recognizers for 0-sqrt through 5-sqrt variants.
+  - Phase 197 (`twenty_five_log_poly_effective_x2`): Zero-Sqrt × 25-Log × polynomial.
+  - Phase 198 (`one_sqrt_twenty_five_log_poly_effective_x2`): One-Sqrt × 25-Log × polynomial.
+  - Phase 199 (`two_sqrt_twenty_five_log_poly_effective_x2`): Two-Sqrt × 25-Log × polynomial.
+  - Phase 200 (`three_sqrt_twenty_five_log_poly_effective_x2`): Three-Sqrt × 25-Log × polynomial.
+  - Phase 201 (`four_sqrt_twenty_five_log_poly_effective_x2`): Four-Sqrt × 25-Log × polynomial.
+  - Phase 202 (`five_sqrt_twenty_five_log_poly_effective_x2`): Five-Sqrt × 25-Log × polynomial.
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+### Changed
+
+- **Boundary tests for Phases 185–196 updated from 25-log to 26-log**: Since Phase 197 now
+  handles exactly 25 logs, the "refused" boundary tests for prior phases have been updated
+  to use 26 logs to remain above the new recognizer ceiling. Test functions renamed from
+  `phaseN_*_log25_*_refused` to `phaseN_*_log26_*_refused`.
+
 ## 2.133.0 — 2026-05-27
 
 ### Added
