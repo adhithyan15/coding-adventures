@@ -2127,6 +2127,39 @@ function twoSqrtEightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | unde
 }
 
 /**
+ * Phase 100 — Five-Sqrt × Eight-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a)·sqrt(k^b)·sqrt(k^c)·sqrt(k^d)·sqrt(k^e)·log(k)⁸·k^m`.
+ * `log⁸(k)` is sub-polynomial, contributing 0.
+ * effective degree = sum(sqrtHalfDegs) + polyDeg. Completes the Eight-Log family.
+ */
+function fiveSqrtEightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 5) return undefined; // sixth Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 8) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 5 || logCount !== 8) return undefined;
+  return sqrtHalfDegs.reduce((a, b) => a + b, 0) + polyDeg;
+}
+
+/**
  * Phase 99 — Four-Sqrt × Eight-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · sqrt(k^b) · sqrt(k^c) · sqrt(k^d) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial,
@@ -2951,6 +2984,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 100: Mul(Sqrt(P1)×5, Log(h1)×8, polynomial..., bounded...) numerator.
+  // Five Sqrt + eight Log factors; log⁸ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > fiveSqrtEightLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s5l8Deg = fiveSqrtEightLogPolyEffectiveDeg(num, k);
+  if (s5l8Deg !== undefined) {
+    const denDegS5l8 = polynomialDegreeInK(den, k);
+    if (denDegS5l8 !== undefined) {
+      if (denDegS5l8 > s5l8Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

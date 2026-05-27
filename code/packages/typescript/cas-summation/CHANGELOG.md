@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.37.0 — 2026-05-27
+
+### Added
+
+- **Phase 100 — Five-Sqrt × Eight-Log × polynomial numerator** (`fiveSqrtEightLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), ..., Sqrt(P5), Log(h1), ..., Log(h8), polynomial..., bounded...)`.
+  Exactly 5 Sqrt factors and exactly 8 Log factors required.
+  `effectiveDeg = sum(sqrtHalfDegs) + polyDeg`.
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+  Completes the Eight-Log family (Phases 95–100).
+  - 3 new tests in `Phase 100` describe block.
+
 ## 2.36.0 — 2026-05-27
 
 ### Added
