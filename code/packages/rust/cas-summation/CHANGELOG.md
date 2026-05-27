@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.49.0 — 2026-05-27
+
+### Added
+
+- **Phase 112 — Five-Sqrt × Ten-Log × polynomial numerator** (`five_sqrt_ten_log_poly_effective_x2`):
+  Completes the Ten-Log family (Phases 107–112).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.48.0 — 2026-05-27
+
+### Added
+
+- **Phase 111 — Four-Sqrt × Ten-Log × polynomial numerator** (`four_sqrt_ten_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.47.0 — 2026-05-27
+
+### Added
+
+- **Phase 110 — Three-Sqrt × Ten-Log × polynomial numerator** (`three_sqrt_ten_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.46.0 — 2026-05-27
+
+### Added
+
+- **Phase 109 — Two-Sqrt × Ten-Log × polynomial numerator** (`two_sqrt_ten_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.45.0 — 2026-05-27
+
+### Added
+
+- **Phase 108 — One-Sqrt × Ten-Log × polynomial numerator** (`one_sqrt_ten_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.44.0 — 2026-05-27
+
+### Added
+
+- **Phase 107 — Ten-Log × polynomial numerator** (`ten_log_poly_effective_x2`):
+  Starts the Ten-Log family. No Sqrt factors allowed.
+  `effective_x2 = 2·poly_deg`.
+
 ## 2.43.0 — 2026-05-27
 
 ### Added

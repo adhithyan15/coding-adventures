@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.49.0 — 2026-05-27
+
+### Added
+
+- **Phase 112 — Five-Sqrt × Ten-Log × polynomial numerator** (`fiveSqrtTenLogPolyEffectiveDeg`):
+  Completes the Ten-Log family (Phases 107–112).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.48.0 — 2026-05-27
+
+### Added
+
+- **Phase 111 — Four-Sqrt × Ten-Log × polynomial numerator** (`fourSqrtTenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.47.0 — 2026-05-27
+
+### Added
+
+- **Phase 110 — Three-Sqrt × Ten-Log × polynomial numerator** (`threeSqrtTenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.46.0 — 2026-05-27
+
+### Added
+
+- **Phase 109 — Two-Sqrt × Ten-Log × polynomial numerator** (`twoSqrtTenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.45.0 — 2026-05-27
+
+### Added
+
+- **Phase 108 — One-Sqrt × Ten-Log × polynomial numerator** (`oneSqrtTenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.44.0 — 2026-05-27
+
+### Added
+
+- **Phase 107 — Ten-Log × polynomial numerator** (`tenLogPolyEffectiveDeg`):
+  Starts the Ten-Log family. No Sqrt factors allowed.
+  `effectiveDeg = polyDeg`.
+
 ## 2.43.0 — 2026-05-27
 
 ### Added
