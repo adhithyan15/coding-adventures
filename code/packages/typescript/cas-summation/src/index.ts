@@ -2123,6 +2123,38 @@ function oneSqrtNineLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undef
 }
 
 /**
+ * Phase 103 — Two-Sqrt × Nine-Log × polynomial numerator.
+ *
+ * effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+ * Caller checks `denDeg > twoSqrtNineLogPolyEffectiveDeg(num, k)`.
+ */
+function twoSqrtNineLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 2) return undefined; // third Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 9) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 9) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
+/**
  * Phase 96 — One-Sqrt × Eight-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial (`o(k^ε)`),
@@ -3046,6 +3078,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 103: Mul(Sqrt(P1), Sqrt(P2), Log(h1)×9, polynomial..., bounded...) numerator.
+  // Two Sqrt + nine Log factors; log⁹ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > twoSqrtNineLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s2l9Deg = twoSqrtNineLogPolyEffectiveDeg(num, k);
+  if (s2l9Deg !== undefined) {
+    const denDegS2l9 = polynomialDegreeInK(den, k);
+    if (denDegS2l9 !== undefined) {
+      if (denDegS2l9 > s2l9Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
