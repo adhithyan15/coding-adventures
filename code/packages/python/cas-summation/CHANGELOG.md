@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.26.0 — 2026-05-26
+
+### Added
+
+- **Phase 89 — Seven-Log × polynomial numerator** (`_seven_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 7 Log factors and zero Sqrt factors required.  `log⁷(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = 2 * poly_deg`.
+  Sqrt factors are explicitly refused so Sqrt-bearing phases are not shadowed.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase89SevenLogPoly`.
+
 ## 2.21.0 — 2026-05-25
 
 ### Added

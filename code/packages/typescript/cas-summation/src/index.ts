@@ -2003,6 +2003,34 @@ function sixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
 }
 
 /**
+ * Phase 89 — Seven-Log × polynomial numerator.
+ *
+ * Effective growth: `log(k)⁷ · k^m`. `log⁷(k)` is sub-polynomial (`o(k^ε)`),
+ * contributing 0 to effective degree. effective degree = polyDeg.
+ * Sqrt factors are refused so Sqrt-bearing phases are not shadowed.
+ * Caller checks `denDeg > sevenLogPolyEffectiveDeg(num, k)`.
+ */
+function sevenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 7) return undefined; // eight or more Logs — not this phase
+      continue;
+    }
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined; // Sqrt present — refuse
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 7) return undefined;
+  return polyDeg;
+}
+
+/**
  * Phase 84 — One-Sqrt × Six-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁶ · k^m`. `log⁶(k)` is sub-polynomial (`o(k^ε)`),
@@ -2487,6 +2515,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS1l6 = polynomialDegreeInK(den, k);
     if (denDegS1l6 !== undefined) {
       if (denDegS1l6 > s1l6Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 89: Mul(Log(h1)×7, polynomial..., bounded...) numerator — zero Sqrt factors.
+  // Seven Log factors; log⁷ sub-polynomial → effective degree = polyDeg.
+  // Closes when denDeg > sevenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const sl7Deg = sevenLogPolyEffectiveDeg(num, k);
+  if (sl7Deg !== undefined) {
+    const denDegSl7 = polynomialDegreeInK(den, k);
+    if (denDegSl7 !== undefined) {
+      if (denDegSl7 > sl7Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
