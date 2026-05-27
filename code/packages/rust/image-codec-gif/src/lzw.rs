@@ -233,8 +233,12 @@ pub fn encode(pixels: &[u8], min_code_size: u8) -> Vec<u8> {
 /// `data` should be the raw image-data section starting with the
 /// `lzw_minimum_code_size` byte, followed by sub-blocks.
 ///
+/// `max_output` caps the number of decoded bytes to prevent decompression-bomb
+/// attacks.  Pass `width * height` (the declared pixel count) from the caller;
+/// any stream that expands beyond this returns `Err`.
+///
 /// Returns `Err` on invalid input.
-pub fn decode(data: &[u8]) -> Result<Vec<u8>, String> {
+pub fn decode(data: &[u8], max_output: usize) -> Result<Vec<u8>, String> {
     if data.is_empty() {
         return Err("GIF LZW: empty data".into());
     }
@@ -326,6 +330,9 @@ pub fn decode(data: &[u8]) -> Result<Vec<u8>, String> {
     }
     let (s, _) = decode_string(prev_code, &parent, &code_byte);
     output.extend_from_slice(&s);
+    if output.len() > max_output {
+        return Err("GIF LZW: decompressed output exceeds declared image size".into());
+    }
 
     loop {
         let code = match br.read(code_size) {
@@ -338,7 +345,7 @@ pub fn decode(data: &[u8]) -> Result<Vec<u8>, String> {
         }
 
         if code == clear_code {
-            // Reset table.
+            // Reset table and code-width back to the initial state.
             next_code = first_dynamic;
             code_size = min_code_size + 1;
             prev_code = match br.read(code_size) {
@@ -347,11 +354,27 @@ pub fn decode(data: &[u8]) -> Result<Vec<u8>, String> {
                     if c == eoi_code {
                         break;
                     }
+                    // Guard against "double CLEAR" or a dynamic code used as
+                    // the first literal after a reset — both would be invalid
+                    // because the table only contains literal codes 0..clear_code
+                    // right after a reset.
+                    if c == clear_code || c >= next_code {
+                        return Err(format!(
+                            "GIF LZW: invalid post-CLEAR code {} \
+                             (expected literal 0..{})",
+                            c, clear_code
+                        ));
+                    }
                     c
                 }
             };
             let (s, _) = decode_string(prev_code, &parent, &code_byte);
             output.extend_from_slice(&s);
+            if output.len() > max_output {
+                return Err(
+                    "GIF LZW: decompressed output exceeds declared image size".into(),
+                );
+            }
             continue;
         }
 
@@ -380,6 +403,9 @@ pub fn decode(data: &[u8]) -> Result<Vec<u8>, String> {
         }
 
         output.extend_from_slice(&entry);
+        if output.len() > max_output {
+            return Err("GIF LZW: decompressed output exceeds declared image size".into());
+        }
 
         // Add new entry to the table: string(prev_code) + first_byte(entry).
         if next_code < MAX_TABLE_SIZE {
@@ -450,7 +476,8 @@ mod tests {
 
     fn round_trip(pixels: &[u8], min_code_size: u8) {
         let encoded = encode(pixels, min_code_size);
-        let decoded = decode(&encoded).expect("decode failed");
+        // usize::MAX used in tests — test data is not adversarial.
+        let decoded = decode(&encoded, usize::MAX).expect("decode failed");
         assert_eq!(
             decoded, pixels,
             "round-trip failed for min_code_size={}",
@@ -535,14 +562,25 @@ mod tests {
     #[test]
     fn decode_bad_min_code_size() {
         // min_code_size = 0 is invalid.
-        assert!(decode(&[0]).is_err());
-        assert!(decode(&[1]).is_err());
-        assert!(decode(&[9]).is_err());
+        assert!(decode(&[0], usize::MAX).is_err());
+        assert!(decode(&[1], usize::MAX).is_err());
+        assert!(decode(&[9], usize::MAX).is_err());
     }
 
     #[test]
     fn decode_empty_data() {
-        assert!(decode(&[]).is_err());
+        assert!(decode(&[], usize::MAX).is_err());
+    }
+
+    #[test]
+    fn decode_rejects_output_beyond_limit() {
+        // Encode a long RLE sequence then try to decode with a tiny limit.
+        let pixels = vec![0u8; 512];
+        let encoded = encode(&pixels, 8);
+        // Limit of 10 is well below 512 — must fail.
+        assert!(decode(&encoded, 10).is_err());
+        // Limit of 512 must succeed.
+        assert!(decode(&encoded, 512).is_ok());
     }
 
     #[test]

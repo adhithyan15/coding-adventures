@@ -207,6 +207,21 @@ impl<'a> Parser<'a> {
                     let top = self.read_u16_le()? as usize;
                     let width = self.read_u16_le()? as usize;
                     let height = self.read_u16_le()? as usize;
+
+                    // Sanity-check declared dimensions before any allocation.
+                    // 16 MP (4096×4096) is far above any realistic static GIF
+                    // and still allows comfortable headroom for the GIF maximum
+                    // of 65535×65535 to be rejected early.
+                    const MAX_PIXELS: usize = 4096 * 4096;
+                    let pixel_count = width.saturating_mul(height);
+                    if pixel_count > MAX_PIXELS {
+                        return Err(format!(
+                            "GIF: image dimensions {}×{} = {} pixels exceed \
+                             the {} pixel safety limit",
+                            width, height, pixel_count, MAX_PIXELS
+                        ));
+                    }
+
                     let img_packed = self.read_byte()?;
 
                     let local_ct_flag = (img_packed >> 7) & 1;
@@ -246,11 +261,10 @@ impl<'a> Parser<'a> {
                     self.skip_sub_blocks()?;
                     let img_data = &self.data[img_data_start..self.pos];
 
-                    // Decode LZW.
-                    let indices = lzw::decode(img_data)
+                    // Decode LZW, capping output at pixel_count to prevent
+                    // decompression-bomb attacks from crafted LZW streams.
+                    let indices = lzw::decode(img_data, pixel_count)
                         .map_err(|e| format!("GIF: LZW error: {}", e))?;
-
-                    let pixel_count = width * height;
                     if indices.len() < pixel_count {
                         return Err(format!(
                             "GIF: decoded {} indices but image needs {} ({}×{})",
