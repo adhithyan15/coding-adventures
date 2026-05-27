@@ -2100,6 +2100,40 @@ function twoSqrtSevenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | unde
 }
 
 /**
+ * Phase 92 — Three-Sqrt × Seven-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a) · sqrt(k^b) · sqrt(k^c) · log(k)⁷ · k^m ≈ k^{(a+b+c)/2} · log⁷(k) · k^m`.
+ * `log⁷(k)` is sub-polynomial (`o(k^ε)`), contributing 0 to effective polynomial degree.
+ * effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+ * Caller checks `denDeg > threeSqrtSevenLogPolyEffectiveDeg(num, k)`.
+ */
+function threeSqrtSevenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 3) return undefined; // fourth Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 7) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3 || logCount !== 7) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
+/**
  * Phase 84 — One-Sqrt × Six-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁶ · k^m`. `log⁶(k)` is sub-polynomial (`o(k^ε)`),
@@ -2620,6 +2654,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l7 = polynomialDegreeInK(den, k);
     if (denDegS2l7 !== undefined) {
       if (denDegS2l7 > s2l7Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 92: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1)×7, polynomial..., bounded...) numerator.
+  // Three Sqrt + seven Log factors; log⁷ sub-polynomial → effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg.
+  // Closes when denDeg > threeSqrtSevenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s3l7Deg = threeSqrtSevenLogPolyEffectiveDeg(num, k);
+  if (s3l7Deg !== undefined) {
+    const denDegS3l7 = polynomialDegreeInK(den, k);
+    if (denDegS3l7 !== undefined) {
+      if (denDegS3l7 > s3l7Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

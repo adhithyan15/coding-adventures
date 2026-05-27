@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.29.0 — 2026-05-27
+
+### Added
+
+- **Phase 92 — Three-Sqrt × Seven-Log × polynomial numerator** (`three_sqrt_seven_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1(k)), Sqrt(P2(k)), Sqrt(P3(k)), Log(h1(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 7 Log factors required.  `log⁷(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new tests: `phase92_sqrt_k_sqrt_k_sqrt_k_log7_k_over_k2_closes`,
+    `phase92_sqrt_k3_sqrt_k3_sqrt_k3_log7_k_over_k5_closes`,
+    `phase92_sqrt_k_sqrt_k_sqrt_k_log7_k_times_k_over_k2_refused`.
+
 ## 2.28.0 — 2026-05-27
 
 ### Added
