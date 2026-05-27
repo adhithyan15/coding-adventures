@@ -6628,3 +6628,503 @@ class TestPhase112FiveSqrtTenLogPoly:
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase113ElevenLogPoly:
+    """Phase 113 — Eleven-Log × polynomial numerator (zero Sqrt)."""
+
+    def test_log11_over_k_closes(self):
+        """log(k)^11/k: eff_x2=0; 2·1=2 > 0 → closes."""
+        from symbolic_ir import SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log11_times_k_over_k2_closes(self):
+        """log(k)^11·k/k²: eff_x2=2; 2·2=4 > 2 → closes."""
+        from symbolic_ir import SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(MUL, (_k, _k))
+        kp1_2 = IRApply(MUL, (kp1, kp1))
+        num_k = IRApply(MUL, (IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log11_times_k_over_k_refused(self):
+        """log(k)^11·k/k: eff_x2=2; 2·1=2 not > 2 → refused."""
+        from symbolic_ir import SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase114OneSqrtElevenLogPoly:
+    """Phase 114 — One-Sqrt × Eleven-Log × polynomial numerator."""
+
+    def test_sqrt_k_log11_over_k_closes(self):
+        """√k·log(k)^11/k: eff_x2=1; 2·1=2 > 1 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_log11_times_k_over_k2_closes(self):
+        """√k·log(k)^11·k/k²: eff_x2=3; 2·2=4 > 3 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(MUL, (_k, _k))
+        kp1_2 = IRApply(MUL, (kp1, kp1))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_log11_times_k_over_k_refused(self):
+        """√k·log(k)^11·k/k: eff_x2=3; 2·1=2 not > 3 → refused."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase115TwoSqrtElevenLogPoly:
+    """Phase 115 — Two-Sqrt × Eleven-Log × polynomial numerator."""
+
+    def test_sqrt_k_x2_log11_over_k2_closes(self):
+        """√k×2·log(k)^11/k²: eff_x2=2; 2·2=4 > 2 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(MUL, (_k, _k))
+        kp1_2 = IRApply(MUL, (kp1, kp1))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x2_log11_times_k_over_k3_closes(self):
+        """√k×2·log(k)^11·k/k³: eff_x2=4; 2·3=6 > 4 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))
+        kp1_3 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x2_log11_times_k_over_k_refused(self):
+        """√k×2·log(k)^11·k/k: eff_x2=4; 2·1=2 not > 4 → refused."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, _k))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase116ThreeSqrtElevenLogPoly:
+    """Phase 116 — Three-Sqrt × Eleven-Log × polynomial numerator."""
+
+    def test_sqrt_k_x3_log11_over_k2_closes(self):
+        """√k×3·log(k)^11/k²: eff_x2=3; 2·2=4 > 3 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(MUL, (_k, _k))
+        kp1_2 = IRApply(MUL, (kp1, kp1))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x3_log11_times_k_over_k3_closes(self):
+        """√k×3·log(k)^11·k/k³: eff_x2=5; 2·3=6 > 5 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))
+        kp1_3 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x3_log11_times_k_over_k2_refused(self):
+        """√k×3·log(k)^11·k/k²: eff_x2=5; 2·2=4 not > 5 → refused."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(MUL, (_k, _k))
+        kp1_2 = IRApply(MUL, (kp1, kp1))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase117FourSqrtElevenLogPoly:
+    """Phase 117 — Four-Sqrt × Eleven-Log × polynomial numerator."""
+
+    def test_sqrt_k_x4_log11_over_k3_closes(self):
+        """√k×4·log(k)^11/k³: eff_x2=4; 2·3=6 > 4 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))
+        kp1_3 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x4_log11_times_k_over_k4_closes(self):
+        """√k×4·log(k)^11·k/k⁴: eff_x2=6; 2·4=8 > 6 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k4 = IRApply(MUL, (_k, IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))))
+        kp1_4 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k4))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_4))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x4_log11_times_k_over_k3_refused(self):
+        """√k×4·log(k)^11·k/k³: eff_x2=6; 2·3=6 not > 6 → refused."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))
+        kp1_3 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase118FiveSqrtElevenLogPoly:
+    """Phase 118 — Five-Sqrt × Eleven-Log × polynomial numerator (completes Eleven-Log family)."""
+
+    def test_sqrt_k_x5_log11_over_k3_closes(self):
+        """√k×5·log(k)^11/k³: eff_x2=5; 2·3=6 > 5 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))
+        kp1_3 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x5_log11_times_k_over_k4_closes(self):
+        """√k×5·log(k)^11·k/k⁴: eff_x2=7; 2·4=8 > 7 → closes."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k4 = IRApply(MUL, (_k, IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))))
+        kp1_4 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k4))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_4))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_x5_log11_times_k_over_k3_refused(self):
+        """√k×5·log(k)^11·k/k³: eff_x2=7; 2·3=6 not > 7 → refused."""
+        from symbolic_ir import SQRT, SUB
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(MUL, (_k, IRApply(MUL, (_k, _k))))
+        kp1_3 = IRApply(MUL, (kp1, IRApply(MUL, (kp1, kp1))))
+        num_k = IRApply(MUL, (IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+                               IRApply(SQRT, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                               IRApply(LOG, (_k,)), _k))
+        num_kp1 = IRApply(MUL, (IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+                                 IRApply(SQRT, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                 IRApply(LOG, (kp1,)), kp1))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM

@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.55.0 — 2026-05-27
+
+### Added
+
+- **Phase 118 — Five-Sqrt × Eleven-Log × polynomial numerator** (`five_sqrt_eleven_log_poly_effective_x2`):
+  Completes the Eleven-Log family (Phases 113–118).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.54.0 — 2026-05-27
+
+### Added
+
+- **Phase 117 — Four-Sqrt × Eleven-Log × polynomial numerator** (`four_sqrt_eleven_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.53.0 — 2026-05-27
+
+### Added
+
+- **Phase 116 — Three-Sqrt × Eleven-Log × polynomial numerator** (`three_sqrt_eleven_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.52.0 — 2026-05-27
+
+### Added
+
+- **Phase 115 — Two-Sqrt × Eleven-Log × polynomial numerator** (`two_sqrt_eleven_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.51.0 — 2026-05-27
+
+### Added
+
+- **Phase 114 — One-Sqrt × Eleven-Log × polynomial numerator** (`one_sqrt_eleven_log_poly_effective_x2`):
+  `effective_x2 = sqrt1_deg_x2 + 2·poly_deg`.
+
+## 2.50.0 — 2026-05-27
+
+### Added
+
+- **Phase 113 — Eleven-Log × polynomial numerator** (`eleven_log_poly_effective_x2`):
+  Starts the Eleven-Log family (Phases 113–118). Requires exactly 11 Log factors.
+  `effective_x2 = 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
 ## 2.49.0 — 2026-05-27
 
 ### Added

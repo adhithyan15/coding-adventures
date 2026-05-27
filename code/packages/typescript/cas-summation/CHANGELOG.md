@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.55.0 — 2026-05-27
+
+### Added
+
+- **Phase 118 — Five-Sqrt × Eleven-Log × polynomial numerator** (`fiveSqrtElevenLogPolyEffectiveDeg`):
+  Completes the Eleven-Log family (Phases 113–118).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.54.0 — 2026-05-27
+
+### Added
+
+- **Phase 117 — Four-Sqrt × Eleven-Log × polynomial numerator** (`fourSqrtElevenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.53.0 — 2026-05-27
+
+### Added
+
+- **Phase 116 — Three-Sqrt × Eleven-Log × polynomial numerator** (`threeSqrtElevenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.52.0 — 2026-05-27
+
+### Added
+
+- **Phase 115 — Two-Sqrt × Eleven-Log × polynomial numerator** (`twoSqrtElevenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.51.0 — 2026-05-27
+
+### Added
+
+- **Phase 114 — One-Sqrt × Eleven-Log × polynomial numerator** (`oneSqrtElevenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1 + polyDeg`.
+
+## 2.50.0 — 2026-05-27
+
+### Added
+
+- **Phase 113 — Eleven-Log × polynomial numerator** (`elevenLogPolyEffectiveDeg`):
+  Starts the Eleven-Log family (Phases 113–118). Requires exactly 11 Log factors.
+  `effectiveDeg = polyDeg`. Convergent when `denDeg > effectiveDeg`.
+
 ## 2.49.0 — 2026-05-27
 
 ### Added
