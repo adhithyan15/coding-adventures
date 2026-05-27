@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.91.0 — 2026-05-27
+
+### Added
+
+- **Phase 154 — Five-Sqrt × Seventeen-Log × polynomial numerator** (`five_sqrt_seventeen_log_poly_effective_x2`):
+  Completes the Seventeen-Log family (Phases 149–154).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.90.0 — 2026-05-27
+
+### Added
+
+- **Phase 153 — Four-Sqrt × Seventeen-Log × polynomial numerator** (`four_sqrt_seventeen_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.89.0 — 2026-05-27
+
+### Added
+
+- **Phase 152 — Three-Sqrt × Seventeen-Log × polynomial numerator** (`three_sqrt_seventeen_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.88.0 — 2026-05-27
+
+### Added
+
+- **Phase 151 — Two-Sqrt × Seventeen-Log × polynomial numerator** (`two_sqrt_seventeen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.87.0 — 2026-05-27
+
+### Added
+
+- **Phase 150 — One-Sqrt × Seventeen-Log × polynomial numerator** (`one_sqrt_seventeen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.86.0 — 2026-05-27
+
+### Added
+
+- **Phase 149 — Seventeen-Log × polynomial numerator** (`seventeen_log_poly_effective_x2`):
+  `effective_x2 = 2·poly_deg`. No Sqrt factors; log(k)^17 is sub-polynomial.
+
 ## 2.85.0 — 2026-05-27
 
 ### Added

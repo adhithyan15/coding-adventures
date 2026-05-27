@@ -2829,6 +2829,145 @@ function fiveSqrtSixteenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | u
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
 }
 
+function seventeenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  // Phase 149 — Seventeen-Log × polynomial numerator.
+  // log^17(k) is sub-polynomial; effective degree = polyDeg. No Sqrt factors allowed.
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined; // no Sqrts allowed
+    if (isLogOfDivergingInK(arg, k)) { logCount++; if (logCount > 17) return undefined; continue; }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 17) return undefined;
+  return polyDeg;
+}
+
+function oneSqrtSeventeenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  // Phase 150 — One-Sqrt × Seventeen-Log × polynomial numerator.
+  // effective degree = sqrtHalfDeg + polyDeg.
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDeg !== undefined) return undefined;
+      sqrtHalfDeg = hd;
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) { logCount++; if (logCount > 17) return undefined; continue; }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDeg === undefined || logCount !== 17) return undefined;
+  return sqrtHalfDeg + polyDeg;
+}
+
+function twoSqrtSeventeenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  // Phase 151 — Two-Sqrt × Seventeen-Log × polynomial numerator.
+  // effective degree = sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg.
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 2) return undefined;
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) { logCount++; if (logCount > 17) return undefined; continue; }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 17) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
+function threeSqrtSeventeenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  // Phase 152 — Three-Sqrt × Seventeen-Log × polynomial numerator.
+  // effective degree = sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg.
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 3) return undefined;
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) { logCount++; if (logCount > 17) return undefined; continue; }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3 || logCount !== 17) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
+function fourSqrtSeventeenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  // Phase 153 — Four-Sqrt × Seventeen-Log × polynomial numerator.
+  // effective degree = sqrtHalfDegs[0] + … + sqrtHalfDegs[3] + polyDeg.
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 4) return undefined;
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) { logCount++; if (logCount > 17) return undefined; continue; }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 4 || logCount !== 17) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + polyDeg;
+}
+
+function fiveSqrtSeventeenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  // Phase 154 — Five-Sqrt × Seventeen-Log × polynomial numerator.
+  // effective degree = sqrtHalfDegs[0] + … + sqrtHalfDegs[4] + polyDeg.
+  // Completes the Seventeen-Log family (Phases 149-154).
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 5) return undefined;
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) { logCount++; if (logCount > 17) return undefined; continue; }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 5 || logCount !== 17) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
+}
+
 function tenLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
   if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
   let logCount = 0;
@@ -4039,6 +4178,78 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 154: Mul(Sqrt(P1)×5, Log(h1)×17, polynomial..., bounded...) numerator.
+  // Five Sqrt + seventeen Log factors; log¹⁷ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > fiveSqrtSeventeenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s5l17Deg = fiveSqrtSeventeenLogPolyEffectiveDeg(num, k);
+  if (s5l17Deg !== undefined) {
+    const denDegS5l17 = polynomialDegreeInK(den, k);
+    if (denDegS5l17 !== undefined) {
+      if (denDegS5l17 > s5l17Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 153: Mul(Sqrt(P1)×4, Log(h1)×17, polynomial..., bounded...) numerator.
+  // Four Sqrt + seventeen Log factors; log¹⁷ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > fourSqrtSeventeenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s4l17Deg = fourSqrtSeventeenLogPolyEffectiveDeg(num, k);
+  if (s4l17Deg !== undefined) {
+    const denDegS4l17 = polynomialDegreeInK(den, k);
+    if (denDegS4l17 !== undefined) {
+      if (denDegS4l17 > s4l17Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 152: Mul(Sqrt(P1)×3, Log(h1)×17, polynomial..., bounded...) numerator.
+  // Three Sqrt + seventeen Log factors; log¹⁷ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > threeSqrtSeventeenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s3l17Deg = threeSqrtSeventeenLogPolyEffectiveDeg(num, k);
+  if (s3l17Deg !== undefined) {
+    const denDegS3l17 = polynomialDegreeInK(den, k);
+    if (denDegS3l17 !== undefined) {
+      if (denDegS3l17 > s3l17Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 151: Mul(Sqrt(P1), Sqrt(P2), Log(h1)×17, polynomial..., bounded...) numerator.
+  // Two Sqrt + seventeen Log factors; log¹⁷ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > twoSqrtSeventeenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s2l17Deg = twoSqrtSeventeenLogPolyEffectiveDeg(num, k);
+  if (s2l17Deg !== undefined) {
+    const denDegS2l17 = polynomialDegreeInK(den, k);
+    if (denDegS2l17 !== undefined) {
+      if (denDegS2l17 > s2l17Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 150: Mul(Sqrt(P), Log(h1)×17, polynomial..., bounded...) numerator.
+  // One Sqrt + seventeen Log factors; log¹⁷ sub-polynomial → effective degree = sqrtHalfDeg + polyDeg.
+  // Closes when denDeg > oneSqrtSeventeenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s1l17Deg = oneSqrtSeventeenLogPolyEffectiveDeg(num, k);
+  if (s1l17Deg !== undefined) {
+    const denDegS1l17 = polynomialDegreeInK(den, k);
+    if (denDegS1l17 !== undefined) {
+      if (denDegS1l17 > s1l17Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 149: Mul(Log(h1)×17, polynomial..., bounded...) numerator.
+  // Zero Sqrt + seventeen Log factors; log¹⁷ sub-polynomial → effective degree = polyDeg.
+  // Closes when denDeg > seventeenLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const sl17Deg = seventeenLogPolyEffectiveDeg(num, k);
+  if (sl17Deg !== undefined) {
+    const denDegSl17 = polynomialDegreeInK(den, k);
+    if (denDegSl17 !== undefined) {
+      if (denDegSl17 > sl17Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
