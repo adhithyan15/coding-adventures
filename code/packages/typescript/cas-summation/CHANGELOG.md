@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.35.0 — 2026-05-27
+
+### Added
+
+- **Phase 98 — Three-Sqrt × Eight-Log × polynomial numerator** (`threeSqrtEightLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1), ..., Log(h8), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 8 Log factors required.
+  `effectiveDeg = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg`.
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in `Phase 98` describe block.
+
 ## 2.34.0 — 2026-05-27
 
 ### Added
