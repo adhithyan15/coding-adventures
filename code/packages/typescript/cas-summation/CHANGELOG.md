@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.121.0 — 2026-05-27
+
+### Added
+
+- **Phase 184 — Five-Sqrt × Twenty-Two-Log × polynomial numerator** (`fiveSqrtTwentyTwoLogPolyEffectiveDeg`):
+  Completes the Twenty-Two-Log family (Phases 179–184).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.120.0 — 2026-05-27
+
+### Added
+
+- **Phase 183 — Four-Sqrt × Twenty-Two-Log × polynomial numerator** (`fourSqrtTwentyTwoLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3+sqrtHalfDeg4 + polyDeg`.
+
+## 2.119.0 — 2026-05-27
+
+### Added
+
+- **Phase 182 — Three-Sqrt × Twenty-Two-Log × polynomial numerator** (`threeSqrtTwentyTwoLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.118.0 — 2026-05-27
+
+### Added
+
+- **Phase 181 — Two-Sqrt × Twenty-Two-Log × polynomial numerator** (`twoSqrtTwentyTwoLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.117.0 — 2026-05-27
+
+### Added
+
+- **Phase 180 — One-Sqrt × Twenty-Two-Log × polynomial numerator** (`oneSqrtTwentyTwoLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.116.0 — 2026-05-27
+
+### Added
+
+- **Phase 179 — Twenty-Two-Log × polynomial numerator** (`twentyTwoLogPolyEffectiveDeg`):
+  Opens the Twenty-Two-Log family (Phases 179–184).
+  `effectiveDeg = polyDeg` (log²² is sub-polynomial).
+
 ## 2.115.0 — 2026-05-27
 
 ### Added

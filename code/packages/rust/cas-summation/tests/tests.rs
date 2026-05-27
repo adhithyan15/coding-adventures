@@ -11843,3 +11843,627 @@ fn phase178_sqrt5_k_log22_k_over_k_refused() {
     let out = evaluate_sum(f178c, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ── Phase 179: 0-sqrt × 22-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase179_log22_k_over_k3_converges() {
+    // log(k)^22 / k^3: effective_x2=0; 2·3=6 > 0 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k179a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_179a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f179a = apply(sym(SUB), vec![g_k179a, g_kp1_179a]);
+    let out = evaluate_sum(f179a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase179_log22_k_times_k_over_k4_converges() {
+    // log(k)^22·k / k^4: effective_x2=2; 2·4=8 > 2 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k179b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_179b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f179b = apply(sym(SUB), vec![g_k179b, g_kp1_179b]);
+    let out = evaluate_sum(f179b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase179_log22_k_over_k_refused() {
+    // log(k)^22·k / k: effective_x2=2; 2·1=2 not > 2 → refused (boundary: denom too small).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k179c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_179c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f179c = apply(sym(SUB), vec![g_k179c, g_kp1_179c]);
+    let out = evaluate_sum(f179c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 180: 1-sqrt × 22-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase180_sqrt_k_log22_k_over_k3_converges() {
+    // √k·log(k)^22 / k^3: effective_x2=1; 2·3=6 > 1 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k180a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_180a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f180a = apply(sym(SUB), vec![g_k180a, g_kp1_180a]);
+    let out = evaluate_sum(f180a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase180_sqrt_k_log22_k_times_k_over_k4_converges() {
+    // √k·log(k)^22·k / k^4: effective_x2=3; 2·4=8 > 3 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k180b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_180b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f180b = apply(sym(SUB), vec![g_k180b, g_kp1_180b]);
+    let out = evaluate_sum(f180b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase180_sqrt_k_log22_k_over_k_refused() {
+    // √k·log(k)^22·k / k: effective_x2=3; 2·1=2 not > 3 → refused (boundary: denom too small).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k180c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_180c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f180c = apply(sym(SUB), vec![g_k180c, g_kp1_180c]);
+    let out = evaluate_sum(f180c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 181: 2-sqrt × 22-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase181_sqrt2_k_log22_k_over_k3_converges() {
+    // √k^2·log(k)^22 / k^3: effective_x2=2; 2·3=6 > 2 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k181a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_181a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f181a = apply(sym(SUB), vec![g_k181a, g_kp1_181a]);
+    let out = evaluate_sum(f181a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase181_sqrt2_k_log22_k_times_k_over_k4_converges() {
+    // √k^2·log(k)^22·k / k^4: effective_x2=4; 2·4=8 > 4 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k181b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_181b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f181b = apply(sym(SUB), vec![g_k181b, g_kp1_181b]);
+    let out = evaluate_sum(f181b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase181_sqrt2_k_log22_k_over_k_refused() {
+    // √k^2·log(k)^22·k / k: effective_x2=4; 2·1=2 not > 4 → refused (boundary: denom too small).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k181c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_181c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f181c = apply(sym(SUB), vec![g_k181c, g_kp1_181c]);
+    let out = evaluate_sum(f181c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 182: 3-sqrt × 22-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase182_sqrt3_k_log22_k_over_k3_converges() {
+    // √k^3·log(k)^22 / k^3: effective_x2=3; 2·3=6 > 3 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k182a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_182a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f182a = apply(sym(SUB), vec![g_k182a, g_kp1_182a]);
+    let out = evaluate_sum(f182a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase182_sqrt3_k_log22_k_times_k_over_k4_converges() {
+    // √k^3·log(k)^22·k / k^4: effective_x2=5; 2·4=8 > 5 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k182b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_182b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f182b = apply(sym(SUB), vec![g_k182b, g_kp1_182b]);
+    let out = evaluate_sum(f182b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase182_sqrt3_k_log22_k_over_k_refused() {
+    // √k^3·log(k)^22·k / k: effective_x2=5; 2·1=2 not > 5 → refused (boundary: denom too small).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k182c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_182c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f182c = apply(sym(SUB), vec![g_k182c, g_kp1_182c]);
+    let out = evaluate_sum(f182c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 183: 4-sqrt × 22-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase183_sqrt4_k_log22_k_over_k4_converges() {
+    // √k^4·log(k)^22 / k^4: effective_x2=4; 2·4=8 > 4 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k183a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_183a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f183a = apply(sym(SUB), vec![g_k183a, g_kp1_183a]);
+    let out = evaluate_sum(f183a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase183_sqrt4_k_log22_k_times_k_over_k5_converges() {
+    // √k^4·log(k)^22·k / k^5: effective_x2=6; 2·5=10 > 6 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k183b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_183b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f183b = apply(sym(SUB), vec![g_k183b, g_kp1_183b]);
+    let out = evaluate_sum(f183b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase183_sqrt4_k_log22_k_over_k_refused() {
+    // √k^4·log(k)^22·k / k: effective_x2=6; 2·1=2 not > 6 → refused (boundary: denom too small).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k183c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_183c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f183c = apply(sym(SUB), vec![g_k183c, g_kp1_183c]);
+    let out = evaluate_sum(f183c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 184: 5-sqrt × 22-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase184_sqrt5_k_log22_k_over_k4_converges() {
+    // √k^5·log(k)^22 / k^4: effective_x2=5; 2·4=8 > 5 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k184a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_184a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f184a = apply(sym(SUB), vec![g_k184a, g_kp1_184a]);
+    let out = evaluate_sum(f184a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase184_sqrt5_k_log22_k_times_k_over_k5_converges() {
+    // √k^5·log(k)^22·k / k^5: effective_x2=7; 2·5=10 > 7 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k184b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_184b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f184b = apply(sym(SUB), vec![g_k184b, g_kp1_184b]);
+    let out = evaluate_sum(f184b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase184_sqrt5_k_log22_k_over_k_refused() {
+    // √k^5·log(k)^22·k / k: effective_x2=7; 2·1=2 not > 7 → refused (boundary: denom too small).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k184c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_184c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f184c = apply(sym(SUB), vec![g_k184c, g_kp1_184c]);
+    let out = evaluate_sum(f184c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
