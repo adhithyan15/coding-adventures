@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.61.0 — 2026-05-27
+
+### Added
+
+- **Phase 124 — Five-Sqrt × Twelve-Log × polynomial numerator** (`fiveSqrtTwelveLogPolyEffectiveDeg`):
+  Completes the Twelve-Log family (Phases 119–124).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.60.0 — 2026-05-27
+
+### Added
+
+- **Phase 123 — Four-Sqrt × Twelve-Log × polynomial numerator** (`fourSqrtTwelveLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.59.0 — 2026-05-27
+
+### Added
+
+- **Phase 122 — Three-Sqrt × Twelve-Log × polynomial numerator** (`threeSqrtTwelveLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.58.0 — 2026-05-27
+
+### Added
+
+- **Phase 121 — Two-Sqrt × Twelve-Log × polynomial numerator** (`twoSqrtTwelveLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.57.0 — 2026-05-27
+
+### Added
+
+- **Phase 120 — One-Sqrt × Twelve-Log × polynomial numerator** (`oneSqrtTwelveLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.56.0 — 2026-05-27
+
+### Added
+
+- **Phase 119 — Zero-Sqrt × Twelve-Log × polynomial numerator** (`twelveLogPolyEffectiveDeg`):
+  Opens the Twelve-Log family.
+  `effectiveDeg = polyDeg`. Closes when `den_deg > effectiveDeg`.
+
 ## 2.55.0 — 2026-05-27
 
 ### Added

@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.61.0 — 2026-05-27
+
+### Added
+
+- **Phase 124 — Five-Sqrt × Twelve-Log × polynomial** (`_five_sqrt_twelve_log_poly_effective_x2`):
+  Completes the Twelve-Log family (Phases 119–124).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.60.0 — 2026-05-27
+
+### Added
+
+- **Phase 123 — Four-Sqrt × Twelve-Log × polynomial** (`_four_sqrt_twelve_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+…+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.59.0 — 2026-05-27
+
+### Added
+
+- **Phase 122 — Three-Sqrt × Twelve-Log × polynomial** (`_three_sqrt_twelve_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.58.0 — 2026-05-27
+
+### Added
+
+- **Phase 121 — Two-Sqrt × Twelve-Log × polynomial** (`_two_sqrt_twelve_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.57.0 — 2026-05-27
+
+### Added
+
+- **Phase 120 — One-Sqrt × Twelve-Log × polynomial** (`_one_sqrt_twelve_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.56.0 — 2026-05-27
+
+### Added
+
+- **Phase 119 — Zero-Sqrt × Twelve-Log × polynomial** (`_twelve_log_poly_effective_x2`):
+  Opens the Twelve-Log family.
+  `effective_x2 = 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
 ## 2.55.0 — 2026-05-27
 
 ### Added
