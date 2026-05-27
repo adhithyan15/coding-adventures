@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.73.0 — 2026-05-27
+
+### Added
+
+- **Phase 136 — Five-Sqrt × Fourteen-Log × polynomial** (`_five_sqrt_fourteen_log_poly_effective_x2`):
+  Completes the Fourteen-Log family (Phases 131–136).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.72.0 — 2026-05-27
+
+### Added
+
+- **Phase 135 — Four-Sqrt × Fourteen-Log × polynomial** (`_four_sqrt_fourteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+…+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.71.0 — 2026-05-27
+
+### Added
+
+- **Phase 134 — Three-Sqrt × Fourteen-Log × polynomial** (`_three_sqrt_fourteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.70.0 — 2026-05-27
+
+### Added
+
+- **Phase 133 — Two-Sqrt × Fourteen-Log × polynomial** (`_two_sqrt_fourteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.69.0 — 2026-05-27
+
+### Added
+
+- **Phase 132 — One-Sqrt × Fourteen-Log × polynomial** (`_one_sqrt_fourteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.68.0 — 2026-05-27
+
+### Added
+
+- **Phase 131 — Fourteen-Log × polynomial** (`_fourteen_log_poly_effective_x2`):
+  Begins the Fourteen-Log family.
+  `effective_x2 = 2·poly_deg`. Requires exactly 14 `Log` factors and no `Sqrt` factors.
+
 ## 2.67.0 — 2026-05-27
 
 ### Added
