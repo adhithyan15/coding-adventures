@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.85.0 — 2026-05-27
+
+### Added
+
+- **Phase 148 — Five-Sqrt × Sixteen-Log × polynomial numerator** (`fiveSqrtSixteenLogPolyEffectiveDeg`):
+  Completes the Sixteen-Log family (Phases 143–148).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.84.0 — 2026-05-27
+
+### Added
+
+- **Phase 147 — Four-Sqrt × Sixteen-Log × polynomial numerator** (`fourSqrtSixteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.83.0 — 2026-05-27
+
+### Added
+
+- **Phase 146 — Three-Sqrt × Sixteen-Log × polynomial numerator** (`threeSqrtSixteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.82.0 — 2026-05-27
+
+### Added
+
+- **Phase 145 — Two-Sqrt × Sixteen-Log × polynomial numerator** (`twoSqrtSixteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.81.0 — 2026-05-27
+
+### Added
+
+- **Phase 144 — One-Sqrt × Sixteen-Log × polynomial numerator** (`oneSqrtSixteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.80.0 — 2026-05-27
+
+### Added
+
+- **Phase 143 — Sixteen-Log × polynomial numerator** (`sixteenLogPolyEffectiveDeg`):
+  `effectiveDeg = polyDeg`. No Sqrt factors; log(k)^16 grows sub-polynomially.
+
 ## 2.79.0 — 2026-05-27
 
 ### Added

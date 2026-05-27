@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.85.0 — 2026-05-27
+
+### Added
+
+- **Phase 148 — Five-Sqrt × Sixteen-Log × polynomial** (`_five_sqrt_sixteen_log_poly_effective_x2`):
+  Completes the Sixteen-Log family (Phases 143–148).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.84.0 — 2026-05-27
+
+### Added
+
+- **Phase 147 — Four-Sqrt × Sixteen-Log × polynomial** (`_four_sqrt_sixteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+…+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.83.0 — 2026-05-27
+
+### Added
+
+- **Phase 146 — Three-Sqrt × Sixteen-Log × polynomial** (`_three_sqrt_sixteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.82.0 — 2026-05-27
+
+### Added
+
+- **Phase 145 — Two-Sqrt × Sixteen-Log × polynomial** (`_two_sqrt_sixteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.81.0 — 2026-05-27
+
+### Added
+
+- **Phase 144 — One-Sqrt × Sixteen-Log × polynomial** (`_one_sqrt_sixteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.80.0 — 2026-05-27
+
+### Added
+
+- **Phase 143 — Sixteen-Log × polynomial** (`_sixteen_log_poly_effective_x2`):
+  `effective_x2 = 2·poly_deg`. No Sqrt factors; log(k)^16 grows sub-polynomially.
+
 ## 2.79.0 — 2026-05-27
 
 ### Added
