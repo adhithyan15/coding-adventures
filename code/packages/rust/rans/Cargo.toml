@@ -1,0 +1,5 @@
+[package]
+name = "rans"
+version = "0.1.0"
+edition = "2021"
+description = "Range Asymmetric Numeral Systems (rANS) entropy coder: AnsTable + RansEncoder + RansDecoder (zero dependencies)"
