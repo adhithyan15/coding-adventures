@@ -367,6 +367,7 @@ members = [
     "qr-code",
     "data-matrix",
     "pdf417",
+    "image-codec-gif",
     "image-codec-bmp",
     "image-codec-jpeg",
     "image-codec-ppm",
