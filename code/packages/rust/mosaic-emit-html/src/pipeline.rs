@@ -497,6 +497,22 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
             extra_attrs: "",
             void: false,
         },
+        // UI31 §3.2 / UI28-1 / U29-D1 — `Col` is the cell-definition
+        // sub-tag inside HostTableColGroup. The colgroup walker
+        // (above) handles direct Col children specially, but when Col
+        // is wrapped in a For (e.g. mosaic-pkg-grid v0.2.0's `For
+        // (each: slot: column-widths, as: w) { Col [col] (width: ( w
+        // )) }`), the generic walker recurses into the For body and
+        // hits Col here as a standalone primitive. `<col>` is HTML's
+        // canonical void column-definition element — emit it as a
+        // void tag with no built-in style; per-column width comes
+        // from the part-style merge if the author bound one.
+        "Col" => HtmlTag {
+            tag_name: "col",
+            builtin_style: "",
+            extra_attrs: "",
+            void: true,
+        },
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
 }
