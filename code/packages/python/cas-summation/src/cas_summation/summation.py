@@ -1312,6 +1312,19 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 99: ``Mul(Sqrt(P1)..Sqrt(P4), Log(h1), ..., Log(h8), polynomial..., bounded...)`` numerator.
+    # Four Sqrt factors + eight Log factors; log⁸ sub-polynomial → 0.
+    # effective_x2 = sqrt1+sqrt2+sqrt3+sqrt4_deg_x2 + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s4l8p_x2 = _four_sqrt_eight_log_poly_effective_x2(num, k)
+    if s4l8p_x2 is not None:
+        den_deg_s4l8 = _polynomial_degree_in_k(den, k)
+        if den_deg_s4l8 is not None:
+            if 2 * den_deg_s4l8 > s4l8p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -4145,6 +4158,45 @@ def _three_sqrt_eight_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | 
             continue
         return None
     if len(sqrt_degs_x2) != 3 or log_count != 8:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _four_sqrt_eight_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt1_x2 + sqrt2_x2 + sqrt3_x2 + sqrt4_x2 + 2·poly_deg`` when ``node`` is a
+    ``Mul`` with **exactly four** ``Sqrt`` factors, **exactly eight** ``Log`` factors, any
+    polynomial factors, and any bounded factors; ``None`` otherwise.
+
+    Phase 99 — Four-Sqrt × Eight-Log × polynomial numerator.
+
+    Using the ×2 integer trick: ``effective_x2 = a + b + c + d + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 4:
+                return None  # fifth Sqrt — not this phase
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 8:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 4 or log_count != 8:
         return None
     return sum(sqrt_degs_x2) + 2 * poly_deg_sum
 

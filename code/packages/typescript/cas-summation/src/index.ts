@@ -2127,6 +2127,38 @@ function twoSqrtEightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | unde
 }
 
 /**
+ * Phase 99 — Four-Sqrt × Eight-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a) · sqrt(k^b) · sqrt(k^c) · sqrt(k^d) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial,
+ * contributing 0.  effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + sqrtHalfDeg4 + polyDeg.
+ */
+function fourSqrtEightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 4) return undefined; // fifth Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 8) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 4 || logCount !== 8) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + polyDeg;
+}
+
+/**
  * Phase 98 — Three-Sqrt × Eight-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · sqrt(k^b) · sqrt(k^c) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial,
@@ -2919,6 +2951,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 99: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Log(h1)×8, polynomial..., bounded...) numerator.
+  // Four Sqrt + eight Log factors; log⁸ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > fourSqrtEightLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s4l8Deg = fourSqrtEightLogPolyEffectiveDeg(num, k);
+  if (s4l8Deg !== undefined) {
+    const denDegS4l8 = polynomialDegreeInK(den, k);
+    if (denDegS4l8 !== undefined) {
+      if (denDegS4l8 > s4l8Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
