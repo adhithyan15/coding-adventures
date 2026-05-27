@@ -5193,3 +5193,76 @@ class TestPhase94FiveSqrtSevenLogPoly:
         f94 = IRApply(SUB, (g_k94, g_kp1_94))
         result = evaluate_sum(f94, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase95EightLogPoly:
+    """Phase 95 — Eight-Log × polynomial numerator (zero Sqrt).
+
+    effective_x2 = 2·poly_deg (log⁸ → 0).
+    Closes iff 2·den_deg > effective_x2 or denom is non-polynomial diverging.
+    """
+
+    def test_log8_k_over_k2_closes(self):
+        """log(k)⁸/k²: eff_x2=0; 2·2=4 > 0 → closes."""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,))))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log8_k_times_k_over_k3_closes(self):
+        """log(k)⁸·k/k³: eff_x2=2; 2·3=6 > 2 → closes."""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                              _k))
+        num_kp1 = IRApply(MUL, (IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                kp1))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f95b = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f95b, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log8_k_times_k_over_k_refused(self):
+        """log(k)⁸·k/k: eff_x2=2; 2·1=2 not > 2 → refused."""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k95c = IRApply(MUL, (IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                                 IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                                 IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                                 IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+                                 _k))
+        num_kp1_95c = IRApply(MUL, (IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                    IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                    IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                    IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+                                    kp1))
+        g_k95c = IRApply(DIV, (num_k95c, _k))
+        g_kp1_95c = IRApply(DIV, (num_kp1_95c, kp1))
+        f95c = IRApply(SUB, (g_k95c, g_kp1_95c))
+        result = evaluate_sum(f95c, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM

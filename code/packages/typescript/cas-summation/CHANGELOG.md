@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.32.0 — 2026-05-27
+
+### Added
+
+- **Phase 95 — Eight-Log × polynomial numerator** (`eightLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1), ..., Log(h8), polynomial..., bounded...)` with exactly 8 Log
+  factors and no Sqrt factors.  `log⁸(k)` is sub-polynomial (`o(k^ε)`), contributing 0;
+  `effectiveDeg = polyDeg`.  Closes when `denDeg > eightLogPolyEffectiveDeg` or non-polynomial
+  diverging denominator.  Opens the Eight-Log family (Phases 95–100).
+  - 3 new tests in `Phase 95` describe block.
+
 ## 2.31.0 — 2026-05-27
 
 ### Added

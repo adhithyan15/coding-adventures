@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.32.0 — 2026-05-27
+
+### Added
+
+- **Phase 95 — Eight-Log × polynomial numerator** (`_eight_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), ..., Log(h8(k)), polynomial..., bounded...)` with exactly 8 Log
+  factors and no Sqrt factors.  `log⁸(k)` is sub-polynomial (`o(k^ε)`), contributing 0 to
+  effective degree; `effective_x2 = 2·poly_deg`.  Closes when `2·den_deg > effective_x2` or
+  non-polynomial diverging denominator.  Opens the Eight-Log family (Phases 95–100).
+  - 3 new unit tests in `TestPhase95EightLogPoly`.
+
 ## 2.31.0 — 2026-05-27
 
 ### Added
