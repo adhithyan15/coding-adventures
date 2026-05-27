@@ -1273,6 +1273,19 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 96: ``Mul(Sqrt(P), Log(h1), ..., Log(h8), polynomial..., bounded...)`` numerator.
+    # One Sqrt factor + eight Log factors; log⁸ sub-polynomial → 0.
+    # effective_x2 = sqrt_deg_x2 + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s1l8p_x2 = _one_sqrt_eight_log_poly_effective_x2(num, k)
+    if s1l8p_x2 is not None:
+        den_deg_s1l8 = _polynomial_degree_in_k(den, k)
+        if den_deg_s1l8 is not None:
+            if 2 * den_deg_s1l8 > s1l8p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -3942,6 +3955,69 @@ def _eight_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
     if log_count != 8:
         return None
     return 2 * poly_deg_sum
+
+
+def _one_sqrt_eight_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt_deg_x2 + 2·poly_deg`` when ``node`` is a ``Mul`` with
+    **exactly one** ``Sqrt(positive-polynomial)`` factor, **exactly eight**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 96 — One-Sqrt × Eight-Log × polynomial numerator.
+
+    Effective growth:
+    ``sqrt(k^a) · log(k)⁸ · k^m``.  ``log⁸(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick: ``effective_x2 = a + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +----------------------------------------------------------+----------+
+    | Input                                                    | Return   |
+    +==========================================================+==========+
+    | ``Mul(Sqrt(k), Log(k)×8)``                               | ``1``    |
+    | ``Mul(Sqrt(k²), Log(k)×8, k)``                           | ``4``    |
+    | ``Mul(Sqrt(k), Log(k)×7)``                               | None (7) |
+    | ``Mul(Sqrt(k), Sqrt(k), Log(k)×8)``                      | None (2) |
+    +----------------------------------------------------------+----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(P)`` → record; bail on second Sqrt.
+         - ``Log(diverging)`` → count; bail after 8.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 1 Sqrt AND exactly 8 Log factors.
+      4. Return ``sqrt_deg_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_deg_x2: int | None = None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        s_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if s_x2 is not None:
+            if sqrt_deg_x2 is not None:
+                return None  # second Sqrt — not this phase
+            sqrt_deg_x2 = s_x2
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 8:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if sqrt_deg_x2 is None or log_count != 8:
+        return None
+    return sqrt_deg_x2 + 2 * poly_deg_sum
 
 
 def _one_sqrt_six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:

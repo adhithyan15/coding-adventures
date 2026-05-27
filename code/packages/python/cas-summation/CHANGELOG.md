@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.33.0 — 2026-05-27
+
+### Added
+
+- **Phase 96 — One-Sqrt × Eight-Log × polynomial numerator** (`_one_sqrt_eight_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P(k)), Log(h1(k)), ..., Log(h8(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 8 Log factors required.  `log⁸(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase96OneSqrtEightLogPoly`.
+
 ## 2.32.0 — 2026-05-27
 
 ### Added

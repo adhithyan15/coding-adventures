@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.33.0 — 2026-05-27
+
+### Added
+
+- **Phase 96 — One-Sqrt × Eight-Log × polynomial numerator** (`oneSqrtEightLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P), Log(h1), ..., Log(h8), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 8 Log factors required.
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+  - 3 new tests in `Phase 96` describe block.
+
 ## 2.32.0 — 2026-05-27
 
 ### Added
