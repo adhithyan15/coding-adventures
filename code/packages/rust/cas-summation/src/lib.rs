@@ -2341,6 +2341,36 @@ fn one_sqrt_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64
     Some(s + 2 * poly_deg)
 }
 
+/// Phase 97 — Two-Sqrt × Eight-Log × polynomial numerator.
+///
+/// Effective growth: `sqrt(k^a) · sqrt(k^b) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial.
+/// Using the ×2 integer trick: `effective_x2 = a + b + 2·m`.
+/// Caller checks `2·den_deg > effective_x2`.
+fn two_sqrt_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node { IRNode::Apply(a) => a, _ => return None };
+    if !head_is(&apply_node.head, MUL) { return None; }
+    let mut sqrt_degs_x2: Vec<i64> = Vec::new();
+    let mut log_count: usize = 0;
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        if let Some(d) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_degs_x2.len() >= 2 { return None; } // third Sqrt — refuse
+            sqrt_degs_x2.push(d);
+            continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 8 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) { poly_deg += deg; continue; }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs_x2.len() != 2 || log_count != 8 { return None; }
+    Some(sqrt_degs_x2.iter().sum::<i64>() + 2 * poly_deg)
+}
+
 /// Phase 90 — One-Sqrt × Seven-Log × polynomial numerator.
 ///
 /// Effective growth: `sqrt(k^a) · log(k)⁷ · k^m`. `log⁷(k)` is sub-polynomial (`o(k^ε)`),
@@ -3025,6 +3055,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(s1l8_x2) = one_sqrt_eight_log_poly_effective_x2(num, k) {
         if let Some(den_deg_s1l8) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_s1l8 > s1l8_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 97: Mul(Sqrt(P1), Sqrt(P2), Log(diverging)×8, polynomial..., bounded...) numerator.
+    // Two Sqrt + eight Log factors; log⁸ sub-polynomial — effective_x2 = sum(sqrt_deg_x2) + 2·poly_deg.
+    // Closes when 2 * den_deg > effective_x2 or non-polynomial diverging denom.
+    if let Some(s2l8_x2) = two_sqrt_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s2l8) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s2l8 > s2l8_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {

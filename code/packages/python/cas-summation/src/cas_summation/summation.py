@@ -1286,6 +1286,19 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 97: ``Mul(Sqrt(P1), Sqrt(P2), Log(h1), ..., Log(h8), polynomial..., bounded...)`` numerator.
+    # Two Sqrt factors + eight Log factors; log⁸ sub-polynomial → 0.
+    # effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s2l8p_x2 = _two_sqrt_eight_log_poly_effective_x2(num, k)
+    if s2l8p_x2 is not None:
+        den_deg_s2l8 = _polynomial_degree_in_k(den, k)
+        if den_deg_s2l8 is not None:
+            if 2 * den_deg_s2l8 > s2l8p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -4018,6 +4031,70 @@ def _one_sqrt_eight_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | No
     if sqrt_deg_x2 is None or log_count != 8:
         return None
     return sqrt_deg_x2 + 2 * poly_deg_sum
+
+
+def _two_sqrt_eight_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg`` when ``node`` is a ``Mul``
+    with **exactly two** ``Sqrt(positive-polynomial)`` factors, **exactly eight**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 97 — Two-Sqrt × Eight-Log × polynomial numerator.
+
+    Effective growth:
+    ``sqrt(k^a) · sqrt(k^b) · log(k)⁸ · k^m``.  ``log⁸(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick: ``effective_x2 = a + b + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +------------------------------------------------------------------+----------+
+    | Input                                                            | Return   |
+    +==================================================================+==========+
+    | ``Mul(Sqrt(k)×2, Log(k)×8)``                                     | ``2``    |
+    | ``Mul(Sqrt(k²), Sqrt(k), Log(k)×8, k)``                          | ``5``    |
+    | ``Mul(Sqrt(k), Log(k)×8)``                                       | None (1) |
+    | ``Mul(Sqrt(k)×3, Log(k)×8)``                                     | None (3) |
+    | ``Mul(Sqrt(k)×2, Log(k)×7)``                                     | None (7) |
+    +------------------------------------------------------------------+----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(P)`` → record; bail after 2 Sqrts.
+         - ``Log(diverging)`` → count; bail after 8.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 2 Sqrt AND exactly 8 Log factors.
+      4. Return ``sum(sqrt_degs_x2) + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 2:
+                return None  # third Sqrt — not this phase
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 8:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 2 or log_count != 8:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
 
 
 def _one_sqrt_six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:

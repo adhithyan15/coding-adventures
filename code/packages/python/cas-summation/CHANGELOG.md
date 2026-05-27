@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.34.0 — 2026-05-27
+
+### Added
+
+- **Phase 97 — Two-Sqrt × Eight-Log × polynomial numerator** (`_two_sqrt_eight_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1(k)), Sqrt(P2(k)), Log(h1(k)), ..., Log(h8(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt factors and exactly 8 Log factors required.
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg`.
+  - 3 new unit tests in `TestPhase97TwoSqrtEightLogPoly`.
+
 ## 2.33.0 — 2026-05-27
 
 ### Added

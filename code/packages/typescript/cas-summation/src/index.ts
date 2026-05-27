@@ -2095,6 +2095,38 @@ function oneSqrtEightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | unde
 }
 
 /**
+ * Phase 97 — Two-Sqrt × Eight-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a) · sqrt(k^b) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial,
+ * contributing 0.  effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+ */
+function twoSqrtEightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 2) return undefined; // third Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 8) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 8) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
+/**
  * Phase 90 — One-Sqrt × Seven-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁷ · k^m`. `log⁷(k)` is sub-polynomial (`o(k^ε)`),
@@ -2843,6 +2875,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS1l8 = polynomialDegreeInK(den, k);
     if (denDegS1l8 !== undefined) {
       if (denDegS1l8 > s1l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 97: Mul(Sqrt(P1), Sqrt(P2), Log(h1)×8, polynomial..., bounded...) numerator.
+  // Two Sqrt + eight Log factors; log⁸ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > twoSqrtEightLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s2l8Deg = twoSqrtEightLogPolyEffectiveDeg(num, k);
+  if (s2l8Deg !== undefined) {
+    const denDegS2l8 = polynomialDegreeInK(den, k);
+    if (denDegS2l8 !== undefined) {
+      if (denDegS2l8 > s2l8Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
