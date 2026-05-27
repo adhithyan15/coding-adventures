@@ -1182,6 +1182,20 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 87: ``Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Log(h1), ..., Log(h6),
+    #           polynomial..., bounded...)`` numerator.
+    # Four Sqrt factors + six Log factors; log⁶ sub-polynomial → 0.
+    # effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s4l6p_x2 = _four_sqrt_six_log_poly_effective_x2(num, k)
+    if s4l6p_x2 is not None:
+        den_deg_s4l6 = _polynomial_degree_in_k(den, k)
+        if den_deg_s4l6 is not None:
+            if 2 * den_deg_s4l6 > s4l6p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -3441,6 +3455,71 @@ def _one_sqrt_six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None
     if sqrt_deg_x2 is None or log_count != 6:
         return None
     return sqrt_deg_x2 + 2 * poly_deg_sum
+
+
+def _four_sqrt_six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt1_x2 + sqrt2_x2 + sqrt3_x2 + sqrt4_x2 + 2·poly_deg`` when ``node``
+    is a ``Mul`` with **exactly four** ``Sqrt(positive-leading polynomial)`` factors,
+    **exactly six** ``Log(diverging-in-k)`` factors, any polynomial factors, and any
+    bounded factors; ``None`` otherwise.
+
+    Phase 87 — Four-Sqrt × Six-Log × polynomial numerator.
+
+    Effective growth:
+    ``sqrt(k^a)·sqrt(k^b)·sqrt(k^c)·sqrt(k^d)·log(k)⁶·k^m ≈ k^{(a+b+c+d)/2+m}``.
+    ``log⁶(k)`` is sub-polynomial (``o(k^ε)``), contributing 0.
+    Using the ×2 integer trick: ``effective_x2 = a + b + c + d + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +-------------------------------------------------------------------+---------------------+
+    | Input                                                             | Return              |
+    +===================================================================+=====================+
+    | ``Mul(Sqrt(k)×4, Log(k)×6)``                                     | ``4``               |
+    | ``Mul(Sqrt(k²)×4, Log(k)×6)``                                    | ``8``               |
+    | ``Mul(Sqrt(k)×4, Log(k)×6, k)``                                  | ``6``               |
+    | ``Mul(Sqrt(k)×3, Log(k)×6)``                                     | None (3 Sqrts)      |
+    | ``Mul(Sqrt(k)×5, Log(k)×6)``                                     | None (5 Sqrts)      |
+    | ``Mul(Sqrt(k)×4, Log(k)×5)``                                     | None (5 Logs)       |
+    +-------------------------------------------------------------------+---------------------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(P)`` → record ×2 degree; bail after 4.
+         - ``Log(diverging)`` → count; bail after 6.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 4 Sqrt AND exactly 6 Log factors.
+      4. Return ``sum(sqrt_degs_x2) + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 4:
+                return None  # Fifth Sqrt — not this phase
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 6:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 4 or log_count != 6:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
 
 
 def _try_power_of_k(

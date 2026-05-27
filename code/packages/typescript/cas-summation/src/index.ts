@@ -2003,6 +2003,40 @@ function sixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
 }
 
 /**
+ * Phase 87 — Four-Sqrt × Six-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a)·sqrt(k^b)·sqrt(k^c)·sqrt(k^d)·log(k)⁶·k^m`.
+ * `log⁶(k)` is sub-polynomial (`o(k^ε)`), contributing 0.
+ * effective degree = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3+sqrtHalfDeg4 + polyDeg.
+ * Caller checks `denDeg > fourSqrtSixLogPolyEffectiveDeg(num, k)`.
+ */
+function fourSqrtSixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDegs.length >= 4) return undefined; // fifth Sqrt — refuse
+      sqrtHalfDegs.push(hd);
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 6) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 4 || logCount !== 6) return undefined;
+  return sqrtHalfDegs.reduce((a, b) => a + b, 0) + polyDeg;
+}
+
+/**
  * Phase 84 — One-Sqrt × Six-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁶ · k^m`. `log⁶(k)` is sub-polynomial (`o(k^ε)`),
@@ -2487,6 +2521,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS1l6 = polynomialDegreeInK(den, k);
     if (denDegS1l6 !== undefined) {
       if (denDegS1l6 > s1l6Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 87: Mul(Sqrt(P1)×4, Log(h1)×6, polynomial..., bounded...) numerator.
+  // Four Sqrt + six Log; log⁶ sub-polynomial → effective degree = sum(sqrtHalfDegs) + polyDeg.
+  // Closes when denDeg > fourSqrtSixLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s4l6Deg = fourSqrtSixLogPolyEffectiveDeg(num, k);
+  if (s4l6Deg !== undefined) {
+    const denDegS4l6 = polynomialDegreeInK(den, k);
+    if (denDegS4l6 !== undefined) {
+      if (denDegS4l6 > s4l6Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
