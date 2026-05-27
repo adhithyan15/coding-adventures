@@ -1,5 +1,43 @@
 # Changelog
 
+## 2.133.0 — 2026-05-27
+
+### Added
+
+- **Phase 196 — Five-Sqrt × Twenty-Four-Log × polynomial** (`_five_sqrt_twenty_four_log_poly_effective_x2`):
+  Completes the Twenty-Four-Log family (Phases 191–196).
+
+## 2.132.0 — 2026-05-27
+
+### Added
+
+- **Phase 195 — Four-Sqrt × Twenty-Four-Log × polynomial** (`_four_sqrt_twenty_four_log_poly_effective_x2`).
+
+## 2.131.0 — 2026-05-27
+
+### Added
+
+- **Phase 194 — Three-Sqrt × Twenty-Four-Log × polynomial** (`_three_sqrt_twenty_four_log_poly_effective_x2`).
+
+## 2.130.0 — 2026-05-27
+
+### Added
+
+- **Phase 193 — Two-Sqrt × Twenty-Four-Log × polynomial** (`_two_sqrt_twenty_four_log_poly_effective_x2`).
+
+## 2.129.0 — 2026-05-27
+
+### Added
+
+- **Phase 192 — One-Sqrt × Twenty-Four-Log × polynomial** (`_one_sqrt_twenty_four_log_poly_effective_x2`).
+
+## 2.128.0 — 2026-05-27
+
+### Added
+
+- **Phase 191 — Zero-Sqrt × Twenty-Four-Log × polynomial** (`_twenty_four_log_poly_effective_x2`):
+  Starts the Twenty-Four-Log family (Phases 191–196).
+
 ## 2.127.0 — 2026-05-27
 
 ### Added

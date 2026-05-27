@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.133.0 — 2026-05-27
+
+### Added
+
+- **Phase 196 — Five-Sqrt × Twenty-Four-Log × polynomial numerator** (`fiveSqrtTwentyFourLogPolyEffectiveDeg`):
+  Completes the Twenty-Four-Log family (Phases 191–196).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.132.0 — 2026-05-27
+
+### Added
+
+- **Phase 195 — Four-Sqrt × Twenty-Four-Log × polynomial numerator** (`fourSqrtTwentyFourLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.131.0 — 2026-05-27
+
+### Added
+
+- **Phase 194 — Three-Sqrt × Twenty-Four-Log × polynomial numerator** (`threeSqrtTwentyFourLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.130.0 — 2026-05-27
+
+### Added
+
+- **Phase 193 — Two-Sqrt × Twenty-Four-Log × polynomial numerator** (`twoSqrtTwentyFourLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.129.0 — 2026-05-27
+
+### Added
+
+- **Phase 192 — One-Sqrt × Twenty-Four-Log × polynomial numerator** (`oneSqrtTwentyFourLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.128.0 — 2026-05-27
+
+### Added
+
+- **Phase 191 — Twenty-Four-Log × polynomial numerator** (`twentyFourLogPolyEffectiveDeg`):
+  Zero-Sqrt × twenty-four-Log family entry point. `effectiveDeg = polyDeg`.
+
 ## 2.127.0 — 2026-05-27
 
 ### Added

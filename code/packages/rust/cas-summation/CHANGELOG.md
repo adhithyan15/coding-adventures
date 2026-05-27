@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.133.0 — 2026-05-27
+
+### Added
+
+- **Phase 196 — Five-Sqrt × Twenty-Four-Log × polynomial numerator** (`five_sqrt_twenty_four_log_poly_effective_x2`):
+  Completes the Twenty-Four-Log family (Phases 191–196).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.132.0 — 2026-05-27
+
+### Added
+
+- **Phase 195 — Four-Sqrt × Twenty-Four-Log × polynomial numerator** (`four_sqrt_twenty_four_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.131.0 — 2026-05-27
+
+### Added
+
+- **Phase 194 — Three-Sqrt × Twenty-Four-Log × polynomial numerator** (`three_sqrt_twenty_four_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.130.0 — 2026-05-27
+
+### Added
+
+- **Phase 193 — Two-Sqrt × Twenty-Four-Log × polynomial numerator** (`two_sqrt_twenty_four_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.129.0 — 2026-05-27
+
+### Added
+
+- **Phase 192 — One-Sqrt × Twenty-Four-Log × polynomial numerator** (`one_sqrt_twenty_four_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.128.0 — 2026-05-27
+
+### Added
+
+- **Phase 191 — Twenty-Four-Log × polynomial numerator** (`twenty_four_log_poly_effective_x2`):
+  Zero-Sqrt × twenty-four-Log family entry point. `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2`.
+
 ## 2.127.0 — 2026-05-27
 
 ### Added
