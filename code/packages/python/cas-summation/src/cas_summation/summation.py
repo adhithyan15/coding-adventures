@@ -1182,6 +1182,32 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 89: ``Mul(Log(h1), ..., Log(h7), polynomial..., bounded...)`` numerator.
+    # Zero Sqrt factors + seven Log factors; log⁷ sub-polynomial → 0.
+    # effective_x2 = 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    sl7p_x2 = _seven_log_poly_effective_x2(num, k)
+    if sl7p_x2 is not None:
+        den_deg_sl7 = _polynomial_degree_in_k(den, k)
+        if den_deg_sl7 is not None:
+            if 2 * den_deg_sl7 > sl7p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 90: ``Mul(Sqrt(P), Log(h1), ..., Log(h7), polynomial..., bounded...)`` numerator.
+    # One Sqrt factor + seven Log factors; log⁷ sub-polynomial → 0.
+    # effective_x2 = sqrt_deg_x2 + 2·poly_deg.
+    # Vanishes when ``2·den_deg > effective_x2`` (polynomial) or
+    # non-polynomial diverging denominator.
+    s1l7p_x2 = _one_sqrt_seven_log_poly_effective_x2(num, k)
+    if s1l7p_x2 is not None:
+        den_deg_s1l7 = _polynomial_degree_in_k(den, k)
+        if den_deg_s1l7 is not None:
+            if 2 * den_deg_s1l7 > s1l7p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 42 widening: deg(num) < deg(den) on pure polynomials in k.
     num_degree = _polynomial_degree_in_k(num, k)
     if num_degree is None:
@@ -3375,6 +3401,137 @@ def _six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
     if log_count != 6:
         return None
     return 2 * poly_deg_sum
+
+
+def _seven_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``2·poly_deg`` when ``node`` is a ``Mul`` with **exactly seven**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 89 — Seven-Log × polynomial numerator.
+
+    Effective growth:
+    ``log(k)⁷ · k^m``.  ``log⁷(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick (no Sqrt factors present):
+    ``effective_x2 = 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    Sqrt factors are explicitly refused so that this function does not
+    shadow the Sqrt-bearing phases (Phase 90 onward).
+
+    +-----------------------------------------------------+----------+
+    | Input                                               | Return   |
+    +=====================================================+==========+
+    | ``Mul(Log(k)×7)``                                   | ``0``    |
+    | ``Mul(Log(k)×7, k)``                                | ``2``    |
+    | ``Mul(Log(k)×7, k², 3)``                            | ``4``    |
+    | ``Mul(Log(k)×6)``                                   | None (6) |
+    | ``Mul(Log(k)×8)``                                   | None (8) |
+    | ``Mul(Sqrt(k), Log(k)×7)``                          | None     |
+    +-----------------------------------------------------+----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Log(diverging)`` → count; bail after 7.
+         - ``Sqrt(...)`` → refuse (return ``None``).
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 7 Log factors.
+      4. Return ``2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 7:
+                # Eight or more Log factors — not this phase.
+                return None
+            continue
+        if _sqrt_effective_half_degree_x2(arg, k) is not None:
+            # Sqrt factor present — refuse so Sqrt-bearing phases handle it.
+            return None
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if log_count != 7:
+        return None
+    return 2 * poly_deg_sum
+
+
+def _one_sqrt_seven_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``sqrt_deg_x2 + 2·poly_deg`` when ``node`` is a ``Mul`` with
+    **exactly one** ``Sqrt(positive-polynomial)`` factor, **exactly seven**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 90 — One-Sqrt × Seven-Log × polynomial numerator.
+
+    Effective growth:
+    ``sqrt(k^a) · log(k)⁷ · k^m``.  ``log⁷(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick: ``effective_x2 = a + 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    +----------------------------------------------------------+----------+
+    | Input                                                    | Return   |
+    +==========================================================+==========+
+    | ``Mul(Sqrt(k), Log(k)×7)``                               | ``1``    |
+    | ``Mul(Sqrt(k²), Log(k)×7, k)``                           | ``4``    |
+    | ``Mul(Sqrt(k), Log(k)×7, k², 3)``                        | ``5``    |
+    | ``Mul(Log(k)×7)``                                        | None     |
+    | ``Mul(Sqrt(k), Sqrt(k), Log(k)×7)``                      | None (2) |
+    | ``Mul(Sqrt(k), Log(k)×6)``                               | None (6) |
+    +----------------------------------------------------------+----------+
+
+    Algorithm:
+      1. Require ``node = Mul(...)``.
+      2. For each factor:
+         - ``Sqrt(P)`` → record ``sqrt_effective_half_degree_x2``; bail on second Sqrt.
+         - ``Log(diverging)`` → count; bail after 7.
+         - Polynomial in ``k`` → accumulate degree.
+         - Bounded → accept silently.
+         - Anything else → return ``None``.
+      3. Require exactly 1 Sqrt and exactly 7 Log factors.
+      4. Return ``sqrt_deg_x2 + 2 * poly_deg_sum``.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_deg_x2: int | None = None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        s_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if s_x2 is not None:
+            if sqrt_deg_x2 is not None:
+                # Second Sqrt — not this phase.
+                return None
+            sqrt_deg_x2 = s_x2
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 7:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if sqrt_deg_x2 is None or log_count != 7:
+        return None
+    return sqrt_deg_x2 + 2 * poly_deg_sum
 
 
 def _one_sqrt_six_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:

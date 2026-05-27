@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.27.0 — 2026-05-26
+
+### Added
+
+- **Phase 89 — Seven-Log × polynomial numerator** (`sevenLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 7 Log factors required; Sqrt factors explicitly refused.  `log⁷(k)` sub-polynomial
+  — contributes 0 to effective degree; effective degree = polyDeg.
+  Closes when `denDeg > sevenLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 89" describe block.
+- **Phase 90 — One-Sqrt × Seven-Log × polynomial numerator** (`oneSqrtSevenLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt and exactly 7 Log factors required.  `log⁷(k)` sub-polynomial
+  — contributes 0 to effective degree; effective degree = sqrtHalfDeg + polyDeg.
+  Closes when `denDeg > oneSqrtSevenLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 90" describe block.
+
 ## 2.21.0 — 2026-05-25
 
 ### Added

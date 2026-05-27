@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.27.0 — 2026-05-26
+
+### Added
+
+- **Phase 89 — Seven-Log × polynomial numerator** (`seven_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 7 Log factors required; Sqrt factors explicitly refused.  `log⁷(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs` (`phase89_*`).
+- **Phase 90 — One-Sqrt × Seven-Log × polynomial numerator** (`one_sqrt_seven_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt and exactly 7 Log factors required.  `log⁷(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt_deg_x2 + 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs` (`phase90_*`).
+
 ## 2.21.0 — 2026-05-25
 
 ### Added
