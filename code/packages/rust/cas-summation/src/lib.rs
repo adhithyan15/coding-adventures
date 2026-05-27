@@ -2258,6 +2258,37 @@ fn one_sqrt_six_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> 
     Some(s + 2 * poly_deg)
 }
 
+/// Phase 86 — Three-Sqrt × Six-Log × polynomial numerator.
+///
+/// Effective growth: `sqrt(k^a) · sqrt(k^b) · sqrt(k^c) · log(k)⁶ · k^m`.
+/// `log⁶(k)` is sub-polynomial (`o(k^ε)`), contributing 0.
+/// Using the ×2 integer trick: `effective_x2 = a + b + c + 2·m`.
+/// Caller checks `2·den_deg > effective_x2`.
+fn three_sqrt_six_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node { IRNode::Apply(a) => a, _ => return None };
+    if !head_is(&apply_node.head, MUL) { return None; }
+    let mut sqrt_degs_x2: Vec<i64> = Vec::new();
+    let mut log_count: usize = 0;
+    let mut poly_deg: i64 = 0;
+    for arg in &apply_node.args {
+        if let Some(d) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_degs_x2.len() >= 3 { return None; } // fourth Sqrt — refuse
+            sqrt_degs_x2.push(d);
+            continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 6 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) { poly_deg += deg; continue; }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs_x2.len() != 3 || log_count != 6 { return None; }
+    Some(sqrt_degs_x2[0] + sqrt_degs_x2[1] + sqrt_degs_x2[2] + 2 * poly_deg)
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     let apply_node = match g {
         IRNode::Apply(a) => a,
@@ -2691,6 +2722,18 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(s1l6_x2) = one_sqrt_six_log_poly_effective_x2(num, k) {
         if let Some(den_deg_s1l6) = polynomial_degree_in_k(den, k) {
             if 2 * den_deg_s1l6 > s1l6_x2 {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // Phase 86: Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(diverging)×6, polynomial..., bounded...) numerator.
+    // Three Sqrt + six Log factors; log⁶ sub-polynomial — effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg.
+    // Closes when 2 * den_deg > effective_x2 or non-polynomial diverging denom.
+    if let Some(s3l6_x2) = three_sqrt_six_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s3l6) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s3l6 > s3l6_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {
