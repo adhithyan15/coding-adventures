@@ -460,6 +460,7 @@ members = [
     "huffman-tree",
     "huffman-compression",
     "range-coder",
+    "rans",
     "json-rpc",
     "ls00",
     "dap-adapter-core",
