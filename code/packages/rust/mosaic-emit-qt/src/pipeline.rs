@@ -782,10 +782,15 @@ fn build_text_attribute(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
         LayoutPropValue::Number(n) => format!("text: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
-        // U29-G3 expression. Surface as an empty text — Qt/QML emission for
-        // bound expressions needs UI29 §3.4 scope analysis to know how to
-        // map names to QML property bindings.
-        LayoutPropValue::Expr(_) => "text: \"\"".to_string(),
+        // U29-G3 expression + UI29 §3.4 scope (PR #4398) — the Expr text
+        // is the literal QML expression to evaluate in the surrounding
+        // Repeater delegate's scope (where For-loop bindings live as
+        // delegate `property var` declarations). mosaic-pkg-grid v0.2.0's
+        // `Text ( content: ( v ) )` becomes `text: v` (where `v` is the
+        // inner Repeater's `property var v: modelData`); the host gets the
+        // live cell text per body cell instead of the empty placeholder
+        // this branch used to emit before §3.4 made scope rules explicit.
+        LayoutPropValue::Expr(text) => format!("text: {text}"),
     })
 }
 
@@ -806,9 +811,9 @@ fn build_image_source_attribute(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => format!("source: \"{k}\""),
         LayoutPropValue::Number(n) => format!("source: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "source: \"\"".to_string(),
-        // U29-G3 expression. Surface as an empty source — Qt/QML emission
-        // for bound expressions needs UI29 §3.4 scope analysis.
-        LayoutPropValue::Expr(_) => "source: \"\"".to_string(),
+        // Same §3.4 unlock as `build_text_attribute` — the Expr text is
+        // verbatim QML expression text.
+        LayoutPropValue::Expr(text) => format!("source: {text}"),
     })
 }
 
@@ -2064,10 +2069,12 @@ fn build_value_attribute(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
         LayoutPropValue::Number(n) => format!("text: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
-        // U29-G3 expression. Surface as an empty text — Qt/QML emission for
-        // bound expressions needs UI29 §3.4 scope analysis to know how to
-        // map names to QML property bindings.
-        LayoutPropValue::Expr(_) => "text: \"\"".to_string(),
+        // U29-G3 expression + UI29 §3.4 scope (PR #4398) — pass the
+        // Expr text verbatim into the `text:` binding. QML evaluates it
+        // in the surrounding Repeater delegate's scope, where For-loop
+        // bindings live as `property var` declarations. Required by
+        // mosaic-pkg-grid v0.2.0's `HostInput ( value: ( v ) )` shape.
+        LayoutPropValue::Expr(text) => format!("text: {text}"),
     })
 }
 

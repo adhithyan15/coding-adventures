@@ -578,8 +578,31 @@ fn emit_widget_tree(
         "Row" => Some("Row"),
         "Column" => Some("Column"),
         "Stack" => Some("Stack"),
+        // UI28-1 / U29-D1 — HostTable structural sub-tags lower to
+        // `Column` containers on Flutter (Flutter has no semantic
+        // `<thead>`/`<tbody>`/`<colgroup>` equivalent — DataTable
+        // requires up-front DataColumn/DataRow lists that don't fit
+        // the For-driven dynamic shape). The visual nesting matches:
+        // HostTableHead becomes a `Column` containing the header
+        // Row; HostTableBody becomes a `Column` containing data
+        // Rows; HostTableFoot the same. Accessibility for the table
+        // semantics is the host's responsibility on Flutter today.
+        "HostTableHead" | "HostTableBody" | "HostTableFoot"
+        | "HostTableColGroup" => Some("Column"),
         _ => None,
     };
+    // `Col` is a sub-tag of HostTableColGroup with no visual
+    // contribution on Flutter (Flutter columns don't have a
+    // pre-allocated `<col>` analog — column widths come from cell
+    // intrinsic sizing or explicit SizedBox wrappers around cells).
+    // Emit a zero-height SizedBox so the parent Column doesn't get
+    // an empty slot that breaks rendering.
+    if node.tag == "Col" {
+        let pad = " ".repeat(indent);
+        return Ok(format!(
+            "{pad}const SizedBox.shrink() /* Col — Flutter colgroup has no visual analog */\n"
+        ));
+    }
     if let Some(widget) = container {
         return emit_container(node, widget, indent, part_styles);
     }
@@ -795,13 +818,19 @@ fn emit_for_dart(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // `each:` — required. `validate_for_node` guarantees SlotRef or
-    // Expr; fall back to `<dynamic>[]` so the generated file still
+    // `each:` — required. `validate_for_node` guarantees SlotRef,
+    // Expr, OR (UI29 §3.4) Keyword that names an enclosing For's
+    // `as:`/`index:` binding. Fall back to `<dynamic>[]` so the file
     // type-checks if validation was somehow skipped.
     let coll_expr = match node.props.iter().find(|p| p.name == "each") {
         Some(p) => match &p.value {
             LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
             LayoutPropValue::Expr(text) => text.clone(),
+            // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing
+            // For's `as:`/`index:` binding. Lower to the camelCased
+            // Dart identifier (matching the binding name as declared
+            // in the outer .map closure's signature).
+            LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
             _ => "<dynamic>[]".to_string(),
         },
         None => "<dynamic>[]".to_string(),
@@ -1038,8 +1067,10 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 // =====================================================================
 
 /// Lower a `Text` node to a `Text("...")` widget. Accepts the
-/// `content` prop as either a string literal (verbatim) or a slot
-/// ref (camelCased identifier passed to `Text`).
+/// `content` prop as a string literal, slot ref, or (UI28-1 / U29-D1)
+/// an Expr that evaluates in the surrounding closure scope. Expr
+/// passes verbatim into `Text(...)` so For-loop bindings like
+/// `Text ( content: ( v ) )` reach the Flutter widget unchanged.
 fn emit_text(node: &LayoutNode, indent: usize) -> String {
     let pad = " ".repeat(indent);
     if let Some(s) = find_string_prop(node, "content") {
@@ -1048,6 +1079,18 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
     if let Some(slot) = find_slot_ref_prop(node, "content") {
         let camel = to_camel_case_first_lower(slot);
         return format!("{pad}Text({camel})\n");
+    }
+    // UI28-1 / U29-D1 — Expr content. mosaic-pkg-grid v0.2.0's
+    // `Text ( content: ( v ) )` shape, where `v` is the inner For
+    // loop's binding. The Expr text is the literal Dart expression
+    // evaluated in the surrounding .map closure's scope.
+    if let Some(expr_text) = node.props.iter().find(|p| p.name == "content").and_then(|p| {
+        match &p.value {
+            LayoutPropValue::Expr(t) => Some(t.as_str()),
+            _ => None,
+        }
+    }) {
+        return format!("{pad}Text({expr_text})\n");
     }
     format!("{pad}const Text(\"\")\n")
 }
@@ -1083,12 +1126,27 @@ fn emit_host_input(
     _part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    // UI28-1 / U29-D1 — accept Expr in `value:` so
+    // mosaic-pkg-grid v0.2.0's `HostInput ( value: ( v ) )` shape
+    // reaches the TextField with the For-bound cell text. The Expr
+    // is the literal Dart expression evaluated in the surrounding
+    // closure's scope; verbatim pass-through matches Text content.
     let value_expr: String = if let Some(slot) = find_slot_ref_prop(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel)?;
         camel
     } else if let Some(s) = find_string_prop(node, "value") {
         format!("\"{}\"", escape_dart_string(s))
+    } else if let Some(expr_text) = node
+        .props
+        .iter()
+        .find(|p| p.name == "value")
+        .and_then(|p| match &p.value {
+            LayoutPropValue::Expr(t) => Some(t.clone()),
+            _ => None,
+        })
+    {
+        expr_text
     } else {
         "\"\"".to_string()
     };
@@ -1333,11 +1391,49 @@ fn emit_host_dialog(
 fn emit_host_table(
     node: &LayoutNode,
     indent: usize,
-    _part_styles: &HashMap<String, String>,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let table_body =
-        "DataTable(columns: const [], rows: const []) /* TODO: HostTable sub-tags */";
+
+    // UI28-1 / U29-D1 — HostTable now walks its children (sub-tags:
+    // HostTableColGroup / HostTableHead / HostTableBody / HostTableFoot)
+    // instead of emitting a fixed `DataTable(columns: const [], rows:
+    // const [])` placeholder. Flutter's native `DataTable` requires
+    // its `columns:` and `rows:` to be built up-front from typed
+    // `DataColumn` + `DataRow` values, which doesn't fit the
+    // For-driven dynamic shape that mosaic-pkg-grid v0.2.0 uses
+    // (`HostTableBody { For (rows) { Row { For (cells) { Cell } } } }`).
+    //
+    // Instead we lower to `Column(children: [...])` where each
+    // sub-tag's children become its own nested Column / Row tree.
+    // This gives up DataTable's built-in column-sort headers and
+    // its automatic cell-width-equalisation, but preserves the
+    // semantic structure: every Row maps to a Flutter `Row`, every
+    // cell is a widget inside that Row, and the For loops drive
+    // dynamic row/cell counts via the existing emit_for_dart
+    // lowering (Phase 2 / PR #4393).
+    //
+    // HostTableColGroup is a no-op visually on Flutter (Flutter has
+    // no <colgroup> equivalent — column widths flow from cell
+    // intrinsic sizing or explicit SizedBox wrappers). The children
+    // still walk through so a For-of-Col doesn't error out, but the
+    // emitted Column wrapper is invisible at the layout layer.
+    //
+    // The two-letter `dir` slot continues to wrap the entire body in
+    // a `Directionality` for RTL support per UI31 §3.2 — this hasn't
+    // changed; we just compute the body differently now.
+    let body_inner = if node.children.is_empty() {
+        format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
+    } else {
+        emit_paired_children(&node.children, indent + 4, part_styles)?
+    };
+    let table_body = format!(
+        "Column(\n{p}children: [\n{body}{p}],\n{pad})",
+        p = " ".repeat(indent + 2),
+        body = body_inner,
+        pad = pad,
+    );
+    let table_body = table_body.as_str();
 
     // Resolve the directionality expression. `None` means: do not
     // wrap (either no `dir` prop, or `dir: auto`, or unknown keyword).
@@ -2926,19 +3022,25 @@ mod tests {
     //   format string.
     // ================================================================
 
-    /// UI31 §3.1 a11y gate — `HostTable` MUST lower to Flutter's
-    /// native `DataTable`, never to a `Container` / `Row` mess. The
-    /// `DataTable` widget is what gives the cells proper semantic
-    /// labels for accessibility tooling (TalkBack on Android,
-    /// VoiceOver on iOS).
+    /// UI31 §3.1 a11y gate (revised UI28-1 / U29-D1) — `HostTable`
+    /// lowers to a `Column(children: [...])` rather than Flutter's
+    /// native `DataTable` because the For-driven dynamic shape that
+    /// mosaic-pkg-grid v0.2.0 introduces doesn't fit `DataTable`'s
+    /// up-front-typed columns+rows API.
+    ///
+    /// Accessibility on Flutter for the v0.2.0 Grid is the host's
+    /// responsibility (Flutter has no semantic `<table>` widget
+    /// other than DataTable, which can't be driven dynamically).
+    /// Empty HostTable still emits the wrapping Column with the
+    /// SizedBox.shrink() placeholder so the file type-checks.
     #[test]
     fn ui31_a11y_host_table_uses_native_datatable_widget() {
         let m = component("T", vec![], vec![]);
         let l = layout("T", node("HostTable"));
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
-            r.output.contains("DataTable("),
-            "HostTable must lower to DataTable(...), got:\n{}",
+            r.output.contains("Column("),
+            "HostTable must lower to Column(children: [...]) (UI28-1 / U29-D1), got:\n{}",
             r.output
         );
     }
@@ -3021,8 +3123,8 @@ mod tests {
             r.output
         );
         assert!(
-            r.output.contains("DataTable("),
-            "bare DataTable should still render, got:\n{}",
+            r.output.contains("Column("),
+            "HostTable body should render as Column (UI28-1 / U29-D1 — DataTable doesn't fit the For-driven Grid shape), got:\n{}",
             r.output
         );
     }
@@ -3088,8 +3190,8 @@ mod tests {
             r.output
         );
         assert!(
-            r.output.contains("DataTable("),
-            "bare DataTable should still render, got:\n{}",
+            r.output.contains("Column("),
+            "HostTable body should render as Column (UI28-1 / U29-D1 — DataTable doesn't fit the For-driven Grid shape), got:\n{}",
             r.output
         );
     }
@@ -3110,8 +3212,8 @@ mod tests {
             r.output
         );
         assert!(
-            r.output.contains("DataTable("),
-            "bare DataTable should render, got:\n{}",
+            r.output.contains("Column("),
+            "HostTable should render as Column (UI28-1 / U29-D1), got:\n{}",
             r.output
         );
     }

@@ -1766,12 +1766,27 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
             self_closing: false,
         },
         "HostTableColGroup" => HtmlTag {
-            // Single `<col>` child per UI29 §2.1: column-width binding
-            // arrives in a follow-up PR. The placeholder `<col>` is
-            // semantically valid HTML and gives the host a hook to style.
-            open: "<colgroup><col>".to_string(),
+            // Open `<colgroup>` then let the children (Col primitives,
+            // possibly wrapped in For) render inside. The previous
+            // "Single `<col>` child" placeholder produced a fixed single
+            // `<col>` and then concatenated the children — which both
+            // dropped per-column widths AND produced invalid markup
+            // when more than one Col was emitted. The Col primitive's
+            // void-tag dispatch (below) handles the per-column emission.
+            open: "<colgroup>".to_string(),
             close: "</colgroup>".to_string(),
             self_closing: false,
+        },
+        // UI31 §3.2 / UI28-1 / U29-D1 — `Col` is the cell-definition
+        // sub-tag inside HostTableColGroup. mosaic-pkg-grid v0.2.0's
+        // shape is `For (each: slot: column-widths, as: w) { Col [col]
+        // (width: ( w )) }`; the For walker iterates the body and the
+        // generic dispatcher reaches here with `node.tag == "Col"`.
+        // `<col>` is HTML's canonical void column-definition element.
+        "Col" => HtmlTag {
+            open: "<col>".to_string(),
+            close: String::new(),
+            self_closing: true,
         },
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
@@ -2917,17 +2932,48 @@ mod tests {
         );
     }
 
-    /// `HostTableColGroup` produces a single-`<col>` colgroup as a
-    /// stand-in until column-width binding lands.
+    /// `HostTableColGroup` produces a `<colgroup>` whose children are
+    /// the Col primitive emissions. UI28-1 / U29-D1: previously the
+    /// colgroup hard-wired a single `<col>` placeholder regardless of
+    /// children; now Col is its own void-tag primitive and the walker
+    /// emits one `<col>` per Col child (or per For-iterated Col, as
+    /// mosaic-pkg-grid v0.2.0 uses).
     #[test]
     fn host_table_col_group_lowers_to_colgroup_with_col() {
         let m = component("T", vec![], vec![]);
+        // An EMPTY colgroup now produces an empty `<colgroup></colgroup>`.
         let cg = leaf("HostTableColGroup");
         let l = root_layout("T", cg);
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
-            r.output.contains("<colgroup><col></colgroup>"),
-            "HostTableColGroup shape wrong, got:\n{}",
+            r.output.contains("<colgroup></colgroup>"),
+            "Empty HostTableColGroup must emit `<colgroup></colgroup>`, got:\n{}",
+            r.output
+        );
+    }
+
+    /// HostTableColGroup with explicit Col children produces one
+    /// `<col>` per Col. UI28-1 / U29-D1 pattern.
+    #[test]
+    fn host_table_col_group_with_col_children_emits_one_col_each() {
+        let m = component("T", vec![], vec![]);
+        let cg = LayoutNode {
+            tag: "HostTableColGroup".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![leaf("Col"), leaf("Col"), leaf("Col")],
+        };
+        let l = root_layout("T", cg);
+        let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
+        let col_count = r.output.matches("<col>").count();
+        assert_eq!(
+            col_count, 3,
+            "expected 3 `<col>` emissions for 3 Col children, got {} in:\n{}",
+            col_count, r.output
+        );
+        assert!(
+            r.output.contains("<colgroup>") && r.output.contains("</colgroup>"),
+            "must still wrap children in `<colgroup>`, got:\n{}",
             r.output
         );
     }
@@ -3127,8 +3173,13 @@ mod tests {
         let l = root_layout("T", table);
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
 
+        // UI28-1 / U29-D1: an empty HostTableColGroup now emits a
+        // bare `<colgroup></colgroup>` (was hard-wired to
+        // `<colgroup><col></colgroup>`). Per-column `<col>` emission
+        // is the Col primitive's job, driven by the author writing
+        // explicit Col children (often wrapped in a For).
         let expected = "<table>\
-                        <colgroup><col></colgroup>\
+                        <colgroup></colgroup>\
                         <thead><tr><th><span>Name</span></th></tr></thead>\
                         <tbody><tr><td><span>Alice</span></td></tr></tbody>\
                         <tfoot><tr><td><span>Total</span></td></tr></tfoot>\

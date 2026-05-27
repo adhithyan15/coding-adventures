@@ -772,11 +772,17 @@ fn swift_text_expression(node: &LayoutNode) -> String {
                     // Emit refs are not valid for Text content; fall through
                     // to the empty placeholder.
                 }
-                LayoutPropValue::Expr(_) => {
-                    // U29-G3 expression-valued content. SwiftUI emission for
-                    // bound expressions requires UI29 §3.4 scope analysis;
-                    // for now fall through to the empty placeholder rather
-                    // than emit a Swift compile error.
+                LayoutPropValue::Expr(text) => {
+                    // U29-G3 expression-valued content + UI29 §3.4 scope
+                    // (PR #4398) — the Expr text is the literal Swift
+                    // expression to evaluate in the surrounding For-loop
+                    // closure's lexical scope. mosaic-pkg-grid v0.2.0's
+                    // `Text ( content: ( v ) )` shape becomes `Text(v)`
+                    // (where `v` is the inner ForEach binding); the host
+                    // gets the live cell text inside every body cell
+                    // instead of the empty placeholder this branch used
+                    // to emit before §3.4 made the scope rules explicit.
+                    return format!("Text({text})");
                 }
             }
         }
@@ -834,14 +840,23 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
     let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
 
-    // `value: slot: x` -> `text: .constant(x)`. If no `value` is bound we
-    // synthesise an empty `.constant("")` so the file still type-checks.
-    let value_expr = match find_slot_ref_prop(node, "value") {
-        Some(slot) => {
-            let camel = to_camel_case_first_lower(slot);
-            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            camel
-        }
+    // `value: slot: x` -> `text: .constant(x)`. If `value` is an Expr
+    // (e.g. `value: ( v )` where `v` is a For-loop binding from the
+    // mosaic-pkg-grid v0.2.0 Cell composition), pass the expression
+    // text verbatim into `.constant(...)` — Swift evaluates it in the
+    // surrounding closure's lexical scope. If no `value` is bound,
+    // synthesise `.constant("")` so the file still type-checks.
+    let value_expr = match node.props.iter().find(|p| p.name == "value") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel)
+                    .map_err(PipelineEmitError::UnsafeSlotName)?;
+                camel
+            }
+            LayoutPropValue::Expr(text) => text.clone(),
+            _ => "\"\"".to_string(),
+        },
         None => "\"\"".to_string(),
     };
 
