@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.43.0 — 2026-05-27
+
+### Added
+
+- **Phase 106 — Five-Sqrt × Nine-Log × polynomial numerator** (`fiveSqrtNineLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1)×5, Log(h1)×9, polynomial..., bounded...)`.
+  Exactly 5 Sqrt factors and exactly 9 Log factors required.
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+  Completes the Nine-Log family (Phases 101–106).
+
+## 2.42.0 — 2026-05-27
+
+### Added
+
+- **Phase 105 — Four-Sqrt × Nine-Log × polynomial numerator** (`fourSqrtNineLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1)×4, Log(h1)×9, polynomial..., bounded...)`.
+  Exactly 4 Sqrt factors and exactly 9 Log factors required.
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+
+## 2.41.0 — 2026-05-27
+
+### Added
+
+- **Phase 104 — Three-Sqrt × Nine-Log × polynomial numerator** (`threeSqrtNineLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1)×3, Log(h1)×9, polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 9 Log factors required.
+  `effectiveDeg = sqrtHalfDeg1 + sqrtHalfDeg2 + sqrtHalfDeg3 + polyDeg`.
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+
 ## 2.40.0 — 2026-05-27
 
 ### Added

@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.43.0 — 2026-05-27
+
+### Added
+
+- **Phase 106 — Five-Sqrt × Nine-Log × polynomial numerator** (`five_sqrt_nine_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1)×5, Log(h1)×9, polynomial..., bounded...)`.
+  Exactly 5 Sqrt factors and exactly 9 Log factors required.
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2`. Completes the Nine-Log family (Phases 101–106).
+
+## 2.42.0 — 2026-05-27
+
+### Added
+
+- **Phase 105 — Four-Sqrt × Nine-Log × polynomial numerator** (`four_sqrt_nine_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1)×4, Log(h1)×9, polynomial..., bounded...)`.
+  Exactly 4 Sqrt factors and exactly 9 Log factors required.
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2`.
+
+## 2.41.0 — 2026-05-27
+
+### Added
+
+- **Phase 104 — Three-Sqrt × Nine-Log × polynomial numerator** (`three_sqrt_nine_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1)×3, Log(h1)×9, polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 9 Log factors required.
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2`.
+
 ## 2.40.0 — 2026-05-27
 
 ### Added

@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.43.0 — 2026-05-27
+
+### Added
+
+- **Phase 106 — Five-Sqrt × Nine-Log × polynomial** (`_five_sqrt_nine_log_poly_effective_x2`):
+  Completes the Nine-Log family (Phases 101–106).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.42.0 — 2026-05-27
+
+### Added
+
+- **Phase 105 — Four-Sqrt × Nine-Log × polynomial** (`_four_sqrt_nine_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+…+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.41.0 — 2026-05-27
+
+### Added
+
+- **Phase 104 — Three-Sqrt × Nine-Log × polynomial** (`_three_sqrt_nine_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
 ## 2.40.0 — 2026-05-27
 
 ### Added
