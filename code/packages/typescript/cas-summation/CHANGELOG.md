@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.79.0 — 2026-05-27
+
+### Added
+
+- **Phase 142 — Five-Sqrt × Fifteen-Log × polynomial numerator** (`fiveSqrtFifteenLogPolyEffectiveDeg`):
+  Completes the Fifteen-Log family (Phases 137–142).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.78.0 — 2026-05-27
+
+### Added
+
+- **Phase 141 — Four-Sqrt × Fifteen-Log × polynomial numerator** (`fourSqrtFifteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.77.0 — 2026-05-27
+
+### Added
+
+- **Phase 140 — Three-Sqrt × Fifteen-Log × polynomial numerator** (`threeSqrtFifteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.76.0 — 2026-05-27
+
+### Added
+
+- **Phase 139 — Two-Sqrt × Fifteen-Log × polynomial numerator** (`twoSqrtFifteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.75.0 — 2026-05-27
+
+### Added
+
+- **Phase 138 — One-Sqrt × Fifteen-Log × polynomial numerator** (`oneSqrtFifteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.74.0 — 2026-05-27
+
+### Added
+
+- **Phase 137 — Fifteen-Log × polynomial numerator** (`fifteenLogPolyEffectiveDeg`):
+  Begins the Fifteen-Log family.
+  `effectiveDeg = polyDeg`. Requires exactly 15 `Log` factors and no `Sqrt` factors.
+
 ## 2.73.0 — 2026-05-27
 
 ### Added

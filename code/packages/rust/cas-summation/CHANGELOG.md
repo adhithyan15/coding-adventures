@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.79.0 — 2026-05-27
+
+### Added
+
+- **Phase 142 — Five-Sqrt × Fifteen-Log × polynomial numerator** (`five_sqrt_fifteen_log_poly_effective_x2`):
+  Completes the Fifteen-Log family (Phases 137–142).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.78.0 — 2026-05-27
+
+### Added
+
+- **Phase 141 — Four-Sqrt × Fifteen-Log × polynomial numerator** (`four_sqrt_fifteen_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.77.0 — 2026-05-27
+
+### Added
+
+- **Phase 140 — Three-Sqrt × Fifteen-Log × polynomial numerator** (`three_sqrt_fifteen_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.76.0 — 2026-05-27
+
+### Added
+
+- **Phase 139 — Two-Sqrt × Fifteen-Log × polynomial numerator** (`two_sqrt_fifteen_log_poly_effective_x2`):
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`.
+
+## 2.75.0 — 2026-05-27
+
+### Added
+
+- **Phase 138 — One-Sqrt × Fifteen-Log × polynomial numerator** (`one_sqrt_fifteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.74.0 — 2026-05-27
+
+### Added
+
+- **Phase 137 — Fifteen-Log × polynomial numerator** (`fifteen_log_poly_effective_x2`):
+  Begins the Fifteen-Log family.
+  `effective_x2 = 2·poly_deg`. Requires exactly 15 `Log` factors, no `Sqrt` factors.
+
 ## 2.73.0 — 2026-05-27
 
 ### Added

@@ -1463,6 +1463,62 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 142: ``Mul(Sqrt(P1)×5, Log(h1)×15, polynomial..., bounded...)`` numerator.
+    # Five Sqrt + fifteen Log factors; log^15 sub-polynomial → effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg.
+    # Closes when ``2·den_deg > effective_x2`` or non-polynomial diverging denominator.
+    s5l15p_x2 = _five_sqrt_fifteen_log_poly_effective_x2(num, k)
+    if s5l15p_x2 is not None:
+        den_deg_s5l15 = _polynomial_degree_in_k(den, k)
+        if den_deg_s5l15 is not None:
+            if 2 * den_deg_s5l15 > s5l15p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 141: ``Mul(Sqrt(P1)×4, Log(h1)×15, polynomial..., bounded...)`` numerator.
+    s4l15p_x2 = _four_sqrt_fifteen_log_poly_effective_x2(num, k)
+    if s4l15p_x2 is not None:
+        den_deg_s4l15 = _polynomial_degree_in_k(den, k)
+        if den_deg_s4l15 is not None:
+            if 2 * den_deg_s4l15 > s4l15p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 140: ``Mul(Sqrt(P1)×3, Log(h1)×15, polynomial..., bounded...)`` numerator.
+    s3l15p_x2 = _three_sqrt_fifteen_log_poly_effective_x2(num, k)
+    if s3l15p_x2 is not None:
+        den_deg_s3l15 = _polynomial_degree_in_k(den, k)
+        if den_deg_s3l15 is not None:
+            if 2 * den_deg_s3l15 > s3l15p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 139: ``Mul(Sqrt(P1), Sqrt(P2), Log(h1)×15, polynomial..., bounded...)`` numerator.
+    s2l15p_x2 = _two_sqrt_fifteen_log_poly_effective_x2(num, k)
+    if s2l15p_x2 is not None:
+        den_deg_s2l15 = _polynomial_degree_in_k(den, k)
+        if den_deg_s2l15 is not None:
+            if 2 * den_deg_s2l15 > s2l15p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 138: ``Mul(Sqrt(P), Log(h1)×15, polynomial..., bounded...)`` numerator.
+    s1l15p_x2 = _one_sqrt_fifteen_log_poly_effective_x2(num, k)
+    if s1l15p_x2 is not None:
+        den_deg_s1l15 = _polynomial_degree_in_k(den, k)
+        if den_deg_s1l15 is not None:
+            if 2 * den_deg_s1l15 > s1l15p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 137: ``Mul(Log(h1)×15, polynomial..., bounded...)`` numerator.
+    sl15p_x2 = _fifteen_log_poly_effective_x2(num, k)
+    if sl15p_x2 is not None:
+        den_deg_sl15 = _polynomial_degree_in_k(den, k)
+        if den_deg_sl15 is not None:
+            if 2 * den_deg_sl15 > sl15p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 136: ``Mul(Sqrt(P1)×5, Log(h1)×14, polynomial..., bounded...)`` numerator.
     # Five Sqrt + fourteen Log factors; log^14 sub-polynomial → effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg.
     # Closes when ``2·den_deg > effective_x2`` or non-polynomial diverging denominator.
@@ -5858,6 +5914,213 @@ def _five_sqrt_fourteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int 
             continue
         return None
     if len(sqrt_degs_x2) != 5 or log_count != 14:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _fifteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Return ``2·poly_deg`` when ``node`` is a ``Mul`` with **exactly fifteen**
+    ``Log(diverging-in-k)`` factors, any polynomial factors, and any bounded
+    factors; ``None`` otherwise.
+
+    Phase 137 — Fifteen-Log × polynomial numerator.
+
+    Effective growth:
+    ``log(k)^15 · k^m``.  ``log^15(k)`` is sub-polynomial (``o(k^ε)``),
+    contributing 0 to the effective polynomial degree.
+    Using the ×2 integer trick (no Sqrt factors present):
+    ``effective_x2 = 2·m``.
+    Caller checks ``2·den_deg > effective_x2``.
+
+    Sqrt factors are explicitly refused so that this function does not
+    shadow the Sqrt-bearing phases (Phase 138 onward).
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 15:
+                return None
+            continue
+        if _sqrt_effective_half_degree_x2(arg, k) is not None:
+            return None
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if log_count != 15:
+        return None
+    return 2 * poly_deg_sum
+
+
+def _one_sqrt_fifteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 138 — One-Sqrt × Fifteen-Log × polynomial numerator.
+    effective_x2 = sqrt_deg_x2 + 2·poly_deg.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_deg_x2: int | None = None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if sqrt_deg_x2 is not None:
+                return None
+            sqrt_deg_x2 = deg_x2
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 15:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if sqrt_deg_x2 is None or log_count != 15:
+        return None
+    return sqrt_deg_x2 + 2 * poly_deg_sum
+
+
+def _two_sqrt_fifteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 139 — Two-Sqrt × Fifteen-Log × polynomial numerator.
+    effective_x2 = sqrt1 + sqrt2 + 2·poly_deg.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 2:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 15:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 2 or log_count != 15:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _three_sqrt_fifteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 140 — Three-Sqrt × Fifteen-Log × polynomial numerator.
+    effective_x2 = sqrt1 + sqrt2 + sqrt3 + 2·poly_deg.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 3:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 15:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 3 or log_count != 15:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _four_sqrt_fifteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 141 — Four-Sqrt × Fifteen-Log × polynomial numerator.
+    effective_x2 = sqrt1 + sqrt2 + sqrt3 + sqrt4 + 2·poly_deg.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 4:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 15:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 4 or log_count != 15:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _five_sqrt_fifteen_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 142 — Five-Sqrt × Fifteen-Log × polynomial numerator.
+    effective_x2 = sqrt1+sqrt2+sqrt3+sqrt4+sqrt5 + 2·poly_deg.
+    Completes the Fifteen-Log family (Phases 137-142).
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 5:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 15:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 5 or log_count != 15:
         return None
     return sum(sqrt_degs_x2) + 2 * poly_deg_sum
 
