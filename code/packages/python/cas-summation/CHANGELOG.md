@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.39.0 — 2026-05-27
+
+### Added
+
+- **Phase 102 — One-Sqrt × Nine-Log × polynomial numerator** (`_one_sqrt_nine_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P(k)), Log(h1), ..., Log(h9), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 9 Log factors required.
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+
 ## 2.38.0 — 2026-05-27
 
 ### Added

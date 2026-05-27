@@ -2089,6 +2089,40 @@ function nineLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
 }
 
 /**
+ * Phase 102 — One-Sqrt × Nine-Log × polynomial numerator.
+ *
+ * Effective growth: `sqrt(k^a) · log(k)⁹ · k^m`. `log⁹(k)` is sub-polynomial (`o(k^ε)`),
+ * contributing 0 to effective polynomial degree.
+ * effective degree = sqrtHalfDeg + polyDeg.
+ * Caller checks `denDeg > oneSqrtNineLogPolyEffectiveDeg(num, k)`.
+ */
+function oneSqrtNineLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const hd = sqrtEffectiveHalfDegree(arg, k);
+    if (hd !== undefined) {
+      if (sqrtHalfDeg !== undefined) return undefined; // second Sqrt — refuse
+      sqrtHalfDeg = hd;
+      continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 9) return undefined;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDeg === undefined || logCount !== 9) return undefined;
+  return sqrtHalfDeg + polyDeg;
+}
+
+/**
  * Phase 96 — One-Sqrt × Eight-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial (`o(k^ε)`),
@@ -3012,6 +3046,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 102: Mul(Sqrt(P), Log(h1)×9, polynomial..., bounded...) numerator.
+  // One Sqrt + nine Log factors; log⁹ sub-polynomial → effective degree = sqrtHalfDeg + polyDeg.
+  // Closes when denDeg > oneSqrtNineLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const s1l9Deg = oneSqrtNineLogPolyEffectiveDeg(num, k);
+  if (s1l9Deg !== undefined) {
+    const denDegS1l9 = polynomialDegreeInK(den, k);
+    if (denDegS1l9 !== undefined) {
+      if (denDegS1l9 > s1l9Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
