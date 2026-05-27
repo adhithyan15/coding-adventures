@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.25.0 — 2026-05-26
+
+### Added
+
+- **Phase 88 — Five-Sqrt × Six-Log × polynomial numerator** (`fiveSqrtSixLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Sqrt(P5), Log(h1(k)), ..., Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 5 Sqrt and exactly 6 Log factors; `log⁶(k)` sub-polynomial — contributes 0 to effective
+  degree; effective degree = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg.
+  Closes when `denDeg > fiveSqrtSixLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 88" describe block.
+
 ## 2.24.0 — 2026-05-26
 
 ### Added

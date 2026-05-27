@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.25.0 — 2026-05-26
+
+### Added
+
+- **Phase 88 — Five-Sqrt × Six-Log × polynomial numerator** (`five_sqrt_six_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Sqrt(P5), Log(h1(k)), ..., Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 5 Sqrt factors and exactly 6 Log factors required.  `log⁶(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_x2 + sqrt2_x2 + sqrt3_x2 + sqrt4_x2 + sqrt5_x2 + 2 * poly_deg`.
+  Closes when `2 * den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new integration tests in `tests/tests.rs` (`phase88_*`).
+
 ## 2.24.0 — 2026-05-26
 
 ### Added
