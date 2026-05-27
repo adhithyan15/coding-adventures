@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.30.0 — 2026-05-27
+
+### Added
+
+- **Phase 93 — Four-Sqrt × Seven-Log × polynomial numerator** (`four_sqrt_seven_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1)..Sqrt(P4), Log(h1), ..., Log(h7), polynomial..., bounded...)`.
+  Exactly 4 Sqrt factors and exactly 7 Log factors required.
+  `effective_x2 = sum(sqrt_deg_x2) + 2·poly_deg`.
+  - 3 new tests: `phase93_sqrt_k_x4_log7_k_over_k3_closes`,
+    `phase93_sqrt_k2_x4_log7_k_over_k5_closes`,
+    `phase93_sqrt_k_x4_log7_k_times_k_over_k3_refused`.
+
 ## 2.29.0 — 2026-05-27
 
 ### Added

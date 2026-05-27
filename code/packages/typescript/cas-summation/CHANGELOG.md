@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.30.0 — 2026-05-27
+
+### Added
+
+- **Phase 93 — Four-Sqrt × Seven-Log × polynomial numerator** (`fourSqrtSevenLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1)..Sqrt(P4), Log(h1), ..., Log(h7), polynomial..., bounded...)`.
+  Exactly 4 Sqrt factors and exactly 7 Log factors required.
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3+sqrtHalfDeg4+polyDeg`.
+  - 3 new tests in `Phase 93` describe block.
+
 ## 2.29.0 — 2026-05-27
 
 ### Added
