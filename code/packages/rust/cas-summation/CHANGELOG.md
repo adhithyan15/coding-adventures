@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.97.0 — 2026-05-27
+
+### Added
+
+- **Phase 160 — Five-Sqrt × Eighteen-Log × polynomial numerator** (`five_sqrt_eighteen_log_poly_effective_x2`):
+  Completes the Eighteen-Log family (Phases 155–160).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.96.0 — 2026-05-27
+
+### Added
+
+- **Phase 159 — Four-Sqrt × Eighteen-Log × polynomial numerator** (`four_sqrt_eighteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+…+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.95.0 — 2026-05-27
+
+### Added
+
+- **Phase 158 — Three-Sqrt × Eighteen-Log × polynomial numerator** (`three_sqrt_eighteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.94.0 — 2026-05-27
+
+### Added
+
+- **Phase 157 — Two-Sqrt × Eighteen-Log × polynomial numerator** (`two_sqrt_eighteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.93.0 — 2026-05-27
+
+### Added
+
+- **Phase 156 — One-Sqrt × Eighteen-Log × polynomial numerator** (`one_sqrt_eighteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.92.0 — 2026-05-27
+
+### Added
+
+- **Phase 155 — Eighteen-Log × polynomial numerator** (`eighteen_log_poly_effective_x2`):
+  `effective_x2 = 2·poly_deg`. No Sqrt factors; log(k)^18 grows sub-polynomially.
+
 ## 2.91.0 — 2026-05-27
 
 ### Added

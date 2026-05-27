@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.97.0 — 2026-05-27
+
+### Added
+
+- **Phase 160 — Five-Sqrt × Eighteen-Log × polynomial numerator** (`fiveSqrtEighteenLogPolyEffectiveDeg`):
+  Completes the Eighteen-Log family (Phases 155–160).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.96.0 — 2026-05-27
+
+### Added
+
+- **Phase 159 — Four-Sqrt × Eighteen-Log × polynomial numerator** (`fourSqrtEighteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.95.0 — 2026-05-27
+
+### Added
+
+- **Phase 158 — Three-Sqrt × Eighteen-Log × polynomial numerator** (`threeSqrtEighteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.94.0 — 2026-05-27
+
+### Added
+
+- **Phase 157 — Two-Sqrt × Eighteen-Log × polynomial numerator** (`twoSqrtEighteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.93.0 — 2026-05-27
+
+### Added
+
+- **Phase 156 — One-Sqrt × Eighteen-Log × polynomial numerator** (`oneSqrtEighteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.92.0 — 2026-05-27
+
+### Added
+
+- **Phase 155 — Eighteen-Log × polynomial numerator** (`eighteenLogPolyEffectiveDeg`):
+  `effectiveDeg = polyDeg`. No Sqrt factors; log(k)^18 grows sub-polynomially.
+
 ## 2.91.0 — 2026-05-27
 
 ### Added
