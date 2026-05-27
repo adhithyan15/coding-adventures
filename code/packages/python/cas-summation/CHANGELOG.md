@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.103.0 — 2026-05-27
+
+### Added
+
+- **Phase 166 — Five-Sqrt × Nineteen-Log × polynomial** (`_five_sqrt_nineteen_log_poly_effective_x2`):
+  Completes the Nineteen-Log family (Phases 161–166).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.102.0 — 2026-05-27
+
+### Added
+
+- **Phase 165 — Four-Sqrt × Nineteen-Log × polynomial** (`_four_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.101.0 — 2026-05-27
+
+### Added
+
+- **Phase 164 — Three-Sqrt × Nineteen-Log × polynomial** (`_three_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.100.0 — 2026-05-27
+
+### Added
+
+- **Phase 163 — Two-Sqrt × Nineteen-Log × polynomial** (`_two_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.99.0 — 2026-05-27
+
+### Added
+
+- **Phase 162 — One-Sqrt × Nineteen-Log × polynomial** (`_one_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.98.0 — 2026-05-27
+
+### Added
+
+- **Phase 161 — Nineteen-Log × polynomial** (`_nineteen_log_poly_effective_x2`):
+  Opens the Nineteen-Log family (Phases 161–166).
+  `effective_x2 = 2·poly_deg`; no Sqrt factors permitted.
+
 ## 2.97.0 — 2026-05-27
 
 ### Added

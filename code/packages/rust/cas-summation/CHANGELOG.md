@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.103.0 — 2026-05-27
+
+### Added
+
+- **Phase 166 — Five-Sqrt × Nineteen-Log × polynomial numerator** (`five_sqrt_nineteen_log_poly_effective_x2`):
+  Completes the Nineteen-Log family (Phases 161–166).
+  `effective_x2 = sum(sqrt_degs_x2) + 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
+## 2.102.0 — 2026-05-27
+
+### Added
+
+- **Phase 165 — Four-Sqrt × Nineteen-Log × polynomial numerator** (`four_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.101.0 — 2026-05-27
+
+### Added
+
+- **Phase 164 — Three-Sqrt × Nineteen-Log × polynomial numerator** (`three_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.100.0 — 2026-05-27
+
+### Added
+
+- **Phase 163 — Two-Sqrt × Nineteen-Log × polynomial numerator** (`two_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.99.0 — 2026-05-27
+
+### Added
+
+- **Phase 162 — One-Sqrt × Nineteen-Log × polynomial numerator** (`one_sqrt_nineteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.98.0 — 2026-05-27
+
+### Added
+
+- **Phase 161 — Nineteen-Log × polynomial numerator** (`nineteen_log_poly_effective_x2`):
+  Opens the Nineteen-Log family (Phases 161–166).
+  `effective_x2 = 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
 ## 2.97.0 — 2026-05-27
 
 ### Added

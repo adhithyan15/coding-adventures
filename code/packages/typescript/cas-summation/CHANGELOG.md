@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.103.0 — 2026-05-27
+
+### Added
+
+- **Phase 166 — Five-Sqrt × Nineteen-Log × polynomial numerator** (`fiveSqrtNineteenLogPolyEffectiveDeg`):
+  Completes the Nineteen-Log family (Phases 161–166).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.102.0 — 2026-05-27
+
+### Added
+
+- **Phase 165 — Four-Sqrt × Nineteen-Log × polynomial numerator** (`fourSqrtNineteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3+sqrtHalfDeg4 + polyDeg`.
+
+## 2.101.0 — 2026-05-27
+
+### Added
+
+- **Phase 164 — Three-Sqrt × Nineteen-Log × polynomial numerator** (`threeSqrtNineteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.100.0 — 2026-05-27
+
+### Added
+
+- **Phase 163 — Two-Sqrt × Nineteen-Log × polynomial numerator** (`twoSqrtNineteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.99.0 — 2026-05-27
+
+### Added
+
+- **Phase 162 — One-Sqrt × Nineteen-Log × polynomial numerator** (`oneSqrtNineteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.98.0 — 2026-05-27
+
+### Added
+
+- **Phase 161 — Nineteen-Log × polynomial numerator** (`nineteenLogPolyEffectiveDeg`):
+  Opens the Nineteen-Log family (Phases 161–166).
+  `effectiveDeg = polyDeg`; no Sqrt factors permitted.
+
 ## 2.97.0 — 2026-05-27
 
 ### Added

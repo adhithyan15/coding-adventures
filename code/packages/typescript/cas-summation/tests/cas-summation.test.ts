@@ -14023,3 +14023,1109 @@ describe("Phase 160: FiveSqrt × EighteenLog × poly numerator", () => {
     expect(result).toMatchObject({ kind: "apply", head: SUM });
   });
 });
+
+// Phase 161 — Nineteen-Log × polynomial numerator
+// ---------------------------------------------------------------------------
+describe("Phase 161: NineteenLog × poly numerator", () => {
+  it("log(k)^19/k^2 closes (eff=0, denDeg=2 > 0)", () => {
+    const k161a = sym("k");
+    const kp1_161a = { kind: "apply" as const, head: ADD, args: [k161a, int(1)] };
+    const k2_161a = { kind: "apply" as const, head: POW, args: [k161a, int(2)] };
+    const kp12_161a = { kind: "apply" as const, head: POW, args: [kp1_161a, int(2)] };
+    const numK_161a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+      { kind: "apply" as const, head: LOG, args: [k161a] },
+    ]};
+    const numKp1_161a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161a] },
+    ]};
+    const gK161a = { kind: "apply" as const, head: DIV, args: [numK_161a, k2_161a] };
+    const gKp1_161a = { kind: "apply" as const, head: DIV, args: [numKp1_161a, kp12_161a] };
+    const f161a = { kind: "apply" as const, head: SUB, args: [gK161a, gKp1_161a] };
+    const result = evaluateSum(f161a, k161a, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("log(k)^19*k/k^2 closes (eff=1, denDeg=2 > 1)", () => {
+    const k161b = sym("k");
+    const kp1_161b = { kind: "apply" as const, head: ADD, args: [k161b, int(1)] };
+    const k2_161b = { kind: "apply" as const, head: POW, args: [k161b, int(2)] };
+    const kp12_161b = { kind: "apply" as const, head: POW, args: [kp1_161b, int(2)] };
+    const numK_161b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      { kind: "apply" as const, head: LOG, args: [k161b] },
+      k161b,
+    ]};
+    const numKp1_161b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161b] },
+      kp1_161b,
+    ]};
+    const gK161b = { kind: "apply" as const, head: DIV, args: [numK_161b, k2_161b] };
+    const gKp1_161b = { kind: "apply" as const, head: DIV, args: [numKp1_161b, kp12_161b] };
+    const f161b = { kind: "apply" as const, head: SUB, args: [gK161b, gKp1_161b] };
+    const result = evaluateSum(f161b, k161b, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("log(k)^19*k/k^1 refused (eff=1, denDeg=1 not > 1)", () => {
+    const k161c = sym("k");
+    const kp1_161c = { kind: "apply" as const, head: ADD, args: [k161c, int(1)] };
+    const numK_161c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      { kind: "apply" as const, head: LOG, args: [k161c] },
+      k161c,
+    ]};
+    const numKp1_161c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_161c] },
+      kp1_161c,
+    ]};
+    const gK161c = { kind: "apply" as const, head: DIV, args: [numK_161c, k161c] };
+    const gKp1_161c = { kind: "apply" as const, head: DIV, args: [numKp1_161c, kp1_161c] };
+    const f161c = { kind: "apply" as const, head: SUB, args: [gK161c, gKp1_161c] };
+    const result = evaluateSum(f161c, k161c, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+// Phase 162 — One-Sqrt × Nineteen-Log × polynomial numerator
+// ---------------------------------------------------------------------------
+describe("Phase 162: OneSqrt × NineteenLog × poly numerator", () => {
+  it("sqrt(k)*log(k)^19/k^2 closes (eff=0.5, denDeg=2 > 0.5)", () => {
+    const k162a = sym("k");
+    const kp1_162a = { kind: "apply" as const, head: ADD, args: [k162a, int(1)] };
+    const k2_162a = { kind: "apply" as const, head: POW, args: [k162a, int(2)] };
+    const kp12_162a = { kind: "apply" as const, head: POW, args: [kp1_162a, int(2)] };
+    const numK_162a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+      { kind: "apply" as const, head: LOG, args: [k162a] },
+    ]};
+    const numKp1_162a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162a] },
+    ]};
+    const gK162a = { kind: "apply" as const, head: DIV, args: [numK_162a, k2_162a] };
+    const gKp1_162a = { kind: "apply" as const, head: DIV, args: [numKp1_162a, kp12_162a] };
+    const f162a = { kind: "apply" as const, head: SUB, args: [gK162a, gKp1_162a] };
+    const result = evaluateSum(f162a, k162a, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)*log(k)^19*k/k^2 closes (eff=1.5, denDeg=2 > 1.5)", () => {
+    const k162b = sym("k");
+    const kp1_162b = { kind: "apply" as const, head: ADD, args: [k162b, int(1)] };
+    const k2_162b = { kind: "apply" as const, head: POW, args: [k162b, int(2)] };
+    const kp12_162b = { kind: "apply" as const, head: POW, args: [kp1_162b, int(2)] };
+    const numK_162b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      { kind: "apply" as const, head: LOG, args: [k162b] },
+      k162b,
+    ]};
+    const numKp1_162b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162b] },
+      kp1_162b,
+    ]};
+    const gK162b = { kind: "apply" as const, head: DIV, args: [numK_162b, k2_162b] };
+    const gKp1_162b = { kind: "apply" as const, head: DIV, args: [numKp1_162b, kp12_162b] };
+    const f162b = { kind: "apply" as const, head: SUB, args: [gK162b, gKp1_162b] };
+    const result = evaluateSum(f162b, k162b, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)*log(k)^19*k/k^1 refused (eff=1.5, denDeg=1 not > 1.5)", () => {
+    const k162c = sym("k");
+    const kp1_162c = { kind: "apply" as const, head: ADD, args: [k162c, int(1)] };
+    const numK_162c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      { kind: "apply" as const, head: LOG, args: [k162c] },
+      k162c,
+    ]};
+    const numKp1_162c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_162c] },
+      kp1_162c,
+    ]};
+    const gK162c = { kind: "apply" as const, head: DIV, args: [numK_162c, k162c] };
+    const gKp1_162c = { kind: "apply" as const, head: DIV, args: [numKp1_162c, kp1_162c] };
+    const f162c = { kind: "apply" as const, head: SUB, args: [gK162c, gKp1_162c] };
+    const result = evaluateSum(f162c, k162c, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+// Phase 163 — Two-Sqrt × Nineteen-Log × polynomial numerator
+// ---------------------------------------------------------------------------
+describe("Phase 163: TwoSqrt × NineteenLog × poly numerator", () => {
+  it("sqrt(k)x2*log(k)^19/k^2 closes (eff=1, denDeg=2 > 1)", () => {
+    const k163a = sym("k");
+    const kp1_163a = { kind: "apply" as const, head: ADD, args: [k163a, int(1)] };
+    const k2_163a = { kind: "apply" as const, head: POW, args: [k163a, int(2)] };
+    const kp12_163a = { kind: "apply" as const, head: POW, args: [kp1_163a, int(2)] };
+    const numK_163a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k163a] },
+      { kind: "apply" as const, head: SQRT, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+      { kind: "apply" as const, head: LOG, args: [k163a] },
+    ]};
+    const numKp1_163a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_163a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163a] },
+    ]};
+    const gK163a = { kind: "apply" as const, head: DIV, args: [numK_163a, k2_163a] };
+    const gKp1_163a = { kind: "apply" as const, head: DIV, args: [numKp1_163a, kp12_163a] };
+    const f163a = { kind: "apply" as const, head: SUB, args: [gK163a, gKp1_163a] };
+    const result = evaluateSum(f163a, k163a, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x2*log(k)^19*k/k^3 closes (eff=2, denDeg=3 > 2)", () => {
+    const k163b = sym("k");
+    const kp1_163b = { kind: "apply" as const, head: ADD, args: [k163b, int(1)] };
+    const k3_163b = { kind: "apply" as const, head: POW, args: [k163b, int(3)] };
+    const kp13_163b = { kind: "apply" as const, head: POW, args: [kp1_163b, int(3)] };
+    const numK_163b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k163b] },
+      { kind: "apply" as const, head: SQRT, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      { kind: "apply" as const, head: LOG, args: [k163b] },
+      k163b,
+    ]};
+    const numKp1_163b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_163b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163b] },
+      kp1_163b,
+    ]};
+    const gK163b = { kind: "apply" as const, head: DIV, args: [numK_163b, k3_163b] };
+    const gKp1_163b = { kind: "apply" as const, head: DIV, args: [numKp1_163b, kp13_163b] };
+    const f163b = { kind: "apply" as const, head: SUB, args: [gK163b, gKp1_163b] };
+    const result = evaluateSum(f163b, k163b, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x2*log(k)^19*k/k^2 refused (eff=2, denDeg=2 not > 2)", () => {
+    const k163c = sym("k");
+    const kp1_163c = { kind: "apply" as const, head: ADD, args: [k163c, int(1)] };
+    const k2_163c = { kind: "apply" as const, head: POW, args: [k163c, int(2)] };
+    const kp12_163c = { kind: "apply" as const, head: POW, args: [kp1_163c, int(2)] };
+    const numK_163c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k163c] },
+      { kind: "apply" as const, head: SQRT, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      { kind: "apply" as const, head: LOG, args: [k163c] },
+      k163c,
+    ]};
+    const numKp1_163c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_163c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_163c] },
+      kp1_163c,
+    ]};
+    const gK163c = { kind: "apply" as const, head: DIV, args: [numK_163c, k2_163c] };
+    const gKp1_163c = { kind: "apply" as const, head: DIV, args: [numKp1_163c, kp12_163c] };
+    const f163c = { kind: "apply" as const, head: SUB, args: [gK163c, gKp1_163c] };
+    const result = evaluateSum(f163c, k163c, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+// Phase 164 — Three-Sqrt × Nineteen-Log × polynomial numerator
+// ---------------------------------------------------------------------------
+describe("Phase 164: ThreeSqrt × NineteenLog × poly numerator", () => {
+  it("sqrt(k)x3*log(k)^19/k^2 closes (eff=1.5, denDeg=2 > 1.5)", () => {
+    const k164a = sym("k");
+    const kp1_164a = { kind: "apply" as const, head: ADD, args: [k164a, int(1)] };
+    const k2_164a = { kind: "apply" as const, head: POW, args: [k164a, int(2)] };
+    const kp12_164a = { kind: "apply" as const, head: POW, args: [kp1_164a, int(2)] };
+    const numK_164a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k164a] },
+      { kind: "apply" as const, head: SQRT, args: [k164a] },
+      { kind: "apply" as const, head: SQRT, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+      { kind: "apply" as const, head: LOG, args: [k164a] },
+    ]};
+    const numKp1_164a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_164a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_164a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164a] },
+    ]};
+    const gK164a = { kind: "apply" as const, head: DIV, args: [numK_164a, k2_164a] };
+    const gKp1_164a = { kind: "apply" as const, head: DIV, args: [numKp1_164a, kp12_164a] };
+    const f164a = { kind: "apply" as const, head: SUB, args: [gK164a, gKp1_164a] };
+    const result = evaluateSum(f164a, k164a, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x3*log(k)^19*k/k^3 closes (eff=2.5, denDeg=3 > 2.5)", () => {
+    const k164b = sym("k");
+    const kp1_164b = { kind: "apply" as const, head: ADD, args: [k164b, int(1)] };
+    const k3_164b = { kind: "apply" as const, head: POW, args: [k164b, int(3)] };
+    const kp13_164b = { kind: "apply" as const, head: POW, args: [kp1_164b, int(3)] };
+    const numK_164b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k164b] },
+      { kind: "apply" as const, head: SQRT, args: [k164b] },
+      { kind: "apply" as const, head: SQRT, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      { kind: "apply" as const, head: LOG, args: [k164b] },
+      k164b,
+    ]};
+    const numKp1_164b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_164b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_164b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164b] },
+      kp1_164b,
+    ]};
+    const gK164b = { kind: "apply" as const, head: DIV, args: [numK_164b, k3_164b] };
+    const gKp1_164b = { kind: "apply" as const, head: DIV, args: [numKp1_164b, kp13_164b] };
+    const f164b = { kind: "apply" as const, head: SUB, args: [gK164b, gKp1_164b] };
+    const result = evaluateSum(f164b, k164b, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x3*log(k)^19*k/k^2 refused (eff=2.5, denDeg=2 not > 2.5)", () => {
+    const k164c = sym("k");
+    const kp1_164c = { kind: "apply" as const, head: ADD, args: [k164c, int(1)] };
+    const k2_164c = { kind: "apply" as const, head: POW, args: [k164c, int(2)] };
+    const kp12_164c = { kind: "apply" as const, head: POW, args: [kp1_164c, int(2)] };
+    const numK_164c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k164c] },
+      { kind: "apply" as const, head: SQRT, args: [k164c] },
+      { kind: "apply" as const, head: SQRT, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      { kind: "apply" as const, head: LOG, args: [k164c] },
+      k164c,
+    ]};
+    const numKp1_164c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_164c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_164c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_164c] },
+      kp1_164c,
+    ]};
+    const gK164c = { kind: "apply" as const, head: DIV, args: [numK_164c, k2_164c] };
+    const gKp1_164c = { kind: "apply" as const, head: DIV, args: [numKp1_164c, kp12_164c] };
+    const f164c = { kind: "apply" as const, head: SUB, args: [gK164c, gKp1_164c] };
+    const result = evaluateSum(f164c, k164c, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+// Phase 165 — Four-Sqrt × Nineteen-Log × polynomial numerator
+// ---------------------------------------------------------------------------
+describe("Phase 165: FourSqrt × NineteenLog × poly numerator", () => {
+  it("sqrt(k)x4*log(k)^19/k^3 closes (eff=2, denDeg=3 > 2)", () => {
+    const k165a = sym("k");
+    const kp1_165a = { kind: "apply" as const, head: ADD, args: [k165a, int(1)] };
+    const k3_165a = { kind: "apply" as const, head: POW, args: [k165a, int(3)] };
+    const kp13_165a = { kind: "apply" as const, head: POW, args: [kp1_165a, int(3)] };
+    const numK_165a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k165a] },
+      { kind: "apply" as const, head: SQRT, args: [k165a] },
+      { kind: "apply" as const, head: SQRT, args: [k165a] },
+      { kind: "apply" as const, head: SQRT, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+      { kind: "apply" as const, head: LOG, args: [k165a] },
+    ]};
+    const numKp1_165a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_165a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165a] },
+    ]};
+    const gK165a = { kind: "apply" as const, head: DIV, args: [numK_165a, k3_165a] };
+    const gKp1_165a = { kind: "apply" as const, head: DIV, args: [numKp1_165a, kp13_165a] };
+    const f165a = { kind: "apply" as const, head: SUB, args: [gK165a, gKp1_165a] };
+    const result = evaluateSum(f165a, k165a, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x4*log(k)^19*k/k^4 closes (eff=3, denDeg=4 > 3)", () => {
+    const k165b = sym("k");
+    const kp1_165b = { kind: "apply" as const, head: ADD, args: [k165b, int(1)] };
+    const k4_165b = { kind: "apply" as const, head: POW, args: [k165b, int(4)] };
+    const kp14_165b = { kind: "apply" as const, head: POW, args: [kp1_165b, int(4)] };
+    const numK_165b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k165b] },
+      { kind: "apply" as const, head: SQRT, args: [k165b] },
+      { kind: "apply" as const, head: SQRT, args: [k165b] },
+      { kind: "apply" as const, head: SQRT, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      { kind: "apply" as const, head: LOG, args: [k165b] },
+      k165b,
+    ]};
+    const numKp1_165b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_165b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165b] },
+      kp1_165b,
+    ]};
+    const gK165b = { kind: "apply" as const, head: DIV, args: [numK_165b, k4_165b] };
+    const gKp1_165b = { kind: "apply" as const, head: DIV, args: [numKp1_165b, kp14_165b] };
+    const f165b = { kind: "apply" as const, head: SUB, args: [gK165b, gKp1_165b] };
+    const result = evaluateSum(f165b, k165b, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x4*log(k)^19*k/k^3 refused (eff=3, denDeg=3 not > 3)", () => {
+    const k165c = sym("k");
+    const kp1_165c = { kind: "apply" as const, head: ADD, args: [k165c, int(1)] };
+    const k3_165c = { kind: "apply" as const, head: POW, args: [k165c, int(3)] };
+    const kp13_165c = { kind: "apply" as const, head: POW, args: [kp1_165c, int(3)] };
+    const numK_165c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k165c] },
+      { kind: "apply" as const, head: SQRT, args: [k165c] },
+      { kind: "apply" as const, head: SQRT, args: [k165c] },
+      { kind: "apply" as const, head: SQRT, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      { kind: "apply" as const, head: LOG, args: [k165c] },
+      k165c,
+    ]};
+    const numKp1_165c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_165c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_165c] },
+      kp1_165c,
+    ]};
+    const gK165c = { kind: "apply" as const, head: DIV, args: [numK_165c, k3_165c] };
+    const gKp1_165c = { kind: "apply" as const, head: DIV, args: [numKp1_165c, kp13_165c] };
+    const f165c = { kind: "apply" as const, head: SUB, args: [gK165c, gKp1_165c] };
+    const result = evaluateSum(f165c, k165c, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+// Phase 166 — Five-Sqrt × Nineteen-Log × polynomial numerator
+// ---------------------------------------------------------------------------
+describe("Phase 166: FiveSqrt × NineteenLog × poly numerator", () => {
+  it("sqrt(k)x5*log(k)^19/k^4 closes (eff=2.5, denDeg=4 > 2.5)", () => {
+    const k166a = sym("k");
+    const kp1_166a = { kind: "apply" as const, head: ADD, args: [k166a, int(1)] };
+    const k4_166a = { kind: "apply" as const, head: POW, args: [k166a, int(4)] };
+    const kp14_166a = { kind: "apply" as const, head: POW, args: [kp1_166a, int(4)] };
+    const numK_166a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k166a] },
+      { kind: "apply" as const, head: SQRT, args: [k166a] },
+      { kind: "apply" as const, head: SQRT, args: [k166a] },
+      { kind: "apply" as const, head: SQRT, args: [k166a] },
+      { kind: "apply" as const, head: SQRT, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+      { kind: "apply" as const, head: LOG, args: [k166a] },
+    ]};
+    const numKp1_166a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_166a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166a] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166a] },
+    ]};
+    const gK166a = { kind: "apply" as const, head: DIV, args: [numK_166a, k4_166a] };
+    const gKp1_166a = { kind: "apply" as const, head: DIV, args: [numKp1_166a, kp14_166a] };
+    const f166a = { kind: "apply" as const, head: SUB, args: [gK166a, gKp1_166a] };
+    const result = evaluateSum(f166a, k166a, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x5*log(k)^19*k/k^4 closes (eff=3.5, denDeg=4 > 3.5)", () => {
+    const k166b = sym("k");
+    const kp1_166b = { kind: "apply" as const, head: ADD, args: [k166b, int(1)] };
+    const k4_166b = { kind: "apply" as const, head: POW, args: [k166b, int(4)] };
+    const kp14_166b = { kind: "apply" as const, head: POW, args: [kp1_166b, int(4)] };
+    const numK_166b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k166b] },
+      { kind: "apply" as const, head: SQRT, args: [k166b] },
+      { kind: "apply" as const, head: SQRT, args: [k166b] },
+      { kind: "apply" as const, head: SQRT, args: [k166b] },
+      { kind: "apply" as const, head: SQRT, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      { kind: "apply" as const, head: LOG, args: [k166b] },
+      k166b,
+    ]};
+    const numKp1_166b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_166b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166b] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166b] },
+      kp1_166b,
+    ]};
+    const gK166b = { kind: "apply" as const, head: DIV, args: [numK_166b, k4_166b] };
+    const gKp1_166b = { kind: "apply" as const, head: DIV, args: [numKp1_166b, kp14_166b] };
+    const f166b = { kind: "apply" as const, head: SUB, args: [gK166b, gKp1_166b] };
+    const result = evaluateSum(f166b, k166b, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("sqrt(k)x5*log(k)^19*k/k^3 refused (eff=3.5, denDeg=3 not > 3.5)", () => {
+    const k166c = sym("k");
+    const kp1_166c = { kind: "apply" as const, head: ADD, args: [k166c, int(1)] };
+    const k3_166c = { kind: "apply" as const, head: POW, args: [k166c, int(3)] };
+    const kp13_166c = { kind: "apply" as const, head: POW, args: [kp1_166c, int(3)] };
+    const numK_166c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k166c] },
+      { kind: "apply" as const, head: SQRT, args: [k166c] },
+      { kind: "apply" as const, head: SQRT, args: [k166c] },
+      { kind: "apply" as const, head: SQRT, args: [k166c] },
+      { kind: "apply" as const, head: SQRT, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      { kind: "apply" as const, head: LOG, args: [k166c] },
+      k166c,
+    ]};
+    const numKp1_166c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_166c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166c] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      { kind: "apply" as const, head: LOG, args: [kp1_166c] },
+      kp1_166c,
+    ]};
+    const gK166c = { kind: "apply" as const, head: DIV, args: [numK_166c, k3_166c] };
+    const gKp1_166c = { kind: "apply" as const, head: DIV, args: [numKp1_166c, kp13_166c] };
+    const f166c = { kind: "apply" as const, head: SUB, args: [gK166c, gKp1_166c] };
+    const result = evaluateSum(f166c, k166c, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
