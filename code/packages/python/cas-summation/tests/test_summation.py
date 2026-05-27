@@ -11919,6 +11919,7 @@ class TestPhase167TwentyLogPoly:
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
             _k,
         ))
         num_kp1 = IRApply(MUL, (
@@ -11928,6 +11929,7 @@ class TestPhase167TwentyLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
@@ -12033,6 +12035,7 @@ class TestPhase168OneSqrtTwentyLogPoly:
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
             _k,
         ))
         num_kp1 = IRApply(MUL, (
@@ -12043,6 +12046,7 @@ class TestPhase168OneSqrtTwentyLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
@@ -12148,6 +12152,7 @@ class TestPhase169TwoSqrtTwentyLogPoly:
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -12157,6 +12162,7 @@ class TestPhase169TwoSqrtTwentyLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
@@ -12262,6 +12268,7 @@ class TestPhase170ThreeSqrtTwentyLogPoly:
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -12271,6 +12278,7 @@ class TestPhase170ThreeSqrtTwentyLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
@@ -12381,6 +12389,7 @@ class TestPhase171FourSqrtTwentyLogPoly:
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -12391,6 +12400,7 @@ class TestPhase171FourSqrtTwentyLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
@@ -12500,6 +12510,7 @@ class TestPhase172FiveSqrtTwentyLogPoly:
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -12510,6 +12521,7 @@ class TestPhase172FiveSqrtTwentyLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
@@ -12613,6 +12625,7 @@ class TestPhase173TwentyOneLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
             _k,
         ))
         num_kp1 = IRApply(MUL, (
@@ -12624,6 +12637,7 @@ class TestPhase173TwentyOneLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             kp1,
         ))
         g_k = IRApply(DIV, (num_k, k2))
@@ -12721,6 +12735,7 @@ class TestPhase174OneSqrtTwentyOneLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
             _k,
         ))
         num_kp1 = IRApply(MUL, (
@@ -12733,6 +12748,7 @@ class TestPhase174OneSqrtTwentyOneLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             kp1,
         ))
         g_k = IRApply(DIV, (num_k, k2))
@@ -12831,6 +12847,7 @@ class TestPhase175TwoSqrtTwentyOneLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -12841,6 +12858,7 @@ class TestPhase175TwoSqrtTwentyOneLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
         ))
@@ -12940,6 +12958,7 @@ class TestPhase176ThreeSqrtTwentyOneLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -12950,6 +12969,7 @@ class TestPhase176ThreeSqrtTwentyOneLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
         ))
@@ -13054,6 +13074,7 @@ class TestPhase177FourSqrtTwentyOneLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -13065,6 +13086,7 @@ class TestPhase177FourSqrtTwentyOneLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
         ))
@@ -13169,6 +13191,7 @@ class TestPhase178FiveSqrtTwentyOneLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -13180,6 +13203,7 @@ class TestPhase178FiveSqrtTwentyOneLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),
         ))
@@ -13261,8 +13285,8 @@ class TestPhase179TwentyTwoLogPoly:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_log23_k_times_k_over_k2_refused(self):
-        """log(k)²³·k/k²: 23 logs → refused."""
+    def test_log24_k_times_k_over_k2_refused(self):
+        """log(k)²⁴·k/k²: 24 logs → not Phase 179."""
         from symbolic_ir import SUB
 
         kp1 = IRApply(ADD, (_k, IRInteger(1)))
@@ -13277,6 +13301,7 @@ class TestPhase179TwentyTwoLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
             _k,
         ))
         num_kp1 = IRApply(MUL, (
@@ -13288,6 +13313,7 @@ class TestPhase179TwentyTwoLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
             kp1,
         ))
         g_k = IRApply(DIV, (num_k, k2))
@@ -13372,8 +13398,8 @@ class TestPhase180OneSqrtTwentyTwoLogPoly:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_sqrt_k_log23_k_times_k_over_k2_refused(self):
-        """√k·log(k)²³·k/k²: sqrt(k)+23 logs → refused."""
+    def test_sqrt_k_log24_k_times_k_over_k2_refused(self):
+        """√k·log(k)²⁴·k/k²: sqrt(k)+24 logs → not Phase 180."""
         from symbolic_ir import SQRT, SUB
 
         kp1 = IRApply(ADD, (_k, IRInteger(1)))
@@ -13389,6 +13415,7 @@ class TestPhase180OneSqrtTwentyTwoLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
             _k,
         ))
         num_kp1 = IRApply(MUL, (
@@ -13401,6 +13428,7 @@ class TestPhase180OneSqrtTwentyTwoLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
             kp1,
         ))
         g_k = IRApply(DIV, (num_k, k2))
@@ -13485,8 +13513,8 @@ class TestPhase181TwoSqrtTwentyTwoLogPoly:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_two_sqrt_k_log23_k_over_k2_refused(self):
-        """(√k)²·log(k)²³/k²: 23 logs → refused."""
+    def test_two_sqrt_k_log24_k_over_k2_refused(self):
+        """(√k)²·log(k)²⁴/k²: 24 logs → not Phase 181."""
         from symbolic_ir import SQRT, SUB
 
         kp1 = IRApply(ADD, (_k, IRInteger(1)))
@@ -13503,6 +13531,7 @@ class TestPhase181TwoSqrtTwentyTwoLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),   # 22nd log
             IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -13515,6 +13544,7 @@ class TestPhase181TwoSqrtTwentyTwoLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),   # 22nd log
             IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -13598,8 +13628,8 @@ class TestPhase182ThreeSqrtTwentyTwoLogPoly:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_three_sqrt_k_log23_k_over_k3_refused(self):
-        """(√k)³·log(k)²³/k³: 23 logs → refused."""
+    def test_three_sqrt_k_log24_k_over_k3_refused(self):
+        """(√k)³·log(k)²⁴/k³: 24 logs → not Phase 182."""
         from symbolic_ir import SQRT, SUB
 
         kp1 = IRApply(ADD, (_k, IRInteger(1)))
@@ -13616,6 +13646,7 @@ class TestPhase182ThreeSqrtTwentyTwoLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),   # 22nd log
             IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -13628,6 +13659,7 @@ class TestPhase182ThreeSqrtTwentyTwoLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),   # 22nd log
             IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -13715,8 +13747,8 @@ class TestPhase183FourSqrtTwentyTwoLogPoly:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_four_sqrt_k_log23_k_over_k3_refused(self):
-        """(√k)⁴·log(k)²³/k³: 23 logs → refused."""
+    def test_four_sqrt_k_log24_k_over_k3_refused(self):
+        """(√k)⁴·log(k)²⁴/k³: 24 logs → not Phase 183."""
         from symbolic_ir import SQRT, SUB
 
         kp1 = IRApply(ADD, (_k, IRInteger(1)))
@@ -13734,6 +13766,7 @@ class TestPhase183FourSqrtTwentyTwoLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),   # 22nd log
             IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -13747,6 +13780,7 @@ class TestPhase183FourSqrtTwentyTwoLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),   # 22nd log
             IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -13834,8 +13868,8 @@ class TestPhase184FiveSqrtTwentyTwoLogPoly:
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert not (isinstance(result, IRApply) and result.head == SUM)
 
-    def test_five_sqrt_k_log23_k_over_k3_refused(self):
-        """(√k)⁵·log(k)²³/k³: 23 logs → refused."""
+    def test_five_sqrt_k_log24_k_over_k3_refused(self):
+        """(√k)⁵·log(k)²⁴/k³: 24 logs → not Phase 184."""
         from symbolic_ir import SQRT, SUB
 
         kp1 = IRApply(ADD, (_k, IRInteger(1)))
@@ -13853,6 +13887,7 @@ class TestPhase184FiveSqrtTwentyTwoLogPoly:
             IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
             IRApply(LOG, (_k,)),   # 22nd log
             IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -13866,6 +13901,703 @@ class TestPhase184FiveSqrtTwentyTwoLogPoly:
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
             IRApply(LOG, (kp1,)),   # 22nd log
             IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase185TwentyThreeLogPoly:
+    """Phase 185 — Twenty-Three-Log × polynomial numerator."""
+
+    def test_log23_k_over_k2_closes(self):
+        """log(k)²³/k²: eff_x2=0; 2·2=4 > 0 → closes."""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log23_k_times_k_over_k2_closes(self):
+        """log(k)²³·k/k²: eff_x2=2; 2·2=4 > 2 → closes."""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log24_k_times_k_over_k2_refused(self):
+        """log(k)²⁴·k/k²: 24 logs → not Phase 185."""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase186OneSqrtTwentyThreeLogPoly:
+    """Phase 186 — One-Sqrt × Twenty-Three-Log × polynomial numerator."""
+
+    def test_sqrt_k_log23_k_over_k2_closes(self):
+        """√k·log(k)²³/k²: eff_x2=1; 2·2=4 > 1 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_log23_k_times_k_over_k2_closes(self):
+        """√k·log(k)²³·k/k²: eff_x2=3; 2·2=4 > 3 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_log24_k_times_k_over_k2_refused(self):
+        """√k·log(k)²⁴·k/k²: sqrt(k)+24 logs → not Phase 186."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase187TwoSqrtTwentyThreeLogPoly:
+    """Phase 187 — Two-Sqrt × Twenty-Three-Log × polynomial numerator."""
+
+    def test_two_sqrt_k_log23_k_over_k2_closes(self):
+        """(√k)²·log(k)²³/k²: eff_x2=2; 2·2=4 > 2 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_two_sqrt_k_log23_k_times_k_over_k3_closes(self):
+        """(√k)²·log(k)²³·k/k³: eff_x2=4; 2·3=6 > 4 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_two_sqrt_k_log24_k_over_k2_refused(self):
+        """(√k)²·log(k)²⁴/k²: 24 logs → not Phase 187."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 22nd log
+            IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 22nd log
+            IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase188ThreeSqrtTwentyThreeLogPoly:
+    """Phase 188 — Three-Sqrt × Twenty-Three-Log × polynomial numerator."""
+
+    def test_three_sqrt_k_log23_k_over_k2_closes(self):
+        """(√k)³·log(k)²³/k²: eff_x2=3; 2·2=4 > 3 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_k_log23_k_times_k_over_k3_closes(self):
+        """(√k)³·log(k)²³·k/k³: eff_x2=5; 2·3=6 > 5 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_k_log24_k_over_k3_refused(self):
+        """(√k)³·log(k)²⁴/k³: 24 logs → not Phase 188."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 22nd log
+            IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 22nd log
+            IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase189FourSqrtTwentyThreeLogPoly:
+    """Phase 189 — Four-Sqrt × Twenty-Three-Log × polynomial numerator."""
+
+    def test_four_sqrt_k_log23_k_over_k3_closes(self):
+        """(√k)⁴·log(k)²³/k³: eff_x2=4; 2·3=6 > 4 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_four_sqrt_k_log23_k_times_k_over_k4_closes(self):
+        """(√k)⁴·log(k)²³·k/k⁴: eff_x2=6; 2·4=8 > 6 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k4 = IRApply(POW, (_k, IRInteger(4)))
+        kp1_4 = IRApply(POW, (kp1, IRInteger(4)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k4))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_4))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_four_sqrt_k_log24_k_over_k3_refused(self):
+        """(√k)⁴·log(k)²⁴/k³: 24 logs → not Phase 189."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 22nd log
+            IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 22nd log
+            IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase190FiveSqrtTwentyThreeLogPoly:
+    """Phase 190 — Five-Sqrt × Twenty-Three-Log × polynomial numerator."""
+
+    def test_five_sqrt_k_log23_k_over_k3_closes(self):
+        """(√k)⁵·log(k)²³/k³: eff_x2=5; 2·3=6 > 5 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_five_sqrt_k_log23_k_times_k_over_k4_closes(self):
+        """(√k)⁵·log(k)²³·k/k⁴: eff_x2=7; 2·4=8 > 7 → closes."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k4 = IRApply(POW, (_k, IRInteger(4)))
+        kp1_4 = IRApply(POW, (kp1, IRInteger(4)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 23rd log
+            _k,
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 23rd log
+            kp1,
+        ))
+        g_k = IRApply(DIV, (num_k, k4))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_4))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_five_sqrt_k_log24_k_over_k3_refused(self):
+        """(√k)⁵·log(k)²⁴/k³: 24 logs → not Phase 190."""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        num_k = IRApply(MUL, (
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (_k,)), IRApply(SQRT, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),   # 22nd log
+            IRApply(LOG, (_k,)),   # 23rd log
+            IRApply(LOG, (_k,)),   # 24th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),   # 22nd log
+            IRApply(LOG, (kp1,)),   # 23rd log
+            IRApply(LOG, (kp1,)),   # 24th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))

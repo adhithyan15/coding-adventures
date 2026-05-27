@@ -1,5 +1,43 @@
 # Changelog
 
+## 2.127.0 — 2026-05-27
+
+### Added
+
+- **Phase 190 — Five-Sqrt × Twenty-Three-Log × polynomial** (`_five_sqrt_twenty_three_log_poly_effective_x2`):
+  Completes the Twenty-Three-Log family (Phases 185–190).
+
+## 2.126.0 — 2026-05-27
+
+### Added
+
+- **Phase 189 — Four-Sqrt × Twenty-Three-Log × polynomial** (`_four_sqrt_twenty_three_log_poly_effective_x2`).
+
+## 2.125.0 — 2026-05-27
+
+### Added
+
+- **Phase 188 — Three-Sqrt × Twenty-Three-Log × polynomial** (`_three_sqrt_twenty_three_log_poly_effective_x2`).
+
+## 2.124.0 — 2026-05-27
+
+### Added
+
+- **Phase 187 — Two-Sqrt × Twenty-Three-Log × polynomial** (`_two_sqrt_twenty_three_log_poly_effective_x2`).
+
+## 2.123.0 — 2026-05-27
+
+### Added
+
+- **Phase 186 — One-Sqrt × Twenty-Three-Log × polynomial** (`_one_sqrt_twenty_three_log_poly_effective_x2`).
+
+## 2.122.0 — 2026-05-27
+
+### Added
+
+- **Phase 185 — Twenty-Three-Log × polynomial** (`_twenty_three_log_poly_effective_x2`):
+  `effective_x2 = 2·poly_deg`.
+
 ## 2.121.0 — 2026-05-27
 
 ### Added
