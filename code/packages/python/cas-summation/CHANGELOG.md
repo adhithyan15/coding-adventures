@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.115.0 — 2026-05-27
+
+### Added
+
+- **Phase 178 — Five-Sqrt × Twenty-One-Log × polynomial** (`_five_sqrt_twenty_one_log_poly_effective_x2`):
+  Completes the Twenty-One-Log family (Phases 173–178).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.114.0 — 2026-05-27
+
+### Added
+
+- **Phase 177 — Four-Sqrt × Twenty-One-Log × polynomial** (`_four_sqrt_twenty_one_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.113.0 — 2026-05-27
+
+### Added
+
+- **Phase 176 — Three-Sqrt × Twenty-One-Log × polynomial** (`_three_sqrt_twenty_one_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.112.0 — 2026-05-27
+
+### Added
+
+- **Phase 175 — Two-Sqrt × Twenty-One-Log × polynomial** (`_two_sqrt_twenty_one_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.111.0 — 2026-05-27
+
+### Added
+
+- **Phase 174 — One-Sqrt × Twenty-One-Log × polynomial** (`_one_sqrt_twenty_one_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.110.0 — 2026-05-27
+
+### Added
+
+- **Phase 173 — Twenty-One-Log × polynomial** (`_twenty_one_log_poly_effective_x2`):
+  Recognizes `Mul(Log(diverging)×21, poly…)` numerators; `effective_x2 = 2·poly_deg`.
+
 ## 2.109.0 — 2026-05-27
 
 ### Added
