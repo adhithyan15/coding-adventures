@@ -2061,6 +2061,34 @@ function eightLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
 }
 
 /**
+ * Phase 101 — Nine-Log × polynomial numerator.
+ *
+ * Effective growth: `log(k)⁹ · k^m`. `log⁹(k)` is sub-polynomial (`o(k^ε)`),
+ * contributing 0 to effective polynomial degree.
+ * effective degree = polyDeg.
+ * Caller checks `denDeg > nineLogPolyEffectiveDeg(num, k)`.
+ */
+function nineLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 9) return undefined; // ten or more Logs — not this phase
+      continue;
+    }
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined; // Sqrt present — refuse
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) { polyDeg += deg; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 9) return undefined;
+  return polyDeg;
+}
+
+/**
  * Phase 96 — One-Sqrt × Eight-Log × polynomial numerator.
  *
  * Effective growth: `sqrt(k^a) · log(k)⁸ · k^m`. `log⁸(k)` is sub-polynomial (`o(k^ε)`),
@@ -2984,6 +3012,18 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 101: Mul(Log(h1)×9, polynomial..., bounded...) numerator.
+  // Zero Sqrt + nine Log factors; log⁹ sub-polynomial → effective degree = polyDeg.
+  // Closes when denDeg > nineLogPolyEffectiveDeg or non-polynomial diverging denom.
+  const sl9Deg = nineLogPolyEffectiveDeg(num, k);
+  if (sl9Deg !== undefined) {
+    const denDegSl9 = polynomialDegreeInK(den, k);
+    if (denDegSl9 !== undefined) {
+      if (denDegSl9 > sl9Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }

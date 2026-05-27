@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.38.0 — 2026-05-27
+
+### Added
+
+- **Phase 101 — Nine-Log × polynomial numerator** (`nineLogPolyEffectiveDeg`):
+  recognises `Mul(Log(h1), ..., Log(h9), polynomial..., bounded...)`.
+  Exactly 9 Log factors and zero Sqrt factors required.
+  `effectiveDeg = polyDeg`. Begins the Nine-Log family (Phases 101–106).
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+
 ## 2.37.0 — 2026-05-27
 
 ### Added
