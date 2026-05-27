@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.67.0 — 2026-05-27
+
+### Added
+
+- **Phase 130 — Five-Sqrt × Thirteen-Log × polynomial** (`_five_sqrt_thirteen_log_poly_effective_x2`):
+  Completes the Thirteen-Log family (Phases 125–130).
+  `effective_x2 = sqrt1+…+sqrt5_deg_x2 + 2·poly_deg`.
+
+## 2.66.0 — 2026-05-27
+
+### Added
+
+- **Phase 129 — Four-Sqrt × Thirteen-Log × polynomial** (`_four_sqrt_thirteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+…+sqrt4_deg_x2 + 2·poly_deg`.
+
+## 2.65.0 — 2026-05-27
+
+### Added
+
+- **Phase 128 — Three-Sqrt × Thirteen-Log × polynomial** (`_three_sqrt_thirteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2+sqrt3_deg_x2 + 2·poly_deg`.
+
+## 2.64.0 — 2026-05-27
+
+### Added
+
+- **Phase 127 — Two-Sqrt × Thirteen-Log × polynomial** (`_two_sqrt_thirteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt1+sqrt2_deg_x2 + 2·poly_deg`.
+
+## 2.63.0 — 2026-05-27
+
+### Added
+
+- **Phase 126 — One-Sqrt × Thirteen-Log × polynomial** (`_one_sqrt_thirteen_log_poly_effective_x2`):
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+
+## 2.62.0 — 2026-05-27
+
+### Added
+
+- **Phase 125 — Thirteen-Log × polynomial** (`_thirteen_log_poly_effective_x2`):
+  Zero-Sqrt case. `effective_x2 = 2·poly_deg`. Closes when `2·den_deg > effective_x2`.
+
 ## 2.61.0 — 2026-05-27
 
 ### Added

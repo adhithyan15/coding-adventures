@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.67.0 — 2026-05-27
+
+### Added
+
+- **Phase 130 — Five-Sqrt × Thirteen-Log × polynomial numerator** (`fiveSqrtThirteenLogPolyEffectiveDeg`):
+  Completes the Thirteen-Log family (Phases 125–130).
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5 + polyDeg`.
+
+## 2.66.0 — 2026-05-27
+
+### Added
+
+- **Phase 129 — Four-Sqrt × Thirteen-Log × polynomial numerator** (`fourSqrtThirteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg4 + polyDeg`.
+
+## 2.65.0 — 2026-05-27
+
+### Added
+
+- **Phase 128 — Three-Sqrt × Thirteen-Log × polynomial numerator** (`threeSqrtThirteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2+sqrtHalfDeg3 + polyDeg`.
+
+## 2.64.0 — 2026-05-27
+
+### Added
+
+- **Phase 127 — Two-Sqrt × Thirteen-Log × polynomial numerator** (`twoSqrtThirteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg1+sqrtHalfDeg2 + polyDeg`.
+
+## 2.63.0 — 2026-05-27
+
+### Added
+
+- **Phase 126 — One-Sqrt × Thirteen-Log × polynomial numerator** (`oneSqrtThirteenLogPolyEffectiveDeg`):
+  `effectiveDeg = sqrtHalfDeg + polyDeg`.
+
+## 2.62.0 — 2026-05-27
+
+### Added
+
+- **Phase 125 — Thirteen-Log × polynomial numerator** (`thirteenLogPolyEffectiveDeg`):
+  Zero-Sqrt case. `effectiveDeg = polyDeg`. Closes when `denDeg > effectiveDeg`.
+
 ## 2.61.0 — 2026-05-27
 
 ### Added
