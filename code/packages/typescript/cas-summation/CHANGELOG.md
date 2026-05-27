@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.31.0 — 2026-05-27
+
+### Added
+
+- **Phase 94 — Five-Sqrt × Seven-Log × polynomial numerator** (`fiveSqrtSevenLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1)..Sqrt(P5), Log(h1), ..., Log(h7), polynomial..., bounded...)`.
+  Exactly 5 Sqrt factors and exactly 7 Log factors required.
+  `effectiveDeg = sqrtHalfDeg1+…+sqrtHalfDeg5+polyDeg`.
+  Completes the Seven-Log family (Phases 89–94).
+  - 3 new tests in `Phase 94` describe block.
+
 ## 2.30.0 — 2026-05-27
 
 ### Added
