@@ -3526,3 +3526,91 @@ fn phase90_sqrt_k_log7_k_times_k_over_k_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+#[test]
+fn phase91_sqrt_k_sqrt_k_log7_k_over_k2_closes() {
+    // √k·√k·log(k)^7 / k²: effective_x2=1+1=2; 2·2=4 > 2 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1,
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase91_sqrt_k3_sqrt_k3_log7_k_over_k4_closes() {
+    // √(k³)·√(k³)·log(k)^7 / k⁴: effective_x2=3+3=6; 2·4=8 > 6 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![k3]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![kp1_3]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k4 = apply(sym(POW), vec![k.clone(), int(4)]);
+    let kp1_4 = apply(sym(POW), vec![kp1.clone(), int(4)]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k3.clone(), sqrt_k3,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1_3.clone(), sqrt_kp1_3,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1,
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k4]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_4]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase91_sqrt_k_sqrt_k_log7_k_times_k_over_k2_refused() {
+    // √k·√k·log(k)^7·k / k²: effective_x2=1+1+2=4; 2·2=4 not > 4 → refused.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1,
+        kp1.clone(),
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.28.0 — 2026-05-27
+
+### Added
+
+- **Phase 91 — Two-Sqrt × Seven-Log × polynomial numerator** (`twoSqrtSevenLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1(k)), Sqrt(P2(k)), Log(h1(k)), ..., Log(h7(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt factors and exactly 7 Log factors required.  `log⁷(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effectiveDeg = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg`.
+  Closes when `denDeg > effectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in `Phase 91 — Two-Sqrt × Seven-Log × polynomial numerator` describe block.
+
 ## 2.27.0 — 2026-05-26
 
 ### Added
