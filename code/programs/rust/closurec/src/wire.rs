@@ -715,6 +715,110 @@ mod tests {
         assert_eq!(cfg.defines.defines.get("EMPTY"), Some(&DefineValue::Null));
     }
 
+    // ------------------------------------------------------------------
+    // CLOC11.04 — --define numeric edge case coverage
+    //
+    // CC accepts the same number forms Java's Double.parseDouble
+    // accepts: negative, fractional, scientific, leading-plus.
+    // Rust's f64::parse covers all of these so the existing
+    // parse_define_value branch already works — these tests just
+    // pin the contract so a future refactor (e.g. switching to a
+    // hand-rolled number parser) can't quietly regress it.
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn define_accepts_negative_integer() {
+        let cfg = config_from_parsed(&parse(&["-D", "N=-42"])).expect("ok");
+        assert_eq!(cfg.defines.defines.get("N"), Some(&DefineValue::Number(-42.0)));
+    }
+
+    #[test]
+    fn define_accepts_negative_float() {
+        let cfg = config_from_parsed(&parse(&["-D", "X=-1.5"])).expect("ok");
+        assert_eq!(cfg.defines.defines.get("X"), Some(&DefineValue::Number(-1.5)));
+    }
+
+    #[test]
+    fn define_accepts_fractional_only() {
+        // `.5` (no leading digit) is a valid JS number literal
+        // and a valid Rust f64::parse input.
+        let cfg = config_from_parsed(&parse(&["-D", "HALF=.5"])).expect("ok");
+        assert_eq!(cfg.defines.defines.get("HALF"), Some(&DefineValue::Number(0.5)));
+    }
+
+    #[test]
+    fn define_accepts_scientific_notation() {
+        let cfg = config_from_parsed(&parse(&["-D", "KILO=1e3"])).expect("ok");
+        assert_eq!(cfg.defines.defines.get("KILO"), Some(&DefineValue::Number(1000.0)));
+    }
+
+    #[test]
+    fn define_accepts_scientific_notation_with_negative_exponent() {
+        let cfg = config_from_parsed(&parse(&["-D", "MICRO=1e-6"])).expect("ok");
+        assert_eq!(
+            cfg.defines.defines.get("MICRO"),
+            Some(&DefineValue::Number(1e-6))
+        );
+    }
+
+    #[test]
+    fn define_accepts_leading_plus_sign() {
+        // `+1` is uncommon but accepted by both CC's parser and
+        // Rust's f64::parse. Some shell scripts emit it from
+        // `echo "+$N"` patterns.
+        let cfg = config_from_parsed(&parse(&["-D", "P=+1"])).expect("ok");
+        assert_eq!(cfg.defines.defines.get("P"), Some(&DefineValue::Number(1.0)));
+    }
+
+    #[test]
+    fn define_rejects_nan_string() {
+        // `NaN` parses as f64 but is non-finite; we reject (CC
+        // does too — NaN isn't a valid JS *literal*, you have to
+        // write `0/0` to get it).
+        let err = config_from_parsed(&parse(&["-D", "BAD=NaN"]))
+            .expect_err("must reject");
+        match err {
+            ConfigError::InvalidDefine { name, .. } => assert_eq!(name, "BAD"),
+            other => panic!("expected InvalidDefine, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn define_rejects_infinity_string() {
+        // Same reasoning as NaN.
+        let err = config_from_parsed(&parse(&["-D", "INF=Infinity"]))
+            .expect_err("must reject");
+        match err {
+            ConfigError::InvalidDefine { name, .. } => assert_eq!(name, "INF"),
+            other => panic!("expected InvalidDefine, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn define_accepts_hex_via_f64_parse_failure_path_fallthrough() {
+        // Rust's f64::parse does NOT accept hex literals
+        // (`0xFF`). Since CC's value parser uses
+        // Double.parseDouble which also rejects hex, we error.
+        // Pin so a refactor doesn't accidentally accept hex.
+        let err = config_from_parsed(&parse(&["-D", "HEX=0xFF"]))
+            .expect_err("must reject");
+        match err {
+            ConfigError::InvalidDefine { name, .. } => assert_eq!(name, "HEX"),
+            other => panic!("expected InvalidDefine, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn define_zero_and_negative_zero_both_parse() {
+        let cfg = config_from_parsed(&parse(&["-D", "Z=0", "-D", "NZ=-0"]))
+            .expect("ok");
+        assert_eq!(cfg.defines.defines.get("Z"), Some(&DefineValue::Number(0.0)));
+        // -0.0 IS finite and parses; we accept it. The f64 -0.0
+        // compares equal to +0.0 under ==, so the assertion still
+        // passes.
+        assert_eq!(cfg.defines.defines.get("NZ"), Some(&DefineValue::Number(-0.0)));
+    }
+
     #[test]
     fn define_invalid_returns_error() {
         // Bare unquoted string is not a valid JS literal — CC

@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.22.0] - 2026-05-26
+
+### Added — CLOC11.04: `--define` numeric edge case test coverage
+
+Test-coverage slice pinning behavior of `--define VALUE` for the full set of numeric literals CC's `Double.parseDouble` accepts. Rust's `f64::parse` covers all of these already — these tests make the contract explicit so a future refactor (e.g. switching to a hand-rolled number parser, or tightening to integer-only) can't quietly regress CC compat.
+
+Forms covered:
+
+| Form          | Accepted by closurec | Example       |
+|---------------|----------------------|---------------|
+| Integer       | ✓                    | `42`          |
+| Negative int  | ✓ (NEW PIN)          | `-42`         |
+| Float         | ✓                    | `1.5`         |
+| Negative float| ✓ (NEW PIN)          | `-1.5`        |
+| Fractional-only | ✓ (NEW PIN)        | `.5`          |
+| Scientific    | ✓ (NEW PIN)          | `1e3`         |
+| Negative exp  | ✓ (NEW PIN)          | `1e-6`        |
+| Leading `+`   | ✓ (NEW PIN)          | `+1`          |
+| Zero          | ✓ (NEW PIN)          | `0`           |
+| Negative zero | ✓ (NEW PIN)          | `-0`          |
+| `NaN`         | ✗ (NEW PIN)          | rejected      |
+| `Infinity`    | ✗ (NEW PIN)          | rejected      |
+| Hex `0xFF`    | ✗ (NEW PIN)          | rejected      |
+
+NaN/Infinity rejection is deliberate — they parse as `f64` in Rust but aren't valid JS *literals* (you'd write `0/0` or `1/0` to get them at runtime). Hex literals would be valid JS but CC's `Double.parseDouble` rejects them; we match.
+
+- **10 new unit tests** in `wire::tests`, no behavior change.
+
+### Pipeline matrix (unchanged)
+
+Same 14-step pipeline as 0.21.0. This is a test-only release that pins the contract on existing config-build behavior.
+
 ## [0.21.0] - 2026-05-26
 
 ### Added — CLOC11.34: `--output_manifest` writes input file list
