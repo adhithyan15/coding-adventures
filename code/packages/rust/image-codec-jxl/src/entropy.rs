@@ -139,6 +139,18 @@ pub fn decode_rans_block(data: &[u8]) -> Result<(Vec<u8>, usize), String> {
         ));
     }
 
+    // DoS guard: a hostile input could claim num_symbols = u32::MAX (4 billion),
+    // causing a multi-gigabyte Vec allocation and OOM.  We cap at 256 M symbols,
+    // which covers a 16384×16384-pixel image — far beyond any realistic use case
+    // for this teaching codec.
+    const MAX_SYMBOLS: usize = 256 * 1024 * 1024; // 256 M
+    if num_symbols > MAX_SYMBOLS {
+        return Err(format!(
+            "JXL: rANS block claims {} symbols, exceeding the {} limit",
+            num_symbols, MAX_SYMBOLS
+        ));
+    }
+
     let counts_end = 8 + alphabet_size * 4;
     if data.len() < counts_end + 4 {
         return Err("JXL: rANS block truncated in frequency table".into());
@@ -149,13 +161,18 @@ pub fn decode_rans_block(data: &[u8]) -> Result<(Vec<u8>, usize), String> {
 
     let data_len = u32::from_le_bytes(data[counts_end..counts_end + 4].try_into().unwrap()) as usize;
     let data_start = counts_end + 4;
-    let data_end = data_start + data_len;
+    // Guard against usize overflow in data_start + data_len before we do the
+    // bounds check below.  data_start is at most 8 + 256*4 + 4 = 1036 bytes,
+    // so the checked_add is defensive but cheap.
+    let data_end = data_start.checked_add(data_len).ok_or_else(|| {
+        "JXL: rANS block data_len overflows address space".to_string()
+    })?;
 
     if data.len() < data_end {
         return Err(format!(
             "JXL: rANS block claims {} compressed bytes but only {} remain",
             data_len,
-            data.len() - data_start
+            data.len().saturating_sub(data_start)
         ));
     }
 
