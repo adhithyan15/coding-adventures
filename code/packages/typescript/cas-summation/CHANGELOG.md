@@ -1,5 +1,52 @@
 # Changelog
 
+## 2.163.0 — 2026-05-27
+
+### Added
+
+- **Phase 226 — Five-Sqrt × Twenty-Nine-Log × polynomial** (`fiveSqrtTwentyNineLogPolyEffectiveDeg`):
+  Completes the Twenty-Nine-Log family (Phases 221–226).
+- **Phase 225 — Four-Sqrt × Twenty-Nine-Log × polynomial** (`fourSqrtTwentyNineLogPolyEffectiveDeg`).
+- **Phase 224 — Three-Sqrt × Twenty-Nine-Log × polynomial** (`threeSqrtTwentyNineLogPolyEffectiveDeg`).
+- **Phase 223 — Two-Sqrt × Twenty-Nine-Log × polynomial** (`twoSqrtTwentyNineLogPolyEffectiveDeg`).
+- **Phase 222 — One-Sqrt × Twenty-Nine-Log × polynomial** (`oneSqrtTwentyNineLogPolyEffectiveDeg`).
+- **Phase 221 — Zero-Sqrt × Twenty-Nine-Log × polynomial** (`twentyNineLogPolyEffectiveDeg`).
+
+### Changed
+
+- Boundary tests in Phases 215–220 (and prior phases 167–214) updated from 29-log
+  "refused" to 30-log "refused" now that Phases 221–226 handle exactly 29 logs.
+
+## 2.162.0 — 2026-05-27
+
+### Added
+
+- Phase 226 helper functions (internal release step).
+
+## 2.161.0 — 2026-05-27
+
+### Added
+
+- Phase 225 helper functions (internal release step).
+
+## 2.160.0 — 2026-05-27
+
+### Added
+
+- Phase 224 helper functions (internal release step).
+
+## 2.159.0 — 2026-05-27
+
+### Added
+
+- Phase 223 helper functions (internal release step).
+
+## 2.158.0 — 2026-05-27
+
+### Added
+
+- Phase 222 helper functions (internal release step).
+
 ## 2.157.0 — 2026-05-27
 
 ### Added

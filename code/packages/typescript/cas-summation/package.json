@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-summation",
-  "version": "2.157.0",
+  "version": "2.163.0",
   "description": "Pure TypeScript symbolic summation and product evaluation over symbolic IR",
   "type": "module",
   "main": "src/index.ts",
