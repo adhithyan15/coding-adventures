@@ -148,6 +148,8 @@ from symbolic_ir import (
 )
 from symbolic_ir.nodes import C1, C2, C_CONST, ODE2, D
 
+from cas_ode.frobenius import try_frobenius_series
+
 if TYPE_CHECKING:
     from symbolic_vm.vm import VM
 
@@ -3455,6 +3457,18 @@ def solve_ode(
     named = _try_var_coeff_named_ode(expr, y, x)
     if named is not None:
         return named
+
+    # ---- Track C1: Frobenius / power-series fallback -----------------------
+    # For 2nd-order linear ODEs with a regular singular point at x=0 that
+    # do NOT belong to a recognised named family, produce a truncated
+    # power-series solution.  This catches the textbook "solve by Frobenius"
+    # exercises without expanding the named-ODE grid.
+    #
+    # Scope (Track C1): singular point at x=0 only; non-integer-difference
+    # indicial roots only.  Logarithmic / merged-root cases fall through.
+    frob = try_frobenius_series(expr, y, x)
+    if frob is not None:
+        return frob
 
     # ---- Phase 18: Bernoulli ------------------------------------------------
     bern = _try_bernoulli(expr, y, x, vm)
