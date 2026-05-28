@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.24.0 — 2026-05-28
+
+### Removed — Track A2 cleanup (delete 27 grid helpers superseded by Phase 86)
+
+Pure deletion: removes the 27 hand-written ``N-Sqrt × M-Log × polynomial``
+helpers (Phases 59–85), their dispatcher branches, and their tests, now
+that ``log_sqrt_poly_effective_x2_generic`` preempts the entire grid.
+No behavior change.
+
+- ``src/lib.rs``: removed dispatcher branches for Phases 59–85 inside
+  ``g_vanishes_at_infinity`` and the helper functions
+  ``bounded_sqrt_poly_effective_x2`` through
+  ``two_sqrt_six_log_poly_effective_x2`` (~1,288 lines).
+  ``log_sqrt_poly_effective_x2_generic`` and all earlier helpers
+  remain untouched.
+- ``tests/tests.rs``: removed every ``phase59_*`` through ``phase85_*``
+  ``#[test]`` (~1,904 lines, 81 tests).  Phase 56–58 and Phase 86 tests
+  remain.
+- ``cargo test`` count drops from 156 → 75 phase tests; all surviving
+  tests pass.
+
 ## 2.23.0 — 2026-05-28
 
 ### Added — Phase 86 cleanup (generic log × sqrt × polynomial recogniser)

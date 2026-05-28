@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.24.0 — 2026-05-28
+
+**Track A2 cleanup — delete 27 grid helpers superseded by Phase 86 generic.**
+
+Pure deletion: removes the 27 hand-written ``N-Sqrt × M-Log × polynomial``
+helpers (Phases 59–85) and their dispatcher calls + tests, now that the
+Phase 86 generic recogniser (``_log_sqrt_poly_effective_x2_generic``)
+preempts the entire grid in every case the grid covers.  No behavior change.
+
+- ``src/cas_summation/summation.py``: removed all Phase 59–85 dispatcher
+  branches inside ``g_vanishes_at_infinity`` and the helper functions
+  ``_bounded_sqrt_poly_effective_x2`` through ``_two_sqrt_six_log_poly_effective_x2``.
+  The Phase 86 generic branch (which previously preempted them all) is
+  unchanged.
+- ``tests/test_summation.py``: removed all ``TestEvaluateSumPhase{59..67}``
+  and ``TestPhase{68..85}`` classes (117 tests).  Phase 56–58 and Phase 86
+  test classes remain.
+- Net source diff: ~2,227 lines deleted from ``summation.py``;
+  ~2,618 lines deleted from the test module.  pytest count drops from
+  ~268 to 151; no test fails or regresses.
+
 ## 2.23.0 — 2026-05-28
 
 **Phase 86 — Cleanup: generic log × sqrt × polynomial recogniser.**
