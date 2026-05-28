@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.205.0 — 2026-05-27
+
+### Added
+
+- **Phase 268 — Five-Sqrt × Thirty-Six-Log × polynomial** (`fiveSqrtThirtySixLogPolyEffectiveDeg`):
+  Completes the Thirty-Six-Log family (Phases 263–268).
+- **Phase 267 — Four-Sqrt × Thirty-Six-Log × polynomial** (`fourSqrtThirtySixLogPolyEffectiveDeg`).
+- **Phase 266 — Three-Sqrt × Thirty-Six-Log × polynomial** (`threeSqrtThirtySixLogPolyEffectiveDeg`).
+- **Phase 265 — Two-Sqrt × Thirty-Six-Log × polynomial** (`twoSqrtThirtySixLogPolyEffectiveDeg`).
+- **Phase 264 — One-Sqrt × Thirty-Six-Log × polynomial** (`oneSqrtThirtySixLogPolyEffectiveDeg`).
+- **Phase 263 — Zero-Sqrt × Thirty-Six-Log × polynomial** (`thirtySixLogPolyEffectiveDeg`).
+
+### Changed
+
+- Boundary tests in Phases 257–262 (and prior phases 167–256) updated from 36-log
+  "refused" to 37-log "refused" now that Phases 263–268 handle exactly 36 logs.
+
 ## 2.199.0 — 2026-05-27
 
 ### Added

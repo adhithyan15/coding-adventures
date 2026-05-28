@@ -5253,6 +5253,165 @@ function fiveSqrtThirtyFiveLogPolyEffectiveDeg(node: IRNode, k: IRNode): number 
   return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
 }
 
+/** Phase 263 — Zero-Sqrt × Thirty-Six-Log × polynomial numerator.
+ * effectiveDeg = polyDeg (no sqrt factors).
+ * Caller checks `denDeg > thirtySixLogPolyEffectiveDeg(num, k)`.
+ */
+function thirtySixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (sqrtEffectiveHalfDegree(arg, k) !== undefined) return undefined;
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 36) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (logCount !== 36) return undefined;
+  return polyDeg;
+}
+
+/** Phase 264 — One-Sqrt × Thirty-Six-Log × polynomial numerator.
+ * Caller checks `denDeg > oneSqrtThirtySixLogPolyEffectiveDeg(num, k)`.
+ */
+function oneSqrtThirtySixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sh = sqrtEffectiveHalfDegree(arg, k);
+    if (sh !== undefined) {
+      if (sqrtHalfDeg !== undefined) return undefined;
+      sqrtHalfDeg = sh; continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 36) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDeg === undefined || logCount !== 36) return undefined;
+  return sqrtHalfDeg + polyDeg;
+}
+
+/** Phase 265 — Two-Sqrt × Thirty-Six-Log × polynomial numerator. */
+function twoSqrtThirtySixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sh = sqrtEffectiveHalfDegree(arg, k);
+    if (sh !== undefined) {
+      if (sqrtHalfDegs.length >= 2) return undefined;
+      sqrtHalfDegs.push(sh); continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 36) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 2 || logCount !== 36) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + polyDeg;
+}
+
+/** Phase 266 — Three-Sqrt × Thirty-Six-Log × polynomial numerator. */
+function threeSqrtThirtySixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sh = sqrtEffectiveHalfDegree(arg, k);
+    if (sh !== undefined) {
+      if (sqrtHalfDegs.length >= 3) return undefined;
+      sqrtHalfDegs.push(sh); continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 36) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 3 || logCount !== 36) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + polyDeg;
+}
+
+/** Phase 267 — Four-Sqrt × Thirty-Six-Log × polynomial numerator. */
+function fourSqrtThirtySixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sh = sqrtEffectiveHalfDegree(arg, k);
+    if (sh !== undefined) {
+      if (sqrtHalfDegs.length >= 4) return undefined;
+      sqrtHalfDegs.push(sh); continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 36) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 4 || logCount !== 36) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + polyDeg;
+}
+
+/** Phase 268 — Five-Sqrt × Thirty-Six-Log × polynomial numerator.
+ * Caller checks `denDeg > fiveSqrtThirtySixLogPolyEffectiveDeg(num, k)`.
+ * Completes the Thirty-Six-Log family (Phases 263–268).
+ */
+function fiveSqrtThirtySixLogPolyEffectiveDeg(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const sqrtHalfDegs: number[] = [];
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    const sh = sqrtEffectiveHalfDegree(arg, k);
+    if (sh !== undefined) {
+      if (sqrtHalfDegs.length >= 5) return undefined;
+      sqrtHalfDegs.push(sh); continue;
+    }
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 36) return undefined;
+      continue;
+    }
+    const d = polynomialDegreeInK(arg, k);
+    if (d !== undefined) { polyDeg += d; continue; }
+    if (isBoundedInK(arg, k)) continue;
+    return undefined;
+  }
+  if (sqrtHalfDegs.length !== 5 || logCount !== 36) return undefined;
+  return sqrtHalfDegs[0] + sqrtHalfDegs[1] + sqrtHalfDegs[2] + sqrtHalfDegs[3] + sqrtHalfDegs[4] + polyDeg;
+}
+
 /** Phase 251 — Zero-Sqrt × Thirty-Four-Log × polynomial numerator.
  * effectiveDeg = polyDeg (no sqrt factors).
  * Caller checks `denDeg > thirtyFourLogPolyEffectiveDeg(num, k)`.
@@ -7047,6 +7206,66 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegS2l8 = polynomialDegreeInK(den, k);
     if (denDegS2l8 !== undefined) {
       if (denDegS2l8 > s2l8Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 268: five sqrt + 36 logs
+  const s5l36Deg = fiveSqrtThirtySixLogPolyEffectiveDeg(num, k);
+  if (s5l36Deg !== undefined) {
+    const denDegS5l36 = polynomialDegreeInK(den, k);
+    if (denDegS5l36 !== undefined) {
+      if (denDegS5l36 > s5l36Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 267: four sqrt + 36 logs
+  const s4l36Deg = fourSqrtThirtySixLogPolyEffectiveDeg(num, k);
+  if (s4l36Deg !== undefined) {
+    const denDegS4l36 = polynomialDegreeInK(den, k);
+    if (denDegS4l36 !== undefined) {
+      if (denDegS4l36 > s4l36Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 266: three sqrt + 36 logs
+  const s3l36Deg = threeSqrtThirtySixLogPolyEffectiveDeg(num, k);
+  if (s3l36Deg !== undefined) {
+    const denDegS3l36 = polynomialDegreeInK(den, k);
+    if (denDegS3l36 !== undefined) {
+      if (denDegS3l36 > s3l36Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 265: two sqrt + 36 logs
+  const s2l36Deg = twoSqrtThirtySixLogPolyEffectiveDeg(num, k);
+  if (s2l36Deg !== undefined) {
+    const denDegS2l36 = polynomialDegreeInK(den, k);
+    if (denDegS2l36 !== undefined) {
+      if (denDegS2l36 > s2l36Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 264: one sqrt + 36 logs
+  const s1l36Deg = oneSqrtThirtySixLogPolyEffectiveDeg(num, k);
+  if (s1l36Deg !== undefined) {
+    const denDegS1l36 = polynomialDegreeInK(den, k);
+    if (denDegS1l36 !== undefined) {
+      if (denDegS1l36 > s1l36Deg) return true;
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 263: zero sqrt + 36 logs
+  const s0l36Deg = thirtySixLogPolyEffectiveDeg(num, k);
+  if (s0l36Deg !== undefined) {
+    const denDegS0l36 = polynomialDegreeInK(den, k);
+    if (denDegS0l36 !== undefined) {
+      if (denDegS0l36 > s0l36Deg) return true;
     } else if (hDivergesAtInfinity(den, k)) {
       return true;
     }
