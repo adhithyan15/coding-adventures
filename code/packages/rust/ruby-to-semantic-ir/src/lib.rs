@@ -3314,4 +3314,106 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 8a (FC) — additional compound-assignment lowering.
+    //
+    // Six new compound-assign forms are accepted by the lexer/grammar
+    // and lowered by reusing the existing `lower_assignment` desugar
+    // path: `x %= y` → `x = x % y`, `x **= y` → `x = x ** y`, etc.
+    // The lowerer emits `Stmt::Assign` (never LetBinding) because
+    // op-assign always reads-then-writes; the validator therefore
+    // requires `x` to be pre-declared in the same block.
+    //
+    // Five tests below cover (1) modulo `%=` emits `Assign` with
+    // `BuiltinCall("%")` value, (2) `**=` emits `Assign` with
+    // `BuiltinCall("**")` value, (3) `<<=` likewise, (4) the three
+    // bitwise compounds `&= |= ^=` all desugar correctly, and
+    // (5) a validator E2E smoke that declares `x`, then re-binds via
+    // each new compound form in turn.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn modulo_assign_desugars_to_assign_with_modulo_builtin() {
+        let m = lower("x = 10\nx %= 3\n");
+        let b = main_body(&m);
+        // stmts[0] = LetBinding(x, 10); stmts[1] = Assign(x, 10 % 3)
+        match &b.stmts[1] {
+            Stmt::Assign { name, value, .. } => {
+                assert_eq!(name, "x");
+                match value {
+                    Expr::BuiltinCall { name: op, args, .. } => {
+                        assert_eq!(op, "%");
+                        assert_eq!(args.len(), 2);
+                        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                        assert!(matches!(&args[1], Expr::IntLit { value: 3, .. }));
+                    }
+                    other => panic!("expected BuiltinCall(`%`), got {:?}", other),
+                }
+            }
+            other => panic!("expected Stmt::Assign at stmts[1], got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::MutableBindings));
+    }
+
+    #[test]
+    fn power_assign_desugars_to_assign_with_power_builtin() {
+        let m = lower("x = 2\nx **= 8\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::Assign { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "**");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[1], Expr::IntLit { value: 8, .. }));
+            }
+            other => panic!("expected Assign(BuiltinCall(**)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn left_shift_assign_desugars_to_assign_with_lshift_builtin() {
+        let m = lower("x = 1\nx <<= 4\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::Assign { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "<<");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[1], Expr::IntLit { value: 4, .. }));
+            }
+            other => panic!("expected Assign(BuiltinCall(<<)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bitwise_op_assigns_lower_to_assign_with_bitwise_builtins() {
+        // Three statements covering `&=`, `|=`, `^=` — each must
+        // desugar to `Stmt::Assign` with the correct builtin name.
+        let m = lower("x = 7\nx &= 1\nx |= 2\nx ^= 4\n");
+        let b = main_body(&m);
+        let expected = ["&", "|", "^"];
+        for (i, op) in expected.iter().enumerate() {
+            let stmt = &b.stmts[i + 1];
+            match stmt {
+                Stmt::Assign { value: Expr::BuiltinCall { name, .. }, .. } => {
+                    assert_eq!(name, op, "expected `{op}` at stmts[{}]", i + 1);
+                }
+                other => panic!("expected Assign(BuiltinCall(`{op}`)), got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn compound_assigns_module_passes_sir_validator() {
+        // End-to-end smoke: declare `x`, then drive every new
+        // compound-assign in turn.  The validator must accept the
+        // resulting module — every Assign reads a previously bound
+        // `x`, and `MutableBindings` is in the manifest.
+        let m = lower("x = 1\nx %= 1\nx **= 1\nx <<= 1\nx &= 1\nx |= 1\nx ^= 1\nputs(x)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected compound-assign module: {:?}",
+            result
+        );
+    }
 }

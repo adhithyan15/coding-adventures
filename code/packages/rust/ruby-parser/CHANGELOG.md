@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.34.0] - 2026-05-26
+
+### Added (Phase 8a (FC) — additional arithmetic / bitwise / shift op-assigns)
+
+Extended the `assignment` rule to recognise six more compound-assignment operators:
+
+```ebnf
+assignment = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "<<=" | "&=" | "|=" | "^=" | "||=" | "&&=" ) expression ;
+```
+
+Combined with the lexer's `fuse_compound_assigns` companion pass (extended in this phase to recognise `%`, `**`, `<<`, `&`, `|`, `^` as left operands), Ruby's complete compound-assign family on local variables is now parseable — minus `>>=`, which is tracked as a follow-up.
+
+Regenerated `_grammar.rs` via `grammar-tools compile-grammar`.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 143 → **147** (+4):
+  - `test_parse_modulo_op_assign`
+  - `test_parse_power_and_shift_op_assigns`
+  - `test_parse_bitwise_op_assigns`
+  - `test_parse_plain_assignment_still_works_after_8a` (regression)
+
+### v0 deferred limitations
+
+- `>>=` is NOT yet accepted because the 1.8-era lexer state machine splits `>>` into two `>` tokens.  A dedicated `>>` pre-fusion pass is the natural follow-up; it slots in cleanly because the post-`>>=` lowering reuses the same Phase 8a desugar path.
+
 ## [0.33.0] - 2026-05-26
 
 ### Added (Phase 7f — Ruby 3.1 hash value-omitted shorthand `{x:, y:}`)

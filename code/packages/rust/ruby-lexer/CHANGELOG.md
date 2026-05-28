@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.23.0] - 2026-05-26
+
+### Added (Phase 8a (FC) companion — fuse more compound-assign operators)
+
+`fuse_compound_assigns` recognises six additional left-flank operator tokens:
+
+- `%`, `**`, `<<`, `&`, `|`, `^` (all emitted by the 1.8-baseline state machine as `Name`-typed tokens)
+
+When immediately followed by a `=` with no whitespace gap, the pair folds into a single `Name("%=")` / `Name("**=")` / `Name("<<=")` / `Name("&=")` / `Name("|=")` / `Name("^=")` token, matching the existing fusion strategy for `+= -= *= /= ||= &&=`.
+
+This lets the parser's `assignment` rule match the new compound forms by value, the same way it already matches `+=` and friends.
+
+### Deferred
+
+- `>>=` is NOT yet handled because the state machine splits `>>` into two `>` tokens.  Folding it requires a separate `>>` pre-fusion pass and is tracked as a follow-up.
+
 ## [0.22.0] - 2026-05-24
 
 ### Added (Phase 6q companion — re-tag trailing-modifier keywords)
