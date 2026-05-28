@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.24.0 — 2026-05-28
+
+### Removed — Track A2 cleanup (delete 27 grid helpers superseded by Phase 86)
+
+Pure deletion: removes the 27 hand-written ``N-Sqrt × M-Log × polynomial``
+helpers (Phases 59–85), their dispatcher branches, and their tests, now
+that ``logSqrtPolyEffectiveDegGeneric`` preempts the entire grid.  No
+behavior change.
+
+- ``src/index.ts``: removed dispatcher branches for Phases 59–85 inside
+  ``gVanishesAtInfinity`` and the helper functions
+  ``boundedSqrtPolyEffectiveDeg`` through ``twoSqrtSixLogPolyEffectiveDeg``
+  (~1,390 lines).  ``logSqrtPolyEffectiveDegGeneric`` and all earlier
+  helpers (``splitBoundedPolynomialFactor``, ``boundedTimesSqrtHalfDegree``,
+  …) remain untouched.
+- ``tests/cas-summation.test.ts``: removed every ``describe("summation:
+  Phase 5{9}…")`` through ``Phase 85`` block (~2,503 lines, 96 tests).
+  Phase 56–58 and Phase 86 describes remain.
+- Vitest count drops from 179 → 83; all surviving tests pass.
+
 ## 2.23.0 — 2026-05-28
 
 ### Added — Phase 86 cleanup (generic log × sqrt × polynomial recogniser)
