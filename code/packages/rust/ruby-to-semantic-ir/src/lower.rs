@@ -70,6 +70,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         user_functions: Vec::new(),
         features_used: HashSet::new(),
         block_counter: 0,
+        multi_assign_counter: 0,
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -140,6 +141,142 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
 }
 
 // ---------------------------------------------------------------------------
+// Phase 9a (FC) — helper: detect VarRefs that name LHS targets
+// ---------------------------------------------------------------------------
+//
+// Used by `lower_multi_assignment` to decide whether the simple
+// sequential lowering is safe (`a, b = 1, 2`) or whether the swap-safe
+// temp-pass is needed (`a, b = b, a`).  Walks an `Expr` tree
+// recursively and returns true iff any `VarRef` it contains has a name
+// listed in `names`.
+//
+// This is a structural recursion over every `Expr` variant the SIR
+// defines.  Adding a new `Expr` variant to `semantic-ir` will cause
+// this match to fail-stop at compile time (Rust's exhaustiveness
+// check), prompting an update here — important because a missed
+// variant would silently re-introduce the swap mis-lowering.
+fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
+    match expr {
+        Expr::VarRef { name, .. } => names.contains(name),
+
+        // Leaves: no children, no references possible.
+        Expr::IntLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. }
+        | Expr::FloatLit { .. } => false,
+
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            expr_references_any_name(cond, names)
+                || block_references_any_name(then_branch, names)
+                || block_references_any_name(else_branch, names)
+        }
+
+        Expr::Block(b) => block_references_any_name(b, names),
+
+        Expr::DirectCall { args, .. }
+        | Expr::BuiltinCall { args, .. }
+        | Expr::Intrinsic { args, .. } => {
+            args.iter().any(|a| expr_references_any_name(a, names))
+        }
+
+        Expr::IndirectCall { target, args, .. } => {
+            expr_references_any_name(target, names)
+                || args.iter().any(|a| expr_references_any_name(a, names))
+        }
+
+        Expr::MakeClosure { captures, .. } => captures
+            .iter()
+            .any(|c| expr_references_any_name(&c.value, names)),
+
+        Expr::SeqLit { items, .. } => {
+            items.iter().any(|i| expr_references_any_name(i, names))
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            expr_references_any_name(seq, names) || expr_references_any_name(index, names)
+        }
+        Expr::SeqLen { seq, .. } => expr_references_any_name(seq, names),
+
+        Expr::MapLit { entries, .. } => entries.iter().any(|e| {
+            expr_references_any_name(&e.key, names)
+                || expr_references_any_name(&e.value, names)
+        }),
+        Expr::MapGet { map, key, .. } => {
+            expr_references_any_name(map, names) || expr_references_any_name(key, names)
+        }
+
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+    }
+}
+
+fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
+    // Block stmts: scan each stmt's contained Expr(s).  We only need a
+    // shallow walk over the tree shapes that `lower_expression` itself
+    // can emit — and `lower_expression`'s output is by definition a
+    // single `Expr` so any sub-blocks were built by the same lowerer
+    // (and are subject to the same parent's scope rules).  We still
+    // scan them defensively in case future lowering paths nest blocks.
+    if expr_references_any_name(&block.value, names) {
+        return true;
+    }
+    for stmt in &block.stmts {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::ExprStmt { expr: value, .. }
+            | Stmt::Assign { value, .. } => {
+                if expr_references_any_name(value, names) {
+                    return true;
+                }
+            }
+            Stmt::While { cond, body, .. } => {
+                if expr_references_any_name(cond, names)
+                    || block_references_any_name(body, names)
+                {
+                    return true;
+                }
+            }
+            Stmt::ForRange { start, stop, step, body, .. } => {
+                if expr_references_any_name(start, names)
+                    || expr_references_any_name(stop, names)
+                    || expr_references_any_name(step, names)
+                    || block_references_any_name(body, names)
+                {
+                    return true;
+                }
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                if expr_references_any_name(iter, names)
+                    || block_references_any_name(body, names)
+                {
+                    return true;
+                }
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                if expr_references_any_name(seq, names)
+                    || expr_references_any_name(index, names)
+                    || expr_references_any_name(value, names)
+                {
+                    return true;
+                }
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                if expr_references_any_name(map, names)
+                    || expr_references_any_name(key, names)
+                    || expr_references_any_name(value, names)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    false
+}
+
+// ---------------------------------------------------------------------------
 // Lowerer
 // ---------------------------------------------------------------------------
 
@@ -171,6 +308,13 @@ struct Lowerer {
     /// it once to mint a fresh `__block_<n>` name for the trailing
     /// block's hoisted Function.
     block_counter: usize,
+    /// Phase 9a (FC): monotonically-increasing counter for synthesised
+    /// multi-assignment temporary names.  Each `multi_assignment` whose
+    /// LHS appears in any RHS expression (e.g. the swap `a, b = b, a`)
+    /// increments it once and mints fresh `__multi_assign_t<n>_<i>`
+    /// temps so the original RHS values are captured *before* any LHS
+    /// is rebound — matching Ruby's parallel-binding semantics.
+    multi_assign_counter: usize,
 }
 
 impl Lowerer {
@@ -2135,41 +2279,132 @@ impl Lowerer {
 
         // Lower each RHS first — this matches Ruby's evaluation order
         // (RHS is fully evaluated, *then* the LHS bindings happen).
-        // For the parallel-binding case (`a, b = b, a` swap), Ruby
-        // collects all RHS values *before* writing any LHS.  Our v0
-        // sequential lowering (`a = expr0; b = expr1`) is equivalent
-        // for the common case where no LHS appears in the RHS — which
-        // is the only shape we test for v0.  The swap case
-        // (`a, b = b, a`) would silently mis-lower under v0; this is
-        // documented as a deferred limitation.
         let lowered_rhs: Vec<Expr> = rhs_exprs
             .iter()
             .map(|e| self.lower_expression(e))
             .collect::<Result<_, _>>()?;
 
-        // Emit one Stmt per pair.  Reuses the same LetBinding/Assign
-        // decision rule as `lower_assignment`.
-        let mut out: Vec<Stmt> = Vec::with_capacity(lhs_names.len());
-        for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs.into_iter()) {
-            let span = name_span.clone();
-            let stmt = if self.declared_locals.contains(&name) {
-                self.features_used.insert(Feature::MutableBindings);
-                Stmt::Assign {
-                    name: name.clone(),
-                    scope: Scope::Local,
-                    value,
-                    span,
-                }
-            } else {
-                self.declared_locals.insert(name.clone());
-                Stmt::LetBinding {
-                    name: name.clone(),
+        // ── Phase 9a (FC) — swap-safe parallel binding ───────────────
+        //
+        // Ruby's parallel assignment collects ALL RHS values *before*
+        // writing ANY LHS.  Phase 6r's lowering emitted statements
+        // sequentially: `Stmt(a := rhs0); Stmt(b := rhs1)`.  That's
+        // observably correct only when no LHS name appears in any RHS
+        // expression — the simple `a, b = 1, 2` case.  For the swap
+        // (`a, b = b, a`), the second statement reads the *new* `a`
+        // instead of the original, producing the wrong result.
+        //
+        // Phase 9a closes the gap with a "needs-temps" heuristic:
+        //
+        //   1. Build the set of LHS names.
+        //   2. Scan each lowered RHS expression for any `VarRef` whose
+        //      name is in that set.
+        //   3. If found → emit two passes:
+        //        a. `LetStarBinding(__multi_assign_t<N>_<i>, rhs[i])`
+        //           for each i — captures the ORIGINAL RHS value before
+        //           any LHS is rebound.  Uses `LetStarBinding` so each
+        //           temp's name is visible to the LHS-binding pass that
+        //           follows (LetBinding's parallel-let validator group
+        //           rule would hide them).
+        //        b. `Stmt::LetBinding`/`Assign` for each LHS, reading
+        //           from the corresponding temp via `VarRef`.
+        //   4. Otherwise → emit the sequential shape Phase 6r used
+        //      (one stmt per pair, no temps) — cheaper SIR and matches
+        //      the simple-case test expectations.
+        //
+        // The temp names use a monotonic counter (`multi_assign_counter`)
+        // so nested or repeated multi-assignments don't collide.  Names
+        // are double-underscore-prefixed so they can't collide with
+        // user-typeable Ruby locals.
+        let lhs_name_set: HashSet<String> =
+            lhs_names.iter().map(|(n, _)| n.clone()).collect();
+        let needs_temps = lowered_rhs
+            .iter()
+            .any(|e| expr_references_any_name(e, &lhs_name_set));
+
+        let mut out: Vec<Stmt> = Vec::new();
+
+        if needs_temps {
+            let counter = self.multi_assign_counter;
+            self.multi_assign_counter += 1;
+
+            // Pass 1: bind each RHS to a fresh temp via LetStarBinding
+            // so the LHS-binding pass below can read them by VarRef
+            // without hitting the LetBinding parallel-let validator
+            // visibility rule.
+            let mut temp_refs: Vec<Expr> = Vec::with_capacity(lowered_rhs.len());
+            for (i, (rhs_value, (_, name_span))) in
+                lowered_rhs.into_iter().zip(lhs_names.iter()).enumerate()
+            {
+                let tmp_name = format!("__multi_assign_t{}_{}", counter, i);
+                let tmp_span = name_span.clone();
+                // Record the temp so later VarRef lookups treat it as
+                // a local.  (It IS declared via LetStarBinding.)
+                self.declared_locals.insert(tmp_name.clone());
+                out.push(Stmt::LetStarBinding {
+                    name: tmp_name.clone(),
                     sir_type: None,
-                    value,
-                    span,
-                }
-            };
-            out.push(stmt);
+                    value: rhs_value,
+                    span: tmp_span.clone(),
+                });
+                temp_refs.push(Expr::VarRef {
+                    name: tmp_name,
+                    scope: Scope::Local,
+                    span: tmp_span,
+                });
+            }
+
+            // Pass 2: assign each LHS from its temp.
+            for ((name, name_span), tmp_ref) in
+                lhs_names.into_iter().zip(temp_refs.into_iter())
+            {
+                let span = name_span.clone();
+                let stmt = if self.declared_locals.contains(&name) {
+                    self.features_used.insert(Feature::MutableBindings);
+                    Stmt::Assign {
+                        name: name.clone(),
+                        scope: Scope::Local,
+                        value: tmp_ref,
+                        span,
+                    }
+                } else {
+                    self.declared_locals.insert(name.clone());
+                    Stmt::LetBinding {
+                        name: name.clone(),
+                        sir_type: None,
+                        value: tmp_ref,
+                        span,
+                    }
+                };
+                out.push(stmt);
+            }
+        } else {
+            // Fast path: no LHS appears in any RHS, so the sequential
+            // lowering Phase 6r used is observably equivalent to the
+            // truly-parallel form.  Emit one Stmt per pair.
+            for ((name, name_span), value) in
+                lhs_names.into_iter().zip(lowered_rhs.into_iter())
+            {
+                let span = name_span.clone();
+                let stmt = if self.declared_locals.contains(&name) {
+                    self.features_used.insert(Feature::MutableBindings);
+                    Stmt::Assign {
+                        name: name.clone(),
+                        scope: Scope::Local,
+                        value,
+                        span,
+                    }
+                } else {
+                    self.declared_locals.insert(name.clone());
+                    Stmt::LetBinding {
+                        name: name.clone(),
+                        sir_type: None,
+                        value,
+                        span,
+                    }
+                };
+                out.push(stmt);
+            }
         }
         Ok(out)
     }
