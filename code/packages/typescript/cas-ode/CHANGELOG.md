@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.3.0 — 2026-05-28
+
+### Added
+
+- **Track C2 — Frobenius / power-series ODE solver** (`tryFrobeniusSeries`):
+  - Solves second-order linear ODEs `P(x)·y'' + Q(x)·y' + R(x)·y = 0` with a
+    regular singular point at `x = 0` by substituting `y = x^r · Σ a_n x^n`.
+  - `polyCoeffsExtract` — extract rational polynomial coefficients of `expr`
+    in `x` up to arbitrary `maxDeg` (generalises the named-ODE `polynomialCoeffs`
+    which is capped at degree 2).
+  - `degreeOfMonomial` — recursive `[coeff, degree]` decomposition for a
+    monomial `c·x^k`; handles n-ary `Mul`, `Neg`, `Pow(x, k≥0)`, rational
+    literals.
+  - `fracPolyMul` — truncated polynomial multiplication over `Frac`.
+  - `isRegularSingular` — verify x=0 is a regular singular point and return
+    the analytic Taylor series `tildeP = x·p(x)` and `tildeQ = x²·q(x)`.
+    Computes `1 / P_eff(x)` (where `P_eff = P/x^m`) via the standard
+    series-inverse recurrence; returns `null` for irregular singular points
+    (order `m > 2`) or when the leading-zero analyticity condition fails.
+  - `solveIndicial` — solve `r² + (p_0-1)r + q_0 = 0` for rational roots
+    using `exactSqrt`; returns `null` on complex / irrational roots.
+  - `rootsDifferByInteger` — guard for the logarithmic Frobenius case (bails).
+  - `buildSeriesIr` — assemble `Mul(Pow(x, r), Add(a_0, a_1·x, …, a_N·x^N))`
+    IR; signed `Frac` exponents encoded with `Neg(Rational(…))` for `r < 0`.
+  - Dispatch order: inserted in `solveOde` after `tryVarCoeffNamedOde` and
+    before `tryBernoulli`.  Mirrors the Python ordering: the named families
+    (Bessel, Legendre, Hermite, Chebyshev) get first shot, and only un-named
+    regular-singular-point ODEs reach the Frobenius helper.
+  - Default truncation `N = 10`; recurrence is exact over `Frac` so the
+    series matches the Python reference coefficient-for-coefficient.
+- Scope (deliberate parity with Track C1):
+  - Singular point at `x = 0` only.
+  - Indicial roots must be rational and differ by a non-integer (the
+    logarithmic / merged-root cases produce log terms and bail to `null`).
+  - Irregular singular points (order of vanishing of `P` > 2) bail.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added
