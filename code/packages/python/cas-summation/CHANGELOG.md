@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.373.0 — 2026-05-28
+
+### Added
+- Phase 431 (Zero-Sqrt × Sixty-Four-Log): convergence recognizer for sums with exactly 64 logarithmic factors and polynomial numerator
+- Phase 432 (One-Sqrt × Sixty-Four-Log): convergence recognizer for sums with one sqrt factor, exactly 64 logarithmic factors, and polynomial numerator
+- Phase 433 (Two-Sqrt × Sixty-Four-Log): convergence recognizer for sums with two sqrt factors, exactly 64 logarithmic factors, and polynomial numerator
+- Phase 434 (Three-Sqrt × Sixty-Four-Log): convergence recognizer for sums with three sqrt factors, exactly 64 logarithmic factors, and polynomial numerator
+- Phase 435 (Four-Sqrt × Sixty-Four-Log): convergence recognizer for sums with four sqrt factors, exactly 64 logarithmic factors, and polynomial numerator
+- Phase 436 (Five-Sqrt × Sixty-Four-Log): convergence recognizer for sums with five sqrt factors, exactly 64 logarithmic factors, and polynomial numerator
+
 ## 2.367.0 — 2026-05-28
 
 ### Added
