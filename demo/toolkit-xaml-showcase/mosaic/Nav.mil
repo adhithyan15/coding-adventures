@@ -1,0 +1,17 @@
+// Nav.mil — interface for the toolkit's Nav.
+//
+// Horizontal navigation bar — a row of clickable links. Bootstrap's
+// `<ul class="nav">` distilled. Pairs naturally with a `Container`
+// or `Navbar` wrapper but works standalone.
+
+component Nav {
+  // Link labels in order. Each becomes a clickable item.
+  slot items : list<text> ;
+
+  // Index of the currently-active link (or -1 for none). Drives
+  // active-state styling once the variant sub-part syntax lands.
+  slot active-index : number ;
+
+  // Fired when the user clicks a link. Payload is the link's index.
+  emit onSelect ( index : number ) ;
+}

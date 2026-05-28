@@ -1,0 +1,27 @@
+// Alert.light.msl — default light-theme styling for Alert.
+//
+// Same caveat as Button.light.msl: variant sub-parts (alert/info,
+// alert/danger, etc.) defer to the spec §4.1 syntax decision. v0.1
+// PR-1 uses the info-variant colors as the base.
+
+style Alert {
+  part alert {
+    padding       : 12 ;
+    border-radius : 4 ;
+    background    : "#cff4fc" ;
+    color         : "#055160" ;
+    border-width  : 1 ;
+    border-color  : "#b6effb" ;
+  }
+  part alert-row {
+    padding : 0 ;
+  }
+  part message {
+  }
+  part close-btn {
+    padding : 4 ;
+    background : "transparent" ;
+    border-width : 0 ;
+    color : "#055160" ;
+  }
+}

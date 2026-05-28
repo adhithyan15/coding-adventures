@@ -1,0 +1,26 @@
+// Accordion.light.msl — default light-theme styling.
+
+style Accordion {
+  part accordion {
+    padding : 0 ;
+  }
+  part accordion-item {
+    padding      : 0 ;
+    border-width : 1 ;
+    border-color : "#dee2e6" ;
+  }
+  part accordion-header {
+    padding       : 12 ;
+    background    : "#f8f9fa" ;
+    color         : "#212529" ;
+    border-width  : 0 ;
+    font-size     : 16 ;
+    border-radius : 0 ;
+  }
+  part accordion-body {
+    padding    : 12 ;
+    background : "#ffffff" ;
+    color      : "#212529" ;
+    font-size  : 14 ;
+  }
+}

@@ -1,0 +1,31 @@
+// Tabs.mil — interface for the toolkit's Tabs (v0.8).
+//
+// A horizontal row of tab buttons with a single body panel beneath
+// showing the currently-active tab's content. Bootstrap's
+// `<ul class="nav nav-tabs">` + a `.tab-content` panel, distilled.
+//
+// Why parallel headers + active-body instead of `list<{label,body}>`?
+// ----------------------------------------------------------------
+// Same reason as Accordion: the kernel doesn't have struct-slot
+// syntax. But Tabs only needs the *active* body shown — the others
+// don't render — so the host can pass just one body string and skip
+// the parallel-list-of-all-bodies workaround Accordion uses.
+// Result: a simpler v0.8 shape than Accordion.
+
+component Tabs {
+  // Tab labels, in order. Each becomes a clickable header button.
+  slot headers : list<text> ;
+
+  // The body content of the currently-active tab. Host owns the
+  // mapping from active-index → body and passes the chosen text here.
+  slot active-body : text ;
+
+  // Index of the active tab (drives active-state styling once the
+  // variant sub-part syntax lands).
+  slot active-index : number ;
+
+  // Fired when the user clicks a tab header. Payload is the tab's
+  // index. Host typically responds by updating active-index and
+  // active-body together.
+  emit onSelect ( index : number ) ;
+}

@@ -1,0 +1,17 @@
+// Breadcrumb.mil — interface for the toolkit's Breadcrumb.
+//
+// Hierarchical navigation trail: Home / Library / Data. Bootstrap's
+// `<ol class="breadcrumb">` equivalent. The trailing item is the
+// current location (typically rendered non-clickable).
+
+component Breadcrumb {
+  // The breadcrumb crumbs in order from root to current. The
+  // LAST item is treated as the current location and renders in
+  // a distinct (non-link) style.
+  slot crumbs : list<text> ;
+
+  // Fired when the user clicks a crumb. Payload is the index. The
+  // last crumb's index doesn't fire (it's the current location);
+  // clicking it is a no-op.
+  emit onSelect ( index : number ) ;
+}
