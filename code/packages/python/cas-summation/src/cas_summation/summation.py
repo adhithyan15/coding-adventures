@@ -1477,6 +1477,60 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
                 return True
         elif _h_diverges_at_infinity(den, k):
             return True
+    # Phase 346: ``Mul(Sqrt(P1)×5, Log(h1)×49, polynomial..., bounded...)`` numerator.
+    s5l49p_x2 = _five_sqrt_forty_nine_log_poly_effective_x2(num, k)
+    if s5l49p_x2 is not None:
+        den_deg_s5l49 = _polynomial_degree_in_k(den, k)
+        if den_deg_s5l49 is not None:
+            if 2 * den_deg_s5l49 > s5l49p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 345: ``Mul(Sqrt(P1)×4, Log(h1)×49, polynomial..., bounded...)`` numerator.
+    s4l49p_x2 = _four_sqrt_forty_nine_log_poly_effective_x2(num, k)
+    if s4l49p_x2 is not None:
+        den_deg_s4l49 = _polynomial_degree_in_k(den, k)
+        if den_deg_s4l49 is not None:
+            if 2 * den_deg_s4l49 > s4l49p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 344: ``Mul(Sqrt(P1)×3, Log(h1)×49, polynomial..., bounded...)`` numerator.
+    s3l49p_x2 = _three_sqrt_forty_nine_log_poly_effective_x2(num, k)
+    if s3l49p_x2 is not None:
+        den_deg_s3l49 = _polynomial_degree_in_k(den, k)
+        if den_deg_s3l49 is not None:
+            if 2 * den_deg_s3l49 > s3l49p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 343: ``Mul(Sqrt(P), Sqrt(P2), Log(h1)×49, polynomial..., bounded...)`` numerator.
+    s2l49p_x2 = _two_sqrt_forty_nine_log_poly_effective_x2(num, k)
+    if s2l49p_x2 is not None:
+        den_deg_s2l49 = _polynomial_degree_in_k(den, k)
+        if den_deg_s2l49 is not None:
+            if 2 * den_deg_s2l49 > s2l49p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 342: ``Mul(Sqrt(P), Log(h1)×49, polynomial..., bounded...)`` numerator.
+    s1l49p_x2 = _one_sqrt_forty_nine_log_poly_effective_x2(num, k)
+    if s1l49p_x2 is not None:
+        den_deg_s1l49 = _polynomial_degree_in_k(den, k)
+        if den_deg_s1l49 is not None:
+            if 2 * den_deg_s1l49 > s1l49p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
+    # Phase 341: ``Mul(Log(h1)×49, polynomial..., bounded...)`` numerator.
+    sl49p_x2 = _forty_nine_log_poly_effective_x2(num, k)
+    if sl49p_x2 is not None:
+        den_deg_sl49 = _polynomial_degree_in_k(den, k)
+        if den_deg_sl49 is not None:
+            if 2 * den_deg_sl49 > sl49p_x2:
+                return True
+        elif _h_diverges_at_infinity(den, k):
+            return True
     # Phase 340: ``Mul(Sqrt(P1)×5, Log(h1)×48, polynomial..., bounded...)`` numerator.
     s5l48p_x2 = _five_sqrt_forty_eight_log_poly_effective_x2(num, k)
     if s5l48p_x2 is not None:
@@ -12385,6 +12439,207 @@ def _five_sqrt_forty_three_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> i
             continue
         return None
     if len(sqrt_degs_x2) != 5 or log_count != 43:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _forty_nine_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 341 — Zero-Sqrt × Forty-Nine-Log × polynomial numerator.
+
+    The Forty-Nine-Log family (Phases 341–346) extends the recogniser to
+    summands whose numerator contains exactly forty-nine logarithmic factors
+    and zero to five square-root factors.  This is Phase 341: zero sqrts.
+
+    Parameters
+    ----------
+    node : IRNode
+        The numerator node.
+    k : IRSymbol
+        The summation variable.
+
+    Returns
+    -------
+    int | None
+        ``2 * poly_deg_sum`` when the shape matches (always even); ``None``
+        when the pattern is not recognised.
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        if _sqrt_effective_half_degree_x2(arg, k) is not None:
+            return None
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 49:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if log_count != 49:
+        return None
+    return 2 * poly_deg_sum
+
+
+def _one_sqrt_forty_nine_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 342 — One-Sqrt × Forty-Nine-Log × polynomial numerator."""
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_deg_x2: int | None = None
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if sqrt_deg_x2 is not None:
+                return None
+            sqrt_deg_x2 = deg_x2
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 49:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if sqrt_deg_x2 is None or log_count != 49:
+        return None
+    return sqrt_deg_x2 + 2 * poly_deg_sum
+
+
+def _two_sqrt_forty_nine_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 343 — Two-Sqrt × Forty-Nine-Log × polynomial numerator."""
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 2:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 49:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 2 or log_count != 49:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _three_sqrt_forty_nine_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 344 — Three-Sqrt × Forty-Nine-Log × polynomial numerator."""
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 3:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 49:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 3 or log_count != 49:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _four_sqrt_forty_nine_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 345 — Four-Sqrt × Forty-Nine-Log × polynomial numerator."""
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 4:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 49:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 4 or log_count != 49:
+        return None
+    return sum(sqrt_degs_x2) + 2 * poly_deg_sum
+
+
+def _five_sqrt_forty_nine_log_poly_effective_x2(node: IRNode, k: IRSymbol) -> int | None:
+    """Phase 346 — Five-Sqrt × Forty-Nine-Log × polynomial numerator.
+    Completes the Forty-Nine-Log family (Phases 341-346).
+    """
+    if not isinstance(node, IRApply) or node.head != MUL:
+        return None
+    sqrt_degs_x2: list[int] = []
+    log_count: int = 0
+    poly_deg_sum: int = 0
+    for arg in node.args:
+        deg_x2 = _sqrt_effective_half_degree_x2(arg, k)
+        if deg_x2 is not None:
+            if len(sqrt_degs_x2) >= 5:
+                return None
+            sqrt_degs_x2.append(deg_x2)
+            continue
+        if _is_log_of_diverging_in_k(arg, k):
+            log_count += 1
+            if log_count > 49:
+                return None
+            continue
+        deg = _polynomial_degree_in_k(arg, k)
+        if deg is not None:
+            poly_deg_sum += deg
+            continue
+        if _is_bounded_in_k(arg, k):
+            continue
+        return None
+    if len(sqrt_degs_x2) != 5 or log_count != 49:
         return None
     return sum(sqrt_degs_x2) + 2 * poly_deg_sum
 
