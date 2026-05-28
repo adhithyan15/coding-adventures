@@ -4874,17 +4874,157 @@ fn apart_simple_roots(
     )
 }
 
+/// Binomial coefficient ``C(n, k)``.  Returns ``0`` when ``k`` is out of
+/// range so callers can sum unconditionally.  Mirrors Python ``_binomial``.
+fn binomial_i128(n: usize, k: usize) -> i128 {
+    if k > n {
+        return 0;
+    }
+    if k == 0 || k == n {
+        return 1;
+    }
+    let kk = k.min(n - k);
+    let mut result: i128 = 1;
+    for i in 0..kk {
+        result = result * (n - i) as i128 / (i + 1) as i128;
+    }
+    result
+}
+
+/// First ``length`` Taylor coefficients of ``poly(r + t)`` as a polynomial
+/// in ``t``.  Mirrors Python ``_taylor_expand_around_r``: for
+/// ``poly(x) = ∑ c_i x^i``,
+///     poly(r + t)_j = ∑_{i ≥ j} c_i · C(i, j) · r^(i − j).
+/// When ``length`` exceeds ``deg poly`` trailing entries are 0.
+fn poly_taylor_expand_around_r(poly: &[RatC], r: RatC, length: usize) -> Option<RatPoly> {
+    let deg = if poly.is_empty() { 0 } else { poly.len() - 1 };
+    let mut result: RatPoly = Vec::with_capacity(length);
+    for j in 0..length {
+        let mut cj: RatC = RC_ZERO;
+        let mut r_pow: RatC = RC_ONE; // r^(i - j) starts at r^0 when i == j
+        let start = j;
+        for i in start..=deg {
+            if i >= poly.len() {
+                break;
+            }
+            let binom = binomial_i128(i, j);
+            if binom != 0 {
+                let coef = poly[i];
+                let term = rc_mul(rc_mul(coef, (binom, 1))?, r_pow)?;
+                cj = rc_add(cj, term)?;
+            }
+            r_pow = rc_mul(r_pow, r)?;
+        }
+        result.push(cj);
+    }
+    Some(result)
+}
+
+/// Formal power-series division ``N(t)/D(t)`` to ``length`` terms.
+/// Requires ``D(0) ≠ 0`` — returns ``None`` otherwise (signal of a
+/// repeated-root miscount upstream).  Mirrors Python ``_series_div``.
+fn poly_series_div(n_coeffs: &[RatC], d_coeffs: &[RatC], length: usize) -> Option<RatPoly> {
+    if d_coeffs.is_empty() || rc_is_zero(d_coeffs[0]) {
+        return None;
+    }
+    let d0 = d_coeffs[0];
+    let mut q: RatPoly = Vec::with_capacity(length);
+    for j in 0..length {
+        let nj = if j < n_coeffs.len() { n_coeffs[j] } else { RC_ZERO };
+        let mut s: RatC = RC_ZERO;
+        for k in 1..=j {
+            let dk = if k < d_coeffs.len() { d_coeffs[k] } else { RC_ZERO };
+            s = rc_add(s, rc_mul(dk, q[j - k])?)?;
+        }
+        q.push(rc_div(rc_sub(nj, s)?, d0)?);
+    }
+    Some(q)
+}
+
+/// Build the IR for ``A / (x − r)^power``.  Drops ``±1`` numerator
+/// coefficients to match the formatting in ``apart_simple_roots``.
+/// Mirrors Python ``_build_apart_term``.
+fn build_apart_term(a: RatC, r: RatC, power: usize, x: &str) -> Option<IRNode> {
+    let factor_ir = rp_to_ir_apart(&[rc_neg(r), RC_ONE], x)?;
+    let denom_ir = if power == 1 {
+        factor_ir
+    } else {
+        apply_node(POW, vec![factor_ir, IRNode::Integer(power as i64)])
+    };
+    let node = if rc_is_one(a) {
+        apply_node(DIV, vec![IRNode::Integer(1), denom_ir])
+    } else if a == (-1, 1) {
+        apply_node(NEG, vec![apply_node(DIV, vec![IRNode::Integer(1), denom_ir])])
+    } else {
+        apply_node(DIV, vec![rc_to_ir(a)?, denom_ir])
+    };
+    Some(node)
+}
+
+/// Decompose a *proper* rational function (deg num < deg den).
+///
+/// Phase 1 (simple roots) — residue formula ``A_i = P(r_i)/Q'(r_i)``.
+///
+/// Phase 48 (repeated linear factors) — for each rational root ``r`` of
+/// multiplicity ``m`` compute ``Q(x) = den(x)/(x − r)^m`` and expand
+/// ``φ(t) = P(r + t)/Q(r + t)`` as a Taylor series in ``t`` up to
+/// ``t^(m − 1)``.  Then ``A_{r, m − j} = φ_j``.  Emits terms
+/// ``A / (x − r)^power`` for ``power = 1..=m`` in ascending order.
+///
+/// Returns ``None`` when ``den`` has an irreducible factor on top of its
+/// rational roots (partial fractions over the rationals cannot decompose
+/// further).
 fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
     let roots = rp_rational_roots(den)?;
     if roots.is_empty() {
         return None;
     }
     let mults = rp_root_multiplicities(den, &roots)?;
-    if mults.iter().any(|(_, m)| *m > 1) {
-        // Phase 48 — out of scope for this PR.
-        return None;
+
+    // Phase 1 fast path — preserves the existing output shape for the
+    // regression tests written against B1.
+    if mults.iter().all(|(_, m)| *m == 1) {
+        return apart_simple_roots(num, den, &roots, x);
     }
-    apart_simple_roots(num, den, &roots, x)
+
+    // Phase 48 generic path: Taylor + series-division per root.
+    let mut terms: Vec<IRNode> = Vec::new();
+    for &r in &roots {
+        let m = mults
+            .iter()
+            .find_map(|(rr, mm)| if *rr == r { Some(*mm) } else { None })?;
+        // Q(x) = den(x) / (x − r)^m.  Successive divisions are exact
+        // because we just verified the multiplicity above.
+        let mut q_poly: RatPoly = rp_normalize(den);
+        let linear: RatPoly = vec![rc_neg(r), RC_ONE];
+        for _ in 0..m {
+            let (q, _rem) = rp_div(&q_poly, &linear)?;
+            q_poly = q;
+        }
+        // Taylor-expand both P(r + t) and Q(r + t) up to t^(m − 1).
+        let n_taylor = poly_taylor_expand_around_r(num, r, m)?;
+        let d_taylor = poly_taylor_expand_around_r(&q_poly, r, m)?;
+        let phi = poly_series_div(&n_taylor, &d_taylor, m)?;
+        // A_{r, m − j} = phi[j].  Emit ascending power order:
+        // 1/(x − r), 1/(x − r)^2, …, 1/(x − r)^m.
+        for power in 1..=m {
+            let j = m - power;
+            let a = phi[j];
+            if rc_is_zero(a) {
+                continue;
+            }
+            terms.push(build_apart_term(a, r, power, x)?);
+        }
+    }
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
 }
 
 fn apart_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
