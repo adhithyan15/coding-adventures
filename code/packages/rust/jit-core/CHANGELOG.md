@@ -5,6 +5,84 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.0] — 2026-05-28 (GenericCirJit — universal bytecode JIT)
+
+### Added — `jit_core::generic_jit::GenericCirJit`
+
+A universal bytecode JIT backend that **any language with typed IIR**
+can plug into.  Eliminates the per-language `Backend` duplication
+that was emerging with `BrainfuckCirJit` (~918 lines) and
+`BasicCirJit` (~640 lines) — ~70% of each is the same logic:
+register allocation, typed CIR opcode encoding, branch fixups,
+dispatch loop.
+
+#### How languages use it
+
+Three lines instead of ~600:
+
+```rust
+let backend = GenericCirJit::new();
+backend.register_builtin("print_i64", |args| { /* …captured I/O… */ });
+JITCore::new(&mut vm, Box::new(backend))
+    .execute_with_jit(&mut vm, &mut module, "main", &[]);
+```
+
+#### Supported CIR opcodes
+
+- **Constants**: `const_{i8|i16|i32|i64|u8|u16|u32|u64|bool}` → CONST_I64
+- **Move**: `mov` → MOV
+- **Arithmetic** (i64 family): `add_*`, `sub_*`, `mul_*`, `div_*`,
+  `neg_*` → ADD/SUB/MUL/DIV/NEG_I64
+- **Comparisons** (i64 family): `cmp_{eq|ne|lt|le|gt|ge}_*`
+- **Control flow**: `label`, `jmp`, `jmp_if_true`, `jmp_if_false`
+- **Linear memory** (when configured): `load_mem`, `store_mem`
+- **Builtins**: `call_builtin` → CALL_BUILTIN with 2-byte builtin
+  index into a per-binary name table
+- **Returns**: `ret_*` → RET_I64 / RET_VOID
+
+Float arithmetic refused (returns `None` from `compile()`).
+
+#### Builtin callback registry
+
+`GenericCirJit::register_builtin(name, |args| → Value)` registers
+language-specific callbacks.  Compile-time, `compile()` resolves
+each `call_builtin "name"` to a 2-byte index and emits a name table
+prefix in the bytecode.  At run-time, the index → callback lookup
+is O(1).
+
+#### Linear memory
+
+`GenericCirJit::with_linear_memory(tape_size)` allocates a fresh
+`Vec<u8>` of `tape_size` bytes per `run()` call.  Brainfuck's tape
+model fits directly: `load_mem` returns 0 for OOB addresses
+(lazy-infinite-tape convention), `store_mem` errors on OOB writes.
+
+#### Step counter + error slot
+
+`GenericCirJit::steps_handle()` / `error_handle()` expose
+`Arc<Mutex<…>>` handles so the wrapping VM can inspect fuel use
+and surface execution errors (which `Backend::run`'s signature
+can't return as a `Result`).
+
+#### Tests
+
+- 9 unit tests in `generic_jit::tests`: compile + run for const,
+  add, cmp+jmp, divide-by-zero, builtin dispatch, unregistered
+  builtin rejection, float refusal, load_mem/store_mem with and
+  without linear memory.
+- 2 end-to-end tests in `tests/generic_jit_e2e.rs`: full JITCore
+  flow with a BASIC-shaped print + arithmetic program.
+
+#### What's next
+
+`BrainfuckCirJit` and `BasicCirJit` continue to ship in their own
+crates for backwards compatibility, but new languages (Oct, Nib,
+Twig) plug into `GenericCirJit` directly — no per-language Backend
+impl.  Future PR will migrate Brainfuck + BASIC onto
+`GenericCirJit` and delete ~1500 lines of duplicated code.
+
+---
+
 ## [0.2.0] — 2026-05-11
 
 ### Changed (LANG32 — Operand::Str exhaustiveness)
