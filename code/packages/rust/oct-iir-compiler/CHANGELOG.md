@@ -1,5 +1,52 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.2.0 — 2026-05-28 (OCT03 — JIT via GenericCirJit)
+
+### Added — Oct programs JIT-compile via `jit-core::GenericCirJit`
+
+With `jit-core::GenericCirJit` landed in `jit-core` 0.3.0, Oct gets a
+real JIT **without a per-language Backend impl**.  Oct functions
+compile through `JITCore::execute_with_jit` → `GenericCirJit` →
+packed bytecode.
+
+This is the second language (after Brainfuck and Dartmouth BASIC) to
+plug into the LANG VM's JIT chain.  Unlike Brainfuck and BASIC,
+which still ship their own per-language Backend impls
+(`BrainfuckCirJit` / `BasicCirJit`), Oct uses `GenericCirJit`
+directly — no duplicated code.
+
+### Changed — `IIRFunction::type_status = FullyTyped` override
+
+`IIRFunction::new`'s automatic `infer_type_status` returns
+`PartiallyTyped` because Oct's control-flow ops (`label`, `jmp`,
+`jmp_if_false`, `ret_void`) carry `"void"` hints, and `"void"` is
+NOT in `interpreter_ir::opcodes::CONCRETE_TYPES`.  Every Oct
+instruction is in fact statically known (no `"any"` hints), so the
+function is genuinely fully typed for the JIT's threshold-zero
+compile path.  We now override `type_status = FullyTyped` after
+construction, mirroring Brainfuck and BASIC.
+
+Without this fix, `JITCore` would never call `compile()` on Oct's
+functions, and `GenericCirJit` would never run.
+
+### Tests
+
+- 4 new end-to-end tests in `tests/jit_e2e.rs`:
+  - `oct_jit_returns_constant_42`: `fn answer() -> u8 { return 42; }`
+  - `oct_jit_arithmetic_and_return`: `let x: u8 = 30; let y: u8 = 12;
+    return x + y;` → 42
+  - `oct_jit_if_else`: `if x == 0 { x = 1; } else { x = 2; }` → 1
+  - `oct_jit_while_loop`: `while n < 10 { n = n + 1; }` → 10
+- All 11 existing lib tests continue to pass.
+
+### Dependencies
+
+- Added `vm-core` and `jit-core` as **dev-dependencies** (the JIT
+  test harness lives in `tests/jit_e2e.rs`).  Oct's main library
+  has no runtime JIT dependency — the JIT integration is purely a
+  consumer-side concern (downstream `oct-vm` or similar would pull
+  in `vm-core` + `jit-core` as needed).
+
 ## 0.1.0 — 2026-05-20 (OCT02 phase 3)
 
 Initial Rust port of the Oct IIR compiler.  Lowers a parsed +

@@ -262,12 +262,22 @@ impl Compiler {
             }
         }
 
-        let iir_fn = IIRFunction::new(
+        let mut iir_fn = IIRFunction::new(
             &name,
             params.into_iter().map(|(n, _ty)| (n, "i64".to_string())).collect(),
             &actual_return_type,
             body,
         );
+        // Override `IIRFunction::new`'s automatic `infer_type_status` —
+        // it returns `PartiallyTyped` for Oct because control-flow ops
+        // (`label`, `jmp`, `jmp_if_false`, `ret_void`) use `"void"`
+        // type hints and `"void"` is NOT in
+        // `interpreter_ir::opcodes::CONCRETE_TYPES`.  Every Oct
+        // instruction is in fact statically known (no `"any"` hints
+        // anywhere), so the function is genuinely fully typed for the
+        // JIT's threshold-zero compile path.  Mirrors Brainfuck +
+        // Dartmouth BASIC.
+        iir_fn.type_status = interpreter_ir::function::FunctionTypeStatus::FullyTyped;
         self.functions.push(iir_fn);
         Ok(())
     }

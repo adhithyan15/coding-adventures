@@ -1,8 +1,8 @@
 [package]
 name = "oct-iir-compiler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Oct frontend for the LANG VM AOT chain — lowers parsed and type-checked Oct into interpreter_ir::IIRModule (OCT02 phase 3)."
+description = "Oct frontend for the LANG VM AOT chain — lowers parsed and type-checked Oct into interpreter_ir::IIRModule.  OCT02 phase 3 + OCT03: emits FullyTyped functions so the JITCore + GenericCirJit chain can run Oct programs JIT-compiled."
 
 [dependencies]
 lexer                        = { path = "../lexer" }
@@ -10,3 +10,9 @@ parser                       = { path = "../parser" }
 coding-adventures-oct-parser = { path = "../oct-parser" }
 oct-type-checker             = { path = "../oct-type-checker" }
 interpreter-ir               = { path = "../interpreter-ir" }
+
+[dev-dependencies]
+# Used by tests/jit_e2e.rs to prove Oct programs run through the
+# JITCore + GenericCirJit chain.
+vm-core   = { path = "../vm-core" }
+jit-core  = { path = "../jit-core" }
