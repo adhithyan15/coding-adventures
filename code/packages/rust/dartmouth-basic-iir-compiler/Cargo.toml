@@ -1,14 +1,13 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1)."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1).  v0.2.0: ships BasicCirJit — a real bytecode JIT backend for jit-core."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }
 parser           = { path = "../parser" }
 interpreter-ir   = { path = "../interpreter-ir" }
-
-[dev-dependencies]
-vm-core          = { path = "../vm-core" }
+# Promoted from dev-dep — BasicCirJit lives in this crate.
 jit-core         = { path = "../jit-core" }
+vm-core          = { path = "../vm-core" }
