@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.15.0] — 2026-05-28
+
+**Track D2 — bivariate Hensel lifting in `Factor` (TypeScript port).**
+
+Wires the new `@coding-adventures/cas-factor` 0.2.0 `tryBivariateHensel`
+into the `Factor` head's multivariate fall-through chain.  When none of
+the existing pattern handlers (perfect square/cube, difference of
+squares, cubic identity, grouping, common-factor) recognise the input,
+the handler now converts the IR to `BiPoly`, calls
+`tryBivariateHensel`, and emits a `Mul(...)` of the lifted factors.
+Mirrors the Python `_try_bivariate_hensel_ir` glue in
+`symbolic-vm/cas_handlers.py`.
+
+### Added
+
+- `findTwoVariables(node)` — walks the IR tree, returns the first two
+  distinct free variables or `undefined` (third variable, transcendental
+  constant, etc. all disqualify).
+- `irToBipoly(node, x, y)` — converts the polynomial subset of IR
+  (`Add`, `Sub`, `Mul`, `Pow`, `Neg`, `Integer`, `Rational`, symbol) to
+  a sparse `BiPoly`.  Returns `undefined` for floats, transcendentals,
+  non-integer or negative exponents, foreign symbols.
+- `bipolyToIr(p, x, y)` — converts a `BiPoly` back to IR with
+  deterministic descending-degree term order.
+- `tryBivariateHenselIr(inner)` — the top-level glue.
+
+### Changed
+
+- `factorHandler` — when the multivariate pattern path (`Apply`-level
+  pattern recognisers) finishes without producing a factorisation, the
+  handler now tries `tryBivariateHenselIr` before falling through to
+  unevaluated `Factor(...)`.
+
 ## [0.14.0] — 2026-05-28
 
 **Track B3 — Apart for repeated linear factors (Phase 48, TypeScript port).**

@@ -23,7 +23,9 @@
 
 use std::collections::{HashMap, HashSet};
 
-use cas_factor::factor_integer_polynomial;
+use cas_factor::{
+    factor_integer_polynomial, try_bivariate_hensel, BiPoly as HenselBiPoly, Rat as HenselRat,
+};
 use symbolic_ir::{
     IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH,
     CSCH, D, DEFINE, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL,
@@ -3631,6 +3633,14 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return vm.eval(rewritten);
     }
 
+    // Generic bivariate Hensel lifting fallback — mirrors the Python
+    // ``_try_bivariate_hensel_ir`` glue in ``symbolic-vm/cas_handlers.py``.
+    // For multivariate inputs the pattern handlers above couldn't
+    // recognise.
+    if let Some(rewritten) = try_bivariate_hensel_ir(input) {
+        return vm.eval(rewritten);
+    }
+
     fallback
 }
 
@@ -4495,6 +4505,258 @@ fn trim_poly(mut poly: Vec<i64>) -> Vec<i64> {
 
 fn is_head_name(head: &IRNode, expected: &str) -> bool {
     matches!(head, IRNode::Symbol(name) if name == expected)
+}
+
+// ---------------------------------------------------------------------------
+// Bivariate Hensel-lifting IR glue.  Mirrors the Python
+// ``_try_bivariate_hensel_ir``, ``_find_two_variables``, ``_ir_to_bipoly``,
+// and ``_bipoly_to_ir`` helpers in ``symbolic-vm/cas_handlers.py``.
+// ---------------------------------------------------------------------------
+
+/// Find the first two distinct free variable names in ``node``.
+///
+/// Constants (``%pi``, ``%e``, …) and any sub-expression with three or more
+/// distinct free variables disqualify the input (returns ``None``).  The
+/// bivariate Hensel path is only meaningful when exactly two variables
+/// appear.
+fn find_two_variables(node: &IRNode) -> Option<(String, String)> {
+    let mut seen: Vec<String> = Vec::new();
+    fn walk(n: &IRNode, seen: &mut Vec<String>) -> bool {
+        match n {
+            IRNode::Symbol(name) if !name.starts_with('%') => {
+                if !seen.iter().any(|s| s == name) {
+                    seen.push(name.clone());
+                    if seen.len() > 2 {
+                        return false;
+                    }
+                }
+                true
+            }
+            IRNode::Apply(apply) => {
+                for arg in &apply.args {
+                    if !walk(arg, seen) {
+                        return false;
+                    }
+                }
+                true
+            }
+            _ => true,
+        }
+    }
+    if !walk(node, &mut seen) {
+        return None;
+    }
+    if seen.len() != 2 {
+        return None;
+    }
+    Some((seen[0].clone(), seen[1].clone()))
+}
+
+/// Convert an IR expression to a bivariate polynomial in ``(x, y)``.
+///
+/// Returns ``None`` for any sub-expression outside ℚ[x, y]: floats, a third
+/// free symbol, transcendentals (Sin/Log/…), non-integer exponents, etc.
+fn ir_to_bipoly(node: &IRNode, x: &str, y: &str) -> Option<HenselBiPoly> {
+    fn bi_one() -> HenselBiPoly {
+        let mut out = std::collections::BTreeMap::new();
+        out.insert((0, 0), HenselRat::ONE);
+        out
+    }
+    fn bi_mul_local(a: &HenselBiPoly, b: &HenselBiPoly) -> HenselBiPoly {
+        let mut out: HenselBiPoly = std::collections::BTreeMap::new();
+        for ((i1, j1), c1) in a {
+            for ((i2, j2), c2) in b {
+                let key = (i1 + i2, j1 + j2);
+                let cur = out.get(&key).copied().unwrap_or(HenselRat::ZERO);
+                out.insert(key, cur.add(&c1.mul(c2)));
+            }
+        }
+        out.retain(|_, v| !v.is_zero());
+        out
+    }
+    fn bi_add_into(acc: &mut HenselBiPoly, other: &HenselBiPoly) {
+        for (k, v) in other {
+            let cur = acc.get(k).copied().unwrap_or(HenselRat::ZERO);
+            acc.insert(*k, cur.add(v));
+        }
+        acc.retain(|_, v| !v.is_zero());
+    }
+
+    match node {
+        IRNode::Integer(value) => {
+            if *value == 0 {
+                Some(std::collections::BTreeMap::new())
+            } else {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert((0, 0), HenselRat::from_int(*value as i128));
+                Some(m)
+            }
+        }
+        IRNode::Rational(n, d) => {
+            let mut m = std::collections::BTreeMap::new();
+            m.insert((0, 0), HenselRat::new(*n as i128, *d as i128));
+            Some(m)
+        }
+        IRNode::Float(_) | IRNode::Str(_) => None,
+        IRNode::Symbol(name) => {
+            if name.starts_with('%') {
+                return None;
+            }
+            if name == x {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert((1, 0), HenselRat::ONE);
+                Some(m)
+            } else if name == y {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert((0, 1), HenselRat::ONE);
+                Some(m)
+            } else {
+                None
+            }
+        }
+        IRNode::Apply(apply) => {
+            let head = match &apply.head {
+                IRNode::Symbol(name) => name.as_str(),
+                _ => return None,
+            };
+            if head == ADD {
+                let mut acc: HenselBiPoly = std::collections::BTreeMap::new();
+                for arg in &apply.args {
+                    let sub = ir_to_bipoly(arg, x, y)?;
+                    bi_add_into(&mut acc, &sub);
+                }
+                Some(acc)
+            } else if head == SUB && apply.args.len() == 2 {
+                let a = ir_to_bipoly(&apply.args[0], x, y)?;
+                let b = ir_to_bipoly(&apply.args[1], x, y)?;
+                let mut neg_b: HenselBiPoly = std::collections::BTreeMap::new();
+                for (k, v) in &b {
+                    if !v.is_zero() {
+                        neg_b.insert(*k, v.neg());
+                    }
+                }
+                let mut acc = a;
+                bi_add_into(&mut acc, &neg_b);
+                Some(acc)
+            } else if head == NEG && apply.args.len() == 1 {
+                let sub = ir_to_bipoly(&apply.args[0], x, y)?;
+                let mut out: HenselBiPoly = std::collections::BTreeMap::new();
+                for (k, v) in sub {
+                    if !v.is_zero() {
+                        out.insert(k, v.neg());
+                    }
+                }
+                Some(out)
+            } else if head == MUL {
+                let mut acc = bi_one();
+                for arg in &apply.args {
+                    let sub = ir_to_bipoly(arg, x, y)?;
+                    acc = bi_mul_local(&acc, &sub);
+                }
+                Some(acc)
+            } else if head == POW && apply.args.len() == 2 {
+                let exp = match apply.args[1] {
+                    IRNode::Integer(e) => e,
+                    _ => return None,
+                };
+                if exp < 0 {
+                    return None;
+                }
+                let base = ir_to_bipoly(&apply.args[0], x, y)?;
+                if exp == 0 {
+                    return Some(bi_one());
+                }
+                let mut result = base.clone();
+                for _ in 1..exp {
+                    result = bi_mul_local(&result, &base);
+                }
+                Some(result)
+            } else {
+                None
+            }
+        }
+    }
+}
+
+/// Convert a bivariate ℚ-polynomial back to an IR expression.
+///
+/// Sorting is descending total degree, then descending i, then descending
+/// j — matching the Python ``_bipoly_to_ir`` deterministic key order.
+fn bipoly_to_ir(p: &HenselBiPoly, x: &str, y: &str) -> IRNode {
+    if p.is_empty() {
+        return IRNode::Integer(0);
+    }
+
+    fn monomial_node(i: usize, j: usize, c: HenselRat, x: &str, y: &str) -> IRNode {
+        let mut parts: Vec<IRNode> = Vec::new();
+        let is_constant_term = i == 0 && j == 0;
+        if !c.is_one() || is_constant_term {
+            if c.denom == 1 {
+                parts.push(IRNode::Integer(c.numer as i64));
+            } else {
+                parts.push(IRNode::rational(c.numer as i64, c.denom as i64));
+            }
+        }
+        if i > 0 {
+            let x_node = IRNode::Symbol(x.to_string());
+            if i == 1 {
+                parts.push(x_node);
+            } else {
+                parts.push(apply_node(POW, vec![x_node, IRNode::Integer(i as i64)]));
+            }
+        }
+        if j > 0 {
+            let y_node = IRNode::Symbol(y.to_string());
+            if j == 1 {
+                parts.push(y_node);
+            } else {
+                parts.push(apply_node(POW, vec![y_node, IRNode::Integer(j as i64)]));
+            }
+        }
+        if parts.len() == 1 {
+            parts.into_iter().next().unwrap()
+        } else {
+            apply_node(MUL, parts)
+        }
+    }
+
+    // Sort: descending total degree, then by descending i, then j.
+    let mut keys: Vec<(usize, usize)> = p.keys().copied().collect();
+    keys.sort_by(|a, b| {
+        let at = a.0 + a.1;
+        let bt = b.0 + b.1;
+        match bt.cmp(&at) {
+            std::cmp::Ordering::Equal => match b.0.cmp(&a.0) {
+                std::cmp::Ordering::Equal => b.1.cmp(&a.1),
+                o => o,
+            },
+            o => o,
+        }
+    });
+
+    let terms: Vec<IRNode> = keys
+        .iter()
+        .map(|(i, j)| monomial_node(*i, *j, *p.get(&(*i, *j)).unwrap(), x, y))
+        .collect();
+    if terms.len() == 1 {
+        terms.into_iter().next().unwrap()
+    } else {
+        apply_node(ADD, terms)
+    }
+}
+
+fn try_bivariate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
+    let (x_var, y_var) = find_two_variables(inner)?;
+    let bipoly = ir_to_bipoly(inner, &x_var, &y_var)?;
+    let factors = try_bivariate_hensel(&bipoly)?;
+    if factors.len() < 2 {
+        return None;
+    }
+    let factor_nodes: Vec<IRNode> = factors.iter().map(|f| bipoly_to_ir(f, &x_var, &y_var)).collect();
+    if factor_nodes.len() == 1 {
+        return Some(factor_nodes.into_iter().next().unwrap());
+    }
+    Some(apply_node(MUL, factor_nodes))
 }
 
 // ---------------------------------------------------------------------------

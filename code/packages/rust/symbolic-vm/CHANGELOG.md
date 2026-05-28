@@ -1,5 +1,59 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.15.0] — 2026-05-28
+
+**Track D2 — bivariate Hensel lifting in `Factor` (Rust port).**
+
+Wires the new `cas-factor` 0.2.0 `try_bivariate_hensel` into the
+`Factor` head's multivariate fall-through chain.  When none of the
+existing pattern handlers (perfect square/cube, difference of squares,
+cubic identity, grouping, common-factor) recognise the input, the
+handler now converts the IR to `cas_factor::BiPoly`, calls
+`try_bivariate_hensel`, and emits a `Mul(...)` of the lifted factors.
+Mirrors the Python `_try_bivariate_hensel_ir` glue in
+`symbolic-vm/cas_handlers.py`.
+
+### Added
+
+- `find_two_variables(node)` — walks the IR tree, returns the first two
+  distinct free variable names or `None` (third variable, transcendental
+  constant, etc. all disqualify).
+- `ir_to_bipoly(node, x, y)` — converts the polynomial subset of IR
+  (`Add`, `Sub`, `Mul`, `Pow`, `Neg`, `Integer`, `Rational`, symbol) to
+  a sparse `cas_factor::BiPoly`.  Returns `None` for floats,
+  transcendentals, non-integer or negative exponents, foreign symbols.
+- `bipoly_to_ir(p, x, y)` — converts a `BiPoly` back to IR with
+  deterministic descending-degree term order.
+- `try_bivariate_hensel_ir(inner)` — the top-level glue invoked by
+  `factor_handler`.
+
+### Changed
+
+- `factor_handler` — when the multivariate pattern path finishes
+  without producing a factorisation, the handler now tries
+  `try_bivariate_hensel_ir` before falling through to the unevaluated
+  `Factor(...)` form.
+- Added `cas_factor::{try_bivariate_hensel, BiPoly, Rat}` imports.
+
+### Added — tests
+
+`tests/hensel.rs` — 6 cases:
+
+- `hensel_factor_x2_xy_minus_2y2_splits` — acceptance case
+  `(x + 2y)(x - y)`.
+- `hensel_factor_non_unit_leading_2x2_3xy_minus_2y2_splits` — leading
+  coefficient ≠ 1.
+- `hensel_factor_x3_minus_y3_splits` — multi-degree linear × quadratic.
+- `hensel_factor_x2_plus_y2_plus_1_irreducible` — irreducible bivariate
+  stays unevaluated.
+- `hensel_factor_x2_minus_1_falls_through_to_univariate` — pure
+  univariate regression: the existing path still produces
+  `Mul(Add(1, x), Add(-1, x))`.
+- `hensel_factor_x_plus_y_is_already_irreducible` — bare `x + y` stays
+  unfactored.
+
+Full suite: **200 passed** (194 prior + 6 net new).
+
 ## [0.14.0] — 2026-05-28
 
 **Track B3 — Apart for repeated linear factors (Phase 48, Rust port).**

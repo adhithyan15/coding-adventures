@@ -55,7 +55,8 @@ import {
   rational,
   sym,
 } from "@coding-adventures/symbolic-ir";
-import { factorIntegerPolynomial } from "@coding-adventures/cas-factor";
+import { BiRational, factorIntegerPolynomial, tryBivariateHensel } from "@coding-adventures/cas-factor";
+import type { BiPoly } from "@coding-adventures/cas-factor";
 
 export type Handler = (vm: VM, expr: IRApply) => IRNode;
 export type RulePredicate = (expr: IRApply) => boolean;
@@ -973,7 +974,13 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
     const grouping = extractMultivariateGrouping(inner);
     if (grouping !== undefined) return grouping;
     const commonFactored = extractCommonSymbolicFactor(inner);
-    return commonFactored === undefined ? expr : vm.eval(commonFactored);
+    if (commonFactored !== undefined) return vm.eval(commonFactored);
+    // Generic bivariate Hensel lifting fallback — for multivariate inputs
+    // the pattern handlers above can't recognise.  Mirrors the Python
+    // ``_try_bivariate_hensel_ir`` glue in ``symbolic-vm/cas_handlers.py``.
+    const hensel = tryBivariateHenselIr(inner);
+    if (hensel !== undefined) return vm.eval(hensel);
+    return expr;
   }
 
   const [content, factors] = factorIntegerPolynomial(coeffs);
@@ -1035,6 +1042,198 @@ function irToIntegerPoly(node: IRNode, variable: IRSymbol): bigint[] | undefined
     return base === undefined ? undefined : polyPow(base, node.args[1].value);
   }
   return undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Bivariate Hensel-lifting IR glue.  Mirrors the Python ``_try_bivariate_*``
+// helpers in ``symbolic-vm/cas_handlers.py``.
+// ---------------------------------------------------------------------------
+
+function findTwoVariables(node: IRNode): [IRSymbol, IRSymbol] | undefined {
+  const seen: IRSymbol[] = [];
+  function walk(n: IRNode): boolean {
+    if (n.kind === "symbol") {
+      if (n.name.startsWith("%")) return true;
+      if (!seen.some((s) => s.name === n.name)) {
+        seen.push(n);
+        if (seen.length > 2) return false;
+      }
+      return true;
+    }
+    if (n.kind === "apply") {
+      for (const arg of n.args) {
+        if (!walk(arg)) return false;
+      }
+    }
+    return true;
+  }
+  if (!walk(node)) return undefined;
+  if (seen.length !== 2) return undefined;
+  return [seen[0], seen[1]];
+}
+
+function biKey(i: number, j: number): string {
+  return `${i},${j}`;
+}
+
+function biParseKey(k: string): [number, number] {
+  const idx = k.indexOf(",");
+  return [Number(k.slice(0, idx)), Number(k.slice(idx + 1))];
+}
+
+function biAddInPlace(acc: BiPoly, other: BiPoly): BiPoly {
+  for (const [k, v] of other) {
+    const cur = acc.get(k);
+    acc.set(k, cur === undefined ? v : cur.add(v));
+  }
+  for (const [k, v] of [...acc]) {
+    if (v.isZero()) acc.delete(k);
+  }
+  return acc;
+}
+
+function biMulMaps(a: BiPoly, b: BiPoly): BiPoly {
+  const out: BiPoly = new Map();
+  for (const [k1, c1] of a) {
+    const [i1, j1] = biParseKey(k1);
+    for (const [k2, c2] of b) {
+      const [i2, j2] = biParseKey(k2);
+      const k = biKey(i1 + i2, j1 + j2);
+      const cur = out.get(k);
+      out.set(k, cur === undefined ? c1.mul(c2) : cur.add(c1.mul(c2)));
+    }
+  }
+  for (const [k, v] of [...out]) {
+    if (v.isZero()) out.delete(k);
+  }
+  return out;
+}
+
+function irToBipoly(node: IRNode, x: IRSymbol, y: IRSymbol): BiPoly | undefined {
+  // Numeric literals.
+  if (node.kind === "integer") {
+    if (node.value === 0n) return new Map();
+    return new Map([[biKey(0, 0), BiRational.fromInt(node.value)]]);
+  }
+  if (node.kind === "rational") {
+    return new Map([[biKey(0, 0), new BiRational(node.numer, node.denom)]]);
+  }
+  if (node.kind === "float") return undefined;
+  if (node.kind === "string") return undefined;
+  if (node.kind === "symbol") {
+    if (node.name.startsWith("%")) return undefined;
+    if (node.name === x.name) return new Map([[biKey(1, 0), BiRational.ONE]]);
+    if (node.name === y.name) return new Map([[biKey(0, 1), BiRational.ONE]]);
+    return undefined;
+  }
+  // Apply nodes.
+  const apply = node;
+  if (apply.head.kind !== "symbol") return undefined;
+  const head = apply.head.name;
+  if (head === ADD.name) {
+    const acc: BiPoly = new Map();
+    for (const arg of apply.args) {
+      const sub = irToBipoly(arg, x, y);
+      if (sub === undefined) return undefined;
+      biAddInPlace(acc, sub);
+    }
+    return acc;
+  }
+  if (head === SUB.name && apply.args.length === 2) {
+    const a = irToBipoly(apply.args[0], x, y);
+    const b = irToBipoly(apply.args[1], x, y);
+    if (a === undefined || b === undefined) return undefined;
+    const negB: BiPoly = new Map();
+    for (const [k, v] of b) negB.set(k, v.neg());
+    biAddInPlace(a, negB);
+    return a;
+  }
+  if (head === NEG.name && apply.args.length === 1) {
+    const sub = irToBipoly(apply.args[0], x, y);
+    if (sub === undefined) return undefined;
+    const out: BiPoly = new Map();
+    for (const [k, v] of sub) {
+      if (!v.isZero()) out.set(k, v.neg());
+    }
+    return out;
+  }
+  if (head === MUL.name) {
+    let acc: BiPoly = new Map([[biKey(0, 0), BiRational.ONE]]);
+    for (const arg of apply.args) {
+      const sub = irToBipoly(arg, x, y);
+      if (sub === undefined) return undefined;
+      acc = biMulMaps(acc, sub);
+    }
+    return acc;
+  }
+  if (head === POW.name && apply.args.length === 2) {
+    const expNode = apply.args[1];
+    if (expNode.kind !== "integer") return undefined;
+    const eBig = expNode.value;
+    if (eBig < 0n) return undefined;
+    const base = irToBipoly(apply.args[0], x, y);
+    if (base === undefined) return undefined;
+    if (eBig === 0n) return new Map([[biKey(0, 0), BiRational.ONE]]);
+    let result = base;
+    const e = Number(eBig);
+    for (let i = 1; i < e; i += 1) result = biMulMaps(result, base);
+    return result;
+  }
+  return undefined;
+}
+
+function bipolyToIr(p: BiPoly, x: IRSymbol, y: IRSymbol): IRNode {
+  if (p.size === 0) return int(0);
+
+  function monomialNode(i: number, j: number, c: BiRational): IRNode {
+    const parts: IRNode[] = [];
+    const isConstantTerm = i === 0 && j === 0;
+    if (!c.equals(BiRational.ONE) || isConstantTerm) {
+      if (c.denom === 1n) {
+        parts.push(int(c.numer));
+      } else {
+        parts.push(rational(c.numer, c.denom));
+      }
+    }
+    if (i > 0) {
+      parts.push(i === 1 ? x : app(POW, [x, int(i)]));
+    }
+    if (j > 0) {
+      parts.push(j === 1 ? y : app(POW, [y, int(j)]));
+    }
+    if (parts.length === 1) return parts[0];
+    return app(MUL, parts);
+  }
+
+  // Sort by descending total degree, then by descending i, then j.
+  const keys = [...p.keys()].sort((a, b) => {
+    const [ai, aj] = biParseKey(a);
+    const [bi, bj] = biParseKey(b);
+    const aTot = ai + aj;
+    const bTot = bi + bj;
+    if (aTot !== bTot) return bTot - aTot;
+    if (ai !== bi) return bi - ai;
+    return bj - aj;
+  });
+  const terms = keys.map((k) => {
+    const [i, j] = biParseKey(k);
+    return monomialNode(i, j, p.get(k)!);
+  });
+  if (terms.length === 1) return terms[0];
+  return app(ADD, terms);
+}
+
+function tryBivariateHenselIr(inner: IRNode): IRNode | undefined {
+  const vars = findTwoVariables(inner);
+  if (vars === undefined) return undefined;
+  const [x, y] = vars;
+  const bipoly = irToBipoly(inner, x, y);
+  if (bipoly === undefined) return undefined;
+  const factors = tryBivariateHensel(bipoly);
+  if (factors === null || factors.length < 2) return undefined;
+  const factorNodes = factors.map((f) => bipolyToIr(f, x, y));
+  if (factorNodes.length === 1) return factorNodes[0];
+  return app(MUL, factorNodes);
 }
 
 function factorResultToIr(content: bigint, factors: Array<[bigint[], number]>, variable: IRSymbol): IRNode {
