@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.217.0 — 2026-05-27
+
+### Added
+
+- **Phase 280 — Five-Sqrt × Thirty-Eight-Log × polynomial** (`five_sqrt_thirty_eight_log_poly_effective_x2`):
+  Completes the Thirty-Eight-Log family (Phases 275–280).
+- **Phase 279 — Four-Sqrt × Thirty-Eight-Log × polynomial** (`four_sqrt_thirty_eight_log_poly_effective_x2`).
+- **Phase 278 — Three-Sqrt × Thirty-Eight-Log × polynomial** (`three_sqrt_thirty_eight_log_poly_effective_x2`).
+- **Phase 277 — Two-Sqrt × Thirty-Eight-Log × polynomial** (`two_sqrt_thirty_eight_log_poly_effective_x2`).
+- **Phase 276 — One-Sqrt × Thirty-Eight-Log × polynomial** (`one_sqrt_thirty_eight_log_poly_effective_x2`).
+- **Phase 275 — Zero-Sqrt × Thirty-Eight-Log × polynomial** (`thirty_eight_log_poly_effective_x2`).
+
+### Changed
+
+- Boundary tests in Phases 269–274 (and prior phases 167–268) updated from 38-log
+  "refused" to 39-log "refused" now that Phases 275–280 handle exactly 38 logs.
+
 ## 2.211.0 — 2026-05-27
 
 ### Added
