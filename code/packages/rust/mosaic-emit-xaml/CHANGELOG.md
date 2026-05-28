@@ -1,5 +1,69 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — #4548 toolkit-demo regressions — three emitter gaps closed
+
+Three mosaic-emit-xaml code-gen bugs surfaced when compiling
+components from `mosaic-pkg-toolkit` (Button / Alert / Badge / Spinner
+demo, PR #4548) through the XAML backend. None of the existing
+demos (hello-dialog, mosaic-pkg-grid) exercised the affected style
+or naming surface. Each fix is a localised change with regression
+tests; the toolkit Button + Alert + Badge XAML now regenerates
+cleanly and builds without hand-patches.
+
+### X1 — `border-radius` lowered to invalid `BorderRadius`
+
+`css_property_to_xaml_setter` had no entry for `border-radius`, so
+the kebab-to-pascal fallback produced `BorderRadius` — which isn't
+a real WinUI 3 property. The XAML markup compiler rejected it
+silently (`XamlCompiler.exe` exits 1 with no diagnostic). Fixed
+by adding the explicit `"border-radius" => "CornerRadius"` mapping
+(`UIElement.CornerRadius` is the actual WinUI property).
+
+Regression test: `border_radius_lowers_to_corner_radius`.
+
+### X2 — `x:Name` collided with the enclosing class name
+
+Components where the pascal-cased part name equals the component
+name (e.g. `Button.mll`'s `HostButton [ button ]` inside the
+`Button` component) produced `<Button x:Name="Button">`. WinUI's
+XAML compiler auto-generates a `private Button Button;` field
+that triggers C# error CS0542 ("member names cannot be the same
+as their enclosing type"). Affected Button, Checkbox, Input,
+Radio.
+
+Fixed by detecting the collision in `host_x_name` and suffixing
+`Element` to the identifier. Event-handler stems are derived from
+`x_name` so both the XAML attribute (`Click="ButtonElement_Click"`)
+and the code-behind method (`private void ButtonElement_Click`)
+stay consistent automatically.
+
+Regression tests: `x_name_avoids_component_class_name_collision`,
+`x_name_unchanged_when_no_collision`.
+
+### X3 — text-style props on `<Border>` rejected by WinUI
+
+`<Border>` doesn't have `Foreground` / `FontSize` / `FontWeight` /
+`FontFamily` — those belong on the text content inside. The emitter
+was placing every part-style property on the wrapping `<Border>`
+unconditionally, so styled toolkit components like Alert and Badge
+emitted invalid markup that XamlCompiler silently rejected.
+
+Fixed in `emit_container` by partitioning the part-style fragment:
+container-paint props (Background, BorderBrush, BorderThickness,
+CornerRadius, Padding, Margin, Width, Height, *Alignment) stay on
+the opening tag; text-style props move into a scoped
+`<Border.Resources>` block as a `<Style TargetType="TextBlock">`
+implicit style. WinUI's implicit-style resolution then applies
+them to every `TextBlock` descendant inside the container.
+
+This change also applies to the other emit_container call sites
+(`Stack` → `<Grid>`), which have the same constraint.
+
+Regression tests:
+`box_partitions_style_between_border_and_textblock_resource`,
+`box_without_text_style_emits_no_resources_block`,
+`parse_style_fragment_round_trips_build_style_fragment`.
+
 ## [Unreleased] — UI31-K-xaml — `HostTable` RTL contract
 
 The WinUI `HostTable` lowering (which produces a structural `<Grid>`
