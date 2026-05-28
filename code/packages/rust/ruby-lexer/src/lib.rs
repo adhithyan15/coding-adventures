@@ -446,6 +446,25 @@ impl RubyLexer {
         // so `1..5` (which the range pass converts to `Int ".." Int`)
         // doesn't get mistaken for a float.
         self.fuse_float_literals();
+        // Phase 8a-2 (FC) companion — pre-fuse `>>` and `>>=`.
+        //
+        // The 1.8-baseline state machine emits `>>` as two separate
+        // `Name(">")` tokens (no dedicated right-shift token), and the
+        // greedy `>=` classifier folds `>` immediately followed by `=`
+        // into `Name(">=")`.  That means `x >>= 5` arrives here as
+        // `Name("x")`, `Name(">")`, `Name(">=")`, `Number("5")` — the
+        // second `>` got eaten by the `>=` rule.
+        //
+        // This pre-fusion pass restores the right shapes:
+        //   `Name(">")` + `Name(">")`  (no ws) → `Name(">>")`
+        //   `Name(">")` + `Name(">=")` (no ws) → `Name(">>=")`
+        //
+        // Must run BEFORE `fuse_compound_assigns` so the standalone `=`
+        // case (e.g. `x = 5`) is unaffected, and so that any future
+        // `Name(">>")` left-shift token gets a chance to participate in
+        // compound-assign fusion (currently moot — `>>=` is folded
+        // directly here, but the pattern stays consistent).
+        self.fuse_right_shifts();
         // Phase 6p companion — fuse compound-assignment operators
         // (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  Pre-1.0 Ruby, so
         // no era gating.  Runs AFTER float/radix fusions (which fold
@@ -751,6 +770,94 @@ impl RubyLexer {
             } else {
                 i += 1;
             }
+        }
+    }
+
+    /// Phase 8a-2 (FC) companion — fold `>>` and `>>=`.
+    ///
+    /// The state machine doesn't carry a dedicated right-shift token
+    /// (unlike `<<`, which the heredoc opener already emits as a
+    /// single `Name("<<")`).  Two-character `>>` therefore arrives as
+    /// two separate `Name(">")` tokens.  Worse, when followed by `=`
+    /// the greedy `>=` classifier eats the second `>` together with
+    /// the trailing `=`, so `x >>= 5` arrives as `>`, `>=` — *neither*
+    /// `>>` nor `=` survives intact.
+    ///
+    /// This pass scans for the two shapes:
+    ///
+    /// | Incoming pair (adjacent, no whitespace gap) | Folded into     |
+    /// |---------------------------------------------|-----------------|
+    /// | `Name(">")` + `Name(">")`                   | `Name(">>")`    |
+    /// | `Name(">")` + `Name(">=")`                  | `Name(">>=")`   |
+    ///
+    /// Adjacency gate: same line, no whitespace before the second
+    /// token.  Same gating as `fuse_compound_assigns` — a space breaks
+    /// the fusion (`x > > 5` stays two tokens, which is a syntax error
+    /// in Ruby but not a right shift / compound-shift).
+    ///
+    /// Why a separate pass rather than extending
+    /// `fuse_compound_assigns`?  Because the input shape is `>`, `>=`
+    /// — there is no standalone `=` for the existing fuse pass to fold
+    /// against.  The `>=` token is already a unit by the time the
+    /// fusion pipeline runs.
+    ///
+    /// Era: pre-1.0 Ruby — every era ≥ 1.8 emits the same problematic
+    /// pre-fusion shape, so no gating.
+    fn fuse_right_shifts(&mut self) {
+        let mut i = 0;
+        while i + 1 < self.tokens.len() {
+            // Left token must be `Name(">")`.
+            let is_gt = {
+                let a = &self.tokens[i];
+                a.type_ == TokenType::Name && a.value == ">"
+            };
+            if !is_gt {
+                i += 1;
+                continue;
+            }
+            // Right token must be `Name(">")` or `Name(">=")`, on the
+            // same line, with no whitespace gap.
+            let (new_value_opt, same_line, no_ws) = {
+                let a = &self.tokens[i];
+                let b = &self.tokens[i + 1];
+                let same_line = a.line == b.line;
+                let no_ws = !self
+                    .whitespace_before_token
+                    .get(i + 1)
+                    .copied()
+                    .unwrap_or(false);
+                let nv: Option<&'static str> = if b.type_ == TokenType::Name {
+                    match b.value.as_str() {
+                        ">" => Some(">>"),
+                        ">=" => Some(">>="),
+                        _ => None,
+                    }
+                } else {
+                    None
+                };
+                (nv, same_line, no_ws)
+            };
+            if let Some(nv) = new_value_opt {
+                if same_line && no_ws {
+                    let span_line = self.tokens[i].line;
+                    let span_col = self.tokens[i].column;
+                    self.tokens.remove(i + 1);
+                    self.whitespace_before_token.remove(i + 1);
+                    self.tokens[i] = Token {
+                        type_: TokenType::Name,
+                        value: nv.to_string(),
+                        line: span_line,
+                        column: span_col,
+                        type_name: None,
+                        flags: None,
+                    };
+                    // Don't advance — three-`>` sequences (e.g. `a>>>b`,
+                    // which is illegal in Ruby anyway) get correctly
+                    // partial-folded on the next iteration.
+                    continue;
+                }
+            }
+            i += 1;
         }
     }
 
@@ -4099,6 +4206,83 @@ mod tests {
         let has_plus = toks.iter().any(|t| t.type_ == TokenType::Plus);
         let has_eq = toks.iter().any(|t| t.type_ == TokenType::Equals);
         assert!(has_plus && has_eq, "expected separate Plus + Equals, got {toks:?}");
+    }
+
+    // Phase 8a-2 (FC) — `>>` and `>>=` pre-fusion.
+
+    #[test]
+    fn right_shift_compound_assign_fuses_into_single_token() {
+        // `x >>= 5` should produce a single `Name(">>=")` token —
+        // not the pre-fusion shape `>`, `>=`.
+        let toks = tokenize_ruby_for_version("x >>= 5", "1.8").unwrap();
+        let has_fused = toks
+            .iter()
+            .any(|t| t.type_ == TokenType::Name && t.value == ">>=");
+        assert!(
+            has_fused,
+            "expected `>>=` Name token after fusion, got {toks:?}"
+        );
+        // And no orphan `>=` left over.
+        let has_orphan_ge = toks
+            .iter()
+            .any(|t| t.type_ == TokenType::Name && t.value == ">=");
+        assert!(
+            !has_orphan_ge,
+            "expected no orphan `>=` after `>>=` fusion, got {toks:?}"
+        );
+    }
+
+    #[test]
+    fn right_shift_binary_operator_fuses_into_single_token() {
+        // `5 >> 3` should produce a single `Name(">>")` — not two
+        // separate `Name(">")` tokens.
+        let toks = tokenize_ruby_for_version("5 >> 3", "1.8").unwrap();
+        let shift_count = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name && t.value == ">>")
+            .count();
+        let bare_gt_count = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name && t.value == ">")
+            .count();
+        assert_eq!(shift_count, 1, "expected exactly one `>>` token in {toks:?}");
+        assert_eq!(bare_gt_count, 0, "expected no bare `>` tokens in {toks:?}");
+    }
+
+    #[test]
+    fn right_shift_fusion_respects_whitespace_gap() {
+        // `5 > > 3` (with a space between the two `>`s) must NOT fuse.
+        let toks = tokenize_ruby_for_version("5 > > 3", "1.8").unwrap();
+        let shift_count = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name && t.value == ">>")
+            .count();
+        let gt_count = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name && t.value == ">")
+            .count();
+        assert_eq!(shift_count, 0, "should NOT fuse across whitespace: {toks:?}");
+        assert_eq!(gt_count, 2, "expected two bare `>` tokens: {toks:?}");
+    }
+
+    #[test]
+    fn right_shift_fusion_leaves_unrelated_ge_alone() {
+        // `a >= b` must stay as a single `Name(">=")` — only the
+        // post-`>` form is folded.
+        let toks = tokenize_ruby_for_version("a >= b", "1.8").unwrap();
+        let ge_count = toks
+            .iter()
+            .filter(|t| t.type_ == TokenType::Name && t.value == ">=")
+            .count();
+        assert_eq!(ge_count, 1, "expected one `>=` token unchanged: {toks:?}");
+        // No spurious `>>=` or `>>` tokens.
+        for forbidden in [">>=", ">>"] {
+            let n = toks
+                .iter()
+                .filter(|t| t.type_ == TokenType::Name && t.value == forbidden)
+                .count();
+            assert_eq!(n, 0, "did not expect `{forbidden}` in {toks:?}");
+        }
     }
 
     #[test]
