@@ -1801,7 +1801,18 @@ function polyQRationalRoots(p: PolyQ): RatQ[] {
     const found = new Map<string, RatQ>();
     found.set("0/1", RQ_ZERO);
     for (const r of tailRoots) found.set(`${r[0]}/${r[1]}`, r);
-    return [...found.values()];
+    // Sort ascending — matches Python's ``sorted(roots)`` (Phase 48 needs
+    // a stable ascending order across multi-root denominators that include
+    // ``x = 0``; B1's simple-root tests never exercised this branch).
+    const all = [...found.values()];
+    all.sort((a, b) => {
+      const lhs = a[0] * b[1];
+      const rhs = b[0] * a[1];
+      if (lhs < rhs) return -1;
+      if (lhs > rhs) return 1;
+      return 0;
+    });
+    return all;
   }
 
   const divisors = (m: bigint): bigint[] => {
@@ -2069,7 +2080,7 @@ function polyTerm(c: RatQ, i: number, x: IRSymbol): IRNode {
   return app(MUL, [rqToIr(c), power]);
 }
 
-// --- Apart simple-roots (Phase 1) -------------------------------------------
+// --- Apart simple-roots (Phase 1) + repeated linear factors (Phase 48) -----
 
 /** Phase 1 simple-root path; mirrors ``_apart_simple_roots`` in Python.
  *  Returns ``undefined`` when any residue blows up (repeated root that
@@ -2106,19 +2117,150 @@ function apartSimpleRoots(
   return acc;
 }
 
-/** Decompose a *proper* rational function (deg num < deg den).  Returns
- *  ``undefined`` if any root has multiplicity > 1 (Phase 48 — out of scope)
- *  or if the denominator contains an irreducible factor on top of the
- *  rational roots. */
+/** Binomial coefficient ``C(n, k)``.  Returns ``0n`` when k is out of
+ *  range so callers can sum unconditionally.  Mirrors Python ``_binomial``. */
+function binomialBig(n: number, k: number): bigint {
+  if (k < 0 || k > n) return 0n;
+  if (k === 0 || k === n) return 1n;
+  const kk = Math.min(k, n - k);
+  let result = 1n;
+  for (let i = 0; i < kk; i += 1) {
+    result = (result * BigInt(n - i)) / BigInt(i + 1);
+  }
+  return result;
+}
+
+/** Return the first ``length`` Taylor coefficients of ``poly(r + t)`` as
+ *  a polynomial in ``t``.  Mirrors Python ``_taylor_expand_around_r``:
+ *  for ``poly(x) = ∑ c_i x^i``,
+ *      poly(r + t) = ∑_j t^j · [∑_{i ≥ j} c_i · C(i, j) · r^(i − j)].
+ *  When ``length`` exceeds ``deg poly`` trailing entries are filled with 0. */
+function polyTaylorExpandAroundR(poly: PolyQ, r: RatQ, length: number): RatQ[] {
+  const deg = poly.length - 1;
+  const result: RatQ[] = [];
+  for (let j = 0; j < length; j += 1) {
+    let cj: RatQ = RQ_ZERO;
+    let rPow: RatQ = RQ_ONE; // r^(i - j) starts at r^0 when i == j
+    for (let i = j; i <= deg; i += 1) {
+      const coef = poly[i];
+      const binom = binomialBig(i, j);
+      if (binom !== 0n) {
+        const term = rqMul(rqMul(coef, [binom, 1n]), rPow);
+        cj = rqAdd(cj, term);
+      }
+      rPow = rqMul(rPow, r);
+    }
+    result.push(cj);
+  }
+  return result;
+}
+
+/** Formal power-series division ``N(t) / D(t)`` up to ``t^(length − 1)``.
+ *  Requires ``D(0) ≠ 0`` — returns ``undefined`` otherwise (signal of a
+ *  repeated-root miscount upstream).  Mirrors Python ``_series_div``. */
+function polySeriesDiv(
+  nCoeffs: readonly RatQ[],
+  dCoeffs: readonly RatQ[],
+  length: number,
+): RatQ[] | undefined {
+  if (dCoeffs.length === 0 || rqIsZero(dCoeffs[0])) return undefined;
+  const d0 = dCoeffs[0];
+  const q: RatQ[] = [];
+  for (let j = 0; j < length; j += 1) {
+    const nj = j < nCoeffs.length ? nCoeffs[j] : RQ_ZERO;
+    let s: RatQ = RQ_ZERO;
+    for (let k = 1; k <= j; k += 1) {
+      const dk = k < dCoeffs.length ? dCoeffs[k] : RQ_ZERO;
+      s = rqAdd(s, rqMul(dk, q[j - k]));
+    }
+    q.push(rqDiv(rqSub(nj, s), d0));
+  }
+  return q;
+}
+
+/** Build the IR for ``A / (x − r)^power``.  Drops ±1 numerator coefficients
+ *  to match the formatting convention in ``apartSimpleRoots``.  Mirrors
+ *  Python ``_build_apart_term``. */
+function buildApartTerm(A: RatQ, r: RatQ, power: number, x: IRSymbol): IRNode {
+  const negR = rqNeg(r);
+  const factorIr = fromPolynomial([negR, RQ_ONE], x);
+  const denomIr: IRNode = power === 1 ? factorIr : app(POW, [factorIr, int(power)]);
+  if (rqEquals(A, RQ_ONE)) {
+    return app(DIV, [int(1), denomIr]);
+  }
+  if (rqEquals(A, [-1n, 1n])) {
+    return app(NEG, [app(DIV, [int(1), denomIr])]);
+  }
+  return app(DIV, [rqToIr(A), denomIr]);
+}
+
+/** Decompose a *proper* rational function (deg num < deg den).
+ *
+ *  Phase 1 (simple roots) — uses the residue formula ``A_i = P(r_i)/Q'(r_i)``
+ *  for each distinct rational root ``r_i``.
+ *
+ *  Phase 48 (repeated linear factors) — for each root ``r`` of multiplicity
+ *  ``m`` compute ``Q(x) = den(x)/(x − r)^m`` and expand
+ *  ``φ(t) = P(r + t)/Q(r + t)`` as a Taylor series in ``t`` up to ``t^(m−1)``.
+ *  Then ``A_{r, m − j} = φ_j``.  Emits terms ``A / (x − r)^power`` for
+ *  ``power = 1..m``.
+ *
+ *  Returns ``undefined`` when ``den`` has an irreducible factor on top of
+ *  its rational roots — partial fractions over the rationals can't go
+ *  further in that case. */
 function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
   const roots = polyQRationalRoots(den);
   if (roots.length === 0) return undefined;
   const mults = polyQRootMultiplicities(den, roots);
   if (mults === undefined) return undefined;
+
+  // Phase 1 fast path — preserves the existing output shape for the
+  // regression tests written against B1.
+  let allSimple = true;
   for (const { mult } of mults.values()) {
-    if (mult > 1) return undefined; // Phase 48 path — explicitly out of scope.
+    if (mult > 1) {
+      allSimple = false;
+      break;
+    }
   }
-  return apartSimpleRoots(num, den, roots, x);
+  if (allSimple) return apartSimpleRoots(num, den, roots, x);
+
+  // Phase 48 generic path: Taylor + series-division per root.
+  const terms: IRNode[] = [];
+  for (const r of roots) {
+    const key = `${r[0]}/${r[1]}`;
+    const entry = mults.get(key);
+    if (entry === undefined) return undefined; // defensive — shouldn't happen
+    const m = entry.mult;
+    // Q(x) = den(x) / (x − r)^m.  Successive divisions are exact because
+    // we just verified the multiplicity above.
+    let qPoly: RatQ[] = polyQNormalize(den);
+    const linear: RatQ[] = [rqNeg(r), RQ_ONE];
+    for (let i = 0; i < m; i += 1) {
+      const { q } = polyQDivmod(qPoly, linear);
+      qPoly = q;
+    }
+    // Taylor-expand both P(r + t) and Q(r + t) up to t^(m − 1).
+    const nTaylor = polyTaylorExpandAroundR(num, r, m);
+    const dTaylor = polyTaylorExpandAroundR(qPoly, r, m);
+    const phi = polySeriesDiv(nTaylor, dTaylor, m);
+    if (phi === undefined) return undefined;
+    // A_{r, m − j} = phi[j].  Emit ascending power order:
+    // 1/(x − r), 1/(x − r)^2, …, 1/(x − r)^m.
+    for (let power = 1; power <= m; power += 1) {
+      const j = m - power;
+      const A = phi[j];
+      if (rqIsZero(A)) continue;
+      terms.push(buildApartTerm(A, r, power, x));
+    }
+  }
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  let acc: IRNode = terms[0];
+  for (let i = 1; i < terms.length; i += 1) {
+    acc = app(ADD, [acc, terms[i]]);
+  }
+  return acc;
 }
 
 function apartHandler(_vm: VM, expr: IRApply): IRNode {

@@ -1,5 +1,64 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.14.0] — 2026-05-28
+
+**Track B3 — Apart for repeated linear factors (Phase 48, Rust port).**
+
+Lifts the multiplicity > 1 bail introduced in Track B1.
+``Apart(P(x)/Q(x), x)`` now decomposes rational functions whose
+denominator factors as ``∏_r (x − r)^{m_r}`` for *rational* ``r`` with
+arbitrary multiplicity.  Each pole ``r`` of multiplicity ``m`` contributes
+terms ``A_{r,1}/(x − r) + A_{r,2}/(x − r)² + … + A_{r,m}/(x − r)^m``
+where the coefficients come from the Taylor expansion of
+``φ(t) = P(r + t)/Q(r + t)`` around ``t = 0`` with
+``Q(x) = den(x)/(x − r)^m``.  Then ``A_{r, m − j} = φ_j``.
+
+This mirrors the Phase 48 algorithm added to Python ``symbolic-vm`` in
+PR \#3927 and the TypeScript port at ``@coding-adventures/symbolic-vm``
+0.14.0.  Acceptance: ``Apart(1/(k²(k+1)²), k)`` decomposes to
+``2/(k+1) + 1/(k+1)² − 2/k + 1/k²`` (left-associated, roots ascending),
+matching the Python reference byte-for-byte.
+
+Denominators that still contain an irreducible quadratic factor on top of
+the rational roots continue to bail to the unevaluated ``Apart(...)``
+form — partial fractions over the rationals can't go further there.
+
+### Added
+
+- ``poly_taylor_expand_around_r`` — Taylor-expand a ``RatPoly`` around a
+  rational point ``r`` to ``length`` coefficients using the binomial
+  identity ``poly(r+t)_j = ∑_{i≥j} c_i · C(i, j) · r^(i−j)``.  Exact
+  ``i128`` arithmetic throughout.
+- ``poly_series_div`` — formal power-series division ``N(t)/D(t)`` to
+  ``length`` terms via the recurrence
+  ``Q_j = (N_j − ∑_{k≥1} D_k · Q_{j−k}) / D_0``.  Returns ``None`` when
+  ``D(0) = 0`` (defensive guard against a repeated-root miscount).
+- ``build_apart_term`` — IR builder for ``A / (x − r)^power`` with
+  ``±1`` numerator elision matching ``apart_simple_roots``.
+- ``binomial_i128`` — exact ``i128`` binomial helper used by the
+  Taylor expansion.
+
+### Changed
+
+- ``apart_proper`` — Phase 48 generic path lifted in: when any
+  multiplicity > 1, compute ``Q(x) = den(x)/(x − r)^m`` per root via
+  successive ``rp_div``, Taylor-expand ``num`` and ``Q`` around ``r``,
+  series-divide, and emit ascending-power terms via ``build_apart_term``.
+  Phase 1 simple-roots fast path retained for the B1 regression tests
+  (cheaper than Taylor + series division, preserves the existing IR
+  shape).
+
+### Removed
+
+- The ``mult > 1 → None`` bail in ``apart_proper`` — the new code path
+  handles the repeated-root case directly.
+
+### Out of scope (deferred)
+
+- Irreducible quadratic factors (``Apart`` over the rationals only).
+- Algebraic-number roots beyond Q — would require an irrational-roots
+  extension.
+
 ## [0.13.0] — 2026-05-28
 
 **Track B1 — Apart simple-roots partial-fraction decomposition (Rust port).**

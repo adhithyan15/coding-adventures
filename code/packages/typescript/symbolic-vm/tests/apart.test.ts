@@ -14,16 +14,19 @@ import {
 } from "@coding-adventures/symbolic-ir";
 import { SymbolicBackend, VM } from "../src/index.js";
 
-// Helpers — Track B1 (Apart simple-roots port) acceptance tests.
+// Helpers — Track B1 (Apart simple-roots) + Track B3 (Phase 48 repeated
+// linear factors) acceptance tests.
 //
-// Mirrors the six Python test cases enumerated in macsyma-finish-plan.md
-// (Track B1).  Apart is registered by string-name "Apart" because no
-// symbolic-ir constant exists for it.
+// Mirrors the Python test cases enumerated in
+// ``code/specs/macsyma-finish-plan.md`` (Tracks B1 + B3) and verified
+// against the Python reference output exactly.  Apart is registered by
+// string-name "Apart" because no symbolic-ir constant exists for it.
 const APART = sym("Apart");
 const x = sym("x");
+const k = sym("k");
 
-function apart(inner: IRNode): IRNode {
-  return app(APART, [inner, x]);
+function apart(inner: IRNode, variable: IRNode = x): IRNode {
+  return app(APART, [inner, variable]);
 }
 
 describe("Apart — Track B1 (Phase 1 simple roots)", () => {
@@ -92,13 +95,6 @@ describe("Apart — Track B1 (Phase 1 simple roots)", () => {
     expect(result).toEqual(app(APART, [inner, x]));
   });
 
-  it("leaves 1/(x-1)^2 unevaluated (repeated root — Phase 48 out of scope)", () => {
-    const vm = new VM(new SymbolicBackend());
-    const inner = app(DIV, [int(1), app(POW, [app(SUB, [x, int(1)]), int(2)])]);
-    const result = vm.eval(apart(inner));
-    expect(result).toEqual(app(APART, [inner, x]));
-  });
-
   it("passes a bare polynomial Apart(x+1, x) through as x+1", () => {
     const vm = new VM(new SymbolicBackend());
     const inner = app(ADD, [x, int(1)]);
@@ -106,5 +102,92 @@ describe("Apart — Track B1 (Phase 1 simple roots)", () => {
     // ``to_rational(x+1, x)`` → num = [1, 1], den = [1]; the early-return
     // path emits ``from_polynomial(num, x)`` = Add(1, x).
     expect(result).toEqual(app(ADD, [int(1), x]));
+  });
+});
+
+describe("Apart — Track B3 (Phase 48 repeated linear factors)", () => {
+  it("decomposes 1/(k^2 (k+1)^2) into -2/k + 1/k^2 + 2/(k+1) + 1/(k+1)^2 (acceptance)", () => {
+    const vm = new VM(new SymbolicBackend());
+    // 1 / (k^2 * (k+1)^2)
+    const k2 = app(POW, [k, int(2)]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const kp1Sq = app(POW, [kp1, int(2)]);
+    const inner = app(DIV, [int(1), app(MUL, [k2, kp1Sq])]);
+    const result = vm.eval(apart(inner, k));
+    // Roots sorted ascending: -1 (mult 2) before 0 (mult 2).
+    // For r = -1: φ(t) = 1 / (r+t)^2 |_{r=-1}; Q(x) = k^2, so
+    //   Q(-1+t) = (-1+t)^2 = 1 - 2t + t^2  →  φ_0 = 1, φ_1 = 2.
+    //   A_{-1, 2} = φ_0 = 1,  A_{-1, 1} = φ_1 = 2.
+    // For r = 0: Q(x) = (k+1)^2; Q(t) = (1+t)^2 = 1 + 2t + t^2 →
+    //   φ_0 = 1, φ_1 = -2.  A_{0, 2} = 1, A_{0, 1} = -2.
+    // Emit in order: 2/(1+k), 1/(1+k)^2, -2/k, 1/k^2 (left-associated).
+    expect(result).toEqual(
+      app(ADD, [
+        app(ADD, [
+          app(ADD, [
+            app(DIV, [int(2), app(ADD, [int(1), k])]),
+            app(DIV, [int(1), app(POW, [app(ADD, [int(1), k]), int(2)])]),
+          ]),
+          app(DIV, [int(-2), k]),
+        ]),
+        app(DIV, [int(1), app(POW, [k, int(2)])]),
+      ]),
+    );
+  });
+
+  it("decomposes 1/(k-1)^3 to itself (single triple root, Q(x) = 1)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const inner = app(DIV, [int(1), app(POW, [app(SUB, [k, int(1)]), int(3)])]);
+    const result = vm.eval(apart(inner, k));
+    // r = 1, m = 3, Q(x) = 1.  φ(t) = 1 / 1 = 1; φ_0 = 1, φ_1 = φ_2 = 0.
+    // A_{1, 3} = 1, A_{1, 2} = 0, A_{1, 1} = 0.  Single term emitted.
+    expect(result).toEqual(
+      app(DIV, [int(1), app(POW, [app(ADD, [int(-1), k]), int(3)])]),
+    );
+  });
+
+  it("decomposes 1/((k-1)(k-2)^2) (mixed simple + repeated)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const f1 = app(SUB, [k, int(1)]);
+    const f2Sq = app(POW, [app(SUB, [k, int(2)]), int(2)]);
+    const inner = app(DIV, [int(1), app(MUL, [f1, f2Sq])]);
+    const result = vm.eval(apart(inner, k));
+    // Roots ascending: 1 (simple), 2 (mult 2).
+    // For r = 1 (simple): emitted via fall-through to the same Taylor
+    //   path; Q(x) = (k-2)^2, Q(1) = 1, so A = 1/Q(1) = 1.
+    // For r = 2 (mult 2): Q(x) = (k-1); Q(2+t) = 1 + t →
+    //   φ_0 = 1, φ_1 = -1.  A_{2, 2} = 1, A_{2, 1} = -1.
+    // Emit: 1/(-1+k), -1/(-2+k) [as Neg(Div(1, …))], 1/(-2+k)^2.
+    expect(result).toEqual(
+      app(ADD, [
+        app(ADD, [
+          app(DIV, [int(1), app(ADD, [int(-1), k])]),
+          app(NEG, [app(DIV, [int(1), app(ADD, [int(-2), k])])]),
+        ]),
+        app(DIV, [int(1), app(POW, [app(ADD, [int(-2), k]), int(2)])]),
+      ]),
+    );
+  });
+
+  it("leaves 1/((x^2+1)(x-1)^2) unevaluated (irreducible factor + repeated root)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const quad = app(ADD, [app(POW, [x, int(2)]), int(1)]);
+    const linSq = app(POW, [app(SUB, [x, int(1)]), int(2)]);
+    const inner = app(DIV, [int(1), app(MUL, [quad, linSq])]);
+    const result = vm.eval(apart(inner));
+    // x^2 + 1 has no rational roots — the rational-roots theorem only
+    // finds x = 1 (mult 2), which doesn't sum to deg(den) = 4.  Bail.
+    expect(result).toEqual(app(APART, [inner, x]));
+  });
+
+  it("decomposes 1/(x-2)^2 to itself (single repeated root, Q(x) = 1)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const inner = app(DIV, [int(1), app(POW, [app(SUB, [x, int(2)]), int(2)])]);
+    const result = vm.eval(apart(inner));
+    // r = 2, m = 2, Q(x) = 1.  φ_0 = 1, φ_1 = 0.
+    // A_{2, 2} = 1, A_{2, 1} = 0.  Single term.
+    expect(result).toEqual(
+      app(DIV, [int(1), app(POW, [app(ADD, [int(-2), x]), int(2)])]),
+    );
   });
 });

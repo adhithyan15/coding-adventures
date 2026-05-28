@@ -1,5 +1,68 @@
 # Changelog
 
+## [0.14.0] — 2026-05-28
+
+**Track B3 — Apart for repeated linear factors (Phase 48, TypeScript port).**
+
+Lifts the multiplicity > 1 bail introduced in Track B1.
+``Apart(P(x)/Q(x), x)`` now decomposes rational functions whose denominator
+factors as ``∏_r (x − r)^{m_r}`` for *rational* ``r`` with arbitrary
+multiplicity.  Each pole ``r`` of multiplicity ``m`` contributes terms
+``A_{r,1}/(x − r) + A_{r,2}/(x − r)² + … + A_{r,m}/(x − r)^m`` where the
+coefficients come from the Taylor expansion of
+``φ(t) = P(r + t)/Q(r + t)`` around ``t = 0`` with
+``Q(x) = den(x)/(x − r)^m``.  Then ``A_{r, m − j} = φ_j``.
+
+This mirrors the Phase 48 algorithm added to Python ``symbolic-vm`` in PR
+\#3927.  Acceptance: ``Apart(1/(k²(k+1)²), k)`` decomposes to
+``2/(k+1) + 1/(k+1)² − 2/k + 1/k²`` (left-associated, roots sorted
+ascending), matching the Python reference byte-for-byte.
+
+Denominators that still contain an irreducible quadratic factor on top of
+the rational roots continue to bail to the unevaluated ``Apart(...)``
+form — partial fractions over the rationals can't go further there.
+
+### Added
+
+- ``polyTaylorExpandAroundR`` — Taylor-expand a ``PolyQ`` around a
+  rational point ``r`` to ``length`` coefficients.  Uses the binomial
+  identity ``poly(r+t)_j = ∑_{i≥j} c_i · C(i, j) · r^(i−j)`` with exact
+  arbitrary-precision ``BigInt`` arithmetic.
+- ``polySeriesDiv`` — formal power-series division ``N(t)/D(t)`` to
+  ``length`` terms via the standard recurrence
+  ``Q_j = (N_j − ∑_{k≥1} D_k · Q_{j−k}) / D_0``.  Returns ``undefined``
+  when ``D(0) = 0`` (defensive guard against a repeated-root miscount).
+- ``buildApartTerm`` — IR builder for ``A / (x − r)^power`` with
+  ``±1`` numerator elision (matches the formatting in
+  ``apartSimpleRoots``).
+- ``binomialBig`` — exact ``BigInt`` binomial helper used by the
+  Taylor expansion.
+
+### Changed
+
+- ``apartProper`` — Phase 48 generic path lifted in: when any
+  multiplicity > 1, compute ``Q(x) = den(x)/(x − r)^m`` per root via
+  successive division, Taylor-expand ``num`` and ``Q`` around ``r``,
+  series-divide, and emit ascending-power terms via ``buildApartTerm``.
+  Phase 1 simple-roots fast path retained (cheaper than Taylor + series
+  division and preserves the existing B1 regression-test IR shapes).
+- ``polyQRationalRoots`` — the ``a₀ = 0`` (x = 0 is a root) branch now
+  sorts its returned roots ascending, matching the non-zero-root path
+  and the Python ``sorted(roots)`` reference.  B1's simple-root tests
+  never exercised this branch; Phase 48 needs a stable order across
+  multi-root denominators including ``x = 0``.
+
+### Removed
+
+- The ``mult > 1 → undefined`` bail in ``apartProper`` — the new code
+  path handles the repeated-root case directly.
+
+### Out of scope (deferred)
+
+- Irreducible quadratic factors (``Apart`` over the rationals only).
+- Algebraic-number roots beyond Q — would require an irrational-roots
+  extension.
+
 ## [0.13.0] — 2026-05-28
 
 **Track B1 — Apart simple-roots partial-fraction decomposition (TypeScript port).**
