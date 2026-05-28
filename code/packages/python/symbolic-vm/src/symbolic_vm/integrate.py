@@ -125,12 +125,14 @@ from symbolic_vm.exp_hyp_integral import (
 )
 from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
+from symbolic_vm.derivative import _diff as _vm_diff  # noqa: F401 — used in handler
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.hyp_power_integral import (
     cosh_power_integral,
     sinh_power_integral,
     sinh_times_cosh_power,
 )
+from symbolic_vm.ibp_tabular import try_ibp_tabular
 from symbolic_vm.log_integral import log_poly_integral
 from symbolic_vm.mixed_integral import mixed_integral
 from symbolic_vm.polynomial_bridge import (
@@ -254,6 +256,18 @@ def integrate() -> Handler:
             _elliptic_e_result = _try_incomplete_elliptic_e(f, x)
             if _elliptic_e_result is not None:
                 return _elliptic_e_result
+            # Track E1: generic tabular IBP fallback.  Fires after every
+            # shape-specific handler has returned None.  See
+            # ``ibp_tabular.py`` for the algorithm.
+            ibp_result = try_ibp_tabular(
+                f,
+                x,
+                integrate_fn=lambda g: _integrate(g, x),
+                diff_fn=lambda g: vm.eval(_vm_diff(g, x)),
+                simplify_fn=vm.eval,
+            )
+            if ibp_result is not None:
+                return vm.eval(ibp_result)
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 

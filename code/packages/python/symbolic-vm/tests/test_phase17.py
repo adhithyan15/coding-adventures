@@ -296,14 +296,28 @@ class TestPhase17_TanhPowers:
 class TestPhase17_Fallthrough:
     """Cases that must stay unevaluated — fallthrough to the user."""
 
-    def test_poly_times_tanh_squared_unevaluated(self) -> None:
-        """∫ x·tanh²(x) dx — poly×tanh^n is non-elementary (polylogarithm)."""
+    def test_poly_times_tanh_squared_via_ibp(self) -> None:
+        """``∫ x·tanh²(x) dx`` — closes via Track E1 generic tabular IBP.
+
+        The earlier docstring labelled this "non-elementary
+        (polylogarithm)" but that's incorrect: the identity
+        ``tanh²(x) = 1 − sech²(x)`` makes the integrand elementary
+        (``x − x·sech²(x)``), so the antiderivative
+        ``x²/2 − x·tanh(x) + log(cosh(x))`` is fully elementary.
+
+        Before Track E1, no shape-specific handler matched
+        ``polynomial × tanh²`` and the integrand stayed unevaluated.
+        The generic tabular IBP fallback now closes it via
+        ``u = x, w = tanh²(x)``.  ``F'(x) = f(x)`` is verified
+        numerically.
+        """
         from symbolic_ir import MUL  # noqa: PLC0415
 
         vm = _make_vm()
         f = IRApply(MUL, (X, _pow(_tanh(X), _INT(2))))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
 
     def test_tanh_nonlinear_arg_unevaluated(self) -> None:
         """∫ tanh²(x²) dx — non-linear argument, unevaluated."""
