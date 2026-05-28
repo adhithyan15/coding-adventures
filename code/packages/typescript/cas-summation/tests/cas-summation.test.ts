@@ -15271,8 +15271,8 @@ describe("Phase 167 — Twenty-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK167r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1167r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK167r = { kind: "apply" as const, head: DIV, args: [numK167r, k2] };
@@ -15321,8 +15321,8 @@ describe("Phase 168 — One-Sqrt × Twenty-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK168r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [k] }, ...logs29k, k] };
     const numKp1168r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [kp1] }, ...logs29kp1, kp1] };
     const gK168r = { kind: "apply" as const, head: DIV, args: [numK168r, k2] };
@@ -15375,8 +15375,8 @@ describe("Phase 169 — Two-Sqrt × Twenty-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK169r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -15431,8 +15431,8 @@ describe("Phase 170 — Three-Sqrt × Twenty-Log × polynomial numerator", () =>
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK170r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -15487,8 +15487,8 @@ describe("Phase 171 — Four-Sqrt × Twenty-Log × polynomial numerator", () => 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK171r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -15543,8 +15543,8 @@ describe("Phase 172 — Five-Sqrt × Twenty-Log × polynomial numerator", () => 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK172r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -15595,8 +15595,8 @@ describe("Phase 173 — Twenty-One-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK173r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1173r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK173r = { kind: "apply" as const, head: DIV, args: [numK173r, k2] };
@@ -15645,8 +15645,8 @@ describe("Phase 174 — One-Sqrt × Twenty-One-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK174r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [k] }, ...logs29k, k] };
     const numKp1174r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [kp1] }, ...logs29kp1, kp1] };
     const gK174r = { kind: "apply" as const, head: DIV, args: [numK174r, k2] };
@@ -15699,8 +15699,8 @@ describe("Phase 175 — Two-Sqrt × Twenty-One-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK175r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -15755,8 +15755,8 @@ describe("Phase 176 — Three-Sqrt × Twenty-One-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK176r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -15811,8 +15811,8 @@ describe("Phase 177 — Four-Sqrt × Twenty-One-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK177r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -15867,8 +15867,8 @@ describe("Phase 178 — Five-Sqrt × Twenty-One-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK178r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -15919,8 +15919,8 @@ describe("Phase 179 — Twenty-Two-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK179r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1179r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK179r = { kind: "apply" as const, head: DIV, args: [numK179r, k2] };
@@ -15969,8 +15969,8 @@ describe("Phase 180 — One-Sqrt × Twenty-Two-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK180r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [k] }, ...logs29k, k] };
     const numKp1180r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [kp1] }, ...logs29kp1, kp1] };
     const gK180r = { kind: "apply" as const, head: DIV, args: [numK180r, k2] };
@@ -16023,8 +16023,8 @@ describe("Phase 181 — Two-Sqrt × Twenty-Two-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK181r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -16079,8 +16079,8 @@ describe("Phase 182 — Three-Sqrt × Twenty-Two-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK182r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16135,8 +16135,8 @@ describe("Phase 183 — Four-Sqrt × Twenty-Two-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK183r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16191,8 +16191,8 @@ describe("Phase 184 — Five-Sqrt × Twenty-Two-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK184r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16243,8 +16243,8 @@ describe("Phase 185 — Twenty-Three-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK185r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1185r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK185r = { kind: "apply" as const, head: DIV, args: [numK185r, k2] };
@@ -16293,8 +16293,8 @@ describe("Phase 186 — One-Sqrt × Twenty-Three-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK186r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [k] }, ...logs29k, k] };
     const numKp1186r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [kp1] }, ...logs29kp1, kp1] };
     const gK186r = { kind: "apply" as const, head: DIV, args: [numK186r, k2] };
@@ -16347,8 +16347,8 @@ describe("Phase 187 — Two-Sqrt × Twenty-Three-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK187r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -16403,8 +16403,8 @@ describe("Phase 188 — Three-Sqrt × Twenty-Three-Log × polynomial numerator",
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK188r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16459,8 +16459,8 @@ describe("Phase 189 — Four-Sqrt × Twenty-Three-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK189r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16515,8 +16515,8 @@ describe("Phase 190 — Five-Sqrt × Twenty-Three-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK190r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16567,8 +16567,8 @@ describe("Phase 191 — Twenty-Four-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK191r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1191r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK191r = { kind: "apply" as const, head: DIV, args: [numK191r, k2] };
@@ -16621,8 +16621,8 @@ describe("Phase 192 — One-Sqrt × Twenty-Four-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK192r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs29k, k] };
@@ -16677,8 +16677,8 @@ describe("Phase 193 — Two-Sqrt × Twenty-Four-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK193r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -16733,8 +16733,8 @@ describe("Phase 194 — Three-Sqrt × Twenty-Four-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK194r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16789,8 +16789,8 @@ describe("Phase 195 — Four-Sqrt × Twenty-Four-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK195r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16845,8 +16845,8 @@ describe("Phase 196 — Five-Sqrt × Twenty-Four-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK196r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -16897,8 +16897,8 @@ describe("Phase 197 — Twenty-Five-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK197r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1197r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK197r = { kind: "apply" as const, head: DIV, args: [numK197r, k2] };
@@ -16951,8 +16951,8 @@ describe("Phase 198 — One-Sqrt × Twenty-Five-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK198r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs29k, k] };
@@ -17007,8 +17007,8 @@ describe("Phase 199 — Two-Sqrt × Twenty-Five-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK199r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -17063,8 +17063,8 @@ describe("Phase 200 — Three-Sqrt × Twenty-Five-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK200r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17119,8 +17119,8 @@ describe("Phase 201 — Four-Sqrt × Twenty-Five-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK201r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17175,8 +17175,8 @@ describe("Phase 202 — Five-Sqrt × Twenty-Five-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK202r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17227,8 +17227,8 @@ describe("Phase 203 — Twenty-Six-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK203r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1203r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK203r = { kind: "apply" as const, head: DIV, args: [numK203r, k2] };
@@ -17279,8 +17279,8 @@ describe("Phase 204 — One-Sqrt × Twenty-Six-Log × polynomial numerator", () 
   it("√k·log(k)²⁹·k/k² refused (30 logs — not Phase 204)", () => {
     const k = sym("k");
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK204r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs29k, k] };
@@ -17333,8 +17333,8 @@ describe("Phase 205 — Two-Sqrt × Twenty-Six-Log × polynomial numerator", () 
   it("√k·√k·log(k)²⁹/k² refused (30 logs — not Phase 205)", () => {
     const k = sym("k");
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK205r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k, k] };
@@ -17387,8 +17387,8 @@ describe("Phase 206 — Three-Sqrt × Twenty-Six-Log × polynomial numerator", (
   it("(√k)³·log(k)²⁹/k² refused (30 logs — not Phase 206)", () => {
     const k = sym("k");
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK206r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k, k] };
@@ -17443,8 +17443,8 @@ describe("Phase 207 — Four-Sqrt × Twenty-Six-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK207r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k, k] };
@@ -17499,8 +17499,8 @@ describe("Phase 208 — Five-Sqrt × Twenty-Six-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK208r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17551,8 +17551,8 @@ describe("Phase 209 — Zero-Sqrt × Twenty-Seven-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK209r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1209r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK209r = { kind: "apply" as const, head: DIV, args: [numK209r, k2] };
@@ -17603,8 +17603,8 @@ describe("Phase 210 — One-Sqrt × Twenty-Seven-Log × polynomial numerator", (
   it("√k·log(k)²⁹·k/k² refused (30 logs — not Phase 210)", () => {
     const k = sym("k");
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK210r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs29k, k] };
@@ -17659,8 +17659,8 @@ describe("Phase 211 — Two-Sqrt × Twenty-Seven-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK211r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -17715,8 +17715,8 @@ describe("Phase 212 — Three-Sqrt × Twenty-Seven-Log × polynomial numerator",
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK212r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17771,8 +17771,8 @@ describe("Phase 213 — Four-Sqrt × Twenty-Seven-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK213r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17827,8 +17827,8 @@ describe("Phase 214 — Five-Sqrt × Twenty-Seven-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK214r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -17879,8 +17879,8 @@ describe("Phase 215 — Zero-Sqrt × Twenty-Eight-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK215r = { kind: "apply" as const, head: MUL, args: [...logs29k, k] };
     const numKp1215r = { kind: "apply" as const, head: MUL, args: [...logs29kp1, kp1] };
     const gK215r = { kind: "apply" as const, head: DIV, args: [numK215r, k2] };
@@ -17933,8 +17933,8 @@ describe("Phase 216 — One-Sqrt × Twenty-Eight-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK216r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs29k, k] };
@@ -17989,8 +17989,8 @@ describe("Phase 217 — Two-Sqrt × Twenty-Eight-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK217r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs29k] };
@@ -18045,8 +18045,8 @@ describe("Phase 218 — Three-Sqrt × Twenty-Eight-Log × polynomial numerator",
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK218r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -18101,8 +18101,8 @@ describe("Phase 219 — Four-Sqrt × Twenty-Eight-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK219r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -18157,8 +18157,8 @@ describe("Phase 220 — Five-Sqrt × Twenty-Eight-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs29k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs29kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs29k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs29kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK220r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs29k] };
@@ -18209,8 +18209,8 @@ describe("Phase 221 — Zero-Sqrt × Twenty-Nine-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs30k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs30kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs30k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs30kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK221r = { kind: "apply" as const, head: MUL, args: [...logs30k, k] };
     const numKp1221r = { kind: "apply" as const, head: MUL, args: [...logs30kp1, kp1] };
     const gK221r = { kind: "apply" as const, head: DIV, args: [numK221r, k2] };
@@ -18263,8 +18263,8 @@ describe("Phase 222 — One-Sqrt × Twenty-Nine-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs30k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs30kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs30k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs30kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK222r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs30k, k] };
@@ -18319,8 +18319,8 @@ describe("Phase 223 — Two-Sqrt × Twenty-Nine-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs30k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs30kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs30k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs30kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK223r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs30k, k] };
@@ -18375,8 +18375,8 @@ describe("Phase 224 — Three-Sqrt × Twenty-Nine-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs30k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs30kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs30k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs30kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK224r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs30k, k] };
@@ -18431,8 +18431,8 @@ describe("Phase 225 — Four-Sqrt × Twenty-Nine-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs30k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs30kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs30k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs30kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK225r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs30k, k] };
@@ -18487,8 +18487,8 @@ describe("Phase 226 — Five-Sqrt × Twenty-Nine-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs30k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs30kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs30k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs30kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK226r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs30k, k] };
@@ -18539,8 +18539,8 @@ describe("Phase 227 — Zero-Sqrt × Thirty-Log × polynomial numerator", () => 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs31k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs31kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs31k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs31kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK227r = { kind: "apply" as const, head: MUL, args: [...logs31k, k] };
     const numKp1227r = { kind: "apply" as const, head: MUL, args: [...logs31kp1, kp1] };
     const gK227r = { kind: "apply" as const, head: DIV, args: [numK227r, k2] };
@@ -18593,8 +18593,8 @@ describe("Phase 228 — One-Sqrt × Thirty-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs31k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs31kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs31k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs31kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK228r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs31k, k] };
@@ -18649,8 +18649,8 @@ describe("Phase 229 — Two-Sqrt × Thirty-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs31k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs31kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs31k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs31kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK229r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs31k, k] };
@@ -18705,8 +18705,8 @@ describe("Phase 230 — Three-Sqrt × Thirty-Log × polynomial numerator", () =>
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs31k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs31kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs31k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs31kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK230r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs31k, k] };
@@ -18761,8 +18761,8 @@ describe("Phase 231 — Four-Sqrt × Thirty-Log × polynomial numerator", () => 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs31k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs31kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs31k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs31kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK231r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs31k, k] };
@@ -18817,8 +18817,8 @@ describe("Phase 232 — Five-Sqrt × Thirty-Log × polynomial numerator", () => 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs31k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs31kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs31k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs31kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK232r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs31k, k] };
@@ -18869,8 +18869,8 @@ describe("Phase 233 — Zero-Sqrt × Thirty-One-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs32k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs32kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs32k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs32kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK233r = { kind: "apply" as const, head: MUL, args: [...logs32k, k] };
     const numKp1233r = { kind: "apply" as const, head: MUL, args: [...logs32kp1, kp1] };
     const gK233r = { kind: "apply" as const, head: DIV, args: [numK233r, k2] };
@@ -18923,8 +18923,8 @@ describe("Phase 234 — One-Sqrt × Thirty-One-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs32k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs32kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs32k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs32kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK234r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs32k, k] };
@@ -18979,8 +18979,8 @@ describe("Phase 235 — Two-Sqrt × Thirty-One-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs32k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs32kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs32k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs32kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK235r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs32k, k] };
@@ -19035,8 +19035,8 @@ describe("Phase 236 — Three-Sqrt × Thirty-One-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs32k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs32kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs32k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs32kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK236r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs32k, k] };
@@ -19091,8 +19091,8 @@ describe("Phase 237 — Four-Sqrt × Thirty-One-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs32k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs32kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs32k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs32kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK237r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs32k, k] };
@@ -19147,8 +19147,8 @@ describe("Phase 238 — Five-Sqrt × Thirty-One-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs32k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs32kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs32k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs32kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK238r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs32k, k] };
@@ -19199,8 +19199,8 @@ describe("Phase 239 — Thirty-Two-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs33k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs33kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs33k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs33kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK239r = { kind: "apply" as const, head: MUL, args: [...logs33k, k] };
     const numKp1239r = { kind: "apply" as const, head: MUL, args: [...logs33kp1, kp1] };
     const gK239r = { kind: "apply" as const, head: DIV, args: [numK239r, k2] };
@@ -19249,8 +19249,8 @@ describe("Phase 240 — One-Sqrt × Thirty-Two-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs33k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs33kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs33k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs33kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK240r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [k] }, ...logs33k, k] };
     const numKp1240r = { kind: "apply" as const, head: MUL, args: [{ kind: "apply" as const, head: SQRT, args: [kp1] }, ...logs33kp1, kp1] };
     const gK240r = { kind: "apply" as const, head: DIV, args: [numK240r, k2] };
@@ -19303,8 +19303,8 @@ describe("Phase 241 — Two-Sqrt × Thirty-Two-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs33k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs33kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs33k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs33kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK241r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs33k] };
@@ -19359,8 +19359,8 @@ describe("Phase 242 — Three-Sqrt × Thirty-Two-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs33k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs33kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs33k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs33kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK242r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs33k] };
@@ -19415,8 +19415,8 @@ describe("Phase 243 — Four-Sqrt × Thirty-Two-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs33k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs33kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs33k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs33kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK243r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs33k, k] };
@@ -19471,8 +19471,8 @@ describe("Phase 244 — Five-Sqrt × Thirty-Two-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs33k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs33kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs33k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs33kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK244r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs33k, k] };
@@ -19523,8 +19523,8 @@ describe("Phase 245 — Thirty-Three-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs34k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs34kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs34k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs34kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK245r = { kind: "apply" as const, head: MUL, args: [...logs34k, k] };
     const numKp1245r = { kind: "apply" as const, head: MUL, args: [...logs34kp1, kp1] };
     const gK245r = { kind: "apply" as const, head: DIV, args: [numK245r, k2] };
@@ -19577,8 +19577,8 @@ describe("Phase 246 — One-Sqrt × Thirty-Three-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs34k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs34kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs34k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs34kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK246r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs34k, k] };
@@ -19633,8 +19633,8 @@ describe("Phase 247 — Two-Sqrt × Thirty-Three-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs34k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs34kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs34k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs34kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK247r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs34k] };
@@ -19689,8 +19689,8 @@ describe("Phase 248 — Three-Sqrt × Thirty-Three-Log × polynomial numerator",
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs34k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs34kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs34k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs34kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK248r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs34k] };
@@ -19745,8 +19745,8 @@ describe("Phase 249 — Four-Sqrt × Thirty-Three-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs34k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs34kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs34k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs34kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK249r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs34k] };
@@ -19801,8 +19801,8 @@ describe("Phase 250 — Five-Sqrt × Thirty-Three-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs34k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs34kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs34k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs34kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK250r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs34k, k] };
@@ -19853,8 +19853,8 @@ describe("Phase 251 — Thirty-Four-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK251r = { kind: "apply" as const, head: MUL, args: [...logs36k, k] };
     const numKp1251r = { kind: "apply" as const, head: MUL, args: [...logs36kp1, kp1] };
     const gK251r = { kind: "apply" as const, head: DIV, args: [numK251r, k2] };
@@ -19907,8 +19907,8 @@ describe("Phase 252 — One-Sqrt × Thirty-Four-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK252r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs36k, k] };
@@ -19963,8 +19963,8 @@ describe("Phase 253 — Two-Sqrt × Thirty-Four-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
     const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK253r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs36k] };
@@ -20019,8 +20019,8 @@ describe("Phase 254 — Three-Sqrt × Thirty-Four-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK254r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs36k] };
@@ -20075,8 +20075,8 @@ describe("Phase 255 — Four-Sqrt × Thirty-Four-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
     const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK255r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs36k] };
@@ -20131,8 +20131,8 @@ describe("Phase 256 — Five-Sqrt × Thirty-Four-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK256r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs36k, k] };
@@ -20183,8 +20183,8 @@ describe("Phase 257 — Thirty-Five-Log × polynomial numerator", () => {
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK257r = { kind: "apply" as const, head: MUL, args: [...logs36k, k] };
     const numKp1257r = { kind: "apply" as const, head: MUL, args: [...logs36kp1, kp1] };
     const gK257r = { kind: "apply" as const, head: DIV, args: [numK257r, k2] };
@@ -20237,8 +20237,8 @@ describe("Phase 258 — One-Sqrt × Thirty-Five-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK258r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs36k, k] };
@@ -20293,8 +20293,8 @@ describe("Phase 259 — Two-Sqrt × Thirty-Five-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK259r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs36k, k] };
@@ -20349,8 +20349,8 @@ describe("Phase 260 — Three-Sqrt × Thirty-Five-Log × polynomial numerator", 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK260r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs36k, k] };
@@ -20405,8 +20405,8 @@ describe("Phase 261 — Four-Sqrt × Thirty-Five-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK261r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs36k, k] };
@@ -20461,8 +20461,8 @@ describe("Phase 262 — Five-Sqrt × Thirty-Five-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs36k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs36kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs36k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs36kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK262r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs36k, k] };
@@ -20513,8 +20513,8 @@ describe("Phase 263 — Zero-Sqrt × Thirty-Six-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs37k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const numK263r = { kind: "apply" as const, head: MUL, args: [...logs37k, k] };
     const numKp1263r = { kind: "apply" as const, head: MUL, args: [...logs37kp1, kp1] };
     const gK263r = { kind: "apply" as const, head: DIV, args: [numK263r, k2] };
@@ -20567,8 +20567,8 @@ describe("Phase 264 — One-Sqrt × Thirty-Six-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs37k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK264r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs37k, k] };
@@ -20623,8 +20623,8 @@ describe("Phase 265 — Two-Sqrt × Thirty-Six-Log × polynomial numerator", () 
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs37k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK265r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs37k] };
@@ -20679,8 +20679,8 @@ describe("Phase 266 — Three-Sqrt × Thirty-Six-Log × polynomial numerator", (
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs37k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK266r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs37k] };
@@ -20735,8 +20735,8 @@ describe("Phase 267 — Four-Sqrt × Thirty-Six-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs37k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK267r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs37k, k] };
@@ -20791,8 +20791,8 @@ describe("Phase 268 — Five-Sqrt × Thirty-Six-Log × polynomial numerator", ()
     const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
     const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
     const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
-    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
-    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const logs37k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
     const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
     const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
     const numK268r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs37k, k] };
@@ -20801,6 +20801,336 @@ describe("Phase 268 — Five-Sqrt × Thirty-Six-Log × polynomial numerator", ()
     const gKp1268r = { kind: "apply" as const, head: DIV, args: [numKp1268r, kp1_2] };
     const f268r = { kind: "apply" as const, head: SUB, args: [gK268r, gKp1268r] };
     const result = evaluateSum(f268r, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+describe("Phase 269 — Zero-Sqrt × Thirty-Seven-Log × polynomial numerator", () => {
+  it("log(k)³⁷/k² closes (polyDeg=0 → effective=0; denDeg=2 > 0)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const numK269a = { kind: "apply" as const, head: MUL, args: [...logs37k] };
+    const numKp1269a = { kind: "apply" as const, head: MUL, args: [...logs37kp1] };
+    const gK269a = { kind: "apply" as const, head: DIV, args: [numK269a, k2] };
+    const gKp1269a = { kind: "apply" as const, head: DIV, args: [numKp1269a, kp1_2] };
+    const f269a = { kind: "apply" as const, head: SUB, args: [gK269a, gKp1269a] };
+    const result = evaluateSum(f269a, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("log(k)³⁷·k/k² closes (polyDeg=1 → effective=1; denDeg=2 > 1)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const numK269b = { kind: "apply" as const, head: MUL, args: [...logs37k, k] };
+    const numKp1269b = { kind: "apply" as const, head: MUL, args: [...logs37kp1, kp1] };
+    const gK269b = { kind: "apply" as const, head: DIV, args: [numK269b, k2] };
+    const gKp1269b = { kind: "apply" as const, head: DIV, args: [numKp1269b, kp1_2] };
+    const f269b = { kind: "apply" as const, head: SUB, args: [gK269b, gKp1269b] };
+    const result = evaluateSum(f269b, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("log(k)³⁸·k/k² refused (38 logs — not Phase 269)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
+    const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
+    const logs38k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs38kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const numK269r = { kind: "apply" as const, head: MUL, args: [...logs38k, k] };
+    const numKp1269r = { kind: "apply" as const, head: MUL, args: [...logs38kp1, kp1] };
+    const gK269r = { kind: "apply" as const, head: DIV, args: [numK269r, k2] };
+    const gKp1269r = { kind: "apply" as const, head: DIV, args: [numKp1269r, kp1_2] };
+    const f269r = { kind: "apply" as const, head: SUB, args: [gK269r, gKp1269r] };
+    const result = evaluateSum(f269r, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+describe("Phase 270 — One-Sqrt × Thirty-Seven-Log × polynomial numerator", () => {
+  it("√k·log(k)³⁷/k² closes (sqrtHalf=0.5, polyDeg=0 → effective=0.5; denDeg=2 > 0.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK270a = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs37k] };
+    const numKp1270a = { kind: "apply" as const, head: MUL, args: [sqrtKp1, ...logs37kp1] };
+    const gK270a = { kind: "apply" as const, head: DIV, args: [numK270a, k2] };
+    const gKp1270a = { kind: "apply" as const, head: DIV, args: [numKp1270a, kp1_2] };
+    const f270a = { kind: "apply" as const, head: SUB, args: [gK270a, gKp1270a] };
+    const result = evaluateSum(f270a, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√k·log(k)³⁷·k/k² closes (sqrtHalf=0.5, polyDeg=1 → effective=1.5; denDeg=2 > 1.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK270b = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs37k, k] };
+    const numKp1270b = { kind: "apply" as const, head: MUL, args: [sqrtKp1, ...logs37kp1, kp1] };
+    const gK270b = { kind: "apply" as const, head: DIV, args: [numK270b, k2] };
+    const gKp1270b = { kind: "apply" as const, head: DIV, args: [numKp1270b, kp1_2] };
+    const f270b = { kind: "apply" as const, head: SUB, args: [gK270b, gKp1270b] };
+    const result = evaluateSum(f270b, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√k·log(k)³⁸·k/k² refused (38 logs — not Phase 270)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
+    const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
+    const logs38k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs38kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK270r = { kind: "apply" as const, head: MUL, args: [sqrtK, ...logs38k, k] };
+    const numKp1270r = { kind: "apply" as const, head: MUL, args: [sqrtKp1, ...logs38kp1, kp1] };
+    const gK270r = { kind: "apply" as const, head: DIV, args: [numK270r, k2] };
+    const gKp1270r = { kind: "apply" as const, head: DIV, args: [numKp1270r, kp1_2] };
+    const f270r = { kind: "apply" as const, head: SUB, args: [gK270r, gKp1270r] };
+    const result = evaluateSum(f270r, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+describe("Phase 271 — Two-Sqrt × Thirty-Seven-Log × polynomial numerator", () => {
+  it("(√k)²·log(k)³⁷/k² closes (sqrtHalf=1, polyDeg=0 → effective=1; denDeg=2 > 1)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK271a = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs37k] };
+    const numKp1271a = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, ...logs37kp1] };
+    const gK271a = { kind: "apply" as const, head: DIV, args: [numK271a, k2] };
+    const gKp1271a = { kind: "apply" as const, head: DIV, args: [numKp1271a, kp1_2] };
+    const f271a = { kind: "apply" as const, head: SUB, args: [gK271a, gKp1271a] };
+    const result = evaluateSum(f271a, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)²·log(k)³⁷·k/k³ closes (sqrtHalf=1, polyDeg=1 → effective=2; denDeg=3 > 2)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK271b = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs37k, k] };
+    const numKp1271b = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, ...logs37kp1, kp1] };
+    const gK271b = { kind: "apply" as const, head: DIV, args: [numK271b, k3] };
+    const gKp1271b = { kind: "apply" as const, head: DIV, args: [numKp1271b, kp1_3] };
+    const f271b = { kind: "apply" as const, head: SUB, args: [gK271b, gKp1271b] };
+    const result = evaluateSum(f271b, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)²·log(k)³⁸·k/k² refused (38 logs — not Phase 271)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
+    const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
+    const logs38k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs38kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK271r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, ...logs38k, k] };
+    const numKp1271r = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, ...logs38kp1, kp1] };
+    const gK271r = { kind: "apply" as const, head: DIV, args: [numK271r, k2] };
+    const gKp1271r = { kind: "apply" as const, head: DIV, args: [numKp1271r, kp1_2] };
+    const f271r = { kind: "apply" as const, head: SUB, args: [gK271r, gKp1271r] };
+    const result = evaluateSum(f271r, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+describe("Phase 272 — Three-Sqrt × Thirty-Seven-Log × polynomial numerator", () => {
+  it("(√k)³·log(k)³⁷/k² closes (sqrtHalf=1.5, polyDeg=0 → effective=1.5; denDeg=2 > 1.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK272a = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs37k] };
+    const numKp1272a = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, ...logs37kp1] };
+    const gK272a = { kind: "apply" as const, head: DIV, args: [numK272a, k2] };
+    const gKp1272a = { kind: "apply" as const, head: DIV, args: [numKp1272a, kp1_2] };
+    const f272a = { kind: "apply" as const, head: SUB, args: [gK272a, gKp1272a] };
+    const result = evaluateSum(f272a, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)³·log(k)³⁷·k/k³ closes (sqrtHalf=1.5, polyDeg=1 → effective=2.5; denDeg=3 > 2.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK272b = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs37k, k] };
+    const numKp1272b = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, ...logs37kp1, kp1] };
+    const gK272b = { kind: "apply" as const, head: DIV, args: [numK272b, k3] };
+    const gKp1272b = { kind: "apply" as const, head: DIV, args: [numKp1272b, kp1_3] };
+    const f272b = { kind: "apply" as const, head: SUB, args: [gK272b, gKp1272b] };
+    const result = evaluateSum(f272b, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)³·log(k)³⁸·k/k² refused (38 logs — not Phase 272)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
+    const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
+    const logs38k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs38kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK272r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, ...logs38k, k] };
+    const numKp1272r = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, ...logs38kp1, kp1] };
+    const gK272r = { kind: "apply" as const, head: DIV, args: [numK272r, k2] };
+    const gKp1272r = { kind: "apply" as const, head: DIV, args: [numKp1272r, kp1_2] };
+    const f272r = { kind: "apply" as const, head: SUB, args: [gK272r, gKp1272r] };
+    const result = evaluateSum(f272r, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+describe("Phase 273 — Four-Sqrt × Thirty-Seven-Log × polynomial numerator", () => {
+  it("(√k)⁴·log(k)³⁷/k³ closes (sqrtHalf=2, polyDeg=0 → effective=2; denDeg=3 > 2)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK273a = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs37k] };
+    const numKp1273a = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, ...logs37kp1] };
+    const gK273a = { kind: "apply" as const, head: DIV, args: [numK273a, k3] };
+    const gKp1273a = { kind: "apply" as const, head: DIV, args: [numKp1273a, kp1_3] };
+    const f273a = { kind: "apply" as const, head: SUB, args: [gK273a, gKp1273a] };
+    const result = evaluateSum(f273a, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)⁴·log(k)³⁷·k/k⁴ closes (sqrtHalf=2, polyDeg=1 → effective=3; denDeg=4 > 3)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k4 = { kind: "apply" as const, head: POW, args: [k, int(4)] };
+    const kp1_4 = { kind: "apply" as const, head: POW, args: [kp1, int(4)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK273b = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs37k, k] };
+    const numKp1273b = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, ...logs37kp1, kp1] };
+    const gK273b = { kind: "apply" as const, head: DIV, args: [numK273b, k4] };
+    const gKp1273b = { kind: "apply" as const, head: DIV, args: [numKp1273b, kp1_4] };
+    const f273b = { kind: "apply" as const, head: SUB, args: [gK273b, gKp1273b] };
+    const result = evaluateSum(f273b, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)⁴·log(k)³⁸·k/k² refused (38 logs — not Phase 273)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
+    const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
+    const logs38k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs38kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK273r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, ...logs38k, k] };
+    const numKp1273r = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, ...logs38kp1, kp1] };
+    const gK273r = { kind: "apply" as const, head: DIV, args: [numK273r, k2] };
+    const gKp1273r = { kind: "apply" as const, head: DIV, args: [numKp1273r, kp1_2] };
+    const f273r = { kind: "apply" as const, head: SUB, args: [gK273r, gKp1273r] };
+    const result = evaluateSum(f273r, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
+describe("Phase 274 — Five-Sqrt × Thirty-Seven-Log × polynomial numerator", () => {
+  it("(√k)^5·log(k)³⁷/k³ closes (sqrtHalf=2.5, polyDeg=0 → effective=2.5; denDeg=3 > 2.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK274a = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs37k] };
+    const numKp1274a = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, ...logs37kp1] };
+    const gK274a = { kind: "apply" as const, head: DIV, args: [numK274a, k3] };
+    const gKp1274a = { kind: "apply" as const, head: DIV, args: [numKp1274a, kp1_3] };
+    const f274a = { kind: "apply" as const, head: SUB, args: [gK274a, gKp1274a] };
+    const result = evaluateSum(f274a, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)^5·log(k)³⁷·k/k4 closes (sqrtHalf=2.5, polyDeg=1 → effective=3.5; denDeg=4 > 3.5)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k4 = { kind: "apply" as const, head: POW, args: [k, int(4)] };
+    const kp1_4 = { kind: "apply" as const, head: POW, args: [kp1, int(4)] };
+    const logs37k = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs37kp1 = Array.from({ length: 37 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK274b = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs37k, k] };
+    const numKp1274b = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, ...logs37kp1, kp1] };
+    const gK274b = { kind: "apply" as const, head: DIV, args: [numK274b, k4] };
+    const gKp1274b = { kind: "apply" as const, head: DIV, args: [numKp1274b, kp1_4] };
+    const f274b = { kind: "apply" as const, head: SUB, args: [gK274b, gKp1274b] };
+    const result = evaluateSum(f274b, k, int(1), sym("%inf"), evalNode);
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("(√k)^5·log(k)³⁸·k/k² refused (38 logs — not Phase 274)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: MUL, args: [k, k] };
+    const kp1_2 = { kind: "apply" as const, head: MUL, args: [kp1, kp1] };
+    const logs38k = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [k] }));
+    const logs38kp1 = Array.from({ length: 38 }, () => ({ kind: "apply" as const, head: LOG, args: [kp1] }));
+    const sqrtK = { kind: "apply" as const, head: SQRT, args: [k] };
+    const sqrtKp1 = { kind: "apply" as const, head: SQRT, args: [kp1] };
+    const numK274r = { kind: "apply" as const, head: MUL, args: [sqrtK, sqrtK, sqrtK, sqrtK, sqrtK, ...logs38k, k] };
+    const numKp1274r = { kind: "apply" as const, head: MUL, args: [sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, sqrtKp1, ...logs38kp1, kp1] };
+    const gK274r = { kind: "apply" as const, head: DIV, args: [numK274r, k2] };
+    const gKp1274r = { kind: "apply" as const, head: DIV, args: [numKp1274r, kp1_2] };
+    const f274r = { kind: "apply" as const, head: SUB, args: [gK274r, gKp1274r] };
+    const result = evaluateSum(f274r, k, int(1), sym("%inf"), evalNode);
     expect(result).toMatchObject({ kind: "apply", head: SUM });
   });
 });
