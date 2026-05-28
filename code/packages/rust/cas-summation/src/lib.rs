@@ -7983,6 +7983,169 @@ fn five_sqrt_fifty_seven_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Opt
     Some(sqrt_degs.iter().sum::<i64>() + 2 * poly_deg_sum)
 }
 
+/// Phase 395 — Zero-Sqrt × Fifty-Eight-Log × polynomial numerator.
+///
+/// The Fifty-Eight-Log family (Phases 395–400) extends the recogniser to
+/// summands whose numerator contains exactly fifty-eight logarithmic factors
+/// and zero to five square-root factors.  This is Phase 395: zero sqrts.
+fn fifty_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let IRNode::Apply(app) = node else { return None; };
+    if app.head != sym(MUL) { return None; }
+    let mut log_count: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &app.args {
+        if sqrt_effective_half_degree_x2(arg, k).is_some() { return None; }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 58 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg_sum += deg; continue;
+        }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if log_count != 58 { return None; }
+    Some(2 * poly_deg_sum)
+}
+
+/// Phase 396 — One-Sqrt × Fifty-Eight-Log × polynomial numerator.
+fn one_sqrt_fifty_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let IRNode::Apply(app) = node else { return None; };
+    if app.head != sym(MUL) { return None; }
+    let mut sqrt_deg: Option<i64> = None;
+    let mut log_count: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &app.args {
+        if let Some(hd) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_deg.is_some() { return None; }
+            sqrt_deg = Some(hd); continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 58 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg_sum += deg; continue;
+        }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_deg.is_none() || log_count != 58 { return None; }
+    Some(sqrt_deg.unwrap() + 2 * poly_deg_sum)
+}
+
+/// Phase 397 — Two-Sqrt × Fifty-Eight-Log × polynomial numerator.
+fn two_sqrt_fifty_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let IRNode::Apply(app) = node else { return None; };
+    if app.head != sym(MUL) { return None; }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut log_count: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &app.args {
+        if let Some(hd) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_degs.len() >= 2 { return None; }
+            sqrt_degs.push(hd); continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 58 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg_sum += deg; continue;
+        }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs.len() != 2 || log_count != 58 { return None; }
+    Some(sqrt_degs.iter().sum::<i64>() + 2 * poly_deg_sum)
+}
+
+/// Phase 398 — Three-Sqrt × Fifty-Eight-Log × polynomial numerator.
+fn three_sqrt_fifty_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let IRNode::Apply(app) = node else { return None; };
+    if app.head != sym(MUL) { return None; }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut log_count: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &app.args {
+        if let Some(hd) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_degs.len() >= 3 { return None; }
+            sqrt_degs.push(hd); continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 58 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg_sum += deg; continue;
+        }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs.len() != 3 || log_count != 58 { return None; }
+    Some(sqrt_degs.iter().sum::<i64>() + 2 * poly_deg_sum)
+}
+
+/// Phase 399 — Four-Sqrt × Fifty-Eight-Log × polynomial numerator.
+fn four_sqrt_fifty_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let IRNode::Apply(app) = node else { return None; };
+    if app.head != sym(MUL) { return None; }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut log_count: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &app.args {
+        if let Some(hd) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_degs.len() >= 4 { return None; }
+            sqrt_degs.push(hd); continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 58 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg_sum += deg; continue;
+        }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs.len() != 4 || log_count != 58 { return None; }
+    Some(sqrt_degs.iter().sum::<i64>() + 2 * poly_deg_sum)
+}
+
+/// Phase 400 — Five-Sqrt × Fifty-Eight-Log × polynomial numerator.
+/// Completes the Fifty-Eight-Log family (Phases 395–400).
+fn five_sqrt_fifty_eight_log_poly_effective_x2(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let IRNode::Apply(app) = node else { return None; };
+    if app.head != sym(MUL) { return None; }
+    let mut sqrt_degs: Vec<i64> = Vec::new();
+    let mut log_count: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    for arg in &app.args {
+        if let Some(hd) = sqrt_effective_half_degree_x2(arg, k) {
+            if sqrt_degs.len() >= 5 { return None; }
+            sqrt_degs.push(hd); continue;
+        }
+        if is_log_of_diverging_in_k(arg, k) {
+            log_count += 1;
+            if log_count > 58 { return None; }
+            continue;
+        }
+        if let Some(deg) = polynomial_degree_in_k(arg, k) {
+            poly_deg_sum += deg; continue;
+        }
+        if is_bounded_in_k(arg, k) { continue; }
+        return None;
+    }
+    if sqrt_degs.len() != 5 || log_count != 58 { return None; }
+    Some(sqrt_degs.iter().sum::<i64>() + 2 * poly_deg_sum)
+}
+
 /// Phase 377 — Zero-Sqrt × Fifty-Five-Log × polynomial numerator.
 ///
 /// The Fifty-Five-Log family (Phases 377–382) extends the recogniser to
@@ -11351,6 +11514,42 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
         } else if h_diverges_at_infinity(den, k) {
             return true;
         }
+    }
+    // Phase 400: Mul(Sqrt(P1)×5, Log(h1)×58, ...) numerator.
+    if let Some(s5l58_x2) = five_sqrt_fifty_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s5l58) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s5l58 > s5l58_x2 { return true; }
+        } else if h_diverges_at_infinity(den, k) { return true; }
+    }
+    // Phase 399: Mul(Sqrt(P1)×4, Log(h1)×58, ...) numerator.
+    if let Some(s4l58_x2) = four_sqrt_fifty_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s4l58) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s4l58 > s4l58_x2 { return true; }
+        } else if h_diverges_at_infinity(den, k) { return true; }
+    }
+    // Phase 398: Mul(Sqrt(P1)×3, Log(h1)×58, ...) numerator.
+    if let Some(s3l58_x2) = three_sqrt_fifty_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s3l58) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s3l58 > s3l58_x2 { return true; }
+        } else if h_diverges_at_infinity(den, k) { return true; }
+    }
+    // Phase 397: Mul(Sqrt(P), Sqrt(P2), Log(h1)×58, ...) numerator.
+    if let Some(s2l58_x2) = two_sqrt_fifty_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s2l58) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s2l58 > s2l58_x2 { return true; }
+        } else if h_diverges_at_infinity(den, k) { return true; }
+    }
+    // Phase 396: Mul(Sqrt(P), Log(h1)×58, ...) numerator.
+    if let Some(s1l58_x2) = one_sqrt_fifty_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_s1l58) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_s1l58 > s1l58_x2 { return true; }
+        } else if h_diverges_at_infinity(den, k) { return true; }
+    }
+    // Phase 395: Mul(Log(h1)×58, ...) numerator.
+    if let Some(sl58_x2) = fifty_eight_log_poly_effective_x2(num, k) {
+        if let Some(den_deg_sl58) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_sl58 > sl58_x2 { return true; }
+        } else if h_diverges_at_infinity(den, k) { return true; }
     }
     // Phase 394: Mul(Sqrt(P1)×5, Log(h1)×57, ...) numerator.
     if let Some(s5l57_x2) = five_sqrt_fifty_seven_log_poly_effective_x2(num, k) {

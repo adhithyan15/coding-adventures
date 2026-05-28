@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-summation",
-  "version": "2.331.0",
+  "version": "2.337.0",
   "description": "Pure TypeScript symbolic summation and product evaluation over symbolic IR",
   "type": "module",
   "main": "src/index.ts",
@@ -9,7 +9,12 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
-  "keywords": ["cas", "summation", "series", "browser"],
+  "keywords": [
+    "cas",
+    "summation",
+    "series",
+    "browser"
+  ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
