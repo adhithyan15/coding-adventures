@@ -2,6 +2,40 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.36.0] - 2026-05-28
+
+### Changed (Phase 8b (FC) — short-circuit `||=` / `&&=` lowering)
+
+Phase 6p originally lowered `x ||= y` and `x &&= y` eagerly to
+`Assign(x, BuiltinCall("or"/"and", [VarRef(x), y]))`.  That form
+ALWAYS evaluates `y` and ALWAYS re-binds `x`, which silently breaks
+Ruby's documented short-circuit semantics whenever `y` has side
+effects.  Phase 8b replaces it with a gated `Expr::If` so the RHS and
+the re-bind are skipped when the short-circuit branch fires.
+
+| Source     | SIR shape                                                          |
+|------------|--------------------------------------------------------------------|
+| `x ||= y`  | `ExprStmt(If(VarRef(x), Block{[], VarRef(x)}, Block{[Assign(x,y)], VarRef(x)}))` |
+| `x &&= y`  | `ExprStmt(If(VarRef(x), Block{[Assign(x,y)], VarRef(x)}, Block{[], VarRef(x)}))` |
+
+`Feature::MutableBindings` is still required (the gated branch
+re-binds `x`), and `x` is recorded as a declared local so any
+subsequent `x = …` doesn't trip the rebinding-into-undeclared-name
+error.  All other compound-assign forms (`+=`, `-=`, `*=`, `/=`, `%=`,
+`**=`, `<<=`, `>>=`, `&=`, `|=`, `^=`) keep their eager
+`Assign + BuiltinCall` lowering — they have no short-circuit
+semantics, so the previous shape is correct for them.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 162 → **165** (+3 net):
+  - Replaced `logical_compound_assigns_lower_to_or_and_builtins`
+    (asserted the old eager shape) with four new tests:
+    - `or_assign_lowers_to_short_circuit_if_with_assign_in_else_branch`
+    - `and_assign_lowers_to_short_circuit_if_with_assign_in_then_branch`
+    - `short_circuit_op_assign_marks_mutable_bindings_feature`
+    - `short_circuit_op_assign_module_passes_sir_validator` (validator E2E for both ops)
+
 ## [0.35.0] - 2026-05-26
 
 ### Added (Phase 8a-2 (FC) — `>>=` right-shift compound-assign lowering)

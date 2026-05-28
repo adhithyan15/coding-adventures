@@ -1765,6 +1765,95 @@ impl Lowerer {
         });
 
         let span = self.span_of(node);
+
+        // ── Phase 8b — short-circuit op-assign (`||=`, `&&=`) ───────────
+        //
+        // Ruby's short-circuit compound assignments do NOT eagerly
+        // evaluate the RHS when the LHS already short-circuits the
+        // expression.  Specifically:
+        //
+        //   `x ||= y`  ≡  `x || (x = y)`
+        //                — if `x` is truthy, `y` is NOT evaluated and
+        //                  `x` is NOT re-assigned (side effects on `y`
+        //                  must not fire).
+        //   `x &&= y`  ≡  `x && (x = y)`
+        //                — if `x` is falsy, `y` is NOT evaluated and
+        //                  `x` is NOT re-assigned.
+        //
+        // Phase 6p lowered both forms eagerly to
+        // `Assign(x, BuiltinCall("or"/"and", [VarRef(x), y]))` — that
+        // ALWAYS evaluates `y` and ALWAYS re-binds `x`, which silently
+        // breaks side-effect ordering when `y` has them.  Phase 8b
+        // replaces that with a gated `Expr::If` so the assignment is
+        // skipped entirely when the short-circuit condition fires.
+        //
+        // SIR shape for `x ||= y` (and analogously for `&&=`):
+        //
+        //   ExprStmt(If(
+        //     cond:        VarRef(x),
+        //     then_branch: Block { stmts: [],            value: VarRef(x) },  // truthy → keep x
+        //     else_branch: Block { stmts: [Assign(x,y)], value: VarRef(x) },  // falsy → assign
+        //   ))
+        //
+        // For `&&=`, the two branches swap (truthy → assign, falsy → keep).
+        //
+        // The compound-assign path below stays in charge of all the
+        // arithmetic/bitwise/shift forms (`+=`, `-=`, `*=`, …, `>>=`) —
+        // those have no short-circuit semantics, so the existing
+        // BuiltinCall lowering is correct for them.
+        if let Some(op) = op_token.as_deref() {
+            if op == "||=" || op == "&&=" {
+                // Mark mutation + record local so subsequent `x = …`
+                // statements don't re-binding-error.  Matches the
+                // bookkeeping the generic compound path does below.
+                self.features_used.insert(Feature::MutableBindings);
+                self.declared_locals.insert(name.clone());
+
+                let cond_ref = Expr::VarRef {
+                    name: name.clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                };
+                let result_ref = Expr::VarRef {
+                    name: name.clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                };
+                let assign_stmt = Stmt::Assign {
+                    name: name.clone(),
+                    scope: Scope::Local,
+                    value: rhs,
+                    span: span.clone(),
+                };
+                let empty_block = Block {
+                    stmts: vec![],
+                    value: result_ref.clone(),
+                    span: span.clone(),
+                };
+                let assign_block = Block {
+                    stmts: vec![assign_stmt],
+                    value: result_ref,
+                    span: span.clone(),
+                };
+                // `||=`: truthy → keep (empty); falsy → assign
+                // `&&=`: truthy → assign;        falsy → keep (empty)
+                let (then_branch, else_branch) = if op == "||=" {
+                    (empty_block, assign_block)
+                } else {
+                    (assign_block, empty_block)
+                };
+                return Ok(Stmt::ExprStmt {
+                    expr: Expr::If {
+                        cond: Box::new(cond_ref),
+                        then_branch: Box::new(then_branch),
+                        else_branch: Box::new(else_branch),
+                        span: span.clone(),
+                    },
+                    span,
+                });
+            }
+        }
+
         // Build the effective RHS.  For plain `=`, it's just `rhs`.
         // For compound forms, wrap it as `BuiltinCall(op, [VarRef(x), rhs])`
         // where `op` is the underlying binary operator (`+` for `+=`,
@@ -1798,9 +1887,9 @@ impl Lowerer {
                 "&=" => ("&", EffectSet::PURE),
                 "|=" => ("|", EffectSet::PURE),
                 "^=" => ("^", EffectSet::PURE),
-                "||=" => ("or", EffectSet::PURE),
-                "&&=" => ("and", EffectSet::PURE),
-                _ => unreachable!("op_token matched only the compound forms above"),
+                // `||=` and `&&=` are handled by the short-circuit
+                // branch above (Phase 8b) and never reach this match.
+                _ => unreachable!("op_token matched only the eager compound forms above"),
             };
             let lhs_ref = Expr::VarRef {
                 name: name.clone(),
