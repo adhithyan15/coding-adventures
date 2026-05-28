@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.73.0 — 2026-05-28
+
+**Track E1 — generic tabular integration-by-parts fallback.**
+
+Adds a last-ditch generic IBP handler that fires only after every
+shape-specific elementary / Phase 23 special-function / Elliptic
+handler has returned ``None``.  Closes the integration gap for
+``Mul``-shaped integrands that no per-shape recogniser matches but
+that admit the textbook tabular IBP factorisation
+``f = u(x) · w(x)`` with ``u`` polynomial and ``w`` integrable.
+
+### Algorithm
+
+For ``∫ u·w dx`` with ``u`` polynomial of degree ``N − 1`` and ``w``
+integrable, the antiderivative is the alternating sum
+
+```
+∫ u·w dx  =  Σ_{k=0}^{N-1}  (-1)^k · u^(k)(x) · I^(k+1)(w)
+```
+
+derived from N successive applications of IBP; the trailing remainder
+``(-1)^N · ∫ u^(N)·I^N(w) dx`` vanishes because ``u^(N) = 0``.  The
+implementation enumerates ``Mul`` factor partitions, picks the
+polynomial-on-one-side / integrable-on-the-other split, and assembles
+the table.  Bounded by ``_MAX_FACTORS = 5`` and ``_MAX_POLY_DEGREE =
+8`` so the search never explodes.
+
+### Added
+
+- ``ibp_tabular`` module with ``try_ibp_tabular(f, x, integrate_fn,
+  diff_fn, simplify_fn)`` — pure function, no VM dependency.
+- New test file ``tests/test_ibp.py`` exercising the three named
+  acceptance cases (``∫ x·sin(x) dx``, ``∫ x²·eˣ dx``,
+  ``∫ x³·cos(x) dx``), the new gap case
+  ``∫ x·sin(x)·cos(x) dx`` (three-factor Mul that per-shape
+  handlers don't recognise), and the two fallthroughs (``∫ 1/x dx``
+  via the elementary log rule; ``∫ sin(x²) dx`` via Phase 23
+  Fresnel — neither lets the generic IBP fabricate a closed form).
+
+### Changed
+
+- ``integrate.py`` — wires ``try_ibp_tabular`` into the
+  indefinite-integration outer handler **after** Phase 23
+  special-function and Elliptic fallbacks, as the final attempt
+  before returning unevaluated.
+- ``tests/test_phase16.py::test_poly_times_sech_squared_unevaluated``
+  → ``test_poly_times_sech_squared_via_ibp`` — Track E1 closes
+  ``∫ x·sech²(x) dx`` to ``x·tanh(x) − log(cosh(x))``, which the
+  earlier test asserted unevaluated.  Updated to check the new
+  closed form via numerical ``F'(x) ≈ f(x)``.
+- ``tests/test_phase17.py::test_poly_times_tanh_squared_unevaluated``
+  → ``test_poly_times_tanh_squared_via_ibp`` — same pattern; the
+  identity ``tanh²(x) = 1 − sech²(x)`` makes the integrand
+  elementary (the earlier docstring's "polylogarithm" label was
+  incorrect).  Track E1 produces ``x²/2 − x·tanh(x) + log(cosh(x))``.
+
+### Notes
+
+- Anti-pattern guard: this is ONE generic algorithm, not a
+  helper-per-shape.  The lesson check in
+  ``code/specs/macsyma-finish-plan.md`` forbids
+  ``_int_x_times_sin``-style additions; the new module's only
+  public entry is the single ``try_ibp_tabular`` function.
+- Termination: the D-column terminates at ``u^(N) = 0`` (guaranteed
+  for polynomial ``u``); the I-column terminates at ``N`` steps
+  (matched to D); the partition search is ``2^n − 2`` where
+  ``n ≤ 5`` factors.  No unbounded recursion.
+
 ## 0.72.0 — 2026-05-22
 
 **Phase 48 — Apart for repeated linear factors.**
