@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.151.0 — 2026-05-27
+
+### Added
+
+- **Phase 214 — Five-Sqrt × Twenty-Seven-Log × polynomial** (`fiveSqrtTwentySevenLogPolyEffectiveDeg`):
+  Completes the Twenty-Seven-Log family (Phases 209–214).
+- **Phase 213 — Four-Sqrt × Twenty-Seven-Log × polynomial** (`fourSqrtTwentySevenLogPolyEffectiveDeg`).
+- **Phase 212 — Three-Sqrt × Twenty-Seven-Log × polynomial** (`threeSqrtTwentySevenLogPolyEffectiveDeg`).
+- **Phase 211 — Two-Sqrt × Twenty-Seven-Log × polynomial** (`twoSqrtTwentySevenLogPolyEffectiveDeg`).
+- **Phase 210 — One-Sqrt × Twenty-Seven-Log × polynomial** (`oneSqrtTwentySevenLogPolyEffectiveDeg`).
+- **Phase 209 — Zero-Sqrt × Twenty-Seven-Log × polynomial** (`twentySevenLogPolyEffectiveDeg`).
+
+### Changed
+
+- Boundary tests in Phases 203–208 (and prior phases 167–202) updated from 27-log
+  "refused" to 28-log "refused" now that Phases 209–214 handle exactly 27 logs.
+
 ## 2.145.0 — 2026-05-27
 
 ### Added
