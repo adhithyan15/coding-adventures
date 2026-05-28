@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.301.0 — 2026-05-28
+
+### Added
+
+- **Phase 364 — Five-Sqrt × Fifty-Two-Log × polynomial** (`fiveSqrtFiftyTwoLogPolyEffectiveDeg`):
+  Completes the Fifty-Two-Log family (Phases 359–364).
+- **Phase 363 — Four-Sqrt × Fifty-Two-Log × polynomial** (`fourSqrtFiftyTwoLogPolyEffectiveDeg`).
+- **Phase 362 — Three-Sqrt × Fifty-Two-Log × polynomial** (`threeSqrtFiftyTwoLogPolyEffectiveDeg`).
+- **Phase 361 — Two-Sqrt × Fifty-Two-Log × polynomial** (`twoSqrtFiftyTwoLogPolyEffectiveDeg`).
+- **Phase 360 — One-Sqrt × Fifty-Two-Log × polynomial** (`oneSqrtFiftyTwoLogPolyEffectiveDeg`).
+- **Phase 359 — Zero-Sqrt × Fifty-Two-Log × polynomial** (`fiftyTwoLogPolyEffectiveDeg`).
+
+### Changed
+
+- Boundary tests in Phases 353–358 updated from 52-log "refused" to 53-log "refused"
+  now that Phases 359–364 handle exactly 52 logs.
+
 ## 2.295.0 — 2026-05-28
 
 ### Added
