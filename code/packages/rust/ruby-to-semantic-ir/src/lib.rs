@@ -1526,23 +1526,147 @@ mod tests {
         }
     }
 
+    // -----------------------------------------------------------------
+    // Phase 8b — short-circuit op-assign (`||=`, `&&=`)
+    // -----------------------------------------------------------------
+    //
+    // Ruby semantics:
+    //   `x ||= y`  ≡  `x || (x = y)`
+    //   `x &&= y`  ≡  `x && (x = y)`
+    //
+    // RHS must NOT be evaluated when the short-circuit branch fires,
+    // so the lowering uses a gated `Expr::If`:
+    //
+    //   `x ||= y` → ExprStmt(If(
+    //                  cond:        VarRef(x),
+    //                  then_branch: Block { [],            VarRef(x) },
+    //                  else_branch: Block { [Assign(x,y)], VarRef(x) },
+    //                ))
+    //
+    // For `&&=` the two branches swap.  Phase 6p used to lower these to
+    // an eager `Assign(x, BuiltinCall("or"/"and", [VarRef(x), y]))`,
+    // which silently broke side-effect ordering when `y` had any.
+
     #[test]
-    fn logical_compound_assigns_lower_to_or_and_builtins() {
-        // ||= → "or"; &&= → "and".  Same binary-op encoding as the
-        // arithmetic forms.
-        for (op_src, op_builtin) in [("||=", "or"), ("&&=", "and")] {
+    fn or_assign_lowers_to_short_circuit_if_with_assign_in_else_branch() {
+        // `x ||= 2` after `x = 1`:
+        //   - cond branch: VarRef(x)
+        //   - then_branch: empty stmts, value VarRef(x)  (truthy → keep)
+        //   - else_branch: [Assign(x, 2)], value VarRef(x)  (falsy → assign)
+        let m = lower("x = 1\nx ||= 2\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::ExprStmt {
+                expr: Expr::If { cond, then_branch, else_branch, .. },
+                ..
+            } => {
+                assert!(
+                    matches!(cond.as_ref(), Expr::VarRef { name, .. } if name == "x"),
+                    "||= cond should be VarRef(x), got {:?}",
+                    cond
+                );
+                assert!(
+                    then_branch.stmts.is_empty(),
+                    "||= then-branch should be empty (no-op when x is truthy), got {:?}",
+                    then_branch.stmts
+                );
+                assert_eq!(
+                    else_branch.stmts.len(),
+                    1,
+                    "||= else-branch should contain exactly one Assign"
+                );
+                match &else_branch.stmts[0] {
+                    Stmt::Assign { name, value, .. } => {
+                        assert_eq!(name, "x");
+                        assert!(
+                            matches!(value, Expr::IntLit { value: 2, .. }),
+                            "||= else-branch should assign x = 2, got {:?}",
+                            value
+                        );
+                    }
+                    other => panic!("expected Assign in ||= else-branch, got {:?}", other),
+                }
+            }
+            other => panic!("expected ExprStmt(If(...)) for ||=, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn and_assign_lowers_to_short_circuit_if_with_assign_in_then_branch() {
+        // `x &&= 2` after `x = 1`:
+        //   - cond branch: VarRef(x)
+        //   - then_branch: [Assign(x, 2)], value VarRef(x)  (truthy → assign)
+        //   - else_branch: empty stmts, value VarRef(x)     (falsy → keep)
+        let m = lower("x = 1\nx &&= 2\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::ExprStmt {
+                expr: Expr::If { cond, then_branch, else_branch, .. },
+                ..
+            } => {
+                assert!(
+                    matches!(cond.as_ref(), Expr::VarRef { name, .. } if name == "x"),
+                    "&&= cond should be VarRef(x), got {:?}",
+                    cond
+                );
+                assert_eq!(
+                    then_branch.stmts.len(),
+                    1,
+                    "&&= then-branch should contain exactly one Assign"
+                );
+                match &then_branch.stmts[0] {
+                    Stmt::Assign { name, value, .. } => {
+                        assert_eq!(name, "x");
+                        assert!(
+                            matches!(value, Expr::IntLit { value: 2, .. }),
+                            "&&= then-branch should assign x = 2, got {:?}",
+                            value
+                        );
+                    }
+                    other => panic!("expected Assign in &&= then-branch, got {:?}", other),
+                }
+                assert!(
+                    else_branch.stmts.is_empty(),
+                    "&&= else-branch should be empty (no-op when x is falsy), got {:?}",
+                    else_branch.stmts
+                );
+            }
+            other => panic!("expected ExprStmt(If(...)) for &&=, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn short_circuit_op_assign_marks_mutable_bindings_feature() {
+        // Both ||= and &&= must declare `MutableBindings` in the
+        // module's feature manifest, exactly like the eager compound
+        // forms — the assignment in the gated branch is still a
+        // re-binding from the validator's perspective.
+        for op_src in ["||=", "&&="] {
             let src = format!("x = 1\nx {op_src} 2\n");
             let m = lower(&src);
-            let b = main_body(&m);
-            match &b.stmts[1] {
-                Stmt::Assign { value, .. } => match value {
-                    Expr::BuiltinCall { name, .. } => {
-                        assert_eq!(name, op_builtin, "wrong builtin for {op_src}");
-                    }
-                    other => panic!("expected BuiltinCall for {op_src}, got {:?}", other),
-                },
-                other => panic!("expected Assign for {op_src}, got {:?}", other),
-            }
+            assert!(
+                m.manifest.contains(semantic_ir::Feature::MutableBindings),
+                "{op_src} module should require MutableBindings, got: {:?}",
+                m.manifest
+            );
+        }
+    }
+
+    #[test]
+    fn short_circuit_op_assign_module_passes_sir_validator() {
+        // End-to-end smoke check for both forms.  The validator must
+        // accept the `If` shape with an `Assign` nested in one branch
+        // (which is a less-common construction than top-level Assign,
+        // but well within SIR's grammar).
+        for op_src in ["||=", "&&="] {
+            let src = format!("x = 1\nx {op_src} 2\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "validator rejected {op_src} short-circuit lowering: {:?}",
+                result
+            );
         }
     }
 
