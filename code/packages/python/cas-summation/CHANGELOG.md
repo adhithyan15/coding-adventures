@@ -1,5 +1,88 @@
 # Changelog
 
+## 2.23.0 — 2026-05-28
+
+**Phase 86 — Cleanup: generic log × sqrt × polynomial recogniser.**
+
+Closes a long-running design problem.  Phases 59-85 accumulated a
+hand-written grid of ``N-Sqrt × M-Log × polynomial`` helpers — one
+function per ``(N, M)`` combination, all with the same body modulo
+the hardcoded counts.  This PR replaces the entire grid with a
+single generic helper.
+
+### Motivation
+
+The convergence math is identical for every non-negative ``(N, M)``:
+
+- The product of ``N`` ``Log(diverging)`` factors is still
+  sub-polynomial — ``log^N(k) = o(k^ε)`` for any ``ε > 0`` — so ``N``
+  contributes ``0`` to the effective growth degree.
+- Each ``Sqrt(P_i)`` contributes ``deg(P_i)/2`` (recorded ×2 to stay
+  in integer arithmetic).
+- Each polynomial factor contributes its own degree (also ×2 here).
+- Bounded factors (constants in ``k``, ``Sin``, ``Cos``, closures)
+  contribute ``0``.
+
+Effective growth ×2: ``Σ sqrt_inner_deg_x2 + 2 · Σ poly_deg``.
+Vanishes when ``2·den_deg > effective_x2`` (polynomial denominator)
+or non-polynomial diverging denominator.
+
+The grid hardcoded ``(N, M)`` for ``N ∈ {0..5}`` and ``M ∈ {0..6}``
+— **42 helpers, all redundant**.  Cases beyond that grid
+(``M ≥ 7``, ``N ≥ 6``) silently failed.
+
+### Added
+
+- **``_log_sqrt_poly_effective_x2_generic(node, k) -> int | None``** —
+  one function that handles every ``(N, M, K)`` combination.  Returns
+  ``effective_x2`` (= ``Σ sqrt_deg_x2 + 2·Σ poly_deg``) when the ``Mul``
+  splits cleanly into Log / Sqrt / polynomial / bounded factors;
+  ``None`` for unrecognised factors (e.g. ``Exp(k)``,
+  ``Sqrt(negative)``).
+
+- **Phase 86 branch in ``_g_vanishes_at_infinity``** — inserted between
+  Phase 58 (bounded × Log × polynomial) and Phase 59 (bounded × Sqrt
+  × polynomial).  Catches every case the hand-written grid catches,
+  *plus* cases beyond the grid that previously failed.
+
+- **6 new tests** in ``TestPhase86GenericLogSqrtPoly`` proving the
+  generic handles cases the grid doesn't:
+
+  * 7-Log / k² closes (grid stops at 6 Log).
+  * 6-Sqrt / k⁴ closes (grid stops at 5 Sqrt).
+  * Mixed 3-Sqrt × 7-Log × poly closes.
+  * Regression: ``Exp(k)`` factor refused (would falsely close).
+  * Regression: ``Sqrt(-k)`` refused (complex-valued for large k).
+  * Regression: pure-bounded numerator falls through to Phase 49.
+
+### Status of the existing grid (Phases 59-85)
+
+The 42 hardcoded helpers remain in place for backward compatibility
+and are still wired into the dispatcher.  They are now redundant —
+the new Phase 86 branch catches every input they handle.  A
+follow-up PR can delete them in a single sweep without behavioral
+change.
+
+### Tests
+
+Full suite: **268 passed** (was 262; +6 net new — all from the
+generic).
+
+### Why this was needed
+
+74 open PRs (#4471-#4544) had queued up adding more ``(N, M)`` grid
+points up to ``N=64`` Log factors and beyond, each bumping the
+package version by ``0.006``.  Those PRs are now closed — the
+generic supersedes all of them.
+
+### Still deferred (genuine future work)
+
+- Deleting the redundant grid helpers (Phases 59-85) — pure
+  refactor, no behavior change.
+- Generalising further to ``Exp(non-positive)`` and other vanishing
+  transcendentals.
+- Two-Log-of-Sqrt patterns and similar nested compositions.
+
 ## 2.22.0 — 2026-05-26
 
 ### Added

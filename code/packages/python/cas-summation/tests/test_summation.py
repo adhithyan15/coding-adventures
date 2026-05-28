@@ -4757,3 +4757,168 @@ class TestPhase85TwoSqrtSixLogPoly:
         f = IRApply(SUB, (g_k, g_kp1))
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRApply) and result.head == SUM
+
+
+# ---------------------------------------------------------------------------
+# Phase 86 — Generic log×sqrt×polynomial recogniser cleanup.
+#
+# These tests prove a SINGLE generic helper handles cases beyond the
+# hand-written grid of Phases 59-85.  The grid only covers up to (5-Sqrt,
+# 6-Log) explicitly; the generic handles arbitrary (N, M, K).
+# ---------------------------------------------------------------------------
+
+
+class TestPhase86GenericLogSqrtPoly:
+    def test_seven_log_falls_through_grid_and_closes_via_generic(self):
+        """``Mul(Log, Log, Log, Log, Log, Log, Log) / k`` — 7 Log factors.
+
+        The hand-written grid stops at 6 logs.  The generic helper
+        handles arbitrary N: log^7(k) is still sub-polynomial, so the
+        sum converges with any positive-degree polynomial denominator.
+        """
+        from symbolic_ir import POW, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        logs_k = tuple(IRApply(LOG, (_k,)) for _ in range(7))
+        logs_kp1 = tuple(IRApply(LOG, (kp1,)) for _ in range(7))
+        num_k = IRApply(MUL, logs_k)
+        num_kp1 = IRApply(MUL, logs_kp1)
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM), (
+            f"Generic Phase 86 should close 7-Log/k²; got {result!r}"
+        )
+
+    def test_six_sqrt_falls_through_grid_and_closes_via_generic(self):
+        """``Mul(Sqrt(k), Sqrt(k), Sqrt(k), Sqrt(k), Sqrt(k), Sqrt(k)) / k^4``.
+
+        6 sqrt-of-k factors: effective ×2 = 1·6 = 6, so
+        ``2·den_deg = 8 > 6`` closes when ``den_deg = 4``.  The
+        hand-written grid only handles up to 5 Sqrt factors.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        sqrts_k = tuple(IRApply(SQRT, (_k,)) for _ in range(6))
+        sqrts_kp1 = tuple(IRApply(SQRT, (kp1,)) for _ in range(6))
+        num_k = IRApply(MUL, sqrts_k)
+        num_kp1 = IRApply(MUL, sqrts_kp1)
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(4)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(4)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_three_sqrt_seven_log_poly_closes_via_generic(self):
+        """``sin(k)·log^7(k)·sqrt(k³)·sqrt(k)·sqrt(k²)·k / k^5``.
+
+        Mixed (3 Sqrt, 7 Log, 1 poly factor, 1 bounded).  Outside the
+        hardcoded grid (which stops at 5/6).  Effective ×2 = sqrt
+        sum + 2·poly = (3+1+2) + 2·1 = 8, so 2·5 = 10 > 8 closes.
+        """
+        from symbolic_ir import POW, SIN, SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        logs_k = tuple(IRApply(LOG, (_k,)) for _ in range(7))
+        logs_kp1 = tuple(IRApply(LOG, (kp1,)) for _ in range(7))
+        sqrt_factors_k = (
+            IRApply(SQRT, (IRApply(POW, (_k, IRInteger(3))),)),
+            IRApply(SQRT, (_k,)),
+            IRApply(SQRT, (IRApply(POW, (_k, IRInteger(2))),)),
+        )
+        sqrt_factors_kp1 = (
+            IRApply(SQRT, (IRApply(POW, (kp1, IRInteger(3))),)),
+            IRApply(SQRT, (kp1,)),
+            IRApply(SQRT, (IRApply(POW, (kp1, IRInteger(2))),)),
+        )
+        num_k = IRApply(
+            MUL,
+            (IRApply(SIN, (_k,)), *logs_k, *sqrt_factors_k, _k),
+        )
+        num_kp1 = IRApply(
+            MUL,
+            (IRApply(SIN, (kp1,)), *logs_kp1, *sqrt_factors_kp1, kp1),
+        )
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(5)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(5)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_generic_refuses_unrecognised_factor(self):
+        """``Mul(Log(k), Sqrt(k), Exp(k)) / k³``: Exp(k) is unrecognised.
+
+        Generic must refuse so we don't silently close a sum that's
+        actually divergent (exp(k) grows faster than any poly denom).
+        """
+        from symbolic_ir import EXP, POW, SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(
+            MUL,
+            (
+                IRApply(LOG, (_k,)),
+                IRApply(SQRT, (_k,)),
+                IRApply(EXP, (_k,)),
+            ),
+        )
+        num_kp1 = IRApply(
+            MUL,
+            (
+                IRApply(LOG, (kp1,)),
+                IRApply(SQRT, (kp1,)),
+                IRApply(EXP, (kp1,)),
+            ),
+        )
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # exp(k)·log(k)·sqrt(k) grows exponentially → does NOT vanish.
+        # Generic must refuse so the sum stays unevaluated.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_generic_refuses_negative_sqrt_argument(self):
+        """``Sqrt(Mul(-1, k))`` is complex-valued for large positive k;
+        generic must refuse.
+        """
+        from symbolic_ir import POW, SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        neg_k = IRApply(MUL, (IRInteger(-1), _k))
+        neg_kp1 = IRApply(MUL, (IRInteger(-1), kp1))
+        num_k = IRApply(
+            MUL,
+            (IRApply(LOG, (_k,)), IRApply(SQRT, (neg_k,))),
+        )
+        num_kp1 = IRApply(
+            MUL,
+            (IRApply(LOG, (kp1,)), IRApply(SQRT, (neg_kp1,))),
+        )
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(3)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(3)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Sqrt of negative polynomial is complex; refuse.
+        assert isinstance(result, IRApply) and result.head == SUM
+
+    def test_generic_pure_bounded_falls_through_to_phase49(self):
+        """``Mul(Sin(k), Cos(k)) / k²`` — no Log, no Sqrt, no polynomial.
+
+        Generic recognises 'no growth factor' and returns None, so
+        Phase 49 (bounded × diverging) handles it instead.  End-to-
+        end pin: sum still closes.
+        """
+        from symbolic_ir import COS, POW, SIN, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        num_k = IRApply(MUL, (IRApply(SIN, (_k,)), IRApply(COS, (_k,))))
+        num_kp1 = IRApply(MUL, (IRApply(SIN, (kp1,)), IRApply(COS, (kp1,))))
+        g_k = IRApply(DIV, (num_k, IRApply(POW, (_k, IRInteger(2)))))
+        g_kp1 = IRApply(DIV, (num_kp1, IRApply(POW, (kp1, IRInteger(2)))))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        # Phase 49 catches this — sum closes.
+        assert not (isinstance(result, IRApply) and result.head == SUM)
