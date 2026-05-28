@@ -95,7 +95,19 @@ layout Grid {
       For ( each: slot: viewport-rows , as: row , index: r ) {
         Row [ data-row ] {
           For ( each: row , as: v , index: c ) {
-            Box [ cell ] {
+            Box [ cell ] (
+              // Task #35 — per-cell sub-part state toggles. mosstyle
+              // declares `state selected { ... }` and `state editing
+              // { ... }` blocks under `part sheet/cell` in
+              // Grid.dark.msl; the React emitter looks up these
+              // `state-when-*` predicates and emits conditional style
+              // spreads inside the cell's `style={{...}}` JSX object.
+              // Result: the selected cell visually highlights as the
+              // user navigates, and the editing cell carries a
+              // distinct background while inline editing is active.
+              state-when-selected: ( r == selectedRow && c == selectedCol ) ,
+              state-when-editing:  ( r == editRow && c == editCol )
+            ) {
               If ( when: ( r == editRow && c == editCol ) ) {
                 HostInput (
                   value:    ( v ) ,

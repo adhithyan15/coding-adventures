@@ -921,10 +921,64 @@ fn emit_jsx_tree(
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
     let merged_style = merge_styles(&builtin_style, part_style_str);
-    let style_attr = if merged_style.is_empty() {
+
+    // UI28-1 / Task #35 — `state-when-X: ( expr )` props collect per-state
+    // conditional style spreads. For every prop whose name starts with
+    // `state-when-`, look up the matching `<part>:<state>` entry in
+    // part_styles (produced by mosstyle when the author writes
+    // `state X { ... }` blocks). If present, emit a `...(expr ? {...} : {})`
+    // spread inside the JSX style object so the cell appearance flips
+    // when the predicate is true.
+    //
+    // Example author surface:
+    //   Box [cell] ( state-when-selected: ( r == selRow && c == selCol ) )
+    // and mosstyle:
+    //   part sheet/cell { state selected { background: blue } }
+    // produces:
+    //   style={{ ...base, ...((r == selRow && c == selCol) ? { background: "blue" } : {}) }}
+    let mut state_spreads = String::new();
+    if let Some(part) = node.part_name.as_deref() {
+        for prop in &node.props {
+            if let Some(state_name) = prop.name.strip_prefix("state-when-") {
+                let state_key = format!("{part}:{state_name}");
+                if let Some(state_style) = part_styles.get(&state_key) {
+                    if state_style.is_empty() {
+                        continue;
+                    }
+                    let cond_text = match &prop.value {
+                        LayoutPropValue::Expr(t) => t.clone(),
+                        LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+                        LayoutPropValue::Keyword(k) => {
+                            // Author wrote a bare keyword (e.g. `true`).
+                            // Treat it as a literal JS identifier — `true`/
+                            // `false` are reserved keywords so this works
+                            // for the trivial cases.
+                            k.clone()
+                        }
+                        _ => continue,
+                    };
+                    state_spreads.push_str(&format!(
+                        ", ...(({cond_text}) ? {{ {state_style} }} : {{}})"
+                    ));
+                }
+            }
+        }
+    }
+
+    let style_attr = if merged_style.is_empty() && state_spreads.is_empty() {
         String::new()
-    } else {
+    } else if state_spreads.is_empty() {
         format!(" style={{{{ {merged_style} }}}}")
+    } else {
+        // Both static merged style + conditional state spreads. The static
+        // style is the first spread inside the object so author state
+        // overrides win when the predicate is true.
+        let base = if merged_style.is_empty() {
+            String::new()
+        } else {
+            merged_style.clone()
+        };
+        format!(" style={{{{ {base}{state_spreads} }}}}")
     };
     let mut open = format!("{tag_name}{extra_attrs}{style_attr}");
 
@@ -10796,6 +10850,105 @@ mod tests {
             row_refs >= 2,
             "expected at least 2 body references to {{row}}, found {}, output:\n{}",
             row_refs,
+            out
+        );
+    }
+
+    // =====================================================================
+    // Task #35 — `state-when-X: ( expr )` conditional sub-part styling
+    //
+    // The userland Grid (mosaic-pkg-grid v0.2.0 + the VisiCalc Grid.mll
+    // inlined copy) needs per-cell selection/editing highlights that the
+    // legacy monolithic Grid emitter used to compute inline. The new
+    // approach: author writes `state-when-X: ( expr )` props on a Box (or
+    // any part-bearing primitive), the emitter looks up `<part>:X` in the
+    // part-style map, and emits a conditional style spread inside the
+    // JSX `style={{...}}` object.
+    // =====================================================================
+
+    #[test]
+    fn task_35_state_when_prop_emits_conditional_style_spread() {
+        let m = component("X", vec![], vec![]);
+        let box_node = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some("cell".to_string()),
+            props: vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                // Force Expr via parens grouping (UI29 §3.3).
+                value: LayoutPropValue::Expr("( selRow == 0 )".to_string()),
+            }],
+            children: vec![],
+        };
+        let l = LayoutDef { component_name: "X".to_string(), root: box_node };
+        // Style source — declares `part cell { background: gray; state
+        // selected { background: blue } }`. The mosstyle compiler produces
+        // a part-style map entry for both `cell` and `cell:selected`.
+        let style_src = "style X { part cell { background: #444444; state selected { background: #0066cc; } } }";
+        let style_def =
+            mosstyle_compiler::compile(style_src, None).expect("compile style");
+        let result = from_pipeline(&m, &l, &style_def.def).expect("emit ok");
+        let out = &result.output;
+        // The state-when-selected predicate Expr appears inside a
+        // conditional spread on the style object.
+        assert!(
+            out.contains("...((( selRow == 0 )) ? {")
+                || out.contains("...(( selRow == 0 ) ? {"),
+            "expected conditional style spread from state-when-selected, got:\n{}",
+            out
+        );
+        assert!(
+            out.contains("background"),
+            "expected base background to appear, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn task_35_state_when_without_matching_state_block_is_silently_ignored() {
+        // Authors can declare `state-when-X` without `state X { ... }` in
+        // mosstyle — that's a no-op. We don't emit the spread at all when
+        // the part-style map has no matching entry, so the rendered style
+        // stays clean.
+        let m = component("X", vec![], vec![]);
+        let box_node = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some("cell".to_string()),
+            props: vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::Expr("( true )".to_string()),
+            }],
+            children: vec![],
+        };
+        let l = LayoutDef { component_name: "X".to_string(), root: box_node };
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        let out = &result.output;
+        assert!(
+            !out.contains("...(("),
+            "expected NO conditional spread when no matching state block exists, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn task_35_state_when_skips_node_without_part_name() {
+        // A Box without `[part]` has nowhere to look up styles. The
+        // `state-when-X` prop is silently ignored.
+        let m = component("X", vec![], vec![]);
+        let box_node = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::Expr("( true )".to_string()),
+            }],
+            children: vec![],
+        };
+        let l = LayoutDef { component_name: "X".to_string(), root: box_node };
+        let result = from_pipeline(&m, &l, &empty_style("X")).expect("emit ok");
+        let out = &result.output;
+        assert!(
+            !out.contains("...(("),
+            "expected NO conditional spread when node has no part_name, got:\n{}",
             out
         );
     }

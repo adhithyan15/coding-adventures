@@ -42,7 +42,12 @@ layout Grid {
       For ( each: slot: viewport-rows , as: row , index: r ) {
         Row [ data-row ] {
           For ( each: row , as: v , index: c ) {
-            Box [ cell ] {
+            Box [ cell ] (
+              // Task #35 — same state-when toggles as desktop. See
+              // Grid.desktop.mll for the rationale.
+              state-when-selected: ( r == selectedRow && c == selectedCol ) ,
+              state-when-editing:  ( r == editRow && c == editCol )
+            ) {
               If ( when: ( r == editRow && c == editCol ) ) {
                 HostInput (
                   value:    ( v ) ,
