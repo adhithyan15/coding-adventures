@@ -148,7 +148,50 @@ pub fn transform_source(
     source: &str,
     config: &CompilerConfig,
 ) -> Result<String, CompilerError> {
+    transform_source_with_cv(source, config, None)
+}
+
+/// CV-aware variant of [`transform_source`] (CLOC11.61).
+///
+/// When `cv` is `Some((log, id))`, each pipeline stage appends a
+/// [`Contribution`](coding_adventures_correlation_vector::Contribution)
+/// to the per-file CV entry identified by `id`. The pre-CLOC11.61
+/// `run_compiler` recorded one summary `transform_source.applied`
+/// contribution per file; this slice replaces it with per-stage
+/// records so the trace shows which pass touched the bytes and by
+/// how much.
+///
+/// When `cv` is `None`, this function is byte-identical in
+/// behavior to the original `transform_source` — same Result,
+/// same error mapping, zero CV overhead.
+///
+/// # Contribution shape
+///
+/// | Stage              | `source`           | `tag`            | `meta`                                   |
+/// |--------------------|--------------------|------------------|------------------------------------------|
+/// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
+/// | Simple / Advanced  | `compilation_level`| `identity`       | `{level: "SIMPLE" \| "ADVANCED" \| ...}` |
+/// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
+///
+/// The `defines.applied` contribution lands for every input even
+/// when `--define` is empty (`defines_count: 0`), because the
+/// stage *ran* — it just didn't do any substitutions. That keeps
+/// the trace symmetric across files and visualization tools
+/// don't have to special-case zero-defines runs.
+pub fn transform_source_with_cv(
+    source: &str,
+    config: &CompilerConfig,
+    cv: Option<(
+        &mut coding_adventures_correlation_vector::CVLog,
+        &str,
+    )>,
+) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
+
+    // Hoist `cv` into a local so we can borrow it twice inside
+    // the function (once per stage). The Option<&mut> doesn't
+    // implement Copy, but we can reborrow at each call site.
+    let mut cv_pair = cv;
 
     // Step 1 — compilation-level transform.
     let after_level = match config.compilation.level {
@@ -163,6 +206,49 @@ pub fn transform_source(
         | CompilationLevel::TranspileOnly => source.to_string(),
     };
 
+    if let Some((log, cv_id)) = cv_pair.as_mut() {
+        let mut meta = std::collections::HashMap::new();
+        let (tag, extras): (&str, Vec<(&str, serde_json::Value)>) =
+            match config.compilation.level {
+                CompilationLevel::WhitespaceOnly => (
+                    "whitespace_only",
+                    vec![
+                        (
+                            "input_byte_len",
+                            serde_json::Value::Number((source.len() as u64).into()),
+                        ),
+                        (
+                            "output_byte_len",
+                            serde_json::Value::Number((after_level.len() as u64).into()),
+                        ),
+                    ],
+                ),
+                CompilationLevel::Simple => (
+                    "identity",
+                    vec![("level", serde_json::Value::String("SIMPLE".into()))],
+                ),
+                CompilationLevel::Advanced => (
+                    "identity",
+                    vec![("level", serde_json::Value::String("ADVANCED".into()))],
+                ),
+                CompilationLevel::Bundle => (
+                    "identity",
+                    vec![("level", serde_json::Value::String("BUNDLE".into()))],
+                ),
+                CompilationLevel::TranspileOnly => (
+                    "identity",
+                    vec![(
+                        "level",
+                        serde_json::Value::String("TRANSPILE_ONLY".into()),
+                    )],
+                ),
+            };
+        for (k, v) in extras {
+            meta.insert(k.to_string(), v);
+        }
+        let _ = log.contribute(cv_id, "compilation_level", tag, meta);
+    }
+
     // Step 2 — `--define / -D` substitution (CLOC11.19). Runs
     // *after* the compilation-level transform so that
     // WHITESPACE_ONLY's output is the input to substitution. The
@@ -174,8 +260,31 @@ pub fn transform_source(
     // identifier matching either way.
     //
     // Fast path: with no defines, this is a no-op string copy.
-    defines::apply_defines(&after_level, &config.defines.defines, es_version)
-        .map_err(CompilerError::Define)
+    let after_defines = defines::apply_defines(
+        &after_level,
+        &config.defines.defines,
+        es_version,
+    )
+    .map_err(CompilerError::Define)?;
+
+    if let Some((log, cv_id)) = cv_pair.as_mut() {
+        let mut meta = std::collections::HashMap::new();
+        meta.insert(
+            "input_byte_len".to_string(),
+            serde_json::Value::Number((after_level.len() as u64).into()),
+        );
+        meta.insert(
+            "output_byte_len".to_string(),
+            serde_json::Value::Number((after_defines.len() as u64).into()),
+        );
+        meta.insert(
+            "defines_count".to_string(),
+            serde_json::Value::Number((config.defines.defines.len() as u64).into()),
+        );
+        let _ = log.contribute(cv_id, "defines", "applied", meta);
+    }
+
+    Ok(after_defines)
 }
 
 /// Project the typed `LanguageVersion` enum into the
@@ -414,28 +523,19 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             None
         };
 
-        let transformed = transform_source(&contents, config)?;
-
-        // CLOC11.60 — record one summary contribution from
-        // `transform_source` per file. CLOC11.61+ split this into
-        // a contribution per stage (whitespace_only, defines).
-        if let Some(id) = &cv_id {
-            let mut meta = std::collections::HashMap::new();
-            meta.insert(
-                "input_byte_len".to_string(),
-                serde_json::Value::Number((contents.len() as u64).into()),
-            );
-            meta.insert(
-                "output_byte_len".to_string(),
-                serde_json::Value::Number((transformed.len() as u64).into()),
-            );
-            let _ = cv_log.contribute(
-                id,
-                "transform_source",
-                "applied",
-                meta,
-            );
-        }
+        // CLOC11.61: per-stage CV contributions. When CV is on,
+        // pass the per-file cv_id through to `transform_source_with_cv`
+        // so the transform records one record per stage
+        // (compilation_level + defines) rather than the single
+        // summary contribution from CLOC11.60.
+        let transformed = match &cv_id {
+            Some(id) => transform_source_with_cv(
+                &contents,
+                config,
+                Some((&mut cv_log, id.as_str())),
+            )?,
+            None => transform_source(&contents, config)?,
+        };
 
         combined.push_str(&transformed);
         // Closure separates concatenated inputs with a newline so
@@ -1886,17 +1986,197 @@ mod tests {
         // path appears at least once as the Origin.location.
         assert!(body.contains("a.js"), "missing a.js: {body}");
         assert!(body.contains("b.js"), "missing b.js: {body}");
-        // The `transform_source` contribution tag lands per file.
-        // Substring `"source":"transform_source"` is the
-        // per-contribution marker; the CVLog's `pass_order` also
-        // mentions it once, so the precise expectation is 2
-        // contribution occurrences for 2 input files.
-        let contribution_marker = "\"source\":\"transform_source\"";
+        // CLOC11.61 superseded the CLOC11.60 single
+        // "transform_source.applied" contribution with per-stage
+        // records: `compilation_level` + `defines` per file. So
+        // two files yields 2 × 2 = 4 contributions total, with
+        // each stage's source string appearing twice (once per
+        // file).
+        let cl_marker = "\"source\":\"compilation_level\"";
+        let def_marker = "\"source\":\"defines\"";
         assert_eq!(
-            body.matches(contribution_marker).count(),
+            body.matches(cl_marker).count(),
             2,
-            "expected 2 transform_source contributions, got: {body}"
+            "expected 2 compilation_level contributions, got: {body}"
+        );
+        assert_eq!(
+            body.matches(def_marker).count(),
+            2,
+            "expected 2 defines contributions, got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.61 — per-stage CV contribution tests
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_records_compilation_level_stage_per_file() {
+        // With WHITESPACE_ONLY level set, the per-file CV entry
+        // should gain a `compilation_level.whitespace_only`
+        // contribution with input/output byte_len in meta.
+        let dir = temp_path("cv-cl-ws-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x  =  1; // trim me").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // The compilation_level tag is "whitespace_only" — pin
+        // both the source-name and the tag verbatim.
+        assert!(
+            body.contains("\"source\":\"compilation_level\""),
+            "missing compilation_level source: {body}"
+        );
+        assert!(
+            body.contains("\"tag\":\"whitespace_only\""),
+            "missing whitespace_only tag: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_identity_with_level_name_for_simple() {
+        // Default level is SIMPLE; the identity-path
+        // contribution should record the level name as meta.
+        let dir = temp_path("cv-cl-simple-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // Default compilation level is SIMPLE.
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"tag\":\"identity\""), "got: {body}");
+        assert!(body.contains("\"level\":\"SIMPLE\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_defines_stage_with_defines_count() {
+        // The `defines.applied` contribution lands per file
+        // regardless of whether the user passed any `--define`
+        // entries. Meta includes a `defines_count` so the trace
+        // shows whether substitutions were possible.
+        let dir = temp_path("cv-defines-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var DEBUG = false;").expect("setup");
+        let mut defines = std::collections::BTreeMap::new();
+        defines.insert(
+            "DEBUG".to_string(),
+            crate::config::DefineValue::Bool(true),
+        );
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            defines: crate::config::DefinesConfig { defines },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"defines\""),
+            "missing defines source: {body}"
+        );
+        assert!(
+            body.contains("\"tag\":\"applied\""),
+            "missing applied tag: {body}"
+        );
+        assert!(
+            body.contains("\"defines_count\":1"),
+            "missing defines_count: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_both_stages_in_pipeline_order() {
+        // Both `compilation_level` and `defines` contributions
+        // must appear, and the CVLog's pass_order should reflect
+        // the call order (compilation_level → defines).
+        let dir = temp_path("cv-both-stages-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Both source-names present.
+        assert!(body.contains("\"source\":\"compilation_level\""));
+        assert!(body.contains("\"source\":\"defines\""));
+        // pass_order in the CVLog dump should show
+        // compilation_level FIRST. We pin the substring `["compilation_level"` to catch the leading element.
+        assert!(
+            body.contains("\"pass_order\":[\"compilation_level\",\"defines\"]"),
+            "expected pass_order [compilation_level, defines], got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn transform_source_facade_is_byte_identical_to_with_cv_none() {
+        // Pin the pre-CLOC11.61 contract: `transform_source(s, c)`
+        // and `transform_source_with_cv(s, c, None)` produce the
+        // same Result for the same inputs. Lets the facade stay
+        // valid for callers that don't care about CV.
+        let cfg = CompilerConfig::default();
+        let source = "var x = 1;";
+        let a = transform_source(source, &cfg).expect("a");
+        let b = transform_source_with_cv(source, &cfg, None).expect("b");
+        assert_eq!(a, b);
     }
 }

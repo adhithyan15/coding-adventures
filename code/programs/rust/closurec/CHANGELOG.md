@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.24.0] - 2026-05-27
+
+### Changed — CLOC11.61: per-stage `--correlation_vector` contributions
+
+Builds on CLOC11.60's plumbing. Replaces the single `transform_source.applied` summary contribution with one record per pipeline stage so the CV trace shows which pass touched the bytes and how much they grew/shrank.
+
+Per-file CV entry now gains:
+
+| Stage              | `source`            | `tag`             | `meta`                                                  |
+|--------------------|---------------------|-------------------|---------------------------------------------------------|
+| WhitespaceOnly     | `compilation_level` | `whitespace_only` | `{input_byte_len, output_byte_len}`                     |
+| Simple             | `compilation_level` | `identity`        | `{level: "SIMPLE"}`                                     |
+| Advanced           | `compilation_level` | `identity`        | `{level: "ADVANCED"}`                                   |
+| Bundle             | `compilation_level` | `identity`        | `{level: "BUNDLE"}`                                     |
+| TranspileOnly      | `compilation_level` | `identity`        | `{level: "TRANSPILE_ONLY"}`                             |
+| Defines            | `defines`           | `applied`         | `{input_byte_len, output_byte_len, defines_count}`      |
+
+The `defines.applied` contribution lands even when `--define` is empty (`defines_count: 0`) — the stage *ran*, it just had nothing to substitute. Keeps the trace symmetric across files; visualization tools don't have to special-case zero-defines runs.
+
+### Implementation
+
+- **New `transform_source_with_cv(source, config, cv) -> Result<String>`** with `cv: Option<(&mut CVLog, &str id)>`. When `cv` is `None`, byte-identical behavior to `transform_source`.
+- **`transform_source` is now a thin facade** delegating to `transform_source_with_cv(..., None)`.
+- **`run_compiler`'s per-file loop** calls `transform_source_with_cv` when CV is on, passing the per-file `cv_id`. The CLOC11.60 post-call summary contribution is removed (superseded by the per-stage records).
+- **5 new unit tests** in `run::tests`:
+  - WHITESPACE_ONLY → `compilation_level.whitespace_only` contribution lands
+  - SIMPLE default → `compilation_level.identity` with `level: "SIMPLE"` lands
+  - `--define` entries → `defines.applied` with `defines_count`
+  - Both stages present + `pass_order: [compilation_level, defines]`
+  - `transform_source` facade ≡ `transform_source_with_cv(_, _, None)`
+- **CLOC11.60 multi-file test updated** to count 2 × `compilation_level` + 2 × `defines` contributions instead of 2 × the old `transform_source` summary.
+
+### Pipeline matrix (unchanged structurally)
+
+Same 15 steps as 0.23.0; the change is in step 5's instrumentation, not in pipeline order.
+
+### Still queued
+
+- CLOC11.62: CV records for wrapper / IIFE / charset stages.
+- CLOC11.63: source-map / manifest writes recorded as derived CV entries.
+- CLOC11.64–66: per-token granularity, tombstones for removals, custom `--correlation_vector_output` path.
+
 ## [0.23.0] - 2026-05-27
 
 ### Added — CLOC11.60: opt-in `--correlation_vector` plumbing through pipeline
