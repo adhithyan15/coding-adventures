@@ -504,6 +504,14 @@ pub struct SpecialModesConfig {
     pub print_ast: bool,
     pub print_source_after_each_pass: bool,
     pub help_markdown: bool,
+    /// CLOC11.60: when true, the pipeline threads a
+    /// [`coding_adventures_correlation_vector::CVLog`] through
+    /// every transform stage so the user (or audit tooling) can
+    /// trace any output byte back to its input provenance. When
+    /// false (default), the CV log is constructed in disabled
+    /// mode (zero overhead — the crate short-circuits every
+    /// `create` / `contribute` call).
+    pub correlation_vector: bool,
 }
 
 // ---------------------------------------------------------------------------

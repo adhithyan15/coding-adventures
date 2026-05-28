@@ -487,6 +487,7 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
         print_ast: get_bool(p, "print_ast")?,
         print_source_after_each_pass: get_bool(p, "print_source_after_each_pass")?,
         help_markdown: get_bool(p, "help_markdown")?,
+        correlation_vector: get_bool(p, "correlation_vector")?,
     })
 }
 

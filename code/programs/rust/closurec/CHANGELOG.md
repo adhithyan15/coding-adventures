@@ -2,6 +2,57 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.23.0] - 2026-05-27
+
+### Added — CLOC11.60: opt-in `--correlation_vector` plumbing through pipeline
+
+**Architectural milestone.** First slice of the correlation-vector traceability work specified in `feedback_closurec_correlation_vectors.md`. When `--correlation_vector` is set, the pipeline threads a [`coding_adventures_correlation_vector::CVLog`] through every input file and records per-file contributions for the transform stage. When the flag is unset (default), the `CVLog` is constructed in disabled mode — every `create`/`contribute` call is a no-op, so the existing zero-overhead pipeline behavior is preserved.
+
+The CV trace is written as a JSON sidecar file at the end of the run. Path policy:
+
+- When `--js_output_file` is set, the sidecar lives next to it as `<output>.cv.json`. Build pipelines consuming the compiled JS automatically pick up the trace without a separate flag.
+- When `--js_output_file` is absent (stdout output), the sidecar lands at `closurec-cv.json` in the current working directory.
+
+### What this slice covers (intentionally narrow)
+
+- **Per-file root CV entry**: assigns a CV ID at file ingestion with `Origin::source = "input_file"` and `location = <path>`.
+- **One summary contribution per file**: tags the entry with `source = "transform_source"`, `tag = "applied"`, and includes input + output byte lengths in `meta`. This is the placeholder for the deeper per-stage instrumentation queued in CLOC11.61..11.66.
+- **JSON sidecar emission** via `CVLog::to_json_string()`.
+
+### What's still queued
+
+- CLOC11.61: split the per-file summary contribution into one-per-stage (`whitespace_only`, `defines`).
+- CLOC11.62: wrapper / IIFE / charset stages.
+- CLOC11.63: source-map / manifest writes recorded as derived CV entries.
+- CLOC11.64–66: per-token granularity, tombstones for removals, custom `--correlation_vector_output` path flag.
+
+### Implementation
+
+- **`SpecialModesConfig.correlation_vector: bool`** field + cli.spec.json entry + wire.rs parsing.
+- **`run_compiler` instantiates `CVLog::new(config.special_modes.correlation_vector)`** once before the per-input loop. The boolean toggle threads down into every CV call; disabled-mode short-circuits at the crate level.
+- **`format_cv_log_json(&CVLog) -> String`** wraps `CVLog::to_json_string()` with a `{}` fallback so a serialization error doesn't break the otherwise-successful run.
+- **Step 7 (NEW) in `run_compiler`** — writes the sidecar after the manifest write so `wrote_files` ends up in pipeline order: JS, source map, manifest, CV sidecar.
+- **4 new unit tests** in `run::tests` (default → no sidecar, opt-in → sidecar next to output, opt-in stdout → default sidecar in CWD, multi-file → entry-per-file).
+
+### Pipeline matrix (cumulative across CLOC11)
+
+`run_compiler`:
+1. Resolve `--js` globs
+2. Resolve `--externs` globs
+3. `--print_tree` short-circuit
+4. `--print_tree_json` short-circuit
+5. Per-input `transform_source` (now records one CV contribution per file when `--correlation_vector` is set)
+6. Concatenate transformed inputs
+7. `--checks_only` short-circuit
+8. `--emit_use_strict` prepend
+9. `--output_wrapper` substitution
+10. `--isolation_mode IIFE` wrap
+11. `--charset` US_ASCII escape
+12. Write JS
+13. Write source map
+14. Write input manifest
+15. **Write CV sidecar (CLOC11.60, NEW) if `--correlation_vector` was set**
+
 ## [0.22.0] - 2026-05-26
 
 ### Added — CLOC11.04: `--define` numeric edge case test coverage
