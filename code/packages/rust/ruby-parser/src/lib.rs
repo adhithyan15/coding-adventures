@@ -1499,6 +1499,57 @@ mod tests {
         assert!(tree_has_token_value(m, "*"), "expected `*` in second RHS");
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 9b (FC) — splat LHS in multi-assignment
+    //
+    // Grammar addition:
+    //   multi_assignment = mlhs_target COMMA mlhs_target { COMMA mlhs_target }
+    //                      EQUALS expression { COMMA expression } ;
+    //   mlhs_target      = [ "*" ] NAME ;
+    //
+    // We assert: (1) `*` appears as a leading token in the right
+    // `mlhs_target` slot, (2) the parser recognises the construct as
+    // `multi_assignment`, and (3) the LHS target count comes out
+    // right.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_multi_assignment_splat_at_end() {
+        let ast = parse_ruby("a, *b = 1, 2, 3");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        // Count mlhs_target children to confirm splat is its own slot.
+        let lhs_target_count = m.children.iter().filter(|c| matches!(c,
+            ASTNodeOrToken::Node(n) if n.rule_name == "mlhs_target"
+        )).count();
+        assert_eq!(lhs_target_count, 2, "expected 2 mlhs_target nodes");
+        assert!(tree_has_token_value(m, "*"), "expected `*` in tree");
+    }
+
+    #[test]
+    fn test_parse_multi_assignment_splat_at_start() {
+        let ast = parse_ruby("*a, b = 1, 2, 3");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        let lhs_target_count = m.children.iter().filter(|c| matches!(c,
+            ASTNodeOrToken::Node(n) if n.rule_name == "mlhs_target"
+        )).count();
+        assert_eq!(lhs_target_count, 2, "expected 2 mlhs_target nodes");
+        assert!(tree_has_token_value(m, "*"));
+    }
+
+    #[test]
+    fn test_parse_multi_assignment_splat_in_middle() {
+        let ast = parse_ruby("a, *b, c = 1, 2, 3, 4");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        let lhs_target_count = m.children.iter().filter(|c| matches!(c,
+            ASTNodeOrToken::Node(n) if n.rule_name == "mlhs_target"
+        )).count();
+        assert_eq!(lhs_target_count, 3, "expected 3 mlhs_target nodes");
+        assert!(tree_has_token_value(m, "*"));
+    }
+
     #[test]
     fn test_parse_single_assignment_not_consumed_by_multi() {
         // Regression: `a = 1` (one LHS) must still parse as a plain

@@ -2,6 +2,47 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.38.0] - 2026-05-28
+
+### Added (Phase 9b (FC) — splat target in multi-assignment LHS)
+
+`multi_assignment` now accepts an optional `*` prefix on each LHS
+target via the new `mlhs_target` rule.  At most one splat per LHS is
+allowed; the splat absorbs zero or more "extra" RHS values into an
+`Expr::SeqLit` while non-splat targets bind to fixed-position RHS
+values (counted from the start, or from the end if a splat sits to
+the left).
+
+| Source                      | SIR shape (after Phase 9b)                                                                                                                                                                                  |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `a, *b = 1, 2, 3`           | `LetStarBinding(t0,1); LetStarBinding(t1,2); LetStarBinding(t2,3); LetBinding(a, VarRef(t0)); LetBinding(b, SeqLit([VarRef(t1), VarRef(t2)]))`                                                              |
+| `*a, b = 1, 2, 3`           | `LetStarBinding(t0,1); LetStarBinding(t1,2); LetStarBinding(t2,3); LetBinding(a, SeqLit([VarRef(t0), VarRef(t1)])); LetBinding(b, VarRef(t2))`                                                              |
+| `a, *b, c = 1, 2, 3, 4`     | 4 temps + `LetBinding(a, t0); LetBinding(b, SeqLit([t1, t2])); LetBinding(c, t3)`                                                                                                                            |
+| `a, *b = 1`                 | 1 temp + `LetBinding(a, t0); LetBinding(b, SeqLit([]))` *(empty splat)*                                                                                                                                     |
+
+The splat path always routes through the swap-safe temp pass (Phase
+9a pattern) — every RHS value lands in a fresh
+`LetStarBinding(__multi_assign_t<N>_<i>, rhs[i])` first, so the
+splat's `SeqLit` and the surrounding non-splat bindings all read
+captured values.  `Feature::Sequences` is required.
+
+Arity check:
+
+- No splat → LHS count must equal RHS count (Phase 6r semantics).
+- Splat present → RHS count must be `≥ non_splat_count`.  Otherwise
+  the lowerer rejects with a clear error.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 170 → **177** (+7):
+  - `splat_lhs_at_end_absorbs_trailing_rhs_into_seqlit`
+  - `splat_lhs_at_start_absorbs_leading_rhs_into_seqlit`
+  - `splat_lhs_in_middle_absorbs_middle_rhs_into_seqlit`
+  - `splat_lhs_with_minimum_rhs_count_gives_empty_seqlit`
+  - `splat_lhs_requests_sequences_feature`
+  - `splat_lhs_module_passes_sir_validator` (E2E for all three splat positions)
+  - `splat_lhs_too_few_rhs_is_a_lower_error`
+
 ## [0.37.0] - 2026-05-28
 
 ### Changed (Phase 9a (FC) — swap-safe parallel multi-assignment)

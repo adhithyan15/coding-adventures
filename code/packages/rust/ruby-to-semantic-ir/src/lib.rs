@@ -2063,6 +2063,184 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Phase 9b (FC) — splat LHS in multi-assignment
+    // -----------------------------------------------------------------
+    //
+    // Grammar now allows `[ "*" ] NAME` per LHS target.  At most one
+    // splat per LHS — the splat absorbs zero or more "extra" RHS
+    // values into an `Expr::SeqLit` while non-splat targets bind to
+    // fixed-position RHS values (counted from the start, or from the
+    // end if a splat sits to the left).
+    //
+    // The splat path always routes through the swap-safe temp pass
+    // (Phase 9a pattern): every RHS value is bound to a fresh
+    // `LetStarBinding(__multi_assign_t<N>_<i>, rhs[i])`, then each LHS
+    // is assigned from the corresponding temp(s).
+
+    #[test]
+    fn splat_lhs_at_end_absorbs_trailing_rhs_into_seqlit() {
+        // `a, *b = 1, 2, 3` → a=1; b=[2, 3]
+        let m = lower("a, *b = 1, 2, 3\n");
+        let body = main_body(&m);
+        // 3 temps + 2 LHS bindings = 5 stmts.
+        assert_eq!(
+            body.stmts.len(),
+            5,
+            "expected 5 stmts (3 temps + 2 LHS), got {:?}",
+            body.stmts
+        );
+        // Stmt[3] binds `a` to temp 0 (= IntLit 1).
+        match &body.stmts[3] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "a");
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
+                    "a should bind to a temp VarRef, got {:?}",
+                    value
+                );
+            }
+            other => panic!("expected LetBinding(a, temp), got {:?}", other),
+        }
+        // Stmt[4] binds `b` to SeqLit of temps 1..3.
+        match &body.stmts[4] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "b");
+                match value {
+                    Expr::SeqLit { items, .. } => {
+                        assert_eq!(items.len(), 2, "splat should absorb 2 values");
+                        for item in items {
+                            assert!(
+                                matches!(item, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
+                                "splat items should be VarRef to temps, got {:?}",
+                                item
+                            );
+                        }
+                    }
+                    other => panic!("expected SeqLit for splat, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(b, SeqLit), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn splat_lhs_at_start_absorbs_leading_rhs_into_seqlit() {
+        // `*a, b = 1, 2, 3` → a=[1, 2]; b=3
+        let m = lower("*a, b = 1, 2, 3\n");
+        let body = main_body(&m);
+        assert_eq!(body.stmts.len(), 5);
+        // Stmt[3] binds `a` to SeqLit of temps 0..2.
+        match &body.stmts[3] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "a");
+                match value {
+                    Expr::SeqLit { items, .. } => {
+                        assert_eq!(items.len(), 2, "splat at start should absorb 2 values");
+                    }
+                    other => panic!("expected SeqLit for splat, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(a, SeqLit), got {:?}", other),
+        }
+        // Stmt[4] binds `b` to temp 2 (the last temp).
+        match &body.stmts[4] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "b");
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
+                );
+            }
+            other => panic!("expected LetBinding(b, temp), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn splat_lhs_in_middle_absorbs_middle_rhs_into_seqlit() {
+        // `a, *b, c = 1, 2, 3, 4` → a=1; b=[2, 3]; c=4
+        let m = lower("a, *b, c = 1, 2, 3, 4\n");
+        let body = main_body(&m);
+        // 4 temps + 3 LHS bindings = 7 stmts.
+        assert_eq!(body.stmts.len(), 7);
+        // Stmt[4] binds `a` to temp 0.
+        assert!(matches!(&body.stmts[4], Stmt::LetBinding { name, .. } if name == "a"));
+        // Stmt[5] binds `b` to SeqLit of 2 items (the middle 2 temps).
+        match &body.stmts[5] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "b");
+                match value {
+                    Expr::SeqLit { items, .. } => assert_eq!(items.len(), 2),
+                    other => panic!("expected SeqLit, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(b, SeqLit), got {:?}", other),
+        }
+        // Stmt[6] binds `c` to the last temp.
+        assert!(matches!(&body.stmts[6], Stmt::LetBinding { name, .. } if name == "c"));
+    }
+
+    #[test]
+    fn splat_lhs_with_minimum_rhs_count_gives_empty_seqlit() {
+        // `a, *b = 1` → a=1; b=[]
+        let m = lower("a, *b = 1\n");
+        let body = main_body(&m);
+        // 1 temp + 2 LHS bindings = 3 stmts.
+        assert_eq!(body.stmts.len(), 3);
+        match &body.stmts[2] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "b");
+                match value {
+                    Expr::SeqLit { items, .. } => assert!(items.is_empty()),
+                    other => panic!("expected empty SeqLit, got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(b, SeqLit), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn splat_lhs_requests_sequences_feature() {
+        // The splat target binds a SeqLit which requires the
+        // `Sequences` feature in the module manifest.
+        let m = lower("a, *b = 1, 2, 3\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Sequences),
+            "splat-target multi-assignment should require Sequences"
+        );
+    }
+
+    #[test]
+    fn splat_lhs_module_passes_sir_validator() {
+        // End-to-end smoke test for all three splat positions.
+        for src in [
+            "a, *b = 1, 2, 3\n",
+            "*a, b = 1, 2, 3\n",
+            "a, *b, c = 1, 2, 3, 4\n",
+        ] {
+            let m = lower(src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "validator rejected splat multi-assign `{}`: {:?}",
+                src.trim(),
+                result
+            );
+        }
+    }
+
+    #[test]
+    fn splat_lhs_too_few_rhs_is_a_lower_error() {
+        // `a, *b, c = 1` has 2 non-splat LHS but only 1 RHS — the
+        // arity check should reject this.
+        let result = compile_source("a, *b, c = 1\n", "test");
+        assert!(result.is_err(), "expected RubyLowerError for splat with too-few RHS");
+        let msg = result.unwrap_err().message;
+        assert!(
+            msg.contains("non-splat LHS") || msg.contains("RHS count"),
+            "expected splat-arity error, got: {msg}"
+        );
+    }
+
     #[test]
     fn multi_assignment_two_swaps_use_distinct_temp_counters() {
         // Two consecutive swaps in the same scope must use DIFFERENT
