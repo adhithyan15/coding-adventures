@@ -24,6 +24,7 @@ Quick start::
 from cas_factor.bzh import bzh_factor
 from cas_factor.factor import FactorList, factor_integer_polynomial
 from cas_factor.heads import FACTOR, IRREDUCIBLE
+from cas_factor.hensel import BiPoly, try_bivariate_hensel
 from cas_factor.kronecker import kronecker_factor
 from cas_factor.polynomial import (
     Poly,
@@ -41,6 +42,7 @@ __all__ = [
     "FACTOR",
     "FactorList",
     "IRREDUCIBLE",
+    "BiPoly",
     "Poly",
     "bzh_factor",
     "content",
@@ -54,4 +56,5 @@ __all__ = [
     "kronecker_factor",
     "normalize",
     "primitive_part",
+    "try_bivariate_hensel",
 ]
