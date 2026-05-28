@@ -548,6 +548,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Literal { value: r#"%="#.to_string() },
                         GrammarElement::Literal { value: r#"**="#.to_string() },
                         GrammarElement::Literal { value: r#"<<="#.to_string() },
+                        GrammarElement::Literal { value: r#">>="#.to_string() },
                         GrammarElement::Literal { value: r#"&="#.to_string() },
                         GrammarElement::Literal { value: r#"|="#.to_string() },
                         GrammarElement::Literal { value: r#"^="#.to_string() },

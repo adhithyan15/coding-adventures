@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.24.0] - 2026-05-26
+
+### Added (Phase 8a-2 (FC) — `>>` and `>>=` token fusion)
+
+New pre-fusion pass `fuse_right_shifts()` runs immediately before `fuse_compound_assigns()`:
+
+| Incoming pair (adjacent, no whitespace gap) | Folded into     |
+|---------------------------------------------|-----------------|
+| `Name(">")` + `Name(">")`                   | `Name(">>")`    |
+| `Name(">")` + `Name(">=")`                  | `Name(">>=")`   |
+
+This sidesteps the 1.8-era state-machine quirk where the greedy `>=` classifier already ate the `=` from `>>=` before the compound-assign pass got a chance.  Same adjacency rules as the existing compound-assign fusion: same line, no whitespace gap.
+
+### Tests
+
+- `coding-adventures-ruby-lexer`: 169 → **173** (+4):
+  - `right_shift_compound_assign_fuses_into_single_token`
+  - `right_shift_binary_operator_fuses_into_single_token`
+  - `right_shift_fusion_respects_whitespace_gap`
+  - `right_shift_fusion_leaves_unrelated_ge_alone` (regression)
+
 ## [0.23.0] - 2026-05-26
 
 ### Added (Phase 8a (FC) companion — fuse more compound-assign operators)

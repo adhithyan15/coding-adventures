@@ -2615,5 +2615,52 @@ mod tests {
         let ast = parse_ruby("x = 5");
         assert!(find_descendant(&ast, "assignment").is_some());
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 8a-2 (FC) — right-shift compound assign `>>=`.
+    //
+    // The lexer now pre-fuses `>>` and `>>=` into single Name tokens,
+    // so the parser's `assignment` rule accepts `>>=` the same way it
+    // already accepts `<<=`.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_right_shift_op_assign() {
+        let ast = parse_ruby("x >>= 1");
+        let a = find_descendant(&ast, "assignment").expect("expected assignment");
+        let has_op = a.children.iter().any(|c| {
+            matches!(c, ASTNodeOrToken::Token(t) if t.value == ">>=")
+        });
+        assert!(has_op, "expected `>>=` token under assignment");
+    }
+
+    #[test]
+    fn test_parse_left_and_right_shift_op_assigns_round_trip() {
+        // Two statements, `x <<= 1` and `x >>= 1`, each parses to a
+        // separate assignment with its respective fused operator token.
+        let ast = parse_ruby("x <<= 1\nx >>= 1");
+        let stmts: Vec<&GrammarASTNode> = ast
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(stmts.len(), 2);
+        let ops: Vec<String> = stmts
+            .iter()
+            .filter_map(|s| {
+                let a = find_descendant(s, "assignment")?;
+                a.children.iter().find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.value == "<<=" || t.value == ">>=" => {
+                        Some(t.value.clone())
+                    }
+                    _ => None,
+                })
+            })
+            .collect();
+        assert_eq!(ops, vec!["<<=".to_string(), ">>=".to_string()]);
+    }
 }
 

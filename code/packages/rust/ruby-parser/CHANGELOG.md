@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.35.0] - 2026-05-26
+
+### Added (Phase 8a-2 (FC) — `>>=` right-shift compound assign)
+
+`assignment` rule extended with `">>="` alongside the Phase 8a additions:
+
+```ebnf
+assignment = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "<<=" | ">>=" | "&=" | "|=" | "^=" | "||=" | "&&=" ) expression ;
+```
+
+The lexer's new `fuse_right_shifts()` pass folds `>>=` into a single `Name(">>=")` token before this rule runs, so parsing is mechanical.  Combined with Phase 8a, the parser now accepts Ruby's **complete** compound-assignment family on local variables (no further deferrals).
+
+Regenerated `_grammar.rs` via `grammar-tools compile-grammar`.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 147 → **149** (+2):
+  - `test_parse_right_shift_op_assign`
+  - `test_parse_left_and_right_shift_op_assigns_round_trip`
+
 ## [0.34.0] - 2026-05-26
 
 ### Added (Phase 8a (FC) — additional arithmetic / bitwise / shift op-assigns)

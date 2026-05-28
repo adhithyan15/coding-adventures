@@ -3416,4 +3416,44 @@ puts("hi #{name}")
             result
         );
     }
+
+    // -----------------------------------------------------------------
+    // Phase 8a-2 (FC) — right-shift compound assign `>>=`.
+    //
+    // The lexer now folds `>>` and `>>=` into single Name tokens,
+    // the grammar accepts `>>=` in the assignment rule's alternation,
+    // and the lowerer routes it through the same desugar path as
+    // `<<=`: `x >>= y` → `x = x >> y` → `Assign(x, BuiltinCall(">>",
+    // [VarRef(x), y]))`.
+    //
+    // Two tests below: shape assertion and validator E2E smoke.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn right_shift_assign_desugars_to_assign_with_rshift_builtin() {
+        let m = lower("x = 16\nx >>= 2\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::Assign { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, ">>");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected Assign(BuiltinCall(>>)), got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::MutableBindings));
+    }
+
+    #[test]
+    fn right_shift_assign_module_passes_sir_validator() {
+        // End-to-end smoke pairing left- and right-shift compounds.
+        let m = lower("x = 1\nx <<= 4\nx >>= 2\nputs(x)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected shift-assign module: {:?}",
+            result
+        );
+    }
 }

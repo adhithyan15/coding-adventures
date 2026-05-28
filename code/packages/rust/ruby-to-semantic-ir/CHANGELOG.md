@@ -2,6 +2,24 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.35.0] - 2026-05-26
+
+### Added (Phase 8a-2 (FC) — `>>=` right-shift compound-assign lowering)
+
+`lower_assignment` gains one more case arm — `">>="` maps to `BuiltinCall(">>", ...)` with the same `Stmt::Assign` + `Feature::MutableBindings` shape as the rest of the compound-assign family.
+
+| Source     | SIR shape                                                       |
+|------------|-----------------------------------------------------------------|
+| `x >>= y`  | `Assign(x, BuiltinCall(">>", [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+
+Combined with Phase 8a, Ruby's complete compound-assignment family on local variables is now fully lowered to first-class SIR.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 160 → **162** (+2):
+  - `right_shift_assign_desugars_to_assign_with_rshift_builtin`
+  - `right_shift_assign_module_passes_sir_validator` (E2E smoke)
+
 ## [0.34.0] - 2026-05-26
 
 ### Added (Phase 8a (FC) — additional compound-assignment lowering)

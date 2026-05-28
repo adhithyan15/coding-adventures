@@ -1749,6 +1749,7 @@ impl Lowerer {
                         | "%="
                         | "**="
                         | "<<="
+                        | ">>="
                         | "&="
                         | "|="
                         | "^="
@@ -1793,6 +1794,7 @@ impl Lowerer {
                 "%=" => ("%", EffectSet::PURE),
                 "**=" => ("**", EffectSet::PURE),
                 "<<=" => ("<<", EffectSet::PURE),
+                ">>=" => (">>", EffectSet::PURE),
                 "&=" => ("&", EffectSet::PURE),
                 "|=" => ("|", EffectSet::PURE),
                 "^=" => ("^", EffectSet::PURE),
