@@ -1,5 +1,69 @@
 # Changelog
 
+## 2.25.0 — 2026-05-28
+
+### Added — Track B2 (Apart-retry telescope chain port: Phase 40 + Phase 46)
+
+Ports the Python ``sum_handler`` Apart-retry composition (``symbolic-vm``
+Phase 40 + Phase 46) to Rust ``cas-summation``.  After the existing
+direct telescoping / vanishing-at-infinity / classic-series pipeline
+falls through on a rational summand ``Div(P(k), Q(k))``,
+``evaluate_sum`` now:
+
+1. Dispatches ``Apart(f, k)`` through the user-provided ``eval_fn`` —
+   typically a ``symbolic-vm`` ``VM`` with the Apart handler installed
+   (Track B1, ``symbolic-vm`` 0.13.0).
+2. If Apart actually decomposes ``f`` (returned shape structurally
+   differs from the input), normalises the ``Add(a, Neg(b))`` /
+   ``Add(a, Div(-c, d))`` shapes to ``Sub`` via the existing
+   ``normalise_add_neg_to_sub`` helper.
+3. Retries the full pipeline on the normalised result with a one-shot
+   ``apart_retried`` guard so we never recurse a second time.
+
+This closes the classic ``∑_{k=1}^∞ 1/(k(k+1)) = 1`` telescope: Apart
+decomposes the summand to ``Add(Div(1, k), Neg(Div(1, k+1)))``; the
+Phase 40+46 normaliser rewrites to ``Sub(1/k, 1/(k+1))``; the
+structural telescope detector fires and Phase 41 emits ``1`` (since
+``1/(k+1) → 0`` at infinity).
+
+### Changes
+
+- ``src/lib.rs``:
+  - Refactor ``evaluate_sum`` to delegate to a private
+    ``evaluate_sum_inner`` carrying an ``apart_retried`` flag.  The
+    closure is wrapped as ``&mut dyn FnMut(IRNode) -> IRNode`` so the
+    recursive call doesn't monomorphise to ever-deepening ``&mut &mut
+    ...`` layers and trip rustc's recursion limit.
+  - Add the Apart-retry block just above the unevaluated fallback —
+    only fires when ``f`` is structurally ``Div(...)`` (saves a wasted
+    VM round-trip on non-rational summands).
+  - Port ``_canonicalise_add_operand_order`` from Python: deep-rewrite
+    every ``Add`` so numeric literals come last among its arguments.
+    This makes the Apart-decomposed shape match the substituted half
+    in ``try_telescoping``'s structural equality check (Apart emits
+    ``Add(1, k)`` while substitution produces ``Add(k, 1)``).
+  - Wire the canonicaliser into ``normalise_add_neg_to_sub`` so it
+    runs after every rewrite.
+  - Relax ``try_telescoping`` to ``E: ?Sized + FnMut`` so it accepts
+    the ``&mut dyn FnMut`` reborrow.
+
+- ``Cargo.toml``: bump to 2.25.0; add ``symbolic-vm`` as a
+  ``dev-dependency`` so the Track B2 tests can construct a real VM with
+  the Apart handler installed.  The published crate's runtime
+  dependencies are unchanged.
+
+- ``tests/tests.rs``: new ``track_b2_*`` test functions — 6 cases:
+  acceptance ``1/(k(k+1)) = 1``, three-term shifted ``1/(k(k+2))``
+  (safety: no false closure), Phase 46 constant numerator ``2/(k(k+1))
+  = 2``, irreducible-denominator fallthrough, polynomial-summand
+  fallthrough, and non-telescoping-after-Apart fallthrough.
+
+When the user's ``eval_fn`` does not dispatch ``Apart`` (e.g. a bare
+arithmetic walker), the Apart attempt returns ``Apply(Apart, [f, k])``
+which structurally differs from ``f``, but the recursive retry on that
+shape also returns unevaluated — so the original unevaluated ``Sum``
+is preserved.  No spurious closure can leak out.
+
 ## 2.24.0 — 2026-05-28
 
 ### Removed — Track A2 cleanup (delete 27 grid helpers superseded by Phase 86)
