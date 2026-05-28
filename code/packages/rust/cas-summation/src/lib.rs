@@ -246,6 +246,44 @@ pub fn evaluate_sum<E>(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, mut eval_fn
 where
     E: FnMut(IRNode) -> IRNode,
 {
+    // Wrap as a trait object so the recursive call inside
+    // ``evaluate_sum_inner`` doesn't monomorphise to ever-deepening
+    // ``&mut &mut ...`` layers and trip the compiler's recursion limit.
+    let closure: &mut dyn FnMut(IRNode) -> IRNode = &mut eval_fn;
+    evaluate_sum_inner(f, k, lo, hi, closure, false)
+}
+
+/// Track B2 (Rust port of Phase 40 + Phase 46 from Python ``symbolic-vm``
+/// ``sum_handler``).  The ``apart_retried`` flag prevents infinite
+/// recursion when the retry path falls back into the same pipeline —
+/// Apart is attempted at most once per top-level call.
+///
+/// Apart-retry telescope chain
+/// ---------------------------
+/// When the structural telescope detector and every other narrow
+/// recogniser fall through to the unevaluated ``Sum(...)`` shape AND
+/// the summand is a proper rational ``Div(P(k), Q(k))``, we expand once
+/// via ``Apart(f, k)`` (dispatched through the user-provided
+/// ``eval_fn`` — typically a ``symbolic-vm`` VM with the Apart handler
+/// installed) and retry ``evaluate_sum`` on the partial-fraction
+/// decomposed shape.
+///
+/// The classic case is ``∑ 1/(k·(k+1))``: Apart emits
+/// ``Add(Div(1, k), Neg(Div(1, k+1)))`` which the Phase 40+46
+/// Add-with-negation normaliser rewrites to ``Sub(1/k, 1/(k+1))`` so the
+/// telescope detector fires and Phase 41 emits ``1`` at infinity (since
+/// ``1/(k+1) → 0``).  When ``eval_fn`` does not dispatch Apart the
+/// attempt returns ``Apply(Apart, [f, k])`` which structurally differs
+/// from ``f``, but the recursive retry won't close on it so the original
+/// unevaluated Sum is preserved.
+fn evaluate_sum_inner(
+    f: IRNode,
+    k: IRNode,
+    lo: IRNode,
+    hi: IRNode,
+    eval_fn: &mut dyn FnMut(IRNode) -> IRNode,
+    apart_retried: bool,
+) -> IRNode {
     let inf_upper = is_inf(&hi);
 
     if is_constant_in(&f, &k) {
@@ -279,7 +317,7 @@ where
     //   polynomial denominator, or any proper rational with
     //   deg(num) < deg(den)).  Otherwise fall through to the
     //   unevaluated SUM at the bottom.
-    if let Some((g_expr, sign)) = try_telescoping(&f, &k, &mut eval_fn) {
+    if let Some((g_expr, sign)) = try_telescoping(&f, &k, eval_fn) {
         if inf_upper {
             if g_vanishes_at_infinity(&g_expr, &k) {
                 let g_at_lo = substitute(&g_expr, &k, &lo);
@@ -332,7 +370,42 @@ where
         }
     }
 
+    // Track B2 — Apart-retry telescope chain.  Mirrors the Python
+    // ``sum_handler`` Phase 40 / Phase 46 retry path: when every direct
+    // rule above fails on a rational summand, expand once via
+    // ``Apart(f, k)`` (dispatched through the user-provided ``eval_fn``)
+    // and try the whole pipeline again.  The ``apart_retried`` guard
+    // pins the retry to at most one round, matching Python's structural
+    // one-shot behaviour and guaranteeing termination.
+    if !apart_retried && head_is_div(&f) {
+        let apart_attempt = eval_fn(apply(sym(APART), vec![f.clone(), k.clone()]));
+        if apart_attempt != f {
+            // Apart emits two-term partial fractions as
+            // ``Add(a, Neg(b))`` or ``Add(a, Div(-c, d))``.  The
+            // structural telescope detector keys off ``Sub`` heads, so
+            // normalise via the existing helper before retrying.
+            let normalised = normalise_add_neg_to_sub(&apart_attempt);
+            let retry = evaluate_sum_inner(normalised, k.clone(), lo.clone(), hi.clone(), eval_fn, true);
+            // Only return when the retry actually closed (i.e. it is
+            // no longer the unevaluated Sum head).  Otherwise fall
+            // through and return the original unevaluated form below.
+            if !is_unevaluated_sum(&retry) {
+                return retry;
+            }
+        }
+    }
+
     apply(sym(SUM), vec![f, k, lo, hi])
+}
+
+const APART: &str = "Apart";
+
+fn head_is_div(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(a) if head_is(&a.head, DIV))
+}
+
+fn is_unevaluated_sum(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(a) if head_is(&a.head, SUM))
 }
 
 pub fn evaluate_product<E>(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, mut eval_fn: E) -> IRNode
@@ -534,22 +607,70 @@ fn extract_negation(node: &IRNode) -> Option<IRNode> {
 fn normalise_add_neg_to_sub(node: &IRNode) -> IRNode {
     let apply_node = match node {
         IRNode::Apply(a) if head_is(&a.head, ADD) && a.args.len() == 2 => a,
-        _ => return node.clone(),
+        _ => return canonicalise_add_operand_order(node),
     };
     let left = &apply_node.args[0];
     let right = &apply_node.args[1];
     let left_pos = extract_negation(left);
     let right_pos = extract_negation(right);
-    match (left_pos, right_pos) {
+    let rewritten = match (left_pos, right_pos) {
         // Both sides genuinely negative — no telescope to expose.
         (Some(_), Some(_)) => node.clone(),
         (_, Some(rp)) => binary(SUB, left.clone(), rp),
         (Some(lp), _) => binary(SUB, right.clone(), lp),
         (None, None) => node.clone(),
-    }
+    };
+    canonicalise_add_operand_order(&rewritten)
 }
 
-fn try_telescoping<E>(f: &IRNode, k: &IRNode, eval_fn: &mut E) -> Option<(IRNode, i32)>
+/// Track B2 (Rust port of Python ``_canonicalise_add_operand_order``):
+/// deep-rewrite every ``Add`` so that numeric literals appear *last*
+/// among its arguments.
+///
+/// The symbolic VM doesn't currently impose a canonical operand order on
+/// ``Add``, so two structurally distinct trees can represent the same
+/// mathematical expression — e.g. ``Add(k, 1)`` vs ``Add(1, k)``.  The
+/// Phase 39 telescope detector relies on structural equality after
+/// ``eval_fn``, so these must look identical for the Apart-rewritten
+/// summand to match the substituted half (``Apart`` emits ``Add(1, k)``
+/// while substitution produces ``Add(k, 1)``).
+///
+/// Walks the tree and sorts each ``Add``'s arguments so that integer /
+/// rational / float literals come *last*, preserving the relative order
+/// of non-literal children.
+fn canonicalise_add_operand_order(node: &IRNode) -> IRNode {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return node.clone(),
+    };
+    let new_args: Vec<IRNode> = apply_node
+        .args
+        .iter()
+        .map(canonicalise_add_operand_order)
+        .collect();
+    if head_is(&apply_node.head, ADD) && new_args.len() >= 2 {
+        let (literals, non_literals): (Vec<IRNode>, Vec<IRNode>) =
+            new_args.iter().cloned().partition(|arg| {
+                matches!(
+                    arg,
+                    IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_)
+                )
+            });
+        if !literals.is_empty() && !non_literals.is_empty() {
+            let mut reordered = non_literals;
+            reordered.extend(literals);
+            if reordered != new_args {
+                return apply(apply_node.head.clone(), reordered);
+            }
+        }
+    }
+    if new_args != apply_node.args {
+        return apply(apply_node.head.clone(), new_args);
+    }
+    node.clone()
+}
+
+fn try_telescoping<E: ?Sized>(f: &IRNode, k: &IRNode, eval_fn: &mut E) -> Option<(IRNode, i32)>
 where
     E: FnMut(IRNode) -> IRNode,
 {

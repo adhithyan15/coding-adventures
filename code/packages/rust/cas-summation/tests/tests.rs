@@ -1709,3 +1709,113 @@ fn phase86_pure_bounded_falls_through_to_phase49() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Track B2 — Apart-retry telescope chain (Phase 40 + Phase 46 composition).
+//
+// These tests drive ``evaluate_sum`` through a real ``symbolic-vm`` VM
+// (``SymbolicBackend`` has the Apart handler installed since 0.13.0), so
+// the ``Apply(Apart, ...)`` emitted by the new retry path is actually
+// dispatched to ``apart_handler``.  This is the only place in the
+// cas-summation Rust test suite that takes a runtime dependency on
+// symbolic-vm — it is a ``dev-dependency`` so the published runtime
+// crate still has no transitive tie to the VM.
+// ---------------------------------------------------------------------------
+
+use symbolic_vm::{SymbolicBackend, VM};
+
+fn vm_eval() -> impl FnMut(IRNode) -> IRNode {
+    let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+    move |node: IRNode| vm.eval(node)
+}
+
+#[test]
+fn track_b2_acceptance_one_over_k_kplus1_closes_to_one() {
+    // The classic case: Apart decomposes 1/(k(k+1)) → 1/k − 1/(k+1).
+    // The Phase 40+46 Add-Neg normaliser rewrites Add(Div(1,k), Neg(Div(1,k+1)))
+    // to Sub(1/k, 1/(k+1)); Phase 41 closes the resulting antisymmetric
+    // telescope at ∞ to give g(1) = 1.
+    let k = sym("k");
+    let denom = apply(sym(MUL), vec![k.clone(), apply(sym(ADD), vec![k.clone(), int(1)])]);
+    let f = apply(sym(DIV), vec![int(1), denom]);
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), vm_eval()), int(1));
+}
+
+#[test]
+fn track_b2_three_term_shifted_one_over_k_kplus2() {
+    // Apart: 1/(k(k+2)) = (1/2)/k − (1/2)/(k+2).  This is a shift-2
+    // telescope, *not* k → k+1, so the structural detector cannot close
+    // it directly.  Safety requirement: the Apart-retry must not falsely
+    // claim closure here.  Accept either a verified closed form (3/4)
+    // or unevaluated Sum.  A wrong rational is a regression.
+    let k = sym("k");
+    let denom = apply(sym(MUL), vec![k.clone(), apply(sym(ADD), vec![k.clone(), int(2)])]);
+    let f = apply(sym(DIV), vec![int(1), denom]);
+    let result = evaluate_sum(f, k, int(1), sym("%inf"), vm_eval());
+    match rational_value(&result) {
+        Some(r) => {
+            assert_eq!(r, Rational::new(3, 4));
+        }
+        None => {
+            assert!(matches!(&result, IRNode::Apply(a) if a.head == sym(SUM)));
+        }
+    }
+}
+
+#[test]
+fn track_b2_phase46_constant_numerator_two_over_k_kplus1() {
+    // Apart: 2/(k(k+1)) = 2/k − 2/(k+1).  Phase 46 widening recognises
+    // ``Add(Div(2, k), Neg(Div(2, k+1)))`` after the Add-Neg normaliser
+    // fires; antisymmetric Phase 41 closes it to 2.
+    let k = sym("k");
+    let denom = apply(sym(MUL), vec![k.clone(), apply(sym(ADD), vec![k.clone(), int(1)])]);
+    let f = apply(sym(DIV), vec![int(2), denom]);
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), vm_eval()), int(2));
+}
+
+#[test]
+fn track_b2_irreducible_denom_returns_unevaluated() {
+    // ``k² + 1`` has no rational roots, so the Apart handler returns its
+    // input unchanged.  ``apart_attempt == f``, so no retry; the sum
+    // falls through to unevaluated ``Sum(...)``.
+    let k = sym("k");
+    let den = apply(sym(ADD), vec![apply(sym(POW), vec![k.clone(), int(2)]), int(1)]);
+    let f = apply(sym(DIV), vec![int(1), den]);
+    let result = evaluate_sum(f, k, int(1), sym("%inf"), vm_eval());
+    assert!(matches!(&result, IRNode::Apply(a) if a.head == sym(SUM)));
+}
+
+#[test]
+fn track_b2_polynomial_summand_skips_apart_uses_faulhaber() {
+    // ``k(k+1)`` is a polynomial, not a Div — the Apart-retry guard
+    // skips it entirely.  The existing power-of-k / Faulhaber path
+    // closes ∑_{k=1}^4 k(k+1) = ∑k² + ∑k = 30 + 10 = 40.
+    let k = sym("k");
+    let f = apply(sym(MUL), vec![k.clone(), apply(sym(ADD), vec![k.clone(), int(1)])]);
+    assert_eq!(evaluate_sum(f, k, int(1), int(4), vm_eval()), int(40));
+}
+
+#[test]
+fn track_b2_apart_fires_but_no_telescope_returns_unevaluated() {
+    // ``1/((k-1)(k+1)(k+2))`` from k=2 to ∞.  Apart produces a 3-term
+    // shift-mixed decomposition that has no direct shift-1 pairing, so
+    // the inner telescope detector returns None and we fall through to
+    // unevaluated SUM.  Safety: no wrong numeric value emitted.
+    let k = sym("k");
+    let km1 = apply(sym(SUB), vec![k.clone(), int(1)]);
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let kp2 = apply(sym(ADD), vec![k.clone(), int(2)]);
+    let den = apply(sym(MUL), vec![km1, apply(sym(MUL), vec![kp1, kp2])]);
+    let f = apply(sym(DIV), vec![int(1), den]);
+    let result = evaluate_sum(f, k, int(2), sym("%inf"), vm_eval());
+    match rational_value(&result) {
+        Some(_) => {
+            // Any closed numeric value here would need independent
+            // verification; currently this branch is not expected to
+            // trigger but is left in for a future widening.
+        }
+        None => {
+            assert!(matches!(&result, IRNode::Apply(a) if a.head == sym(SUM)));
+        }
+    }
+}

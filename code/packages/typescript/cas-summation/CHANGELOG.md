@@ -1,5 +1,50 @@
 # Changelog
 
+## 2.25.0 — 2026-05-28
+
+### Added — Track B2 (Apart-retry telescope chain port: Phase 40 + Phase 46)
+
+Ports the Python ``sum_handler`` Apart-retry composition (``symbolic-vm``
+Phase 40 + Phase 46) to TypeScript ``cas-summation``.  After the existing
+direct telescoping / vanishing-at-infinity / classic-series pipeline falls
+through on a rational summand ``Div(P(k), Q(k))``, ``evaluateSum`` now:
+
+1. Dispatches ``Apart(f, k)`` through the user-provided ``evalFn`` —
+   typically a ``symbolic-vm`` VM with the Apart handler installed
+   (Track B1, ``symbolic-vm`` 0.13.0).
+2. If Apart actually decomposes ``f`` (returned shape structurally differs
+   from the input), normalises the ``Add(a, Div(-c, d))`` /
+   ``Add(Neg(b), a)`` shapes to ``Sub`` via the existing
+   ``normaliseAddNegToSub`` helper.
+3. Retries the full pipeline on the normalised result with a one-shot
+   ``apartRetried`` guard so we never recurse a second time.
+
+This is the long-promised TypeScript closure of the classic
+``∑_{k=1}^∞ 1/(k(k+1)) = 1`` telescope: Apart decomposes the summand to
+``Add(Div(1, k), Div(-1, k+1))`` which the Phase 40+46 normaliser
+rewrites to ``Sub(1/k, 1/(k+1))``; the structural telescope detector
+fires and Phase 41 emits ``1`` (since ``1/(k+1) → 0`` at infinity).
+
+- ``src/index.ts``: refactor ``evaluateSum`` to delegate to a private
+  ``evaluateSumInner`` carrying an ``apartRetried`` flag; add the
+  Apart-retry block just above the unevaluated fallback.
+- ``package.json``: bump to 2.25.0; add ``@coding-adventures/symbolic-vm``
+  as a ``devDependency`` so the tests can construct a real VM with the
+  Apart handler installed.
+- ``BUILD``: chain-install ``cas-factor`` and ``symbolic-vm`` ahead of the
+  package install so CI has the transitive ``file:`` deps available.
+- ``tests/cas-summation.test.ts``: new ``"summation: Track B2 Apart-retry
+  telescope chain"`` describe block — 6 cases (acceptance, three-term,
+  Phase 46 constant numerator, irreducible-denominator fallthrough,
+  polynomial-summand fallthrough, non-telescoping-after-Apart fallthrough).
+
+When the user's ``evalFn`` does not dispatch ``Apart`` (e.g. a bare
+arithmetic walker without the symbolic-vm handler), the Apart attempt
+returns ``Apply(Apart, [f, k])`` which structurally differs from ``f``,
+but the recursive retry on that shape also returns unevaluated — so the
+original unevaluated ``Sum`` is preserved.  No spurious "closure" can
+leak out.
+
 ## 2.24.0 — 2026-05-28
 
 ### Removed — Track A2 cleanup (delete 27 grid helpers superseded by Phase 86)

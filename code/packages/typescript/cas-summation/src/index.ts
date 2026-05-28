@@ -109,6 +109,42 @@ export function trySpecialInfinite(f: IRNode, k: IRNode, lo: IRNode): IRNode | u
 }
 
 export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn: EvalFn): IRNode {
+  return evaluateSumInner(f, k, lo, hi, evalFn, false);
+}
+
+/**
+ * Track B2 (TypeScript port of Phase 40 + Phase 46 from Python ``symbolic-vm``
+ * ``sum_handler``).  The ``apartRetried`` flag prevents infinite recursion
+ * when the retry path falls back to the outer entry point — Apart is
+ * attempted at most once per top-level call.
+ *
+ * Apart-retry telescope chain
+ * ---------------------------
+ * When the structural telescope detector and every other narrow recogniser
+ * fall through to the unevaluated ``Sum(...)`` shape AND the summand is a
+ * proper rational ``Div(P(k), Q(k))``, we expand once via
+ * ``Apart(f, k)`` (dispatched through the user-provided ``evalFn`` —
+ * typically a ``symbolic-vm`` VM with the Apart handler installed) and
+ * retry ``evaluateSum`` on the partial-fraction decomposed shape.
+ *
+ * The classic case is ``∑ 1/(k·(k+1))``: Apart emits
+ * ``Add(Div(1, k), Div(-1, k+1))`` which the Phase 40+46 Add-with-negation
+ * normaliser rewrites to ``Sub(1/k, 1/(k+1))`` so the telescope detector
+ * fires and emits ``1 − 1/(hi+1)`` (finite) or ``1`` (infinite, since
+ * ``1/(k+1) → 0``).  When ``evalFn`` does not dispatch Apart (e.g. a bare
+ * arithmetic evaluator), ``apart_attempt`` retains the same head
+ * (``Apply(Apart, ...)``), structurally differs from ``f``, but
+ * ``evaluateSumInner`` will not close on it so the original unevaluated
+ * Sum is returned — exactly the Python fall-through behaviour.
+ */
+function evaluateSumInner(
+  f: IRNode,
+  k: IRNode,
+  lo: IRNode,
+  hi: IRNode,
+  evalFn: EvalFn,
+  apartRetried: boolean,
+): IRNode {
   const infUpper = isInf(hi);
   if (isConstantIn(f, k)) {
     return evalFn(app(MUL, [f, app(ADD, [app(SUB, [hi, lo]), int(1)])]));
@@ -181,6 +217,38 @@ export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn
       total = addR(total, r);
     }
     if (ok) return rationalToIr(total);
+  }
+
+  // Track B2 — Apart-retry telescope chain.  Mirrors the Python
+  // ``sum_handler`` Phase 40 / Phase 46 retry path: when every direct rule
+  // above fails on a rational summand, expand once via ``Apart(f, k)``
+  // (dispatched through the user-provided ``evalFn``, i.e. a real VM with
+  // the Apart handler installed) and try the whole pipeline again.  The
+  // ``apartRetried`` guard pins the retry to at most one round, matching
+  // Python's structural one-shot behaviour and guaranteeing termination.
+  //
+  // Only attempted when ``f`` is structurally ``Div(num, den)`` — Apart
+  // leaves other heads unchanged, so this saves a wasted round-trip
+  // through the VM dispatch.  When ``apart_attempt`` is structurally
+  // equal to ``f`` (e.g. denominator irreducible over ℚ, or Apart isn't
+  // wired into ``evalFn``), no retry is performed.
+  if (!apartRetried && f.kind === "apply" && equals(f.head, DIV)) {
+    const apartAttempt = evalFn(app(sym("Apart"), [f, k]));
+    if (!equals(apartAttempt, f)) {
+      // Apart emits two-term partial fractions as ``Add(a, Div(-c, d))``
+      // or ``Add(Neg(a), b)``.  The structural telescope detector keys
+      // off ``Sub`` heads, so normalise via the existing helper before
+      // retrying.  ``normaliseAddNegToSub`` is a no-op when the head is
+      // not an Add — safe to apply unconditionally.
+      const normalised = normaliseAddNegToSub(apartAttempt);
+      const retry = evaluateSumInner(normalised, k, lo, hi, evalFn, true);
+      // Only return when the retry actually closed the sum (i.e. it is
+      // no longer the unevaluated ``Sum(...)`` head).  Otherwise fall
+      // through and return the original unevaluated form below.
+      if (!(retry.kind === "apply" && equals(retry.head, SUM))) {
+        return retry;
+      }
+    }
   }
 
   return app(SUM, [f, k, lo, hi]);
@@ -295,22 +363,65 @@ function extractNegation(node: IRNode): IRNode | undefined {
  */
 function normaliseAddNegToSub(node: IRNode): IRNode {
   if (node.kind !== "apply" || !irEquals(node.head, ADD) || node.args.length !== 2) {
-    return node;
+    return canonicaliseAddOperandOrder(node);
   }
   const [left, right] = node.args;
   const leftPos = extractNegation(left);
   const rightPos = extractNegation(right);
   if (leftPos !== undefined && rightPos !== undefined) {
     // Both sides genuinely negative — no telescope to expose.
-    return node;
+    return canonicaliseAddOperandOrder(node);
   }
   if (rightPos !== undefined) {
-    return app(SUB, [left, rightPos]);
+    return canonicaliseAddOperandOrder(app(SUB, [left, rightPos]));
   }
   if (leftPos !== undefined) {
-    return app(SUB, [right, leftPos]);
+    return canonicaliseAddOperandOrder(app(SUB, [right, leftPos]));
   }
-  return node;
+  return canonicaliseAddOperandOrder(node);
+}
+
+/**
+ * Track B2 (TypeScript port of Python ``_canonicalise_add_operand_order``):
+ * deep-rewrite every ``Add`` so that numeric literals appear *last* among
+ * its arguments.
+ *
+ * The symbolic VM doesn't currently impose a canonical operand order on
+ * ``Add``, so two structurally distinct trees can represent the same
+ * mathematical expression — e.g. ``Add(k, 1)`` vs ``Add(1, k)``.  The
+ * Phase 39 telescope detector relies on ``==`` after ``evalFn``, so
+ * these must look identical for the Apart-rewritten summand to match the
+ * substituted half (``Apart`` emits ``Add(1, k)`` while substitution
+ * produces ``Add(k, 1)``).
+ *
+ * Walks the tree and sorts each ``Add``'s arguments so that integer /
+ * rational / float literals come *last*, preserving the relative order of
+ * non-literal children.  Other heads recurse into their arguments unchanged.
+ */
+function canonicaliseAddOperandOrder(node: IRNode): IRNode {
+  if (node.kind !== "apply") return node;
+  const newArgs = node.args.map(canonicaliseAddOperandOrder);
+  if (irEquals(node.head, ADD) && newArgs.length >= 2) {
+    const literals: IRNode[] = [];
+    const nonLiterals: IRNode[] = [];
+    for (const arg of newArgs) {
+      if (arg.kind === "integer" || arg.kind === "rational" || arg.kind === "float") {
+        literals.push(arg);
+      } else {
+        nonLiterals.push(arg);
+      }
+    }
+    if (literals.length > 0 && nonLiterals.length > 0) {
+      const reordered = [...nonLiterals, ...literals];
+      // Only rebuild when the order actually changed.
+      const changed = reordered.some((arg, idx) => arg !== newArgs[idx]);
+      if (changed) {
+        return app(node.head, reordered);
+      }
+    }
+  }
+  const argsChanged = newArgs.some((arg, idx) => arg !== node.args[idx]);
+  return argsChanged ? app(node.head, newArgs) : node;
 }
 
 /**
