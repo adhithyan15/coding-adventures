@@ -369,6 +369,7 @@ members = [
     "pdf417",
     "image-codec-gif",
     "image-codec-bmp",
+    "image-codec-ico",
     "image-codec-jpeg",
     "image-codec-ppm",
     "image-codec-qoi",

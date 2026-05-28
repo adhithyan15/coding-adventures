@@ -1080,6 +1080,17 @@
   Closes when `denDeg > oneSqrtSevenLogPolyEffectiveDeg` or non-polynomial diverging denominator.
   - 3 new tests in the "Phase 90" describe block.
 
+## 2.22.0 — 2026-05-26
+
+### Added
+
+- **Phase 85 — Two-Sqrt × Six-Log × polynomial numerator** (`twoSqrtSixLogPolyEffectiveDeg`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt and exactly 6 Log factors; `log⁶(k)` sub-polynomial — contributes 0 to effective
+  degree; effective degree = sqrtHalfDeg1 + sqrtHalfDeg2 + polyDeg.
+  Closes when `denDeg > twoSqrtSixLogPolyEffectiveDeg` or non-polynomial diverging denominator.
+  - 3 new tests in the "Phase 85" describe block.
+
 ## 2.21.0 — 2026-05-25
 
 ### Added

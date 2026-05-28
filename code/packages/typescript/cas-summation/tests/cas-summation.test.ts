@@ -3691,6 +3691,109 @@ describe("Phase 84 — One-Sqrt × Six-Log × polynomial numerator", () => {
   });
 });
 
+describe("Phase 85 — Two-Sqrt × Six-Log × polynomial numerator", () => {
+  it("√k·√k·log(k)⁶/k² closes (sqrtHalf1=0.5, sqrtHalf2=0.5, polyDeg=0 → effective=1; denDeg=2 > 1)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const numK85a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+    ]};
+    const numKp185a = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+    ]};
+    const gK85a = { kind: "apply" as const, head: DIV, args: [numK85a, k2] };
+    const gKp185a = { kind: "apply" as const, head: DIV, args: [numKp185a, kp1_2] };
+    const f85a = { kind: "apply" as const, head: SUB, args: [gK85a, gKp185a] };
+    const result = evaluateSum(f85a, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf1=0.5, sqrtHalf2=0.5, polyDeg=0 → effective=1; denDeg=2 > 1 → closes
+    expect(result).not.toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√(k³)·√(k³)·log(k)⁶/k refused (sqrtHalf1=1.5, sqrtHalf2=1.5 → effective=3; denDeg=1 not > 3)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k3 = { kind: "apply" as const, head: POW, args: [k, int(3)] };
+    const kp1_3 = { kind: "apply" as const, head: POW, args: [kp1, int(3)] };
+    const numK85b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k3] },
+      { kind: "apply" as const, head: SQRT, args: [k3] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+    ]};
+    const numKp185b = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1_3] },
+      { kind: "apply" as const, head: SQRT, args: [kp1_3] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+    ]};
+    const gK85b = { kind: "apply" as const, head: DIV, args: [numK85b, k] };
+    const gKp185b = { kind: "apply" as const, head: DIV, args: [numKp185b, kp1] };
+    const f85b = { kind: "apply" as const, head: SUB, args: [gK85b, gKp185b] };
+    const result = evaluateSum(f85b, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf1=1.5, sqrtHalf2=1.5 → effective=3; denDeg=1 not > 3 → refused
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("√k·√k·log(k)⁶·k/k² refused (sqrtHalf1=0.5, sqrtHalf2=0.5, polyDeg=1 → effective=2; denDeg=2 not > 2)", () => {
+    const k = sym("k");
+    const kp1 = { kind: "apply" as const, head: ADD, args: [k, int(1)] };
+    const k2 = { kind: "apply" as const, head: POW, args: [k, int(2)] };
+    const kp1_2 = { kind: "apply" as const, head: POW, args: [kp1, int(2)] };
+    const numK85c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: SQRT, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      { kind: "apply" as const, head: LOG, args: [k] },
+      k,
+    ]};
+    const numKp185c = { kind: "apply" as const, head: MUL, args: [
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: SQRT, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      { kind: "apply" as const, head: LOG, args: [kp1] },
+      kp1,
+    ]};
+    const gK85c = { kind: "apply" as const, head: DIV, args: [numK85c, k2] };
+    const gKp185c = { kind: "apply" as const, head: DIV, args: [numKp185c, kp1_2] };
+    const f85c = { kind: "apply" as const, head: SUB, args: [gK85c, gKp185c] };
+    const result = evaluateSum(f85c, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalf1=0.5, sqrtHalf2=0.5, polyDeg=1 → effective=2; denDeg=2 not > 2 → refused
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+});
+
 describe("Phase 89 — Seven-Log × polynomial numerator", () => {
   // log(k)^7 · poly(k) / denom — effective degree = polyDeg (log^7 sub-polynomial).
 
