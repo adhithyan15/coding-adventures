@@ -1,5 +1,75 @@
 # Changelog
 
+## 0.4.0 — 2026-05-28
+
+**Track D1 — Bivariate Hensel lifting in Q[x, y].**
+
+Closes the bivariate-factoring gap in the MACSYMA finish plan
+(`code/specs/macsyma-finish-plan.md`).  The acceptance criterion was
+`factor(x² + xy − 2y²) → (x + 2y)(x − y)` and similar bivariate
+polynomials with rational coefficients.
+
+Adds `cas_factor/hensel.py` implementing the textbook bivariate Hensel
+lift over ℚ:
+
+1. **Lucky-substitution search** — try small integer values `y₀ ∈
+   {0, ±1, ±2, …}` until the univariate image `f(x, y₀)` is squarefree
+   and has full x-degree.
+2. **Univariate factoring of the image** — clear denominators and reuse
+   the existing `factor_integer_polynomial` pipeline (rational roots +
+   Kronecker + BZH).
+3. **Hensel lift in powers of `(y − y₀)`** — at each step solve the
+   univariate Diophantine equation `u·g₀ + v·h₀ = e_k` in ℚ[x] via
+   extended GCD, then add the corrections at the next `y`-layer.
+4. **Multi-factor handling** — iteratively peel off one univariate
+   factor against the product of the rest, routing every factor count
+   through the same two-factor lift (per the spec's
+   "no helper per polynomial shape" guardrail).
+5. **Final verification** — multiply lifted factors and confirm the
+   product equals the input before returning.
+
+New cases correctly handled (previously returned unevaluated):
+
+- `factor(x² + xy − 2y²) → (x + 2y)(x − y)`
+- `factor(2x² + 3xy − 2y²)` → linear × linear over ℚ
+- `factor(x³ − y³) → (x − y)(x² + xy + y²)`
+- `factor(x² + y² + 1)` → confirmed irreducible (returns `None`)
+- Univariate inputs (`x² − 1`) fall through cleanly to the existing
+  univariate path.
+
+Updates `symbolic_vm/cas_handlers.py`:
+
+- New helpers `_find_two_variables`, `_ir_to_bipoly`, `_bipoly_to_ir`,
+  `_try_bivariate_hensel_ir` that bridge the IR layer to the new
+  bivariate algorithm.
+- `factor_handler` dispatcher gains the bivariate Hensel branch after
+  the existing multivariate pattern recognisers (perfect-square,
+  difference-of-squares, cubic-identity, perfect-cube, grouping,
+  common-factor extraction) and before returning unevaluated.
+
+Limitations (explicitly documented):
+
+- **Bivariate only** — trivariate+ falls through.  The spec calls
+  three-variable factoring a non-goal.
+- **Rational coefficients only** — works directly in ℚ via the
+  diophantine-solver approach rather than mod-p + CRT, simpler and
+  sufficient for graduate-engineering inputs.
+- **Squarefree image required** — polynomials whose univariate image
+  at every small `y₀` has a repeated root (e.g. `(x − y)²(x + y)`)
+  return `None` from the bivariate path.  Squarefree decomposition is
+  out of scope for this PR.
+
+New tests: `tests/test_hensel.py` — 6 cases covering the acceptance
+criterion, non-monic leading coefficient, multi-factor lift,
+irreducibility detection, linear input (fall-through), and the
+univariate fall-through.
+
+Total test count: 141 (135 existing + 6 new).  Coverage: 90%
+(88% for the new `hensel.py` module).
+
+This is the **Python** side of Track D1.  The TS+Rust port is Track D2
+(separate PR).
+
 ## 0.3.0 — 2026-04-28
 
 **Phase 3 — Berlekamp-Zassenhaus-Hensel (BZH) for arbitrary-degree factoring.**
