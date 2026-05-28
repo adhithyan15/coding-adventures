@@ -4498,6 +4498,442 @@ fn is_head_name(head: &IRNode, expected: &str) -> bool {
 }
 
 // ---------------------------------------------------------------------------
+// Apart (Track B1) — partial-fraction decomposition over Q(x).
+//
+// Phase 1 only: every root of the denominator must be a *simple* rational
+// root.  Repeated roots and irreducible quadratic factors leave the
+// expression wrapped in ``Apart(...)``.  This mirrors the Python
+// ``apart_handler`` / ``_apart_simple_roots`` / ``_apart_proper`` chain in
+// ``cas_handlers.py`` but stays inside the existing ``RatC`` / ``RatPoly``
+// machinery so we don't introduce a new arithmetic substrate.
+//
+// Polynomials use the same ``RatPoly`` representation as the rest of this
+// file: lowest degree first, coefficient at index k is the coefficient of
+// x^k.  Polynomials are not auto-normalised; callers strip trailing zeros
+// via ``rp_normalize`` when needed.
+// ---------------------------------------------------------------------------
+
+const APART: &str = "Apart";
+
+/// Strip trailing zero coefficients in place.
+fn rp_normalize(p: &[RatC]) -> RatPoly {
+    let mut out: RatPoly = p.to_vec();
+    while out.last().map_or(false, |c| rc_is_zero(*c)) {
+        out.pop();
+    }
+    out
+}
+
+/// Horner evaluation at a rational point.
+fn rp_evaluate(p: &[RatC], x: RatC) -> Option<RatC> {
+    let n = rp_normalize(p);
+    if n.is_empty() {
+        return Some(RC_ZERO);
+    }
+    let mut acc = RC_ZERO;
+    for &c in n.iter().rev() {
+        acc = rc_add(rc_mul(acc, x)?, c)?;
+    }
+    Some(acc)
+}
+
+/// Rational roots via the Rational-Roots Theorem.  Returns roots in
+/// ascending order — matches Python's ``sorted(roots)`` so the IR output
+/// shape stays stable across regression tests.
+fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
+    let n = rp_normalize(p);
+    if n.len() <= 1 {
+        return Some(vec![]);
+    }
+
+    // Clear denominators so candidates come from integer divisors of p.
+    let mut lcm_den: i128 = 1;
+    for &(_, d) in &n {
+        let g = gcd128(lcm_den.unsigned_abs(), d.unsigned_abs()) as i128;
+        lcm_den = lcm_den.checked_mul(d)? / g;
+    }
+    let mut int_coeffs: Vec<i128> = n
+        .iter()
+        .map(|&(num, den)| num.checked_mul(lcm_den).map(|p| p / den))
+        .collect::<Option<Vec<_>>>()?;
+    if *int_coeffs.last()? < 0 {
+        for c in int_coeffs.iter_mut() {
+            *c = -*c;
+        }
+    }
+
+    let a0 = int_coeffs[0];
+    let an = *int_coeffs.last()?;
+
+    if a0 == 0 {
+        // x = 0 is a root; strip it and recurse on the tail.
+        let tail_int = &int_coeffs[1..];
+        let tail_poly: RatPoly = tail_int.iter().map(|&c| (c, 1i128)).collect();
+        let mut tail_roots = rp_rational_roots(&tail_poly)?;
+        if !tail_roots.iter().any(|r| rc_is_zero(*r)) {
+            tail_roots.push(RC_ZERO);
+        }
+        // Keep ascending order.
+        tail_roots.sort_by(|a, b| {
+            // a = (an, ad), b = (bn, bd) — compare an*bd vs bn*ad.
+            let lhs = a.0 as i128 * b.1 as i128;
+            let rhs = b.0 as i128 * a.1 as i128;
+            lhs.cmp(&rhs)
+        });
+        return Some(tail_roots);
+    }
+
+    fn divisors(m: i128) -> Vec<i128> {
+        let abs = m.unsigned_abs();
+        let mut out = Vec::new();
+        let mut d: u128 = 1;
+        while d <= abs {
+            if abs % d == 0 {
+                out.push(d as i128);
+            }
+            d += 1;
+        }
+        out
+    }
+
+    let p_divs = divisors(a0);
+    let q_divs = divisors(an);
+
+    // Use a tuple-keyed set via Vec + dedup; counts are small.
+    let mut candidates: Vec<RatC> = Vec::new();
+    for &u in &p_divs {
+        for &v in &q_divs {
+            for sign in [1i128, -1] {
+                if let Some(cand) = rc(sign * u, v) {
+                    candidates.push(cand);
+                }
+            }
+        }
+    }
+    candidates.sort();
+    candidates.dedup();
+
+    let int_poly: RatPoly = int_coeffs.iter().map(|&c| (c, 1i128)).collect();
+    let mut roots: Vec<RatC> = Vec::new();
+    for cand in candidates {
+        if let Some(v) = rp_evaluate(&int_poly, cand) {
+            if rc_is_zero(v) && !roots.iter().any(|r| *r == cand) {
+                roots.push(cand);
+            }
+        }
+    }
+    // Sort ascending — matches Python's ``sorted(roots)``.
+    roots.sort_by(|a, b| {
+        let lhs = a.0 * b.1;
+        let rhs = b.0 * a.1;
+        lhs.cmp(&rhs)
+    });
+    Some(roots)
+}
+
+/// For each rational root, count the multiplicity of ``(x − r)`` in ``den``.
+/// Returns ``None`` when the multiplicities don't sum to ``deg(den)``
+/// (irreducible factor present), so the caller can bail to the unevaluated
+/// form.
+fn rp_root_multiplicities(den: &[RatC], roots: &[RatC]) -> Option<Vec<(RatC, usize)>> {
+    let mut out: Vec<(RatC, usize)> = Vec::new();
+    let mut remaining: RatPoly = rp_normalize(den);
+    let mut total = 0usize;
+    for &r in roots {
+        let linear: RatPoly = vec![rc_neg(r), RC_ONE]; // (x − r)
+        let mut m: usize = 0;
+        loop {
+            let (q, rem) = rp_div(&remaining, &linear)?;
+            if rp_is_zero(&rem) {
+                remaining = q;
+                m += 1;
+            } else {
+                break;
+            }
+        }
+        if m == 0 {
+            return None;
+        }
+        total += m;
+        out.push((r, m));
+    }
+    let deg_den = rp_deg(den)?;
+    if total != deg_den {
+        return None;
+    }
+    Some(out)
+}
+
+/// Rational form of an IR sub-expression in variable ``x``.
+type RpRational = (RatPoly, RatPoly); // (num, den)
+
+const fn rp_one_const() -> [RatC; 1] {
+    [(1i128, 1i128)]
+}
+
+fn rp_one() -> RatPoly {
+    rp_one_const().to_vec()
+}
+
+/// Attempt to represent ``node`` as a rational function ``num / den`` of
+/// ``x``.  Returns ``None`` for floats, free symbols, transcendentals, or
+/// any subtree outside Q(x).  Mirrors Python ``polynomial_bridge.to_rational``
+/// (and the analogous TS port).
+fn to_rational_ir(node: &IRNode, x: &str) -> Option<RpRational> {
+    match node {
+        IRNode::Integer(n) => Some((vec![(*n as i128, 1)], rp_one())),
+        IRNode::Rational(n, d) => {
+            let c = rc(*n as i128, *d as i128)?;
+            Some((vec![c], rp_one()))
+        }
+        IRNode::Float(_) => None,
+        IRNode::Symbol(s) => {
+            if s == x {
+                Some((vec![RC_ZERO, RC_ONE], rp_one()))
+            } else {
+                None
+            }
+        }
+        IRNode::Apply(apply) => {
+            let IRNode::Symbol(head) = &apply.head else {
+                return None;
+            };
+            match (head.as_str(), apply.args.as_slice()) {
+                (ADD, args) if !args.is_empty() => {
+                    let mut acc = to_rational_ir(&args[0], x)?;
+                    for arg in &args[1..] {
+                        let other = to_rational_ir(arg, x)?;
+                        acc = rational_add(acc, other)?;
+                    }
+                    Some(acc)
+                }
+                (SUB, [a, b]) => {
+                    let ra = to_rational_ir(a, x)?;
+                    let rb = to_rational_ir(b, x)?;
+                    rational_sub(ra, rb)
+                }
+                (NEG, [a]) => {
+                    let (num, den) = to_rational_ir(a, x)?;
+                    let neg_num: RatPoly = num.into_iter().map(rc_neg).collect();
+                    Some((neg_num, den))
+                }
+                (MUL, args) if !args.is_empty() => {
+                    let mut acc = to_rational_ir(&args[0], x)?;
+                    for arg in &args[1..] {
+                        let other = to_rational_ir(arg, x)?;
+                        acc = rational_mul(acc, other)?;
+                    }
+                    Some(acc)
+                }
+                (DIV, [a, b]) => {
+                    let ra = to_rational_ir(a, x)?;
+                    let rb = to_rational_ir(b, x)?;
+                    rational_div(ra, rb)
+                }
+                (POW, [base, exp]) => {
+                    let IRNode::Integer(n) = exp else {
+                        return None;
+                    };
+                    rational_pow(base, *n, x)
+                }
+                _ => None,
+            }
+        }
+        _ => None,
+    }
+}
+
+fn rational_add(a: RpRational, b: RpRational) -> Option<RpRational> {
+    let num = rp_add(&rp_mul(&a.0, &b.1)?, &rp_mul(&b.0, &a.1)?)?;
+    let den = rp_mul(&a.1, &b.1)?;
+    Some((num, den))
+}
+
+fn rational_sub(a: RpRational, b: RpRational) -> Option<RpRational> {
+    let num = rp_sub_poly(&rp_mul(&a.0, &b.1)?, &rp_mul(&b.0, &a.1)?)?;
+    let den = rp_mul(&a.1, &b.1)?;
+    Some((num, den))
+}
+
+fn rational_mul(a: RpRational, b: RpRational) -> Option<RpRational> {
+    Some((rp_mul(&a.0, &b.0)?, rp_mul(&a.1, &b.1)?))
+}
+
+fn rational_div(a: RpRational, b: RpRational) -> Option<RpRational> {
+    let new_den = rp_mul(&a.1, &b.0)?;
+    if rp_is_zero(&new_den) {
+        return None;
+    }
+    Some((rp_mul(&a.0, &b.1)?, new_den))
+}
+
+fn rational_pow(base: &IRNode, n: i64, x: &str) -> Option<RpRational> {
+    let (num, den) = to_rational_ir(base, x)?;
+    if n == 0 {
+        return Some((rp_one(), rp_one()));
+    }
+    if n < 0 {
+        if rp_is_zero(&num) {
+            return None;
+        }
+        let k = (-n) as usize;
+        return Some((rp_power(&den, k)?, rp_power(&num, k)?));
+    }
+    let k = n as usize;
+    Some((rp_power(&num, k)?, rp_power(&den, k)?))
+}
+
+fn rp_power(p: &[RatC], n: usize) -> Option<RatPoly> {
+    let mut result: RatPoly = rp_one();
+    for _ in 0..n {
+        result = rp_mul(&result, p)?;
+    }
+    Some(result)
+}
+
+/// Build canonical IR for a polynomial coefficient tuple.  Mirrors
+/// ``polynomial_bridge.from_polynomial`` — left-associated ``Add`` chain,
+/// drops zero terms, special-cases ±1 coefficients.
+fn rp_to_ir_apart(p: &[RatC], x: &str) -> Option<IRNode> {
+    let n = rp_normalize(p);
+    if n.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    if n.len() == 1 {
+        return rc_to_ir(n[0]);
+    }
+    let x_sym = IRNode::Symbol(x.to_string());
+    let mut terms: Vec<IRNode> = Vec::new();
+    for (i, &c) in n.iter().enumerate() {
+        if rc_is_zero(c) {
+            continue;
+        }
+        let monomial = if i == 0 {
+            rc_to_ir(c)?
+        } else {
+            let power: IRNode = if i == 1 {
+                x_sym.clone()
+            } else {
+                apply_node(POW, vec![x_sym.clone(), IRNode::Integer(i as i64)])
+            };
+            if rc_is_one(c) {
+                power
+            } else if c == (-1, 1) {
+                apply_node(NEG, vec![power])
+            } else {
+                apply_node(MUL, vec![rc_to_ir(c)?, power])
+            }
+        };
+        terms.push(monomial);
+    }
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
+}
+
+fn apart_simple_roots(
+    num: &[RatC],
+    den: &[RatC],
+    roots: &[RatC],
+    x: &str,
+) -> Option<IRNode> {
+    let den_deriv = rp_deriv(den)?;
+    let mut terms: Vec<IRNode> = Vec::new();
+    for &r in roots {
+        let num_val = rp_evaluate(num, r)?;
+        let den_d_val = rp_evaluate(&den_deriv, r)?;
+        if rc_is_zero(den_d_val) {
+            return None;
+        }
+        let coef = rc_div(num_val, den_d_val)?;
+        // (x − r) IR via from_polynomial([-r, 1], x).
+        let factor_ir = rp_to_ir_apart(&[rc_neg(r), RC_ONE], x)?;
+        let term = if rc_is_one(coef) {
+            apply_node(DIV, vec![IRNode::Integer(1), factor_ir])
+        } else if coef == (-1, 1) {
+            apply_node(NEG, vec![apply_node(DIV, vec![IRNode::Integer(1), factor_ir])])
+        } else {
+            apply_node(DIV, vec![rc_to_ir(coef)?, factor_ir])
+        };
+        terms.push(term);
+    }
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
+}
+
+fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
+    let roots = rp_rational_roots(den)?;
+    if roots.is_empty() {
+        return None;
+    }
+    let mults = rp_root_multiplicities(den, &roots)?;
+    if mults.iter().any(|(_, m)| *m > 1) {
+        // Phase 48 — out of scope for this PR.
+        return None;
+    }
+    apart_simple_roots(num, den, &roots, x)
+}
+
+fn apart_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    let fallback = IRNode::Apply(Box::new(expr.clone()));
+    if expr.args.len() != 2 {
+        return fallback;
+    }
+    let inner = &expr.args[0];
+    let var = &expr.args[1];
+    let IRNode::Symbol(x) = var else {
+        return fallback;
+    };
+    let Some((num, den)) = to_rational_ir(inner, x) else {
+        return fallback;
+    };
+    let den_norm = rp_normalize(&den);
+    let num_norm = rp_normalize(&num);
+
+    // Already a polynomial (denominator ≡ 1).
+    if den_norm.len() == 1 && rc_is_one(den_norm[0]) {
+        return rp_to_ir_apart(&num_norm, x).unwrap_or(fallback);
+    }
+
+    let num_deg = rp_deg(&num_norm).unwrap_or(0);
+    let den_deg = match rp_deg(&den_norm) {
+        Some(d) => d,
+        None => return fallback,
+    };
+
+    if num_deg >= den_deg {
+        let Some((q, r)) = rp_div(&num_norm, &den_norm) else {
+            return fallback;
+        };
+        if rp_is_zero(&r) {
+            return rp_to_ir_apart(&q, x).unwrap_or(fallback);
+        }
+        let Some(proper) = apart_proper(&r, &den_norm, x) else {
+            return fallback;
+        };
+        let Some(poly_part) = rp_to_ir_apart(&q, x) else {
+            return fallback;
+        };
+        return apply_node(ADD, vec![poly_part, proper]);
+    }
+
+    apart_proper(&num_norm, &den_norm, x).unwrap_or(fallback)
+}
+
+// ---------------------------------------------------------------------------
 // Build handler table
 // ---------------------------------------------------------------------------
 
@@ -4568,6 +5004,8 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
         m.insert(D.to_string(), derivative_handler());
         m.insert(INTEGRATE.to_string(), integrate_handler());
         m.insert(FACTOR.to_string(), handler_fn(factor_handler));
+        // Track B1 — Apart simple-roots partial-fraction decomposition.
+        m.insert(APART.to_string(), handler_fn(apart_handler));
     }
     m
 }
