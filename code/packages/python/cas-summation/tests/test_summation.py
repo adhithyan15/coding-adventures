@@ -17892,6 +17892,7 @@ class TestPhase205TwoSqrtTwentySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -18076,6 +18077,7 @@ class TestPhase206ThreeSqrtTwentySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -18266,6 +18268,7 @@ class TestPhase207FourSqrtTwentySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -18456,6 +18459,7 @@ class TestPhase208FiveSqrtTwentySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -19014,6 +19018,7 @@ class TestPhase211TwoSqrtTwentySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -19202,6 +19207,7 @@ class TestPhase212ThreeSqrtTwentySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -19396,6 +19402,7 @@ class TestPhase213FourSqrtTwentySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -19590,6 +19597,7 @@ class TestPhase214FiveSqrtTwentySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -20160,6 +20168,7 @@ class TestPhase217TwoSqrtTwentyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -20352,6 +20361,7 @@ class TestPhase218ThreeSqrtTwentyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -20550,6 +20560,7 @@ class TestPhase219FourSqrtTwentyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -20748,6 +20759,7 @@ class TestPhase220FiveSqrtTwentyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -21331,6 +21343,7 @@ class TestPhase223TwoSqrtTwentyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -21527,6 +21540,7 @@ class TestPhase224ThreeSqrtTwentyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -21729,6 +21743,7 @@ class TestPhase225FourSqrtTwentyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -21931,6 +21946,7 @@ class TestPhase226FiveSqrtTwentyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -22525,6 +22541,7 @@ class TestPhase229TwoSqrtThirtyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -22725,6 +22742,7 @@ class TestPhase230ThreeSqrtThirtyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -22925,6 +22943,7 @@ class TestPhase231FourSqrtThirtyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -23131,6 +23150,7 @@ class TestPhase232FiveSqrtThirtyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -23737,6 +23757,7 @@ class TestPhase235TwoSqrtThirtyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -23941,6 +23962,7 @@ class TestPhase236ThreeSqrtThirtyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -24151,6 +24173,7 @@ class TestPhase237FourSqrtThirtyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -24361,6 +24384,7 @@ class TestPhase238FiveSqrtThirtyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -24979,6 +25003,7 @@ class TestPhase241TwoSqrtThirtyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -25187,6 +25212,7 @@ class TestPhase242ThreeSqrtThirtyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -25401,6 +25427,7 @@ class TestPhase243FourSqrtThirtyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -25615,6 +25642,7 @@ class TestPhase244FiveSqrtThirtyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -26245,6 +26273,7 @@ class TestPhase247TwoSqrtThirtyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -26457,6 +26486,7 @@ class TestPhase248ThreeSqrtThirtyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -26675,6 +26705,7 @@ class TestPhase249FourSqrtThirtyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -26893,6 +26924,7 @@ class TestPhase250FiveSqrtThirtyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -27535,6 +27567,7 @@ class TestPhase253TwoSqrtThirtyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -27751,6 +27784,7 @@ class TestPhase254ThreeSqrtThirtyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -27973,6 +28007,7 @@ class TestPhase255FourSqrtThirtyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -28195,6 +28230,7 @@ class TestPhase256FiveSqrtThirtyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -28849,6 +28885,7 @@ class TestPhase259TwoSqrtThirtyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -29069,6 +29106,7 @@ class TestPhase260ThreeSqrtThirtyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -29295,6 +29333,7 @@ class TestPhase261FourSqrtThirtyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -29521,6 +29560,7 @@ class TestPhase262FiveSqrtThirtyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -30187,6 +30227,7 @@ class TestPhase265TwoSqrtThirtySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -30411,6 +30452,7 @@ class TestPhase266ThreeSqrtThirtySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -30641,6 +30683,7 @@ class TestPhase267FourSqrtThirtySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -30871,6 +30914,7 @@ class TestPhase268FiveSqrtThirtySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -31095,6 +31139,7 @@ class TestPhase269ThirtySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -31322,6 +31367,7 @@ class TestPhase270OneSqrtThirtySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -31549,6 +31595,7 @@ class TestPhase271TwoSqrtThirtySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -31776,6 +31823,7 @@ class TestPhase272ThreeSqrtThirtySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -32003,6 +32051,7 @@ class TestPhase273FourSqrtThirtySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -32236,6 +32285,7 @@ class TestPhase274FiveSqrtThirtySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -32463,6 +32513,7 @@ class TestPhase275ThirtyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -32694,6 +32745,7 @@ class TestPhase276OneSqrtThirtyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -32925,6 +32977,7 @@ class TestPhase277TwoSqrtThirtyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -33156,6 +33209,7 @@ class TestPhase278ThreeSqrtThirtyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -33393,6 +33447,7 @@ class TestPhase279FourSqrtThirtyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -33630,6 +33685,7 @@ class TestPhase280FiveSqrtThirtyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -33862,6 +33918,7 @@ class TestPhase281ThirtyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -34097,6 +34154,7 @@ class TestPhase282OneSqrtThirtyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -34334,6 +34392,7 @@ class TestPhase283TwoSqrtThirtyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -34571,6 +34630,7 @@ class TestPhase284ThreeSqrtThirtyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -34808,6 +34868,7 @@ class TestPhase285FourSqrtThirtyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -35045,6 +35106,7 @@ class TestPhase286FiveSqrtThirtyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -35281,6 +35343,7 @@ class TestPhase287FortyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -35520,6 +35583,7 @@ class TestPhase288OneSqrtFortyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -35761,6 +35825,7 @@ class TestPhase289TwoSqrtFortyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -36002,6 +36067,7 @@ class TestPhase290ThreeSqrtFortyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -36243,6 +36309,7 @@ class TestPhase291FourSqrtFortyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -36484,6 +36551,7 @@ class TestPhase292FiveSqrtFortyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -36724,6 +36792,7 @@ class TestPhase293FortyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -36896,6 +36965,7 @@ class TestPhase294OneSqrtFortyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -37068,6 +37138,7 @@ class TestPhase295TwoSqrtFortyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -37240,6 +37311,7 @@ class TestPhase296ThreeSqrtFortyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -37412,6 +37484,7 @@ class TestPhase297FourSqrtFortyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -37584,6 +37657,7 @@ class TestPhase298FiveSqrtFortyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -37755,6 +37829,7 @@ class TestPhase299FortyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -37929,6 +38004,7 @@ class TestPhase300OneSqrtFortyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -38103,6 +38179,7 @@ class TestPhase301TwoSqrtFortyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -38277,6 +38354,7 @@ class TestPhase302ThreeSqrtFortyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -38451,6 +38529,7 @@ class TestPhase303FourSqrtFortyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -38625,6 +38704,7 @@ class TestPhase304FiveSqrtFortyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -38798,6 +38878,7 @@ class TestPhase305FortyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -38975,6 +39056,7 @@ class TestPhase306OneSqrtFortyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -39152,6 +39234,7 @@ class TestPhase307TwoSqrtFortyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -39329,6 +39412,7 @@ class TestPhase308ThreeSqrtFortyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -39506,6 +39590,7 @@ class TestPhase309FourSqrtFortyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -39683,6 +39768,7 @@ class TestPhase310FiveSqrtFortyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -39858,6 +39944,7 @@ class TestPhase311FortyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -40037,6 +40124,7 @@ class TestPhase312OneSqrtFortyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -40216,6 +40304,7 @@ class TestPhase313TwoSqrtFortyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -40395,6 +40484,7 @@ class TestPhase314ThreeSqrtFortyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -40574,6 +40664,7 @@ class TestPhase315FourSqrtFortyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -40753,6 +40844,7 @@ class TestPhase316FiveSqrtFortyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -40930,6 +41022,7 @@ class TestPhase317FortyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -41110,6 +41203,7 @@ class TestPhase318OneSqrtFortyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -41290,6 +41384,7 @@ class TestPhase319TwoSqrtFortyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -41470,6 +41565,7 @@ class TestPhase320ThreeSqrtFortyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -41650,6 +41746,7 @@ class TestPhase321FourSqrtFortyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -41830,6 +41927,7 @@ class TestPhase322FiveSqrtFortyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -42009,6 +42107,7 @@ class TestPhase323FortysSixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -42191,6 +42290,7 @@ class TestPhase324OneSqrtFortySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -42373,6 +42473,7 @@ class TestPhase325TwoSqrtFortySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -42555,6 +42656,7 @@ class TestPhase326ThreeSqrtFortySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -42737,6 +42839,7 @@ class TestPhase327FourSqrtFortySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -42919,6 +43022,7 @@ class TestPhase328FiveSqrtFortySixLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -43100,6 +43204,7 @@ class TestPhase329FortySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -43284,6 +43389,7 @@ class TestPhase330OneSqrtFortySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -43468,6 +43574,7 @@ class TestPhase331TwoSqrtFortySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -43652,6 +43759,7 @@ class TestPhase332ThreeSqrtFortySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -43836,6 +43944,7 @@ class TestPhase333FourSqrtFortySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -44020,6 +44129,7 @@ class TestPhase334FiveSqrtFortySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -44203,6 +44313,7 @@ class TestPhase335FortyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -44390,6 +44501,7 @@ class TestPhase336OneSqrtFortyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -44577,6 +44689,7 @@ class TestPhase337TwoSqrtFortyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -44764,6 +44877,7 @@ class TestPhase338ThreeSqrtFortyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -44951,6 +45065,7 @@ class TestPhase339FourSqrtFortyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -45138,6 +45253,7 @@ class TestPhase340FiveSqrtFortyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -45323,6 +45439,7 @@ class TestPhase341FortyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -45512,6 +45629,7 @@ class TestPhase342OneSqrtFortyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -45701,6 +45819,7 @@ class TestPhase343TwoSqrtFortyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -45890,6 +46009,7 @@ class TestPhase344ThreeSqrtFortyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -46079,6 +46199,7 @@ class TestPhase345FourSqrtFortyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -46268,6 +46389,7 @@ class TestPhase346FiveSqrtFortyNineLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -46455,6 +46577,7 @@ class TestPhase347FiftyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -46646,6 +46769,7 @@ class TestPhase348OneSqrtFiftyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -46837,6 +46961,7 @@ class TestPhase349TwoSqrtFiftyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -47028,6 +47153,7 @@ class TestPhase350ThreeSqrtFiftyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -47219,6 +47345,7 @@ class TestPhase351FourSqrtFiftyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -47410,6 +47537,7 @@ class TestPhase352FiveSqrtFiftyLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -47599,6 +47727,7 @@ class TestPhase353FiftyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -47792,6 +47921,7 @@ class TestPhase354OneSqrtFiftyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -47985,6 +48115,7 @@ class TestPhase355TwoSqrtFiftyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -48178,6 +48309,7 @@ class TestPhase356ThreeSqrtFiftyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -48371,6 +48503,7 @@ class TestPhase357FourSqrtFiftyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -48564,6 +48697,7 @@ class TestPhase358FiveSqrtFiftyOneLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -48715,6 +48849,7 @@ class TestPhase359FiftyTwoLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
@@ -48760,6 +48895,7 @@ class TestPhase359FiftyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -48914,6 +49050,7 @@ class TestPhase360OneSqrtFiftyTwoLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)),
@@ -48960,6 +49097,7 @@ class TestPhase360OneSqrtFiftyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -49114,6 +49252,7 @@ class TestPhase361TwoSqrtFiftyTwoLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -49160,6 +49299,7 @@ class TestPhase361TwoSqrtFiftyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -49314,6 +49454,7 @@ class TestPhase362ThreeSqrtFiftyTwoLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -49360,6 +49501,7 @@ class TestPhase362ThreeSqrtFiftyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -49514,6 +49656,7 @@ class TestPhase363FourSqrtFiftyTwoLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -49560,6 +49703,7 @@ class TestPhase363FourSqrtFiftyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -49714,6 +49858,7 @@ class TestPhase364FiveSqrtFiftyTwoLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -49760,6 +49905,7 @@ class TestPhase364FiveSqrtFiftyTwoLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -49952,6 +50098,7 @@ class TestPhase365FiftyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -50148,6 +50295,7 @@ class TestPhase366OneSqrtFiftyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -50344,6 +50492,7 @@ class TestPhase367TwoSqrtFiftyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -50540,6 +50689,7 @@ class TestPhase368ThreeSqrtFiftyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -50736,6 +50886,7 @@ class TestPhase369FourSqrtFiftyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -50932,6 +51083,7 @@ class TestPhase370FiveSqrtFiftyThreeLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -51126,6 +51278,7 @@ class TestPhase371FiftyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -51324,6 +51477,7 @@ class TestPhase372OneSqrtFiftyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -51522,6 +51676,7 @@ class TestPhase373TwoSqrtFiftyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -51720,6 +51875,7 @@ class TestPhase374ThreeSqrtFiftyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -51918,6 +52074,7 @@ class TestPhase375FourSqrtFiftyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -52116,6 +52273,7 @@ class TestPhase376FiveSqrtFiftyFourLogPoly:
             IRApply(LOG, (kp1,)),  # 56th log (over 55; refused)
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -52273,6 +52431,7 @@ class TestPhase377FiftyFiveLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
@@ -52318,6 +52477,7 @@ class TestPhase377FiftyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -52478,6 +52638,7 @@ class TestPhase378OneSqrtFiftyFiveLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)),
@@ -52524,6 +52685,7 @@ class TestPhase378OneSqrtFiftyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -52684,6 +52846,7 @@ class TestPhase379TwoSqrtFiftyFiveLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -52730,6 +52893,7 @@ class TestPhase379TwoSqrtFiftyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -52890,6 +53054,7 @@ class TestPhase380ThreeSqrtFiftyFiveLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -52936,6 +53101,7 @@ class TestPhase380ThreeSqrtFiftyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -53096,6 +53262,7 @@ class TestPhase381FourSqrtFiftyFiveLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -53142,6 +53309,7 @@ class TestPhase381FourSqrtFiftyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -53302,6 +53470,7 @@ class TestPhase382FiveSqrtFiftyFiveLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)), IRApply(SQRT, (kp1,)),
@@ -53348,6 +53517,7 @@ class TestPhase382FiveSqrtFiftyFiveLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -53507,6 +53677,7 @@ class TestPhase383ZeroSqrtFiftySixLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
@@ -53552,6 +53723,7 @@ class TestPhase383ZeroSqrtFiftySixLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -53718,6 +53890,7 @@ class TestPhase384OneSqrtFiftySixLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1,
@@ -53764,6 +53937,7 @@ class TestPhase384OneSqrtFiftySixLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -53930,6 +54104,7 @@ class TestPhase385TwoSqrtFiftySixLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1,
@@ -53976,6 +54151,7 @@ class TestPhase385TwoSqrtFiftySixLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -54142,6 +54318,7 @@ class TestPhase386ThreeSqrtFiftySixLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -54188,6 +54365,7 @@ class TestPhase386ThreeSqrtFiftySixLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -54354,6 +54532,7 @@ class TestPhase387FourSqrtFiftySixLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -54400,6 +54579,7 @@ class TestPhase387FourSqrtFiftySixLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -54566,6 +54746,7 @@ class TestPhase388FiveSqrtFiftySixLogPoly:
             IRApply(LOG, (_k,)),  # 57th log (over 56; refused)
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -54612,6 +54793,7 @@ class TestPhase388FiveSqrtFiftySixLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log (over 56; refused)
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -54773,6 +54955,7 @@ class TestPhase389ZeroSqrtFiftySevenLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
@@ -54818,6 +55001,7 @@ class TestPhase389ZeroSqrtFiftySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -54986,6 +55170,7 @@ class TestPhase390OneSqrtFiftySevenLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1,
@@ -55032,6 +55217,7 @@ class TestPhase390OneSqrtFiftySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -55200,6 +55386,7 @@ class TestPhase391TwoSqrtFiftySevenLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1,
@@ -55246,6 +55433,7 @@ class TestPhase391TwoSqrtFiftySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -55414,6 +55602,7 @@ class TestPhase392ThreeSqrtFiftySevenLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -55460,6 +55649,7 @@ class TestPhase392ThreeSqrtFiftySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -55628,6 +55818,7 @@ class TestPhase393FourSqrtFiftySevenLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -55674,6 +55865,7 @@ class TestPhase393FourSqrtFiftySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -55842,6 +56034,7 @@ class TestPhase394FiveSqrtFiftySevenLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
             IRApply(LOG, (_k,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (_k,)),  # 62nd log (over 59; refused by Phase 406)
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -55888,6 +56081,7 @@ class TestPhase394FiveSqrtFiftySevenLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
             IRApply(LOG, (kp1,)),  # 61st log (over 60; refused)
+            IRApply(LOG, (kp1,)),  # 62nd log (over 59; refused by Phase 406)
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -56051,6 +56245,7 @@ class TestPhase395ZeroSqrtFiftyEightLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 58th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (_k,)),  # 60th log
         ))
         num_kp1 = IRApply(MUL, (
             IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
@@ -56096,6 +56291,7 @@ class TestPhase395ZeroSqrtFiftyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 58th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -56266,6 +56462,7 @@ class TestPhase396OneSqrtFiftyEightLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 58th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (_k,)),  # 60th log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1,
@@ -56312,6 +56509,7 @@ class TestPhase396OneSqrtFiftyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 58th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -56482,6 +56680,7 @@ class TestPhase397TwoSqrtFiftyEightLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 58th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (_k,)),  # 60th log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1,
@@ -56528,6 +56727,7 @@ class TestPhase397TwoSqrtFiftyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 58th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k2))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
@@ -56698,6 +56898,7 @@ class TestPhase398ThreeSqrtFiftyEightLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 58th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (_k,)),  # 60th log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -56744,6 +56945,7 @@ class TestPhase398ThreeSqrtFiftyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 58th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -56914,6 +57116,7 @@ class TestPhase399FourSqrtFiftyEightLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 58th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (_k,)),  # 60th log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -56960,6 +57163,7 @@ class TestPhase399FourSqrtFiftyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 58th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
@@ -57130,6 +57334,7 @@ class TestPhase400FiveSqrtFiftyEightLogPoly:
             IRApply(LOG, (_k,)),  # 57th log
             IRApply(LOG, (_k,)),  # 58th log
             IRApply(LOG, (_k,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (_k,)),  # 60th log
         ))
         num_kp1 = IRApply(MUL, (
             sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
@@ -57176,6 +57381,1331 @@ class TestPhase400FiveSqrtFiftyEightLogPoly:
             IRApply(LOG, (kp1,)),  # 57th log
             IRApply(LOG, (kp1,)),  # 58th log
             IRApply(LOG, (kp1,)),  # 59th log (over 58; refused)
+            IRApply(LOG, (kp1,)),  # 60th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase401ZeroSqrtFiftyNineLogPoly:
+    """Phase 401 -- Zero-Sqrt x Fifty-Nine-Log x polynomial numerator."""
+
+    def test_log59_k_over_k2_closes(self):
+        """log(k)^59/k^2: eff_x2=0; 2*2=4 > 0 -> closes"""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_log59_k_over_k2_refused(self):
+        """log(k)^60/k2: 60 logs -> not Phase 401 -> refused"""
+        from symbolic_ir import SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        num_k = IRApply(MUL, (
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+            IRApply(LOG, (_k,)),  # 60th log
+            IRApply(LOG, (_k,)),  # 61st log (over 59; refused)
+        ))
+        num_kp1 = IRApply(MUL, (
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+            IRApply(LOG, (kp1,)),  # 60th log
+            IRApply(LOG, (kp1,)),  # 61st log (over 59; refused)
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase402OneSqrtFiftyNineLogPoly:
+    """Phase 402 -- One-Sqrt x Fifty-Nine-Log x polynomial numerator."""
+
+    def test_sqrt_k_log59_k_over_k2_closes(self):
+        """sqrt(k)*log(k)^59/k^2: eff_x2=1; 2*2=4 > 1 -> closes"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_sqrt_k_log59_k_over_k2_refused(self):
+        """sqrt(k)*log(k)^60/k2: 60 logs -> not Phase 402 -> refused"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+            IRApply(LOG, (_k,)),  # 60th log
+            IRApply(LOG, (_k,)),  # 61st log (over 59; refused)
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+            IRApply(LOG, (kp1,)),  # 60th log
+            IRApply(LOG, (kp1,)),  # 61st log (over 59; refused)
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase403TwoSqrtFiftyNineLogPoly:
+    """Phase 403 -- Two-Sqrt x Fifty-Nine-Log x polynomial numerator."""
+
+    def test_2sqrt_k_log59_k_over_k2_closes(self):
+        """sqrt(k)^2*log(k)^59/k^2: eff_x2=2; 2*2=4 > 2 -> closes"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_2sqrt_k_log59_k_over_k2_refused(self):
+        """sqrt(k)^2*log(k)^60/k2: 60 logs -> not Phase 403 -> refused"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k2 = IRApply(POW, (_k, IRInteger(2)))
+        kp1_2 = IRApply(POW, (kp1, IRInteger(2)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+            IRApply(LOG, (_k,)),  # 60th log
+            IRApply(LOG, (_k,)),  # 61st log (over 59; refused)
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+            IRApply(LOG, (kp1,)),  # 60th log
+            IRApply(LOG, (kp1,)),  # 61st log (over 59; refused)
+        ))
+        g_k = IRApply(DIV, (num_k, k2))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_2))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase404ThreeSqrtFiftyNineLogPoly:
+    """Phase 404 -- Three-Sqrt x Fifty-Nine-Log x polynomial numerator."""
+
+    def test_3sqrt_k_log59_k_over_k3_closes(self):
+        """sqrt(k)^3*log(k)^59/k^3: eff_x2=3; 2*3=6 > 3 -> closes"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_3sqrt_k_log59_k_over_k3_refused(self):
+        """sqrt(k)^3*log(k)^60/k3: 60 logs -> not Phase 404 -> refused"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+            IRApply(LOG, (_k,)),  # 60th log
+            IRApply(LOG, (_k,)),  # 61st log (over 59; refused)
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+            IRApply(LOG, (kp1,)),  # 60th log
+            IRApply(LOG, (kp1,)),  # 61st log (over 59; refused)
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase405FourSqrtFiftyNineLogPoly:
+    """Phase 405 -- Four-Sqrt x Fifty-Nine-Log x polynomial numerator."""
+
+    def test_4sqrt_k_log59_k_over_k3_closes(self):
+        """sqrt(k)^4*log(k)^59/k^3: eff_x2=4; 2*3=6 > 4 -> closes"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k, sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_4sqrt_k_log59_k_over_k3_refused(self):
+        """sqrt(k)^4*log(k)^60/k3: 60 logs -> not Phase 405 -> refused"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k, sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+            IRApply(LOG, (_k,)),  # 60th log
+            IRApply(LOG, (_k,)),  # 61st log (over 59; refused)
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+            IRApply(LOG, (kp1,)),  # 60th log
+            IRApply(LOG, (kp1,)),  # 61st log (over 59; refused)
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert isinstance(result, IRApply) and result.head == SUM
+
+
+class TestPhase406FiveSqrtFiftyNineLogPoly:
+    """Phase 406 -- Five-Sqrt x Fifty-Nine-Log x polynomial numerator."""
+
+    def test_5sqrt_k_log59_k_over_k3_closes(self):
+        """sqrt(k)^5*log(k)^59/k^3: eff_x2=5; 2*3=6 > 5 -> closes"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k, sqrt_k, sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+        ))
+        g_k = IRApply(DIV, (num_k, k3))
+        g_kp1 = IRApply(DIV, (num_kp1, kp1_3))
+        f = IRApply(SUB, (g_k, g_kp1))
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+        assert not (isinstance(result, IRApply) and result.head == SUM)
+
+    def test_5sqrt_k_log59_k_over_k3_refused(self):
+        """sqrt(k)^5*log(k)^60/k3: 60 logs -> not Phase 406 -> refused"""
+        from symbolic_ir import SQRT, SUB
+
+        kp1 = IRApply(ADD, (_k, IRInteger(1)))
+        k3 = IRApply(POW, (_k, IRInteger(3)))
+        kp1_3 = IRApply(POW, (kp1, IRInteger(3)))
+        sqrt_k = IRApply(SQRT, (_k,))
+        sqrt_kp1 = IRApply(SQRT, (kp1,))
+        num_k = IRApply(MUL, (
+            sqrt_k, sqrt_k, sqrt_k, sqrt_k, sqrt_k,
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)), IRApply(LOG, (_k,)), IRApply(LOG, (_k,)),
+            IRApply(LOG, (_k,)),  # 25th log
+            IRApply(LOG, (_k,)),  # 26th log
+            IRApply(LOG, (_k,)),  # 27th log
+            IRApply(LOG, (_k,)),  # 28th log
+            IRApply(LOG, (_k,)),  # 29th log
+            IRApply(LOG, (_k,)),  # 30th log
+            IRApply(LOG, (_k,)),  # 31st log
+            IRApply(LOG, (_k,)),  # 32nd log
+            IRApply(LOG, (_k,)),  # 33rd log
+            IRApply(LOG, (_k,)),  # 34th log
+            IRApply(LOG, (_k,)),  # 35th log
+            IRApply(LOG, (_k,)),  # 36th log
+            IRApply(LOG, (_k,)),  # 37th log
+            IRApply(LOG, (_k,)),  # 38th log
+            IRApply(LOG, (_k,)),  # 39th log
+            IRApply(LOG, (_k,)),  # 40th log
+            IRApply(LOG, (_k,)),  # 41st log
+            IRApply(LOG, (_k,)),  # 42nd log
+            IRApply(LOG, (_k,)),  # 43rd log
+            IRApply(LOG, (_k,)),  # 44th log
+            IRApply(LOG, (_k,)),  # 45th log
+            IRApply(LOG, (_k,)),  # 46th log
+            IRApply(LOG, (_k,)),  # 47th log
+            IRApply(LOG, (_k,)),  # 48th log
+            IRApply(LOG, (_k,)),  # 49th log
+            IRApply(LOG, (_k,)),  # 50th log
+            IRApply(LOG, (_k,)),  # 51st log
+            IRApply(LOG, (_k,)),  # 52nd log
+            IRApply(LOG, (_k,)),  # 53rd log
+            IRApply(LOG, (_k,)),  # 54th log
+            IRApply(LOG, (_k,)),  # 55th log
+            IRApply(LOG, (_k,)),  # 56th log
+            IRApply(LOG, (_k,)),  # 57th log
+            IRApply(LOG, (_k,)),  # 58th log
+            IRApply(LOG, (_k,)),  # 59th log
+            IRApply(LOG, (_k,)),  # 60th log
+            IRApply(LOG, (_k,)),  # 61st log (over 59; refused)
+        ))
+        num_kp1 = IRApply(MUL, (
+            sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1, sqrt_kp1,
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)), IRApply(LOG, (kp1,)),
+            IRApply(LOG, (kp1,)),  # 25th log
+            IRApply(LOG, (kp1,)),  # 26th log
+            IRApply(LOG, (kp1,)),  # 27th log
+            IRApply(LOG, (kp1,)),  # 28th log
+            IRApply(LOG, (kp1,)),  # 29th log
+            IRApply(LOG, (kp1,)),  # 30th log
+            IRApply(LOG, (kp1,)),  # 31st log
+            IRApply(LOG, (kp1,)),  # 32nd log
+            IRApply(LOG, (kp1,)),  # 33rd log
+            IRApply(LOG, (kp1,)),  # 34th log
+            IRApply(LOG, (kp1,)),  # 35th log
+            IRApply(LOG, (kp1,)),  # 36th log
+            IRApply(LOG, (kp1,)),  # 37th log
+            IRApply(LOG, (kp1,)),  # 38th log
+            IRApply(LOG, (kp1,)),  # 39th log
+            IRApply(LOG, (kp1,)),  # 40th log
+            IRApply(LOG, (kp1,)),  # 41st log
+            IRApply(LOG, (kp1,)),  # 42nd log
+            IRApply(LOG, (kp1,)),  # 43rd log
+            IRApply(LOG, (kp1,)),  # 44th log
+            IRApply(LOG, (kp1,)),  # 45th log
+            IRApply(LOG, (kp1,)),  # 46th log
+            IRApply(LOG, (kp1,)),  # 47th log
+            IRApply(LOG, (kp1,)),  # 48th log
+            IRApply(LOG, (kp1,)),  # 49th log
+            IRApply(LOG, (kp1,)),  # 50th log
+            IRApply(LOG, (kp1,)),  # 51st log
+            IRApply(LOG, (kp1,)),  # 52nd log
+            IRApply(LOG, (kp1,)),  # 53rd log
+            IRApply(LOG, (kp1,)),  # 54th log
+            IRApply(LOG, (kp1,)),  # 55th log
+            IRApply(LOG, (kp1,)),  # 56th log
+            IRApply(LOG, (kp1,)),  # 57th log
+            IRApply(LOG, (kp1,)),  # 58th log
+            IRApply(LOG, (kp1,)),  # 59th log
+            IRApply(LOG, (kp1,)),  # 60th log
+            IRApply(LOG, (kp1,)),  # 61st log (over 59; refused)
         ))
         g_k = IRApply(DIV, (num_k, k3))
         g_kp1 = IRApply(DIV, (num_kp1, kp1_3))

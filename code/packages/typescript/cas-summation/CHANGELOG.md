@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.343.0 — 2026-05-28
+
+### Added
+- Phase 401 (`fiftyNineLogPolyEffectiveDeg`): Zero-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer.
+- Phase 402 (`oneSqrtFiftyNineLogPolyEffectiveDeg`): One-Sqrt × Fifty-Nine-Log.
+- Phase 403 (`twoSqrtFiftyNineLogPolyEffectiveDeg`): Two-Sqrt × Fifty-Nine-Log.
+- Phase 404 (`threeSqrtFiftyNineLogPolyEffectiveDeg`): Three-Sqrt × Fifty-Nine-Log.
+- Phase 405 (`fourSqrtFiftyNineLogPolyEffectiveDeg`): Four-Sqrt × Fifty-Nine-Log.
+- Phase 406 (`fiveSqrtFiftyNineLogPolyEffectiveDeg`): Five-Sqrt × Fifty-Nine-Log. Completes the Fifty-Nine-Log family.
+- 6 new describe blocks covering Phase 401–406 (closes + refused for each).
+- Cascade fix: Phase 394–400 refused tests updated from 59→60 log factors.
+
 ## 2.337.0 — 2026-05-28
 
 ### Added

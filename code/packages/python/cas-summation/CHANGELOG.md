@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.343.0 — 2026-05-28
+
+### Added
+- Phase 401 (`_fifty_nine_log_poly_effective_x2`): Zero-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer.
+- Phase 402 (`_one_sqrt_fifty_nine_log_poly_effective_x2`): One-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer.
+- Phase 403 (`_two_sqrt_fifty_nine_log_poly_effective_x2`): Two-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer.
+- Phase 404 (`_three_sqrt_fifty_nine_log_poly_effective_x2`): Three-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer.
+- Phase 405 (`_four_sqrt_fifty_nine_log_poly_effective_x2`): Four-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer.
+- Phase 406 (`_five_sqrt_fifty_nine_log_poly_effective_x2`): Five-Sqrt × Fifty-Nine-Log × polynomial numerator recognizer. Completes the Fifty-Nine-Log family.
+- 12 new test cases covering Phase 401–406 (closes + refused for each).
+- Cascade fix: Phase 395–400 refused tests updated from 59→60 log factors.
+
 ## 2.337.0 — 2026-05-28
 
 ### Added
