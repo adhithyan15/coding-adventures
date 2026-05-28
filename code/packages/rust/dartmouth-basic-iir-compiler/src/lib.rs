@@ -49,9 +49,15 @@
 #![warn(rust_2018_idioms)]
 
 use coding_adventures_dartmouth_basic_parser::parse_dartmouth_basic;
-use interpreter_ir::function::IIRFunction;
+use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
+
+// Re-export the JIT backend so downstream consumers (tests, future
+// `dartmouth-basic-vm` wrappers) can use it without depending on the
+// internal module path.
+pub mod jit_backend;
+pub use jit_backend::{BasicCirJit, DEFAULT_OUTPUT_CAP, DEFAULT_STEP_CAP};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 // ===========================================================================
@@ -110,12 +116,21 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
 {
     let mut comp = Compiler::default();
     comp.emit_program(ast)?;
-    let main = IIRFunction::new(
+    // Override `IIRFunction::new`'s automatic `infer_type_status` —
+    // which returns `PartiallyTyped` because BASIC's control-flow ops
+    // (label, jmp, jmp_if_*, ret, call_builtin "print_i64") use
+    // `"void"` hints and `"void"` is not in `CONCRETE_TYPES`.  Every
+    // BASIC instruction is in fact statically known (no `"any"` hints
+    // anywhere), so the function is genuinely fully typed for the
+    // JIT's threshold-zero compile path.  This mirrors Brainfuck's
+    // `IIRFunction { … type_status: FullyTyped, … }` construction.
+    let mut main = IIRFunction::new(
         "main",
         vec![],   // no parameters
         "i64",    // return i64 for the exit code
         comp.instrs,
     );
+    main.type_status = FunctionTypeStatus::FullyTyped;
     let mut module = IIRModule::new(module_name, "dartmouth-basic");
     module.functions.push(main);
     module.entry_point = Some("main".to_string());
