@@ -1331,6 +1331,90 @@ fn bounded_log_poly_degree(node: &IRNode, k: &IRNode) -> Option<i64> {
     Some(poly_deg)
 }
 
+/// Return `Σ sqrt_inner_deg_x2 + 2·Σ poly_deg` when `node` is a `Mul` whose
+/// factors split into any combination of:
+///
+/// * `Log(diverging)` factors (any count, including zero),
+/// * `Sqrt(positive-leading polynomial)` factors (any count),
+/// * polynomial factors in `k` (any count),
+/// * bounded-in-`k` factors (any count, e.g. `Sin`, `Cos`, constants),
+///
+/// and at least one of the Log/Sqrt/polynomial factors is present.  Returns
+/// `None` when any factor is unrecognised (e.g. `Exp(k)`) or when the
+/// numerator is purely bounded.
+///
+/// **Phase 86 — cleanup.**  Supersedes the hand-written grid of
+/// `N-Sqrt × M-Log × polynomial` helpers from Phases 59-85.  The convergence
+/// math is identical for every non-negative `(N, M)` pair:
+///
+/// * Product of `N` `Log(diverging)` factors is sub-polynomial —
+///   `log^N(k) = o(k^ε)` for any `ε > 0` — so `N` contributes 0 to the
+///   effective growth degree.
+/// * Each `Sqrt(P_i)` contributes `deg(P_i)/2` (recorded ×2 to stay in
+///   integer arithmetic).
+/// * Each polynomial factor `Q_j` contributes its own `deg(Q_j)`
+///   (multiplied ×2 here).
+/// * Bounded factors contribute 0.
+///
+/// Effective growth ×2:
+///
+/// ```text
+/// effective_x2 = sum_i sqrt_inner_deg_x2(Sqrt(P_i))
+///              + 2 * sum_j deg(Q_j)
+/// ```
+///
+/// The caller compares `2 * den_deg > effective_x2` (polynomial denominator)
+/// or short-circuits on non-polynomial diverging denominator.
+///
+/// Conservative refusals:
+///
+/// * Empty `Mul` (no recognised growth factor) → `None`.
+/// * `Sqrt` of a polynomial whose leading coefficient is negative → `None`.
+/// * Any unrecognised factor (Exp, free symbol, …) → `None`.
+fn log_sqrt_poly_effective_x2_generic(node: &IRNode, k: &IRNode) -> Option<i64> {
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return None,
+    };
+    if !head_is(&apply_node.head, MUL) {
+        return None;
+    }
+    let mut sqrt_inner_deg_x2_sum: i64 = 0;
+    let mut poly_deg_sum: i64 = 0;
+    let mut found_log = false;
+    let mut found_sqrt = false;
+    let mut found_poly = false;
+    for arg in &apply_node.args {
+        if is_log_of_diverging_in_k(arg, k) {
+            found_log = true;
+            continue;
+        }
+        if let Some(sqrt_deg_x2) = sqrt_effective_half_degree_x2(arg, k) {
+            sqrt_inner_deg_x2_sum += sqrt_deg_x2;
+            found_sqrt = true;
+            continue;
+        }
+        if is_bounded_in_k(arg, k) {
+            // Constants and Sin/Cos/closures — contribute nothing.
+            continue;
+        }
+        if let Some(poly_deg) = polynomial_degree_in_k(arg, k) {
+            if poly_deg >= 1 {
+                poly_deg_sum += poly_deg;
+                found_poly = true;
+                continue;
+            }
+        }
+        // Unrecognised factor (Exp, free symbol, …) — bail.
+        return None;
+    }
+    if !found_log && !found_sqrt && !found_poly {
+        // Pure-bounded numerator — let Phase 49 handle it.
+        return None;
+    }
+    Some(sqrt_inner_deg_x2_sum + 2 * poly_deg_sum)
+}
+
 /// Return `sqrt_inner_deg + 2 * poly_deg` when `node` is a `Mul` with
 /// exactly one `Sqrt(positive-leading polynomial P)` factor, any polynomial
 /// factors (total degree `poly_deg`), and any number of bounded factors in
@@ -2402,6 +2486,33 @@ fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
     if let Some(blp_deg) = bounded_log_poly_degree(num, k) {
         if let Some(den_deg_blp) = polynomial_degree_in_k(den, k) {
             if den_deg_blp > blp_deg {
+                return true;
+            }
+        } else if h_diverges_at_infinity(den, k) {
+            return true;
+        }
+    }
+    // ---- Generic recogniser (Phase 86 cleanup) ----
+    //
+    // `Mul(bounded..., Log_1, ..., Log_N, Sqrt_1, ..., Sqrt_M, Poly_1, ..., Poly_K)`
+    // over diverging denominator.  The product of any number of
+    // `Log(diverging)` factors is still sub-polynomial
+    // (`log^N(k) = o(k^ε)`), so `N` drops out of the comparison.  The Sqrt
+    // factors contribute `Σ deg(P_i)/2` and the polynomial factors
+    // contribute `Σ deg(Q_j)`.  Effective ×2:
+    //
+    //     effective_x2 = Σ sqrt_inner_deg_x2 + 2·Σ poly_deg
+    //
+    // Vanishes when `2·den_deg > effective_x2` (polynomial denominator) or
+    // short-circuits on non-polynomial diverging denominator.
+    //
+    // Supersedes the hand-written grid of `N-Sqrt × M-Log × polynomial`
+    // helpers (Phases 59-85): the math is identical for every (N, M) ≥ (0, 0).
+    // The hardcoded helpers remain in place for now but are preempted by
+    // this branch; a follow-up cleanup PR will delete them.
+    if let Some(gen_x2) = log_sqrt_poly_effective_x2_generic(num, k) {
+        if let Some(den_deg_gen) = polynomial_degree_in_k(den, k) {
+            if 2 * den_deg_gen > gen_x2 {
                 return true;
             }
         } else if h_diverges_at_infinity(den, k) {

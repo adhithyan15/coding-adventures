@@ -3444,3 +3444,172 @@ fn phase85_two_sqrt_k_log6_k_times_k_over_k2_refused() {
     let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }
+
+// ---------------------------------------------------------------------------
+// Phase 86 (Rust port): generic log × sqrt × polynomial recogniser cleanup.
+//
+// A single generic helper supersedes the hand-written grid of Phases 59-85.
+// These tests prove it handles cases the grid cannot (>5 Sqrts, >6 Logs,
+// mixed shapes) and that it refuses unrecognised factors so divergent sums
+// stay unevaluated.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn phase86_seven_log_over_k2_closes_via_generic() {
+    // log(k)^7 / k²: log^7 sub-polynomial, effective_x2=0, 2·2=4 > 0 → closes.
+    // The hand-written grid stops at 6 logs.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1,
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase86_six_sqrt_k_over_k4_closes_via_generic() {
+    // √k × 6 over k⁴: effective_x2 = 6·1 = 6, 2·4=8 > 6 → closes.
+    // The hand-written grid stops at 5 Sqrt factors.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let k4 = apply(sym(POW), vec![k.clone(), int(4)]);
+    let kp1_4 = apply(sym(POW), vec![kp1.clone(), int(4)]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(),
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(),
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k4]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_4]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase86_three_sqrt_seven_log_poly_closes_via_generic() {
+    // sin(k)·log(k)^7·√(k³)·√k·√(k²)·k / k⁵:
+    //   sqrt_x2 sum = 3+1+2 = 6, poly_deg sum = 1, effective_x2 = 6 + 2 = 8,
+    //   2·5 = 10 > 8 → closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let k5 = apply(sym(POW), vec![k.clone(), int(5)]);
+    let kp1_5 = apply(sym(POW), vec![kp1.clone(), int(5)]);
+    let sqrt_k3 = apply(sym("Sqrt"), vec![k3]);
+    let sqrt_kp1_3 = apply(sym("Sqrt"), vec![kp1_3]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let sqrt_k2 = apply(sym("Sqrt"), vec![k2]);
+    let sqrt_kp1_2 = apply(sym("Sqrt"), vec![kp1_2]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sin_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k,
+        sqrt_k3, sqrt_k, sqrt_k2,
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sin_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1,
+        sqrt_kp1_3, sqrt_kp1, sqrt_kp1_2,
+        kp1.clone(),
+    ]);
+    let g_k = apply(sym(DIV), vec![num_k, k5]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_5]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase86_unrecognised_exp_refused() {
+    // log(k)·√k·exp(k) / k³: exp grows exponentially → divergent.
+    // Generic must refuse so sum stays unevaluated.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let exp_k = apply(sym(EXP), vec![k.clone()]);
+    let exp_kp1 = apply(sym(EXP), vec![kp1.clone()]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let num_k = apply(sym(MUL), vec![log_k, sqrt_k, exp_k]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, sqrt_kp1, exp_kp1]);
+    let g_k = apply(sym(DIV), vec![num_k, k3]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_3]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase86_sqrt_negative_refused() {
+    // log(k)·√(-k) / k³: Sqrt of negative-leading polynomial → refuse.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let neg_k = apply(sym(MUL), vec![int(-1), k.clone()]);
+    let neg_kp1 = apply(sym(MUL), vec![int(-1), kp1.clone()]);
+    let sqrt_neg_k = apply(sym("Sqrt"), vec![neg_k]);
+    let sqrt_neg_kp1 = apply(sym("Sqrt"), vec![neg_kp1]);
+    let k3 = apply(sym(POW), vec![k.clone(), int(3)]);
+    let kp1_3 = apply(sym(POW), vec![kp1.clone(), int(3)]);
+    let num_k = apply(sym(MUL), vec![log_k, sqrt_neg_k]);
+    let num_kp1 = apply(sym(MUL), vec![log_kp1, sqrt_neg_kp1]);
+    let g_k = apply(sym(DIV), vec![num_k, k3]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_3]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase86_pure_bounded_falls_through_to_phase49() {
+    // sin(k)·cos(k) / k²: no Log / Sqrt / polynomial growth factor.
+    // Generic returns None → Phase 49 (bounded × diverging) handles it; sum closes.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sin_k = apply(sym("Sin"), vec![k.clone()]);
+    let sin_kp1 = apply(sym("Sin"), vec![kp1.clone()]);
+    let cos_k = apply(sym("Cos"), vec![k.clone()]);
+    let cos_kp1 = apply(sym("Cos"), vec![kp1.clone()]);
+    let k2 = apply(sym(POW), vec![k.clone(), int(2)]);
+    let kp1_2 = apply(sym(POW), vec![kp1.clone(), int(2)]);
+    let num_k = apply(sym(MUL), vec![sin_k, cos_k]);
+    let num_kp1 = apply(sym(MUL), vec![sin_kp1, cos_kp1]);
+    let g_k = apply(sym(DIV), vec![num_k, k2]);
+    let g_kp1 = apply(sym(DIV), vec![num_kp1, kp1_2]);
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let out = evaluate_sum(f, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}

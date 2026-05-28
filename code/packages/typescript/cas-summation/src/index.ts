@@ -1028,6 +1028,85 @@ function boundedLogPolyDegree(node: IRNode, k: IRNode): number | undefined {
 }
 
 /**
+ * Return ``Σ sqrtHalfDeg + Σ polyDeg`` when ``node`` is a ``Mul`` whose
+ * factors split into any combination of:
+ *
+ *   - ``Log(diverging)`` factors (any count, including zero),
+ *   - ``Sqrt(positive-leading polynomial)`` factors (any count),
+ *   - polynomial factors in ``k`` (any count),
+ *   - bounded-in-``k`` factors (any count, e.g. ``Sin``, ``Cos``, constants),
+ *
+ * and at least one of the Log/Sqrt/polynomial factors is present.  Returns
+ * ``undefined`` when any factor is unrecognised (e.g. ``Exp(k)``) or when
+ * the numerator is purely bounded.
+ *
+ * **Phase 86 — cleanup.**  Supersedes the hand-written grid of
+ * ``N-Sqrt × M-Log × polynomial`` helpers (Phases 59-85).  The convergence
+ * math is identical for every non-negative ``(N, M)`` pair:
+ *
+ *   - The product of ``N`` ``Log(diverging)`` factors is sub-polynomial —
+ *     ``log^N(k) = o(k^ε)`` for any ``ε > 0`` — so ``N`` contributes ``0``
+ *     to the effective growth degree.
+ *   - Each ``Sqrt(P_i)`` contributes ``deg(P_i)/2`` (here as a fractional
+ *     half-degree, matching the existing TS-port convention).
+ *   - Each polynomial factor ``Q_j`` contributes its own ``deg(Q_j)``.
+ *   - Bounded factors contribute ``0``.
+ *
+ * Effective growth:
+ *
+ *   effective = Σ_i sqrtHalfDeg(Sqrt(P_i)) + Σ_j deg(Q_j)
+ *
+ * Caller compares ``denDeg > effective`` (polynomial denominator) or
+ * short-circuits on non-polynomial diverging denominator.
+ *
+ * Conservative refusals:
+ *
+ *   - Empty ``Mul`` (no recognised growth factor) → undefined.
+ *   - ``Sqrt`` of a polynomial whose leading coefficient is negative → undefined.
+ *   - Any unrecognised factor (Exp, free symbol, …) → undefined.
+ */
+function logSqrtPolyEffectiveDegGeneric(
+  node: IRNode,
+  k: IRNode,
+): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDegSum = 0;
+  let polyDegSum = 0;
+  let foundLog = false;
+  let foundSqrt = false;
+  let foundPoly = false;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      foundLog = true;
+      continue;
+    }
+    const sqrtHalfDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (sqrtHalfDeg !== undefined) {
+      sqrtHalfDegSum += sqrtHalfDeg;
+      foundSqrt = true;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      // Constants and Sin/Cos/closures — contribute nothing.
+      continue;
+    }
+    const polyDeg = polynomialDegreeInK(arg, k);
+    if (polyDeg !== undefined && polyDeg >= 1) {
+      polyDegSum += polyDeg;
+      foundPoly = true;
+      continue;
+    }
+    // Unrecognised factor (Exp, free symbol, …) — bail.
+    return undefined;
+  }
+  if (!foundLog && !foundSqrt && !foundPoly) {
+    // Pure-bounded numerator — let Phase 49 handle it.
+    return undefined;
+  }
+  return sqrtHalfDegSum + polyDegSum;
+}
+
+/**
  * Return ``sqrtHalfDeg + polyDeg`` when ``node`` is a ``Mul`` with
  * exactly one ``Sqrt(positive-leading polynomial P)`` factor, any polynomial
  * factors (total degree ``polyDeg``), and any number of bounded factors;
@@ -2184,6 +2263,35 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
     const denDegBlp = polynomialDegreeInK(den, k);
     if (denDegBlp !== undefined) {
       if (denDegBlp > blpDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // ---- Generic recogniser (Phase 86 cleanup) ----
+  //
+  // Mul(bounded..., Log_1, ..., Log_N, Sqrt_1, ..., Sqrt_M, Poly_1, ..., Poly_K)
+  // over diverging denominator: the product of any number of
+  // ``Log(diverging)`` factors is still sub-polynomial
+  // (``log^N(k) = o(k^ε)``), so ``N`` drops out of the comparison.  The
+  // Sqrt factors contribute ``Σ deg(P_i)/2`` and the polynomial factors
+  // contribute ``Σ deg(Q_j)``.  Effective:
+  //
+  //   effective = Σ sqrtHalfDeg + Σ polyDeg
+  //
+  // Vanishes when ``denDeg > effective``; non-polynomial diverging
+  // denominators dominate automatically.
+  //
+  // Supersedes the hand-written grid of ``N-Sqrt × M-Log × polynomial``
+  // helpers (Phases 59-85): the math is identical for every (N, M) ≥ (0, 0).
+  // The hardcoded helpers remain in place for now but are preempted by this
+  // branch; a follow-up cleanup PR will delete them.
+  const genDeg = logSqrtPolyEffectiveDegGeneric(num, k);
+  if (genDeg !== undefined) {
+    const denDegGen = polynomialDegreeInK(den, k);
+    if (denDegGen !== undefined) {
+      if (denDegGen > genDeg) {
         return true;
       }
     } else if (hDivergesAtInfinity(den, k)) {

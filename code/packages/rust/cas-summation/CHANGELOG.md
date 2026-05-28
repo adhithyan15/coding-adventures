@@ -1,5 +1,40 @@
 # Changelog
 
+## 2.23.0 — 2026-05-28
+
+### Added — Phase 86 cleanup (generic log × sqrt × polynomial recogniser)
+
+Mirrors the Python `2.23.0` cleanup: a single generic helper supersedes the
+hand-written grid of `N-Sqrt × M-Log × polynomial` recognisers (Phases 59-85).
+The convergence math is identical for every non-negative `(N, M, K)`:
+
+- The product of `N` `Log(diverging)` factors is sub-polynomial
+  (`log^N(k) = o(k^ε)`), so `N` contributes 0 to the effective growth degree.
+- Each `Sqrt(P_i)` contributes `deg(P_i)/2` (recorded ×2 for integer arithmetic).
+- Each polynomial factor `Q_j` contributes its own `deg(Q_j)` (×2 here).
+- Bounded factors contribute 0.
+
+`log_sqrt_poly_effective_x2_generic(node, k)` returns
+`Σ sqrt_inner_deg_x2 + 2·Σ poly_deg` when the numerator matches; the dispatcher
+in `g_vanishes_at_infinity` inserts this branch between Phase 58 and Phase 59
+so it preempts the entire grid for every shape the grid was meant to cover
+(and many it wasn't — e.g. seven `Log` factors, six `Sqrt` factors, arbitrary
+mixes).
+
+The hand-written grid helpers (`two_sqrt_poly_effective_x2`,
+`five_log_poly_effective_x2`, …) remain in place for now but are now dead
+code; a follow-up cleanup PR will delete them.
+
+6 new integration tests in `tests/tests.rs`:
+
+- `phase86_seven_log_over_k2_closes_via_generic` (grid stops at 6).
+- `phase86_six_sqrt_k_over_k4_closes_via_generic` (grid stops at 5).
+- `phase86_three_sqrt_seven_log_poly_closes_via_generic` (mixed; outside grid).
+- `phase86_unrecognised_exp_refused` (must not silently close a divergent sum).
+- `phase86_sqrt_negative_refused` (complex-valued — refuse).
+- `phase86_pure_bounded_falls_through_to_phase49` (regression: generic
+  returns `None` so Phase 49 takes over).
+
 ## 2.22.0 — 2026-05-26
 
 ### Added

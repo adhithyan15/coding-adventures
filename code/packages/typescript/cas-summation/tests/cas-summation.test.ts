@@ -3793,3 +3793,116 @@ describe("Phase 85 — Two-Sqrt × Six-Log × polynomial numerator", () => {
     expect(result).toMatchObject({ kind: "apply", head: SUM });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Phase 86 (TS port): generic log × sqrt × polynomial recogniser cleanup.
+//
+// A single helper handles arbitrary (N, M, K) — supersedes the hand-written
+// grid from Phases 59-85.  These tests prove the generic closes cases the
+// hardcoded grid cannot reach (more than 5 Sqrts, more than 6 Logs, mixed).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 86 generic log × sqrt × polynomial recogniser", () => {
+  it("seven logs over k² closes via generic (hand-written grid stops at 6)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const logsK = Array.from({ length: 7 }, () => app(LOG, [k]));
+    const logsKp1 = Array.from({ length: 7 }, () => app(LOG, [kp1]));
+    const numK = app(MUL, logsK);
+    const numKp1 = app(MUL, logsKp1);
+    const gK = app(DIV, [numK, app(POW, [k, int(2)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+
+  it("six sqrts of k over k⁴ closes via generic (grid stops at 5)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sqrtsK = Array.from({ length: 6 }, () => app(SQRT, [k]));
+    const sqrtsKp1 = Array.from({ length: 6 }, () => app(SQRT, [kp1]));
+    const numK = app(MUL, sqrtsK);
+    const numKp1 = app(MUL, sqrtsKp1);
+    const gK = app(DIV, [numK, app(POW, [k, int(4)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(4)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalfSum = 6 * 0.5 = 3; denDeg = 4 > 3 → closes.
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+
+  it("three sqrts × seven logs × k over k⁵ closes via generic", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const logsK = Array.from({ length: 7 }, () => app(LOG, [k]));
+    const logsKp1 = Array.from({ length: 7 }, () => app(LOG, [kp1]));
+    const sqrtFactorsK = [
+      app(SQRT, [app(POW, [k, int(3)])]),
+      app(SQRT, [k]),
+      app(SQRT, [app(POW, [k, int(2)])]),
+    ];
+    const sqrtFactorsKp1 = [
+      app(SQRT, [app(POW, [kp1, int(3)])]),
+      app(SQRT, [kp1]),
+      app(SQRT, [app(POW, [kp1, int(2)])]),
+    ];
+    const numK = app(MUL, [app(sym("Sin"), [k]), ...logsK, ...sqrtFactorsK, k]);
+    const numKp1 = app(MUL, [
+      app(sym("Sin"), [kp1]),
+      ...logsKp1,
+      ...sqrtFactorsKp1,
+      kp1,
+    ]);
+    const gK = app(DIV, [numK, app(POW, [k, int(5)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(5)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalfSum = 1.5 + 0.5 + 1 = 3, polyDegSum = 1, effective = 4, denDeg = 5 → closes.
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+
+  it("refuses unrecognised factor (Exp) so divergent sum stays unevaluated", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(LOG, [k]), app(SQRT, [k]), app(EXP, [k])]);
+    const numKp1 = app(MUL, [
+      app(LOG, [kp1]),
+      app(SQRT, [kp1]),
+      app(EXP, [kp1]),
+    ]);
+    const gK = app(DIV, [numK, app(POW, [k, int(3)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(3)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // exp(k)·log(k)·sqrt(k) grows exponentially → must NOT vanish.
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("refuses Sqrt of negative polynomial (complex-valued)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const negK = app(MUL, [int(-1), k]);
+    const negKp1 = app(MUL, [int(-1), kp1]);
+    const numK = app(MUL, [app(LOG, [k]), app(SQRT, [negK])]);
+    const numKp1 = app(MUL, [app(LOG, [kp1]), app(SQRT, [negKp1])]);
+    const gK = app(DIV, [numK, app(POW, [k, int(3)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(3)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("pure bounded falls through to Phase 49 (sum still closes)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Cos"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Cos"), [kp1])]);
+    const gK = app(DIV, [numK, app(POW, [k, int(2)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // Phase 49 (bounded × diverging) catches it — generic returns undefined.
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+});
