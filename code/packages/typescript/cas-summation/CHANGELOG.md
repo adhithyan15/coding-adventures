@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.277.0 — 2026-05-28
+
+### Added
+
+- **Phase 340 — Five-Sqrt × Forty-Eight-Log × polynomial** (`fiveSqrtFortyEightLogPolyEffectiveDeg`):
+  Completes the Forty-Eight-Log family (Phases 335–340).
+- **Phase 339 — Four-Sqrt × Forty-Eight-Log × polynomial** (`fourSqrtFortyEightLogPolyEffectiveDeg`).
+- **Phase 338 — Three-Sqrt × Forty-Eight-Log × polynomial** (`threeSqrtFortyEightLogPolyEffectiveDeg`).
+- **Phase 337 — Two-Sqrt × Forty-Eight-Log × polynomial** (`twoSqrtFortyEightLogPolyEffectiveDeg`).
+- **Phase 336 — One-Sqrt × Forty-Eight-Log × polynomial** (`oneSqrtFortyEightLogPolyEffectiveDeg`).
+- **Phase 335 — Zero-Sqrt × Forty-Eight-Log × polynomial** (`fortyEightLogPolyEffectiveDeg`).
+
+### Changed
+
+- Boundary tests in Phases 167–334 updated from 48-log "refused" to 49-log "refused"
+  now that Phases 335–340 handle exactly 48 logs.
+
 ## 2.271.0 — 2026-05-28
 
 ### Added
