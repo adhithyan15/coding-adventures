@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.361.0 — 2026-05-28
+
+### Added
+- Phase 419 (`sixtyTwoLogPolyEffectiveDeg`): Zero-Sqrt × Sixty-Two-Log × polynomial numerator recognizer.
+- Phase 420 (`oneSqrtSixtyTwoLogPolyEffectiveDeg`): One-Sqrt × Sixty-Two-Log.
+- Phase 421 (`twoSqrtSixtyTwoLogPolyEffectiveDeg`): Two-Sqrt × Sixty-Two-Log.
+- Phase 422 (`threeSqrtSixtyTwoLogPolyEffectiveDeg`): Three-Sqrt × Sixty-Two-Log.
+- Phase 423 (`fourSqrtSixtyTwoLogPolyEffectiveDeg`): Four-Sqrt × Sixty-Two-Log.
+- Phase 424 (`fiveSqrtSixtyTwoLogPolyEffectiveDeg`): Five-Sqrt × Sixty-Two-Log. Completes the Sixty-Two-Log family.
+- 6 new describe blocks covering Phase 419–424 (closes + refused for each).
+- Cascade fix: refused tests across all earlier phases that previously used exactly 62 logs as the "over-boundary" value updated to use 63 log factors, since Phase 419 now accepts exactly 62. Also fixed 480 occurrences of `{ length: 61 }` arrays (outside Phase 413–418 closes tests) bumped to `{ length: 63 }`.
+
 ## 2.355.0 — 2026-05-28
 
 ### Added
