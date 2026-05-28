@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.355.0 — 2026-05-28
+
+### Added
+- Phase 413 (`sixty_one_log_poly_effective_x2`): Zero-Sqrt × Sixty-One-Log × polynomial numerator recognizer.
+- Phase 414 (`one_sqrt_sixty_one_log_poly_effective_x2`): One-Sqrt × Sixty-One-Log.
+- Phase 415 (`two_sqrt_sixty_one_log_poly_effective_x2`): Two-Sqrt × Sixty-One-Log.
+- Phase 416 (`three_sqrt_sixty_one_log_poly_effective_x2`): Three-Sqrt × Sixty-One-Log.
+- Phase 417 (`four_sqrt_sixty_one_log_poly_effective_x2`): Four-Sqrt × Sixty-One-Log.
+- Phase 418 (`five_sqrt_sixty_one_log_poly_effective_x2`): Five-Sqrt × Sixty-One-Log. Completes the Sixty-One-Log family.
+- 12 new test functions covering Phase 413–418 (converges + refused for each).
+- Cascade fix: refused tests for Phases across the full chain (all those previously using exactly 61 logs as the "over-boundary" value) updated to use 62 log factors, since Phase 413 now accepts exactly 61. Also fixed Phase 417–418 refused test log counts (had 57 logs instead of 62).
+
 ## 2.349.0 — 2026-05-28
 
 ### Added
