@@ -2529,5 +2529,91 @@ mod tests {
             );
         }
     }
+
+    // -----------------------------------------------------------------------
+    // Phase 8a (FC) — additional arithmetic / bitwise / shift op-assigns
+    //
+    // The `assignment` rule was extended to recognise `%=`, `**=`, `<<=`,
+    // `&=`, `|=`, `^=` in addition to the pre-existing
+    // `+= -= *= /= ||= &&=`.  These tests assert the grammar accepts the
+    // new shapes and routes through the `assignment` rule.  Lowering
+    // semantics are tested in the `ruby-to-semantic-ir` crate.
+    //
+    // `>>=` is NOT exercised here — the 1.8-era lexer state machine
+    // emits `>>` as two `>` tokens, so the compound-fusion pass can't
+    // pre-fuse `>>=` yet.  That's a tracked follow-up; see Phase 8a's
+    // PR body for the deferred-limitation note.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_modulo_op_assign() {
+        // `x %= 5` should parse as a single `assignment` node carrying
+        // the fused `%=` operator token.
+        let ast = parse_ruby("x %= 5");
+        let a = find_descendant(&ast, "assignment").expect("expected assignment");
+        let has_op = a.children.iter().any(|c| {
+            matches!(c, ASTNodeOrToken::Token(t) if t.value == "%=")
+        });
+        assert!(has_op, "expected `%=` token under assignment");
+    }
+
+    #[test]
+    fn test_parse_power_and_shift_op_assigns() {
+        // Two assignments in one program — `x **= 2`, `x <<= 1` —
+        // each parses as a separate `assignment` node, and each
+        // carries its respective fused operator token.
+        let ast = parse_ruby("x **= 2\nx <<= 1");
+        let stmts: Vec<&GrammarASTNode> = ast
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(stmts.len(), 2, "expected 2 statements");
+        let ops: Vec<String> = stmts
+            .iter()
+            .filter_map(|s| {
+                let a = find_descendant(s, "assignment")?;
+                a.children.iter().find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.value == "**=" || t.value == "<<=" => {
+                        Some(t.value.clone())
+                    }
+                    _ => None,
+                })
+            })
+            .collect();
+        assert_eq!(
+            ops,
+            vec!["**=".to_string(), "<<=".to_string()],
+            "expected `**=` then `<<=`"
+        );
+    }
+
+    #[test]
+    fn test_parse_bitwise_op_assigns() {
+        // All three bitwise compound forms parse cleanly.
+        for src in &["x &= 7", "x |= 7", "x ^= 7"] {
+            let ast = parse_ruby(src);
+            let a = find_descendant(&ast, "assignment")
+                .unwrap_or_else(|| panic!("expected assignment in {src:?}"));
+            assert!(
+                a.children.iter().any(|c| matches!(c, ASTNodeOrToken::Token(t) if {
+                    let v = t.value.as_str();
+                    v == "&=" || v == "|=" || v == "^="
+                })),
+                "expected bitwise op-assign token under assignment in {src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_parse_plain_assignment_still_works_after_8a() {
+        // Regression — extending the `assignment` operator alternation
+        // must not break the original `x = 5` form.
+        let ast = parse_ruby("x = 5");
+        assert!(find_descendant(&ast, "assignment").is_some());
+    }
 }
 

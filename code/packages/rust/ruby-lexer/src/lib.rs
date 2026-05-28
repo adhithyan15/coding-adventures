@@ -758,10 +758,22 @@ impl RubyLexer {
     /// `+=`, `-=`, `*=`, `/=`, `||=`, `&&=` into a single Name-typed
     /// token whose value is the fused operator (`+=` etc.).
     ///
+    /// Phase 8a (FC) extension — also fuse the remaining compound
+    /// assigns Ruby supports on the left-hand side: `%=`, `**=`,
+    /// `<<=`, `&=`, `|=`, `^=`.  These all come through as `Name`
+    /// tokens with the operator value (e.g. `Name("%")`, `Name("**")`,
+    /// `Name("<<")`, `Name("&")`, `Name("|")`, `Name("^")`), so the
+    /// same fold pattern applies — we just widen the `match` arm to
+    /// recognise them by value.  Note that `>>=` is NOT handled here
+    /// because the 1.8-era state machine emits `>>` as two separate
+    /// `Name(">")` tokens; folding that requires a dedicated `>>`
+    /// pre-fusion pass and is deferred.
+    ///
     /// The 1.8-baseline state machine emits compound assigns as two
     /// tokens:
     ///   - The op (Plus / Minus / Star / Slash for `+`/`-`/`*`/`/`,
-    ///     or Name for `||` / `&&` — classify_op_token's catch-all).
+    ///     or Name for `||` / `&&` / `%` / `**` / `<<` / `&` / `|`
+    ///     / `^` — classify_op_token's catch-all).
     ///   - Equals for the trailing `=`.
     ///
     /// This pass folds the pair into a single token so the grammar
@@ -784,11 +796,28 @@ impl RubyLexer {
                     TokenType::Minus => ("-", true),
                     TokenType::Star => ("*", true),
                     TokenType::Slash => ("/", true),
-                    // `||` and `&&` come through as Name (catch-all
-                    // in classify_op_token).  Filter by value so we
+                    // `||`, `&&`, `%`, `**`, `<<`, `&`, `|`, `^`
+                    // all come through as Name (catch-all in
+                    // classify_op_token).  Filter by value so we
                     // don't accidentally fuse `foo =` into something.
-                    TokenType::Name if a.value == "||" || a.value == "&&" => {
-                        (if a.value == "||" { "||" } else { "&&" }, false)
+                    TokenType::Name
+                        if matches!(
+                            a.value.as_str(),
+                            "||" | "&&" | "%" | "**" | "<<" | "&" | "|" | "^"
+                        ) =>
+                    {
+                        let lex: &'static str = match a.value.as_str() {
+                            "||" => "||",
+                            "&&" => "&&",
+                            "%" => "%",
+                            "**" => "**",
+                            "<<" => "<<",
+                            "&" => "&",
+                            "|" => "|",
+                            "^" => "^",
+                            _ => unreachable!(),
+                        };
+                        (lex, false)
                     }
                     _ => {
                         i += 1;

@@ -260,7 +260,7 @@ ensure_clause   = "ensure" { !"end" statement } ;
 # on Op tokens (Plus/Minus/Star/Slash) and the two Name-typed
 # logicals (`||`/`&&`) to avoid colliding with comparison ops which
 # the lexer fuses directly.
-assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression ;
+assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "<<=" | "&=" | "|=" | "^=" | "||=" | "&&=" ) expression ;
 # Phase 7e — Ruby 3.0 rightward (single-line) assignment `expr => var`.
 #
 # Mirror image of the normal `var = expr` assignment: the value is on

@@ -1730,10 +1730,31 @@ impl Lowerer {
         // pre-fuses `+=`, `-=`, `*=`, `/=`, `||=`, `&&=` into single
         // Name-typed tokens; here we read the operator token (skipping
         // the leading NAME) to dispatch.
+        //
+        // Phase 8a (FC) extension — the lexer now also fuses the
+        // additional compound forms `%=`, `**=`, `<<=`, `&=`, `|=`,
+        // `^=` (Ruby's full arithmetic/bitwise/shift compound family).
+        // `>>=` is deliberately NOT in this list because the 1.8-era
+        // lexer state machine splits `>>` into two `>` tokens; folding
+        // that requires a dedicated `>>` pre-fusion pass and is
+        // tracked as a follow-up chunk.
         let op_token = node.children.iter().skip(1).find_map(|c| match c {
             ASTNodeOrToken::Token(t) => {
                 let v = t.value.as_str();
-                if matches!(v, "+=" | "-=" | "*=" | "/=" | "||=" | "&&=") {
+                if matches!(
+                    v,
+                    "+=" | "-="
+                        | "*="
+                        | "/="
+                        | "%="
+                        | "**="
+                        | "<<="
+                        | "&="
+                        | "|="
+                        | "^="
+                        | "||="
+                        | "&&="
+                ) {
                     Some(v.to_string())
                 } else {
                     None
@@ -1749,15 +1770,35 @@ impl Lowerer {
         // `or` for `||=`, etc.).  Lowering identically to
         // `x = x op rhs` keeps downstream emitters simple — no new
         // compound-assign-aware code paths required.
+        //
+        // Builtin-name table for Phase 8a additions:
+        //   `%=`  → `%`   (modulo)
+        //   `**=` → `**`  (power)
+        //   `<<=` → `<<`  (left shift / append)
+        //   `&=`  → `&`   (bitwise and)
+        //   `|=`  → `|`   (bitwise or)
+        //   `^=`  → `^`   (bitwise xor)
+        //
+        // These BuiltinCall names match the surface operator literally,
+        // following the same convention as `+`/`-`/`*`/`/` already in
+        // use; downstream emitters that target Ruby (or any language
+        // with the same operator spellings) can pass the name through
+        // unchanged.
         let value = if let Some(op) = op_token.as_deref() {
             let (builtin_name, effects) = match op {
                 "+=" => ("+", EffectSet::PURE),
                 "-=" => ("-", EffectSet::PURE),
                 "*=" => ("*", EffectSet::PURE),
                 "/=" => ("/", EffectSet::PURE),
+                "%=" => ("%", EffectSet::PURE),
+                "**=" => ("**", EffectSet::PURE),
+                "<<=" => ("<<", EffectSet::PURE),
+                "&=" => ("&", EffectSet::PURE),
+                "|=" => ("|", EffectSet::PURE),
+                "^=" => ("^", EffectSet::PURE),
                 "||=" => ("or", EffectSet::PURE),
                 "&&=" => ("and", EffectSet::PURE),
-                _ => unreachable!("op_token matched only the six compound forms above"),
+                _ => unreachable!("op_token matched only the compound forms above"),
             };
             let lhs_ref = Expr::VarRef {
                 name: name.clone(),

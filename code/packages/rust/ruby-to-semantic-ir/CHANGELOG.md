@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.34.0] - 2026-05-26
+
+### Added (Phase 8a (FC) — additional compound-assignment lowering)
+
+`lower_assignment` learns six more compound forms — `%=`, `**=`, `<<=`, `&=`, `|=`, `^=` — and desugars each identically to `x = x op rhs`:
+
+| Source     | SIR shape                                                       |
+|------------|-----------------------------------------------------------------|
+| `x %= y`   | `Assign(x, BuiltinCall("%",  [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+| `x **= y`  | `Assign(x, BuiltinCall("**", [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+| `x <<= y`  | `Assign(x, BuiltinCall("<<", [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+| `x &= y`   | `Assign(x, BuiltinCall("&",  [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+| `x \|= y`  | `Assign(x, BuiltinCall("\|", [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+| `x ^= y`   | `Assign(x, BuiltinCall("^",  [VarRef(x, Local), <y>]))` + `Feature::MutableBindings` |
+
+Same convention as the pre-existing `+= -= *= /=` family: BuiltinCall name matches the underlying surface operator literally, so downstream emitters that target Ruby can pass the name through unchanged.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 155 → **160** (+5):
+  - `modulo_assign_desugars_to_assign_with_modulo_builtin`
+  - `power_assign_desugars_to_assign_with_power_builtin`
+  - `left_shift_assign_desugars_to_assign_with_lshift_builtin`
+  - `bitwise_op_assigns_lower_to_assign_with_bitwise_builtins`
+  - `compound_assigns_module_passes_sir_validator` (E2E smoke)
+
 ## [0.33.0] - 2026-05-26
 
 ### Added (Phase 7f — Ruby 3.1 hash value-omitted shorthand lowering)
