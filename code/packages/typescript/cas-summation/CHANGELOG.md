@@ -1,5 +1,39 @@
 # Changelog
 
+## 2.23.0 — 2026-05-28
+
+### Added — Phase 86 cleanup (generic log × sqrt × polynomial recogniser)
+
+Mirrors the Python `2.23.0` cleanup: a single generic helper supersedes the
+hand-written grid of `N-Sqrt × M-Log × polynomial` recognisers (Phases 59-85).
+The convergence math is identical for every non-negative `(N, M, K)`:
+
+- The product of `N` `Log(diverging)` factors is sub-polynomial
+  (`log^N(k) = o(k^ε)`), so `N` contributes 0 to the effective growth degree.
+- Each `Sqrt(P_i)` contributes `deg(P_i)/2`.
+- Each polynomial factor `Q_j` contributes its own `deg(Q_j)`.
+- Bounded factors contribute 0.
+
+`logSqrtPolyEffectiveDegGeneric(node, k)` returns `Σ sqrtHalfDeg + Σ polyDeg`
+when the numerator matches; the dispatcher in `gVanishesAtInfinity` inserts
+this branch between Phase 58 and Phase 59 so it preempts the entire grid for
+every shape the grid was meant to cover (and many it wasn't — e.g. seven
+`Log` factors, six `Sqrt` factors, arbitrary mixes).
+
+The hand-written grid helpers (`twoSqrtPolyEffectiveDeg`, `fiveLogPolyEffectiveDeg`,
+…) remain in place for now but are now dead code; a follow-up cleanup PR will
+delete them.
+
+6 new tests in the "Phase 86 generic" describe block:
+
+- `seven logs over k²` (grid stops at 6 — generic handles it).
+- `six sqrts of k over k⁴` (grid stops at 5 — generic handles it).
+- `three sqrts × seven logs × k over k⁵` (mixed; outside the grid).
+- `refuses unrecognised factor (Exp)` (must not silently close a divergent sum).
+- `refuses Sqrt of negative polynomial` (complex-valued — refuse).
+- `pure bounded falls through to Phase 49` (regression — generic returns
+  undefined so Phase 49 takes over).
+
 ## 2.22.0 — 2026-05-26
 
 ### Added
