@@ -72,6 +72,7 @@ pub mod cache;
 pub mod cir;
 pub mod core;
 pub mod errors;
+pub mod generic_jit;
 pub mod optimizer;
 pub mod specialise;
 
@@ -80,5 +81,6 @@ pub use backend::Backend;
 pub use cir::{CIRInstr, CIROperand};
 pub use core::JITCore;
 pub use errors::{DeoptimizerError, JITError, UnspecializableError};
+pub use generic_jit::{BuiltinFn, GenericCirJit};
 pub use optimizer::CIROptimizer;
 pub use specialise::specialise;
