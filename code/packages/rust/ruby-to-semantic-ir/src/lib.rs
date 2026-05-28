@@ -1900,6 +1900,199 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 9a (FC) — swap-safe parallel binding
+    // -----------------------------------------------------------------
+    //
+    // Phase 6r's lowering was sequential: `a, b = b, a` became
+    // `Assign(a, VarRef(b)); Assign(b, VarRef(a))` — the second assign
+    // reads the NEW `a`, silently producing `a = old_b; b = old_b`
+    // instead of a true swap.
+    //
+    // Phase 9a fixes this by detecting whether any LHS name appears in
+    // any RHS expression.  If so, the lowerer introduces fresh
+    // `LetStarBinding` temps (`__multi_assign_t<N>_<i>`) capturing the
+    // ORIGINAL RHS values first; the LHS-binding pass then reads each
+    // temp.  If no LHS appears in any RHS, the existing sequential
+    // shape is preserved (no temps).
+    //
+    // The "needs-temps" detector is a structural walk over Expr; any
+    // VarRef to an LHS name (no matter how deeply nested) triggers
+    // the temp-pass.
+
+    #[test]
+    fn multi_assignment_swap_introduces_temps_to_preserve_parallel_semantics() {
+        // `a, b = b, a` must NOT lower to the buggy sequential form.
+        // Expected SIR:
+        //   LetBinding(a, 1)
+        //   LetBinding(b, 2)
+        //   LetStarBinding(__multi_assign_t0_0, VarRef(b))   <- captures original b
+        //   LetStarBinding(__multi_assign_t0_1, VarRef(a))   <- captures original a
+        //   Assign(a, VarRef(__multi_assign_t0_0))
+        //   Assign(b, VarRef(__multi_assign_t0_1))
+        let m = lower("a = 1\nb = 2\na, b = b, a\n");
+        let body = main_body(&m);
+        assert_eq!(
+            body.stmts.len(),
+            6,
+            "swap should emit 6 stmts (2 priors + 2 temps + 2 assigns), got {:?}",
+            body.stmts
+        );
+        // Temp 0 captures original b.
+        match &body.stmts[2] {
+            Stmt::LetStarBinding { name, value, .. } => {
+                assert!(name.starts_with("__multi_assign_t"));
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n == "b"),
+                    "temp 0 should capture VarRef(b), got {:?}",
+                    value
+                );
+            }
+            other => panic!("expected LetStarBinding for temp 0, got {:?}", other),
+        }
+        // Temp 1 captures original a.
+        match &body.stmts[3] {
+            Stmt::LetStarBinding { name, value, .. } => {
+                assert!(name.starts_with("__multi_assign_t"));
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n == "a"),
+                    "temp 1 should capture VarRef(a), got {:?}",
+                    value
+                );
+            }
+            other => panic!("expected LetStarBinding for temp 1, got {:?}", other),
+        }
+        // a := temp 0
+        match &body.stmts[4] {
+            Stmt::Assign { name, value, .. } => {
+                assert_eq!(name, "a");
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
+                    "a should be assigned from a temp, got {:?}",
+                    value
+                );
+            }
+            other => panic!("expected Assign(a, temp), got {:?}", other),
+        }
+        // b := temp 1
+        match &body.stmts[5] {
+            Stmt::Assign { name, value, .. } => {
+                assert_eq!(name, "b");
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
+                    "b should be assigned from a temp, got {:?}",
+                    value
+                );
+            }
+            other => panic!("expected Assign(b, temp), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn multi_assignment_simple_case_keeps_fast_path_with_no_temps() {
+        // Sanity: the new heuristic must NOT introduce temps when no
+        // LHS appears in any RHS.  This preserves the Phase 6r shape
+        // assumption that `a, b = 1, 2` is 2 stmts (not 4).
+        let m = lower("a, b = 1, 2\n");
+        let body = main_body(&m);
+        assert_eq!(
+            body.stmts.len(),
+            2,
+            "simple-case multi-assign should stay 2 stmts, got {:?}",
+            body.stmts
+        );
+        // Nothing should be a `LetStarBinding` (those would be temps).
+        for s in &body.stmts {
+            assert!(
+                !matches!(s, Stmt::LetStarBinding { .. }),
+                "simple-case should not introduce temps, got {:?}",
+                s
+            );
+        }
+    }
+
+    #[test]
+    fn multi_assignment_partial_dependency_still_uses_temps_for_all_positions() {
+        // `a, b = 1, a` — only the SECOND RHS references an LHS, but
+        // the temp-pass kicks in for the whole multi-assignment so the
+        // capture is uniform.  Without this, position 1 would read the
+        // post-assignment `a` instead of the original.
+        let m = lower("a = 7\nb = 8\na, b = 1, a\n");
+        let body = main_body(&m);
+        // Expect: 2 prior LetBindings + 2 temps + 2 assigns = 6 stmts.
+        assert_eq!(body.stmts.len(), 6,
+            "partial-dep multi-assign should emit 6 stmts, got {:?}", body.stmts);
+        // Both temps must be LetStarBindings.
+        assert!(matches!(&body.stmts[2], Stmt::LetStarBinding { .. }));
+        assert!(matches!(&body.stmts[3], Stmt::LetStarBinding { .. }));
+        // Temp 0 captures literal 1 (no LHS reference in this RHS).
+        match &body.stmts[2] {
+            Stmt::LetStarBinding { value, .. } => {
+                assert!(
+                    matches!(value, Expr::IntLit { value: 1, .. }),
+                    "temp 0 should capture IntLit(1), got {:?}",
+                    value
+                );
+            }
+            _ => unreachable!(),
+        }
+        // Temp 1 captures the original VarRef(a).
+        match &body.stmts[3] {
+            Stmt::LetStarBinding { value, .. } => {
+                assert!(
+                    matches!(value, Expr::VarRef { name: n, .. } if n == "a"),
+                    "temp 1 should capture VarRef(a), got {:?}",
+                    value
+                );
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    #[test]
+    fn multi_assignment_swap_module_passes_sir_validator() {
+        // Validator must accept the temp-pass lowering — LetStarBinding
+        // adds the temp name to the env immediately, so the subsequent
+        // Assign's VarRef sees it; `Feature::MutableBindings` is
+        // already requested for the re-binding LHS.
+        let m = lower("a = 1\nb = 2\na, b = b, a\nputs(a)\nputs(b)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected swap-case multi-assign: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn multi_assignment_two_swaps_use_distinct_temp_counters() {
+        // Two consecutive swaps in the same scope must use DIFFERENT
+        // temp counters so the second swap's temps don't shadow or
+        // collide with the first.  This guards against accidental
+        // re-use of the counter inside a single scope.
+        let m = lower(
+            "a = 1\nb = 2\nc = 3\nd = 4\na, b = b, a\nc, d = d, c\n",
+        );
+        let body = main_body(&m);
+        // Collect temp names that appear as LetStarBinding declarations.
+        let mut temp_names: Vec<String> = body
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::LetStarBinding { name, .. } => Some(name.clone()),
+                _ => None,
+            })
+            .collect();
+        temp_names.sort();
+        temp_names.dedup();
+        assert_eq!(
+            temp_names.len(),
+            4,
+            "expected 4 distinct temp names across two swaps, got {:?}",
+            temp_names
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6s — splat / double-splat
     // -----------------------------------------------------------------
     //

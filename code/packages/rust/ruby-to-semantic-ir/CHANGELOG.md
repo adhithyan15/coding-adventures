@@ -2,6 +2,49 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.37.0] - 2026-05-28
+
+### Changed (Phase 9a (FC) — swap-safe parallel multi-assignment)
+
+Phase 6r lowered `a, b = rhs0, rhs1` as a flat sequence of one SIR
+statement per pair: `Stmt(a := rhs0); Stmt(b := rhs1)`.  That's
+observably correct only when no LHS name appears in any RHS — the
+common case.  For the swap `a, b = b, a`, the sequential form reads
+the *post-assignment* value of `a` when evaluating the second pair,
+producing `a = old_b; b = old_b` instead of the true swap.
+
+Phase 9a introduces a "needs-temps" heuristic.  After lowering every
+RHS to an `Expr`, the lowerer scans each one (structural recursion
+over the SIR `Expr` tree) for any `VarRef` whose name appears in the
+LHS list.  If found:
+
+1. Each RHS value is bound to a fresh `LetStarBinding` temp named
+   `__multi_assign_t<N>_<i>` (counter `multi_assign_counter` ensures
+   uniqueness across multiple multi-assignments in the same scope).
+2. Each LHS is then assigned from its temp via the usual
+   first-sighting `LetBinding` / re-binding `Assign` decision.
+
+`LetStarBinding` (sequential semantics) is used for the temps so each
+temp's name is visible to the subsequent LHS-binding pass — `LetBinding`
+would put them in the same parallel-let validator group and hide them.
+
+If no LHS appears in any RHS, the lowerer keeps Phase 6r's sequential
+shape (no temps, no `LetStarBinding`) so the simple case stays cheap.
+
+| Source                  | SIR shape (after Phase 9a)                                                                                                         |
+|-------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `a, b = 1, 2`           | `LetBinding(a, 1); LetBinding(b, 2)` *(no temps — fast path)*                                                                      |
+| `a = 1; b = 2; a, b = b, a` | `LetBinding(a, 1); LetBinding(b, 2); LetStarBinding(__multi_assign_t0_0, VarRef(b)); LetStarBinding(__multi_assign_t0_1, VarRef(a)); Assign(a, VarRef(__multi_assign_t0_0)); Assign(b, VarRef(__multi_assign_t0_1))` |
+
+### Tests
+
+- `ruby-to-semantic-ir`: 165 → **170** (+5):
+  - `multi_assignment_swap_introduces_temps_to_preserve_parallel_semantics`
+  - `multi_assignment_simple_case_keeps_fast_path_with_no_temps`
+  - `multi_assignment_partial_dependency_still_uses_temps_for_all_positions`
+  - `multi_assignment_swap_module_passes_sir_validator` (validator E2E)
+  - `multi_assignment_two_swaps_use_distinct_temp_counters`
+
 ## [0.36.0] - 2026-05-28
 
 ### Changed (Phase 8b (FC) — short-circuit `||=` / `&&=` lowering)
