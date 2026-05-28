@@ -13168,7 +13168,8 @@ fn phase191_log29_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31st log
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31st log
+        log_k, // 32nd log
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -13176,7 +13177,8 @@ fn phase191_log29_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31st log
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31st log
+        log_kp1, // 32nd log
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -13275,7 +13277,8 @@ fn phase192_sqrt_k_log29_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31st log
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31st log
+        log_k, // 32nd log
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -13284,7 +13287,8 @@ fn phase192_sqrt_k_log29_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31st log
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31st log
+        log_kp1, // 32nd log
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -13796,7 +13800,8 @@ fn phase197_log29_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -13804,7 +13809,8 @@ fn phase197_log29_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -13903,7 +13909,8 @@ fn phase198_sqrt_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -13912,7 +13919,8 @@ fn phase198_sqrt_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k198c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14009,7 +14017,8 @@ fn phase199_sqrt2_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14018,7 +14027,8 @@ fn phase199_sqrt2_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k199c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14115,7 +14125,8 @@ fn phase200_sqrt3_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14124,7 +14135,8 @@ fn phase200_sqrt3_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k200c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14221,7 +14233,8 @@ fn phase201_sqrt4_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14230,7 +14243,8 @@ fn phase201_sqrt4_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k201c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14327,7 +14341,8 @@ fn phase202_sqrt5_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14336,7 +14351,8 @@ fn phase202_sqrt5_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k202c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14422,7 +14438,8 @@ fn phase203_log29_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14430,7 +14447,8 @@ fn phase203_log29_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -14529,7 +14547,8 @@ fn phase204_sqrt_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14538,7 +14557,8 @@ fn phase204_sqrt_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k204c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14635,7 +14655,8 @@ fn phase205_sqrt2_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14644,7 +14665,8 @@ fn phase205_sqrt2_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k205c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14741,7 +14763,8 @@ fn phase206_sqrt3_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14750,7 +14773,8 @@ fn phase206_sqrt3_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k206c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14847,7 +14871,8 @@ fn phase207_sqrt4_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14856,7 +14881,8 @@ fn phase207_sqrt4_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k207c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -14953,7 +14979,8 @@ fn phase208_sqrt5_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -14962,7 +14989,8 @@ fn phase208_sqrt5_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k208c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15053,7 +15081,8 @@ fn phase209_log29_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15062,7 +15091,8 @@ fn phase209_log29_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -15166,7 +15196,8 @@ fn phase210_sqrt_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15176,7 +15207,8 @@ fn phase210_sqrt_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k210c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15278,7 +15310,8 @@ fn phase211_sqrt2_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15288,7 +15321,8 @@ fn phase211_sqrt2_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k211c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15390,7 +15424,8 @@ fn phase212_sqrt3_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15400,7 +15435,8 @@ fn phase212_sqrt3_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k212c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15502,7 +15538,8 @@ fn phase213_sqrt4_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15512,7 +15549,8 @@ fn phase213_sqrt4_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k213c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15614,7 +15652,8 @@ fn phase214_sqrt5_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15624,7 +15663,8 @@ fn phase214_sqrt5_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k214c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15715,7 +15755,8 @@ fn phase215_log29_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15724,7 +15765,8 @@ fn phase215_log29_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -15828,7 +15870,8 @@ fn phase216_sqrt_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15838,7 +15881,8 @@ fn phase216_sqrt_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k216c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -15940,7 +15984,8 @@ fn phase217_sqrt2_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -15950,7 +15995,8 @@ fn phase217_sqrt2_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k217c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16052,7 +16098,8 @@ fn phase218_sqrt3_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16062,7 +16109,8 @@ fn phase218_sqrt3_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k218c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16164,7 +16212,8 @@ fn phase219_sqrt4_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16174,7 +16223,8 @@ fn phase219_sqrt4_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k219c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16276,7 +16326,8 @@ fn phase220_sqrt5_k_log29_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16286,7 +16337,8 @@ fn phase220_sqrt5_k_log29_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k220c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16377,7 +16429,8 @@ fn phase221_log30_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16386,7 +16439,8 @@ fn phase221_log30_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -16490,7 +16544,8 @@ fn phase222_sqrt1_k_log30_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16500,7 +16555,8 @@ fn phase222_sqrt1_k_log30_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k222c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16602,7 +16658,8 @@ fn phase223_sqrt2_k_log30_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16612,7 +16669,8 @@ fn phase223_sqrt2_k_log30_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k223c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16714,7 +16772,8 @@ fn phase224_sqrt3_k_log30_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16724,7 +16783,8 @@ fn phase224_sqrt3_k_log30_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k224c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16826,7 +16886,8 @@ fn phase225_sqrt4_k_log30_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16836,7 +16897,8 @@ fn phase225_sqrt4_k_log30_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k225c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -16938,7 +17000,8 @@ fn phase226_sqrt5_k_log30_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -16948,7 +17011,8 @@ fn phase226_sqrt5_k_log30_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k226c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -17039,7 +17103,8 @@ fn phase227_log31_k_times_k_over_k2_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -17048,7 +17113,8 @@ fn phase227_log31_k_times_k_over_k2_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
@@ -17152,7 +17218,8 @@ fn phase228_sqrt1_k_log31_k_times_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -17162,7 +17229,8 @@ fn phase228_sqrt1_k_log31_k_times_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k228c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -17264,7 +17332,8 @@ fn phase229_sqrt2_k_log31_k_times_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -17274,7 +17343,8 @@ fn phase229_sqrt2_k_log31_k_times_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k229c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -17376,7 +17446,8 @@ fn phase230_sqrt3_k_log31_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -17386,7 +17457,8 @@ fn phase230_sqrt3_k_log31_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k230c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -17488,7 +17560,8 @@ fn phase231_sqrt4_k_log31_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -17498,7 +17571,8 @@ fn phase231_sqrt4_k_log31_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k231c = apply(sym(DIV), vec![num_k, k.clone()]);
@@ -17600,7 +17674,8 @@ fn phase232_sqrt5_k_log31_k_over_k_refused() {
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
         log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
-        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), // 31 logs
+        log_k, // 32 logs
         k.clone(),
     ]);
     let num_kp1 = apply(sym(MUL), vec![
@@ -17610,12 +17685,685 @@ fn phase232_sqrt5_k_log31_k_over_k_refused() {
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
         log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
-        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), // 31 logs
+        log_kp1, // 32 logs
         kp1.clone(),
     ]);
     let g_k232c = apply(sym(DIV), vec![num_k, k.clone()]);
     let g_kp1_232c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
     let f232c = apply(sym(SUB), vec![g_k232c, g_kp1_232c]);
     let out = evaluate_sum(f232c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 233: 0-sqrt × 31-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase233_log31_k_over_k5_converges() {
+    // log(k)^31 / k^5: effective_x2=0; 2·5=10 > 0 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k233a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_233a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f233a = apply(sym(SUB), vec![g_k233a, g_kp1_233a]);
+    let out = evaluate_sum(f233a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase233_log31_k_times_k_over_k5_converges() {
+    // log(k)^31·k / k^5: effective_x2=2; 2·5=10 > 2 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k233b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_233b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f233b = apply(sym(SUB), vec![g_k233b, g_kp1_233b]);
+    let out = evaluate_sum(f233b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase233_log32_k_times_k_over_k2_refused() {
+    // log(k)^32·k / k^2: 32 logs → refused (Phase 233 handles exactly 31).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k, // 32 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1, // 32 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone()]);
+    let g_k233c = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_233c = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f233c = apply(sym(SUB), vec![g_k233c, g_kp1_233c]);
+    let out = evaluate_sum(f233c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 234: 1-sqrt × 31-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase234_sqrt1_k_log31_k_over_k4_converges() {
+    // √k^1·log(k)^31 / k^4: effective_x2=1; 2·4=8 > 1 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k234a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_234a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f234a = apply(sym(SUB), vec![g_k234a, g_kp1_234a]);
+    let out = evaluate_sum(f234a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase234_sqrt1_k_log31_k_times_k_over_k5_converges() {
+    // √k^1·log(k)^31·k / k^5: effective_x2=3; 2·5=10 > 3 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k234b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_234b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f234b = apply(sym(SUB), vec![g_k234b, g_kp1_234b]);
+    let out = evaluate_sum(f234b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase234_sqrt1_k_log32_k_times_k_over_k_refused() {
+    // √k^1·log(k)^32·k / k: 32 logs → refused (Phase 234 handles exactly 31).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k, // 32 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1, // 32 logs
+        kp1.clone(),
+    ]);
+    let g_k234c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_234c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f234c = apply(sym(SUB), vec![g_k234c, g_kp1_234c]);
+    let out = evaluate_sum(f234c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 235: 2-sqrt × 31-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase235_sqrt2_k_log31_k_over_k4_converges() {
+    // √k^2·log(k)^31 / k^4: effective_x2=2; 2·4=8 > 2 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k235a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_235a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f235a = apply(sym(SUB), vec![g_k235a, g_kp1_235a]);
+    let out = evaluate_sum(f235a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase235_sqrt2_k_log31_k_times_k_over_k5_converges() {
+    // √k^2·log(k)^31·k / k^5: effective_x2=4; 2·5=10 > 4 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k235b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_235b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f235b = apply(sym(SUB), vec![g_k235b, g_kp1_235b]);
+    let out = evaluate_sum(f235b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase235_sqrt2_k_log32_k_over_k_refused() {
+    // √k^2·log(k)^32 / k: 32 logs → refused (Phase 235 handles exactly 31).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k, // 32 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1, // 32 logs
+    ]);
+    let g_k235c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_235c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f235c = apply(sym(SUB), vec![g_k235c, g_kp1_235c]);
+    let out = evaluate_sum(f235c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 236: 3-sqrt × 31-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase236_sqrt3_k_log31_k_over_k4_converges() {
+    // √k^3·log(k)^31 / k^4: effective_x2=3; 2·4=8 > 3 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k236a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_236a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f236a = apply(sym(SUB), vec![g_k236a, g_kp1_236a]);
+    let out = evaluate_sum(f236a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase236_sqrt3_k_log31_k_times_k_over_k5_converges() {
+    // √k^3·log(k)^31·k / k^5: effective_x2=5; 2·5=10 > 5 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k236b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_236b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f236b = apply(sym(SUB), vec![g_k236b, g_kp1_236b]);
+    let out = evaluate_sum(f236b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase236_sqrt3_k_log32_k_over_k_refused() {
+    // √k^3·log(k)^32·k / k: 32 logs → refused (Phase 236 handles exactly 31).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k, // 32 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1, // 32 logs
+        kp1.clone(),
+    ]);
+    let g_k236c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_236c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f236c = apply(sym(SUB), vec![g_k236c, g_kp1_236c]);
+    let out = evaluate_sum(f236c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 237: 4-sqrt × 31-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase237_sqrt4_k_log31_k_over_k4_converges() {
+    // √k^4·log(k)^31 / k^4: effective_x2=4; 2·4=8 > 4 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k237a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_237a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f237a = apply(sym(SUB), vec![g_k237a, g_kp1_237a]);
+    let out = evaluate_sum(f237a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase237_sqrt4_k_log31_k_times_k_over_k5_converges() {
+    // √k^4·log(k)^31·k / k^5: effective_x2=6; 2·5=10 > 6 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k237b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_237b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f237b = apply(sym(SUB), vec![g_k237b, g_kp1_237b]);
+    let out = evaluate_sum(f237b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase237_sqrt4_k_log32_k_over_k_refused() {
+    // √k^4·log(k)^32·k / k: 32 logs → refused (Phase 237 handles exactly 31).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k, // 32 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1, // 32 logs
+        kp1.clone(),
+    ]);
+    let g_k237c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_237c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f237c = apply(sym(SUB), vec![g_k237c, g_kp1_237c]);
+    let out = evaluate_sum(f237c, k, int(1), sym("%inf"), eval);
+    assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+// ── Phase 238: 5-sqrt × 31-log × polynomial ──────────────────────────────────
+
+#[test]
+fn phase238_sqrt5_k_log31_k_over_k4_converges() {
+    // √k^5·log(k)^31 / k^4: effective_x2=5; 2·4=8 > 5 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k238a = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_238a = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f238a = apply(sym(SUB), vec![g_k238a, g_kp1_238a]);
+    let out = evaluate_sum(f238a, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase238_sqrt5_k_log31_k_times_k_over_k5_converges() {
+    // √k^5·log(k)^31·k / k^5: effective_x2=7; 2·5=10 > 7 → converges.
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k, // 31 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1, // 31 logs
+        kp1.clone(),
+    ]);
+    let den_k = apply(sym(MUL), vec![k.clone(), k.clone(), k.clone(), k.clone(), k.clone()]);
+    let den_kp1 = apply(sym(MUL), vec![kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone(), kp1.clone()]);
+    let g_k238b = apply(sym(DIV), vec![num_k, den_k]);
+    let g_kp1_238b = apply(sym(DIV), vec![num_kp1, den_kp1]);
+    let f238b = apply(sym(SUB), vec![g_k238b, g_kp1_238b]);
+    let out = evaluate_sum(f238b, k, int(1), sym("%inf"), eval);
+    assert!(!matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
+}
+
+#[test]
+fn phase238_sqrt5_k_log32_k_over_k_refused() {
+    // √k^5·log(k)^32·k / k: 32 logs → refused (Phase 238 handles exactly 31).
+    let k = sym("k");
+    let kp1 = apply(sym(ADD), vec![k.clone(), int(1)]);
+    let sqrt_k = apply(sym("Sqrt"), vec![k.clone()]);
+    let sqrt_kp1 = apply(sym("Sqrt"), vec![kp1.clone()]);
+    let log_k = apply(sym(LOG), vec![k.clone()]);
+    let log_kp1 = apply(sym(LOG), vec![kp1.clone()]);
+    let num_k = apply(sym(MUL), vec![
+        sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k.clone(), sqrt_k,
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(), log_k.clone(),
+        log_k.clone(), log_k, // 32 logs
+        k.clone(),
+    ]);
+    let num_kp1 = apply(sym(MUL), vec![
+        sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1.clone(), sqrt_kp1,
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(), log_kp1.clone(),
+        log_kp1.clone(), log_kp1, // 32 logs
+        kp1.clone(),
+    ]);
+    let g_k238c = apply(sym(DIV), vec![num_k, k.clone()]);
+    let g_kp1_238c = apply(sym(DIV), vec![num_kp1, kp1.clone()]);
+    let f238c = apply(sym(SUB), vec![g_k238c, g_kp1_238c]);
+    let out = evaluate_sum(f238c, k, int(1), sym("%inf"), eval);
     assert!(matches!(&out, IRNode::Apply(node) if node.head == sym(SUM)));
 }

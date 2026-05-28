@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.175.0 — 2026-05-27
+
+### Added
+
+- **Phase 238 — Five-Sqrt × Thirty-One-Log × polynomial** (`five_sqrt_thirty_one_log_poly_effective_x2`):
+  Completes the Thirty-One-Log family (Phases 233–238).
+- **Phase 237 — Four-Sqrt × Thirty-One-Log × polynomial** (`four_sqrt_thirty_one_log_poly_effective_x2`).
+- **Phase 236 — Three-Sqrt × Thirty-One-Log × polynomial** (`three_sqrt_thirty_one_log_poly_effective_x2`).
+- **Phase 235 — Two-Sqrt × Thirty-One-Log × polynomial** (`two_sqrt_thirty_one_log_poly_effective_x2`).
+- **Phase 234 — One-Sqrt × Thirty-One-Log × polynomial** (`one_sqrt_thirty_one_log_poly_effective_x2`).
+- **Phase 233 — Zero-Sqrt × Thirty-One-Log × polynomial** (`thirty_one_log_poly_effective_x2`).
+
+### Changed
+
+- Boundary tests in Phases 227–232 (and prior phases 167–226) updated from 31-log
+  "refused" to 32-log "refused" now that Phases 233–238 handle exactly 31 logs.
+
 ## 2.169.0 — 2026-05-27
 
 ### Added
