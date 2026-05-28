@@ -748,11 +748,44 @@ fn css_property_to_xaml_setter(name: &str) -> String {
         "height"         => "Height".to_string(),
         "border-width"   => "BorderThickness".to_string(),
         "border-color"   => "BorderBrush".to_string(),
+        // X1 fix: mosstyle's `border-radius` maps to WinUI's
+        // `CornerRadius` (UIElement.CornerRadius), NOT `BorderRadius`.
+        // The latter isn't a real WinUI 3 property; the XAML markup
+        // compiler rejects it silently (XamlCompiler.exe exits 1 with
+        // no diagnostic). Caught by the toolkit Button + Alert + Badge
+        // demo (#4548).
+        "border-radius"  => "CornerRadius".to_string(),
         // Anything else passes through PascalCased so we don't crash; the
         // emitter prefers a stale-but-running output to a hard error in
         // PR-1. A real CSS → XAML completeness check lands later.
         other => kebab_to_pascal_case(other),
     }
+}
+
+/// Returns `true` for the XAML setter properties that belong on a
+/// `<Border>` (and other container elements like `<Grid>`, `<StackPanel>`)
+/// — i.e. properties governing the box's own paint, not the text content
+/// inside it. Used by `emit_box` to partition style props between the
+/// `<Border>` itself and its inner `<TextBlock>` child.
+///
+/// `<Border>` accepts: Background, BorderBrush, BorderThickness,
+/// CornerRadius, Padding, Margin, Width, Height. It does NOT accept
+/// Foreground, FontSize, FontWeight, FontFamily — those belong on the
+/// inner content. Caught by the toolkit Alert + Badge demo (#4548).
+fn is_container_style_attr(setter: &str) -> bool {
+    matches!(
+        setter,
+        "Background"
+            | "BorderBrush"
+            | "BorderThickness"
+            | "CornerRadius"
+            | "Padding"
+            | "Margin"
+            | "Width"
+            | "Height"
+            | "HorizontalAlignment"
+            | "VerticalAlignment"
+    )
 }
 
 // =====================================================================
@@ -1149,6 +1182,100 @@ fn part_style_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
     String::new()
 }
 
+/// Parse a joined style fragment (the value side of `PartStyleMap`)
+/// back into individual `(setter, value)` pairs. Round-trips
+/// `build_style_fragment`'s output. Used by `emit_container` to
+/// partition style props between the wrapping element and its
+/// inner text content. Caught by the toolkit Alert + Badge demo
+/// (#4548).
+fn parse_style_fragment(frag: &str) -> Vec<(String, String)> {
+    let mut out = Vec::new();
+    let mut chars = frag.chars().peekable();
+    while chars.peek().is_some() {
+        // Skip whitespace.
+        while matches!(chars.peek(), Some(c) if c.is_whitespace()) {
+            chars.next();
+        }
+        // Read the key up to '='.
+        let mut key = String::new();
+        while let Some(&c) = chars.peek() {
+            if c == '=' {
+                break;
+            }
+            key.push(c);
+            chars.next();
+        }
+        if chars.peek() != Some(&'=') {
+            break;
+        }
+        chars.next(); // consume '='
+        if chars.peek() != Some(&'"') {
+            break;
+        }
+        chars.next(); // consume opening '"'
+        // Read the value up to the next un-escaped '"'. Values that
+        // contain `\"` (escaped) are unusual but handled.
+        let mut value = String::new();
+        while let Some(&c) = chars.peek() {
+            if c == '"' {
+                chars.next();
+                break;
+            }
+            if c == '\\' {
+                chars.next();
+                if let Some(&n) = chars.peek() {
+                    value.push(n);
+                    chars.next();
+                }
+            } else {
+                value.push(c);
+                chars.next();
+            }
+        }
+        if !key.is_empty() {
+            out.push((key, value));
+        }
+    }
+    out
+}
+
+/// Partition a style fragment into:
+///   - `container_attrs`: a leading-space-prefixed attribute string
+///     containing only the setters valid on `<Border>` / `<Grid>` /
+///     `<StackPanel>` (paint, padding, sizing — see
+///     `is_container_style_attr`).
+///   - `text_setters`: the remaining `(setter, value)` pairs that
+///     belong on text content (Foreground, FontSize, FontWeight,
+///     FontFamily). Empty when no text-style props were present.
+///
+/// `emit_container` uses this to put the box's own paint on the
+/// outer element and emit a scoped `Style TargetType="TextBlock"`
+/// resource carrying the inheritable text style. WinUI's implicit-
+/// style mechanism then applies it to every `TextBlock` descendant
+/// inside the container.
+fn partition_box_style(part: Option<&str>, part_styles: &PartStyleMap)
+    -> (String, Vec<(String, String)>)
+{
+    let frag = match part.and_then(|p| part_styles.get(p)) {
+        Some(f) => f.as_str(),
+        None => return (String::new(), Vec::new()),
+    };
+    let mut container = String::new();
+    let mut text = Vec::new();
+    for (setter, value) in parse_style_fragment(frag) {
+        if is_container_style_attr(&setter) {
+            container.push(' ');
+            container.push_str(&setter);
+            container.push_str("=\"");
+            container.push_str(&value);
+            container.push('"');
+        } else {
+            text.push((setter, value));
+        }
+    }
+    (container, text)
+}
+
 // ---------------------------------------------------------------------
 // Primitive emitters (the nine simple kernel primitives — PR-1)
 // ---------------------------------------------------------------------
@@ -1207,8 +1334,35 @@ fn emit_container(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let style = part_style_attr(node, part_styles);
-    let mut out = format!("{pad}<{element}{style}>\n");
+    let inner_pad = " ".repeat(indent + 4);
+
+    // X3 fix: `<Border>`, `<Grid>`, `<StackPanel>` don't have
+    // `Foreground` / `FontSize` / `FontWeight` / `FontFamily`. When
+    // the part style includes those, the XAML markup compiler
+    // rejects them. Partition the style props: keep container-paint
+    // attrs on the opening tag, push text-style attrs into a scoped
+    // `<Element.Resources>` block as a TargetType="TextBlock" implicit
+    // style. WinUI's implicit-style resolution then applies them to
+    // every TextBlock descendant inside. Caught by the toolkit Alert
+    // + Badge demo (#4548).
+    let (container_attrs, text_setters) =
+        partition_box_style(node.part_name.as_deref(), part_styles);
+
+    let mut out = format!("{pad}<{element}{container_attrs}>\n");
+
+    if !text_setters.is_empty() {
+        writeln!(out, "{inner_pad}<{element}.Resources>").unwrap();
+        writeln!(out, "{inner_pad}    <Style TargetType=\"TextBlock\">").unwrap();
+        for (setter, value) in &text_setters {
+            writeln!(
+                out,
+                "{inner_pad}        <Setter Property=\"{setter}\" Value=\"{value}\"/>"
+            ).unwrap();
+        }
+        writeln!(out, "{inner_pad}    </Style>").unwrap();
+        writeln!(out, "{inner_pad}</{element}.Resources>").unwrap();
+    }
+
     out.push_str(&emit_xaml_children(&node.children, indent + 4, part_styles, ctx)?);
     writeln!(out, "{pad}</{element}>").unwrap();
     Ok(out)
@@ -3146,6 +3300,18 @@ fn host_x_name(node: &LayoutNode, tag: &str, ctx: &mut EmitContext<'_>) -> Strin
     if let Some(p) = node.part_name.as_deref() {
         let pascal = kebab_to_pascal_case(p);
         if is_safe_identifier(&pascal) {
+            // X2 fix: when the pascal-cased part name collides with the
+            // enclosing component class name (e.g. component `Button`
+            // with part `button`), WinUI's XAML compiler generates a
+            // `private … {pascal} {pascal};` field that triggers C#
+            // error CS0542 ("member names cannot be the same as their
+            // enclosing type"). Suffix `Element` to disambiguate; the
+            // `_Click` handler stem is derived from `x_name` so the
+            // .xaml.cs stays consistent automatically. Caught by the
+            // toolkit Button + Checkbox + Input + Radio demo (#4548).
+            if pascal == ctx.component_name {
+                return format!("{pascal}Element");
+            }
             return pascal;
         }
     }
@@ -8121,5 +8287,258 @@ mod tests {
             "expected dispatch with args.NewValue payload, got:\n{}",
             r.code_behind
         );
+    }
+
+    // ── #4548 toolkit-demo emitter-gap regressions ──
+
+    /// Helper: build a Box with a part name carrying a style on
+    /// every interesting CSS property.
+    fn styled_box_with_text_child(part: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some(part.to_string()),
+            props: Vec::new(),
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some(format!("{part}-text")),
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("hello".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        }
+    }
+
+    fn style_for_box(part: &str, props: Vec<(&str, &str)>) -> StyleDef {
+        StyleDef {
+            component_name: "Foo".to_string(),
+            parts: vec![PartStyle {
+                name: part.to_string(),
+                base: props
+                    .into_iter()
+                    .map(|(k, v)| StyleProp {
+                        name: k.to_string(),
+                        value: v.to_string(),
+                    })
+                    .collect(),
+                states: Vec::new(),
+            }],
+        }
+    }
+
+    /// X1: `border-radius` lowers to WinUI's `CornerRadius`, not
+    /// the made-up `BorderRadius` attribute (which doesn't exist
+    /// in WinUI 3 and causes the XAML markup compiler to fail).
+    #[test]
+    fn border_radius_lowers_to_corner_radius() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", styled_box_with_text_child("frame"));
+        let s = style_for_box("frame", vec![("border-radius", "4")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("CornerRadius=\"4\""),
+            "expected CornerRadius=\"4\" in output, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("BorderRadius=\""),
+            "BorderRadius is not a WinUI 3 property; got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// X2: when the pascal-cased part name collides with the
+    /// enclosing component class name (e.g. component `Button`
+    /// + part `button`), the x:Name gets an `Element` suffix to
+    /// avoid C# CS0542 ("member names cannot be the same as
+    /// their enclosing type").
+    #[test]
+    fn x_name_avoids_component_class_name_collision() {
+        let c = component("Button", vec![], vec![emit("onClick", vec![])]);
+        // Part name "button" pascal-cases to "Button" — same as the
+        // component class. The emitter must rename to ButtonElement.
+        let l = layout_with_root(
+            "Button",
+            host_button_node(
+                Some("button"),
+                vec![LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onClick".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Button"));
+        assert!(
+            r.xaml.contains("x:Name=\"ButtonElement\""),
+            "expected x:Name=\"ButtonElement\" (collision with class), got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("x:Name=\"Button\""),
+            "raw x:Name=\"Button\" would collide with class Button, got:\n{}",
+            r.xaml
+        );
+        // The handler stem is derived from x_name; both XAML and code-
+        // behind must use the renamed identifier consistently.
+        assert!(
+            r.xaml.contains("Click=\"ButtonElement_Click\""),
+            "handler stem must follow renamed x_name, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("private void ButtonElement_Click"),
+            "code-behind handler must match renamed x_name, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// X2 negative: when the pascal-cased part name does NOT
+    /// collide with the component name, the original identifier
+    /// is preserved. (Catches accidental over-suffixing.)
+    #[test]
+    fn x_name_unchanged_when_no_collision() {
+        let c = component("Card", vec![], vec![emit("onClick", vec![])]);
+        let l = layout_with_root(
+            "Card",
+            host_button_node(
+                Some("submit"),
+                vec![LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onClick".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Card"));
+        assert!(
+            r.xaml.contains("x:Name=\"Submit\""),
+            "expected unchanged x:Name=\"Submit\", got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("SubmitElement"),
+            "non-colliding name must not be suffixed, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// X3: `<Border>` doesn't accept Foreground / FontSize /
+    /// FontWeight / FontFamily. The emitter splits the style props:
+    /// container-paint stays on the Border, text-style attrs go
+    /// into a scoped Style TargetType="TextBlock" resource that
+    /// cascades to TextBlock descendants via WinUI implicit-style
+    /// resolution.
+    #[test]
+    fn box_partitions_style_between_border_and_textblock_resource() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", styled_box_with_text_child("alert"));
+        let s = style_for_box(
+            "alert",
+            vec![
+                ("padding", "12"),
+                ("background", "#cff4fc"),
+                ("color", "#055160"),
+                ("border-width", "1"),
+                ("border-color", "#b6effb"),
+                ("font-size", "14"),
+                ("font-weight", "500"),
+                ("border-radius", "4"),
+            ],
+        );
+        let r = compile(&c, &l, &s);
+
+        // Border keeps the container-paint props.
+        assert!(r.xaml.contains("Background=\"#cff4fc\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("BorderBrush=\"#b6effb\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("BorderThickness=\"1\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("CornerRadius=\"4\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Padding=\"12\""), "got:\n{}", r.xaml);
+
+        // Text-style props moved into a scoped Style resource.
+        assert!(
+            r.xaml.contains("<Border.Resources>"),
+            "expected Border.Resources with TextBlock style, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Style TargetType=\"TextBlock\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Setter Property=\"Foreground\" Value=\"#055160\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Setter Property=\"FontSize\" Value=\"14\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Setter Property=\"FontWeight\" Value=\"500\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+
+        // Crucially the Border opening tag must NOT carry text-style
+        // attrs directly (WinUI rejects them).
+        let border_open_line = r
+            .xaml
+            .lines()
+            .find(|l| l.contains("<Border ") || l.contains("<Border\t"))
+            .unwrap_or("");
+        assert!(
+            !border_open_line.contains("Foreground="),
+            "Border tag must not carry Foreground, line: {}",
+            border_open_line
+        );
+        assert!(
+            !border_open_line.contains("FontSize="),
+            "Border tag must not carry FontSize, line: {}",
+            border_open_line
+        );
+        assert!(
+            !border_open_line.contains("FontWeight="),
+            "Border tag must not carry FontWeight, line: {}",
+            border_open_line
+        );
+    }
+
+    /// X3 negative: when the part has no text-style props, no
+    /// `<Border.Resources>` block is emitted.
+    #[test]
+    fn box_without_text_style_emits_no_resources_block() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", styled_box_with_text_child("frame"));
+        let s = style_for_box(
+            "frame",
+            vec![("padding", "8"), ("background", "#ffffff")],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            !r.xaml.contains("Border.Resources"),
+            "no text-style props should mean no Resources block, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// X1 round-trip: `parse_style_fragment` reverses
+    /// `build_style_fragment`'s output.
+    #[test]
+    fn parse_style_fragment_round_trips_build_style_fragment() {
+        let props = vec![
+            StyleProp { name: "padding".to_string(), value: "8".to_string() },
+            StyleProp { name: "background".to_string(), value: "#ffffff".to_string() },
+            StyleProp { name: "color".to_string(), value: "#212529".to_string() },
+            StyleProp { name: "border-radius".to_string(), value: "4".to_string() },
+        ];
+        let joined = build_style_fragment(&props);
+        let parsed = parse_style_fragment(&joined);
+        assert_eq!(parsed.len(), 4);
+        assert_eq!(parsed[0], ("Padding".to_string(), "8".to_string()));
+        assert_eq!(parsed[1], ("Background".to_string(), "#ffffff".to_string()));
+        assert_eq!(parsed[2], ("Foreground".to_string(), "#212529".to_string()));
+        assert_eq!(parsed[3], ("CornerRadius".to_string(), "4".to_string()));
     }
 }
