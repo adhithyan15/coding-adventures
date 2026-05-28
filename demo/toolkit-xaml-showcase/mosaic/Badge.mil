@@ -1,0 +1,14 @@
+// Badge.mil — interface for the toolkit's Badge component.
+//
+// A small pill label. Bootstrap's `<span class="badge bg-primary">N</span>`
+// equivalent. Used for counts, status indicators, tags.
+
+component Badge {
+  // Visible label text. Required.
+  slot label : text ;
+
+  // Variant keyword. One of: primary, secondary, success, danger,
+  // warning, info, light, dark. Default: primary.
+  // Drives the part-level styling via `part badge/<variant>`.
+  slot variant : text ;
+}

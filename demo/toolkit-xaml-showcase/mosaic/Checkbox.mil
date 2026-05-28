@@ -1,0 +1,59 @@
+// Checkbox.mil — interface for the toolkit's Checkbox (v0.3).
+//
+// **v0.3 rewrite.** Previously this composed from `HostButton` + an
+// inline `If/Else` to fake two checkmark glyph states (v0.1/v0.2).
+// That shape lost the platform-native a11y role (`role="checkbox"` /
+// `AccessibilityRole.checkBox` / `AutomationPeer.CheckBox`), the
+// platform focus ring, the tri-state visual, and the keyboard
+// semantics that a real checkbox widget ships.
+//
+// v0.3 makes `Checkbox` a thin wrapper around the UI29-2 kernel
+// primitive `HostCheckbox`. Every backend lowers the wrapper to its
+// platform's actual checkbox widget (DOM `<input type="checkbox">`,
+// SwiftUI `Toggle`, Qt `CheckBox`, WinUI `CheckBox`, etc.).
+//
+// **Breaking changes from v0.2.**
+//
+// 1. `onChange` now carries a `checked: bool` payload. The previous
+//    signature was payloadless ("the host already knows the current
+//    value and just inverts it"); UI29-2 §2.2 makes the new state
+//    canonical on the emit so consumers don't need to derive it.
+// 2. The internal part names `checkbox-box-checked` and
+//    `checkbox-box-unchecked` are gone — the native widget renders
+//    its own check glyph and there's no inner element to style.
+//    Only the `checkbox` root part survives.
+//
+// New optional slot:
+//
+// - `indeterminate: bool` — when truthy, the checkbox renders in
+//   "mixed" state (commonly used for a parent checkbox whose
+//   children are partially checked). Backends that fully wire
+//   indeterminate today: Qt, XAML, HTML, WebComponent. React
+//   support is deferred to a follow-up (the slot is accepted but
+//   silently ignored on React; two-state behaviour still works).
+
+component Checkbox {
+  // Display label rendered next to the checkbox box. Backend lowering
+  // wraps the input in a `<label>` element (or platform equivalent)
+  // so clicking the label toggles the checkbox — the idiomatic form
+  // pattern.
+  slot label : text ;
+
+  // Current checked state. Host owns it; flip the slot value when
+  // `onChange` fires.
+  slot checked : bool ;
+
+  // Disabled flag. When true the widget rejects clicks and paints
+  // the platform's disabled style.
+  slot disabled : bool ;
+
+  // Tri-state "mixed" indicator. When true, the platform renders
+  // the indeterminate visual (a dash on macOS/iOS/WinUI; a hatched
+  // box in some Linux themes). Has no effect on the React backend
+  // pending the indeterminate follow-up PR.
+  slot indeterminate : bool ;
+
+  // Fired when the user toggles the checkbox. Carries the new
+  // state — host updates its `checked:` slot to match.
+  emit onChange ( checked : bool ) ;
+}

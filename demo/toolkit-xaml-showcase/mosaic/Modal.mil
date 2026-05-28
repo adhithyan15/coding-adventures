@@ -1,0 +1,34 @@
+// Modal.mil — interface for the toolkit's Modal.
+//
+// A titled, modal dialog. Wraps the kernel HostDialog with a
+// simplified surface — host passes `open: bool`, `title: text`,
+// `message: text` and gets `onClose`. The HostDialog itself
+// handles the modal blocking, focus trap, and Esc-to-close on
+// every backend natively.
+//
+// Why one `message` slot and not a node-typed children slot?
+// ----------------------------------------------------------
+// Same reason as ListGroup: arbitrary-children passing requires a
+// kernel feature that v0.1 doesn't have. The message-text + title-
+// text shape covers >80% of dialog uses. The full-children variant
+// follows when the kernel grows the children-pass-through
+// primitive.
+
+component Modal {
+  // The dialog's title, shown in the header.
+  slot title : text ;
+
+  // The dialog's body text.
+  slot message : text ;
+
+  // Whether the dialog is currently shown. Host watches this slot
+  // and calls ShowAsync/Hide accordingly (this is the documented
+  // contract HostDialog establishes on every backend).
+  slot open : bool ;
+
+  // Label for the close button. Defaults to "Close" if left empty.
+  slot close-label : text ;
+
+  // Fired when the dialog dismisses (Esc, backdrop, or Close click).
+  emit onClose ;
+}
