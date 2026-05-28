@@ -941,6 +941,11 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   });
   table.set(LIST.name, (_vm, expr) => expr);
   table.set(FACTOR.name, factorHandler);
+  // Track B1 (Phase 1 partial-fraction decomposition).  Registered by string
+  // name because ``Apart`` has no exported constant in symbolic-ir.
+  if (simplify) {
+    table.set("Apart", apartHandler);
+  }
   if (simplify) {
     table.set(D.name, differentiate());
     table.set(INTEGRATE.name, integrate());
@@ -1618,6 +1623,534 @@ function nodeKey(node: IRNode): string {
     case "apply":
       return `a:${nodeKey(node.head)}(${node.args.map((arg) => nodeKey(arg)).join(",")})`;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Apart (Track B1) — partial-fraction decomposition over Q(x).
+//
+// Phase 1 only: every root of the denominator must be a *simple* rational
+// root.  Repeated roots and irreducible quadratic factors bail to the
+// unevaluated ``Apart(...)`` (Phase 48 is out of scope for this PR).
+//
+// Polynomials here use a coefficient-tuple representation indexed by power
+// (lowest degree first) — same convention as ``polynomial-bridge.py``:
+//
+//     [c0, c1, c2]  ↔  c0 + c1·x + c2·x²
+//
+// Coefficients are ``RatQ`` values (bigint numerator + bigint denominator,
+// always lowest terms with denom > 0).  We deliberately roll our own thin
+// fraction type rather than reusing ``Numeric`` because Numeric also admits
+// floats — Apart must stay exact.
+// ---------------------------------------------------------------------------
+
+/** Exact rational coefficient: numerator + positive denominator in lowest terms. */
+type RatQ = readonly [bigint, bigint];
+
+const RQ_ZERO: RatQ = [0n, 1n];
+const RQ_ONE: RatQ = [1n, 1n];
+
+function rqAbs(n: bigint): bigint {
+  return n < 0n ? -n : n;
+}
+
+/** Greatest common divisor of two non-negative bigints. */
+function rqGcd(a: bigint, b: bigint): bigint {
+  let x = a < 0n ? -a : a;
+  let y = b < 0n ? -b : b;
+  while (y !== 0n) {
+    [x, y] = [y, x % y];
+  }
+  return x;
+}
+
+/** Build a RatQ from raw numer/denom, reducing to lowest terms with denom > 0. */
+function rqMake(n: bigint, d: bigint): RatQ {
+  if (d === 0n) throw new RangeError("zero denominator in RatQ");
+  if (d < 0n) {
+    n = -n;
+    d = -d;
+  }
+  if (n === 0n) return RQ_ZERO;
+  const g = rqGcd(rqAbs(n), d);
+  return [n / g, d / g];
+}
+
+function rqIsZero(r: RatQ): boolean {
+  return r[0] === 0n;
+}
+
+function rqEquals(a: RatQ, b: RatQ): boolean {
+  return a[0] === b[0] && a[1] === b[1];
+}
+
+function rqAdd(a: RatQ, b: RatQ): RatQ {
+  return rqMake(a[0] * b[1] + b[0] * a[1], a[1] * b[1]);
+}
+
+function rqSub(a: RatQ, b: RatQ): RatQ {
+  return rqMake(a[0] * b[1] - b[0] * a[1], a[1] * b[1]);
+}
+
+function rqMul(a: RatQ, b: RatQ): RatQ {
+  return rqMake(a[0] * b[0], a[1] * b[1]);
+}
+
+function rqDiv(a: RatQ, b: RatQ): RatQ {
+  if (b[0] === 0n) throw new RangeError("division by zero in RatQ");
+  return rqMake(a[0] * b[1], a[1] * b[0]);
+}
+
+function rqNeg(r: RatQ): RatQ {
+  return [-r[0], r[1]];
+}
+
+/** Convert a RatQ to IR (Integer when denom == 1, otherwise Rational). */
+function rqToIr(r: RatQ): IRNode {
+  if (r[0] === 0n) return int(0);
+  if (r[1] === 1n) return int(r[0]);
+  return rational(r[0], r[1]);
+}
+
+/** Coefficient tuple (lowest-degree first); empty array == zero polynomial. */
+type PolyQ = readonly RatQ[];
+
+/** Strip trailing zeros — analog of ``polynomial.normalize``. */
+function polyQNormalize(p: PolyQ): RatQ[] {
+  const result = [...p];
+  while (result.length > 0 && rqIsZero(result[result.length - 1])) result.pop();
+  return result;
+}
+
+/** Degree (-1 for the zero polynomial). */
+function polyQDegree(p: PolyQ): number {
+  const n = polyQNormalize(p);
+  return n.length - 1;
+}
+
+/** Horner evaluation at a rational point. */
+function polyQEvaluate(p: PolyQ, x: RatQ): RatQ {
+  const n = polyQNormalize(p);
+  if (n.length === 0) return RQ_ZERO;
+  let acc: RatQ = RQ_ZERO;
+  for (let i = n.length - 1; i >= 0; i -= 1) {
+    acc = rqAdd(rqMul(acc, x), n[i]);
+  }
+  return acc;
+}
+
+/** Formal derivative; constant / zero polynomial → []. */
+function polyQDeriv(p: PolyQ): RatQ[] {
+  const n = polyQNormalize(p);
+  if (n.length <= 1) return [];
+  const result: RatQ[] = [];
+  for (let i = 1; i < n.length; i += 1) {
+    result.push(rqMul(n[i], [BigInt(i), 1n]));
+  }
+  return polyQNormalize(result);
+}
+
+/** Polynomial long division: returns { q, r } such that ``a = b·q + r``. */
+function polyQDivmod(a: PolyQ, b: PolyQ): { q: RatQ[]; r: RatQ[] } {
+  const nb = polyQNormalize(b);
+  if (nb.length === 0) throw new RangeError("polynomial division by zero");
+  const na = polyQNormalize(a);
+  const degA = na.length - 1;
+  const degB = nb.length - 1;
+  if (degA < degB) return { q: [], r: na };
+  const rem: RatQ[] = [...na];
+  const quot: RatQ[] = Array.from({ length: degA - degB + 1 }, () => RQ_ZERO);
+  const leadB = nb[degB];
+  let degRem = degA;
+  while (degRem >= degB) {
+    const coeff = rqDiv(rem[degRem], leadB);
+    const power = degRem - degB;
+    quot[power] = coeff;
+    for (let j = 0; j < nb.length; j += 1) {
+      rem[power + j] = rqSub(rem[power + j], rqMul(coeff, nb[j]));
+    }
+    degRem -= 1;
+    while (degRem >= 0 && rqIsZero(rem[degRem])) degRem -= 1;
+  }
+  return { q: polyQNormalize(quot), r: polyQNormalize(rem) };
+}
+
+/** Distinct rational roots via the Rational-Roots Theorem.  Returns roots
+ *  as ``RatQ`` values in arbitrary order. */
+function polyQRationalRoots(p: PolyQ): RatQ[] {
+  const n = polyQNormalize(p);
+  if (n.length <= 1) return [];
+
+  // Clear denominators so candidates come from integer divisors of p.
+  let lcmDen = 1n;
+  for (const [, d] of n) {
+    lcmDen = (lcmDen * d) / rqGcd(lcmDen, d);
+  }
+  let intCoeffs = n.map(([num, den]) => (num * lcmDen) / den);
+  if (intCoeffs[intCoeffs.length - 1] < 0n) {
+    intCoeffs = intCoeffs.map((c) => -c);
+  }
+
+  const a0 = intCoeffs[0];
+  const an = intCoeffs[intCoeffs.length - 1];
+
+  if (a0 === 0n) {
+    // x = 0 is a root; strip it and recurse on the tail.
+    const tailInt = intCoeffs.slice(1);
+    const tailPoly: RatQ[] = tailInt.map((c) => rqMake(c, 1n));
+    const tailRoots = polyQRationalRoots(tailPoly);
+    const found = new Map<string, RatQ>();
+    found.set("0/1", RQ_ZERO);
+    for (const r of tailRoots) found.set(`${r[0]}/${r[1]}`, r);
+    return [...found.values()];
+  }
+
+  const divisors = (m: bigint): bigint[] => {
+    const abs = m < 0n ? -m : m;
+    const out: bigint[] = [];
+    for (let d = 1n; d <= abs; d += 1n) {
+      if (abs % d === 0n) out.push(d);
+    }
+    return out;
+  };
+
+  const pDivs = divisors(a0);
+  const qDivs = divisors(an);
+
+  const candidates = new Map<string, RatQ>();
+  for (const u of pDivs) {
+    for (const v of qDivs) {
+      const pos = rqMake(u, v);
+      const neg = rqMake(-u, v);
+      candidates.set(`${pos[0]}/${pos[1]}`, pos);
+      candidates.set(`${neg[0]}/${neg[1]}`, neg);
+    }
+  }
+
+  const intPoly: RatQ[] = intCoeffs.map((c) => rqMake(c, 1n));
+  const roots: RatQ[] = [];
+  for (const cand of candidates.values()) {
+    if (rqIsZero(polyQEvaluate(intPoly, cand))) roots.push(cand);
+  }
+  // Sort ascending by rational value to match Python's ``sorted(roots)``
+  // — keeps the IR output shape stable across regression tests.
+  roots.sort((a, b) => {
+    const lhs = a[0] * b[1];
+    const rhs = b[0] * a[1];
+    if (lhs < rhs) return -1;
+    if (lhs > rhs) return 1;
+    return 0;
+  });
+  return roots;
+}
+
+/** For each rational root r, count how many times (x − r) divides ``den``.
+ *  Returns a Map keyed by RatQ string-key; returns ``undefined`` if the
+ *  multiplicities don't sum to deg(den) (irreducible factor present). */
+function polyQRootMultiplicities(
+  den: PolyQ,
+  roots: readonly RatQ[],
+): Map<string, { root: RatQ; mult: number }> | undefined {
+  const out = new Map<string, { root: RatQ; mult: number }>();
+  let remaining: RatQ[] = polyQNormalize(den);
+  let total = 0;
+  for (const r of roots) {
+    let m = 0;
+    const linear: RatQ[] = [rqNeg(r), RQ_ONE]; // (x − r)
+    // Repeatedly divide while exact.
+    /* eslint-disable no-constant-condition */
+    while (true) {
+      const { q, r: rem } = polyQDivmod(remaining, linear);
+      if (polyQNormalize(rem).length === 0) {
+        remaining = q;
+        m += 1;
+      } else {
+        break;
+      }
+    }
+    /* eslint-enable no-constant-condition */
+    if (m === 0) return undefined;
+    out.set(`${r[0]}/${r[1]}`, { root: r, mult: m });
+    total += m;
+  }
+  if (total !== polyQDegree(den)) return undefined;
+  return out;
+}
+
+// --- IR ↔ polynomial bridge -------------------------------------------------
+
+type RationalForm = { num: RatQ[]; den: RatQ[] };
+
+/** Mirror of Python ``polynomial_bridge.to_rational``: walks an IR tree and
+ *  returns ``{ num, den }`` if it lives in Q(x); otherwise ``undefined``. */
+function toRational(node: IRNode, x: IRSymbol): RationalForm | undefined {
+  return toRationalWalk(node, x);
+}
+
+function toRationalWalk(node: IRNode, x: IRSymbol): RationalForm | undefined {
+  if (node.kind === "integer") {
+    return { num: [rqMake(node.value, 1n)], den: [RQ_ONE] };
+  }
+  if (node.kind === "rational") {
+    return { num: [rqMake(node.numer, node.denom)], den: [RQ_ONE] };
+  }
+  if (node.kind === "float") return undefined; // exact only
+  if (node.kind === "symbol") {
+    if (node.name === x.name) {
+      return { num: [RQ_ZERO, RQ_ONE], den: [RQ_ONE] };
+    }
+    return undefined;
+  }
+  if (node.kind !== "apply") return undefined;
+  const head = node.head;
+
+  if (equals(head, ADD)) {
+    return reduceRational(node.args, x, addRational);
+  }
+  if (equals(head, SUB)) {
+    if (node.args.length !== 2) return undefined;
+    const a = toRationalWalk(node.args[0], x);
+    const b = toRationalWalk(node.args[1], x);
+    if (!a || !b) return undefined;
+    return subRational(a, b);
+  }
+  if (equals(head, NEG)) {
+    if (node.args.length !== 1) return undefined;
+    const a = toRationalWalk(node.args[0], x);
+    if (!a) return undefined;
+    return { num: a.num.map(rqNeg), den: a.den };
+  }
+  if (equals(head, MUL)) {
+    return reduceRational(node.args, x, mulRational);
+  }
+  if (equals(head, DIV)) {
+    if (node.args.length !== 2) return undefined;
+    const a = toRationalWalk(node.args[0], x);
+    const b = toRationalWalk(node.args[1], x);
+    if (!a || !b) return undefined;
+    return divRational(a, b);
+  }
+  if (equals(head, POW)) {
+    if (node.args.length !== 2) return undefined;
+    return powRational(node.args[0], node.args[1], x);
+  }
+  return undefined;
+}
+
+function polyQAdd(a: PolyQ, b: PolyQ): RatQ[] {
+  const n = Math.max(a.length, b.length);
+  const out: RatQ[] = [];
+  for (let i = 0; i < n; i += 1) {
+    const av = i < a.length ? a[i] : RQ_ZERO;
+    const bv = i < b.length ? b[i] : RQ_ZERO;
+    out.push(rqAdd(av, bv));
+  }
+  return polyQNormalize(out);
+}
+
+function polyQSub(a: PolyQ, b: PolyQ): RatQ[] {
+  const n = Math.max(a.length, b.length);
+  const out: RatQ[] = [];
+  for (let i = 0; i < n; i += 1) {
+    const av = i < a.length ? a[i] : RQ_ZERO;
+    const bv = i < b.length ? b[i] : RQ_ZERO;
+    out.push(rqSub(av, bv));
+  }
+  return polyQNormalize(out);
+}
+
+function polyQMul(a: PolyQ, b: PolyQ): RatQ[] {
+  if (a.length === 0 || b.length === 0) return [];
+  const out: RatQ[] = Array.from({ length: a.length + b.length - 1 }, () => RQ_ZERO);
+  for (let i = 0; i < a.length; i += 1) {
+    if (rqIsZero(a[i])) continue;
+    for (let j = 0; j < b.length; j += 1) {
+      if (rqIsZero(b[j])) continue;
+      out[i + j] = rqAdd(out[i + j], rqMul(a[i], b[j]));
+    }
+  }
+  return polyQNormalize(out);
+}
+
+function polyQPow(p: PolyQ, n: number): RatQ[] {
+  let result: RatQ[] = [RQ_ONE];
+  for (let i = 0; i < n; i += 1) {
+    result = polyQMul(result, p);
+  }
+  return result;
+}
+
+function addRational(a: RationalForm, b: RationalForm): RationalForm {
+  return {
+    num: polyQAdd(polyQMul(a.num, b.den), polyQMul(b.num, a.den)),
+    den: polyQMul(a.den, b.den),
+  };
+}
+
+function subRational(a: RationalForm, b: RationalForm): RationalForm {
+  return {
+    num: polyQSub(polyQMul(a.num, b.den), polyQMul(b.num, a.den)),
+    den: polyQMul(a.den, b.den),
+  };
+}
+
+function mulRational(a: RationalForm, b: RationalForm): RationalForm {
+  return { num: polyQMul(a.num, b.num), den: polyQMul(a.den, b.den) };
+}
+
+function divRational(a: RationalForm, b: RationalForm): RationalForm | undefined {
+  const newDen = polyQMul(a.den, b.num);
+  if (polyQNormalize(newDen).length === 0) return undefined;
+  return { num: polyQMul(a.num, b.den), den: newDen };
+}
+
+function powRational(
+  baseNode: IRNode,
+  expNode: IRNode,
+  x: IRSymbol,
+): RationalForm | undefined {
+  if (expNode.kind !== "integer") return undefined;
+  const baseR = toRationalWalk(baseNode, x);
+  if (!baseR) return undefined;
+  const n = Number(expNode.value);
+  if (!Number.isFinite(n)) return undefined;
+  if (n === 0) return { num: [RQ_ONE], den: [RQ_ONE] };
+  if (n < 0) {
+    if (polyQNormalize(baseR.num).length === 0) return undefined;
+    return { num: polyQPow(baseR.den, -n), den: polyQPow(baseR.num, -n) };
+  }
+  return { num: polyQPow(baseR.num, n), den: polyQPow(baseR.den, n) };
+}
+
+function reduceRational(
+  args: readonly IRNode[],
+  x: IRSymbol,
+  op: (a: RationalForm, b: RationalForm) => RationalForm | undefined,
+): RationalForm | undefined {
+  if (args.length === 0) return undefined;
+  let acc = toRationalWalk(args[0], x);
+  if (!acc) return undefined;
+  for (let i = 1; i < args.length; i += 1) {
+    const other = toRationalWalk(args[i], x);
+    if (!other) return undefined;
+    const next = op(acc, other);
+    if (!next) return undefined;
+    acc = next;
+  }
+  return acc;
+}
+
+/** Build the canonical IR tree for a polynomial.  Mirrors
+ *  ``polynomial_bridge.from_polynomial``: emits ``Add(term_0, term_1, …)``
+ *  left-associated, drops zero terms, special-cases ±1 coefficients. */
+function fromPolynomial(p: PolyQ, x: IRSymbol): IRNode {
+  const n = polyQNormalize(p);
+  if (n.length === 0) return int(0);
+  if (n.length === 1) return rqToIr(n[0]);
+  const terms: IRNode[] = [];
+  for (let i = 0; i < n.length; i += 1) {
+    const c = n[i];
+    if (rqIsZero(c)) continue;
+    terms.push(polyTerm(c, i, x));
+  }
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  let acc: IRNode = terms[0];
+  for (let i = 1; i < terms.length; i += 1) {
+    acc = app(ADD, [acc, terms[i]]);
+  }
+  return acc;
+}
+
+function polyTerm(c: RatQ, i: number, x: IRSymbol): IRNode {
+  if (i === 0) return rqToIr(c);
+  const power: IRNode = i === 1 ? x : app(POW, [x, int(i)]);
+  if (rqEquals(c, RQ_ONE)) return power;
+  if (rqEquals(c, [-1n, 1n])) return app(NEG, [power]);
+  return app(MUL, [rqToIr(c), power]);
+}
+
+// --- Apart simple-roots (Phase 1) -------------------------------------------
+
+/** Phase 1 simple-root path; mirrors ``_apart_simple_roots`` in Python.
+ *  Returns ``undefined`` when any residue blows up (repeated root that
+ *  slipped through — defensive, the caller already gates on this). */
+function apartSimpleRoots(
+  num: PolyQ,
+  den: PolyQ,
+  roots: readonly RatQ[],
+  x: IRSymbol,
+): IRNode | undefined {
+  const denDeriv = polyQDeriv(den);
+  const terms: IRNode[] = [];
+  for (const r of roots) {
+    const numVal = polyQEvaluate(num, r);
+    const denDVal = polyQEvaluate(denDeriv, r);
+    if (rqIsZero(denDVal)) return undefined;
+    const A = rqDiv(numVal, denDVal);
+    const negR = rqNeg(r);
+    const factorIr = fromPolynomial([negR, RQ_ONE], x);
+    if (rqEquals(A, RQ_ONE)) {
+      terms.push(app(DIV, [int(1), factorIr]));
+    } else if (rqEquals(A, [-1n, 1n])) {
+      terms.push(app(NEG, [app(DIV, [int(1), factorIr])]));
+    } else {
+      terms.push(app(DIV, [rqToIr(A), factorIr]));
+    }
+  }
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  let acc: IRNode = terms[0];
+  for (let i = 1; i < terms.length; i += 1) {
+    acc = app(ADD, [acc, terms[i]]);
+  }
+  return acc;
+}
+
+/** Decompose a *proper* rational function (deg num < deg den).  Returns
+ *  ``undefined`` if any root has multiplicity > 1 (Phase 48 — out of scope)
+ *  or if the denominator contains an irreducible factor on top of the
+ *  rational roots. */
+function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
+  const roots = polyQRationalRoots(den);
+  if (roots.length === 0) return undefined;
+  const mults = polyQRootMultiplicities(den, roots);
+  if (mults === undefined) return undefined;
+  for (const { mult } of mults.values()) {
+    if (mult > 1) return undefined; // Phase 48 path — explicitly out of scope.
+  }
+  return apartSimpleRoots(num, den, roots, x);
+}
+
+function apartHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 2) return expr;
+  const inner = expr.args[0];
+  const varNode = expr.args[1];
+  if (varNode.kind !== "symbol") return expr;
+  const rational = toRational(inner, varNode);
+  if (!rational) return expr;
+  const num = polyQNormalize(rational.num);
+  const den = polyQNormalize(rational.den);
+  if (den.length === 1 && rqEquals(den[0], RQ_ONE)) {
+    // Already a polynomial.
+    return fromPolynomial(num, varNode);
+  }
+  const numDeg = polyQDegree(num);
+  const denDeg = polyQDegree(den);
+  if (numDeg >= denDeg) {
+    // Improper fraction — polynomial division first, then Apart on the
+    // proper remainder.
+    const { q, r } = polyQDivmod(num, den);
+    if (polyQNormalize(r).length === 0) {
+      return fromPolynomial(q, varNode);
+    }
+    const properResult = apartProper(r, den, varNode);
+    if (properResult === undefined) return expr;
+    const polyPart = fromPolynomial(q, varNode);
+    return app(ADD, [polyPart, properResult]);
+  }
+  const result = apartProper(num, den, varNode);
+  if (result === undefined) return expr;
+  return result;
 }
 
 function integrate(): Handler {

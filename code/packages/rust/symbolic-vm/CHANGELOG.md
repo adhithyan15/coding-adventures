@@ -1,5 +1,43 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.13.0] — 2026-05-28
+
+**Track B1 — Apart simple-roots partial-fraction decomposition (Rust port).**
+
+Ports the Phase 1 simple-root subset of Python's ``apart_handler`` from
+``symbolic-vm/cas_handlers.py``.  ``Apart(P(x)/Q(x), x)`` now decomposes
+rational functions whose denominator has only *distinct rational* roots
+using the residue formula ``A_i = P(r_i) / Q'(r_i)``.  Improper fractions
+(deg P ≥ deg Q) get a polynomial-division step first, then Apart on the
+proper remainder.  Repeated roots (Phase 48 in the Python tree) and
+denominators with irreducible quadratic factors leave the expression
+wrapped in ``Apart(...)`` for downstream pipelines to handle.
+
+This unblocks the deferred Rust port of the Phase 40 / 46 Apart-retry
+telescope chain in ``cas-summation``.
+
+### Added
+
+- ``apart_handler`` registered under the ``"Apart"`` head in the symbolic
+  backend's handler table.
+- ``to_rational_ir`` IR → ``(num, den)`` bridge built on the existing
+  ``RatPoly`` / ``RatC`` machinery (no new arithmetic substrate).
+- ``rp_normalize`` / ``rp_evaluate`` / ``rp_rational_roots`` /
+  ``rp_root_multiplicities`` / ``rp_power`` polynomial helpers and
+  ``rp_to_ir_apart`` IR emitter, all sitting beside the existing
+  rational-integration ``rp_*`` family.
+- ``apart_simple_roots`` + ``apart_proper`` implementing the residue-
+  formula decomposition.  ``apart_proper`` returns ``None`` (caller
+  emits unevaluated ``Apart(...)``) when *any* multiplicity > 1 —
+  Phase 48 is explicitly out of scope for this PR.
+- ``tests/apart.rs`` with 6 acceptance cases mirroring the Track B1
+  test plan in ``code/specs/macsyma-finish-plan.md``.
+
+### Out of scope (deferred to follow-on tracks)
+
+- Repeated linear factors (Phase 48 algorithm) — Track B3.
+- Apart-retry telescope chain (Phase 40 + 46 composition) — Track B2.
+
 ## [0.12.0] — 2026-05-22
 
 **Phase 47 — Nested-Add flattening (Rust port).**
