@@ -791,6 +791,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // The source-map write runs *after* the JS write so callers
     // get a consistent on-disk pair (or no source map at all if
     // the flag is unset).
+    //
+    // CLOC11.63: capture `encoded.len()` BEFORE the match so the
+    // downstream CV `js_output_file` record can include it. The
+    // None arm moves `encoded` into stdout_text; without the
+    // pre-capture we'd see a borrow-of-moved error.
+    let encoded_byte_len = encoded.len();
     let result = match &config.io.js_output_file {
         Some(path) => {
             write_output_file(path, &encoded)?;
@@ -807,13 +813,84 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
 
     // Step 5 (CLOC11.42): source map write.
     let mut wrote_files = result.wrote_files;
+
+    // CLOC11.63: when CV is on AND the JS write actually went to
+    // disk, derive a `js_output_file` CV entry with the combined
+    // entry as parent. Contributes a `wrote` record with the
+    // path + byte_len so a CV trace consumer can match an output
+    // file back to its substrate.
+    if let Some(parent_id) = &combined_cv_id {
+        if let Some(js_path) = &config.io.js_output_file {
+            let mut origin_meta = std::collections::HashMap::new();
+            origin_meta.insert(
+                "path".to_string(),
+                serde_json::Value::String(
+                    js_path.to_string_lossy().into_owned(),
+                ),
+            );
+            let js_cv_id = cv_log.derive(
+                parent_id,
+                Some(coding_adventures_correlation_vector::Origin {
+                    source: "js_output_file".to_string(),
+                    location: js_path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta: origin_meta,
+                }),
+            );
+            let mut contrib_meta = std::collections::HashMap::new();
+            contrib_meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((encoded_byte_len as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                &js_cv_id,
+                "write_output_file",
+                "wrote",
+                contrib_meta,
+            );
+        }
+    }
+
     if !config.source_map.path_template.is_empty() {
         let map_path = std::path::PathBuf::from(&config.source_map.path_template);
         let map_body = crate::source_map::format_minimal_v3(
             config.io.js_output_file.as_deref(),
         );
         write_output_file(&map_path, &map_body)?;
-        wrote_files.push(map_path);
+        wrote_files.push(map_path.clone());
+
+        // CLOC11.63: source map derives from the combined entry
+        // (the JS it maps points back to combined). Contribute
+        // a `wrote` record with byte_len of the v3 JSON.
+        if let Some(parent_id) = &combined_cv_id {
+            let mut origin_meta = std::collections::HashMap::new();
+            origin_meta.insert(
+                "path".to_string(),
+                serde_json::Value::String(
+                    map_path.to_string_lossy().into_owned(),
+                ),
+            );
+            let map_cv_id = cv_log.derive(
+                parent_id,
+                Some(coding_adventures_correlation_vector::Origin {
+                    source: "source_map_output".to_string(),
+                    location: map_path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta: origin_meta,
+                }),
+            );
+            let mut contrib_meta = std::collections::HashMap::new();
+            contrib_meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((map_body.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                &map_cv_id,
+                "write_output_file",
+                "wrote",
+                contrib_meta,
+            );
+        }
     }
 
     // Step 6 (CLOC11.34): --output_manifest write.
@@ -837,6 +914,50 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         let body = format_manifest(&inputs);
         write_output_file(manifest_path, &body)?;
         wrote_files.push(manifest_path.clone());
+
+        // CLOC11.63: manifest derives from the *per-file* CVs,
+        // not the combined entry — the manifest enumerates input
+        // files, not the merged output. Use `merge()` with the
+        // per-file IDs as parents.
+        if config.special_modes.correlation_vector
+            && !per_file_cv_ids.is_empty()
+        {
+            let parent_refs: Vec<&str> =
+                per_file_cv_ids.iter().map(|s| s.as_str()).collect();
+            let mut origin_meta = std::collections::HashMap::new();
+            origin_meta.insert(
+                "path".to_string(),
+                serde_json::Value::String(
+                    manifest_path.to_string_lossy().into_owned(),
+                ),
+            );
+            origin_meta.insert(
+                "file_count".to_string(),
+                serde_json::Value::Number(
+                    (per_file_cv_ids.len() as u64).into(),
+                ),
+            );
+            let manifest_cv_id = cv_log.merge(
+                &parent_refs,
+                Some(coding_adventures_correlation_vector::Origin {
+                    source: "manifest_output".to_string(),
+                    location: manifest_path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta: origin_meta,
+                }),
+            );
+            let mut contrib_meta = std::collections::HashMap::new();
+            contrib_meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((body.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                &manifest_cv_id,
+                "write_output_file",
+                "wrote",
+                contrib_meta,
+            );
+        }
     }
 
     // Step 7 (CLOC11.60): write the correlation-vector trace as
@@ -2073,11 +2194,25 @@ mod tests {
         let _ = fs::remove_dir_all(&dir);
     }
 
+    /// Process-global mutex shared by every test that calls
+    /// `std::env::set_current_dir`. CWD is process state, not
+    /// thread state — without serialization, two tests chdir'ing
+    /// in parallel race and one reads from the other's temp dir
+    /// (CLOC11.63 hit this when CLOC11.60's chdir test and
+    /// CLOC11.63's chdir test ran concurrently).
+    ///
+    /// We use a plain `std::sync::Mutex<()>` rather than a
+    /// crate like `serial_test`: the repo principle is
+    /// zero-deps where reasonable and the lock pattern here is
+    /// trivial.
+    static CWD_TEST_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
     #[test]
     fn correlation_vector_on_writes_default_sidecar_when_stdout_output() {
         // When --js_output_file is absent, the sidecar lands at
         // `closurec-cv.json` in CWD. Test from a temp dir we
         // chdir into so we don't litter the repo root.
+        let _cwd_guard = CWD_TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         let prev_cwd = std::env::current_dir().expect("cwd");
         let dir = temp_path("cv-stdout-dir");
         fs::create_dir_all(&dir).expect("setup");
@@ -2534,6 +2669,159 @@ mod tests {
         assert!(body.contains("\"tag\":\"normalized\""), "got: {body}");
         // The default mode is US_ASCII; should appear in meta.
         assert!(body.contains("\"mode\":\"US_ASCII\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.63 — CV records for output writes (JS, source map, manifest)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_records_js_output_file_entry() {
+        // When --js_output_file is set and CV is on, a
+        // `js_output_file` derived entry should appear in the
+        // sidecar with combined as parent.
+        let dir = temp_path("cv-js-write-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"js_output_file\""),
+            "missing js_output_file entry: {body}"
+        );
+        assert!(
+            body.contains("\"source\":\"write_output_file\""),
+            "missing write_output_file contribution: {body}"
+        );
+        assert!(body.contains("\"tag\":\"wrote\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_js_output_file_entry_when_stdout() {
+        // When --js_output_file is absent (stdout), no
+        // `js_output_file` entry — the JS didn't write to disk.
+        let _cwd_guard = CWD_TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        let prev_cwd = std::env::current_dir().expect("cwd");
+        let dir = temp_path("cv-js-stdout-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        std::env::set_current_dir(&dir).expect("chdir");
+
+        let in_path = dir.join("in.js");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string("closurec-cv.json").expect("read sidecar");
+        assert!(
+            !body.contains("\"source\":\"js_output_file\""),
+            "should NOT contain js_output_file when stdout: {body}"
+        );
+
+        std::env::set_current_dir(prev_cwd).expect("restore cwd");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_source_map_output_entry() {
+        let dir = temp_path("cv-smap-write-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let map_path = dir.join("out.js.map");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"source_map_output\""),
+            "missing source_map_output entry: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_manifest_output_entry_with_per_file_parents() {
+        // Manifest CV entry should be created via merge() with
+        // per-file IDs as parents (NOT combined as parent — the
+        // manifest enumerates input files, not the merged output).
+        let dir = temp_path("cv-manifest-write-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let a = dir.join("a.js");
+        let b = dir.join("b.js");
+        let out_path = dir.join("out.js");
+        let manifest_path = dir.join("manifest.txt");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&a, "var a;").expect("a");
+        fs::write(&b, "var b;").expect("b");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![
+                    a.to_string_lossy().to_string(),
+                    b.to_string_lossy().to_string(),
+                ],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            chunks: crate::config::ChunksConfig {
+                output_manifest_file: Some(manifest_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"manifest_output\""),
+            "missing manifest_output entry: {body}"
+        );
+        // file_count should be 2.
+        assert!(body.contains("\"file_count\":2"), "got: {body}");
         let _ = fs::remove_dir_all(&dir);
     }
 }
