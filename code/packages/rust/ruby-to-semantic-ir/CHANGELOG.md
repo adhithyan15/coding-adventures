@@ -2,6 +2,56 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.39.0] - 2026-05-28
+
+### Added (Phase 9c (FC) — single-RHS tuple destructure)
+
+`multi_assignment` now accepts the single-RHS shape that Phase 9b's
+comments still flagged as deferred:
+
+```ruby
+a, b    = arr           # a == arr[0]; b == arr[1]
+a, b, c = arr           # a == arr[0]; b == arr[1]; c == arr[2]
+a, b    = make_pair()   # make_pair() evaluated once into a temp
+```
+
+The lowerer routes 1-RHS / ≥2-LHS / no-splat through a new helper
+`lower_multi_assignment_single_rhs_destructure`.  The strategy:
+
+1. Bind the single (already-lowered) RHS to a fresh
+   `LetStarBinding(__multi_assign_t<N>_seq, rhs)` — `LetStarBinding`
+   keeps the temp visible to the LHS-binding pass and side effects
+   in the RHS fire exactly once.
+2. For each LHS position `i`, emit
+   `Stmt::LetBinding`/`Stmt::Assign` reading
+   `Expr::SeqIndex { seq: VarRef(temp), index: IntLit(i) }`.
+
+| Source                | SIR shape (Phase 9c)                                                                                              |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------|
+| `a, b = arr`          | `LetStarBinding(t0_seq, arr); LetBinding(a, SeqIndex(t0_seq, 0)); LetBinding(b, SeqIndex(t0_seq, 1))`             |
+| `a, b, c = arr`       | `LetStarBinding(t0_seq, arr); LetBinding(a, SeqIndex(t0_seq, 0)); LetBinding(b, SeqIndex(t0_seq, 1)); LetBinding(c, SeqIndex(t0_seq, 2))` |
+| `a = 0; a, b = arr`   | re-bind path: stmt for `a` is `Assign`, requests `Feature::MutableBindings`                                       |
+
+Out-of-bounds semantics are target-language-defined per
+`Expr::SeqIndex`'s docs.  Ruby itself fills missing positions with
+`nil`; matching that exactly is left to the backend or a future
+phase.
+
+### Arity check (Phase 9c)
+
+The no-splat arity check relaxes from "LHS == RHS strict" to
+"LHS == RHS *or* exactly 1 RHS with ≥2 LHS".  All other shapes still
+error.  The splat path is unchanged (`a, *b = arr` still uses the
+Phase 9b splat lowering and treats the single RHS as one of the
+absorbable values — single-RHS-with-splat auto-unpack remains a
+future phase).
+
+### Tests
+
+- `ruby-to-semantic-ir`: 177 → **184** (+7)
+- `coding-adventures-ruby-parser`: 152 → **155** (+3 — grammar
+  coverage tests for `a, b = arr` shape).
+
 ## [0.38.0] - 2026-05-28
 
 ### Added (Phase 9b (FC) — splat target in multi-assignment LHS)

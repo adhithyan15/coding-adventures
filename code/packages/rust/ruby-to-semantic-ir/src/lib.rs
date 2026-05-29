@@ -2241,6 +2241,210 @@ mod tests {
         );
     }
 
+    // ───────────────────────────────────────────────────────────────
+    // Phase 9c (FC) — single-RHS tuple destructure (`a, b = arr`)
+    // ───────────────────────────────────────────────────────────────
+
+    #[test]
+    fn single_rhs_destructure_two_lhs_reads_seq_index_zero_and_one() {
+        // `a, b = arr` after `arr = [10, 20]`.  The lowering should
+        // bind `arr` to a temp once via LetStarBinding, then read
+        // `temp[0]` into `a` and `temp[1]` into `b`.
+        let m = lower("arr = [10, 20]\na, b = arr\n");
+        let body = main_body(&m);
+        // arr LetBinding + temp LetStarBinding + 2 LHS LetBindings = 4.
+        assert_eq!(
+            body.stmts.len(),
+            4,
+            "expected 4 stmts (arr + temp + 2 LHS), got {:?}",
+            body.stmts
+        );
+        // Stmt[1] is the temp LetStarBinding.
+        match &body.stmts[1] {
+            Stmt::LetStarBinding { name, .. } => {
+                assert!(
+                    name.starts_with("__multi_assign_t") && name.ends_with("_seq"),
+                    "expected single-RHS temp `__multi_assign_t<N>_seq`, got `{}`",
+                    name
+                );
+            }
+            other => panic!("expected LetStarBinding(temp, arr), got {:?}", other),
+        }
+        // Stmt[2] binds `a` to `temp[0]`.
+        match &body.stmts[2] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "a");
+                match value {
+                    Expr::SeqIndex { seq, index, .. } => {
+                        assert!(
+                            matches!(seq.as_ref(),
+                                Expr::VarRef { name: n, .. }
+                                    if n.starts_with("__multi_assign_t")),
+                            "expected SeqIndex.seq to be VarRef(temp), got {:?}",
+                            seq
+                        );
+                        assert!(
+                            matches!(index.as_ref(), Expr::IntLit { value: 0, .. }),
+                            "expected SeqIndex.index = IntLit(0), got {:?}",
+                            index
+                        );
+                    }
+                    other => panic!("expected SeqIndex(temp, 0), got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(a, SeqIndex), got {:?}", other),
+        }
+        // Stmt[3] binds `b` to `temp[1]`.
+        match &body.stmts[3] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert_eq!(name, "b");
+                match value {
+                    Expr::SeqIndex { index, .. } => assert!(
+                        matches!(index.as_ref(), Expr::IntLit { value: 1, .. }),
+                        "expected SeqIndex.index = IntLit(1), got {:?}",
+                        index
+                    ),
+                    other => panic!("expected SeqIndex(temp, 1), got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(b, SeqIndex), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn single_rhs_destructure_three_lhs_emits_three_seq_indexes() {
+        // `a, b, c = arr` — three SeqIndex reads, indices 0/1/2.
+        let m = lower("arr = [10, 20, 30]\na, b, c = arr\n");
+        let body = main_body(&m);
+        // arr + temp + 3 LHS = 5.
+        assert_eq!(body.stmts.len(), 5);
+        let expected_indices = [0i64, 1, 2];
+        for (i, expected) in expected_indices.iter().enumerate() {
+            // body.stmts[i + 2] is the i-th LHS binding.
+            match &body.stmts[i + 2] {
+                Stmt::LetBinding { value: Expr::SeqIndex { index, .. }, .. } => {
+                    match index.as_ref() {
+                        Expr::IntLit { value: v, .. } => assert_eq!(
+                            v, expected,
+                            "stmt[{}] expected index {} got {}",
+                            i + 2,
+                            expected,
+                            v
+                        ),
+                        other => panic!("expected IntLit, got {:?}", other),
+                    }
+                }
+                other => panic!("stmt[{}] expected LetBinding(SeqIndex), got {:?}", i + 2, other),
+            }
+        }
+    }
+
+    #[test]
+    fn single_rhs_destructure_evaluates_rhs_exactly_once() {
+        // The whole point of the temp is to evaluate the RHS once.
+        // Verify the lowered SIR has exactly ONE statement holding
+        // the lowered RHS (the LetStarBinding for the temp) — the
+        // LHS bindings should reference the temp by name, not re-
+        // evaluate the original RHS expression.
+        //
+        // We use a builtin-call shape (`String.new`) as a stand-in for
+        // "something with potential side effects".
+        let m = lower("a, b = make_pair\n");
+        let body = main_body(&m);
+        // temp + 2 LHS = 3 stmts.
+        assert_eq!(body.stmts.len(), 3);
+        // The first statement should be the LetStarBinding wrapping
+        // the entire RHS expression.  Either side of the SeqIndex
+        // reads is a *VarRef*, not a re-lowering of `make_pair`.
+        match &body.stmts[0] {
+            Stmt::LetStarBinding { name, .. } => assert!(
+                name.starts_with("__multi_assign_t") && name.ends_with("_seq")
+            ),
+            other => panic!("expected LetStarBinding(temp, rhs), got {:?}", other),
+        }
+        for i in 1..=2 {
+            if let Stmt::LetBinding { value: Expr::SeqIndex { seq, .. }, .. } =
+                &body.stmts[i]
+            {
+                assert!(
+                    matches!(seq.as_ref(), Expr::VarRef { .. }),
+                    "stmt[{}] SeqIndex.seq should be VarRef(temp), got {:?}",
+                    i,
+                    seq
+                );
+            } else {
+                panic!("stmt[{}] expected LetBinding(SeqIndex), got {:?}", i, body.stmts[i]);
+            }
+        }
+    }
+
+    #[test]
+    fn single_rhs_destructure_requests_sequences_feature() {
+        // SeqIndex requires `Feature::Sequences` in the manifest.
+        let m = lower("arr = [1, 2]\na, b = arr\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Sequences),
+            "single-RHS multi-assignment should require Sequences"
+        );
+    }
+
+    #[test]
+    fn single_rhs_destructure_module_passes_sir_validator() {
+        // End-to-end: the SIR module produced by the lowerer should
+        // pass the validator without errors.
+        for src in [
+            "arr = [1, 2]\na, b = arr\n",
+            "arr = [10, 20, 30]\na, b, c = arr\n",
+            // Re-bind path: pre-existing locals should re-assign cleanly.
+            "a = 0\nb = 0\narr = [1, 2]\na, b = arr\n",
+        ] {
+            let m = lower(src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "validator rejected single-RHS destructure `{}`: {:?}",
+                src.trim().replace('\n', " | "),
+                result
+            );
+        }
+    }
+
+    #[test]
+    fn single_rhs_destructure_rebind_uses_assign_not_letbinding() {
+        // `a` was already declared as a local — the LHS binding for
+        // `a` after `a, b = arr` should be an Assign, not a new
+        // LetBinding (and `MutableBindings` should be requested).
+        let m = lower("a = 0\narr = [1, 2]\na, b = arr\n");
+        let body = main_body(&m);
+        // a-decl, arr-decl, temp, a-assign, b-let = 5 stmts.
+        assert_eq!(body.stmts.len(), 5);
+        match &body.stmts[3] {
+            Stmt::Assign { name, .. } => assert_eq!(name, "a"),
+            other => panic!("expected Assign(a, ...) for re-bind, got {:?}", other),
+        }
+        match &body.stmts[4] {
+            Stmt::LetBinding { name, .. } => assert_eq!(name, "b"),
+            other => panic!("expected LetBinding(b, ...) for first-sighting, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::MutableBindings),
+            "re-bind path should request MutableBindings"
+        );
+    }
+
+    #[test]
+    fn single_rhs_destructure_lhs_4_rhs_2_no_splat_still_errors() {
+        // The arity check should ONLY relax for the 1-RHS case.  A
+        // 2-RHS, 4-LHS form is still a hard error.
+        let result = compile_source("a, b, c, d = 1, 2\n", "test");
+        assert!(result.is_err(), "expected RubyLowerError for 4 LHS / 2 RHS");
+        let msg = result.unwrap_err().message;
+        assert!(
+            msg.contains("LHS count == RHS count") || msg.contains("tuple destructure"),
+            "expected arity error mentioning tuple destructure, got: {msg}"
+        );
+    }
+
     #[test]
     fn multi_assignment_two_swaps_use_distinct_temp_counters() {
         // Two consecutive swaps in the same scope must use DIFFERENT

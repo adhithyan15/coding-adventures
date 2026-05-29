@@ -2313,13 +2313,22 @@ impl Lowerer {
 
         // Arity check — different rule depending on whether a splat is
         // present.
+        //
+        // Phase 9c (FC) — single-RHS auto-unpack ("tuple destructure")
+        // adds one new acceptable shape for the no-splat path: exactly
+        // one RHS and ≥2 LHS.  We lower it by binding the single RHS to
+        // a temp and reading `temp[0]`, `temp[1]`, … into each LHS via
+        // `Expr::SeqIndex`.  The check below permits that shape; the
+        // dispatch a few lines down routes it to the dedicated helper.
         if splat_idx.is_none() {
-            if lhs_targets.len() != rhs_exprs.len() {
+            let is_single_rhs_unpack =
+                rhs_exprs.len() == 1 && lhs_targets.len() > 1;
+            if lhs_targets.len() != rhs_exprs.len() && !is_single_rhs_unpack {
                 return Err(RubyLowerError {
                     message: format!(
-                        "multi_assignment v0 requires LHS count == RHS count \
-                         (got {} LHS, {} RHS); single-RHS auto-unpack \
-                         not yet supported",
+                        "multi_assignment requires LHS count == RHS count \
+                         OR exactly 1 RHS (tuple destructure); \
+                         got {} LHS, {} RHS",
                         lhs_targets.len(),
                         rhs_exprs.len(),
                     ),
@@ -2360,6 +2369,27 @@ impl Lowerer {
                 &lhs_targets,
                 splat_idx_real,
                 lowered_rhs,
+            );
+        }
+
+        // ── Phase 9c dispatch ───────────────────────────────────────
+        //
+        // Single-RHS tuple destructure (`a, b = arr` and friends).
+        // The arity check above already guaranteed that this shape is
+        // 1 RHS + ≥2 LHS and no splat.  Route to a dedicated helper
+        // that binds the RHS to a temp once and reads `temp[i]` for
+        // each LHS via `Expr::SeqIndex`.
+        if lowered_rhs.len() == 1 && lhs_targets.len() > 1 {
+            // Move the lone RHS out of the Vec.  This `unwrap` is
+            // unreachable because `len() == 1` was just checked.
+            let rhs_value = lowered_rhs.into_iter().next().expect(
+                "lower_multi_assignment: single-RHS dispatch invariant \
+                 violated — lowered_rhs.len() == 1 was just checked",
+            );
+            return self.lower_multi_assignment_single_rhs_destructure(
+                node,
+                lhs_targets,
+                rhs_value,
             );
         }
         // For the (also re-mapped) compatibility with the Phase 9a
@@ -2492,6 +2522,116 @@ impl Lowerer {
                 out.push(stmt);
             }
         }
+        Ok(out)
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 9c (FC) — multi-assignment single-RHS tuple destructure
+    // -------------------------------------------------------------------
+
+    /// Lower the single-RHS form of `multi_assignment`:
+    ///
+    /// ```text
+    /// a, b    = arr           → a == arr[0]; b == arr[1]
+    /// a, b, c = arr           → a == arr[0]; b == arr[1]; c == arr[2]
+    /// a, b    = make_pair()   → make_pair() evaluated once into a temp
+    /// ```
+    ///
+    /// Strategy:
+    ///
+    /// 1. Bind the (already-lowered) RHS to a fresh
+    ///    `LetStarBinding(__multi_assign_t<N>_seq, rhs)`.  We use
+    ///    `LetStarBinding` so the temp's name is visible to the
+    ///    subsequent LHS-binding pass (the parallel-let validator
+    ///    would otherwise hide names declared in the same LetBinding
+    ///    group).  The single-temp evaluation also guarantees side
+    ///    effects in the RHS fire exactly once — important for things
+    ///    like `a, b = next_pair()` where the call may have observable
+    ///    side effects.
+    ///
+    /// 2. For each LHS at position `i`, emit
+    ///    `Stmt::LetBinding`/`Stmt::Assign` reading from
+    ///    `Expr::SeqIndex { seq: VarRef(temp), index: IntLit(i) }`.
+    ///    The first-sighting vs. re-bind decision uses the same logic
+    ///    as the rest of the lowerer (`declared_locals`).
+    ///
+    /// Always requests `Feature::Sequences` (for `SeqIndex`).  The
+    /// re-bind path also requests `Feature::MutableBindings`.
+    ///
+    /// Out-of-bounds semantics: target-language-defined per
+    /// `Expr::SeqIndex`'s documentation.  Ruby itself would fill
+    /// missing positions with `nil`; matching that exactly is left to
+    /// the consuming backend (or a later phase if we want to make
+    /// missing-index→nil explicit in the SIR).
+    fn lower_multi_assignment_single_rhs_destructure(
+        &mut self,
+        _node: &GrammarASTNode,
+        lhs_targets: Vec<(String, bool, Span)>,
+        rhs_value: Expr,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        // Mint a unique temp name.
+        let counter = self.multi_assign_counter;
+        self.multi_assign_counter += 1;
+        let tmp_name = format!("__multi_assign_t{}_seq", counter);
+
+        // Span for the temp is the first LHS's span — close enough
+        // for diagnostics; the actual RHS expression already carries
+        // its own span in its sub-trees.
+        let tmp_span = lhs_targets
+            .first()
+            .map(|(_, _, s)| s.clone())
+            .expect("single-RHS destructure invariant: lhs_targets non-empty");
+
+        let mut out: Vec<Stmt> = Vec::with_capacity(lhs_targets.len() + 1);
+
+        // Pass 1: bind the RHS to the temp.
+        self.declared_locals.insert(tmp_name.clone());
+        out.push(Stmt::LetStarBinding {
+            name: tmp_name.clone(),
+            sir_type: None,
+            value: rhs_value,
+            span: tmp_span.clone(),
+        });
+
+        // Both SeqIndex and the temp's array shape rely on the
+        // Sequences feature flag.
+        self.features_used.insert(Feature::Sequences);
+
+        // Pass 2: bind each LHS from `temp[i]`.
+        for (i, (name, _is_splat, name_span)) in lhs_targets.into_iter().enumerate() {
+            let span = name_span.clone();
+            let index_expr = Expr::SeqIndex {
+                seq: Box::new(Expr::VarRef {
+                    name: tmp_name.clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                }),
+                index: Box::new(Expr::IntLit {
+                    value: i as i64,
+                    span: span.clone(),
+                }),
+                span: span.clone(),
+            };
+            let stmt = if self.declared_locals.contains(&name) {
+                self.features_used.insert(Feature::MutableBindings);
+                Stmt::Assign {
+                    name: name.clone(),
+                    scope: Scope::Local,
+                    value: index_expr,
+                    span,
+                }
+            } else {
+                self.declared_locals.insert(name.clone());
+                Stmt::LetBinding {
+                    name: name.clone(),
+                    sir_type: None,
+                    value: index_expr,
+                    span,
+                }
+            };
+            out.push(stmt);
+        }
+
         Ok(out)
     }
 
