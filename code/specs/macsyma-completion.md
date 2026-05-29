@@ -1,5 +1,24 @@
 # MACSYMA Completion Roadmap
 
+> **🎉 macsyma-finish-plan spec complete (2026-05-28).**  All five
+> tracks of `code/specs/macsyma-finish-plan.md` (ten sub-tracks total)
+> have shipped across Python, TypeScript, and Rust:
+>
+> - **Track A** — Phase 86 generic recogniser port (#4552) + delete
+>   42 redundant grid helpers (#4557).
+> - **Track B** — Apart simple-roots (#4558), Apart-retry telescope
+>   (#4559), Apart repeated-linear-factors (#4560) ports to TS+Rust.
+> - **Track C** — Frobenius / power-series ODE in Python (#4561)
+>   and the TS+Rust port (#4562).
+> - **Track D** — Bivariate Hensel lifting in Python `cas-factor`
+>   (#4563) and the TS+Rust port (#4564).
+> - **Track E** — Generic tabular IBP integration fallback in Python
+>   (#4569) and the TS+Rust port (this PR).
+>
+> The MACSYMA pipeline is now considered done for the purposes of this
+> repo — new work is feature-driven (e.g. Maple frontend), not
+> gap-driven.
+
 > **Status**: Living document. Tracks what is implemented, what is
 > specified but not built, and what needs a new spec. Updated as
 > work lands.

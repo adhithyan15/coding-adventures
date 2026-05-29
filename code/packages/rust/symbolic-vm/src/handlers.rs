@@ -1996,8 +1996,15 @@ fn integrate_handler() -> Handler {
         }
 
         let result = integrate(&f, &x);
-        let original = apply_node(INTEGRATE, vec![f, IRNode::Symbol(x)]);
+        let original = apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.clone())]);
         if result == original {
+            // Track E2: generic tabular IBP fallback.  Fires after every
+            // shape-specific handler in `integrate` returned the original
+            // unevaluated `Integrate(...)` form.  Mirrors the Python
+            // ``try_ibp_tabular`` hook in ``integrate.py``.
+            if let Some(ibp_result) = try_ibp_tabular(&f, &x, vm) {
+                return vm.eval(ibp_result);
+            }
             result
         } else {
             vm.eval(result)
@@ -2127,6 +2134,233 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         }
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
     }
+}
+
+// ---------------------------------------------------------------------------
+// Track E2 — Generic tabular integration-by-parts fallback.
+//
+// Mirrors `ibp_tabular.py` from the Python reference (Track E1).  When
+// every shape-specific handler in `integrate` returned the original
+// unevaluated `Integrate(...)` form, this fallback makes a last-ditch
+// attempt by **generic tabular IBP**:
+//
+//   For ``f = u(x) · w(x)`` where ``u`` is polynomial in ``x``:
+//     ∫ u·w dx = Σ_{k=0}^{N-1} (-1)^k · u^(k)(x) · I^(k+1)(w)
+//
+// where N = deg(u) + 1.  The I-column entries ``∫w, ∫∫w, ..., ∫^N w``
+// come from recursive ``integrate``; if any step fails to close, the
+// partition is abandoned.  Bounded by `IBP_MAX_FACTORS` (5) and
+// `IBP_MAX_POLY_DEGREE` (8).
+// ---------------------------------------------------------------------------
+
+const IBP_MAX_FACTORS: usize = 5;
+const IBP_MAX_POLY_DEGREE: usize = 8;
+
+/// Flatten a (possibly nested-binary) `Mul` tree into a list of leaves.
+/// `Mul(a, Mul(b, Mul(c, d)))` → `[a, b, c, d]`.  Without flattening the
+/// IBP search would miss splits like `u = a·c, w = b·d` purely because
+/// the parse tree happened to group differently.
+fn ibp_flatten_mul(node: &IRNode) -> Vec<IRNode> {
+    if let IRNode::Apply(apply) = node {
+        if apply.head == IRNode::Symbol(MUL.to_string()) {
+            let mut out = Vec::new();
+            for arg in &apply.args {
+                out.extend(ibp_flatten_mul(arg));
+            }
+            return out;
+        }
+    }
+    vec![node.clone()]
+}
+
+/// Rebuild a left-associative `Mul` chain from a list of factors.  Empty
+/// list → `1`; single factor returns itself.
+fn ibp_multiply_ir(factors: &[IRNode]) -> IRNode {
+    if factors.is_empty() {
+        return IRNode::Integer(1);
+    }
+    if factors.len() == 1 {
+        return factors[0].clone();
+    }
+    let mut acc = factors[0].clone();
+    for f in &factors[1..] {
+        acc = apply_node(MUL, vec![acc, f.clone()]);
+    }
+    acc
+}
+
+/// Polynomial degree of `node` in `x`.  Returns `Some(-1)` for the zero
+/// polynomial, `Some(d)` for degree-d polynomials, `None` for anything
+/// outside Q[x].  Mirrors Python `_polynomial_degree`.
+fn ibp_polynomial_degree(node: &IRNode, x: &str) -> Option<i64> {
+    let (num, den) = to_rational_ir(node, x)?;
+    if rp_normalize(&den).len() > 1 {
+        return None; // rational, not polynomial in x
+    }
+    let n = rp_normalize(&num);
+    if n.is_empty() {
+        Some(-1) // zero
+    } else {
+        Some((n.len() - 1) as i64)
+    }
+}
+
+/// True if `node` contains any unevaluated `Integrate(...)` sub-tree.
+fn ibp_contains_integrate(node: &IRNode) -> bool {
+    if let IRNode::Apply(apply) = node {
+        if apply.head == IRNode::Symbol(INTEGRATE.to_string()) {
+            return true;
+        }
+        return apply.args.iter().any(ibp_contains_integrate);
+    }
+    false
+}
+
+/// True iff `node` canonicalises to the integer literal `0`.  Also
+/// recognises `Neg(0)`.
+fn ibp_is_zero(node: &IRNode) -> bool {
+    match node {
+        IRNode::Integer(0) => true,
+        IRNode::Apply(apply) => {
+            apply.head == IRNode::Symbol(NEG.to_string())
+                && apply.args.len() == 1
+                && ibp_is_zero(&apply.args[0])
+        }
+        _ => false,
+    }
+}
+
+/// Enumerate k-element subsets of `[0, n)`.
+fn ibp_combinations(n: usize, k: usize) -> Vec<Vec<usize>> {
+    let mut out = Vec::new();
+    let mut pick = Vec::new();
+    fn walk(start: usize, n: usize, k: usize, pick: &mut Vec<usize>, out: &mut Vec<Vec<usize>>) {
+        if pick.len() == k {
+            out.push(pick.clone());
+            return;
+        }
+        for i in start..n {
+            pick.push(i);
+            walk(i + 1, n, k, pick, out);
+            pick.pop();
+        }
+    }
+    walk(0, n, k, &mut pick, &mut out);
+    out
+}
+
+/// Attempt generic tabular IBP on a `Mul`-shaped integrand.  Returns the
+/// closed-form antiderivative as IR, or `None` when no viable `(u, w)`
+/// split was found.
+fn try_ibp_tabular(f: &IRNode, x: &str, vm: &mut VM) -> Option<IRNode> {
+    // Only fires on Mul — every other shape has dedicated handlers.
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    if apply.head != IRNode::Symbol(MUL.to_string()) {
+        return None;
+    }
+    let factors = ibp_flatten_mul(f);
+    if factors.len() < 2 || factors.len() > IBP_MAX_FACTORS {
+        return None;
+    }
+    let n = factors.len();
+    // Prefer smaller `u` first — tabular IBP is most efficient when `u`
+    // is low-degree.
+    for u_size in 1..n {
+        for u_idx in ibp_combinations(n, u_size) {
+            let u_set: HashSet<usize> = u_idx.into_iter().collect();
+            let mut u_factors: Vec<IRNode> = Vec::new();
+            let mut w_factors: Vec<IRNode> = Vec::new();
+            for (i, factor) in factors.iter().enumerate() {
+                if u_set.contains(&i) {
+                    u_factors.push(factor.clone());
+                } else {
+                    w_factors.push(factor.clone());
+                }
+            }
+            if let Some(result) = ibp_try_split(&u_factors, &w_factors, x, vm) {
+                return Some(result);
+            }
+        }
+    }
+    None
+}
+
+/// Try `u = ∏ u_factors`, `w = ∏ w_factors` as the tabular split.
+fn ibp_try_split(
+    u_factors: &[IRNode],
+    w_factors: &[IRNode],
+    x: &str,
+    vm: &mut VM,
+) -> Option<IRNode> {
+    let u_ir = vm.eval(ibp_multiply_ir(u_factors));
+    let deg = ibp_polynomial_degree(&u_ir, x)?;
+    if deg < 0 {
+        // u is the zero polynomial — ∫ 0·w dx = 0.
+        return Some(IRNode::Integer(0));
+    }
+    let deg = deg as usize;
+    if deg > IBP_MAX_POLY_DEGREE {
+        return None;
+    }
+
+    // D-column: u, u', u'', ..., 0.
+    let mut d_col: Vec<IRNode> = vec![u_ir.clone()];
+    let mut cur = u_ir;
+    for _ in 0..=deg {
+        let next = vm.eval(diff(&cur, x));
+        d_col.push(next.clone());
+        cur = next;
+        if ibp_is_zero(&cur) {
+            break;
+        }
+    }
+    if !ibp_is_zero(d_col.last().unwrap()) {
+        return None;
+    }
+    let big_n = d_col.len() - 1; // u^(N) = 0
+
+    // I-column: w, ∫w, ∫∫w, ..., ∫^N w.
+    let w_ir = vm.eval(ibp_multiply_ir(w_factors));
+    let mut i_col: Vec<IRNode> = vec![w_ir.clone()];
+    let mut cur = w_ir;
+    let x_sym = IRNode::Symbol(x.to_string());
+    for _ in 0..big_n {
+        // Call integrate directly to avoid re-entering the IBP fallback
+        // inside the recursive integrator (mirrors Python's
+        // `integrate_fn=lambda g: _integrate(g, x)` rather than the
+        // outer handler).
+        let integrated = integrate(&cur, x);
+        let unevaluated = apply_node(INTEGRATE, vec![cur.clone(), x_sym.clone()]);
+        if integrated == unevaluated {
+            return None;
+        }
+        let simplified = vm.eval(integrated);
+        if ibp_contains_integrate(&simplified) {
+            return None;
+        }
+        i_col.push(simplified.clone());
+        cur = simplified;
+    }
+
+    // Assemble: Σ_{k=0}^{N-1} (-1)^k · D[k] · I[k+1].
+    let mut pieces: Vec<IRNode> = Vec::new();
+    for k in 0..big_n {
+        let mut term = apply_node(MUL, vec![d_col[k].clone(), i_col[k + 1].clone()]);
+        if k % 2 == 1 {
+            term = apply_node(NEG, vec![term]);
+        }
+        pieces.push(term);
+    }
+    if pieces.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    let mut result = pieces[0].clone();
+    for piece in &pieces[1..] {
+        result = apply_node(ADD, vec![result, piece.clone()]);
+    }
+    Some(result)
 }
 
 fn complete_elliptic_first_kind(

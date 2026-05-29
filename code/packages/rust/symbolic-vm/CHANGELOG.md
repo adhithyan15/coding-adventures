@@ -1,5 +1,59 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.16.0] — 2026-05-28
+
+**Track E2 — generic tabular integration-by-parts fallback (Rust port).**
+Mirrors the Python `ibp_tabular.py` reference (Track E1) and the
+TypeScript port at `0.16.0`.  Closes the cross-language gap for the
+`Integrate` handler.
+
+When every shape-specific handler in `integrate` returned the original
+unevaluated `Integrate(...)` form for a `Mul`-shaped integrand, the new
+`try_ibp_tabular` fallback makes a last-ditch attempt by **generic
+tabular IBP**:
+
+```
+For f = u(x) · w(x) with u polynomial in x:
+  ∫ u·w dx = Σ_{k=0}^{N-1} (-1)^k · u^(k)(x) · I^(k+1)(w)
+```
+
+where N = deg(u) + 1.  The I-column entries `∫w, ∫∫w, ..., ∫^N w` come
+from a recursive call to `integrate` (not the outer handler — this
+avoids re-entering the IBP fallback during column construction); any
+step that fails to close abandons the partition.  Bounded by
+`IBP_MAX_FACTORS = 5` and `IBP_MAX_POLY_DEGREE = 8`.
+
+### Added
+
+- `try_ibp_tabular(f, x, vm)` — top-level fallback.  Returns the
+  closed-form antiderivative or `None`.
+- `ibp_flatten_mul(node)` — flattens nested-binary `Mul(a, Mul(b, c))`
+  trees so the IBP search isn't fooled by parse-tree grouping.
+- `ibp_multiply_ir(factors)` — rebuilds a left-associative `Mul` chain.
+- `ibp_polynomial_degree(node, x)` — returns the polynomial degree in x
+  (`Some(-1)` for zero, `None` for non-polynomial).
+- `ibp_contains_integrate(node)`, `ibp_is_zero(node)`,
+  `ibp_try_split(...)`, `ibp_combinations(n, k)` — implementation
+  helpers.
+
+### Changed
+
+- `integrate_handler` now invokes `try_ibp_tabular` as the **last**
+  fallback before returning the unevaluated `Integrate(...)` form.
+  Closed-form results are passed through `vm.eval` for simplification.
+
+### Test plan
+
+Six tests in `tests/ibp_tabular.rs`:
+
+1. `∫ x·sin(x) dx` closes via tabular IBP.
+2. `∫ x²·eˣ dx` closes via tabular IBP.
+3. `∫ x³·cos(x) dx` closes (verified against trapezoidal rule).
+4. Fallthrough: `∫ 1/x dx → log(x)` (IBP short-circuits — head is DIV).
+5. Fallthrough: `∫ sin(x²) dx` stays unevaluated or returns Fresnel —
+   IBP fabricates no bogus elementary form.
+6. Regression: `∫ cos(x²) dx` (Fresnel family) still stays unevaluated.
+
 ## [0.15.0] — 2026-05-28
 
 **Track D2 — bivariate Hensel lifting in `Factor` (Rust port).**
