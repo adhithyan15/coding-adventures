@@ -493,6 +493,13 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     let mut cv_log = coding_adventures_correlation_vector::CVLog::new(
         config.special_modes.correlation_vector,
     );
+    // CLOC11.62: per-file CV IDs accumulate so the post-loop
+    // stages (wrapper / IIFE / charset / etc.) can derive a
+    // single "combined" CV entry with all of them as parents.
+    // That combined entry is the substrate the rest of the
+    // pipeline contributes against — every byte from any input
+    // gets its post-combine provenance recorded there.
+    let mut per_file_cv_ids: Vec<String> = Vec::new();
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
             path: path.clone(),
@@ -537,6 +544,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             None => transform_source(&contents, config)?,
         };
 
+        if let Some(id) = cv_id {
+            per_file_cv_ids.push(id);
+        }
+
         combined.push_str(&transformed);
         // Closure separates concatenated inputs with a newline so
         // back-to-back files don't end up syntactically merged.
@@ -544,6 +555,47 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             combined.push('\n');
         }
     }
+
+    // CLOC11.62: derive the post-concat "combined" CV entry.
+    //
+    // After the per-file loop, every subsequent stage operates on
+    // the concatenated `combined` string, not on individual
+    // files. The CV trace needs an entity that represents that
+    // post-concat substrate — otherwise contributions from
+    // `--emit_use_strict`, `--output_wrapper`, IIFE, `--charset`
+    // would have nowhere to attach.
+    //
+    // We use `CVLog::merge()` with the per-file CV IDs as parents,
+    // so a downstream consumer following an output-byte's
+    // provenance walks: combined-entry → all source files. The
+    // origin is synthetic ("concatenated_combined_source"); no
+    // location since it's not a file on disk.
+    let combined_cv_id = if config.special_modes.correlation_vector
+        && !per_file_cv_ids.is_empty()
+    {
+        let parent_refs: Vec<&str> =
+            per_file_cv_ids.iter().map(|s| s.as_str()).collect();
+        let mut meta = std::collections::HashMap::new();
+        meta.insert(
+            "file_count".to_string(),
+            serde_json::Value::Number((per_file_cv_ids.len() as u64).into()),
+        );
+        meta.insert(
+            "byte_len".to_string(),
+            serde_json::Value::Number((combined.len() as u64).into()),
+        );
+        Some(cv_log.merge(
+            &parent_refs,
+            Some(coding_adventures_correlation_vector::Origin {
+                source: "concatenated_combined_source".to_string(),
+                location: String::new(),
+                timestamp: None,
+                meta,
+            }),
+        ))
+    } else {
+        None
+    };
 
     // Step 2.25 (CLOC11.51): --checks_only short-circuits emission.
     //
@@ -576,6 +628,29 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // it sits at the very top of the function body it's meant to
     // govern. CC has the same ordering.
     if config.language.emit_use_strict {
+        // CLOC11.62 — record the emit_use_strict contribution
+        // on the combined entry. The directive is a fixed-size
+        // 16-byte prepend (`"use strict";\n`), so meta carries
+        // the input/output byte lengths.
+        if let Some(id) = &combined_cv_id {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((combined.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number(
+                    ((combined.len() + 16) as u64).into(),
+                ),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "emit_use_strict",
+                "prepended",
+                meta,
+            );
+        }
         // Use double quotes to match CC's emission. A trailing
         // newline keeps the directive on its own line, which is
         // visually clearer in --output_wrapper templates that
@@ -598,6 +673,34 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     )
     .map_err(CompilerError::Wrapper)?;
 
+    // CLOC11.62 — record the output_wrapper contribution.
+    //
+    // We only emit a contribution when the wrapper actually
+    // changed the bytes (`wrapped != combined`). Skipping the
+    // contribution for the no-wrapper passthrough avoids
+    // spurious entries that say "this pass ran and did
+    // nothing" — the CV trace stays focused on bytes that
+    // moved.
+    if let Some(id) = &combined_cv_id {
+        if wrapped != combined {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((combined.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number((wrapped.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "output_wrapper",
+                "substituted",
+                meta,
+            );
+        }
+    }
+
     // Step 3.5 (CLOC11.31): apply --isolation_mode IIFE if set.
     // Layered after the user wrapper, matching CC's pipeline:
     // user wrapper runs first, IIFE wraps the result. So the
@@ -605,8 +708,31 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // CC, and the behavior users requesting IIFE expect.
     let isolated = match config.formatting.isolation_mode {
         IsolationMode::Iife => wrapper::apply_iife_wrap(&wrapped),
-        IsolationMode::None => wrapped,
+        IsolationMode::None => wrapped.clone(),
     };
+
+    // CLOC11.62 — record the isolation_mode contribution.
+    // Only fires when IIFE is on; the None case is a pass-through
+    // that doesn't change bytes.
+    if let Some(id) = &combined_cv_id {
+        if config.formatting.isolation_mode == IsolationMode::Iife {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((wrapped.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number((isolated.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "isolation_mode",
+                "iife_wrapped",
+                meta,
+            );
+        }
+    }
 
     // Step 3.75 (CLOC11.16): apply --charset normalization.
     //
@@ -620,10 +746,38 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // user injected via `--output_wrapper` (e.g. a `©` in a
     // banner) gets escaped alongside the body. See
     // `crate::charset` for the table of accepted values.
-    let encoded = crate::charset::apply_charset(
-        &isolated,
-        crate::charset::OutputCharset::from_raw(&config.io.charset),
-    );
+    let charset_mode = crate::charset::OutputCharset::from_raw(&config.io.charset);
+    let encoded = crate::charset::apply_charset(&isolated, charset_mode);
+
+    // CLOC11.62 — record the charset contribution.
+    //
+    // The contribution lands even when the mode is UTF-8 (pass-
+    // through) because the stage RAN — same symmetry argument as
+    // CLOC11.61's defines.applied. Meta carries the resolved
+    // mode name and byte deltas so a viewer can show whether
+    // escapes were emitted.
+    if let Some(id) = &combined_cv_id {
+        let mut meta = std::collections::HashMap::new();
+        meta.insert(
+            "mode".to_string(),
+            serde_json::Value::String(
+                match charset_mode {
+                    crate::charset::OutputCharset::UsAscii => "US_ASCII",
+                    crate::charset::OutputCharset::Utf8 => "UTF-8",
+                }
+                .to_string(),
+            ),
+        );
+        meta.insert(
+            "input_byte_len".to_string(),
+            serde_json::Value::Number((isolated.len() as u64).into()),
+        );
+        meta.insert(
+            "output_byte_len".to_string(),
+            serde_json::Value::Number((encoded.len() as u64).into()),
+        );
+        let _ = cv_log.contribute(id, "charset", "normalized", meta);
+    }
 
     // Step 4: write the output. Two cases:
     //   a) --js_output_file set → write to disk via write_output_file.
@@ -2159,10 +2313,13 @@ mod tests {
         assert!(body.contains("\"source\":\"compilation_level\""));
         assert!(body.contains("\"source\":\"defines\""));
         // pass_order in the CVLog dump should show
-        // compilation_level FIRST. We pin the substring `["compilation_level"` to catch the leading element.
+        // compilation_level FIRST, then defines. Other passes
+        // may follow (CLOC11.62 adds charset; later slices add
+        // more). Pin the prefix to keep the per-file ordering
+        // invariant while staying tolerant of new passes.
         assert!(
-            body.contains("\"pass_order\":[\"compilation_level\",\"defines\"]"),
-            "expected pass_order [compilation_level, defines], got: {body}"
+            body.contains("\"pass_order\":[\"compilation_level\",\"defines\""),
+            "expected pass_order to start with [compilation_level, defines, ...], got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
@@ -2178,5 +2335,205 @@ mod tests {
         let a = transform_source(source, &cfg).expect("a");
         let b = transform_source_with_cv(source, &cfg, None).expect("b");
         assert_eq!(a, b);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.62 — CV records for post-combine stages (emit_use_strict,
+    // output_wrapper, isolation_mode, charset)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_creates_combined_entry_after_per_file_loop() {
+        // The "concatenated_combined_source" CV entry should
+        // appear in the sidecar, with the per-file entries as
+        // parents. Lets us walk a downstream byte's provenance
+        // back to its source file(s).
+        let dir = temp_path("cv-combined-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"concatenated_combined_source\""),
+            "missing combined entry: {body}"
+        );
+        // file_count meta should show 1.
+        assert!(body.contains("\"file_count\":1"), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_emit_use_strict_contribution() {
+        let dir = temp_path("cv-strict-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            language: crate::config::LanguageConfig {
+                emit_use_strict: true,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"emit_use_strict\""),
+            "missing emit_use_strict source: {body}"
+        );
+        assert!(
+            body.contains("\"tag\":\"prepended\""),
+            "missing prepended tag: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_does_not_record_emit_use_strict_when_unset() {
+        let dir = temp_path("cv-no-strict-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // emit_use_strict NOT set → no contribution.
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            !body.contains("emit_use_strict"),
+            "should NOT contain emit_use_strict when flag is off: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_output_wrapper_when_bytes_changed() {
+        let dir = temp_path("cv-wrapper-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            formatting: crate::config::FormattingConfig {
+                output_wrapper: "PRE %output% POST".to_string(),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"source\":\"output_wrapper\""), "got: {body}");
+        assert!(body.contains("\"tag\":\"substituted\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_iife_when_isolation_mode_set() {
+        let dir = temp_path("cv-iife-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            formatting: crate::config::FormattingConfig {
+                isolation_mode: IsolationMode::Iife,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"source\":\"isolation_mode\""), "got: {body}");
+        assert!(body.contains("\"tag\":\"iife_wrapped\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_always_records_charset_with_resolved_mode() {
+        // The charset contribution lands even at the default
+        // (US_ASCII out, no flag passed) because the stage RAN.
+        let dir = temp_path("cv-charset-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"source\":\"charset\""), "got: {body}");
+        assert!(body.contains("\"tag\":\"normalized\""), "got: {body}");
+        // The default mode is US_ASCII; should appear in meta.
+        assert!(body.contains("\"mode\":\"US_ASCII\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
     }
 }

@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.25.0] - 2026-05-27
+
+### Added — CLOC11.62: CV records for post-combine stages
+
+Extends CLOC11.61's per-stage instrumentation to the four post-concatenation pipeline stages: `emit_use_strict`, `output_wrapper`, `isolation_mode` (IIFE), and `charset`. After the per-file loop, the CV log derives a new "combined" entry whose parents are every per-file CV ID — so a downstream output byte's provenance walks `combined → all source files` automatically.
+
+The combined entry is the substrate every post-concat contribution lands on:
+
+| Stage             | `source`           | `tag`           | `meta`                                                        |
+|-------------------|--------------------|-----------------|---------------------------------------------------------------|
+| emit_use_strict   | `emit_use_strict`  | `prepended`     | `{input_byte_len, output_byte_len}` (only when flag set)      |
+| output_wrapper    | `output_wrapper`   | `substituted`   | `{input_byte_len, output_byte_len}` (only when wrapper changed bytes) |
+| isolation_mode    | `isolation_mode`   | `iife_wrapped`  | `{input_byte_len, output_byte_len}` (only when IIFE set)      |
+| charset           | `charset`          | `normalized`    | `{mode: "US_ASCII"\|"UTF-8", input_byte_len, output_byte_len}` (always) |
+
+Contribution-or-not policy: the `charset` stage always contributes (it always runs); the other three skip the contribution when they're pass-throughs (no flag set / no bytes changed). This keeps the trace focused on actual byte movement while still recording the structural step.
+
+### New CV entity: `concatenated_combined_source`
+
+After the per-file loop, when CV is on, `run_compiler` calls `CVLog::merge(per_file_ids, Some(combined_origin))` to create a new entry whose `parent_ids` are every per-file root. Meta carries `file_count` and `byte_len`. Origin: `source = "concatenated_combined_source"`, no location (it's not a file on disk). All four post-combine contributions attach here.
+
+### Implementation
+
+- **`per_file_cv_ids: Vec<String>`** accumulated through the per-file loop.
+- **`combined_cv_id`** computed after the loop via `cv_log.merge(...)`.
+- **Each post-combine stage** wrapped with `if let Some(id) = &combined_cv_id { ... cv_log.contribute(id, ...) }`.
+- **`isolation_mode = None` branch** had to switch from move-of-`wrapped` to `.clone()` so we can record the input byte length in the CV branch above the move.
+- **6 new unit tests** in `run::tests` (combined entry exists with parents, emit_use_strict on, emit_use_strict off → no contribution, output_wrapper changing bytes, IIFE on, charset always with mode).
+- **Existing CLOC11.61 `pass_order` test** updated to assert prefix `[compilation_level, defines, ...]` rather than exact `[compilation_level, defines]`, since CLOC11.62 + later slices grow the pass_order.
+
+### Pipeline matrix (unchanged structurally)
+
+Same 15 steps; CLOC11.62 adds per-stage CV records inside steps 8–11 (and a new derived "combined" CV entity between steps 6 and 7).
+
+### Still queued
+
+- CLOC11.63: source-map / manifest writes recorded as derived CV entries.
+- CLOC11.64–66: per-token granularity, tombstones for removals, custom `--correlation_vector_output` path flag.
+
 ## [0.24.0] - 2026-05-27
 
 ### Changed — CLOC11.61: per-stage `--correlation_vector` contributions
