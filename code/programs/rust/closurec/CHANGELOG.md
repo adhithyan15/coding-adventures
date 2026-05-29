@@ -2,6 +2,44 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.26.0] - 2026-05-27
+
+### Added — CLOC11.63: CV records for output writes (JS, source map, manifest)
+
+Extends CLOC11.62 to record the three output-file writes as derived CV entries. Every byte that hits disk now has a CV ID, and the trace forms a proper DAG from per-file sources through combined-output to disk artifacts.
+
+Three new derived CV entities:
+
+| Entity                 | Created via   | Parent(s)            | Records                              |
+|------------------------|---------------|----------------------|--------------------------------------|
+| `js_output_file`       | `derive()`    | `combined_cv_id`     | `write_output_file.wrote` + byte_len |
+| `source_map_output`    | `derive()`    | `combined_cv_id`     | `write_output_file.wrote` + byte_len |
+| `manifest_output`      | `merge()`     | `per_file_cv_ids[]`  | `write_output_file.wrote` + byte_len |
+
+**Why manifest uses `merge()` with per-file parents:** the manifest enumerates input files, not the merged output. Conceptually it's an index of the per-file CVs, not a derivative of the merged JS. A consumer following provenance from a manifest entry walks straight back to the per-file CV roots.
+
+**Why JS / source_map use `derive()` with `combined_cv_id`:** they derive their bytes from the combined post-transform substrate.
+
+Gates: each record only contributes when the corresponding flag is set (`--js_output_file`, `--create_source_map`, `--output_manifest`).
+
+### Coverage milestone
+
+After CLOC11.63, the CV trace covers every step:
+
+```
+input → per-file CV → combined CV → js_output_file CV → disk
+                                  → source_map_output CV → disk
+                                  → manifest_output CV (merge of per-file) → disk
+```
+
+The user's policy ("every feature CV-traceable when enabled") is structurally complete for the pipeline that exists today. CLOC11.64–66 add granularity (per-token, tombstones) and convenience (`--correlation_vector_output`), not coverage.
+
+### Implementation
+
+- Captured `encoded_byte_len` before the JS-write match block to avoid borrow-of-moved when the None arm consumes `encoded`.
+- Output writes now followed by `cv_log.derive(...)` or `cv_log.merge(...)` when CV is on.
+- 4 new unit tests in `run::tests`.
+
 ## [0.25.0] - 2026-05-27
 
 ### Added — CLOC11.62: CV records for post-combine stages
