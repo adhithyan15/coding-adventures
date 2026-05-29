@@ -371,6 +371,7 @@ members = [
     "image-codec-bmp",
     "image-codec-ico",
     "image-codec-jpeg",
+    "image-codec-jxl",
     "image-codec-ppm",
     "image-codec-qoi",
     "image-codec-webp",
