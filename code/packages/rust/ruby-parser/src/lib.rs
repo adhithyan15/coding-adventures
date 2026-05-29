@@ -1550,6 +1550,85 @@ mod tests {
         assert!(tree_has_token_value(m, "*"));
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 9c (FC) — single-RHS tuple destructure (`a, b = arr`).
+    //
+    // The grammar already accepts these shapes: `multi_assignment`
+    // requires ≥2 LHS targets and ≥1 RHS expression.  Phase 9c just
+    // turns on the lowering for the 1-RHS case.  These tests assert
+    // the grammar still recognises the construct correctly so the SIR
+    // lowerer's single-RHS dispatch has well-formed input.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_multi_assignment_single_rhs_two_lhs() {
+        // `a, b = arr` — 2 LHS, 1 RHS, no splat.
+        let ast = parse_ruby("a, b = arr");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        let lhs_target_count = m
+            .children
+            .iter()
+            .filter(|c| {
+                matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "mlhs_target")
+            })
+            .count();
+        assert_eq!(lhs_target_count, 2, "expected 2 mlhs_target nodes");
+        // No `*` token anywhere — this is the no-splat shape.
+        assert!(
+            !tree_has_token_value(m, "*"),
+            "single-RHS tuple destructure should have no splat"
+        );
+    }
+
+    #[test]
+    fn test_parse_multi_assignment_single_rhs_three_lhs() {
+        // `a, b, c = arr` — 3 LHS, 1 RHS.
+        let ast = parse_ruby("a, b, c = arr");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        let lhs_target_count = m
+            .children
+            .iter()
+            .filter(|c| {
+                matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "mlhs_target")
+            })
+            .count();
+        assert_eq!(lhs_target_count, 3, "expected 3 mlhs_target nodes");
+        assert!(!tree_has_token_value(m, "*"));
+    }
+
+    #[test]
+    fn test_parse_multi_assignment_single_rhs_keeps_one_rhs_expression() {
+        // The grammar should put exactly ONE expression on the RHS for
+        // the single-RHS case — `multi_assignment`'s RHS rule is
+        // `expression { COMMA expression }`, so the trailing repetition
+        // group must be empty here.
+        let ast = parse_ruby("a, b = arr");
+        let m = find_descendant(&ast, "multi_assignment")
+            .expect("expected multi_assignment node");
+        // Find the EQUALS token's index, then count expression nodes
+        // appearing after it.
+        let eq_idx = m
+            .children
+            .iter()
+            .position(|c| {
+                matches!(c, ASTNodeOrToken::Token(t) if t.value == "=")
+            })
+            .expect("expected EQUALS token in multi_assignment");
+        let rhs_expr_count = m.children[eq_idx + 1..]
+            .iter()
+            .filter(|c| {
+                matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")
+            })
+            .count();
+        assert_eq!(
+            rhs_expr_count, 1,
+            "expected exactly 1 RHS expression, got {}",
+            rhs_expr_count
+        );
+    }
+
     #[test]
     fn test_parse_single_assignment_not_consumed_by_multi() {
         // Regression: `a = 1` (one LHS) must still parse as a plain

@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.37.0] - 2026-05-28
+
+### Added (Phase 9c (FC) — single-RHS tuple destructure grammar coverage)
+
+No grammar changes — the existing `multi_assignment` rule already
+accepts the 1-RHS shape (`expression { COMMA expression }` allows the
+trailing repetition group to be empty).  Phase 9c enables the lowering
+for that shape; this version bump tracks the new parser-level tests
+that pin grammar behaviour:
+
+- `test_parse_multi_assignment_single_rhs_two_lhs` (`a, b = arr`)
+- `test_parse_multi_assignment_single_rhs_three_lhs` (`a, b, c = arr`)
+- `test_parse_multi_assignment_single_rhs_keeps_one_rhs_expression`
+  (asserts the RHS list has exactly one expression node)
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 152 → **155** (+3)
+
 ## [0.36.0] - 2026-05-28
 
 ### Added (Phase 9b (FC) — splat target in multi-assignment LHS)
