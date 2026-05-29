@@ -165,6 +165,16 @@ impl Compiler {
         }
 
         let mut iir_fn = IIRFunction::new(&name, params, &ret_ty, body);
+        // Override `IIRFunction::new`'s automatic `infer_type_status` —
+        // it returns `PartiallyTyped` because Nib's control-flow ops
+        // (`label`, `jmp`, `jmp_if_false`, `ret_void`) use `"void"`
+        // type hints and `"void"` is NOT in
+        // `interpreter_ir::opcodes::CONCRETE_TYPES`.  Every Nib
+        // instruction is in fact statically known (no `"any"` hints
+        // anywhere), so the function is genuinely fully typed for the
+        // JIT's threshold-zero compile path.  Mirrors Brainfuck +
+        // Dartmouth BASIC + Oct.
+        iir_fn.type_status = interpreter_ir::function::FunctionTypeStatus::FullyTyped;
         // Empty source_map keeps the lockstep invariant satisfied for
         // tooling that doesn't need positions.  Real position threading
         // is a follow-up.
@@ -234,11 +244,15 @@ impl Compiler {
                     .ok_or_else(|| CompileError::Unsupported("assign_stmt missing name".into()))?;
                 if let Some(expr) = expression_children(stmt).first() {
                     let v = self.compile_expr(expr, types, env, out)?;
-                    // Re-emit as a `_move` so the destination's slot updates.
+                    // Re-emit as a typed `mov` so the destination's slot
+                    // updates.  Previously this was `call_builtin "_move"`;
+                    // typed `mov` is the canonical form recognised by
+                    // vm-core's dispatch, GenericCirJit's bytecode
+                    // compiler, and the AOT backends.
                     out.push(IIRInstr::new(
-                        "call_builtin",
+                        "mov",
                         Some(name.clone()),
-                        vec![Operand::Var("_move".into()), Operand::Var(v)],
+                        vec![Operand::Var(v)],
                         "any",
                     ));
                 }
@@ -328,12 +342,13 @@ impl Compiler {
 
         if let Some(expr) = expression_children(stmt).first() {
             let v = self.compile_expr(expr, types, env, out)?;
-            // Bind the user-named variable via `_move` so subsequent
-            // references resolve to the same slot.
+            // Bind the user-named variable via typed `mov` so subsequent
+            // references resolve to the same slot.  Canonical form
+            // (was `call_builtin "_move"` historically).
             out.push(IIRInstr::new(
-                "call_builtin",
+                "mov",
                 Some(name.clone()),
-                vec![Operand::Var("_move".into()), Operand::Var(v)],
+                vec![Operand::Var(v)],
                 &ty_str,
             ));
         }

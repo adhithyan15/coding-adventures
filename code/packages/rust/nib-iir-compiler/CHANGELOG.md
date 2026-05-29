@@ -1,5 +1,54 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.5.0 — 2026-05-28 (NIB05 — JIT via GenericCirJit)
+
+### Added — Nib programs JIT-compile via `jit-core::GenericCirJit`
+
+With `jit-core::GenericCirJit` landed (jit-core 0.3.0) and Oct's
+integration validated (PR #4555), Nib gets a real JIT without a
+per-language Backend impl.  Nib is the **third** language to plug
+into the JIT chain (after Brainfuck and Dartmouth BASIC) and the
+**second** to do so via `GenericCirJit` directly — proving the
+architectural pattern.
+
+### Changed — `let` and `assign` emit typed `mov` instead of `call_builtin "_move"`
+
+Previously, Nib's `assign_stmt` and `let_stmt` emitted
+`call_builtin "_move"` with `srcs = [Var("_move"), Var(rhs)]`.
+This was the historical pre-Path-A form that AOT specialised to
+typed CIR, but `vm-core` and `GenericCirJit` reject unknown builtin
+names (`_move` isn't a registered runtime builtin — it's a
+compile-time marker).
+
+The new emission is the canonical typed form:
+
+    mov name <- rhs [type]
+
+which `vm-core`'s dispatch table handles directly and
+`GenericCirJit::compile()` translates to a `MOV` bytecode opcode.
+The AOT backends already accept typed `mov` (twig-vm 0.19.0+'s
+dispatch wrapper, iir-to-* validators in their respective 0.4.x+).
+
+### Changed — `IIRFunction::type_status = FullyTyped` override
+
+`IIRFunction::new`'s automatic `infer_type_status` returns
+`PartiallyTyped` because Nib's control-flow ops (`label`, `jmp`,
+`jmp_if_false`, `ret_void`) carry `"void"` hints, and `"void"` is
+NOT in `interpreter_ir::opcodes::CONCRETE_TYPES`.  Every Nib
+instruction is in fact statically known (no `"any"` hints), so the
+function is genuinely fully typed for the JIT's threshold-zero
+compile path.  Mirrors Brainfuck, BASIC, and Oct.
+
+### Tests
+
+- 4 new end-to-end tests in `tests/jit_e2e.rs`:
+  - `nib_jit_returns_constant_42`: `fn main() -> u8 { return 42; }`
+  - `nib_jit_inline_arithmetic`: `return 30 + 12;` → 42
+  - `nib_jit_let_and_add`: `let x: u4 = 7; return x;` → 7
+  - `nib_jit_if_else`: `if 1 == 1 { return 100; } else ...` → 100
+- All 11 existing lib tests continue to pass.
+- Downstream `lang-aot` (8 + 11) continues to pass.
+
 ## 0.4.0 — 2026-05-22 (typed CIR ops — unblocks IIR-to-* backends)
 
 Nib's IIR output is now accepted by every IIR-to-* backend
