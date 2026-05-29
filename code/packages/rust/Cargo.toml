@@ -375,6 +375,7 @@ members = [
     "image-codec-ppm",
     "image-codec-qoi",
     "image-codec-webp",
+    "image-codec-raf",
     "mosaic-analyzer",
     "mosaic-driver",
     "mosaic-compile",
