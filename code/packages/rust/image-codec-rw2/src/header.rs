@@ -204,8 +204,13 @@ pub fn parse_ifd(bytes: &[u8], ifd_offset: u32) -> Result<Rw2Ifd, String> {
     }
 
     // IFD body: entry_count × 12 bytes, starting at off+2.
-    let entries_start = off + 2;
-    let entries_end = entries_start + entry_count * 12;
+    // Use checked arithmetic to prevent usize overflow if ifd_offset is near
+    // usize::MAX (possible on a crafted file on a 32-bit host).
+    let entries_start = off.checked_add(2).ok_or("RW2: IFD offset arithmetic overflow")?;
+    let entries_end = entry_count
+        .checked_mul(12)
+        .and_then(|n| entries_start.checked_add(n))
+        .ok_or("RW2: IFD entry range arithmetic overflow")?;
     if entries_end > bytes.len() {
         return Err("RW2: IFD extends past end of file".into());
     }
