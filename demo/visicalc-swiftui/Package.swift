@@ -13,10 +13,14 @@ let package = Package(
     name: "VisiCalc",
     platforms: [
         // SwiftUI's TextField + onSubmit + onExitCommand all need
-        // macOS 11+ / iOS 15+. We pick macOS 12 to also get
-        // ToolbarItem(placement:) parity with iOS 15.
-        .macOS(.v12),
-        .iOS(.v15),
+        // macOS 11+ / iOS 15+. mosaic-emit-swiftui emits the
+        // `.onChange(of: x) { handler }` form which Apple revised
+        // in macOS 14 / iOS 17 (the old single-closure signature
+        // is now deprecated, and the new two-or-three-arg form is
+        // required). Pick macOS 14 / iOS 17 to match the emitter's
+        // current output without an `if #available` workaround.
+        .macOS(.v14),
+        .iOS(.v17),
     ],
     products: [
         .executable(name: "visicalc", targets: ["VisiCalc"]),
