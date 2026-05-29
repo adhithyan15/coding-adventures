@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "closurec",
   "description": "closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "parsing_mode": "gnu",
   "flags": [
     { "id": "browser_featureset_year", "long": "browser_featureset_year", "type": "integer", "default": 0, "description": "Shortcut for defining goog.FEATURESET_YEAR=YYYY (minimum 2012)." },
@@ -95,6 +95,7 @@
     { "id": "error_format", "long": "error_format", "type": "enum", "enum_values": ["STANDARD"], "default": "STANDARD", "description": "Format for error messages." },
     { "id": "renaming", "long": "renaming", "type": "boolean", "default": true, "description": "Disable variable renaming. Cannot be combined with ADVANCED compilation level." },
     { "id": "help_markdown", "long": "help_markdown", "type": "boolean", "default": false, "description": "Print markdown-formatted flag usage (hidden)." },
+    { "id": "correlation_vector", "long": "correlation_vector", "type": "boolean", "default": false, "description": "Thread a correlation-vector trace through every transform stage so output bytes are traceable back to input. Default off; opt in via this flag (CLOC11.60)." },
     { "id": "instrument_for_coverage_option", "long": "instrument_for_coverage_option", "type": "enum", "enum_values": ["NONE", "LINE", "BRANCH", "PRODUCTION"], "default": "NONE", "description": "Enable code instrumentation for coverage analysis." },
     { "id": "production_instrumentation_array_name", "long": "production_instrumentation_array_name", "type": "string", "default": "", "description": "Global array name used by production instrumentation." },
     { "id": "chunk_output_type", "long": "chunk_output_type", "type": "enum", "enum_values": ["GLOBAL_NAMESPACE", "ES_MODULES"], "default": "GLOBAL_NAMESPACE", "description": "Format for output chunks." },

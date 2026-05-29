@@ -375,13 +375,68 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // CLOC11.07+ replace the SIMPLE/ADVANCED arms with real
     // lex/parse/typecheck/passes/emit pipelines.
     let mut combined = String::new();
+    // CLOC11.60: opt-in correlation-vector log. Constructed in
+    // "enabled" mode iff `--correlation_vector` was passed; in
+    // disabled mode every CV call is a no-op. We accumulate
+    // contributions through the per-file loop and dump them at
+    // the end of `run_compiler` to a side-channel file
+    // (`closurec-cv.json` by default) when enabled.
+    let mut cv_log = coding_adventures_correlation_vector::CVLog::new(
+        config.special_modes.correlation_vector,
+    );
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
             path: path.clone(),
             kind: e.kind(),
             message: e.to_string(),
         })?;
+
+        // CLOC11.60 — assign a CV ID at ingestion (the per-file
+        // root), so every downstream contribution can attach to
+        // it. The `Origin` is the file path; granularity is
+        // per-file for now. CLOC11.61+ deepen this to per-token
+        // / per-byte as the transform stages get CV-aware.
+        let cv_id = if config.special_modes.correlation_vector {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((contents.len() as u64).into()),
+            );
+            Some(cv_log.create(Some(
+                coding_adventures_correlation_vector::Origin {
+                    source: "input_file".to_string(),
+                    location: path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta,
+                },
+            )))
+        } else {
+            None
+        };
+
         let transformed = transform_source(&contents, config)?;
+
+        // CLOC11.60 — record one summary contribution from
+        // `transform_source` per file. CLOC11.61+ split this into
+        // a contribution per stage (whitespace_only, defines).
+        if let Some(id) = &cv_id {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((contents.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number((transformed.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "transform_source",
+                "applied",
+                meta,
+            );
+        }
+
         combined.push_str(&transformed);
         // Closure separates concatenated inputs with a newline so
         // back-to-back files don't end up syntactically merged.
@@ -530,10 +585,57 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         wrote_files.push(manifest_path.clone());
     }
 
+    // Step 7 (CLOC11.60): write the correlation-vector trace as
+    // a JSON sidecar file when `--correlation_vector` was set.
+    //
+    // Path policy:
+    //   - When `--js_output_file` is set, the sidecar sits
+    //     beside it as `<output>.cv.json`. Build pipelines
+    //     consuming the JS get the trace automatically without
+    //     a separate flag for the path.
+    //   - When `--js_output_file` is absent (stdout), the
+    //     sidecar lands at `closurec-cv.json` in the working
+    //     directory. Discoverable; user can rename / move.
+    //
+    // CLOC11.6N (a follow-up slice) will add an explicit
+    // `--correlation_vector_output <path>` flag so callers who
+    // want a custom location don't have to rely on the
+    // sidecar-of-output convention.
+    if config.special_modes.correlation_vector {
+        let sidecar_path = match &config.io.js_output_file {
+            Some(p) => {
+                let mut s = p.as_os_str().to_owned();
+                s.push(".cv.json");
+                PathBuf::from(s)
+            }
+            None => PathBuf::from("closurec-cv.json"),
+        };
+        let body = format_cv_log_json(&cv_log);
+        write_output_file(&sidecar_path, &body)?;
+        wrote_files.push(sidecar_path);
+    }
+
     Ok(CompilerOutput {
         stdout_text: result.stdout_text,
         wrote_files,
     })
+}
+
+/// Serialize a `CVLog` to a pretty-printed JSON string for the
+/// `--correlation_vector` sidecar. We use `serde_json::to_string_pretty`
+/// rather than hand-rolling the format because the CV crate's
+/// `CVEntry` / `Contribution` types are already `Serialize`, and
+/// the sidecar is consumed by tooling (not pinned in fixtures), so
+/// serde's formatting choices don't bite us.
+///
+/// On serialization failure (vanishingly rare for the CV crate's
+/// well-formed structs), we fall back to a minimal `{}` document so
+/// the write still succeeds — a missing sidecar would be worse than
+/// a stub one for the build-pipeline-consumes-the-file case.
+fn format_cv_log_json(cv_log: &coding_adventures_correlation_vector::CVLog) -> String {
+    cv_log
+        .to_json_string()
+        .unwrap_or_else(|_| "{}".to_string())
 }
 
 /// Format the contents of an `--output_manifest` file from a
@@ -1652,6 +1754,148 @@ mod tests {
             out.wrote_files,
             vec![out_path, map_path, manifest_path.clone()],
             "wrote_files in pipeline order: JS, source map, manifest"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.60 — opt-in correlation-vector plumbing
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_off_writes_no_sidecar() {
+        // Default behavior: --correlation_vector unset → no CV
+        // sidecar file. Pin so a refactor doesn't accidentally
+        // always-on the CV trace (which would be visible
+        // user-perf regression and disk-usage surprise).
+        let in_path = temp_path("cv-off-in.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // Stdout-only output, no sidecar.
+        assert!(out.wrote_files.is_empty(), "no files written; got {:?}", out.wrote_files);
+        let _ = fs::remove_file(&in_path);
+    }
+
+    #[test]
+    fn correlation_vector_on_writes_sidecar_next_to_output_file() {
+        // With --js_output_file set, the sidecar lands at
+        // `<output>.cv.json` next to the JS.
+        let dir = temp_path("cv-on-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(out.wrote_files.contains(&sidecar_path), "sidecar written");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Body must be JSON. We don't pin the exact format
+        // (CVLog::to_json_string controls it) but assert the
+        // shape: starts with `{`, contains an entries section.
+        assert!(body.trim_start().starts_with('{'), "got: {body}");
+        // The Origin we recorded names "input_file" — pin that
+        // marker so the file→entry connection is verifiable
+        // without re-parsing the JSON.
+        assert!(body.contains("input_file"), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_on_writes_default_sidecar_when_stdout_output() {
+        // When --js_output_file is absent, the sidecar lands at
+        // `closurec-cv.json` in CWD. Test from a temp dir we
+        // chdir into so we don't litter the repo root.
+        let prev_cwd = std::env::current_dir().expect("cwd");
+        let dir = temp_path("cv-stdout-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        std::env::set_current_dir(&dir).expect("chdir");
+
+        let in_path = dir.join("in.js");
+        fs::write(&in_path, "var x=1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        let expected_sidecar = PathBuf::from("closurec-cv.json");
+        assert!(out.wrote_files.contains(&expected_sidecar), "got: {:?}", out.wrote_files);
+        assert!(dir.join("closurec-cv.json").exists());
+
+        // Restore cwd before the temp dir goes away.
+        std::env::set_current_dir(prev_cwd).expect("restore cwd");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_one_entry_per_input_file() {
+        // Two --js inputs → CV log gains two entries (one per
+        // input). Verifies the per-file `create()` call lands.
+        let dir = temp_path("cv-multi-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let a = dir.join("a.js");
+        let b = dir.join("b.js");
+        let out_path = dir.join("combined.js");
+        let sidecar_path = dir.join("combined.js.cv.json");
+        fs::write(&a, "var a=1;").expect("a");
+        fs::write(&b, "var b=2;").expect("b");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![
+                    a.to_string_lossy().to_string(),
+                    b.to_string_lossy().to_string(),
+                ],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Both file paths should appear as origins. Granular
+        // assertion via substring count: each `a.js` and `b.js`
+        // path appears at least once as the Origin.location.
+        assert!(body.contains("a.js"), "missing a.js: {body}");
+        assert!(body.contains("b.js"), "missing b.js: {body}");
+        // The `transform_source` contribution tag lands per file.
+        // Substring `"source":"transform_source"` is the
+        // per-contribution marker; the CVLog's `pass_order` also
+        // mentions it once, so the precise expectation is 2
+        // contribution occurrences for 2 input files.
+        let contribution_marker = "\"source\":\"transform_source\"";
+        assert_eq!(
+            body.matches(contribution_marker).count(),
+            2,
+            "expected 2 transform_source contributions, got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
