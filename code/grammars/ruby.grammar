@@ -45,14 +45,31 @@ statement    = endless_def_statement | def_statement | class_statement | module_
 #   returns a Vec<Stmt> from this one source statement.
 #
 # v0 restrictions (deferred to later phases):
-#   - LHS count must equal RHS count.  Mismatched arities (e.g.
-#     `a, b = 1, 2, 3` or `a, b, c = 1, 2`) → RubyLowerError.
+#   - LHS count must equal RHS count for the *non-splat* targets;
+#     mismatched arities still produce a RubyLowerError.  When a splat
+#     target IS present (Phase 9b — see below), the splat absorbs zero
+#     or more "extra" RHS values into a Sequence and the non-splat LHS
+#     count drives the arity check.
 #   - Single-RHS auto-unpack `a, b = arr` is NOT supported.
-#   - Splat targets `a, *b = 1, 2, 3` ride with Phase 6s.
 #   - Multi-assignment LHS inside a `modifier_statement`
 #     (`a, b = 1, 2 if cond`) is NOT supported — modifier_statement's
 #     LHS alternation lists single-LHS forms only.
-multi_assignment = NAME COMMA NAME { COMMA NAME } EQUALS expression { COMMA expression } ;
+#
+# Phase 9b (FC) — splat target on the LHS.
+#
+# `mlhs_target` allows an optional leading `*` so one (at most) of the
+# LHS positions can absorb the "rest" of the RHS values into a Sequence:
+#
+#   a, *b = 1, 2, 3      → a == 1; b == [2, 3]
+#   *a, b = 1, 2, 3      → a == [1, 2]; b == 3
+#   a, *b, c = 1, 2, 3, 4 → a == 1; b == [2, 3]; c == 4
+#
+# Same shape as `param` and `call_arg` (`[ "*" ] NAME`).  At most one
+# splat per LHS is allowed; the lowerer enforces the single-splat rule
+# (the grammar would allow multiple `*` tokens but the lowerer rejects
+# them with a clear error message).
+multi_assignment = mlhs_target COMMA mlhs_target { COMMA mlhs_target } EQUALS expression { COMMA expression } ;
+mlhs_target  = [ "*" ] NAME ;
 # Phase 6q — modifier conditionals/loops `x if y`, `x unless y`,
 # `x while y`, `x until y`.
 #

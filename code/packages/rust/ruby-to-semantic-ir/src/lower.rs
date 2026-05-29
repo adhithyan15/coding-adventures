@@ -2179,78 +2179,105 @@ impl Lowerer {
     ///
     /// Grammar shape (per `ruby.grammar`):
     /// ```text
-    /// multi_assignment = NAME COMMA NAME { COMMA NAME }
+    /// multi_assignment = mlhs_target COMMA mlhs_target { COMMA mlhs_target }
     ///                    EQUALS
     ///                    expression { COMMA expression } ;
+    /// mlhs_target      = [ "*" ] NAME ;
     /// ```
     ///
-    /// AST layout: the leading `NAME` tokens and their separator
-    /// `COMMA`s sit before the `EQUALS` token; after `EQUALS` come
-    /// the `expression` rule nodes (also `COMMA`-separated, but the
-    /// `COMMA` between expressions is a Token child while the
-    /// `expression` itself is a Node child).  We walk the children
-    /// linearly: NAME tokens encountered *before* EQUALS form the LHS
-    /// list; `expression` nodes encountered *after* EQUALS form the
-    /// RHS list.
+    /// AST layout: each `mlhs_target` sub-node holds an optional `"*"`
+    /// token followed by a `NAME` token.  After the EQUALS token the
+    /// RHS `expression` nodes follow.  We walk the parent's children
+    /// linearly: `mlhs_target` sub-nodes encountered *before* EQUALS
+    /// form the LHS list (recording `(name, is_splat)` per target);
+    /// `expression` nodes encountered *after* EQUALS form the RHS list.
     ///
-    /// Lowering rule for each `(lhs[i], rhs[i])` pair: identical to a
-    /// plain `lhs[i] = rhs[i]` assignment —
-    /// - First sighting of `lhs[i]` in this scope → `Stmt::LetBinding`.
-    /// - Subsequent sighting → `Stmt::Assign` (and the lowerer marks
-    ///   `Feature::MutableBindings`, same as the assignment lowerer).
+    /// Lowering rules:
     ///
-    /// **v0 restrictions** (documented in `ruby.grammar` and the
-    /// changelog):
+    /// - **Non-splat target** at position `i` binds the `i`-th RHS
+    ///   value (from the start, or from the end if the splat sits to
+    ///   its left), exactly like Phase 6r's pair-wise lowering:
+    ///   `Stmt::LetBinding` on first sighting, `Stmt::Assign` on
+    ///   re-bind.
+    /// - **Splat target** (Phase 9b — at most one per LHS) binds an
+    ///   `Expr::SeqLit` of the "middle" RHS values — those that aren't
+    ///   claimed by the fixed-position non-splat targets to its left
+    ///   or right.  Always requests `Feature::Sequences`.
     ///
-    /// - LHS count must equal RHS count.  Mismatched arities are
-    ///   rejected with a `RubyLowerError` rather than silently
-    ///   padding with `nil` / discarding extras.  This keeps the v0
-    ///   semantics unambiguous; the more permissive Ruby semantics
-    ///   (excess LHS gets `nil`, excess RHS is dropped) ride with a
-    ///   future phase.
-    /// - Single-RHS auto-unpack `a, b = arr` is NOT supported (the
-    ///   grammar requires at least one RHS expression but the
-    ///   lowerer will reject the count mismatch).
-    /// - Splat targets `a, *b = 1, 2, 3` ride with Phase 6s.
+    /// **Arity check** (Phase 9b refinement):
+    ///
+    /// - No splat present → LHS count must equal RHS count (Phase 6r
+    ///   semantics).
+    /// - Splat present → RHS count must be ≥ `non_splat_count`.  The
+    ///   splat absorbs the difference (possibly zero) into a Sequence.
+    ///
+    /// **Still deferred to later phases**:
+    ///
+    /// - Single-RHS auto-unpack `a, b = arr` (Phase 9c).
+    /// - Multi-assignment LHS inside a `modifier_statement`.
     fn lower_multi_assignment(
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<Vec<Stmt>, RubyLowerError> {
         // Walk children, partitioning at the EQUALS token.
+        // Each LHS sub-node is an `mlhs_target` — `[ "*" ] NAME`.
         let mut saw_equals = false;
-        let mut lhs_names: Vec<(String, Span)> = Vec::new();
+        let mut lhs_targets: Vec<(String, bool, Span)> = Vec::new();
         let mut rhs_exprs: Vec<&GrammarASTNode> = Vec::new();
         for child in &node.children {
             match child {
                 ASTNodeOrToken::Token(t) => {
                     if t.type_ == TokenType::Equals {
                         saw_equals = true;
-                    } else if !saw_equals && t.type_ == TokenType::Name {
-                        // LHS name.  (COMMAs are also Token children
-                        // but they're not Name-typed, so this branch
-                        // skips them naturally.)
-                        lhs_names.push((t.value.clone(), self.span_of_token(t)));
                     }
-                    // Tokens after EQUALS (COMMAs between RHS
-                    // expressions) are dropped — we only care about
-                    // the Node children for the RHS list.
+                    // COMMAs and any stray tokens are ignored at this
+                    // level — actual LHS NAMEs now live inside
+                    // `mlhs_target` sub-nodes.
                 }
                 ASTNodeOrToken::Node(n) => {
-                    if saw_equals && n.rule_name == "expression" {
+                    if !saw_equals && n.rule_name == "mlhs_target" {
+                        // Pick out optional "*" + NAME token from this
+                        // sub-node.  The lexer emits "*" as a
+                        // `TokenType::Star` token (not a Name-typed
+                        // token), so the splat detection is
+                        // type-based; the target's Name lands on a
+                        // `TokenType::Name`.  Defensive value-filter on
+                        // Name covers the edge case where a future
+                        // lexer change re-routes `*` through Name.
+                        let mut is_splat = false;
+                        let mut name_and_span: Option<(String, Span)> = None;
+                        for sub in &n.children {
+                            if let ASTNodeOrToken::Token(t) = sub {
+                                if t.type_ == TokenType::Star
+                                    || (t.type_ == TokenType::Name && t.value == "*")
+                                {
+                                    is_splat = true;
+                                } else if t.type_ == TokenType::Name {
+                                    name_and_span = Some((
+                                        t.value.clone(),
+                                        self.span_of_token(t),
+                                    ));
+                                }
+                            }
+                        }
+                        if let Some((nm, sp)) = name_and_span {
+                            lhs_targets.push((nm, is_splat, sp));
+                        }
+                    } else if saw_equals && n.rule_name == "expression" {
                         rhs_exprs.push(n);
                     }
                 }
             }
         }
 
-        // Sanity: the grammar guarantees at least two LHS names and
-        // at least one RHS, and an EQUALS token between them.  Defend
+        // Sanity: the grammar guarantees at least two LHS targets and
+        // at least one RHS, plus an EQUALS token between them.  Defend
         // against pathological inputs anyway.
-        if lhs_names.len() < 2 {
+        if lhs_targets.len() < 2 {
             return Err(RubyLowerError {
                 message: format!(
-                    "multi_assignment expected ≥2 LHS names, got {}",
-                    lhs_names.len()
+                    "multi_assignment expected ≥2 LHS targets, got {}",
+                    lhs_targets.len()
                 ),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
@@ -2263,14 +2290,50 @@ impl Lowerer {
                 column: node.start_column.unwrap_or(0),
             });
         }
-        if lhs_names.len() != rhs_exprs.len() {
+
+        // Locate splat position(s).  At most one splat is allowed per
+        // LHS — Ruby's grammar enforces this and so does the lowerer.
+        let splat_positions: Vec<usize> = lhs_targets
+            .iter()
+            .enumerate()
+            .filter_map(|(i, (_, is_splat, _))| if *is_splat { Some(i) } else { None })
+            .collect();
+        if splat_positions.len() > 1 {
             return Err(RubyLowerError {
                 message: format!(
-                    "multi_assignment v0 requires LHS count == RHS count \
-                     (got {} LHS, {} RHS); splat / single-RHS auto-unpack \
-                     not yet supported",
-                    lhs_names.len(),
+                    "multi_assignment allows at most one splat (*) LHS, got {}",
+                    splat_positions.len()
+                ),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            });
+        }
+        let splat_idx: Option<usize> = splat_positions.first().copied();
+        let non_splat_count = lhs_targets.len() - if splat_idx.is_some() { 1 } else { 0 };
+
+        // Arity check — different rule depending on whether a splat is
+        // present.
+        if splat_idx.is_none() {
+            if lhs_targets.len() != rhs_exprs.len() {
+                return Err(RubyLowerError {
+                    message: format!(
+                        "multi_assignment v0 requires LHS count == RHS count \
+                         (got {} LHS, {} RHS); single-RHS auto-unpack \
+                         not yet supported",
+                        lhs_targets.len(),
+                        rhs_exprs.len(),
+                    ),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                });
+            }
+        } else if rhs_exprs.len() < non_splat_count {
+            return Err(RubyLowerError {
+                message: format!(
+                    "multi_assignment with splat needs RHS count ≥ \
+                     non-splat LHS count (got {} RHS, {} non-splat LHS)",
                     rhs_exprs.len(),
+                    non_splat_count,
                 ),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
@@ -2283,6 +2346,29 @@ impl Lowerer {
             .iter()
             .map(|e| self.lower_expression(e))
             .collect::<Result<_, _>>()?;
+
+        // ── Phase 9b dispatch ───────────────────────────────────────
+        //
+        // When a splat is present, we route to a dedicated lowering
+        // path so the Phase 6r/9a non-splat code below stays simple.
+        // The splat path always uses the swap-safe temp pass (Phase 9a
+        // pattern) because routing one LHS to a SeqLit makes the
+        // bookkeeping easier when every RHS value sits in a named temp.
+        if let Some(splat_idx_real) = splat_idx {
+            return self.lower_multi_assignment_with_splat(
+                node,
+                &lhs_targets,
+                splat_idx_real,
+                lowered_rhs,
+            );
+        }
+        // For the (also re-mapped) compatibility with the Phase 9a
+        // code, project to the old `lhs_names: Vec<(String, Span)>`
+        // shape now that we know there are no splats.
+        let lhs_names: Vec<(String, Span)> = lhs_targets
+            .iter()
+            .map(|(n, _, s)| (n.clone(), s.clone()))
+            .collect();
 
         // ── Phase 9a (FC) — swap-safe parallel binding ───────────────
         //
@@ -2405,6 +2491,129 @@ impl Lowerer {
                 };
                 out.push(stmt);
             }
+        }
+        Ok(out)
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 9b (FC) — multi-assignment WITH splat LHS
+    // -------------------------------------------------------------------
+
+    /// Lower the splat-LHS form of `multi_assignment`:
+    ///
+    /// ```text
+    /// a, *b = 1, 2, 3        → a == 1; b == [2, 3]
+    /// *a, b = 1, 2, 3        → a == [1, 2]; b == 3
+    /// a, *b, c = 1, 2, 3, 4  → a == 1; b == [2, 3]; c == 4
+    /// ```
+    ///
+    /// Strategy: always go through the temp pass (same shape as Phase
+    /// 9a's swap-safe path) — every RHS value is bound to a fresh
+    /// `LetStarBinding(__multi_assign_t<N>_<i>, rhs[i])`.  Then we walk
+    /// the LHS list:
+    ///
+    /// - Non-splat target at position `i` (before splat) → reads
+    ///   `__multi_assign_t<N>_<i>`.
+    /// - Non-splat target at position `i` (after splat)  → reads
+    ///   `__multi_assign_t<N>_<rhs_len - (lhs_len - 1 - i)>`.
+    /// - Splat target → binds `Expr::SeqLit` of the "middle" temps
+    ///   `__multi_assign_t<N>_<splat_idx>..__multi_assign_t<N>_<end>`
+    ///   where `end = rhs_len - (lhs_len - 1 - splat_idx)`.  May be
+    ///   empty (the splat gets an empty Sequence).  Always requests
+    ///   `Feature::Sequences`.
+    fn lower_multi_assignment_with_splat(
+        &mut self,
+        node: &GrammarASTNode,
+        lhs_targets: &[(String, bool, Span)],
+        splat_idx: usize,
+        lowered_rhs: Vec<Expr>,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        // Step 1: emit temp bindings for every RHS.  Reuses the same
+        // counter-based naming scheme as Phase 9a so temps from
+        // adjacent multi-assignments don't collide.
+        let counter = self.multi_assign_counter;
+        self.multi_assign_counter += 1;
+        let stmt_span = self.span_of(node);
+        let rhs_len = lowered_rhs.len();
+
+        let mut out: Vec<Stmt> = Vec::with_capacity(rhs_len + lhs_targets.len());
+        let mut temp_names: Vec<String> = Vec::with_capacity(rhs_len);
+        for (i, rhs_value) in lowered_rhs.into_iter().enumerate() {
+            let tmp_name = format!("__multi_assign_t{}_{}", counter, i);
+            // Record so subsequent VarRef lookups treat the temp as
+            // a local.  (It IS declared via LetStarBinding here.)
+            self.declared_locals.insert(tmp_name.clone());
+            out.push(Stmt::LetStarBinding {
+                name: tmp_name.clone(),
+                sir_type: None,
+                value: rhs_value,
+                span: stmt_span.clone(),
+            });
+            temp_names.push(tmp_name);
+        }
+
+        // Step 2: emit the LHS bindings.  The splat absorbs the
+        // middle of the temp list (possibly an empty middle).
+        let lhs_len = lhs_targets.len();
+        // Indices of the temps that go into the splat's SeqLit.
+        let splat_temps_start = splat_idx;
+        let splat_temps_end = rhs_len - (lhs_len - 1 - splat_idx);
+
+        for (i, (name, is_splat, name_span)) in lhs_targets.iter().enumerate() {
+            let span = name_span.clone();
+            let value = if *is_splat {
+                // Build a Sequence from the middle slice of temps.
+                self.features_used.insert(Feature::Sequences);
+                let items: Vec<Expr> = (splat_temps_start..splat_temps_end)
+                    .map(|j| Expr::VarRef {
+                        name: temp_names[j].clone(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    })
+                    .collect();
+                Expr::SeqLit {
+                    items,
+                    span: span.clone(),
+                }
+            } else {
+                // Pick the temp at i-mapped position.  Before the
+                // splat, positions match directly (0..splat_idx).
+                // After the splat, count from the end:
+                //   The post-splat tail has `lhs_len - 1 - splat_idx`
+                //   non-splat targets; they map to the last
+                //   `lhs_len - 1 - splat_idx` temps.  Target at LHS
+                //   position `i` is at temp index `rhs_len - lhs_len + i`.
+                let temp_index = if i < splat_idx {
+                    i
+                } else {
+                    // i > splat_idx (since splat itself handled above)
+                    rhs_len - lhs_len + i
+                };
+                Expr::VarRef {
+                    name: temp_names[temp_index].clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                }
+            };
+
+            let stmt = if self.declared_locals.contains(name) {
+                self.features_used.insert(Feature::MutableBindings);
+                Stmt::Assign {
+                    name: name.clone(),
+                    scope: Scope::Local,
+                    value,
+                    span,
+                }
+            } else {
+                self.declared_locals.insert(name.clone());
+                Stmt::LetBinding {
+                    name: name.clone(),
+                    sir_type: None,
+                    value,
+                    span,
+                }
+            };
+            out.push(stmt);
         }
         Ok(out)
     }

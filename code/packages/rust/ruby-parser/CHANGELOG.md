@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.36.0] - 2026-05-28
+
+### Added (Phase 9b (FC) — splat target in multi-assignment LHS)
+
+`multi_assignment` rule extended to allow an optional `*` prefix on
+each LHS target via a new `mlhs_target` rule:
+
+```ebnf
+multi_assignment = mlhs_target COMMA mlhs_target { COMMA mlhs_target }
+                   EQUALS expression { COMMA expression } ;
+mlhs_target      = [ "*" ] NAME ;
+```
+
+The grammar allows the splat at any LHS position; the lowerer
+enforces "at most one splat".  Single-LHS forms (`a = 1`) still fall
+through to the existing `assignment` rule unchanged because
+`multi_assignment` requires at least two `mlhs_target`s.
+
+`_grammar.rs` regenerated via `grammar-tools compile-grammar`.
+
+### Tests
+
+- `coding-adventures-ruby-parser`: 149 → **152** (+3):
+  - `test_parse_multi_assignment_splat_at_end`
+  - `test_parse_multi_assignment_splat_at_start`
+  - `test_parse_multi_assignment_splat_in_middle`
+
 ## [0.35.0] - 2026-05-26
 
 ### Added (Phase 8a-2 (FC) — `>>=` right-shift compound assign)
