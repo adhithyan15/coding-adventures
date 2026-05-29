@@ -2514,6 +2514,19 @@ function integrate(): Handler {
     }
     const result = integrateIndefinite(f, x);
     if (result === undefined) {
+      // Track E2: generic tabular IBP fallback.  Fires after every
+      // shape-specific handler in integrateIndefinite returned undefined.
+      // Mirrors the Python ``try_ibp_tabular`` hook in ``integrate.py``.
+      const ibpResult = tryIbpTabular(
+        f,
+        x,
+        (g) => integrateIndefinite(g, x),
+        (g) => diff(g, x),
+        (n) => vm.eval(n),
+      );
+      if (ibpResult !== undefined) {
+        return vm.eval(ibpResult);
+      }
       return expr;
     }
     return isDeferredIntegral(result, f, x) ? result : vm.eval(result);
@@ -3132,6 +3145,198 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   }
 
   return undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Track E2 — Generic tabular integration-by-parts fallback.
+//
+// Mirrors ``ibp_tabular.py`` from the Python reference port (Track E1).
+// When the pipeline's shape-specific handlers in ``integrateIndefinite``
+// have all returned ``undefined`` for a ``Mul``-shaped integrand, this
+// fallback makes a last-ditch attempt by **generic tabular IBP**:
+//
+//   For ``f = u(x) · w(x)`` where ``u`` is polynomial in ``x``:
+//     ∫ u·w dx = Σ_{k=0}^{N-1} (-1)^k · u^(k)(x) · I^(k+1)(w)
+//
+// where N = deg(u) + 1 (so u^(N) = 0 and the trailing remainder
+// vanishes).  The I-column entries ``∫w, ∫∫w, ..., ∫^N w`` come from
+// the recursive ``integrateIndefinite`` callback; if any step fails
+// to close, the partition is abandoned.
+//
+// Bounded by ``IBP_MAX_FACTORS = 5`` (number of flattened Mul factors)
+// and ``IBP_MAX_POLY_DEGREE = 8`` (degree of the polynomial column).
+// ---------------------------------------------------------------------------
+
+const IBP_MAX_FACTORS = 5;
+const IBP_MAX_POLY_DEGREE = 8;
+
+/** Flatten a (possibly nested-binary) ``Mul`` tree into a list of leaves.
+ *  ``Mul(a, Mul(b, Mul(c, d)))`` → ``[a, b, c, d]``.  Without flattening
+ *  the IBP search would miss splits like ``u = a·c, w = b·d`` purely
+ *  because the parse tree happened to group differently. */
+function ibpFlattenMul(node: IRNode): IRNode[] {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) {
+    return [node];
+  }
+  const out: IRNode[] = [];
+  for (const arg of node.args) {
+    out.push(...ibpFlattenMul(arg));
+  }
+  return out;
+}
+
+/** Rebuild a left-associative ``Mul`` chain from a list of factors.
+ *  Empty list → ``1``; single factor returns itself. */
+function ibpMultiplyIr(factors: readonly IRNode[]): IRNode {
+  if (factors.length === 0) return int(1);
+  if (factors.length === 1) return factors[0];
+  let acc: IRNode = factors[0];
+  for (let i = 1; i < factors.length; i += 1) {
+    acc = app(MUL, [acc, factors[i]]);
+  }
+  return acc;
+}
+
+/** Return the polynomial degree of ``node`` in ``x``, or ``undefined``
+ *  if it is not in Q[x].  ``-1`` denotes the zero polynomial.  Mirrors
+ *  the Python ``_polynomial_degree`` helper. */
+function ibpPolynomialDegree(node: IRNode, x: IRSymbol): number | undefined {
+  const r = toRational(node, x);
+  if (r === undefined) return undefined;
+  if (polyQDegree(r.den) > 0) return undefined; // rational, not polynomial
+  const n = polyQNormalize(r.num);
+  if (n.length === 0) return -1; // zero polynomial
+  return n.length - 1;
+}
+
+/** True if ``node`` contains any unevaluated ``Integrate(...)`` sub-tree.
+ *  Used to reject I-column entries the recursive integrator could not
+ *  close to a true antiderivative. */
+function ibpContainsIntegrate(node: IRNode): boolean {
+  if (node.kind === "apply") {
+    if (equals(node.head, INTEGRATE)) return true;
+    return node.args.some((a) => ibpContainsIntegrate(a));
+  }
+  return false;
+}
+
+/** True iff ``node`` canonicalises to the integer literal ``0``.
+ *  Also recognises ``Neg(0)``. */
+function ibpIsZero(node: IRNode): boolean {
+  if (node.kind === "integer" && node.value === 0n) return true;
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
+    return ibpIsZero(node.args[0]);
+  }
+  return false;
+}
+
+/** Enumerate ``k``-element subsets of ``[0, n)`` as index arrays. */
+function ibpCombinations(n: number, k: number): number[][] {
+  const out: number[][] = [];
+  const pick: number[] = [];
+  const walk = (start: number): void => {
+    if (pick.length === k) {
+      out.push(pick.slice());
+      return;
+    }
+    for (let i = start; i < n; i += 1) {
+      pick.push(i);
+      walk(i + 1);
+      pick.pop();
+    }
+  };
+  walk(0);
+  return out;
+}
+
+/** Attempt generic tabular IBP on a ``Mul``-shaped integrand.
+ *  Returns the closed-form antiderivative as IR, or ``undefined`` when
+ *  no viable ``(u, w)`` split was found. */
+function tryIbpTabular(
+  f: IRNode,
+  x: IRSymbol,
+  integrateFn: (g: IRNode) => IRNode | undefined,
+  diffFn: (g: IRNode) => IRNode,
+  simplifyFn: (n: IRNode) => IRNode,
+): IRNode | undefined {
+  // Only fires on Mul — every other shape has dedicated handlers.
+  if (f.kind !== "apply" || !equals(f.head, MUL)) return undefined;
+  const factors = ibpFlattenMul(f);
+  if (factors.length < 2 || factors.length > IBP_MAX_FACTORS) return undefined;
+  const n = factors.length;
+  // Prefer smaller ``u`` first — tabular IBP is most efficient when ``u``
+  // is low-degree.  Enumerate subset partitions of size 1 .. n-1.
+  for (let uSize = 1; uSize < n; uSize += 1) {
+    for (const uIdx of ibpCombinations(n, uSize)) {
+      const uSet = new Set(uIdx);
+      const uFactors: IRNode[] = [];
+      const wFactors: IRNode[] = [];
+      for (let i = 0; i < n; i += 1) {
+        if (uSet.has(i)) uFactors.push(factors[i]);
+        else wFactors.push(factors[i]);
+      }
+      const result = ibpTrySplit(uFactors, wFactors, x, integrateFn, diffFn, simplifyFn);
+      if (result !== undefined) return result;
+    }
+  }
+  return undefined;
+}
+
+/** Try ``u = ∏ uFactors``, ``w = ∏ wFactors`` as the tabular split. */
+function ibpTrySplit(
+  uFactors: readonly IRNode[],
+  wFactors: readonly IRNode[],
+  x: IRSymbol,
+  integrateFn: (g: IRNode) => IRNode | undefined,
+  diffFn: (g: IRNode) => IRNode,
+  simplifyFn: (n: IRNode) => IRNode,
+): IRNode | undefined {
+  const uIr = simplifyFn(ibpMultiplyIr(uFactors));
+  const deg = ibpPolynomialDegree(uIr, x);
+  if (deg === undefined) return undefined;
+  if (deg < 0) {
+    // u is the zero polynomial — ∫ 0·w dx = 0.
+    return int(0);
+  }
+  if (deg > IBP_MAX_POLY_DEGREE) return undefined;
+
+  // D-column: u, u', u'', ..., 0.
+  const dCol: IRNode[] = [uIr];
+  let cur: IRNode = uIr;
+  for (let i = 0; i <= deg; i += 1) {
+    cur = simplifyFn(diffFn(cur));
+    dCol.push(cur);
+    if (ibpIsZero(cur)) break;
+  }
+  if (!ibpIsZero(dCol[dCol.length - 1])) return undefined;
+  const N = dCol.length - 1; // u^(N) = 0
+
+  // I-column: w, ∫w, ∫∫w, ..., ∫^N w.
+  const wIr = simplifyFn(ibpMultiplyIr(wFactors));
+  const iCol: IRNode[] = [wIr];
+  cur = wIr;
+  for (let k = 0; k < N; k += 1) {
+    const integrated = integrateFn(cur);
+    if (integrated === undefined) return undefined;
+    const simplified = simplifyFn(integrated);
+    if (ibpContainsIntegrate(simplified)) return undefined;
+    iCol.push(simplified);
+    cur = simplified;
+  }
+
+  // Assemble: Σ_{k=0}^{N-1} (-1)^k · D[k] · I[k+1].
+  const pieces: IRNode[] = [];
+  for (let k = 0; k < N; k += 1) {
+    let term: IRNode = app(MUL, [dCol[k], iCol[k + 1]]);
+    if (k % 2 === 1) term = app(NEG, [term]);
+    pieces.push(term);
+  }
+  if (pieces.length === 0) return int(0);
+  let result: IRNode = pieces[0];
+  for (let i = 1; i < pieces.length; i += 1) {
+    result = app(ADD, [result, pieces[i]]);
+  }
+  return result;
 }
 
 function completeEllipticFirstKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {

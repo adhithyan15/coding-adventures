@@ -1,5 +1,27 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
+> **🎉 MACSYMA finish-plan closed (2026-05-28).** All five tracks of
+> `code/specs/macsyma-finish-plan.md` (ten sub-tracks total) have
+> shipped across all three languages.  Sub-track PR map:
+>
+> | Sub-track | PR | Description |
+> |---|---|---|
+> | A1 | ✅ #4552 | Phase 86 generic recogniser port (TS + Rust) |
+> | A2 | ✅ #4557 | Delete 42 redundant grid helpers (all 3 langs) |
+> | B1 | ✅ #4558 | Apart simple-roots port (TS + Rust) |
+> | B2 | ✅ #4559 | Apart-retry telescope chain port (TS + Rust) |
+> | B3 | ✅ #4560 | Apart repeated-linear-factors port (TS + Rust) |
+> | C1 | ✅ #4561 | Frobenius / power-series ODE (Python) |
+> | C2 | ✅ #4562 | Frobenius port (TS + Rust) |
+> | D1 | ✅ #4563 | Bivariate Hensel lifting (Python `cas-factor`) |
+> | D2 | ✅ #4564 | Bivariate Hensel port (TS + Rust) |
+> | E1 | ✅ #4569 | Generic tabular IBP fallback (Python `symbolic-vm`) |
+> | E2 | ✅ this PR | Generic IBP port (TS + Rust `symbolic-vm` 0.16.0) |
+>
+> The MACSYMA pipeline is now considered done for the purposes of this
+> repo.  New work is feature-driven (e.g. Maple frontend) rather than
+> gap-driven.
+
 > **Living document.** Updated each time a PR lands or new work is planned.
 > Last updated: 2026-05-22 (after Phase 48 Apart-for-repeated-linear-
 > factors landed in Python — all three Phase 45-documented summation
@@ -545,7 +567,7 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | `∫ sin(log(x)) dx`, `∫ cos(log(x)) dx`, `∫ xᵏ·sin/cos(log(x)) dx` (Phase 27 trig-of-log) | u=log(x) substitution converts to exp×trig form; closed form `x^(k+1)·((k+1)trig(log x)∓cotrig(log x))/((k+1)²+1)` | ✅ Python PR #3373 `symbolic-vm` 0.57.0; TS + Rust `symbolic-vm` 0.4.0 |
 | `∫ P(x)·log(Q(x)) dx`, `∫ P(x)·atan(Q(x)) dx` for non-linear Q (Phase 28 general IBP) | IBP with residual integrated via polynomial long division + Case A (prop to D′) / Case B (const/quadratic) | ✅ Python PR #3380 `symbolic-vm` 0.58.0; TS + Rust `symbolic-vm` 0.5.0 (PR #3381) |
 | `∫ c / (a + b·sin/cos(α·x + β)) dx` for rational `a, b, α, β` with `α ≠ 0` (Phases 34–38 Weierstrass family) | `u = tan((α·x+β)/2)` substitution: arctan form (`a² > b²`), degenerate `a² = b²`, log form (`a² < b²`), and linear-argument lifting all wired. | ✅ All discriminant regimes and both `b > |a|` / `b < −|a|` cos branches closed across all three languages. Phase 34 (PRs #3472/#3473/#3475 — arctan), Phase 35 (degenerate), Phase 36 (log form, `b > |a|`), Phase 37 (cos `b < −|a|` — PRs #3683/#3685/#3689), Phase 38 (non-bare linear arguments — PRs #3690/#3691/#3692). Symbolic `a, b, α, β` still need an assumption context. |
-| `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
+| `∫ f(x)·g(x)` where neither integrates alone | Generic tabular IBP fallback — Python (#4569 `symbolic-vm` 0.73.0), TS + Rust (this PR `symbolic-vm` 0.16.0).  Bounded by 5 factors / poly degree 8. | ✅ Track E1 + E2 |
 
 #### Completed REPL and session features
 
