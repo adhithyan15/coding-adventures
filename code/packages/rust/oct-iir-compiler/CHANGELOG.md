@@ -1,5 +1,44 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.3.0 — 2026-05-29 (OCT04 — AOT backend acceptance proofs)
+
+### Added — `tests/backend_compat.rs` exercises every IIR-to-* backend
+
+Oct's emitted IIR is now proven by automated tests to be accepted by
+the validators of every AOT backend (wasm, jvm, clr, beam).  This
+closes the "Oct's IIR shape could regress without anyone noticing"
+gap — the same shape Twig (`twig-ir-compiler/tests/backend_compat.rs`)
+and Nib (`nib-iir-compiler/tests/backend_compat.rs`) already had.
+
+### Coverage (9 tests)
+
+| Group | Test | Asserts |
+|---|---|---|
+| Minimal | `oct_empty_main_accepted_by_every_backend` | `fn main() { }` |
+| Minimal | `oct_return_constant_accepted_by_every_backend` | `fn answer() -> u8 { return 42; }` |
+| Arithmetic | `oct_typed_add_accepted_by_every_backend` | `x + y` (u8) |
+| Arithmetic | `oct_typed_sub_accepted_by_every_backend` | `x - y` (u8) |
+| Comparison | `oct_typed_eq_accepted_by_every_backend` | `x == 5` |
+| Comparison | `oct_typed_lt_accepted_by_every_backend` | `x < 10` |
+| Control flow | `oct_if_else_accepted_by_every_backend` | `if … { … } else { … }` |
+| Control flow | `oct_while_loop_accepted_by_every_backend` | `while n < 10 { n = n + 1 }` |
+| Invariant | `oct_every_function_is_fully_typed` | every fn has `type_status == FullyTyped` |
+
+All 9 pass on first run — proving Oct's IIR is shape-compatible with
+every backend without further changes.  This is the AOT counterpart
+to `tests/jit_e2e.rs` (which proves the JIT path).
+
+### Dependencies
+
+Added `iir-to-wasm`, `iir-to-jvm-class-file`, `iir-to-cil-bytecode`,
+`iir-to-beam` as **dev-dependencies**.  None of them ship to runtime
+consumers of `oct-iir-compiler`.
+
+### Tests
+
+- 9 backend_compat tests pass.
+- 11 lib + 4 jit_e2e existing tests still pass.
+
 ## 0.2.0 — 2026-05-28 (OCT03 — JIT via GenericCirJit)
 
 ### Added — Oct programs JIT-compile via `jit-core::GenericCirJit`
