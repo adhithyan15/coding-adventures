@@ -394,6 +394,21 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(module_mark);
                     i += 1;
                 }
+                Stmt::SingletonClassDef { body, span, .. } => {
+                    // A singleton-class declaration (Ruby Phase 14e) is
+                    // a class-opening construct → mark Feature::Classes,
+                    // then depth-guard and walk the body in a fresh
+                    // local-env scope, same as ClassDef.
+                    self.observed.add(Feature::Classes);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let singleton_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(singleton_mark);
+                    i += 1;
+                }
             }
         }
     }
@@ -1372,5 +1387,78 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok(), "expected missing-Modules-feature error");
         assert!(r.errors().any(|i| i.message.contains("modules")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 14e — `Stmt::SingletonClassDef` validation.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn singleton_class_def_body_with_let_binding_validates() {
+        // A singleton-class body holding a LetBinding is walked and
+        // accepted; the module declares Feature::Classes.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::SingletonClassDef {
+                    target: "self".into(),
+                    body: vec![Stmt::LetBinding {
+                        name: "X".into(),
+                        sir_type: None,
+                        value: Expr::IntLit { value: 1, span: s() },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn singleton_class_def_body_undefined_varref_is_error() {
+        // Proves the singleton body is actually validated.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::SingletonClassDef {
+                    target: "self".into(),
+                    body: vec![Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "ghost".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "expected undefined-varref error from singleton body, got {:?}",
+            r.issues
+        );
     }
 }

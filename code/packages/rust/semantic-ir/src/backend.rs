@@ -235,6 +235,13 @@ where
                 walk_intrinsics_in_stmt(s, f, depth + 1);
             }
         }
+        Stmt::SingletonClassDef { body, .. } => {
+            // Same recursion for singleton-class bodies (Ruby
+            // Phase 14e).
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
     }
 }
 

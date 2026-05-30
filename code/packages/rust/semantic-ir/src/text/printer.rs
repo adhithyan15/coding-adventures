@@ -251,6 +251,16 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             }
             out.push(')');
         }
+        Stmt::SingletonClassDef { target, body, .. } => {
+            // `(singleton-class-def << Target)` head; body statements
+            // (if any) printed one per line (Ruby Phase 14e).
+            let _ = write!(out, "(singleton-class-def << {}", target);
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
     }
 }
 
@@ -778,6 +788,28 @@ mod tests {
         print_block(&mut out, &block, 0);
         assert!(out.contains("(module-def Config"));
         assert!(out.contains("(let v (int 3))"));
+    }
+
+    #[test]
+    fn print_singleton_class_def() {
+        // `class << self; end` → `(singleton-class-def << self)`.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::SingletonClassDef {
+                target: "self".into(),
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(singleton-class-def << self)"),
+            "expected `(singleton-class-def << self)` in output, got:\n{}",
+            out
+        );
     }
 
     #[test]

@@ -279,6 +279,23 @@ pub enum Stmt {
         body: Vec<Stmt>,
         span: Span,
     },
+
+    /// `class << receiver; body; end` — a singleton-class (metaclass)
+    /// declaration.  Introduced by the Ruby frontend's Phase 14e.
+    ///
+    /// `target` is the receiver whose singleton class is opened — the
+    /// dominant idiom is `class << self` (`target = "self"`), but a
+    /// bare object name is also accepted (`class << obj`).  Like
+    /// `ClassDef`/`ModuleDef`, method `def`s inside the body are
+    /// hoisted to top-level `Function`s by the lowerer; `body` carries
+    /// the non-`def` statements.  Triggers `Feature::Classes` (a
+    /// singleton class is a class-opening construct, not a new
+    /// feature).
+    SingletonClassDef {
+        target: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -295,6 +312,7 @@ impl Stmt {
             Stmt::MapSet { span, .. } => span,
             Stmt::ClassDef { span, .. } => span,
             Stmt::ModuleDef { span, .. } => span,
+            Stmt::SingletonClassDef { span, .. } => span,
         }
     }
 }
