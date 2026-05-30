@@ -1,7 +1,7 @@
 use spice_engine::{
-    format_tf_table, tf, tf_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params,
-    MosfetType, Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
+    format_corner_tf_table, format_tf_table, tf, tf_corners, Bjt, BjtPolarity, Capacitor, Cccs,
+    Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Element, Inductor, Mosfet,
+    MosfetLevel1Params, MosfetType, Resistor, SpiceError, TfResult, Vccs, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -116,6 +116,43 @@ fn tf_corners_runs_transfer_function_per_corner() {
     assert_close(result.points[0].result.input_impedance_ohms, 2_000.0);
     assert_close(result.points[1].result.input_impedance_ohms, 1_500.0);
     assert_close(result.points[2].result.input_impedance_ohms, 3_000.0);
+}
+
+#[test]
+fn corner_tf_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = tf_corners(
+        &circuit,
+        "out",
+        "Vin",
+        &[
+            CornerSpec::new("nominal", vec![]),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "rbot-slow",
+                vec![CornerOverride::new("Rbot", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_tf_table(&result),
+        "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\nnominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\nrbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\nrbot-slow\t6.666667e-01\t3.000000e+03\t6.666667e+02\n"
+    );
 }
 
 #[test]

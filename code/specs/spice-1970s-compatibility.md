@@ -318,6 +318,9 @@ Status:
 - `.TF` transfer-function results can now be rendered as stable tab-separated
   text tables across Python, TypeScript, and Rust, covering gain and
   input/output impedance rows.
+- Named-corner `.TF` transfer-function results can now be rendered as stable
+  tab-separated text tables in the live Rust SPICE package, preserving corner
+  order and covering gain and input/output impedance rows.
 - Two-port S-parameter results can now be rendered as stable tab-separated
   text tables in the live Rust SPICE package, covering real, imaginary,
   magnitude, and phase rows for S11/S21/S12/S22 entries.

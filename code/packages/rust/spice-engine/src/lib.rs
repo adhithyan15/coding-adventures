@@ -3778,6 +3778,21 @@ pub fn format_tf_table(result: &TfResult) -> String {
     )
 }
 
+pub fn format_corner_tf_table(result: &CornerTfResult) -> String {
+    let mut rows = vec!["Corner\tTransferRatio\tInputImpedance\tOutputImpedance".to_string()];
+    for point in &result.points {
+        rows.push(format!(
+            "{}\t{}\t{}\t{}",
+            point.corner_name,
+            format_table_number(point.result.transfer_ratio),
+            format_table_number(point.result.input_impedance_ohms),
+            format_table_number(point.result.output_impedance_ohms)
+        ));
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
 pub fn format_s_parameter_table(result: &SParameterResult) -> String {
     let mut rows = vec![
         "Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase".to_string(),
