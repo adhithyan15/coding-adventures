@@ -375,6 +375,7 @@ members = [
     "image-codec-ppm",
     "image-codec-qoi",
     "image-codec-tiff",
+    "image-codec-cr2",
     "image-codec-dng",
     "image-codec-rw2",
     "image-codec-webp",
