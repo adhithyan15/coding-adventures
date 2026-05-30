@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.31.0] - 2026-05-30
+
+### Added — CLOC11.68: `--correlation_vector_pretty` flag
+
+Adds a toggle between compact and pretty-printed CV sidecar JSON. Default is compact (single-line, what CI / build pipelines want); `--correlation_vector_pretty` switches to multi-line, 2-space-indented output for human inspection.
+
+Resolution:
+- `--correlation_vector_pretty` (default `false`) → compact JSON via `CVLog::to_json_string`.
+- `--correlation_vector_pretty true` → round-trip via `serde_json::Value` and `to_string_pretty` for the multi-line form.
+
+The flag is only consulted when `--correlation_vector` is also enabled. With CV off, the formatter never runs.
+
+### Why round-trip rather than a new upstream method
+
+`CVLog::to_json_string` is the only path that knows the `LogSnapshot` shape (the fields aren't `pub`). Parsing back to a `serde_json::Value` and re-emitting via `to_string_pretty` is wasteful but correct, and only happens on the opt-in slow path. The performance hit is irrelevant — humans-eyes mode is already off the critical path of a build.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_pretty: bool`.
+- `wire::read_special_modes` now reads `correlation_vector_pretty` from the parse result.
+- `format_cv_log_json` signature changed from `(&CVLog) -> String` to `(&CVLog, pretty: bool) -> String`. Private to the crate; no external API impact.
+- Versions: `Cargo.toml` `0.30.0` → `0.31.0`, `cli.spec.json` `0.30.0` → `0.31.0`.
+
 ## [0.30.0] - 2026-05-30
 
 ### Added — CLOC11.67: `--correlation_vector_output <path>` flag

@@ -1254,7 +1254,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 None => PathBuf::from("closurec-cv.json"),
             },
         };
-        let body = format_cv_log_json(&cv_log);
+        let body = format_cv_log_json(
+            &cv_log,
+            config.special_modes.correlation_vector_pretty,
+        );
         write_output_file(&sidecar_path, &body)?;
         wrote_files.push(sidecar_path);
     }
@@ -1265,21 +1268,49 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     })
 }
 
-/// Serialize a `CVLog` to a pretty-printed JSON string for the
-/// `--correlation_vector` sidecar. We use `serde_json::to_string_pretty`
-/// rather than hand-rolling the format because the CV crate's
-/// `CVEntry` / `Contribution` types are already `Serialize`, and
-/// the sidecar is consumed by tooling (not pinned in fixtures), so
-/// serde's formatting choices don't bite us.
+/// Serialize a `CVLog` to a JSON string for the
+/// `--correlation_vector` sidecar.
 ///
-/// On serialization failure (vanishingly rare for the CV crate's
-/// well-formed structs), we fall back to a minimal `{}` document so
-/// the write still succeeds — a missing sidecar would be worse than
-/// a stub one for the build-pipeline-consumes-the-file case.
-fn format_cv_log_json(cv_log: &coding_adventures_correlation_vector::CVLog) -> String {
-    cv_log
+/// `pretty` (CLOC11.68): when true, pretty-prints the JSON
+/// (multi-line, 2-space indent) by round-tripping through
+/// `serde_json::Value` and `to_string_pretty`. When false
+/// (the default, and what CI / build pipelines want), emits
+/// compact single-line JSON via the CV crate's native
+/// `to_json_string`.
+///
+/// Why the round-trip for pretty mode: the CV crate's
+/// `to_json_string` is hard-coded to compact output and it's
+/// the only path that knows the `LogSnapshot` shape (the
+/// fields aren't pub). Parsing back to a `serde_json::Value`
+/// and re-emitting via `to_string_pretty` is wasteful but
+/// correct, and only happens on the opt-in slow path. The
+/// performance hit is irrelevant — humans-eyes mode is
+/// already off the critical path of a build.
+///
+/// On any serialization failure (vanishingly rare for the
+/// CV crate's well-formed structs, and additionally
+/// surviving a round-trip in pretty mode), we fall back to
+/// a minimal `{}` document so the write still succeeds —
+/// a missing sidecar would be worse than a stub one for the
+/// build-pipeline-consumes-the-file case.
+fn format_cv_log_json(
+    cv_log: &coding_adventures_correlation_vector::CVLog,
+    pretty: bool,
+) -> String {
+    let compact = cv_log
         .to_json_string()
-        .unwrap_or_else(|_| "{}".to_string())
+        .unwrap_or_else(|_| "{}".to_string());
+    if !pretty {
+        return compact;
+    }
+    // Round-trip: compact text → serde_json::Value → pretty
+    // text. The intermediate Value is heap-allocated but only
+    // exists for one serialization pass.
+    match serde_json::from_str::<serde_json::Value>(&compact) {
+        Ok(v) => serde_json::to_string_pretty(&v)
+            .unwrap_or_else(|_| compact),
+        Err(_) => compact,
+    }
 }
 
 /// Format the contents of an `--output_manifest` file from a
@@ -3122,6 +3153,90 @@ mod tests {
             !explicit_sidecar.exists(),
             "expected NO sidecar when correlation_vector is off, got file at {:?}",
             explicit_sidecar
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.68 — --correlation_vector_pretty flag
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_pretty_off_emits_compact_json() {
+        // Default behavior: compact single-line JSON. We
+        // detect compact form by absence of "\n  " (indented
+        // newlines). The body has at least one entry so
+        // pretty would definitely insert newlines.
+        let dir = std::env::temp_dir().join("closurec_cloc11_68_compact");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                // correlation_vector_pretty defaults to false
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read");
+        assert!(
+            !body.contains("\n  "),
+            "expected compact JSON (no indented newlines), got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_pretty_on_emits_indented_json() {
+        // With --correlation_vector_pretty, the sidecar JSON
+        // should have indented newlines. We check for "\n  "
+        // (newline + 2 spaces) which serde_json::to_string_pretty
+        // emits at every nested key.
+        let dir = std::env::temp_dir().join("closurec_cloc11_68_pretty");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_pretty: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read");
+        assert!(
+            body.contains("\n  "),
+            "expected pretty JSON with indented newlines, got: {body}"
+        );
+        // Same data content as compact: still has entries key
+        // and pass_order. Pretty mode is just whitespace.
+        assert!(
+            body.contains("\"entries\""),
+            "pretty JSON missing entries key: {body}"
+        );
+        assert!(
+            body.contains("\"pass_order\""),
+            "pretty JSON missing pass_order key: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
