@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.38.0] - 2026-05-30
+
+### Added — CLOC11.75: `--correlation_vector_summary_stderr`
+
+Boolean flag (default false). When on, the `--correlation_vector_summary` line is routed to `stderr_text` instead of `stdout_text`. Useful when stdout carries the actual JS payload (no `--js_output_file`) — without this flag, the summary line would corrupt the JS that downstream tooling pipes into.
+
+### Changed
+
+- `CompilerOutput` gains `stderr_text: String` (default empty). Existing callers ignoring stderr see no behavior change; tests can assert on routing without grepping file descriptors.
+- `parse_and_run`'s contract is now: returns `(stdout_text + stderr_text, ExitCode)` for back-compat with existing callers. A new `parse_and_run_with_streams` returns `(stdout, stderr, ExitCode)` separately; `main()` calls the streaming variant and writes stderr via `eprint!`.
+- `SpecialModesConfig` gains `correlation_vector_summary_stderr: bool`.
+- Versions: `Cargo.toml` `0.37.0` → `0.38.0`, `cli.spec.json` `0.37.0` → `0.38.0`.
+
+### Implementation note
+
+Why split the CompilerOutput rather than threading an `io::Write`: keeping run_compiler pure (no I/O, returns a value) preserves the existing test ergonomics — tests inspect the returned struct. The cost is one extra `String` field that's empty on the common path.
+
 ## [0.37.0] - 2026-05-30
 
 ### Added — CLOC11.74: `--correlation_vector_summary_format` enum (TEXT | JSON | KV)

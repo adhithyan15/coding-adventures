@@ -634,6 +634,15 @@ pub struct SpecialModesConfig {
     /// Only consulted when `correlation_vector_summary` is
     /// also true. With summary off the format flag is dead.
     pub correlation_vector_summary_format: CorrelationVectorSummaryFormat,
+    /// CLOC11.75: route the summary line to `stderr_text`
+    /// instead of `stdout_text`. Useful when stdout carries
+    /// the actual JS payload (no `--js_output_file`) and you
+    /// don't want a `cv sidecar: ...` line corrupting it.
+    ///
+    /// Default `false` preserves CLOC11.73's stdout-bound
+    /// behaviour byte-for-byte. Only consulted when
+    /// `correlation_vector_summary` is also true.
+    pub correlation_vector_summary_stderr: bool,
 }
 
 /// CLOC11.74 — render style for the `--correlation_vector_summary`
