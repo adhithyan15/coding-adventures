@@ -512,6 +512,14 @@ pub struct SpecialModesConfig {
     /// mode (zero overhead — the crate short-circuits every
     /// `create` / `contribute` call).
     pub correlation_vector: bool,
+    /// CLOC11.67: explicit path for the correlation-vector
+    /// sidecar JSON. When `None` (the default), the writer
+    /// falls back to placing the sidecar next to
+    /// `--js_output_file` as `<output>.cv.json`, or to
+    /// `closurec-cv.json` in the current working directory
+    /// when output is stdout. Only consulted when
+    /// `correlation_vector` is also true; ignored otherwise.
+    pub correlation_vector_output: Option<PathBuf>,
 }
 
 // ---------------------------------------------------------------------------

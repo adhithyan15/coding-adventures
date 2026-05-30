@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.30.0] - 2026-05-30
+
+### Added — CLOC11.67: `--correlation_vector_output <path>` flag
+
+Adds an explicit path override for the correlation-vector sidecar JSON. Lets CI pipelines route the CV trace to an artifact directory (or `/dev/null` for benchmarks) without relying on the sidecar-of-output convention.
+
+Resolution order (highest precedence first):
+
+1. `--correlation_vector_output <path>` → that path, verbatim, no decoration.
+2. Else if `--js_output_file` is set → `<output>.cv.json` beside it.
+3. Else (stdout output) → `closurec-cv.json` in the working directory.
+
+The flag is only consulted when `--correlation_vector` is also enabled — the trace itself is still opt-in. With CV off, the path flag is ignored.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_output: Option<PathBuf>`.
+- `wire::read_special_modes` now reads `correlation_vector_output` from the parse result; empty string maps to `None`.
+- Versions: `Cargo.toml` `0.29.0` → `0.30.0`, `cli.spec.json` `0.29.0` → `0.30.0`.
+
 ## [0.29.0] - 2026-05-30
 
 ### Added — CLOC11.66: WHITESPACE_ONLY token tombstones

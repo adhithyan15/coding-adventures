@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.29.0
+Version: 0.30.0
 
 ## Flags
 
@@ -369,6 +369,10 @@ Print markdown-formatted flag usage (hidden).
 ### `--correlation_vector` (boolean, default: false)
 
 Thread a correlation-vector trace through every transform stage so output bytes are traceable back to input. Default off; opt in via this flag (CLOC11.60).
+
+### `--correlation_vector_output` (string, default: "")
+
+Path to write the correlation-vector sidecar JSON. Default empty → `<js_output_file>.cv.json` next to the JS output, or `closurec-cv.json` in CWD when output is stdout (CLOC11.67).
 
 ### `--instrument_for_coverage_option` (enum, default: NONE)
 
