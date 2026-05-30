@@ -378,6 +378,7 @@ members = [
     "image-codec-rw2",
     "image-codec-webp",
     "image-codec-raf",
+    "image-codec-orf",
     "mosaic-analyzer",
     "mosaic-driver",
     "mosaic-compile",
