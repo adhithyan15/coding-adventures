@@ -891,26 +891,83 @@ mod tests {
         }
     }
 
+    // -----------------------------------------------------------------
+    // Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`.  Mirrors
+    // ClassDef (minus inheritance): method defs hoist to top-level
+    // Functions; non-def statements stay in the module body.
+    // -----------------------------------------------------------------
+
     #[test]
-    fn module_still_lowers_to_nil_no_op_in_phase_14a() {
-        // Phase 14a covers `class` only.  `module M; end` continues
-        // to lower to the Phase 6f NilLit no-op until Phase 14d adds
-        // a `Stmt::ModuleDef` analog.  This test pins the contract so
-        // a future refactor that accidentally merges class/module
-        // arms again is caught.
+    fn empty_module_lowers_to_module_def_stmt() {
+        // Phase 14d: `module M; end` lowers to a first-class
+        // `Stmt::ModuleDef { name: "M", body: vec![], .. }`, replacing
+        // the pre-14d NilLit no-op contract.
         let m = lower("module M\nend\n");
         let main = main_body(&m);
         assert_eq!(main.stmts.len(), 1);
-        assert!(matches!(
-            &main.stmts[0],
-            Stmt::ExprStmt { expr: Expr::NilLit { .. }, .. }
-        ));
+        match &main.stmts[0] {
+            Stmt::ModuleDef { name, body, .. } => {
+                assert_eq!(name, "M");
+                assert!(body.is_empty(), "empty module → empty body");
+            }
+            other => panic!("expected Stmt::ModuleDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn empty_module_requests_modules_feature() {
+        // Emitting a `Stmt::ModuleDef` triggers the `Feature::Modules`
+        // manifest entry (distinct from `Classes`).
+        let m = lower("module M\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Modules),
+            "manifest should contain Feature::Modules; got {:?}",
+            m.manifest
+        );
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::Classes),
+            "a module-only program must not request Feature::Classes"
+        );
+    }
+
+    #[test]
+    fn empty_module_passes_sir_validator() {
+        // E2E: lower → validate for a module-only program.
+        let m = lower("module M\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected module-only program: {:?}", result);
     }
 
     #[test]
     fn module_with_def_hoists_def_to_top_level() {
+        // Method defs inside a module hoist to top-level Functions
+        // (unchanged contract); the ModuleDef body stays empty.
         let m = lower("module M\n  def helper\n  end\nend\n");
         assert!(m.functions.iter().any(|f| f.name == "helper"));
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ModuleDef { name, body, .. } => {
+                assert_eq!(name, "M");
+                assert!(body.is_empty(), "method-only module body stays empty (defs hoist)");
+            }
+            other => panic!("expected Stmt::ModuleDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn module_body_preserves_executable_statement() {
+        // A non-def statement in a module body is preserved in
+        // ModuleDef.body (Phase 14d), mirroring ClassDef Phase 14b.
+        let m = lower("module Config\n  VERSION = 3\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ModuleDef { name, body, .. } => {
+                assert_eq!(name, "Config");
+                assert_eq!(body.len(), 1, "VERSION = 3 preserved; got {:?}", body);
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "VERSION"));
+            }
+            other => panic!("expected Stmt::ModuleDef, got {:?}", other),
+        }
     }
 
     #[test]

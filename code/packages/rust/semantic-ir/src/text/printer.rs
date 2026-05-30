@@ -240,6 +240,17 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             }
             out.push(')');
         }
+        Stmt::ModuleDef { name, body, .. } => {
+            // `(module-def Name)` for the empty case; body statements
+            // (if any) printed one per line (Ruby Phase 14d).  Mirrors
+            // the ClassDef printer minus the superclass clause.
+            let _ = write!(out, "(module-def {}", name);
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
     }
 }
 
@@ -720,6 +731,53 @@ mod tests {
         print_block(&mut out, &block, 0);
         assert!(out.contains("(class-def Bar"));
         assert!(out.contains("(let y (int 2))"));
+    }
+
+    #[test]
+    fn print_empty_module_def() {
+        // `module M; end` → `(module-def M)` (no body lines).
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ModuleDef {
+                name: "M".into(),
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(module-def M)"),
+            "expected `(module-def M)` in output, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn print_module_def_with_body_stmt() {
+        // A populated module body prints each statement indented under
+        // the module-def head.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ModuleDef {
+                name: "Config".into(),
+                body: vec![Stmt::LetBinding {
+                    name: "v".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 3, span: s_.clone() },
+                    span: s_.clone(),
+                }],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(out.contains("(module-def Config"));
+        assert!(out.contains("(let v (int 3))"));
     }
 
     #[test]

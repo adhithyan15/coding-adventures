@@ -2,6 +2,37 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.43.0] - 2026-05-30
+
+### Changed (Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`)
+
+`module M … end` now lowers to a first-class
+`Stmt::ModuleDef { name, body, span }` (semantic-ir 0.4.0), replacing
+the pre-14d behaviour where a module lowered to a no-op
+`ExprStmt(NilLit)` (with its `def`s hoisted as a side effect).
+
+- New `extract_module_name` helper (symmetric with
+  `extract_class_name`, module-specific error message).
+- Emitting a `ModuleDef` requests `Feature::Modules`, now materialised
+  into the module manifest.
+- Module body handling is **identical to a class** and shares the
+  helper, renamed `lower_class_body_statements` →
+  `lower_decl_body_statements`: method `def`s hoist to top-level
+  `Function`s; non-`def` statements are preserved in `body` in source
+  order.
+- Retired the Phase 6f `collect_def_statements_from_body` whole-body
+  pre-pass (now dead — both the class and module arms hoist per-direct
+  child via `lower_decl_body_statements`, and nested declarations
+  hoist their own direct `def`s through the normal dispatch).
+
+The pre-14d `module_still_lowers_to_nil_no_op_in_phase_14a` test is
+replaced by the new ModuleDef contract tests. New/updated tests:
+`empty_module_lowers_to_module_def_stmt`,
+`empty_module_requests_modules_feature`,
+`empty_module_passes_sir_validator`,
+`module_with_def_hoists_def_to_top_level` (now also asserts ModuleDef),
+`module_body_preserves_executable_statement`.  Test count: 198 → 201.
+
 ## [0.42.0] - 2026-05-30
 
 ### Added (Phase 14c (FC) — inheritance `class Foo < Bar`)

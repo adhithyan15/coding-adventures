@@ -378,6 +378,22 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(class_mark);
                     i += 1;
                 }
+                Stmt::ModuleDef { body, span, .. } => {
+                    // A module declaration (Ruby Phase 14d) is validated
+                    // exactly like a class body: mark Feature::Modules,
+                    // depth-guard the recursion, and walk the body in a
+                    // fresh local-env scope so module-body names don't
+                    // leak into the surrounding statement stream.
+                    self.observed.add(Feature::Modules);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let module_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(module_mark);
+                    i += 1;
+                }
             }
         }
     }
@@ -1254,5 +1270,107 @@ mod tests {
             "class-body local INNER must not leak to sibling stmt, got {:?}",
             r.issues
         );
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 14d — `Stmt::ModuleDef` validation (mirrors ClassDef).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn module_def_body_with_let_binding_validates() {
+        // A module body holding a LetBinding is walked by the validator
+        // and accepted; the module declares Feature::Modules.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Modules]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "Config".into(),
+                    body: vec![Stmt::LetBinding {
+                        name: "V".into(),
+                        sir_type: None,
+                        value: Expr::IntLit { value: 3, span: s() },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn module_def_body_undefined_varref_is_error() {
+        // Proves the module body is actually validated: a VarRef to an
+        // undefined local inside the module body must be reported.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Modules]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "M".into(),
+                    body: vec![Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "ghost".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "expected undefined-varref error from module body, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn module_def_without_manifest_feature_is_error() {
+        // A ModuleDef present but `Feature::Modules` not declared →
+        // the used-but-undeclared check fires.
+        let mut m = empty_module(FeatureManifest::new());
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "M".into(),
+                    body: vec![],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-Modules-feature error");
+        assert!(r.errors().any(|i| i.message.contains("modules")));
     }
 }

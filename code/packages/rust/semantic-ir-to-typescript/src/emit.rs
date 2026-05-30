@@ -163,6 +163,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::ClassDef { span, .. } => {
             panic!("ts backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
         }
+        Stmt::ModuleDef { span, .. } => {
+            panic!("ts backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 

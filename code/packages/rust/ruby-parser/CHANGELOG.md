@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.41.0] - 2026-05-30
+
+### Added (Phase 14d (FC) — `module M … end` parser coverage)
+
+No grammar change — `module_statement = "module" NAME { !"end"
+statement } "end"` already accepts a module body.  Phase 14d adds
+parser coverage for the parse properties the lowerer relies on (name
+extraction, def/non-def body children):
+
+- `test_parse_module_name_is_first_name_token` — the module name is the
+  first Name token (the `module` keyword is a Keyword-type token).
+- `test_parse_module_body_with_def` — a `def` inside a module parses as
+  a `def_statement` body child.
+- `test_parse_module_body_mixes_def_and_assignment` — the body holds
+  both an `assignment` and a `def_statement`.
+
+Test count: 164 → 167 (+3).
+
 ## [0.40.0] - 2026-05-30
 
 ### Added (Phase 14c (FC) — inheritance `class Foo < Bar`)

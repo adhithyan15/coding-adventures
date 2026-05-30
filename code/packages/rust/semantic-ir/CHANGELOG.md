@@ -2,6 +2,44 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.4.0 — SIR17: module declarations (`Stmt::ModuleDef`)
+
+Introduced by the Ruby frontend's Phase 14d (`module M … end`).
+
+### Added
+
+- `Stmt::ModuleDef { name: String, body: Vec<Stmt>, span: Span }` — a
+  module (namespace / mixin) declaration.  Structurally a `ClassDef`
+  without inheritance: a named declaration whose `body` is a list of
+  statements.  Like `ClassDef`, method `def`s inside the body are
+  hoisted to top-level `Function`s by the Ruby lowerer; the `body`
+  carries the module's non-`def` statements.
+- `Feature::Modules` (kebab name `modules`) — declared by any module
+  that contains a `Stmt::ModuleDef`.  Distinct from `Classes`: a Ruby
+  `module` is a namespace/mixin, not an instantiable class.  Backends
+  that do not list it in their accepted-feature set reject such modules
+  at the capability check, before emit.
+
+### Changed
+
+- `Stmt::span()`, the walker, the validator (marks `Feature::Modules`,
+  walks the body via `check_stmt_seq` in a scoped env mark/rewind with
+  the `MAX_IR_DEPTH` guard — same shape as the `ClassDef` arm), the
+  text printer (`(module-def Name …)` s-expression), and the
+  intrinsic-walk backend helper all gain a `ModuleDef` arm.  The four
+  reference backends (TypeScript, Rust, Python, Go) gain an unreachable
+  `panic!` arm; `Feature::Modules` is absent from their accepted sets,
+  so module-using modules are rejected at the capability check before
+  emit.
+
+New tests (5): `print_empty_module_def`, `print_module_def_with_body_stmt`,
+`module_def_body_with_let_binding_validates`,
+`module_def_body_undefined_varref_is_error`,
+`module_def_without_manifest_feature_is_error`.  Test count: 85 → 90.
+
+This is a **breaking enum change** for any exhaustive `match` on `Stmt`
+that does not use a `_` / `..` rest arm.
+
 ## 0.3.0 — SIR17: class inheritance (`ClassDef.superclass`)
 
 Introduced by the Ruby frontend's Phase 14c (`class Foo < Bar`).
