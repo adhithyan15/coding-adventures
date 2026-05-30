@@ -491,6 +491,7 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
         correlation_vector_output: get_str(p, "correlation_vector_output")?
             .filter(|s| !s.is_empty())
             .map(std::path::PathBuf::from),
+        correlation_vector_pretty: get_bool(p, "correlation_vector_pretty")?,
     })
 }
 
