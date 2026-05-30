@@ -3666,6 +3666,49 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 16c (FC) — ensure clause coverage / hardening.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn ensure_only_lowers_with_no_rescues() {
+        // `begin … ensure … end` (no rescue) → TryCatch with an empty
+        // `rescues` and a populated `ensure_body`; requests Exceptions.
+        let m = lower("begin\n  x = 1\nensure\n  y = 2\nend\n");
+        match &main_body(&m).stmts[0] {
+            Stmt::TryCatch { rescues, ensure_body, .. } => {
+                assert!(rescues.is_empty(), "ensure-only has no rescue clauses");
+                let ens = ensure_body.as_ref().expect("ensure body present");
+                assert!(matches!(&ens[0], Stmt::LetBinding { name, .. } if name == "y"));
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
+    }
+
+    #[test]
+    fn ensure_body_preserves_statement_order() {
+        // The ensure body keeps its statements in source order.
+        let m = lower("begin\n  x = 1\nensure\n  a = 1\n  b = 2\nend\n");
+        match &main_body(&m).stmts[0] {
+            Stmt::TryCatch { ensure_body, .. } => {
+                let ens = ensure_body.as_ref().expect("ensure body present");
+                assert_eq!(ens.len(), 2, "both ensure stmts preserved; got {:?}", ens);
+                assert!(matches!(&ens[0], Stmt::LetBinding { name, .. } if name == "a"));
+                assert!(matches!(&ens[1], Stmt::LetBinding { name, .. } if name == "b"));
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn ensure_only_passes_sir_validator() {
+        // E2E: an ensure-only begin (no rescue) validates end-to-end.
+        let m = lower("begin\n  x = 1\nensure\n  y = 2\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected ensure-only begin: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6u — `case … when … else … end`
     // -----------------------------------------------------------------
     //

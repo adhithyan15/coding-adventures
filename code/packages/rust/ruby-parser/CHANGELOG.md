@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.48.0] - 2026-05-30
+
+### Added (Phase 16c (FC) — `ensure` clause coverage)
+
+No grammar change — the `ensure_clause` rule already parses (Phase 6v),
+and the Phase 16a `Stmt::TryCatch.ensure_body` lowering consumes it.
+Phase 16c adds a parse pin for the multi-statement ensure body:
+
+- `test_parse_begin_ensure_multiple_statements` — an `ensure` clause with
+  several statements collects them all under the `ensure_clause` node.
+
+(Ensure-only and rescue+ensure shapes are already covered by
+`test_parse_begin_with_ensure` / `test_parse_begin_with_rescue_and_ensure`.)
+Test count: 178 → 179 (+1).
+
 ## [0.47.0] - 2026-05-30
 
 ### Added (Phase 16b (FC) — typed / multi-type / multi-clause rescue)
