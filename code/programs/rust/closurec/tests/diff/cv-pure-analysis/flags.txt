@@ -1,0 +1,7 @@
+--correlation_vector
+--correlation_vector_summary
+--correlation_vector_summary_only
+--correlation_vector_format
+NONE
+--js
+tests/diff/cv-pure-analysis/input/a.js

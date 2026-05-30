@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.40.0] - 2026-05-30
+
+### Added — CLOC11.77: end-to-end integration test for CV pure-analysis combo
+
+New integration test `tests/diff_cv_pure_analysis.rs` exercises the combo built up across CLOC11.60 → 11.76:
+
+```
+--correlation_vector              (CLOC11.60)
+--correlation_vector_summary      (CLOC11.73)
+--correlation_vector_summary_only (CLOC11.76)
+--correlation_vector_format NONE  (CLOC11.69)
+```
+
+Contract pinned:
+1. With `--correlation_vector_summary_only`, no JS file lands on disk even though `--js` is supplied.
+2. With `--correlation_vector_format NONE`, no CV sidecar lands either — pure in-memory analysis, no writes.
+3. The CV summary line still makes it to stdout because `--correlation_vector_summary` is on and `summary_stderr` is off (default).
+4. closurec exits 0 — pure-analysis is a normal successful invocation.
+
+### Why this exists as a separate integration test
+
+The combination touches CLI parsing, wire reading, four config fields, three skip-gates in `run_compiler`, and the summary serializer. A single end-to-end test through the actual binary catches integration drift that per-feature unit tests would miss — e.g. a future refactor that splits `SpecialModesConfig` and forgets to thread one of the four flags would fail here even if every isolated test still passed.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.39.0` → `0.40.0`, `cli.spec.json` `0.39.0` → `0.40.0`.
+
 ## [0.39.0] - 2026-05-30
 
 ### Added — CLOC11.76: `--correlation_vector_summary_only` (pure analysis mode)
