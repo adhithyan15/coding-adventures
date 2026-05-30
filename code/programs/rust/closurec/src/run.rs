@@ -1062,7 +1062,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // None arm moves `encoded` into stdout_text; without the
     // pre-capture we'd see a borrow-of-moved error.
     let encoded_byte_len = encoded.len();
-    let result = match &config.io.js_output_file {
+    let mut result = match &config.io.js_output_file {
         Some(path) => {
             write_output_file(path, &encoded)?;
             CompilerOutput {
@@ -1241,6 +1241,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     //   3. Else (stdout output), the sidecar lands at
     //      `closurec-cv.json` in the working directory.
     //      Discoverable; user can rename / move.
+    // Track whether we actually wrote a sidecar (vs. NONE
+    // format that skipped) and where, so CLOC11.73 can name
+    // the file in the summary line.
+    let mut cv_sidecar_written: Option<PathBuf> = None;
     if config.special_modes.correlation_vector {
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
@@ -1282,8 +1286,23 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     ),
                 };
                 write_output_file(&sidecar_path, &body)?;
-                wrote_files.push(sidecar_path);
+                wrote_files.push(sidecar_path.clone());
+                cv_sidecar_written = Some(sidecar_path);
             }
+        }
+
+        // CLOC11.73 — opt-in stdout summary. Computed
+        // post-filter so the line describes what's actually
+        // on disk (or would have been, under NONE format).
+        if config.special_modes.correlation_vector_summary {
+            let summary = compute_cv_summary(
+                &cv_log,
+                &config.special_modes.correlation_vector_filter,
+                config.special_modes.correlation_vector_filter_includes_origin,
+                config.special_modes.correlation_vector_filter_invert,
+                cv_sidecar_written.as_deref(),
+            );
+            result.stdout_text.push_str(&summary);
         }
     }
 
@@ -1291,6 +1310,116 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         stdout_text: result.stdout_text,
         wrote_files,
     })
+}
+
+/// CLOC11.73 — produce a one-line stdout summary of the CV
+/// log, *after* the same filter would have been applied for
+/// the sidecar. The output ends with a newline so it composes
+/// cleanly with the rest of `stdout_text`.
+///
+/// Two flavors:
+///   - `wrote_path = Some(p)` (Json / Ndjson format):
+///     "cv sidecar: <p>: N entries, M contributions, T
+///      tombstones, pass_order=[...]"
+///   - `wrote_path = None` (NONE format / write skipped):
+///     "cv sidecar: skipped (format=NONE): N entries, M
+///      contributions, T tombstones, pass_order=[...]"
+///
+/// Counts reflect the post-filter view; under filter=[] the
+/// summary describes the unfiltered log.
+fn compute_cv_summary(
+    cv_log: &coding_adventures_correlation_vector::CVLog,
+    filter: &[String],
+    filter_includes_origin: bool,
+    filter_invert: bool,
+    wrote_path: Option<&std::path::Path>,
+) -> String {
+    // Build the same parsed-Value form the formatters use,
+    // apply the same filter, then count.
+    let compact = cv_log
+        .to_json_string()
+        .unwrap_or_else(|_| "{}".to_string());
+    let mut root: serde_json::Value = match serde_json::from_str(&compact) {
+        Ok(v) => v,
+        Err(_) => {
+            // Fallback to a stub summary; pass_order is
+            // unknown but we still print zeros so the line
+            // is well-formed.
+            return summary_line(wrote_path, 0, 0, 0, &[]);
+        }
+    };
+    if !filter.is_empty() {
+        prune_entries_by_source(
+            &mut root,
+            filter,
+            filter_includes_origin,
+            filter_invert,
+        );
+    }
+    let entries = root
+        .get("entries")
+        .and_then(|v| v.as_object())
+        .map(|o| o.values().cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
+    let entry_count = entries.len();
+    let contribution_count: usize = entries
+        .iter()
+        .map(|e| {
+            e.get("contributions")
+                .and_then(|v| v.as_array())
+                .map(|a| a.len())
+                .unwrap_or(0)
+        })
+        .sum();
+    let tombstone_count: usize = entries
+        .iter()
+        .filter(|e| {
+            e.get("deleted")
+                .map(|d| !d.is_null())
+                .unwrap_or(false)
+        })
+        .count();
+    let pass_order: Vec<String> = root
+        .get("pass_order")
+        .and_then(|v| v.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(str::to_string))
+                .collect()
+        })
+        .unwrap_or_default();
+    summary_line(
+        wrote_path,
+        entry_count,
+        contribution_count,
+        tombstone_count,
+        &pass_order,
+    )
+}
+
+/// Render the CLOC11.73 summary as a single line ending in
+/// `\n`. Kept separate from `compute_cv_summary` so the
+/// formatting can be tested / changed without re-running the
+/// CV count walk.
+fn summary_line(
+    wrote_path: Option<&std::path::Path>,
+    entries: usize,
+    contributions: usize,
+    tombstones: usize,
+    pass_order: &[String],
+) -> String {
+    let prefix = match wrote_path {
+        Some(p) => format!("cv sidecar: {}", p.display()),
+        None => "cv sidecar: skipped (format=NONE)".to_string(),
+    };
+    format!(
+        "{}: {} entries, {} contributions, {} tombstones, pass_order=[{}]\n",
+        prefix,
+        entries,
+        contributions,
+        tombstones,
+        pass_order.join(","),
+    )
 }
 
 /// Serialize a `CVLog` to a JSON string for the
@@ -3906,6 +4035,147 @@ mod tests {
         assert!(
             body.contains("\"source\":\"lexer_token\""),
             "expected lexer_token Origins under empty inverted filter: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.73 — --correlation_vector_summary
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_summary_writes_one_line_after_sidecar() {
+        // With --correlation_vector + --correlation_vector_summary,
+        // stdout_text should end with the summary line and
+        // the sidecar should still land on disk.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_73_summary_default");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(
+            sidecar_path.exists(),
+            "expected sidecar at {:?}",
+            sidecar_path
+        );
+        // stdout summary present.
+        assert!(
+            out.stdout_text.contains("cv sidecar:"),
+            "expected `cv sidecar:` prefix, got: {:?}",
+            out.stdout_text
+        );
+        assert!(
+            out.stdout_text.contains(" entries, "),
+            "expected entries field, got: {:?}",
+            out.stdout_text
+        );
+        assert!(
+            out.stdout_text.contains("pass_order=["),
+            "expected pass_order field, got: {:?}",
+            out.stdout_text
+        );
+        // The summary line ends in `\n`.
+        assert!(
+            out.stdout_text.ends_with('\n'),
+            "expected trailing newline, got: {:?}",
+            out.stdout_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_summary_reports_skipped_under_format_none() {
+        // Format=NONE: sidecar is not written. Summary line
+        // should say "skipped (format=NONE)" but still count
+        // entries / contributions / tombstones from the
+        // (in-memory) cv_log.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_73_summary_none");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let default_sidecar = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_format:
+                    crate::config::CorrelationVectorFormat::None,
+                correlation_vector_summary: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(
+            !default_sidecar.exists(),
+            "NONE format should skip sidecar write"
+        );
+        assert!(
+            out.stdout_text.contains("skipped (format=NONE)"),
+            "expected `skipped (format=NONE)` marker, got: {:?}",
+            out.stdout_text
+        );
+        // Still reports counts.
+        assert!(
+            out.stdout_text.contains(" entries, "),
+            "expected entries field even under NONE: {:?}",
+            out.stdout_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_summary_off_emits_no_summary() {
+        // Default flag off → no summary line in stdout_text
+        // even when CV is enabled.
+        let dir = std::env::temp_dir().join("closurec_cloc11_73_summary_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                // correlation_vector_summary defaults to false
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(
+            !out.stdout_text.contains("cv sidecar:"),
+            "expected no summary line under default flag, got: {:?}",
+            out.stdout_text
         );
         let _ = fs::remove_dir_all(&dir);
     }

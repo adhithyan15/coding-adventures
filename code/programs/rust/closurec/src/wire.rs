@@ -517,6 +517,7 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
             p,
             "correlation_vector_filter_invert",
         )?,
+        correlation_vector_summary: get_bool(p, "correlation_vector_summary")?,
     })
 }
 
