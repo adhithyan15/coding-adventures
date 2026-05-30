@@ -123,6 +123,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // Phase 14d (FC) — `module M; end` lowers to
         // `Stmt::ModuleDef` and triggers the `Modules` feature.
         Feature::Modules,
+        // Phase 15a (FC) — an instance-var ref (`@x`, `Scope::Instance`)
+        // triggers the `InstanceVars` feature.
+        Feature::InstanceVars,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -298,6 +301,15 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
         }
     }
     false
+}
+
+/// Phase 15a (FC) — is this Name-token value a Ruby *instance
+/// variable* (`@x`)?  Instance vars lex as a `Name` token carrying the
+/// leading sigil.  A single `@` marks an instance variable; a double
+/// `@@` is a *class* variable (Phase 15b) and a leading `$` is a
+/// global — both excluded here so they keep their pre-15a handling.
+fn is_instance_var_name(name: &str) -> bool {
+    name.starts_with('@') && !name.starts_with("@@")
 }
 
 // ---------------------------------------------------------------------------
@@ -2226,9 +2238,15 @@ impl Lowerer {
                 // branch above (Phase 8b) and never reach this match.
                 _ => unreachable!("op_token matched only the eager compound forms above"),
             };
+            // Phase 15a — a compound assign to an instance variable
+            // (`@x += 1`) reads `@x` with `Scope::Instance` too.
             let lhs_ref = Expr::VarRef {
                 name: name.clone(),
-                scope: Scope::Local,
+                scope: if is_instance_var_name(&name) {
+                    Scope::Instance
+                } else {
+                    Scope::Local
+                },
                 span: span.clone(),
             };
             Expr::BuiltinCall {
@@ -2240,6 +2258,24 @@ impl Lowerer {
         } else {
             rhs
         };
+
+        // Phase 15a (FC) — instance-variable assignment (`@x = …`,
+        // `@x += …`) lowers to `Stmt::Assign { scope: Instance }`
+        // regardless of prior sightings: an instance var needs no
+        // `let` declaration and is never a local.  The store lowers to
+        // `Stmt::Assign`, whose validator arm observes
+        // `MutableBindings`, so we declare both features.  We do NOT
+        // touch `declared_locals` (an ivar is not a local).
+        if is_instance_var_name(&name) {
+            self.features_used.insert(Feature::InstanceVars);
+            self.features_used.insert(Feature::MutableBindings);
+            return Ok(Stmt::Assign {
+                name,
+                scope: Scope::Instance,
+                value,
+                span,
+            });
+        }
 
         // A compound assignment ALWAYS reads then re-binds, so it
         // must emit `Stmt::Assign` (never `LetBinding`).  Plain `=`
@@ -4924,7 +4960,16 @@ impl Lowerer {
                             // and/or (b) auto-emit `Global` declarations for
                             // `$x`-prefixed names so the validator-true
                             // mapping `$x` → `Scope::Global` becomes usable.
-                            let scope = if self.current_params.contains(&tok.value) {
+                            // Phase 15a (FC) — a single-`@` sigil name is
+                            // an *instance variable* (`@x`); it lowers to
+                            // `Scope::Instance` (no declaration needed).
+                            // `@@x` (class var, double `@`) and `$x`
+                            // (global) keep the pre-15a `Scope::Local`
+                            // fallback for now (Phase 15b / later).
+                            let scope = if is_instance_var_name(&tok.value) {
+                                self.features_used.insert(Feature::InstanceVars);
+                                Scope::Instance
+                            } else if self.current_params.contains(&tok.value) {
                                 Scope::Param
                             } else {
                                 Scope::Local

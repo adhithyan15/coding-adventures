@@ -55,6 +55,11 @@ pub enum Feature {
     /// Distinct from `Classes`: a Ruby `module` is a namespace/mixin,
     /// not an instantiable class.
     Modules,
+    /// Module references an object instance variable
+    /// (`Scope::Instance`, Ruby `@x`).  Phase 15a (Ruby).  Instance
+    /// vars need no prior declaration and are scoped to the receiver
+    /// object, so they are distinct from `Local`/`Global` bindings.
+    InstanceVars,
 }
 
 impl Feature {
@@ -78,6 +83,7 @@ impl Feature {
         Feature::ShortCircuit,
         Feature::Classes,
         Feature::Modules,
+        Feature::InstanceVars,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -101,6 +107,7 @@ impl Feature {
             Feature::ShortCircuit => "short-circuit",
             Feature::Classes => "classes",
             Feature::Modules => "modules",
+            Feature::InstanceVars => "instance-vars",
         }
     }
 

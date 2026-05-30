@@ -847,6 +847,33 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 15a (FC) — instance variables `@x`.  No grammar change: the
+    // lexer already emits `@x` as a `Name` token (sigil included), and
+    // ivar assignment / expression parsing is covered by the Phase 6x
+    // tests (`test_parse_instance_var_assignment`,
+    // `test_parse_instance_var_in_expression`).  Phase 15a adds only the
+    // compound-assign parse pin the new lowering path exercises.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_instance_var_compound_assignment() {
+        // `@n += 1` parses as an assignment carrying the `@n` Name token
+        // and the fused `+=` operator token (the shape the 15a lowerer's
+        // compound-ivar path dispatches on).
+        let ast = parse_ruby("@n += 1");
+        let asn = find_statement_inner(&ast, "assignment")
+            .expect("expected assignment");
+        assert!(
+            body_has_token_value(asn, "@n"),
+            "expected the `@n` ivar Name token in the assignment header"
+        );
+        assert!(
+            body_has_token_value(asn, "+="),
+            "expected the fused `+=` compound-assign operator token"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
 

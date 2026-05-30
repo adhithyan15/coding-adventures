@@ -2,6 +2,39 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.6.0 — SIR17: instance-variable scope (`Scope::Instance`)
+
+Introduced by the Ruby frontend's Phase 15a (`@x`).
+
+### Added
+
+- `Scope::Instance` — an object instance variable (Ruby `@x`).  Unlike
+  `Scope::Local`, an instance var needs **no prior declaration**:
+  `check_varref` performs no scope-existence check for it (reading an
+  unset `@x` yields nil in Ruby).  `Scope::name()` / `from_name()` gain
+  the `"instance"` tag.
+- `Feature::InstanceVars` (kebab `instance-vars`) — declared by any
+  module that references a `Scope::Instance` var.  The validator
+  observes it from each Instance-scoped `VarRef`; backends that don't
+  list it in their accepted set reject such modules at the capability
+  check, before emit.
+
+### Changed
+
+- `check_varref` gains a `Scope::Instance` arm (no resolution; observes
+  `Feature::InstanceVars`).  The text printer renders
+  `(var-ref @x instance)` via the existing `scope.name()` path.  The
+  four reference backends' `emit_var_ref` gain an unreachable `panic!`
+  arm for `Scope::Instance` (rejected pre-emit by the capability check).
+
+New tests (3): `print_var_ref_instance_scope`,
+`instance_var_ref_needs_no_declaration`,
+`instance_var_ref_without_manifest_feature_is_error`.  Test count:
+93 → 96.
+
+This is a **breaking enum change** for any exhaustive `match` on
+`Scope` without a `_` rest arm.
+
 ## 0.5.0 — SIR17: singleton-class declarations (`Stmt::SingletonClassDef`)
 
 Introduced by the Ruby frontend's Phase 14e (`class << self … end`).

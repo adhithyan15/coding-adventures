@@ -569,6 +569,14 @@ impl<'m> ValidatorState<'m> {
                 // Builtin names are not enumerated by the SIR;
                 // resolution is the backend's responsibility.
             }
+            Scope::Instance => {
+                // Instance variables (Ruby `@x`) need no prior
+                // declaration — reading an unset `@x` yields nil — so
+                // there is nothing to resolve against the local env.
+                // We only record that the feature is in use so the
+                // manifest comparison stays honest.
+                self.observed.add(Feature::InstanceVars);
+            }
         }
     }
 
@@ -1460,5 +1468,55 @@ mod tests {
             "expected undefined-varref error from singleton body, got {:?}",
             r.issues
         );
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 15a — `Scope::Instance` (instance variables).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body value is a single
+    /// instance-var ref, declaring the given features.
+    fn module_with_instance_ref(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "@x".into(),
+                    scope: Scope::Instance,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn instance_var_ref_needs_no_declaration() {
+        // An instance-var ref is accepted with no prior `let`/param —
+        // reading an unset `@x` is nil in Ruby.  Module declares
+        // `InstanceVars`.
+        let m = module_with_instance_ref(&[Feature::InstanceVars]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn instance_var_ref_without_manifest_feature_is_error() {
+        // The validator observes `InstanceVars` from the Instance-scoped
+        // ref; if the manifest doesn't declare it, the
+        // used-but-undeclared check fires.
+        let m = module_with_instance_ref(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-InstanceVars-feature error");
+        assert!(r.errors().any(|i| i.message.contains("instance-vars")));
     }
 }

@@ -285,6 +285,12 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         Scope::Builtin => {
             let _ = write!(out, "_sir_builtin_closure({})", quote_py_string(name));
         }
+        Scope::Instance => {
+            // SIR17 Phase 15a — `Feature::InstanceVars` is not accepted
+            // by this backend; instance-var-using modules are rejected
+            // at the capability check before emit.  Unreachable.
+            panic!("python backend reached SIR17 instance-var ref `{}` — capability check should have rejected it", name);
+        }
     }
 }
 

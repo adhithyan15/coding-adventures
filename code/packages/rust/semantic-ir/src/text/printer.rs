@@ -518,6 +518,18 @@ mod tests {
     }
 
     #[test]
+    fn print_var_ref_instance_scope() {
+        // Phase 15a — an instance-var ref prints with the `instance`
+        // scope tag and the `@`-sigil name preserved verbatim.
+        let e = Expr::VarRef {
+            name: "@x".into(),
+            scope: Scope::Instance,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(var-ref @x instance)");
+    }
+
+    #[test]
     fn print_builtin_call_with_pure() {
         let e = Expr::BuiltinCall {
             name: "+".into(),
