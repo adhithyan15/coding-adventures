@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1).  v0.2.0: ships BasicCirJit — a real bytecode JIT backend for jit-core."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1).  v0.2.0: ships BasicCirJit — a real bytecode JIT backend for jit-core.  v0.3.0: backend_compat e2e tests prove BASIC's IIR is accepted by every IIR-to-{wasm,jvm,clr,beam} validator."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }
@@ -11,3 +11,12 @@ interpreter-ir   = { path = "../interpreter-ir" }
 # Promoted from dev-dep — BasicCirJit lives in this crate.
 jit-core         = { path = "../jit-core" }
 vm-core          = { path = "../vm-core" }
+
+[dev-dependencies]
+# Used by tests/backend_compat.rs to prove BASIC programs are
+# accepted by every IIR-to-* backend validator (wasm / jvm / clr /
+# beam).
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+iir-to-beam           = { path = "../iir-to-beam" }
