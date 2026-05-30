@@ -125,52 +125,130 @@ core Grid {
   }
 
   // --- Actions (reducer cases) ------------------------------------
+  //
+  // Each non-trivial action delegates AT LEAST ONE decision to an
+  // extension point so the host can change behaviour without
+  // replacing the whole action.  Core authors should be LIBERAL about
+  // declaring extension points — every "this is the default; a real
+  // app might want something else" decision is one.
+
   action navigate ( row : number , col : number ) {
+    // Extension: navigation policy.  Default clamps to grid bounds;
+    // hosts that want wrap-around, frozen panes, or scroll-into-view
+    // override `clamp-navigation` to compute a different (row, col).
+    let target = ext clamp-navigation ( row , col , total-rows , total-cols ) -> ( number , number )
+
     // Cancel any in-flight edit when navigating elsewhere.
     when edit-row != -1 {
+      ext on-edit-cancelled ( edit-content , edit-row , edit-col )    // notify host (analytics, autosave)
       edit-row     = -1
       edit-col     = -1
       edit-content = ""
     }
-    selected-row = row
-    selected-col = col
+    selected-row = target . 0
+    selected-col = target . 1
+
+    ext on-selection-changed ( selected-row , selected-col )           // notify host
   }
 
   action editStart ( row : number , col : number ) {
-    edit-row     = row
-    edit-col     = col
-    edit-content = cells [ cell-key ( row , col ) ] or ""
+    // Extension: gate editing.  Default lets every cell edit; hosts
+    // that want read-only cells, permission checks, or row-locking
+    // override `can-edit` to return false.
+    let allowed = ext can-edit ( row , col ) -> bool
+    when allowed {
+      edit-row     = row
+      edit-col     = col
+      // Extension: seed the editor.  Default is the cell's stored
+      // value; hosts may seed a formula template or last-typed value.
+      edit-content = ext initial-edit-content ( row , col , cells [ cell-key ( row , col ) ] or "" ) -> text
+    }
   }
 
   action formulaChange ( value : text ) {
-    edit-content = value
+    // Extension: validate-as-you-type.  Default accepts every
+    // keystroke; hosts may sanitise, length-clamp, or reject.
+    edit-content = ext on-formula-change ( value , edit-row , edit-col ) -> text
   }
 
   action editCommit {
     when edit-row != -1 {
-      // Extension point: the host can replace this whole body.
-      // Default behaviour is "raw text in, raw text out".
-      ext on-commit ( edit-content , edit-row , edit-col ) -> text
-      // The `ext` keyword yields a value when the host extends it.
-      // Default impl: `default { edit-content }`.
+      // Extension: the value-transform on commit.  This is the
+      // "formula engine plug-in point" — host returns the evaluated
+      // / sanitised / parsed value to store.  Default is raw
+      // passthrough.
+      let stored = ext on-commit ( edit-content , edit-row , edit-col ) -> text
 
-      cells [ cell-key ( edit-row , edit-col ) ] = result
-      selected-row = min ( edit-row + 1 , total-rows - 1 )
+      cells [ cell-key ( edit-row , edit-col ) ] = stored
+
+      // Extension: post-commit cursor policy.  Default moves down
+      // one row (Excel convention).  Hosts may move right (Numbers),
+      // stay in place (some accessibility configs), or jump to a
+      // named cell.
+      let next = ext post-commit-cursor ( edit-row , edit-col , total-rows , total-cols ) -> ( number , number )
+      selected-row = next . 0
+      selected-col = next . 1
+
       edit-row     = -1
       edit-col     = -1
       edit-content = ""
+
+      ext on-cell-committed ( stored , next . 0 , next . 1 )          // notify host (autosave, recalc)
     }
   }
 
   action editCancel {
+    ext on-edit-cancelled ( edit-content , edit-row , edit-col )      // shared with navigate
     edit-row     = -1
     edit-col     = -1
     edit-content = ""
   }
 
-  // --- Explicit extension points the host can override -----------
+  // --- Explicit extension points the host can override ------------
+
+  extension-point clamp-navigation ( r : number , c : number , rows : number , cols : number )
+    -> ( number , number )
+  {
+    default {
+      // Default: clamp to [0, rows) × [0, cols)
+      ( max ( 0 , min ( r , rows - 1 ) ) , max ( 0 , min ( c , cols - 1 ) ) )
+    }
+  }
+
+  extension-point can-edit ( row : number , col : number ) -> bool {
+    default { true }
+  }
+
+  extension-point initial-edit-content ( row : number , col : number , current : text ) -> text {
+    default { current }
+  }
+
+  extension-point on-formula-change ( value : text , row : number , col : number ) -> text {
+    default { value }                                                  // accept every keystroke
+  }
+
   extension-point on-commit ( value : text , row : number , col : number ) -> text {
-    default { value }       // raw passthrough; host plugs formula engine
+    default { value }                                                  // raw text → raw text
+  }
+
+  extension-point post-commit-cursor ( row : number , col : number , rows : number , cols : number )
+    -> ( number , number )
+  {
+    default { ( min ( row + 1 , rows - 1 ) , col ) }                  // move down
+  }
+
+  // --- Void extension points (notifications; no return value) -----
+
+  extension-point on-selection-changed ( row : number , col : number ) {
+    default { }                                                        // no-op
+  }
+
+  extension-point on-cell-committed ( value : text , next-row : number , next-col : number ) {
+    default { }                                                        // no-op
+  }
+
+  extension-point on-edit-cancelled ( draft : text , row : number , col : number ) {
+    default { }                                                        // no-op
   }
 }
 ```
@@ -183,15 +261,18 @@ own UI33-G-* PR; together they define the language.
 | ID         | Construct                          | Notes                                                                                                           |
 |------------|------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | UI33-G-1   | `core NAME { ... }` top-level      | Mirrors `component` in `.mil`. One core per file.                                                               |
-| UI33-G-2   | `state { slot ... }` block         | Slot declarations with `name : type = default`. Reuses `.mil` types: text, number, bool, list<T>, map<K,V>.     |
+| UI33-G-2   | `state { slot ... }` block         | Slot declarations with `name : type = default`. Reuses `.mil` types: text, number, bool, list<T>, map<K,V>, tuples `(T1, T2)`. |
 | UI33-G-3   | `action NAME ( params ) { body }`  | Reducer case. Params are typed.                                                                                 |
 | UI33-G-4   | Assignment: `slot = expr`           | Updates a state slot.                                                                                            |
 | UI33-G-5   | `when COND { ... }`                | Conditional block (no `else` initially — keep grammar minimal).                                                  |
 | UI33-G-6   | Arithmetic + comparison ops        | `+ - * / == != < > <= >= && \|\|` over numbers/booleans. No coercion.                                            |
 | UI33-G-7   | `or` operator on map lookup        | `cells[k] or "default"` — keeps null-handling explicit. Lowers to backend-idiomatic `?.` / `??`.                |
-| UI33-G-8   | `ext NAME ( args ) -> type`        | Calls an extension point. Returns the host's value (or the `default { ... }` block when not overridden).        |
-| UI33-G-9   | `extension-point NAME ( params ) -> type { default { ... } }` | Declares an override hook with a fallback body.                                       |
+| UI33-G-8   | `ext NAME ( args ) -> type`        | Calls a value-returning extension point. Returns the host's value (or the `default { ... }` block).             |
+| UI33-G-9   | `extension-point NAME (params) -> type { default { ... } }` | Declares a value-returning override hook with a fallback body.                               |
 | UI33-G-10  | Built-in fns                       | `min`, `max`, `abs`, `cell-key`, `length`, ... — small standard library. Each lowers per backend.               |
+| UI33-G-11  | `let NAME = expr`                  | Local binding for action-scoped intermediate values. Read-only, never re-bound. Scoped to the enclosing `{ }`.   |
+| UI33-G-12  | Tuple expression `( a , b )` + projection `t . 0` / `t . 1` | Cheap multi-return without record types. Two-element tuples only in v0.1.0.     |
+| UI33-G-13  | `ext NAME ( args )` (no `-> type`) + `extension-point NAME ( ... ) { default { } }` | Void extension point — host notification hook. Default body is empty. |
 
 ### 3.3 Per-backend emission
 
@@ -213,7 +294,146 @@ exact action semantics across backends. A reducer expressed once in
 `.core` produces seven structurally identical state machines, each
 written in its target language's natural pattern.
 
-### 3.4 What `.core` deliberately does NOT include
+### 3.4 Override mechanisms — three layers of escape hatch
+
+Business logic changes. Cores ship sensible defaults but every host
+will eventually need to bend something. The spec offers three layers
+of override, in increasing power and decreasing fine-grain control:
+
+#### Layer 1 — Named extension points (the everyday case)
+
+This is what §3.1's example uses throughout. Core author declares
+`extension-point NAME ( ... ) -> type { default { ... } }` at every
+meaningful decision; host writes a function with the matching name in
+its host file. No DSL change, no grammar, just a function.
+
+| Pros                                                           | Cons                                                                                              |
+|----------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| Typed, named, intentional. Host's IDE auto-completes the hook. | Only the points the core author thought to expose are overridable.                                |
+| Default body is statically known — easy reasoning.             | Adding a new extension point requires a core release (which downstreams must opt into).           |
+| Composable — extension-point bodies can call other ext points. | If a real-world need lands between two ext points, the host has to either request a new one or fall to Layer 2/3. |
+
+**Rule of thumb for core authors.** Declare an extension point at
+every `// TODO: should this be configurable?` moment. Cores should be
+generous — extension-point declarations have near-zero runtime cost
+(they're function dispatch) and saying "you can override this" up
+front is cheaper than retrofitting later.
+
+#### Layer 2 — Dispatcher-level action override (the escape hatch)
+
+When the core's decomposition doesn't match the host's reality, the
+host can replace a whole action body from the `.disp` file:
+
+```
+dispatcher VisiCalc {
+  uses core mosaic-core-grid as grid
+
+  // Replace the editCommit action body entirely. The host's body has
+  // access to the same state slots and built-ins as the core's body,
+  // PLUS the host can call into the original via `super.editCommit`.
+  override action grid.editCommit {
+    when edit-row != -1 {
+      let stored = parse-and-evaluate ( edit-content )
+      let row-tag = compute-row-tag ( edit-row , cells )            // host extra
+      cells [ cell-key ( edit-row , edit-col ) ]      = stored
+      cells [ "tag:" + cell-key ( edit-row , edit-col ) ] = row-tag // host extra slot
+      edit-row     = -1
+      edit-col     = -1
+      edit-content = ""
+    }
+  }
+}
+```
+
+This is the escape hatch. Use it when:
+
+- The core's extension points don't carve out the right shape AND
+- Bumping the core to add a new extension point isn't an option (you
+  don't own the core, or you need to ship today).
+
+The override body lives in the `.disp` file, not in host code, so it
+still benefits from the per-backend emission machinery. It also means
+the override is **statically visible** — anyone reading the dispatcher
+file sees that the host has diverged from the core's default, and
+upgrading the core is a deliberate "do my overrides still apply?"
+exercise rather than a silent breakage.
+
+| Pros                                                           | Cons                                                                                              |
+|----------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| No core change needed. Host owns the divergence.               | Override must keep state-shape compatibility with the core (no rogue slots).                      |
+| Static, in-tree, reviewable.                                   | Defeats some of "framework reasons about the business logic" — overridden actions are opaque to core-level analysis. |
+| `super.NAME` lets the override delegate to the original.       | Upgrading the core may silently change semantics around the overridden action.                    |
+
+#### Layer 3 — State default overrides (configuration)
+
+The cheapest and most common kind of "I want different behaviour":
+change a default. Settable on the `uses core ... as ...` line:
+
+```
+dispatcher VisiCalc {
+  uses core mosaic-core-grid as grid (
+    total-rows = 1000 ,
+    total-cols = 100 ,
+    edit-row   = -1                  // unchanged from core default, but explicit
+  )
+}
+```
+
+This is plain configuration — no DSL machinery, no override body, just
+overriding initial values. Useful for sizing, default modes, feature
+flags exposed as state slots.
+
+The core declares which state slots are publicly-overridable by
+marking them with `config` instead of relying on convention. (Slots
+without `config` can still be touched by Layer 2 overrides but won't
+appear in IDE autocomplete on `uses core (...)`.) Sketch:
+
+```
+state {
+  config total-rows  : number = 100
+  config total-cols  : number = 26
+  cells              : map<text, text>      // not config — internal
+  edit-row           : number = -1           // not config — internal
+  ...
+}
+```
+
+#### How the three layers compose
+
+A real-world VisiCalc pilot might use all three:
+
+```
+dispatcher VisiCalc {
+  uses core mosaic-core-grid as grid (
+    total-rows = 10000 ,                                       // Layer 3
+    total-cols = 200
+  )
+
+  // Layer 1 hooks (declared in host file, not here):
+  //   on-commit          → call formula engine
+  //   post-commit-cursor → move right on Tab, down on Enter
+  //   can-edit           → check workbook permissions
+
+  // Layer 2 escape hatch:
+  override action grid.editCommit {
+    // Custom: write to both cell store AND undo log atomically
+    when edit-row != -1 {
+      let stored = ext on-commit ( edit-content , edit-row , edit-col ) -> text
+      let undo-frame = capture-undo ( cells , edit-row , edit-col )
+      cells [ cell-key ( edit-row , edit-col ) ] = stored
+      ext push-undo-frame ( undo-frame )
+      super . post-edit-commit-cleanup ( )                     // delegate the rest
+    }
+  }
+}
+```
+
+The combination is intentional: configuration goes in §3.5.3, named
+hooks go in §3.5.1 (host file), heavyweight divergence goes in §3.5.2
+(dispatcher file). Reading the dispatcher tells you exactly how much
+the host has diverged from the core.
+
+### 3.6 What `.core` deliberately does NOT include
 
 - **Views.** `.core` cannot lay out widgets. That's `.mll`'s job.
 - **Async / effects.** No `await`, no Promise, no I/O. Side effects
@@ -292,6 +512,25 @@ Implicit binding kicks in when:
 When either fails, the author must add an explicit `bind` line, and
 omitting it produces a compile error pointing at the unmatched emit.
 
+### 4.4 Override grammar in `.disp`
+
+Per §3.5, the dispatcher file is also where the host applies state-
+default overrides (Layer 3) and action overrides (Layer 2). The
+grammar:
+
+| ID         | Construct                                          | Notes                                                                                                                |
+|------------|----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| UI33-D-6   | `uses core NAME as ALIAS ( slot = expr , ... )`    | State-default override list. Each slot must be declared `config` in the core. Type-checked against the core.         |
+| UI33-D-7   | `override action ALIAS . NAME { body }`            | Replace an action's body. Body uses the same grammar as `.core` action bodies (assignments, `when`, `let`, `ext`).   |
+| UI33-D-8   | `super . NAME ( args )` inside an override         | Call into the original core action (or an extension point) from within an override. Solves the "do most of the default + tweak this" case without copy-paste. |
+
+A dispatcher with both Layer 2 + Layer 3 overrides is the heaviest
+form a host file should reach for; if it grows past ~4 action
+overrides on a single core, that's a strong signal the core itself
+should add extension points and the overrides should retire. The
+codegen will warn (`UI33-W-1`) when a single dispatcher has more than
+3 overrides against a single core.
+
 ## 5. Wiring into UI32's `--emit-project`
 
 UI32 already specifies that `mosaic-compile --backend X --emit-project`
@@ -339,6 +578,17 @@ This is the validating end-to-end run. If `mosaic-core-grid` cannot
 replace VisiCalc's reducer across all seven backends without
 regressions in the functional verification suite (`preview_eval` on
 React, screenshot diffing on the others), the spec is wrong.
+
+**Override exercise.** The pilot must also prove all three override
+layers (§3.5) on at least one backend. VisiCalc-React is the natural
+candidate: it should use a Layer 3 default override (`total-rows =
+1000` to demonstrate sizing config), a Layer 1 host hook (`on-commit`
+calls a tiny in-tree expression evaluator like `=1+2` → `"3"` so we
+can see business logic actually changing), and a Layer 2 dispatcher
+override on `editStart` (e.g. seed editing with `=` if the user types
+`=` as the first character). If any of the three layers proves
+awkward in practice, the override mechanism gets reworked before the
+other six backends consume the same patterns.
 
 ## 7. Migration strategy — two-track
 
@@ -396,6 +646,11 @@ Sequential within the phase; each PR is small.
 | UI33-D-3  | `mounts component NAME from PATH`                               |
 | UI33-D-4  | Auto-derivation of implicit emit ↔ action bindings              |
 | UI33-D-5  | `bind component.slot ← core.slot` slot wiring + expressions     |
+| UI33-D-6  | State-default override list on `uses core (...)` (Layer 3)      |
+| UI33-D-7  | `override action ALIAS.NAME { body }` (Layer 2)                 |
+| UI33-D-8  | `super.NAME(args)` delegation inside override body              |
+| UI33-D-9  | `config` slot marker in `.core` + IDE-completion metadata for `.disp` (Layer 3 type-check) |
+| UI33-D-W1 | Codegen warning when a dispatcher has > 3 overrides per core (signals core should add extension points) |
 
 ### Phase 3 — first end-to-end backend (React)
 
@@ -440,8 +695,16 @@ For each backend X ∈ {swiftui, flutter, qt, html, webcomp, xaml}:
 - **`.core` grammar scope creep.** The temptation to add async, derived
   state, selectors, computed properties, and a full expression
   language is real. v0.1.0 deliberately stays minimal — the
-  validating question is "does it express
-  VisiCalc's reducer?". If yes, ship; defer everything else.
+  validating question is "does it express VisiCalc's reducer **and
+  exercise all three override layers**?". If yes, ship; defer
+  everything else.
+- **Extension-point granularity calibration.** §3.5.1 advises core
+  authors to be generous with extension points. Too few and the
+  Layer 2 escape hatch becomes the default; too many and the core
+  feels like a parameter soup. The pilot will iterate the
+  granularity for `mosaic-core-grid`; future cores should follow the
+  pattern it lands on (one extension point per "this is the default
+  policy" decision is a reasonable starting heuristic).
 - **Cross-backend semantic drift.** Seven emitters must produce
   semantically identical state machines from one `.core` source.
   This needs a shared property-test suite where every backend
