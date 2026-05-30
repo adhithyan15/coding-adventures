@@ -509,6 +509,65 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`.  Grammar is
+    // unchanged (`module_statement = "module" NAME { !"end" statement }
+    // "end"`); these tests pin the parse properties the 14d lowerer
+    // relies on (name extraction, def/non-def body children).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_module_name_is_first_name_token() {
+        // `module Config; end` — the module name is the first Name
+        // token (the `module` keyword is a Keyword-type token).
+        let ast = parse_ruby("module Config\nend");
+        let m = find_statement_inner(&ast, "module_statement")
+            .expect("expected module_statement");
+        let name_tok = m.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("Config"));
+    }
+
+    #[test]
+    fn test_parse_module_body_with_def() {
+        // A method def inside a module parses as a `def_statement` body
+        // child (the lowerer hoists it to a top-level Function).
+        let ast = parse_ruby("module M\n  def helper\n  end\nend");
+        let m = find_statement_inner(&ast, "module_statement")
+            .expect("expected module_statement");
+        let names = body_inner_rule_names(m);
+        assert!(
+            names.iter().any(|r| r == "def_statement"),
+            "expected a def_statement in the module body; got {:?}",
+            names
+        );
+    }
+
+    #[test]
+    fn test_parse_module_body_mixes_def_and_assignment() {
+        // `module M; VERSION = 3; def helper; end; end` — the body
+        // holds both an `assignment` (stays in ModuleDef.body) and a
+        // `def_statement` (hoisted).
+        let ast = parse_ruby("module M\n  VERSION = 3\n  def helper\n  end\nend");
+        let m = find_statement_inner(&ast, "module_statement")
+            .expect("expected module_statement");
+        let names = body_inner_rule_names(m);
+        assert!(
+            names.iter().any(|r| r == "assignment"),
+            "expected an assignment in the module body; got {:?}",
+            names
+        );
+        assert!(
+            names.iter().any(|r| r == "def_statement"),
+            "expected a def_statement in the module body; got {:?}",
+            names
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 14a (FC) — empty `class Foo; end` first-class lowering.
     //
     // The grammar is unchanged (the `class_statement` rule already

@@ -179,6 +179,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::ClassDef { span, .. } => {
             panic!("python backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
         }
+        Stmt::ModuleDef { span, .. } => {
+            panic!("python backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -378,6 +381,9 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
             // walrus-expression form regardless.
             Stmt::ClassDef { span, .. } => {
                 panic!("python backend (walrus path) reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+            }
+            Stmt::ModuleDef { span, .. } => {
+                panic!("python backend (walrus path) reached SIR17 module-def statement at {} — capability check should have rejected it", span);
             }
         }
     }

@@ -186,6 +186,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::ClassDef { span, .. } => {
             panic!("rust backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
         }
+        Stmt::ModuleDef { span, .. } => {
+            panic!("rust backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -513,6 +516,9 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         // form regardless.
         Stmt::ClassDef { span, .. } => {
             panic!("rust backend (inline) reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        }
+        Stmt::ModuleDef { span, .. } => {
+            panic!("rust backend (inline) reached SIR17 module-def statement at {} — capability check should have rejected it", span);
         }
     }
 }

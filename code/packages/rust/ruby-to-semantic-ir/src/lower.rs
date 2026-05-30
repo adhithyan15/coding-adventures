@@ -120,6 +120,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // Phase 14a (FC) — `class Foo; end` lowers to
         // `Stmt::ClassDef` and triggers the `Classes` feature.
         Feature::Classes,
+        // Phase 14d (FC) — `module M; end` lowers to
+        // `Stmt::ModuleDef` and triggers the `Modules` feature.
+        Feature::Modules,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -274,13 +277,11 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     return true;
                 }
             }
-            Stmt::ClassDef { body, .. } => {
-                // A class declaration body is itself a `Vec<Stmt>`.
-                // Recurse over each contained statement using a
-                // synthetic wrapper Block, mirroring the loop /
-                // pattern-stmt arms above.  Phase 14a always lowers
-                // an empty body so this loop is a no-op; included
-                // for forward-compatibility with later phases.
+            Stmt::ClassDef { body, .. } | Stmt::ModuleDef { body, .. } => {
+                // A class/module declaration body is itself a
+                // `Vec<Stmt>`.  Recurse over each contained statement
+                // using a synthetic wrapper Block, mirroring the loop /
+                // pattern-stmt arms above.
                 for inner in body {
                     let synthetic = Block {
                         stmts: vec![inner.clone()],
@@ -528,17 +529,16 @@ impl Lowerer {
                 // the body continue to be hoisted to top-level
                 // `Function`s — SIR v0 has no method-as-statement
                 // node, so a method can't live inside `body`
-                // (a `Vec<Stmt>`).  The hoisting is now done
-                // per-child inside `lower_class_body_statements`
-                // (replacing the whole-body `collect_def_statements_from_body`
-                // pre-pass the 14a arm used), so each nested `def` is
-                // hoisted exactly once and every non-`def` statement
-                // is preserved in `body` instead of being dropped.
+                // (a `Vec<Stmt>`).  The hoisting is done per-child
+                // inside `lower_decl_body_statements` (shared with
+                // `module_statement`), so each nested `def` is hoisted
+                // exactly once and every non-`def` statement is
+                // preserved in `body` instead of being dropped.
                 let name = self.extract_class_name(node)?;
                 // Phase 14c — optional `< Bar` superclass clause.
                 let superclass = self.extract_superclass(node);
                 self.features_used.insert(Feature::Classes);
-                let body = self.lower_class_body_statements(node)?;
+                let body = self.lower_decl_body_statements(node)?;
                 Ok(Stmt::ClassDef {
                     name,
                     superclass,
@@ -547,28 +547,30 @@ impl Lowerer {
                 })
             }
             "module_statement" => {
-                // Phase 6f: module declarations parse but don't
-                // yet introduce a real namespace in SIR v0 (Phase
-                // 14d will land `Stmt::ModuleDef`).  We walk the
-                // body so nested `def` declarations *are* hoisted to
-                // top-level Functions (matching the def_statement
-                // behaviour at the program level), then emit a no-op
-                // ExprStmt(NilLit) in place of the module so the
-                // main-body statement stream stays in sync with the
-                // source line count.
+                // Phase 14d (FC): `module M … end` now lowers to a
+                // first-class `Stmt::ModuleDef { name, body, span }`,
+                // structurally a `ClassDef` without inheritance
+                // (replacing the Phase 6f NilLit no-op).
                 //
-                // Caveat (documented for backends): the hoisted
-                // methods land at top-level, not nested under the
-                // module name.  In real Ruby, `module M; def bar`
-                // makes `bar` a module-level method of `M`.  v0 SIR
-                // collapses the namespace; the validator still
-                // accepts the result because every function has a
-                // unique name and `main` is the only export.
-                self.collect_def_statements_from_body(node)?;
-                Ok(Stmt::ExprStmt {
-                    expr: Expr::NilLit {
-                        span: self.span_of(node),
-                    },
+                // Body handling is identical to a class
+                // (`lower_decl_body_statements`): method `def`s are
+                // hoisted to top-level `Function`s — SIR v0 has no
+                // method-as-statement node — while every non-`def`
+                // statement is preserved in `body` in source order.
+                //
+                // Caveat (documented for backends, unchanged from 6f):
+                // the hoisted methods land at top-level, not nested
+                // under the module name.  In real Ruby, `module M; def
+                // bar` makes `bar` a module-level method of `M`.  v0 SIR
+                // collapses the namespace; the validator still accepts
+                // the result because every function has a unique name
+                // and `main` is the only export.
+                let name = self.extract_module_name(node)?;
+                self.features_used.insert(Feature::Modules);
+                let body = self.lower_decl_body_statements(node)?;
+                Ok(Stmt::ModuleDef {
+                    name,
+                    body,
                     span: self.span_of(node),
                 })
             }
@@ -1556,55 +1558,22 @@ impl Lowerer {
         Ok(())
     }
 
-    /// Phase 6f: walk the body of a `class_statement` / `module_statement`
-    /// and hoist every nested `def_statement` to a top-level `Function`
-    /// on `self.user_functions`.  This mirrors the program-level
-    /// `collect_def_statements` pre-pass — same hoisting semantics,
-    /// same scope-isolation behaviour (each method body gets a fresh
-    /// `declared_locals` / `current_params`).  Called from
-    /// `lower_statement_inner` when the class/module is first reached,
-    /// not from the global pre-pass, so each nested `def` is hoisted
-    /// exactly once.
-    fn collect_def_statements_from_body(
-        &mut self,
-        body_owner: &GrammarASTNode,
-    ) -> Result<(), RubyLowerError> {
-        for child in &body_owner.children {
-            let stmt = match child {
-                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
-                _ => continue,
-            };
-            let inner = match self.first_node_child(stmt) {
-                Some(n) => n,
-                None => continue,
-            };
-            // Phase 7c — both `def_statement` and `endless_def_statement`
-            // are hoisted from inside class / module bodies.
-            match inner.rule_name.as_str() {
-                "def_statement" => {
-                    let func = self.lower_def_statement(inner)?;
-                    self.user_functions.push(func);
-                }
-                "endless_def_statement" => {
-                    let func = self.lower_endless_def_statement(inner)?;
-                    self.user_functions.push(func);
-                }
-                "class_statement" | "module_statement" => {
-                    // Nested class/module — recurse so deeply-nested
-                    // `def`s still get hoisted.
-                    self.collect_def_statements_from_body(inner)?;
-                }
-                _ => {}
-            }
-        }
-        Ok(())
-    }
+    // Phase 6f's `collect_def_statements_from_body` (a whole-body
+    // recursive def-hoisting pre-pass) was retired in Phase 14b/14d:
+    // `lower_decl_body_statements` now hoists each declaration's direct
+    // `def` children itself and delegates nested `class`/`module`
+    // declarations to the normal dispatch (whose own arm hoists their
+    // direct `def`s), so every method is still hoisted exactly once
+    // without a separate pre-pass.
 
-    /// Phase 14b (FC) — lower a `class_statement` body into the
-    /// `Vec<Stmt>` carried by `Stmt::ClassDef.body`.
+    /// Phase 14b/14d (FC) — lower a `class_statement` *or*
+    /// `module_statement` body into the `Vec<Stmt>` carried by
+    /// `Stmt::ClassDef.body` / `Stmt::ModuleDef.body`.  Both
+    /// declaration forms share identical body semantics, so they share
+    /// this helper.
     ///
-    /// Walks the class body's `statement` children once, in source
-    /// order:
+    /// Walks the declaration body's `statement` children once, in
+    /// source order:
     ///
     /// - `def_statement` / `endless_def_statement` are **hoisted** to
     ///   top-level `Function`s on `self.user_functions` (SIR v0 has no
@@ -1617,14 +1586,12 @@ impl Lowerer {
     ///   dispatch used for the program body and pushed onto `body`,
     ///   so it is preserved rather than discarded.
     ///
-    /// Hoisting here is per-direct-child (not the recursive
-    /// whole-body `collect_def_statements_from_body` walk the Phase 14a
-    /// arm used).  A nested `class`/`module` statement is lowered via
-    /// the normal dispatch, whose own arm hoists *its* direct `def`s —
-    /// so every method is hoisted exactly once and no name is
-    /// double-registered (which would trip the validator's function
-    /// name-uniqueness check).
-    fn lower_class_body_statements(
+    /// Hoisting here is per-direct-child.  A nested `class`/`module`
+    /// statement is lowered via the normal dispatch, whose own arm
+    /// hoists *its* direct `def`s — so every method is hoisted exactly
+    /// once and no name is double-registered (which would trip the
+    /// validator's function name-uniqueness check).
+    fn lower_decl_body_statements(
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<Vec<Stmt>, RubyLowerError> {
@@ -1675,6 +1642,28 @@ impl Lowerer {
         });
         let name_token = name_token.ok_or_else(|| RubyLowerError {
             message: "class_statement missing class-name token".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        Ok(name_token.value.clone())
+    }
+
+    /// Phase 14d (FC) — extract the module name from a
+    /// `module_statement` AST node (`module M … end`).
+    ///
+    /// Shape: `KEYWORD("module") NAME { !"end" statement } "end"`.  The
+    /// name is the first `TokenType::Name` token — symmetric with
+    /// `extract_class_name`, but with a module-specific error message.
+    fn extract_module_name(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Result<String, RubyLowerError> {
+        let name_token = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+            _ => None,
+        });
+        let name_token = name_token.ok_or_else(|| RubyLowerError {
+            message: "module_statement missing module-name token".to_string(),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         })?;

@@ -263,6 +263,22 @@ pub enum Stmt {
         body: Vec<Stmt>,
         span: Span,
     },
+
+    /// `module Name; body; end` — a module (namespace / mixin)
+    /// declaration.  Structurally a `ClassDef` without inheritance:
+    /// a named declaration whose `body` is a list of statements.
+    ///
+    /// Introduced by the Ruby frontend's Phase 14d.  Like `ClassDef`,
+    /// method `def`s inside the body are hoisted to top-level
+    /// `Function`s by the lowerer (SIR v0 has no method-as-statement
+    /// node); the `body` carries the module's *non-def* statements in
+    /// source order.  A module has no superclass, so there is no
+    /// `superclass` field.
+    ModuleDef {
+        name: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -278,6 +294,7 @@ impl Stmt {
             Stmt::SeqSet { span, .. } => span,
             Stmt::MapSet { span, .. } => span,
             Stmt::ClassDef { span, .. } => span,
+            Stmt::ModuleDef { span, .. } => span,
         }
     }
 }

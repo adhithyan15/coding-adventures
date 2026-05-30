@@ -228,6 +228,13 @@ where
                 walk_intrinsics_in_stmt(s, f, depth + 1);
             }
         }
+        Stmt::ModuleDef { body, .. } => {
+            // Same recursion as ClassDef for module bodies (Ruby
+            // Phase 14d).
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
     }
 }
 

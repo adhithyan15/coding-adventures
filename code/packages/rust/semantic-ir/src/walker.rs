@@ -130,6 +130,13 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
                 v.visit_stmt(stmt);
             }
         }
+        Stmt::ModuleDef { body, .. } => {
+            // Module body is a list of statements — same recursion as
+            // ClassDef (Ruby Phase 14d).
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+        }
     }
 }
 

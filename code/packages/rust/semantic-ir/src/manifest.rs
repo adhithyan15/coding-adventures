@@ -50,6 +50,11 @@ pub enum Feature {
     /// `class Foo; end`.  Future Ruby phases extend the body shape
     /// without renaming the feature.
     Classes,
+    /// Module contains at least one `Stmt::ModuleDef`.  Phase 14d
+    /// (Ruby) introduces this feature with `module M … end`.
+    /// Distinct from `Classes`: a Ruby `module` is a namespace/mixin,
+    /// not an instantiable class.
+    Modules,
 }
 
 impl Feature {
@@ -72,6 +77,7 @@ impl Feature {
         Feature::Maps,
         Feature::ShortCircuit,
         Feature::Classes,
+        Feature::Modules,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -94,6 +100,7 @@ impl Feature {
             Feature::Maps => "maps",
             Feature::ShortCircuit => "short-circuit",
             Feature::Classes => "classes",
+            Feature::Modules => "modules",
         }
     }
 
