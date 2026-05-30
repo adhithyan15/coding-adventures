@@ -2,6 +2,101 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.42.0] - 2026-05-30
+
+### Added (Phase 14c (FC) — inheritance `class Foo < Bar`)
+
+`class Foo < Bar` now lowers to `Stmt::ClassDef` with
+`superclass: Some("Bar")` (semantic-ir 0.3.0's new field); a base class
+`class Foo` keeps `superclass: None`.
+
+- New `extract_superclass` helper scans the `class_statement` node's
+  *direct* child tokens for the `<` separator (a `Name`-type token with
+  value `"<"`) and returns the value of the next `Name` token — the
+  superclass.  Only direct tokens are inspected, so a `<` comparison
+  *inside* a body statement (`a < b`) is never mistaken for the
+  superclass separator (body statements are `statement` nodes, not bare
+  tokens).
+- Inheritance composes with Phase 14b: a subclass body still hoists its
+  `def`s to top-level Functions and preserves non-def statements in
+  `ClassDef.body`.
+
+New tests (+5): `class_with_superclass_records_parent_name`,
+`base_class_has_no_superclass`,
+`subclass_with_body_records_superclass_and_hoists_methods`,
+`subclass_passes_sir_validator` (E2E lower → validate),
+`comparison_in_class_body_is_not_mistaken_for_superclass`.
+Test count: 193 → 198 (+5).
+
+## [0.41.0] - 2026-05-30
+
+### Changed (Phase 14b (FC) — class body with method defs + statements)
+
+`class Foo … end` now lowers to `Stmt::ClassDef` with a **populated**
+`body` (Phase 14a always emitted `body: vec![]`).  The class body's
+*executable* statements — constant/expression assignments, bare
+expressions, nested `class`/`module` declarations, loops, … — are
+lowered in source order and preserved in `ClassDef.body`, instead of
+being silently dropped.
+
+- New `lower_class_body_statements` helper walks the class body's
+  `statement` children once:
+  - `def_statement` / `endless_def_statement` are **hoisted** to
+    top-level `Function`s (unchanged — SIR v0 has no
+    method-as-statement node, so a method can't live inside a
+    `Vec<Stmt>`), contributing nothing to `body`.
+  - every other statement is lowered via the shared
+    `lower_statement_inner_multi` dispatch and pushed onto `body`.
+- The `class_statement` arm no longer calls the recursive
+  whole-body `collect_def_statements_from_body` pre-pass; hoisting is
+  now per-direct-child.  A nested `class`/`module` is lowered via the
+  normal dispatch (whose own arm hoists *its* direct `def`s), so every
+  method is hoisted **exactly once** — no double-registration that
+  would trip the validator's function-name-uniqueness check.
+- A method-*only* class still produces an empty `body` (the methods
+  hoist); the `module_statement` arm is unchanged (still a NilLit
+  no-op + def hoist, pending Phase 14d's `ModuleDef`).
+
+New tests (4): `class_body_preserves_executable_statement_and_hoists_method`,
+`class_body_preserves_multiple_statements_in_source_order`,
+`class_with_body_statements_passes_sir_validator` (E2E lower → validate),
+`nested_class_methods_hoisted_exactly_once`.  The existing
+`class_with_method_body_still_emits_class_def_and_hoists_method` is
+retained (method-only → empty body) with an updated comment.
+
+Test count: 189 → 193 (+4).
+
+## [0.40.0] - 2026-05-29
+
+### Added (Phase 14a (FC) — empty `class Foo; end`)
+
+`class Foo; end` now lowers to a first-class
+`Stmt::ClassDef { name: "Foo", body: vec![], span }` (semantic-ir
+0.2.0's new SIR17 node), replacing the pre-14a behaviour where a
+class declaration lowered to a no-op `ExprStmt(NilLit)`.
+
+- New `extract_class_name` helper pulls the class name from the
+  first `TokenType::Name` token of a `class_statement` node (the
+  `class` keyword is `TokenType::Keyword`, so it is skipped).
+- Emitting a `ClassDef` requests `Feature::Classes`, which is now
+  materialised into the module manifest alongside the existing
+  feature tally.
+- **Empty-body only:** Phase 14a always lowers `body: vec![]`.  The
+  pre-existing Phase 6f method-hoisting fallback is preserved — a
+  non-empty class body still hoists its `def`s to top-level
+  `Function`s, leaving the `ClassDef` body empty — so older fixtures
+  with method bodies continue to validate.  Phase 14b will populate
+  `body` directly and retire the hoist-as-fallback path.
+- `module M; end` is unchanged: it continues to lower to the Phase
+  6f `NilLit` no-op until a later phase introduces a module node.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 184 → 189 (+5): empty-class → ClassDef,
+  `Feature::Classes` request, validator E2E, verbatim-name
+  preservation, class-with-method-body (ClassDef + hoist), and a
+  pin that `module` still lowers to NilLit.
+
 ## [0.39.0] - 2026-05-28
 
 ### Added (Phase 9c (FC) — single-RHS tuple destructure)

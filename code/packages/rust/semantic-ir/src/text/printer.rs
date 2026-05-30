@@ -224,6 +224,22 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             print_expr_inline_depth(out, value, depth + 1);
             out.push(')');
         }
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            // `(class-def Name)` for the empty base-class case;
+            // `(class-def Name (< Super))` when the class inherits
+            // (Ruby Phase 14c `class Foo < Bar`); body statements, if
+            // any, are printed one per line after the optional
+            // superclass clause.
+            let _ = write!(out, "(class-def {}", name);
+            if let Some(sup) = superclass {
+                let _ = write!(out, " (< {})", sup);
+            }
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
     }
 }
 
@@ -652,5 +668,81 @@ mod tests {
         print_block(&mut out, &block, 0);
         assert!(out.contains("(let x (int 1))"));
         assert!(out.contains("(var-ref x local)"));
+    }
+
+    // ── SIR17: class declarations ──────────────────────────────────
+
+    #[test]
+    fn print_empty_class_def() {
+        // `class Foo; end` → `(class-def Foo)` (no body lines).
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ClassDef {
+                name: "Foo".into(),
+                superclass: None,
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(class-def Foo)"),
+            "expected `(class-def Foo)` in output, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn print_class_def_with_body_stmt() {
+        // Forward-compat: a populated body prints each statement
+        // indented under the class-def head.  Phase 14a never emits
+        // this shape, but the printer supports it.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ClassDef {
+                name: "Bar".into(),
+                superclass: None,
+                body: vec![Stmt::LetBinding {
+                    name: "y".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: s_.clone() },
+                    span: s_.clone(),
+                }],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(out.contains("(class-def Bar"));
+        assert!(out.contains("(let y (int 2))"));
+    }
+
+    #[test]
+    fn print_class_def_with_superclass() {
+        // Ruby Phase 14c: `class Foo < Bar` prints the superclass
+        // clause `(< Bar)` right after the class name.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ClassDef {
+                name: "Foo".into(),
+                superclass: Some("Bar".into()),
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(class-def Foo (< Bar))"),
+            "expected `(class-def Foo (< Bar))` in output, got:\n{}",
+            out
+        );
     }
 }

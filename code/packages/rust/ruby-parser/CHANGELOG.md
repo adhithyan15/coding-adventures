@@ -2,6 +2,82 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.40.0] - 2026-05-30
+
+### Added (Phase 14c (FC) — inheritance `class Foo < Bar`)
+
+Grammar change: `class_statement` gains an optional superclass clause:
+
+```
+class_statement = "class" NAME [ "<" NAME ] { !"end" statement } "end" ;
+```
+
+The `"<"` literal matches by *value* — the lexer reclassifies `<` to a
+`Name`-type token (the comparison-operator trick), and the grammar's
+literal matcher compares the token value, so `"<"` matches
+transparently.  `packages/rust/ruby-parser/src/_grammar.rs` was
+regenerated via `grammar-tools compile-grammar`.
+
+New parser tests (+3):
+
+- `test_parse_class_with_superclass` — `class Dog < Animal; end` parses
+  with the `<` separator and superclass `Animal` tokens in the class
+  header, and zero body statements.
+- `test_parse_base_class_has_no_superclass_separator` — a base class
+  `class Widget; end` carries no `<` token.
+- `test_parse_subclass_with_method_body` — inheritance composes with a
+  non-empty body (`<` separator + a `def_statement` body child).
+
+A `body_has_token_value` test helper checks for a direct child token by
+value.  Test count: 161 → 164 (+3).
+
+## [0.39.0] - 2026-05-30
+
+### Added (Phase 14b (FC) — class body with method defs + statements)
+
+No grammar changes — the `class_statement` body
+(`{ !"end" statement }`) already accepts any statement, so a class
+mixing method definitions and executable statements parses without
+a grammar edit.  Phase 14b adds parser coverage pinning the body
+shape the 14b lowerer walks (one `statement` child per source line,
+each wrapping its own inner rule):
+
+- `test_parse_class_body_mixes_def_and_assignment` — `class Foo;
+  MAX = 10; def bar; end; end` parses to a body holding both an
+  `assignment` and a `def_statement`.
+- `test_parse_class_body_multiple_assignments_preserved` — two
+  consecutive constant assignments parse as two distinct body
+  `statement` children, in source order.
+- `test_parse_nested_class_inside_class_body` — a `class` declared
+  inside another class parses as a nested `class_statement` body
+  child (the shape the lowerer recurses through).
+
+A `body_inner_rule_names` test helper collects the inner-rule name
+of each direct body statement (one level deep).
+
+Test count: 158 → 161 (+3).
+
+## [0.38.0] - 2026-05-29
+
+### Added (Phase 14a (FC) — empty `class Foo; end` grammar coverage)
+
+No grammar changes — the existing `class_statement` rule
+(`"class" NAME { !"end" statement } "end"`) already accepts an
+empty body (the repetition matches zero statements).  Phase 14a
+adds parser coverage for the exact parse properties the lowerer
+depends on:
+
+- `test_parse_empty_class_camelcase_name` — a multi-character
+  CamelCase class name is extracted whole from the first Name token
+  (the `class` keyword token is not mistaken for it).
+- `test_parse_empty_class_has_zero_body_statements` — the empty
+  class has zero `statement` children in its body.
+- `test_parse_empty_class_followed_by_top_level_stmt` — an empty
+  class does not swallow a following top-level statement; the
+  `!"end"` boundary keeps `x = 1` a sibling assignment.
+
+Tests: 155 → 158 (+3).
+
 ## [0.37.0] - 2026-05-28
 
 ### Added (Phase 9c (FC) — single-RHS tuple destructure grammar coverage)

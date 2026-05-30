@@ -38,10 +38,22 @@
 // onEditCommit / onEditCancel are forwarded by the inline cell's
 // HostInput so the host's reducer can react to the user pressing
 // Enter or Escape inside the cell editor.  The App's reducer in
-// src/app/state.ts already has the matching action types
-// (`editCommit { value }` and `editCancel`) — they were dispatched
+// src/app/state.ts has matching action types — they were dispatched
 // only from FormulaBar before; now they're also dispatched from
 // per-cell editing.
+//
+// v0.2.0 FOLLOW-UP (this fix) — the inline cell HostInput is also
+// wired to onFormulaChange so each keystroke updates the host's
+// `edit-content` slot.  Without this, the React/HostInput emitter
+// generates a controlled <input value={v} /> with NO onChange, and
+// the cell input silently rejects every keystroke.  onEditCommit
+// then reads from `edit-content` (NOT from a dispatch payload),
+// which matches the FormulaBar's commit semantics — UI28-1 §6.4.
+//
+// onEditCommit carries no payload now: HostInput's `onCommit:` emit
+// is intentionally void (see mosaic-emit-react::emit_host_input_jsx),
+// so the host's reducer reads the buffered `state.editContent`
+// instead of `action.value`.
 
 component Grid {
   // Display data (host computes from cells + viewport offset).
@@ -73,7 +85,22 @@ component Grid {
   slot edit-content : text ;
 
   // Events fired up to the host reducer.
-  emit onNavigate     ( row : number , col : number ) ;
-  emit onEditCommit   ( value : text ) ;
+  //
+  //   onNavigate       — host selects (row, col).  Currently unreached
+  //                      from the layout because per-cell click needs
+  //                      parameterized emit-dispatch (grammar follow-up,
+  //                      UI28-2 §X).  Keyboard navigation handled in
+  //                      App.tsx covers it for now.
+  //   onFormulaChange  — each keystroke inside the inline cell editor;
+  //                      payload is the new buffer text.  Matches
+  //                      FormulaBar.mil's emit of the same name.
+  //   onEditCommit     — Enter pressed inside the inline cell editor.
+  //                      VOID payload — the reducer reads the buffered
+  //                      `edit-content` it has been accumulating from
+  //                      onFormulaChange.
+  //   onEditCancel     — Escape pressed inside the inline cell editor.
+  emit onNavigate       ( row : number , col : number ) ;
+  emit onFormulaChange  ( value : text ) ;
+  emit onEditCommit ;
   emit onEditCancel ;
 }

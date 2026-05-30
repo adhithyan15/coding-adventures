@@ -121,6 +121,15 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             v.visit_expr(key);
             v.visit_expr(value);
         }
+        Stmt::ClassDef { body, .. } => {
+            // Class body is a list of statements; recurse so visitors
+            // see nested declarations.  Phase 14a always lowers an
+            // empty body for `class Foo; end`, but later phases will
+            // populate it; the walker is forward-compatible.
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+        }
     }
 }
 

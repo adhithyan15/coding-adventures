@@ -1,5 +1,76 @@
 # Changelog — twig-vm
 
+## [0.23.0] — 2026-05-30 (VMDEBUG01 — extract generic debug substrate to `vm-debug`)
+
+### Changed — `DebugHooks` + `DebugServer` moved to the new `vm-debug` crate
+
+Lifts the generic debug substrate out of `twig-vm` into the new
+[`vm-debug`](../vm-debug) crate so per-language DAP adapters
+(`basic-dap`, `nib-dap`, `oct-dap` — task #37) can depend on a single
+substrate without pulling in twig-vm's full Twig→IIR→Lispy stack.
+
+This is **source-compatible** for existing consumers: every type
+previously available under `twig_vm::debug::*` /
+`twig_vm::debug_server::*` is re-exported, so code like
+
+```rust
+use twig_vm::debug::DebugHooks;
+use twig_vm::debug_server::{DebugServer, StopReason, MAX_LINE_BYTES};
+```
+
+continues to compile unchanged.
+
+#### What moved
+
+| Type | From | To |
+|------|------|----|
+| `DebugHooks` trait     | `twig_vm::debug`        | `vm_debug` |
+| `DebugFrame` trait     | (new)                   | `vm_debug` |
+| `StopReason` enum      | `twig_vm::debug_server` | `vm_debug` |
+| `MAX_LINE_BYTES` const | `twig_vm::debug_server` | `vm_debug` |
+| `DebugServer` struct   | `twig_vm::debug_server` | `vm_debug` |
+
+#### What stayed in twig-vm
+
+- `FrameView<'a>` — twig-vm's concrete read-only frame view (it
+  borrows the private `dispatch::Frame`).  Now implements
+  `vm_debug::DebugFrame` so it can be passed to any
+  `vm_debug::DebugHooks` impl.
+- The `dispatch::run_with_debug` entry point (and every internal
+  helper that propagates `&mut Option<&mut dyn DebugHooks>`) — now
+  typed against the re-exported trait alias.
+
+#### Trait signature change
+
+`DebugHooks::before_instruction` now takes `&dyn DebugFrame` instead
+of `&FrameView<'_>`.  This affects any external `impl DebugHooks for
+MyType` — the signature must change from
+
+```rust
+fn before_instruction(&mut self, fn: &str, depth: usize, pc: usize, frame: &FrameView<'_>)
+```
+
+to
+
+```rust
+fn before_instruction(&mut self, fn: &str, depth: usize, pc: usize, frame: &dyn DebugFrame)
+```
+
+`vm_debug::DebugFrame` exposes the same `register_names` /
+`read_register` methods, so the body usually stays the same — just
+the parameter type changes.
+
+#### Tests
+
+All 171 existing twig-vm tests pass.  The 12 unit tests previously
+inside `debug.rs` and `debug_server.rs` now live in `vm-debug`'s test
+suite, with three new tests added there to cover the new
+`DebugFrame` trait shape (`recording_hook_records_calls`,
+`stop_reason_wire_strings_stable`,
+`snapshot_frame_uses_stable_slot_ordering_when_module_loaded`).
+
+Downstream `twig-dap` end-to-end tests pass unchanged.
+
 ## [0.22.0] — 2026-05-26 (Dispatch: typed `field_load` for cons-cell read)
 
 ### Added — `exec_field_load` for `car` / `cdr`

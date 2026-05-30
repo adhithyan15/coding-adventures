@@ -509,6 +509,226 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 14a (FC) — empty `class Foo; end` first-class lowering.
+    //
+    // The grammar is unchanged (the `class_statement` rule already
+    // accepts an empty body via `{ !"end" statement }` matching zero
+    // times).  These tests pin the exact parse properties the Phase
+    // 14a lowerer relies on: a single class_statement node, the class
+    // name extractable as the first Name token, and zero body
+    // statements for the empty form.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_empty_class_followed_by_top_level_stmt() {
+        // An empty class must not swallow a following top-level
+        // statement: `class Foo\nend\nx = 1` parses to a
+        // class_statement *and* leaves `x = 1` as a sibling
+        // statement at the program root.  This pins the negative
+        // lookahead `!"end"` boundary the lowerer relies on when it
+        // emits exactly one ClassDef stmt per class.
+        let ast = parse_ruby("class Foo\nend\nx = 1");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        // The empty class itself has no body statements.
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(body_count, 0);
+        // The trailing assignment survived as its own statement.
+        assert!(
+            find_statement_inner(&ast, "assignment").is_some(),
+            "trailing `x = 1` should parse as a sibling assignment"
+        );
+    }
+
+    #[test]
+    fn test_parse_empty_class_camelcase_name() {
+        // Multi-character CamelCase class name — the first Name token
+        // is the whole identifier, not a truncation, and the `class`
+        // keyword (a Keyword-type token) is not mistaken for it.
+        let ast = parse_ruby("class WidgetFactory\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let name_tok = cls.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("WidgetFactory"));
+    }
+
+    #[test]
+    fn test_parse_empty_class_has_zero_body_statements() {
+        // The empty-body invariant the lowerer depends on: an empty
+        // class has no `statement` children in its body.
+        let ast = parse_ruby("class Foo\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(body_count, 0, "empty class should have no body statements");
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 14b (FC) — class body mixing method defs and executable
+    // statements.  The grammar is still unchanged (`class_statement`'s
+    // `{ !"end" statement }` body already accepts any statement); these
+    // tests pin the parse shape the 14b lowerer walks: the body holds
+    // one `statement` child per source line, each wrapping its own
+    // inner rule (`def_statement`, `assignment`, nested
+    // `class_statement`, …).
+    // -----------------------------------------------------------------------
+
+    /// Collect the inner-rule name of every `statement` child directly
+    /// under `node`'s body (one level deep — does not recurse).
+    fn body_inner_rule_names(node: &GrammarASTNode) -> Vec<String> {
+        node.children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                    n.children.iter().find_map(|inner| match inner {
+                        ASTNodeOrToken::Node(d) => Some(d.rule_name.clone()),
+                        _ => None,
+                    })
+                }
+                _ => None,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn test_parse_class_body_mixes_def_and_assignment() {
+        // `class Foo\n  MAX = 10\n  def bar\n  end\nend` — the body has
+        // two statements: an `assignment` (MAX = 10) and a
+        // `def_statement` (bar).  The 14b lowerer hoists the def and
+        // keeps the assignment in ClassDef.body.
+        let ast = parse_ruby("class Foo\n  MAX = 10\n  def bar\n  end\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let names = body_inner_rule_names(cls);
+        assert!(
+            names.iter().any(|r| r == "assignment"),
+            "expected an assignment in the class body; got {:?}",
+            names
+        );
+        assert!(
+            names.iter().any(|r| r == "def_statement"),
+            "expected a def_statement in the class body; got {:?}",
+            names
+        );
+    }
+
+    #[test]
+    fn test_parse_class_body_multiple_assignments_preserved() {
+        // Two executable statements parse as two distinct body
+        // `statement` children, in source order.
+        let ast = parse_ruby("class Cfg\n  A = 1\n  B = 2\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let names = body_inner_rule_names(cls);
+        assert_eq!(
+            names,
+            vec!["assignment".to_string(), "assignment".to_string()],
+            "expected two assignment statements in order; got {:?}",
+            names
+        );
+    }
+
+    #[test]
+    fn test_parse_nested_class_inside_class_body() {
+        // A class declared inside another class parses as a nested
+        // `class_statement` body child — the shape the 14b lowerer
+        // recurses through (hoisting the inner class's defs exactly
+        // once).
+        let ast = parse_ruby("class Outer\n  class Inner\n  end\nend");
+        let outer = find_statement_inner(&ast, "class_statement")
+            .expect("expected outer class_statement");
+        let names = body_inner_rule_names(outer);
+        assert!(
+            names.iter().any(|r| r == "class_statement"),
+            "expected a nested class_statement in Outer's body; got {:?}",
+            names
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase 14c (FC) — inheritance `class Foo < Bar`.  The grammar's
+    // `class_statement` gains an optional `[ "<" NAME ]` superclass
+    // clause; `<` lexes as a Name-type token whose value is "<".
+    // -----------------------------------------------------------------------
+
+    /// Direct child tokens of `node` whose value equals `value`.
+    fn body_has_token_value(node: &GrammarASTNode, value: &str) -> bool {
+        node.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t) if t.value == value
+        ))
+    }
+
+    #[test]
+    fn test_parse_class_with_superclass() {
+        // `class Dog < Animal\nend` parses to a class_statement whose
+        // direct children include the `<` separator token and the
+        // superclass Name token `Animal`.
+        let ast = parse_ruby("class Dog < Animal\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(
+            body_has_token_value(cls, "<"),
+            "expected a `<` superclass separator token in the class header"
+        );
+        assert!(
+            body_has_token_value(cls, "Animal"),
+            "expected the superclass name `Animal` token in the class header"
+        );
+        // The empty subclass has no body statements.
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(body_count, 0, "empty subclass should have no body statements");
+    }
+
+    #[test]
+    fn test_parse_base_class_has_no_superclass_separator() {
+        // A base class `class Widget\nend` has no `<` token — the
+        // optional superclass clause matched zero times.
+        let ast = parse_ruby("class Widget\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(
+            !body_has_token_value(cls, "<"),
+            "base class must not carry a `<` superclass separator"
+        );
+    }
+
+    #[test]
+    fn test_parse_subclass_with_method_body() {
+        // Inheritance composes with a non-empty body: `class Cat <
+        // Animal; def meow; end; end` parses with the `<` separator AND
+        // a def_statement body child.
+        let ast = parse_ruby("class Cat < Animal\n  def meow\n  end\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(body_has_token_value(cls, "<"), "expected `<` separator");
+        assert!(body_has_token_value(cls, "Animal"), "expected superclass `Animal`");
+        let names = body_inner_rule_names(cls);
+        assert!(
+            names.iter().any(|r| r == "def_statement"),
+            "expected a def_statement in the subclass body; got {:?}",
+            names
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
 

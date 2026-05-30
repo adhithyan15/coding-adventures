@@ -24,7 +24,9 @@ use crate::defines;
 use crate::globs;
 use crate::whitespace_only;
 use crate::wrapper;
+use coding_adventures_javascript_lexer::tokenize_javascript_typed;
 use coding_adventures_javascript_tokens::EsVersion;
+use lexer::token::TokenType;
 use std::fs;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -148,7 +150,50 @@ pub fn transform_source(
     source: &str,
     config: &CompilerConfig,
 ) -> Result<String, CompilerError> {
+    transform_source_with_cv(source, config, None)
+}
+
+/// CV-aware variant of [`transform_source`] (CLOC11.61).
+///
+/// When `cv` is `Some((log, id))`, each pipeline stage appends a
+/// [`Contribution`](coding_adventures_correlation_vector::Contribution)
+/// to the per-file CV entry identified by `id`. The pre-CLOC11.61
+/// `run_compiler` recorded one summary `transform_source.applied`
+/// contribution per file; this slice replaces it with per-stage
+/// records so the trace shows which pass touched the bytes and by
+/// how much.
+///
+/// When `cv` is `None`, this function is byte-identical in
+/// behavior to the original `transform_source` — same Result,
+/// same error mapping, zero CV overhead.
+///
+/// # Contribution shape
+///
+/// | Stage              | `source`           | `tag`            | `meta`                                   |
+/// |--------------------|--------------------|------------------|------------------------------------------|
+/// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
+/// | Simple / Advanced  | `compilation_level`| `identity`       | `{level: "SIMPLE" \| "ADVANCED" \| ...}` |
+/// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
+///
+/// The `defines.applied` contribution lands for every input even
+/// when `--define` is empty (`defines_count: 0`), because the
+/// stage *ran* — it just didn't do any substitutions. That keeps
+/// the trace symmetric across files and visualization tools
+/// don't have to special-case zero-defines runs.
+pub fn transform_source_with_cv(
+    source: &str,
+    config: &CompilerConfig,
+    cv: Option<(
+        &mut coding_adventures_correlation_vector::CVLog,
+        &str,
+    )>,
+) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
+
+    // Hoist `cv` into a local so we can borrow it twice inside
+    // the function (once per stage). The Option<&mut> doesn't
+    // implement Copy, but we can reborrow at each call site.
+    let mut cv_pair = cv;
 
     // Step 1 — compilation-level transform.
     let after_level = match config.compilation.level {
@@ -163,6 +208,49 @@ pub fn transform_source(
         | CompilationLevel::TranspileOnly => source.to_string(),
     };
 
+    if let Some((log, cv_id)) = cv_pair.as_mut() {
+        let mut meta = std::collections::HashMap::new();
+        let (tag, extras): (&str, Vec<(&str, serde_json::Value)>) =
+            match config.compilation.level {
+                CompilationLevel::WhitespaceOnly => (
+                    "whitespace_only",
+                    vec![
+                        (
+                            "input_byte_len",
+                            serde_json::Value::Number((source.len() as u64).into()),
+                        ),
+                        (
+                            "output_byte_len",
+                            serde_json::Value::Number((after_level.len() as u64).into()),
+                        ),
+                    ],
+                ),
+                CompilationLevel::Simple => (
+                    "identity",
+                    vec![("level", serde_json::Value::String("SIMPLE".into()))],
+                ),
+                CompilationLevel::Advanced => (
+                    "identity",
+                    vec![("level", serde_json::Value::String("ADVANCED".into()))],
+                ),
+                CompilationLevel::Bundle => (
+                    "identity",
+                    vec![("level", serde_json::Value::String("BUNDLE".into()))],
+                ),
+                CompilationLevel::TranspileOnly => (
+                    "identity",
+                    vec![(
+                        "level",
+                        serde_json::Value::String("TRANSPILE_ONLY".into()),
+                    )],
+                ),
+            };
+        for (k, v) in extras {
+            meta.insert(k.to_string(), v);
+        }
+        let _ = log.contribute(cv_id, "compilation_level", tag, meta);
+    }
+
     // Step 2 — `--define / -D` substitution (CLOC11.19). Runs
     // *after* the compilation-level transform so that
     // WHITESPACE_ONLY's output is the input to substitution. The
@@ -174,8 +262,31 @@ pub fn transform_source(
     // identifier matching either way.
     //
     // Fast path: with no defines, this is a no-op string copy.
-    defines::apply_defines(&after_level, &config.defines.defines, es_version)
-        .map_err(CompilerError::Define)
+    let after_defines = defines::apply_defines(
+        &after_level,
+        &config.defines.defines,
+        es_version,
+    )
+    .map_err(CompilerError::Define)?;
+
+    if let Some((log, cv_id)) = cv_pair.as_mut() {
+        let mut meta = std::collections::HashMap::new();
+        meta.insert(
+            "input_byte_len".to_string(),
+            serde_json::Value::Number((after_level.len() as u64).into()),
+        );
+        meta.insert(
+            "output_byte_len".to_string(),
+            serde_json::Value::Number((after_defines.len() as u64).into()),
+        );
+        meta.insert(
+            "defines_count".to_string(),
+            serde_json::Value::Number((config.defines.defines.len() as u64).into()),
+        );
+        let _ = log.contribute(cv_id, "defines", "applied", meta);
+    }
+
+    Ok(after_defines)
 }
 
 /// Project the typed `LanguageVersion` enum into the
@@ -384,6 +495,13 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     let mut cv_log = coding_adventures_correlation_vector::CVLog::new(
         config.special_modes.correlation_vector,
     );
+    // CLOC11.62: per-file CV IDs accumulate so the post-loop
+    // stages (wrapper / IIFE / charset / etc.) can derive a
+    // single "combined" CV entry with all of them as parents.
+    // That combined entry is the substrate the rest of the
+    // pipeline contributes against — every byte from any input
+    // gets its post-combine provenance recorded there.
+    let mut per_file_cv_ids: Vec<String> = Vec::new();
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
             path: path.clone(),
@@ -414,27 +532,285 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             None
         };
 
-        let transformed = transform_source(&contents, config)?;
-
-        // CLOC11.60 — record one summary contribution from
-        // `transform_source` per file. CLOC11.61+ split this into
-        // a contribution per stage (whitespace_only, defines).
+        // CLOC11.64: per-token CV entries. With CV enabled we
+        // tokenize the file and create a CV entry per token that
+        // is a *child* (via `derive`) of the per-file CV entry.
+        // This lays the substrate later slices need to migrate
+        // token-level contributions (defines.applied,
+        // whitespace_only drops, rename mappings…) off the
+        // per-file CV and onto the precise token CV they touched.
+        //
+        // The per-file CV is left in place: it remains the
+        // attach-point for stage-level summaries
+        // (compilation_level, defines) and the merge-parent for
+        // the combined post-concat CV. Tokens add detail; they
+        // don't replace the file root.
+        //
+        // Granularity (intentional this slice):
+        //   - one child entry per token from
+        //     `tokenize_javascript_typed` — comments and pure
+        //     whitespace are not emitted as tokens by the
+        //     lexer, so we get exactly the bytes that survive
+        //     into the token stream.
+        //   - Origin.source = "lexer_token", location =
+        //     "<path>:<line>:<col>" (1-based, matching the
+        //     lexer's own line/column).
+        //   - meta = {kind, lexeme_byte_len, token_index} —
+        //     kind is the TokenType as a stable lowercase
+        //     string; lexeme_byte_len is value.len() (post
+        //     escape resolution for strings — matches what the
+        //     emitter would write); token_index is the 0-based
+        //     position in the stream so later passes can refer
+        //     back without keeping the token vec around.
+        //
+        // Errors: a lex failure (malformed JS) does not abort
+        // the build. The string-only transform pipeline can
+        // still handle WHITESPACE_ONLY style copies; we just
+        // record a `lex.failed` contribution on the per-file
+        // CV and skip token-CV creation. Later slices that need
+        // tokens may treat absence as "lex didn't reach this
+        // file" — a recoverable state.
         if let Some(id) = &cv_id {
-            let mut meta = std::collections::HashMap::new();
-            meta.insert(
-                "input_byte_len".to_string(),
-                serde_json::Value::Number((contents.len() as u64).into()),
-            );
-            meta.insert(
-                "output_byte_len".to_string(),
-                serde_json::Value::Number((transformed.len() as u64).into()),
-            );
-            let _ = cv_log.contribute(
-                id,
-                "transform_source",
-                "applied",
-                meta,
-            );
+            let es = map_language_in_to_es_version(config);
+            match tokenize_javascript_typed(&contents, es) {
+                Ok(tokens) => {
+                    let token_count = tokens.len();
+                    // CLOC11.65: capture each derived token CV ID
+                    // so that *after* the lex loop we can attach
+                    // token-level contributions (defines.applied
+                    // on the specific Name token a --define
+                    // substituted) onto the precise child CV
+                    // rather than smearing them on the per-file
+                    // root.
+                    let mut token_cv_ids: Vec<String> =
+                        Vec::with_capacity(token_count);
+                    for (idx, tok) in tokens.iter().enumerate() {
+                        let mut tmeta = std::collections::HashMap::new();
+                        tmeta.insert(
+                            "kind".to_string(),
+                            serde_json::Value::String(
+                                format!("{:?}", tok.type_).to_lowercase(),
+                            ),
+                        );
+                        tmeta.insert(
+                            "lexeme_byte_len".to_string(),
+                            serde_json::Value::Number(
+                                (tok.value.len() as u64).into(),
+                            ),
+                        );
+                        tmeta.insert(
+                            "token_index".to_string(),
+                            serde_json::Value::Number((idx as u64).into()),
+                        );
+                        let tok_cv = cv_log.derive(
+                            id,
+                            Some(coding_adventures_correlation_vector::Origin {
+                                source: "lexer_token".to_string(),
+                                location: format!(
+                                    "{}:{}:{}",
+                                    path.to_string_lossy(),
+                                    tok.line,
+                                    tok.column,
+                                ),
+                                timestamp: None,
+                                meta: tmeta,
+                            }),
+                        );
+                        token_cv_ids.push(tok_cv);
+                    }
+                    let mut cmeta = std::collections::HashMap::new();
+                    cmeta.insert(
+                        "token_count".to_string(),
+                        serde_json::Value::Number((token_count as u64).into()),
+                    );
+                    let _ = cv_log.contribute(
+                        id, "lex", "tokens_emitted", cmeta,
+                    );
+
+                    // CLOC11.65: per-token `defines.applied`.
+                    // Walk the token stream; whenever a Name
+                    // token's lexeme matches a key in
+                    // `config.defines.defines`, contribute
+                    // `defines.applied` on THAT token's CV with
+                    // {define_name, define_value, define_value_kind}.
+                    //
+                    // Why on the token CV and not the file CV:
+                    // upstream Closure substitutes per occurrence,
+                    // so the trace should record per occurrence.
+                    // The per-file `defines.applied` summary
+                    // contribution still fires later (preserves
+                    // the "stage ran" signal for zero-defines
+                    // runs) — the per-token records are *in
+                    // addition*, giving precise byte-level
+                    // provenance.
+                    //
+                    // Caveats this slice does not handle:
+                    //   - defines inside string literals (the
+                    //     current string-level apply_defines
+                    //     happens to skip them too, but only by
+                    //     accident of regex; we just look at
+                    //     Name tokens which already excludes
+                    //     strings).
+                    //   - shorthand object syntax (`{ FOO }`),
+                    //     where renaming would change semantics
+                    //     — same caveat as the existing
+                    //     string-level pass.
+                    if !config.defines.defines.is_empty() {
+                        for (idx, tok) in tokens.iter().enumerate() {
+                            if tok.type_ != TokenType::Name {
+                                continue;
+                            }
+                            let Some(def_value) =
+                                config.defines.defines.get(&tok.value)
+                            else {
+                                continue;
+                            };
+                            let (val_json, val_kind) = match def_value {
+                                crate::config::DefineValue::Bool(b) => (
+                                    serde_json::Value::Bool(*b),
+                                    "bool",
+                                ),
+                                crate::config::DefineValue::Number(n) => (
+                                    serde_json::Number::from_f64(*n)
+                                        .map(serde_json::Value::Number)
+                                        .unwrap_or(serde_json::Value::Null),
+                                    "number",
+                                ),
+                                crate::config::DefineValue::String(s) => (
+                                    serde_json::Value::String(s.clone()),
+                                    "string",
+                                ),
+                                crate::config::DefineValue::Null => (
+                                    serde_json::Value::Null,
+                                    "null",
+                                ),
+                            };
+                            let mut dmeta = std::collections::HashMap::new();
+                            dmeta.insert(
+                                "define_name".to_string(),
+                                serde_json::Value::String(tok.value.clone()),
+                            );
+                            dmeta.insert(
+                                "define_value".to_string(),
+                                val_json,
+                            );
+                            dmeta.insert(
+                                "define_value_kind".to_string(),
+                                serde_json::Value::String(val_kind.into()),
+                            );
+                            dmeta.insert(
+                                "token_index".to_string(),
+                                serde_json::Value::Number((idx as u64).into()),
+                            );
+                            // token_cv_ids[idx] is valid: same
+                            // length and order as tokens (we
+                            // built it in lock-step above).
+                            let _ = cv_log.contribute(
+                                &token_cv_ids[idx],
+                                "defines",
+                                "applied",
+                                dmeta,
+                            );
+                        }
+                    }
+
+                    // CLOC11.66 — WHITESPACE_ONLY token
+                    // tombstones. Only the WHITESPACE_ONLY
+                    // compilation level filters tokens at this
+                    // stage (`whitespace_only_minify` drops
+                    // trivia and EOF). For every token CV that
+                    // matches the same trivia / EOF predicate
+                    // the minifier uses, record a
+                    // DeletionRecord (tombstone) on the token
+                    // CV so the trace shows precisely which
+                    // bytes the pass killed.
+                    //
+                    // Why not lex twice (pre + post) and diff
+                    // the streams? The trivia / EOF predicate
+                    // *is* the contract — `is_trivia` and
+                    // `is_eof` in `whitespace_only.rs` are
+                    // what the minifier itself uses. Reusing
+                    // them keeps the tombstone set guaranteed
+                    // identical to the dropped set without a
+                    // second lex pass.
+                    //
+                    // Other compilation levels (SIMPLE,
+                    // ADVANCED, BUNDLE, TRANSPILE_ONLY) are
+                    // currently identity on the string —
+                    // they don't drop any tokens — so no
+                    // tombstones land for those. As those
+                    // levels grow real bodies in later
+                    // CLOC11.* slices, each will need its own
+                    // tombstone block.
+                    if matches!(
+                        config.compilation.level,
+                        crate::config::CompilationLevel::WhitespaceOnly,
+                    ) {
+                        for (idx, tok) in tokens.iter().enumerate() {
+                            let is_trivia_tok = crate::whitespace_only::is_trivia(tok);
+                            let is_eof_tok = crate::whitespace_only::is_eof(tok);
+                            if !is_trivia_tok && !is_eof_tok {
+                                continue;
+                            }
+                            let mut wmeta = std::collections::HashMap::new();
+                            wmeta.insert(
+                                "kind".to_string(),
+                                serde_json::Value::String(
+                                    if is_eof_tok {
+                                        "eof".into()
+                                    } else {
+                                        "trivia".into()
+                                    },
+                                ),
+                            );
+                            wmeta.insert(
+                                "token_index".to_string(),
+                                serde_json::Value::Number((idx as u64).into()),
+                            );
+                            wmeta.insert(
+                                "token_lexeme_byte_len".to_string(),
+                                serde_json::Value::Number(
+                                    (tok.value.len() as u64).into(),
+                                ),
+                            );
+                            cv_log.delete(
+                                &token_cv_ids[idx],
+                                "compilation_level",
+                                "whitespace_only_dropped",
+                                wmeta,
+                            );
+                        }
+                    }
+                }
+                Err(err) => {
+                    let mut emeta = std::collections::HashMap::new();
+                    emeta.insert(
+                        "message".to_string(),
+                        serde_json::Value::String(err),
+                    );
+                    let _ = cv_log.contribute(
+                        id, "lex", "failed", emeta,
+                    );
+                }
+            }
+        }
+
+        // CLOC11.61: per-stage CV contributions. When CV is on,
+        // pass the per-file cv_id through to `transform_source_with_cv`
+        // so the transform records one record per stage
+        // (compilation_level + defines) rather than the single
+        // summary contribution from CLOC11.60.
+        let transformed = match &cv_id {
+            Some(id) => transform_source_with_cv(
+                &contents,
+                config,
+                Some((&mut cv_log, id.as_str())),
+            )?,
+            None => transform_source(&contents, config)?,
+        };
+
+        if let Some(id) = cv_id {
+            per_file_cv_ids.push(id);
         }
 
         combined.push_str(&transformed);
@@ -444,6 +820,47 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             combined.push('\n');
         }
     }
+
+    // CLOC11.62: derive the post-concat "combined" CV entry.
+    //
+    // After the per-file loop, every subsequent stage operates on
+    // the concatenated `combined` string, not on individual
+    // files. The CV trace needs an entity that represents that
+    // post-concat substrate — otherwise contributions from
+    // `--emit_use_strict`, `--output_wrapper`, IIFE, `--charset`
+    // would have nowhere to attach.
+    //
+    // We use `CVLog::merge()` with the per-file CV IDs as parents,
+    // so a downstream consumer following an output-byte's
+    // provenance walks: combined-entry → all source files. The
+    // origin is synthetic ("concatenated_combined_source"); no
+    // location since it's not a file on disk.
+    let combined_cv_id = if config.special_modes.correlation_vector
+        && !per_file_cv_ids.is_empty()
+    {
+        let parent_refs: Vec<&str> =
+            per_file_cv_ids.iter().map(|s| s.as_str()).collect();
+        let mut meta = std::collections::HashMap::new();
+        meta.insert(
+            "file_count".to_string(),
+            serde_json::Value::Number((per_file_cv_ids.len() as u64).into()),
+        );
+        meta.insert(
+            "byte_len".to_string(),
+            serde_json::Value::Number((combined.len() as u64).into()),
+        );
+        Some(cv_log.merge(
+            &parent_refs,
+            Some(coding_adventures_correlation_vector::Origin {
+                source: "concatenated_combined_source".to_string(),
+                location: String::new(),
+                timestamp: None,
+                meta,
+            }),
+        ))
+    } else {
+        None
+    };
 
     // Step 2.25 (CLOC11.51): --checks_only short-circuits emission.
     //
@@ -476,6 +893,29 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // it sits at the very top of the function body it's meant to
     // govern. CC has the same ordering.
     if config.language.emit_use_strict {
+        // CLOC11.62 — record the emit_use_strict contribution
+        // on the combined entry. The directive is a fixed-size
+        // 16-byte prepend (`"use strict";\n`), so meta carries
+        // the input/output byte lengths.
+        if let Some(id) = &combined_cv_id {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((combined.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number(
+                    ((combined.len() + 16) as u64).into(),
+                ),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "emit_use_strict",
+                "prepended",
+                meta,
+            );
+        }
         // Use double quotes to match CC's emission. A trailing
         // newline keeps the directive on its own line, which is
         // visually clearer in --output_wrapper templates that
@@ -498,6 +938,34 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     )
     .map_err(CompilerError::Wrapper)?;
 
+    // CLOC11.62 — record the output_wrapper contribution.
+    //
+    // We only emit a contribution when the wrapper actually
+    // changed the bytes (`wrapped != combined`). Skipping the
+    // contribution for the no-wrapper passthrough avoids
+    // spurious entries that say "this pass ran and did
+    // nothing" — the CV trace stays focused on bytes that
+    // moved.
+    if let Some(id) = &combined_cv_id {
+        if wrapped != combined {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((combined.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number((wrapped.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "output_wrapper",
+                "substituted",
+                meta,
+            );
+        }
+    }
+
     // Step 3.5 (CLOC11.31): apply --isolation_mode IIFE if set.
     // Layered after the user wrapper, matching CC's pipeline:
     // user wrapper runs first, IIFE wraps the result. So the
@@ -505,8 +973,31 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // CC, and the behavior users requesting IIFE expect.
     let isolated = match config.formatting.isolation_mode {
         IsolationMode::Iife => wrapper::apply_iife_wrap(&wrapped),
-        IsolationMode::None => wrapped,
+        IsolationMode::None => wrapped.clone(),
     };
+
+    // CLOC11.62 — record the isolation_mode contribution.
+    // Only fires when IIFE is on; the None case is a pass-through
+    // that doesn't change bytes.
+    if let Some(id) = &combined_cv_id {
+        if config.formatting.isolation_mode == IsolationMode::Iife {
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "input_byte_len".to_string(),
+                serde_json::Value::Number((wrapped.len() as u64).into()),
+            );
+            meta.insert(
+                "output_byte_len".to_string(),
+                serde_json::Value::Number((isolated.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                id,
+                "isolation_mode",
+                "iife_wrapped",
+                meta,
+            );
+        }
+    }
 
     // Step 3.75 (CLOC11.16): apply --charset normalization.
     //
@@ -520,10 +1011,38 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // user injected via `--output_wrapper` (e.g. a `©` in a
     // banner) gets escaped alongside the body. See
     // `crate::charset` for the table of accepted values.
-    let encoded = crate::charset::apply_charset(
-        &isolated,
-        crate::charset::OutputCharset::from_raw(&config.io.charset),
-    );
+    let charset_mode = crate::charset::OutputCharset::from_raw(&config.io.charset);
+    let encoded = crate::charset::apply_charset(&isolated, charset_mode);
+
+    // CLOC11.62 — record the charset contribution.
+    //
+    // The contribution lands even when the mode is UTF-8 (pass-
+    // through) because the stage RAN — same symmetry argument as
+    // CLOC11.61's defines.applied. Meta carries the resolved
+    // mode name and byte deltas so a viewer can show whether
+    // escapes were emitted.
+    if let Some(id) = &combined_cv_id {
+        let mut meta = std::collections::HashMap::new();
+        meta.insert(
+            "mode".to_string(),
+            serde_json::Value::String(
+                match charset_mode {
+                    crate::charset::OutputCharset::UsAscii => "US_ASCII",
+                    crate::charset::OutputCharset::Utf8 => "UTF-8",
+                }
+                .to_string(),
+            ),
+        );
+        meta.insert(
+            "input_byte_len".to_string(),
+            serde_json::Value::Number((isolated.len() as u64).into()),
+        );
+        meta.insert(
+            "output_byte_len".to_string(),
+            serde_json::Value::Number((encoded.len() as u64).into()),
+        );
+        let _ = cv_log.contribute(id, "charset", "normalized", meta);
+    }
 
     // Step 4: write the output. Two cases:
     //   a) --js_output_file set → write to disk via write_output_file.
@@ -537,6 +1056,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // The source-map write runs *after* the JS write so callers
     // get a consistent on-disk pair (or no source map at all if
     // the flag is unset).
+    //
+    // CLOC11.63: capture `encoded.len()` BEFORE the match so the
+    // downstream CV `js_output_file` record can include it. The
+    // None arm moves `encoded` into stdout_text; without the
+    // pre-capture we'd see a borrow-of-moved error.
+    let encoded_byte_len = encoded.len();
     let result = match &config.io.js_output_file {
         Some(path) => {
             write_output_file(path, &encoded)?;
@@ -553,13 +1078,84 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
 
     // Step 5 (CLOC11.42): source map write.
     let mut wrote_files = result.wrote_files;
+
+    // CLOC11.63: when CV is on AND the JS write actually went to
+    // disk, derive a `js_output_file` CV entry with the combined
+    // entry as parent. Contributes a `wrote` record with the
+    // path + byte_len so a CV trace consumer can match an output
+    // file back to its substrate.
+    if let Some(parent_id) = &combined_cv_id {
+        if let Some(js_path) = &config.io.js_output_file {
+            let mut origin_meta = std::collections::HashMap::new();
+            origin_meta.insert(
+                "path".to_string(),
+                serde_json::Value::String(
+                    js_path.to_string_lossy().into_owned(),
+                ),
+            );
+            let js_cv_id = cv_log.derive(
+                parent_id,
+                Some(coding_adventures_correlation_vector::Origin {
+                    source: "js_output_file".to_string(),
+                    location: js_path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta: origin_meta,
+                }),
+            );
+            let mut contrib_meta = std::collections::HashMap::new();
+            contrib_meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((encoded_byte_len as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                &js_cv_id,
+                "write_output_file",
+                "wrote",
+                contrib_meta,
+            );
+        }
+    }
+
     if !config.source_map.path_template.is_empty() {
         let map_path = std::path::PathBuf::from(&config.source_map.path_template);
         let map_body = crate::source_map::format_minimal_v3(
             config.io.js_output_file.as_deref(),
         );
         write_output_file(&map_path, &map_body)?;
-        wrote_files.push(map_path);
+        wrote_files.push(map_path.clone());
+
+        // CLOC11.63: source map derives from the combined entry
+        // (the JS it maps points back to combined). Contribute
+        // a `wrote` record with byte_len of the v3 JSON.
+        if let Some(parent_id) = &combined_cv_id {
+            let mut origin_meta = std::collections::HashMap::new();
+            origin_meta.insert(
+                "path".to_string(),
+                serde_json::Value::String(
+                    map_path.to_string_lossy().into_owned(),
+                ),
+            );
+            let map_cv_id = cv_log.derive(
+                parent_id,
+                Some(coding_adventures_correlation_vector::Origin {
+                    source: "source_map_output".to_string(),
+                    location: map_path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta: origin_meta,
+                }),
+            );
+            let mut contrib_meta = std::collections::HashMap::new();
+            contrib_meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((map_body.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                &map_cv_id,
+                "write_output_file",
+                "wrote",
+                contrib_meta,
+            );
+        }
     }
 
     // Step 6 (CLOC11.34): --output_manifest write.
@@ -583,34 +1179,85 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         let body = format_manifest(&inputs);
         write_output_file(manifest_path, &body)?;
         wrote_files.push(manifest_path.clone());
+
+        // CLOC11.63: manifest derives from the *per-file* CVs,
+        // not the combined entry — the manifest enumerates input
+        // files, not the merged output. Use `merge()` with the
+        // per-file IDs as parents.
+        if config.special_modes.correlation_vector
+            && !per_file_cv_ids.is_empty()
+        {
+            let parent_refs: Vec<&str> =
+                per_file_cv_ids.iter().map(|s| s.as_str()).collect();
+            let mut origin_meta = std::collections::HashMap::new();
+            origin_meta.insert(
+                "path".to_string(),
+                serde_json::Value::String(
+                    manifest_path.to_string_lossy().into_owned(),
+                ),
+            );
+            origin_meta.insert(
+                "file_count".to_string(),
+                serde_json::Value::Number(
+                    (per_file_cv_ids.len() as u64).into(),
+                ),
+            );
+            let manifest_cv_id = cv_log.merge(
+                &parent_refs,
+                Some(coding_adventures_correlation_vector::Origin {
+                    source: "manifest_output".to_string(),
+                    location: manifest_path.to_string_lossy().into_owned(),
+                    timestamp: None,
+                    meta: origin_meta,
+                }),
+            );
+            let mut contrib_meta = std::collections::HashMap::new();
+            contrib_meta.insert(
+                "byte_len".to_string(),
+                serde_json::Value::Number((body.len() as u64).into()),
+            );
+            let _ = cv_log.contribute(
+                &manifest_cv_id,
+                "write_output_file",
+                "wrote",
+                contrib_meta,
+            );
+        }
     }
 
     // Step 7 (CLOC11.60): write the correlation-vector trace as
     // a JSON sidecar file when `--correlation_vector` was set.
     //
-    // Path policy:
-    //   - When `--js_output_file` is set, the sidecar sits
-    //     beside it as `<output>.cv.json`. Build pipelines
-    //     consuming the JS get the trace automatically without
-    //     a separate flag for the path.
-    //   - When `--js_output_file` is absent (stdout), the
-    //     sidecar lands at `closurec-cv.json` in the working
-    //     directory. Discoverable; user can rename / move.
-    //
-    // CLOC11.6N (a follow-up slice) will add an explicit
-    // `--correlation_vector_output <path>` flag so callers who
-    // want a custom location don't have to rely on the
-    // sidecar-of-output convention.
+    // Path policy (CLOC11.67):
+    //   1. If `--correlation_vector_output <path>` is set,
+    //      honor it verbatim. Highest precedence — callers
+    //      who want a custom location (CI artifact dir,
+    //      tmpfs, /dev/null for benchmarks) get exactly that
+    //      path with no decoration.
+    //   2. Else if `--js_output_file` is set, the sidecar sits
+    //      beside it as `<output>.cv.json`. Build pipelines
+    //      consuming the JS get the trace automatically
+    //      without an extra flag.
+    //   3. Else (stdout output), the sidecar lands at
+    //      `closurec-cv.json` in the working directory.
+    //      Discoverable; user can rename / move.
     if config.special_modes.correlation_vector {
-        let sidecar_path = match &config.io.js_output_file {
-            Some(p) => {
-                let mut s = p.as_os_str().to_owned();
-                s.push(".cv.json");
-                PathBuf::from(s)
-            }
-            None => PathBuf::from("closurec-cv.json"),
+        let sidecar_path = match &config.special_modes.correlation_vector_output {
+            // CLOC11.67 — explicit override wins.
+            Some(p) => p.clone(),
+            None => match &config.io.js_output_file {
+                Some(p) => {
+                    let mut s = p.as_os_str().to_owned();
+                    s.push(".cv.json");
+                    PathBuf::from(s)
+                }
+                None => PathBuf::from("closurec-cv.json"),
+            },
         };
-        let body = format_cv_log_json(&cv_log);
+        let body = format_cv_log_json(
+            &cv_log,
+            config.special_modes.correlation_vector_pretty,
+        );
         write_output_file(&sidecar_path, &body)?;
         wrote_files.push(sidecar_path);
     }
@@ -621,21 +1268,49 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     })
 }
 
-/// Serialize a `CVLog` to a pretty-printed JSON string for the
-/// `--correlation_vector` sidecar. We use `serde_json::to_string_pretty`
-/// rather than hand-rolling the format because the CV crate's
-/// `CVEntry` / `Contribution` types are already `Serialize`, and
-/// the sidecar is consumed by tooling (not pinned in fixtures), so
-/// serde's formatting choices don't bite us.
+/// Serialize a `CVLog` to a JSON string for the
+/// `--correlation_vector` sidecar.
 ///
-/// On serialization failure (vanishingly rare for the CV crate's
-/// well-formed structs), we fall back to a minimal `{}` document so
-/// the write still succeeds — a missing sidecar would be worse than
-/// a stub one for the build-pipeline-consumes-the-file case.
-fn format_cv_log_json(cv_log: &coding_adventures_correlation_vector::CVLog) -> String {
-    cv_log
+/// `pretty` (CLOC11.68): when true, pretty-prints the JSON
+/// (multi-line, 2-space indent) by round-tripping through
+/// `serde_json::Value` and `to_string_pretty`. When false
+/// (the default, and what CI / build pipelines want), emits
+/// compact single-line JSON via the CV crate's native
+/// `to_json_string`.
+///
+/// Why the round-trip for pretty mode: the CV crate's
+/// `to_json_string` is hard-coded to compact output and it's
+/// the only path that knows the `LogSnapshot` shape (the
+/// fields aren't pub). Parsing back to a `serde_json::Value`
+/// and re-emitting via `to_string_pretty` is wasteful but
+/// correct, and only happens on the opt-in slow path. The
+/// performance hit is irrelevant — humans-eyes mode is
+/// already off the critical path of a build.
+///
+/// On any serialization failure (vanishingly rare for the
+/// CV crate's well-formed structs, and additionally
+/// surviving a round-trip in pretty mode), we fall back to
+/// a minimal `{}` document so the write still succeeds —
+/// a missing sidecar would be worse than a stub one for the
+/// build-pipeline-consumes-the-file case.
+fn format_cv_log_json(
+    cv_log: &coding_adventures_correlation_vector::CVLog,
+    pretty: bool,
+) -> String {
+    let compact = cv_log
         .to_json_string()
-        .unwrap_or_else(|_| "{}".to_string())
+        .unwrap_or_else(|_| "{}".to_string());
+    if !pretty {
+        return compact;
+    }
+    // Round-trip: compact text → serde_json::Value → pretty
+    // text. The intermediate Value is heap-allocated but only
+    // exists for one serialization pass.
+    match serde_json::from_str::<serde_json::Value>(&compact) {
+        Ok(v) => serde_json::to_string_pretty(&v)
+            .unwrap_or_else(|_| compact),
+        Err(_) => compact,
+    }
 }
 
 /// Format the contents of an `--output_manifest` file from a
@@ -1819,11 +2494,25 @@ mod tests {
         let _ = fs::remove_dir_all(&dir);
     }
 
+    /// Process-global mutex shared by every test that calls
+    /// `std::env::set_current_dir`. CWD is process state, not
+    /// thread state — without serialization, two tests chdir'ing
+    /// in parallel race and one reads from the other's temp dir
+    /// (CLOC11.63 hit this when CLOC11.60's chdir test and
+    /// CLOC11.63's chdir test ran concurrently).
+    ///
+    /// We use a plain `std::sync::Mutex<()>` rather than a
+    /// crate like `serial_test`: the repo principle is
+    /// zero-deps where reasonable and the lock pattern here is
+    /// trivial.
+    static CWD_TEST_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
     #[test]
     fn correlation_vector_on_writes_default_sidecar_when_stdout_output() {
         // When --js_output_file is absent, the sidecar lands at
         // `closurec-cv.json` in CWD. Test from a temp dir we
         // chdir into so we don't litter the repo root.
+        let _cwd_guard = CWD_TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         let prev_cwd = std::env::current_dir().expect("cwd");
         let dir = temp_path("cv-stdout-dir");
         fs::create_dir_all(&dir).expect("setup");
@@ -1886,17 +2575,1022 @@ mod tests {
         // path appears at least once as the Origin.location.
         assert!(body.contains("a.js"), "missing a.js: {body}");
         assert!(body.contains("b.js"), "missing b.js: {body}");
-        // The `transform_source` contribution tag lands per file.
-        // Substring `"source":"transform_source"` is the
-        // per-contribution marker; the CVLog's `pass_order` also
-        // mentions it once, so the precise expectation is 2
-        // contribution occurrences for 2 input files.
-        let contribution_marker = "\"source\":\"transform_source\"";
+        // CLOC11.61 superseded the CLOC11.60 single
+        // "transform_source.applied" contribution with per-stage
+        // records: `compilation_level` + `defines` per file. So
+        // two files yields 2 × 2 = 4 contributions total, with
+        // each stage's source string appearing twice (once per
+        // file).
+        let cl_marker = "\"source\":\"compilation_level\"";
+        let def_marker = "\"source\":\"defines\"";
         assert_eq!(
-            body.matches(contribution_marker).count(),
+            body.matches(cl_marker).count(),
             2,
-            "expected 2 transform_source contributions, got: {body}"
+            "expected 2 compilation_level contributions, got: {body}"
         );
+        assert_eq!(
+            body.matches(def_marker).count(),
+            2,
+            "expected 2 defines contributions, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.61 — per-stage CV contribution tests
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_records_compilation_level_stage_per_file() {
+        // With WHITESPACE_ONLY level set, the per-file CV entry
+        // should gain a `compilation_level.whitespace_only`
+        // contribution with input/output byte_len in meta.
+        let dir = temp_path("cv-cl-ws-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x  =  1; // trim me").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // The compilation_level tag is "whitespace_only" — pin
+        // both the source-name and the tag verbatim.
+        assert!(
+            body.contains("\"source\":\"compilation_level\""),
+            "missing compilation_level source: {body}"
+        );
+        assert!(
+            body.contains("\"tag\":\"whitespace_only\""),
+            "missing whitespace_only tag: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_identity_with_level_name_for_simple() {
+        // Default level is SIMPLE; the identity-path
+        // contribution should record the level name as meta.
+        let dir = temp_path("cv-cl-simple-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // Default compilation level is SIMPLE.
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"tag\":\"identity\""), "got: {body}");
+        assert!(body.contains("\"level\":\"SIMPLE\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_defines_stage_with_defines_count() {
+        // The `defines.applied` contribution lands per file
+        // regardless of whether the user passed any `--define`
+        // entries. Meta includes a `defines_count` so the trace
+        // shows whether substitutions were possible.
+        let dir = temp_path("cv-defines-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var DEBUG = false;").expect("setup");
+        let mut defines = std::collections::BTreeMap::new();
+        defines.insert(
+            "DEBUG".to_string(),
+            crate::config::DefineValue::Bool(true),
+        );
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            defines: crate::config::DefinesConfig { defines },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"defines\""),
+            "missing defines source: {body}"
+        );
+        assert!(
+            body.contains("\"tag\":\"applied\""),
+            "missing applied tag: {body}"
+        );
+        assert!(
+            body.contains("\"defines_count\":1"),
+            "missing defines_count: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_both_stages_in_pipeline_order() {
+        // Both `compilation_level` and `defines` contributions
+        // must appear, and the CVLog's pass_order should reflect
+        // the call order (compilation_level → defines).
+        let dir = temp_path("cv-both-stages-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Both source-names present.
+        assert!(body.contains("\"source\":\"compilation_level\""));
+        assert!(body.contains("\"source\":\"defines\""));
+        // pass_order in the CVLog dump should show lex FIRST
+        // (CLOC11.64 added per-token CV emission ahead of
+        // transform_source_with_cv), then compilation_level,
+        // then defines. Other passes follow (CLOC11.62 adds
+        // charset; later slices add more). Pin the prefix to
+        // keep the per-file ordering invariant while staying
+        // tolerant of new passes.
+        assert!(
+            body.contains(
+                "\"pass_order\":[\"lex\",\"compilation_level\",\"defines\""
+            ),
+            "expected pass_order to start with [lex, compilation_level, defines, ...], got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn transform_source_facade_is_byte_identical_to_with_cv_none() {
+        // Pin the pre-CLOC11.61 contract: `transform_source(s, c)`
+        // and `transform_source_with_cv(s, c, None)` produce the
+        // same Result for the same inputs. Lets the facade stay
+        // valid for callers that don't care about CV.
+        let cfg = CompilerConfig::default();
+        let source = "var x = 1;";
+        let a = transform_source(source, &cfg).expect("a");
+        let b = transform_source_with_cv(source, &cfg, None).expect("b");
+        assert_eq!(a, b);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.64 — per-token CV entries (children of per-file CV)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_emits_per_token_cv_entries() {
+        // With --correlation_vector on, every token from the
+        // lexer should appear in the sidecar as a derived CV
+        // entry with source="lexer_token" and parent_ids
+        // pointing at the per-file CV root. We also expect a
+        // `lex.tokens_emitted` contribution on the per-file CV
+        // with a token_count matching the lexer's output.
+        let dir = std::env::temp_dir().join("closurec_cloc11_64_tokens");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Source name appears.
+        assert!(
+            body.contains("\"source\":\"lexer_token\""),
+            "expected lexer_token source in CV sidecar, got: {body}"
+        );
+        // lex.tokens_emitted contribution lands on the per-file CV.
+        assert!(
+            body.contains("\"source\":\"lex\"")
+                && body.contains("\"tag\":\"tokens_emitted\""),
+            "expected lex.tokens_emitted contribution, got: {body}"
+        );
+        // token_index keys appear (proves we wrote the per-token meta).
+        assert!(
+            body.contains("\"token_index\""),
+            "expected token_index in token meta, got: {body}"
+        );
+        // For "var x = 1;" the JS lexer emits at least 5 tokens
+        // (var, x, =, 1, ;) — assert lower-bound, not exact,
+        // because the lexer may emit additional tokens (EOF,
+        // implicit semis) and we don't want to brittle-pin
+        // grammar internals.
+        let token_count = body.matches("\"source\":\"lexer_token\"").count();
+        assert!(
+            token_count >= 5,
+            "expected at least 5 token CV entries for 'var x = 1;', got {token_count}: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_disabled_emits_no_token_entries() {
+        // With CV disabled (default), no sidecar should be
+        // written and no per-token work should happen — same
+        // byte-identical behavior as pre-CLOC11.64.
+        let dir = std::env::temp_dir().join("closurec_cloc11_64_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // correlation_vector NOT set (default false)
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            !sidecar_path.exists(),
+            "no sidecar should exist when CV is disabled"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.65 — per-token `defines.applied` contributions
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_records_defines_applied_on_token_cv() {
+        // With --correlation_vector on and --define FOO=true,
+        // a Name token whose lexeme is "FOO" should get a
+        // `defines.applied` contribution recorded on its
+        // token CV (parent = per-file CV). The per-file
+        // summary contribution from transform_source_with_cv
+        // still fires; this checks the *new* per-token one.
+        use crate::config::{DefineValue, DefinesConfig};
+        let dir = std::env::temp_dir().join("closurec_cloc11_65_defines");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        // FOO appears as a Name token twice; defines.applied
+        // contribution should fire for each occurrence.
+        fs::write(&in_path, "var x = FOO; FOO + 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let mut defines = std::collections::BTreeMap::new();
+        defines.insert("FOO".to_string(), DefineValue::Bool(true));
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            defines: DefinesConfig { defines },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // The token-level defines.applied tag appears alongside
+        // the per-file summary. Distinguish the two by checking
+        // for the token-only meta key `define_name` (the per-file
+        // summary uses `defines_count` instead).
+        assert!(
+            body.contains("\"define_name\":\"FOO\""),
+            "expected token-level defines.applied with define_name=FOO, got: {body}"
+        );
+        assert!(
+            body.contains("\"define_value_kind\":\"bool\""),
+            "expected define_value_kind=bool meta, got: {body}"
+        );
+        // FOO appears twice in the input → two per-token records.
+        let occurrences = body.matches("\"define_name\":\"FOO\"").count();
+        assert!(
+            occurrences >= 2,
+            "expected ≥2 per-token defines.applied for FOO×2, got {occurrences}: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_per_token_defines_when_unmatched() {
+        // A Name token whose lexeme doesn't match any --define
+        // key should NOT get a token-level defines.applied
+        // contribution. The per-file summary still fires
+        // (it always does, with defines_count: 0).
+        use crate::config::DefinesConfig;
+        let dir = std::env::temp_dir().join("closurec_cloc11_65_nomatch");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            defines: DefinesConfig { defines: std::collections::BTreeMap::new() },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // No define_name meta key (token-level) — only the
+        // per-file summary which uses defines_count.
+        assert!(
+            !body.contains("\"define_name\""),
+            "expected NO token-level defines.applied, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.66 — WHITESPACE_ONLY token tombstones
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_tombstones_trivia_tokens_under_whitespace_only() {
+        // With --correlation_vector + --compilation_level
+        // WHITESPACE_ONLY, the dropped trivia + EOF tokens
+        // should appear in the sidecar as deleted CV entries
+        // (DeletionRecord present, source=compilation_level,
+        // reason=whitespace_only_dropped). The surviving Name
+        // tokens (var, x, etc.) should NOT be tombstoned.
+        let dir = std::env::temp_dir().join("closurec_cloc11_66_ws_drop");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        // Comments + whitespace generate trivia tokens; EOF
+        // is always emitted at end.
+        fs::write(
+            &in_path,
+            "// a comment\nvar x = 1; /* block */ var y = 2;",
+        )
+        .expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // The tombstone reason string lands in the sidecar.
+        assert!(
+            body.contains("\"reason\":\"whitespace_only_dropped\""),
+            "expected whitespace_only_dropped tombstone, got: {body}"
+        );
+        // EOF kind always lands (every file ends with EOF
+        // sentinel; the JS grammar happens not to emit COMMENT
+        // tokens — comments are skipped at lex time — so trivia
+        // kind never fires for this grammar today, but the code
+        // path covers both cases against future grammar
+        // evolution).
+        assert!(
+            body.contains("\"kind\":\"eof\""),
+            "expected eof kind tombstone, got: {body}"
+        );
+        // The tombstone landed via the DeletionRecord field.
+        assert!(
+            body.contains("\"source\":\"compilation_level\",\"reason\":\"whitespace_only_dropped\""),
+            "expected DeletionRecord with compilation_level source, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_tombstones_under_simple_level() {
+        // Non-WHITESPACE_ONLY levels currently don't drop
+        // tokens at the compilation_level stage, so no
+        // tombstones should appear. (As later slices add
+        // real bodies to SIMPLE/ADVANCED/etc., each will
+        // need its own block + test; this pins the current
+        // contract.)
+        let dir = std::env::temp_dir().join("closurec_cloc11_66_simple");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "// a comment\nvar x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // SIMPLE is the default; spelled out for clarity.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            !body.contains("\"reason\":\"whitespace_only_dropped\""),
+            "expected NO whitespace_only_dropped tombstones under SIMPLE, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.67 — --correlation_vector_output <path> flag
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_output_flag_overrides_sidecar_path() {
+        // With --correlation_vector_output set to an explicit
+        // path, the sidecar should land THERE (verbatim, no
+        // .cv.json decoration) and NOT at the default location.
+        let dir = std::env::temp_dir().join("closurec_cloc11_67_explicit");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let default_sidecar = dir.join("out.js.cv.json"); // would-be default
+        let explicit_sidecar = dir.join("custom-trace.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_output: Some(explicit_sidecar.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            explicit_sidecar.exists(),
+            "expected sidecar at explicit path {:?}",
+            explicit_sidecar
+        );
+        assert!(
+            !default_sidecar.exists(),
+            "expected NO sidecar at default path {:?}",
+            default_sidecar
+        );
+        // Sanity: file contains the CV JSON structure.
+        let body = fs::read_to_string(&explicit_sidecar).expect("read");
+        assert!(
+            body.contains("\"entries\""),
+            "explicit-path sidecar missing CVLog structure: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_output_flag_ignored_when_cv_disabled() {
+        // With --correlation_vector off, --correlation_vector_output
+        // is silently ignored — no sidecar of any kind is written.
+        // Pins the contract that the path flag does not
+        // accidentally enable the trace.
+        let dir = std::env::temp_dir().join("closurec_cloc11_67_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let explicit_sidecar = dir.join("should-not-exist.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                // correlation_vector remains false
+                correlation_vector_output: Some(explicit_sidecar.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            !explicit_sidecar.exists(),
+            "expected NO sidecar when correlation_vector is off, got file at {:?}",
+            explicit_sidecar
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.68 — --correlation_vector_pretty flag
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_pretty_off_emits_compact_json() {
+        // Default behavior: compact single-line JSON. We
+        // detect compact form by absence of "\n  " (indented
+        // newlines). The body has at least one entry so
+        // pretty would definitely insert newlines.
+        let dir = std::env::temp_dir().join("closurec_cloc11_68_compact");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                // correlation_vector_pretty defaults to false
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read");
+        assert!(
+            !body.contains("\n  "),
+            "expected compact JSON (no indented newlines), got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_pretty_on_emits_indented_json() {
+        // With --correlation_vector_pretty, the sidecar JSON
+        // should have indented newlines. We check for "\n  "
+        // (newline + 2 spaces) which serde_json::to_string_pretty
+        // emits at every nested key.
+        let dir = std::env::temp_dir().join("closurec_cloc11_68_pretty");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_pretty: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read");
+        assert!(
+            body.contains("\n  "),
+            "expected pretty JSON with indented newlines, got: {body}"
+        );
+        // Same data content as compact: still has entries key
+        // and pass_order. Pretty mode is just whitespace.
+        assert!(
+            body.contains("\"entries\""),
+            "pretty JSON missing entries key: {body}"
+        );
+        assert!(
+            body.contains("\"pass_order\""),
+            "pretty JSON missing pass_order key: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.62 — CV records for post-combine stages (emit_use_strict,
+    // output_wrapper, isolation_mode, charset)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_creates_combined_entry_after_per_file_loop() {
+        // The "concatenated_combined_source" CV entry should
+        // appear in the sidecar, with the per-file entries as
+        // parents. Lets us walk a downstream byte's provenance
+        // back to its source file(s).
+        let dir = temp_path("cv-combined-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"concatenated_combined_source\""),
+            "missing combined entry: {body}"
+        );
+        // file_count meta should show 1.
+        assert!(body.contains("\"file_count\":1"), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_emit_use_strict_contribution() {
+        let dir = temp_path("cv-strict-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            language: crate::config::LanguageConfig {
+                emit_use_strict: true,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"emit_use_strict\""),
+            "missing emit_use_strict source: {body}"
+        );
+        assert!(
+            body.contains("\"tag\":\"prepended\""),
+            "missing prepended tag: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_does_not_record_emit_use_strict_when_unset() {
+        let dir = temp_path("cv-no-strict-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // emit_use_strict NOT set → no contribution.
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            !body.contains("emit_use_strict"),
+            "should NOT contain emit_use_strict when flag is off: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_output_wrapper_when_bytes_changed() {
+        let dir = temp_path("cv-wrapper-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            formatting: crate::config::FormattingConfig {
+                output_wrapper: "PRE %output% POST".to_string(),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"source\":\"output_wrapper\""), "got: {body}");
+        assert!(body.contains("\"tag\":\"substituted\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_iife_when_isolation_mode_set() {
+        let dir = temp_path("cv-iife-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            formatting: crate::config::FormattingConfig {
+                isolation_mode: IsolationMode::Iife,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"source\":\"isolation_mode\""), "got: {body}");
+        assert!(body.contains("\"tag\":\"iife_wrapped\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_always_records_charset_with_resolved_mode() {
+        // The charset contribution lands even at the default
+        // (US_ASCII out, no flag passed) because the stage RAN.
+        let dir = temp_path("cv-charset-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(body.contains("\"source\":\"charset\""), "got: {body}");
+        assert!(body.contains("\"tag\":\"normalized\""), "got: {body}");
+        // The default mode is US_ASCII; should appear in meta.
+        assert!(body.contains("\"mode\":\"US_ASCII\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.63 — CV records for output writes (JS, source map, manifest)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_records_js_output_file_entry() {
+        // When --js_output_file is set and CV is on, a
+        // `js_output_file` derived entry should appear in the
+        // sidecar with combined as parent.
+        let dir = temp_path("cv-js-write-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"js_output_file\""),
+            "missing js_output_file entry: {body}"
+        );
+        assert!(
+            body.contains("\"source\":\"write_output_file\""),
+            "missing write_output_file contribution: {body}"
+        );
+        assert!(body.contains("\"tag\":\"wrote\""), "got: {body}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_js_output_file_entry_when_stdout() {
+        // When --js_output_file is absent (stdout), no
+        // `js_output_file` entry — the JS didn't write to disk.
+        let _cwd_guard = CWD_TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        let prev_cwd = std::env::current_dir().expect("cwd");
+        let dir = temp_path("cv-js-stdout-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        std::env::set_current_dir(&dir).expect("chdir");
+
+        let in_path = dir.join("in.js");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string("closurec-cv.json").expect("read sidecar");
+        assert!(
+            !body.contains("\"source\":\"js_output_file\""),
+            "should NOT contain js_output_file when stdout: {body}"
+        );
+
+        std::env::set_current_dir(prev_cwd).expect("restore cwd");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_source_map_output_entry() {
+        let dir = temp_path("cv-smap-write-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let map_path = dir.join("out.js.map");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"source_map_output\""),
+            "missing source_map_output entry: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_records_manifest_output_entry_with_per_file_parents() {
+        // Manifest CV entry should be created via merge() with
+        // per-file IDs as parents (NOT combined as parent — the
+        // manifest enumerates input files, not the merged output).
+        let dir = temp_path("cv-manifest-write-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let a = dir.join("a.js");
+        let b = dir.join("b.js");
+        let out_path = dir.join("out.js");
+        let manifest_path = dir.join("manifest.txt");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&a, "var a;").expect("a");
+        fs::write(&b, "var b;").expect("b");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![
+                    a.to_string_lossy().to_string(),
+                    b.to_string_lossy().to_string(),
+                ],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            chunks: crate::config::ChunksConfig {
+                output_manifest_file: Some(manifest_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"source\":\"manifest_output\""),
+            "missing manifest_output entry: {body}"
+        );
+        // file_count should be 2.
+        assert!(body.contains("\"file_count\":2"), "got: {body}");
         let _ = fs::remove_dir_all(&dir);
     }
 }

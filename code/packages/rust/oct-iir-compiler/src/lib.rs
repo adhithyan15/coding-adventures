@@ -58,8 +58,23 @@ use coding_adventures_oct_parser::parse_oct;
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
+use interpreter_ir::source_loc::SourceLoc;
 use oct_type_checker::check_ast;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+/// Extract a `SourceLoc` from a `GrammarASTNode`, falling back to
+/// `SYNTHETIC` when the parser couldn't attach position info.
+///
+/// Used to tag every emitted IIR instruction with the source position
+/// of the AST node that produced it.  The resulting `source_map`
+/// powers line-based breakpoints in the debugger and source-line
+/// reporting in stack traces.
+fn node_loc(node: &GrammarASTNode) -> SourceLoc {
+    match (node.start_line, node.start_column) {
+        (Some(line), Some(col)) => SourceLoc::new(line, col),
+        _ => SourceLoc::SYNTHETIC,
+    }
+}
 
 // ===========================================================================
 // Public API
@@ -148,7 +163,6 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str)
 // Compiler
 // ===========================================================================
 
-#[derive(Default)]
 struct Compiler {
     functions: Vec<IIRFunction>,
     /// Loop-end labels for `break` to jump to (innermost on top).
@@ -157,6 +171,29 @@ struct Compiler {
     tmp_counter: usize,
     /// Per-function: counter for synthesised label families.
     label_counter: usize,
+    /// Per-function: per-instruction source positions, built in
+    /// lockstep with the function body.  Reset at the start of each
+    /// `compile_function` call.
+    source_map: Vec<SourceLoc>,
+    /// "Currently compiling" source position.  Updated by every
+    /// `compile_stmt` / `compile_expr` entry point and read by
+    /// [`emit`] when it appends to the instruction stream.  Using a
+    /// `Cell` so `emit(&self, ...)` can stay non-mutable for the
+    /// callers that already pass `&self`.
+    current_loc: std::cell::Cell<SourceLoc>,
+}
+
+impl Default for Compiler {
+    fn default() -> Self {
+        Compiler {
+            functions: Vec::new(),
+            break_stack: Vec::new(),
+            tmp_counter: 0,
+            label_counter: 0,
+            source_map: Vec::new(),
+            current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+        }
+    }
 }
 
 impl Compiler {
@@ -172,10 +209,28 @@ impl Compiler {
         format!("{prefix}_{i}")
     }
 
-    fn emit(&self, out: &mut Vec<IIRInstr>, op: &str, dest: Option<&str>,
+    fn emit(&mut self, out: &mut Vec<IIRInstr>, op: &str, dest: Option<&str>,
             srcs: Vec<Operand>, ty: &str)
     {
         out.push(IIRInstr::new(op, dest.map(|s| s.to_string()), srcs, ty));
+        // Tag this instruction with the "currently compiling" source
+        // position.  Statement-level compile_* entry points set
+        // self.current_loc on entry, so every instruction emitted
+        // while compiling that statement (including from sub-
+        // expressions) inherits the statement's source line.
+        //
+        // Line-based debuggers care about which line a breakpoint
+        // sits on, not the per-expression column.  Statement-level
+        // granularity is both sufficient and cheaper than per-
+        // expression threading.
+        self.source_map.push(self.current_loc.get());
+    }
+
+    /// Update the "currently compiling" source position.  Subsequent
+    /// `emit` calls tag their instructions with this position via the
+    /// `source_map` field.
+    fn set_loc(&self, loc: SourceLoc) {
+        self.current_loc.set(loc);
     }
 
     fn compile_program(&mut self, ast: &GrammarASTNode) -> Result<(), OctError> {
@@ -210,6 +265,16 @@ impl Compiler {
         self.tmp_counter = 0;
         self.label_counter = 0;
         self.break_stack.clear();
+        // Reset per-function source-map state.  The vec accumulates
+        // one `SourceLoc` per emitted instruction so the resulting
+        // `IIRFunction.source_map` stays in lockstep with
+        // `instructions` — the lockstep invariant the IIR consumers
+        // (debugger, stack traces, AOT debug info) require.
+        self.source_map.clear();
+        // Default position for instructions emitted before any
+        // statement (e.g. the synthesised main epilogue): the fn
+        // declaration's own line.
+        self.set_loc(node_loc(fn_decl));
 
         let name = first_name_token(fn_decl)
             .ok_or_else(|| OctError::Malformed("fn_decl missing NAME".into()))?;
@@ -278,6 +343,20 @@ impl Compiler {
         // JIT's threshold-zero compile path.  Mirrors Brainfuck +
         // Dartmouth BASIC.
         iir_fn.type_status = interpreter_ir::function::FunctionTypeStatus::FullyTyped;
+        // Move the accumulated source positions onto the function.
+        // The lockstep invariant (one entry per instruction) is
+        // enforced by [`emit`]: every push to `body` pairs with a
+        // push to `source_map`.  We defensively pad with the fn
+        // declaration's own location in case any pre-source_map code
+        // path slipped through (this branch is dead today but cheap).
+        let body_len = iir_fn.instructions.len();
+        while self.source_map.len() < body_len {
+            self.source_map.push(node_loc(fn_decl));
+        }
+        if self.source_map.len() > body_len {
+            self.source_map.truncate(body_len);
+        }
+        iir_fn.source_map = std::mem::take(&mut self.source_map);
         self.functions.push(iir_fn);
         Ok(())
     }
@@ -298,6 +377,11 @@ impl Compiler {
     fn compile_stmt(&mut self, stmt: &GrammarASTNode, out: &mut Vec<IIRInstr>)
         -> Result<(), OctError>
     {
+        // Tag every instruction emitted while compiling this statement
+        // (including from sub-expressions) with the statement's source
+        // position.  See `emit`'s documentation for why statement-level
+        // granularity is correct for line-based breakpoints.
+        self.set_loc(node_loc(stmt));
         // `stmt` wraps exactly one of the *_stmt rules.
         let inner = child_nodes(stmt).into_iter().next()
             .ok_or_else(|| OctError::Malformed("empty stmt".into()))?;
@@ -849,5 +933,53 @@ mod tests {
         let fact_o = ops(&m, "fact");
         assert!(fact_o.contains(&"call".to_string()),
                 "fact must self-call; got {fact_o:?}");
+    }
+
+    // ── Source-map invariants (OCT05 — debugger prerequisite) ──────────
+
+    #[test]
+    fn source_map_lockstep_with_instructions() {
+        // Every function's source_map must have exactly one entry per
+        // instruction.  Without this invariant, the debugger's
+        // sidecar can't map a paused IIR PC back to a source line.
+        let m = compile_source(
+            "fn main() { let x: u8 = 30; let y: u8 = 12; }",
+            "test",
+        ).expect("ok");
+        for f in &m.functions {
+            assert_eq!(
+                f.source_map.len(),
+                f.instructions.len(),
+                "fn {} source_map ({}) must be lockstep with instructions ({})",
+                f.name, f.source_map.len(), f.instructions.len(),
+            );
+        }
+    }
+
+    #[test]
+    fn source_map_carries_real_line_numbers() {
+        // The compiler should thread real source positions through the
+        // emitted IIR, not just SYNTHETIC (line=0, col=0).  Without
+        // real positions, line-based breakpoints cannot resolve.
+        //
+        // We construct a 3-line program and assert that at least one
+        // instruction is tagged with each non-empty line.
+        let src = "fn main() {\n\
+                   let x: u8 = 30;\n\
+                   let y: u8 = 12;\n\
+                   }\n";
+        let m = compile_source(src, "test").expect("ok");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let lines_seen: std::collections::BTreeSet<u32> = main.source_map.iter()
+            .filter(|l| **l != SourceLoc::SYNTHETIC)
+            .map(|l| l.line)
+            .collect();
+        // We expect at least lines 2 and 3 to be tagged (the two let
+        // statements).  The synthesised main epilogue may carry line 1
+        // (the fn declaration) or be SYNTHETIC — either is acceptable.
+        assert!(lines_seen.contains(&2),
+            "expected line 2 (first let stmt) to appear in source_map; got: {lines_seen:?}");
+        assert!(lines_seen.contains(&3),
+            "expected line 3 (second let stmt) to appear in source_map; got: {lines_seen:?}");
     }
 }

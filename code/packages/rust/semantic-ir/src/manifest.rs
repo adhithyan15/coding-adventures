@@ -44,6 +44,12 @@ pub enum Feature {
     Sequences,
     Maps,
     ShortCircuit,
+    // ── SIR17 (object-oriented frontends) ────────────────────────────
+    /// Module contains at least one `Stmt::ClassDef`.  Phase 14a
+    /// (Ruby) introduces this feature with the empty-body form
+    /// `class Foo; end`.  Future Ruby phases extend the body shape
+    /// without renaming the feature.
+    Classes,
 }
 
 impl Feature {
@@ -65,6 +71,7 @@ impl Feature {
         Feature::Sequences,
         Feature::Maps,
         Feature::ShortCircuit,
+        Feature::Classes,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -86,6 +93,7 @@ impl Feature {
             Feature::Sequences => "sequences",
             Feature::Maps => "maps",
             Feature::ShortCircuit => "short-circuit",
+            Feature::Classes => "classes",
         }
     }
 

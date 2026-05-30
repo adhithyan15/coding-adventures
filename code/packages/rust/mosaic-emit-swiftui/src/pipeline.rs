@@ -896,19 +896,31 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
         }
     }
 
-    // `.onSubmit { dispatch(.e(value: value)) }`. SwiftUI fires onSubmit
-    // when the user presses Enter / Return in the TextField.
+    // `.onSubmit { dispatch(.e) }`. SwiftUI fires onSubmit when the
+    // user presses Enter / Return in the TextField.
+    //
+    // We deliberately emit the VOID form regardless of whether
+    // `value:` is bound on the HostInput. The previous shape
+    // `dispatch(.<case>(value: <value_expr>))` was an emitter bug:
+    // it tried to call a Swift enum case with an associated value
+    // that the .mil never declared (`emit onCommit ;` has no
+    // payload), producing "enum case has no associated values"
+    // compile errors. Matches the React backend, which dispatches
+    // `{ type: "commit" }` with no value field. Authors who need
+    // the live value subscribe to `onChange` (which IS the
+    // value-carrying path — see the `.onChange(of:)` handler
+    // above).
+    //
+    // If a future Mosaic component genuinely needs an onCommit
+    // that carries the value, the right move is to declare
+    // `emit onCommit ( value : text ) ;` in the .mil and have the
+    // emitter look up the emit's payload from the interface
+    // descriptor — not to guess from the HostInput's `value:` prop.
+    // That richer payload-aware handling is tracked as a follow-up.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_emit_name(&case_name)?;
-        if find_slot_ref_prop(node, "value").is_some() {
-            line.push_str(&format!(
-                ".onSubmit {{ dispatch(.{case_name}(value: {value_expr})) }}"
-            ));
-        } else {
-            // No value slot — emit the void form.
-            line.push_str(&format!(".onSubmit {{ dispatch(.{case_name}) }}"));
-        }
+        line.push_str(&format!(".onSubmit {{ dispatch(.{case_name}) }}"));
     }
 
     // `.onExitCommand { dispatch(.e) }` — macOS Escape-key handler.
@@ -2916,9 +2928,17 @@ mod tests {
         )
         .unwrap()
         .output;
+        // Always emit the void-form dispatch. The previous
+        // `dispatch(.commit(value: value))` shape was an emitter bug:
+        // when the Mosaic component declares `emit onCommit ;` (no
+        // payload — which is the common case), the Swift compiler
+        // rejected the value-carrying form as "enum case has no
+        // associated values". Authors that need the live value
+        // subscribe to `onChange` instead (which IS the value-
+        // carrying path; see `.onChange(of: ...)` test elsewhere).
         assert!(
-            out.contains(".onSubmit { dispatch(.commit(value: value)) }"),
-            "expected .onSubmit dispatch site, got:\n{out}"
+            out.contains(".onSubmit { dispatch(.commit) }"),
+            "expected void-form .onSubmit dispatch, got:\n{out}"
         );
     }
 

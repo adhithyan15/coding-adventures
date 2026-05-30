@@ -117,6 +117,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // Phase 6z — float literals (`1.5`, `1e10`, `1.5e-3`) lower
         // to `Expr::FloatLit` and trigger the `Floats` feature.
         Feature::Floats,
+        // Phase 14a (FC) — `class Foo; end` lowers to
+        // `Stmt::ClassDef` and triggers the `Classes` feature.
+        Feature::Classes,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -269,6 +272,24 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     || expr_references_any_name(value, names)
                 {
                     return true;
+                }
+            }
+            Stmt::ClassDef { body, .. } => {
+                // A class declaration body is itself a `Vec<Stmt>`.
+                // Recurse over each contained statement using a
+                // synthetic wrapper Block, mirroring the loop /
+                // pattern-stmt arms above.  Phase 14a always lowers
+                // an empty body so this loop is a no-op; included
+                // for forward-compatibility with later phases.
+                for inner in body {
+                    let synthetic = Block {
+                        stmts: vec![inner.clone()],
+                        value: Expr::NilLit { span: inner.span().clone() },
+                        span: inner.span().clone(),
+                    };
+                    if block_references_any_name(&synthetic, names) {
+                        return true;
+                    }
                 }
             }
         }
@@ -496,22 +517,50 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
-            "class_statement" | "module_statement" => {
-                // Phase 6f: class/module declarations parse but don't
-                // yet introduce a real namespace in SIR v0 (SIR has no
-                // `class` / `namespace` node — that lands in a later
-                // phase together with method dispatch).  We walk the
+            "class_statement" => {
+                // Phase 14b (FC): `class Foo … end` lowers to a
+                // first-class `Stmt::ClassDef { name, body, span }`
+                // whose `body` now carries the class's *executable*
+                // statements in source order (Phase 14a always
+                // emitted an empty body).
+                //
+                // Method definitions (`def` / endless `def`) inside
+                // the body continue to be hoisted to top-level
+                // `Function`s — SIR v0 has no method-as-statement
+                // node, so a method can't live inside `body`
+                // (a `Vec<Stmt>`).  The hoisting is now done
+                // per-child inside `lower_class_body_statements`
+                // (replacing the whole-body `collect_def_statements_from_body`
+                // pre-pass the 14a arm used), so each nested `def` is
+                // hoisted exactly once and every non-`def` statement
+                // is preserved in `body` instead of being dropped.
+                let name = self.extract_class_name(node)?;
+                // Phase 14c — optional `< Bar` superclass clause.
+                let superclass = self.extract_superclass(node);
+                self.features_used.insert(Feature::Classes);
+                let body = self.lower_class_body_statements(node)?;
+                Ok(Stmt::ClassDef {
+                    name,
+                    superclass,
+                    body,
+                    span: self.span_of(node),
+                })
+            }
+            "module_statement" => {
+                // Phase 6f: module declarations parse but don't
+                // yet introduce a real namespace in SIR v0 (Phase
+                // 14d will land `Stmt::ModuleDef`).  We walk the
                 // body so nested `def` declarations *are* hoisted to
                 // top-level Functions (matching the def_statement
                 // behaviour at the program level), then emit a no-op
-                // ExprStmt(NilLit) in place of the class/module so
-                // the main-body statement stream stays in sync with
-                // the source line count.
+                // ExprStmt(NilLit) in place of the module so the
+                // main-body statement stream stays in sync with the
+                // source line count.
                 //
                 // Caveat (documented for backends): the hoisted
                 // methods land at top-level, not nested under the
-                // class name.  In real Ruby, `class Foo; def bar`
-                // makes `bar` an instance method of `Foo`.  v0 SIR
+                // module name.  In real Ruby, `module M; def bar`
+                // makes `bar` a module-level method of `M`.  v0 SIR
                 // collapses the namespace; the validator still
                 // accepts the result because every function has a
                 // unique name and `main` is the only export.
@@ -1549,6 +1598,117 @@ impl Lowerer {
             }
         }
         Ok(())
+    }
+
+    /// Phase 14b (FC) — lower a `class_statement` body into the
+    /// `Vec<Stmt>` carried by `Stmt::ClassDef.body`.
+    ///
+    /// Walks the class body's `statement` children once, in source
+    /// order:
+    ///
+    /// - `def_statement` / `endless_def_statement` are **hoisted** to
+    ///   top-level `Function`s on `self.user_functions` (SIR v0 has no
+    ///   method-as-statement node, so a method body can't live inside
+    ///   a `Vec<Stmt>`).  They contribute *nothing* to `body` — the
+    ///   hoisted function is the canonical representation.
+    /// - Every other statement (constant/expression assignments, bare
+    ///   expressions, nested `class` / `module` declarations, loops, …)
+    ///   is lowered via the same [`lower_statement_inner_multi`]
+    ///   dispatch used for the program body and pushed onto `body`,
+    ///   so it is preserved rather than discarded.
+    ///
+    /// Hoisting here is per-direct-child (not the recursive
+    /// whole-body `collect_def_statements_from_body` walk the Phase 14a
+    /// arm used).  A nested `class`/`module` statement is lowered via
+    /// the normal dispatch, whose own arm hoists *its* direct `def`s —
+    /// so every method is hoisted exactly once and no name is
+    /// double-registered (which would trip the validator's function
+    /// name-uniqueness check).
+    fn lower_class_body_statements(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let mut body: Vec<Stmt> = Vec::new();
+        for child in &node.children {
+            let stmt = match child {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
+                _ => continue,
+            };
+            let inner = match self.first_node_child(stmt) {
+                Some(n) => n,
+                None => continue,
+            };
+            match inner.rule_name.as_str() {
+                "def_statement" => {
+                    let func = self.lower_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                "endless_def_statement" => {
+                    let func = self.lower_endless_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                _ => {
+                    body.extend(self.lower_statement_inner_multi(inner)?);
+                }
+            }
+        }
+        Ok(body)
+    }
+
+    /// Phase 14a (FC) — extract the class name from a `class_statement`
+    /// AST node.
+    ///
+    /// Shape: `KEYWORD("class") NAME { !"end" statement } KEYWORD("end")`.
+    /// The class name is the first `TokenType::Name` token in the child
+    /// list (the `class` token has `TokenType::Keyword`, so a plain
+    /// `expect_first_name_token` would also work, but we prefer an
+    /// explicit Name-type filter for symmetry with the analogous
+    /// helper inside `lower_def_statement` that extracts the method
+    /// name).
+    fn extract_class_name(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Result<String, RubyLowerError> {
+        let name_token = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+            _ => None,
+        });
+        let name_token = name_token.ok_or_else(|| RubyLowerError {
+            message: "class_statement missing class-name token".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        Ok(name_token.value.clone())
+    }
+
+    /// Phase 14c (FC) — extract the optional superclass name from a
+    /// `class_statement` AST node (`class Foo < Bar`).
+    ///
+    /// Grammar shape: `"class" NAME [ "<" NAME ] { … } "end"`.  The
+    /// `"<"` separator lexes as a `TokenType::Name` token whose *value*
+    /// is `"<"` (the lexer reclassifies comparison operators as Name
+    /// tokens; the grammar's `"<"` literal matches by value).  We scan
+    /// the direct child tokens for that `<` separator and return the
+    /// value of the *next* `Name`-type token — the superclass.  Returns
+    /// `None` for a base class (`class Foo`), where no `<` is present.
+    ///
+    /// Only direct child tokens are inspected, so a `<` appearing deep
+    /// inside a body statement (e.g. `a < b` as a comparison) is never
+    /// mistaken for the superclass separator: body statements are
+    /// `statement` *nodes*, not bare tokens, in the child list.
+    fn extract_superclass(&self, node: &GrammarASTNode) -> Option<String> {
+        let mut seen_lt = false;
+        for child in &node.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if seen_lt && matches!(t.type_, TokenType::Name) {
+                    return Some(t.value.clone());
+                }
+                if t.value == "<" {
+                    seen_lt = true;
+                }
+            }
+        }
+        None
     }
 
     /// Phase 7c — lower an endless method definition `def foo = expr`

@@ -1,5 +1,100 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.4.0 — 2026-05-30 (BASIC05 — source-location threading for debugger)
+
+### Added — Real source positions in `IIRFunction.source_map`
+
+BASIC's emitted IIR now carries real `(line, column)` per instruction
+in `IIRFunction.source_map`, in lockstep with `instructions`.
+Previously the field was either empty or all `SourceLoc::SYNTHETIC`.
+
+This is the prerequisite for line-based breakpoints in the future
+`basic-dap` debugger crate.  Without real positions, the debug
+sidecar built by the DAP layer cannot resolve `setBreakpoints
+{ file, lines: [N] }` requests to IIR instructions.
+
+This mirrors the pattern landed for `oct-iir-compiler` 0.4.0
+(OCT05 / PR #4583).  Same `node_loc()` + `Cell<SourceLoc>` +
+statement-level `set_loc()` shape — the next step in the
+horizontally-sequenced "every language gets every Twig-grade
+tool" roadmap.
+
+### Implementation
+
+- New `node_loc(&GrammarASTNode) -> SourceLoc` helper extracts
+  `(start_line, start_column)` from an AST node, falling back to
+  `SYNTHETIC` when the parser couldn't attach positions.
+- `Compiler` gained two fields: `source_map: Vec<SourceLoc>` (the
+  per-function accumulator) and `current_loc: Cell<SourceLoc>`
+  (the "currently compiling" position).  Manual `impl Default`
+  replaces the `#[derive(Default)]` since `Cell<SourceLoc>` doesn't
+  have a usable default (well, it does — but being explicit makes
+  the SYNTHETIC start state obvious to readers).
+- `Compiler::emit` now pushes `current_loc.get()` onto `source_map`
+  for every instruction it appends, maintaining the lockstep
+  invariant.
+- `emit_line` calls `set_loc(node_loc(line))` on entry — all
+  instructions emitted for that line (label + body) inherit the
+  line's source position.
+- `emit_statement` re-tags with the wrapped statement node's own
+  position, which may be a tighter range than `emit_line` set.
+- `emit_program` sets the initial loc to the program root so the
+  synthesised end-of-program epilogue (`const 0; ret`) gets a
+  sensible source line rather than `SYNTHETIC`.
+- `compile_program` ends with the move-with-defensive-padding shape:
+  `main.source_map = std::mem::take(&mut comp.source_map)` after
+  ensuring `source_map.len() == instructions.len()`.
+
+### Tests
+
+- 2 new unit tests:
+  - `source_map_lockstep_with_instructions`: every function's
+    `source_map.len() == instructions.len()`.
+  - `source_map_carries_real_line_numbers`: a 4-line BASIC program
+    produces entries for every line — proving the per-line source
+    positions get threaded through, not just SYNTHETIC.
+- All existing lib tests still pass.
+
+## 0.3.0 — 2026-05-29 (PL05-C — AOT backend acceptance proofs)
+
+### Added — `tests/backend_compat.rs` exercises every IIR-to-* backend
+
+BASIC's emitted IIR is now proven by automated tests to be accepted
+by the validators of every AOT backend (wasm, jvm, clr, beam).  This
+closes the "BASIC's IIR shape could regress without anyone noticing"
+gap — the same shape Twig (`twig-ir-compiler/tests/backend_compat.rs`),
+Nib (`nib-iir-compiler/tests/backend_compat.rs`), and Oct (PR #4580)
+already had.
+
+### Coverage (8 tests)
+
+| Group | Test | Asserts |
+|---|---|---|
+| Minimal | `basic_minimal_end_accepted_by_every_backend` | `10 END` |
+| Minimal | `basic_let_binding_accepted_by_every_backend` | `LET A = 42` |
+| Arithmetic | `basic_typed_add_accepted_by_every_backend` | `C = A + B` |
+| Arithmetic | `basic_typed_mul_accepted_by_every_backend` | `C = A * B` |
+| Control flow | `basic_if_then_goto_accepted_by_every_backend` | `IF A > 5 THEN 100` |
+| Control flow | `basic_for_next_loop_accepted_by_every_backend` | `FOR I = 1 TO 3 / NEXT I` |
+| Control flow | `basic_goto_accepted_by_every_backend` | `GOTO 100` |
+| Invariant | `basic_main_is_fully_typed` | main has `type_status == FullyTyped` |
+
+All 8 pass on first run — BASIC's IIR is shape-compatible with every
+backend with zero further changes.  This is the AOT counterpart to
+the existing tests/jit_smoke.rs + tests/jit_real_backend.rs (which
+prove the JIT path).
+
+### Dependencies
+
+Added `iir-to-wasm`, `iir-to-jvm-class-file`, `iir-to-cil-bytecode`,
+`iir-to-beam` as **dev-dependencies**.  None of them ship to runtime
+consumers of `dartmouth-basic-iir-compiler`.
+
+### Tests
+
+- 8 new backend_compat tests pass.
+- 17 lib + 8 + 6 + 4 existing tests still pass.
+
 ## 0.2.0 — 2026-05-26 (PL05-B — real BasicCirJit backend)
 
 ### Added — `BasicCirJit`: a real `jit_core::backend::Backend`

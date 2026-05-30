@@ -512,6 +512,25 @@ pub struct SpecialModesConfig {
     /// mode (zero overhead — the crate short-circuits every
     /// `create` / `contribute` call).
     pub correlation_vector: bool,
+    /// CLOC11.67: explicit path for the correlation-vector
+    /// sidecar JSON. When `None` (the default), the writer
+    /// falls back to placing the sidecar next to
+    /// `--js_output_file` as `<output>.cv.json`, or to
+    /// `closurec-cv.json` in the current working directory
+    /// when output is stdout. Only consulted when
+    /// `correlation_vector` is also true; ignored otherwise.
+    pub correlation_vector_output: Option<PathBuf>,
+    /// CLOC11.68: when true, the CV sidecar is written as
+    /// pretty-printed JSON (multi-line, 2-space indent) rather
+    /// than the default compact single-line form. Pretty mode
+    /// inflates byte size 3–5× for typical traces but is much
+    /// easier to read by hand. CI / build pipelines should
+    /// leave this off; humans inspecting a trace should turn
+    /// it on.
+    ///
+    /// Only consulted when `correlation_vector` is true; the
+    /// formatter never runs when the trace is disabled.
+    pub correlation_vector_pretty: bool,
 }
 
 // ---------------------------------------------------------------------------

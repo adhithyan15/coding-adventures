@@ -189,7 +189,7 @@ fn push_quoted_string_content(out: &mut String, content: &str) {
 /// We check both the grammar-supplied `type_name` (an `Option<String>`)
 /// and the structural `TokenType`'s `is_trivia()`. The two should
 /// agree but we accept either: defensive against grammar evolution.
-fn is_trivia(tok: &lexer::token::Token) -> bool {
+pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
     // Match grammar-supplied type names *exactly* — substring
     // matching against "COMMENT" would misclassify hypothetical
     // tokens like "NON_COMMENT_LITERAL". The set below is the
@@ -218,7 +218,7 @@ fn is_trivia(tok: &lexer::token::Token) -> bool {
 }
 
 /// True iff this is the EOF sentinel emitted by the lexer.
-fn is_eof(tok: &lexer::token::Token) -> bool {
+pub(crate) fn is_eof(tok: &lexer::token::Token) -> bool {
     matches!(tok.type_, lexer::token::TokenType::Eof)
 }
 

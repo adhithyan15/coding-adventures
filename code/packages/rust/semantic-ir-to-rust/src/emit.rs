@@ -180,6 +180,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         | Stmt::MapSet { span, .. } => {
             panic!("rust backend reached SIR16 statement at {} — capability check should have rejected it", span);
         }
+        // SIR17 (classes) — `Feature::Classes` is not accepted by
+        // this backend, so a class-using module is rejected by the
+        // capability check before emit.  Reaching this arm is a bug.
+        Stmt::ClassDef { span, .. } => {
+            panic!("rust backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -501,6 +507,12 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         | Stmt::SeqSet { span, .. }
         | Stmt::MapSet { span, .. } => {
             panic!("rust backend (inline) reached SIR16 statement at {} — capability check should have rejected it", span);
+        }
+        // SIR17 (classes) — unreachable: rejected by the capability
+        // check, and a class declaration has no inline-expression
+        // form regardless.
+        Stmt::ClassDef { span, .. } => {
+            panic!("rust backend (inline) reached SIR17 class-def statement at {} — capability check should have rejected it", span);
         }
     }
 }

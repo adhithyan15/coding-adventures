@@ -2,6 +2,87 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.3.0 — SIR17: class inheritance (`ClassDef.superclass`)
+
+Introduced by the Ruby frontend's Phase 14c (`class Foo < Bar`).
+
+### Added
+
+- `Stmt::ClassDef` gains a `superclass: Option<String>` field — the
+  parent class name (`Some("Bar")` for `class Foo < Bar`, `None` for a
+  base class `class Foo`).  It is an advisory name only: SIR v0 has no
+  class symbol table, so the validator does not resolve it (mirroring
+  how the class's own `name` is not bound as a local).
+
+### Changed
+
+- The text printer emits a `(< Super)` clause right after the class
+  name when `superclass` is set: `(class-def Foo (< Bar))`.  Base
+  classes are unchanged (`(class-def Foo)`).
+- The walker, validator, intrinsic-walk backend helper, and the four
+  reference backends' `ClassDef` arms are unaffected by the new field
+  (it carries no sub-expressions to traverse and no capability impact);
+  class-using modules are still rejected at the capability check before
+  emit.
+
+New test: `print_class_def_with_superclass`.  This is a **breaking
+struct change** for any code constructing `Stmt::ClassDef` literally —
+all in-tree constructors updated to pass `superclass`.
+
+## 0.2.1 — SIR17 validator: walk populated `ClassDef` bodies
+
+No node-shape change.  The Ruby frontend's Phase 14b begins emitting
+`Stmt::ClassDef` nodes with a *populated* `body` (Phase 14a always
+emitted an empty body), so the validator now actually walks it.
+
+### Changed
+
+- Factored the statement-sequence walk out of `check_block` into a
+  new private `check_stmt_seq(&[Stmt], env, depth)` helper.
+  `check_block` now calls it for `block.stmts` (then checks the
+  trailing `block.value`), preserving the exact prior behaviour —
+  parallel-`let` grouping, sequential `let*`, mutable `Assign`,
+  loop/scope handling.
+- `Stmt::ClassDef`'s validator arm now calls `check_stmt_seq` on the
+  body inside a fresh `env.mark()`/`env.rewind()` scope (Phase 14a
+  left this loop a documented no-op).  Class-body locals therefore
+  do **not** leak into the surrounding statement stream, and a
+  bad reference inside a class body is now reported instead of
+  silently accepted.  An explicit `MAX_IR_DEPTH` guard bounds
+  recursion for pathologically nested `class … class …` bodies.
+
+New tests (3): `class_def_body_with_let_binding_validates`,
+`class_def_body_undefined_varref_is_error` (proves the body is
+walked, not no-op'd), `class_def_body_local_does_not_leak_to_sibling`.
+Test count: 81 → 84 (+3).
+
+## 0.2.0 — SIR17: class declarations
+
+Adds the first object-oriented IR node, introduced by the Ruby
+frontend's Phase 14a (empty `class Foo; end`).
+
+### Added
+
+- `Stmt::ClassDef { name: String, body: Vec<Stmt>, span: Span }` — a
+  class declaration whose body is a list of statements.  The Ruby
+  frontend's Phase 14a lands the *empty-body* case (`body: vec![]`);
+  the variant is shaped to carry a populated body in later phases.
+  `body` is a `Vec<Stmt>` rather than a `Block` because a class body
+  is a declaration, not a value-producing expression.
+- `Feature::Classes` (kebab name `classes`) — declared by any module
+  that contains a `Stmt::ClassDef`.  Backends that do not list it in
+  their accepted-feature set reject such modules at the capability
+  check, before emit.
+
+### Changed
+
+- `Stmt::span()`, the validator, the text printer (`(class-def
+  Name ...)` s-expression), the walker, and the intrinsic-walk
+  backend helper all gained a `ClassDef` arm.  The four reference
+  backends (TypeScript, Rust, Python, Go) reject class-using modules
+  via their unchanged capability declarations, so their emit paths
+  treat the new arm as unreachable.
+
 ## 0.1.0 — initial release (SIR10 v0)
 
 First cut of the narrow-waist Semantic IR.  Implements the v0

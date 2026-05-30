@@ -1,8 +1,8 @@
 [package]
 name = "oct-iir-compiler"
-version = "0.2.0"
+version = "0.4.0"
 edition = "2021"
-description = "Oct frontend for the LANG VM AOT chain — lowers parsed and type-checked Oct into interpreter_ir::IIRModule.  OCT02 phase 3 + OCT03: emits FullyTyped functions so the JITCore + GenericCirJit chain can run Oct programs JIT-compiled."
+description = "Oct frontend for the LANG VM AOT chain — lowers parsed and type-checked Oct into interpreter_ir::IIRModule.  OCT03: emits FullyTyped functions so the JITCore + GenericCirJit chain can run Oct programs JIT-compiled.  OCT04: backend_compat e2e tests prove Oct's IIR is accepted by every IIR-to-{wasm,jvm,clr,beam} validator.  OCT05: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints."
 
 [dependencies]
 lexer                        = { path = "../lexer" }
@@ -16,3 +16,9 @@ interpreter-ir               = { path = "../interpreter-ir" }
 # JITCore + GenericCirJit chain.
 vm-core   = { path = "../vm-core" }
 jit-core  = { path = "../jit-core" }
+# Used by tests/backend_compat.rs to prove Oct programs are accepted
+# by every IIR-to-* backend validator (wasm / jvm / clr / beam).
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+iir-to-beam           = { path = "../iir-to-beam" }

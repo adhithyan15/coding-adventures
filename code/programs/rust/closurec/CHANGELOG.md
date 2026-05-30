@@ -2,6 +2,259 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.31.0] - 2026-05-30
+
+### Added — CLOC11.68: `--correlation_vector_pretty` flag
+
+Adds a toggle between compact and pretty-printed CV sidecar JSON. Default is compact (single-line, what CI / build pipelines want); `--correlation_vector_pretty` switches to multi-line, 2-space-indented output for human inspection.
+
+Resolution:
+- `--correlation_vector_pretty` (default `false`) → compact JSON via `CVLog::to_json_string`.
+- `--correlation_vector_pretty true` → round-trip via `serde_json::Value` and `to_string_pretty` for the multi-line form.
+
+The flag is only consulted when `--correlation_vector` is also enabled. With CV off, the formatter never runs.
+
+### Why round-trip rather than a new upstream method
+
+`CVLog::to_json_string` is the only path that knows the `LogSnapshot` shape (the fields aren't `pub`). Parsing back to a `serde_json::Value` and re-emitting via `to_string_pretty` is wasteful but correct, and only happens on the opt-in slow path. The performance hit is irrelevant — humans-eyes mode is already off the critical path of a build.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_pretty: bool`.
+- `wire::read_special_modes` now reads `correlation_vector_pretty` from the parse result.
+- `format_cv_log_json` signature changed from `(&CVLog) -> String` to `(&CVLog, pretty: bool) -> String`. Private to the crate; no external API impact.
+- Versions: `Cargo.toml` `0.30.0` → `0.31.0`, `cli.spec.json` `0.30.0` → `0.31.0`.
+
+## [0.30.0] - 2026-05-30
+
+### Added — CLOC11.67: `--correlation_vector_output <path>` flag
+
+Adds an explicit path override for the correlation-vector sidecar JSON. Lets CI pipelines route the CV trace to an artifact directory (or `/dev/null` for benchmarks) without relying on the sidecar-of-output convention.
+
+Resolution order (highest precedence first):
+
+1. `--correlation_vector_output <path>` → that path, verbatim, no decoration.
+2. Else if `--js_output_file` is set → `<output>.cv.json` beside it.
+3. Else (stdout output) → `closurec-cv.json` in the working directory.
+
+The flag is only consulted when `--correlation_vector` is also enabled — the trace itself is still opt-in. With CV off, the path flag is ignored.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_output: Option<PathBuf>`.
+- `wire::read_special_modes` now reads `correlation_vector_output` from the parse result; empty string maps to `None`.
+- Versions: `Cargo.toml` `0.29.0` → `0.30.0`, `cli.spec.json` `0.29.0` → `0.30.0`.
+
+## [0.29.0] - 2026-05-30
+
+### Added — CLOC11.66: WHITESPACE_ONLY token tombstones
+
+When `--correlation_vector` is on and `--compilation_level WHITESPACE_ONLY` is set, every token CV that the minifier drops (trivia + EOF) now gets a `DeletionRecord` (tombstone) via `CVLog::delete`. The CV trace shows precisely which input bytes the WHITESPACE_ONLY pass killed.
+
+Tombstone shape (one per dropped token):
+
+```
+source: "compilation_level"
+reason: "whitespace_only_dropped"
+meta: {
+  kind:                  "trivia" | "eof",
+  token_index:           <0-based position in lexer stream>,
+  token_lexeme_byte_len: <token.value.len()>,
+}
+```
+
+Implementation reuses `whitespace_only::is_trivia` / `is_eof` (now `pub(crate)`) — the same predicate the minifier itself uses — so the tombstone set is guaranteed identical to the dropped set without a second lex pass.
+
+Other compilation levels (SIMPLE, ADVANCED, BUNDLE, TRANSPILE_ONLY) are currently identity on the string and don't drop tokens, so no tombstones land for those. As those levels grow real bodies in later CLOC11.* slices, each will need its own tombstone block.
+
+### Changed
+
+- `whitespace_only::is_trivia` and `whitespace_only::is_eof` promoted from private `fn` to `pub(crate) fn` so the per-token CV path can call them directly without duplicating the predicate.
+- Versions: `Cargo.toml` `0.28.0` → `0.29.0`, `cli.spec.json` `0.28.0` → `0.29.0`.
+
+## [0.28.0] - 2026-05-30
+
+### Added — CLOC11.65: per-token `defines.applied` contributions
+
+Uses the per-token CV substrate from CLOC11.64. When `--correlation_vector` is on and `--define K[=V]` flags are present, every `Name` token in the input whose lexeme matches a define key gets a `defines.applied` contribution recorded **on its token CV**, not on the per-file root.
+
+Per-token `defines.applied` contribution shape:
+
+```
+source: "defines"
+tag:    "applied"
+meta: {
+  define_name:        <token.value>,
+  define_value:       <Bool | Number | String | Null>,
+  define_value_kind:  "bool" | "number" | "string" | "null",
+  token_index:        <0-based position in the lexer stream>,
+}
+```
+
+The per-file `defines.applied` summary (defines_count, byte deltas) still fires from `transform_source_with_cv` — the per-token records are *in addition*, so visualization tools get both "the stage ran" (file-level) and "this specific token was hit" (token-level).
+
+Implementation: the token loop now keeps a `Vec<String>` of derived token CV IDs in lock-step with the token vector, so post-loop lookups are O(1). The defines check skips non-Name tokens — strings, numbers, regex literals — matching the existing string-level `apply_defines` behaviour.
+
+Caveats (unchanged from the string-level pass):
+- Defines inside string literals are not substituted (correct — the Name filter excludes string tokens).
+- Object shorthand (`{ FOO }`) would change semantics if substituted; same caveat as `apply_defines`.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.27.0` → `0.28.0`, `cli.spec.json` `0.27.0` → `0.28.0`.
+
+## [0.27.0] - 2026-05-29
+
+### Added — CLOC11.64: per-token CV entries (children of per-file CV)
+
+Continues the "every feature CV-traceable when enabled" series. When `--correlation_vector` is on, after reading each input file we now tokenize with `coding-adventures-javascript-lexer::tokenize_javascript_typed` and derive a **child CV entry per token** under the per-file CV root.
+
+This is the substrate for the next slices (CLOC11.65+) to migrate token-level contributions (`defines.applied`, `whitespace_only` drops, rename mappings) off the per-file summary entry and onto the precise token CV they touched — so the trace tells you *which token* a transform mutated, not just *which file*.
+
+Per-token CV entry shape:
+
+| Field         | Value                                            |
+|---------------|--------------------------------------------------|
+| parent_ids    | `[per_file_cv_id]` (via `CVLog::derive`)         |
+| `source`      | `"lexer_token"`                                  |
+| `location`    | `"<path>:<line>:<column>"` (1-based, lexer-native) |
+| `meta.kind`   | lowercased `TokenType` debug name                |
+| `meta.lexeme_byte_len` | `value.len()` (post escape resolution)  |
+| `meta.token_index` | 0-based position in the token stream        |
+
+Per-file CV gains one summary contribution after the token loop:
+
+```
+source: "lex", tag: "tokens_emitted", meta: {token_count: N}
+```
+
+Error policy: a lex failure does **not** abort the build. The string-only pipeline still runs (WHITESPACE_ONLY can copy verbatim, defines can no-op). We record `lex.failed` with the lexer error message on the per-file CV and skip per-token creation.
+
+Cost: only paid when `--correlation_vector` is on. Default-off path is byte-identical to 0.26.0.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.26.0` → `0.27.0`, `cli.spec.json` `0.26.0` → `0.27.0`.
+
+## [0.26.0] - 2026-05-27
+
+### Added — CLOC11.63: CV records for output writes (JS, source map, manifest)
+
+Extends CLOC11.62 to record the three output-file writes as derived CV entries. Every byte that hits disk now has a CV ID, and the trace forms a proper DAG from per-file sources through combined-output to disk artifacts.
+
+Three new derived CV entities:
+
+| Entity                 | Created via   | Parent(s)            | Records                              |
+|------------------------|---------------|----------------------|--------------------------------------|
+| `js_output_file`       | `derive()`    | `combined_cv_id`     | `write_output_file.wrote` + byte_len |
+| `source_map_output`    | `derive()`    | `combined_cv_id`     | `write_output_file.wrote` + byte_len |
+| `manifest_output`      | `merge()`     | `per_file_cv_ids[]`  | `write_output_file.wrote` + byte_len |
+
+**Why manifest uses `merge()` with per-file parents:** the manifest enumerates input files, not the merged output. Conceptually it's an index of the per-file CVs, not a derivative of the merged JS. A consumer following provenance from a manifest entry walks straight back to the per-file CV roots.
+
+**Why JS / source_map use `derive()` with `combined_cv_id`:** they derive their bytes from the combined post-transform substrate.
+
+Gates: each record only contributes when the corresponding flag is set (`--js_output_file`, `--create_source_map`, `--output_manifest`).
+
+### Coverage milestone
+
+After CLOC11.63, the CV trace covers every step:
+
+```
+input → per-file CV → combined CV → js_output_file CV → disk
+                                  → source_map_output CV → disk
+                                  → manifest_output CV (merge of per-file) → disk
+```
+
+The user's policy ("every feature CV-traceable when enabled") is structurally complete for the pipeline that exists today. CLOC11.64–66 add granularity (per-token, tombstones) and convenience (`--correlation_vector_output`), not coverage.
+
+### Implementation
+
+- Captured `encoded_byte_len` before the JS-write match block to avoid borrow-of-moved when the None arm consumes `encoded`.
+- Output writes now followed by `cv_log.derive(...)` or `cv_log.merge(...)` when CV is on.
+- 4 new unit tests in `run::tests`.
+
+## [0.25.0] - 2026-05-27
+
+### Added — CLOC11.62: CV records for post-combine stages
+
+Extends CLOC11.61's per-stage instrumentation to the four post-concatenation pipeline stages: `emit_use_strict`, `output_wrapper`, `isolation_mode` (IIFE), and `charset`. After the per-file loop, the CV log derives a new "combined" entry whose parents are every per-file CV ID — so a downstream output byte's provenance walks `combined → all source files` automatically.
+
+The combined entry is the substrate every post-concat contribution lands on:
+
+| Stage             | `source`           | `tag`           | `meta`                                                        |
+|-------------------|--------------------|-----------------|---------------------------------------------------------------|
+| emit_use_strict   | `emit_use_strict`  | `prepended`     | `{input_byte_len, output_byte_len}` (only when flag set)      |
+| output_wrapper    | `output_wrapper`   | `substituted`   | `{input_byte_len, output_byte_len}` (only when wrapper changed bytes) |
+| isolation_mode    | `isolation_mode`   | `iife_wrapped`  | `{input_byte_len, output_byte_len}` (only when IIFE set)      |
+| charset           | `charset`          | `normalized`    | `{mode: "US_ASCII"\|"UTF-8", input_byte_len, output_byte_len}` (always) |
+
+Contribution-or-not policy: the `charset` stage always contributes (it always runs); the other three skip the contribution when they're pass-throughs (no flag set / no bytes changed). This keeps the trace focused on actual byte movement while still recording the structural step.
+
+### New CV entity: `concatenated_combined_source`
+
+After the per-file loop, when CV is on, `run_compiler` calls `CVLog::merge(per_file_ids, Some(combined_origin))` to create a new entry whose `parent_ids` are every per-file root. Meta carries `file_count` and `byte_len`. Origin: `source = "concatenated_combined_source"`, no location (it's not a file on disk). All four post-combine contributions attach here.
+
+### Implementation
+
+- **`per_file_cv_ids: Vec<String>`** accumulated through the per-file loop.
+- **`combined_cv_id`** computed after the loop via `cv_log.merge(...)`.
+- **Each post-combine stage** wrapped with `if let Some(id) = &combined_cv_id { ... cv_log.contribute(id, ...) }`.
+- **`isolation_mode = None` branch** had to switch from move-of-`wrapped` to `.clone()` so we can record the input byte length in the CV branch above the move.
+- **6 new unit tests** in `run::tests` (combined entry exists with parents, emit_use_strict on, emit_use_strict off → no contribution, output_wrapper changing bytes, IIFE on, charset always with mode).
+- **Existing CLOC11.61 `pass_order` test** updated to assert prefix `[compilation_level, defines, ...]` rather than exact `[compilation_level, defines]`, since CLOC11.62 + later slices grow the pass_order.
+
+### Pipeline matrix (unchanged structurally)
+
+Same 15 steps; CLOC11.62 adds per-stage CV records inside steps 8–11 (and a new derived "combined" CV entity between steps 6 and 7).
+
+### Still queued
+
+- CLOC11.63: source-map / manifest writes recorded as derived CV entries.
+- CLOC11.64–66: per-token granularity, tombstones for removals, custom `--correlation_vector_output` path flag.
+
+## [0.24.0] - 2026-05-27
+
+### Changed — CLOC11.61: per-stage `--correlation_vector` contributions
+
+Builds on CLOC11.60's plumbing. Replaces the single `transform_source.applied` summary contribution with one record per pipeline stage so the CV trace shows which pass touched the bytes and how much they grew/shrank.
+
+Per-file CV entry now gains:
+
+| Stage              | `source`            | `tag`             | `meta`                                                  |
+|--------------------|---------------------|-------------------|---------------------------------------------------------|
+| WhitespaceOnly     | `compilation_level` | `whitespace_only` | `{input_byte_len, output_byte_len}`                     |
+| Simple             | `compilation_level` | `identity`        | `{level: "SIMPLE"}`                                     |
+| Advanced           | `compilation_level` | `identity`        | `{level: "ADVANCED"}`                                   |
+| Bundle             | `compilation_level` | `identity`        | `{level: "BUNDLE"}`                                     |
+| TranspileOnly      | `compilation_level` | `identity`        | `{level: "TRANSPILE_ONLY"}`                             |
+| Defines            | `defines`           | `applied`         | `{input_byte_len, output_byte_len, defines_count}`      |
+
+The `defines.applied` contribution lands even when `--define` is empty (`defines_count: 0`) — the stage *ran*, it just had nothing to substitute. Keeps the trace symmetric across files; visualization tools don't have to special-case zero-defines runs.
+
+### Implementation
+
+- **New `transform_source_with_cv(source, config, cv) -> Result<String>`** with `cv: Option<(&mut CVLog, &str id)>`. When `cv` is `None`, byte-identical behavior to `transform_source`.
+- **`transform_source` is now a thin facade** delegating to `transform_source_with_cv(..., None)`.
+- **`run_compiler`'s per-file loop** calls `transform_source_with_cv` when CV is on, passing the per-file `cv_id`. The CLOC11.60 post-call summary contribution is removed (superseded by the per-stage records).
+- **5 new unit tests** in `run::tests`:
+  - WHITESPACE_ONLY → `compilation_level.whitespace_only` contribution lands
+  - SIMPLE default → `compilation_level.identity` with `level: "SIMPLE"` lands
+  - `--define` entries → `defines.applied` with `defines_count`
+  - Both stages present + `pass_order: [compilation_level, defines]`
+  - `transform_source` facade ≡ `transform_source_with_cv(_, _, None)`
+- **CLOC11.60 multi-file test updated** to count 2 × `compilation_level` + 2 × `defines` contributions instead of 2 × the old `transform_source` summary.
+
+### Pipeline matrix (unchanged structurally)
+
+Same 15 steps as 0.23.0; the change is in step 5's instrumentation, not in pipeline order.
+
+### Still queued
+
+- CLOC11.62: CV records for wrapper / IIFE / charset stages.
+- CLOC11.63: source-map / manifest writes recorded as derived CV entries.
+- CLOC11.64–66: per-token granularity, tombstones for removals, custom `--correlation_vector_output` path.
+
 ## [0.23.0] - 2026-05-27
 
 ### Added — CLOC11.60: opt-in `--correlation_vector` plumbing through pipeline

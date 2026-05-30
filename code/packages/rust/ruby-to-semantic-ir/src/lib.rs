@@ -597,14 +597,308 @@ mod tests {
     }
 
     #[test]
-    fn empty_class_lowers_cleanly() {
-        // `class Foo; end` with no body should produce a module that
-        // still has `main` and no extra user functions.
+    fn empty_class_lowers_to_class_def_stmt() {
+        // Phase 14a (FC): `class Foo; end` lowers to a real
+        // `Stmt::ClassDef { name: "Foo", body: vec![], .. }`,
+        // replacing the pre-14a NilLit no-op contract.
         let m = lower("class Foo\nend\n");
-        // Only `main` exists.
+        // Only `main` exists — empty class has no methods to hoist.
         assert_eq!(m.functions.len(), 1);
         assert_eq!(m.functions[0].name, "main");
-        // The class declaration lowered to a no-op stmt in main.
+        let main = main_body(&m);
+        assert_eq!(main.stmts.len(), 1);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Foo");
+                assert!(body.is_empty(), "Phase 14a body is always empty");
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14a (FC) — empty `class Foo; end` first-class lowering.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn empty_class_requests_classes_feature() {
+        // Phase 14a (FC): emitting a `Stmt::ClassDef` triggers the
+        // `Feature::Classes` manifest entry.  Without the manifest
+        // entry, the validator would reject the module under its
+        // strict declared-vs-used check.
+        let m = lower("class Foo\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Classes),
+            "manifest should contain Feature::Classes; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn empty_class_module_passes_sir_validator() {
+        // E2E: lower → validate.  Catches any drift between the
+        // lowerer's manifest request and the validator's feature
+        // accounting for the new ClassDef stmt.
+        let m = lower("class Foo\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our class-only module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn empty_class_preserves_class_name_verbatim() {
+        // The class name must be the verbatim Ruby identifier — not
+        // case-folded, not prefixed.  Smoke-test a non-"Foo" name to
+        // make sure the helper doesn't pick up the `class` keyword
+        // token instead of the Name token.
+        let m = lower("class WidgetFactory\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, .. } => assert_eq!(name, "WidgetFactory"),
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_with_method_body_still_emits_class_def_and_hoists_method() {
+        // A method-*only* class keeps an empty `ClassDef.body` under
+        // both Phase 14a and 14b: method defs are hoisted to top-level
+        // `Function`s (SIR v0 has no method-as-statement node), so they
+        // are not represented inside the body `Vec<Stmt>`.  Phase 14b
+        // changes the *non-def* statements (see the tests below); the
+        // method-hoist contract is unchanged.
+        let m = lower("class Foo\n  def bar\n  end\nend\n");
+        // `bar` was hoisted to top-level Functions.
+        assert!(
+            m.functions.iter().any(|f| f.name == "bar"),
+            "expected hoisted `bar` function; got functions {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        // The class statement itself produced a ClassDef in main.
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Foo");
+                assert!(
+                    body.is_empty(),
+                    "method-only class body stays empty (defs hoist); got {:?}",
+                    body
+                );
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14b (FC) — class body with method defs + executable
+    // statements.  Method defs continue to hoist to top-level
+    // Functions; every *non-def* statement is now preserved in
+    // `Stmt::ClassDef.body` (Phase 14a discarded them).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn class_body_preserves_executable_statement_and_hoists_method() {
+        // `MAX = 10` (an executable class-body statement) must survive
+        // into `ClassDef.body` as a `LetBinding`, while `def bar` is
+        // still hoisted to a top-level Function.
+        let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "bar"),
+            "expected hoisted `bar`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Foo");
+                assert_eq!(
+                    body.len(),
+                    1,
+                    "the def is hoisted (0 body stmts) and only `MAX = 10` stays; got {:?}",
+                    body
+                );
+                match &body[0] {
+                    Stmt::LetBinding { name, value, .. } => {
+                        assert_eq!(name, "MAX");
+                        assert!(matches!(value, Expr::IntLit { value: 10, .. }));
+                    }
+                    other => panic!("expected LetBinding MAX, got {:?}", other),
+                }
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_body_preserves_multiple_statements_in_source_order() {
+        // Two constant assignments must appear in `body` in the same
+        // order they were written.
+        let m = lower("class Cfg\n  A = 1\n  B = 2\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { body, .. } => {
+                assert_eq!(body.len(), 2, "both assignments preserved; got {:?}", body);
+                let names: Vec<&str> = body
+                    .iter()
+                    .map(|s| match s {
+                        Stmt::LetBinding { name, .. } => name.as_str(),
+                        other => panic!("expected LetBinding, got {:?}", other),
+                    })
+                    .collect();
+                assert_eq!(names, vec!["A", "B"]);
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_with_body_statements_passes_sir_validator() {
+        // E2E: a class mixing an executable statement and a method def
+        // must lower to a module the validator accepts.  Guards against
+        // drift between the lowerer's populated body and the
+        // validator's new `check_stmt_seq`-based ClassDef walk.
+        let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected class with populated body: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn nested_class_methods_hoisted_exactly_once() {
+        // A class nested inside another class lowers to a nested
+        // `ClassDef` in the outer class's body.  Both methods must be
+        // hoisted to top-level Functions *exactly once* — a regression
+        // here (double-hoist) would create duplicate function names and
+        // trip the validator's name-uniqueness check.
+        let m = lower(
+            "class Outer\n  def o\n  end\n  class Inner\n    def i\n    end\n  end\nend\n",
+        );
+        let count = |needle: &str| m.functions.iter().filter(|f| f.name == needle).count();
+        assert_eq!(count("o"), 1, "`o` hoisted exactly once");
+        assert_eq!(count("i"), 1, "`i` hoisted exactly once");
+        // Outer's body carries the nested Inner ClassDef.
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Outer");
+                assert_eq!(body.len(), 1, "Inner class is the only body stmt; got {:?}", body);
+                match &body[0] {
+                    Stmt::ClassDef { name, body, .. } => {
+                        assert_eq!(name, "Inner");
+                        assert!(body.is_empty(), "Inner is method-only → empty body");
+                    }
+                    other => panic!("expected nested ClassDef Inner, got {:?}", other),
+                }
+            }
+            other => panic!("expected Stmt::ClassDef Outer, got {:?}", other),
+        }
+        // Whole module still validates (no duplicate names).
+        assert!(semantic_ir::validate(&m).is_ok());
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14c (FC) — inheritance `class Foo < Bar`.  The superclass
+    // name lands in `Stmt::ClassDef.superclass` (semantic-ir 0.3.0);
+    // a base class keeps `superclass: None`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn class_with_superclass_records_parent_name() {
+        // `class Dog < Animal` → ClassDef.superclass == Some("Animal").
+        let m = lower("class Dog < Animal\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, body, .. } => {
+                assert_eq!(name, "Dog");
+                assert_eq!(superclass.as_deref(), Some("Animal"));
+                assert!(body.is_empty());
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn base_class_has_no_superclass() {
+        // A class without `< Parent` keeps `superclass: None` — the
+        // 14c grammar's superclass clause is optional.
+        let m = lower("class Widget\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, .. } => {
+                assert_eq!(name, "Widget");
+                assert_eq!(*superclass, None, "base class must have no superclass");
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn subclass_with_body_records_superclass_and_hoists_methods() {
+        // Inheritance composes with Phase 14b: the superclass is
+        // captured AND the body's `def`s hoist while non-def statements
+        // stay in the body.
+        let m = lower("class Cat < Animal\n  LEGS = 4\n  def meow\n  end\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "meow"),
+            "expected hoisted `meow`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, body, .. } => {
+                assert_eq!(name, "Cat");
+                assert_eq!(superclass.as_deref(), Some("Animal"));
+                assert_eq!(body.len(), 1, "only `LEGS = 4` stays in body; got {:?}", body);
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "LEGS"));
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn subclass_passes_sir_validator() {
+        // E2E: a subclass with a populated body lowers to a module the
+        // validator accepts (the superclass name is advisory; it is
+        // not resolved against a symbol table).
+        let m = lower("class Cat < Animal\n  LEGS = 4\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected subclass module: {:?}", result);
+    }
+
+    #[test]
+    fn comparison_in_class_body_is_not_mistaken_for_superclass() {
+        // A `<` *inside* a body statement (a comparison expression)
+        // must not be lifted as the superclass: only the direct
+        // `class NAME < NAME` separator counts.  `class Plain` here has
+        // no superclass even though its body contains `a < b`.
+        let m = lower("class Plain\n  a = 1\n  a < 2\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, .. } => {
+                assert_eq!(name, "Plain");
+                assert_eq!(
+                    *superclass, None,
+                    "a comparison in the body must not become the superclass"
+                );
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn module_still_lowers_to_nil_no_op_in_phase_14a() {
+        // Phase 14a covers `class` only.  `module M; end` continues
+        // to lower to the Phase 6f NilLit no-op until Phase 14d adds
+        // a `Stmt::ModuleDef` analog.  This test pins the contract so
+        // a future refactor that accidentally merges class/module
+        // arms again is caught.
+        let m = lower("module M\nend\n");
         let main = main_body(&m);
         assert_eq!(main.stmts.len(), 1);
         assert!(matches!(
