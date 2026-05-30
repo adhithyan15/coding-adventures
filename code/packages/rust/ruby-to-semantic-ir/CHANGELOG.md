@@ -2,6 +2,35 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.45.0] - 2026-05-30
+
+### Changed (Phase 15a (FC) — instance variables `@x`)
+
+Instance variables now lower to the first-class `Scope::Instance`
+(semantic-ir 0.6.0) instead of the Phase 6x `Scope::Local` placeholder:
+
+- A `@x` **read** lowers to `Expr::VarRef { scope: Instance }` — and,
+  crucially, no longer errors as an undefined local when read before any
+  assignment (reading an unset `@x` is nil in Ruby).
+- A `@x` **assignment** (`@x = …`, `@x += …`) lowers to
+  `Stmt::Assign { scope: Instance }` — never a `LetBinding` — and does
+  not register `@x` as a local.  Emitting it requests
+  `Feature::InstanceVars` (and `MutableBindings`, since the store is a
+  `Stmt::Assign`).
+- New `is_instance_var_name` helper: a single-`@` sigil name is an
+  instance var; `@@x` (class var, Phase 15b) and `$x` (global) keep
+  their pre-15a handling.
+
+New tests (+5): `instance_var_read_lowers_to_instance_scope`,
+`instance_var_assignment_lowers_to_instance_assign`,
+`instance_var_read_without_assignment_passes_validator` (E2E),
+`instance_var_in_method_roundtrips_through_validator` (E2E),
+`class_var_double_at_is_not_instance_scope` (regression guard).  The
+pre-existing Phase 6x test
+`instance_var_ref_lowers_with_local_scope_and_sigil_preserved` was
+updated to assert the new `Scope::Instance` contract.  Test count:
+206 → 211 (+5).
+
 ## [0.44.0] - 2026-05-30
 
 ### Added (Phase 14e (FC) — singleton class `class << self … end`)

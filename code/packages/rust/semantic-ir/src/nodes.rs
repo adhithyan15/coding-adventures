@@ -331,6 +331,13 @@ pub enum Scope {
     Global,
     /// Language built-in (`+`, `cons`, etc.).
     Builtin,
+    /// Object instance variable (Ruby `@x`).  Unlike `Local`, an
+    /// instance variable needs **no prior declaration**: reading an
+    /// unset `@x` yields nil in Ruby, so the validator performs no
+    /// scope-existence check for this kind.  The leading `@` sigil is
+    /// preserved in the `VarRef` / `Assign` name.  Introduced by the
+    /// Ruby frontend's Phase 15a; gated by `Feature::InstanceVars`.
+    Instance,
 }
 
 impl Scope {
@@ -342,6 +349,7 @@ impl Scope {
             Scope::Capture => "capture",
             Scope::Global => "global",
             Scope::Builtin => "builtin",
+            Scope::Instance => "instance",
         }
     }
 
@@ -353,6 +361,7 @@ impl Scope {
             "capture" => Scope::Capture,
             "global" => Scope::Global,
             "builtin" => Scope::Builtin,
+            "instance" => Scope::Instance,
             _ => return None,
         })
     }

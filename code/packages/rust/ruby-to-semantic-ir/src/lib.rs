@@ -967,6 +967,93 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 15a (FC) — instance variables `@x`.  Reads lower to
+    // `VarRef { scope: Instance }`, assignments to
+    // `Assign { scope: Instance }` (no `let` declaration needed).
+    // Triggers `Feature::InstanceVars`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn instance_var_read_lowers_to_instance_scope() {
+        // A bare `@x` read with no prior assignment lowers to
+        // `VarRef { scope: Instance }` — and crucially does NOT error
+        // as an undefined local (reading an unset ivar is nil in Ruby).
+        let m = lower("@x\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "@x");
+                assert_eq!(*scope, Scope::Instance);
+            }
+            other => panic!("expected VarRef instance, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::InstanceVars),
+            "manifest should declare InstanceVars; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn instance_var_assignment_lowers_to_instance_assign() {
+        // `@count = 0` → `Assign { scope: Instance }` (not a
+        // `LetBinding`), since an instance var is never a local.
+        let m = lower("@count = 0\n");
+        match &main_body(&m).stmts[0] {
+            Stmt::Assign { name, scope, .. } => {
+                assert_eq!(name, "@count");
+                assert_eq!(*scope, Scope::Instance);
+            }
+            other => panic!("expected Assign instance, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn instance_var_read_without_assignment_passes_validator() {
+        // E2E: reading an unset `@x` (here as an assignment RHS, with no
+        // prior `@x = …`) must lower to a module the validator accepts —
+        // the key win over the pre-15a local-modelling, which rejected
+        // `@x` as an unknown local.
+        let m = lower("y = @x\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected unset-ivar read: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn instance_var_in_method_roundtrips_through_validator() {
+        // `def inc; @count = @count + 1; end` — assignment + read of the
+        // same ivar inside a method body; validates end-to-end.
+        let m = lower("def inc\n  @count = @count + 1\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "inc"),
+            "expected hoisted `inc`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validator rejected ivar method: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn class_var_double_at_is_not_instance_scope() {
+        // Regression guard: `@@x` (class var, Phase 15b) must NOT be
+        // mistaken for an instance var — it keeps the pre-15a
+        // local-modelling (single `@` only is an instance var).
+        let m = lower("@@total = 0\n");
+        match &main_body(&m).stmts[0] {
+            Stmt::LetBinding { name, .. } => assert_eq!(name, "@@total"),
+            // (If a later phase changes @@ handling, this guard should be
+            // updated — but it must not become Scope::Instance here.)
+            other => panic!("expected `@@total` LetBinding (not instance), got {:?}", other),
+        }
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::InstanceVars),
+            "`@@x` must not request InstanceVars"
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`.  Mirrors
     // ClassDef (minus inheritance): method defs hoist to top-level
     // Functions; non-def statements stay in the module body.
@@ -3084,7 +3171,10 @@ mod tests {
         match ref_expr {
             Expr::VarRef { name, scope, .. } => {
                 assert_eq!(name, "@a", "ivar value should retain leading `@`");
-                assert_eq!(*scope, Scope::Local, "v0 puts ivars on Scope::Local");
+                // Phase 15a (FC): instance vars now lower to
+                // `Scope::Instance` (was `Scope::Local` in the Phase 6x
+                // v0 placeholder).
+                assert_eq!(*scope, Scope::Instance, "Phase 15a: ivars use Scope::Instance");
             }
             other => panic!("expected VarRef(@a), got {:?}", other),
         }
