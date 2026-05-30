@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_corner_dc_table` for stable tab-separated named-corner DC
+  operating-point voltage and current text output snapshots.
 - Add `format_corner_tf_table` for stable tab-separated named-corner `.TF`
   gain and impedance text output snapshots.
 - Add `format_corner_ac_table` for stable tab-separated named-corner `.AC`
