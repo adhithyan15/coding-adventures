@@ -169,6 +169,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::SingletonClassDef { span, .. } => {
             panic!("ts backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
         }
+        Stmt::TryCatch { span, .. } => {
+            panic!("ts backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 

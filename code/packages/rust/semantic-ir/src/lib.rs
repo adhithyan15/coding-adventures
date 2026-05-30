@@ -66,7 +66,7 @@ pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};
 pub use nodes::{
     Block, Capture, CaptureValue, ExportName, Expr, Function, Global, Import, ImportName, Module,
-    Param, Scope, Stmt,
+    Param, RescueClause, Scope, Stmt,
 };
 pub use span::Span;
 pub use text::{print_block, print_expr, print_function, print_module};

@@ -3496,67 +3496,69 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
-    // Phase 6v — `begin … rescue … ensure … end`
+    // Phase 6v / 16a — `begin … rescue … ensure … end`
     // -----------------------------------------------------------------
     //
-    // SIR has no try/catch primitive.  v0 lowering is lossy: body,
-    // rescue, and ensure stmts emit inline with marker BuiltinCalls
-    // (`__rescue_marker__`, `__ensure_marker__`) bracketing the
-    // rescue/ensure sections.
+    // Phase 16a (FC): `begin/rescue/ensure/end` lowers to a first-class
+    // `Stmt::TryCatch` (replacing the Phase 6v inline
+    // `__rescue_marker__`/`__ensure_marker__` placeholder builtins).
 
     #[test]
     fn begin_without_rescue_lowers_body_inline() {
-        // `begin x = 1 end` → just LetBinding(x, 1).  No markers.
+        // `begin x = 1 end` → TryCatch with just the body, no rescues/ensure.
         let m = lower("begin\n  x = 1\nend\n");
         let b = main_body(&m);
         assert_eq!(b.stmts.len(), 1);
-        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "x"));
+        match &b.stmts[0] {
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                assert_eq!(body.len(), 1);
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "x"));
+                assert!(rescues.is_empty(), "no rescue clauses");
+                assert!(ensure_body.is_none(), "no ensure clause");
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
     }
 
     #[test]
-    fn begin_with_rescue_emits_rescue_marker() {
+    fn begin_with_rescue_lowers_to_rescue_clause() {
         let m = lower(
             "begin\n  x = 1\nrescue StandardError => e\n  y = 2\nend\n",
         );
         let b = main_body(&m);
-        // Stmts: LetBinding(x,1), ExprStmt(BuiltinCall(__rescue_marker__, ["StandardError", "e"])), LetBinding(y,2).
-        assert_eq!(b.stmts.len(), 3);
-        let marker = match &b.stmts[1] {
-            Stmt::ExprStmt { expr, .. } => expr,
-            other => panic!("expected ExprStmt(rescue marker), got {:?}", other),
-        };
-        match marker {
-            Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "__rescue_marker__");
-                assert_eq!(args.len(), 2);
-                assert!(
-                    matches!(&args[0], Expr::StrLit { value, .. } if value == "StandardError")
-                );
-                assert!(
-                    matches!(&args[1], Expr::StrLit { value, .. } if value == "e")
-                );
+        match &b.stmts[0] {
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "x"));
+                assert_eq!(rescues.len(), 1);
+                let r = &rescues[0];
+                assert_eq!(r.exception_types, vec!["StandardError".to_string()]);
+                assert_eq!(r.binding.as_deref(), Some("e"));
+                assert!(matches!(&r.body[0], Stmt::LetBinding { name, .. } if name == "y"));
+                assert!(ensure_body.is_none());
             }
-            other => panic!("expected __rescue_marker__ builtin, got {:?}", other),
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
+    }
+
+    #[test]
+    fn begin_with_ensure_lowers_to_ensure_body() {
+        let m = lower("begin\n  x = 1\nensure\n  y = 2\nend\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "x"));
+                assert!(rescues.is_empty());
+                let ens = ensure_body.as_ref().expect("ensure body present");
+                assert!(matches!(&ens[0], Stmt::LetBinding { name, .. } if name == "y"));
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
         }
     }
 
     #[test]
-    fn begin_with_ensure_emits_ensure_marker() {
-        let m = lower("begin\n  x = 1\nensure\n  y = 2\nend\n");
-        let b = main_body(&m);
-        // Stmts: LetBinding(x,1), ExprStmt(BuiltinCall(__ensure_marker__, [])), LetBinding(y,2).
-        assert_eq!(b.stmts.len(), 3);
-        assert!(matches!(
-            &b.stmts[1],
-            Stmt::ExprStmt {
-                expr: Expr::BuiltinCall { name, args, .. },
-                ..
-            } if name == "__ensure_marker__" && args.is_empty()
-        ));
-    }
-
-    #[test]
-    fn begin_with_rescue_and_ensure_emits_both_markers_in_order() {
+    fn begin_with_rescue_and_ensure_lowers_to_full_trycatch() {
         let m = lower(concat!(
             "begin\n",
             "  x = 1\n",
@@ -3567,27 +3569,33 @@ mod tests {
             "end\n",
         ));
         let b = main_body(&m);
-        // Stmts in order:
-        //   0: LetBinding(x, 1)
-        //   1: ExprStmt(__rescue_marker__("StandardError", "e"))
-        //   2: LetBinding(y, 2)
-        //   3: ExprStmt(__ensure_marker__())
-        //   4: LetBinding(z, 3)
-        assert_eq!(b.stmts.len(), 5);
-        assert!(matches!(
-            &b.stmts[1],
-            Stmt::ExprStmt {
-                expr: Expr::BuiltinCall { name, .. },
-                ..
-            } if name == "__rescue_marker__"
+        match &b.stmts[0] {
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "x"));
+                assert_eq!(rescues.len(), 1);
+                assert!(matches!(&rescues[0].body[0], Stmt::LetBinding { name, .. } if name == "y"));
+                let ens = ensure_body.as_ref().expect("ensure present");
+                assert!(matches!(&ens[0], Stmt::LetBinding { name, .. } if name == "z"));
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn begin_rescue_passes_sir_validator() {
+        // E2E: a begin/rescue/ensure program validates end-to-end, and
+        // the exception binding `e` is usable inside the rescue body.
+        let m = lower(concat!(
+            "begin\n",
+            "  x = 1\n",
+            "rescue StandardError => e\n",
+            "  y = e\n",
+            "ensure\n",
+            "  z = 3\n",
+            "end\n",
         ));
-        assert!(matches!(
-            &b.stmts[3],
-            Stmt::ExprStmt {
-                expr: Expr::BuiltinCall { name, .. },
-                ..
-            } if name == "__ensure_marker__"
-        ));
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected begin/rescue: {:?}", result);
     }
 
     // -----------------------------------------------------------------

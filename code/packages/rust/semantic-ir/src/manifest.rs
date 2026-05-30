@@ -70,6 +70,11 @@ pub enum Feature {
     /// Like instance/class vars, a constant reference needs no prior
     /// `let` declaration; it resolves against the constant scope.
     Constants,
+    /// Module uses structured exception handling (`Stmt::TryCatch`,
+    /// Ruby `begin/rescue/ensure/end`).  Phase 16a (Ruby).  Replaces the
+    /// earlier `__rescue_marker__`/`__ensure_marker__` placeholder
+    /// builtins with a first-class node.
+    Exceptions,
 }
 
 impl Feature {
@@ -96,6 +101,7 @@ impl Feature {
         Feature::InstanceVars,
         Feature::ClassVars,
         Feature::Constants,
+        Feature::Exceptions,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -122,6 +128,7 @@ impl Feature {
             Feature::InstanceVars => "instance-vars",
             Feature::ClassVars => "class-vars",
             Feature::Constants => "constants",
+            Feature::Exceptions => "exceptions",
         }
     }
 
