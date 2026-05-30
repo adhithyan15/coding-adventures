@@ -2511,6 +2511,24 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_begin_ensure_multiple_statements() {
+        // Phase 16c — an ensure clause with several statements collects
+        // them all under the `ensure_clause` node (negative-lookahead
+        // repetition stops at `end`).
+        let ast = parse_ruby(
+            "begin\n  x = 1\nensure\n  a = 1\n  b = 2\nend",
+        );
+        let ec = find_descendant(&ast, "ensure_clause")
+            .expect("expected ensure_clause");
+        let stmt_count = ec
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(stmt_count, 2, "expected 2 ensure-body statements; got {stmt_count}");
+    }
+
+    #[test]
     fn test_parse_case_single_when() {
         // Smallest form: one when clause, no else.
         let ast = parse_ruby("case x\nwhen 1\n  y = 1\nend");

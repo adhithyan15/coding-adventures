@@ -2,6 +2,24 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.51.0] - 2026-05-30
+
+### Added (Phase 16c (FC) — `ensure` clause coverage)
+
+Hardening of the Phase 16a `Stmt::TryCatch.ensure_body` lowering — no
+code change.  Phase 16c locks the ensure-clause behaviour in with tests
+that 16a didn't cover:
+
+- `ensure_only_lowers_with_no_rescues` — `begin … ensure … end` (no
+  rescue) lowers to a `TryCatch` with empty `rescues` and a populated
+  `ensure_body`, requesting `Feature::Exceptions`.
+- `ensure_body_preserves_statement_order` — a multi-statement ensure
+  body keeps its statements in source order.
+- `ensure_only_passes_sir_validator` (E2E) — an ensure-only begin
+  validates end-to-end (no rescue path).
+
+Test count: 226 → 229 (+3).
+
 ## [0.50.0] - 2026-05-30
 
 ### Added (Phase 16b (FC) — typed / multi-type / multi-clause rescue)
