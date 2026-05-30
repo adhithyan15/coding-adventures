@@ -338,6 +338,21 @@ pub enum Scope {
     /// preserved in the `VarRef` / `Assign` name.  Introduced by the
     /// Ruby frontend's Phase 15a; gated by `Feature::InstanceVars`.
     Instance,
+    /// Class variable (Ruby `@@x`).  Like `Instance`, it needs **no
+    /// prior declaration** (the validator performs no scope-existence
+    /// check) — but it is shared across the class hierarchy rather than
+    /// per-object.  The leading `@@` sigil is preserved in the name.
+    /// Introduced by the Ruby frontend's Phase 15b; gated by
+    /// `Feature::ClassVars`.
+    ClassVar,
+    /// Constant (Ruby `FOO`, `MyClass` — any name whose first letter is
+    /// uppercase).  Like `Instance`/`ClassVar`, it needs **no prior
+    /// declaration** in the SIR sense (the validator performs no
+    /// scope-existence check): a constant is resolved against the
+    /// enclosing lexical/constant scope at runtime, not against a `let`
+    /// binding.  The name is preserved verbatim.  Introduced by the
+    /// Ruby frontend's Phase 15c; gated by `Feature::Constants`.
+    Const,
 }
 
 impl Scope {
@@ -350,6 +365,8 @@ impl Scope {
             Scope::Global => "global",
             Scope::Builtin => "builtin",
             Scope::Instance => "instance",
+            Scope::ClassVar => "class-var",
+            Scope::Const => "const",
         }
     }
 
@@ -362,6 +379,8 @@ impl Scope {
             "global" => Scope::Global,
             "builtin" => Scope::Builtin,
             "instance" => Scope::Instance,
+            "class-var" => Scope::ClassVar,
+            "const" => Scope::Const,
             _ => return None,
         })
     }

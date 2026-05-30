@@ -702,8 +702,9 @@ mod tests {
     #[test]
     fn class_body_preserves_executable_statement_and_hoists_method() {
         // `MAX = 10` (an executable class-body statement) must survive
-        // into `ClassDef.body` as a `LetBinding`, while `def bar` is
-        // still hoisted to a top-level Function.
+        // into `ClassDef.body`.  Phase 15c: a constant assignment lowers
+        // to `Stmt::Assign { scope: Const }` (was `LetBinding`), while
+        // `def bar` is still hoisted to a top-level Function.
         let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
         assert!(
             m.functions.iter().any(|f| f.name == "bar"),
@@ -721,11 +722,12 @@ mod tests {
                     body
                 );
                 match &body[0] {
-                    Stmt::LetBinding { name, value, .. } => {
+                    Stmt::Assign { name, scope, value, .. } => {
                         assert_eq!(name, "MAX");
+                        assert_eq!(*scope, Scope::Const);
                         assert!(matches!(value, Expr::IntLit { value: 10, .. }));
                     }
-                    other => panic!("expected LetBinding MAX, got {:?}", other),
+                    other => panic!("expected Assign(MAX, Const), got {:?}", other),
                 }
             }
             other => panic!("expected Stmt::ClassDef, got {:?}", other),
@@ -735,7 +737,8 @@ mod tests {
     #[test]
     fn class_body_preserves_multiple_statements_in_source_order() {
         // Two constant assignments must appear in `body` in the same
-        // order they were written.
+        // order they were written.  Phase 15c: constant assignments
+        // lower to `Stmt::Assign { scope: Const }`.
         let m = lower("class Cfg\n  A = 1\n  B = 2\nend\n");
         let main = main_body(&m);
         match &main.stmts[0] {
@@ -744,8 +747,11 @@ mod tests {
                 let names: Vec<&str> = body
                     .iter()
                     .map(|s| match s {
-                        Stmt::LetBinding { name, .. } => name.as_str(),
-                        other => panic!("expected LetBinding, got {:?}", other),
+                        Stmt::Assign { name, scope, .. } => {
+                            assert_eq!(*scope, Scope::Const, "constant → Const scope");
+                            name.as_str()
+                        }
+                        other => panic!("expected Assign(Const), got {:?}", other),
                     })
                     .collect();
                 assert_eq!(names, vec!["A", "B"]);
@@ -855,7 +861,8 @@ mod tests {
                 assert_eq!(name, "Cat");
                 assert_eq!(superclass.as_deref(), Some("Animal"));
                 assert_eq!(body.len(), 1, "only `LEGS = 4` stays in body; got {:?}", body);
-                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "LEGS"));
+                // Phase 15c: `LEGS = 4` is a constant assignment → Assign(Const).
+                assert!(matches!(&body[0], Stmt::Assign { name, scope, .. } if name == "LEGS" && *scope == Scope::Const));
             }
             other => panic!("expected Stmt::ClassDef, got {:?}", other),
         }
@@ -939,7 +946,8 @@ mod tests {
             Stmt::SingletonClassDef { target, body, .. } => {
                 assert_eq!(target, "self");
                 assert_eq!(body.len(), 1, "only `X = 1` stays in body; got {:?}", body);
-                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "X"));
+                // Phase 15c: `X = 1` is a constant assignment → Assign(Const).
+                assert!(matches!(&body[0], Stmt::Assign { name, scope, .. } if name == "X" && *scope == Scope::Const));
             }
             other => panic!("expected Stmt::SingletonClassDef, got {:?}", other),
         }
@@ -1037,19 +1045,150 @@ mod tests {
 
     #[test]
     fn class_var_double_at_is_not_instance_scope() {
-        // Regression guard: `@@x` (class var, Phase 15b) must NOT be
-        // mistaken for an instance var — it keeps the pre-15a
-        // local-modelling (single `@` only is an instance var).
+        // `@@x` (double `@`) is a *class* variable — Phase 15b lowers it
+        // to `Assign { scope: ClassVar }` (not Instance, not a local),
+        // requesting `ClassVars` (and never `InstanceVars`).
         let m = lower("@@total = 0\n");
         match &main_body(&m).stmts[0] {
-            Stmt::LetBinding { name, .. } => assert_eq!(name, "@@total"),
-            // (If a later phase changes @@ handling, this guard should be
-            // updated — but it must not become Scope::Instance here.)
-            other => panic!("expected `@@total` LetBinding (not instance), got {:?}", other),
+            Stmt::Assign { name, scope, .. } => {
+                assert_eq!(name, "@@total");
+                assert_eq!(*scope, Scope::ClassVar);
+            }
+            other => panic!("expected `@@total` Assign(ClassVar), got {:?}", other),
         }
         assert!(
+            m.manifest.contains(semantic_ir::Feature::ClassVars),
+            "`@@x` should request ClassVars; got {:?}",
+            m.manifest
+        );
+        assert!(
             !m.manifest.contains(semantic_ir::Feature::InstanceVars),
-            "`@@x` must not request InstanceVars"
+            "`@@x` must not request InstanceVars (it is a class var)"
+        );
+    }
+
+    #[test]
+    fn class_var_read_lowers_to_classvar_scope() {
+        // A bare `@@x` read lowers to `VarRef { scope: ClassVar }` and
+        // requests `Feature::ClassVars` (no declaration needed).
+        let m = lower("@@x\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "@@x");
+                assert_eq!(*scope, Scope::ClassVar);
+            }
+            other => panic!("expected VarRef classvar, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::ClassVars),
+            "manifest should declare ClassVars; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn class_var_read_without_assignment_passes_validator() {
+        // E2E: reading an unset `@@x` (as an assignment RHS) validates —
+        // class vars need no prior declaration.
+        let m = lower("y = @@x\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected unset-cvar read: {:?}", result);
+    }
+
+    #[test]
+    fn class_var_in_method_roundtrips_through_validator() {
+        // `def bump; @@count = @@count + 1; end` — class-var assign +
+        // read inside a method; validates end-to-end.
+        let m = lower("def bump\n  @@count = @@count + 1\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "bump"),
+            "expected hoisted `bump`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validator rejected cvar method: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn instance_and_class_vars_are_distinct_scopes() {
+        // `@x` → Instance, `@@x` → ClassVar — the single/double `@`
+        // distinction routes to different scopes (and both features).
+        let m = lower("@x = 1\n@@x = 2\n");
+        let stmts = &main_body(&m).stmts;
+        match (&stmts[0], &stmts[1]) {
+            (Stmt::Assign { scope: s0, .. }, Stmt::Assign { scope: s1, .. }) => {
+                assert_eq!(*s0, Scope::Instance, "`@x` → Instance");
+                assert_eq!(*s1, Scope::ClassVar, "`@@x` → ClassVar");
+            }
+            other => panic!("expected two Assigns, got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::InstanceVars));
+        assert!(m.manifest.contains(semantic_ir::Feature::ClassVars));
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 15c (FC) — constants `FOO` / `MyClass` → `Scope::Const`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn const_read_lowers_to_const_scope() {
+        // A bare uppercase-initial name read lowers to
+        // `VarRef { scope: Const }` and requests `Feature::Constants`
+        // (no declaration needed).
+        let m = lower("MAX\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "MAX");
+                assert_eq!(*scope, Scope::Const);
+            }
+            other => panic!("expected VarRef const, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Constants),
+            "manifest should declare Constants; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn const_assignment_lowers_to_const_assign_not_letbinding() {
+        // `MAX = 10` lowers to `Stmt::Assign { scope: Const }` (never a
+        // `LetBinding`); the constant is not registered as a local.
+        let m = lower("MAX = 10\n");
+        match &main_body(&m).stmts[0] {
+            Stmt::Assign { name, scope, .. } => {
+                assert_eq!(name, "MAX");
+                assert_eq!(*scope, Scope::Const);
+            }
+            other => panic!("expected Assign(MAX, Const), got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::Constants));
+    }
+
+    #[test]
+    fn const_read_without_assignment_passes_validator() {
+        // E2E: reading a constant with no prior assignment (as an
+        // assignment RHS) validates — a constant needs no `let`.
+        let m = lower("y = MAX\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected unset-const read: {:?}", result);
+    }
+
+    #[test]
+    fn lowercase_name_stays_local_not_const() {
+        // Regression: a lowercase-initial name is an ordinary local,
+        // NOT a constant — it must keep `Scope::Local` and must not
+        // request `Constants`.
+        let m = lower("foo = 1\nfoo\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "foo");
+                assert_eq!(*scope, Scope::Local, "lowercase name stays Local");
+            }
+            other => panic!("expected VarRef(foo, Local), got {:?}", other),
+        }
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::Constants),
+            "a lowercase local must not request Constants"
         );
     }
 
@@ -1126,7 +1265,8 @@ mod tests {
             Stmt::ModuleDef { name, body, .. } => {
                 assert_eq!(name, "Config");
                 assert_eq!(body.len(), 1, "VERSION = 3 preserved; got {:?}", body);
-                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "VERSION"));
+                // Phase 15c: `VERSION = 3` is a constant assignment → Assign(Const).
+                assert!(matches!(&body[0], Stmt::Assign { name, scope, .. } if name == "VERSION" && *scope == Scope::Const));
             }
             other => panic!("expected Stmt::ModuleDef, got {:?}", other),
         }
@@ -3199,7 +3339,10 @@ mod tests {
         match ref_expr {
             Expr::VarRef { name, scope, .. } => {
                 assert_eq!(name, "@@count", "cvar value should retain `@@`");
-                assert_eq!(*scope, Scope::Local, "v0 puts cvars on Scope::Local");
+                // Phase 15b (FC): class vars now lower to
+                // `Scope::ClassVar` (was `Scope::Local` in the Phase 6x
+                // v0 placeholder).
+                assert_eq!(*scope, Scope::ClassVar, "Phase 15b: cvars use Scope::ClassVar");
             }
             other => panic!("expected VarRef(@@count), got {:?}", other),
         }

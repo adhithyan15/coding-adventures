@@ -126,6 +126,12 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // Phase 15a (FC) — an instance-var ref (`@x`, `Scope::Instance`)
         // triggers the `InstanceVars` feature.
         Feature::InstanceVars,
+        // Phase 15b (FC) — a class-var ref (`@@x`, `Scope::ClassVar`)
+        // triggers the `ClassVars` feature.
+        Feature::ClassVars,
+        // Phase 15c (FC) — a constant ref/assign (`FOO`, `Scope::Const`)
+        // triggers the `Constants` feature.
+        Feature::Constants,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -310,6 +316,26 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
 /// global — both excluded here so they keep their pre-15a handling.
 fn is_instance_var_name(name: &str) -> bool {
     name.starts_with('@') && !name.starts_with("@@")
+}
+
+/// Phase 15b (FC) — is this Name-token value a Ruby *class variable*
+/// (`@@x`)?  Class vars lex as a `Name` token carrying the `@@` sigil.
+/// (A single `@` is an *instance* variable — see `is_instance_var_name`.)
+fn is_class_var_name(name: &str) -> bool {
+    name.starts_with("@@")
+}
+
+/// Phase 15c (FC) — is this Name-token value a Ruby *constant*?  In
+/// Ruby, any identifier whose first character is an uppercase ASCII
+/// letter is a constant (`FOO`, `Pi`, `MyClass`).  Sigil names (`@x`,
+/// `@@x`, `$x`) start with punctuation, so they are never constants;
+/// ordinary locals/params start lowercase or `_`.  Class/module *names*
+/// in `class Foo` / `module M` are consumed by their own grammar
+/// productions and never reach the generic Name→VarRef factor path, so
+/// this only fires for constants used as values (reads) or assignment
+/// targets (`FOO = …`).
+fn is_constant_name(name: &str) -> bool {
+    name.chars().next().is_some_and(|c| c.is_ascii_uppercase())
 }
 
 // ---------------------------------------------------------------------------
@@ -2238,15 +2264,21 @@ impl Lowerer {
                 // branch above (Phase 8b) and never reach this match.
                 _ => unreachable!("op_token matched only the eager compound forms above"),
             };
-            // Phase 15a — a compound assign to an instance variable
-            // (`@x += 1`) reads `@x` with `Scope::Instance` too.
+            // Phase 15a/15b/15c — a compound assign to a sigil var or a
+            // constant (`@x += 1`, `@@x += 1`, `FOO += 1`) reads it back
+            // with the matching scope.
+            let lhs_scope = if is_class_var_name(&name) {
+                Scope::ClassVar
+            } else if is_instance_var_name(&name) {
+                Scope::Instance
+            } else if is_constant_name(&name) {
+                Scope::Const
+            } else {
+                Scope::Local
+            };
             let lhs_ref = Expr::VarRef {
                 name: name.clone(),
-                scope: if is_instance_var_name(&name) {
-                    Scope::Instance
-                } else {
-                    Scope::Local
-                },
+                scope: lhs_scope,
                 span: span.clone(),
             };
             Expr::BuiltinCall {
@@ -2259,19 +2291,49 @@ impl Lowerer {
             rhs
         };
 
-        // Phase 15a (FC) — instance-variable assignment (`@x = …`,
-        // `@x += …`) lowers to `Stmt::Assign { scope: Instance }`
-        // regardless of prior sightings: an instance var needs no
-        // `let` declaration and is never a local.  The store lowers to
-        // `Stmt::Assign`, whose validator arm observes
-        // `MutableBindings`, so we declare both features.  We do NOT
-        // touch `declared_locals` (an ivar is not a local).
+        // Phase 15a/15b (FC) — instance- / class-variable assignment
+        // (`@x = …`, `@@x = …`, and their compound forms) lowers to
+        // `Stmt::Assign { scope: Instance | ClassVar }` regardless of
+        // prior sightings: a sigil var needs no `let` declaration and is
+        // never a local.  The store is a `Stmt::Assign`, whose validator
+        // arm observes `MutableBindings`, so we declare both features.
+        // We do NOT touch `declared_locals`.  Class var is checked first
+        // (`@@x` also starts with `@`).
+        if is_class_var_name(&name) {
+            self.features_used.insert(Feature::ClassVars);
+            self.features_used.insert(Feature::MutableBindings);
+            return Ok(Stmt::Assign {
+                name,
+                scope: Scope::ClassVar,
+                value,
+                span,
+            });
+        }
         if is_instance_var_name(&name) {
             self.features_used.insert(Feature::InstanceVars);
             self.features_used.insert(Feature::MutableBindings);
             return Ok(Stmt::Assign {
                 name,
                 scope: Scope::Instance,
+                value,
+                span,
+            });
+        }
+
+        // Phase 15c (FC) — a constant assignment (`FOO = …`) lowers to
+        // `Stmt::Assign { scope: Const }` rather than a `LetBinding`: a
+        // constant is resolved against the constant scope, not the
+        // local env, so it is never registered in `declared_locals`.
+        // The store is a `Stmt::Assign` whose validator arm observes
+        // `MutableBindings`, so we declare both features.  (Re-assigning
+        // a constant is a warning in real Ruby, not an error, so we do
+        // not try to enforce single-assignment here.)
+        if is_constant_name(&name) {
+            self.features_used.insert(Feature::Constants);
+            self.features_used.insert(Feature::MutableBindings);
+            return Ok(Stmt::Assign {
+                name,
+                scope: Scope::Const,
                 value,
                 span,
             });
@@ -4960,15 +5022,24 @@ impl Lowerer {
                             // and/or (b) auto-emit `Global` declarations for
                             // `$x`-prefixed names so the validator-true
                             // mapping `$x` → `Scope::Global` becomes usable.
-                            // Phase 15a (FC) — a single-`@` sigil name is
-                            // an *instance variable* (`@x`); it lowers to
-                            // `Scope::Instance` (no declaration needed).
-                            // `@@x` (class var, double `@`) and `$x`
-                            // (global) keep the pre-15a `Scope::Local`
-                            // fallback for now (Phase 15b / later).
-                            let scope = if is_instance_var_name(&tok.value) {
+                            // Phase 15a/15b/15c (FC) — names lower to
+                            // dedicated scopes (no declaration needed):
+                            // `@@x` (double `@`) → class var, `@x`
+                            // (single `@`) → instance var, and any
+                            // uppercase-initial name (`FOO`, `MyClass`)
+                            // → constant.  `$x` (global) keeps the
+                            // pre-15a `Scope::Local` fallback for now.
+                            // Class var is checked first since `@@x`
+                            // also starts with `@`.
+                            let scope = if is_class_var_name(&tok.value) {
+                                self.features_used.insert(Feature::ClassVars);
+                                Scope::ClassVar
+                            } else if is_instance_var_name(&tok.value) {
                                 self.features_used.insert(Feature::InstanceVars);
                                 Scope::Instance
+                            } else if is_constant_name(&tok.value) {
+                                self.features_used.insert(Feature::Constants);
+                                Scope::Const
                             } else if self.current_params.contains(&tok.value) {
                                 Scope::Param
                             } else {
