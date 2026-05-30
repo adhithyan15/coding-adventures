@@ -3521,6 +3521,41 @@ pub fn format_dc_table(result: &DcResult, probes: &[&str]) -> Result<String, Spi
     ))
 }
 
+pub fn format_corner_dc_table(
+    result: &CornerSweepResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .first()
+            .map(|point| {
+                default_output_probes(&point.result.node_voltages, &point.result.branch_currents)
+            })
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!("Corner\tIndex\t{}", selected_probes.join("\t"))];
+    for corner in &result.points {
+        let values: Result<Vec<String>, SpiceError> = selected_probes
+            .iter()
+            .map(|probe| {
+                table_probe_value(
+                    &corner.result.node_voltages,
+                    &corner.result.branch_currents,
+                    probe,
+                    "format_corner_dc_table",
+                )
+                .map(format_table_number)
+            })
+            .collect();
+        rows.push(format!("{}\t0\t{}", corner.corner_name, values?.join("\t")));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_dc_sweep_table(
     source_name: &str,
     points: &[DcSweepPoint],

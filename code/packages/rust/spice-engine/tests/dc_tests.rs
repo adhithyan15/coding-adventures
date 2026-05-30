@@ -1,10 +1,10 @@
 use spice_engine::{
     circuit_at_temperature, dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
-    format_corner_dc_sweep_table, format_dc_sweep_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
-    Circuit, CornerOverride, CornerSpec, CurrentSource, DcConvergenceAid, DcOpOptions, Diode,
-    Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
-    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs, Vcvs, VoltageSource,
-    Waveform, XInstance,
+    format_corner_dc_sweep_table, format_corner_dc_table, format_dc_sweep_table, BSource, Bjt,
+    BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, DcConvergenceAid,
+    DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params,
+    MosfetType, Resistor, SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, Vccs,
+    Vcvs, VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1049,6 +1049,42 @@ fn dc_corners_runs_named_parameter_overrides() {
     assert_close(result.points[1].result.voltage("out").unwrap(), 10.0 / 3.0);
     assert_close(result.points[2].result.voltage("out").unwrap(), 6.0);
     assert_close(result.points[3].result.voltage("out").unwrap(), -5.0);
+}
+
+#[test]
+fn corner_dc_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = dc_corners(
+        &circuit,
+        &[
+            CornerSpec::new("nominal", Vec::new()),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "vin-high",
+                vec![CornerOverride::new("Vin", "voltage", 12.0)],
+            ),
+        ],
+        DcOpOptions::default(),
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_dc_table(&result, &["V(out)", "I(Vin)"]).unwrap(),
+        "Corner\tIndex\tV(out)\tI(Vin)\nnominal\t0\t5.000000e+00\t-5.000000e-03\nrbot-fast\t0\t3.333333e+00\t-6.666667e-03\nvin-high\t0\t6.000000e+00\t-6.000000e-03\n"
+    );
 }
 
 #[test]
