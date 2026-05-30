@@ -374,6 +374,7 @@ members = [
     "image-codec-jxl",
     "image-codec-ppm",
     "image-codec-qoi",
+    "image-codec-tiff",
     "image-codec-webp",
     "mosaic-analyzer",
     "mosaic-driver",
