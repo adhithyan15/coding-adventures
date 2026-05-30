@@ -2,6 +2,41 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.47.0] - 2026-05-30
+
+### Changed (Phase 15c (FC) — constants `FOO` / `MyClass`)
+
+Constants now lower to the first-class `Scope::Const` (semantic-ir
+0.8.0) instead of the Phase 6x `Scope::Local` placeholder, mirroring
+Phases 15a/15b (`@x`, `@@x`):
+
+- A constant **read** (any bare uppercase-initial name) lowers to
+  `Expr::VarRef { scope: Const }` — and no longer errors as an
+  undefined local when read before any assignment.
+- A constant **assignment** (`FOO = …`, including the compound forms)
+  lowers to `Stmt::Assign { scope: Const }` — never a `LetBinding` — and
+  is not registered in `declared_locals`.  Emitting it requests
+  `Feature::Constants` (and `MutableBindings`, since the store is a
+  `Stmt::Assign`).
+- New `is_constant_name` helper: a name whose first character is an
+  uppercase ASCII letter is a constant.  Class/module *names* in
+  `class Foo` / `module M` are consumed by their own grammar productions
+  and never reach this path, so only constants used as values or
+  assignment targets are routed here.
+
+New tests (+4): `const_read_lowers_to_const_scope`,
+`const_assignment_lowers_to_const_assign_not_letbinding`,
+`const_read_without_assignment_passes_validator` (E2E),
+`lowercase_name_stays_local_not_const` (regression).  Five pre-existing
+class/module/singleton-body tests that asserted constant assignments as
+`LetBinding` were updated to the new `Assign { scope: Const }` contract
+(`class_body_preserves_multiple_statements_in_source_order`,
+`class_body_preserves_executable_statement_and_hoists_method`,
+`module_body_preserves_executable_statement`,
+`singleton_class_hoists_methods_and_keeps_statements`,
+`subclass_with_body_records_superclass_and_hoists_methods`).  Test
+count: 215 → 219 (+4).
+
 ## [0.46.0] - 2026-05-30
 
 ### Changed (Phase 15b (FC) — class variables `@@x`)

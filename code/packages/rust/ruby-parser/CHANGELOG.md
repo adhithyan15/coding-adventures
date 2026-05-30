@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.45.0] - 2026-05-30
+
+### Added (Phase 15c (FC) — constants `FOO` / `MyClass`)
+
+No grammar change — an uppercase-initial identifier already lexes as a
+`Name` token, so `MAX = 10` parses as an `assignment` and a bare `MAX`
+as an expression.  Phase 15c adds one parse pin for the new lowering
+path:
+
+- `test_parse_constant_assignment` — `MAX = 10` parses as an assignment
+  carrying the uppercase-initial `MAX` Name token.
+
+Test count: 172 → 173 (+1).
+
 ## [0.44.0] - 2026-05-30
 
 ### Added (Phase 15b (FC) — class variables `@@x`)

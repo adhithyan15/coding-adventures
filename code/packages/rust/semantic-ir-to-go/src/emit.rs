@@ -342,6 +342,11 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
             // class-var modules are rejected before emit.  Unreachable.
             panic!("go backend reached SIR17 class-var ref `{}` — capability check should have rejected it", name);
         }
+        Scope::Const => {
+            // SIR17 Phase 15c — `Feature::Constants` likewise unaccepted;
+            // constant-using modules are rejected before emit.  Unreachable.
+            panic!("go backend reached SIR17 const ref `{}` — capability check should have rejected it", name);
+        }
     }
 }
 

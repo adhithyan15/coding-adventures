@@ -702,8 +702,9 @@ mod tests {
     #[test]
     fn class_body_preserves_executable_statement_and_hoists_method() {
         // `MAX = 10` (an executable class-body statement) must survive
-        // into `ClassDef.body` as a `LetBinding`, while `def bar` is
-        // still hoisted to a top-level Function.
+        // into `ClassDef.body`.  Phase 15c: a constant assignment lowers
+        // to `Stmt::Assign { scope: Const }` (was `LetBinding`), while
+        // `def bar` is still hoisted to a top-level Function.
         let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
         assert!(
             m.functions.iter().any(|f| f.name == "bar"),
@@ -721,11 +722,12 @@ mod tests {
                     body
                 );
                 match &body[0] {
-                    Stmt::LetBinding { name, value, .. } => {
+                    Stmt::Assign { name, scope, value, .. } => {
                         assert_eq!(name, "MAX");
+                        assert_eq!(*scope, Scope::Const);
                         assert!(matches!(value, Expr::IntLit { value: 10, .. }));
                     }
-                    other => panic!("expected LetBinding MAX, got {:?}", other),
+                    other => panic!("expected Assign(MAX, Const), got {:?}", other),
                 }
             }
             other => panic!("expected Stmt::ClassDef, got {:?}", other),
@@ -735,7 +737,8 @@ mod tests {
     #[test]
     fn class_body_preserves_multiple_statements_in_source_order() {
         // Two constant assignments must appear in `body` in the same
-        // order they were written.
+        // order they were written.  Phase 15c: constant assignments
+        // lower to `Stmt::Assign { scope: Const }`.
         let m = lower("class Cfg\n  A = 1\n  B = 2\nend\n");
         let main = main_body(&m);
         match &main.stmts[0] {
@@ -744,8 +747,11 @@ mod tests {
                 let names: Vec<&str> = body
                     .iter()
                     .map(|s| match s {
-                        Stmt::LetBinding { name, .. } => name.as_str(),
-                        other => panic!("expected LetBinding, got {:?}", other),
+                        Stmt::Assign { name, scope, .. } => {
+                            assert_eq!(*scope, Scope::Const, "constant → Const scope");
+                            name.as_str()
+                        }
+                        other => panic!("expected Assign(Const), got {:?}", other),
                     })
                     .collect();
                 assert_eq!(names, vec!["A", "B"]);
@@ -855,7 +861,8 @@ mod tests {
                 assert_eq!(name, "Cat");
                 assert_eq!(superclass.as_deref(), Some("Animal"));
                 assert_eq!(body.len(), 1, "only `LEGS = 4` stays in body; got {:?}", body);
-                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "LEGS"));
+                // Phase 15c: `LEGS = 4` is a constant assignment → Assign(Const).
+                assert!(matches!(&body[0], Stmt::Assign { name, scope, .. } if name == "LEGS" && *scope == Scope::Const));
             }
             other => panic!("expected Stmt::ClassDef, got {:?}", other),
         }
@@ -939,7 +946,8 @@ mod tests {
             Stmt::SingletonClassDef { target, body, .. } => {
                 assert_eq!(target, "self");
                 assert_eq!(body.len(), 1, "only `X = 1` stays in body; got {:?}", body);
-                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "X"));
+                // Phase 15c: `X = 1` is a constant assignment → Assign(Const).
+                assert!(matches!(&body[0], Stmt::Assign { name, scope, .. } if name == "X" && *scope == Scope::Const));
             }
             other => panic!("expected Stmt::SingletonClassDef, got {:?}", other),
         }
@@ -1118,6 +1126,73 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 15c (FC) — constants `FOO` / `MyClass` → `Scope::Const`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn const_read_lowers_to_const_scope() {
+        // A bare uppercase-initial name read lowers to
+        // `VarRef { scope: Const }` and requests `Feature::Constants`
+        // (no declaration needed).
+        let m = lower("MAX\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "MAX");
+                assert_eq!(*scope, Scope::Const);
+            }
+            other => panic!("expected VarRef const, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Constants),
+            "manifest should declare Constants; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn const_assignment_lowers_to_const_assign_not_letbinding() {
+        // `MAX = 10` lowers to `Stmt::Assign { scope: Const }` (never a
+        // `LetBinding`); the constant is not registered as a local.
+        let m = lower("MAX = 10\n");
+        match &main_body(&m).stmts[0] {
+            Stmt::Assign { name, scope, .. } => {
+                assert_eq!(name, "MAX");
+                assert_eq!(*scope, Scope::Const);
+            }
+            other => panic!("expected Assign(MAX, Const), got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::Constants));
+    }
+
+    #[test]
+    fn const_read_without_assignment_passes_validator() {
+        // E2E: reading a constant with no prior assignment (as an
+        // assignment RHS) validates — a constant needs no `let`.
+        let m = lower("y = MAX\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected unset-const read: {:?}", result);
+    }
+
+    #[test]
+    fn lowercase_name_stays_local_not_const() {
+        // Regression: a lowercase-initial name is an ordinary local,
+        // NOT a constant — it must keep `Scope::Local` and must not
+        // request `Constants`.
+        let m = lower("foo = 1\nfoo\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "foo");
+                assert_eq!(*scope, Scope::Local, "lowercase name stays Local");
+            }
+            other => panic!("expected VarRef(foo, Local), got {:?}", other),
+        }
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::Constants),
+            "a lowercase local must not request Constants"
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`.  Mirrors
     // ClassDef (minus inheritance): method defs hoist to top-level
     // Functions; non-def statements stay in the module body.
@@ -1190,7 +1265,8 @@ mod tests {
             Stmt::ModuleDef { name, body, .. } => {
                 assert_eq!(name, "Config");
                 assert_eq!(body.len(), 1, "VERSION = 3 preserved; got {:?}", body);
-                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "VERSION"));
+                // Phase 15c: `VERSION = 3` is a constant assignment → Assign(Const).
+                assert!(matches!(&body[0], Stmt::Assign { name, scope, .. } if name == "VERSION" && *scope == Scope::Const));
             }
             other => panic!("expected Stmt::ModuleDef, got {:?}", other),
         }

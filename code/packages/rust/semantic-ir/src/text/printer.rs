@@ -542,6 +542,18 @@ mod tests {
     }
 
     #[test]
+    fn print_var_ref_const_scope() {
+        // Phase 15c — a constant ref prints with the `const` scope tag
+        // and the (uppercase-initial) name preserved verbatim.
+        let e = Expr::VarRef {
+            name: "MAX".into(),
+            scope: Scope::Const,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(var-ref MAX const)");
+    }
+
+    #[test]
     fn print_builtin_call_with_pure() {
         let e = Expr::BuiltinCall {
             name: "+".into(),

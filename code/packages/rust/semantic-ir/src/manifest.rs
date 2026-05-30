@@ -65,6 +65,11 @@ pub enum Feature {
     /// no prior declaration; they are shared across the class
     /// hierarchy rather than per-object.
     ClassVars,
+    /// Module references a constant (`Scope::Const`, Ruby `FOO` /
+    /// `MyClass` — any uppercase-initial name).  Phase 15c (Ruby).
+    /// Like instance/class vars, a constant reference needs no prior
+    /// `let` declaration; it resolves against the constant scope.
+    Constants,
 }
 
 impl Feature {
@@ -90,6 +95,7 @@ impl Feature {
         Feature::Modules,
         Feature::InstanceVars,
         Feature::ClassVars,
+        Feature::Constants,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -115,6 +121,7 @@ impl Feature {
             Feature::Modules => "modules",
             Feature::InstanceVars => "instance-vars",
             Feature::ClassVars => "class-vars",
+            Feature::Constants => "constants",
         }
     }
 
