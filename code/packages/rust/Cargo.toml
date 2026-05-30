@@ -661,6 +661,7 @@ members = [
     "lang-refinement-protocol",
     "lang-runtime-core",
     "lispy-runtime",
+    "vm-debug",
     "twig-vm",
     "twig-to-jvm",
     "twig-to-cil",

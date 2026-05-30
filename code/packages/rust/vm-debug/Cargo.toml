@@ -1,0 +1,12 @@
+[package]
+name = "vm-debug"
+version = "0.1.0"
+edition = "2021"
+description = "Language-agnostic debug substrate for IIR-based VMs.  Exposes the DebugFrame + DebugHooks traits and the TCP-backed DebugServer that twig-vm (and the upcoming basic-vm / nib-vm / oct-vm) all share.  Lets per-language DAP adapters depend on a single substrate without pulling in twig-vm itself."
+
+[dependencies]
+# DebugServer's `new_with_module` walks an IIRModule to build stable
+# per-function slot indices — universally useful across every language
+# on the LANG VM substrate.
+interpreter-ir = { path = "../interpreter-ir" }
+serde_json     = "1"
