@@ -2,6 +2,33 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.3.0 — SIR17: class inheritance (`ClassDef.superclass`)
+
+Introduced by the Ruby frontend's Phase 14c (`class Foo < Bar`).
+
+### Added
+
+- `Stmt::ClassDef` gains a `superclass: Option<String>` field — the
+  parent class name (`Some("Bar")` for `class Foo < Bar`, `None` for a
+  base class `class Foo`).  It is an advisory name only: SIR v0 has no
+  class symbol table, so the validator does not resolve it (mirroring
+  how the class's own `name` is not bound as a local).
+
+### Changed
+
+- The text printer emits a `(< Super)` clause right after the class
+  name when `superclass` is set: `(class-def Foo (< Bar))`.  Base
+  classes are unchanged (`(class-def Foo)`).
+- The walker, validator, intrinsic-walk backend helper, and the four
+  reference backends' `ClassDef` arms are unaffected by the new field
+  (it carries no sub-expressions to traverse and no capability impact);
+  class-using modules are still rejected at the capability check before
+  emit.
+
+New test: `print_class_def_with_superclass`.  This is a **breaking
+struct change** for any code constructing `Stmt::ClassDef` literally —
+all in-tree constructors updated to pass `superclass`.
+
 ## 0.2.1 — SIR17 validator: walk populated `ClassDef` bodies
 
 No node-shape change.  The Ruby frontend's Phase 14b begins emitting

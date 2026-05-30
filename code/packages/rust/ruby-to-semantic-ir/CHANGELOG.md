@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.42.0] - 2026-05-30
+
+### Added (Phase 14c (FC) — inheritance `class Foo < Bar`)
+
+`class Foo < Bar` now lowers to `Stmt::ClassDef` with
+`superclass: Some("Bar")` (semantic-ir 0.3.0's new field); a base class
+`class Foo` keeps `superclass: None`.
+
+- New `extract_superclass` helper scans the `class_statement` node's
+  *direct* child tokens for the `<` separator (a `Name`-type token with
+  value `"<"`) and returns the value of the next `Name` token — the
+  superclass.  Only direct tokens are inspected, so a `<` comparison
+  *inside* a body statement (`a < b`) is never mistaken for the
+  superclass separator (body statements are `statement` nodes, not bare
+  tokens).
+- Inheritance composes with Phase 14b: a subclass body still hoists its
+  `def`s to top-level Functions and preserves non-def statements in
+  `ClassDef.body`.
+
+New tests (+5): `class_with_superclass_records_parent_name`,
+`base_class_has_no_superclass`,
+`subclass_with_body_records_superclass_and_hoists_methods`,
+`subclass_passes_sir_validator` (E2E lower → validate),
+`comparison_in_class_body_is_not_mistaken_for_superclass`.
+Test count: 193 → 198 (+5).
+
 ## [0.41.0] - 2026-05-30
 
 ### Changed (Phase 14b (FC) — class body with method defs + statements)

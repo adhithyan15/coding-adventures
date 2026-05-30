@@ -659,6 +659,76 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 14c (FC) — inheritance `class Foo < Bar`.  The grammar's
+    // `class_statement` gains an optional `[ "<" NAME ]` superclass
+    // clause; `<` lexes as a Name-type token whose value is "<".
+    // -----------------------------------------------------------------------
+
+    /// Direct child tokens of `node` whose value equals `value`.
+    fn body_has_token_value(node: &GrammarASTNode, value: &str) -> bool {
+        node.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t) if t.value == value
+        ))
+    }
+
+    #[test]
+    fn test_parse_class_with_superclass() {
+        // `class Dog < Animal\nend` parses to a class_statement whose
+        // direct children include the `<` separator token and the
+        // superclass Name token `Animal`.
+        let ast = parse_ruby("class Dog < Animal\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(
+            body_has_token_value(cls, "<"),
+            "expected a `<` superclass separator token in the class header"
+        );
+        assert!(
+            body_has_token_value(cls, "Animal"),
+            "expected the superclass name `Animal` token in the class header"
+        );
+        // The empty subclass has no body statements.
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(body_count, 0, "empty subclass should have no body statements");
+    }
+
+    #[test]
+    fn test_parse_base_class_has_no_superclass_separator() {
+        // A base class `class Widget\nend` has no `<` token — the
+        // optional superclass clause matched zero times.
+        let ast = parse_ruby("class Widget\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(
+            !body_has_token_value(cls, "<"),
+            "base class must not carry a `<` superclass separator"
+        );
+    }
+
+    #[test]
+    fn test_parse_subclass_with_method_body() {
+        // Inheritance composes with a non-empty body: `class Cat <
+        // Animal; def meow; end; end` parses with the `<` separator AND
+        // a def_statement body child.
+        let ast = parse_ruby("class Cat < Animal\n  def meow\n  end\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(body_has_token_value(cls, "<"), "expected `<` separator");
+        assert!(body_has_token_value(cls, "Animal"), "expected superclass `Animal`");
+        let names = body_inner_rule_names(cls);
+        assert!(
+            names.iter().any(|r| r == "def_statement"),
+            "expected a def_statement in the subclass body; got {:?}",
+            names
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
 

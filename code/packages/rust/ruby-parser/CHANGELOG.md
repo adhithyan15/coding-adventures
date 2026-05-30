@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.40.0] - 2026-05-30
+
+### Added (Phase 14c (FC) — inheritance `class Foo < Bar`)
+
+Grammar change: `class_statement` gains an optional superclass clause:
+
+```
+class_statement = "class" NAME [ "<" NAME ] { !"end" statement } "end" ;
+```
+
+The `"<"` literal matches by *value* — the lexer reclassifies `<` to a
+`Name`-type token (the comparison-operator trick), and the grammar's
+literal matcher compares the token value, so `"<"` matches
+transparently.  `packages/rust/ruby-parser/src/_grammar.rs` was
+regenerated via `grammar-tools compile-grammar`.
+
+New parser tests (+3):
+
+- `test_parse_class_with_superclass` — `class Dog < Animal; end` parses
+  with the `<` separator and superclass `Animal` tokens in the class
+  header, and zero body statements.
+- `test_parse_base_class_has_no_superclass_separator` — a base class
+  `class Widget; end` carries no `<` token.
+- `test_parse_subclass_with_method_body` — inheritance composes with a
+  non-empty body (`<` separator + a `def_statement` body child).
+
+A `body_has_token_value` test helper checks for a direct child token by
+value.  Test count: 161 → 164 (+3).
+
 ## [0.39.0] - 2026-05-30
 
 ### Added (Phase 14b (FC) — class body with method defs + statements)

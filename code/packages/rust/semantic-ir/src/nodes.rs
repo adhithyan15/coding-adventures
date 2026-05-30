@@ -251,8 +251,15 @@ pub enum Stmt {
     /// produces no value — it is a declaration, not an expression —
     /// so the per-Block trailing `value` field doesn't apply.
     /// Backends emit each statement in source order.
+    ///
+    /// `superclass` (SIR17, Ruby Phase 14c) carries the parent class
+    /// name for `class Foo < Bar` — `Some("Bar")` — and is `None` for
+    /// a base class (`class Foo`).  It is an advisory name only: SIR v0
+    /// has no class symbol table, so the validator does not resolve it
+    /// (mirroring how the class's own `name` is not bound as a local).
     ClassDef {
         name: String,
+        superclass: Option<String>,
         body: Vec<Stmt>,
         span: Span,
     },
