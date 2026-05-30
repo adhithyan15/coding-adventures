@@ -488,6 +488,9 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
         print_source_after_each_pass: get_bool(p, "print_source_after_each_pass")?,
         help_markdown: get_bool(p, "help_markdown")?,
         correlation_vector: get_bool(p, "correlation_vector")?,
+        correlation_vector_output: get_str(p, "correlation_vector_output")?
+            .filter(|s| !s.is_empty())
+            .map(std::path::PathBuf::from),
     })
 }
 

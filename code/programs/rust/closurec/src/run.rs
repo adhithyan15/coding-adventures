@@ -1228,27 +1228,31 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // Step 7 (CLOC11.60): write the correlation-vector trace as
     // a JSON sidecar file when `--correlation_vector` was set.
     //
-    // Path policy:
-    //   - When `--js_output_file` is set, the sidecar sits
-    //     beside it as `<output>.cv.json`. Build pipelines
-    //     consuming the JS get the trace automatically without
-    //     a separate flag for the path.
-    //   - When `--js_output_file` is absent (stdout), the
-    //     sidecar lands at `closurec-cv.json` in the working
-    //     directory. Discoverable; user can rename / move.
-    //
-    // CLOC11.6N (a follow-up slice) will add an explicit
-    // `--correlation_vector_output <path>` flag so callers who
-    // want a custom location don't have to rely on the
-    // sidecar-of-output convention.
+    // Path policy (CLOC11.67):
+    //   1. If `--correlation_vector_output <path>` is set,
+    //      honor it verbatim. Highest precedence — callers
+    //      who want a custom location (CI artifact dir,
+    //      tmpfs, /dev/null for benchmarks) get exactly that
+    //      path with no decoration.
+    //   2. Else if `--js_output_file` is set, the sidecar sits
+    //      beside it as `<output>.cv.json`. Build pipelines
+    //      consuming the JS get the trace automatically
+    //      without an extra flag.
+    //   3. Else (stdout output), the sidecar lands at
+    //      `closurec-cv.json` in the working directory.
+    //      Discoverable; user can rename / move.
     if config.special_modes.correlation_vector {
-        let sidecar_path = match &config.io.js_output_file {
-            Some(p) => {
-                let mut s = p.as_os_str().to_owned();
-                s.push(".cv.json");
-                PathBuf::from(s)
-            }
-            None => PathBuf::from("closurec-cv.json"),
+        let sidecar_path = match &config.special_modes.correlation_vector_output {
+            // CLOC11.67 — explicit override wins.
+            Some(p) => p.clone(),
+            None => match &config.io.js_output_file {
+                Some(p) => {
+                    let mut s = p.as_os_str().to_owned();
+                    s.push(".cv.json");
+                    PathBuf::from(s)
+                }
+                None => PathBuf::from("closurec-cv.json"),
+            },
         };
         let body = format_cv_log_json(&cv_log);
         write_output_file(&sidecar_path, &body)?;
@@ -3033,6 +3037,91 @@ mod tests {
         assert!(
             !body.contains("\"reason\":\"whitespace_only_dropped\""),
             "expected NO whitespace_only_dropped tombstones under SIMPLE, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.67 — --correlation_vector_output <path> flag
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_output_flag_overrides_sidecar_path() {
+        // With --correlation_vector_output set to an explicit
+        // path, the sidecar should land THERE (verbatim, no
+        // .cv.json decoration) and NOT at the default location.
+        let dir = std::env::temp_dir().join("closurec_cloc11_67_explicit");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let default_sidecar = dir.join("out.js.cv.json"); // would-be default
+        let explicit_sidecar = dir.join("custom-trace.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_output: Some(explicit_sidecar.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            explicit_sidecar.exists(),
+            "expected sidecar at explicit path {:?}",
+            explicit_sidecar
+        );
+        assert!(
+            !default_sidecar.exists(),
+            "expected NO sidecar at default path {:?}",
+            default_sidecar
+        );
+        // Sanity: file contains the CV JSON structure.
+        let body = fs::read_to_string(&explicit_sidecar).expect("read");
+        assert!(
+            body.contains("\"entries\""),
+            "explicit-path sidecar missing CVLog structure: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_output_flag_ignored_when_cv_disabled() {
+        // With --correlation_vector off, --correlation_vector_output
+        // is silently ignored — no sidecar of any kind is written.
+        // Pins the contract that the path flag does not
+        // accidentally enable the trace.
+        let dir = std::env::temp_dir().join("closurec_cloc11_67_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let explicit_sidecar = dir.join("should-not-exist.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                // correlation_vector remains false
+                correlation_vector_output: Some(explicit_sidecar.clone()),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            !explicit_sidecar.exists(),
+            "expected NO sidecar when correlation_vector is off, got file at {:?}",
+            explicit_sidecar
         );
         let _ = fs::remove_dir_all(&dir);
     }
