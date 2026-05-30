@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "closurec",
   "description": "closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "parsing_mode": "gnu",
   "flags": [
     { "id": "browser_featureset_year", "long": "browser_featureset_year", "type": "integer", "default": 0, "description": "Shortcut for defining goog.FEATURESET_YEAR=YYYY (minimum 2012)." },
@@ -101,6 +101,7 @@
     { "id": "correlation_vector_format", "long": "correlation_vector_format", "type": "enum", "enum_values": ["JSON", "NDJSON", "NONE"], "default": "JSON", "description": "Sidecar format: JSON = single document (default), NDJSON = one CV entry per line for streaming consumers, NONE = compute CV but skip write (useful for benchmarking overhead). Ignored unless --correlation_vector is also set (CLOC11.69)." },
     { "id": "correlation_vector_filter", "long": "correlation_vector_filter", "type": "string", "default": "", "description": "Comma-separated allowlist of CV source names (e.g. \"lex,defines\"). Entries with no contribution.source in the allowlist are pruned from the written sidecar. Empty (default) keeps every entry. Ignored unless --correlation_vector is also set (CLOC11.70)." },
     { "id": "correlation_vector_filter_includes_origin", "long": "correlation_vector_filter_includes_origin", "type": "boolean", "default": false, "description": "When --correlation_vector_filter is set, also match entries by their origin.source (in addition to contribution.source). Lets `--correlation_vector_filter lex` keep the per-token CV entries whose Origin.source is \"lexer_token\". Default off preserves CLOC11.70 strict semantics (CLOC11.71)." },
+    { "id": "correlation_vector_filter_invert", "long": "correlation_vector_filter_invert", "type": "boolean", "default": false, "description": "Invert the --correlation_vector_filter from an allowlist to a blocklist. With --correlation_vector_filter lex and --correlation_vector_filter_invert true, entries that DO match (i.e. carry a `lex` contribution and/or origin) are dropped; everything else is kept. Useful for \"everything except X\" filters where enumerating the allowlist is impractical (CLOC11.72)." },
     { "id": "instrument_for_coverage_option", "long": "instrument_for_coverage_option", "type": "enum", "enum_values": ["NONE", "LINE", "BRANCH", "PRODUCTION"], "default": "NONE", "description": "Enable code instrumentation for coverage analysis." },
     { "id": "production_instrumentation_array_name", "long": "production_instrumentation_array_name", "type": "string", "default": "", "description": "Global array name used by production instrumentation." },
     { "id": "chunk_output_type", "long": "chunk_output_type", "type": "enum", "enum_values": ["GLOBAL_NAMESPACE", "ES_MODULES"], "default": "GLOBAL_NAMESPACE", "description": "Format for output chunks." },

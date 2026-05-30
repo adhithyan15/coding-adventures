@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.34.0
+Version: 0.35.0
 
 ## Flags
 
@@ -389,6 +389,10 @@ Comma-separated allowlist of CV source names (e.g. "lex,defines"). Entries with 
 ### `--correlation_vector_filter_includes_origin` (boolean, default: false)
 
 When --correlation_vector_filter is set, also match entries by their origin.source (in addition to contribution.source). Lets `--correlation_vector_filter lex` keep the per-token CV entries whose Origin.source is "lexer_token". Default off preserves CLOC11.70 strict semantics (CLOC11.71).
+
+### `--correlation_vector_filter_invert` (boolean, default: false)
+
+Invert the --correlation_vector_filter from an allowlist to a blocklist. With --correlation_vector_filter lex and --correlation_vector_filter_invert true, entries that DO match (i.e. carry a `lex` contribution and/or origin) are dropped; everything else is kept. Useful for "everything except X" filters where enumerating the allowlist is impractical (CLOC11.72).
 
 ### `--instrument_for_coverage_option` (enum, default: NONE)
 

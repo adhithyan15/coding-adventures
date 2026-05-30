@@ -1271,12 +1271,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                         &cv_log,
                         &config.special_modes.correlation_vector_filter,
                         config.special_modes.correlation_vector_filter_includes_origin,
+                        config.special_modes.correlation_vector_filter_invert,
                     ),
                     _ => format_cv_log_json(
                         &cv_log,
                         config.special_modes.correlation_vector_pretty,
                         &config.special_modes.correlation_vector_filter,
                         config.special_modes.correlation_vector_filter_includes_origin,
+                        config.special_modes.correlation_vector_filter_invert,
                     ),
                 };
                 write_output_file(&sidecar_path, &body)?;
@@ -1321,6 +1323,7 @@ fn format_cv_log_json(
     pretty: bool,
     filter: &[String],
     filter_includes_origin: bool,
+    filter_invert: bool,
 ) -> String {
     let compact = cv_log
         .to_json_string()
@@ -1337,7 +1340,12 @@ fn format_cv_log_json(
             Err(_) => return compact,
         };
     if need_filter {
-        prune_entries_by_source(&mut value, filter, filter_includes_origin);
+        prune_entries_by_source(
+            &mut value,
+            filter,
+            filter_includes_origin,
+            filter_invert,
+        );
     }
     if pretty {
         serde_json::to_string_pretty(&value).unwrap_or_else(|_| compact)
@@ -1372,6 +1380,7 @@ fn format_cv_log_ndjson(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     filter: &[String],
     filter_includes_origin: bool,
+    filter_invert: bool,
 ) -> String {
     let compact = cv_log
         .to_json_string()
@@ -1381,7 +1390,12 @@ fn format_cv_log_ndjson(
         Err(_) => return compact,
     };
     if !filter.is_empty() {
-        prune_entries_by_source(&mut root, filter, filter_includes_origin);
+        prune_entries_by_source(
+            &mut root,
+            filter,
+            filter_includes_origin,
+            filter_invert,
+        );
     }
     let mut out = String::new();
     if let Some(entries) = root.get("entries").and_then(|v| v.as_object()) {
@@ -1443,6 +1457,7 @@ fn prune_entries_by_source(
     root: &mut serde_json::Value,
     allowlist: &[String],
     include_origin: bool,
+    invert: bool,
 ) {
     let Some(entries) = root
         .get_mut("entries")
@@ -1455,7 +1470,9 @@ fn prune_entries_by_source(
     let allow: std::collections::HashSet<&str> =
         allowlist.iter().map(String::as_str).collect();
     entries.retain(|_id, entry| {
-        // (1) Any contribution.source in the allowlist?
+        // Compute "does this entry match the source list?"
+        // (1) any contribution.source in the allowlist, OR
+        // (2) (CLOC11.71 opt-in) origin.source in the allowlist.
         let contrib_match = entry
             .get("contributions")
             .and_then(|v| v.as_array())
@@ -1468,23 +1485,19 @@ fn prune_entries_by_source(
                 })
             })
             .unwrap_or(false);
-        if contrib_match {
-            return true;
-        }
-        // (2) CLOC11.71 — also accept entries whose Origin
-        // source is allowlisted.
-        if include_origin {
-            let origin_match = entry
+        let origin_match = include_origin
+            && entry
                 .get("origin")
                 .and_then(|o| o.get("source"))
                 .and_then(|s| s.as_str())
                 .map(|s| allow.contains(s))
                 .unwrap_or(false);
-            if origin_match {
-                return true;
-            }
-        }
-        false
+        let matches = contrib_match || origin_match;
+        // CLOC11.72 — invert flips the keep rule. Default
+        // (invert=false): keep matches, drop non-matches
+        // (allowlist). invert=true: keep non-matches, drop
+        // matches (blocklist).
+        if invert { !matches } else { matches }
     });
 }
 
@@ -3785,6 +3798,114 @@ mod tests {
         assert!(
             !body.contains("\"source\":\"input_file\""),
             "input_file Origin should not match filter=lexer_token, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.72 — --correlation_vector_filter_invert (blocklist)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_filter_invert_drops_matched_keeps_rest() {
+        // With filter=lex AND invert=true, entries that have
+        // a lex contribution are DROPPED and entries without
+        // are kept. So the per-file CV root (which has the
+        // lex.tokens_emitted contribution) should be gone,
+        // but token CVs (no lex contribution) should remain
+        // alongside the combined/output entries.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_72_invert_basic");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_filter: vec!["lex".to_string()],
+                correlation_vector_filter_invert: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        let root: serde_json::Value =
+            serde_json::from_str(&body).expect("parse");
+        let entries = root
+            .get("entries")
+            .and_then(|v| v.as_object())
+            .expect("entries object");
+        // No surviving entry has a lex contribution.
+        for (id, entry) in entries.iter() {
+            let contribs = entry
+                .get("contributions")
+                .and_then(|v| v.as_array())
+                .expect("contributions array");
+            let has_lex = contribs.iter().any(|c| {
+                c.get("source").and_then(|s| s.as_str()) == Some("lex")
+            });
+            assert!(
+                !has_lex,
+                "entry {id} survived but has a lex contribution under invert: {entry}"
+            );
+        }
+        // Entries DO still exist — invert is not "drop
+        // everything". The non-input_file entries (combined,
+        // js_output_file, manifest, etc.) live on.
+        assert!(
+            !entries.is_empty(),
+            "invert should keep non-matching entries, got empty: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_filter_invert_empty_filter_is_noop() {
+        // An empty filter with invert=true is still a
+        // no-op (nothing can match an empty allowlist, so
+        // nothing is blocked). Same byte-identical output
+        // as no-filter-set.
+        let dir = std::env::temp_dir().join("closurec_cloc11_72_invert_empty");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                // correlation_vector_filter left empty
+                correlation_vector_filter_invert: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Sanity: input_file root + lexer_token entries both
+        // appear (no pruning happened).
+        assert!(
+            body.contains("\"source\":\"input_file\""),
+            "expected input_file Origin under empty inverted filter: {body}"
+        );
+        assert!(
+            body.contains("\"source\":\"lexer_token\""),
+            "expected lexer_token Origins under empty inverted filter: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
