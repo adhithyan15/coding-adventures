@@ -513,6 +513,22 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
             p,
             "correlation_vector_filter_includes_origin",
         )?,
+        correlation_vector_filter_invert: get_bool(
+            p,
+            "correlation_vector_filter_invert",
+        )?,
+        correlation_vector_summary: get_bool(p, "correlation_vector_summary")?,
+        correlation_vector_summary_format: match get_str(
+            p,
+            "correlation_vector_summary_format",
+        )?
+        .as_deref()
+        {
+            Some("JSON") => crate::config::CorrelationVectorSummaryFormat::Json,
+            Some("KV") => crate::config::CorrelationVectorSummaryFormat::Kv,
+            // TEXT, empty, or absent → default
+            _ => crate::config::CorrelationVectorSummaryFormat::Text,
+        },
     })
 }
 
