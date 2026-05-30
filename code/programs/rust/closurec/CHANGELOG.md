@@ -2,6 +2,86 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.36.0] - 2026-05-30
+
+### Added — CLOC11.73: `--correlation_vector_summary` stdout one-liner
+
+Boolean flag. When on, prints a single summary line to stdout (`CompilerOutput.stdout_text`) after the CV sidecar write (or skipped under `--correlation_vector_format NONE`). Lets build pipelines see how many entries / contributions / tombstones the run produced without parsing the JSON itself.
+
+Output format:
+
+```
+cv sidecar: <path>: N entries, M contributions, T tombstones, pass_order=[a,b,c]
+```
+
+When the format is `NONE`:
+
+```
+cv sidecar: skipped (format=NONE): N entries, M contributions, T tombstones, pass_order=[a,b,c]
+```
+
+### Counts are post-filter
+
+`compute_cv_summary` calls the same `prune_entries_by_source` helper the formatters use (with the same `include_origin` and `invert` flags), so the printed counts describe **what's actually on disk** when a filter is in play.
+
+### Composition
+
+- Default off → no change to existing stdout output.
+- Composes orthogonally with every other CV flag — `summary` reads what the formatters wrote, it doesn't second-guess them.
+- Trails the JS / source map / manifest stdout (only fires when CV is on; the line ends in `\n`).
+
+### Implementation
+
+- New private `compute_cv_summary(cv_log, filter, include_origin, invert, wrote_path)` returns the rendered line. Parses `cv_log.to_json_string()` once, applies the filter, counts entries / contributions / tombstones, extracts `pass_order`.
+- `summary_line` helper formats the rendered string; isolated from the count walk so format changes don't bleed into the counting path.
+- `result.stdout_text` is now bound `mut` to allow the summary append.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_summary: bool`.
+- `wire::read_special_modes` reads the bool.
+- Versions: `Cargo.toml` `0.35.0` → `0.36.0`, `cli.spec.json` `0.35.0` → `0.36.0`.
+
+## [0.35.0] - 2026-05-30
+
+### Added — CLOC11.72: `--correlation_vector_filter_invert`
+
+Boolean flag that flips the CLOC11.70 allowlist into a **blocklist**. With:
+
+```bash
+closurec --correlation_vector \
+         --correlation_vector_filter lex \
+         --correlation_vector_filter_invert
+```
+
+entries that DO match (i.e. carry a `lex` contribution and/or — under `--correlation_vector_filter_includes_origin` — a `lex` origin) are dropped; everything else is kept.
+
+Use case: "everything except X" filters where enumerating the allowlist would be impractical (the lexer alone produces many `lexer_token` entries; flipping to `--correlation_vector_filter_invert` lets you exclude one stage instead of listing every other).
+
+### Composition
+
+Invert composes orthogonally with `include_origin`:
+- `include_origin` selects WHICH sources count as a match (contribution.source only, or contribution.source ∪ origin.source).
+- `invert` then decides whether matches are kept or dropped.
+
+| include_origin | invert | Behavior                                                  |
+|----------------|--------|-----------------------------------------------------------|
+| false          | false  | CLOC11.70 strict allowlist on contribution.source         |
+| true           | false  | CLOC11.71 broadened allowlist (also origin.source)        |
+| false          | true   | CLOC11.72 blocklist on contribution.source                |
+| true           | true   | CLOC11.72 blocklist on contribution.source ∪ origin.source |
+
+### Implementation
+
+- `prune_entries_by_source` signature: now `(root, allowlist, include_origin, invert)`. The match-computation logic is unchanged; only the keep-rule terminal expression is `if invert { !matches } else { matches }`.
+- Both `format_cv_log_json` and `format_cv_log_ndjson` thread the flag through. Empty-allowlist short-circuit unchanged: an inverted empty filter is a no-op (no entry can match → none are blocked), so we keep the fast path.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_filter_invert: bool`.
+- `wire::read_special_modes` reads the bool.
+- Versions: `Cargo.toml` `0.34.0` → `0.35.0`, `cli.spec.json` `0.34.0` → `0.35.0`.
+
 ## [0.34.0] - 2026-05-30
 
 ### Added — CLOC11.71: `--correlation_vector_filter_includes_origin`

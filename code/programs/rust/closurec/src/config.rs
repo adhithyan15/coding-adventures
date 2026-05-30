@@ -581,6 +581,42 @@ pub struct SpecialModesConfig {
     /// Only consulted when `correlation_vector` is true AND
     /// `correlation_vector_filter` is non-empty.
     pub correlation_vector_filter_includes_origin: bool,
+    /// CLOC11.72: flip the allowlist sense. When `false`
+    /// (default), entries are kept iff they match (CLOC11.70
+    /// + CLOC11.71 semantics). When `true`, entries are kept
+    /// iff they do NOT match — the allowlist becomes a
+    /// blocklist.
+    ///
+    /// Composes orthogonally with `include_origin`:
+    /// `include_origin` selects WHICH sources count as a
+    /// "match" for an entry (contribution.source only, or
+    /// contribution.source ∪ origin.source); `invert` then
+    /// decides whether matches are kept or dropped.
+    ///
+    /// Empty allowlist with `invert=true` keeps everything
+    /// (no entry can match → none are blocked). Empty
+    /// allowlist with `invert=false` is the
+    /// no-filter-configured fast path that pre-CLOC11.70
+    /// callers used; both branches preserve byte-for-byte
+    /// default behavior.
+    ///
+    /// Only consulted when `correlation_vector` is true AND
+    /// `correlation_vector_filter` is non-empty (an inverted
+    /// empty filter is a no-op, so we keep the empty-filter
+    /// short-circuit).
+    pub correlation_vector_filter_invert: bool,
+    /// CLOC11.73: when true, after the CV sidecar is
+    /// written (or skipped under
+    /// `correlation_vector_format = None`), print a one-line
+    /// summary of the trace to `stdout_text`. Lets a build
+    /// pipeline see how many entries / contributions /
+    /// tombstones the run produced without parsing the JSON
+    /// itself. Counts reflect the post-filter state, so
+    /// the summary describes what was actually written to
+    /// disk.
+    ///
+    /// Only consulted when `correlation_vector` is true.
+    pub correlation_vector_summary: bool,
 }
 
 /// CLOC11.69 — sidecar persistence format. Default is

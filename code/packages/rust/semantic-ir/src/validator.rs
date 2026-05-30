@@ -577,6 +577,17 @@ impl<'m> ValidatorState<'m> {
                 // manifest comparison stays honest.
                 self.observed.add(Feature::InstanceVars);
             }
+            Scope::ClassVar => {
+                // Class variables (Ruby `@@x`) likewise need no prior
+                // declaration; record the feature only.
+                self.observed.add(Feature::ClassVars);
+            }
+            Scope::Const => {
+                // Constants (Ruby `FOO` / `MyClass`) resolve against the
+                // constant scope, not a `let` binding — no local
+                // resolution; record the feature only.
+                self.observed.add(Feature::Constants);
+            }
         }
     }
 
@@ -1518,5 +1529,105 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok(), "expected missing-InstanceVars-feature error");
         assert!(r.errors().any(|i| i.message.contains("instance-vars")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 15b — `Scope::ClassVar` (class variables).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body value is a single
+    /// class-var ref, declaring the given features.
+    fn module_with_class_var_ref(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "@@count".into(),
+                    scope: Scope::ClassVar,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn class_var_ref_needs_no_declaration() {
+        // A class-var ref is accepted with no prior `let`/param —
+        // reading an unset `@@x` is nil in Ruby.  Module declares
+        // `ClassVars`.
+        let m = module_with_class_var_ref(&[Feature::ClassVars]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn class_var_ref_without_manifest_feature_is_error() {
+        // The validator observes `ClassVars` from the ClassVar-scoped
+        // ref; if the manifest doesn't declare it, the
+        // used-but-undeclared check fires.
+        let m = module_with_class_var_ref(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-ClassVars-feature error");
+        assert!(r.errors().any(|i| i.message.contains("class-vars")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 15c — `Scope::Const` (constants).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body value is a single
+    /// constant ref, declaring the given features.
+    fn module_with_const_ref(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "MAX".into(),
+                    scope: Scope::Const,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn const_ref_needs_no_declaration() {
+        // A constant ref is accepted with no prior `let`/param — a
+        // constant resolves against the constant scope, not a local
+        // binding.  Module declares `Constants`.
+        let m = module_with_const_ref(&[Feature::Constants]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn const_ref_without_manifest_feature_is_error() {
+        // The validator observes `Constants` from the Const-scoped ref;
+        // if the manifest doesn't declare it, the used-but-undeclared
+        // check fires.
+        let m = module_with_const_ref(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-Constants-feature error");
+        assert!(r.errors().any(|i| i.message.contains("constants")));
     }
 }
