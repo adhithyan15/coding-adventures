@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.28.0] - 2026-05-30
+
+### Added — CLOC11.65: per-token `defines.applied` contributions
+
+Uses the per-token CV substrate from CLOC11.64. When `--correlation_vector` is on and `--define K[=V]` flags are present, every `Name` token in the input whose lexeme matches a define key gets a `defines.applied` contribution recorded **on its token CV**, not on the per-file root.
+
+Per-token `defines.applied` contribution shape:
+
+```
+source: "defines"
+tag:    "applied"
+meta: {
+  define_name:        <token.value>,
+  define_value:       <Bool | Number | String | Null>,
+  define_value_kind:  "bool" | "number" | "string" | "null",
+  token_index:        <0-based position in the lexer stream>,
+}
+```
+
+The per-file `defines.applied` summary (defines_count, byte deltas) still fires from `transform_source_with_cv` — the per-token records are *in addition*, so visualization tools get both "the stage ran" (file-level) and "this specific token was hit" (token-level).
+
+Implementation: the token loop now keeps a `Vec<String>` of derived token CV IDs in lock-step with the token vector, so post-loop lookups are O(1). The defines check skips non-Name tokens — strings, numbers, regex literals — matching the existing string-level `apply_defines` behaviour.
+
+Caveats (unchanged from the string-level pass):
+- Defines inside string literals are not substituted (correct — the Name filter excludes string tokens).
+- Object shorthand (`{ FOO }`) would change semantics if substituted; same caveat as `apply_defines`.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.27.0` → `0.28.0`, `cli.spec.json` `0.27.0` → `0.28.0`.
+
 ## [0.27.0] - 2026-05-29
 
 ### Added — CLOC11.64: per-token CV entries (children of per-file CV)

@@ -26,6 +26,7 @@ use crate::whitespace_only;
 use crate::wrapper;
 use coding_adventures_javascript_lexer::tokenize_javascript_typed;
 use coding_adventures_javascript_tokens::EsVersion;
+use lexer::token::TokenType;
 use std::fs;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -574,6 +575,15 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             match tokenize_javascript_typed(&contents, es) {
                 Ok(tokens) => {
                     let token_count = tokens.len();
+                    // CLOC11.65: capture each derived token CV ID
+                    // so that *after* the lex loop we can attach
+                    // token-level contributions (defines.applied
+                    // on the specific Name token a --define
+                    // substituted) onto the precise child CV
+                    // rather than smearing them on the per-file
+                    // root.
+                    let mut token_cv_ids: Vec<String> =
+                        Vec::with_capacity(token_count);
                     for (idx, tok) in tokens.iter().enumerate() {
                         let mut tmeta = std::collections::HashMap::new();
                         tmeta.insert(
@@ -592,7 +602,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             "token_index".to_string(),
                             serde_json::Value::Number((idx as u64).into()),
                         );
-                        let _ = cv_log.derive(
+                        let tok_cv = cv_log.derive(
                             id,
                             Some(coding_adventures_correlation_vector::Origin {
                                 source: "lexer_token".to_string(),
@@ -606,6 +616,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                                 meta: tmeta,
                             }),
                         );
+                        token_cv_ids.push(tok_cv);
                     }
                     let mut cmeta = std::collections::HashMap::new();
                     cmeta.insert(
@@ -615,6 +626,93 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     let _ = cv_log.contribute(
                         id, "lex", "tokens_emitted", cmeta,
                     );
+
+                    // CLOC11.65: per-token `defines.applied`.
+                    // Walk the token stream; whenever a Name
+                    // token's lexeme matches a key in
+                    // `config.defines.defines`, contribute
+                    // `defines.applied` on THAT token's CV with
+                    // {define_name, define_value, define_value_kind}.
+                    //
+                    // Why on the token CV and not the file CV:
+                    // upstream Closure substitutes per occurrence,
+                    // so the trace should record per occurrence.
+                    // The per-file `defines.applied` summary
+                    // contribution still fires later (preserves
+                    // the "stage ran" signal for zero-defines
+                    // runs) — the per-token records are *in
+                    // addition*, giving precise byte-level
+                    // provenance.
+                    //
+                    // Caveats this slice does not handle:
+                    //   - defines inside string literals (the
+                    //     current string-level apply_defines
+                    //     happens to skip them too, but only by
+                    //     accident of regex; we just look at
+                    //     Name tokens which already excludes
+                    //     strings).
+                    //   - shorthand object syntax (`{ FOO }`),
+                    //     where renaming would change semantics
+                    //     — same caveat as the existing
+                    //     string-level pass.
+                    if !config.defines.defines.is_empty() {
+                        for (idx, tok) in tokens.iter().enumerate() {
+                            if tok.type_ != TokenType::Name {
+                                continue;
+                            }
+                            let Some(def_value) =
+                                config.defines.defines.get(&tok.value)
+                            else {
+                                continue;
+                            };
+                            let (val_json, val_kind) = match def_value {
+                                crate::config::DefineValue::Bool(b) => (
+                                    serde_json::Value::Bool(*b),
+                                    "bool",
+                                ),
+                                crate::config::DefineValue::Number(n) => (
+                                    serde_json::Number::from_f64(*n)
+                                        .map(serde_json::Value::Number)
+                                        .unwrap_or(serde_json::Value::Null),
+                                    "number",
+                                ),
+                                crate::config::DefineValue::String(s) => (
+                                    serde_json::Value::String(s.clone()),
+                                    "string",
+                                ),
+                                crate::config::DefineValue::Null => (
+                                    serde_json::Value::Null,
+                                    "null",
+                                ),
+                            };
+                            let mut dmeta = std::collections::HashMap::new();
+                            dmeta.insert(
+                                "define_name".to_string(),
+                                serde_json::Value::String(tok.value.clone()),
+                            );
+                            dmeta.insert(
+                                "define_value".to_string(),
+                                val_json,
+                            );
+                            dmeta.insert(
+                                "define_value_kind".to_string(),
+                                serde_json::Value::String(val_kind.into()),
+                            );
+                            dmeta.insert(
+                                "token_index".to_string(),
+                                serde_json::Value::Number((idx as u64).into()),
+                            );
+                            // token_cv_ids[idx] is valid: same
+                            // length and order as tokens (we
+                            // built it in lock-step above).
+                            let _ = cv_log.contribute(
+                                &token_cv_ids[idx],
+                                "defines",
+                                "applied",
+                                dmeta,
+                            );
+                        }
+                    }
                 }
                 Err(err) => {
                     let mut emeta = std::collections::HashMap::new();
@@ -2662,6 +2760,104 @@ mod tests {
         assert!(
             !sidecar_path.exists(),
             "no sidecar should exist when CV is disabled"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.65 — per-token `defines.applied` contributions
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_records_defines_applied_on_token_cv() {
+        // With --correlation_vector on and --define FOO=true,
+        // a Name token whose lexeme is "FOO" should get a
+        // `defines.applied` contribution recorded on its
+        // token CV (parent = per-file CV). The per-file
+        // summary contribution from transform_source_with_cv
+        // still fires; this checks the *new* per-token one.
+        use crate::config::{DefineValue, DefinesConfig};
+        let dir = std::env::temp_dir().join("closurec_cloc11_65_defines");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        // FOO appears as a Name token twice; defines.applied
+        // contribution should fire for each occurrence.
+        fs::write(&in_path, "var x = FOO; FOO + 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let mut defines = std::collections::BTreeMap::new();
+        defines.insert("FOO".to_string(), DefineValue::Bool(true));
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            defines: DefinesConfig { defines },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // The token-level defines.applied tag appears alongside
+        // the per-file summary. Distinguish the two by checking
+        // for the token-only meta key `define_name` (the per-file
+        // summary uses `defines_count` instead).
+        assert!(
+            body.contains("\"define_name\":\"FOO\""),
+            "expected token-level defines.applied with define_name=FOO, got: {body}"
+        );
+        assert!(
+            body.contains("\"define_value_kind\":\"bool\""),
+            "expected define_value_kind=bool meta, got: {body}"
+        );
+        // FOO appears twice in the input → two per-token records.
+        let occurrences = body.matches("\"define_name\":\"FOO\"").count();
+        assert!(
+            occurrences >= 2,
+            "expected ≥2 per-token defines.applied for FOO×2, got {occurrences}: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_per_token_defines_when_unmatched() {
+        // A Name token whose lexeme doesn't match any --define
+        // key should NOT get a token-level defines.applied
+        // contribution. The per-file summary still fires
+        // (it always does, with defines_count: 0).
+        use crate::config::DefinesConfig;
+        let dir = std::env::temp_dir().join("closurec_cloc11_65_nomatch");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            defines: DefinesConfig { defines: std::collections::BTreeMap::new() },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // No define_name meta key (token-level) — only the
+        // per-file summary which uses defines_count.
+        assert!(
+            !body.contains("\"define_name\""),
+            "expected NO token-level defines.applied, got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
