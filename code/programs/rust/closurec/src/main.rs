@@ -102,6 +102,28 @@ const CLI_SPEC_JSON: &str = include_str!("../cli.spec.json");
 /// `3` for compilation error, `4` for IO error once those paths
 /// actually exist. Stick with 0/1 for now.
 pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
+    let (stdout, stderr, code) = parse_and_run_with_streams(args);
+    // Back-compat shim: combine stdout + stderr into a single
+    // string for callers that don't care about routing. Tests
+    // that need to assert on stderr separately call
+    // `parse_and_run_with_streams` directly.
+    let mut combined = stdout;
+    combined.push_str(&stderr);
+    (combined, code)
+}
+
+/// CLOC11.75 — version of `parse_and_run` that splits the
+/// output into stdout-bound and stderr-bound text. `main`
+/// uses this to route the CV summary line to stderr when
+/// `--correlation_vector_summary_stderr` is set, without
+/// corrupting an stdout-bound JS payload.
+///
+/// All call sites other than `main` and the CLOC11.75 tests
+/// can keep using `parse_and_run` — its return value
+/// (stdout + stderr concatenated, plus exit code) is the
+/// same byte-for-byte as before for runs without
+/// `--correlation_vector_summary_stderr`.
+pub fn parse_and_run_with_streams(args: &[String]) -> (String, String, ExitCode) {
     // Step 1: load the spec. This is cheap (serde_json parses the
     // ~9 KB spec in microseconds) and runs once per invocation.
     // We could lazy_static it for repeated CLI loops, but the
@@ -114,6 +136,7 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
             // of reporting it.
             return (
                 format!("internal error: cli.spec.json failed to load: {}\n", e),
+                String::new(),
                 ExitCode::from(70), // EX_SOFTWARE per sysexits.h
             );
         }
@@ -144,7 +167,7 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
             // typed CompilerConfig.
             let cfg = match wire::config_from_parsed(&result) {
                 Ok(c) => c,
-                Err(e) => return (format!("{e}\n"), ExitCode::from(1)),
+                Err(e) => return (format!("{e}\n"), String::new(), ExitCode::from(1)),
             };
 
             // Step 3.5 (CLOC11.54): --help_markdown short-circuit.
@@ -158,6 +181,7 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
             if cfg.special_modes.help_markdown {
                 return (
                     help_markdown::format_help_markdown(&spec_for_help_md),
+                    String::new(),
                     ExitCode::SUCCESS,
                 );
             }
@@ -173,12 +197,12 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
                 Ok(out) => {
                     // Closure exits 0 on success regardless of
                     // whether output went to stdout or to a file.
-                    (out.stdout_text, ExitCode::SUCCESS)
+                    (out.stdout_text, out.stderr_text, ExitCode::SUCCESS)
                 }
-                Err(e) => (format!("{e}\n"), ExitCode::from(2)),
+                Err(e) => (format!("{e}\n"), String::new(), ExitCode::from(2)),
             }
         }
-        Ok(ParserOutput::Help(h)) => (h.text, ExitCode::SUCCESS),
+        Ok(ParserOutput::Help(h)) => (h.text, String::new(), ExitCode::SUCCESS),
         Ok(ParserOutput::Version(v)) => {
             // CLOC11.55: emit a CC-compat banner.
             //
@@ -205,6 +229,7 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
                     "Closure Compiler (closurec — drop-in replacement, https://github.com/adhithyan15/coding-adventures)\nVersion: {}\n",
                     v.version
                 ),
+                String::new(),
                 ExitCode::SUCCESS,
             )
         }
@@ -212,7 +237,7 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
             // cli-builder's Display for CliBuilderError already
             // formats nicely (multi-line if there are multiple
             // errors, with "did you mean?" suggestions).
-            (format!("{}\n", e), ExitCode::from(1))
+            (format!("{}\n", e), String::new(), ExitCode::from(1))
         }
     }
 }
@@ -225,8 +250,16 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
 /// the spec.
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    let (text, code) = parse_and_run(&args);
-    print!("{}", text);
+    // CLOC11.75 — use the streaming variant so the CV summary
+    // line can land on stderr when
+    // `--correlation_vector_summary_stderr` is set; without
+    // that flag stderr_text is always empty and main behaves
+    // identically to pre-CLOC11.75.
+    let (stdout, stderr, code) = parse_and_run_with_streams(&args);
+    print!("{}", stdout);
+    if !stderr.is_empty() {
+        eprint!("{}", stderr);
+    }
     code
 }
 

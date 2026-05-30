@@ -529,6 +529,10 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
             // TEXT, empty, or absent → default
             _ => crate::config::CorrelationVectorSummaryFormat::Text,
         },
+        correlation_vector_summary_stderr: get_bool(
+            p,
+            "correlation_vector_summary_stderr",
+        )?,
     })
 }
 

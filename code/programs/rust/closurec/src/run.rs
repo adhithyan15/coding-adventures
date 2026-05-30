@@ -40,10 +40,15 @@ use std::path::{Path, PathBuf};
 /// `stdout_text` is what should be printed (empty if `--js_output_file`
 /// captured all output). `wrote_files` lists every path actually
 /// written, so tests can assert on disk effects without reading
-/// each file.
+/// each file. `stderr_text` (CLOC11.75) is content the caller
+/// should print to stderr — used today for the CV summary
+/// when `--correlation_vector_summary_stderr` is set so the
+/// summary doesn't corrupt a stdout-bound JS payload. Default
+/// empty; tests can assert on routing without grepping fds.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct CompilerOutput {
     pub stdout_text: String,
+    pub stderr_text: String,
     pub wrote_files: Vec<PathBuf>,
 }
 
@@ -364,6 +369,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     if config.io.js_patterns.is_empty() {
         return Ok(CompilerOutput {
             stdout_text: "closurec v0.1.0 - identity pipeline\n".to_string(),
+            stderr_text: String::new(),
             wrote_files: Vec::new(),
         });
     }
@@ -430,6 +436,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
         return Ok(CompilerOutput {
             stdout_text: dump,
+            stderr_text: String::new(),
             wrote_files: Vec::new(),
         });
     }
@@ -471,6 +478,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         };
         return Ok(CompilerOutput {
             stdout_text: dump,
+            stderr_text: String::new(),
             wrote_files: Vec::new(),
         });
     }
@@ -880,6 +888,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     if config.compilation.checks_only {
         return Ok(CompilerOutput {
             stdout_text: String::new(),
+            stderr_text: String::new(),
             wrote_files: Vec::new(),
         });
     }
@@ -1067,11 +1076,13 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             write_output_file(path, &encoded)?;
             CompilerOutput {
                 stdout_text: String::new(),
+                stderr_text: String::new(),
                 wrote_files: vec![path.clone()],
             }
         }
         None => CompilerOutput {
             stdout_text: encoded,
+            stderr_text: String::new(),
             wrote_files: Vec::new(),
         },
     };
@@ -1303,12 +1314,19 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 cv_sidecar_written.as_deref(),
                 config.special_modes.correlation_vector_summary_format,
             );
-            result.stdout_text.push_str(&summary);
+            // CLOC11.75 — route to stderr_text when the
+            // stderr flag is on; default stays on stdout.
+            if config.special_modes.correlation_vector_summary_stderr {
+                result.stderr_text.push_str(&summary);
+            } else {
+                result.stdout_text.push_str(&summary);
+            }
         }
     }
 
     Ok(CompilerOutput {
         stdout_text: result.stdout_text,
+        stderr_text: result.stderr_text,
         wrote_files,
     })
 }
@@ -4413,6 +4431,88 @@ mod tests {
             !out.stdout_text.contains("{\"cv_sidecar\""),
             "text default should not emit JSON, got: {:?}",
             out.stdout_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.75 — --correlation_vector_summary_stderr
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_summary_stderr_routes_to_stderr_text() {
+        // With the stderr flag on, the summary line should
+        // appear in stderr_text and NOT in stdout_text.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_75_stderr_on");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                correlation_vector_summary_stderr: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(
+            out.stderr_text.contains("cv sidecar:"),
+            "expected summary on stderr_text, got: {:?}",
+            out.stderr_text
+        );
+        assert!(
+            !out.stdout_text.contains("cv sidecar:"),
+            "expected NO summary on stdout_text under stderr flag, got: {:?}",
+            out.stdout_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_summary_stderr_off_remains_on_stdout() {
+        // Default: stderr flag off → summary stays on stdout
+        // (CLOC11.73 behaviour). stderr_text is empty.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_75_stderr_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                // correlation_vector_summary_stderr defaults to false
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(
+            out.stdout_text.contains("cv sidecar:"),
+            "expected summary on stdout_text by default, got: {:?}",
+            out.stdout_text
+        );
+        assert!(
+            out.stderr_text.is_empty(),
+            "expected empty stderr_text by default, got: {:?}",
+            out.stderr_text
         );
         let _ = fs::remove_dir_all(&dir);
     }
