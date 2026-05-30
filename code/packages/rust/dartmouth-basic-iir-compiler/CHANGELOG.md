@@ -1,5 +1,45 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.3.0 — 2026-05-29 (PL05-C — AOT backend acceptance proofs)
+
+### Added — `tests/backend_compat.rs` exercises every IIR-to-* backend
+
+BASIC's emitted IIR is now proven by automated tests to be accepted
+by the validators of every AOT backend (wasm, jvm, clr, beam).  This
+closes the "BASIC's IIR shape could regress without anyone noticing"
+gap — the same shape Twig (`twig-ir-compiler/tests/backend_compat.rs`),
+Nib (`nib-iir-compiler/tests/backend_compat.rs`), and Oct (PR #4580)
+already had.
+
+### Coverage (8 tests)
+
+| Group | Test | Asserts |
+|---|---|---|
+| Minimal | `basic_minimal_end_accepted_by_every_backend` | `10 END` |
+| Minimal | `basic_let_binding_accepted_by_every_backend` | `LET A = 42` |
+| Arithmetic | `basic_typed_add_accepted_by_every_backend` | `C = A + B` |
+| Arithmetic | `basic_typed_mul_accepted_by_every_backend` | `C = A * B` |
+| Control flow | `basic_if_then_goto_accepted_by_every_backend` | `IF A > 5 THEN 100` |
+| Control flow | `basic_for_next_loop_accepted_by_every_backend` | `FOR I = 1 TO 3 / NEXT I` |
+| Control flow | `basic_goto_accepted_by_every_backend` | `GOTO 100` |
+| Invariant | `basic_main_is_fully_typed` | main has `type_status == FullyTyped` |
+
+All 8 pass on first run — BASIC's IIR is shape-compatible with every
+backend with zero further changes.  This is the AOT counterpart to
+the existing tests/jit_smoke.rs + tests/jit_real_backend.rs (which
+prove the JIT path).
+
+### Dependencies
+
+Added `iir-to-wasm`, `iir-to-jvm-class-file`, `iir-to-cil-bytecode`,
+`iir-to-beam` as **dev-dependencies**.  None of them ship to runtime
+consumers of `dartmouth-basic-iir-compiler`.
+
+### Tests
+
+- 8 new backend_compat tests pass.
+- 17 lib + 8 + 6 + 4 existing tests still pass.
+
 ## 0.2.0 — 2026-05-26 (PL05-B — real BasicCirJit backend)
 
 ### Added — `BasicCirJit`: a real `jit_core::backend::Backend`
