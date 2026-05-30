@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.36.0
+Version: 0.37.0
 
 ## Flags
 
@@ -397,6 +397,10 @@ Invert the --correlation_vector_filter from an allowlist to a blocklist. With --
 ### `--correlation_vector_summary` (boolean, default: false)
 
 Print a one-line summary of the correlation-vector trace to stdout after the sidecar is written (or skipped under --correlation_vector_format NONE). Format: `cv sidecar: <path>: N entries, M contributions, T tombstones, pass_order=[a,b,c]`. Counts reflect post-filter state. Useful for build pipelines that don't want to parse the JSON to see if anything interesting happened (CLOC11.73).
+
+### `--correlation_vector_summary_format` (enum, default: TEXT)
+
+Format for the --correlation_vector_summary stdout line. TEXT (default) = the existing human-readable line. JSON = single-line `{"cv_sidecar": {...}}` for machine consumers. KV = space-separated `cv_sidecar.entries=N cv_sidecar.contributions=M ...` for ad-hoc shell parsing. Ignored unless --correlation_vector_summary is also set (CLOC11.74).
 
 ### `--instrument_for_coverage_option` (enum, default: NONE)
 

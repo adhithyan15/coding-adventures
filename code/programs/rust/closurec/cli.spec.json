@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "closurec",
   "description": "closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.",
-  "version": "0.36.0",
+  "version": "0.37.0",
   "parsing_mode": "gnu",
   "flags": [
     { "id": "browser_featureset_year", "long": "browser_featureset_year", "type": "integer", "default": 0, "description": "Shortcut for defining goog.FEATURESET_YEAR=YYYY (minimum 2012)." },
@@ -103,6 +103,7 @@
     { "id": "correlation_vector_filter_includes_origin", "long": "correlation_vector_filter_includes_origin", "type": "boolean", "default": false, "description": "When --correlation_vector_filter is set, also match entries by their origin.source (in addition to contribution.source). Lets `--correlation_vector_filter lex` keep the per-token CV entries whose Origin.source is \"lexer_token\". Default off preserves CLOC11.70 strict semantics (CLOC11.71)." },
     { "id": "correlation_vector_filter_invert", "long": "correlation_vector_filter_invert", "type": "boolean", "default": false, "description": "Invert the --correlation_vector_filter from an allowlist to a blocklist. With --correlation_vector_filter lex and --correlation_vector_filter_invert true, entries that DO match (i.e. carry a `lex` contribution and/or origin) are dropped; everything else is kept. Useful for \"everything except X\" filters where enumerating the allowlist is impractical (CLOC11.72)." },
     { "id": "correlation_vector_summary", "long": "correlation_vector_summary", "type": "boolean", "default": false, "description": "Print a one-line summary of the correlation-vector trace to stdout after the sidecar is written (or skipped under --correlation_vector_format NONE). Format: `cv sidecar: <path>: N entries, M contributions, T tombstones, pass_order=[a,b,c]`. Counts reflect post-filter state. Useful for build pipelines that don't want to parse the JSON to see if anything interesting happened (CLOC11.73)." },
+    { "id": "correlation_vector_summary_format", "long": "correlation_vector_summary_format", "type": "enum", "enum_values": ["TEXT", "JSON", "KV"], "default": "TEXT", "description": "Format for the --correlation_vector_summary stdout line. TEXT (default) = the existing human-readable line. JSON = single-line `{\"cv_sidecar\": {...}}` for machine consumers. KV = space-separated `cv_sidecar.entries=N cv_sidecar.contributions=M ...` for ad-hoc shell parsing. Ignored unless --correlation_vector_summary is also set (CLOC11.74)." },
     { "id": "instrument_for_coverage_option", "long": "instrument_for_coverage_option", "type": "enum", "enum_values": ["NONE", "LINE", "BRANCH", "PRODUCTION"], "default": "NONE", "description": "Enable code instrumentation for coverage analysis." },
     { "id": "production_instrumentation_array_name", "long": "production_instrumentation_array_name", "type": "string", "default": "", "description": "Global array name used by production instrumentation." },
     { "id": "chunk_output_type", "long": "chunk_output_type", "type": "enum", "enum_values": ["GLOBAL_NAMESPACE", "ES_MODULES"], "default": "GLOBAL_NAMESPACE", "description": "Format for output chunks." },

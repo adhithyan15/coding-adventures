@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.37.0] - 2026-05-30
+
+### Added — CLOC11.74: `--correlation_vector_summary_format` enum (TEXT | JSON | KV)
+
+Machine-readable rendering for the CLOC11.73 summary line. Lets CI/build pipelines consume the summary without regex-matching the human-readable text.
+
+- `TEXT` (default) — CLOC11.73 line: `cv sidecar: <path>: N entries, M contributions, T tombstones, pass_order=[a,b,c]`
+- `JSON` — single-line JSON object:
+  ```json
+  {"cv_sidecar":{"path":"<path>","skipped":false,"entries":N,"contributions":M,"tombstones":T,"pass_order":["a","b","c"]}}
+  ```
+  Under format=NONE: `"path": null, "skipped": true`.
+- `KV` — space-separated `key=value`:
+  ```
+  cv_sidecar.path="<path>" cv_sidecar.skipped=false cv_sidecar.entries=N cv_sidecar.contributions=M cv_sidecar.tombstones=T cv_sidecar.pass_order="a,b,c"
+  ```
+  Path and pass_order are quoted on the RHS via `serde_json::to_string` so shell tooling can split on whitespace safely.
+
+Flag is only consulted when `--correlation_vector_summary` is also on. With summary off, the format selector is dead.
+
+### Implementation
+
+- `compute_cv_summary` and `summary_line` gain a `summary_format: CorrelationVectorSummaryFormat` parameter. The count walk is unchanged; only the terminal rendering branches.
+- JSON and KV use `serde_json` for string escaping (paths can contain quotes, backslashes, control chars on weird filesystems — let serde handle it).
+- New public enum `CorrelationVectorSummaryFormat` with `#[default] = Text`.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_summary_format: CorrelationVectorSummaryFormat`.
+- `wire::read_special_modes` maps the string value to the enum; unknown / empty falls back to `Text`.
+- Versions: `Cargo.toml` `0.36.0` → `0.37.0`, `cli.spec.json` `0.36.0` → `0.37.0`.
+
 ## [0.36.0] - 2026-05-30
 
 ### Added — CLOC11.73: `--correlation_vector_summary` stdout one-liner
