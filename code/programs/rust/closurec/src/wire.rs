@@ -509,6 +509,10 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
                     .collect::<Vec<_>>()
             })
             .unwrap_or_default(),
+        correlation_vector_filter_includes_origin: get_bool(
+            p,
+            "correlation_vector_filter_includes_origin",
+        )?,
     })
 }
 

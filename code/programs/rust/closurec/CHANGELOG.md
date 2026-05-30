@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.34.0] - 2026-05-30
+
+### Added — CLOC11.71: `--correlation_vector_filter_includes_origin`
+
+Adds an opt-in sub-flag to extend the CLOC11.70 filter so it also matches against each entry's `origin.source`, not just `contribution.source`.
+
+Default `false` preserves CLOC11.70's strict semantics byte-for-byte: only entries with a contribution whose source is in the allowlist survive.
+
+With `--correlation_vector_filter_includes_origin true` and `--correlation_vector_filter lex`, an entry is kept iff:
+
+1. any element of `contributions` has `source` in the allowlist (the CLOC11.70 rule), OR
+2. the entry's `origin.source` is in the allowlist.
+
+This is how you get a `--correlation_vector_filter lex` invocation to also retain the per-token CV entries created with `Origin{source: "lexer_token", ...}` — their "lex" association lives in the Origin, not in a contribution.
+
+### Why opt-in rather than the new default
+
+Default-on would silently change the result of every existing `--correlation_vector_filter X` invocation. Default-off keeps CLOC11.70 unchanged; users who want the broader match flip the flag. Standard backward-compat policy for evolving CLI semantics.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_filter_includes_origin: bool`.
+- `wire::read_special_modes` reads the bool flag.
+- `prune_entries_by_source` signature: now `(root, allowlist, include_origin)`. Inline doc updated; the contribution-match branch still short-circuits before the Origin check so the fast path is unchanged.
+- Both `format_cv_log_json` and `format_cv_log_ndjson` thread the flag through.
+- Versions: `Cargo.toml` `0.33.0` → `0.34.0`, `cli.spec.json` `0.33.0` → `0.34.0`.
+
 ## [0.33.0] - 2026-05-30
 
 ### Added — CLOC11.70: `--correlation_vector_filter` allowlist flag

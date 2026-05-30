@@ -1270,11 +1270,13 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     CorrelationVectorFormat::Ndjson => format_cv_log_ndjson(
                         &cv_log,
                         &config.special_modes.correlation_vector_filter,
+                        config.special_modes.correlation_vector_filter_includes_origin,
                     ),
                     _ => format_cv_log_json(
                         &cv_log,
                         config.special_modes.correlation_vector_pretty,
                         &config.special_modes.correlation_vector_filter,
+                        config.special_modes.correlation_vector_filter_includes_origin,
                     ),
                 };
                 write_output_file(&sidecar_path, &body)?;
@@ -1318,6 +1320,7 @@ fn format_cv_log_json(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     pretty: bool,
     filter: &[String],
+    filter_includes_origin: bool,
 ) -> String {
     let compact = cv_log
         .to_json_string()
@@ -1334,7 +1337,7 @@ fn format_cv_log_json(
             Err(_) => return compact,
         };
     if need_filter {
-        prune_entries_by_source(&mut value, filter);
+        prune_entries_by_source(&mut value, filter, filter_includes_origin);
     }
     if pretty {
         serde_json::to_string_pretty(&value).unwrap_or_else(|_| compact)
@@ -1368,6 +1371,7 @@ fn format_cv_log_json(
 fn format_cv_log_ndjson(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     filter: &[String],
+    filter_includes_origin: bool,
 ) -> String {
     let compact = cv_log
         .to_json_string()
@@ -1377,7 +1381,7 @@ fn format_cv_log_ndjson(
         Err(_) => return compact,
     };
     if !filter.is_empty() {
-        prune_entries_by_source(&mut root, filter);
+        prune_entries_by_source(&mut root, filter, filter_includes_origin);
     }
     let mut out = String::new();
     if let Some(entries) = root.get("entries").and_then(|v| v.as_object()) {
@@ -1405,15 +1409,23 @@ fn format_cv_log_ndjson(
     out
 }
 
-/// CLOC11.70 — in-place prune of the `entries` object on a
-/// parsed CVLog JSON `Value` by `contribution.source`
-/// allowlist.
+/// CLOC11.70 + CLOC11.71 — in-place prune of the `entries`
+/// object on a parsed CVLog JSON `Value` by a source allowlist.
 ///
 /// Walks `root["entries"]` (an object map id → entry). An
-/// entry is kept iff it has at least one element in its
-/// `contributions` array whose `source` field equals any
-/// string in `allowlist`. Entries with empty / missing
-/// `contributions` are dropped (no source can match).
+/// entry is kept iff at least one of the following matches a
+/// string in `allowlist`:
+///
+///   1. any element of `contributions` whose `source` is in
+///      the allowlist (the CLOC11.70 rule, always applied);
+///   2. **if** `include_origin` is true (CLOC11.71): the
+///      entry's `origin.source` string.
+///
+/// `include_origin=false` preserves CLOC11.70 strict
+/// semantics byte-for-byte. `include_origin=true` lets
+/// `--correlation_vector_filter lex` also keep per-token CV
+/// entries whose `Origin.source == "lexer_token"` even
+/// though they have zero contributions.
 ///
 /// `allowlist` is treated as a closed set of exact-match
 /// strings — no wildcards, no prefix matching. The empty
@@ -1430,6 +1442,7 @@ fn format_cv_log_ndjson(
 fn prune_entries_by_source(
     root: &mut serde_json::Value,
     allowlist: &[String],
+    include_origin: bool,
 ) {
     let Some(entries) = root
         .get_mut("entries")
@@ -1442,18 +1455,36 @@ fn prune_entries_by_source(
     let allow: std::collections::HashSet<&str> =
         allowlist.iter().map(String::as_str).collect();
     entries.retain(|_id, entry| {
-        let Some(contribs) = entry
+        // (1) Any contribution.source in the allowlist?
+        let contrib_match = entry
             .get("contributions")
             .and_then(|v| v.as_array())
-        else {
-            return false;
-        };
-        contribs.iter().any(|c| {
-            c.get("source")
+            .map(|contribs| {
+                contribs.iter().any(|c| {
+                    c.get("source")
+                        .and_then(|s| s.as_str())
+                        .map(|s| allow.contains(s))
+                        .unwrap_or(false)
+                })
+            })
+            .unwrap_or(false);
+        if contrib_match {
+            return true;
+        }
+        // (2) CLOC11.71 — also accept entries whose Origin
+        // source is allowlisted.
+        if include_origin {
+            let origin_match = entry
+                .get("origin")
+                .and_then(|o| o.get("source"))
                 .and_then(|s| s.as_str())
                 .map(|s| allow.contains(s))
-                .unwrap_or(false)
-        })
+                .unwrap_or(false);
+            if origin_match {
+                return true;
+            }
+        }
+        false
     });
 }
 
@@ -3665,6 +3696,95 @@ mod tests {
             entries.is_empty(),
             "expected empty entries under unmatched filter, got {}: {body}",
             entries.len()
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.71 — --correlation_vector_filter_includes_origin
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_filter_origin_off_drops_lexer_token_origin() {
+        // Default semantics (sub-flag off): filter=lexer_token
+        // alone prunes every entry that doesn't have a
+        // contribution with source="lexer_token". Token CV
+        // entries have NO contributions; only their Origin
+        // says "lexer_token". So they should all be dropped.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_71_origin_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_filter: vec!["lexer_token".to_string()],
+                // correlation_vector_filter_includes_origin defaults to false
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // No entry has a contribution with source="lexer_token",
+        // so under strict semantics every entry is pruned.
+        assert!(
+            !body.contains("\"source\":\"lexer_token\""),
+            "filter=lexer_token without include_origin should drop all token entries, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_filter_origin_on_keeps_lexer_token_origin() {
+        // With include_origin = true, filter=lexer_token now
+        // keeps the entries whose Origin.source is
+        // "lexer_token" (i.e. the per-token CV entries) even
+        // though they have zero contributions. The per-file
+        // CV root (Origin.source="input_file") is dropped
+        // because neither its Origin nor its contributions
+        // mention "lexer_token".
+        let dir = std::env::temp_dir().join("closurec_cloc11_71_origin_on");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_filter: vec!["lexer_token".to_string()],
+                correlation_vector_filter_includes_origin: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Origin.source=lexer_token entries survived.
+        assert!(
+            body.contains("\"source\":\"lexer_token\""),
+            "filter=lexer_token + include_origin=true should keep token entries, got: {body}"
+        );
+        // input_file root entry was pruned.
+        assert!(
+            !body.contains("\"source\":\"input_file\""),
+            "input_file Origin should not match filter=lexer_token, got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
