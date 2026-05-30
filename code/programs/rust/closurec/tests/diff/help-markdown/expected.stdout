@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.32.0
+Version: 0.33.0
 
 ## Flags
 
@@ -381,6 +381,10 @@ Pretty-print the correlation-vector sidecar JSON (multi-line, 2-space indent). D
 ### `--correlation_vector_format` (enum, default: JSON)
 
 Sidecar format: JSON = single document (default), NDJSON = one CV entry per line for streaming consumers, NONE = compute CV but skip write (useful for benchmarking overhead). Ignored unless --correlation_vector is also set (CLOC11.69).
+
+### `--correlation_vector_filter` (string, default: "")
+
+Comma-separated allowlist of CV source names (e.g. "lex,defines"). Entries with no contribution.source in the allowlist are pruned from the written sidecar. Empty (default) keeps every entry. Ignored unless --correlation_vector is also set (CLOC11.70).
 
 ### `--instrument_for_coverage_option` (enum, default: NONE)
 
