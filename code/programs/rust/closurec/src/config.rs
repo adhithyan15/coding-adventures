@@ -566,6 +566,21 @@ pub struct SpecialModesConfig {
     /// written. Only consulted when `correlation_vector` is
     /// also true.
     pub correlation_vector_filter: Vec<String>,
+    /// CLOC11.71: when true, the filter also matches against
+    /// each entry's `origin.source`, not just
+    /// `contribution.source` (the CLOC11.70 default).
+    ///
+    /// Default `false` preserves the CLOC11.70 strict
+    /// semantics: per-token CV entries created with
+    /// `Origin{source: "lexer_token", ...}` and zero
+    /// contributions are *still* pruned under
+    /// `--correlation_vector_filter lex` — because their
+    /// "lex" association lives in the Origin, not in a
+    /// contribution. Setting this flag to true keeps them.
+    ///
+    /// Only consulted when `correlation_vector` is true AND
+    /// `correlation_vector_filter` is non-empty.
+    pub correlation_vector_filter_includes_origin: bool,
 }
 
 /// CLOC11.69 — sidecar persistence format. Default is
