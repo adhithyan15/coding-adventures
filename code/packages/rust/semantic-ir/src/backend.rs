@@ -219,6 +219,15 @@ where
             walk_intrinsics_in_expr(key, f, depth + 1);
             walk_intrinsics_in_expr(value, f, depth + 1);
         }
+        Stmt::ClassDef { body, .. } => {
+            // Recurse into each body statement so intrinsics nested
+            // under a class declaration are still observed.  Phase
+            // 14a always emits an empty body; the populated body
+            // case is handled forward-compatibly.
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
     }
 }
 

@@ -509,6 +509,74 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 14a (FC) — empty `class Foo; end` first-class lowering.
+    //
+    // The grammar is unchanged (the `class_statement` rule already
+    // accepts an empty body via `{ !"end" statement }` matching zero
+    // times).  These tests pin the exact parse properties the Phase
+    // 14a lowerer relies on: a single class_statement node, the class
+    // name extractable as the first Name token, and zero body
+    // statements for the empty form.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_empty_class_followed_by_top_level_stmt() {
+        // An empty class must not swallow a following top-level
+        // statement: `class Foo\nend\nx = 1` parses to a
+        // class_statement *and* leaves `x = 1` as a sibling
+        // statement at the program root.  This pins the negative
+        // lookahead `!"end"` boundary the lowerer relies on when it
+        // emits exactly one ClassDef stmt per class.
+        let ast = parse_ruby("class Foo\nend\nx = 1");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        // The empty class itself has no body statements.
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(body_count, 0);
+        // The trailing assignment survived as its own statement.
+        assert!(
+            find_statement_inner(&ast, "assignment").is_some(),
+            "trailing `x = 1` should parse as a sibling assignment"
+        );
+    }
+
+    #[test]
+    fn test_parse_empty_class_camelcase_name() {
+        // Multi-character CamelCase class name — the first Name token
+        // is the whole identifier, not a truncation, and the `class`
+        // keyword (a Keyword-type token) is not mistaken for it.
+        let ast = parse_ruby("class WidgetFactory\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let name_tok = cls.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        });
+        assert_eq!(name_tok, Some("WidgetFactory"));
+    }
+
+    #[test]
+    fn test_parse_empty_class_has_zero_body_statements() {
+        // The empty-body invariant the lowerer depends on: an empty
+        // class has no `statement` children in its body.
+        let ast = parse_ruby("class Foo\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let body_count = cls
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "statement"))
+            .count();
+        assert_eq!(body_count, 0, "empty class should have no body statements");
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
 
