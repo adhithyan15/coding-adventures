@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.32.0] - 2026-05-30
+
+### Added — CLOC11.69: `--correlation_vector_format` enum (JSON | NDJSON | NONE)
+
+Adds a sidecar format selector to cover streaming consumers and benchmark modes.
+
+- `JSON` (default) — single JSON document, same shape as CLOC11.60+. `--correlation_vector_pretty` still applies.
+- `NDJSON` — newline-delimited JSON: one CV entry per line, ending with a `{"_meta": {"pass_order":[...], "enabled":...}}` footer line. Tooling can `tail -f` mid-build without waiting for a closing brace. The `pretty` flag is ignored under NDJSON (line-delimited JSON is inherently single-line per record).
+- `NONE` — compute the CV log but **do not** write the sidecar. Lets benchmarks measure CV compute overhead in isolation from write/serialize overhead.
+
+The flag is ignored when `--correlation_vector` is off.
+
+### Implementation notes
+
+- `format_cv_log_ndjson` round-trips through `serde_json::Value` (same approach as the pretty path) to walk the `entries` map without touching CV crate internals. Fallback chain: any parse/serialize hiccup yields the compact single-doc JSON instead of an empty file.
+- The `None` arm is a single-statement no-op gated by the existing `if config.special_modes.correlation_vector` block, so default behavior is unchanged when the flag is absent.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_format: CorrelationVectorFormat` (new enum).
+- `wire::read_special_modes` reads the enum from the parse result; unknown / empty values fall back to `Json`.
+- Versions: `Cargo.toml` `0.31.0` → `0.32.0`, `cli.spec.json` `0.31.0` → `0.32.0`.
+
 ## [0.31.0] - 2026-05-30
 
 ### Added — CLOC11.68: `--correlation_vector_pretty` flag

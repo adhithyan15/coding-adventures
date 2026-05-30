@@ -1242,24 +1242,41 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     //      `closurec-cv.json` in the working directory.
     //      Discoverable; user can rename / move.
     if config.special_modes.correlation_vector {
-        let sidecar_path = match &config.special_modes.correlation_vector_output {
-            // CLOC11.67 — explicit override wins.
-            Some(p) => p.clone(),
-            None => match &config.io.js_output_file {
-                Some(p) => {
-                    let mut s = p.as_os_str().to_owned();
-                    s.push(".cv.json");
-                    PathBuf::from(s)
-                }
-                None => PathBuf::from("closurec-cv.json"),
-            },
-        };
-        let body = format_cv_log_json(
-            &cv_log,
-            config.special_modes.correlation_vector_pretty,
-        );
-        write_output_file(&sidecar_path, &body)?;
-        wrote_files.push(sidecar_path);
+        // CLOC11.69 — format selection. `None` short-circuits
+        // the whole write step: the CV log is still computed
+        // (the rest of the function ran) but nothing hits disk.
+        // Useful for benchmarks measuring CV compute overhead
+        // vs CV write overhead in isolation.
+        use crate::config::CorrelationVectorFormat;
+        match config.special_modes.correlation_vector_format {
+            CorrelationVectorFormat::None => {
+                // explicit no-op
+            }
+            fmt @ (CorrelationVectorFormat::Json
+            | CorrelationVectorFormat::Ndjson) => {
+                let sidecar_path = match &config.special_modes.correlation_vector_output {
+                    // CLOC11.67 — explicit override wins.
+                    Some(p) => p.clone(),
+                    None => match &config.io.js_output_file {
+                        Some(p) => {
+                            let mut s = p.as_os_str().to_owned();
+                            s.push(".cv.json");
+                            PathBuf::from(s)
+                        }
+                        None => PathBuf::from("closurec-cv.json"),
+                    },
+                };
+                let body = match fmt {
+                    CorrelationVectorFormat::Ndjson => format_cv_log_ndjson(&cv_log),
+                    _ => format_cv_log_json(
+                        &cv_log,
+                        config.special_modes.correlation_vector_pretty,
+                    ),
+                };
+                write_output_file(&sidecar_path, &body)?;
+                wrote_files.push(sidecar_path);
+            }
+        }
     }
 
     Ok(CompilerOutput {
@@ -1311,6 +1328,64 @@ fn format_cv_log_json(
             .unwrap_or_else(|_| compact),
         Err(_) => compact,
     }
+}
+
+/// CLOC11.69 — serialize a `CVLog` as newline-delimited JSON.
+///
+/// Output shape:
+///   - one line per CV entry, formatted as the JSON for the
+///     entry's `CVEntry` struct,
+///   - followed by one final line with the metadata object:
+///     `{"_meta": {"pass_order": [...], "enabled": <bool>}}`.
+///
+/// Why a final `_meta` line: streaming consumers reading the
+/// sidecar with `tail -f` or line-by-line want the entries
+/// available as they arrive without waiting for a closing
+/// brace. Trailing the metadata keeps `pass_order` parseable
+/// once the producer is done without polluting any individual
+/// entry line.
+///
+/// We reuse `to_json_string` + parse-as-Value rather than
+/// touching CV crate internals. The compact JSON has the shape
+/// `{"entries":{"id":{...}}, "pass_order":[...], "enabled":...}`
+/// so we walk the `entries` map and re-emit each value as a
+/// single-line JSON document. On any parse / serialize hiccup
+/// we fall through to the compact JSON document (a valid
+/// fallback the consumer's `tail` will still see).
+fn format_cv_log_ndjson(
+    cv_log: &coding_adventures_correlation_vector::CVLog,
+) -> String {
+    let compact = cv_log
+        .to_json_string()
+        .unwrap_or_else(|_| "{}".to_string());
+    let root: serde_json::Value = match serde_json::from_str(&compact) {
+        Ok(v) => v,
+        Err(_) => return compact,
+    };
+    let mut out = String::new();
+    if let Some(entries) = root.get("entries").and_then(|v| v.as_object()) {
+        for entry in entries.values() {
+            if let Ok(line) = serde_json::to_string(entry) {
+                out.push_str(&line);
+                out.push('\n');
+            }
+        }
+    }
+    // Append the metadata footer line.
+    let mut meta = serde_json::Map::new();
+    if let Some(po) = root.get("pass_order") {
+        meta.insert("pass_order".to_string(), po.clone());
+    }
+    if let Some(en) = root.get("enabled") {
+        meta.insert("enabled".to_string(), en.clone());
+    }
+    let mut footer = serde_json::Map::new();
+    footer.insert("_meta".to_string(), serde_json::Value::Object(meta));
+    if let Ok(line) = serde_json::to_string(&serde_json::Value::Object(footer)) {
+        out.push_str(&line);
+        out.push('\n');
+    }
+    out
 }
 
 /// Format the contents of an `--output_manifest` file from a
@@ -3237,6 +3312,142 @@ mod tests {
         assert!(
             body.contains("\"pass_order\""),
             "pretty JSON missing pass_order key: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.69 — --correlation_vector_format (JSON | NDJSON | NONE)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_format_ndjson_writes_one_entry_per_line() {
+        // NDJSON: every line should parse as JSON; the count
+        // of lines should be `entries + 1` (one per CV entry,
+        // one footer `_meta` line). We don't pin the exact
+        // count to avoid brittleness as the pipeline grows; we
+        // just assert ≥2 lines and every line is valid JSON.
+        let dir = std::env::temp_dir().join("closurec_cloc11_69_ndjson");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_format:
+                    crate::config::CorrelationVectorFormat::Ndjson,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        let lines: Vec<&str> =
+            body.lines().filter(|l| !l.is_empty()).collect();
+        assert!(
+            lines.len() >= 2,
+            "expected ≥2 NDJSON lines (entries + meta), got {}: {body}",
+            lines.len()
+        );
+        // Every line must parse as JSON on its own.
+        for (i, line) in lines.iter().enumerate() {
+            serde_json::from_str::<serde_json::Value>(line)
+                .unwrap_or_else(|_| panic!(
+                    "NDJSON line {i} did not parse as JSON: {line}"
+                ));
+        }
+        // The last line should be the _meta footer.
+        assert!(
+            lines.last().unwrap().contains("\"_meta\""),
+            "expected last line to be _meta footer, got: {}",
+            lines.last().unwrap()
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_format_none_skips_sidecar_write() {
+        // NONE format: CV is enabled, the trace is computed,
+        // but NO sidecar file is created. The would-be default
+        // path must not exist after the run.
+        let dir = std::env::temp_dir().join("closurec_cloc11_69_none");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let default_sidecar = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_format:
+                    crate::config::CorrelationVectorFormat::None,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            !default_sidecar.exists(),
+            "NONE format should skip sidecar write, found file at {:?}",
+            default_sidecar
+        );
+        // JS output still produced — CV gating doesn't affect
+        // the normal pipeline.
+        assert!(
+            out_path.exists(),
+            "JS output should still be written under NONE: {:?}",
+            out_path
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_format_json_default_unchanged() {
+        // Default (JSON) format: existing behavior preserved.
+        // Sidecar exists and is a single JSON document.
+        let dir = std::env::temp_dir().join("closurec_cloc11_69_json");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                // correlation_vector_format defaults to Json
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Whole body must parse as a single JSON document.
+        serde_json::from_str::<serde_json::Value>(&body)
+            .expect("JSON format should produce a single JSON doc");
+        // And NOT contain a _meta footer (that's NDJSON-only).
+        assert!(
+            !body.contains("\"_meta\""),
+            "JSON format should not include the NDJSON _meta footer"
         );
         let _ = fs::remove_dir_all(&dir);
     }

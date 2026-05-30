@@ -492,6 +492,14 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
             .filter(|s| !s.is_empty())
             .map(std::path::PathBuf::from),
         correlation_vector_pretty: get_bool(p, "correlation_vector_pretty")?,
+        correlation_vector_format: match get_str(p, "correlation_vector_format")?
+            .as_deref()
+        {
+            Some("NDJSON") => crate::config::CorrelationVectorFormat::Ndjson,
+            Some("NONE") => crate::config::CorrelationVectorFormat::None,
+            // JSON, empty, or absent → default
+            _ => crate::config::CorrelationVectorFormat::Json,
+        },
     })
 }
 
