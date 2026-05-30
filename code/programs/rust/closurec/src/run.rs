@@ -713,6 +713,74 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             );
                         }
                     }
+
+                    // CLOC11.66 — WHITESPACE_ONLY token
+                    // tombstones. Only the WHITESPACE_ONLY
+                    // compilation level filters tokens at this
+                    // stage (`whitespace_only_minify` drops
+                    // trivia and EOF). For every token CV that
+                    // matches the same trivia / EOF predicate
+                    // the minifier uses, record a
+                    // DeletionRecord (tombstone) on the token
+                    // CV so the trace shows precisely which
+                    // bytes the pass killed.
+                    //
+                    // Why not lex twice (pre + post) and diff
+                    // the streams? The trivia / EOF predicate
+                    // *is* the contract — `is_trivia` and
+                    // `is_eof` in `whitespace_only.rs` are
+                    // what the minifier itself uses. Reusing
+                    // them keeps the tombstone set guaranteed
+                    // identical to the dropped set without a
+                    // second lex pass.
+                    //
+                    // Other compilation levels (SIMPLE,
+                    // ADVANCED, BUNDLE, TRANSPILE_ONLY) are
+                    // currently identity on the string —
+                    // they don't drop any tokens — so no
+                    // tombstones land for those. As those
+                    // levels grow real bodies in later
+                    // CLOC11.* slices, each will need its own
+                    // tombstone block.
+                    if matches!(
+                        config.compilation.level,
+                        crate::config::CompilationLevel::WhitespaceOnly,
+                    ) {
+                        for (idx, tok) in tokens.iter().enumerate() {
+                            let is_trivia_tok = crate::whitespace_only::is_trivia(tok);
+                            let is_eof_tok = crate::whitespace_only::is_eof(tok);
+                            if !is_trivia_tok && !is_eof_tok {
+                                continue;
+                            }
+                            let mut wmeta = std::collections::HashMap::new();
+                            wmeta.insert(
+                                "kind".to_string(),
+                                serde_json::Value::String(
+                                    if is_eof_tok {
+                                        "eof".into()
+                                    } else {
+                                        "trivia".into()
+                                    },
+                                ),
+                            );
+                            wmeta.insert(
+                                "token_index".to_string(),
+                                serde_json::Value::Number((idx as u64).into()),
+                            );
+                            wmeta.insert(
+                                "token_lexeme_byte_len".to_string(),
+                                serde_json::Value::Number(
+                                    (tok.value.len() as u64).into(),
+                                ),
+                            );
+                            cv_log.delete(
+                                &token_cv_ids[idx],
+                                "compilation_level",
+                                "whitespace_only_dropped",
+                                wmeta,
+                            );
+                        }
+                    }
                 }
                 Err(err) => {
                     let mut emeta = std::collections::HashMap::new();
@@ -2858,6 +2926,113 @@ mod tests {
         assert!(
             !body.contains("\"define_name\""),
             "expected NO token-level defines.applied, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.66 — WHITESPACE_ONLY token tombstones
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_tombstones_trivia_tokens_under_whitespace_only() {
+        // With --correlation_vector + --compilation_level
+        // WHITESPACE_ONLY, the dropped trivia + EOF tokens
+        // should appear in the sidecar as deleted CV entries
+        // (DeletionRecord present, source=compilation_level,
+        // reason=whitespace_only_dropped). The surviving Name
+        // tokens (var, x, etc.) should NOT be tombstoned.
+        let dir = std::env::temp_dir().join("closurec_cloc11_66_ws_drop");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        // Comments + whitespace generate trivia tokens; EOF
+        // is always emitted at end.
+        fs::write(
+            &in_path,
+            "// a comment\nvar x = 1; /* block */ var y = 2;",
+        )
+        .expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // The tombstone reason string lands in the sidecar.
+        assert!(
+            body.contains("\"reason\":\"whitespace_only_dropped\""),
+            "expected whitespace_only_dropped tombstone, got: {body}"
+        );
+        // EOF kind always lands (every file ends with EOF
+        // sentinel; the JS grammar happens not to emit COMMENT
+        // tokens — comments are skipped at lex time — so trivia
+        // kind never fires for this grammar today, but the code
+        // path covers both cases against future grammar
+        // evolution).
+        assert!(
+            body.contains("\"kind\":\"eof\""),
+            "expected eof kind tombstone, got: {body}"
+        );
+        // The tombstone landed via the DeletionRecord field.
+        assert!(
+            body.contains("\"source\":\"compilation_level\",\"reason\":\"whitespace_only_dropped\""),
+            "expected DeletionRecord with compilation_level source, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_tombstones_under_simple_level() {
+        // Non-WHITESPACE_ONLY levels currently don't drop
+        // tokens at the compilation_level stage, so no
+        // tombstones should appear. (As later slices add
+        // real bodies to SIMPLE/ADVANCED/etc., each will
+        // need its own block + test; this pins the current
+        // contract.)
+        let dir = std::env::temp_dir().join("closurec_cloc11_66_simple");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "// a comment\nvar x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // SIMPLE is the default; spelled out for clarity.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            !body.contains("\"reason\":\"whitespace_only_dropped\""),
+            "expected NO whitespace_only_dropped tombstones under SIMPLE, got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
