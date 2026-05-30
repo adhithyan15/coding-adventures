@@ -531,6 +531,35 @@ pub struct SpecialModesConfig {
     /// Only consulted when `correlation_vector` is true; the
     /// formatter never runs when the trace is disabled.
     pub correlation_vector_pretty: bool,
+    /// CLOC11.69: how to format and persist the CV sidecar.
+    ///   - `Json` (default): single JSON document, same shape
+    ///     as CLOC11.60 → 11.68. The `pretty` toggle still
+    ///     applies.
+    ///   - `Ndjson`: one CV entry per line, no enclosing
+    ///     object. Streaming consumers (jq, log aggregators)
+    ///     can `tail -f` mid-build. `pretty` is ignored under
+    ///     Ndjson — line-delimited JSON is inherently
+    ///     single-line per record.
+    ///   - `None`: compute the CV log but do NOT write a
+    ///     sidecar. Useful for benchmarking how much the CV
+    ///     trace itself costs versus the write.
+    pub correlation_vector_format: CorrelationVectorFormat,
+}
+
+/// CLOC11.69 — sidecar persistence format. Default is
+/// `Json` (the historical CLOC11.60+ behaviour).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum CorrelationVectorFormat {
+    /// Single JSON document. The `correlation_vector_pretty`
+    /// flag toggles compact vs indented.
+    #[default]
+    Json,
+    /// Newline-delimited JSON: one entry per line. `pretty`
+    /// is ignored.
+    Ndjson,
+    /// No sidecar written; CV log is still computed in
+    /// memory and discarded. For benchmarks.
+    None,
 }
 
 // ---------------------------------------------------------------------------
