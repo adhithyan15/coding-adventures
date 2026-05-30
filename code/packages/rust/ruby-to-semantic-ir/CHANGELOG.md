@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.48.0] - 2026-05-30
+
+### Added (Phase 15d (FC) — scoped lookup `Foo::Bar`)
+
+Ruby's scope-resolution operator now lowers.  A scoped constant lookup
+is, semantically, a single constant resolved against a namespace, so it
+reuses the Phase 15c `Scope::Const` machinery (no new SIR node):
+
+- `apply_dot_chain` now also folds `scope_resolution` postfix steps.
+- New `fold_one_scope_resolution`: `Foo::Bar` folds into a single
+  `VarRef { scope: Const, name: "Foo::Bar" }`, and `A::B::C` collapses
+  to `VarRef { Const, "A::B::C" }`.  Each step requests
+  `Feature::Constants`.
+- A non-constant base (`expr::Bar`, uncommon) is preserved structurally
+  via a `BuiltinCall("__scope__", [base, StrLit(name)])` marker so no
+  structure is silently dropped.
+
+New tests (+3): `scope_resolution_lowers_to_qualified_const`,
+`scope_resolution_chain_lowers_to_full_path`,
+`scope_resolution_passes_sir_validator` (E2E).  Test count: 219 → 222
+(+3).
+
 ## [0.47.0] - 2026-05-30
 
 ### Changed (Phase 15c (FC) — constants `FOO` / `MyClass`)

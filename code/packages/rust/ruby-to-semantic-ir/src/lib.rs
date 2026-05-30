@@ -1193,6 +1193,52 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 15d (FC) — scoped lookup `Foo::Bar` → qualified `Scope::Const`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn scope_resolution_lowers_to_qualified_const() {
+        // `Foo::Bar` folds into a single `VarRef { scope: Const }` whose
+        // name is the qualified path `"Foo::Bar"`, and requests
+        // `Feature::Constants`.
+        let m = lower("Foo::Bar\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "Foo::Bar", "qualified constant path preserved");
+                assert_eq!(*scope, Scope::Const);
+            }
+            other => panic!("expected VarRef(Foo::Bar, Const), got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Constants),
+            "manifest should declare Constants; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn scope_resolution_chain_lowers_to_full_path() {
+        // `A::B::C` collapses to `VarRef { Const, "A::B::C" }`.
+        let m = lower("A::B::C\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "A::B::C");
+                assert_eq!(*scope, Scope::Const);
+            }
+            other => panic!("expected VarRef(A::B::C, Const), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn scope_resolution_passes_sir_validator() {
+        // E2E: a scoped constant lookup (as an assignment RHS) validates —
+        // a constant needs no prior `let`.
+        let m = lower("y = Foo::Bar\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected scoped const: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`.  Mirrors
     // ClassDef (minus inheritance): method defs hoist to top-level
     // Functions; non-def statements stay in the module body.
