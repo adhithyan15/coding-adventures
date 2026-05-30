@@ -561,3 +561,286 @@ fn end_to_end_oct_user_fn_call_succeeds() {
         "expected exit 0; got {:?}; stderr={:?}",
         out.status.code(), String::from_utf8_lossy(&out.stderr));
 }
+
+// ---------------------------------------------------------------------------
+// Oct: expanded coverage (mirrors Nib's 5-test breadth)
+// ---------------------------------------------------------------------------
+
+/// Oct program with if/else — the then branch should set x to 1, the
+/// program exits successfully.  Exercises typed `cmp_eq` + `jmp_if_false`
+/// + `mov` + `jmp` + `label` through the AOT chain.
+const OCT_IF_ELSE: &str = "fn main() { \
+                               let x: u8 = 0; \
+                               if x == 0 { x = 1; } else { x = 2; } \
+                           }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_oct_if_else_exits_zero() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("ifelse.oct");
+    let exe = dir.path().join("ifelse.exe");
+    std::fs::write(&src, OCT_IF_ELSE).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0 from Oct if/else; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_oct_if_else_exits_zero() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("ifelse.oct");
+    let exe = dir.path().join("ifelse");
+    std::fs::write(&src, OCT_IF_ELSE).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0 from Oct if/else; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+/// Oct program with a while loop — counts n from 0 to 10.  Exercises
+/// backward `jmp` (the AOT chain's branch-distance encoding) and
+/// repeated `cmp_lt` + `add` through native codegen.
+const OCT_WHILE_LOOP: &str = "fn main() { \
+                                  let n: u8 = 0; \
+                                  while n < 10 { n = n + 1; } \
+                              }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_oct_while_loop_exits_zero() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("whileloop.oct");
+    let exe = dir.path().join("whileloop.exe");
+    std::fs::write(&src, OCT_WHILE_LOOP).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0 from Oct while loop; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_oct_while_loop_exits_zero() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("whileloop.oct");
+    let exe = dir.path().join("whileloop");
+    std::fs::write(&src, OCT_WHILE_LOOP).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0 from Oct while loop; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+/// Oct cross-function arithmetic: `add_one(8)` should yield 9 and main
+/// then doubles it via `add_one`-style chain.  Exercises typed argument
+/// passing + cross-fn `call` reloc multiple times in a single program.
+const OCT_CROSS_FN_CHAIN: &str = "fn add_one(a: u8) -> u8 { return a + 1; } \
+                                  fn main() { \
+                                      let x: u8 = add_one(8); \
+                                      let y: u8 = add_one(x); \
+                                  }";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_oct_cross_fn_chain_exits_zero() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("chain.oct");
+    let exe = dir.path().join("chain.exe");
+    std::fs::write(&src, OCT_CROSS_FN_CHAIN).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0 from Oct cross-fn chain; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_oct_cross_fn_chain_exits_zero() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("chain.oct");
+    let exe = dir.path().join("chain");
+    std::fs::write(&src, OCT_CROSS_FN_CHAIN).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::Oct)
+        .unwrap_or_else(|e| panic!("Oct compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(0),
+        "expected exit 0 from Oct cross-fn chain; got {:?}; stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr));
+}
+
+// ---------------------------------------------------------------------------
+// BASIC: expanded coverage (mirrors Nib's 5-test breadth)
+// ---------------------------------------------------------------------------
+
+/// BASIC arithmetic chain: A + B + C printed.  Exercises multiple
+/// typed `add` ops through the AOT pipeline.
+const BASIC_ARITH_CHAIN: &str = "10 LET A = 10\n\
+                                 20 LET B = 20\n\
+                                 30 LET C = 12\n\
+                                 40 LET D = A + B + C\n\
+                                 50 PRINT D\n\
+                                 60 END\n";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_basic_arith_chain_prints_42() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("chain.bas");
+    let exe = dir.path().join("chain.exe");
+    std::fs::write(&src, BASIC_ARITH_CHAIN).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"42\n",
+        "expected stdout '42\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_basic_arith_chain_prints_42() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("chain.bas");
+    let exe = dir.path().join("chain");
+    std::fs::write(&src, BASIC_ARITH_CHAIN).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"42\n",
+        "expected stdout '42\\n', got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// BASIC `IF…THEN <line>` conditional branch — A > 5 takes the then
+/// branch, printing 1.  Exercises typed `cmp_gt` + `jmp_if_*` through
+/// native codegen with the line-label resolution.
+const BASIC_IF_THEN: &str = "10 LET A = 7\n\
+                             20 IF A > 5 THEN 100\n\
+                             30 PRINT 0\n\
+                             40 GOTO 200\n\
+                             100 PRINT 1\n\
+                             200 END\n";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_basic_if_then_prints_1() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("ifthen.bas");
+    let exe = dir.path().join("ifthen.exe");
+    std::fs::write(&src, BASIC_IF_THEN).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"1\n",
+        "expected stdout '1\\n' from IF A > 5 THEN; got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_basic_if_then_prints_1() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("ifthen.bas");
+    let exe = dir.path().join("ifthen");
+    std::fs::write(&src, BASIC_IF_THEN).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"1\n",
+        "expected stdout '1\\n' from IF A > 5 THEN; got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+/// BASIC `GOTO` unconditional jump — control flow skips the assignment
+/// on line 30 and reaches line 100 directly, printing A's original
+/// value (1).  Exercises forward unconditional branch resolution.
+const BASIC_GOTO: &str = "10 LET A = 1\n\
+                          20 GOTO 100\n\
+                          30 LET A = 999\n\
+                          100 PRINT A\n\
+                          110 END\n";
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_basic_goto_prints_1() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("goto.bas");
+    let exe = dir.path().join("goto.exe");
+    std::fs::write(&src, BASIC_GOTO).unwrap();
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"1\n",
+        "expected stdout '1\\n' from GOTO skip; got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_basic_goto_prints_1() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("goto.bas");
+    let exe = dir.path().join("goto");
+    std::fs::write(&src, BASIC_GOTO).unwrap();
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::DartmouthBasic)
+        .unwrap_or_else(|e| panic!("BASIC compile failed: {e}"));
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.stdout, b"1\n",
+        "expected stdout '1\\n' from GOTO skip; got {:?}; stderr={:?}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+}
