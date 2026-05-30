@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.29.0] - 2026-05-30
+
+### Added — CLOC11.66: WHITESPACE_ONLY token tombstones
+
+When `--correlation_vector` is on and `--compilation_level WHITESPACE_ONLY` is set, every token CV that the minifier drops (trivia + EOF) now gets a `DeletionRecord` (tombstone) via `CVLog::delete`. The CV trace shows precisely which input bytes the WHITESPACE_ONLY pass killed.
+
+Tombstone shape (one per dropped token):
+
+```
+source: "compilation_level"
+reason: "whitespace_only_dropped"
+meta: {
+  kind:                  "trivia" | "eof",
+  token_index:           <0-based position in lexer stream>,
+  token_lexeme_byte_len: <token.value.len()>,
+}
+```
+
+Implementation reuses `whitespace_only::is_trivia` / `is_eof` (now `pub(crate)`) — the same predicate the minifier itself uses — so the tombstone set is guaranteed identical to the dropped set without a second lex pass.
+
+Other compilation levels (SIMPLE, ADVANCED, BUNDLE, TRANSPILE_ONLY) are currently identity on the string and don't drop tokens, so no tombstones land for those. As those levels grow real bodies in later CLOC11.* slices, each will need its own tombstone block.
+
+### Changed
+
+- `whitespace_only::is_trivia` and `whitespace_only::is_eof` promoted from private `fn` to `pub(crate) fn` so the per-token CV path can call them directly without duplicating the predicate.
+- Versions: `Cargo.toml` `0.28.0` → `0.29.0`, `cli.spec.json` `0.28.0` → `0.29.0`.
+
 ## [0.28.0] - 2026-05-30
 
 ### Added — CLOC11.65: per-token `defines.applied` contributions
