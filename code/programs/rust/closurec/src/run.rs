@@ -24,6 +24,7 @@ use crate::defines;
 use crate::globs;
 use crate::whitespace_only;
 use crate::wrapper;
+use coding_adventures_javascript_lexer::tokenize_javascript_typed;
 use coding_adventures_javascript_tokens::EsVersion;
 use std::fs;
 use std::io::{self, Write};
@@ -529,6 +530,104 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         } else {
             None
         };
+
+        // CLOC11.64: per-token CV entries. With CV enabled we
+        // tokenize the file and create a CV entry per token that
+        // is a *child* (via `derive`) of the per-file CV entry.
+        // This lays the substrate later slices need to migrate
+        // token-level contributions (defines.applied,
+        // whitespace_only drops, rename mappings…) off the
+        // per-file CV and onto the precise token CV they touched.
+        //
+        // The per-file CV is left in place: it remains the
+        // attach-point for stage-level summaries
+        // (compilation_level, defines) and the merge-parent for
+        // the combined post-concat CV. Tokens add detail; they
+        // don't replace the file root.
+        //
+        // Granularity (intentional this slice):
+        //   - one child entry per token from
+        //     `tokenize_javascript_typed` — comments and pure
+        //     whitespace are not emitted as tokens by the
+        //     lexer, so we get exactly the bytes that survive
+        //     into the token stream.
+        //   - Origin.source = "lexer_token", location =
+        //     "<path>:<line>:<col>" (1-based, matching the
+        //     lexer's own line/column).
+        //   - meta = {kind, lexeme_byte_len, token_index} —
+        //     kind is the TokenType as a stable lowercase
+        //     string; lexeme_byte_len is value.len() (post
+        //     escape resolution for strings — matches what the
+        //     emitter would write); token_index is the 0-based
+        //     position in the stream so later passes can refer
+        //     back without keeping the token vec around.
+        //
+        // Errors: a lex failure (malformed JS) does not abort
+        // the build. The string-only transform pipeline can
+        // still handle WHITESPACE_ONLY style copies; we just
+        // record a `lex.failed` contribution on the per-file
+        // CV and skip token-CV creation. Later slices that need
+        // tokens may treat absence as "lex didn't reach this
+        // file" — a recoverable state.
+        if let Some(id) = &cv_id {
+            let es = map_language_in_to_es_version(config);
+            match tokenize_javascript_typed(&contents, es) {
+                Ok(tokens) => {
+                    let token_count = tokens.len();
+                    for (idx, tok) in tokens.iter().enumerate() {
+                        let mut tmeta = std::collections::HashMap::new();
+                        tmeta.insert(
+                            "kind".to_string(),
+                            serde_json::Value::String(
+                                format!("{:?}", tok.type_).to_lowercase(),
+                            ),
+                        );
+                        tmeta.insert(
+                            "lexeme_byte_len".to_string(),
+                            serde_json::Value::Number(
+                                (tok.value.len() as u64).into(),
+                            ),
+                        );
+                        tmeta.insert(
+                            "token_index".to_string(),
+                            serde_json::Value::Number((idx as u64).into()),
+                        );
+                        let _ = cv_log.derive(
+                            id,
+                            Some(coding_adventures_correlation_vector::Origin {
+                                source: "lexer_token".to_string(),
+                                location: format!(
+                                    "{}:{}:{}",
+                                    path.to_string_lossy(),
+                                    tok.line,
+                                    tok.column,
+                                ),
+                                timestamp: None,
+                                meta: tmeta,
+                            }),
+                        );
+                    }
+                    let mut cmeta = std::collections::HashMap::new();
+                    cmeta.insert(
+                        "token_count".to_string(),
+                        serde_json::Value::Number((token_count as u64).into()),
+                    );
+                    let _ = cv_log.contribute(
+                        id, "lex", "tokens_emitted", cmeta,
+                    );
+                }
+                Err(err) => {
+                    let mut emeta = std::collections::HashMap::new();
+                    emeta.insert(
+                        "message".to_string(),
+                        serde_json::Value::String(err),
+                    );
+                    let _ = cv_log.contribute(
+                        id, "lex", "failed", emeta,
+                    );
+                }
+            }
+        }
 
         // CLOC11.61: per-stage CV contributions. When CV is on,
         // pass the per-file cv_id through to `transform_source_with_cv`
@@ -2447,14 +2546,18 @@ mod tests {
         // Both source-names present.
         assert!(body.contains("\"source\":\"compilation_level\""));
         assert!(body.contains("\"source\":\"defines\""));
-        // pass_order in the CVLog dump should show
-        // compilation_level FIRST, then defines. Other passes
-        // may follow (CLOC11.62 adds charset; later slices add
-        // more). Pin the prefix to keep the per-file ordering
-        // invariant while staying tolerant of new passes.
+        // pass_order in the CVLog dump should show lex FIRST
+        // (CLOC11.64 added per-token CV emission ahead of
+        // transform_source_with_cv), then compilation_level,
+        // then defines. Other passes follow (CLOC11.62 adds
+        // charset; later slices add more). Pin the prefix to
+        // keep the per-file ordering invariant while staying
+        // tolerant of new passes.
         assert!(
-            body.contains("\"pass_order\":[\"compilation_level\",\"defines\""),
-            "expected pass_order to start with [compilation_level, defines, ...], got: {body}"
+            body.contains(
+                "\"pass_order\":[\"lex\",\"compilation_level\",\"defines\""
+            ),
+            "expected pass_order to start with [lex, compilation_level, defines, ...], got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
@@ -2470,6 +2573,97 @@ mod tests {
         let a = transform_source(source, &cfg).expect("a");
         let b = transform_source_with_cv(source, &cfg, None).expect("b");
         assert_eq!(a, b);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.64 — per-token CV entries (children of per-file CV)
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_emits_per_token_cv_entries() {
+        // With --correlation_vector on, every token from the
+        // lexer should appear in the sidecar as a derived CV
+        // entry with source="lexer_token" and parent_ids
+        // pointing at the per-file CV root. We also expect a
+        // `lex.tokens_emitted` contribution on the per-file CV
+        // with a token_count matching the lexer's output.
+        let dir = std::env::temp_dir().join("closurec_cloc11_64_tokens");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Source name appears.
+        assert!(
+            body.contains("\"source\":\"lexer_token\""),
+            "expected lexer_token source in CV sidecar, got: {body}"
+        );
+        // lex.tokens_emitted contribution lands on the per-file CV.
+        assert!(
+            body.contains("\"source\":\"lex\"")
+                && body.contains("\"tag\":\"tokens_emitted\""),
+            "expected lex.tokens_emitted contribution, got: {body}"
+        );
+        // token_index keys appear (proves we wrote the per-token meta).
+        assert!(
+            body.contains("\"token_index\""),
+            "expected token_index in token meta, got: {body}"
+        );
+        // For "var x = 1;" the JS lexer emits at least 5 tokens
+        // (var, x, =, 1, ;) — assert lower-bound, not exact,
+        // because the lexer may emit additional tokens (EOF,
+        // implicit semis) and we don't want to brittle-pin
+        // grammar internals.
+        let token_count = body.matches("\"source\":\"lexer_token\"").count();
+        assert!(
+            token_count >= 5,
+            "expected at least 5 token CV entries for 'var x = 1;', got {token_count}: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_disabled_emits_no_token_entries() {
+        // With CV disabled (default), no sidecar should be
+        // written and no per-token work should happen — same
+        // byte-identical behavior as pre-CLOC11.64.
+        let dir = std::env::temp_dir().join("closurec_cloc11_64_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            // correlation_vector NOT set (default false)
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            !sidecar_path.exists(),
+            "no sidecar should exist when CV is disabled"
+        );
+        let _ = fs::remove_dir_all(&dir);
     }
 
     // ------------------------------------------------------------------

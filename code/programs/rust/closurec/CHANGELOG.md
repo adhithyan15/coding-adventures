@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.27.0] - 2026-05-29
+
+### Added — CLOC11.64: per-token CV entries (children of per-file CV)
+
+Continues the "every feature CV-traceable when enabled" series. When `--correlation_vector` is on, after reading each input file we now tokenize with `coding-adventures-javascript-lexer::tokenize_javascript_typed` and derive a **child CV entry per token** under the per-file CV root.
+
+This is the substrate for the next slices (CLOC11.65+) to migrate token-level contributions (`defines.applied`, `whitespace_only` drops, rename mappings) off the per-file summary entry and onto the precise token CV they touched — so the trace tells you *which token* a transform mutated, not just *which file*.
+
+Per-token CV entry shape:
+
+| Field         | Value                                            |
+|---------------|--------------------------------------------------|
+| parent_ids    | `[per_file_cv_id]` (via `CVLog::derive`)         |
+| `source`      | `"lexer_token"`                                  |
+| `location`    | `"<path>:<line>:<column>"` (1-based, lexer-native) |
+| `meta.kind`   | lowercased `TokenType` debug name                |
+| `meta.lexeme_byte_len` | `value.len()` (post escape resolution)  |
+| `meta.token_index` | 0-based position in the token stream        |
+
+Per-file CV gains one summary contribution after the token loop:
+
+```
+source: "lex", tag: "tokens_emitted", meta: {token_count: N}
+```
+
+Error policy: a lex failure does **not** abort the build. The string-only pipeline still runs (WHITESPACE_ONLY can copy verbatim, defines can no-op). We record `lex.failed` with the lexer error message on the per-file CV and skip per-token creation.
+
+Cost: only paid when `--correlation_vector` is on. Default-off path is byte-identical to 0.26.0.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.26.0` → `0.27.0`, `cli.spec.json` `0.26.0` → `0.27.0`.
+
 ## [0.26.0] - 2026-05-27
 
 ### Added — CLOC11.63: CV records for output writes (JS, source map, manifest)
