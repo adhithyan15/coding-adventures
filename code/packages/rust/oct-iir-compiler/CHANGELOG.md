@@ -1,5 +1,52 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.4.0 — 2026-05-30 (OCT05 — source-location threading for debugger)
+
+### Added — Real source positions in `IIRFunction.source_map`
+
+Oct's emitted IIR now carries real `(line, column)` per instruction
+in `IIRFunction.source_map`, in lockstep with `instructions`.
+Previously the field was either empty or all `SourceLoc::SYNTHETIC`.
+
+This is the prerequisite for line-based breakpoints in the future
+`oct-dap` debugger crate.  Without real positions, the debug
+sidecar built by the DAP layer cannot resolve `setBreakpoints
+{ file, lines: [N] }` requests to IIR instructions.
+
+### Implementation
+
+- New `node_loc(&GrammarASTNode) -> SourceLoc` helper extracts
+  `(start_line, start_column)` from an AST node, falling back to
+  `SYNTHETIC` when the parser couldn't attach positions.
+- `Compiler` gained two fields: `source_map: Vec<SourceLoc>` (the
+  per-function accumulator) and `current_loc: Cell<SourceLoc>`
+  (the "currently compiling" position).  Reset at the start of
+  every `compile_fn` call.
+- `Compiler::emit` now pushes `current_loc.get()` onto
+  `source_map` for every instruction it appends, maintaining the
+  lockstep invariant.
+- `compile_stmt` calls `set_loc(node_loc(stmt))` on entry, so all
+  instructions emitted while compiling a statement (including from
+  sub-expressions) inherit the statement's source line.  This is
+  the right granularity for line-based debuggers: per-statement,
+  not per-expression-column.
+- `compile_fn` reset/take semantics: each function gets its own
+  source_map slice, moved onto `iir_fn.source_map` at the end.
+  Defensive padding handles the rare case where pre-set_loc
+  emission slipped through (dead today; cheap to keep).
+
+### Tests
+
+- 2 new unit tests:
+  - `source_map_lockstep_with_instructions`: every function's
+    `source_map.len() == instructions.len()`.
+  - `source_map_carries_real_line_numbers`: a 3-line program
+    produces tagged-line entries for both let statements (not
+    just SYNTHETIC).
+- All 11 existing lib tests still pass (13 total).
+- 9 backend_compat + 4 jit_e2e tests still pass.
+- Downstream `lang-aot` (8 + 17) continues to pass.
+
 ## 0.3.0 — 2026-05-29 (OCT04 — AOT backend acceptance proofs)
 
 ### Added — `tests/backend_compat.rs` exercises every IIR-to-* backend
