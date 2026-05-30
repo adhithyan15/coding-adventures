@@ -535,10 +535,13 @@ impl Lowerer {
                 // hoisted exactly once and every non-`def` statement
                 // is preserved in `body` instead of being dropped.
                 let name = self.extract_class_name(node)?;
+                // Phase 14c — optional `< Bar` superclass clause.
+                let superclass = self.extract_superclass(node);
                 self.features_used.insert(Feature::Classes);
                 let body = self.lower_class_body_statements(node)?;
                 Ok(Stmt::ClassDef {
                     name,
+                    superclass,
                     body,
                     span: self.span_of(node),
                 })
@@ -1676,6 +1679,36 @@ impl Lowerer {
             column: node.start_column.unwrap_or(0),
         })?;
         Ok(name_token.value.clone())
+    }
+
+    /// Phase 14c (FC) — extract the optional superclass name from a
+    /// `class_statement` AST node (`class Foo < Bar`).
+    ///
+    /// Grammar shape: `"class" NAME [ "<" NAME ] { … } "end"`.  The
+    /// `"<"` separator lexes as a `TokenType::Name` token whose *value*
+    /// is `"<"` (the lexer reclassifies comparison operators as Name
+    /// tokens; the grammar's `"<"` literal matches by value).  We scan
+    /// the direct child tokens for that `<` separator and return the
+    /// value of the *next* `Name`-type token — the superclass.  Returns
+    /// `None` for a base class (`class Foo`), where no `<` is present.
+    ///
+    /// Only direct child tokens are inspected, so a `<` appearing deep
+    /// inside a body statement (e.g. `a < b` as a comparison) is never
+    /// mistaken for the superclass separator: body statements are
+    /// `statement` *nodes*, not bare tokens, in the child list.
+    fn extract_superclass(&self, node: &GrammarASTNode) -> Option<String> {
+        let mut seen_lt = false;
+        for child in &node.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if seen_lt && matches!(t.type_, TokenType::Name) {
+                    return Some(t.value.clone());
+                }
+                if t.value == "<" {
+                    seen_lt = true;
+                }
+            }
+        }
+        None
     }
 
     /// Phase 7c — lower an endless method definition `def foo = expr`

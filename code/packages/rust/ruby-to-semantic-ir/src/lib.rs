@@ -802,6 +802,95 @@ mod tests {
         assert!(semantic_ir::validate(&m).is_ok());
     }
 
+    // -----------------------------------------------------------------
+    // Phase 14c (FC) — inheritance `class Foo < Bar`.  The superclass
+    // name lands in `Stmt::ClassDef.superclass` (semantic-ir 0.3.0);
+    // a base class keeps `superclass: None`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn class_with_superclass_records_parent_name() {
+        // `class Dog < Animal` → ClassDef.superclass == Some("Animal").
+        let m = lower("class Dog < Animal\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, body, .. } => {
+                assert_eq!(name, "Dog");
+                assert_eq!(superclass.as_deref(), Some("Animal"));
+                assert!(body.is_empty());
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn base_class_has_no_superclass() {
+        // A class without `< Parent` keeps `superclass: None` — the
+        // 14c grammar's superclass clause is optional.
+        let m = lower("class Widget\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, .. } => {
+                assert_eq!(name, "Widget");
+                assert_eq!(*superclass, None, "base class must have no superclass");
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn subclass_with_body_records_superclass_and_hoists_methods() {
+        // Inheritance composes with Phase 14b: the superclass is
+        // captured AND the body's `def`s hoist while non-def statements
+        // stay in the body.
+        let m = lower("class Cat < Animal\n  LEGS = 4\n  def meow\n  end\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "meow"),
+            "expected hoisted `meow`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, body, .. } => {
+                assert_eq!(name, "Cat");
+                assert_eq!(superclass.as_deref(), Some("Animal"));
+                assert_eq!(body.len(), 1, "only `LEGS = 4` stays in body; got {:?}", body);
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "LEGS"));
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn subclass_passes_sir_validator() {
+        // E2E: a subclass with a populated body lowers to a module the
+        // validator accepts (the superclass name is advisory; it is
+        // not resolved against a symbol table).
+        let m = lower("class Cat < Animal\n  LEGS = 4\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected subclass module: {:?}", result);
+    }
+
+    #[test]
+    fn comparison_in_class_body_is_not_mistaken_for_superclass() {
+        // A `<` *inside* a body statement (a comparison expression)
+        // must not be lifted as the superclass: only the direct
+        // `class NAME < NAME` separator counts.  `class Plain` here has
+        // no superclass even though its body contains `a < b`.
+        let m = lower("class Plain\n  a = 1\n  a < 2\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, superclass, .. } => {
+                assert_eq!(name, "Plain");
+                assert_eq!(
+                    *superclass, None,
+                    "a comparison in the body must not become the superclass"
+                );
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
     #[test]
     fn module_still_lowers_to_nil_no_op_in_phase_14a() {
         // Phase 14a covers `class` only.  `module M; end` continues

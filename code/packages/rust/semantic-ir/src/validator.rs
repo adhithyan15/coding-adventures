@@ -1150,6 +1150,7 @@ mod tests {
             body: Block {
                 stmts: vec![Stmt::ClassDef {
                     name: name.into(),
+                    superclass: None,
                     body,
                     span: s(),
                 }],
@@ -1222,6 +1223,7 @@ mod tests {
                 stmts: vec![
                     Stmt::ClassDef {
                         name: "Foo".into(),
+                        superclass: None,
                         body: vec![Stmt::LetBinding {
                             name: "INNER".into(),
                             sir_type: None,
