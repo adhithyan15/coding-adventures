@@ -137,6 +137,12 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
                 v.visit_stmt(stmt);
             }
         }
+        Stmt::SingletonClassDef { body, .. } => {
+            // Singleton-class body — same recursion (Ruby Phase 14e).
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+        }
     }
 }
 

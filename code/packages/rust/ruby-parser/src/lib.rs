@@ -788,6 +788,65 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 14e (FC) — singleton class `class << receiver … end`.  The
+    // `class_statement` rule gains a singleton alternative
+    // (`"class" "<<" singleton_receiver …`); `<<` lexes as an Op token
+    // (value "<<"), `self` as a Keyword.  The parse carries a
+    // `singleton_receiver` child node the lowerer dispatches on.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_singleton_class_of_self() {
+        // `class << self; end` parses to a class_statement carrying a
+        // `singleton_receiver` child (whose token is `self`), plus the
+        // `<<` separator token.
+        let ast = parse_ruby("class << self\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        assert!(body_has_token_value(cls, "<<"), "expected `<<` separator token");
+        let recv = cls.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "singleton_receiver" => Some(n),
+            _ => None,
+        });
+        let recv = recv.expect("expected a singleton_receiver child node");
+        let recv_tok = recv.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+            _ => None,
+        });
+        assert_eq!(recv_tok, Some("self"));
+    }
+
+    #[test]
+    fn test_parse_singleton_class_body_with_def() {
+        // A def inside a singleton class parses as a def_statement body
+        // child (hoisted by the lowerer).
+        let ast = parse_ruby("class << self\n  def foo\n  end\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let names = body_inner_rule_names(cls);
+        assert!(
+            names.iter().any(|r| r == "def_statement"),
+            "expected a def_statement in the singleton body; got {:?}",
+            names
+        );
+    }
+
+    #[test]
+    fn test_parse_ordinary_class_has_no_singleton_receiver() {
+        // Regression guard: `class Foo` must NOT carry a
+        // singleton_receiver child (the singleton alternative must not
+        // shadow the ordinary form).
+        let ast = parse_ruby("class Foo\nend");
+        let cls = find_statement_inner(&ast, "class_statement")
+            .expect("expected class_statement");
+        let has_recv = cls.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Node(n) if n.rule_name == "singleton_receiver"
+        ));
+        assert!(!has_recv, "ordinary class must have no singleton_receiver child");
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
 

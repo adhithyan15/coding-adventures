@@ -892,6 +892,81 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 14e (FC) — singleton class `class << receiver … end` →
+    // `Stmt::SingletonClassDef`.  Body handling mirrors class/module:
+    // method defs hoist to top-level Functions; non-def statements stay
+    // in the body.  Triggers `Feature::Classes`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn singleton_class_of_self_lowers_to_singleton_class_def() {
+        // `class << self; end` → SingletonClassDef { target: "self" }.
+        let m = lower("class << self\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::SingletonClassDef { target, body, .. } => {
+                assert_eq!(target, "self");
+                assert!(body.is_empty(), "empty singleton body");
+            }
+            other => panic!("expected Stmt::SingletonClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn singleton_class_requests_classes_feature() {
+        // A singleton class is a class-opening construct → it requests
+        // `Feature::Classes` (not a separate feature).
+        let m = lower("class << self\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Classes),
+            "manifest should contain Feature::Classes; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn singleton_class_hoists_methods_and_keeps_statements() {
+        // `class << self; X = 1; def foo; end; end` — `foo` hoists to a
+        // top-level Function; `X = 1` stays in the singleton body.
+        let m = lower("class << self\n  X = 1\n  def foo\n  end\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "foo"),
+            "expected hoisted `foo`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::SingletonClassDef { target, body, .. } => {
+                assert_eq!(target, "self");
+                assert_eq!(body.len(), 1, "only `X = 1` stays in body; got {:?}", body);
+                assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "X"));
+            }
+            other => panic!("expected Stmt::SingletonClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn singleton_class_passes_sir_validator() {
+        // E2E: lower → validate for a singleton class with a body.
+        let m = lower("class << self\n  X = 1\n  def foo\n  end\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected singleton-class module: {:?}", result);
+    }
+
+    #[test]
+    fn ordinary_class_still_lowers_to_class_def_not_singleton() {
+        // Regression guard: the singleton dispatch must not hijack the
+        // ordinary `class Foo` form (no `singleton_receiver` child).
+        let m = lower("class Foo\nend\n");
+        let main = main_body(&m);
+        assert!(
+            matches!(&main.stmts[0], Stmt::ClassDef { .. }),
+            "ordinary class must lower to ClassDef, got {:?}",
+            &main.stmts[0]
+        );
+    }
+
+    // -----------------------------------------------------------------
     // Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`.  Mirrors
     // ClassDef (minus inheritance): method defs hoist to top-level
     // Functions; non-def statements stay in the module body.

@@ -394,6 +394,21 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(module_mark);
                     i += 1;
                 }
+                Stmt::SingletonClassDef { body, span, .. } => {
+                    // A singleton-class declaration (Ruby Phase 14e) is
+                    // a class-opening construct → mark Feature::Classes,
+                    // then depth-guard and walk the body in a fresh
+                    // local-env scope, same as ClassDef.
+                    self.observed.add(Feature::Classes);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let singleton_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(singleton_mark);
+                    i += 1;
+                }
             }
         }
     }

@@ -277,8 +277,10 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     return true;
                 }
             }
-            Stmt::ClassDef { body, .. } | Stmt::ModuleDef { body, .. } => {
-                // A class/module declaration body is itself a
+            Stmt::ClassDef { body, .. }
+            | Stmt::ModuleDef { body, .. }
+            | Stmt::SingletonClassDef { body, .. } => {
+                // A class/module/singleton declaration body is itself a
                 // `Vec<Stmt>`.  Recurse over each contained statement
                 // using a synthetic wrapper Block, mirroring the loop /
                 // pattern-stmt arms above.
@@ -519,21 +521,38 @@ impl Lowerer {
                 })
             }
             "class_statement" => {
+                // Phase 14e (FC): the `class_statement` rule has two
+                // forms.  The *singleton* form `class << RECEIVER … end`
+                // parses with a `singleton_receiver` child node; the
+                // ordinary form `class Foo [< Bar] … end` does not.  We
+                // dispatch on that child's presence.
+                if let Some(target) = self.extract_singleton_receiver(node) {
+                    // Singleton class (`class << self` / `class << obj`)
+                    // → `Stmt::SingletonClassDef { target, body }`.
+                    // Body handling is identical to a class/module:
+                    // method `def`s hoist to top-level Functions,
+                    // non-`def` statements stay in `body`.
+                    self.features_used.insert(Feature::Classes);
+                    let body = self.lower_decl_body_statements(node)?;
+                    return Ok(Stmt::SingletonClassDef {
+                        target,
+                        body,
+                        span: self.span_of(node),
+                    });
+                }
                 // Phase 14b (FC): `class Foo … end` lowers to a
                 // first-class `Stmt::ClassDef { name, body, span }`
-                // whose `body` now carries the class's *executable*
-                // statements in source order (Phase 14a always
-                // emitted an empty body).
+                // whose `body` carries the class's *executable*
+                // statements in source order.
                 //
                 // Method definitions (`def` / endless `def`) inside
-                // the body continue to be hoisted to top-level
-                // `Function`s — SIR v0 has no method-as-statement
-                // node, so a method can't live inside `body`
-                // (a `Vec<Stmt>`).  The hoisting is done per-child
-                // inside `lower_decl_body_statements` (shared with
-                // `module_statement`), so each nested `def` is hoisted
-                // exactly once and every non-`def` statement is
-                // preserved in `body` instead of being dropped.
+                // the body are hoisted to top-level `Function`s — SIR
+                // v0 has no method-as-statement node, so a method can't
+                // live inside `body` (a `Vec<Stmt>`).  The hoisting is
+                // done per-child inside `lower_decl_body_statements`
+                // (shared with `module_statement`), so each nested
+                // `def` is hoisted exactly once and every non-`def`
+                // statement is preserved in `body` instead of dropped.
                 let name = self.extract_class_name(node)?;
                 // Phase 14c — optional `< Bar` superclass clause.
                 let superclass = self.extract_superclass(node);
@@ -1698,6 +1717,29 @@ impl Lowerer {
             }
         }
         None
+    }
+
+    /// Phase 14e (FC) — extract the singleton-class receiver from a
+    /// `class_statement` AST node, if it is the singleton form
+    /// `class << RECEIVER … end`.
+    ///
+    /// The singleton form parses with a `singleton_receiver` child node
+    /// (`singleton_receiver = "self" | NAME`); the ordinary
+    /// `class Foo [< Bar]` form has none.  Returns `Some(receiver)` —
+    /// the value of the receiver token (`"self"` or a bare name) — for
+    /// the singleton form, and `None` for the ordinary form (which
+    /// signals the caller to take the `ClassDef` path).
+    fn extract_singleton_receiver(&self, node: &GrammarASTNode) -> Option<String> {
+        let receiver_node = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "singleton_receiver" => Some(n),
+            _ => None,
+        })?;
+        // The receiver node wraps exactly one token (`self` keyword or a
+        // Name) — return its value.
+        receiver_node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.clone()),
+            _ => None,
+        })
     }
 
     /// Phase 7c — lower an endless method definition `def foo = expr`

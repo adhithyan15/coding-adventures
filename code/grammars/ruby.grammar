@@ -124,7 +124,18 @@ endless_def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] EQUALS expressio
 # note below), but the literal matcher compares the token value, so
 # `"<"` matches transparently.  The superclass is a single `NAME`; the
 # lowerer lifts it into `Stmt::ClassDef.superclass`.
-class_statement  = "class"  NAME [ "<" NAME ] { !"end" statement } "end" ;
+#
+# Phase 14e — singleton-class form `class << RECEIVER … end` (opens the
+# receiver's singleton/metaclass; `def`s inside become singleton
+# methods).  The `<<` literal matches the left-shift Op token by value
+# (`class << self` lexes as `class`, `<<`, `self` — the space before
+# `self` keeps `<<` a shift operator, not a heredoc opener).  The
+# receiver is `self` (the dominant idiom) or a bare `NAME`.  The
+# singleton alternative is listed FIRST so PEG tries it before the
+# `"class" NAME …` form (the `<<` after `class` disambiguates).
+class_statement  = "class" "<<" singleton_receiver { !"end" statement } "end"
+                 | "class" NAME [ "<" NAME ] { !"end" statement } "end" ;
+singleton_receiver = "self" | NAME ;
 module_statement = "module" NAME { !"end" statement } "end" ;
 # Phase 6g — blocks `do … end` and brace-blocks `method { … }`.
 method_with_block = ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] block ;

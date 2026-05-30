@@ -2,6 +2,41 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.5.0 — SIR17: singleton-class declarations (`Stmt::SingletonClassDef`)
+
+Introduced by the Ruby frontend's Phase 14e (`class << self … end`).
+
+### Added
+
+- `Stmt::SingletonClassDef { target: String, body: Vec<Stmt>, span: Span }`
+  — a singleton-class (metaclass) declaration.  `target` is the
+  receiver whose singleton class is opened (`"self"` for the dominant
+  `class << self` idiom, or a bare object name).  Like
+  `ClassDef`/`ModuleDef`, method `def`s in the body are hoisted to
+  top-level `Function`s by the Ruby lowerer; `body` carries the
+  non-`def` statements.  Reuses `Feature::Classes` (a singleton class
+  is a class-opening construct, not a new feature) — no manifest
+  change.
+
+### Changed
+
+- `Stmt::span()`, the walker, the validator (marks `Feature::Classes`,
+  walks the body via `check_stmt_seq` in a scoped env mark/rewind with
+  the `MAX_IR_DEPTH` guard — same shape as `ClassDef`), the text
+  printer (`(singleton-class-def << Target …)`), and the
+  intrinsic-walk backend helper gain a `SingletonClassDef` arm.  The
+  four reference backends gain an unreachable `panic!` arm
+  (`Feature::Classes` absent from their accepted sets → rejected at the
+  capability check before emit).
+
+New tests (3): `print_singleton_class_def`,
+`singleton_class_def_body_with_let_binding_validates`,
+`singleton_class_def_body_undefined_varref_is_error`.  Test count:
+90 → 93.
+
+This is a **breaking enum change** for any exhaustive `match` on `Stmt`
+without a `_` / `..` rest arm.
+
 ## 0.4.0 — SIR17: module declarations (`Stmt::ModuleDef`)
 
 Introduced by the Ruby frontend's Phase 14d (`module M … end`).
