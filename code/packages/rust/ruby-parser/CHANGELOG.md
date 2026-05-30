@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.47.0] - 2026-05-30
+
+### Added (Phase 16b (FC) — typed / multi-type / multi-clause rescue)
+
+No grammar change — the `rescue_clause` /  `exception_list` rules
+(`rescue ExceptionType[, OtherType] => var`) already parse these forms
+(Phase 6v).  Phase 16b adds parse pins for the typed and multi-clause
+shapes that the Phase 16a `Stmt::TryCatch` lowering relies on:
+
+- `test_parse_begin_multi_type_rescue` — `rescue Foo, Bar => e` parses
+  with an `exception_list` carrying both class Name tokens plus the `=>`
+  binding.
+- `test_parse_begin_multiple_rescue_clauses` — two `rescue` clauses
+  parse as two distinct `rescue_clause` nodes under the begin_statement.
+
+Test count: 176 → 178 (+2).
+
 ## [0.46.0] - 2026-05-30
 
 ### Added (Phase 15d (FC) — scope-resolution operator `Foo::Bar`)

@@ -2,6 +2,25 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.50.0] - 2026-05-30
+
+### Added (Phase 16b (FC) — typed / multi-type / multi-clause rescue)
+
+Hardening of the Phase 16a `Stmt::TryCatch` lowering — no code change,
+the 16a `RescueClause` plumbing already handles these forms.  Phase 16b
+locks the behaviour in with dedicated tests:
+
+- `rescue_multi_type_lowers_all_exception_types` — `rescue Foo, Bar => e`
+  lowers to one `RescueClause` whose `exception_types` lists both classes
+  in source order, with binding `e`.
+- `multiple_rescue_clauses_lower_to_separate_clauses` — two `rescue`
+  clauses lower to two `RescueClause`s, each with its own exception type
+  and binding, in source order.
+- `multi_clause_rescue_passes_sir_validator` (E2E) — each clause's
+  binding resolves inside its own body, confirming per-clause scope.
+
+Test count: 223 → 226 (+3).
+
 ## [0.49.0] - 2026-05-30
 
 ### Changed (Phase 16a (FC) — `begin/rescue/ensure/end` → `Stmt::TryCatch`)
