@@ -5129,10 +5129,61 @@ impl Lowerer {
             if let ASTNodeOrToken::Node(sub) = child {
                 if sub.rule_name == "dot_call" {
                     recv = self.fold_one_dot_call(recv, sub)?;
+                } else if sub.rule_name == "scope_resolution" {
+                    // Phase 15d (FC) — `::Name` step.
+                    recv = self.fold_one_scope_resolution(recv, sub)?;
                 }
             }
         }
         Ok(recv)
+    }
+
+    /// Lower a single `scope_resolution` step (`::Name`).  Grammar shape
+    /// (Phase 15d):
+    ///     scope_resolution = "::" ( NAME | KEYWORD ) ;
+    ///
+    /// A scoped constant lookup `Foo::Bar` is, semantically, a single
+    /// constant resolved against a namespace.  The common case — a
+    /// constant path whose base is itself a `Scope::Const` ref — folds
+    /// into one qualified-name `Scope::Const` ref (`"Foo::Bar"`), so
+    /// `A::B::C` collapses to `VarRef { scope: Const, name: "A::B::C" }`.
+    /// A non-constant base (`expr::Bar`, uncommon) is preserved
+    /// structurally via a `__scope__` BuiltinCall marker so no structure
+    /// is silently dropped.  Either way `Feature::Constants` is
+    /// requested (the result is a constant reference).
+    fn fold_one_scope_resolution(
+        &mut self,
+        base: Expr,
+        sr_node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let (rhs_name, rhs_span) = self.expect_first_name_token(sr_node)?;
+        self.features_used.insert(Feature::Constants);
+        match base {
+            Expr::VarRef { name, scope: Scope::Const, span } => Ok(Expr::VarRef {
+                name: format!("{name}::{rhs_name}"),
+                scope: Scope::Const,
+                span,
+            }),
+            other => {
+                // Fallback: `expr::Bar` where the base is not a bare
+                // constant.  Keep the step explicit; the synthetic
+                // StrLit triggers the Strings feature.
+                self.features_used.insert(Feature::Strings);
+                let span = self.span_of(sr_node);
+                Ok(Expr::BuiltinCall {
+                    name: "__scope__".to_string(),
+                    args: vec![
+                        other,
+                        Expr::StrLit {
+                            value: rhs_name,
+                            span: rhs_span,
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span,
+                })
+            }
+        }
     }
 
     /// Lower a single `dot_call` step.  Grammar shape (Phase 6s):

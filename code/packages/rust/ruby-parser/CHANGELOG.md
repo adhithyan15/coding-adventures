@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.46.0] - 2026-05-30
+
+### Added (Phase 15d (FC) — scope-resolution operator `Foo::Bar`)
+
+The grammar gains a `scope_resolution` postfix so constant paths parse:
+
+- New rule `scope_resolution = "::" ( NAME | KEYWORD ) ;`, appended to
+  `factor`'s postfix alternation (`{ dot_call | scope_resolution }`), so
+  `Foo::Bar` parses as `(Foo)::Bar` and `A::B::C` as a chain of two
+  `::` steps.  The `::` literal matches by VALUE (the lexer emits `::`
+  as a `Colon`-typed token whose value is `"::"`).
+- **Disambiguation fix**: `symbol_literal` previously matched the
+  `COLON` token by TYPE, which let it swallow the `::` of a scope
+  resolution (so `Foo::Bar` mis-parsed as `Foo(:Bar)`).  It now matches
+  the literal `":"` (by value), keeping symbols to the single-colon form
+  and freeing `::` for `scope_resolution`.  All existing symbol tests
+  still pass (a lone `:` lexes as `Colon` value `":"`).
+
+New parse pins (+3): `test_parse_scope_resolution_foo_bar`,
+`test_parse_scope_resolution_chain` (`A::B::C` → two steps),
+`test_parse_scope_resolution_then_dot_call` (`Foo::Bar.baz` mixes both
+postfix kinds).  Test count: 173 → 176 (+3).
+
 ## [0.45.0] - 2026-05-30
 
 ### Added (Phase 15c (FC) — constants `FOO` / `MyClass`)

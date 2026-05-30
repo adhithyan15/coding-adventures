@@ -327,6 +327,14 @@ rightward_assignment = expression "=>" NAME ;
 # deliberately out of scope for this chunk — they get their own phases.
 method_call  = ( NAME | KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
 dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] ;
+# Phase 15d (FC) — scope-resolution operator `Foo::Bar` (and chains
+# `A::B::C`).  The lexer emits `::` as a `Colon` token whose VALUE is
+# "::", so the grammar literal `"::"` matches it by value.  A
+# `scope_resolution` postfix mirrors `dot_call`: it captures one `::Name`
+# step and is appended to `factor`'s postfix alternation so a constant
+# path parses as `((Foo)::Bar)::Baz`.  The lowerer folds each step into a
+# qualified `Scope::Const` name.
+scope_resolution = "::" ( NAME | KEYWORD ) ;
 # Phase 6s — splat call arguments.  `f(*arr)` and `f(**hsh)` (and the
 # mixed form `f(1, *arr, **hsh, named: x)`) flow through here.  The
 # optional `[ "*" | "**" ]` prefix sits inside a single call_arg slot,
@@ -458,7 +466,7 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # leaving `(1).bar` unconsumed.  When no parens follow the name, the
 # method_call alternative fails (requires LPAREN) and we fall through to
 # the bare-NAME branch.
-factor       = ( lambda_literal | method_call | NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call } ;
+factor       = ( lambda_literal | method_call | NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
 # Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter
@@ -479,7 +487,13 @@ factor       = ( lambda_literal | method_call | NUMBER | STRING | NAME | KEYWORD
 # downstream emitters a single closure-construction shape.
 lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
 unary_minus  = MINUS factor ;
-symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;
+# Phase 15d (FC) — the colon is matched by the literal ":" (by VALUE)
+# rather than the COLON token reference (by TYPE).  The lexer emits both
+# `:` and `::` as `Colon`-typed tokens distinguished only by value, so a
+# by-type match would let `symbol_literal` swallow the `::` of a
+# scope-resolution (`Foo::Bar`).  Matching the literal ":" keeps symbols
+# to the single-colon form and frees `::` for `scope_resolution`.
+symbol_literal = ":" ( NAME | KEYWORD | STRING ) ;
 array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
 hash_literal = LBRACE [ hash_entry { COMMA hash_entry } ] RBRACE ;
 hash_entry   = NAME COLON expression | NAME COLON | expression "=>" expression ;

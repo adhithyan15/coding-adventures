@@ -905,6 +905,56 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_parse_scope_resolution_foo_bar() {
+        // `Foo::Bar` parses with a `scope_resolution` postfix node
+        // carrying the `::` operator token and the `Bar` Name.
+        let ast = parse_ruby("Foo::Bar");
+        let sr = find_descendant(&ast, "scope_resolution")
+            .expect("expected scope_resolution node");
+        assert!(
+            body_has_token_value(sr, "::"),
+            "scope_resolution should carry the `::` operator token"
+        );
+        assert!(
+            body_has_token_value(sr, "Bar"),
+            "scope_resolution should carry the `Bar` Name token"
+        );
+    }
+
+    #[test]
+    fn test_parse_scope_resolution_chain() {
+        // `A::B::C` parses as a chain of TWO `scope_resolution` steps.
+        let ast = parse_ruby("A::B::C");
+        let factor = find_descendant(&ast, "factor")
+            .expect("expected factor node");
+        let steps = factor
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "scope_resolution"))
+            .count();
+        assert_eq!(steps, 2, "A::B::C has two `::` steps; got {}", steps);
+    }
+
+    #[test]
+    fn test_parse_scope_resolution_then_dot_call() {
+        // `Foo::Bar.baz` mixes a `::` step and a `.` step under the same
+        // factor postfix — both node kinds coexist.
+        let ast = parse_ruby("Foo::Bar.baz");
+        let factor = find_descendant(&ast, "factor")
+            .expect("expected factor node");
+        assert!(
+            factor.children.iter().any(|c|
+                matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "scope_resolution")),
+            "expected a scope_resolution step"
+        );
+        assert!(
+            factor.children.iter().any(|c|
+                matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "dot_call")),
+            "expected a dot_call step"
+        );
+    }
+
     // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------
