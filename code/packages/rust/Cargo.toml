@@ -662,6 +662,7 @@ members = [
     "lang-runtime-core",
     "lispy-runtime",
     "vm-debug",
+    "basic-dap",
     "twig-vm",
     "twig-to-jvm",
     "twig-to-cil",

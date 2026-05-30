@@ -1,0 +1,18 @@
+[package]
+name = "basic-dap"
+version = "0.1.0"
+edition = "2021"
+description = "BASIC05 — Dartmouth BASIC Debug Adapter: compile + launch hooks over dap-adapter-core; produces the basic-dap binary VS Code drives over stdio.  Modelled on twig-dap and built on the same dap-adapter-core / debug-sidecar / vm-debug substrate."
+
+[dependencies]
+dap-adapter-core              = { path = "../dap-adapter-core" }
+dartmouth-basic-iir-compiler  = { path = "../dartmouth-basic-iir-compiler" }
+interpreter-ir                = { path = "../interpreter-ir" }
+debug-sidecar                 = { path = "../debug-sidecar" }
+
+[[bin]]
+name = "basic-dap"
+path = "bin/basic_dap.rs"
+
+[dev-dependencies]
+tempfile = "3"
