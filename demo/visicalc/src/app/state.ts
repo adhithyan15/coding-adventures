@@ -21,7 +21,7 @@ export type { GridEvent, FormulaBarEvent };
 /** Host-internal events not produced by any Mosaic component. */
 export type HostEvent =
   | { type: "editStart"; row: number; col: number }
-  | { type: "editCommit"; value: string }
+  | { type: "editCommit" }
   | { type: "editCancel" }
   | { type: "scroll"; offset: number }
   | {
@@ -113,9 +113,15 @@ export function reducer(state: AppState, action: AppAction): AppState {
     }
 
     case "editCommit": {
+      // The inline cell HostInput's `onCommit:` emit is void by design
+      // (see mosaic-emit-react::emit_host_input_jsx) — the buffered
+      // text already lives in state.editContent, accumulated keystroke-
+      // by-keystroke via the `formulaChange` action.  Reading from
+      // action.value would always be `undefined` because the dispatch
+      // payload is `{ type: "editCommit" }` with no fields.
       if (state.editRow === -1) return state;
       const k = cellKey(state.editRow, state.editCol);
-      const newCells = { ...state.cells, [k]: action.value };
+      const newCells = { ...state.cells, [k]: state.editContent };
       // Move selection down one row after commit (Excel convention).
       const nextRow = Math.min(state.editRow + 1, state.totalRows - 1);
       const nextCol = state.editCol;
