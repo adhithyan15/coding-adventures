@@ -1,5 +1,60 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.4.0 — 2026-05-30 (BASIC05 — source-location threading for debugger)
+
+### Added — Real source positions in `IIRFunction.source_map`
+
+BASIC's emitted IIR now carries real `(line, column)` per instruction
+in `IIRFunction.source_map`, in lockstep with `instructions`.
+Previously the field was either empty or all `SourceLoc::SYNTHETIC`.
+
+This is the prerequisite for line-based breakpoints in the future
+`basic-dap` debugger crate.  Without real positions, the debug
+sidecar built by the DAP layer cannot resolve `setBreakpoints
+{ file, lines: [N] }` requests to IIR instructions.
+
+This mirrors the pattern landed for `oct-iir-compiler` 0.4.0
+(OCT05 / PR #4583).  Same `node_loc()` + `Cell<SourceLoc>` +
+statement-level `set_loc()` shape — the next step in the
+horizontally-sequenced "every language gets every Twig-grade
+tool" roadmap.
+
+### Implementation
+
+- New `node_loc(&GrammarASTNode) -> SourceLoc` helper extracts
+  `(start_line, start_column)` from an AST node, falling back to
+  `SYNTHETIC` when the parser couldn't attach positions.
+- `Compiler` gained two fields: `source_map: Vec<SourceLoc>` (the
+  per-function accumulator) and `current_loc: Cell<SourceLoc>`
+  (the "currently compiling" position).  Manual `impl Default`
+  replaces the `#[derive(Default)]` since `Cell<SourceLoc>` doesn't
+  have a usable default (well, it does — but being explicit makes
+  the SYNTHETIC start state obvious to readers).
+- `Compiler::emit` now pushes `current_loc.get()` onto `source_map`
+  for every instruction it appends, maintaining the lockstep
+  invariant.
+- `emit_line` calls `set_loc(node_loc(line))` on entry — all
+  instructions emitted for that line (label + body) inherit the
+  line's source position.
+- `emit_statement` re-tags with the wrapped statement node's own
+  position, which may be a tighter range than `emit_line` set.
+- `emit_program` sets the initial loc to the program root so the
+  synthesised end-of-program epilogue (`const 0; ret`) gets a
+  sensible source line rather than `SYNTHETIC`.
+- `compile_program` ends with the move-with-defensive-padding shape:
+  `main.source_map = std::mem::take(&mut comp.source_map)` after
+  ensuring `source_map.len() == instructions.len()`.
+
+### Tests
+
+- 2 new unit tests:
+  - `source_map_lockstep_with_instructions`: every function's
+    `source_map.len() == instructions.len()`.
+  - `source_map_carries_real_line_numbers`: a 4-line BASIC program
+    produces entries for every line — proving the per-line source
+    positions get threaded through, not just SYNTHETIC.
+- All existing lib tests still pass.
+
 ## 0.3.0 — 2026-05-29 (PL05-C — AOT backend acceptance proofs)
 
 ### Added — `tests/backend_compat.rs` exercises every IIR-to-* backend

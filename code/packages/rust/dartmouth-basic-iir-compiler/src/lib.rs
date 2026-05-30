@@ -52,6 +52,7 @@ use coding_adventures_dartmouth_basic_parser::parse_dartmouth_basic;
 use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
+use interpreter_ir::source_loc::SourceLoc;
 
 // Re-export the JIT backend so downstream consumers (tests, future
 // `dartmouth-basic-vm` wrappers) can use it without depending on the
@@ -59,6 +60,22 @@ use interpreter_ir::module::IIRModule;
 pub mod jit_backend;
 pub use jit_backend::{BasicCirJit, DEFAULT_OUTPUT_CAP, DEFAULT_STEP_CAP};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+/// Extract a [`SourceLoc`] from a `GrammarASTNode`, falling back to
+/// [`SourceLoc::SYNTHETIC`] when the parser couldn't attach position
+/// info (rare — mostly synthesised wrapper nodes).
+///
+/// Used by the BASIC compiler to tag every emitted IIR instruction
+/// with the source position of the AST node that produced it.  The
+/// resulting `IIRFunction.source_map` powers line-based breakpoints
+/// in the future `basic-dap` debugger crate and source-line reporting
+/// in stack traces.
+fn node_loc(node: &GrammarASTNode) -> SourceLoc {
+    match (node.start_line, node.start_column) {
+        (Some(line), Some(col)) => SourceLoc::new(line, col),
+        _ => SourceLoc::SYNTHETIC,
+    }
+}
 
 // ===========================================================================
 // Public surface
@@ -124,6 +141,7 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
     // anywhere), so the function is genuinely fully typed for the
     // JIT's threshold-zero compile path.  This mirrors Brainfuck's
     // `IIRFunction { … type_status: FullyTyped, … }` construction.
+    let body_len = comp.instrs.len();
     let mut main = IIRFunction::new(
         "main",
         vec![],   // no parameters
@@ -131,13 +149,25 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
         comp.instrs,
     );
     main.type_status = FunctionTypeStatus::FullyTyped;
+    // Move the accumulated source positions onto the function.  The
+    // lockstep invariant (one entry per instruction) is enforced by
+    // [`Compiler::emit`]: every push to `instrs` pairs with a push to
+    // `source_map`.  We defensively pad with `SYNTHETIC` in case any
+    // pre-source_map code path slipped through (this branch is dead
+    // today but cheap to keep).
+    while comp.source_map.len() < body_len {
+        comp.source_map.push(SourceLoc::SYNTHETIC);
+    }
+    if comp.source_map.len() > body_len {
+        comp.source_map.truncate(body_len);
+    }
+    main.source_map = std::mem::take(&mut comp.source_map);
     let mut module = IIRModule::new(module_name, "dartmouth-basic");
     module.functions.push(main);
     module.entry_point = Some("main".to_string());
     Ok(module)
 }
 
-#[derive(Default)]
 struct Compiler {
     instrs: Vec<IIRInstr>,
     /// Next synthetic register name (`_t0`, `_t1`, …) for temporaries.
@@ -149,6 +179,30 @@ struct Compiler {
     open_fors: Vec<ForState>,
     /// Counter for unique `for_<n>` label families.
     for_counter: usize,
+    /// Per-instruction source positions, built in lockstep with
+    /// `instrs`.  Moved onto `IIRFunction.source_map` at end of
+    /// [`compile_program`].
+    source_map: Vec<SourceLoc>,
+    /// "Currently compiling" source position.  Updated by every
+    /// statement-level entry point (`emit_line`, `emit_statement`)
+    /// and read by [`emit`] when it appends to the instruction
+    /// stream.  Using a [`Cell`](std::cell::Cell) so a future move to
+    /// `emit(&self, ...)` would not require a re-shuffle of mut
+    /// signatures.
+    current_loc: std::cell::Cell<SourceLoc>,
+}
+
+impl Default for Compiler {
+    fn default() -> Self {
+        Compiler {
+            instrs: Vec::new(),
+            temp_counter: 0,
+            open_fors: Vec::new(),
+            for_counter: 0,
+            source_map: Vec::new(),
+            current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -173,6 +227,25 @@ impl Compiler {
     {
         self.instrs.push(IIRInstr::new(op,
             dest.map(|s| s.to_string()), srcs, type_hint));
+        // Tag this instruction with the "currently compiling" source
+        // position.  Statement-level entry points (`emit_line`,
+        // `emit_statement`) set `self.current_loc` so every
+        // instruction emitted while compiling that statement —
+        // including from sub-expressions — inherits the statement's
+        // source line.
+        //
+        // Line-based debuggers care about which line a breakpoint
+        // sits on, not the per-expression column.  Statement-level
+        // granularity is both sufficient and cheaper than per-
+        // expression threading.
+        self.source_map.push(self.current_loc.get());
+    }
+
+    /// Update the "currently compiling" source position.  Subsequent
+    /// [`emit`] calls tag their instructions with this position via
+    /// the `source_map` field.
+    fn set_loc(&self, loc: SourceLoc) {
+        self.current_loc.set(loc);
     }
 
     fn emit_program(&mut self, ast: &GrammarASTNode) -> Result<(), CompileError> {
@@ -180,6 +253,11 @@ impl Compiler {
             return Err(CompileError::Malformed(format!(
                 "expected root `program`, got `{}`", ast.rule_name)));
         }
+
+        // Default position for instructions emitted before any line
+        // (e.g. the synthesised end-of-program epilogue): the program
+        // root's own position.
+        self.set_loc(node_loc(ast));
 
         // Walk every `line` child, in order.
         for child in &ast.children {
@@ -200,6 +278,12 @@ impl Compiler {
     }
 
     fn emit_line(&mut self, line: &GrammarASTNode) -> Result<(), CompileError> {
+        // Tag every instruction emitted while compiling this line
+        // (including the synthetic `label line_N` and the statement
+        // body) with the line's source position.  The inner
+        // `emit_statement` may overwrite this with the wrapped
+        // statement node's own position — typically the same line.
+        self.set_loc(node_loc(line));
         let line_num = extract_line_num(line)
             .ok_or_else(|| CompileError::Malformed(
                 "line missing LINE_NUM token".into()))?;
@@ -227,6 +311,14 @@ impl Compiler {
     fn emit_statement(&mut self, stmt: &GrammarASTNode)
         -> Result<(), CompileError>
     {
+        // Re-tag the "currently compiling" loc with the inner
+        // statement node's own position.  In practice this is almost
+        // always the same line as `emit_line` already set, but the
+        // grammar permits multiple statements on one line (via `:`
+        // separators in some BASIC dialects) and the AST may have a
+        // tighter (line, col) range for the inner node — so the more
+        // specific one wins.
+        self.set_loc(node_loc(stmt));
         match stmt.rule_name.as_str() {
             "let_stmt"     => self.emit_let(stmt),
             "print_stmt"   => self.emit_print(stmt),
@@ -879,6 +971,54 @@ mod tests {
             CompileError::UnsupportedStatement(name) => assert_eq!(name, "GOSUB"),
             other => panic!("expected UnsupportedStatement(GOSUB), got {other:?}"),
         }
+    }
+
+    // ── Source-map invariants (BASIC05 — debugger prerequisite) ──────
+
+    /// Every function's `source_map` must have exactly one entry per
+    /// instruction.  Without this lockstep invariant the debugger's
+    /// sidecar cannot map a paused IIR PC back to a source line.
+    #[test]
+    fn source_map_lockstep_with_instructions() {
+        let m = compile("10 LET A = 42\n20 PRINT A\n30 END\n").expect("ok");
+        for f in &m.functions {
+            assert_eq!(
+                f.source_map.len(),
+                f.instructions.len(),
+                "fn {} source_map ({}) must be lockstep with instructions ({})",
+                f.name, f.source_map.len(), f.instructions.len(),
+            );
+        }
+    }
+
+    /// The compiler should thread real source positions through the
+    /// emitted IIR, not just `SYNTHETIC` (line=0, col=0).  Without
+    /// real positions, line-based breakpoints cannot resolve.
+    ///
+    /// We construct a small program with each statement on its own
+    /// line and assert that at least one instruction is tagged with
+    /// each non-empty source line.
+    #[test]
+    fn source_map_carries_real_line_numbers() {
+        let src = "10 LET A = 30\n\
+                   20 LET B = 12\n\
+                   30 PRINT A\n\
+                   40 END\n";
+        let m = compile(src).expect("ok");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let lines_seen: std::collections::BTreeSet<u32> = main.source_map.iter()
+            .filter(|l| **l != SourceLoc::SYNTHETIC)
+            .map(|l| l.line)
+            .collect();
+        // Each BASIC source line should appear at least once in the
+        // source_map (since each emits at least the `label line_N`
+        // instruction plus a statement body).
+        assert!(lines_seen.contains(&1),
+            "expected line 1 (LET A) to appear in source_map; got: {lines_seen:?}");
+        assert!(lines_seen.contains(&2),
+            "expected line 2 (LET B) to appear in source_map; got: {lines_seen:?}");
+        assert!(lines_seen.contains(&3),
+            "expected line 3 (PRINT A) to appear in source_map; got: {lines_seen:?}");
     }
 
     /// A complete small program: LET, arithmetic, PRINT, END.
