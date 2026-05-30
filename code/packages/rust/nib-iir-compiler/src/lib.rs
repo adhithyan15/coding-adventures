@@ -48,6 +48,22 @@ use interpreter_ir::source_loc::SourceLoc;
 use nib_type_checker::{check, NibType, TypedAst};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
+/// Extract a [`SourceLoc`] from a `GrammarASTNode`, falling back to
+/// [`SourceLoc::SYNTHETIC`] when the parser couldn't attach position
+/// info (rare — mostly synthesised wrapper nodes).
+///
+/// Used by the Nib compiler to tag every emitted IIR instruction with
+/// the source position of the AST node that produced it.  The
+/// resulting `IIRFunction.source_map` powers line-based breakpoints
+/// in the future `nib-dap` debugger crate and source-line reporting
+/// in stack traces.
+fn node_loc(node: &GrammarASTNode) -> SourceLoc {
+    match (node.start_line, node.start_column) {
+        (Some(line), Some(col)) => SourceLoc::new(line, col),
+        _ => SourceLoc::SYNTHETIC,
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -107,13 +123,62 @@ pub fn compile_typed(typed: TypedAst, module_name: &str) -> Result<IIRModule, Co
 // Compiler state
 // ---------------------------------------------------------------------------
 
-#[derive(Default)]
 struct Compiler {
     /// Counter for synthesised SSA-ish virtual register names within a
     /// function: `_n0`, `_n1`, …
     var_counter: usize,
     /// Counter for synthesised label names: `_L0`, `_L1`, …
     label_counter: usize,
+    /// Per-instruction source positions, built in lockstep with the
+    /// emitted instruction vector via [`Compiler::emit_to`].  Moved
+    /// onto `IIRFunction.source_map` at end of [`compile_function`].
+    source_map: Vec<SourceLoc>,
+    /// "Currently compiling" source position.  Updated by every
+    /// `compile_stmt` entry and read by [`emit_to`] when it appends
+    /// to the instruction stream.  A [`Cell`](std::cell::Cell) so
+    /// `set_loc` doesn't need `&mut self`, which keeps the
+    /// `&self`-style call sites in expression compilation from
+    /// requiring a borrow-checker dance.
+    current_loc: std::cell::Cell<SourceLoc>,
+}
+
+impl Default for Compiler {
+    fn default() -> Self {
+        Compiler {
+            var_counter: 0,
+            label_counter: 0,
+            source_map: Vec::new(),
+            current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+        }
+    }
+}
+
+impl Compiler {
+    /// Push an instruction onto the function body and tag it with
+    /// the "currently compiling" source position.  Every IIR-emitting
+    /// site in this module funnels through this helper so the
+    /// lockstep invariant (`source_map.len() == instructions.len()`)
+    /// holds.
+    ///
+    /// Statement-level entry points (`compile_stmt`) set
+    /// `self.current_loc` so every instruction emitted while
+    /// compiling that statement — including from sub-expressions —
+    /// inherits the statement's source line.
+    ///
+    /// Line-based debuggers care about which line a breakpoint sits
+    /// on, not the per-expression column.  Statement-level
+    /// granularity is both sufficient and cheaper than per-expression
+    /// threading.
+    fn emit_to(&mut self, out: &mut Vec<IIRInstr>, instr: IIRInstr) {
+        out.push(instr);
+        self.source_map.push(self.current_loc.get());
+    }
+
+    /// Update the "currently compiling" source position.  Subsequent
+    /// [`emit_to`] calls tag their instructions with this position.
+    fn set_loc(&self, loc: SourceLoc) {
+        self.current_loc.set(loc);
+    }
 }
 
 impl Compiler {
@@ -140,6 +205,16 @@ impl Compiler {
         // Reset per-function counters for stable register naming.
         self.var_counter = 0;
         self.label_counter = 0;
+        // Reset per-function source-map state.  The vec accumulates
+        // one `SourceLoc` per emitted instruction so the resulting
+        // `IIRFunction.source_map` stays in lockstep with
+        // `instructions` — the lockstep invariant the IIR consumers
+        // (debugger, stack traces, AOT debug info) require.
+        self.source_map.clear();
+        // Default position for instructions emitted before any
+        // statement (e.g. the synthesised trailing ret_void): the fn
+        // declaration's own line.
+        self.set_loc(node_loc(fn_decl));
 
         let name = first_name(fn_decl)
             .ok_or_else(|| CompileError::Unsupported("fn_decl missing name".into()))?;
@@ -159,9 +234,12 @@ impl Compiler {
         // Defensive trailing `ret_void` so a function without an explicit
         // return doesn't fall off the end at runtime.  The aarch64-backend
         // emits a defensive epilogue too, but a well-formed IIR should
-        // always end in some `ret*`.
+        // always end in some `ret*`.  Funnelled through `emit_to` so the
+        // source_map stays in lockstep (tagged with the fn_decl's loc,
+        // set above).
         if !body.iter().any(|i| i.op.starts_with("ret")) {
-            body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+            self.emit_to(&mut body,
+                IIRInstr::new("ret_void", None, vec![], "void"));
         }
 
         let mut iir_fn = IIRFunction::new(&name, params, &ret_ty, body);
@@ -175,10 +253,22 @@ impl Compiler {
         // JIT's threshold-zero compile path.  Mirrors Brainfuck +
         // Dartmouth BASIC + Oct.
         iir_fn.type_status = interpreter_ir::function::FunctionTypeStatus::FullyTyped;
-        // Empty source_map keeps the lockstep invariant satisfied for
-        // tooling that doesn't need positions.  Real position threading
-        // is a follow-up.
-        iir_fn.source_map = vec![SourceLoc::SYNTHETIC; iir_fn.instructions.len()];
+        // Move the accumulated source positions onto the function.
+        // The lockstep invariant (one entry per instruction) is
+        // enforced by [`emit_to`]: every push to `body` pairs with a
+        // push to `self.source_map`.  We defensively pad with the fn
+        // declaration's own location in case any pre-source_map code
+        // path slipped through (this branch is dead today but cheap
+        // to keep — mirrors the same shape in oct-iir-compiler and
+        // dartmouth-basic-iir-compiler).
+        let body_len = iir_fn.instructions.len();
+        while self.source_map.len() < body_len {
+            self.source_map.push(node_loc(fn_decl));
+        }
+        if self.source_map.len() > body_len {
+            self.source_map.truncate(body_len);
+        }
+        iir_fn.source_map = std::mem::take(&mut self.source_map);
         Ok(iir_fn)
     }
 
@@ -212,6 +302,12 @@ impl Compiler {
             return Ok(());
         }
 
+        // Tag every instruction emitted while compiling this statement
+        // (including from sub-expressions) with the statement's source
+        // position.  See [`emit_to`] for why statement-level
+        // granularity is correct for line-based breakpoints.
+        self.set_loc(node_loc(stmt));
+
         match stmt.rule_name.as_str() {
             "let_stmt" => self.compile_let(stmt, types, env, out),
             "return_stmt" => {
@@ -228,14 +324,14 @@ impl Compiler {
                         .map(nib_ty_str)
                         .unwrap_or("i64")
                         .to_string();
-                    out.push(IIRInstr::new(
+                    self.emit_to(out, IIRInstr::new(
                         "ret",
                         None,
                         vec![Operand::Var(v)],
                         &ty_str,
                     ));
                 } else {
-                    out.push(IIRInstr::new("ret_void", None, vec![], "void"));
+                    self.emit_to(out, IIRInstr::new("ret_void", None, vec![], "void"));
                 }
                 Ok(())
             }
@@ -249,7 +345,7 @@ impl Compiler {
                     // typed `mov` is the canonical form recognised by
                     // vm-core's dispatch, GenericCirJit's bytecode
                     // compiler, and the AOT backends.
-                    out.push(IIRInstr::new(
+                    self.emit_to(out, IIRInstr::new(
                         "mov",
                         Some(name.clone()),
                         vec![Operand::Var(v)],
@@ -308,12 +404,12 @@ impl Compiler {
         let end_lbl = self.fresh_label();
 
         // label while_<n>_top
-        out.push(IIRInstr::new("label", None,
+        self.emit_to(out, IIRInstr::new("label", None,
             vec![Operand::Var(top_lbl.clone())], "void"));
 
         // <eval cond → c>; jmp_if_false c, while_<n>_end
         let cond_v = self.compile_expr(cond_node, types, env, out)?;
-        out.push(IIRInstr::new("jmp_if_false", None,
+        self.emit_to(out, IIRInstr::new("jmp_if_false", None,
             vec![Operand::Var(cond_v), Operand::Var(end_lbl.clone())],
             "void"));
 
@@ -321,9 +417,9 @@ impl Compiler {
         self.compile_block(body, types, env, out)?;
 
         // jmp while_<n>_top; label while_<n>_end
-        out.push(IIRInstr::new("jmp", None,
+        self.emit_to(out, IIRInstr::new("jmp", None,
             vec![Operand::Var(top_lbl)], "void"));
-        out.push(IIRInstr::new("label", None,
+        self.emit_to(out, IIRInstr::new("label", None,
             vec![Operand::Var(end_lbl)], "void"));
         Ok(())
     }
@@ -345,7 +441,7 @@ impl Compiler {
             // Bind the user-named variable via typed `mov` so subsequent
             // references resolve to the same slot.  Canonical form
             // (was `call_builtin "_move"` historically).
-            out.push(IIRInstr::new(
+            self.emit_to(out, IIRInstr::new(
                 "mov",
                 Some(name.clone()),
                 vec![Operand::Var(v)],
@@ -379,7 +475,7 @@ impl Compiler {
         let end_lbl  = self.fresh_label();
 
         // jmp_if_false cond_v, else_lbl
-        out.push(IIRInstr::new(
+        self.emit_to(out, IIRInstr::new(
             "jmp_if_false",
             None,
             vec![Operand::Var(cond_v), Operand::Var(else_lbl.clone())],
@@ -387,12 +483,12 @@ impl Compiler {
         ));
 
         self.compile_block(then_block, types, env, out)?;
-        out.push(IIRInstr::new(
+        self.emit_to(out, IIRInstr::new(
             "jmp", None,
             vec![Operand::Var(end_lbl.clone())], "void",
         ));
 
-        out.push(IIRInstr::new(
+        self.emit_to(out, IIRInstr::new(
             "label", None,
             vec![Operand::Var(else_lbl)], "void",
         ));
@@ -400,7 +496,7 @@ impl Compiler {
             self.compile_block(eb, types, env, out)?;
         }
 
-        out.push(IIRInstr::new(
+        self.emit_to(out, IIRInstr::new(
             "label", None,
             vec![Operand::Var(end_lbl)], "void",
         ));
@@ -455,7 +551,7 @@ impl Compiler {
         if let Some(value) = parse_literal(node) {
             let v = self.fresh_var();
             let ty = lookup_node_type(node, types).map(nib_ty_str).unwrap_or("u8");
-            out.push(IIRInstr::new(
+            self.emit_to(out, IIRInstr::new(
                 "const",
                 Some(v.clone()),
                 vec![Operand::Int(value)],
@@ -545,7 +641,7 @@ impl Compiler {
                     arg_slots.len(),
                 )));
             }
-            out.push(IIRInstr::new(
+            self.emit_to(out, IIRInstr::new(
                 "call_builtin",
                 None,
                 vec![
@@ -572,7 +668,7 @@ impl Compiler {
         for a in arg_slots {
             srcs.push(Operand::Var(a));
         }
-        out.push(IIRInstr::new(
+        self.emit_to(out, IIRInstr::new(
             "call",
             Some(dest.clone()),
             srcs,
@@ -640,7 +736,7 @@ impl Compiler {
             // of truth on the IIRFunction; instruction type_hints are
             // a separate IIR-level concept and concrete-typing them as
             // `i64` lets every IIR-to-* validator accept the module.
-            out.push(IIRInstr::new(
+            self.emit_to(out, IIRInstr::new(
                 cir_op,
                 Some(dest.clone()),
                 vec![Operand::Var(acc), Operand::Var(rhs)],
@@ -1047,6 +1143,63 @@ mod tests {
             .map(|i| i.op.as_str()).collect();
         assert!(ops.contains(&"call"), "missing `call` to `one`; got {ops:?}");
         assert!(ops.contains(&"jmp_if_false"), "missing jmp_if_false; got {ops:?}");
+    }
+
+    // ── Source-map invariants (NIB05 — debugger prerequisite) ──────────
+
+    /// Every function's `source_map` must have exactly one entry per
+    /// instruction.  Without this lockstep invariant the debugger's
+    /// sidecar cannot map a paused IIR PC back to a source line.
+    #[test]
+    fn source_map_lockstep_with_instructions() {
+        // Note on the literals chosen here: Nib's type-checker infers
+        // the narrowest fitting unsigned integer for an int literal
+        // (so `12` infers as `u4`), and a `let y: u8 = 12;` fails the
+        // exact-match constraint.  We use `30` and `40` so both
+        // statements stay valid `u8` programs.
+        let m = compile_source(
+            "fn main() -> u8 { let x: u8 = 30; let y: u8 = 40; return x + y; }",
+            "test",
+        ).expect("ok");
+        for f in &m.functions {
+            assert_eq!(
+                f.source_map.len(),
+                f.instructions.len(),
+                "fn {} source_map ({}) must be lockstep with instructions ({})",
+                f.name, f.source_map.len(), f.instructions.len(),
+            );
+        }
+    }
+
+    /// The compiler should thread real source positions through the
+    /// emitted IIR, not just `SYNTHETIC` (line=0, col=0).  Without
+    /// real positions, line-based breakpoints cannot resolve.
+    ///
+    /// We construct a multi-line Nib program and assert that at least
+    /// one instruction is tagged with each non-fn-decl source line.
+    #[test]
+    fn source_map_carries_real_line_numbers() {
+        let src = "fn main() -> u8 {\n\
+                   let x: u8 = 30;\n\
+                   let y: u8 = 40;\n\
+                   return x + y;\n\
+                   }\n";
+        let m = compile_source(src, "test").expect("ok");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let lines_seen: std::collections::BTreeSet<u32> = main.source_map.iter()
+            .filter(|l| **l != SourceLoc::SYNTHETIC)
+            .map(|l| l.line)
+            .collect();
+        // We expect at least lines 2, 3, and 4 to be tagged (the two
+        // let statements and the return statement).  The synthesised
+        // trailing ret_void — if any — may carry line 1 (the fn
+        // declaration) or be SYNTHETIC, either is acceptable.
+        assert!(lines_seen.contains(&2),
+            "expected line 2 (first let stmt) to appear in source_map; got: {lines_seen:?}");
+        assert!(lines_seen.contains(&3),
+            "expected line 3 (second let stmt) to appear in source_map; got: {lines_seen:?}");
+        assert!(lines_seen.contains(&4),
+            "expected line 4 (return stmt) to appear in source_map; got: {lines_seen:?}");
     }
 }
 
