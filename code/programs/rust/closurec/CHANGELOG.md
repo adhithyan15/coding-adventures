@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.39.0] - 2026-05-30
+
+### Added — CLOC11.76: `--correlation_vector_summary_only` (pure analysis mode)
+
+Boolean flag (default false). When on, the run **skips every output write**: no JS file (or stdout), no source map, no manifest. The CV log is still computed in memory, so `--correlation_vector_summary` can still print real counts.
+
+Pairs naturally with `--correlation_vector_format NONE` to skip the CV sidecar too — a pure-analysis invocation that does no disk writes whatsoever. With both set, the only externally observable output is the summary line on stdout (or stderr under CLOC11.75).
+
+Use case: `closurec --correlation_vector --correlation_vector_summary --correlation_vector_summary_only` answers "what would the CV trace look like" without rebuilding artifacts.
+
+### Implementation
+
+- `SpecialModesConfig` gains `correlation_vector_summary_only: bool`.
+- Three call sites in `run_compiler` are gated on `!summary_only`: the JS output write, the source map write, and the manifest write. The matching `js_output_file` / `source_map_output` / `manifest_output` CV records are also skipped (they describe writes that didn't happen).
+- The CV sidecar write block (Step 7) is unchanged — `--correlation_vector_format NONE` is the right way to skip it, summary_only doesn't reach into that policy.
+- Default false → byte-identical to CLOC11.75.
+
+### Changed
+
+- `wire.rs`: `read_special_modes` pulls the new bool.
+- Versions: `Cargo.toml` `0.38.0` → `0.39.0`, `cli.spec.json` `0.38.0` → `0.39.0`.
+
 ## [0.38.0] - 2026-05-30
 
 ### Added — CLOC11.75: `--correlation_vector_summary_stderr`

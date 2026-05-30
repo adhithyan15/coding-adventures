@@ -533,6 +533,10 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
             p,
             "correlation_vector_summary_stderr",
         )?,
+        correlation_vector_summary_only: get_bool(
+            p,
+            "correlation_vector_summary_only",
+        )?,
     })
 }
 

@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "closurec",
   "description": "closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.",
-  "version": "0.38.0",
+  "version": "0.39.0",
   "parsing_mode": "gnu",
   "flags": [
     { "id": "browser_featureset_year", "long": "browser_featureset_year", "type": "integer", "default": 0, "description": "Shortcut for defining goog.FEATURESET_YEAR=YYYY (minimum 2012)." },
@@ -105,6 +105,7 @@
     { "id": "correlation_vector_summary", "long": "correlation_vector_summary", "type": "boolean", "default": false, "description": "Print a one-line summary of the correlation-vector trace to stdout after the sidecar is written (or skipped under --correlation_vector_format NONE). Format: `cv sidecar: <path>: N entries, M contributions, T tombstones, pass_order=[a,b,c]`. Counts reflect post-filter state. Useful for build pipelines that don't want to parse the JSON to see if anything interesting happened (CLOC11.73)." },
     { "id": "correlation_vector_summary_format", "long": "correlation_vector_summary_format", "type": "enum", "enum_values": ["TEXT", "JSON", "KV"], "default": "TEXT", "description": "Format for the --correlation_vector_summary stdout line. TEXT (default) = the existing human-readable line. JSON = single-line `{\"cv_sidecar\": {...}}` for machine consumers. KV = space-separated `cv_sidecar.entries=N cv_sidecar.contributions=M ...` for ad-hoc shell parsing. Ignored unless --correlation_vector_summary is also set (CLOC11.74)." },
     { "id": "correlation_vector_summary_stderr", "long": "correlation_vector_summary_stderr", "type": "boolean", "default": false, "description": "Route the --correlation_vector_summary line to stderr instead of stdout. Useful when stdout is the actual JS output (no --js_output_file) and you don't want the summary to corrupt it. Default off preserves the CLOC11.73 stdout-bound behaviour (CLOC11.75)." },
+    { "id": "correlation_vector_summary_only", "long": "correlation_vector_summary_only", "type": "boolean", "default": false, "description": "Skip all output writes (JS, source map, manifest) and only emit the CV summary. Useful for `closurec --print-cv-summary` style invocations that just want the trace counts. Pair with --correlation_vector_format NONE to skip the sidecar too — pure analysis mode, no disk writes at all. Default off preserves normal compile output (CLOC11.76)." },
     { "id": "instrument_for_coverage_option", "long": "instrument_for_coverage_option", "type": "enum", "enum_values": ["NONE", "LINE", "BRANCH", "PRODUCTION"], "default": "NONE", "description": "Enable code instrumentation for coverage analysis." },
     { "id": "production_instrumentation_array_name", "long": "production_instrumentation_array_name", "type": "string", "default": "", "description": "Global array name used by production instrumentation." },
     { "id": "chunk_output_type", "long": "chunk_output_type", "type": "enum", "enum_values": ["GLOBAL_NAMESPACE", "ES_MODULES"], "default": "GLOBAL_NAMESPACE", "description": "Format for output chunks." },
