@@ -530,6 +530,18 @@ mod tests {
     }
 
     #[test]
+    fn print_var_ref_class_var_scope() {
+        // Phase 15b — a class-var ref prints with the `class-var`
+        // scope tag and the `@@`-sigil name preserved verbatim.
+        let e = Expr::VarRef {
+            name: "@@count".into(),
+            scope: Scope::ClassVar,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(var-ref @@count class-var)");
+    }
+
+    #[test]
     fn print_builtin_call_with_pure() {
         let e = Expr::BuiltinCall {
             name: "+".into(),

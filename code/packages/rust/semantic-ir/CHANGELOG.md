@@ -2,6 +2,39 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.7.0 — SIR17: class-variable scope (`Scope::ClassVar`)
+
+Introduced by the Ruby frontend's Phase 15b (`@@x`).
+
+### Added
+
+- `Scope::ClassVar` — a class variable (Ruby `@@x`).  Like
+  `Scope::Instance`, a class var needs **no prior declaration**:
+  `check_varref` performs no scope-existence check for it (reading an
+  unset `@@x` yields nil in Ruby).  `Scope::name()` / `from_name()` gain
+  the `"class-var"` tag.
+- `Feature::ClassVars` (kebab `class-vars`) — declared by any module
+  that references a `Scope::ClassVar` var.  The validator observes it
+  from each ClassVar-scoped `VarRef`; backends that don't list it in
+  their accepted set reject such modules at the capability check,
+  before emit.
+
+### Changed
+
+- `check_varref` gains a `Scope::ClassVar` arm (no resolution; observes
+  `Feature::ClassVars`).  The text printer renders
+  `(var-ref @@x class-var)` via the existing `scope.name()` path.  The
+  four reference backends' `emit_var_ref` gain an unreachable `panic!`
+  arm for `Scope::ClassVar` (rejected pre-emit by the capability check).
+
+New tests (3): `print_var_ref_class_var_scope`,
+`class_var_ref_needs_no_declaration`,
+`class_var_ref_without_manifest_feature_is_error`.  Test count:
+96 → 99.
+
+This is a **breaking enum change** for any exhaustive `match` on
+`Scope` without a `_` rest arm.
+
 ## 0.6.0 — SIR17: instance-variable scope (`Scope::Instance`)
 
 Introduced by the Ruby frontend's Phase 15a (`@x`).

@@ -873,6 +873,24 @@ mod tests {
         );
     }
 
+    #[test]
+    fn test_parse_class_var_compound_assignment() {
+        // `@@n += 1` parses as an assignment carrying the `@@n` Name token
+        // and the fused `+=` operator token (the shape the 15b lowerer's
+        // compound-cvar path dispatches on).
+        let ast = parse_ruby("@@n += 1");
+        let asn = find_statement_inner(&ast, "assignment")
+            .expect("expected assignment");
+        assert!(
+            body_has_token_value(asn, "@@n"),
+            "expected the `@@n` cvar Name token in the assignment header"
+        );
+        assert!(
+            body_has_token_value(asn, "+="),
+            "expected the fused `+=` compound-assign operator token"
+        );
+    }
+
     // -----------------------------------------------------------------------
     // Phase 6g — blocks `do … end` and brace-blocks `method { … }`
     // -----------------------------------------------------------------------

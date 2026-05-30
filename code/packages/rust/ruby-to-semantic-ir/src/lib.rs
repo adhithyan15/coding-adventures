@@ -1037,20 +1037,84 @@ mod tests {
 
     #[test]
     fn class_var_double_at_is_not_instance_scope() {
-        // Regression guard: `@@x` (class var, Phase 15b) must NOT be
-        // mistaken for an instance var — it keeps the pre-15a
-        // local-modelling (single `@` only is an instance var).
+        // `@@x` (double `@`) is a *class* variable — Phase 15b lowers it
+        // to `Assign { scope: ClassVar }` (not Instance, not a local),
+        // requesting `ClassVars` (and never `InstanceVars`).
         let m = lower("@@total = 0\n");
         match &main_body(&m).stmts[0] {
-            Stmt::LetBinding { name, .. } => assert_eq!(name, "@@total"),
-            // (If a later phase changes @@ handling, this guard should be
-            // updated — but it must not become Scope::Instance here.)
-            other => panic!("expected `@@total` LetBinding (not instance), got {:?}", other),
+            Stmt::Assign { name, scope, .. } => {
+                assert_eq!(name, "@@total");
+                assert_eq!(*scope, Scope::ClassVar);
+            }
+            other => panic!("expected `@@total` Assign(ClassVar), got {:?}", other),
         }
         assert!(
-            !m.manifest.contains(semantic_ir::Feature::InstanceVars),
-            "`@@x` must not request InstanceVars"
+            m.manifest.contains(semantic_ir::Feature::ClassVars),
+            "`@@x` should request ClassVars; got {:?}",
+            m.manifest
         );
+        assert!(
+            !m.manifest.contains(semantic_ir::Feature::InstanceVars),
+            "`@@x` must not request InstanceVars (it is a class var)"
+        );
+    }
+
+    #[test]
+    fn class_var_read_lowers_to_classvar_scope() {
+        // A bare `@@x` read lowers to `VarRef { scope: ClassVar }` and
+        // requests `Feature::ClassVars` (no declaration needed).
+        let m = lower("@@x\n");
+        match &main_body(&m).value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "@@x");
+                assert_eq!(*scope, Scope::ClassVar);
+            }
+            other => panic!("expected VarRef classvar, got {:?}", other),
+        }
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::ClassVars),
+            "manifest should declare ClassVars; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn class_var_read_without_assignment_passes_validator() {
+        // E2E: reading an unset `@@x` (as an assignment RHS) validates —
+        // class vars need no prior declaration.
+        let m = lower("y = @@x\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected unset-cvar read: {:?}", result);
+    }
+
+    #[test]
+    fn class_var_in_method_roundtrips_through_validator() {
+        // `def bump; @@count = @@count + 1; end` — class-var assign +
+        // read inside a method; validates end-to-end.
+        let m = lower("def bump\n  @@count = @@count + 1\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "bump"),
+            "expected hoisted `bump`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validator rejected cvar method: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn instance_and_class_vars_are_distinct_scopes() {
+        // `@x` → Instance, `@@x` → ClassVar — the single/double `@`
+        // distinction routes to different scopes (and both features).
+        let m = lower("@x = 1\n@@x = 2\n");
+        let stmts = &main_body(&m).stmts;
+        match (&stmts[0], &stmts[1]) {
+            (Stmt::Assign { scope: s0, .. }, Stmt::Assign { scope: s1, .. }) => {
+                assert_eq!(*s0, Scope::Instance, "`@x` → Instance");
+                assert_eq!(*s1, Scope::ClassVar, "`@@x` → ClassVar");
+            }
+            other => panic!("expected two Assigns, got {:?}", other),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::InstanceVars));
+        assert!(m.manifest.contains(semantic_ir::Feature::ClassVars));
     }
 
     // -----------------------------------------------------------------
@@ -3199,7 +3263,10 @@ mod tests {
         match ref_expr {
             Expr::VarRef { name, scope, .. } => {
                 assert_eq!(name, "@@count", "cvar value should retain `@@`");
-                assert_eq!(*scope, Scope::Local, "v0 puts cvars on Scope::Local");
+                // Phase 15b (FC): class vars now lower to
+                // `Scope::ClassVar` (was `Scope::Local` in the Phase 6x
+                // v0 placeholder).
+                assert_eq!(*scope, Scope::ClassVar, "Phase 15b: cvars use Scope::ClassVar");
             }
             other => panic!("expected VarRef(@@count), got {:?}", other),
         }

@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.44.0] - 2026-05-30
+
+### Added (Phase 15b (FC) — class variables `@@x`)
+
+No grammar change — the lexer already emits `@@x` as a `Name` token
+(sigil included, since Phase 4i/4j), so `@@x = 1` parses as an
+`assignment` and a bare `@@x` as an expression.  Cvar assignment and
+expression parsing are already covered by the Phase 6x tests
+(`test_parse_class_var_assignment`, etc.).  Phase 15b adds one parse pin
+for the new lowering path:
+
+- `test_parse_class_var_compound_assignment` — `@@n += 1` parses as an
+  assignment carrying the `@@n` Name token and the fused `+=` operator
+  token.
+
+Test count: 171 → 172 (+1).
+
 ## [0.43.0] - 2026-05-30
 
 ### Added (Phase 15a (FC) — instance variables `@x`)

@@ -2,6 +2,37 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.46.0] - 2026-05-30
+
+### Changed (Phase 15b (FC) — class variables `@@x`)
+
+Class variables now lower to the first-class `Scope::ClassVar`
+(semantic-ir 0.7.0) instead of the Phase 6x `Scope::Local` placeholder,
+mirroring Phase 15a's treatment of `@x`:
+
+- A `@@x` **read** lowers to `Expr::VarRef { scope: ClassVar }` — and,
+  crucially, no longer errors as an undefined local when read before any
+  assignment (reading an unset `@@x` is nil in Ruby).
+- A `@@x` **assignment** (`@@x = …`, `@@x += …`) lowers to
+  `Stmt::Assign { scope: ClassVar }` — never a `LetBinding` — and does
+  not register `@@x` as a local.  Emitting it requests
+  `Feature::ClassVars` (and `MutableBindings`, since the store is a
+  `Stmt::Assign`).
+- New `is_class_var_name` helper (`starts_with("@@")`).  Because `@@x`
+  also begins with `@`, the read/assign paths test for class var
+  **before** instance var, so `@@x` → ClassVar and `@x` → Instance stay
+  distinct.
+
+New tests (+4): `class_var_read_lowers_to_classvar_scope`,
+`class_var_read_without_assignment_passes_validator` (E2E),
+`class_var_in_method_roundtrips_through_validator` (E2E),
+`instance_and_class_vars_are_distinct_scopes` (regression guard).  Two
+pre-existing tests were updated to the new ClassVar contract:
+`class_var_double_at_is_not_instance_scope` (now asserts
+`Scope::ClassVar` + `ClassVars`/not-`InstanceVars`) and the Phase 6x
+`class_var_ref_lowers_with_local_scope_and_double_at_preserved` (now
+asserts `Scope::ClassVar`).  Test count: 211 → 215 (+4).
+
 ## [0.45.0] - 2026-05-30
 
 ### Changed (Phase 15a (FC) — instance variables `@x`)

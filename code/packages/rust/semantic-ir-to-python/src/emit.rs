@@ -291,6 +291,11 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
             // at the capability check before emit.  Unreachable.
             panic!("python backend reached SIR17 instance-var ref `{}` — capability check should have rejected it", name);
         }
+        Scope::ClassVar => {
+            // SIR17 Phase 15b — `Feature::ClassVars` likewise unaccepted;
+            // class-var modules are rejected before emit.  Unreachable.
+            panic!("python backend reached SIR17 class-var ref `{}` — capability check should have rejected it", name);
+        }
     }
 }
 
