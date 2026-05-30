@@ -544,6 +544,28 @@ pub struct SpecialModesConfig {
     ///     sidecar. Useful for benchmarking how much the CV
     ///     trace itself costs versus the write.
     pub correlation_vector_format: CorrelationVectorFormat,
+    /// CLOC11.70: allowlist of CV `contribution.source`
+    /// values. When non-empty, the sidecar serializer prunes
+    /// any entry whose `contributions` does NOT include at
+    /// least one record whose `source` field appears in this
+    /// vector.
+    ///
+    /// Caveat (documented and tested):
+    ///   - Filtering matches against `contribution.source`,
+    ///     **not** `origin.source`. So a per-token CV entry
+    ///     created with `Origin{source: "lexer_token", ...}`
+    ///     but with zero contributions will be pruned by
+    ///     `--correlation_vector_filter lex` — its "lex"
+    ///     association lives in the Origin, not in a
+    ///     contribution. The per-file CV root (which holds
+    ///     the `lex.tokens_emitted` contribution) is kept.
+    ///     Later slices may extend the filter to also match
+    ///     `origin.source` if a use-case demands.
+    ///
+    /// Empty (the default) → no pruning; every entry is
+    /// written. Only consulted when `correlation_vector` is
+    /// also true.
+    pub correlation_vector_filter: Vec<String>,
 }
 
 /// CLOC11.69 — sidecar persistence format. Default is

@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.33.0] - 2026-05-30
+
+### Added — CLOC11.70: `--correlation_vector_filter` allowlist flag
+
+Adds a CSV allowlist of CV `contribution.source` names. When non-empty, the sidecar serializer prunes any CV entry whose `contributions` does not include at least one record whose `source` is in the allowlist.
+
+Example: `--correlation_vector_filter lex,defines` writes only entries that the `lex` or `defines` stages touched.
+
+### Semantics
+
+- Strict match on `contribution.source`. The per-token CV entries created with `Origin{source: "lexer_token", ...}` but with zero contributions are dropped when the filter is `lex` — their "lex" association lives in the Origin, not in a contribution. The per-file CV root (which holds the `lex.tokens_emitted` contribution) is kept. Documented in the config-level rustdoc and pinned by tests.
+- Empty allowlist = no pruning (default behavior). The fast path in `format_cv_log_json` short-circuits the round-trip when both `pretty` and `filter` are unset.
+- Whitespace around CSV tokens is trimmed; empty tokens are ignored. `"lex, defines"` is the same as `"lex,defines"`.
+
+### Implementation
+
+- New shared helper `prune_entries_by_source(&mut serde_json::Value, &[String])` mutates the parsed CV log in-place. Uses a `HashSet` for O(1) source lookup.
+- Both `format_cv_log_json` and `format_cv_log_ndjson` now take the filter slice and call the helper between parse and re-emit.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_filter: Vec<String>`.
+- `wire::read_special_modes` splits the comma-separated string; trims whitespace; drops empty tokens.
+- `format_cv_log_json` signature: now `(cv_log, pretty, filter) -> String`. Private to the crate.
+- `format_cv_log_ndjson` signature: now `(cv_log, filter) -> String`. Private to the crate.
+- Versions: `Cargo.toml` `0.32.0` → `0.33.0`, `cli.spec.json` `0.32.0` → `0.33.0`.
+
 ## [0.32.0] - 2026-05-30
 
 ### Added — CLOC11.69: `--correlation_vector_format` enum (JSON | NDJSON | NONE)

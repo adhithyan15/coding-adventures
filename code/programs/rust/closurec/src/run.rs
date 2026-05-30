@@ -1267,10 +1267,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     },
                 };
                 let body = match fmt {
-                    CorrelationVectorFormat::Ndjson => format_cv_log_ndjson(&cv_log),
+                    CorrelationVectorFormat::Ndjson => format_cv_log_ndjson(
+                        &cv_log,
+                        &config.special_modes.correlation_vector_filter,
+                    ),
                     _ => format_cv_log_json(
                         &cv_log,
                         config.special_modes.correlation_vector_pretty,
+                        &config.special_modes.correlation_vector_filter,
                     ),
                 };
                 write_output_file(&sidecar_path, &body)?;
@@ -1313,20 +1317,29 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
 fn format_cv_log_json(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     pretty: bool,
+    filter: &[String],
 ) -> String {
     let compact = cv_log
         .to_json_string()
         .unwrap_or_else(|_| "{}".to_string());
-    if !pretty {
+    let need_filter = !filter.is_empty();
+    if !pretty && !need_filter {
+        // Fast path: default-default — no parse, no transform.
         return compact;
     }
-    // Round-trip: compact text → serde_json::Value → pretty
-    // text. The intermediate Value is heap-allocated but only
-    // exists for one serialization pass.
-    match serde_json::from_str::<serde_json::Value>(&compact) {
-        Ok(v) => serde_json::to_string_pretty(&v)
-            .unwrap_or_else(|_| compact),
-        Err(_) => compact,
+    // Round-trip: compact text → serde_json::Value → (filter?) → text.
+    let mut value: serde_json::Value =
+        match serde_json::from_str(&compact) {
+            Ok(v) => v,
+            Err(_) => return compact,
+        };
+    if need_filter {
+        prune_entries_by_source(&mut value, filter);
+    }
+    if pretty {
+        serde_json::to_string_pretty(&value).unwrap_or_else(|_| compact)
+    } else {
+        serde_json::to_string(&value).unwrap_or_else(|_| compact)
     }
 }
 
@@ -1354,14 +1367,18 @@ fn format_cv_log_json(
 /// fallback the consumer's `tail` will still see).
 fn format_cv_log_ndjson(
     cv_log: &coding_adventures_correlation_vector::CVLog,
+    filter: &[String],
 ) -> String {
     let compact = cv_log
         .to_json_string()
         .unwrap_or_else(|_| "{}".to_string());
-    let root: serde_json::Value = match serde_json::from_str(&compact) {
+    let mut root: serde_json::Value = match serde_json::from_str(&compact) {
         Ok(v) => v,
         Err(_) => return compact,
     };
+    if !filter.is_empty() {
+        prune_entries_by_source(&mut root, filter);
+    }
     let mut out = String::new();
     if let Some(entries) = root.get("entries").and_then(|v| v.as_object()) {
         for entry in entries.values() {
@@ -1386,6 +1403,58 @@ fn format_cv_log_ndjson(
         out.push('\n');
     }
     out
+}
+
+/// CLOC11.70 — in-place prune of the `entries` object on a
+/// parsed CVLog JSON `Value` by `contribution.source`
+/// allowlist.
+///
+/// Walks `root["entries"]` (an object map id → entry). An
+/// entry is kept iff it has at least one element in its
+/// `contributions` array whose `source` field equals any
+/// string in `allowlist`. Entries with empty / missing
+/// `contributions` are dropped (no source can match).
+///
+/// `allowlist` is treated as a closed set of exact-match
+/// strings — no wildcards, no prefix matching. The empty
+/// allowlist case is the caller's responsibility (caller
+/// should skip this function entirely; we'd otherwise prune
+/// everything).
+///
+/// Why a separate helper rather than inlining at each
+/// formatter: the json and ndjson paths both round-trip
+/// through `serde_json::Value` (the former for pretty mode,
+/// the latter unconditionally), so one helper handling both
+/// is cheaper than two near-identical loops and keeps the
+/// "entry is kept iff …" rule in one auditable place.
+fn prune_entries_by_source(
+    root: &mut serde_json::Value,
+    allowlist: &[String],
+) {
+    let Some(entries) = root
+        .get_mut("entries")
+        .and_then(|v| v.as_object_mut())
+    else {
+        return;
+    };
+    // Build a HashSet for O(1) lookup; the loop runs over
+    // every entry × every contribution otherwise.
+    let allow: std::collections::HashSet<&str> =
+        allowlist.iter().map(String::as_str).collect();
+    entries.retain(|_id, entry| {
+        let Some(contribs) = entry
+            .get("contributions")
+            .and_then(|v| v.as_array())
+        else {
+            return false;
+        };
+        contribs.iter().any(|c| {
+            c.get("source")
+                .and_then(|s| s.as_str())
+                .map(|s| allow.contains(s))
+                .unwrap_or(false)
+        })
+    });
 }
 
 /// Format the contents of an `--output_manifest` file from a
@@ -3448,6 +3517,154 @@ mod tests {
         assert!(
             !body.contains("\"_meta\""),
             "JSON format should not include the NDJSON _meta footer"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.70 — --correlation_vector_filter allowlist
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_filter_keeps_only_allowlisted_sources() {
+        // With filter=["lex"], only entries containing a
+        // contribution with source="lex" should survive.
+        // Empty-contribution entries (token CVs) are dropped.
+        // Entries with allowlisted contributions (per-file
+        // CV root has lex.tokens_emitted) are kept.
+        let dir = std::env::temp_dir().join("closurec_cloc11_70_filter_lex");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_filter: vec!["lex".to_string()],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        let root: serde_json::Value =
+            serde_json::from_str(&body).expect("parse");
+        let entries = root
+            .get("entries")
+            .and_then(|v| v.as_object())
+            .expect("entries object");
+        // Every surviving entry must have at least one
+        // contribution with source="lex".
+        for (id, entry) in entries.iter() {
+            let contribs = entry
+                .get("contributions")
+                .and_then(|v| v.as_array())
+                .expect("contributions array");
+            let has_lex = contribs.iter().any(|c| {
+                c.get("source").and_then(|s| s.as_str()) == Some("lex")
+            });
+            assert!(
+                has_lex,
+                "entry {id} survived but has no lex contribution: {entry}"
+            );
+        }
+        // No lexer_token entries (no contributions) should
+        // appear under filter=lex.
+        for (id, entry) in entries.iter() {
+            let origin_source = entry
+                .get("origin")
+                .and_then(|o| o.get("source"))
+                .and_then(|s| s.as_str());
+            assert_ne!(
+                origin_source,
+                Some("lexer_token"),
+                "lexer_token entry {id} should have been pruned: {entry}"
+            );
+        }
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_filter_empty_keeps_everything() {
+        // Empty filter = no pruning. Sanity check that the
+        // default config behaves identically to pre-CLOC11.70.
+        let dir = std::env::temp_dir().join("closurec_cloc11_70_filter_empty");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                // correlation_vector_filter defaults to empty Vec
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Confirm at least one lexer_token entry exists (it
+        // would be pruned under filter=lex per the test above).
+        assert!(
+            body.contains("\"source\":\"lexer_token\""),
+            "expected lexer_token entries in unfiltered sidecar: {body}"
+        );
+    }
+
+    #[test]
+    fn correlation_vector_filter_unmatched_prunes_all() {
+        // Filter with a source name that never appears →
+        // entries object becomes empty. The skeleton
+        // (entries / pass_order / enabled) is still valid
+        // JSON.
+        let dir = std::env::temp_dir().join("closurec_cloc11_70_filter_none");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_filter: vec![
+                    "nonexistent_source_xyz".to_string()
+                ],
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        let root: serde_json::Value =
+            serde_json::from_str(&body).expect("parse");
+        let entries = root
+            .get("entries")
+            .and_then(|v| v.as_object())
+            .expect("entries object");
+        assert!(
+            entries.is_empty(),
+            "expected empty entries under unmatched filter, got {}: {body}",
+            entries.len()
         );
         let _ = fs::remove_dir_all(&dir);
     }

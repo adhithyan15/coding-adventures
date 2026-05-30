@@ -500,6 +500,15 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
             // JSON, empty, or absent → default
             _ => crate::config::CorrelationVectorFormat::Json,
         },
+        correlation_vector_filter: get_str(p, "correlation_vector_filter")?
+            .map(|s| {
+                s.split(',')
+                    .map(str::trim)
+                    .filter(|t| !t.is_empty())
+                    .map(str::to_string)
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default(),
     })
 }
 
