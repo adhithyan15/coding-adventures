@@ -617,6 +617,37 @@ pub struct SpecialModesConfig {
     ///
     /// Only consulted when `correlation_vector` is true.
     pub correlation_vector_summary: bool,
+    /// CLOC11.74: rendering style for the
+    /// `--correlation_vector_summary` line.
+    ///   - `Text` (default): human-readable one-line form
+    ///     introduced by CLOC11.73.
+    ///   - `Json`: single-line JSON object — `{"cv_sidecar":
+    ///     {"path": "...", "skipped": false, "entries": N,
+    ///     "contributions": M, "tombstones": T,
+    ///     "pass_order": [...]}}`. Machine consumers can
+    ///     parse without regex-matching the human line.
+    ///   - `Kv`: space-separated key=value pairs prefixed
+    ///     with `cv_sidecar.` — `cv_sidecar.path=... cv_sidecar.entries=N
+    ///     cv_sidecar.contributions=M ...`. For shell-tooling
+    ///     pipelines that grep/cut single fields.
+    ///
+    /// Only consulted when `correlation_vector_summary` is
+    /// also true. With summary off the format flag is dead.
+    pub correlation_vector_summary_format: CorrelationVectorSummaryFormat,
+}
+
+/// CLOC11.74 — render style for the `--correlation_vector_summary`
+/// line. Default `Text` (the CLOC11.73 form).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum CorrelationVectorSummaryFormat {
+    /// Human-readable one-line summary (CLOC11.73 default).
+    #[default]
+    Text,
+    /// Single-line JSON object: `{"cv_sidecar": {...}}`.
+    Json,
+    /// Space-separated `key=value` pairs prefixed with
+    /// `cv_sidecar.`.
+    Kv,
 }
 
 /// CLOC11.69 — sidecar persistence format. Default is

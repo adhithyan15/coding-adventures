@@ -1301,6 +1301,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 config.special_modes.correlation_vector_filter_includes_origin,
                 config.special_modes.correlation_vector_filter_invert,
                 cv_sidecar_written.as_deref(),
+                config.special_modes.correlation_vector_summary_format,
             );
             result.stdout_text.push_str(&summary);
         }
@@ -1333,6 +1334,7 @@ fn compute_cv_summary(
     filter_includes_origin: bool,
     filter_invert: bool,
     wrote_path: Option<&std::path::Path>,
+    summary_format: crate::config::CorrelationVectorSummaryFormat,
 ) -> String {
     // Build the same parsed-Value form the formatters use,
     // apply the same filter, then count.
@@ -1345,7 +1347,7 @@ fn compute_cv_summary(
             // Fallback to a stub summary; pass_order is
             // unknown but we still print zeros so the line
             // is well-formed.
-            return summary_line(wrote_path, 0, 0, 0, &[]);
+            return summary_line(wrote_path, 0, 0, 0, &[], summary_format);
         }
     };
     if !filter.is_empty() {
@@ -1394,6 +1396,7 @@ fn compute_cv_summary(
         contribution_count,
         tombstone_count,
         &pass_order,
+        summary_format,
     )
 }
 
@@ -1401,25 +1404,125 @@ fn compute_cv_summary(
 /// `\n`. Kept separate from `compute_cv_summary` so the
 /// formatting can be tested / changed without re-running the
 /// CV count walk.
+///
+/// CLOC11.74: dispatch on `summary_format` to produce one of
+/// three shapes:
+///   - `Text` (default): the CLOC11.73 human-readable form.
+///   - `Json`: single-line JSON object `{"cv_sidecar": {...}}`.
+///     `path` is `null` under `skipped=true`.
+///   - `Kv`: space-separated `key=value` pairs prefixed
+///     with `cv_sidecar.`. Values that may contain spaces
+///     (path; pass_order joined by `,`) are quoted on the
+///     RHS so shell tooling can `awk '{...}'`/`cut` safely.
 fn summary_line(
     wrote_path: Option<&std::path::Path>,
     entries: usize,
     contributions: usize,
     tombstones: usize,
     pass_order: &[String],
+    summary_format: crate::config::CorrelationVectorSummaryFormat,
 ) -> String {
-    let prefix = match wrote_path {
-        Some(p) => format!("cv sidecar: {}", p.display()),
-        None => "cv sidecar: skipped (format=NONE)".to_string(),
-    };
-    format!(
-        "{}: {} entries, {} contributions, {} tombstones, pass_order=[{}]\n",
-        prefix,
-        entries,
-        contributions,
-        tombstones,
-        pass_order.join(","),
-    )
+    use crate::config::CorrelationVectorSummaryFormat as F;
+    match summary_format {
+        F::Text => {
+            let prefix = match wrote_path {
+                Some(p) => format!("cv sidecar: {}", p.display()),
+                None => "cv sidecar: skipped (format=NONE)".to_string(),
+            };
+            format!(
+                "{}: {} entries, {} contributions, {} tombstones, pass_order=[{}]\n",
+                prefix,
+                entries,
+                contributions,
+                tombstones,
+                pass_order.join(","),
+            )
+        }
+        F::Json => {
+            // Build a serde_json::Map for the cv_sidecar
+            // payload so we don't have to hand-escape paths
+            // or pass_order entries. serde_json handles
+            // strings, quotes, nested objects safely.
+            let mut payload = serde_json::Map::new();
+            match wrote_path {
+                Some(p) => {
+                    payload.insert(
+                        "path".to_string(),
+                        serde_json::Value::String(p.display().to_string()),
+                    );
+                    payload.insert(
+                        "skipped".to_string(),
+                        serde_json::Value::Bool(false),
+                    );
+                }
+                None => {
+                    payload.insert(
+                        "path".to_string(),
+                        serde_json::Value::Null,
+                    );
+                    payload.insert(
+                        "skipped".to_string(),
+                        serde_json::Value::Bool(true),
+                    );
+                }
+            }
+            payload.insert(
+                "entries".to_string(),
+                serde_json::Value::Number((entries as u64).into()),
+            );
+            payload.insert(
+                "contributions".to_string(),
+                serde_json::Value::Number((contributions as u64).into()),
+            );
+            payload.insert(
+                "tombstones".to_string(),
+                serde_json::Value::Number((tombstones as u64).into()),
+            );
+            payload.insert(
+                "pass_order".to_string(),
+                serde_json::Value::Array(
+                    pass_order
+                        .iter()
+                        .map(|s| serde_json::Value::String(s.clone()))
+                        .collect(),
+                ),
+            );
+            let mut root = serde_json::Map::new();
+            root.insert(
+                "cv_sidecar".to_string(),
+                serde_json::Value::Object(payload),
+            );
+            let mut line = serde_json::to_string(&serde_json::Value::Object(root))
+                .unwrap_or_else(|_| "{\"cv_sidecar\":{}}".to_string());
+            line.push('\n');
+            line
+        }
+        F::Kv => {
+            // Quote path + pass_order on the RHS so callers
+            // can split on whitespace; the values themselves
+            // never contain a literal `"` in our pipeline,
+            // but we still let serde escape them defensively.
+            let path_val = match wrote_path {
+                Some(p) => p.display().to_string(),
+                None => String::new(),
+            };
+            let skipped_val = wrote_path.is_none();
+            let pass_order_joined = pass_order.join(",");
+            let path_quoted = serde_json::to_string(&path_val)
+                .unwrap_or_else(|_| "\"\"".to_string());
+            let pass_order_quoted = serde_json::to_string(&pass_order_joined)
+                .unwrap_or_else(|_| "\"\"".to_string());
+            format!(
+                "cv_sidecar.path={} cv_sidecar.skipped={} cv_sidecar.entries={} cv_sidecar.contributions={} cv_sidecar.tombstones={} cv_sidecar.pass_order={}\n",
+                path_quoted,
+                skipped_val,
+                entries,
+                contributions,
+                tombstones,
+                pass_order_quoted,
+            )
+        }
+    }
 }
 
 /// Serialize a `CVLog` to a JSON string for the
@@ -4175,6 +4278,140 @@ mod tests {
         assert!(
             !out.stdout_text.contains("cv sidecar:"),
             "expected no summary line under default flag, got: {:?}",
+            out.stdout_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.74 — --correlation_vector_summary_format
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_summary_format_json_emits_parseable_object() {
+        // JSON summary: stdout_text contains one line that
+        // parses as JSON and has the cv_sidecar object with
+        // expected fields.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_74_summary_json");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                correlation_vector_summary_format:
+                    crate::config::CorrelationVectorSummaryFormat::Json,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        let line = out.stdout_text.trim();
+        let parsed: serde_json::Value = serde_json::from_str(line)
+            .unwrap_or_else(|_| panic!("JSON summary did not parse: {line}"));
+        let cv = parsed
+            .get("cv_sidecar")
+            .and_then(|v| v.as_object())
+            .expect("cv_sidecar object missing");
+        assert_eq!(cv.get("skipped"), Some(&serde_json::Value::Bool(false)));
+        assert!(cv.get("path").and_then(|v| v.as_str()).is_some());
+        assert!(cv.get("entries").and_then(|v| v.as_u64()).is_some());
+        assert!(cv.get("contributions").and_then(|v| v.as_u64()).is_some());
+        assert!(cv.get("tombstones").and_then(|v| v.as_u64()).is_some());
+        assert!(cv.get("pass_order").and_then(|v| v.as_array()).is_some());
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_summary_format_kv_emits_key_value_pairs() {
+        // KV summary: stdout contains the cv_sidecar.* keys
+        // with `=` separators; path and pass_order are quoted.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_74_summary_kv");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                correlation_vector_summary_format:
+                    crate::config::CorrelationVectorSummaryFormat::Kv,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        let line = out.stdout_text.trim();
+        assert!(
+            line.contains("cv_sidecar.path=\""),
+            "expected quoted cv_sidecar.path=\"...\" in KV summary, got: {line}"
+        );
+        assert!(
+            line.contains("cv_sidecar.skipped=false"),
+            "expected cv_sidecar.skipped=false in KV summary, got: {line}"
+        );
+        assert!(
+            line.contains("cv_sidecar.entries="),
+            "expected cv_sidecar.entries= in KV summary, got: {line}"
+        );
+        assert!(
+            line.contains("cv_sidecar.pass_order=\""),
+            "expected quoted cv_sidecar.pass_order=\"...\" in KV summary, got: {line}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_summary_format_text_remains_default() {
+        // No format flag set → CLOC11.73 text line, byte-
+        // for-byte unchanged.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_74_summary_default");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                // summary_format defaults to Text
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        assert!(
+            out.stdout_text.starts_with("cv sidecar:"),
+            "expected text prefix `cv sidecar:`, got: {:?}",
+            out.stdout_text
+        );
+        assert!(
+            !out.stdout_text.contains("{\"cv_sidecar\""),
+            "text default should not emit JSON, got: {:?}",
             out.stdout_text
         );
         let _ = fs::remove_dir_all(&dir);
