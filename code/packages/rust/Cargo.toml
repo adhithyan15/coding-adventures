@@ -665,6 +665,7 @@ members = [
     "vm-debug",
     "basic-dap",
     "nib-dap",
+    "oct-dap",
     "twig-vm",
     "twig-to-jvm",
     "twig-to-cil",
