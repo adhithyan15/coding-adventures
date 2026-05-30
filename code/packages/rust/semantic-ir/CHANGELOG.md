@@ -2,6 +2,33 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.2.1 — SIR17 validator: walk populated `ClassDef` bodies
+
+No node-shape change.  The Ruby frontend's Phase 14b begins emitting
+`Stmt::ClassDef` nodes with a *populated* `body` (Phase 14a always
+emitted an empty body), so the validator now actually walks it.
+
+### Changed
+
+- Factored the statement-sequence walk out of `check_block` into a
+  new private `check_stmt_seq(&[Stmt], env, depth)` helper.
+  `check_block` now calls it for `block.stmts` (then checks the
+  trailing `block.value`), preserving the exact prior behaviour —
+  parallel-`let` grouping, sequential `let*`, mutable `Assign`,
+  loop/scope handling.
+- `Stmt::ClassDef`'s validator arm now calls `check_stmt_seq` on the
+  body inside a fresh `env.mark()`/`env.rewind()` scope (Phase 14a
+  left this loop a documented no-op).  Class-body locals therefore
+  do **not** leak into the surrounding statement stream, and a
+  bad reference inside a class body is now reported instead of
+  silently accepted.  An explicit `MAX_IR_DEPTH` guard bounds
+  recursion for pathologically nested `class … class …` bodies.
+
+New tests (3): `class_def_body_with_let_binding_validates`,
+`class_def_body_undefined_varref_is_error` (proves the body is
+walked, not no-op'd), `class_def_body_local_does_not_leak_to_sibling`.
+Test count: 81 → 84 (+3).
+
 ## 0.2.0 — SIR17: class declarations
 
 Adds the first object-oriented IR node, introduced by the Ruby

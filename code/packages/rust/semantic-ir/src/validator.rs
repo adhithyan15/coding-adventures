@@ -242,6 +242,21 @@ impl<'m> ValidatorState<'m> {
             return;
         }
         let mark = env.mark();
+        self.check_stmt_seq(&b.stmts, env, depth);
+        self.check_expr(&b.value, env, depth + 1);
+        env.rewind(mark);
+    }
+
+    /// Validate a flat statement sequence (`&[Stmt]`) against `env`.
+    ///
+    /// Factored out of [`check_block`] (Phase 14b) so a class body
+    /// (`Stmt::ClassDef.body`, a bare `Vec<Stmt>` with no trailing
+    /// value slot) can reuse the exact same statement-accounting
+    /// rules — parallel-`let` grouping, sequential `let*`, mutable
+    /// `Assign`, loop/scope handling — without wrapping the body in a
+    /// synthetic `Block`.  Callers are responsible for their own
+    /// `env.mark()`/`env.rewind()` scoping around the call.
+    fn check_stmt_seq(&mut self, stmts: &[Stmt], env: &mut LocalEnv, depth: usize) {
         // Walk statements in *groups*: a run of consecutive LetBinding
         // statements forms one parallel-let group whose RHS expressions
         // all evaluate in the scope BEFORE the group.  All names from
@@ -249,18 +264,18 @@ impl<'m> ValidatorState<'m> {
         // LetStarBinding and ExprStmt break the run; LetStarBinding
         // adds its name immediately (sequential semantics).
         let mut i = 0;
-        while i < b.stmts.len() {
-            match &b.stmts[i] {
+        while i < stmts.len() {
+            match &stmts[i] {
                 Stmt::LetBinding { .. } => {
                     // Find the maximal run of LetBindings starting at i.
                     let mut j = i;
-                    while j < b.stmts.len() && matches!(b.stmts[j], Stmt::LetBinding { .. }) {
+                    while j < stmts.len() && matches!(stmts[j], Stmt::LetBinding { .. }) {
                         j += 1;
                     }
                     // Check every RHS in the *outer* env (no new
                     // names added yet).
                     for k in i..j {
-                        if let Stmt::LetBinding { value, sir_type, .. } = &b.stmts[k] {
+                        if let Stmt::LetBinding { value, sir_type, .. } = &stmts[k] {
                             self.check_expr(value, env, depth + 1);
                             if sir_type.is_some() {
                                 self.observed.add(Feature::OptionalTypeAnnotations);
@@ -269,7 +284,7 @@ impl<'m> ValidatorState<'m> {
                     }
                     // Add every bound name to the env, all at once.
                     for k in i..j {
-                        if let Stmt::LetBinding { name, .. } = &b.stmts[k] {
+                        if let Stmt::LetBinding { name, .. } = &stmts[k] {
                             env.add_local(name.clone());
                         }
                     }
@@ -334,40 +349,37 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(value, env, depth + 1);
                     i += 1;
                 }
-                Stmt::ClassDef { body, .. } => {
+                Stmt::ClassDef { body, span, .. } => {
                     // A class declaration adds a name to the module
                     // surface (the class itself) and contributes any
-                    // statements in its body.  Phase 14a always lowers
-                    // an empty body, but the validator is structured
-                    // to handle the populated form too.
+                    // statements in its body.  Phase 14b populates the
+                    // body with the class's executable statements
+                    // (method defs are hoisted to top-level Functions
+                    // by the lowerer, so they don't appear here).
                     //
                     // We mark Feature::Classes and recurse into the
-                    // body using a fresh local-env mark (class body
+                    // body using a fresh local-env mark: class body
                     // names shouldn't leak into the surrounding
-                    // statement stream).  We do NOT add the class's
-                    // own name to the local env: classes are
+                    // statement stream.  We do NOT add the class's
+                    // own name to the local env — classes are
                     // top-level/module-level names, not locals.
+                    //
+                    // The explicit depth guard bounds recursion for a
+                    // pathological nest of `class A; class B; …` bodies
+                    // (each level re-enters check_stmt_seq); it mirrors
+                    // the MAX_IR_DEPTH guard check_block applies.
                     self.observed.add(Feature::Classes);
-                    let class_mark = env.mark();
-                    for inner in body {
-                        // Use a single-statement Block wrapper to
-                        // reuse check_block's accounting.  This is
-                        // safe because each inner stmt's effect on
-                        // the env is scoped by class_mark below.
-                        let _ = inner;
-                        // Defer body lowering: with vec![] this loop
-                        // is a no-op, and 14b will define the proper
-                        // recursive walk shape.  Keeping the explicit
-                        // mark/rewind preserves the contract for the
-                        // forward-compatible body case.
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
                     }
+                    let class_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
                     env.rewind(class_mark);
                     i += 1;
                 }
             }
         }
-        self.check_expr(&b.value, env, depth + 1);
-        env.rewind(mark);
     }
 
     fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv, depth: usize) {
@@ -1119,5 +1131,126 @@ mod tests {
         });
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14b (FC) — `Stmt::ClassDef.body` is now a populated
+    // `Vec<Stmt>`; the validator walks it via `check_stmt_seq`.
+    // -----------------------------------------------------------------
+
+    /// Wrap a single `ClassDef` statement in a one-function module
+    /// declaring `Feature::Classes`.
+    fn module_with_class_body(name: &str, body: Vec<Stmt>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ClassDef {
+                    name: name.into(),
+                    body,
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn class_def_body_with_let_binding_validates() {
+        // A class body holding a single LetBinding is now walked by the
+        // validator (Phase 14a no-op'd the body loop) and accepted.
+        let m = module_with_class_body(
+            "Foo",
+            vec![Stmt::LetBinding {
+                name: "MAX".into(),
+                sir_type: None,
+                value: Expr::IntLit { value: 10, span: s() },
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn class_def_body_undefined_varref_is_error() {
+        // Proves the body is *actually validated* now: a VarRef to an
+        // undefined local inside the class body must be reported as an
+        // error.  Under the Phase 14a no-op loop this would have been
+        // silently accepted.
+        let m = module_with_class_body(
+            "Foo",
+            vec![Stmt::ExprStmt {
+                expr: Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "expected undefined-varref error from class body, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn class_def_body_local_does_not_leak_to_sibling() {
+        // A binding introduced inside the class body must not be
+        // visible to statements *after* the class (the body is scoped
+        // by its own env mark/rewind).  Here `INNER` is bound inside
+        // the class, then referenced as a sibling statement after it —
+        // which must error.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![
+                    Stmt::ClassDef {
+                        name: "Foo".into(),
+                        body: vec![Stmt::LetBinding {
+                            name: "INNER".into(),
+                            sir_type: None,
+                            value: Expr::IntLit { value: 1, span: s() },
+                            span: s(),
+                        }],
+                        span: s(),
+                    },
+                    Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "INNER".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                ],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "class-body local INNER must not leak to sibling stmt, got {:?}",
+            r.issues
+        );
     }
 }

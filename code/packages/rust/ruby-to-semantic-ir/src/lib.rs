@@ -664,11 +664,12 @@ mod tests {
 
     #[test]
     fn class_with_method_body_still_emits_class_def_and_hoists_method() {
-        // Phase 14a contract for non-empty classes: the new
-        // `Stmt::ClassDef` is emitted (body always empty in 14a)
-        // AND the pre-14a method-hoisting fallback continues to work
-        // so older fixtures don't regress.  Phase 14b will replace
-        // the hoist with nested body lowering.
+        // A method-*only* class keeps an empty `ClassDef.body` under
+        // both Phase 14a and 14b: method defs are hoisted to top-level
+        // `Function`s (SIR v0 has no method-as-statement node), so they
+        // are not represented inside the body `Vec<Stmt>`.  Phase 14b
+        // changes the *non-def* statements (see the tests below); the
+        // method-hoist contract is unchanged.
         let m = lower("class Foo\n  def bar\n  end\nend\n");
         // `bar` was hoisted to top-level Functions.
         assert!(
@@ -683,11 +684,122 @@ mod tests {
                 assert_eq!(name, "Foo");
                 assert!(
                     body.is_empty(),
-                    "Phase 14a body is always empty; populated body lands in 14b"
+                    "method-only class body stays empty (defs hoist); got {:?}",
+                    body
                 );
             }
             other => panic!("expected Stmt::ClassDef, got {:?}", other),
         }
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14b (FC) — class body with method defs + executable
+    // statements.  Method defs continue to hoist to top-level
+    // Functions; every *non-def* statement is now preserved in
+    // `Stmt::ClassDef.body` (Phase 14a discarded them).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn class_body_preserves_executable_statement_and_hoists_method() {
+        // `MAX = 10` (an executable class-body statement) must survive
+        // into `ClassDef.body` as a `LetBinding`, while `def bar` is
+        // still hoisted to a top-level Function.
+        let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "bar"),
+            "expected hoisted `bar`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Foo");
+                assert_eq!(
+                    body.len(),
+                    1,
+                    "the def is hoisted (0 body stmts) and only `MAX = 10` stays; got {:?}",
+                    body
+                );
+                match &body[0] {
+                    Stmt::LetBinding { name, value, .. } => {
+                        assert_eq!(name, "MAX");
+                        assert!(matches!(value, Expr::IntLit { value: 10, .. }));
+                    }
+                    other => panic!("expected LetBinding MAX, got {:?}", other),
+                }
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_body_preserves_multiple_statements_in_source_order() {
+        // Two constant assignments must appear in `body` in the same
+        // order they were written.
+        let m = lower("class Cfg\n  A = 1\n  B = 2\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { body, .. } => {
+                assert_eq!(body.len(), 2, "both assignments preserved; got {:?}", body);
+                let names: Vec<&str> = body
+                    .iter()
+                    .map(|s| match s {
+                        Stmt::LetBinding { name, .. } => name.as_str(),
+                        other => panic!("expected LetBinding, got {:?}", other),
+                    })
+                    .collect();
+                assert_eq!(names, vec!["A", "B"]);
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_with_body_statements_passes_sir_validator() {
+        // E2E: a class mixing an executable statement and a method def
+        // must lower to a module the validator accepts.  Guards against
+        // drift between the lowerer's populated body and the
+        // validator's new `check_stmt_seq`-based ClassDef walk.
+        let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected class with populated body: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn nested_class_methods_hoisted_exactly_once() {
+        // A class nested inside another class lowers to a nested
+        // `ClassDef` in the outer class's body.  Both methods must be
+        // hoisted to top-level Functions *exactly once* — a regression
+        // here (double-hoist) would create duplicate function names and
+        // trip the validator's name-uniqueness check.
+        let m = lower(
+            "class Outer\n  def o\n  end\n  class Inner\n    def i\n    end\n  end\nend\n",
+        );
+        let count = |needle: &str| m.functions.iter().filter(|f| f.name == needle).count();
+        assert_eq!(count("o"), 1, "`o` hoisted exactly once");
+        assert_eq!(count("i"), 1, "`i` hoisted exactly once");
+        // Outer's body carries the nested Inner ClassDef.
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Outer");
+                assert_eq!(body.len(), 1, "Inner class is the only body stmt; got {:?}", body);
+                match &body[0] {
+                    Stmt::ClassDef { name, body, .. } => {
+                        assert_eq!(name, "Inner");
+                        assert!(body.is_empty(), "Inner is method-only → empty body");
+                    }
+                    other => panic!("expected nested ClassDef Inner, got {:?}", other),
+                }
+            }
+            other => panic!("expected Stmt::ClassDef Outer, got {:?}", other),
+        }
+        // Whole module still validates (no duplicate names).
+        assert!(semantic_ir::validate(&m).is_ok());
     }
 
     #[test]

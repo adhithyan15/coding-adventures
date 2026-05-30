@@ -2,6 +2,44 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.41.0] - 2026-05-30
+
+### Changed (Phase 14b (FC) — class body with method defs + statements)
+
+`class Foo … end` now lowers to `Stmt::ClassDef` with a **populated**
+`body` (Phase 14a always emitted `body: vec![]`).  The class body's
+*executable* statements — constant/expression assignments, bare
+expressions, nested `class`/`module` declarations, loops, … — are
+lowered in source order and preserved in `ClassDef.body`, instead of
+being silently dropped.
+
+- New `lower_class_body_statements` helper walks the class body's
+  `statement` children once:
+  - `def_statement` / `endless_def_statement` are **hoisted** to
+    top-level `Function`s (unchanged — SIR v0 has no
+    method-as-statement node, so a method can't live inside a
+    `Vec<Stmt>`), contributing nothing to `body`.
+  - every other statement is lowered via the shared
+    `lower_statement_inner_multi` dispatch and pushed onto `body`.
+- The `class_statement` arm no longer calls the recursive
+  whole-body `collect_def_statements_from_body` pre-pass; hoisting is
+  now per-direct-child.  A nested `class`/`module` is lowered via the
+  normal dispatch (whose own arm hoists *its* direct `def`s), so every
+  method is hoisted **exactly once** — no double-registration that
+  would trip the validator's function-name-uniqueness check.
+- A method-*only* class still produces an empty `body` (the methods
+  hoist); the `module_statement` arm is unchanged (still a NilLit
+  no-op + def hoist, pending Phase 14d's `ModuleDef`).
+
+New tests (4): `class_body_preserves_executable_statement_and_hoists_method`,
+`class_body_preserves_multiple_statements_in_source_order`,
+`class_with_body_statements_passes_sir_validator` (E2E lower → validate),
+`nested_class_methods_hoisted_exactly_once`.  The existing
+`class_with_method_body_still_emits_class_def_and_hoists_method` is
+retained (method-only → empty body) with an updated comment.
+
+Test count: 189 → 193 (+4).
+
 ## [0.40.0] - 2026-05-29
 
 ### Added (Phase 14a (FC) — empty `class Foo; end`)
