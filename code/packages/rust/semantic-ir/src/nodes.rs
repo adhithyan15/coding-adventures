@@ -233,6 +233,29 @@ pub enum Stmt {
         value: Expr,
         span: Span,
     },
+
+    // ── SIR17: class declarations ──────────────────────────────────
+    /// `class Name; body; end` — a class declaration.
+    ///
+    /// SIR v0 represents a class as a named declaration whose body is
+    /// itself a list of statements.  Phase 14a (Ruby frontend) lands
+    /// the *empty-body* case: `class Foo; end` lowers to
+    /// `ClassDef { name: "Foo", body: vec![], span }`.  Method bodies
+    /// are *not* nested here yet — they continue to be hoisted to
+    /// top-level `Function`s by the Ruby lowerer's existing pass
+    /// (see ruby-to-semantic-ir Phase 6f).  Later Ruby phases (14b)
+    /// will populate `body` directly so methods nest under their
+    /// owning class.
+    ///
+    /// Why a `Vec<Stmt>` body rather than `Block`?  A class body
+    /// produces no value — it is a declaration, not an expression —
+    /// so the per-Block trailing `value` field doesn't apply.
+    /// Backends emit each statement in source order.
+    ClassDef {
+        name: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -247,6 +270,7 @@ impl Stmt {
             Stmt::ForEach { span, .. } => span,
             Stmt::SeqSet { span, .. } => span,
             Stmt::MapSet { span, .. } => span,
+            Stmt::ClassDef { span, .. } => span,
         }
     }
 }

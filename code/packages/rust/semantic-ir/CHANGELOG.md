@@ -2,6 +2,33 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.2.0 — SIR17: class declarations
+
+Adds the first object-oriented IR node, introduced by the Ruby
+frontend's Phase 14a (empty `class Foo; end`).
+
+### Added
+
+- `Stmt::ClassDef { name: String, body: Vec<Stmt>, span: Span }` — a
+  class declaration whose body is a list of statements.  The Ruby
+  frontend's Phase 14a lands the *empty-body* case (`body: vec![]`);
+  the variant is shaped to carry a populated body in later phases.
+  `body` is a `Vec<Stmt>` rather than a `Block` because a class body
+  is a declaration, not a value-producing expression.
+- `Feature::Classes` (kebab name `classes`) — declared by any module
+  that contains a `Stmt::ClassDef`.  Backends that do not list it in
+  their accepted-feature set reject such modules at the capability
+  check, before emit.
+
+### Changed
+
+- `Stmt::span()`, the validator, the text printer (`(class-def
+  Name ...)` s-expression), the walker, and the intrinsic-walk
+  backend helper all gained a `ClassDef` arm.  The four reference
+  backends (TypeScript, Rust, Python, Go) reject class-using modules
+  via their unchanged capability declarations, so their emit paths
+  treat the new arm as unreachable.
+
 ## 0.1.0 — initial release (SIR10 v0)
 
 First cut of the narrow-waist Semantic IR.  Implements the v0

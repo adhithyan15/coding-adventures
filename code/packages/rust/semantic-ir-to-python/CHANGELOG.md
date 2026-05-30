@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — SIR17 exhaustiveness (no behaviour change)
+
+semantic-ir 0.2.0 adds `Stmt::ClassDef` (the SIR17 class node).  This
+backend gains a `ClassDef` match arm in its statement emitter so it
+stays exhaustive.  The arm `panic!`s with a "capability check should
+have rejected it" message: `Feature::Classes` is not in this
+backend's accepted-feature set, so a class-using module is rejected
+at the capability check before emit, making the arm unreachable.  No
+output or accepted-feature changes.
+
 ## 0.1.0 — initial release (SIR14 v0)
 
 Third backend for the narrow-waist Semantic IR.  Emits

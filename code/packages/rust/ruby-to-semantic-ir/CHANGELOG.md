@@ -2,6 +2,37 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.40.0] - 2026-05-29
+
+### Added (Phase 14a (FC) — empty `class Foo; end`)
+
+`class Foo; end` now lowers to a first-class
+`Stmt::ClassDef { name: "Foo", body: vec![], span }` (semantic-ir
+0.2.0's new SIR17 node), replacing the pre-14a behaviour where a
+class declaration lowered to a no-op `ExprStmt(NilLit)`.
+
+- New `extract_class_name` helper pulls the class name from the
+  first `TokenType::Name` token of a `class_statement` node (the
+  `class` keyword is `TokenType::Keyword`, so it is skipped).
+- Emitting a `ClassDef` requests `Feature::Classes`, which is now
+  materialised into the module manifest alongside the existing
+  feature tally.
+- **Empty-body only:** Phase 14a always lowers `body: vec![]`.  The
+  pre-existing Phase 6f method-hoisting fallback is preserved — a
+  non-empty class body still hoists its `def`s to top-level
+  `Function`s, leaving the `ClassDef` body empty — so older fixtures
+  with method bodies continue to validate.  Phase 14b will populate
+  `body` directly and retire the hoist-as-fallback path.
+- `module M; end` is unchanged: it continues to lower to the Phase
+  6f `NilLit` no-op until a later phase introduces a module node.
+
+### Tests
+
+- `ruby-to-semantic-ir`: 184 → 189 (+5): empty-class → ClassDef,
+  `Feature::Classes` request, validator E2E, verbatim-name
+  preservation, class-with-method-body (ClassDef + hoist), and a
+  pin that `module` still lowers to NilLit.
+
 ## [0.39.0] - 2026-05-28
 
 ### Added (Phase 9c (FC) — single-RHS tuple destructure)

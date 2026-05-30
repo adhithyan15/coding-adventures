@@ -117,6 +117,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // Phase 6z — float literals (`1.5`, `1e10`, `1.5e-3`) lower
         // to `Expr::FloatLit` and trigger the `Floats` feature.
         Feature::Floats,
+        // Phase 14a (FC) — `class Foo; end` lowers to
+        // `Stmt::ClassDef` and triggers the `Classes` feature.
+        Feature::Classes,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -269,6 +272,24 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     || expr_references_any_name(value, names)
                 {
                     return true;
+                }
+            }
+            Stmt::ClassDef { body, .. } => {
+                // A class declaration body is itself a `Vec<Stmt>`.
+                // Recurse over each contained statement using a
+                // synthetic wrapper Block, mirroring the loop /
+                // pattern-stmt arms above.  Phase 14a always lowers
+                // an empty body so this loop is a no-op; included
+                // for forward-compatibility with later phases.
+                for inner in body {
+                    let synthetic = Block {
+                        stmts: vec![inner.clone()],
+                        value: Expr::NilLit { span: inner.span().clone() },
+                        span: inner.span().clone(),
+                    };
+                    if block_references_any_name(&synthetic, names) {
+                        return true;
+                    }
                 }
             }
         }
@@ -496,22 +517,45 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
-            "class_statement" | "module_statement" => {
-                // Phase 6f: class/module declarations parse but don't
-                // yet introduce a real namespace in SIR v0 (SIR has no
-                // `class` / `namespace` node — that lands in a later
-                // phase together with method dispatch).  We walk the
+            "class_statement" => {
+                // Phase 14a (FC): `class Foo; end` now lowers to
+                // first-class `Stmt::ClassDef { name: "Foo", body:
+                // vec![], span }` — the SIR has a real class node.
+                //
+                // For Phase 14a we land *only* the empty-body case
+                // semantically: the SIR's `body: vec![]` is always
+                // empty.  Existing `def_statement`-in-body hoisting
+                // (added in Phase 6f) is preserved as a fallback so
+                // pre-14a Ruby fixtures with non-empty class bodies
+                // still validate: the def names get hoisted to
+                // top-level Functions exactly as before, leaving the
+                // ClassDef itself with an empty body.  Phase 14b
+                // will populate `body` directly and retire the
+                // hoist-as-fallback path.
+                self.collect_def_statements_from_body(node)?;
+                let name = self.extract_class_name(node)?;
+                self.features_used.insert(Feature::Classes);
+                Ok(Stmt::ClassDef {
+                    name,
+                    body: Vec::new(),
+                    span: self.span_of(node),
+                })
+            }
+            "module_statement" => {
+                // Phase 6f: module declarations parse but don't
+                // yet introduce a real namespace in SIR v0 (Phase
+                // 14d will land `Stmt::ModuleDef`).  We walk the
                 // body so nested `def` declarations *are* hoisted to
                 // top-level Functions (matching the def_statement
                 // behaviour at the program level), then emit a no-op
-                // ExprStmt(NilLit) in place of the class/module so
-                // the main-body statement stream stays in sync with
-                // the source line count.
+                // ExprStmt(NilLit) in place of the module so the
+                // main-body statement stream stays in sync with the
+                // source line count.
                 //
                 // Caveat (documented for backends): the hoisted
                 // methods land at top-level, not nested under the
-                // class name.  In real Ruby, `class Foo; def bar`
-                // makes `bar` an instance method of `Foo`.  v0 SIR
+                // module name.  In real Ruby, `module M; def bar`
+                // makes `bar` a module-level method of `M`.  v0 SIR
                 // collapses the namespace; the validator still
                 // accepts the result because every function has a
                 // unique name and `main` is the only export.
@@ -1549,6 +1593,32 @@ impl Lowerer {
             }
         }
         Ok(())
+    }
+
+    /// Phase 14a (FC) — extract the class name from a `class_statement`
+    /// AST node.
+    ///
+    /// Shape: `KEYWORD("class") NAME { !"end" statement } KEYWORD("end")`.
+    /// The class name is the first `TokenType::Name` token in the child
+    /// list (the `class` token has `TokenType::Keyword`, so a plain
+    /// `expect_first_name_token` would also work, but we prefer an
+    /// explicit Name-type filter for symmetry with the analogous
+    /// helper inside `lower_def_statement` that extracts the method
+    /// name).
+    fn extract_class_name(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Result<String, RubyLowerError> {
+        let name_token = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+            _ => None,
+        });
+        let name_token = name_token.ok_or_else(|| RubyLowerError {
+            message: "class_statement missing class-name token".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        Ok(name_token.value.clone())
     }
 
     /// Phase 7c — lower an endless method definition `def foo = expr`

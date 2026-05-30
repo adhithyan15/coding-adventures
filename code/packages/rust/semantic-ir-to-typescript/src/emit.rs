@@ -157,6 +157,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         | Stmt::MapSet { span, .. } => {
             panic!("ts backend reached SIR16 statement at {} — capability check should have rejected it", span);
         }
+        // SIR17 (classes) — `Feature::Classes` is not accepted by
+        // this backend, so a class-using module is rejected by the
+        // capability check before emit.  Reaching this arm is a bug.
+        Stmt::ClassDef { span, .. } => {
+            panic!("ts backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 

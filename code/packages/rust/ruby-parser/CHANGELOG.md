@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.38.0] - 2026-05-29
+
+### Added (Phase 14a (FC) — empty `class Foo; end` grammar coverage)
+
+No grammar changes — the existing `class_statement` rule
+(`"class" NAME { !"end" statement } "end"`) already accepts an
+empty body (the repetition matches zero statements).  Phase 14a
+adds parser coverage for the exact parse properties the lowerer
+depends on:
+
+- `test_parse_empty_class_camelcase_name` — a multi-character
+  CamelCase class name is extracted whole from the first Name token
+  (the `class` keyword token is not mistaken for it).
+- `test_parse_empty_class_has_zero_body_statements` — the empty
+  class has zero `statement` children in its body.
+- `test_parse_empty_class_followed_by_top_level_stmt` — an empty
+  class does not swallow a following top-level statement; the
+  `!"end"` boundary keeps `x = 1` a sibling assignment.
+
+Tests: 155 → 158 (+3).
+
 ## [0.37.0] - 2026-05-28
 
 ### Added (Phase 9c (FC) — single-RHS tuple destructure grammar coverage)

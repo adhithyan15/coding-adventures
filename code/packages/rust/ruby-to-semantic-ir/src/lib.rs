@@ -597,14 +597,107 @@ mod tests {
     }
 
     #[test]
-    fn empty_class_lowers_cleanly() {
-        // `class Foo; end` with no body should produce a module that
-        // still has `main` and no extra user functions.
+    fn empty_class_lowers_to_class_def_stmt() {
+        // Phase 14a (FC): `class Foo; end` lowers to a real
+        // `Stmt::ClassDef { name: "Foo", body: vec![], .. }`,
+        // replacing the pre-14a NilLit no-op contract.
         let m = lower("class Foo\nend\n");
-        // Only `main` exists.
+        // Only `main` exists — empty class has no methods to hoist.
         assert_eq!(m.functions.len(), 1);
         assert_eq!(m.functions[0].name, "main");
-        // The class declaration lowered to a no-op stmt in main.
+        let main = main_body(&m);
+        assert_eq!(main.stmts.len(), 1);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Foo");
+                assert!(body.is_empty(), "Phase 14a body is always empty");
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14a (FC) — empty `class Foo; end` first-class lowering.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn empty_class_requests_classes_feature() {
+        // Phase 14a (FC): emitting a `Stmt::ClassDef` triggers the
+        // `Feature::Classes` manifest entry.  Without the manifest
+        // entry, the validator would reject the module under its
+        // strict declared-vs-used check.
+        let m = lower("class Foo\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Classes),
+            "manifest should contain Feature::Classes; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn empty_class_module_passes_sir_validator() {
+        // E2E: lower → validate.  Catches any drift between the
+        // lowerer's manifest request and the validator's feature
+        // accounting for the new ClassDef stmt.
+        let m = lower("class Foo\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected our class-only module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn empty_class_preserves_class_name_verbatim() {
+        // The class name must be the verbatim Ruby identifier — not
+        // case-folded, not prefixed.  Smoke-test a non-"Foo" name to
+        // make sure the helper doesn't pick up the `class` keyword
+        // token instead of the Name token.
+        let m = lower("class WidgetFactory\nend\n");
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, .. } => assert_eq!(name, "WidgetFactory"),
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_with_method_body_still_emits_class_def_and_hoists_method() {
+        // Phase 14a contract for non-empty classes: the new
+        // `Stmt::ClassDef` is emitted (body always empty in 14a)
+        // AND the pre-14a method-hoisting fallback continues to work
+        // so older fixtures don't regress.  Phase 14b will replace
+        // the hoist with nested body lowering.
+        let m = lower("class Foo\n  def bar\n  end\nend\n");
+        // `bar` was hoisted to top-level Functions.
+        assert!(
+            m.functions.iter().any(|f| f.name == "bar"),
+            "expected hoisted `bar` function; got functions {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        // The class statement itself produced a ClassDef in main.
+        let main = main_body(&m);
+        match &main.stmts[0] {
+            Stmt::ClassDef { name, body, .. } => {
+                assert_eq!(name, "Foo");
+                assert!(
+                    body.is_empty(),
+                    "Phase 14a body is always empty; populated body lands in 14b"
+                );
+            }
+            other => panic!("expected Stmt::ClassDef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn module_still_lowers_to_nil_no_op_in_phase_14a() {
+        // Phase 14a covers `class` only.  `module M; end` continues
+        // to lower to the Phase 6f NilLit no-op until Phase 14d adds
+        // a `Stmt::ModuleDef` analog.  This test pins the contract so
+        // a future refactor that accidentally merges class/module
+        // arms again is caught.
+        let m = lower("module M\nend\n");
         let main = main_body(&m);
         assert_eq!(main.stmts.len(), 1);
         assert!(matches!(
