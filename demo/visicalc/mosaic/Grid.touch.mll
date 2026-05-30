@@ -49,8 +49,11 @@ layout Grid {
               state-when-editing:  ( r == editRow && c == editCol )
             ) {
               If ( when: ( r == editRow && c == editCol ) ) {
+                // Mirrors Grid.desktop.mll — see that file for the
+                // edit-content/onFormulaChange rationale.
                 HostInput (
-                  value:    ( v ) ,
+                  value:    slot: edit-content ,
+                  onChange: emit: onFormulaChange ,
                   onCommit: emit: onEditCommit ,
                   onCancel: emit: onEditCancel
                 )

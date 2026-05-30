@@ -109,8 +109,16 @@ layout Grid {
               state-when-editing:  ( r == editRow && c == editCol )
             ) {
               If ( when: ( r == editRow && c == editCol ) ) {
+                // value: ( slot: edit-content ) reflects the host's
+                // live edit buffer.  Using `( v )` would freeze the
+                // input at the cell's stored value because React's
+                // controlled `<input value={v} />` rejects keystrokes
+                // when there is no onChange.  Pairing edit-content
+                // with onFormulaChange below restores the writable
+                // round-trip the FormulaBar already enjoys.
                 HostInput (
-                  value:    ( v ) ,
+                  value:    slot: edit-content ,
+                  onChange: emit: onFormulaChange ,
                   onCommit: emit: onEditCommit ,
                   onCancel: emit: onEditCancel
                 )

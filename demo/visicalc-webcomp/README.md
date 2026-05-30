@@ -41,12 +41,22 @@ custom element should render.
 
 ## How to view
 
+The page uses an ES module import (`import "./build/FormulaBar.js"`)
+to register the `<mos-formula-bar>` custom element. Browsers
+restrict module loading over `file://` — Safari and Chrome both
+block it. Serve over `http://` instead:
+
 ```
-open demo/visicalc-webcomp/index.html
+cd demo/visicalc-webcomp
+bash scripts/build.sh           # regenerate build/FormulaBar.js
+python3 -m http.server 8765      # any static server works
+open http://127.0.0.1:8765/      # then open the URL in any browser
 ```
 
-(Or just double-click the file in a file browser. Type into the
-formula bar and watch the events stream into the log below.)
+(Type into the formula bar and watch the events stream into the log
+below. If you serve the file via `file://` instead, the grid still
+renders but the formula bar will be missing — the browser silently
+refused to load the module.)
 
 ## Where this fits in the cross-backend demo plan
 
