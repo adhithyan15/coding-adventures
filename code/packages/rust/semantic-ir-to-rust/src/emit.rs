@@ -192,6 +192,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
         }
+        Stmt::TryCatch { span, .. } => {
+            panic!("rust backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -541,6 +544,9 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         }
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend (inline) reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
+        }
+        Stmt::TryCatch { span, .. } => {
+            panic!("rust backend (inline) reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
         }
     }
 }

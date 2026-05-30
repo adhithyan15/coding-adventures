@@ -242,6 +242,23 @@ where
                 walk_intrinsics_in_stmt(s, f, depth + 1);
             }
         }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // Recurse into the try body, each rescue body, and the
+            // optional ensure body (Ruby Phase 16a).
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+            for r in rescues {
+                for s in &r.body {
+                    walk_intrinsics_in_stmt(s, f, depth + 1);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for s in ens {
+                    walk_intrinsics_in_stmt(s, f, depth + 1);
+                }
+            }
+        }
     }
 }
 

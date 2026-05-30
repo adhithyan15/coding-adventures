@@ -409,6 +409,37 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(singleton_mark);
                     i += 1;
                 }
+                Stmt::TryCatch { body, rescues, ensure_body, span } => {
+                    // Structured exception handling (Ruby Phase 16a).
+                    // Mark Feature::Exceptions, then depth-guard and walk
+                    // each block in a fresh local-env scope so block-local
+                    // names don't leak into the surrounding stream.  A
+                    // rescue's exception binding (`=> e`) is in scope for
+                    // that clause's body only.  Exception class names are
+                    // advisory (no symbol table), so they are not resolved.
+                    self.observed.add(Feature::Exceptions);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let body_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(body_mark);
+                    for r in rescues {
+                        let rescue_mark = env.mark();
+                        if let Some(bind) = &r.binding {
+                            env.add_local(bind.clone());
+                        }
+                        self.check_stmt_seq(&r.body, env, depth + 1);
+                        env.rewind(rescue_mark);
+                    }
+                    if let Some(ens) = ensure_body {
+                        let ensure_mark = env.mark();
+                        self.check_stmt_seq(ens, env, depth + 1);
+                        env.rewind(ensure_mark);
+                    }
+                    i += 1;
+                }
             }
         }
     }
@@ -1629,5 +1660,110 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok(), "expected missing-Constants-feature error");
         assert!(r.errors().any(|i| i.message.contains("constants")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 16a — `Stmt::TryCatch` (exception handling).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body is a single `TryCatch`
+    /// (`begin; let _t=1; rescue Foo => e; let _r=e; ensure; let _e=1;
+    /// end`), declaring the given features.  The rescue body references
+    /// the bound exception `e`, exercising the binding's scope.
+    fn module_with_try_catch(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        let lb = |name: &str, value: Expr| Stmt::LetBinding {
+            name: name.into(),
+            sir_type: None,
+            value,
+            span: s(),
+        };
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::TryCatch {
+                    body: vec![lb("_t", Expr::IntLit { value: 1, span: s() })],
+                    rescues: vec![RescueClause {
+                        exception_types: vec!["Foo".into()],
+                        binding: Some("e".into()),
+                        // The rescue body reads the bound `e` — must resolve.
+                        body: vec![lb(
+                            "_r",
+                            Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+                        )],
+                        span: s(),
+                    }],
+                    ensure_body: Some(vec![lb("_e", Expr::IntLit { value: 1, span: s() })]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn try_catch_validates_and_binding_is_in_scope() {
+        // A try/catch validates when the manifest declares `Exceptions`,
+        // and the rescue binding `e` resolves inside the rescue body.
+        let m = module_with_try_catch(&[Feature::Exceptions]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn try_catch_without_manifest_feature_is_error() {
+        // The validator observes `Exceptions` from the TryCatch; if the
+        // manifest doesn't declare it, the used-but-undeclared check fires.
+        let m = module_with_try_catch(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-Exceptions-feature error");
+        assert!(r.errors().any(|i| i.message.contains("exceptions")));
+    }
+
+    #[test]
+    fn try_catch_binding_does_not_leak_past_rescue() {
+        // The rescue binding `e` is scoped to its clause body only — a
+        // reference to `e` in the ensure body is undefined.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Exceptions]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::TryCatch {
+                    body: vec![],
+                    rescues: vec![RescueClause {
+                        exception_types: vec![],
+                        binding: Some("e".into()),
+                        body: vec![],
+                        span: s(),
+                    }],
+                    // ensure references `e` — out of scope → error.
+                    ensure_body: Some(vec![Stmt::LetBinding {
+                        name: "_x".into(),
+                        sir_type: None,
+                        value: Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+                        span: s(),
+                    }]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected `e` out-of-scope error in ensure body");
     }
 }

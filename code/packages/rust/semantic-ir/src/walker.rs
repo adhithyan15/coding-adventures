@@ -143,6 +143,24 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
                 v.visit_stmt(stmt);
             }
         }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // Exception handling (Ruby Phase 16a): recurse into the try
+            // body, each rescue clause's body, and the optional ensure
+            // body, so visitors see every nested statement.
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+            for r in rescues {
+                for stmt in &r.body {
+                    v.visit_stmt(stmt);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for stmt in ens {
+                    v.visit_stmt(stmt);
+                }
+            }
+        }
     }
 }
 

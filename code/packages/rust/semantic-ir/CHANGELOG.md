@@ -2,6 +2,44 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.9.0 — SIR17: structured exception handling (`Stmt::TryCatch`)
+
+Introduced by the Ruby frontend's Phase 16a (`begin/rescue/ensure/end`).
+
+### Added
+
+- `Stmt::TryCatch { body, rescues, ensure_body, span }` — a first-class
+  exception-handling statement that replaces the earlier
+  `__rescue_marker__` / `__ensure_marker__` inline `BuiltinCall`
+  placeholders.  `body` and `ensure_body` are bare statement lists (like
+  `ClassDef.body`); `ensure_body` is `Option`al.
+- `RescueClause { exception_types, binding, body, span }` — one `rescue`
+  clause.  `exception_types` is a list of advisory class names (empty =
+  bare catch-all, not resolved by the validator); `binding` is the
+  optional `=> e` exception variable, in scope as a `Scope::Local`
+  within that clause's `body` only.
+- `Feature::Exceptions` (kebab `exceptions`) — declared by any module
+  containing a `TryCatch`.  Backends that don't accept it reject the
+  module at the capability check before emit.
+
+### Changed
+
+- `Stmt::span()`, the walker, the validator (`check_stmt_seq`), the text
+  printer (`(try-catch … (rescue (types …) (bind …) …) (ensure …))`),
+  `backend::walk_intrinsics_in_stmt`, and all four reference backends'
+  statement-emit match gain a `Stmt::TryCatch` arm.  The validator walks
+  the body, each rescue body (with the binding introduced as a local),
+  and the ensure body in fresh local-env scopes; the backend arms are
+  unreachable `panic!`s (rejected pre-emit by the capability check).
+
+New tests (4): `print_try_catch_with_rescue_and_ensure`,
+`try_catch_validates_and_binding_is_in_scope`,
+`try_catch_without_manifest_feature_is_error`,
+`try_catch_binding_does_not_leak_past_rescue`.  Test count: 102 → 106.
+
+This is a **breaking enum change** for any exhaustive `match` on `Stmt`
+without a `_` rest arm.
+
 ## 0.8.0 — SIR17: constant scope (`Scope::Const`)
 
 Introduced by the Ruby frontend's Phase 15c (`FOO` / `MyClass`).

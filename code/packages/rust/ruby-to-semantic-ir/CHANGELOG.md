@@ -2,6 +2,34 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.49.0] - 2026-05-30
+
+### Changed (Phase 16a (FC) — `begin/rescue/ensure/end` → `Stmt::TryCatch`)
+
+`begin/rescue/ensure/end` now lowers to the first-class
+`Stmt::TryCatch` (semantic-ir 0.9.0) instead of the Phase 6v inline
+`__rescue_marker__` / `__ensure_marker__` placeholder builtins:
+
+- `lower_begin_statement` builds a single `Stmt::TryCatch { body,
+  rescues, ensure_body }`.  The try body and each clause body are lowered
+  with the existing `lower_statement_inner_multi` collector.
+- Each `rescue_clause` becomes a `RescueClause` carrying its exception
+  class names (`Vec<String>`), the optional `=> e` binding, and its body.
+  A bare `rescue` yields an empty `exception_types`.
+- The optional `ensure_clause` becomes `ensure_body: Some(..)`.
+- Emitting a `TryCatch` requests `Feature::Exceptions` (no longer the
+  ad-hoc `Effect::MayThrow`-tagged marker builtins).
+- No grammar change — `begin_statement` already parsed (Phase 6v).
+
+The four pre-existing Phase 6v tests were rewritten from
+marker-assertions to the `TryCatch` contract
+(`begin_without_rescue_lowers_body_inline`,
+`begin_with_rescue_lowers_to_rescue_clause`,
+`begin_with_ensure_lowers_to_ensure_body`,
+`begin_with_rescue_and_ensure_lowers_to_full_trycatch`), plus a new
+validator E2E (`begin_rescue_passes_sir_validator`).  Test count:
+222 → 223 (+1).
+
 ## [0.48.0] - 2026-05-30
 
 ### Added (Phase 15d (FC) — scoped lookup `Foo::Bar`)

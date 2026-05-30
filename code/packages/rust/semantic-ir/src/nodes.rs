@@ -158,6 +158,28 @@ pub struct Block {
     pub span: Span,
 }
 
+/// One `rescue` clause of a [`Stmt::TryCatch`] (SIR17, Ruby Phase 16a).
+///
+/// A `begin … rescue … end` may carry several `rescue` clauses, each
+/// matching a (possibly empty) set of exception classes and optionally
+/// binding the caught exception to a local.
+#[derive(Debug, Clone, PartialEq)]
+pub struct RescueClause {
+    /// Exception class names this clause matches (`rescue Foo, Bar`).
+    /// **Empty** means a bare `rescue` (catch-all).  These are advisory
+    /// names only: SIR v0 has no exception-class symbol table, so the
+    /// validator does not resolve them (mirroring `ClassDef.superclass`).
+    pub exception_types: Vec<String>,
+    /// Optional binding for the caught exception (`rescue … => e`).
+    /// When `Some`, the name is in scope as a `Scope::Local` within
+    /// `body` only.
+    pub binding: Option<String>,
+    /// The clause body, a bare statement list (no trailing value slot,
+    /// like `ClassDef.body`).
+    pub body: Vec<Stmt>,
+    pub span: Span,
+}
+
 /// Statement kinds.
 ///
 /// SIR v0 had only `LetBinding`, `LetStarBinding`, and `ExprStmt`.
@@ -296,6 +318,27 @@ pub enum Stmt {
         body: Vec<Stmt>,
         span: Span,
     },
+
+    // ── SIR17: exception handling ──────────────────────────────────
+    /// `begin; body; rescue …; ensure …; end` — structured exception
+    /// handling.  Introduced by the Ruby frontend's Phase 16a, which
+    /// replaces the earlier `__rescue_marker__` / `__ensure_marker__`
+    /// inline `BuiltinCall` placeholders with this first-class node.
+    ///
+    /// - `body` runs first (a bare statement list, like `ClassDef.body`).
+    /// - `rescues` are tried in order if `body` raises; each
+    ///   [`RescueClause`] matches a set of exception classes and may
+    ///   bind the exception.
+    /// - `ensure_body`, when `Some`, runs unconditionally afterwards.
+    ///
+    /// Gated by `Feature::Exceptions`; backends that don't accept it
+    /// reject the module at the capability check before emit.
+    TryCatch {
+        body: Vec<Stmt>,
+        rescues: Vec<RescueClause>,
+        ensure_body: Option<Vec<Stmt>>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -313,6 +356,7 @@ impl Stmt {
             Stmt::ClassDef { span, .. } => span,
             Stmt::ModuleDef { span, .. } => span,
             Stmt::SingletonClassDef { span, .. } => span,
+            Stmt::TryCatch { span, .. } => span,
         }
     }
 }

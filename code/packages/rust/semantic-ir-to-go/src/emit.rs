@@ -197,6 +197,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::SingletonClassDef { span, .. } => {
             panic!("go backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
         }
+        // SIR17 (exceptions) — `Feature::Exceptions` is not accepted by
+        // this backend, so a try/catch-using module is rejected by the
+        // capability check before emit.  Unreachable.
+        Stmt::TryCatch { span, .. } => {
+            panic!("go backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        }
     }
 }
 

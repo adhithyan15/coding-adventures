@@ -261,6 +261,39 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             }
             out.push(')');
         }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // `(try-catch <body…> (rescue …) … (ensure …))` — exception
+            // handling (Ruby Phase 16a).  Each clause prints on its own
+            // indented line.
+            out.push_str("(try-catch");
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            for r in rescues {
+                let _ = write!(out, "\n{}  (rescue", " ".repeat(indent));
+                if !r.exception_types.is_empty() {
+                    let _ = write!(out, " (types {})", r.exception_types.join(" "));
+                }
+                if let Some(bind) = &r.binding {
+                    let _ = write!(out, " (bind {})", bind);
+                }
+                for inner in &r.body {
+                    let _ = write!(out, "\n{}    ", " ".repeat(indent));
+                    print_stmt(out, inner, indent + 4, depth + 1);
+                }
+                out.push(')');
+            }
+            if let Some(ens) = ensure_body {
+                let _ = write!(out, "\n{}  (ensure", " ".repeat(indent));
+                for inner in ens {
+                    let _ = write!(out, "\n{}    ", " ".repeat(indent));
+                    print_stmt(out, inner, indent + 4, depth + 1);
+                }
+                out.push(')');
+            }
+            out.push(')');
+        }
     }
 }
 
@@ -870,5 +903,43 @@ mod tests {
             "expected `(class-def Foo (< Bar))` in output, got:\n{}",
             out
         );
+    }
+
+    #[test]
+    fn print_try_catch_with_rescue_and_ensure() {
+        // Ruby Phase 16a: `begin … rescue Foo => e … ensure … end` prints
+        // a `(try-catch …)` head with `(rescue (types …) (bind …) …)` and
+        // `(ensure …)` clauses.
+        let s_ = s();
+        let lb = |name: &str| Stmt::LetBinding {
+            name: name.into(),
+            sir_type: None,
+            value: Expr::IntLit { value: 1, span: s_.clone() },
+            span: s_.clone(),
+        };
+        let block = Block {
+            stmts: vec![Stmt::TryCatch {
+                body: vec![lb("x")],
+                rescues: vec![crate::nodes::RescueClause {
+                    exception_types: vec!["StandardError".into()],
+                    binding: Some("e".into()),
+                    body: vec![lb("y")],
+                    span: s_.clone(),
+                }],
+                ensure_body: Some(vec![lb("z")]),
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(out.contains("(try-catch"), "expected try-catch head, got:\n{}", out);
+        assert!(
+            out.contains("(rescue (types StandardError) (bind e)"),
+            "expected rescue clause, got:\n{}",
+            out
+        );
+        assert!(out.contains("(ensure"), "expected ensure clause, got:\n{}", out);
     }
 }
