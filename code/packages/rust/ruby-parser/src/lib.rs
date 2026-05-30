@@ -2440,6 +2440,46 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_begin_multi_type_rescue() {
+        // Phase 16b — `rescue Foo, Bar => e` parses with an
+        // `exception_list` carrying BOTH class Name tokens.
+        let ast = parse_ruby(
+            "begin\n  x = 1\nrescue Foo, Bar => e\n  y = 2\nend",
+        );
+        let rc = find_descendant(&ast, "rescue_clause")
+            .expect("expected rescue_clause");
+        let el = find_descendant(rc, "exception_list")
+            .expect("expected exception_list");
+        assert!(tree_has_token_value(el, "Foo"), "expected `Foo` exception type");
+        assert!(tree_has_token_value(el, "Bar"), "expected `Bar` exception type");
+        assert!(tree_has_token_value(rc, "=>"), "expected `=>` token");
+        assert!(tree_has_token_value(rc, "e"), "expected binding `e`");
+    }
+
+    #[test]
+    fn test_parse_begin_multiple_rescue_clauses() {
+        // Phase 16b — two `rescue` clauses parse as two distinct
+        // `rescue_clause` nodes under the begin_statement.
+        let ast = parse_ruby(concat!(
+            "begin\n",
+            "  x = 1\n",
+            "rescue TypeError => e\n",
+            "  y = 2\n",
+            "rescue NameError => f\n",
+            "  z = 3\n",
+            "end",
+        ));
+        let b = find_descendant(&ast, "begin_statement")
+            .expect("expected begin_statement node");
+        let clause_count = b
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "rescue_clause"))
+            .count();
+        assert_eq!(clause_count, 2, "expected two rescue_clause nodes; got {}", clause_count);
+    }
+
+    #[test]
     fn test_parse_begin_with_ensure() {
         let ast = parse_ruby("begin\n  x = 1\nensure\n  cleanup = 1\nend");
         let b = find_descendant(&ast, "begin_statement")

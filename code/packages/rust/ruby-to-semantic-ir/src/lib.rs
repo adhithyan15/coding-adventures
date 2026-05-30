@@ -3599,6 +3599,73 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 16b (FC) — typed / multi-type / multi-clause rescue.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn rescue_multi_type_lowers_all_exception_types() {
+        // `rescue Foo, Bar => e` → one RescueClause whose exception_types
+        // lists BOTH classes, in source order.
+        let m = lower("begin\n  x = 1\nrescue Foo, Bar => e\n  y = 2\nend\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::TryCatch { rescues, .. } => {
+                assert_eq!(rescues.len(), 1);
+                assert_eq!(
+                    rescues[0].exception_types,
+                    vec!["Foo".to_string(), "Bar".to_string()],
+                    "both exception classes preserved in order"
+                );
+                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn multiple_rescue_clauses_lower_to_separate_clauses() {
+        // Two `rescue` clauses → two RescueClauses, each with its own
+        // exception type and binding, in source order.
+        let m = lower(concat!(
+            "begin\n",
+            "  x = 1\n",
+            "rescue TypeError => e\n",
+            "  y = 2\n",
+            "rescue NameError => f\n",
+            "  z = 3\n",
+            "end\n",
+        ));
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::TryCatch { rescues, .. } => {
+                assert_eq!(rescues.len(), 2, "two rescue clauses");
+                assert_eq!(rescues[0].exception_types, vec!["TypeError".to_string()]);
+                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+                assert_eq!(rescues[1].exception_types, vec!["NameError".to_string()]);
+                assert_eq!(rescues[1].binding.as_deref(), Some("f"));
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn multi_clause_rescue_passes_sir_validator() {
+        // E2E: a begin with two typed rescue clauses (each binding used in
+        // its own body) validates, confirming per-clause binding scope.
+        let m = lower(concat!(
+            "begin\n",
+            "  x = 1\n",
+            "rescue TypeError => e\n",
+            "  y = e\n",
+            "rescue NameError => f\n",
+            "  z = f\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected multi-clause rescue: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6u — `case … when … else … end`
     // -----------------------------------------------------------------
     //
