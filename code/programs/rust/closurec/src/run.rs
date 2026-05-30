@@ -1071,20 +1071,30 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // None arm moves `encoded` into stdout_text; without the
     // pre-capture we'd see a borrow-of-moved error.
     let encoded_byte_len = encoded.len();
-    let mut result = match &config.io.js_output_file {
-        Some(path) => {
-            write_output_file(path, &encoded)?;
-            CompilerOutput {
-                stdout_text: String::new(),
-                stderr_text: String::new(),
-                wrote_files: vec![path.clone()],
+    // CLOC11.76 — when --correlation_vector_summary_only is
+    // set, skip the JS write entirely. The CV log still
+    // accumulates per-file / combined / post-combine
+    // records; we just don't produce any build artifacts.
+    // The js_output_file CV record below is also skipped
+    // (it would describe a write that never happened).
+    let mut result = if config.special_modes.correlation_vector_summary_only {
+        CompilerOutput::default()
+    } else {
+        match &config.io.js_output_file {
+            Some(path) => {
+                write_output_file(path, &encoded)?;
+                CompilerOutput {
+                    stdout_text: String::new(),
+                    stderr_text: String::new(),
+                    wrote_files: vec![path.clone()],
+                }
             }
+            None => CompilerOutput {
+                stdout_text: encoded,
+                stderr_text: String::new(),
+                wrote_files: Vec::new(),
+            },
         }
-        None => CompilerOutput {
-            stdout_text: encoded,
-            stderr_text: String::new(),
-            wrote_files: Vec::new(),
-        },
     };
 
     // Step 5 (CLOC11.42): source map write.
@@ -1095,6 +1105,11 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // entry as parent. Contributes a `wrote` record with the
     // path + byte_len so a CV trace consumer can match an output
     // file back to its substrate.
+    //
+    // CLOC11.76: skip this CV record under summary_only — the
+    // write never happened, so the trace should not pretend
+    // there's a file on disk.
+    if !config.special_modes.correlation_vector_summary_only {
     if let Some(parent_id) = &combined_cv_id {
         if let Some(js_path) = &config.io.js_output_file {
             let mut origin_meta = std::collections::HashMap::new();
@@ -1126,8 +1141,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             );
         }
     }
+    } // end CLOC11.76 summary_only gate around js CV record
 
-    if !config.source_map.path_template.is_empty() {
+    // CLOC11.76: source map write also skipped under
+    // summary_only.
+    if !config.special_modes.correlation_vector_summary_only
+        && !config.source_map.path_template.is_empty() {
         let map_path = std::path::PathBuf::from(&config.source_map.path_template);
         let map_body = crate::source_map::format_minimal_v3(
             config.io.js_output_file.as_deref(),
@@ -1186,6 +1205,8 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     //
     // Empty inputs (banner mode) produce an empty manifest file
     // — still valid, still useful as a "compilation ran" marker.
+    // CLOC11.76: manifest write also skipped under summary_only.
+    if !config.special_modes.correlation_vector_summary_only {
     if let Some(manifest_path) = &config.chunks.output_manifest_file {
         let body = format_manifest(&inputs);
         write_output_file(manifest_path, &body)?;
@@ -1235,6 +1256,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             );
         }
     }
+    } // end CLOC11.76 summary_only gate around manifest write
 
     // Step 7 (CLOC11.60): write the correlation-vector trace as
     // a JSON sidecar file when `--correlation_vector` was set.
@@ -4513,6 +4535,113 @@ mod tests {
             out.stderr_text.is_empty(),
             "expected empty stderr_text by default, got: {:?}",
             out.stderr_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC11.76 — --correlation_vector_summary_only
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_summary_only_skips_js_and_map_and_manifest() {
+        // summary_only=true + format=NONE: no JS file on disk,
+        // no source map file, no manifest file, no CV sidecar.
+        // wrote_files should be empty. Summary still emitted.
+        let dir =
+            std::env::temp_dir().join("closurec_cloc11_76_summary_only");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let map_path = dir.join("out.js.map");
+        let manifest_path = dir.join("manifest.txt");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            source_map: crate::config::SourceMapConfig {
+                path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            chunks: crate::config::ChunksConfig {
+                output_manifest_file: Some(manifest_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                correlation_vector_summary_only: true,
+                correlation_vector_format:
+                    crate::config::CorrelationVectorFormat::None,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok");
+        // No files written anywhere.
+        assert!(
+            !out_path.exists(),
+            "summary_only should skip JS write, found file at {:?}",
+            out_path
+        );
+        assert!(
+            !map_path.exists(),
+            "summary_only should skip source map, found file at {:?}",
+            map_path
+        );
+        assert!(
+            !manifest_path.exists(),
+            "summary_only should skip manifest, found file at {:?}",
+            manifest_path
+        );
+        assert!(
+            out.wrote_files.is_empty(),
+            "summary_only should produce empty wrote_files, got: {:?}",
+            out.wrote_files
+        );
+        // Summary line still appears.
+        assert!(
+            out.stdout_text.contains("cv sidecar:"),
+            "expected summary line under summary_only, got: {:?}",
+            out.stdout_text
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_summary_only_off_writes_outputs_normally() {
+        // Default (summary_only=false): JS file is written
+        // even when summary is on. Tests the
+        // byte-for-byte-unchanged guarantee.
+        let dir = std::env::temp_dir().join("closurec_cloc11_76_only_off");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x = 1;").expect("write");
+        let out_path = dir.join("out.js");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                correlation_vector_summary: true,
+                // correlation_vector_summary_only defaults to false
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        assert!(
+            out_path.exists(),
+            "default summary_only=false should still write JS, got nothing at {:?}",
+            out_path
         );
         let _ = fs::remove_dir_all(&dir);
     }

@@ -643,6 +643,23 @@ pub struct SpecialModesConfig {
     /// behaviour byte-for-byte. Only consulted when
     /// `correlation_vector_summary` is also true.
     pub correlation_vector_summary_stderr: bool,
+    /// CLOC11.76: skip all output writes (JS, source map,
+    /// manifest) and only emit the CV summary. Useful for
+    /// `closurec --print-cv-summary` style invocations that
+    /// just want the trace counts without producing build
+    /// artifacts.
+    ///
+    /// Pairs naturally with
+    /// `--correlation_vector_format NONE` to skip the
+    /// sidecar too — pure analysis mode, no disk writes at
+    /// all. The CV log is still computed in memory (so the
+    /// summary counts are real).
+    ///
+    /// Default `false` preserves normal compile output.
+    /// Independent of `correlation_vector`: if you set this
+    /// without `--correlation_vector`, you get no writes
+    /// and no summary — effectively a no-op pipeline run.
+    pub correlation_vector_summary_only: bool,
 }
 
 /// CLOC11.74 — render style for the `--correlation_vector_summary`

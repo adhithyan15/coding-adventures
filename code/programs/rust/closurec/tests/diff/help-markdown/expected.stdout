@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.38.0
+Version: 0.39.0
 
 ## Flags
 
@@ -405,6 +405,10 @@ Format for the --correlation_vector_summary stdout line. TEXT (default) = the ex
 ### `--correlation_vector_summary_stderr` (boolean, default: false)
 
 Route the --correlation_vector_summary line to stderr instead of stdout. Useful when stdout is the actual JS output (no --js_output_file) and you don't want the summary to corrupt it. Default off preserves the CLOC11.73 stdout-bound behaviour (CLOC11.75).
+
+### `--correlation_vector_summary_only` (boolean, default: false)
+
+Skip all output writes (JS, source map, manifest) and only emit the CV summary. Useful for `closurec --print-cv-summary` style invocations that just want the trace counts. Pair with --correlation_vector_format NONE to skip the sidecar too — pure analysis mode, no disk writes at all. Default off preserves normal compile output (CLOC11.76).
 
 ### `--instrument_for_coverage_option` (enum, default: NONE)
 
