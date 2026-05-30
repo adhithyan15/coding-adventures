@@ -3281,6 +3281,12 @@ impl Lowerer {
         };
 
         let span = self.span_of(node);
+        // Phase 16d (FC) — `raise Foo` / `raise Foo, "msg"` is exception
+        // machinery; a module that uses it requests `Feature::Exceptions`
+        // (aligning the manifest with begin/rescue from Phase 16a).
+        if callee == "raise" {
+            self.features_used.insert(Feature::Exceptions);
+        }
         let head: Expr = if let Some(effects) = ruby_builtin_effects(&callee) {
             Expr::BuiltinCall {
                 name: callee,
@@ -4977,6 +4983,27 @@ impl Lowerer {
                             );
                         }
                         TokenType::Name => {
+                            // Phase 16d (FC) — a bare `raise` (no args:
+                            // re-raise the current exception) lowers to
+                            // the same `BuiltinCall("raise")` as
+                            // `raise Foo` — `MayThrow` + `Divergent` —
+                            // rather than a plain local read, and
+                            // requests `Feature::Exceptions`.  A `raise`
+                            // shadowed by a local binding (`raise = 1`)
+                            // keeps the local.
+                            if tok.value == "raise"
+                                && !self.declared_locals.contains("raise")
+                            {
+                                self.features_used.insert(Feature::Exceptions);
+                                return Ok(Expr::BuiltinCall {
+                                    name: "raise".to_string(),
+                                    args: vec![],
+                                    effects: EffectSet::PURE
+                                        .with(Effect::MayThrow)
+                                        .with(Effect::Divergent),
+                                    span,
+                                });
+                            }
                             // Inside a function body, parameter
                             // names lex as `VarRef` with
                             // `Scope::Param` so the SIR validator

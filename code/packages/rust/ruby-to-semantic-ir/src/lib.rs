@@ -3709,6 +3709,65 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 16d (FC) — `raise` / `raise Foo` / `raise Foo, "msg"`.
+    // -----------------------------------------------------------------
+
+    /// Extract the head `BuiltinCall` from `main`'s trailing block value
+    /// (a lone trailing expression lowers to the block `value`, not a
+    /// statement).
+    fn raise_builtin(m: &semantic_ir::Module) -> (&str, &[Expr], semantic_ir::EffectSet) {
+        match &main_body(m).value {
+            Expr::BuiltinCall { name, args, effects, .. } => {
+                (name.as_str(), args.as_slice(), *effects)
+            }
+            other => panic!("expected BuiltinCall(raise), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn raise_bare_lowers_to_builtin_with_throw_divergent() {
+        // A bare `raise` (re-raise) lowers to `BuiltinCall("raise", [])`
+        // tagged MayThrow + Divergent, and requests `Feature::Exceptions`.
+        let m = lower("raise\n");
+        let (name, args, effects) = raise_builtin(&m);
+        assert_eq!(name, "raise");
+        assert!(args.is_empty(), "bare raise has no args; got {:?}", args);
+        assert!(effects.contains(Effect::MayThrow), "raise is MayThrow");
+        assert!(effects.contains(Effect::Divergent), "raise is Divergent");
+        assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
+    }
+
+    #[test]
+    fn raise_with_class_lowers_to_builtin() {
+        // `raise Foo` → `BuiltinCall("raise", [VarRef(Foo, Const)])`.
+        let m = lower("raise Foo\n");
+        let (name, args, _effects) = raise_builtin(&m);
+        assert_eq!(name, "raise");
+        assert_eq!(args.len(), 1, "one exception-class arg; got {:?}", args);
+        assert!(matches!(&args[0], Expr::VarRef { name, scope, .. } if name == "Foo" && *scope == Scope::Const));
+        assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
+    }
+
+    #[test]
+    fn raise_with_class_and_message_lowers_to_builtin() {
+        // `raise Foo, "boom"` → `BuiltinCall("raise", [Foo, StrLit])`.
+        let m = lower("raise Foo, \"boom\"\n");
+        let (name, args, _effects) = raise_builtin(&m);
+        assert_eq!(name, "raise");
+        assert_eq!(args.len(), 2, "class + message args; got {:?}", args);
+        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "Foo"));
+        assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "boom"));
+    }
+
+    #[test]
+    fn raise_passes_sir_validator() {
+        // E2E: `raise Foo, "boom"` validates end-to-end.
+        let m = lower("raise Foo, \"boom\"\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected raise: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6u — `case … when … else … end`
     // -----------------------------------------------------------------
     //

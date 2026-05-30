@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.52.0] - 2026-05-30
+
+### Added (Phase 16d (FC) — `raise` / `raise Foo` / `raise Foo, "msg"`)
+
+`raise` lowers to `BuiltinCall("raise", args)` tagged `MayThrow` +
+`Divergent` (it is an expression-position construct, so it stays a
+builtin rather than a `Stmt`).  Phase 16d completes and hardens this:
+
+- **Bare `raise`** (re-raise the current exception) previously lowered
+  to a plain `VarRef("raise", Local)` — losing the throw/divergent
+  effects.  It now lowers to `BuiltinCall("raise", [])` in the factor
+  path, unless `raise` is shadowed by a local binding.
+- A `raise`-using module now requests `Feature::Exceptions` (both the
+  bare-`raise` factor path and the `raise Foo` / `raise Foo, "msg"`
+  method-call path), aligning the manifest with begin/rescue (Phase 16a).
+- `raise Foo` / `raise Foo, "msg"` already lowered to
+  `BuiltinCall("raise", [Foo, …])` via the method-call path (unchanged).
+
+New tests (+4): bare-raise → builtin with MayThrow+Divergent+Exceptions;
+`raise Foo` → one Const arg; `raise Foo, "msg"` → class + message args;
+validator E2E.  Test count: 229 → 233 (+4).
+
 ## [0.51.0] - 2026-05-30
 
 ### Added (Phase 16c (FC) — `ensure` clause coverage)
