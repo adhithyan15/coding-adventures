@@ -1,5 +1,64 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.6.0 — 2026-05-30 (NIB06 — source-location threading for debugger)
+
+### Added — Real source positions in `IIRFunction.source_map`
+
+Nib's emitted IIR now carries real `(line, column)` per instruction
+in `IIRFunction.source_map`, in lockstep with `instructions`.
+Previously the field was filled with `SourceLoc::SYNTHETIC` (matching
+the old `vec![SYNTHETIC; instructions.len()]` placeholder).
+
+This is the prerequisite for line-based breakpoints in the future
+`nib-dap` debugger crate.  Without real positions, the debug
+sidecar built by the DAP layer cannot resolve `setBreakpoints
+{ file, lines: [N] }` requests to IIR instructions.
+
+This mirrors the pattern landed for `oct-iir-compiler` 0.4.0
+(OCT05 / PR #4583) and `dartmouth-basic-iir-compiler` 0.4.0
+(BASIC05 / PR #4587).  The Nib compiler was structurally different
+from those two — it threads `out: &mut Vec<IIRInstr>` through every
+helper rather than centralising on a single `emit` site — so we
+introduced an `emit_to(out, instr)` wrapper that every IIR-emitting
+call now funnels through, preserving the lockstep invariant.
+
+### Implementation
+
+- New `node_loc(&GrammarASTNode) -> SourceLoc` helper extracts
+  `(start_line, start_column)` from an AST node, falling back to
+  `SYNTHETIC` when the parser couldn't attach positions.
+- `Compiler` gained two fields: `source_map: Vec<SourceLoc>` (the
+  per-function accumulator) and `current_loc: Cell<SourceLoc>`
+  (the "currently compiling" position).  Manual `impl Default`
+  replaces the `#[derive(Default)]` since the `Cell` initial state
+  benefits from being explicit (SYNTHETIC).
+- New `Compiler::emit_to(&mut self, out, instr)` wrapper that pushes
+  to both the function body and `source_map` simultaneously.  Every
+  IIR-emitting call site in the module (16 of them, spanning
+  `compile_let` / `compile_if` / `compile_while` / `compile_call_expr`
+  / `compile_binary_chain` / `compile_primary` / the trailing
+  defensive `ret_void`) now funnels through this helper.
+- `compile_stmt` calls `set_loc(node_loc(stmt))` on entry — all
+  instructions emitted for that statement (label + body) inherit the
+  statement's source line, including those from compiled
+  sub-expressions.
+- `compile_function` resets `source_map` and sets the initial loc to
+  the fn declaration's own position (so any pre-stmt emissions get a
+  sensible source line rather than SYNTHETIC).
+- `compile_function` ends with the move-with-defensive-padding shape:
+  `iir_fn.source_map = std::mem::take(&mut self.source_map)` after
+  ensuring lockstep — the same shape Oct + BASIC use.
+
+### Tests
+
+- 2 new unit tests:
+  - `source_map_lockstep_with_instructions`: every function's
+    `source_map.len() == instructions.len()`.
+  - `source_map_carries_real_line_numbers`: a 4-line Nib program
+    (fn header, two let stmts, return) produces entries for each
+    non-fn-decl line.
+- All existing lib tests still pass.
+
 ## 0.5.0 — 2026-05-28 (NIB05 — JIT via GenericCirJit)
 
 ### Added — Nib programs JIT-compile via `jit-core::GenericCirJit`
