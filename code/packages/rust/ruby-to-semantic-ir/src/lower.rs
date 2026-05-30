@@ -518,26 +518,28 @@ impl Lowerer {
                 })
             }
             "class_statement" => {
-                // Phase 14a (FC): `class Foo; end` now lowers to
-                // first-class `Stmt::ClassDef { name: "Foo", body:
-                // vec![], span }` — the SIR has a real class node.
+                // Phase 14b (FC): `class Foo … end` lowers to a
+                // first-class `Stmt::ClassDef { name, body, span }`
+                // whose `body` now carries the class's *executable*
+                // statements in source order (Phase 14a always
+                // emitted an empty body).
                 //
-                // For Phase 14a we land *only* the empty-body case
-                // semantically: the SIR's `body: vec![]` is always
-                // empty.  Existing `def_statement`-in-body hoisting
-                // (added in Phase 6f) is preserved as a fallback so
-                // pre-14a Ruby fixtures with non-empty class bodies
-                // still validate: the def names get hoisted to
-                // top-level Functions exactly as before, leaving the
-                // ClassDef itself with an empty body.  Phase 14b
-                // will populate `body` directly and retire the
-                // hoist-as-fallback path.
-                self.collect_def_statements_from_body(node)?;
+                // Method definitions (`def` / endless `def`) inside
+                // the body continue to be hoisted to top-level
+                // `Function`s — SIR v0 has no method-as-statement
+                // node, so a method can't live inside `body`
+                // (a `Vec<Stmt>`).  The hoisting is now done
+                // per-child inside `lower_class_body_statements`
+                // (replacing the whole-body `collect_def_statements_from_body`
+                // pre-pass the 14a arm used), so each nested `def` is
+                // hoisted exactly once and every non-`def` statement
+                // is preserved in `body` instead of being dropped.
                 let name = self.extract_class_name(node)?;
                 self.features_used.insert(Feature::Classes);
+                let body = self.lower_class_body_statements(node)?;
                 Ok(Stmt::ClassDef {
                     name,
-                    body: Vec::new(),
+                    body,
                     span: self.span_of(node),
                 })
             }
@@ -1593,6 +1595,61 @@ impl Lowerer {
             }
         }
         Ok(())
+    }
+
+    /// Phase 14b (FC) — lower a `class_statement` body into the
+    /// `Vec<Stmt>` carried by `Stmt::ClassDef.body`.
+    ///
+    /// Walks the class body's `statement` children once, in source
+    /// order:
+    ///
+    /// - `def_statement` / `endless_def_statement` are **hoisted** to
+    ///   top-level `Function`s on `self.user_functions` (SIR v0 has no
+    ///   method-as-statement node, so a method body can't live inside
+    ///   a `Vec<Stmt>`).  They contribute *nothing* to `body` — the
+    ///   hoisted function is the canonical representation.
+    /// - Every other statement (constant/expression assignments, bare
+    ///   expressions, nested `class` / `module` declarations, loops, …)
+    ///   is lowered via the same [`lower_statement_inner_multi`]
+    ///   dispatch used for the program body and pushed onto `body`,
+    ///   so it is preserved rather than discarded.
+    ///
+    /// Hoisting here is per-direct-child (not the recursive
+    /// whole-body `collect_def_statements_from_body` walk the Phase 14a
+    /// arm used).  A nested `class`/`module` statement is lowered via
+    /// the normal dispatch, whose own arm hoists *its* direct `def`s —
+    /// so every method is hoisted exactly once and no name is
+    /// double-registered (which would trip the validator's function
+    /// name-uniqueness check).
+    fn lower_class_body_statements(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let mut body: Vec<Stmt> = Vec::new();
+        for child in &node.children {
+            let stmt = match child {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
+                _ => continue,
+            };
+            let inner = match self.first_node_child(stmt) {
+                Some(n) => n,
+                None => continue,
+            };
+            match inner.rule_name.as_str() {
+                "def_statement" => {
+                    let func = self.lower_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                "endless_def_statement" => {
+                    let func = self.lower_endless_def_statement(inner)?;
+                    self.user_functions.push(func);
+                }
+                _ => {
+                    body.extend(self.lower_statement_inner_multi(inner)?);
+                }
+            }
+        }
+        Ok(body)
     }
 
     /// Phase 14a (FC) — extract the class name from a `class_statement`

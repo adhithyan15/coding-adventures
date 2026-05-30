@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.39.0] - 2026-05-30
+
+### Added (Phase 14b (FC) — class body with method defs + statements)
+
+No grammar changes — the `class_statement` body
+(`{ !"end" statement }`) already accepts any statement, so a class
+mixing method definitions and executable statements parses without
+a grammar edit.  Phase 14b adds parser coverage pinning the body
+shape the 14b lowerer walks (one `statement` child per source line,
+each wrapping its own inner rule):
+
+- `test_parse_class_body_mixes_def_and_assignment` — `class Foo;
+  MAX = 10; def bar; end; end` parses to a body holding both an
+  `assignment` and a `def_statement`.
+- `test_parse_class_body_multiple_assignments_preserved` — two
+  consecutive constant assignments parse as two distinct body
+  `statement` children, in source order.
+- `test_parse_nested_class_inside_class_body` — a `class` declared
+  inside another class parses as a nested `class_statement` body
+  child (the shape the lowerer recurses through).
+
+A `body_inner_rule_names` test helper collects the inner-rule name
+of each direct body statement (one level deep).
+
+Test count: 158 → 161 (+3).
+
 ## [0.38.0] - 2026-05-29
 
 ### Added (Phase 14a (FC) — empty `class Foo; end` grammar coverage)
