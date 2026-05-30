@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.44.0] - 2026-05-30
+
+### Added (Phase 14e (FC) — singleton class `class << self … end`)
+
+The singleton-class form `class << RECEIVER … end` now lowers to
+`Stmt::SingletonClassDef { target, body, span }` (semantic-ir 0.5.0).
+`target` is the receiver (`"self"` or a bare name).
+
+- The `class_statement` lowering arm dispatches on the presence of a
+  `singleton_receiver` child node: present → `SingletonClassDef`,
+  absent → the ordinary `ClassDef` path (Phase 14b/14c).
+- New `extract_singleton_receiver` helper returns the receiver token's
+  value (or `None` for the ordinary class form).
+- Body handling reuses `lower_decl_body_statements` (shared with
+  class/module): method `def`s hoist to top-level `Function`s; non-`def`
+  statements are preserved in `body`.  Requests `Feature::Classes`.
+
+New tests (+5): `singleton_class_of_self_lowers_to_singleton_class_def`,
+`singleton_class_requests_classes_feature`,
+`singleton_class_hoists_methods_and_keeps_statements`,
+`singleton_class_passes_sir_validator` (E2E lower → validate),
+`ordinary_class_still_lowers_to_class_def_not_singleton` (regression
+guard).  Test count: 201 → 206 (+5).
+
 ## [0.43.0] - 2026-05-30
 
 ### Changed (Phase 14d (FC) — `module M … end` → `Stmt::ModuleDef`)

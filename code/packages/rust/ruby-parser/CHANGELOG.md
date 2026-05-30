@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.42.0] - 2026-05-30
+
+### Added (Phase 14e (FC) — singleton class `class << receiver … end`)
+
+Grammar change: `class_statement` gains a singleton alternative, listed
+first so PEG tries it before the ordinary form:
+
+```
+class_statement   = "class" "<<" singleton_receiver { !"end" statement } "end"
+                  | "class" NAME [ "<" NAME ] { !"end" statement } "end" ;
+singleton_receiver = "self" | NAME ;
+```
+
+`<<` matches the left-shift Op token by value (`class << self` lexes as
+`class`, `<<`, `self` — the space before `self` keeps `<<` a shift
+operator, not a heredoc opener).  `_grammar.rs` regenerated via
+`grammar-tools compile-grammar`.
+
+New parser tests (+3): `test_parse_singleton_class_of_self`,
+`test_parse_singleton_class_body_with_def`,
+`test_parse_ordinary_class_has_no_singleton_receiver` (regression guard
+that the singleton alternative doesn't shadow `class Foo`).  Test
+count: 167 → 170 (+3).
+
 ## [0.41.0] - 2026-05-30
 
 ### Added (Phase 14d (FC) — `module M … end` parser coverage)
