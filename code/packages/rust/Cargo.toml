@@ -664,6 +664,7 @@ members = [
     "lispy-runtime",
     "vm-debug",
     "basic-dap",
+    "nib-dap",
     "twig-vm",
     "twig-to-jvm",
     "twig-to-cil",
