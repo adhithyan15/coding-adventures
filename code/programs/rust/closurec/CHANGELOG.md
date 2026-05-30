@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.36.0] - 2026-05-30
+
+### Added — CLOC11.73: `--correlation_vector_summary` stdout one-liner
+
+Boolean flag. When on, prints a single summary line to stdout (`CompilerOutput.stdout_text`) after the CV sidecar write (or skipped under `--correlation_vector_format NONE`). Lets build pipelines see how many entries / contributions / tombstones the run produced without parsing the JSON itself.
+
+Output format:
+
+```
+cv sidecar: <path>: N entries, M contributions, T tombstones, pass_order=[a,b,c]
+```
+
+When the format is `NONE`:
+
+```
+cv sidecar: skipped (format=NONE): N entries, M contributions, T tombstones, pass_order=[a,b,c]
+```
+
+### Counts are post-filter
+
+`compute_cv_summary` calls the same `prune_entries_by_source` helper the formatters use (with the same `include_origin` and `invert` flags), so the printed counts describe **what's actually on disk** when a filter is in play.
+
+### Composition
+
+- Default off → no change to existing stdout output.
+- Composes orthogonally with every other CV flag — `summary` reads what the formatters wrote, it doesn't second-guess them.
+- Trails the JS / source map / manifest stdout (only fires when CV is on; the line ends in `\n`).
+
+### Implementation
+
+- New private `compute_cv_summary(cv_log, filter, include_origin, invert, wrote_path)` returns the rendered line. Parses `cv_log.to_json_string()` once, applies the filter, counts entries / contributions / tombstones, extracts `pass_order`.
+- `summary_line` helper formats the rendered string; isolated from the count walk so format changes don't bleed into the counting path.
+- `result.stdout_text` is now bound `mut` to allow the summary append.
+
+### Changed
+
+- `SpecialModesConfig` gains `correlation_vector_summary: bool`.
+- `wire::read_special_modes` reads the bool.
+- Versions: `Cargo.toml` `0.35.0` → `0.36.0`, `cli.spec.json` `0.35.0` → `0.36.0`.
+
 ## [0.35.0] - 2026-05-30
 
 ### Added — CLOC11.72: `--correlation_vector_filter_invert`

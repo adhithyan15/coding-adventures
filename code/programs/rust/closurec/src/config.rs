@@ -605,6 +605,18 @@ pub struct SpecialModesConfig {
     /// empty filter is a no-op, so we keep the empty-filter
     /// short-circuit).
     pub correlation_vector_filter_invert: bool,
+    /// CLOC11.73: when true, after the CV sidecar is
+    /// written (or skipped under
+    /// `correlation_vector_format = None`), print a one-line
+    /// summary of the trace to `stdout_text`. Lets a build
+    /// pipeline see how many entries / contributions /
+    /// tombstones the run produced without parsing the JSON
+    /// itself. Counts reflect the post-filter state, so
+    /// the summary describes what was actually written to
+    /// disk.
+    ///
+    /// Only consulted when `correlation_vector` is true.
+    pub correlation_vector_summary: bool,
 }
 
 /// CLOC11.69 — sidecar persistence format. Default is
