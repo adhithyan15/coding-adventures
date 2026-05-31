@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.66.0] - 2026-05-31
+
+### Added (Phase 11b (FC) — `redo` keyword)
+
+New `redo_statement` lowering arm:
+
+```
+redo → ExprStmt(BuiltinCall("redo", [], Divergent))
+```
+
+`redo` lowers to a **zero-argument** Divergent `BuiltinCall` — distinct
+from `break`/`next`, which always carry an operand (`NilLit` when bare).
+It restarts the current loop iteration without re-checking the loop
+condition, so it diverges from straight-line control flow.  No new SIR
+variant: it reuses the existing `BuiltinCall` envelope, so the walker,
+validator, printer, and all four backends handle it generically by name
+(same as `break`/`next`/`yield`/`super`).
+
+New lowering pins (+3): `redo_lowers_to_zero_arg_divergent_builtin`
+(`redo` → `redo`, 0 args, Divergent),
+`redo_inside_while_body_lowers` (`while x; redo; end` — the marker lands
+inside the `Stmt::While` body), `redo_module_passes_sir_validator`
+(validates).  Test count: 274 → 277.
+
 ## [0.65.0] - 2026-05-31
 
 ### Added (Phase 11a (FC) — `break`/`next` WITH VALUES, coverage-confirmation)

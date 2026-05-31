@@ -1339,6 +1339,42 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 11b — `redo` keyword (restart current loop iteration)
+    //
+    // `redo` is a bare control-flow keyword (lexer-tagged KEYWORD) that
+    // never carries a value.  The grammar rule `redo_statement = "redo"`
+    // sits in the `statement` alternation right after `next_statement`.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_redo_bare() {
+        let ast = parse_ruby("redo");
+        assert!(find_statement_inner(&ast, "redo_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_redo_has_no_expression_child() {
+        // `redo` carries no operand — unlike `break`/`next`, its subtree
+        // must contain NO `expression` node.
+        let ast = parse_ruby("redo");
+        let r = find_statement_inner(&ast, "redo_statement")
+            .expect("expected redo_statement");
+        assert!(!r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_redo_inside_while_body() {
+        // `redo` is most idiomatic inside a loop body; confirm it parses
+        // as a statement within a `while … end` block.  Use the recursive
+        // descendant search since the keyword nests below the top level.
+        let ast = parse_ruby("while x\n  redo\nend");
+        assert!(find_descendant(&ast, "redo_statement").is_some());
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6k — unary minus `-5`, `-x`, `-(1+2)`
     // -----------------------------------------------------------------------
 
