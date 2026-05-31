@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.50.0] - 2026-05-30
+
+### Added (Phase 16e (FC) — method-level rescue/ensure)
+
+`def_statement` now accepts trailing `rescue`/`ensure` clauses WITHOUT an
+explicit `begin` — the whole method body is the protected region:
+
+- `def_statement = "def" NAME [ LPAREN [ params ] RPAREN ]
+  { !"rescue" !"ensure" !"end" statement } { rescue_clause }
+  [ ensure_clause ] "end" ;` — the body repetition gains the same
+  `!"rescue" !"ensure"` negative-lookahead as `begin_statement`, then the
+  shared `rescue_clause` / `ensure_clause` rules.
+- Regenerated `_grammar.rs`.
+
+New parse pins (+3): `test_parse_def_with_method_level_rescue`,
+`test_parse_def_with_method_level_ensure`,
+`test_parse_def_with_typed_rescue_and_ensure`.  Test count: 180 → 183.
+
 ## [0.49.0] - 2026-05-30
 
 ### Added (Phase 16d (FC) — `raise` / `raise Foo` / `raise Foo, "msg"`)

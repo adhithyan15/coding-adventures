@@ -239,6 +239,40 @@ mod tests {
         assert!(find_def_statement(&ast).is_some());
     }
 
+    #[test]
+    fn test_parse_def_with_method_level_rescue() {
+        // Phase 16e — a `def` body may carry a trailing `rescue` clause
+        // without an explicit `begin`.
+        let ast = parse_ruby("def f\n  x = 1\nrescue\n  y = 2\nend");
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        assert!(
+            find_descendant(def, "rescue_clause").is_some(),
+            "expected a rescue_clause under the def body"
+        );
+    }
+
+    #[test]
+    fn test_parse_def_with_method_level_ensure() {
+        // Phase 16e — a `def` body may carry a trailing `ensure` clause.
+        let ast = parse_ruby("def f\n  x = 1\nensure\n  y = 2\nend");
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        assert!(
+            find_descendant(def, "ensure_clause").is_some(),
+            "expected an ensure_clause under the def body"
+        );
+    }
+
+    #[test]
+    fn test_parse_def_with_typed_rescue_and_ensure() {
+        // Phase 16e — full form: typed rescue + ensure on a method body.
+        let ast = parse_ruby(
+            "def f\n  x = 1\nrescue IOError => e\n  log = e\nensure\n  done = 1\nend",
+        );
+        let def = find_def_statement(&ast).expect("expected def_statement");
+        assert!(find_descendant(def, "rescue_clause").is_some(), "expected rescue_clause");
+        assert!(find_descendant(def, "ensure_clause").is_some(), "expected ensure_clause");
+    }
+
     // -----------------------------------------------------------------------
     // Phase 6b — `if … else … end` and `unless`
     // -----------------------------------------------------------------------
