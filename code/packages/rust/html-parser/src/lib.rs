@@ -1130,10 +1130,19 @@ pub struct BrowserContentNode {
     pub aria_labelledby: Vec<String>,
     pub aria_describedby: Vec<String>,
     pub aria_controls: Vec<String>,
+    pub aria_owns: Vec<String>,
+    pub aria_activedescendant: Option<String>,
     pub aria_current: Option<String>,
     pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_modal: Option<String>,
     pub aria_pressed: Option<String>,
     pub aria_selected: Option<String>,
+    pub aria_invalid: Option<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_required: Option<String>,
     pub aria_hidden: bool,
     pub hidden: bool,
     pub inert: bool,
@@ -1307,10 +1316,19 @@ pub struct BrowserRenderNode {
     pub aria_labelledby: Vec<String>,
     pub aria_describedby: Vec<String>,
     pub aria_controls: Vec<String>,
+    pub aria_owns: Vec<String>,
+    pub aria_activedescendant: Option<String>,
     pub aria_current: Option<String>,
     pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_modal: Option<String>,
     pub aria_pressed: Option<String>,
     pub aria_selected: Option<String>,
+    pub aria_invalid: Option<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_required: Option<String>,
     pub aria_hidden: bool,
     pub hidden: bool,
     pub inert: bool,
@@ -1518,10 +1536,19 @@ pub struct BrowserInteractiveElement {
     pub aria_labelledby: Vec<String>,
     pub aria_describedby: Vec<String>,
     pub aria_controls: Vec<String>,
+    pub aria_owns: Vec<String>,
+    pub aria_activedescendant: Option<String>,
     pub aria_current: Option<String>,
     pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_modal: Option<String>,
     pub aria_pressed: Option<String>,
     pub aria_selected: Option<String>,
+    pub aria_invalid: Option<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_required: Option<String>,
     pub aria_hidden: bool,
     pub hidden: bool,
     pub inert: bool,
@@ -1825,10 +1852,19 @@ impl BrowserRenderNode {
             aria_labelledby: content_node.aria_labelledby.clone(),
             aria_describedby: content_node.aria_describedby.clone(),
             aria_controls: content_node.aria_controls.clone(),
+            aria_owns: content_node.aria_owns.clone(),
+            aria_activedescendant: content_node.aria_activedescendant.clone(),
             aria_current: content_node.aria_current.clone(),
             aria_expanded: content_node.aria_expanded.clone(),
+            aria_haspopup: content_node.aria_haspopup.clone(),
+            aria_modal: content_node.aria_modal.clone(),
             aria_pressed: content_node.aria_pressed.clone(),
             aria_selected: content_node.aria_selected.clone(),
+            aria_invalid: content_node.aria_invalid.clone(),
+            aria_live: content_node.aria_live.clone(),
+            aria_busy: content_node.aria_busy.clone(),
+            aria_disabled: content_node.aria_disabled.clone(),
+            aria_required: content_node.aria_required.clone(),
             aria_hidden: content_node.aria_hidden,
             hidden: content_node.hidden,
             inert: content_node.inert,
@@ -9478,10 +9514,19 @@ fn browser_interactive_element(
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
         aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_owns: browser_aria_idrefs(element, "aria-owns"),
+        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
         aria_current: browser_aria_state(element, "aria-current"),
         aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_haspopup: browser_aria_state(element, "aria-haspopup"),
+        aria_modal: browser_aria_state(element, "aria-modal"),
         aria_pressed: browser_aria_state(element, "aria-pressed"),
         aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_invalid: browser_aria_state(element, "aria-invalid"),
+        aria_live: browser_aria_state(element, "aria-live"),
+        aria_busy: browser_aria_state(element, "aria-busy"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_required: browser_aria_state(element, "aria-required"),
         aria_hidden: browser_aria_hidden(element),
         hidden: browser_hidden(element),
         inert: browser_inert(element),
@@ -9513,10 +9558,19 @@ fn is_browser_interactive_summary_element(element: &Element, event_handlers: &[S
     !event_handlers.is_empty()
         || element.attribute("role").is_some()
         || element.attribute("aria-controls").is_some()
+        || element.attribute("aria-owns").is_some()
+        || element.attribute("aria-activedescendant").is_some()
         || element.attribute("aria-current").is_some()
         || element.attribute("aria-expanded").is_some()
+        || element.attribute("aria-haspopup").is_some()
+        || element.attribute("aria-modal").is_some()
         || element.attribute("aria-pressed").is_some()
         || element.attribute("aria-selected").is_some()
+        || element.attribute("aria-invalid").is_some()
+        || element.attribute("aria-live").is_some()
+        || element.attribute("aria-busy").is_some()
+        || element.attribute("aria-disabled").is_some()
+        || element.attribute("aria-required").is_some()
         || element.attribute("aria-hidden").is_some()
         || element.attribute("hidden").is_some()
         || element.attribute("inert").is_some()
@@ -9847,10 +9901,19 @@ fn collect_browser_content_nodes_with_mode(
                         aria_labelledby: Vec::new(),
                         aria_describedby: Vec::new(),
                         aria_controls: Vec::new(),
+                        aria_owns: Vec::new(),
+                        aria_activedescendant: None,
                         aria_current: None,
                         aria_expanded: None,
+                        aria_haspopup: None,
+                        aria_modal: None,
                         aria_pressed: None,
                         aria_selected: None,
+                        aria_invalid: None,
+                        aria_live: None,
+                        aria_busy: None,
+                        aria_disabled: None,
+                        aria_required: None,
                         aria_hidden: false,
                         hidden: false,
                         inert: false,
@@ -10104,10 +10167,19 @@ fn browser_content_node_for_element(
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
         aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_owns: browser_aria_idrefs(element, "aria-owns"),
+        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
         aria_current: browser_aria_state(element, "aria-current"),
         aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_haspopup: browser_aria_state(element, "aria-haspopup"),
+        aria_modal: browser_aria_state(element, "aria-modal"),
         aria_pressed: browser_aria_state(element, "aria-pressed"),
         aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_invalid: browser_aria_state(element, "aria-invalid"),
+        aria_live: browser_aria_state(element, "aria-live"),
+        aria_busy: browser_aria_state(element, "aria-busy"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_required: browser_aria_state(element, "aria-required"),
         aria_hidden: browser_aria_hidden(element),
         hidden: browser_hidden(element),
         inert: browser_inert(element),
@@ -11089,6 +11161,13 @@ fn browser_aria_idrefs(element: &Element, name: &str) -> Vec<String> {
         .attribute(name)
         .map(split_html_classes)
         .unwrap_or_default()
+}
+
+fn browser_aria_idref(element: &Element, name: &str) -> Option<String> {
+    element
+        .attribute(name)
+        .map(collapse_html_whitespace)
+        .filter(|id| !id.is_empty())
 }
 
 fn browser_aria_state(element: &Element, name: &str) -> Option<String> {
