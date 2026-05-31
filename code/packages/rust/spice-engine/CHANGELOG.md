@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `fourier_corners`, `fourier_corners_with_start_time`, and
+  `format_corner_fourier_table` for stable tab-separated named-corner `.FOUR`
+  harmonic coefficient, magnitude, phase, DC, and THD text output snapshots.
 - Add `transient_corners`, `transient_corners_with_method`, and
   `format_corner_transient_table` for stable tab-separated named-corner
   transient sample text output snapshots.

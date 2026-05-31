@@ -2177,6 +2177,18 @@ pub struct FourierResult {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct CornerFourierPoint {
+    pub corner_name: String,
+    pub result: FourierResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerFourierResult {
+    pub fundamental_frequency_hz: f64,
+    pub points: Vec<CornerFourierPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DistortionHarmonic {
     pub harmonic: usize,
     pub frequency_hz: f64,
@@ -3196,6 +3208,58 @@ pub fn fourier(
     harmonics: usize,
 ) -> Result<FourierResult, SpiceError> {
     fourier_with_start_time(points, fundamental_frequency_hz, probes, harmonics, None)
+}
+
+pub fn fourier_corners(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    fundamental_frequency_hz: f64,
+    probes: &[&str],
+    harmonics: usize,
+    corners: &[CornerSpec],
+) -> Result<CornerFourierResult, SpiceError> {
+    fourier_corners_with_start_time(
+        circuit,
+        time_step,
+        stop_time,
+        fundamental_frequency_hz,
+        probes,
+        harmonics,
+        corners,
+        None,
+    )
+}
+
+pub fn fourier_corners_with_start_time(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    fundamental_frequency_hz: f64,
+    probes: &[&str],
+    harmonics: usize,
+    corners: &[CornerSpec],
+    start_time: Option<f64>,
+) -> Result<CornerFourierResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        let transient_points = transient(&corner_circuit, time_step, stop_time)?;
+        points.push(CornerFourierPoint {
+            corner_name: corner.name.clone(),
+            result: fourier_with_start_time(
+                &transient_points,
+                fundamental_frequency_hz,
+                probes,
+                harmonics,
+                start_time,
+            )?,
+        });
+    }
+    Ok(CornerFourierResult {
+        fundamental_frequency_hz,
+        points,
+    })
 }
 
 pub fn fourier_with_start_time(
@@ -4252,6 +4316,33 @@ pub fn format_fourier_table(result: &FourierResult) -> String {
                 format_table_number(probe.dc),
                 format_table_number(probe.total_harmonic_distortion)
             ));
+        }
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
+pub fn format_corner_fourier_table(result: &CornerFourierResult) -> String {
+    let mut rows = vec![
+        "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD".to_string(),
+    ];
+    for point in &result.points {
+        for probe in &point.result.probes {
+            for harmonic in &probe.harmonics {
+                rows.push(format!(
+                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    point.corner_name,
+                    probe.probe,
+                    harmonic.harmonic,
+                    format_table_number(harmonic.frequency_hz),
+                    format_table_number(harmonic.cosine),
+                    format_table_number(harmonic.sine),
+                    format_table_number(harmonic.magnitude),
+                    format_table_number(harmonic.phase_degrees),
+                    format_table_number(probe.dc),
+                    format_table_number(probe.total_harmonic_distortion)
+                ));
+            }
         }
     }
     rows.push(String::new());

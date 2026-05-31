@@ -25,7 +25,7 @@ The initial slices implement:
   corner sweeps.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 - Fourier post-processing for transient output, including DC, harmonic
-  magnitude/phase, and THD results.
+  magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,
   including named corner sweeps.
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
@@ -33,7 +33,7 @@ The initial slices implement:
 - Stable text output tables for selected node voltages, branch currents,
   transient samples, cornered transient samples, AC phasors, cornered DC
   operating points, cornered AC phasors, PSS steady-state periods,
-  sensitivity entries, Fourier harmonics,
+  sensitivity entries, Fourier harmonics, cornered Fourier harmonics,
   transfer-function results, cornered transfer-function results, S-parameter
   entries, cornered S-parameter entries, pole-zero entries, noise PSD
   contributions, cornered noise PSD contributions, cornered sensitivity

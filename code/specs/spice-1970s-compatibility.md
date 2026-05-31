@@ -321,6 +321,10 @@ Status:
 - `.FOUR` Fourier results can now be rendered as stable tab-separated text
   tables across Python, TypeScript, and Rust, covering harmonic coefficients,
   magnitude, phase, DC, and THD rows.
+- Named-corner `.FOUR` Fourier results can now be evaluated and rendered as
+  stable tab-separated text tables in the live Rust SPICE package, preserving
+  corner order and covering harmonic coefficients, magnitude, phase, DC, and
+  THD rows.
 - `.TF` transfer-function results can now be rendered as stable tab-separated
   text tables across Python, TypeScript, and Rust, covering gain and
   input/output impedance rows.
