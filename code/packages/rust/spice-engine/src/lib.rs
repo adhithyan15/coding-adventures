@@ -1727,6 +1727,17 @@ pub struct TemperatureDcResult {
     pub points: Vec<TemperatureDcPoint>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerTemperatureDcPoint {
+    pub corner_name: String,
+    pub points: Vec<TemperatureDcPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerTemperatureDcResult {
+    pub points: Vec<CornerTemperatureDcPoint>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct DcOpOptions {
     pub max_iterations: usize,
@@ -3695,6 +3706,52 @@ pub fn format_temperature_dc_table(
     Ok(rows.join("\n"))
 }
 
+pub fn format_corner_temperature_dc_table(
+    result: &CornerTemperatureDcResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .iter()
+            .find_map(|corner| corner.points.first())
+            .map(|point| {
+                default_output_probes(&point.result.node_voltages, &point.result.branch_currents)
+            })
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Corner\tIndex\tTemperatureKelvin\t{}",
+        selected_probes.join("\t")
+    )];
+    for corner in &result.points {
+        for (index, point) in corner.points.iter().enumerate() {
+            let values: Result<Vec<String>, SpiceError> = selected_probes
+                .iter()
+                .map(|probe| {
+                    table_probe_value(
+                        &point.result.node_voltages,
+                        &point.result.branch_currents,
+                        probe,
+                        "format_corner_temperature_dc_table",
+                    )
+                    .map(format_table_number)
+                })
+                .collect();
+            rows.push(format!(
+                "{}\t{index}\t{}\t{}",
+                corner.corner_name,
+                format_table_number(point.temperature_kelvin),
+                values?.join("\t")
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_dc_sweep_table(
     source_name: &str,
     points: &[DcSweepPoint],
@@ -4754,6 +4811,32 @@ pub fn dc_temperature_sweep(
         });
     }
     Ok(TemperatureDcResult { points })
+}
+
+pub fn dc_temperature_sweep_corners(
+    circuit: &Circuit,
+    temperatures_kelvin: &[f64],
+    nominal_temperature_kelvin: f64,
+    silicon_energy_gap_ev: f64,
+    options: DcOpOptions,
+    corners: &[CornerSpec],
+) -> Result<CornerTemperatureDcResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerTemperatureDcPoint {
+            corner_name: corner.name.clone(),
+            points: dc_temperature_sweep(
+                &corner_circuit,
+                temperatures_kelvin,
+                nominal_temperature_kelvin,
+                silicon_energy_gap_ev,
+                options,
+            )?
+            .points,
+        });
+    }
+    Ok(CornerTemperatureDcResult { points })
 }
 
 fn circuit_with_corner(circuit: &Circuit, corner: &CornerSpec) -> Result<Circuit, SpiceError> {

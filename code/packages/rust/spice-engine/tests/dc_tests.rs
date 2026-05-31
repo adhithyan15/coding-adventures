@@ -1,8 +1,9 @@
 use spice_engine::{
     circuit_at_temperature, dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
-    dc_temperature_sweep, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_dc_sweep_table, format_temperature_dc_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
-    Circuit, CornerOverride, CornerSpec, CurrentSource, DcConvergenceAid, DcOpOptions, Diode,
+    dc_temperature_sweep, dc_temperature_sweep_corners, format_corner_dc_sweep_table,
+    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_temperature_dc_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride,
+    CornerSpec, CornerTemperatureDcResult, CurrentSource, DcConvergenceAid, DcOpOptions, Diode,
     Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
     SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs,
     Vcvs, VoltageSource, Waveform, XInstance,
@@ -400,6 +401,48 @@ fn dc_temperature_sweep_text_output_table_is_stable() {
     assert_eq!(
         format_temperature_dc_table(&result, &["V(a)", "I(V1)"]).unwrap(),
         "Index\tTemperatureKelvin\tV(a)\tI(V1)\n0\t2.750000e+02\t4.560039e+00\t-1.023164e-04\n1\t3.001500e+02\t3.613836e+00\t-3.223638e-04\n2\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+    );
+}
+
+#[test]
+fn corner_temperature_dc_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vcc", "0", 5.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbias", "vcc", "a", 4_300.0,
+    )));
+    circuit.add(Element::Diode(Diode::with_model(
+        "D1", "a", "0", 1.0e-15, 0.02585,
+    )));
+
+    let result = dc_temperature_sweep_corners(
+        &circuit,
+        &[275.0, 350.0],
+        300.15,
+        1.11,
+        DcOpOptions::default(),
+        &[
+            CornerSpec::new("nominal", vec![]),
+            CornerSpec::new(
+                "rbias-high",
+                vec![CornerOverride::new("Rbias", "resistance", 8_600.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    let _: CornerTemperatureDcResult = result.clone();
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "rbias-high");
+    assert!(
+        result.points[0].points[0].result.voltage("a").unwrap()
+            > result.points[0].points[1].result.voltage("a").unwrap()
+    );
+    assert_eq!(
+        format_corner_temperature_dc_table(&result, &["V(a)", "I(V1)"]).unwrap(),
+        "Corner\tIndex\tTemperatureKelvin\tV(a)\tI(V1)\nnominal\t0\t2.750000e+02\t4.560039e+00\t-1.023164e-04\nnominal\t1\t3.500000e+02\t6.351989e-01\t-1.015070e-03\nrbias-high\t0\t2.750000e+02\t4.218594e+00\t-9.086118e-05\nrbias-high\t1\t3.500000e+02\t6.144482e-01\t-5.099479e-04\n"
     );
 }
 
