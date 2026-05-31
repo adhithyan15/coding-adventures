@@ -2,6 +2,68 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-31
+
+### Added — CLOC12.05: port subset of upstream `PeepholeMinimizeConditionsTest`
+
+Third port under the CLOC12 byte-identical contract, after
+`closure-pass-constant-fold` (CLOC12.02) and `closure-pass-dce`
+(CLOC12.04). Establishes the `tests/upstream/` layout for
+`closure-pass-fold-control-flow`.
+
+- `tests/upstream/UPSTREAM_SHA` — pins
+  `google/closure-compiler@5bb35ec1245dc1d3557481e5f8b4db344bcd1e6b`.
+- `tests/upstream/ATTRIBUTION.md` — Apache-2.0 attribution per
+  CLOC12.01 §5.
+- `tests/upstream/peephole_minimize_conditions_test.rs` — 14 ported
+  test methods.
+
+### Test breakdown
+
+|     | passing | ignored |
+|-----|---------|---------|
+| CLOC12.05 | **9** | **5** |
+
+**Passing (9):** literal-test if-folds + non-literal `testSame`:
+
+- `test_if_true_folds_to_consequent` — `if (true) x else y` → `x`.
+- `test_if_false_folds_to_alternate` — `if (false) x else y` → `y`.
+- `test_if_false_no_alternate_becomes_empty_statement` — `if (false) x` → `;`.
+- `test_if_numeric_one_folds_to_consequent` — `if (1) x else y` → `x`.
+- `test_if_numeric_zero_folds_to_alternate` — `if (0) x else y` → `y`.
+- `test_if_nonempty_string_folds_to_consequent` — `if ("hi") x else y` → `x`.
+- `test_if_empty_string_folds_to_alternate` — `if ("") x else y` → `y`.
+- `test_if_null_folds_to_alternate` — `if (null) x else y` → `y`. (Also
+  consumes the routing-gap behaviour earmarked as gap-011 in CLOC12.04
+  — `if (null){x=1;}else{x=2;}` → `x=2;`.)
+- `test_if_non_literal_test_left_alone` — `testSame("if (x) C else A")`.
+
+**Ignored (5):** record upstream's broader compaction scope as new
+`gap-NNN` entries:
+
+| Test | Gap | What's needed |
+|------|-----|---------------|
+| `test_fold_one_child_blocks_if_to_logical_and` | gap-016 | `if (x) S` → `x && S` rewrite |
+| `test_fold_one_child_blocks_if_else_to_ternary` | gap-017 | `if (x) C else A` → `x ? C : A` rewrite |
+| `test_fold_conditional_de_morgan` | gap-018 | De Morgan / negation-swap rewrites |
+| `test_fold_returns_into_ternary` | gap-019 | return-then-return through if-else into single ternary-return |
+| `test_minimize_if_with_throw` | gap-020 | `ThrowStatement` not in Phase 1 AST |
+
+### Cross-crate routing wins
+
+The new `test_if_null_folds_to_alternate` passing here demonstrates
+exactly what CLOC12.04's routing gaps (gap-011 / gap-012 / gap-013)
+predicted: upstream's `PeepholeRemoveDeadCodeTest::testIf` line for
+`null` doesn't really test DCE — it tests fold-control-flow. When
+that upstream line gets re-ported into this crate (a future slice),
+gap-011 can move to `RESOLVED via CLOC12.05` because the *behaviour*
+is already covered here.
+
+### Version bump
+
+`0.1.0` → `0.3.0` (CHANGELOG already had a 0.2.0 entry from the
+earlier real-body roll-out).
+
 ## [0.2.0] - 2026-05-24
 
 ### Added — real `Pass::run` body
