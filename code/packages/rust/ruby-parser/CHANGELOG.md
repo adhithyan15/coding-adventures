@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.63.0] - 2026-05-31
+
+### Added (Phase 11b (FC) — `redo` keyword)
+
+New `redo_statement` rule, added to the `statement` alternation right
+after `next_statement`:
+
+```
+redo_statement = "redo" ;
+```
+
+`redo` is a Ruby keyword (lexer-tagged KEYWORD) that restarts the
+current loop iteration WITHOUT re-evaluating the loop condition or
+advancing the iterator.  Unlike `break`/`next`, it never carries a
+value — it is a bare keyword with no optional trailing expression.
+`_grammar.rs` regenerated.
+
+New parse pins (+3): `test_parse_redo_bare` (`redo` → `redo_statement`),
+`test_parse_redo_has_no_expression_child` (no `expression` subnode),
+`test_parse_redo_inside_while_body` (`while x; redo; end` — nests in a
+loop body).  Test count: 220 → 223.
+
 ## [0.62.0] - 2026-05-31
 
 ### Added (Phase 11a (FC) — `break`/`next` WITH VALUES, coverage-confirmation)

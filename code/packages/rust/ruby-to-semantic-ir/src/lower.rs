@@ -917,6 +917,24 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "redo_statement" => {
+                // Phase 11b: `redo` restarts the current loop iteration
+                // without re-checking the condition.  It is a bare
+                // keyword that never carries a value, so it lowers to a
+                // zero-argument Divergent BuiltinCall — distinct from
+                // `break`/`next`, which always carry an operand (NilLit
+                // when bare).  No `expression` child to inspect.
+                let expr = Expr::BuiltinCall {
+                    name: "redo".to_string(),
+                    args: vec![],
+                    effects: EffectSet::PURE.with(Effect::Divergent),
+                    span: self.span_of(node),
+                };
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
                 line: node.start_line.unwrap_or(0),

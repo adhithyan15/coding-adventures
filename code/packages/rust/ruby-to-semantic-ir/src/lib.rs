@@ -1677,6 +1677,53 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 11b — `redo` keyword (restart current loop iteration)
+    //
+    // `redo` lowers to a ZERO-argument Divergent BuiltinCall, distinct
+    // from `break`/`next` (which always carry an operand, NilLit when
+    // bare).  It restarts the current loop iteration without re-checking
+    // the condition, so it diverges from straight-line control flow.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn redo_lowers_to_zero_arg_divergent_builtin() {
+        let m = lower("redo");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "redo");
+                assert!(args.is_empty(), "redo carries no operand, got {:?}", args);
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(redo, [])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn redo_inside_while_body_lowers() {
+        // `redo` nested in a loop body still lowers to its builtin; find
+        // the `Stmt::While` and confirm its body holds BuiltinCall(redo).
+        let m = lower("x = 0\nwhile x\n  redo\nend\n");
+        let b = main_body(&m);
+        let while_body = b.stmts.iter().find_map(|s| match s {
+            Stmt::While { body, .. } => Some(body),
+            _ => None,
+        }).expect("expected a Stmt::While in the module body");
+        let has_redo = while_body.stmts.iter().any(|s| matches!(
+            s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "redo"
+        ));
+        assert!(has_redo, "expected BuiltinCall(redo) in the while body");
+    }
+
+    #[test]
+    fn redo_module_passes_sir_validator() {
+        let m = lower("x = 0\nwhile x\n  redo\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6k — unary minus → BuiltinCall("neg", [x]).
     // -----------------------------------------------------------------
 
