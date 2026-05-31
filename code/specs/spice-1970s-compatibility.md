@@ -402,6 +402,9 @@ Status:
 - DC operating points can now be evaluated and rendered across explicit
   `.temp`-style analysis temperatures in the live Rust SPICE package, covering
   temperature, node-voltage, and branch-current rows with stable ordering.
+- Named-corner DC operating points can now be evaluated and rendered across
+  explicit `.temp`-style analysis temperatures in the live Rust SPICE package,
+  preserving corner order and selected voltage/current probes.
 - `.disto` and `.pz` parser/control-card records plus first distortion and
   pole-zero result shapes are implemented across Python, TypeScript, and Rust,
   with smoke fixtures for nonlinear-device distortion output and a simple RC

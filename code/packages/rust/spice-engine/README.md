@@ -6,7 +6,8 @@ The initial slices implement:
 
 - DC operating-point analysis for linear circuits using modified nodal analysis
   (MNA).
-- DC operating-point sweeps across explicit analysis temperatures.
+- DC operating-point sweeps across explicit analysis temperatures, including
+  named corner sweeps.
 - DC source sweeps over independent voltage and current sources.
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters, including named corner sweeps.
@@ -33,9 +34,9 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents,
-  DC operating-point temperature sweeps, transient samples, adaptive transient
-  samples, cornered transient samples, cornered adaptive transient samples, AC
-  phasors, cornered DC
+  DC operating-point temperature sweeps, cornered DC operating-point
+  temperature sweeps, transient samples, adaptive transient samples, cornered
+  transient samples, cornered adaptive transient samples, AC phasors, cornered DC
   operating points, cornered AC phasors, PSS steady-state periods,
   sensitivity entries, Fourier harmonics, cornered Fourier harmonics,
   transfer-function results, cornered transfer-function results, S-parameter

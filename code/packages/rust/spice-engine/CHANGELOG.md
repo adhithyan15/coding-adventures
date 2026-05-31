@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `dc_temperature_sweep_corners` and
+  `format_corner_temperature_dc_table` for stable tab-separated named-corner
+  DC operating-point snapshots across explicit `.temp`-style analysis
+  temperatures.
 - Add `dc_temperature_sweep` and `format_temperature_dc_table` for stable
   tab-separated DC operating-point snapshots across explicit `.temp`-style
   analysis temperatures.
