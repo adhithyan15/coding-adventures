@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | yield_statement | super_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | super_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -157,6 +157,10 @@ next_statement   = "next"   [ expression ] ;
 # re-evaluating the loop condition or advancing the iterator.  Unlike
 # `break`/`next`, `redo` never carries a value — it is a bare keyword.
 redo_statement   = "redo" ;
+# Phase 11c (FC) — `retry` re-executes the enclosing `begin` block from
+# the top (inside a `rescue` clause).  Like `redo`, it is a bare keyword
+# that never carries a value.
+retry_statement  = "retry" ;
 # Phase 6t — `yield` keyword.  Inside a method body, `yield` invokes
 # the block argument supplied by the caller (if any), forwarding the
 # given arguments to it.  All three surface forms supported:

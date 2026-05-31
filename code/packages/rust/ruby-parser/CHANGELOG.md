@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.64.0] - 2026-05-31
+
+### Added (Phase 11c (FC) — `retry` keyword)
+
+New `retry_statement` rule, added to the `statement` alternation right
+after `redo_statement`:
+
+```
+retry_statement = "retry" ;
+```
+
+`retry` is a Ruby keyword (lexer-tagged KEYWORD) that re-executes the
+enclosing `begin` block from the top, inside a `rescue` clause.  Like
+`redo`, it is a bare keyword that never carries a value.  `_grammar.rs`
+regenerated.
+
+New parse pins (+3): `test_parse_retry_bare` (`retry` → `retry_statement`),
+`test_parse_retry_has_no_expression_child` (no `expression` subnode),
+`test_parse_retry_inside_begin_rescue_body`
+(`begin; x = 1; rescue; retry; end` — nests in a rescue clause).
+Test count: 223 → 226.
+
 ## [0.63.0] - 2026-05-31
 
 ### Added (Phase 11b (FC) — `redo` keyword)
