@@ -694,7 +694,11 @@ struct ExpectedForm {
     #[serde(default)]
     accept_charset: Option<String>,
     #[serde(default)]
+    accept_charset_tokens: Vec<String>,
+    #[serde(default)]
     autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
     #[serde(default)]
     rel: Option<String>,
     #[serde(default)]
@@ -733,6 +737,8 @@ struct ExpectedFormControl {
     #[serde(default)]
     autocomplete: Option<String>,
     #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
     autocapitalize: Option<String>,
     #[serde(default)]
     enterkeyhint: Option<String>,
@@ -740,6 +746,8 @@ struct ExpectedFormControl {
     dirname: Option<String>,
     #[serde(default)]
     accept: Option<String>,
+    #[serde(default)]
+    accept_tokens: Vec<String>,
     #[serde(default)]
     capture: Option<String>,
     #[serde(default)]
@@ -1010,6 +1018,26 @@ fn browser_form_successful_control_metadata_tracks_submission_values() {
     assert_eq!(
         actual.forms, expected.forms,
         "form controls should preserve successful-control and submission value metadata",
+    );
+}
+
+#[test]
+fn browser_form_descriptor_metadata_tracks_accept_and_autocomplete_tokens() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "form metadata should preserve tokenized accept-charset, autocomplete, and file accept descriptors",
     );
 }
 
@@ -1820,7 +1848,9 @@ impl ExpectedForm {
             target: self.target,
             effective_target: self.effective_target,
             accept_charset: self.accept_charset,
+            accept_charset_tokens: self.accept_charset_tokens,
             autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
             rel: self.rel,
             rel_tokens: self.rel_tokens,
             rel_external: self.rel_external,
@@ -1854,10 +1884,12 @@ impl ExpectedFormControl {
             accessible_description: self.accessible_description,
             placeholder: self.placeholder,
             autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
             autocapitalize: self.autocapitalize,
             enterkeyhint: self.enterkeyhint,
             dirname: self.dirname,
             accept: self.accept,
+            accept_tokens: self.accept_tokens,
             capture: self.capture,
             src: self.src,
             resolved_src: self.resolved_src,

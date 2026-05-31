@@ -679,7 +679,9 @@ def check_browser_expected_lists(
         require_optional_nullable_string(form_path, form, "target", errors)
         require_optional_nullable_string(form_path, form, "effective_target", errors)
         require_optional_nullable_string(form_path, form, "accept_charset", errors)
+        require_optional_string_list(form_path, form, "accept_charset_tokens", errors)
         require_optional_nullable_string(form_path, form, "autocomplete", errors)
+        require_optional_string_list(form_path, form, "autocomplete_tokens", errors)
         require_optional_nullable_string(form_path, form, "rel", errors)
         require_optional_string_list(form_path, form, "rel_tokens", errors)
         for field in (
@@ -730,6 +732,8 @@ def check_browser_expected_lists(
             ):
                 require_optional_nullable_string(control_path, control, field, errors)
             require_optional_string_list(control_path, control, "labels", errors)
+            require_optional_string_list(control_path, control, "autocomplete_tokens", errors)
+            require_optional_string_list(control_path, control, "accept_tokens", errors)
             require_optional_string_list(control_path, control, "datalist_options", errors)
             require_optional_string_list(control_path, control, "output_for", errors)
             require_optional_nullable_string(control_path, control, "value", errors)
