@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-constant-fold"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "Constant-folding optimization pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Folds compile-time-evaluable expressions like `2 + 3 → 5`."
 
@@ -13,3 +13,11 @@ serde_json = "1"
 
 [dev-dependencies]
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file
+# needs an explicit `[[test]]` entry pointing at it. Per
+# CLOC12.01 §3.
+[[test]]
+name = "upstream_peephole_fold_constants"
+path = "tests/upstream/peephole_fold_constants_test.rs"
