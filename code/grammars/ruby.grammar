@@ -190,7 +190,21 @@ yield_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
 # accepted but semantically illegal in Ruby; the SIR lowerer accepts
 # the first of each and flags duplicates as a deferred limitation
 # (v0 keeps the grammar permissive and pushes shape validation up).
-params       = param { COMMA param } ;
+# Phase 22c (FC) — argument forwarding `...`.  Ruby 2.7+ lets a method
+# declare `def m(...)` and forward every argument (positional, keyword
+# and block) to an inner call with `n(...)`.  The lexer fuses `...` into
+# a single Name-typed token (value "...", shared with the exclusive
+# range operator — see `fuse_range_ops`).  Because `...` is Name-typed,
+# the `param = [ "*" | "**" ] NAME` branch WOULD greedily match it as a
+# parameter named "..." — so the bare `"..."` alternative is listed
+# FIRST to claim the token as a literal forwarding marker before the
+# `param` branch sees it.  Ordinary signatures (`def m(a, b)`,
+# `def m(*args)`) are unaffected: their first token is never `...`, so
+# the literal alternative fails and the `param` branch runs.  v0 lowering
+# drops the forwarding param (no Param node — `...` is a literal token
+# child, not a `param` node); the call-side `n(...)` marker carries the
+# forwarding semantics.
+params       = "..." | param { COMMA param } ;
 param        = [ "*" | "**" ] NAME ;
 if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
 elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
@@ -355,6 +369,21 @@ scope_resolution = "::" ( NAME | KEYWORD ) ;
 # standalone.  There is no binary `&` rule in the expression hierarchy
 # (the chain is logical_or → logical_and → … → factor with no bitwise
 # layer), so admitting `&` as a call_arg prefix introduces no ambiguity.
+#
+# Phase 22c (FC) — forward-all argument `...`.  `n(...)` forwards every
+# argument received by an enclosing `def m(...)`.  No call_arg grammar
+# change is needed: the lexer fuses `...` into a single Name-typed token
+# (value "..."), and `factor`'s `NAME` alternative already matches it as
+# a bare-name expression — so `n(...)` parses as a call_arg whose
+# expression is the bare name `...`.  A beginless exclusive-range
+# argument (`m(...5)`) instead parses as a `range` (the `... 5` form),
+# keeping the two disjoint at the parse-tree level.  Lowering inspects
+# the lowered operand: a bare `VarRef { name: "..." }` becomes
+# `BuiltinCall("forward_args", [])`; anything else (incl. ranges) is
+# left untouched.  (Putting a literal `"..."` alternative here would be
+# dead — the NAME branch shadows it — and listing it first would break
+# `m(...5)` since the parser does not backtrack across the call_arg
+# boundary once `...` is consumed.)
 call_arg     = [ "*" | "**" | "&" ] expression ;
 # Phase 6h — paren-less method call.  Idiomatic Ruby allows
 # `puts 1, 2` (no parens) when the call has at least one argument.

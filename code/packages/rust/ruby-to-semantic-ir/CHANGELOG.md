@@ -2,6 +2,37 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.63.0] - 2026-05-31
+
+### Added (Phase 22c (FC) — `...` argument forwarding)
+
+`lower_call_arg` now rewrites a bare-name `...` operand into the nullary
+marker `BuiltinCall("forward_args", [])`.  Because the lexer fuses `...`
+into a single Name-typed token, `n(...)` parses with the bare name `...`
+in the call_arg's expression slot, which lowers to `VarRef { name: "..."
+}`; the new check (on the no-prefix path only) detects that exact name
+and substitutes the marker.  `...` is not a legal Ruby identifier, so a
+bare `VarRef("...")` can only have come from forwarding — the rewrite is
+unambiguous.  A beginless-range argument `m(...5)` lowers to a `range`
+builtin (the `...` is the operator, not a bare name) and is left
+untouched.  No new SIR variant.
+
+`def m(...)` lowers to a function with **zero** params (v0 lossy: the
+bare `...` is a literal token in `params`, not a `param` node, so the
+param collector emits nothing); the call-side `forward_args` marker
+carries the forwarding semantics.
+
+New lowering pins (+3):
+- `forward_args_call_arg_lowers_to_forward_args_builtin` (`f(...)`) —
+  node shape: `BuiltinCall("forward_args", [])` (no operand).
+- `forward_all_def_and_call_passes_sir_validator`
+  (`def m(...) ; puts(...) ; end`) — round-trip lowers, `m` has 0 params,
+  and the module passes `semantic_ir::validate` (`puts` intrinsic).
+- `beginless_range_arg_does_not_lower_to_forward_args` (`m(...5)`) —
+  regression: lowers to `BuiltinCall("range", …)`, not `forward_args`.
+
+Test count: 264 → 267.
+
 ## [0.62.0] - 2026-05-31
 
 ### Added (Phase 22b (FC) — `&blk` block-pass call argument)

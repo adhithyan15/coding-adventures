@@ -2635,6 +2635,72 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_forward_all_call_arg() {
+        // Phase 22c — `n(...)`: forward-all argument.  The bare `...`
+        // matches the new `"..."` alternative of `call_arg` (the
+        // expression branch fails because `...` cannot complete a
+        // beginless range with no operand before `)`).  Confirms one
+        // call_arg carrying the `...` token.
+        let ast = parse_ruby("n(...)");
+        let call = find_descendant(&ast, "method_call").expect("expected method_call");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 1, "expected exactly 1 call_arg, got {arg_count}");
+        let call_arg = find_descendant(&ast, "call_arg").expect("expected call_arg");
+        assert!(tree_has_token_value(call_arg, "..."), "expected `...` forward token");
+    }
+
+    #[test]
+    fn test_parse_forward_all_param() {
+        // Phase 22c — `def m(...)`: forward-all parameter declaration.
+        // The bare `...` matches the new whole-`params` alternative.
+        let ast = parse_ruby("def m(...)\n  puts(1)\nend");
+        let params = find_descendant(&ast, "params").expect("expected params");
+        assert!(tree_has_token_value(params, "..."), "expected `...` in params");
+        // No `param` subnode is produced for the bare forward form.
+        let param_count = params
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "param"))
+            .count();
+        assert_eq!(param_count, 0, "bare `...` params must have 0 `param` nodes");
+    }
+
+    #[test]
+    fn test_parse_forward_all_roundtrip() {
+        // Phase 22c — the canonical forwarding shape:
+        //   def m(...)
+        //     n(...)
+        //   end
+        // Both the param decl and the inner forwarding call must parse.
+        let ast = parse_ruby("def m(...)\n  n(...)\nend");
+        let params = find_descendant(&ast, "params").expect("expected params");
+        assert!(tree_has_token_value(params, "..."), "expected `...` in params");
+        let call = find_descendant(&ast, "method_call").expect("expected inner method_call");
+        let call_arg = find_descendant(call, "call_arg").expect("expected forwarding call_arg");
+        assert!(tree_has_token_value(call_arg, "..."), "expected `...` in inner call");
+    }
+
+    #[test]
+    fn test_parse_beginless_range_arg_still_parses() {
+        // Phase 22c regression — `m(...5)`: a beginless EXCLUSIVE-range
+        // argument must STILL parse as a range (not as forward-all),
+        // because the prefixed-expression branch is tried first and the
+        // `...5` completes a `range`.  The `...` token lives nested in
+        // the call_arg's expression subtree, and a `range` node exists.
+        let ast = parse_ruby("m(...5)");
+        let call_arg = find_descendant(&ast, "call_arg").expect("expected call_arg");
+        assert!(
+            find_descendant(call_arg, "range").is_some(),
+            "expected a range node for the beginless-range argument"
+        );
+        assert!(tree_has_token_value(call_arg, "5"), "expected range endpoint `5`");
+    }
+
+    #[test]
     fn test_parse_binary_star_still_parses_as_expression() {
         // Regression: `a * b` as a statement must still parse as a
         // bare expression-stmt with binary `*`, NOT as `a(splat b)`.
