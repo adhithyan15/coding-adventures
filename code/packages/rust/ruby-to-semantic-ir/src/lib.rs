@@ -2390,6 +2390,68 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 19b (FC) — regex flags `/r/i` coverage confirmation.
+    //
+    // Phase 19a already carries the flag letters in `args[1]` of the
+    // `regex` builtin, so flags are a coverage-confirmation phase (cf.
+    // 16b/16c): these pins exercise MULTI-flag combinations (the 19a
+    // tests only covered a single `i`) and confirm the flag string is
+    // preserved verbatim and in order.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn regex_literal_multi_flag_preserves_all_flags() {
+        // `x = /foo/im` — two flags; both letters preserved in order.
+        let m = lower("x = /foo/im\n");
+        let value = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        }).expect("expected a binding for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"));
+                assert!(
+                    matches!(&args[1], Expr::StrLit { value, .. } if value == "im"),
+                    "expected flags StrLit \"im\" (order preserved); got {:?}", &args[1]
+                );
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn regex_literal_all_common_flags_lower() {
+        // `x = /a/mix` — the three common Ruby regex flags together.
+        // Order is preserved exactly as written.
+        let m = lower("x = /a/mix\n");
+        let value = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        }).expect("expected a binding for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "mix"));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn regex_literal_multi_flag_validates_e2e() {
+        // `def r() (/x/im) end` — multi-flag regex survives validation.
+        let m = lower("def r\n  (/x/im)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "im"));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected multi-flag regex: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //

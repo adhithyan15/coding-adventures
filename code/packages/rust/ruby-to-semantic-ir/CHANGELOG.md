@@ -2,6 +2,21 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.58.0] - 2026-05-31
+
+### Added (Phase 19b (FC) — regex flags `/r/i` coverage confirmation)
+
+No lowering change.  The `regex` builtin's `args[1]` already carries the
+flag letters verbatim (Phase 19a), so 19b is a coverage-confirmation
+phase (cf. 16b/16c) exercising MULTI-flag combinations the 19a tests
+didn't (single `i` only).
+
+New tests (+3): `regex_literal_multi_flag_preserves_all_flags`
+(`/foo/im` → flags `"im"`, order preserved),
+`regex_literal_all_common_flags_lower` (`/a/mix` → `"mix"`),
+`regex_literal_multi_flag_validates_e2e` (`(/x/im)` + validator E2E).
+Test count: 249 → 252.
+
 ## [0.57.0] - 2026-05-31
 
 ### Added (Phase 19a (FC) — regex literal `/pattern/flags`)

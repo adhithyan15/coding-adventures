@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.55.0] - 2026-05-31
+
+### Added (Phase 19b (FC) — regex flags `/r/i` coverage confirmation)
+
+No grammar change.  Regex flags already ride along in the verbatim
+`/pattern/flags` lexeme (Phase 19a), so 19b is a coverage-confirmation
+phase (cf. 16b/16c) pinning MULTI-flag lexemes (the 19a tests only
+covered a single `i`).
+
+New parse pins (+3): `test_parse_regex_literal_multi_flag` (`/foo/im`),
+`test_parse_regex_literal_three_flags` (`/a/mix`),
+`test_parse_regex_literal_multi_flag_in_call_argument` (`foo(/bar/im)`).
+Test count: 195 → 198.
+
 ## [0.54.0] - 2026-05-31
 
 ### Added (Phase 19a (FC) — regex literal `/pattern/flags`)
