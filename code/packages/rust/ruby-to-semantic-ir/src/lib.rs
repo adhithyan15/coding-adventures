@@ -4765,6 +4765,69 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 22d — `super` keyword lowering
+    //
+    //   super        → ExprStmt(BuiltinCall("zsuper", []))   (forward ALL)
+    //   super()      → ExprStmt(BuiltinCall("super",  []))   (forward NONE)
+    //   super(1, 2)  → ExprStmt(BuiltinCall("super",  [IntLit(1), IntLit(2)]))
+    //
+    // The bare-vs-`super()` split is keyed on the presence of a
+    // `super_args` node; `zsuper` and `super` are distinct builtin names.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn bare_super_lowers_to_zsuper_builtin() {
+        let m = lower("super\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "zsuper", "bare super must lower to zsuper");
+                assert!(args.is_empty(), "zsuper carries no operands");
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(zsuper, [])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn super_empty_parens_lowers_to_super_builtin_no_args() {
+        // `super()` is semantically distinct from bare `super`: it
+        // forwards NO arguments.  Name is "super" (not "zsuper") with an
+        // empty arg list.
+        let m = lower("super()\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "super", "super() must lower to `super`, not `zsuper`");
+                assert!(args.is_empty(), "super() forwards zero args");
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(super, [])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn super_with_args_lowers_and_passes_validator() {
+        // `super(1, 2)` → BuiltinCall("super", [IntLit(1), IntLit(2)]),
+        // and the module validates (args are recursively well-formed).
+        let m = lower("super(1, 2)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected super with args: {:?}",
+            result
+        );
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "super");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(super, [1, 2])), got {:?}", other),
+        }
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6y — string interpolation lowering
     //
     // Output shapes covered:

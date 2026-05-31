@@ -841,6 +841,56 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "super_statement" => {
+                // Phase 22d — `super` keyword.
+                //
+                // Grammar shape:
+                //   super_statement = "super" [ super_args ] ;
+                //   super_args      = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+                //                   | call_arg { COMMA call_arg } ;
+                //
+                // Two distinct lowerings keyed on whether a `super_args`
+                // node is PRESENT:
+                //   - absent  → bare `super` ("zsuper") forwards ALL of
+                //     the enclosing method's arguments implicitly, so it
+                //     carries no operands: `BuiltinCall("zsuper", [])`.
+                //   - present → explicit arg list (`super()`, `super(x)`,
+                //     `super x`): `BuiltinCall("super", lowered_args)`,
+                //     where `super()` lowers to zero args (forwards
+                //     nothing) — distinct from bare zsuper.
+                //
+                // Effects: PURE, matching `yield` — `super` dispatches to
+                // a parent method whose own effects are accounted for at
+                // its definition/call site; modelling the marker as PURE
+                // keeps the effect lattice from double-counting.
+                let super_args_node = self.find_node_child(node, "super_args");
+                let (name, args): (&str, Vec<Expr>) = if let Some(sa) = super_args_node {
+                    let call_arg_nodes: Vec<&GrammarASTNode> = sa
+                        .children
+                        .iter()
+                        .filter_map(|c| match c {
+                            ASTNodeOrToken::Node(n) if n.rule_name == "call_arg" => Some(n),
+                            _ => None,
+                        })
+                        .collect();
+                    let lowered: Vec<Expr> = call_arg_nodes
+                        .into_iter()
+                        .map(|n| self.lower_call_arg(n))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    ("super", lowered)
+                } else {
+                    ("zsuper", Vec::new())
+                };
+                Ok(Stmt::ExprStmt {
+                    expr: Expr::BuiltinCall {
+                        name: name.to_string(),
+                        args,
+                        effects: EffectSet::PURE,
+                        span: self.span_of(node),
+                    },
+                    span: self.span_of(node),
+                })
+            }
             "return_statement" | "break_statement" | "next_statement" => {
                 // Phase 6j: control-flow keywords lower to BuiltinCall
                 // with Effect::Divergent.  Optional trailing expression
