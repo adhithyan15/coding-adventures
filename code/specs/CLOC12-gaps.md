@@ -66,19 +66,17 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-007 — `NullLiteral OP NullLiteral` fold not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.03 (PR pending)
 - **Upstream test:** `PeepholeFoldConstantsTest::testNullComparison1` (`null OP null` self-relation lines)
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** `try_fold_binary_op` has dedicated branches for `NumericLiteral`/`NumericLiteral`, `StringLiteral`/`StringLiteral`, `BooleanLiteral`/`BooleanLiteral`, but no branch for `NullLiteral`/`NullLiteral`. The binary node falls through and is returned unchanged.
-- **What it needs:** A small `NullLiteral`/`NullLiteral` branch returning `Boolean(true)` for `==`/`===`/`<=`/`>=` and `Boolean(false)` for `!=`/`!==`/`<`/`>`. Roughly 10 lines in `try_fold_binary_op`.
+- **Resolution:** Added a `NullLiteral`/`NullLiteral` branch in `try_fold_binary_op` returning `Boolean(true)` for `==`/`===`/`<=`/`>=` and `Boolean(false)` for `!=`/`!==`/`<`/`>`. Relational ops follow ECMAScript §IsLessThan with `ToNumber(null) = 0`.
 
 ### gap-008 — cross-type strict equality fold (`Number === String → false`)
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.03 (PR pending)
 - **Upstream test:** `PeepholeFoldConstantsTest::testNumberStringComparison` (`===`/`!==` lines)
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** Strict equality between two literals of *different* JS types is `false` by definition (and `!==` is `true`). The current pass only fires same-type branches, so `1 === '1'` falls through and is returned unchanged.
-- **What it needs:** A pre-branch in `try_fold_binary_op` that, when both sides are literals of different JS types *and* the operator is `===`/`!==`, returns `Boolean(false)`/`Boolean(true)`. Roughly 15 lines, fully self-contained.
+- **Resolution:** Added a strict-equality-cross-type branch in `try_fold_binary_op` that fires after the same-type branches. Uses a new internal helper `js_literal_type` to tag each Phase 1 primitive literal with a discriminator (`"number"`/`"string"`/`"boolean"`/`"null"`); when both sides are tagged and tags differ, `===` → `false`, `!==` → `true`. Loose `==` is still untouched (gap-003/gap-004).
 
 ### gap-006 — unary plus / minus on identifiers, plus identifier-arithmetic shape
 

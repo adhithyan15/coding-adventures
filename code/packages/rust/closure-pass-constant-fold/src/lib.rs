@@ -523,7 +523,92 @@ fn try_fold_binary_op(
         };
     }
 
+    // Null/null comparisons (closes CLOC12 gap-007).
+    //
+    // JS-spec behavior at compile time when both sides are
+    // `null` literals:
+    //
+    //     null == null        → true     (same primitive value)
+    //     null === null       → true     (same type + value)
+    //     null != null        → false
+    //     null !== null       → false
+    //     null <  null        → false    (both coerce to 0, 0 < 0 is false)
+    //     null >  null        → false    (0 > 0 is false)
+    //     null <= null        → true     (0 <= 0 is true)
+    //     null >= null        → true     (0 >= 0 is true)
+    //
+    // Relational operators on `null` go through the abstract
+    // relational comparison algorithm in the ECMAScript spec
+    // (§IsLessThan), which calls ToPrimitive then ToNumber. For
+    // `null`, ToNumber(null) is `0`. So `null < null` reduces to
+    // `0 < 0` which is `false`, and the symmetric cases follow.
+    if let (Expression::NullLiteral(_), Expression::NullLiteral(_)) = (left, right) {
+        return match op {
+            Eq | StrictEq => Some(FoldedLiteral::Boolean(true)),
+            NotEq | StrictNotEq => Some(FoldedLiteral::Boolean(false)),
+            Lt => Some(FoldedLiteral::Boolean(false)),
+            Gt => Some(FoldedLiteral::Boolean(false)),
+            LtEq => Some(FoldedLiteral::Boolean(true)),
+            GtEq => Some(FoldedLiteral::Boolean(true)),
+            _ => None,
+        };
+    }
+
+    // Cross-type strict equality (closes CLOC12 gap-008).
+    //
+    // Per ECMAScript §IsStrictlyEqual, `===` between two values
+    // of different *types* is always `false` (and `!==` is
+    // always `true`) regardless of values:
+    //
+    //     1 === "1"            → false
+    //     1 !== "1"            → true
+    //     true === 1           → false
+    //     null === undefined   → false       (different types — see also gap-001)
+    //
+    // We don't *touch* loose `==` here — that goes through the
+    // abstract-equality algorithm with coercion, which is
+    // gap-003 / gap-004. Strict equality is the easy case: just
+    // check whether the two literals are of different JS types.
+    //
+    // Why this runs after the same-type branches: those branches
+    // already handle `1 === 1`, `"a" === "a"`, `true === true`,
+    // `null === null`. By the time we get here, we know at least
+    // one side is not a literal we recognise *or* the two sides
+    // are of different JS literal types. We only want to fire
+    // when both are literals of *known but different* JS types.
+    if matches!(op, StrictEq | StrictNotEq) {
+        if let (Some(lt), Some(rt)) = (js_literal_type(left), js_literal_type(right)) {
+            if lt != rt {
+                return match op {
+                    StrictEq => Some(FoldedLiteral::Boolean(false)),
+                    StrictNotEq => Some(FoldedLiteral::Boolean(true)),
+                    _ => unreachable!(),
+                };
+            }
+        }
+    }
+
     None
+}
+
+/// Tag the JS type of a literal expression for the cross-type
+/// strict-equality fold (gap-008). Returns `None` for anything
+/// that isn't a Phase 1 primitive literal — identifiers, calls,
+/// member expressions, etc. — so the caller leaves them alone.
+///
+/// The string tags here are *internal* to this module; they're
+/// not the result of `typeof` (which has its own quirks like
+/// `typeof null === "object"`). For the strict-equality fold,
+/// what matters is that two different literal kinds get
+/// different tags, so the equality of the tags drives the fold.
+fn js_literal_type(expr: &Expression) -> Option<&'static str> {
+    match expr {
+        Expression::NumericLiteral(_) => Some("number"),
+        Expression::StringLiteral(_) => Some("string"),
+        Expression::BooleanLiteral(_) => Some("boolean"),
+        Expression::NullLiteral(_) => Some("null"),
+        _ => None,
+    }
 }
 
 /// Best-effort static string rendering of a literal expression. Used
