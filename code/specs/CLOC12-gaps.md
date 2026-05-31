@@ -104,11 +104,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-011 — `if`-with-constant-test collapse lives in `fold-control-flow`, not DCE
 
-- **Status:** ROUTING (not a missing feature)
+- **Status:** RESOLVED in CLOC12.06 — behaviour covered via CLOC12.05 (PR #4672)
 - **Upstream test:** `PeepholeRemoveDeadCodeTest::testIf`, `testHook` (`if`/ternary constant-test lines)
-- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
-- **Why it fails:** Upstream `PeepholeRemoveDeadCode` covers these but our setup splits the responsibility — `closure-pass-fold-control-flow` already does `if (1) {a;} else {b;}` → `a`. Those upstream lines should land in `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs` when CLOC12.05 ports it.
-- **What it needs:** A re-port into `closure-pass-fold-control-flow/tests/upstream/`. Mark this entry RESOLVED when that port lands and confirms the behaviour passes.
+- **Ported file (original site):** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Where the behaviour actually lives now:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs` — `test_if_true_folds_to_consequent`, `test_if_false_folds_to_alternate`, `test_if_false_no_alternate_becomes_empty_statement`, `test_if_numeric_one_folds_to_consequent`, `test_if_numeric_zero_folds_to_alternate`, `test_if_nonempty_string_folds_to_consequent`, `test_if_empty_string_folds_to_alternate`, `test_if_null_folds_to_alternate` (the last one is the exact line upstream `testIf` has for `if(null){…}else{…}` → alternate).
+- **Resolution note:** The DCE-side test stub (`test_if_with_constant_test_collapse`) was changed from `#[ignore]` to a tiny non-ignored marker that documents the cross-crate routing for future readers. Behavioural coverage stays in fold-control-flow where it belongs.
 
 ### gap-012 — `ConditionalExpression` cleanup lives in `constant-fold`, not DCE
 

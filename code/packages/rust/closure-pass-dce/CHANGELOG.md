@@ -2,6 +2,44 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-31
+
+### Changed — CLOC12.06: gap-011 marked RESOLVED via cross-crate routing
+
+Bookkeeping PR. The `test_if_with_constant_test_collapse` stub in
+`tests/upstream/peephole_remove_dead_code_test.rs` was previously
+`#[ignore]`-ed with `gap-011`, on the rationale that upstream
+`PeepholeRemoveDeadCodeTest::testIf` lines like `if (1){…}` →
+consequent really belong in `closure-pass-fold-control-flow`'s
+territory in our setup.
+
+CLOC12.05 (PR #4672) ported the matching upstream behaviour into
+`closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
+as `test_if_true_folds_to_consequent`, `test_if_false_folds_to_alternate`,
+`test_if_null_folds_to_alternate`, etc. — all passing. The
+behaviour is covered in the right crate.
+
+This PR closes the loop:
+
+- The DCE-side stub no longer carries `#[ignore]`. It now passes as
+  a marker test whose body documents where the actual behavioural
+  coverage lives. This keeps the cross-crate audit trail explicit
+  for future readers searching upstream's `testIf` method name.
+- `code/specs/CLOC12-gaps.md` marks gap-011 `RESOLVED in CLOC12.06`
+  with the full list of fold-control-flow ports that cover the
+  behaviour.
+
+### Port score (this crate)
+
+|             | passing | ignored |
+|-------------|---------|---------|
+| CLOC12.04   | 5       | 7       |
+| **CLOC12.06** | **6** | **6**   |
+
+### Version
+
+`0.3.0` → `0.4.0`.
+
 ## [0.3.0] - 2026-05-31
 
 ### Added — CLOC12.04: port subset of upstream `PeepholeRemoveDeadCodeTest`
