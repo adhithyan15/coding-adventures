@@ -808,6 +808,10 @@ struct ExpectedFormControl {
     readonly: bool,
     #[serde(default)]
     will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
     checked: bool,
     #[serde(default)]
     multiple: bool,
@@ -978,6 +982,26 @@ fn browser_form_validation_metadata_tracks_constraint_candidates() {
         actual.forms,
         case.expected.into_browser_document().forms,
         "form controls should preserve validation candidate metadata",
+    );
+}
+
+#[test]
+fn browser_form_validation_descriptor_metadata_tracks_constraint_attributes_and_barred_reasons() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "form controls should preserve validation attributes and barred validation reasons",
     );
 }
 
@@ -1921,6 +1945,8 @@ impl ExpectedFormControl {
             required: self.required,
             readonly: self.readonly,
             will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
             checked: self.checked,
             multiple: self.multiple,
             selected_options: self.selected_options,

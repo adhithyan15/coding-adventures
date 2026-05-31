@@ -1662,6 +1662,8 @@ pub struct BrowserFormControl {
     pub required: bool,
     pub readonly: bool,
     pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
     pub checked: bool,
     pub multiple: bool,
     pub selected_options: Vec<String>,
@@ -11865,6 +11867,48 @@ fn browser_control_will_validate(control_type: &str, element: &Element, disabled
     }
 }
 
+fn browser_control_validation_attributes(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "required",
+        "readonly",
+        "pattern",
+        "min",
+        "max",
+        "step",
+        "minlength",
+        "maxlength",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_control_validation_barred_reason(
+    control_type: &str,
+    element: &Element,
+    disabled: bool,
+) -> Option<String> {
+    if disabled {
+        return Some("disabled".to_string());
+    }
+    if browser_readonly(element) {
+        return Some("readonly".to_string());
+    }
+    match element.name.as_str() {
+        "button" if control_type != "submit" => Some(format!("button-type-{control_type}")),
+        "input" if matches!(control_type, "hidden" | "reset" | "button" | "image") => {
+            Some(format!("input-type-{control_type}"))
+        }
+        "button" => None,
+        "input" | "select" | "textarea" => None,
+        "output" => Some("output".to_string()),
+        _ => Some("not-a-form-control".to_string()),
+    }
+}
+
 fn browser_control_successful(control_type: &str, element: &Element, disabled: bool) -> bool {
     if disabled || element.attribute("name").map_or(true, str::is_empty) {
         return false;
@@ -12640,6 +12684,9 @@ fn browser_form_control(
     let will_validate = browser_control_will_validate(&control_type, element, disabled);
     let successful = browser_control_successful(&control_type, element, disabled);
     let submission_values = browser_control_submission_values(&control_type, element, successful);
+    let validation_attributes = browser_control_validation_attributes(element);
+    let validation_barred_reason =
+        browser_control_validation_barred_reason(&control_type, element, disabled);
     let control_labels = browser_control_labels(element, labels, current_label_text);
     let text = match element.name.as_str() {
         "button" | "output" | "select" => visible_text_for_nodes(&element.children),
@@ -12706,6 +12753,8 @@ fn browser_form_control(
         required: browser_required(element),
         readonly: browser_readonly(element),
         will_validate,
+        validation_attributes,
+        validation_barred_reason,
         checked: element.attribute("checked").is_some(),
         multiple: browser_multiple(element),
         selected_options: browser_control_selected_options(element),
@@ -14038,10 +14087,23 @@ mod tests {
         assert!(controls[0].autofocus);
         assert!(controls[0].required);
         assert!(controls[0].will_validate);
+        assert_eq!(
+            controls[0].validation_attributes,
+            vec!["required", "pattern", "minlength", "maxlength"]
+        );
+        assert_eq!(controls[0].validation_barred_reason, None);
         assert!(controls[0].successful);
         assert_eq!(controls[0].submission_values, vec![""]);
         assert!(controls[1].readonly);
         assert!(!controls[1].will_validate);
+        assert_eq!(
+            controls[1].validation_attributes,
+            vec!["readonly", "maxlength"]
+        );
+        assert_eq!(
+            controls[1].validation_barred_reason.as_deref(),
+            Some("readonly")
+        );
         assert!(controls[1].successful);
         assert_eq!(controls[1].submission_values, vec!["Keep me"]);
         assert_eq!(controls[1].autocapitalize.as_deref(), Some("sentences"));
@@ -14053,6 +14115,10 @@ mod tests {
         assert!(controls[2].disabled);
         assert!(controls[2].checked);
         assert!(!controls[2].will_validate);
+        assert_eq!(
+            controls[2].validation_barred_reason.as_deref(),
+            Some("disabled")
+        );
         assert!(!controls[2].successful);
         assert!(controls[2].submission_values.is_empty());
         assert!(controls[3].multiple);
@@ -14101,6 +14167,10 @@ mod tests {
         assert_eq!(controls[6].width.as_deref(), Some("32"));
         assert_eq!(controls[6].height.as_deref(), Some("16"));
         assert!(!controls[6].will_validate);
+        assert_eq!(
+            controls[6].validation_barred_reason.as_deref(),
+            Some("input-type-image")
+        );
         assert!(!controls[6].successful);
         assert_eq!(controls[7].control_type, "output");
         assert_eq!(controls[7].name.as_deref(), Some("total"));
@@ -14108,6 +14178,10 @@ mod tests {
         assert_eq!(controls[7].value.as_deref(), Some("Ready"));
         assert_eq!(controls[7].text, "Ready");
         assert!(!controls[7].will_validate);
+        assert_eq!(
+            controls[7].validation_barred_reason.as_deref(),
+            Some("output")
+        );
         assert!(!controls[7].successful);
         assert_eq!(controls[8].id.as_deref(), Some("external"));
         assert_eq!(controls[8].name.as_deref(), Some("outside"));
