@@ -173,13 +173,11 @@ fn test_undefined_comparison_2() {
 /// (Subset of the full `testNullComparison1`. Lines that mention
 /// `undefined`, `void 0`, `NaN`, `Infinity` are deferred to gap-001.)
 ///
-/// **Why this is currently `#[ignore]`-ed:** the pass's
-/// `try_fold_binary_op` has dedicated branches for
-/// `NumericLiteral`/`NumericLiteral`, `StringLiteral`/`StringLiteral`,
-/// `BooleanLiteral`/`BooleanLiteral` comparisons, but no branch for
-/// `NullLiteral`/`NullLiteral`. Trivial to add — see gap-007.
+/// **gap-007 closed in CLOC12.03** — `try_fold_binary_op` now has a
+/// `NullLiteral`/`NullLiteral` branch that returns the JS-spec value
+/// for each operator (`==`/`===`/`<=`/`>=` → `true`, the rest →
+/// `false`).
 #[test]
-#[ignore = "blocked on gap-007: NullLiteral OP NullLiteral fold not implemented"]
 fn test_null_comparison_1_self_relations() {
     assert_fold(b(null_(), BinaryOperator::Eq, null_()), bool_(true));
     assert_fold(b(null_(), BinaryOperator::StrictEq, null_()), bool_(true));
@@ -278,14 +276,12 @@ fn test_number_string_comparison_literal_lines() {
 ///   test("1 !== '1'", "true");
 ///
 /// These hold by JS-spec (strict equality requires same JS type; a
-/// Number and a String can never `===`). Our pass *could* fold these
-/// trivially but currently falls through `try_fold_binary_op`'s
-/// per-type branches — none of them match a mixed
-/// `NumericLiteral`/`StringLiteral` pair, so the binary node is
-/// returned untouched. Filed as gap-008; orthogonal to gap-004 (which
-/// is about *loose* equality and abstract relational comparison).
+/// Number and a String can never `===`). **gap-008 closed in
+/// CLOC12.03** — `try_fold_binary_op` now has a cross-type
+/// strict-equality branch that fires when both sides are literals of
+/// different JS types. Stays orthogonal to gap-004 (which is about
+/// loose equality + abstract relational comparison).
 #[test]
-#[ignore = "blocked on gap-008: cross-type strict equality fold (Number === String → false) not implemented"]
 fn test_number_string_strict_equality_lines() {
     assert_fold(b(n(1.0), BinaryOperator::StrictEq, s("1")), bool_(false));
     assert_fold(

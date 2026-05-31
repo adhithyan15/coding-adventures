@@ -2,6 +2,83 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.4.0] - 2026-05-31
+
+### Added — CLOC12.03: close gap-007 and gap-008
+
+Two small fold-pass body extensions in `try_fold_binary_op`, each
+~15 lines, sitting after the existing per-type branches:
+
+**gap-007 — `NullLiteral OP NullLiteral`.** New branch returns the
+JS-spec result for every comparison operator on two `null` literals:
+
+```text
+null ==  null   →  true
+null === null   →  true
+null !=  null   →  false
+null !== null   →  false
+null <   null   →  false   (both coerce to 0; 0 < 0 is false)
+null >   null   →  false
+null <=  null   →  true
+null >=  null   →  true
+```
+
+Relational operators run through ECMAScript §IsLessThan, which
+calls ToNumber on each side. `ToNumber(null)` is `0`, so the four
+relational cases reduce to `0 OP 0`.
+
+**gap-008 — cross-type strict equality.** New branch handles
+`StrictEq`/`StrictNotEq` when both operands are literals of
+*different* JS types. Per ECMAScript §IsStrictlyEqual, `===` is
+`false` for any pair of values with different types, and `!==` is
+`true`. So:
+
+```text
+1 === "1"          →  false
+1 !== "1"          →  true
+true === 1         →  false
+true !== 1         →  true
+null === 0         →  false
+"a" === true       →  false
+```
+
+This branch fires *after* the same-type branches (numeric/numeric,
+string/string, boolean/boolean, null/null), so the only cases left
+to handle are literals of recognised-but-different JS types. Loose
+`==` is still left alone — that goes through the abstract-equality
+algorithm and stays gated by gap-003 / gap-004.
+
+A new internal helper `js_literal_type(&Expression) → Option<&'static str>`
+tags each Phase 1 primitive literal with a string discriminator
+(`"number"`, `"string"`, `"boolean"`, `"null"`). The tags are
+internal — they're not the result of the JS `typeof` operator
+(which has its own quirks like `typeof null === "object"`) — but
+they're sufficient to decide whether two literals have the same JS
+type for the strict-equality fold.
+
+### Test impact
+
+`tests/upstream/peephole_fold_constants_test.rs`:
+
+- `test_null_comparison_1_self_relations` was `#[ignore]`-ed in
+  CLOC12.02 with `gap-007` — now passes.
+- `test_number_string_strict_equality_lines` was `#[ignore]`-ed in
+  CLOC12.02 with `gap-008` — now passes.
+
+Total port score:
+
+|             | passing | ignored |
+|-------------|---------|---------|
+| CLOC12.02   | 5       | 7       |
+| **CLOC12.03** | **7** | **5**   |
+
+`code/specs/CLOC12-gaps.md` updated: `gap-007` and `gap-008` marked
+`RESOLVED-in-#NNNN` (PR number filled in once we know it).
+
+### Version bump
+
+`0.3.0` → `0.4.0`.
+
 ## [0.3.0] - 2026-05-31
 
 ### Added — CLOC12.02: first port of upstream `PeepholeFoldConstantsTest`
