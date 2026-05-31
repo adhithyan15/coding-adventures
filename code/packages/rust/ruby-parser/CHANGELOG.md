@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.53.0] - 2026-05-31
+
+### Added (Phase 10d (FC) — beginless range `..5` / `...5`)
+
+The `range` rule gained a FIRST alternative that leads with the op,
+enabling beginless ranges (an end with no start):
+
+- `range = ( "..." | ".." ) logical_or
+          | logical_or [ ( "..." | ".." ) [ logical_or ] ] ;` — the two
+  alternatives are disjoint on their first token (`..`/`...` vs a
+  `logical_or`), so there is no ambiguity and no backtracking hazard.
+  The beginless alt requires a trailing operand (the end).
+- Regenerated `_grammar.rs`.
+
+New parse pins (+3): `test_parse_beginless_range_inclusive` (`x = ..5`),
+`test_parse_beginless_range_exclusive` (`(...5)`),
+`test_parse_beginless_range_parenthesized` (`(..5)`).  (A bare leading
+`..` at statement start is a separate dispatch quirk — like the
+bare-NAME quirk — so the pins use expression positions.)  Test count:
+189 → 192.
+
 ## [0.52.0] - 2026-05-31
 
 ### Added (Phase 10c (FC) — endless range `1..` / `1...`)

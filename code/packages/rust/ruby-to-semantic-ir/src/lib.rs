@@ -2244,6 +2244,81 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 10d (FC) — beginless range `..5` / `...5` lowering.
+    //
+    // A beginless range carries an end but no start.  It lowers to the
+    // same `range` builtin with the open LOWER bound encoded as
+    // `NilLit`: `BuiltinCall("range", [NilLit, end, BoolLit(excl)])`.
+    // Endless (`1..`) and beginless (`..5`) have identical arity (one
+    // operand + op); the lowerer disambiguates by the op token's
+    // position relative to the operand.  Here we pin that a leading op
+    // produces a NIL START (args[0]) with the operand as the end.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn beginless_range_inclusive_lowers_with_nil_start() {
+        // `def r() (..5) end` — beginless inclusive.  Parens keep the
+        // body off the bare-NAME method-call path (lessons.md).
+        let m = lower("def r\n  (..5)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert_eq!(args.len(), 3, "expected [nil_start, end, exclusive_flag]");
+                assert!(
+                    matches!(&args[0], Expr::NilLit { .. }),
+                    "beginless range start should be NilLit; got {:?}",
+                    &args[0]
+                );
+                assert!(matches!(&args[1], Expr::IntLit { value: 5, .. }));
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: false, .. }),
+                    "inclusive `..` should set the exclusive flag false; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn beginless_range_exclusive_lowers_with_nil_start() {
+        // `def r() (...5) end` — beginless exclusive sets the flag true.
+        let m = lower("def r\n  (...5)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert_eq!(args.len(), 3);
+                assert!(matches!(&args[0], Expr::NilLit { .. }), "start should be nil");
+                assert!(matches!(&args[1], Expr::IntLit { value: 5, .. }));
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: true, .. }),
+                    "exclusive `...` should set the flag true; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn beginless_range_over_param_validates_e2e() {
+        // `def r(b) (..b) end` — beginless range whose end is a param
+        // (in scope, so the VarRef survives validation).  End-to-end pin:
+        // nil start, VarRef end, and the module passes validation.
+        let m = lower("def r(b)\n  (..b)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert!(matches!(&args[0], Expr::NilLit { .. }));
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected beginless range: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //

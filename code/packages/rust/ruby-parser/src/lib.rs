@@ -1744,6 +1744,65 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 10d (FC) — beginless range `..5` / `...5`.
+    //
+    // The `range` rule gained a FIRST alternative leading with the op:
+    //   range = ( "..." | ".." ) logical_or | logical_or [ … ] ;
+    // so a leading `..`/`...` followed by an operand parses to a `range`
+    // node carrying the op token and exactly ONE `logical_or` operand —
+    // same shape (count-wise) as an endless range, but the op token comes
+    // BEFORE the operand instead of after.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_beginless_range_inclusive() {
+        // `x = ..5` — beginless inclusive as an assignment RHS.  A bare
+        // leading `..` at statement start is a separate dispatch quirk
+        // (like the bare-NAME quirk); routing through an expression
+        // position (assignment RHS, parens, array) parses cleanly.
+        let ast = parse_ruby("x = ..5");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token in the beginless range"
+        );
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 1, "beginless range should carry exactly 1 operand");
+    }
+
+    #[test]
+    fn test_parse_beginless_range_exclusive() {
+        // `(...5)` — beginless exclusive carries the `...` token.
+        let ast = parse_ruby("(...5)");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, "..."),
+            "expected `...` token in the beginless exclusive range"
+        );
+    }
+
+    #[test]
+    fn test_parse_beginless_range_parenthesized() {
+        // `(..5)` — parenthesized beginless range.
+        let ast = parse_ruby("(..5)");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token in the parenthesized beginless range"
+        );
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 1, "beginless range should carry exactly 1 operand");
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //
