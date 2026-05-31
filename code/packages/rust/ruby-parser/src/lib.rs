@@ -1918,6 +1918,44 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 19d (FC) — `%r{...}` regex literal.  The lexer emits the whole
+    // literal as one `String` token carrying the verbatim `%r{...}` source
+    // (the `%r` + braces preserved) — the `%`-family sentinel-by-prefix
+    // trick.  No grammar change.  These pins confirm the verbatim `%r{}`
+    // lexeme survives into the parse tree.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_percent_r_regex_literal() {
+        // `x = %r{hello}` — `%r{...}` regex as an assignment RHS.
+        let ast = parse_ruby("x = %r{hello}");
+        assert!(
+            tree_has_token_value(&ast, "%r{hello}"),
+            "expected verbatim `%r{{hello}}` regex token in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_percent_r_regex_empty() {
+        // `x = %r{}` — empty `%r{}` regex.
+        let ast = parse_ruby("x = %r{}");
+        assert!(
+            tree_has_token_value(&ast, "%r{}"),
+            "expected verbatim `%r{{}}` regex token"
+        );
+    }
+
+    #[test]
+    fn test_parse_percent_r_regex_in_call_argument() {
+        // `foo(%r{bar})` — `%r{...}` regex as a method-call argument.
+        let ast = parse_ruby("foo(%r{bar})");
+        assert!(
+            tree_has_token_value(&ast, "%r{bar}"),
+            "expected verbatim `%r{{bar}}` regex token in the call argument"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //

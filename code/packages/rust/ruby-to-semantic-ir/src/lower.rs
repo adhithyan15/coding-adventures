@@ -370,6 +370,51 @@ fn regex_pattern_flags(value: &str) -> Option<(&str, &str)> {
     }
 }
 
+/// The closing delimiter that pairs with a `%r` opening delimiter.
+/// Bracket pairs mirror (`{`→`}`, `[`→`]`, `(`→`)`, `<`→`>`); any other
+/// delimiter (`!`, `|`, `#`, …) is its own close.
+fn percent_literal_close(open: char) -> char {
+    match open {
+        '{' => '}',
+        '[' => ']',
+        '(' => ')',
+        '<' => '>',
+        c => c,
+    }
+}
+
+/// Phase 19d (FC) — if `value` is a `%r`-delimited regex lexeme
+/// (`%r{pat}flags`, `%r(pat)`, `%r!pat!i`, …), split it into
+/// `(pattern, flags)`; otherwise `None`.
+///
+/// The lexer's `percent_r_body` state emits the literal as a
+/// `TokenType::String` token whose value is the verbatim source WITH the
+/// `%r`, the opening/closing delimiters, and any trailing flags — the
+/// same lexeme-prefix sentinel trick `%w`/`%q`/`%i` use.  We drop the
+/// `%r`, read the opening delimiter (the next char), find the matching
+/// closing delimiter (the LAST occurrence — v0 does not track nested
+/// brackets, matching the other percent literals' stance), take the
+/// body in between as the pattern, and the remainder as the flags.  The
+/// flags must be valid Ruby regex flag letters (`imxounes`); anything
+/// else means this isn't a regex (kept `None` defensively).
+fn percent_r_pattern_flags(value: &str) -> Option<(&str, &str)> {
+    let rest = value.strip_prefix("%r")?;
+    let open = rest.chars().next()?;
+    let close = percent_literal_close(open);
+    let after_open = &rest[open.len_utf8()..];
+    let close_idx = after_open.rfind(close)?;
+    let pattern = &after_open[..close_idx];
+    let flags = &after_open[close_idx + close.len_utf8()..];
+    if flags
+        .chars()
+        .all(|c| matches!(c, 'i' | 'm' | 'x' | 'o' | 'u' | 'n' | 'e' | 's'))
+    {
+        Some((pattern, flags))
+    } else {
+        None
+    }
+}
+
 /// Phase 15a (FC) — is this Name-token value a Ruby *instance
 /// variable* (`@x`)?  Instance vars lex as a `Name` token carrying the
 /// leading sigil.  A single `@` marks an instance variable; a double
@@ -5160,6 +5205,20 @@ impl Lowerer {
                                     &tok.value,
                                     span,
                                 ));
+                            }
+                            // Phase 19d (FC) — `%r{...}` regex literal
+                            // dispatch.  The lexer emits `%r{pat}flags` as
+                            // a `String` token carrying the verbatim source
+                            // (the `%r`, delimiters, and flags all present).
+                            // We split it and reuse `lower_regex_literal`,
+                            // so interpolation inside `%r{...}` is handled
+                            // for free by the shared pattern splitter.
+                            if let Some((pattern, flags)) = percent_r_pattern_flags(&tok.value) {
+                                let (pattern, flags) =
+                                    (pattern.to_string(), flags.to_string());
+                                return self.lower_regex_literal(
+                                    &pattern, &flags, span, tok.line, tok.column,
+                                );
                             }
                             // Phase 19a (FC) — regex literal dispatch.  The
                             // lexer's `regex_body` machine emits `/p/flags`

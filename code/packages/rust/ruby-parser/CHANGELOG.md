@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.57.0] - 2026-05-31
+
+### Added (Phase 19d (FC) — `%r{...}` regex literal)
+
+No grammar change.  The lexer's `percent_r_body` state emits the whole
+`%r{...}` literal as a single `TokenType::String` token carrying the
+verbatim source (the `%r` + braces preserved) — the `%`-family
+sentinel-by-prefix trick `%w`/`%q`/`%i` use.  The parser routes it
+through the ordinary string-literal slot.
+
+New parse pins (+3): `test_parse_percent_r_regex_literal` (`%r{hello}`),
+`test_parse_percent_r_regex_empty` (`%r{}`),
+`test_parse_percent_r_regex_in_call_argument` (`foo(%r{bar})`).  Test
+count: 201 → 204.
+
 ## [0.56.0] - 2026-05-31
 
 ### Added (Phase 19c (FC) — regex interpolation `/a#{b}c/`)

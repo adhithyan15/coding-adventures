@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.60.0] - 2026-05-31
+
+### Added (Phase 19d (FC) — `%r{...}` regex literal)
+
+`lower_factor_atom` gained a `%r{...}` dispatch (placed before the
+`/.../` check).  The new free helper `percent_r_pattern_flags` strips
+the `%r`, reads the opening delimiter, finds the matching closing
+delimiter (the last occurrence — v0 does not track nested brackets,
+matching the other percent literals), and splits the body into
+`(pattern, flags)` (flags validated as Ruby regex flag letters).  It
+then reuses `lower_regex_literal`, so a `%r{...}` produces the SAME
+`BuiltinCall("regex", [pattern, StrLit(flags)])` shape as `/.../` — and
+gets the pattern interpolation splitter for free.  No new SIR variant or
+backend dispatch.
+
+(v0 lexer note: `%r` uses `{}` as the canonical delimiter and does not
+slurp trailing flags; the helper is written generally — bracket pairs
+`{}`/`[]`/`()`/`<>` and symmetric delimiters, plus trailing flags — so
+it already covers the broader forms a future lexer pass may emit.)
+
+New tests (+3): `percent_r_regex_lowers_to_regex_builtin` (`%r{hello}`),
+`percent_r_regex_empty_pattern_lowers` (`%r{}`),
+`percent_r_regex_validates_e2e` (`%r{x}` + validator E2E).  Test count:
+255 → 258.
+
 ## [0.59.0] - 2026-05-31
 
 ### Added (Phase 19c (FC) — regex interpolation `/a#{b}c/`)
