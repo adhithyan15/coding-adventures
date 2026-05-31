@@ -85,3 +85,59 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
 - **Why it fails:** Upstream's `testSame("+x > +y")` asserts the pass leaves the expression alone (`x` is unknown). Our pass already does the right thing structurally; this gap is mostly the bookkeeping of porting the remaining `testSame` lines that use unary-plus on identifiers.
 - **What it needs:** Trivial — extend the ported tests once `gap-005` lands so the batch reflects the full upstream method.
+
+### gap-009 — `LabeledStatement` / `BreakStatement` not modelled in Phase 1 AST
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testRemoveNoOpLabelledStatement`, `testRemoveUselessLabelWithFollowingBreak`
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** The Phase 1 typed AST in `javascript-ast` doesn't include `LabeledStatement` or `BreakStatement` variants. Upstream's `a: break a;` requires both.
+- **What it needs:** Add Phase 1.x variants. `LabeledStatement { label: Identifier, body: Statement }` and `BreakStatement { label: Option<Identifier> }`. Then teach DCE that `a: break a;` collapses to empty. Probably a CLOC09 Phase 1.x amendment + a small DCE rule.
+
+### gap-010 — block-flattening (single-child block collapse) not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testFoldBlock` (block-flattening lines)
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** Upstream collapses `{{foo();}}` to `foo();`, `{foo();{}}` to `foo();`, etc. We don't flatten nested blocks — DCE's responsibility is dead-after-terminator and empty-statement removal, not structural simplification.
+- **What it needs:** Either extend DCE with a "block-with-single-statement → that statement" rule, or stand up a dedicated normaliser pass. Probably belongs in DCE for simplicity (~30 lines).
+
+### gap-011 — `if`-with-constant-test collapse lives in `fold-control-flow`, not DCE
+
+- **Status:** ROUTING (not a missing feature)
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testIf`, `testHook` (`if`/ternary constant-test lines)
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** Upstream `PeepholeRemoveDeadCode` covers these but our setup splits the responsibility — `closure-pass-fold-control-flow` already does `if (1) {a;} else {b;}` → `a`. Those upstream lines should land in `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs` when CLOC12.05 ports it.
+- **What it needs:** A re-port into `closure-pass-fold-control-flow/tests/upstream/`. Mark this entry RESOLVED when that port lands and confirms the behaviour passes.
+
+### gap-012 — `ConditionalExpression` cleanup lives in `constant-fold`, not DCE
+
+- **Status:** ROUTING (not a missing feature)
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testHook` (`a ? b : c` cleanup)
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** Belongs in `closure-pass-constant-fold`. Some of these are already covered by the constant-fold inline tests; the rest will get ported when CLOC12.0N expands the `PeepholeFoldConstantsTest` coverage.
+- **What it needs:** Re-port into `closure-pass-constant-fold/tests/upstream/`.
+
+### gap-013 — useless-loop-body folding not in DCE
+
+- **Status:** ROUTING (not a missing feature)
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testFoldUselessFor`, `testFoldUselessDo`, `testFoldEmptyDo`, `testMinimizeLoop_*`
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** `while(x()){x}` → `while(x());` and friends belong in `closure-pass-fold-control-flow`.
+- **What it needs:** Re-port into `closure-pass-fold-control-flow/tests/upstream/` once that crate's port file lands.
+
+### gap-014 — `SwitchStatement` not in Phase 1 AST
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testOptimizeSwitch*` (a dozen tests)
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** No `SwitchStatement`, `SwitchCase`, `BreakStatement` in the Phase 1 typed AST.
+- **What it needs:** Phase 1.x AST extension to model `switch (x) { case 1: ...; default: ...; }`, plus the switch-optimisation logic. Substantial — multiple PRs.
+
+### gap-015 — `var` / `let` / `const` lifting and hoisting
+
+- **Status:** ROUTING + missing feature
+- **Upstream test:** `PeepholeRemoveDeadCodeTest::testVarLifting`, `testLetConstLifting*`
+- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
+- **Why it fails:** Requires scope analysis to know what's reachable. Our DCE doesn't do scope analysis; that's the territory of `closure-pass-remove-unused-vars` and an eventual hoisting pass.
+- **What it needs:** A dedicated hoisting / unused-vars cleanup pass. Likely lands as new content in `closure-pass-remove-unused-vars` rather than here.

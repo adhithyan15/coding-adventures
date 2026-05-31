@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-dce"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Dead-code elimination pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Drops code after definite-terminator statements and removes EmptyStatement noise."
 
@@ -15,3 +15,10 @@ serde_json = "1"
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
 coding-adventures-closure-pass-fold-control-flow = { path = "../closure-pass-fold-control-flow" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file
+# needs an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_peephole_remove_dead_code"
+path = "tests/upstream/peephole_remove_dead_code_test.rs"
