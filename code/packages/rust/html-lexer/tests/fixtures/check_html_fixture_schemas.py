@@ -373,6 +373,7 @@ def check_browser_expected_lists(
             "nonce",
             "referrerpolicy",
             "fetchpriority",
+            "csp",
             "blocking",
             "browsing_context_name",
             "loading",
@@ -514,9 +515,20 @@ def check_browser_expected_lists(
             "width",
             "height",
             "preload",
+            "crossorigin",
+            "controlslist",
         ):
             require_optional_nullable_string(media_path, media, field, errors)
-        for field in ("controls", "autoplay", "loop_media", "muted", "playsinline"):
+        require_optional_string_list(media_path, media, "controlslist_tokens", errors)
+        for field in (
+            "controls",
+            "autoplay",
+            "loop_media",
+            "muted",
+            "playsinline",
+            "disableremoteplayback",
+            "disablepictureinpicture",
+        ):
             require_optional_boolean(media_path, media, field, errors)
 
     for index, context in enumerate(object_list_items(expected, "embedded_contexts")):
@@ -531,6 +543,8 @@ def check_browser_expected_lists(
             "width",
             "height",
             "loading",
+            "fetchpriority",
+            "csp",
             "allow",
             "referrerpolicy",
             "srcdoc",

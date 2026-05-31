@@ -351,7 +351,7 @@
     {
       "id": "embedded-resource-page",
       "description": "Body resource and embedded-context inventories preserve frame, object, video, embed, and srcdoc-only iframe metadata for fetch, policy, and layout planning.",
-      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html name=preview loading=lazy sandbox=\"allow-scripts allow-same-origin\" allow=\"fullscreen; geolocation\" allowfullscreen referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" credentialless width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120><iframe name=inline srcdoc=\"<h1>Inline</h1>\" sandbox allow=payment title=Inline width=240 height=120></iframe>",
+      "input": "<base href=\"https://example.test/media/index.html\"><body><iframe src=frame.html name=preview loading=lazy fetchpriority=high csp=\"script-src 'self'\" sandbox=\"allow-scripts allow-same-origin\" allow=\"fullscreen; geolocation\" allowfullscreen referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" credentialless width=320 height=200 title=Frame></iframe><object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object><video src=movie.mp4 width=640 height=360 controls></video><embed src=legacy.mov type=\"video/quicktime\" width=160 height=120><iframe name=inline srcdoc=\"<h1>Inline</h1>\" sandbox allow=payment title=Inline width=240 height=120></iframe>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/media/index.html",
@@ -359,7 +359,7 @@
         "body_text": "",
         "metas": [],
         "resources": [
-          { "kind": "frame", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "rel": null, "type_hint": null, "media": null, "title": "Frame", "width": "320", "height": "200", "referrerpolicy": "no-referrer", "browsing_context_name": "preview", "loading": "lazy", "sandbox": ["allow-scripts", "allow-same-origin"], "allow": "fullscreen; geolocation", "allowfullscreen": true, "srcdoc": "<p>Fallback</p>", "credentialless": true, "async_script": false, "defer_script": false },
+          { "kind": "frame", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "rel": null, "type_hint": null, "media": null, "title": "Frame", "width": "320", "height": "200", "referrerpolicy": "no-referrer", "fetchpriority": "high", "csp": "script-src 'self'", "browsing_context_name": "preview", "loading": "lazy", "sandbox": ["allow-scripts", "allow-same-origin"], "allow": "fullscreen; geolocation", "allowfullscreen": true, "srcdoc": "<p>Fallback</p>", "credentialless": true, "async_script": false, "defer_script": false },
           { "kind": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "rel": null, "type_hint": "application/x-shockwave-flash", "media": null, "title": null, "width": "400", "height": "300", "async_script": false, "defer_script": false },
           { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/media/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false },
           { "kind": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "rel": null, "type_hint": "video/quicktime", "media": null, "title": null, "width": "160", "height": "120", "async_script": false, "defer_script": false }
@@ -379,7 +379,7 @@
           }
         ],
         "embedded_contexts": [
-          { "element": "iframe", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "browsing_context_name": "preview", "title": "Frame", "width": "320", "height": "200", "loading": "lazy", "sandbox": ["allow-scripts", "allow-same-origin"], "allow": "fullscreen; geolocation", "allowfullscreen": true, "referrerpolicy": "no-referrer", "srcdoc": "<p>Fallback</p>", "credentialless": true, "fallback_text": "" },
+          { "element": "iframe", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "browsing_context_name": "preview", "title": "Frame", "width": "320", "height": "200", "loading": "lazy", "fetchpriority": "high", "csp": "script-src 'self'", "sandbox": ["allow-scripts", "allow-same-origin"], "allow": "fullscreen; geolocation", "allowfullscreen": true, "referrerpolicy": "no-referrer", "srcdoc": "<p>Fallback</p>", "credentialless": true, "fallback_text": "" },
           { "element": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "type_hint": "application/x-shockwave-flash", "width": "400", "height": "300", "fallback_text": "" },
           { "element": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "type_hint": "video/quicktime", "width": "160", "height": "120", "fallback_text": "" },
           { "element": "iframe", "url": null, "resolved_url": null, "browsing_context_name": "inline", "title": "Inline", "width": "240", "height": "120", "allow": "payment", "srcdoc": "<h1>Inline</h1>", "fallback_text": "" }
@@ -390,8 +390,8 @@
     },
     {
       "id": "media-playback-poster-page",
-      "description": "Media summaries expose playback state and poster resolution metadata.",
-      "input": "<base href=\"https://example.test/watch/index.html\"><body><video id=hero src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline preload=metadata width=640 height=360></video><audio src=theme.ogg controls preload=none></audio>",
+      "description": "Media summaries expose playback state, poster resolution, and playback policy metadata.",
+      "input": "<base href=\"https://example.test/watch/index.html\"><body><video id=hero src=movie.mp4 poster=poster.jpg controls controlslist=\"nodownload noplaybackrate\" crossorigin=anonymous autoplay loop muted playsinline preload=metadata disableremoteplayback disablepictureinpicture width=640 height=360></video><audio src=theme.ogg controls controlslist=nodownload crossorigin=use-credentials preload=none disableremoteplayback></audio>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/watch/index.html",
@@ -399,8 +399,8 @@
         "body_text": "",
         "metas": [],
         "resources": [
-          { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "async_script": false, "defer_script": false },
-          { "kind": "audio", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "rel": null, "type_hint": null, "media": null, "title": null, "width": null, "height": null, "async_script": false, "defer_script": false }
+          { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "width": "640", "height": "360", "crossorigin": "anonymous", "async_script": false, "defer_script": false },
+          { "kind": "audio", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "rel": null, "type_hint": null, "media": null, "title": null, "width": null, "height": null, "crossorigin": "use-credentials", "async_script": false, "defer_script": false }
         ],
         "anchors": [
           { "id": "hero", "name": null, "text": "" }
@@ -422,14 +422,23 @@
             "loop_media": true,
             "muted": true,
             "playsinline": true,
-            "preload": "metadata"
+            "preload": "metadata",
+            "crossorigin": "anonymous",
+            "controlslist": "nodownload noplaybackrate",
+            "controlslist_tokens": ["nodownload", "noplaybackrate"],
+            "disableremoteplayback": true,
+            "disablepictureinpicture": true
           },
           {
             "kind": "audio",
             "src": "theme.ogg",
             "resolved_src": "https://example.test/watch/theme.ogg",
             "controls": true,
-            "preload": "none"
+            "preload": "none",
+            "crossorigin": "use-credentials",
+            "controlslist": "nodownload",
+            "controlslist_tokens": ["nodownload"],
+            "disableremoteplayback": true
           }
         ],
         "forms": [],
