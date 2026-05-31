@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.41.0] - 2026-05-30
+
+### Added — CLOC11.78: end-to-end integration test for NDJSON CV sidecar
+
+New integration test `tests/diff_cv_ndjson_streaming.rs` exercises the CLOC11.69 NDJSON format end-to-end:
+
+```bash
+closurec \
+  --correlation_vector \
+  --correlation_vector_format NDJSON \
+  --js tests/diff/cv-ndjson-streaming/input/a.js \
+  --js_output_file <tmpdir>/out.js
+```
+
+### Contract pinned
+
+1. Sidecar lands at `<js_output_file>.cv.json` (the CLOC11.67 default-path policy).
+2. Sidecar is **newline-delimited JSON** — every non-empty line parses standalone.
+3. At least 2 lines (≥1 entry + the `_meta` footer).
+4. Final line is the `{"_meta": {"pass_order": [...], "enabled": ...}}` footer so streaming consumers (`tail -f`, `jq`) can reliably extract `pass_order` after the producer finishes.
+5. closurec exits 0.
+
+### Why this exists as its own integration test
+
+CLOC11.69 unit tests verify `format_cv_log_ndjson` in isolation. This test exercises the full path — CLI parse → wire → `run_compiler` → formatter → disk write → consumer-style readback — through the actual binary. Catches drift in any of those layers, especially path resolution and the `--js_output_file`-sibling sidecar convention.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.40.0` → `0.41.0`, `cli.spec.json` `0.40.0` → `0.41.0`.
+
 ## [0.40.0] - 2026-05-30
 
 ### Added — CLOC11.77: end-to-end integration test for CV pure-analysis combo
