@@ -1803,6 +1803,47 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 19a (FC) — regex literal `/pattern/flags`.
+    //
+    // The lexer resolves the `/`-vs-division ambiguity and emits a regex
+    // as a `String` token carrying the verbatim `/p/flags` (slashes
+    // included), so the parser routes it through the ordinary
+    // string-literal slot — no grammar change.  These pins confirm the
+    // verbatim lexeme survives into the parse tree.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_regex_literal() {
+        // `x = /foo/` — assignment RHS is a regex; the `/foo/` lexeme
+        // appears verbatim in the tree as a String token.
+        let ast = parse_ruby("x = /foo/");
+        assert!(
+            tree_has_token_value(&ast, "/foo/"),
+            "expected verbatim `/foo/` regex token in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_regex_literal_with_flags() {
+        // `x = /foo/i` — flags ride along in the same verbatim lexeme.
+        let ast = parse_ruby("x = /foo/i");
+        assert!(
+            tree_has_token_value(&ast, "/foo/i"),
+            "expected verbatim `/foo/i` regex token in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_regex_literal_in_call_argument() {
+        // `foo(/bar/)` — regex as a method-call argument.
+        let ast = parse_ruby("foo(/bar/)");
+        assert!(
+            tree_has_token_value(&ast, "/bar/"),
+            "expected verbatim `/bar/` regex token in the call argument"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //

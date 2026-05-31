@@ -336,6 +336,40 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
     false
 }
 
+/// Phase 19a (FC) — if `value` is a verbatim regex-literal lexeme
+/// (`/pattern/flags`), split it into `(pattern, flags)`; otherwise
+/// `None`.
+///
+/// A Ruby regex literal lexes (Phase 2 `regex_body`) to a
+/// `TokenType::String` token whose value is the verbatim source WITH the
+/// surrounding slashes — `/foo/`, `/foo/i`, `//`.  A double-quoted string
+/// has its delimiters stripped by the lexer, so a real string like
+/// `"foo"` yields `foo` (no leading slash) and is never mistaken here.
+///
+/// The split: drop the opening `/`, take everything up to the LAST `/`
+/// as the pattern, and the remainder as the flags.  To avoid mistaking a
+/// path-shaped string such as `"/usr/bin"` (lexed value `/usr/bin`) for a
+/// regex, the trailing segment must be made up ENTIRELY of valid Ruby
+/// regex flag letters (`imxounes`); `/usr/bin` fails because `b` is not a
+/// flag, so it stays a string.  (Residual v0 ambiguity: a double-quoted
+/// string whose content happens to have regex shape, e.g. `"/a/i"`, would
+/// be read as a regex — the same lexeme-prefix-sentinel limitation the
+/// backtick and heredoc literals already accept.)
+fn regex_pattern_flags(value: &str) -> Option<(&str, &str)> {
+    let rest = value.strip_prefix('/')?;
+    let close = rest.rfind('/')?;
+    let pattern = &rest[..close];
+    let flags = &rest[close + 1..];
+    if flags
+        .chars()
+        .all(|c| matches!(c, 'i' | 'm' | 'x' | 'o' | 'u' | 'n' | 'e' | 's'))
+    {
+        Some((pattern, flags))
+    } else {
+        None
+    }
+}
+
 /// Phase 15a (FC) — is this Name-token value a Ruby *instance
 /// variable* (`@x`)?  Instance vars lex as a `Name` token carrying the
 /// leading sigil.  A single `@` marks an instance variable; a double
@@ -4669,6 +4703,45 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
+    // Phase 19a (FC) — regex literal lowering (`/pattern/flags`)
+    // -------------------------------------------------------------------
+
+    /// Lower a Ruby regex literal `/pattern/flags` (Phase 19a).
+    ///
+    /// The lexer's `regex_body` sub-machine (entered via `should_open_regex`,
+    /// which resolves the classic `/`-is-regex-vs-division ambiguity from the
+    /// lex state) emits the whole literal as a single `TokenType::String`
+    /// token whose value is the verbatim `` /pattern/flags `` (leading slash
+    /// included).  This is the same lexeme-prefix sentinel trick the percent
+    /// literals, heredocs (`<<`), and backticks (`` ` ``) use — the parser
+    /// routes a regex through the ordinary string-literal slot.
+    ///
+    /// We split the verbatim lexeme into `pattern` and `flags` (see
+    /// [`regex_pattern_flags`]) and emit
+    /// `BuiltinCall("regex", [StrLit(pattern), StrLit(flags)])`.  Carrying
+    /// the two parts as separate `StrLit` args keeps the builtin uniform
+    /// across all flag combinations (`/x/`, `/x/i`, `/x/im`, …) without
+    /// name multiplication — mirroring the `range` builtin's flag arg.
+    ///
+    /// Building a regex object is pure (no I/O, no mutation).  We emit
+    /// `StrLit`s, so the literal requests `Feature::Strings` — the same
+    /// stance as backticks and heredocs.  (v0 does NOT unescape the body:
+    /// `\/` etc. survive verbatim in the pattern, matching the heredoc /
+    /// backtick capture stance.)
+    fn lower_regex_literal(&mut self, pattern: &str, flags: &str, span: Span) -> Expr {
+        self.features_used.insert(Feature::Strings);
+        Expr::BuiltinCall {
+            name: "regex".to_string(),
+            args: vec![
+                Expr::StrLit { value: pattern.to_string(), span: span.clone() },
+                Expr::StrLit { value: flags.to_string(), span: span.clone() },
+            ],
+            effects: EffectSet::PURE,
+            span,
+        }
+    }
+
+    // -------------------------------------------------------------------
     // Phase 6z — numeric literal lowering (float / hex / bin / oct / dec)
     // -------------------------------------------------------------------
 
@@ -5061,6 +5134,18 @@ impl Lowerer {
                                     &tok.value,
                                     span,
                                 ));
+                            }
+                            // Phase 19a (FC) — regex literal dispatch.  The
+                            // lexer's `regex_body` machine emits `/p/flags`
+                            // as a `String` token carrying the verbatim
+                            // source (slashes included).  `regex_pattern_flags`
+                            // recognises that shape (and rejects path-shaped
+                            // strings like `/usr/bin` via the flag-letter
+                            // check), splitting it into pattern + flags.
+                            if let Some((pattern, flags)) = regex_pattern_flags(&tok.value) {
+                                let (pattern, flags) =
+                                    (pattern.to_string(), flags.to_string());
+                                return Ok(self.lower_regex_literal(&pattern, &flags, span));
                             }
                             // Phase 6y — string interpolation expression
                             // lowering.  The lexer (Phase 3b) emits the
