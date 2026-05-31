@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.53.0] - 2026-05-30
+
+### Added (Phase 16e (FC) — method-level rescue/ensure)
+
+A `def` body carrying trailing `rescue`/`ensure` clauses (no explicit
+`begin`) now lowers so the **whole method body** is wrapped in a single
+`Stmt::TryCatch` (semantic-ir 0.9.0); the method's value becomes nil.
+
+- Refactored the Phase 16a `begin` lowering: the body / rescue / ensure
+  extraction is now shared via two helpers — `lower_flat_statements`
+  (direct `statement` children → flat `Vec<Stmt>`) and
+  `lower_rescue_ensure_clauses` (→ `(Vec<RescueClause>, Option<Vec<Stmt>>)`).
+  `lower_begin_statement` and `lower_def_statement` both call them.
+- `lower_def_statement` detects `rescue_clause` / `ensure_clause` children
+  and, when present, wraps the method body in a `TryCatch` (requesting
+  `Feature::Exceptions`); a plain `def` is unchanged (trailing expression
+  still becomes the method value).
+
+New tests (+4): rescue wraps body in TryCatch, ensure wraps body, plain
+def unchanged (regression), method-level rescue validator E2E.  Test
+count: 233 → 237.
+
 ## [0.52.0] - 2026-05-30
 
 ### Added (Phase 16d (FC) — `raise` / `raise Foo` / `raise Foo, "msg"`)

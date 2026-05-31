@@ -2042,52 +2042,78 @@ impl Lowerer {
             })
             .collect();
 
-        let mut stmts_out: Vec<Stmt> = Vec::new();
-        let mut value: Option<Expr> = None;
-        if body_stmts.is_empty() {
-            value = Some(Expr::NilLit {
-                span: self.span_of(node),
-            });
+        // Phase 16e (FC) — method-level rescue/ensure.  If the def body
+        // carries trailing `rescue`/`ensure` clauses (no explicit
+        // `begin`), the WHOLE method body is the protected region: wrap
+        // the body statements and the clauses in a single
+        // `Stmt::TryCatch` (the method's value is then nil).
+        let has_exception_clauses = node.children.iter().any(|c| {
+            matches!(c, ASTNodeOrToken::Node(n)
+                if n.rule_name == "rescue_clause" || n.rule_name == "ensure_clause")
+        });
+
+        let (stmts_out, value): (Vec<Stmt>, Expr) = if has_exception_clauses {
+            self.features_used.insert(Feature::Exceptions);
+            let try_body = self.lower_flat_statements(node)?;
+            let (rescues, ensure_body) = self.lower_rescue_ensure_clauses(node)?;
+            (
+                vec![Stmt::TryCatch {
+                    body: try_body,
+                    rescues,
+                    ensure_body,
+                    span: self.span_of(node),
+                }],
+                Expr::NilLit { span: self.span_of(node) },
+            )
         } else {
-            let last_idx = body_stmts.len() - 1;
-            for (i, s) in body_stmts.iter().enumerate() {
-                let inner = self.first_node_child(s).ok_or_else(|| {
-                    RubyLowerError {
-                        message: "statement node had no child rule".to_string(),
-                        line: s.start_line.unwrap_or(0),
-                        column: s.start_column.unwrap_or(0),
-                    }
-                })?;
-                let is_tail = i == last_idx;
-                let kind = inner.rule_name.as_str();
-                if is_tail && matches!(kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
-                    let v = match kind {
-                        "expression_stmt" => {
-                            let expr_node =
-                                self.first_node_child(inner).ok_or_else(|| {
-                                    RubyLowerError {
-                                        message:
-                                            "expression_stmt had no expression child"
-                                                .to_string(),
-                                        line: inner.start_line.unwrap_or(0),
-                                        column: inner.start_column.unwrap_or(0),
-                                    }
-                                })?;
-                            self.lower_expression(expr_node)?
+            let mut stmts_out: Vec<Stmt> = Vec::new();
+            let mut value: Option<Expr> = None;
+            if body_stmts.is_empty() {
+                value = Some(Expr::NilLit {
+                    span: self.span_of(node),
+                });
+            } else {
+                let last_idx = body_stmts.len() - 1;
+                for (i, s) in body_stmts.iter().enumerate() {
+                    let inner = self.first_node_child(s).ok_or_else(|| {
+                        RubyLowerError {
+                            message: "statement node had no child rule".to_string(),
+                            line: s.start_line.unwrap_or(0),
+                            column: s.start_column.unwrap_or(0),
                         }
-                        "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
-                        _ => unreachable!(),
-                    };
-                    value = Some(v);
-                } else {
-                    // Phase 6r — multi-stmt fan-out for `multi_assignment`.
-                    stmts_out.extend(self.lower_statement_inner_multi(inner)?);
+                    })?;
+                    let is_tail = i == last_idx;
+                    let kind = inner.rule_name.as_str();
+                    if is_tail && matches!(kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
+                        let v = match kind {
+                            "expression_stmt" => {
+                                let expr_node =
+                                    self.first_node_child(inner).ok_or_else(|| {
+                                        RubyLowerError {
+                                            message:
+                                                "expression_stmt had no expression child"
+                                                    .to_string(),
+                                            line: inner.start_line.unwrap_or(0),
+                                            column: inner.start_column.unwrap_or(0),
+                                        }
+                                    })?;
+                                self.lower_expression(expr_node)?
+                            }
+                            "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
+                            _ => unreachable!(),
+                        };
+                        value = Some(v);
+                    } else {
+                        // Phase 6r — multi-stmt fan-out for `multi_assignment`.
+                        stmts_out.extend(self.lower_statement_inner_multi(inner)?);
+                    }
                 }
             }
-        }
-        let value = value.unwrap_or(Expr::NilLit {
-            span: self.span_of(node),
-        });
+            (
+                stmts_out,
+                value.unwrap_or(Expr::NilLit { span: self.span_of(node) }),
+            )
+        };
 
         // Restore the outer scope's locals + params so the rest of
         // the program lowers correctly.
@@ -3131,33 +3157,55 @@ impl Lowerer {
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<Vec<Stmt>, RubyLowerError> {
-        // Phase 16a (FC): `begin/rescue/ensure/end` now lowers to a
-        // first-class `Stmt::TryCatch` (replacing the Phase 6v inline
-        // `__rescue_marker__`/`__ensure_marker__` placeholder builtins).
+        // Phase 16a (FC): `begin/rescue/ensure/end` lowers to a
+        // first-class `Stmt::TryCatch`.  Phase 16e factored the body /
+        // rescue / ensure extraction into shared helpers so method-level
+        // rescue (`def … rescue … end`, no explicit `begin`) can reuse
+        // them.
         let outer_span = self.span_of(node);
         self.features_used.insert(Feature::Exceptions);
+        let body = self.lower_flat_statements(node)?;
+        let (rescues, ensure_body) = self.lower_rescue_ensure_clauses(node)?;
+        Ok(vec![Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            span: outer_span,
+        }])
+    }
 
-        // Helper: lower the direct `statement` children of a node into a
-        // flat `Vec<Stmt>` (the negative-lookahead grammar repetition
-        // ensures these are exactly the relevant block's statements).
-        let lower_body = |this: &mut Self, n: &GrammarASTNode| -> Result<Vec<Stmt>, RubyLowerError> {
-            let mut body = Vec::new();
-            for cc in &n.children {
-                if let ASTNodeOrToken::Node(nn) = cc {
-                    if nn.rule_name == "statement" {
-                        if let Some(inner) = this.first_node_child(nn) {
-                            body.extend(this.lower_statement_inner_multi(inner)?);
-                        }
+    /// Lower the direct `statement` children of `node` into a flat
+    /// `Vec<Stmt>` — no trailing-value extraction.  Used for
+    /// `Stmt::TryCatch` body / rescue / ensure blocks (Phase 16a/16e),
+    /// where the negative-lookahead grammar repetition guarantees the
+    /// direct `statement` children are exactly that block's statements.
+    fn lower_flat_statements(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let mut body = Vec::new();
+        for cc in &node.children {
+            if let ASTNodeOrToken::Node(nn) = cc {
+                if nn.rule_name == "statement" {
+                    if let Some(inner) = self.first_node_child(nn) {
+                        body.extend(self.lower_statement_inner_multi(inner)?);
                     }
                 }
             }
-            Ok(body)
-        };
+        }
+        Ok(body)
+    }
 
-        // 1. The try body: direct `statement` children of `begin_statement`.
-        let body = lower_body(self, node)?;
-
-        // 2. Each rescue_clause, in source order.
+    /// Scan `node`'s direct children for `rescue_clause` / `ensure_clause`
+    /// and build the `(rescues, ensure_body)` for a `Stmt::TryCatch`.
+    /// Shared by `begin … end` (Phase 16a) and method-level rescue on a
+    /// `def` body (Phase 16e).  Callers are responsible for requesting
+    /// `Feature::Exceptions`.
+    fn lower_rescue_ensure_clauses(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<(Vec<RescueClause>, Option<Vec<Stmt>>), RubyLowerError> {
+        // Each rescue_clause, in source order.
         let mut rescues: Vec<RescueClause> = Vec::new();
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
@@ -3206,7 +3254,7 @@ impl Lowerer {
                         }
                         found
                     };
-                    let rescue_body = lower_body(self, n)?;
+                    let rescue_body = self.lower_flat_statements(n)?;
                     rescues.push(RescueClause {
                         exception_types,
                         binding,
@@ -3217,22 +3265,17 @@ impl Lowerer {
             }
         }
 
-        // 3. Optional ensure_clause.
+        // Optional ensure_clause.
         let mut ensure_body: Option<Vec<Stmt>> = None;
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
                 if n.rule_name == "ensure_clause" {
-                    ensure_body = Some(lower_body(self, n)?);
+                    ensure_body = Some(self.lower_flat_statements(n)?);
                 }
             }
         }
 
-        Ok(vec![Stmt::TryCatch {
-            body,
-            rescues,
-            ensure_body,
-            span: outer_span,
-        }])
+        Ok((rescues, ensure_body))
     }
 
     // -------------------------------------------------------------------

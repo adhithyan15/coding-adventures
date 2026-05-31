@@ -3768,6 +3768,80 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 16e (FC) — method-level rescue/ensure (def … rescue … end).
+    // -----------------------------------------------------------------
+
+    /// Find a hoisted top-level function by name.
+    fn func<'a>(m: &'a semantic_ir::Module, name: &str) -> &'a semantic_ir::Function {
+        m.functions
+            .iter()
+            .find(|f| f.name == name)
+            .unwrap_or_else(|| panic!("expected hoisted function `{}`", name))
+    }
+
+    #[test]
+    fn def_with_method_level_rescue_wraps_body_in_trycatch() {
+        // `def f; x = 1; rescue Foo => e; y = e; end` → the method body is
+        // a single `Stmt::TryCatch` (no explicit begin); the function
+        // value is nil.
+        let m = lower("def f\n  x = 1\nrescue Foo => e\n  y = e\nend\n");
+        let f = func(&m, "f");
+        assert_eq!(f.body.stmts.len(), 1, "method body is one TryCatch; got {:?}", f.body.stmts);
+        match &f.body.stmts[0] {
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                assert!(!body.is_empty(), "try body has the method statements");
+                assert_eq!(rescues.len(), 1);
+                assert_eq!(rescues[0].exception_types, vec!["Foo".to_string()]);
+                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+                assert!(ensure_body.is_none());
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+        assert!(matches!(f.body.value, Expr::NilLit { .. }), "method value is nil");
+        assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
+    }
+
+    #[test]
+    fn def_with_method_level_ensure_wraps_body_in_trycatch() {
+        // `def f; x = 1; ensure; y = 2; end` → TryCatch with no rescues
+        // and a populated ensure body.
+        let m = lower("def f\n  x = 1\nensure\n  y = 2\nend\n");
+        let f = func(&m, "f");
+        match &f.body.stmts[0] {
+            Stmt::TryCatch { rescues, ensure_body, .. } => {
+                assert!(rescues.is_empty(), "ensure-only: no rescues");
+                assert!(ensure_body.is_some(), "ensure body present");
+            }
+            other => panic!("expected Stmt::TryCatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn def_without_rescue_keeps_plain_body() {
+        // Regression: a normal `def` (no rescue/ensure) is unchanged —
+        // no TryCatch wraps the body.
+        let m = lower("def f(n)\n  x = n + 1\nend\n");
+        let f = func(&m, "f");
+        assert!(
+            !f.body.stmts.iter().any(|s| matches!(s, Stmt::TryCatch { .. })),
+            "plain def must not produce a TryCatch"
+        );
+        assert!(
+            f.body.stmts.iter().any(|s| matches!(s, Stmt::LetBinding { name, .. } if name == "x")),
+            "plain def keeps its body statements; got {:?}", f.body.stmts
+        );
+    }
+
+    #[test]
+    fn method_level_rescue_passes_sir_validator() {
+        // E2E: a method-level rescue/ensure def (with the binding used in
+        // the rescue body) validates end-to-end.
+        let m = lower("def f\n  x = 1\nrescue StandardError => e\n  y = e\nensure\n  z = 1\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected method-level rescue: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6u — `case … when … else … end`
     // -----------------------------------------------------------------
     //

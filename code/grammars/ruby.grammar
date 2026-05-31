@@ -106,7 +106,13 @@ mlhs_target  = [ "*" ] NAME ;
 # token.  This split sidesteps the grammar's newline-insensitive default
 # mode (modifier syntax is intrinsically a same-line construct in Ruby).
 modifier_statement = ( assignment | method_call_no_paren | method_call | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
-def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"end" statement } "end" ;
+# Phase 16e (FC) — method-level rescue/ensure: a `def` body may carry
+# trailing `rescue`/`ensure` clauses WITHOUT an explicit `begin` (the
+# whole method body is the protected region).  The body repetition gets
+# the same `!"rescue" !"ensure"` negative-lookahead as begin_statement so
+# it stops at the first clause; the lowerer wraps the body + clauses in a
+# `Stmt::TryCatch` (Phase 16a) when any clause is present.
+def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
 # Phase 7c — Ruby 3.0 endless method definition: `def foo = expr` and
 # `def foo(x, y) = expr`.  No `end`, no block body — just a single
 # expression after the `=`.  Placed BEFORE `def_statement` in the
