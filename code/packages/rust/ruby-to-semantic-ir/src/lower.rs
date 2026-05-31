@@ -3513,6 +3513,30 @@ impl Lowerer {
             })?;
         let inner = self.lower_expression(expr_node)?;
         let span = self.span_of(node);
+        // Phase 22c — forward-all argument `...`.  The lexer fuses `...`
+        // into a single Name-typed token, so `n(...)` parses with the
+        // bare name `...` in the call_arg's expression slot, which lowers
+        // to `VarRef { name: "..." }`.  Rewrite that into the nullary
+        // marker `BuiltinCall("forward_args", [])`.  A beginless range
+        // argument `m(...5)` instead lowers to a `range` BuiltinCall (the
+        // `...` is the range operator, not a bare name), so it is left
+        // untouched.  `...` is not a legal Ruby identifier, so a bare
+        // `VarRef("...")` can only have come from argument forwarding —
+        // the match is unambiguous.  A leading `*`/`**`/`&` prefix never
+        // co-occurs with `...` (Ruby forbids `*...`), so this check runs
+        // only on the no-prefix path.
+        if prefix.is_none() {
+            if let Expr::VarRef { name, .. } = &inner {
+                if name == "..." {
+                    return Ok(Expr::BuiltinCall {
+                        name: "forward_args".to_string(),
+                        args: vec![],
+                        effects: EffectSet::PURE,
+                        span,
+                    });
+                }
+            }
+        }
         Ok(match prefix.as_deref() {
             Some("*") => Expr::BuiltinCall {
                 name: "splat".to_string(),

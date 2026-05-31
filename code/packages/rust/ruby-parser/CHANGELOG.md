@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.60.0] - 2026-05-31
+
+### Added (Phase 22c (FC) — `...` argument forwarding)
+
+Ruby 2.7+ argument forwarding: `def m(...)` declares a method that
+forwards every argument, and `n(...)` forwards them to an inner call.
+
+Grammar change — `params` only:
+
+```
+params = "..." | param { COMMA param } ;
+```
+
+The lexer fuses `...` into a single **Name-typed** token (value `...`,
+shared with the exclusive-range operator).  Because `param = [ "*" |
+"**" ] NAME` would otherwise match `...` as a parameter *named* `...`,
+the bare `"..."` alternative is listed FIRST so it claims the token as a
+literal forwarding marker.  Ordinary signatures are unaffected (their
+first token is never `...`).  `_grammar.rs` regenerated.
+
+**No `call_arg` grammar change.**  `factor`'s `NAME` alternative already
+matches the `...` token as a bare-name expression, so `n(...)` parses as
+a call_arg whose expression is the bare name `...`.  A beginless
+exclusive-range argument `m(...5)` instead parses as a `range` (the
+`... 5` form), keeping the two disjoint at the parse-tree level — a
+literal `"..."` call_arg alternative was deliberately NOT added (listing
+it first breaks `m(...5)`, since the parser does not backtrack across the
+call_arg boundary once `...` is consumed; listing it last is dead code
+because `NAME` shadows it).
+
+New parse pins (+4): `test_parse_forward_all_call_arg` (`n(...)`),
+`test_parse_forward_all_param` (`def m(...)` → 0 `param` nodes),
+`test_parse_forward_all_roundtrip` (`def m(...) ; n(...) ; end`),
+`test_parse_beginless_range_arg_still_parses` (`m(...5)` regression —
+still a `range`).  Test count: 210 → 214.
+
 ## [0.59.0] - 2026-05-31
 
 ### Added (Phase 22b (FC) — `&blk` block-pass call argument)

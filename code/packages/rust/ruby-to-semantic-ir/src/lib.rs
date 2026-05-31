@@ -3934,6 +3934,80 @@ mod tests {
     }
 
     #[test]
+    fn forward_args_call_arg_lowers_to_forward_args_builtin() {
+        // Phase 22c — `f(...)` → DirectCall(f, [BuiltinCall("forward_args",
+        // [])]).  A nullary marker (no operand): the forwarding `...`
+        // has no expression child, unlike splat/double_splat/block_pass.
+        let m = lower("f(...)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => args,
+            other => panic!("expected DirectCall(f, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1);
+        match &args[0] {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "forward_args");
+                assert!(args.is_empty(), "forward_args takes no operand");
+            }
+            other => panic!("expected BuiltinCall(forward_args, []), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn forward_all_def_and_call_passes_sir_validator() {
+        // Phase 22c — the canonical forwarding round-trip:
+        //   def m(...)
+        //     puts(...)
+        //   end
+        // `def m(...)` lowers to a function with ZERO params (v0 lossy:
+        // the bare `...` produces no Param node).  The inner `puts(...)`
+        // forwards via the `forward_args` marker.  `puts` is a known
+        // intrinsic, so the whole module validates.
+        let m = lower("def m(...)\n  puts(...)\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected forward-all def/call round-trip: {:?}",
+            result
+        );
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "m")
+            .expect("expected user-defined function `m`");
+        assert_eq!(
+            f.params.len(),
+            0,
+            "bare `...` forward param lowers to zero Params (v0 lossy)"
+        );
+    }
+
+    #[test]
+    fn beginless_range_arg_does_not_lower_to_forward_args() {
+        // Phase 22c regression — `m(...5)` is a beginless exclusive-range
+        // argument, NOT forward-all.  It must lower to the range builtin
+        // (BuiltinCall("range", …)), confirming the direct-child-only
+        // `...` detection doesn't swallow nested range operators.
+        let m = lower("m(...5)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "m" => args,
+            other => panic!("expected DirectCall(m, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1);
+        match &args[0] {
+            Expr::BuiltinCall { name, .. } => {
+                assert_eq!(
+                    name, "range",
+                    "beginless-range arg must be a `range` builtin, not `forward_args`"
+                );
+            }
+            other => panic!("expected BuiltinCall(range, ...), got {:?}", other),
+        }
+    }
+
+    #[test]
     fn splat_call_arg_module_passes_sir_validator() {
         // End-to-end smoke check: a module that uses splat call args
         // validates cleanly.
