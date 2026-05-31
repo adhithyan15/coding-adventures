@@ -2,6 +2,90 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-31
+
+### Added — CLOC12.02: first port of upstream `PeepholeFoldConstantsTest`
+
+This is the **first** ported file under the CLOC12 byte-identical
+contract. Establishes the per-crate `tests/upstream/` layout:
+
+- `tests/upstream/UPSTREAM_SHA` — pins
+  `google/closure-compiler@5bb35ec1245dc1d3557481e5f8b4db344bcd1e6b`.
+- `tests/upstream/ATTRIBUTION.md` — Apache-2.0 attribution per
+  CLOC12.01 §5, lists ported files with upstream paths and blob SHAs.
+- `tests/upstream/peephole_fold_constants_test.rs` — ports a subset
+  of upstream's `PeepholeFoldConstantsTest`:
+  - `test_null_comparison_1_self_relations` — `null OP null` for
+    `==`, `===`, `!=`, `!==`, `<`, `>`, `>=`, `<=`.
+    `#[ignore = "blocked on gap-007"]` (the fold pass has no
+    `NullLiteral`/`NullLiteral` branch yet — small, self-contained
+    fix).
+  - `test_number_number_comparison_literal_lines` — literal-only
+    arithmetic comparisons. **Passes today.**
+  - `test_string_string_comparison_literal_lines` — literal-only
+    string comparisons across `<`, `<=`, `>`, `>=`, `==`, `!=`,
+    `===`, `!==`. **Passes today.**
+  - `test_number_string_strict_equality_lines` — strict equality
+    between Number and String is `false` regardless of values.
+    `#[ignore = "blocked on gap-008"]` — the pass falls through its
+    same-type branches and returns the binary expression unchanged.
+    Trivial small fix queued.
+  - `test_basic_number_comparisons` — sanity check of the
+    same-type-numeric comparison happy path. **Passes today.**
+  - `test_basic_arithmetic_folds` — `2 + 3 = 5`, `"a" + "b" = "ab"`,
+    `"x" + 1 = "x1"`, `5 * 4 = 20`, `10 / 2 = 5`, `7 % 3 = 1`,
+    `2 ** 8 = 256`. **Passes today.**
+  - `test_same_when_either_side_has_an_identifier_subset` —
+    `testSame`-style asserts that identifier-bearing comparisons are
+    left alone. **Passes today.**
+  - `test_undefined_comparison_1` — `#[ignore = "blocked on gap-001"]`.
+  - `test_undefined_comparison_2` — `#[ignore = "blocked on gap-002"]`.
+  - `test_null_comparison_1_loose_against_other_types` —
+    `#[ignore = "blocked on gap-003"]`.
+  - `test_number_string_comparison_literal_lines` —
+    `#[ignore = "blocked on gap-004"]`.
+  - `test_typeof_lines_from_string_string_comparison` —
+    `#[ignore = "blocked on gap-005"]`.
+
+Each ignored test cites a `gap-NNN` entry in
+`code/specs/CLOC12-gaps.md` describing what's blocked and what
+unblocks it. Running `cargo test -- --include-ignored` exercises
+the ignored ports too; the gap count is the measurable progress
+metric for byte-identical convergence.
+
+### Test scaffolding
+
+The ported file does not depend on a source-string parser bridge
+(no such bridge exists yet — `javascript-parser::parse_javascript`
+returns the generic `GrammarASTNode`, not our typed `Program`).
+Instead, the file constructs typed-AST inputs by hand using the
+same literal builders as `closure-pass-constant-fold`'s own inline
+tests:
+
+```rust
+let input  = b(n(2.0), BinaryOperator::Add, n(3.0));
+let expect = n(5.0);
+assert_fold(input, expect);
+```
+
+When the parser bridge lands (a future CLOC11.* slice), we can
+re-port these tests to take the upstream `test("2 + 3", "5")`
+source-string form verbatim. Until then, every port both records
+the upstream `test(...)` line in a doc-comment and asserts the
+same byte output via constructed AST.
+
+### Cargo wiring
+
+Added explicit `[[test]]` entry in `Cargo.toml` pointing at
+`tests/upstream/peephole_fold_constants_test.rs` because Cargo's
+auto-discovery only picks up `tests/*.rs` one level deep. CLOC12.01
+§3 specifies the `tests/upstream/` layout; this is the small price
+for keeping ports physically grouped.
+
+### Version bump
+
+`0.2.0` → `0.3.0`.
+
 ## [0.2.0] - 2026-05-24
 
 ### Added — real `Pass::run` body (first non-identity optimization)

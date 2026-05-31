@@ -1,0 +1,374 @@
+//! Ported from `PeepholeFoldConstantsTest.java` in `google/closure-compiler`,
+//! Apache-2.0. Upstream SHA: see `tests/upstream/UPSTREAM_SHA`.
+//!
+//! Translation policy: see `code/specs/CLOC12-upstream-test-suite-port.md`.
+//!
+//! First port under CLOC12 — establishes the file layout and gap-tracking
+//! pattern. Covers a small subset of upstream's
+//! `PeepholeFoldConstantsTest` focused on cases that our `ConstantFoldPass`
+//! can fold today without language features still to come (no `typeof`,
+//! no `void 0`, no BigInt literal, no `NaN`/`Infinity` identifier).
+//!
+//! Tests that exercise features we don't fold yet are marked
+//! `#[ignore = "blocked on gap-NNN"]` with the gap recorded in
+//! `code/specs/CLOC12-gaps.md`. Running `cargo test -- --include-ignored`
+//! exercises those too and lets us measure progress as gaps close.
+
+use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
+use coding_adventures_closure_pass_pipeline::{Pass, PassContext};
+use coding_adventures_correlation_vector::CVLog;
+use coding_adventures_javascript_ast::{
+    statement::TaggedStatement, BinaryExpression, BinaryOperator, BooleanLiteral, Expression,
+    ExpressionStatement, NullLiteral, NumericLiteral, Program, ProgramItem, SourceType,
+    Statement, StringLiteral,
+};
+use coding_adventures_javascript_tokens::EsVersion;
+use coding_adventures_type_sidecar::Sidecar;
+
+// =====================================================================
+// Test-support helpers
+//
+// `b(...)` builds binary expressions, `n`/`s`/`bool_`/`null_` build the
+// matching literal expressions. Each upstream `test("input", "expected")`
+// becomes one call to `assert_fold(input_expr, expected_expr)`.
+//
+// These mirror the inline test helpers in `closure-pass-constant-fold`'s
+// own unit tests so the byte output is constructed the same way the
+// rest of the crate does it.
+// =====================================================================
+
+fn n(v: f64) -> Expression {
+    Expression::NumericLiteral(NumericLiteral {
+        cv: None,
+        value: v,
+        // Match the `raw` shape the inline tests use for integers and
+        // decimals; the constant-fold pass reads `value`, not `raw`.
+        raw: if v.fract() == 0.0 && v.is_finite() {
+            format!("{}", v as i64)
+        } else {
+            v.to_string()
+        },
+    })
+}
+
+fn s(v: &str) -> Expression {
+    Expression::StringLiteral(StringLiteral {
+        cv: None,
+        value: v.to_string(),
+        raw: format!("\"{}\"", v),
+    })
+}
+
+fn bool_(v: bool) -> Expression {
+    Expression::BooleanLiteral(BooleanLiteral { cv: None, value: v })
+}
+
+fn null_() -> Expression {
+    Expression::NullLiteral(NullLiteral { cv: None })
+}
+
+fn b(left: Expression, op: BinaryOperator, right: Expression) -> Expression {
+    Expression::BinaryExpression(BinaryExpression {
+        cv: None,
+        operator: op,
+        left: Box::new(left),
+        right: Box::new(right),
+    })
+}
+
+/// Wrap an expression as the only statement in a program, run
+/// `ConstantFoldPass` over it, and pull the (possibly-folded) top-level
+/// expression back out.
+fn fold_once(input: Expression) -> Expression {
+    let program = Program::new_untraced(EsVersion::Es2025, SourceType::Module).with_body(vec![
+        ProgramItem::Statement(Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: input,
+        })),
+    ]);
+    let pass = ConstantFoldPass::new();
+    let sidecar = Sidecar::new();
+    let mut cv = CVLog::new(false);
+    let ctx = PassContext {
+        program: &program,
+        sidecar: &sidecar,
+        cv: &mut cv,
+    };
+    let out = pass.run(ctx).expect("constant-fold pass run failed");
+    let item = out.program.body.into_iter().next().expect("body empty");
+    let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) = item
+    else {
+        panic!("unexpected program shape after fold");
+    };
+    es.expression
+}
+
+/// Upstream `test(input, expected)`. Run the fold and assert structural
+/// equality against the expected expression.
+fn assert_fold(input: Expression, expected: Expression) {
+    let actual = fold_once(input);
+    assert_eq!(
+        actual, expected,
+        "fold output did not match expected; actual = {:?}, expected = {:?}",
+        actual, expected
+    );
+}
+
+/// Upstream `testSame(input)`. Run the fold and assert the output is
+/// structurally identical to the input.
+fn assert_same(input: Expression) {
+    let before = input.clone();
+    let after = fold_once(input);
+    assert_eq!(
+        after, before,
+        "expected pass to leave expression unchanged; got {:?}",
+        after
+    );
+}
+
+// =====================================================================
+// Ported tests
+//
+// Each method below mirrors a `@Test public void <name>()` in upstream.
+// Order and naming track the upstream file so a future port re-sync
+// (CLOC12 §4) can diff cleanly.
+// =====================================================================
+
+/// Upstream:
+///
+///   test("undefined == undefined", "true");
+///   test("undefined === undefined", "true");
+///   ... (and many more)
+#[test]
+#[ignore = "blocked on gap-001: no `undefined`/`NaN`/`Infinity` literal in typed AST"]
+fn test_undefined_comparison_1() {
+    // Requires modeling `undefined` (and `void 0`) as literal-equivalent
+    // expressions in the typed AST + a fold rule recognising them.
+}
+
+/// Upstream:
+///
+///   test("\"123\" !== void 0", "true");
+///   test("\"123\" === void 0", "false");
+///   test("void 0 !== \"123\"", "true");
+///   test("void 0 === \"123\"", "false");
+#[test]
+#[ignore = "blocked on gap-002: typed AST has UnaryOperator::Void but constant-fold doesn't recognise it as `undefined`"]
+fn test_undefined_comparison_2() {
+    // `void 0` is `UnaryExpression { op: Void, argument: NumericLiteral(0) }`.
+    // Folding this to `undefined` requires gap-001 first.
+}
+
+/// Upstream:
+///
+///   test("null == null", "true");
+///   test("null === null", "true");
+///   test("null != null", "false");
+///   test("null !== null", "false");
+///   test("null < null", "false");
+///   test("null > null", "false");
+///   test("null >= null", "true");
+///   test("null <= null", "true");
+///
+/// (Subset of the full `testNullComparison1`. Lines that mention
+/// `undefined`, `void 0`, `NaN`, `Infinity` are deferred to gap-001.)
+///
+/// **Why this is currently `#[ignore]`-ed:** the pass's
+/// `try_fold_binary_op` has dedicated branches for
+/// `NumericLiteral`/`NumericLiteral`, `StringLiteral`/`StringLiteral`,
+/// `BooleanLiteral`/`BooleanLiteral` comparisons, but no branch for
+/// `NullLiteral`/`NullLiteral`. Trivial to add — see gap-007.
+#[test]
+#[ignore = "blocked on gap-007: NullLiteral OP NullLiteral fold not implemented"]
+fn test_null_comparison_1_self_relations() {
+    assert_fold(b(null_(), BinaryOperator::Eq, null_()), bool_(true));
+    assert_fold(b(null_(), BinaryOperator::StrictEq, null_()), bool_(true));
+    assert_fold(b(null_(), BinaryOperator::NotEq, null_()), bool_(false));
+    assert_fold(
+        b(null_(), BinaryOperator::StrictNotEq, null_()),
+        bool_(false),
+    );
+    assert_fold(b(null_(), BinaryOperator::Lt, null_()), bool_(false));
+    assert_fold(b(null_(), BinaryOperator::Gt, null_()), bool_(false));
+    assert_fold(b(null_(), BinaryOperator::GtEq, null_()), bool_(true));
+    assert_fold(b(null_(), BinaryOperator::LtEq, null_()), bool_(true));
+}
+
+/// Upstream:
+///
+///   test("null == 0", "false");
+///   test("null == 1", "false");
+///   test("null == 'hi'", "false");
+///   test("null == true", "false");
+///   test("null == false", "false");
+///
+/// Loose equality of `null` with anything non-null/non-undefined is
+/// `false`. Our pass folds `==` only when both sides are the *same* JS
+/// type (sound default — see crate-level docs); these are blocked
+/// pending a richer fold rule.
+#[test]
+#[ignore = "blocked on gap-003: cross-type `null == x` fold not implemented"]
+fn test_null_comparison_1_loose_against_other_types() {
+    assert_fold(b(null_(), BinaryOperator::Eq, n(0.0)), bool_(false));
+    assert_fold(b(null_(), BinaryOperator::Eq, n(1.0)), bool_(false));
+    assert_fold(b(null_(), BinaryOperator::Eq, s("hi")), bool_(false));
+    assert_fold(b(null_(), BinaryOperator::Eq, bool_(true)), bool_(false));
+    assert_fold(b(null_(), BinaryOperator::Eq, bool_(false)), bool_(false));
+}
+
+/// Upstream `testNumberNumberComparison` lines that use only literals:
+///
+///   test("1 > 1", "false");
+///   test("2 == 3", "false");
+///   test("3.6 === 3.6", "true");
+#[test]
+fn test_number_number_comparison_literal_lines() {
+    assert_fold(b(n(1.0), BinaryOperator::Gt, n(1.0)), bool_(false));
+    assert_fold(b(n(2.0), BinaryOperator::Eq, n(3.0)), bool_(false));
+    assert_fold(b(n(3.6), BinaryOperator::StrictEq, n(3.6)), bool_(true));
+}
+
+/// Upstream `testStringStringComparison` literal-only lines:
+///
+///   test("'a' < 'b'", "true");
+///   test("'a' <= 'b'", "true");
+///   test("'a' > 'b'", "false");
+///   test("'a' >= 'b'", "false");
+///   test("'a' == 'a'", "true");
+///   test("'b' != 'a'", "true");
+///   test("'a' === 'a'", "true");
+///   test("'b' !== 'a'", "true");
+#[test]
+fn test_string_string_comparison_literal_lines() {
+    assert_fold(b(s("a"), BinaryOperator::Lt, s("b")), bool_(true));
+    assert_fold(b(s("a"), BinaryOperator::LtEq, s("b")), bool_(true));
+    assert_fold(b(s("a"), BinaryOperator::Gt, s("b")), bool_(false));
+    assert_fold(b(s("a"), BinaryOperator::GtEq, s("b")), bool_(false));
+    assert_fold(b(s("a"), BinaryOperator::Eq, s("a")), bool_(true));
+    assert_fold(b(s("b"), BinaryOperator::NotEq, s("a")), bool_(true));
+    assert_fold(b(s("a"), BinaryOperator::StrictEq, s("a")), bool_(true));
+    assert_fold(b(s("b"), BinaryOperator::StrictNotEq, s("a")), bool_(true));
+}
+
+/// Upstream `testNumberStringComparison` lines that use only literals:
+///
+///   test("1 < '2'", "true");
+///   test("1 == '2'", "false");
+///   test("1 === '1'", "false");
+///   test("1 !== '1'", "true");
+///
+/// `1 == '2'` and friends are cross-type comparisons. Upstream folds
+/// them via the JS abstract equality algorithm. Our pass returns
+/// unchanged for mixed-type `==` (see crate doc); strict `===` between
+/// number and string is `false` by definition though, which we *can*
+/// fold today (literal types differ, strict equality short-circuits to
+/// false).
+#[test]
+#[ignore = "blocked on gap-004: mixed Number/String comparison fold (cross-type Eq, abstract Lt) not implemented"]
+fn test_number_string_comparison_literal_lines() {
+    assert_fold(b(n(1.0), BinaryOperator::Lt, s("2")), bool_(true));
+    assert_fold(b(n(1.0), BinaryOperator::Eq, s("2")), bool_(false));
+    assert_fold(b(n(1.0), BinaryOperator::StrictEq, s("1")), bool_(false));
+    assert_fold(b(n(1.0), BinaryOperator::StrictNotEq, s("1")), bool_(true));
+}
+
+/// Upstream specific lines:
+///
+///   test("1 === '1'", "false");
+///   test("1 !== '1'", "true");
+///
+/// These hold by JS-spec (strict equality requires same JS type; a
+/// Number and a String can never `===`). Our pass *could* fold these
+/// trivially but currently falls through `try_fold_binary_op`'s
+/// per-type branches — none of them match a mixed
+/// `NumericLiteral`/`StringLiteral` pair, so the binary node is
+/// returned untouched. Filed as gap-008; orthogonal to gap-004 (which
+/// is about *loose* equality and abstract relational comparison).
+#[test]
+#[ignore = "blocked on gap-008: cross-type strict equality fold (Number === String → false) not implemented"]
+fn test_number_string_strict_equality_lines() {
+    assert_fold(b(n(1.0), BinaryOperator::StrictEq, s("1")), bool_(false));
+    assert_fold(
+        b(n(1.0), BinaryOperator::StrictNotEq, s("1")),
+        bool_(true),
+    );
+}
+
+/// Upstream:
+///
+///   test("1 < 2", "true"); test("2 < 1", "false");
+///   test("1 == 1", "true"); test("2 == 1", "false");
+///
+/// Pure same-type comparisons — these are well within our current
+/// fold rules (literal vs. literal, both `Number`).
+#[test]
+fn test_basic_number_comparisons() {
+    assert_fold(b(n(1.0), BinaryOperator::Lt, n(2.0)), bool_(true));
+    assert_fold(b(n(2.0), BinaryOperator::Lt, n(1.0)), bool_(false));
+    assert_fold(b(n(1.0), BinaryOperator::Eq, n(1.0)), bool_(true));
+    assert_fold(b(n(2.0), BinaryOperator::Eq, n(1.0)), bool_(false));
+    assert_fold(b(n(1.0), BinaryOperator::StrictEq, n(1.0)), bool_(true));
+    assert_fold(b(n(2.0), BinaryOperator::StrictEq, n(1.0)), bool_(false));
+}
+
+/// Upstream `testStringStringComparison` `testSame` lines using
+/// `typeof` are deferred to gap-005 (no `typeof` constant fold).
+#[test]
+#[ignore = "blocked on gap-005: `typeof` operator constant-fold not implemented"]
+fn test_typeof_lines_from_string_string_comparison() {
+    // `typeof a < 'a'` → leave alone (unknown identifier);
+    // `typeof 3 > typeof 4` → 'number' > 'number' → false (fold-able);
+    // `typeof a === typeof a` → true (fold-able by identity).
+}
+
+/// Upstream "and similar" lines that boil down to plain arithmetic on
+/// literals show up across several `@Test` methods. Capture a sample
+/// here so this first port crate has a meaningful pass count:
+///
+///   test("2 + 3", "5");
+///   test("'a' + 'b'", "'ab'");
+///   test("'x' + 1", "'x1'");
+///   test("5 * 4", "20");
+///   test("10 / 2", "5");
+///   test("7 % 3", "1");
+///   test("2 ** 8", "256");
+///
+/// These mirror the truth-table in `closure-pass-constant-fold`'s
+/// crate-level docs.
+#[test]
+fn test_basic_arithmetic_folds() {
+    assert_fold(b(n(2.0), BinaryOperator::Add, n(3.0)), n(5.0));
+    assert_fold(b(s("a"), BinaryOperator::Add, s("b")), s("ab"));
+    assert_fold(b(s("x"), BinaryOperator::Add, n(1.0)), s("x1"));
+    assert_fold(b(n(5.0), BinaryOperator::Mul, n(4.0)), n(20.0));
+    assert_fold(b(n(10.0), BinaryOperator::Div, n(2.0)), n(5.0));
+    assert_fold(b(n(7.0), BinaryOperator::Mod, n(3.0)), n(1.0));
+    assert_fold(b(n(2.0), BinaryOperator::Exp, n(8.0)), n(256.0));
+}
+
+// =====================================================================
+// `testSame` checks — upstream lines that should NOT change
+// =====================================================================
+
+/// Upstream `testNumberNumberComparison`:
+///
+///   testSame("+x > +y");
+///   testSame("+x == +y");
+///
+/// Identifier-bearing expressions stay put. Lines that use `+x` (unary
+/// plus on identifier) are deferred to gap-006; we cover the plain
+/// identifier shape here to lock in the "don't touch identifiers" rule.
+#[test]
+fn test_same_when_either_side_has_an_identifier_subset() {
+    use coding_adventures_javascript_ast::Identifier;
+    let ident = |name: &str| {
+        Expression::Identifier(Identifier {
+            cv: None,
+            name: name.to_string(),
+        })
+    };
+    assert_same(b(ident("x"), BinaryOperator::Gt, ident("y")));
+    assert_same(b(ident("x"), BinaryOperator::Eq, ident("y")));
+    assert_same(b(ident("x"), BinaryOperator::StrictEq, ident("y")));
+    assert_same(b(ident("x"), BinaryOperator::Gt, ident("x")));
+}
