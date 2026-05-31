@@ -6,17 +6,23 @@ extern crate std;
 use core::fmt::{self, Write};
 
 use board_vm_host::{crc32_ieee, write_blink_module, BlinkProgram, HostError};
-use board_vm_ir::{parse_module, CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, MODULE_VERSION};
+use board_vm_ir::{
+    collect_required_capabilities, parse_module, RequiredCapabilitiesError, CAP_GPIO_OPEN,
+    CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, MODULE_VERSION,
+};
 use board_vm_protocol::{ProgramFormat, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 
 pub const DEFAULT_EJECT_SLOT: u8 = 0;
 pub const DEFAULT_BOOT_POLICY: u8 = BOOT_RUN_IF_NO_HOST;
+pub const MAX_EJECT_REQUIRED_CAPABILITIES: usize = 16;
 pub const BLINK_REQUIRED_CAPABILITIES: [u16; 3] =
     [CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EjectError {
     Host(HostError),
+    RequiredCapabilities(RequiredCapabilitiesError),
+    RequiredCapabilitiesMismatch,
     InvalidBootPolicy(u8),
     Fmt,
 }
@@ -30,6 +36,12 @@ impl From<HostError> for EjectError {
 impl From<fmt::Error> for EjectError {
     fn from(_: fmt::Error) -> Self {
         Self::Fmt
+    }
+}
+
+impl From<RequiredCapabilitiesError> for EjectError {
+    fn from(value: RequiredCapabilitiesError) -> Self {
+        Self::RequiredCapabilities(value)
     }
 }
 
@@ -131,6 +143,11 @@ pub fn build_module_eject_artifact<'a>(
     validate_boot_policy(options.boot_policy)?;
 
     let parsed = parse_module(module).map_err(HostError::from)?;
+    let mut derived_capabilities = [0u16; MAX_EJECT_REQUIRED_CAPABILITIES];
+    let derived_len = collect_required_capabilities(&parsed, &mut derived_capabilities)?;
+    if &derived_capabilities[..derived_len] != required_capabilities {
+        return Err(EjectError::RequiredCapabilitiesMismatch);
+    }
 
     Ok(EjectedProgram {
         program_id: options.program_id,
@@ -297,6 +314,22 @@ mod tests {
             error,
             EjectError::Host(HostError::Module(ModuleError::TooShort))
         );
+    }
+
+    #[test]
+    fn rejects_mismatched_generic_module_capabilities() {
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
+        let module = &module[..module_len];
+
+        let error = build_module_eject_artifact(
+            module,
+            &[CAP_GPIO_OPEN, CAP_TIME_SLEEP_MS],
+            EjectOptions::new(DEFAULT_PROGRAM_ID),
+        )
+        .unwrap_err();
+
+        assert_eq!(error, EjectError::RequiredCapabilitiesMismatch);
     }
 
     #[test]
