@@ -2083,6 +2083,94 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 10a (FC) — inclusive range `1..5` coverage confirmation.
+    //
+    // Inclusive ranges lower to `BuiltinCall("range", [a, b, false])`
+    // since Phase 6n.  Phase 10a (a coverage-confirmation phase, cf.
+    // 16b/16c) adds explicit lowering pins for inclusive ranges in
+    // positions the 6n tests skipped: assignment-RHS at statement level,
+    // string endpoints, and as an array-literal element.  Each asserts
+    // the inclusive flag is `false` so an accidental flag flip is caught.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn inclusive_range_in_assignment_rhs_lowers_with_false_flag() {
+        // `x = 1..5` at statement level — the assigned value is the range.
+        // A first-occurrence binding lowers to `LetBinding` (the frontend
+        // reserves `Assign` for re-binding an already-declared name), so
+        // accept either binding form and read its `value`.
+        let m = lower("x = 1..5\n");
+        let found = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        });
+        let value = found.expect("expected a binding statement for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "range");
+                assert_eq!(args.len(), 3, "expected [start, end, exclusive_flag]");
+                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[1], Expr::IntLit { value: 5, .. }));
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: false, .. }),
+                    "inclusive `..` should set the exclusive flag false; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn inclusive_range_string_endpoints_lower_with_false_flag() {
+        // `def r() ("a".."z") end` — string endpoints, inclusive.  Parens
+        // avoid the bare-NAME method-call ambiguity (lessons.md).
+        let m = lower("def r\n  (\"a\"..\"z\")\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert_eq!(args.len(), 3);
+                assert!(
+                    matches!(&args[0], Expr::StrLit { value, .. } if value == "a"),
+                    "expected start StrLit \"a\"; got {:?}",
+                    &args[0]
+                );
+                assert!(
+                    matches!(&args[1], Expr::StrLit { value, .. } if value == "z"),
+                    "expected end StrLit \"z\"; got {:?}",
+                    &args[1]
+                );
+                assert!(matches!(&args[2], Expr::BoolLit { value: false, .. }));
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn inclusive_range_as_array_element_lowers_and_validates() {
+        // `def r() [1..5] end` — a range as the sole element of an array
+        // literal.  The array's element is itself the range builtin, and
+        // the whole module survives validation (end-to-end pin).
+        let m = lower("def r\n  [1..5]\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::SeqLit { items, .. } => {
+                assert_eq!(items.len(), 1, "expected a one-element array");
+                match &items[0] {
+                    Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                        assert_eq!(args.len(), 3);
+                        assert!(matches!(&args[2], Expr::BoolLit { value: false, .. }));
+                    }
+                    other => panic!("expected range element, got {:?}", other),
+                }
+            }
+            other => panic!("expected SeqLit, got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected array-of-range: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //
