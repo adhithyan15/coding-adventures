@@ -1,0 +1,648 @@
+# UI33-S2 — Platform landscape review: is the single-IR thesis the right framing?
+
+> **Status.** Strategic review companion to UI33 and UI33-S. Doc-only.
+> **Reads honestly about whether UI33's "one .core compiled per
+> backend into one dispatcher contract" framing should be retired
+> or replaced.** Triggered by two prompts:
+>
+>   1. The UI33-S survey showed 4 of 7 existing backends already
+>      have a major idiom mismatch with the uniform-dispatcher
+>      approach.
+>   2. Mobile (Android, React Native, MAUI, Compose Multiplatform)
+>      should be a first-class concern from day one, not a
+>      follow-up — which adds ~6 more emit targets and forces a
+>      hard choice about scope.
+>
+> **The thesis on the table.** Each per-platform emitter should
+> become *substantially smarter* — encoding enough knowledge of its
+> platform's idioms that it can produce truly native-feeling code
+> from a high-level IR. The IR holds the intent; the emitter does
+> the heavy reasoning about platform mapping.
+>
+> **The empirical question this doc forces.** Has anyone ever shipped
+> the "single IR → many native UI platforms" approach successfully?
+> Because *if not*, we should know that before we build it.
+>
+> ---
+
+## 0. The empirical record — read this first
+
+Before we design our way around the problem, look at who has tried
+this before. The pattern of compromises is striking and consistent.
+
+### 0.1 Every "single source, many native UIs" project compromises one of two axes
+
+The field splits cleanly:
+
+| Camp                          | Strategy                                                                     | What they gave up                                  | Examples                                                             |
+|-------------------------------|------------------------------------------------------------------------------|----------------------------------------------------|----------------------------------------------------------------------|
+| **Draw our own pixels**       | Render every widget via Skia/Impeller/OpenGL/Metal/etc. on every platform.   | "Feels truly native" (looks consistent, not idiomatic). | Flutter, Compose Multiplatform, Qt, Slint                            |
+| **Bind to native widgets**    | Lower into UIKit / Android Views / Win32 / GTK widgets directly.             | "Write once" (abstractions leak; per-platform code creeps in). | React Native, KMM, MAUI, SwiftCrossUI, Skip                         |
+
+Nobody has cracked both. Every project on either side chose its
+compromise deliberately and shipped against it.
+
+### 0.2 The cautionary tale Mosaic UI cannot ignore
+
+**Dropbox** famously shipped a shared-C++-for-mobile-business-logic
+architecture for ~5 years (mid-2010s). The native iOS and Android
+apps both consumed the shared C++ core for sync, file management,
+offline state, etc. In 2019 they wrote a public post-mortem about
+why they were dismantling it and going back to native-per-platform.
+The summary, paraphrased:
+
+- The cost of maintaining the bridge between native UI and shared
+  core ended up larger than the cost of rewriting the business logic
+  per platform.
+- Platform-specific patterns (threading, persistence, lifecycle)
+  forced increasing amounts of platform-specific code *inside* the
+  shared core.
+- Hiring became harder: engineers wanted to work in idiomatic
+  platform stacks, not a custom one.
+
+This isn't proof that UI33 is wrong — but the symmetry is uncomfortable.
+We are proposing a shared business logic core (`mosaic-core-grid`)
+that lowers to 7+ idiomatic targets, with a generated bridge per
+target. The Dropbox failure was the same shape.
+
+### 0.3 The two real success stories — both with caveats
+
+- **Flutter** chose draw-our-own-pixels and committed fully. Output
+  *is* consistent, *isn't* idiomatic. Cupertino widgets approximate
+  UIKit but aren't UIKit. Text selection menus, accessibility tree,
+  scroll physics all subtly diverge from platform expectations. The
+  bet: most users don't care about this level of fidelity. Mostly
+  proven correct in the consumer-app market; mostly false for
+  productivity / accessibility-critical apps.
+- **React Native** chose bind-to-native-widgets and burned the bridge
+  (literally — the old JSON bridge was removed in 0.82; New
+  Architecture is default in 0.76+). A `<Text>` IS a real UILabel.
+  The bet: keeping native widget primitives means the abstraction
+  cost stays bounded. Mostly working — RN is gaining share into 2026.
+  Still: every shipped RN app has *some* per-platform code (native
+  modules, navigation customizations, etc.).
+
+### 0.4 Spiritual siblings to Mosaic UI
+
+Two recent-ish projects are directly comparable to what UI33 wants
+to be:
+
+- **SwiftCrossUI** — A SwiftUI-inspired API that compiles to AppKit,
+  UIKit, WinUI, GTK using **native widgets** per platform. Pre-1.0.
+  Small but actively developed. *This is the closest existing
+  precedent for UI33's ambition.* Its progress (and the gaps where
+  it hasn't shipped tier-1 platforms) is the realistic ceiling for
+  what a similar effort can achieve.
+- **Skip** (open-sourced Jan 2026 by SkipUI Inc) — Transpiles SwiftUI
+  source code → Jetpack Compose source code. Single Swift codebase
+  ships native iOS + native Android apps with native widgets on
+  both. Production-shipped apps exist. *Skip is the most successful
+  IR-to-many-native-platforms project to date* — and notice the
+  scope is narrow (iOS + Android only, both via known mappings).
+
+The pattern in §0.4: **narrow scope + native widgets = some success.
+Wide scope + native widgets = nobody yet.** UI33's seven existing
+backends + ~6 mobile additions = unprecedented scope.
+
+---
+
+## 1. The full platform landscape
+
+Updating UI33-S (which covered 7 backends) with the mobile / 2026
+state-of-the-art. Each entry has: **state container**, **action
+shape**, **adoption status**, **whether Mosaic targets it today**.
+
+### 1.1 Web — modest expansion needed?
+
+| Platform           | State container                     | Action / event shape                   | 2026 adoption       | Mosaic today  |
+|--------------------|-------------------------------------|----------------------------------------|---------------------|---------------|
+| **React DOM**      | `useReducer`, **Zustand** (now blessed over Redux), TanStack Query for server state | Tagged union; hooks-based dispatch | High (growth)       | ✅ covered    |
+| **HTML (static)**  | Plain ES module + EventTarget       | DOM events                             | Universal (stable)  | ✅ covered    |
+| **Web Components** | Lit `@property` + CustomEvent       | CustomEvent w/ detail                  | Medium (growth)     | ✅ covered    |
+| Vue                | Pinia, Composition API + ref/reactive | Composables                           | High (growth)       | ❌            |
+| Svelte             | Stores ($state in v5)                | Built-in reactivity                    | Medium (growth)     | ❌            |
+| SolidJS            | createSignal + createStore          | Built-in reactivity                    | Small (growth)      | ❌            |
+| Angular            | Signals (v17+), RxJS                | Services + Output emitters             | Medium (stable)     | ❌            |
+| Qwik               | useStore, useSignal                 | Resumability primitives                | Small (growth)      | ❌            |
+
+The four extra web frameworks (Vue, Svelte, Solid, Angular) are
+each big enough ecosystems that adding them would be ~3-6 months
+each. **They are not in current Mosaic scope and should stay out
+unless a real demand emerges.**
+
+### 1.2 Apple — UIKit gap, but small
+
+| Platform     | State container                                  | Action / event shape       | 2026 adoption                    | Mosaic today  |
+|--------------|--------------------------------------------------|----------------------------|----------------------------------|---------------|
+| **SwiftUI**  | `@Observable` (iOS 17+); else `ObservableObject`  | Method calls / Action enum | High (default for new code)      | ✅ covered    |
+| UIKit        | No blessed standard; MVVM + Combine `@Published` is closest | Delegate / closure / Combine | Maintenance — new code is SwiftUI | ❌ |
+| AppKit       | Same as UIKit (NSResponder hierarchy)             | Same                       | Legacy macOS                     | ❌            |
+
+SwiftUI already covers iOS, iPadOS, macOS, watchOS, tvOS, visionOS
+from a single emit target. **UIKit gap is small; not worth a tier-1
+emitter.**
+
+### 1.3 Android — major gap
+
+| Platform           | State container                                              | Action / event shape           | 2026 adoption          | Mosaic today  |
+|--------------------|--------------------------------------------------------------|--------------------------------|------------------------|---------------|
+| **Jetpack Compose**| `ViewModel` + `StateFlow` + `collectAsStateWithLifecycle`; `remember { mutableStateOf }` for UI-only | Lambdas (UDF); side effects in `viewModelScope.launch` | High (default for new code) | ❌ |
+| Android Views (XML+Kotlin) | LiveData, ViewModel, Data Binding                    | Click listeners                | Maintenance            | ❌            |
+
+**Android is the biggest gap.** Mosaic UI today cannot target
+Android natively at all. If "future mobile apps" is a real
+constraint, Jetpack Compose has to land — and *should* land as
+tier-1, not as an afterthought.
+
+### 1.4 Microsoft — XAML covered, MAUI/Avalonia gap
+
+| Platform     | State container                              | Action / event shape         | 2026 adoption        | Mosaic today  |
+|--------------|----------------------------------------------|------------------------------|----------------------|---------------|
+| **WinUI 3 (XAML)** | `CommunityToolkit.Mvvm` `ObservableObject` + `[RelayCommand]` | `ICommand` (RelayCommand) | High (Win desktop) | ✅ covered    |
+| WPF          | Same                                          | Same                          | Stable (legacy)      | ✅ effectively (XAML emit works)   |
+| .NET MAUI    | Same (XAML or C# markup)                     | Same                          | Stable (Win+iOS+And+Mac) | ❌        |
+| Avalonia     | Same                                          | Same                          | Growth (cross-platform XAML, incl. Linux + WebAssembly) | ❌ |
+
+MAUI / Avalonia are largely "XAML emitter with different ceremony"
+— the existing XAML emit-target is most of the work. **Adding both
+as variants of the existing XAML emitter is medium effort, not a
+fresh per-platform investment.**
+
+### 1.5 Cross-platform UI toolkits — the strategic-choice section
+
+| Platform           | State container                              | Action / event shape         | 2026 adoption                                  | Mosaic today  |
+|--------------------|----------------------------------------------|------------------------------|------------------------------------------------|---------------|
+| **Flutter**        | `ChangeNotifier`, `flutter_bloc` (sealed events+states), Riverpod | Sealed class events / callbacks | High (mobile + desktop + web)             | ✅ covered    |
+| **React Native**   | React hooks + Zustand; Expo Router blessed for nav | Tagged union (same as React DOM) | High (mobile, ~Expo)                       | ❌ (RN DOM ≠ React DOM at the emit layer)     |
+| **Compose Multiplatform** | `StateFlow` + `ViewModel` (now KMP-common); same as Jetpack Compose | Same as Compose | Production-ready since CMP 1.8 (May 2025); strong growth | ❌ |
+| Qt (QML/C++)       | `QObject` + `Q_PROPERTY` + `NOTIFY`           | Signal/slot                   | Stable (desktop); mobile story never won       | ✅ covered (desktop) |
+| Tauri              | Rust backend + web frontend; `invoke()` IPC; `tauri::State` | Rust command functions  | Growth (Electron alternative)                  | ❌            |
+| Slint              | Property bindings + native rendering         | Signals (similar to QML)      | Small (growth)                                 | ❌            |
+| GTK4 (Linux desktop)| GObject + property bindings                  | Signals                       | Stable (Linux desktop)                         | ❌            |
+| Kotlin Multiplatform Mobile (KMM, no shared UI) | Per-platform UI (SwiftUI + Compose) over shared business logic in Kotlin | Per-platform native | Strong growth in Android-rooted shops | n/a (KMM is shared logic, not shared UI) |
+
+This row matters most because **the cross-platform toolkits are
+strategic alternatives to Mosaic's own approach**. We could plausibly
+ship by adopting one of them as the everything-target, instead of
+building UI33's IR + emitters from scratch.
+
+### 1.6 The platforms we should *not* try to cover
+
+| Platform           | Why skip                                                              |
+|--------------------|------------------------------------------------------------------------|
+| TUI (terminal)     | Different paradigm — text-only, no widget tree in the Mosaic sense    |
+| Game engines (Unity, Unreal, Godot) | UI is a sub-system inside a larger non-UI runtime    |
+| AR/VR (RealityKit, Unity XR) | Different interaction model (spatial, not 2D widget tree)    |
+| Voice-first / accessibility-first | Different from "rendered UI" entirely                     |
+
+These are not in scope for this discussion. Mention them only to be
+explicit about boundaries.
+
+### 1.7 The honest scope expansion math
+
+If we keep the existing 7 + add what genuinely matters for the
+mobile + cross-platform story:
+
+| Adding                | Effort estimate (relative)                    | Coverage gained                                              |
+|-----------------------|------------------------------------------------|--------------------------------------------------------------|
+| Jetpack Compose       | Heavy (new language, new ecosystem)            | Android native                                               |
+| React Native          | Medium (shares React's reducer/hook model)     | iOS + Android via JS                                         |
+| Compose Multiplatform | Heavy initially, big payoff                    | iOS + Android + Desktop + Web (Wasm) from one Kotlin target  |
+| MAUI / Avalonia       | Light (XAML emitter variants)                  | Cross-Microsoft + Linux/Mac/Mobile via XAML                  |
+| Vue / Svelte / Solid / Angular | Medium each                            | Web framework breadth                                        |
+| UIKit                 | Medium                                         | Legacy iOS                                                   |
+
+**The "mobile-first-class" decision adds at least Jetpack Compose +
+React Native or Compose Multiplatform.** Realistically, three new
+heavy emitters at minimum.
+
+---
+
+## 2. Honest assessment of UI33's current shape, given the landscape
+
+UI33 (as merged) commits to:
+
+- A single `.core` DSL that lowers to per-backend reducers + state +
+  dispatcher.
+- A `.disp` DSL that wires component emits to core actions.
+- 7 backends today, with a stated intent to extend.
+- A dispatcher pattern that, per UI33-S, is unidiomatic on 3 of 7.
+
+Adding Jetpack Compose + React Native + MAUI + Compose MP to this
+approach:
+
+- Multiplies the per-backend emitter count from 7 to ~12.
+- Each new emitter is a substantial undertaking (per §1.7).
+- The `.core` IR's expressive limits get stretched further: e.g.
+  Jetpack Compose's `StateFlow + collectAsStateWithLifecycle` is a
+  *very specific* coroutine pattern that's awkward to express
+  generically; Compose MP shares it; React Native shares hooks with
+  React DOM but the navigation/lifecycle differs.
+- The dispatcher pattern's "uniform contract" gets harder to defend
+  per added platform.
+
+**This is the moment to honestly ask: is UI33's framing still
+right?** Three possible answers, each requires different work:
+
+1. **Yes** — keep going, accept the per-emitter cost, ship the IR-
+   to-many-native-targets approach despite the empirical record.
+2. **Yes, but narrower** — keep UI33's shape but restrict to a
+   pragmatic tier-1 set and *intentionally* delegate the others to
+   existing cross-platform stacks.
+3. **No** — retire UI33's "single .core for everything" framing.
+   Replace with something honest about per-platform-family-divergence.
+
+The recommendation in §5 picks #2 with a strong tilt toward
+intelligence-in-the-emitter.
+
+---
+
+## 3. The "smarter backend" thesis, examined
+
+The user's hint: "we might need the backend to become smarter at
+what it does." Unpack what this could mean concretely:
+
+### 3.1 What "smarter" can mean
+
+| Axis                   | "Dumb" emitter                                   | "Smart" emitter                                                                                   |
+|------------------------|--------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| Code generation        | Lowers IR node-by-node to target syntax          | Understands target idioms (composables, modifiers, ICommand) and emits in target's preferred patterns |
+| State management       | Generates generic store + dispatch contract      | Generates target-blessed container (`@Observable`, `StateFlow + ViewModel`, `ObservableObject`)   |
+| Accessibility          | Emits ARIA on web, ignores elsewhere             | Emits VoiceOver hints / TalkBack labels / Narrator on each target as a default                    |
+| Navigation             | Out of scope                                      | Generates `expo-router` routes for RN, `NavigationStack` for SwiftUI, NavHost for Compose, etc.   |
+| Hot reload / DevTools  | Out of scope                                      | Emits with the platform's hot-reload story (`Flipper` for RN, `Compose Preview`, `SwiftUI Previews`) preserved |
+| Project shell          | UI32 covers ad-hoc shell generation               | Smart emitter knows the platform's build system, manifest format, CI templates, store-listing requirements |
+| Testing                | None                                              | Generates platform-blessed test scaffolds (`@Preview`, `XCTest`, `WidgetTester`, `compose-ui-test`) |
+| Theming / dark mode    | Static `.msl` mapping                             | Smart emitter integrates target's dynamic-theme APIs (UITraitCollection, DynamicColor, Material You) |
+
+A "smart emitter" doesn't just translate the IR — it knows the
+platform deeply enough to produce something a native developer
+would actually ship.
+
+### 3.2 What "smart emitter" costs
+
+This is not free. Per platform, "smart emitter" implies:
+
+- Substantial domain expertise encoded in the emitter (months of work
+  per platform).
+- Tracking the platform's evolution (SwiftUI changes every WWDC;
+  Compose changes quarterly; React Native rebuilds its architecture
+  every few years).
+- Test coverage: each smart emitter needs golden-file tests against
+  real platform builds, not just unit tests on the emitter logic.
+
+The math: if a smart emitter is 6× the work of a dumb emitter, and
+we want 7 + Jetpack Compose + RN + Compose MP = 10 smart emitters,
+that's 60× the work of one dumb emitter. **Realistically, smart
+emitters are a tier-1-only investment.**
+
+### 3.3 Smart emitters AS the answer to UI33's idiom mismatch
+
+§3 of UI33-S found that 4 of 7 current backends have major idiom
+mismatch with UI33's uniform dispatcher. **A smart emitter would
+not have that mismatch** — it would map the IR to the platform's
+blessed pattern automatically, regardless of what other backends
+do.
+
+This is the strongest argument for the smarter-backend direction:
+the idiom mismatch isn't a UI33 spec problem — it's a "current
+emitters are too dumb to bridge IR semantics to platform idioms"
+problem. Smart emitters fix it structurally.
+
+### 3.4 The risk of smart emitters
+
+The dual of the cost: smart emitters mean the emitter codebase
+becomes the largest, most platform-specific, hardest-to-maintain
+part of Mosaic. They become **specialty crates** that the wider
+contributor pool can't easily touch. Bus factor on each smart
+emitter is small.
+
+This is exactly the trade-off the user signaled they want
+("intelligence in the framework, not the weights" — but the
+intelligence has to live somewhere, and "somewhere" means specialist
+maintainers per emitter).
+
+---
+
+## 4. Architectural options — six honest paths
+
+Each option is internally consistent. Pick one (or a hybrid).
+
+### Option A — Continue UI33 as written
+
+Ship the `.core` + `.disp` DSL grammar. Emit per backend in the
+current "dumb emitter" shape. Accept the idiom mismatch UI33-S
+found. Extend to Jetpack Compose, RN, Compose MP, MAUI by
+replicating the existing emitter pattern.
+
+| Pros                                          | Cons                                                                  |
+|-----------------------------------------------|-----------------------------------------------------------------------|
+| Already in flight (PRs #4627 merged)          | Idiom mismatch on >50% of platforms                                   |
+| Single source of truth                         | Empirical record (§0) suggests this approach has a small success ceiling |
+| Cheapest per added platform                    | Mobile + cross-platform additions multiply the problem                |
+| No new specs                                   | Each new emitter adds dispatcher contract friction                    |
+
+**When to pick:** if velocity matters more than per-platform feel,
+and the demos can absorb the awkward output.
+
+### Option B — Smart emitters per platform (the user's "smarter backend" thesis)
+
+Same `.core` + `.disp` IR as UI33. **Every emitter becomes
+substantially smarter** — encodes its platform's idioms deeply,
+emits idiomatic state containers, accessibility, navigation, theme
+integration, project shells. The dispatcher pattern adapts per
+backend (reactive method calls on SwiftUI/Qt/XAML/Compose;
+event-flow dispatch on React/Flutter/HTML/WebComp/RN).
+
+| Pros                                          | Cons                                                                       |
+|-----------------------------------------------|----------------------------------------------------------------------------|
+| Output feels native on every platform          | ~6× the per-emitter engineering cost                                       |
+| `.core` IR stays as one source of truth        | Specialty maintainer per emitter                                           |
+| Idiom mismatch (UI33-S) resolved structurally  | Slow per-platform onboarding; we ship Compose 6 months after announcing it |
+| Mobile is tier-1 from day one                  | The IR-to-many-native graveyard (§0) still applies                         |
+
+**When to pick:** if "feels native everywhere" is non-negotiable and
+the team can absorb the per-emitter cost. **The user's stated
+preference.**
+
+### Option C — Universal UI IR + per-platform-family logic cores
+
+Split the architecture:
+
+- **Mosaic UI (`.mil` / `.mll` / `.msl`) stays universal** — the
+  view layer is the one thing that genuinely composes across
+  platforms (declarative tree, slot-based composition, kernel
+  primitives).
+- **Business logic cores fragment by platform family**:
+  - Web family (`mosaic-core-web/grid` in TypeScript, used by
+    React, Vue, Svelte, Solid, Angular, HTML, Web Components)
+  - Apple family (`mosaic-core-apple/grid` in Swift, used by
+    SwiftUI on iOS/macOS/etc.)
+  - Android/Kotlin family (`mosaic-core-android/grid` in Kotlin,
+    used by Jetpack Compose, KMM, Compose MP)
+  - Dart family (`mosaic-core-dart/grid`, used by Flutter)
+  - .NET family (`mosaic-core-dotnet/grid`, used by XAML, MAUI,
+    Avalonia)
+
+Each core is *written natively in its target language family*, so
+it's automatically idiomatic. The Mosaic dispatcher then wires
+emits in any backend to the appropriate family's core.
+
+| Pros                                          | Cons                                                                      |
+|-----------------------------------------------|---------------------------------------------------------------------------|
+| Cores are idiomatic by construction           | Cores written 5× instead of once                                          |
+| No `.core` DSL needed at all (saves UI33-G-* PRs) | The "single source of truth" thesis is gone                            |
+| Family-level reuse is real (one TS core works for 5+ web frameworks) | Cross-family bug-fix coordination becomes a thing       |
+| Matches what KMM has actually shipped successfully | Authors of new cores need to know multiple languages                  |
+
+**When to pick:** if you accept that the IR-to-native-everywhere
+bet is a graveyard and the honest answer is to write business logic
+once per language family, not once for everyone.
+
+### Option D — Tier 1 / Tier 2 platforms
+
+Same as Option B (smart emitters), but explicitly only on a tier-1
+subset. Tier-2 platforms get the today-style dumb emitter (or no
+core support at all).
+
+Suggested tier split:
+
+- **Tier 1** (smart emitter, full state + override mechanisms):
+  React DOM, SwiftUI, Jetpack Compose, Flutter, XAML/WinUI, HTML.
+- **Tier 2** (view-emission only, hosts wire their own state):
+  Web Components, Qt, MAUI, Avalonia, React Native, Compose MP.
+- **Not supported**: Vue, Svelte, Solid, Angular, UIKit.
+
+| Pros                                          | Cons                                                                       |
+|-----------------------------------------------|----------------------------------------------------------------------------|
+| Honest about where investment goes             | Tier-2 feels second-class to the people who use it                         |
+| Tier-1 set is shippable                        | "Why isn't my platform tier 1?" politics                                   |
+| Mobile (Compose, RN) gets first-class treatment | Tier-2 platforms can't get core-based business logic — host writes it all |
+
+**When to pick:** as a pragmatic compromise. Avoids over-promising.
+
+### Option E — Adopt an existing cross-platform stack as the everything-target
+
+The honest reframe: **stop emitting native UI per platform, and
+ship Mosaic UI as a DSL that emits to one excellent cross-platform
+target.**
+
+Realistic candidates:
+
+- **Flutter** — covers iOS, Android, web, desktop. Most mature
+  cross-platform widget framework. The draw-pixels compromise (see
+  §0.3).
+- **Compose Multiplatform** — covers Android, iOS, desktop, web
+  (Wasm). Production-ready as of mid-2025. Same draw-pixels
+  compromise.
+- **React Native + RN-Web** — covers iOS, Android, web. Native
+  widgets on mobile, DOM on web. Different runtimes inside but one
+  authoring surface.
+
+Mosaic UI's IR (`.mil/.mll/.msl/.core/.disp`) becomes a layer
+*above* one of these — emitting only that target. The other
+emitters disappear.
+
+| Pros                                          | Cons                                                                      |
+|-----------------------------------------------|---------------------------------------------------------------------------|
+| The cross-platform target has already solved the IR-to-native problem | Mosaic UI becomes "yet another layer above Flutter / Compose MP" — value-add is real but smaller |
+| Massive scope reduction — one tier-1 emitter, not 12 | Lose XAML/WinUI/etc. (the cross-platform targets don't cover Win desktop natively, though Flutter does) |
+| Mobile is solved by adoption                  | Inherit the chosen target's compromises (consistent-not-idiomatic)        |
+| 90% less engineering work                     | The "intelligence in framework" thesis is gone — Flutter/Compose IS the intelligence |
+
+**When to pick:** if the goal is shipping apps, not building
+infrastructure. The fastest path to "I have a Mosaic-UI iOS+Android
+app shipping in production."
+
+### Option F — Hybrid: smart emitters for the desktop/web side, adopted target for mobile
+
+- Smart per-platform emitters for **the platforms where "feels
+  native" really matters and a smart emitter is achievable**:
+  - React DOM (web)
+  - SwiftUI (Apple)
+  - XAML / WinUI (Windows desktop)
+  - HTML (server-rendered)
+- **Adopt Compose Multiplatform for mobile** — Jetpack Compose
+  emit-target on Android, with the same Kotlin core auto-shared to
+  iOS via CMP. Single mobile target instead of "Android emit + iOS
+  emit + RN emit + Flutter emit."
+- Web Components + Qt + Flutter + RN become **secondary targets**:
+  hand-tuned wrappers, no core machinery, deprioritized.
+
+| Pros                                          | Cons                                                                      |
+|-----------------------------------------------|---------------------------------------------------------------------------|
+| Mobile solved via adoption (smaller blast radius than Option E) | Forces Kotlin + Compose MP as the mobile stack — not everyone's preference |
+| Desktop/web stays first-class                  | Two architectural paradigms in one project (smart emit vs. adopted target) |
+| Realistic scope                                | Compose MP iOS rendering is still maturing; betting on its trajectory     |
+
+**When to pick:** if you want "feels native everywhere we control,
+adopt where the field has already won." This is the most pragmatic
+option.
+
+---
+
+## 5. Recommendation
+
+**Option F.** With these specifics:
+
+### 5.1 Reframed scope
+
+| Tier | Platforms | Approach |
+|---|---|---|
+| **Tier 1 — smart emitter, full Mosaic core support** | React DOM, SwiftUI (iOS+macOS+watchOS+tvOS+visionOS), WinUI 3 / XAML, HTML | Encode platform idioms deeply per emitter. Generated code feels native. State containers use platform-blessed patterns (Zustand-hook / @Observable / ObservableObject+RelayCommand). |
+| **Tier 1 — adopted cross-platform stack** | Jetpack Compose (via Compose Multiplatform Android target) | One emitter that compiles Mosaic IR → Kotlin Compose source. Android-first; iOS via CMP comes "for free" as the same emit target. |
+| **Tier 2 — view-emission only, host wires logic** | Flutter, Qt, Web Components, MAUI, Avalonia, React Native | Existing-style emitters. No core support; hosts write their own state. Documented gap; could be promoted later. |
+| **Out of scope** | Vue, Svelte, Solid, Angular, UIKit, Compose MP on iOS as standalone (covered via tier-1 Compose), Tauri | Stay out unless real demand. |
+
+### 5.2 What changes in UI33
+
+| Section | Change |
+|---|---|
+| Three-layer architecture (§2) | Stays — but dispatcher is *compile-time-only*, narrows to "wire emits to native-shape core methods per backend" |
+| `.core` DSL (§3) | Lives only for Tier-1 platforms. The DSL has to be IDIOM-AWARE — its lowering rules differ per backend (reactive vs event-flow modes). |
+| `.disp` DSL (§4) | Lives only for Tier-1 platforms. Tier-2 platforms get a manual host wiring escape hatch. |
+| `--emit-project` (§5) | Stays, expands to include Jetpack Compose / Compose MP project shells. |
+| Migration plan (§7) | Replaced by §5.3 below. |
+| Implementation plan (§8) | Replaced by §5.4 below. |
+
+### 5.3 Migration policy
+
+- **No big-bang migration.** Today's demos keep working.
+- Existing Mosaic UI components (`.mil/.mll/.msl`) keep emitting to
+  all 7 current backends. View-layer emission is universal —
+  *that's not the part we're questioning*.
+- The new `.core/.disp` layer ships as **tier-1-only opt-in**.
+  Tier-2 platforms ignore it.
+- VisiCalc-React migrates first (already planned in UI33).
+  VisiCalc-Compose ships next (validates the adopted-stack
+  approach). VisiCalc-SwiftUI third (validates smart-emit on
+  Apple). The 3 pilots are the architectural validation.
+
+### 5.4 Implementation phasing — replaces UI33 §8
+
+| Phase | PRs | Goal |
+|---|---|---|
+| **Phase 0** — landscape decisions | This doc + UI33 amendments | Adopt §5.1 scope; mark tier-2 platforms explicitly; retire "uniform dispatcher contract" framing |
+| **Phase 1** — `.core` grammar | UI33-G-1..13 | Same as today's UI33 plan |
+| **Phase 2** — `.disp` grammar | UI33-D-1..9 + W1 | Same as today's UI33 plan |
+| **Phase 3** — React smart emitter | UI33-E-react-1..4 | Reference smart emitter. `useGridCore()` hook + actions object + per-state-slot subscriptions |
+| **Phase 4** — `mosaic-core-grid` v0.1.0 + VisiCalc-React pilot | UI33-R-1, UI33-V-react | First validating end-to-end run |
+| **Phase 5** — SwiftUI smart emitter | UI33-E-swiftui-1..4 | `@Observable` class + method-call action shape + .onChange-style modifiers |
+| **Phase 6** — VisiCalc-SwiftUI pilot | UI33-V-swiftui | Validates smart-emit on a reactive platform |
+| **Phase 7** — Compose / Compose MP emitter | UI33-E-compose-1..5 | The mobile-tier-1 emitter. `ViewModel + StateFlow + collectAsStateWithLifecycle`. Lands Android natively; CMP iOS comes from the same emit. |
+| **Phase 8** — VisiCalc-Android pilot | UI33-V-android | Validates the adopted-stack approach. Mobile is shippable. |
+| **Phase 9** — XAML smart emitter | UI33-E-xaml-1..3 | `ObservableObject` + `[ObservableProperty]` + `[RelayCommand]` via CommunityToolkit.Mvvm |
+| **Phase 10** — HTML smart emitter | UI33-E-html-1..3 | Opinionated hydrator + plain ES module + EventTarget. Shared module with WebComp. |
+| **Phase 11** — additional Tier-1 cores | UI33-C-* | mosaic-core-form, mosaic-core-list, mosaic-core-tree, mosaic-core-tabs, mosaic-core-router (per UI33 §8 Phase 6) |
+
+**Roughly the same number of PRs as today's UI33 plan, but the
+emitter PRs each carry substantially more work** (smart-emit is
+~3-6x dumb-emit). Realistic timeline: 3-6 months for Phases 0-8;
+another 3 months for Phases 9-11.
+
+### 5.5 What we're explicitly NOT doing
+
+- Not building a Flutter / RN / Qt smart-emitter (they stay tier-2,
+  hand-wired hosts only).
+- Not building emitters for Vue / Svelte / Solid / Angular.
+- Not adopting Flutter / Compose MP / RN as the everything-target
+  (i.e. *not* Option E in §4). Tier-1 platforms keep getting
+  smart-emit treatment to preserve "feels native" for those.
+- Not addressing platform-specific concerns the IR can't sensibly
+  express (gesture systems, AR overlays, push notifications, deep
+  links). Those stay in host extension points.
+
+---
+
+## 6. What this changes about UI33 (concrete amendments)
+
+If this recommendation lands, UI33 needs:
+
+1. **§2 architecture diagram** — explicitly mark dispatcher as
+   compile-time-only. Show the Tier 1 / Tier 2 split.
+2. **§3 per-backend table (Grid core emission)** — replace with the
+   §3.3 table from UI33-S (the idiomatic per-backend shape table)
+   AND add Jetpack Compose row.
+3. **§3.4 (no async)** — re-affirm. The host extension-point is
+   where async lives, including coroutines on Compose,
+   `Task { await }` on SwiftUI, etc.
+4. **§4 dispatcher** — narrow to compile-time binding generator.
+5. **§5 `--emit-project`** — extend to include Compose / Compose MP
+   project shells (`build.gradle.kts`, `composeApp/`, etc.).
+6. **§6 reference core** — add VisiCalc-Compose as the second pilot;
+   keep VisiCalc-React as the first. Mention VisiCalc-SwiftUI as
+   the third.
+7. **§7 migration** — replace with §5.3 above.
+8. **§8 implementation plan** — replace with §5.4 above.
+9. **NEW §X — Tier 1 / Tier 2 / Out of scope policy** — explicit
+   list with the criteria for promotion/demotion.
+
+---
+
+## 7. Open questions for the user
+
+Before any of this gets written into a UI33 amendment, the
+following need a decision:
+
+1. **Tier-1 set** — confirm React DOM, SwiftUI, Compose (via CMP),
+   XAML, HTML? Or different?
+2. **Adopted cross-platform stack for mobile** — Compose
+   Multiplatform (recommendation above) vs. Flutter vs. React
+   Native + RN-Web vs. KMM?
+3. **Web framework breadth** — really stay React-only on Tier 1, or
+   add Vue/Svelte/Solid? (My recommendation: stay React-only until
+   demand emerges.)
+4. **MAUI/Avalonia** — keep as Tier-2 view-emission only, or
+   promote to Tier-1? They share XAML's emit machinery so cost is
+   medium, not heavy.
+5. **The "smart emitter" investment** — comfortable with 3-6x the
+   per-emitter cost? Comfortable with specialist maintainers per
+   emitter?
+6. **Tier-2 demotion path for current backends** — Flutter, Qt, Web
+   Components, RN are listed as Tier-2 in §5.1. They keep working
+   as view-only emitters. Confirm that's OK vs. keeping them all
+   tier-1.
+7. **VisiCalc as the pilot, three times** — VisiCalc-React,
+   VisiCalc-Compose (Android), VisiCalc-SwiftUI (Apple) all need to
+   work end-to-end before the architecture is considered validated.
+   Three pilots is more work than today's "VisiCalc-React only."
+   Comfortable with that gate?
+8. **The Skip / SwiftCrossUI question** — given Skip (Swift→Compose)
+   exists and is open source, is there a case for *consuming* Skip
+   instead of building our own Swift+Compose mapping? Skip is the
+   most successful spiritual sibling project; ignoring it is a
+   bigger statement than competing with it.
+
+---
+
+## 8. The honest closing
+
+UI33 as written can ship. It will produce working applications.
+It will *not* produce applications that feel native on most
+backends, because the dispatcher contract is unidiomatic on more
+backends than it's idiomatic on.
+
+The mobile expansion makes this 2× worse, not 2× better. We are
+about to commit substantial engineering to a pattern that doesn't
+yet have a precedent at the scope we're attempting (§0).
+
+The smartest investment is probably:
+
+- Stop multiplying emitters with the same "dumb" approach. Make
+  fewer emitters, each substantially smarter.
+- Use the adopted-stack trick (Compose Multiplatform) to cover
+  mobile + part of desktop with one smart emitter instead of three
+  separate ones.
+- Be honest about tiers. Don't ship "Mosaic supports 12 backends"
+  when 6 of them feel non-native.
+- Make sure 3 pilots (one tier-1 reactive, one tier-1 event-flow,
+  one adopted-stack mobile) validate the architecture before
+  expanding.
+
+This is more conservative than the current UI33. It is also more
+likely to ship a thing engineers actually want to use.
+
+---
+
+*End of review. Recommend reading §0 + §5 + §7 even if skipping
+everything else.*
