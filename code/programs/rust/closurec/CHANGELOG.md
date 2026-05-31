@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.43.0] - 2026-05-31
+
+### Added — CLOC11.80: end-to-end integration test for JSON summary format
+
+New integration test `tests/diff_cv_json_summary.rs` exercises the CLOC11.74 JSON summary format end-to-end via the actual binary:
+
+```bash
+closurec \
+  --correlation_vector \
+  --correlation_vector_summary \
+  --correlation_vector_summary_format JSON \
+  --js tests/diff/cv-json-summary/input/a.js \
+  --js_output_file <tmpdir>/out.js
+```
+
+### Contract pinned
+
+1. stdout contains a single-line JSON object that parses cleanly via `serde_json::from_str`.
+2. Top-level key is `cv_sidecar`; its value is an object.
+3. The object has all six expected fields with the right JSON types:
+   - `path`: string (non-empty when a sidecar was written)
+   - `skipped`: bool (false when written)
+   - `entries`: integer
+   - `contributions`: integer
+   - `tombstones`: integer
+   - `pass_order`: array of strings
+4. closurec exits 0 and writes the JS output normally.
+
+### Why a separate integration test
+
+CLOC11.74 unit tests verify the JSON serializer in isolation. This test drives it through the full binary path (CLI parse → wire → `run_compiler` → `summary_line` → stdout) and parses the result back with serde_json, so any drift that breaks JSON well-formedness (e.g. an unescaped path containing a quote) shows up here immediately. Completes the trio (TEXT covered by 11.77, KV by 11.79, JSON by 11.80).
+
+### Changed
+
+- Versions: `Cargo.toml` `0.42.0` → `0.43.0`, `cli.spec.json` `0.42.0` → `0.43.0`.
+
 ## [0.42.0] - 2026-05-31
 
 ### Added — CLOC11.79: end-to-end integration test for KV summary format
