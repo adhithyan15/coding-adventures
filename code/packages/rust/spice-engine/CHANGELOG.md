@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `dc_temperature_sweep` and `format_temperature_dc_table` for stable
+  tab-separated DC operating-point snapshots across explicit `.temp`-style
+  analysis temperatures.
 - Add `format_adaptive_transient_table`, `transient_adaptive_corners`, and
   `format_corner_adaptive_transient_table` for stable tab-separated adaptive
   transient sample text output snapshots, including method, rejected-step, and
