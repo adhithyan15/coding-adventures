@@ -3049,6 +3049,8 @@ mod tests {
         assert!(source.contains("pub const BOARD_VM_PROGRAM_ID: u16 = 7;"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM_SLOT: u8 = 2;"));
         assert!(source.contains("pub const BOARD_VM_BOOT_POLICY: u8 = 2;"));
+        assert!(source.contains("pub const BOARD_VM_REQUIRED_CAPABILITIES: [u16; 3] = ["));
+        assert!(source.contains("0x0001, 0x0002, 0x0010,"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM: [u8; 36] = ["));
     }
 
