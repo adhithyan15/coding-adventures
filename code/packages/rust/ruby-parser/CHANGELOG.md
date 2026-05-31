@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.51.0] - 2026-05-31
+
+### Added (Phase 10a (FC) — inclusive range `1..5` coverage confirmation)
+
+Inclusive ranges were first implemented in **Phase 6n** (the `range`
+rule `range = logical_or [ ( "..." | ".." ) logical_or ]`, with the
+lexer's `fuse_range_ops` folding two adjacent `Dot` tokens into a single
+`Name("..")`).  No grammar change is required for Phase 10a — like
+Phases 16b/16c it is a coverage-confirmation phase that pins inclusive
+ranges in syntactic positions the original 6n tests did not cover.
+
+New parse pins (+3):
+
+- `test_parse_inclusive_range_string_endpoints` — `"a".."z"` (string
+  literal endpoints; the two Dots after a String still fuse to `..`).
+- `test_parse_inclusive_range_as_call_argument` — `foo(1..5)` (range as
+  a method-call argument).
+- `test_parse_inclusive_range_parenthesized` — `(1..5)` (parenthesized
+  range still parses to a `range` node carrying `..`).
+
+Test count: 183 → 186.
+
 ## [0.50.0] - 2026-05-30
 
 ### Added (Phase 16e (FC) — method-level rescue/ensure)

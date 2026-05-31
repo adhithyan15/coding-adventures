@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.54.0] - 2026-05-31
+
+### Added (Phase 10a (FC) — inclusive range `1..5` coverage confirmation)
+
+Inclusive ranges lower to `BuiltinCall("range", [start, end, BoolLit(false)])`
+since **Phase 6n** (the third arg is the exclusive-end flag — `false`
+for `..`, `true` for `...`).  No lowering change is required for Phase
+10a — like Phases 16b/16c it is a coverage-confirmation phase pinning
+inclusive ranges in positions the 6n tests skipped.
+
+New tests (+3):
+
+- `inclusive_range_in_assignment_rhs_lowers_with_false_flag` — `x = 1..5`
+  at statement level (binding RHS; accepts `LetBinding`/`Assign`).
+- `inclusive_range_string_endpoints_lower_with_false_flag` —
+  `("a".."z")` lowers to a range over two `StrLit` endpoints.
+- `inclusive_range_as_array_element_lowers_and_validates` — `[1..5]`
+  lowers to a `SeqLit` whose element is the range builtin, and the
+  module passes `semantic_ir::validate`.
+
+Each pins the inclusive flag to `false`.  Test count: 237 → 240.
+
 ## [0.53.0] - 2026-05-30
 
 ### Added (Phase 16e (FC) — method-level rescue/ensure)

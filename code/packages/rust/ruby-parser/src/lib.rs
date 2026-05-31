@@ -1625,6 +1625,62 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 10a (FC) — inclusive range `1..5` coverage confirmation.
+    //
+    // Inclusive ranges were first implemented in Phase 6n (the `range`
+    // rule + `lower_range`).  Phase 10a is a coverage-confirmation phase
+    // (cf. Phases 16b/16c): it adds explicit parser pins for inclusive
+    // ranges in syntactic positions the original 6n tests did not cover —
+    // string endpoints, a call argument, and a parenthesized range — so a
+    // regression in any of those positions is caught by name.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_inclusive_range_string_endpoints() {
+        // `"a".."z"` — string literal endpoints.  The lexer emits
+        // String Dot Dot String and `fuse_range_ops` folds the two Dots
+        // into a single `..`, so the range node is shape-identical to the
+        // integer case (two `logical_or` operands flanking `..`).
+        let ast = parse_ruby("\"a\"..\"z\"");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token inside the string-endpoint range"
+        );
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 2, "expected 2 logical_or operands");
+    }
+
+    #[test]
+    fn test_parse_inclusive_range_as_call_argument() {
+        // `foo(1..5)` — an inclusive range used as a method-call argument.
+        // The range node must appear below the call's argument list.
+        let ast = parse_ruby("foo(1..5)");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token in the call-argument range"
+        );
+    }
+
+    #[test]
+    fn test_parse_inclusive_range_parenthesized() {
+        // `(1..5)` — a parenthesized inclusive range.  Parens are a
+        // primary/atom wrapper; the range still parses to a `range` node
+        // carrying the `..` token.
+        let ast = parse_ruby("(1..5)");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token in the parenthesized range"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //
