@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.61.0] - 2026-05-31
+
+### Added (Phase 22d (FC) — `super` keyword)
+
+New `super_statement` rule (and a `super_args` rule mirroring
+`yield_args`), added to the `statement` alternation right after
+`yield_statement`:
+
+```
+super_statement = "super" [ super_args ] ;
+super_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+           | call_arg { COMMA call_arg } ;
+```
+
+`super` is a Ruby keyword (lexer-tagged KEYWORD), and `super_statement`
+is placed before the `method_call*` family so the keyword token gets its
+dedicated rule instead of falling through to `method_call_no_paren`.
+Three surface forms parse: bare `super` (no `super_args` — the
+implicit-forward "zsuper"), `super()` (explicit empty `super_args`), and
+`super(x, y)` / `super x` (explicit args).  `super_args` reuses
+`call_arg`, so splat / double-splat / block-pass / `...` forwarding ride
+through uniformly.  `_grammar.rs` regenerated.
+
+New parse pins (+3): `test_parse_super_bare` (`super`, no `super_args`),
+`test_parse_super_empty_parens` (`super()`, 0 call_args),
+`test_parse_super_with_args` (`super(x, y)`, 2 call_args).  Test count:
+214 → 217.
+
 ## [0.60.0] - 2026-05-31
 
 ### Added (Phase 22c (FC) — `...` argument forwarding)

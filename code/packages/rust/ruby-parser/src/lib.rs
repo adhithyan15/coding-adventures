@@ -2701,6 +2701,53 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_super_bare() {
+        // Phase 22d — bare `super` (zsuper): no argument list.  Must
+        // parse as a `super_statement` with NO `super_args` child (the
+        // absence is what marks it as implicit-forward zsuper).
+        let ast = parse_ruby("super");
+        let sup = find_descendant(&ast, "super_statement").expect("expected super_statement");
+        assert!(tree_has_token_value(sup, "super"), "expected `super` keyword");
+        assert!(
+            find_descendant(sup, "super_args").is_none(),
+            "bare super must have NO super_args node"
+        );
+    }
+
+    #[test]
+    fn test_parse_super_empty_parens() {
+        // Phase 22d — `super()`: explicit empty arg list.  A
+        // `super_args` node IS present (with zero `call_arg` children),
+        // distinguishing it from bare zsuper.
+        let ast = parse_ruby("super()");
+        let sup = find_descendant(&ast, "super_statement").expect("expected super_statement");
+        let args = find_descendant(sup, "super_args").expect("expected super_args node");
+        let arg_count = args
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 0, "super() must have 0 call_args");
+    }
+
+    #[test]
+    fn test_parse_super_with_args() {
+        // Phase 22d — `super(x, y)`: explicit args.  `super_args` holds
+        // two `call_arg` children.
+        let ast = parse_ruby("super(x, y)");
+        let sup = find_descendant(&ast, "super_statement").expect("expected super_statement");
+        let args = find_descendant(sup, "super_args").expect("expected super_args node");
+        let arg_count = args
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 2, "super(x, y) must have 2 call_args, got {arg_count}");
+        assert!(tree_has_token_value(sup, "x"));
+        assert!(tree_has_token_value(sup, "y"));
+    }
+
+    #[test]
     fn test_parse_binary_star_still_parses_as_expression() {
         // Regression: `a * b` as a statement must still parse as a
         // bare expression-stmt with binary `*`, NOT as `a(splat b)`.

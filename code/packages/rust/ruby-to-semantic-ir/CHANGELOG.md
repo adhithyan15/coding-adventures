@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.64.0] - 2026-05-31
+
+### Added (Phase 22d (FC) — `super` keyword)
+
+New `super_statement` lowering arm, mirroring `yield`.  Two distinct
+lowerings keyed on whether a `super_args` node is present:
+
+- bare `super` (absent) → `BuiltinCall("zsuper", [])` — Ruby's implicit
+  "zsuper" that forwards ALL of the enclosing method's arguments, so it
+  carries no operands.
+- `super()` / `super(x)` / `super x` (present) → `BuiltinCall("super",
+  lowered_args)`, where `super()` lowers to **zero** args (forwards
+  nothing) — semantically distinct from bare zsuper.
+
+`super_args` reuses `lower_call_arg`, so splat / double-splat /
+block-pass / `...` envelopes nest inside `super` args for free.  Effects
+are PURE (matching `yield`): the dispatched parent method's effects are
+accounted for at its own definition/call site, so the marker stays PURE
+to avoid double-counting.  No new SIR variant.
+
+New lowering pins (+3): `bare_super_lowers_to_zsuper_builtin` (`super` →
+`zsuper`, 0 args), `super_empty_parens_lowers_to_super_builtin_no_args`
+(`super()` → `super`, 0 args), `super_with_args_lowers_and_passes_validator`
+(`super(1, 2)` → `super` with 2 args, validates).  Test count: 267 → 270.
+
 ## [0.63.0] - 2026-05-31
 
 ### Added (Phase 22c (FC) — `...` argument forwarding)
