@@ -4718,27 +4718,53 @@ impl Lowerer {
     ///
     /// We split the verbatim lexeme into `pattern` and `flags` (see
     /// [`regex_pattern_flags`]) and emit
-    /// `BuiltinCall("regex", [StrLit(pattern), StrLit(flags)])`.  Carrying
-    /// the two parts as separate `StrLit` args keeps the builtin uniform
+    /// `BuiltinCall("regex", [<pattern-expr>, StrLit(flags)])`.  Carrying
+    /// the flags as a separate `StrLit` arg keeps the builtin uniform
     /// across all flag combinations (`/x/`, `/x/i`, `/x/im`, …) without
     /// name multiplication — mirroring the `range` builtin's flag arg.
+    ///
+    /// ## Phase 19c — interpolation
+    ///
+    /// The `regex_body` lexer state does not special-case `#{...}` — it
+    /// accumulates the markers verbatim into the pattern — so an
+    /// interpolated regex `` /a#{b}c/ `` arrives here with the pattern
+    /// `a#{b}c`.  We therefore lower the pattern through the SAME
+    /// interpolation splitter string literals use
+    /// ([`lower_string_literal_with_interp`]):
+    ///   - no `#{...}`  → `args[0]` is a plain `StrLit(pattern)` (the
+    ///     Phase-19a/19b shape, unchanged);
+    ///   - with `#{...}` → `args[0]` is a `string_concat` (or a single
+    ///     `VarRef` for `` /#{x}/ ``) over the literal + interpolated
+    ///     segments — exactly how `"a#{b}c"` lowers.
     ///
     /// Building a regex object is pure (no I/O, no mutation).  We emit
     /// `StrLit`s, so the literal requests `Feature::Strings` — the same
     /// stance as backticks and heredocs.  (v0 does NOT unescape the body:
     /// `\/` etc. survive verbatim in the pattern, matching the heredoc /
     /// backtick capture stance.)
-    fn lower_regex_literal(&mut self, pattern: &str, flags: &str, span: Span) -> Expr {
+    fn lower_regex_literal(
+        &mut self,
+        pattern: &str,
+        flags: &str,
+        span: Span,
+        err_line: usize,
+        err_column: usize,
+    ) -> Result<Expr, RubyLowerError> {
         self.features_used.insert(Feature::Strings);
-        Expr::BuiltinCall {
+        // Run the pattern through the string interpolation splitter so
+        // `#{...}` markers inside the regex become real sub-expressions.
+        // For a marker-free pattern this returns a plain `StrLit`.
+        let pattern_expr =
+            self.lower_string_literal_with_interp(pattern, span.clone(), err_line, err_column)?;
+        Ok(Expr::BuiltinCall {
             name: "regex".to_string(),
             args: vec![
-                Expr::StrLit { value: pattern.to_string(), span: span.clone() },
+                pattern_expr,
                 Expr::StrLit { value: flags.to_string(), span: span.clone() },
             ],
             effects: EffectSet::PURE,
             span,
-        }
+        })
     }
 
     // -------------------------------------------------------------------
@@ -5145,7 +5171,9 @@ impl Lowerer {
                             if let Some((pattern, flags)) = regex_pattern_flags(&tok.value) {
                                 let (pattern, flags) =
                                     (pattern.to_string(), flags.to_string());
-                                return Ok(self.lower_regex_literal(&pattern, &flags, span));
+                                return self.lower_regex_literal(
+                                    &pattern, &flags, span, tok.line, tok.column,
+                                );
                             }
                             // Phase 6y — string interpolation expression
                             // lowering.  The lexer (Phase 3b) emits the
