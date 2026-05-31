@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.42.0] - 2026-05-31
+
+### Added — CLOC11.79: end-to-end integration test for KV summary format
+
+New integration test `tests/diff_cv_kv_summary.rs` exercises the CLOC11.74 KV summary format end-to-end via the actual binary:
+
+```bash
+closurec \
+  --correlation_vector \
+  --correlation_vector_summary \
+  --correlation_vector_summary_format KV \
+  --js tests/diff/cv-kv-summary/input/a.js \
+  --js_output_file <tmpdir>/out.js
+```
+
+### Contract pinned
+
+1. stdout contains the CV summary in space-separated `key=value` form, every key prefixed with `cv_sidecar.`.
+2. Path RHS is quoted (`cv_sidecar.path="..."`) so shell tooling splitting on whitespace can recover the (possibly-spaced) path safely.
+3. Numeric and bool RHS values are bare (`cv_sidecar.entries=N`, `cv_sidecar.skipped=false`) — `awk`/`cut` consumers don't have to strip quotes.
+4. `pass_order` is quoted (comma-joined list would otherwise look like multiple keys).
+5. closurec exits 0 and writes the JS output normally — KV summary coexists with a real compile.
+
+### Why a separate integration test
+
+CLOC11.74 unit tests verify the KV serializer in isolation. This test drives it through the full binary path (CLI parse → wire → `run_compiler` → `summary_line` → stdout), catching layer drift that per-feature unit tests would miss.
+
+### Changed
+
+- Versions: `Cargo.toml` `0.41.0` → `0.42.0`, `cli.spec.json` `0.41.0` → `0.42.0`.
+
 ## [0.41.0] - 2026-05-30
 
 ### Added — CLOC11.78: end-to-end integration test for NDJSON CV sidecar
