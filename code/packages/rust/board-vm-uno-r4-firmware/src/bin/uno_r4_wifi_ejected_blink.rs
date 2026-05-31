@@ -6,8 +6,8 @@ mod firmware {
     use board_vm_runtime::Runtime;
     use board_vm_uno_r4::UnoR4Board;
     use board_vm_uno_r4_firmware::{
-        run_ejected_program_once, uno_r4_wifi_backend::UnoR4WifiLedBackend, EjectedFirmwareProgram,
-        EJECTED_INSTRUCTION_BUDGET,
+        run_ejected_boot_program_once, uno_r4_wifi_backend::UnoR4WifiLedBackend,
+        EjectedFirmwareProgram, EJECTED_INSTRUCTION_BUDGET,
     };
     use panic_halt as _;
 
@@ -19,7 +19,8 @@ mod firmware {
         let program = EjectedFirmwareProgram::blink();
 
         loop {
-            let _ = run_ejected_program_once(&mut runtime, program, EJECTED_INSTRUCTION_BUDGET);
+            let _ =
+                run_ejected_boot_program_once(&mut runtime, program, EJECTED_INSTRUCTION_BUDGET);
         }
     }
 }

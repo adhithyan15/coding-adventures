@@ -36,8 +36,8 @@ target/thumbv7em-none-eabihf/release/uno-r4-vm-blink-smoke
 
 `uno-r4-wifi-ejected-blink` is the first board-specific ejection runner. It
 loads the constants in `src/ejected_blink.rs`, validates their BVM module
-metadata against the Uno R4 backend capabilities, and runs the ejected program
-directly on boot without a host protocol session:
+metadata against the Uno R4 backend capabilities, and applies the artifact boot
+policy before running it directly on boot without a host protocol session:
 
 ```sh
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-ejected-blink --release

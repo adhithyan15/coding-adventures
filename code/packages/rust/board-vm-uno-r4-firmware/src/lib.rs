@@ -79,6 +79,12 @@ pub enum FirmwareSmokeError {
     ArtifactRequiredCapabilitiesMismatch,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EjectedBootAction {
+    StoreOnly,
+    Run,
+}
+
 impl From<ModuleError> for FirmwareSmokeError {
     fn from(value: ModuleError) -> Self {
         Self::Module(value)
@@ -131,6 +137,32 @@ pub fn validate_ejected_blink_program(board_max_stack: u8) -> Result<(), Firmwar
     )
 }
 
+pub fn ejected_boot_action(
+    program: EjectedFirmwareProgram<'_>,
+) -> Result<EjectedBootAction, FirmwareSmokeError> {
+    parse_checked_ejected_program(program)?;
+    boot_action_for_policy(program.boot_policy)
+}
+
+pub fn run_ejected_boot_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
+    runtime: &mut Runtime<H, MAX_STACK, MAX_HANDLES>,
+    program: EjectedFirmwareProgram<'_>,
+    instruction_budget: u32,
+) -> Result<Option<RunReport>, FirmwareSmokeError>
+where
+    H: BoardHal,
+{
+    let module = parse_checked_ejected_program(program)?;
+    match boot_action_for_policy(program.boot_policy)? {
+        EjectedBootAction::StoreOnly => Ok(None),
+        EjectedBootAction::Run => {
+            validate(&module, runtime.hal().capabilities(), MAX_STACK as u8)?;
+            runtime.reset_vm();
+            Ok(Some(runtime.run_module(&module, instruction_budget)?))
+        }
+    }
+}
+
 pub fn run_ejected_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
     runtime: &mut Runtime<H, MAX_STACK, MAX_HANDLES>,
     program: EjectedFirmwareProgram<'_>,
@@ -165,10 +197,7 @@ fn parse_checked_ejected_program(
             program.program_format,
         ));
     }
-    match program.boot_policy {
-        BOOT_STORE_ONLY | BOOT_RUN_AT_BOOT | BOOT_RUN_IF_NO_HOST => {}
-        other => return Err(FirmwareSmokeError::InvalidBootPolicy(other)),
-    }
+    boot_action_for_policy(program.boot_policy)?;
     if program.module_version != MODULE_VERSION {
         return Err(FirmwareSmokeError::Module(ModuleError::UnsupportedVersion(
             program.module_version,
@@ -188,6 +217,14 @@ fn parse_checked_ejected_program(
         return Err(FirmwareSmokeError::ArtifactRequiredCapabilitiesMismatch);
     }
     Ok(module)
+}
+
+fn boot_action_for_policy(boot_policy: u8) -> Result<EjectedBootAction, FirmwareSmokeError> {
+    match boot_policy {
+        BOOT_STORE_ONLY => Ok(EjectedBootAction::StoreOnly),
+        BOOT_RUN_AT_BOOT | BOOT_RUN_IF_NO_HOST => Ok(EjectedBootAction::Run),
+        other => Err(FirmwareSmokeError::InvalidBootPolicy(other)),
+    }
 }
 
 fn crc32_ieee(bytes: &[u8]) -> u32 {
@@ -307,6 +344,14 @@ mod tests {
     }
 
     #[test]
+    fn ejected_blink_boot_policy_runs_without_host() {
+        assert_eq!(
+            ejected_boot_action(EjectedFirmwareProgram::blink()).unwrap(),
+            EjectedBootAction::Run
+        );
+    }
+
+    #[test]
     fn rejects_ejected_artifact_metadata_mismatch() {
         let mut program = EjectedFirmwareProgram::blink();
         program.max_stack = program.max_stack.saturating_add(1);
@@ -402,5 +447,20 @@ mod tests {
                 Event::Sleep(250),
             ]
         );
+    }
+
+    #[test]
+    fn ejected_boot_cycle_skips_store_only_artifact() {
+        let hal = FakeHal::new();
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+        let mut program = EjectedFirmwareProgram::blink();
+        program.boot_policy = BOOT_STORE_ONLY;
+
+        let report =
+            run_ejected_boot_program_once(&mut runtime, program, EJECTED_INSTRUCTION_BUDGET)
+                .unwrap();
+
+        assert!(report.is_none());
+        assert!(runtime.hal().events.is_empty());
     }
 }
