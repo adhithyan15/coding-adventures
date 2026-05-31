@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.49.0] - 2026-05-30
+
+### Added (Phase 16d (FC) — `raise` / `raise Foo` / `raise Foo, "msg"`)
+
+No grammar change — `raise` is not a keyword; `raise Foo, "msg"` parses
+as a paren-less method call (`method_call_no_paren`) and bare `raise` as
+an expression.  Phase 16d adds a parse pin:
+
+- `test_parse_raise_with_class_and_message` — `raise Foo, "boom"` parses
+  as a `method_call_no_paren` carrying the `raise` head and both args.
+
+Test count: 179 → 180 (+1).
+
 ## [0.48.0] - 2026-05-30
 
 ### Added (Phase 16c (FC) — `ensure` clause coverage)

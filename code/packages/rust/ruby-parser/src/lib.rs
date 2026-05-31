@@ -2529,6 +2529,17 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_raise_with_class_and_message() {
+        // Phase 16d — `raise Foo, "boom"` parses as a paren-less method
+        // call carrying the `raise` head Name and both arguments.
+        let ast = parse_ruby("raise Foo, \"boom\"");
+        let mc = find_descendant(&ast, "method_call_no_paren")
+            .expect("expected method_call_no_paren");
+        assert!(body_has_token_value(mc, "raise"), "expected `raise` head token");
+        assert!(tree_has_token_value(mc, "Foo"), "expected exception class `Foo`");
+    }
+
+    #[test]
     fn test_parse_case_single_when() {
         // Smallest form: one when clause, no else.
         let ast = parse_ruby("case x\nwhen 1\n  y = 1\nend");
