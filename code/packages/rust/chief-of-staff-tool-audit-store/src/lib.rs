@@ -1485,6 +1485,37 @@ impl ToolAuditSupervisorDrainPlanSummary {
         self.remaining_tick_budget() > 0
     }
 
+    /// Return the typed tick-budget usage classification for this plan.
+    pub fn tick_budget_usage(&self) -> ToolAuditSupervisorDrainTickBudgetUsage {
+        ToolAuditSupervisorDrainTickBudgetUsage::from_counts(self.page_count(), self.max_ticks)
+    }
+
+    /// Return the stable tick-budget usage label for this plan.
+    pub fn tick_budget_usage_label(&self) -> &'static str {
+        self.tick_budget_usage().as_str()
+    }
+
+    /// Return whether the tick-budget usage label parses back to its classification.
+    pub fn tick_budget_usage_label_matches_usage(&self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetUsage::from_label(self.tick_budget_usage_label())
+            == Some(self.tick_budget_usage())
+    }
+
+    /// Return whether the plan used no requested ticks.
+    pub fn used_no_ticks(&self) -> bool {
+        self.tick_budget_usage().is_unused()
+    }
+
+    /// Return whether the plan used some, but not all, requested ticks.
+    pub fn used_partial_tick_budget(&self) -> bool {
+        self.tick_budget_usage().is_partial()
+    }
+
+    /// Return whether the plan consumed the full requested tick budget.
+    pub fn used_full_tick_budget(&self) -> bool {
+        self.tick_budget_usage().is_full()
+    }
+
     /// Return whether no rows are waiting in the planned run.
     pub fn is_idle(&self) -> bool {
         self.planned_records == 0
@@ -1783,6 +1814,37 @@ impl ToolAuditSupervisorDrainLoopSummary {
     /// Return whether more ticks were available when the run stopped.
     pub fn has_remaining_tick_budget(&self) -> bool {
         self.remaining_tick_budget() > 0
+    }
+
+    /// Return the typed tick-budget usage classification for this drain loop.
+    pub fn tick_budget_usage(&self) -> ToolAuditSupervisorDrainTickBudgetUsage {
+        ToolAuditSupervisorDrainTickBudgetUsage::from_counts(self.tick_count(), self.max_ticks)
+    }
+
+    /// Return the stable tick-budget usage label for this drain loop.
+    pub fn tick_budget_usage_label(&self) -> &'static str {
+        self.tick_budget_usage().as_str()
+    }
+
+    /// Return whether the tick-budget usage label parses back to its classification.
+    pub fn tick_budget_usage_label_matches_usage(&self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetUsage::from_label(self.tick_budget_usage_label())
+            == Some(self.tick_budget_usage())
+    }
+
+    /// Return whether the drain loop used no requested ticks.
+    pub fn used_no_ticks(&self) -> bool {
+        self.tick_budget_usage().is_unused()
+    }
+
+    /// Return whether the drain loop used some, but not all, requested ticks.
+    pub fn used_partial_tick_budget(&self) -> bool {
+        self.tick_budget_usage().is_partial()
+    }
+
+    /// Return whether the drain loop consumed the full requested tick budget.
+    pub fn used_full_tick_budget(&self) -> bool {
+        self.tick_budget_usage().is_full()
     }
 
     /// Return whether no audit rows were replayed.
@@ -12750,6 +12812,37 @@ impl ToolAuditSupervisorDrainRunReport {
         self.remaining_tick_budget() > 0
     }
 
+    /// Return the typed tick-budget usage classification for the actual drain.
+    pub fn tick_budget_usage(&self) -> ToolAuditSupervisorDrainTickBudgetUsage {
+        ToolAuditSupervisorDrainTickBudgetUsage::from_counts(self.drain_ticks(), self.max_ticks())
+    }
+
+    /// Return the stable tick-budget usage label for the actual drain.
+    pub fn tick_budget_usage_label(&self) -> &'static str {
+        self.tick_budget_usage().as_str()
+    }
+
+    /// Return whether the tick-budget usage label parses back to its classification.
+    pub fn tick_budget_usage_label_matches_usage(&self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetUsage::from_label(self.tick_budget_usage_label())
+            == Some(self.tick_budget_usage())
+    }
+
+    /// Return whether the actual drain used no requested ticks.
+    pub fn used_no_ticks(&self) -> bool {
+        self.tick_budget_usage().is_unused()
+    }
+
+    /// Return whether the actual drain used some, but not all, requested ticks.
+    pub fn used_partial_tick_budget(&self) -> bool {
+        self.tick_budget_usage().is_partial()
+    }
+
+    /// Return whether the actual drain consumed the full requested tick budget.
+    pub fn used_full_tick_budget(&self) -> bool {
+        self.tick_budget_usage().is_full()
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.plan.planned_records
@@ -12794,6 +12887,11 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn tick_budget_status_flags_match(&self) -> bool {
         self.used_all_ticks() == (self.remaining_tick_budget() == 0)
             && self.has_remaining_tick_budget() == (self.remaining_tick_budget() > 0)
+            && self.tick_budget_usage_label_matches_usage()
+            && self.used_no_ticks() == (self.drain_ticks() == 0)
+            && self.used_partial_tick_budget()
+                == (self.drain_ticks() > 0 && self.drain_ticks() < self.max_ticks())
+            && self.used_full_tick_budget() == self.used_all_ticks()
     }
 
     /// Return whether flattened drain status flags agree with source counts.
@@ -13094,6 +13192,12 @@ impl ToolAuditSupervisorDrainRunReport {
             remaining_tick_budget: self.remaining_tick_budget(),
             used_all_ticks: self.used_all_ticks(),
             has_remaining_tick_budget: self.has_remaining_tick_budget(),
+            tick_budget_usage: self.tick_budget_usage(),
+            tick_budget_usage_label: self.tick_budget_usage_label(),
+            tick_budget_usage_label_matches_usage: self.tick_budget_usage_label_matches_usage(),
+            used_no_ticks: self.used_no_ticks(),
+            used_partial_tick_budget: self.used_partial_tick_budget(),
+            used_full_tick_budget: self.used_full_tick_budget(),
             planned_records: self.planned_records(),
             drained_records: self.drained_records(),
             planned_follow_up_records: self.planned_follow_up_records(),
@@ -16297,6 +16401,18 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub used_all_ticks: bool,
     /// Whether more ticks were available when the run stopped.
     pub has_remaining_tick_budget: bool,
+    /// Typed tick-budget usage classification for the actual drain.
+    pub tick_budget_usage: ToolAuditSupervisorDrainTickBudgetUsage,
+    /// Stable tick-budget usage label for host logs.
+    pub tick_budget_usage_label: &'static str,
+    /// Whether the tick-budget usage label parses back to its classification.
+    pub tick_budget_usage_label_matches_usage: bool,
+    /// Whether the actual drain used no requested ticks.
+    pub used_no_ticks: bool,
+    /// Whether the actual drain used some, but not all, requested ticks.
+    pub used_partial_tick_budget: bool,
+    /// Whether the actual drain consumed the full requested tick budget.
+    pub used_full_tick_budget: bool,
     /// Total rows the preflight plan expected to replay.
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
@@ -23506,6 +23622,36 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.has_remaining_tick_budget
     }
 
+    /// Return the typed tick-budget usage classification for the actual drain.
+    pub fn tick_budget_usage(&self) -> ToolAuditSupervisorDrainTickBudgetUsage {
+        self.tick_budget_usage
+    }
+
+    /// Return the stable tick-budget usage label for host logs.
+    pub fn tick_budget_usage_label(&self) -> &'static str {
+        self.tick_budget_usage_label
+    }
+
+    /// Return whether the tick-budget usage label parses back to its classification.
+    pub fn tick_budget_usage_label_matches_usage(&self) -> bool {
+        self.tick_budget_usage_label_matches_usage
+    }
+
+    /// Return whether the actual drain used no requested ticks.
+    pub fn used_no_ticks(&self) -> bool {
+        self.used_no_ticks
+    }
+
+    /// Return whether the actual drain used some, but not all, requested ticks.
+    pub fn used_partial_tick_budget(&self) -> bool {
+        self.used_partial_tick_budget
+    }
+
+    /// Return whether the actual drain consumed the full requested tick budget.
+    pub fn used_full_tick_budget(&self) -> bool {
+        self.used_full_tick_budget
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.planned_records
@@ -29390,6 +29536,70 @@ impl ToolAuditSupervisorDrainSchedulerAction {
 }
 
 impl Display for ToolAuditSupervisorDrainSchedulerAction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable host-log classification for how much of a drain tick budget was used.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainTickBudgetUsage {
+    /// No planned or actual drain ticks were used.
+    Unused,
+    /// Some requested ticks were used and some remained available.
+    Partial,
+    /// Every requested tick was used.
+    Full,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetUsage {
+    /// Classify tick-budget usage from used and requested tick counts.
+    pub fn from_counts(used_ticks: usize, max_ticks: usize) -> Self {
+        if used_ticks == 0 {
+            Self::Unused
+        } else if used_ticks >= max_ticks {
+            Self::Full
+        } else {
+            Self::Partial
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Unused => "unused",
+            Self::Partial => "partial",
+            Self::Full => "full",
+        }
+    }
+
+    /// Parse a stable snake_case tick-budget usage label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "unused" => Some(Self::Unused),
+            "partial" => Some(Self::Partial),
+            "full" => Some(Self::Full),
+            _ => None,
+        }
+    }
+
+    /// Return whether no ticks were used.
+    pub fn is_unused(self) -> bool {
+        matches!(self, Self::Unused)
+    }
+
+    /// Return whether some, but not all, requested ticks were used.
+    pub fn is_partial(self) -> bool {
+        matches!(self, Self::Partial)
+    }
+
+    /// Return whether every requested tick was used.
+    pub fn is_full(self) -> bool {
+        matches!(self, Self::Full)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetUsage {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -46620,6 +46830,130 @@ mod tests {
                 .map(|stored| stored.checkpoint),
             Some(ToolAuditReadCheckpoint::new(120, "call_4"))
         );
+    }
+
+    #[test]
+    fn supervisor_drain_tick_budget_usage_helpers_are_stable() {
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetUsage::from_counts(0, 3),
+            ToolAuditSupervisorDrainTickBudgetUsage::Unused
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetUsage::from_counts(1, 3),
+            ToolAuditSupervisorDrainTickBudgetUsage::Partial
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetUsage::from_counts(3, 3),
+            ToolAuditSupervisorDrainTickBudgetUsage::Full
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetUsage::from_label("partial"),
+            Some(ToolAuditSupervisorDrainTickBudgetUsage::Partial)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetUsage::from_label("overrun"),
+            None
+        );
+
+        let default_loop = ToolAuditSupervisorDrainLoopSummary::default();
+        assert_eq!(
+            default_loop.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Unused
+        );
+        assert_eq!(default_loop.tick_budget_usage_label(), "unused");
+        assert!(default_loop.tick_budget_usage_label_matches_usage());
+        assert!(default_loop.used_no_ticks());
+        assert!(!default_loop.used_partial_tick_budget());
+        assert!(!default_loop.used_full_tick_budget());
+
+        let empty_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let partial_plan = empty_store
+            .plan_supervisor_checkpoint_drain("supervisor", 10, 3)
+            .unwrap();
+        assert_eq!(
+            partial_plan.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Partial
+        );
+        assert_eq!(partial_plan.tick_budget_usage_label(), "partial");
+        assert!(partial_plan.tick_budget_usage_label_matches_usage());
+        assert!(!partial_plan.used_no_ticks());
+        assert!(partial_plan.used_partial_tick_budget());
+        assert!(!partial_plan.used_full_tick_budget());
+
+        let full_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(full_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+                sample_record("call_4"),
+                sample_record("call_5"),
+            ])
+            .completed_without_failures());
+        let full_plan = full_store
+            .plan_supervisor_checkpoint_drain("supervisor", 2, 2)
+            .unwrap();
+        assert_eq!(
+            full_plan.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Full
+        );
+        assert_eq!(full_plan.tick_budget_usage_label(), "full");
+        assert!(!full_plan.used_partial_tick_budget());
+        assert!(full_plan.used_full_tick_budget());
+
+        let mut full_sink = InMemoryToolAuditSink::new();
+        let full_report = full_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 2, &mut full_sink)
+            .unwrap();
+        assert_eq!(
+            full_report.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Full
+        );
+        assert_eq!(full_report.tick_budget_usage_label(), "full");
+        assert!(full_report.tick_budget_usage_label_matches_usage());
+        assert!(!full_report.used_no_ticks());
+        assert!(!full_report.used_partial_tick_budget());
+        assert!(full_report.used_full_tick_budget());
+        assert!(full_report.tick_budget_status_flags_match());
+
+        let full_summary = full_report.summary();
+        assert_eq!(
+            full_summary.tick_budget_usage,
+            ToolAuditSupervisorDrainTickBudgetUsage::Full
+        );
+        assert_eq!(
+            full_summary.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Full
+        );
+        assert_eq!(full_summary.tick_budget_usage_label, "full");
+        assert_eq!(full_summary.tick_budget_usage_label(), "full");
+        assert!(full_summary.tick_budget_usage_label_matches_usage);
+        assert!(full_summary.tick_budget_usage_label_matches_usage());
+        assert!(!full_summary.used_no_ticks);
+        assert!(!full_summary.used_no_ticks());
+        assert!(!full_summary.used_partial_tick_budget);
+        assert!(!full_summary.used_partial_tick_budget());
+        assert!(full_summary.used_full_tick_budget);
+        assert!(full_summary.used_full_tick_budget());
+
+        let partial_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(partial_store
+            .record_audit_batch(vec![sample_record("call_a"), sample_record("call_b")])
+            .completed_without_failures());
+        let mut partial_sink = InMemoryToolAuditSink::new();
+        let partial_report = partial_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 10, 3, &mut partial_sink)
+            .unwrap();
+        assert_eq!(
+            partial_report.drain.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Partial
+        );
+        assert_eq!(
+            partial_report.tick_budget_usage(),
+            ToolAuditSupervisorDrainTickBudgetUsage::Partial
+        );
+        assert!(partial_report.used_partial_tick_budget());
+        assert!(!partial_report.used_full_tick_budget());
     }
 
     #[test]
