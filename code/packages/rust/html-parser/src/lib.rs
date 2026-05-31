@@ -1610,8 +1610,19 @@ pub struct BrowserForm {
     pub rel_noopener: bool,
     pub rel_noreferrer: bool,
     pub novalidate: bool,
+    pub fieldsets: Vec<BrowserFormFieldset>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormFieldset {
+    pub id: Option<String>,
+    pub form_owner: Option<String>,
+    pub legend: Option<String>,
+    pub disabled: bool,
+    pub control_ids: Vec<String>,
+    pub control_names: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12524,6 +12535,91 @@ fn collect_form_controls_for_form(
     controls
 }
 
+fn collect_form_fieldsets_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    target_form_id: Option<&str>,
+) -> Vec<BrowserFormFieldset> {
+    let mut fieldsets = Vec::new();
+    collect_form_fieldsets_for_form_into(
+        body_root,
+        &mut fieldsets,
+        target_form as *const Element,
+        target_form_id,
+        None,
+        false,
+    );
+    fieldsets
+}
+
+fn collect_form_fieldsets_for_form_into(
+    nodes: &[Node],
+    fieldsets: &mut Vec<BrowserFormFieldset>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    disabled_fieldset_ancestor: bool,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+
+        if element.name == "fieldset" {
+            let form_owner = browser_form_owner(element);
+            let associated_with_target = match form_owner.as_deref() {
+                Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+                None => current_form.is_some_and(|form| form == target_form),
+            };
+
+            if associated_with_target {
+                fieldsets.push(browser_form_fieldset(
+                    element,
+                    target_form_id,
+                    disabled_fieldset_ancestor,
+                ));
+            }
+        }
+
+        let disabled_fieldset =
+            element.name == "fieldset" && element.attribute("disabled").is_some();
+        let first_legend = if disabled_fieldset {
+            first_direct_child_named(element, "legend")
+        } else {
+            None
+        };
+
+        for child in &element.children {
+            let child_disabled_fieldset_ancestor = match child {
+                Node::Element(child_element)
+                    if disabled_fieldset
+                        && first_legend.is_some_and(|legend| {
+                            std::ptr::eq(legend, child_element as *const Element)
+                        }) =>
+                {
+                    disabled_fieldset_ancestor
+                }
+                _ => disabled_fieldset_ancestor || disabled_fieldset,
+            };
+
+            collect_form_fieldsets_for_form_into(
+                std::slice::from_ref(child),
+                fieldsets,
+                target_form,
+                target_form_id,
+                element_form,
+                child_disabled_fieldset_ancestor,
+            );
+        }
+    }
+}
+
 fn browser_form(
     body_root: &[Node],
     element: &Element,
@@ -12550,6 +12646,7 @@ fn browser_form(
     let autocomplete = element.attribute("autocomplete").map(ToOwned::to_owned);
     let novalidate = element.attribute("novalidate").is_some();
     let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
+    let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12586,8 +12683,68 @@ fn browser_form(
         rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
         rel_tokens,
         novalidate,
+        fieldsets,
         controls,
         submitters,
+    }
+}
+
+fn browser_form_fieldset(
+    element: &Element,
+    target_form_id: Option<&str>,
+    disabled_fieldset_ancestor: bool,
+) -> BrowserFormFieldset {
+    BrowserFormFieldset {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        form_owner: browser_form_owner(element),
+        legend: first_direct_child_element_named(element, "legend")
+            .map(|legend| visible_text_for_nodes(&legend.children))
+            .filter(|legend| !legend.is_empty()),
+        disabled: disabled_fieldset_ancestor || element.attribute("disabled").is_some(),
+        control_ids: browser_fieldset_control_ids(element, target_form_id),
+        control_names: browser_fieldset_control_names(element, target_form_id),
+    }
+}
+
+fn browser_fieldset_control_ids(element: &Element, target_form_id: Option<&str>) -> Vec<String> {
+    let mut ids = Vec::new();
+    collect_fieldset_control_attribute_values(element, target_form_id, "id", &mut ids);
+    ids
+}
+
+fn browser_fieldset_control_names(element: &Element, target_form_id: Option<&str>) -> Vec<String> {
+    let mut names = Vec::new();
+    collect_fieldset_control_attribute_values(element, target_form_id, "name", &mut names);
+    names
+}
+
+fn collect_fieldset_control_attribute_values(
+    element: &Element,
+    target_form_id: Option<&str>,
+    attribute_name: &str,
+    values: &mut Vec<String>,
+) {
+    for child in &element.children {
+        let Node::Element(child_element) = child else {
+            continue;
+        };
+
+        if is_browser_form_control_element(&child_element.name)
+            && child_element
+                .attribute("form")
+                .is_none_or(|form| target_form_id.is_some_and(|id| id == form))
+        {
+            if let Some(value) = child_element.attribute(attribute_name) {
+                values.push(value.to_string());
+            }
+        }
+
+        collect_fieldset_control_attribute_values(
+            child_element,
+            target_form_id,
+            attribute_name,
+            values,
+        );
     }
 }
 
@@ -12838,6 +12995,13 @@ fn first_direct_child_named<'a>(element: &'a Element, name: &str) -> Option<*con
         Node::Element(child_element) if child_element.name == name => {
             Some(child_element as *const Element)
         }
+        _ => None,
+    })
+}
+
+fn first_direct_child_element_named<'a>(element: &'a Element, name: &str) -> Option<&'a Element> {
+    element.children.iter().find_map(|child| match child {
+        Node::Element(child_element) if child_element.name == name => Some(child_element),
         _ => None,
     })
 }

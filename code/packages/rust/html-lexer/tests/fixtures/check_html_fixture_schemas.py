@@ -692,6 +692,14 @@ def check_browser_expected_lists(
         ):
             require_optional_boolean(form_path, form, field, errors)
         require_optional_boolean(form_path, form, "novalidate", errors)
+        require_optional_object_list(form_path, form, "fieldsets", errors)
+        for fieldset_index, fieldset in enumerate(object_list_items(form, "fieldsets")):
+            fieldset_path = f"{form_path}.fieldsets[{fieldset_index}]"
+            for field in ("id", "form_owner", "legend"):
+                require_optional_nullable_string(fieldset_path, fieldset, field, errors)
+            require_optional_boolean(fieldset_path, fieldset, "disabled", errors)
+            require_optional_string_list(fieldset_path, fieldset, "control_ids", errors)
+            require_optional_string_list(fieldset_path, fieldset, "control_names", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):

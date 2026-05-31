@@ -1,11 +1,11 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext, BrowserForm,
-    BrowserFormControl, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormControl, BrowserFormFieldset, BrowserFormSubmitter, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
+    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -713,9 +713,27 @@ struct ExpectedForm {
     rel_noreferrer: bool,
     #[serde(default)]
     novalidate: bool,
+    #[serde(default)]
+    fieldsets: Vec<ExpectedFormFieldset>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormFieldset {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    legend: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    control_ids: Vec<String>,
+    #[serde(default)]
+    control_names: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1048,6 +1066,26 @@ fn browser_form_fieldset_metadata_disables_descendant_controls() {
     assert_eq!(
         actual.forms, expected.forms,
         "form controls should reflect disabled fieldset ancestry",
+    );
+}
+
+#[test]
+fn browser_form_fieldset_group_metadata_tracks_legends_disabled_state_and_controls() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "form summaries should preserve fieldset legends, disabled state, and grouped controls",
     );
 }
 
@@ -1948,6 +1986,11 @@ impl ExpectedForm {
             rel_noopener: self.rel_noopener,
             rel_noreferrer: self.rel_noreferrer,
             novalidate: self.novalidate,
+            fieldsets: self
+                .fieldsets
+                .into_iter()
+                .map(ExpectedFormFieldset::into_browser_form_fieldset)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -1958,6 +2001,19 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormSubmitter::into_browser_form_submitter)
                 .collect(),
+        }
+    }
+}
+
+impl ExpectedFormFieldset {
+    fn into_browser_form_fieldset(self) -> BrowserFormFieldset {
+        BrowserFormFieldset {
+            id: self.id,
+            form_owner: self.form_owner,
+            legend: self.legend,
+            disabled: self.disabled,
+            control_ids: self.control_ids,
+            control_names: self.control_names,
         }
     }
 }
