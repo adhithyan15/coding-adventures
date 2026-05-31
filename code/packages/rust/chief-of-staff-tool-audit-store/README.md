@@ -382,6 +382,11 @@ The crate keeps the boundary narrow:
   lane queue action-rollup route-digest queue action route-digest queue action
   route-digest queue action route-digest queue keys and queue digests for deep
   route priority/readiness grouping and drift checks
+- supervisor drain reports and summaries expose host-run escalation dashboard
+  lane queue action-rollup route-digest queue action route-digest queue action
+  route-digest queue action route-digest queue action keys and action digests
+  that bind deep route queue lanes back to queue keys and queue digests for
+  host-log grouping and drift checks
 - supervisor drain reports and summaries expose stable, parseable scheduler action
   recommendations for continuation, follow-up routing, and plan-drift
   investigation
