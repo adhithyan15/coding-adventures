@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-fold-control-flow"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "Control-flow folding pass for the Closure Compiler clone. Slots between constant-fold and DCE per CLOC06's canonical pass set. Eliminates dead branches (`if (false) A else B → B`), removes unreachable code after `return`/`throw`, and collapses degenerate switch arms."
 
@@ -15,3 +15,10 @@ serde_json = "1"
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
 coding-adventures-closure-pass-dce = { path = "../closure-pass-dce" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file
+# needs an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_peephole_minimize_conditions"
+path = "tests/upstream/peephole_minimize_conditions_test.rs"

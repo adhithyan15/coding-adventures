@@ -141,3 +141,43 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
 - **Why it fails:** Requires scope analysis to know what's reachable. Our DCE doesn't do scope analysis; that's the territory of `closure-pass-remove-unused-vars` and an eventual hoisting pass.
 - **What it needs:** A dedicated hoisting / unused-vars cleanup pass. Likely lands as new content in `closure-pass-remove-unused-vars` rather than here.
+
+### gap-016 — `if (x) S` → `x && S` rewrite not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldOneChildBlocks` (`if(x) foo()` → `x&&foo()` lines)
+- **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
+- **Why it fails:** Upstream compacts a one-statement `if (test) consequent` (no alternate) into a `LogicalExpression { left: test, op: And, right: consequent }` wrapped in an `ExpressionStatement`. Our pass leaves `IfStatement` shapes alone when the test isn't a literal.
+- **What it needs:** A rewrite rule in `fold_if_statement`: when `alternate.is_none()`, the consequent is exactly one `ExpressionStatement`, and the test isn't a literal, replace the `IfStatement` with an `ExpressionStatement` wrapping `test && consequent_expr`. Must preserve side-effect semantics — only fire when both sides are observably safe to reorder.
+
+### gap-017 — `if (x) C else A` → `x ? C : A` rewrite not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldOneChildBlocks` (`if(x){foo()}else{bar()}` → `x?foo():bar()` lines)
+- **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
+- **Why it fails:** Upstream rewrites an `IfStatement` with single-`ExpressionStatement` branches into an `ExpressionStatement` wrapping a `ConditionalExpression`. Our pass keeps the `IfStatement`.
+- **What it needs:** A rewrite rule that recognises the `if (test) C else A` shape where both branches are single `ExpressionStatement`s and produces `ConditionalExpression { test, consequent, alternate }`.
+
+### gap-018 — De Morgan / negation-swap rewrites not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldConditionalDeMorgan`
+- **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
+- **Why it fails:** Upstream rewrites `if (!a) foo() else bar()` → `if (a) bar() else foo()` to push the negation out. We don't do this.
+- **What it needs:** Detect a top-level `UnaryExpression { op: Not, .. }` test on an `IfStatement` (and on `ConditionalExpression`), strip the `Not`, and swap consequent / alternate.
+
+### gap-019 — return-then-return through `if-else` → ternary return
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldReturns`
+- **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
+- **Why it fails:** Upstream rewrites `if(x) return 1; else return 2;` to `return x ? 1 : 2;` — needs gap-017 (the ternary rewrite) plus a special case that recognises `ReturnStatement` branches.
+- **What it needs:** Land gap-017 first, then add a `ReturnStatement`-aware shape recogniser on top.
+
+### gap-020 — `ThrowStatement` not in Phase 1 AST
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeMinimizeConditionsTest::testMinimizeIfWithThrow`
+- **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
+- **Why it fails:** No `ThrowStatement` variant in our typed AST.
+- **What it needs:** A Phase 1.x AST extension to model `throw expr;`. Then teach fold-control-flow that `if (x) foo() else throw 1` → `if (!x) throw 1; foo();` (the early-throw rearrangement).
