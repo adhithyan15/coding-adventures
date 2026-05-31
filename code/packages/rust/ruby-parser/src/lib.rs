@@ -1880,6 +1880,44 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 19c (FC) — regex interpolation `/a#{b}c/`.  The `regex_body`
+    // lexer state captures `#{...}` markers verbatim into the body, so
+    // the interpolated regex still arrives as ONE `String` token whose
+    // value includes the markers — no grammar change.  These pins confirm
+    // the verbatim interpolated lexeme survives into the parse tree.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_regex_literal_with_interpolation() {
+        // `x = /a#{b}c/` — `#{b}` preserved verbatim in the regex token.
+        let ast = parse_ruby("x = /a#{b}c/");
+        assert!(
+            tree_has_token_value(&ast, "/a#{b}c/"),
+            "expected verbatim `/a#{{b}}c/` interpolated regex token"
+        );
+    }
+
+    #[test]
+    fn test_parse_regex_interpolation_single_marker() {
+        // `x = /#{b}/` — a lone interpolation marker.
+        let ast = parse_ruby("x = /#{b}/");
+        assert!(
+            tree_has_token_value(&ast, "/#{b}/"),
+            "expected verbatim `/#{{b}}/` regex token"
+        );
+    }
+
+    #[test]
+    fn test_parse_regex_interpolation_with_flags() {
+        // `x = /x#{b}/i` — interpolation plus a trailing flag.
+        let ast = parse_ruby("x = /x#{b}/i");
+        assert!(
+            tree_has_token_value(&ast, "/x#{b}/i"),
+            "expected verbatim `/x#{{b}}/i` regex token"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //

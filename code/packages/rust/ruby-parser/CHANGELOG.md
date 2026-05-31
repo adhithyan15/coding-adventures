@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.56.0] - 2026-05-31
+
+### Added (Phase 19c (FC) — regex interpolation `/a#{b}c/`)
+
+No grammar or lexer change.  The `regex_body` lexer state does not
+special-case `#{...}` — it accumulates the markers verbatim into the
+regex body — so an interpolated regex still arrives as ONE
+`TokenType::String` token whose value includes the markers
+(`/a#{b}c/`).  The parser routes it through the ordinary string-literal
+slot exactly as for a non-interpolated regex.
+
+New parse pins (+3): `test_parse_regex_literal_with_interpolation`
+(`/a#{b}c/`), `test_parse_regex_interpolation_single_marker` (`/#{b}/`),
+`test_parse_regex_interpolation_with_flags` (`/x#{b}/i`) — each confirms
+the verbatim interpolated lexeme survives into the parse tree.  Test
+count: 198 → 201.
+
 ## [0.55.0] - 2026-05-31
 
 ### Added (Phase 19b (FC) — regex flags `/r/i` coverage confirmation)

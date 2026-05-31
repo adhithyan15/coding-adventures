@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.59.0] - 2026-05-31
+
+### Added (Phase 19c (FC) — regex interpolation `/a#{b}c/`)
+
+`lower_regex_literal` now runs the regex pattern through the SAME
+`#{...}` interpolation splitter string literals use
+(`lower_string_literal_with_interp`).  Since the lexer captures the
+markers verbatim into the pattern, an interpolated regex's `args[0]`
+becomes:
+
+- a `string_concat` over literal + interpolated segments for
+  `` /a#{b}c/ `` → `[StrLit("a"), VarRef("b"), StrLit("c")]`;
+- a bare `VarRef` for a lone `` /#{b}/ ``;
+- a plain `StrLit` when the pattern has no markers (the 19a/19b shape,
+  unchanged).
+
+`lower_regex_literal` became fallible (returns `Result`) to propagate
+splitter errors.  No new SIR variant or backend dispatch — reuses
+`string_concat` / `VarRef` / `StrLit`.  Still pure; requests
+`Feature::Strings`.
+
+New tests (+3): `regex_interpolation_lowers_pattern_to_concat`
+(`/a#{b}c/`), `regex_interpolation_single_marker_is_bare_varref`
+(`/#{b}/`), `regex_interpolation_validates_e2e` (`/x#{b}/i` + validator
+E2E).  Test count: 252 → 255.
+
 ## [0.58.0] - 2026-05-31
 
 ### Added (Phase 19b (FC) — regex flags `/r/i` coverage confirmation)

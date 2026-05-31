@@ -2452,6 +2452,78 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 19c (FC) — regex interpolation `/a#{b}c/` lowering.
+    //
+    // The `regex_body` lexer state captures `#{...}` markers verbatim
+    // into the pattern, so the lowerer runs the pattern through the SAME
+    // interpolation splitter strings use.  `args[0]` of the `regex`
+    // builtin therefore becomes a `string_concat` (or a bare `VarRef`
+    // for a single `#{x}` segment) when the pattern interpolates, and a
+    // plain `StrLit` when it doesn't (the 19a shape, unchanged).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn regex_interpolation_lowers_pattern_to_concat() {
+        // `def r(b) (/a#{b}c/) end` — pattern splits into
+        // [StrLit("a"), VarRef(b), StrLit("c")] under string_concat.
+        let m = lower("def r(b)\n  (/a#{b}c/)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                match &args[0] {
+                    Expr::BuiltinCall { name, args: parts, .. } if name == "string_concat" => {
+                        assert_eq!(parts.len(), 3, "expected 3 pattern segments");
+                        assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "a"));
+                        assert!(matches!(&parts[1], Expr::VarRef { name, .. } if name == "b"));
+                        assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "c"));
+                    }
+                    other => panic!("expected string_concat pattern, got {:?}", other),
+                }
+                // Flags arg still present (empty here).
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn regex_interpolation_single_marker_is_bare_varref() {
+        // `def r(b) (/#{b}/) end` — a lone `#{b}` pattern lowers to a
+        // single `VarRef` (no string_concat wrapper), mirroring `"#{b}"`.
+        let m = lower("def r(b)\n  (/#{b}/)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(
+                    matches!(&args[0], Expr::VarRef { name, .. } if name == "b"),
+                    "expected bare VarRef pattern; got {:?}", &args[0]
+                );
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn regex_interpolation_validates_e2e() {
+        // `def r(b) (/x#{b}/i) end` — interpolation + a flag, end-to-end:
+        // pattern is a concat, flags = "i", and the module validates.
+        let m = lower("def r(b)\n  (/x#{b}/i)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(
+                    matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "string_concat"),
+                    "expected string_concat pattern; got {:?}", &args[0]
+                );
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "i"));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected interpolated regex: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //
