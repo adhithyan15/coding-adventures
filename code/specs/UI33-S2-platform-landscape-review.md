@@ -646,3 +646,198 @@ likely to ship a thing engineers actually want to use.
 
 *End of review. Recommend reading §0 + §5 + §7 even if skipping
 everything else.*
+
+---
+
+## 9. Amendment — the component-only exposure constraint
+
+**Added after initial review.** The user clarified a fundamental
+constraint that significantly reframes §0 and partly rewrites the
+§5 rationale:
+
+> *We will never expose direct-to-pixel layers. We will build
+> components on top of them, and those are the only ones that get
+> exposed.*
+
+This is one level above where SwiftCrossUI, Skip, React Native,
+KMM, and Flutter operate. Those projects expose **widget-level**
+abstractions — `SwiftCrossUI.Button` IS the widget the author
+types. Mosaic UI exposes **component-level** abstractions —
+`mosaic-pkg-toolkit::Button` is a composition of kernel primitives,
+which in turn map to either native widgets OR pixel-drawn
+approximations depending on the emitter — but the author never
+sees that choice.
+
+### 9.1 Why this matters — the empirical record splits in two
+
+§0's cautionary tale was about widget-level cross-platform projects.
+At the **component layer**, the precedent is much stronger and
+mostly successful:
+
+| Layer  | Cross-platform examples                                                       | Outcome                              |
+|--------|-------------------------------------------------------------------------------|--------------------------------------|
+| Pixel  | Flutter, Compose MP, Qt, Slint                                                | Visually consistent, not idiomatic    |
+| Widget | SwiftCrossUI, Skip, React Native, KMM, MAUI                                   | Native feel, narrow scope, leaks     |
+| **Component** | **Material UI, shadcn/ui, Chakra, Bootstrap, Mantine, Radix, MUI-for-X** | **Routine; scaled to millions of apps** |
+
+Component-level cross-platform composition is a *solved problem*.
+The library author ships components; consumers compose them;
+internal widget choices are an implementation detail. Mosaic UI's
+new framing puts us in this row, not the widget row.
+
+### 9.2 Two constraints, not one — they're separable
+
+The exposure clarification reveals there are actually two
+constraints in tension, not one:
+
+1. **Author API surface = components only, no pixels and no widgets.**
+   Authors compose `<Grid>`, `<FormulaBar>`, `<Button>`. They don't
+   write `Skia.drawRect()` or `UIKit.UIButton()` or
+   `Compose.Button()`. This is enforced at the IR layer — `.mil`
+   only references kernel primitives and other components.
+
+2. **End-user perceived nativeness = whatever the emitter can
+   economically achieve.** A Mosaic-iOS app should ideally feel
+   indistinguishable from a hand-written SwiftUI app to its end
+   user. Where economically possible, the emitter binds to native
+   widgets (constraint-2 satisfied fully). Where not, the emitter
+   uses a draw-pixels adopted stack (constraint-2 satisfied
+   approximately — Material approximates iOS, etc.).
+
+These constraints are *separable*. Constraint 1 is structural
+(enforced by the type of thing you can write in `.mil`).
+Constraint 2 is qualitative (a per-platform investment decision).
+
+### 9.3 What this changes about §5 — Option F sharpens
+
+The Option-F recommendation in §5 still wins, but the rationale is
+now crisper:
+
+| Tier | Honors constraint 1? | Honors constraint 2? | Approach                                                     |
+|------|----------------------|----------------------|--------------------------------------------------------------|
+| Tier 1 — native-widget emit (React DOM, SwiftUI, WinUI XAML, HTML) | Yes (always) | **Fully** — primitives bind to platform widgets        | Smart emitter encodes platform idioms; native feel preserved |
+| Tier 1 — adopted-stack (Compose MP for mobile) | Yes (always) | **Approximately** — Material approximates iOS         | One emitter covers Android + iOS via Skia rendering          |
+| Tier 2 — view-only (Flutter, Qt, WC, MAUI, Avalonia, RN) | Yes (always) | Deferred                                                | Existing emitters; no core machinery                         |
+
+The "draw pixels" choice in Compose MP is now an explicit cost we
+pay for mobile reach, not a architectural defect. The author never
+sees it; the end user sees a Material-approximating-iOS finish
+instead of true UIKit. We choose to pay that cost on mobile and not
+on desktop/web (where Tier-1 native-widget emit covers it).
+
+### 9.4 What this changes about §0 — most of the anxiety dissolves
+
+§0's empirical cautionary tale (Dropbox, SwiftCrossUI's narrow
+scope, the IR-to-many-natives graveyard) was about *widget-level*
+cross-platform. With the component-only constraint:
+
+- **Dropbox's failure** was about sharing business logic in C++
+  beneath native UI shells. Not what we're doing. Mosaic UI cores
+  share *application* logic per language family (per §1.4 / Option
+  C-flavoured), not generic business logic, and operate beneath a
+  component composition layer that's stable.
+- **SwiftCrossUI / Skip** expose SwiftUI-shaped widgets. Mosaic
+  exposes components. We can use Skip's *technique* (Swift syntax →
+  Compose) without consuming Skip directly, because we don't
+  expose Swift syntax to authors.
+- **Flutter's "not native" critique** is about end users perceiving
+  draw-pixels-doesn't-match-real-platform. This applies to Mosaic
+  *only on adopted-stack tier-1 platforms* (Compose MP). On
+  native-widget tier-1 platforms (SwiftUI, etc.), we honor
+  constraint 2 fully.
+
+§0 still applies to two things:
+- Code-sharing-bridges (the Dropbox-style "shared core + native UI"
+  bridge maintenance overhead). We hit this only for the
+  per-language-family cores. The mitigation is keeping cores small
+  and well-bounded.
+- Wide-scope investment math. We still face 5-7 smart emitters
+  worth of engineering. The component-only constraint doesn't
+  reduce that work.
+
+### 9.5 What this changes about §7 — three of the eight questions resolve
+
+| Q  | Question                                                              | Resolved by §9?                                                                                              |
+|----|-----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Q1 | Tier-1 set                                                             | No change.                                                                                                   |
+| Q2 | Mobile adopted stack                                                   | **Compose MP becomes more defensible** — its draw-pixels compromise is invisible to our authors.            |
+| Q3 | Web framework breadth                                                  | No change.                                                                                                   |
+| Q4 | MAUI / Avalonia tier                                                   | No change.                                                                                                   |
+| Q5 | Smart-emit investment                                                  | **Same engineering cost, but the OUTPUT QUALITY constraint reduces** — smart-emit's job is now "make primitives feel native at the component-composition level," not "expose every widget feature idiomatically." Mildly easier. |
+| Q6 | Tier-2 demotion                                                        | No change.                                                                                                   |
+| Q7 | Three pilots                                                           | No change.                                                                                                   |
+| Q8 | Skip / SwiftCrossUI                                                    | **Resolved — we do NOT consume Skip.** Skip exposes SwiftUI syntax; Mosaic exposes its own component DSL. We can study Skip's Swift→Compose mapping algorithm for our Android emitter inspiration, but we don't depend on it. SwiftCrossUI similarly informs but doesn't get adopted. |
+
+### 9.6 The component catalogue becomes the visible deliverable
+
+Under this framing, the deliverable users *interact with* is the
+component catalogue:
+
+- `mosaic-pkg-toolkit` — Button, Input, Checkbox, Radio, Select,
+  Switch, Slider, Tabs, Accordion, Dialog, Toast, Tooltip,
+  Popover, Menu, Card, Avatar, Badge, Progress, Spinner
+- `mosaic-pkg-grid` — Grid, Cell, Column, Row, HeaderRow, etc.
+- `mosaic-pkg-form` — Form, FormField, FieldError, FieldGroup,
+  Validation
+- `mosaic-pkg-list` — List, ListItem, SortableList, FilterableList
+- `mosaic-pkg-tree` — Tree, TreeNode, ExpandableTreeNode
+- `mosaic-pkg-router` — Route, Link, Outlet, useRoute equivalent
+- `mosaic-pkg-data-table` — DataTable, ColumnDef, SortIndicator
+- `mosaic-pkg-charts` — bar / line / area / pie / scatter as
+  components (NOT pixel APIs — composed of primitives that map to
+  SVG / native charting widget per platform)
+
+Each component is authored once in `.mil/.mll/.msl` (the universal
+view IR) plus its `.core` for business logic. The catalogue's
+*breadth* is now the real engineering frontier — not the per-
+backend emitter count.
+
+This is also closer to how mature component libraries work in any
+single ecosystem (shadcn, MUI, Mantine ship hundreds of components
+each). The cross-platform multiplier is what makes ours hard, but
+the component-only framing keeps the problem bounded.
+
+### 9.7 What still doesn't go away
+
+- **Per-platform widget mapping is still a real engineering
+  surface.** Each kernel primitive (HostInput, HostButton, etc.)
+  needs a per-platform mapping to native widget or fallback. That
+  table is the bedrock; getting it right takes work.
+- **Component breadth is now the bottleneck.** Authors expect a
+  modern component library. Building 50+ components × N backends ×
+  state machinery is a multi-quarter effort even with smart
+  emitters.
+- **End-user accessibility / theming / RTL / dark-mode per
+  platform** still needs investment per platform. Not free with
+  the component framing.
+- **The dispatcher / core machinery from UI33** is still needed —
+  the component-only constraint is orthogonal to the state-and-
+  logic question. UI33 stays largely intact; just §6 (reference
+  core) might want a worked component-composition example, not
+  just the Grid core in isolation.
+
+### 9.8 Updated recommendation
+
+Same as §5 (Option F) but with sharper rationale:
+
+> Mosaic UI is a **component framework with cross-platform native
+> emission**. Authors compose components in the universal `.mil /
+> .mll / .msl / .core / .disp` DSL set. The emitter ecosystem
+> splits into tier-1 (native-widget smart emit) and tier-1-adopted
+> (Compose MP for mobile, paying a draw-pixels cost that authors
+> don't see) and tier-2 (view-only). Component-only exposure means
+> the empirical record of widget-level cross-platform failures
+> (Dropbox, SwiftCrossUI's narrow scope) doesn't apply to us at the
+> same scale.
+
+### 9.9 One new question Q9 added to §7
+
+9. **The component catalogue scope** — what's the v0.1.0 catalogue?
+   Just Grid + FormulaBar (the existing VisiCalc set)? Or do we
+   front-load Button, Input, Form, List, Dialog, etc. to validate
+   that the framework works at component-library scale, not just on
+   a single component?
+
+---
+
+*End of amendment §9.*
