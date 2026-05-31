@@ -305,6 +305,10 @@ Status:
 - Named-corner transient samples can now be evaluated and rendered as stable
   tab-separated text tables in the live Rust SPICE package, preserving corner
   order and covering selected voltage/current probes.
+- Adaptive transient samples can now be rendered as stable tab-separated text
+  tables in the live Rust SPICE package, preserving integration method,
+  rejected-step count, convergence state, sample time, and selected
+  voltage/current probes for direct and named-corner runs.
 - Named-corner DC operating-point results can now be rendered as stable
   tab-separated text tables in the live Rust SPICE package, preserving corner
   order and covering selected voltage/current probes.
