@@ -76,7 +76,7 @@ the run report.
 `repl` opens the same serial-plan-backed transport, sends `HELLO`, and then
 accepts a small interactive command set: `caps`, `upload-blink`, `upload-gpio-read <pin>
 [mode]`, `upload-time-now`, `run [budget]`, `blink [budget]`, `gpio-read <pin>
-[mode] [budget]`, `time-now [budget]`, `stop`, `hello`, `help`, and `quit`.
+[mode] [budget]`, `time-now [budget]`, `ping`, `stop`, `hello`, `help`, and `quit`.
 This is the first language-agnostic host shell: it drives the binary protocol
 through the shared client library, while future frontend packages can put
 richer syntax on top of the same transport calls. `gpio-read` and `time-now`

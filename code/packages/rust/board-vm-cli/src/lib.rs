@@ -334,6 +334,7 @@ pub enum ReplCommand {
     TimeNow {
         instruction_budget: Option<u32>,
     },
+    Ping,
     Stop,
     Quit,
 }
@@ -764,6 +765,7 @@ pub fn parse_repl_line(line: &str) -> Result<ReplCommand, CliError> {
         "time-now" | "time.now" | "now" => Ok(ReplCommand::TimeNow {
             instruction_budget: optional_repl_budget(words.next(), "time-now")?,
         }),
+        "ping" => Ok(ReplCommand::Ping),
         "stop" => Ok(ReplCommand::Stop),
         "quit" | "exit" => Ok(ReplCommand::Quit),
         other => Err(CliError::UnknownCommand(other.to_owned())),
@@ -1947,6 +1949,10 @@ where
             )?;
             write_run(output, &run)?;
         }
+        ReplCommand::Ping => {
+            client.ping()?;
+            writeln!(output, "pong")?;
+        }
         ReplCommand::Stop => {
             let run = client.stop()?;
             write_run(output, &run)?;
@@ -2162,7 +2168,7 @@ where
 {
     writeln!(
         output,
-        "commands: hello, caps, upload-blink, upload-gpio-read <pin> [mode], upload-time-now, run [budget], blink [budget], gpio-read <pin> [mode] [budget], time-now [budget], stop, help, quit"
+        "commands: hello, caps, upload-blink, upload-gpio-read <pin> [mode], upload-time-now, run [budget], blink [budget], gpio-read <pin> [mode] [budget], time-now [budget], ping, stop, help, quit"
     )?;
     Ok(())
 }
@@ -3134,6 +3140,7 @@ mod tests {
                 instruction_budget: Some(24)
             }
         );
+        assert_eq!(parse_repl_line("ping").unwrap(), ReplCommand::Ping);
         assert_eq!(parse_repl_line("stop").unwrap(), ReplCommand::Stop);
         assert_eq!(parse_repl_line("quit").unwrap(), ReplCommand::Quit);
         assert_eq!(parse_repl_line("exit").unwrap(), ReplCommand::Quit);
@@ -3418,7 +3425,7 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
             endpoint,
             LoopbackBluetoothWireTransactor::new(),
         );
-        let input = std::io::Cursor::new(b"caps\nblink 24\nquit\n".to_vec());
+        let input = std::io::Cursor::new(b"caps\nblink 24\nping\nquit\n".to_vec());
         let mut out = Vec::new();
 
         run_repl_with_transport(&options, transport, input, &mut out).unwrap();
@@ -3434,6 +3441,7 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert!(output.contains("upload program_id=13 bytes="));
         assert!(output.contains("run program_id=13 status=Running"));
         assert!(output.contains("open_handles=1"));
+        assert!(output.contains("pong\n"));
     }
 
     #[test]

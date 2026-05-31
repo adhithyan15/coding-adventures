@@ -1778,6 +1778,7 @@ where
             }
             MessageType::RUN => self.handle_run(request, payload_out, frame_out),
             MessageType::STOP => self.handle_stop(request, payload_out, frame_out),
+            MessageType::PING => self.handle_ping(request, frame_out),
             MessageType::BOOTLOADER_REBOOT => {
                 self.handle_bootloader_reboot(request, payload_out, frame_out)
             }
@@ -2014,6 +2015,17 @@ where
             &payload_out[..payload_len],
             frame_out,
         )
+    }
+
+    fn handle_ping(
+        &mut self,
+        request: Frame<'_>,
+        frame_out: &mut [u8],
+    ) -> Result<usize, BoardFault> {
+        if !request.payload.is_empty() {
+            return Err(BoardFault::InvalidFrame);
+        }
+        write_response(MessageType::PONG, request.request_id, &[], frame_out)
     }
 
     fn handle_bootloader_reboot(
@@ -3338,6 +3350,19 @@ mod tests {
                 Some(Event::SleepMs(250)),
             ]
         );
+
+        let ping = session.ping_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..ping.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        assert_eq!(frame.flags, FLAG_IS_RESPONSE);
+        assert_eq!(frame.message_type, MessageType::PONG);
+        assert_eq!(frame.request_id, ping.request_id);
+        assert!(frame.payload.is_empty());
 
         let stop = session.stop_frame(&mut request).unwrap();
         let response_len = handle(
