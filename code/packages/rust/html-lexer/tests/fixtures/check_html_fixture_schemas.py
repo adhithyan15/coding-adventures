@@ -742,6 +742,17 @@ def check_browser_expected_lists(
             require_optional_nullable_string(
                 control_path, control, "validation_barred_reason", errors
             )
+            require_optional_object_list(control_path, control, "option_items", errors)
+            for option_index, option in enumerate(
+                object_list_items(control, "option_items")
+            ):
+                option_path = f"{control_path}.option_items[{option_index}]"
+                require_string(option_path, option, "value", errors)
+                require_optional_nullable_string(option_path, option, "label", errors)
+                require_string(option_path, option, "text", errors)
+                require_optional_boolean(option_path, option, "selected", errors)
+                require_optional_boolean(option_path, option, "disabled", errors)
+                require_optional_nullable_string(option_path, option, "group_label", errors)
             require_optional_nullable_string(control_path, control, "value", errors)
             require_optional_boolean(control_path, control, "successful", errors)
             require_optional_string_list(control_path, control, "submission_values", errors)
