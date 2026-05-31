@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.59.0] - 2026-05-31
+
+### Added (Phase 22b (FC) — `&blk` block-pass call argument)
+
+Grammar change: `call_arg` gained a `&` alternative in its optional
+prefix —
+
+```
+call_arg = [ "*" | "**" | "&" ] expression ;
+```
+
+so a block-pass argument (`f(&blk)`, `arr.each(&blk)`, `f(1, &blk)`)
+parses in both head `method_call` and `dot_call` argument lists, the
+same slots that already carry `*` splat and `**` double-splat. `_grammar.rs`
+regenerated.
+
+No ambiguity: the lexer emits a lone `&` as a Name-typed Op token (the
+`&.` safe-nav fusion only fires when a `.` immediately follows), and
+there is no binary `&` rule anywhere in the expression hierarchy
+(`logical_or → logical_and → … → factor`, no bitwise layer), so a
+leading `&` in a `call_arg` is unambiguous.
+
+New parse pins (+3): `test_parse_block_pass_call_arg` (`f(&blk)`),
+`test_parse_block_pass_after_positional` (`f(1, &blk)`),
+`test_parse_block_pass_in_dot_call` (`arr.each(&blk)`).  Test count:
+207 → 210.
+
 ## [0.58.0] - 2026-05-31
 
 ### Added (Phase 22a (FC) — `**` double-splat call argument, coverage)

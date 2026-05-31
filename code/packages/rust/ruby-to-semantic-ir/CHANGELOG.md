@@ -2,6 +2,29 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.62.0] - 2026-05-31
+
+### Added (Phase 22b (FC) — `&blk` block-pass call argument)
+
+`lower_call_arg` gained a `&` arm: a block-pass argument lowers to
+`BuiltinCall("block_pass", [inner])`, mirroring the `splat` /
+`double_splat` marker envelopes.  SIR has no first-class block-argument
+slot, so the marker lets downstream emitters reconstruct `&expr` (the
+operand may be a Proc, a `&:sym` symbol-to-proc, or any `to_proc`-able
+object — all preserved verbatim inside the envelope).  No new SIR
+variant; the prefix detector now matches `"*" | "**" | "&"`.
+
+New lowering pins (+3):
+- `block_pass_call_arg_lowers_to_block_pass_builtin` (`f(&blk)`) — node
+  shape: `block_pass` wrapping the `VarRef` operand.
+- `block_pass_call_arg_passes_sir_validator` (`puts(&blk)`) — lowers
+  AND passes `semantic_ir::validate` (uses the `puts` intrinsic so the
+  unknown-callee check passes).
+- `block_pass_after_positional_lowers_in_order` (`f(7, &blk)`) — locks
+  the positional-then-block-pass two-arg ordering.
+
+Test count: 261 → 264.
+
 ## [0.61.0] - 2026-05-31
 
 ### Added (Phase 22a (FC) — `**` double-splat call argument, coverage)

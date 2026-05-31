@@ -2586,6 +2586,55 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_block_pass_call_arg() {
+        // Phase 22b — `f(&blk)`: a block-pass argument.  The `&` prefix
+        // joins `*`/`**` in the `call_arg` rule.  Confirms exactly one
+        // `call_arg` carrying the `&` prefix and the operand name.
+        let ast = parse_ruby("f(&blk)");
+        let call = find_descendant(&ast, "method_call").expect("expected method_call");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 1, "expected exactly 1 call_arg, got {arg_count}");
+        let call_arg = find_descendant(&ast, "call_arg").expect("expected call_arg");
+        assert!(tree_has_token_value(call_arg, "&"), "expected `&` prefix");
+        assert!(tree_has_token_value(call_arg, "blk"), "expected `blk` name");
+    }
+
+    #[test]
+    fn test_parse_block_pass_after_positional() {
+        // Phase 22b — `f(1, &blk)`: a positional arg followed by a
+        // block-pass.  Confirms `&` interleaves with ordinary args on
+        // the COMMA separator (two call_args total).
+        let ast = parse_ruby("f(1, &blk)");
+        let call = find_descendant(&ast, "method_call").expect("expected method_call");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 2, "expected 2 call_args, got {arg_count}");
+        assert!(tree_has_token_value(call, "&"), "expected `&` somewhere in the call");
+        assert!(tree_has_token_value(call, "blk"), "expected `blk` name");
+    }
+
+    #[test]
+    fn test_parse_block_pass_in_dot_call() {
+        // Phase 22b — `arr.each(&blk)`: the block-pass rides through a
+        // `dot_call` argument list (the idiomatic `&:sym` / `&proc`
+        // higher-order-call form).  Both head and dot calls reuse
+        // `call_arg`, so `&` must surface in the dot-call path too.
+        let ast = parse_ruby("arr.each(&blk)");
+        let dot = find_descendant(&ast, "dot_call").expect("expected dot_call");
+        let call_arg = find_descendant(dot, "call_arg")
+            .expect("expected call_arg inside dot_call");
+        assert!(tree_has_token_value(call_arg, "&"), "expected `&` in dot_call arg");
+        assert!(tree_has_token_value(call_arg, "blk"), "expected `blk` name");
+    }
+
+    #[test]
     fn test_parse_binary_star_still_parses_as_expression() {
         // Regression: `a * b` as a statement must still parse as a
         // bare expression-stmt with binary `*`, NOT as `a(splat b)`.

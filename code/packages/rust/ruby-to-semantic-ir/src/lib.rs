@@ -3868,6 +3868,72 @@ mod tests {
     }
 
     #[test]
+    fn block_pass_call_arg_lowers_to_block_pass_builtin() {
+        // Phase 22b — `f(&blk)` → DirectCall(f, [BuiltinCall("block_pass",
+        // [VarRef(blk)])]).  Mirrors the splat / double_splat marker
+        // pattern; the operand keeps its identity inside the envelope.
+        let m = lower("blk = 1\nf(&blk)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => args,
+            other => panic!("expected DirectCall(f, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1);
+        match &args[0] {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "block_pass");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "blk"));
+            }
+            other => panic!("expected BuiltinCall(block_pass, ...), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn block_pass_call_arg_passes_sir_validator() {
+        // Phase 22b — end-to-end: a block-pass call arg lowers cleanly
+        // AND the module validates.  `puts` is a known intrinsic, so the
+        // validator's unknown-callee check passes; an unknown `f` would
+        // trip it.  `puts` lowers to BuiltinCall("puts", …).
+        let m = lower("blk = 1\nputs(&blk)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected block-pass call arg: {:?}",
+            result
+        );
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1);
+        assert!(matches!(
+            &args[0],
+            Expr::BuiltinCall { name, .. } if name == "block_pass"
+        ));
+    }
+
+    #[test]
+    fn block_pass_after_positional_lowers_in_order() {
+        // Phase 22b — `f(7, &blk)`: a positional arg followed by a
+        // block-pass.  Locks the two-arg ordering (IntLit, then the
+        // block_pass envelope) — block-pass is always trailing in Ruby.
+        let m = lower("blk = 1\nf(7, &blk)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => args,
+            other => panic!("expected DirectCall(f, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 2, "expected 2 args, got {}", args.len());
+        assert!(matches!(&args[0], Expr::IntLit { value: 7, .. }));
+        assert!(matches!(
+            &args[1],
+            Expr::BuiltinCall { name, .. } if name == "block_pass"
+        ));
+    }
+
+    #[test]
     fn splat_call_arg_module_passes_sir_validator() {
         // End-to-end smoke check: a module that uses splat call args
         // validates cleanly.
