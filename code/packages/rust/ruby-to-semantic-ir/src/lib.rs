@@ -2524,6 +2524,75 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 19d (FC) — `%r{...}` regex literal lowering.
+    //
+    // `%r{pat}flags` lexes to a verbatim `String` token; the lowerer
+    // strips the `%r`, the open/close delimiters, and trailing flags,
+    // then reuses `lower_regex_literal` — so `%r{...}` produces the SAME
+    // `BuiltinCall("regex", [pattern, StrLit(flags)])` shape as `/.../`,
+    // and interpolation inside `%r{...}` is handled for free.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn percent_r_regex_lowers_to_regex_builtin() {
+        // `x = %r{hello}` — brace-delimited, no flags.
+        let m = lower("x = %r{hello}\n");
+        let value = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        }).expect("expected a binding for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert_eq!(args.len(), 2);
+                assert!(
+                    matches!(&args[0], Expr::StrLit { value, .. } if value == "hello"),
+                    "expected pattern StrLit \"hello\"; got {:?}", &args[0]
+                );
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn percent_r_regex_empty_pattern_lowers() {
+        // `x = %r{}` — empty brace-delimited regex.  Pattern is the empty
+        // string; flags empty.  (v0 `%r` uses `{}` as the canonical
+        // delimiter and does not slurp trailing flags — so the pattern is
+        // exactly the body between the braces.)
+        let m = lower("x = %r{}\n");
+        let value = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        }).expect("expected a binding for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(
+                    matches!(&args[0], Expr::StrLit { value, .. } if value.is_empty()),
+                    "expected empty pattern StrLit; got {:?}", &args[0]
+                );
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn percent_r_regex_validates_e2e() {
+        // `def r() (%r{x}) end` — `%r{}` regex survives validation.
+        let m = lower("def r\n  (%r{x})\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "x"));
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected %r regex: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //
