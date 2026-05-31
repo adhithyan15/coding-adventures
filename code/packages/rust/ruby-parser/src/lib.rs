@@ -1844,6 +1844,42 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 19b (FC) — regex flags `/r/i` (coverage).  Flags ride along
+    // in the verbatim `/p/flags` lexeme (no grammar change since 19a);
+    // these pins confirm MULTI-flag lexemes survive into the parse tree.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_regex_literal_multi_flag() {
+        // `x = /foo/im` — two trailing flag letters in the lexeme.
+        let ast = parse_ruby("x = /foo/im");
+        assert!(
+            tree_has_token_value(&ast, "/foo/im"),
+            "expected verbatim `/foo/im` multi-flag regex token"
+        );
+    }
+
+    #[test]
+    fn test_parse_regex_literal_three_flags() {
+        // `x = /a/mix` — three flag letters.
+        let ast = parse_ruby("x = /a/mix");
+        assert!(
+            tree_has_token_value(&ast, "/a/mix"),
+            "expected verbatim `/a/mix` three-flag regex token"
+        );
+    }
+
+    #[test]
+    fn test_parse_regex_literal_multi_flag_in_call_argument() {
+        // `foo(/bar/im)` — multi-flag regex as a call argument.
+        let ast = parse_ruby("foo(/bar/im)");
+        assert!(
+            tree_has_token_value(&ast, "/bar/im"),
+            "expected verbatim `/bar/im` regex token in the call argument"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //
