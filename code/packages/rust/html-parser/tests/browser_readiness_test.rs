@@ -296,6 +296,8 @@ struct ExpectedResource {
     #[serde(default)]
     fetchpriority: Option<String>,
     #[serde(default)]
+    csp: Option<String>,
+    #[serde(default)]
     blocking: Option<String>,
     #[serde(default)]
     blocking_tokens: Vec<String>,
@@ -528,6 +530,16 @@ struct ExpectedMedia {
     playsinline: bool,
     #[serde(default)]
     preload: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    controlslist: Option<String>,
+    #[serde(default)]
+    controlslist_tokens: Vec<String>,
+    #[serde(default)]
+    disableremoteplayback: bool,
+    #[serde(default)]
+    disablepictureinpicture: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -549,6 +561,10 @@ struct ExpectedEmbeddedContext {
     height: Option<String>,
     #[serde(default)]
     loading: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    csp: Option<String>,
     #[serde(default)]
     sandbox: Vec<String>,
     #[serde(default)]
@@ -894,8 +910,7 @@ fn browser_resource_priority_metadata_tracks_rel_and_blocking_tokens() {
     let expected = case.expected.into_browser_document();
 
     assert_eq!(
-        actual.metadata.resource_hints,
-        expected.metadata.resource_hints,
+        actual.metadata.resource_hints, expected.metadata.resource_hints,
         "resource hints should preserve rel and blocking token metadata",
     );
     assert_eq!(
@@ -989,6 +1004,54 @@ fn browser_embedded_context_metadata_tracks_frame_object_embed_and_srcdoc() {
         actual.embedded_contexts,
         case.expected.into_browser_document().embedded_contexts,
         "embedded contexts should preserve frame, object, embed, and srcdoc-only iframe metadata",
+    );
+}
+
+#[test]
+fn browser_embedded_policy_metadata_tracks_fetchpriority_and_csp() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "embedded-resource-page")
+        .expect("embedded resource fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("embedded resource fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.resources, expected.resources,
+        "frame resources should preserve fetch priority and CSP policy metadata",
+    );
+    assert_eq!(
+        actual.embedded_contexts, expected.embedded_contexts,
+        "embedded contexts should preserve fetch priority and CSP policy metadata",
+    );
+}
+
+#[test]
+fn browser_media_policy_metadata_tracks_controls_and_remote_playback_hints() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "media-playback-poster-page")
+        .expect("media playback fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("media playback fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.resources, expected.resources,
+        "media resources should preserve cross-origin fetch metadata",
+    );
+    assert_eq!(
+        actual.media, expected.media,
+        "media summaries should preserve controlslist and remote playback policy metadata",
     );
 }
 
@@ -1434,6 +1497,7 @@ impl ExpectedResource {
             nonce: self.nonce,
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
+            csp: self.csp,
             blocking: self.blocking,
             blocking_tokens,
             browsing_context_name: self.browsing_context_name,
@@ -1630,6 +1694,11 @@ impl ExpectedMedia {
             muted: self.muted,
             playsinline: self.playsinline,
             preload: self.preload,
+            crossorigin: self.crossorigin,
+            controlslist: self.controlslist,
+            controlslist_tokens: self.controlslist_tokens,
+            disableremoteplayback: self.disableremoteplayback,
+            disablepictureinpicture: self.disablepictureinpicture,
         }
     }
 }
@@ -1646,6 +1715,8 @@ impl ExpectedEmbeddedContext {
             width: self.width,
             height: self.height,
             loading: self.loading,
+            fetchpriority: self.fetchpriority,
+            csp: self.csp,
             sandbox: self.sandbox,
             allow: self.allow,
             allowfullscreen: self.allowfullscreen,

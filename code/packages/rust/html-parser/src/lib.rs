@@ -941,6 +941,7 @@ pub struct BrowserResource {
     pub nonce: Option<String>,
     pub referrerpolicy: Option<String>,
     pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
     pub blocking: Option<String>,
     pub blocking_tokens: Vec<String>,
     pub browsing_context_name: Option<String>,
@@ -1508,6 +1509,11 @@ pub struct BrowserMedia {
     pub muted: bool,
     pub playsinline: bool,
     pub preload: Option<String>,
+    pub crossorigin: Option<String>,
+    pub controlslist: Option<String>,
+    pub controlslist_tokens: Vec<String>,
+    pub disableremoteplayback: bool,
+    pub disablepictureinpicture: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1521,6 +1527,8 @@ pub struct BrowserEmbeddedContext {
     pub width: Option<String>,
     pub height: Option<String>,
     pub loading: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
     pub sandbox: Vec<String>,
     pub allow: Option<String>,
     pub allowfullscreen: bool,
@@ -9038,6 +9046,7 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         nonce: element.attribute("nonce").map(ToOwned::to_owned),
                         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
                         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+                        csp: None,
                         blocking: element.attribute("blocking").map(ToOwned::to_owned),
                         blocking_tokens: browser_blocking_tokens(element),
                         browsing_context_name: None,
@@ -9412,6 +9421,7 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         nonce: element.attribute("nonce").map(ToOwned::to_owned),
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        csp: browser_browsing_context_csp(element),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
         blocking_tokens: browser_blocking_tokens(element),
         browsing_context_name: browser_browsing_context_name(element),
@@ -9494,6 +9504,8 @@ fn browser_embedded_context(
         allow: browser_browsing_context_allow(element),
         allowfullscreen: browser_browsing_context_allowfullscreen(element),
         referrerpolicy: browser_browsing_context_referrerpolicy(element),
+        fetchpriority: browser_browsing_context_fetchpriority(element),
+        csp: browser_browsing_context_csp(element),
         srcdoc: browser_browsing_context_srcdoc(element),
         credentialless: browser_browsing_context_credentialless(element),
         fallback_text: visible_text_for_nodes(&element.children),
@@ -9792,6 +9804,7 @@ fn browser_link_resource(
         nonce: element.attribute("nonce").map(ToOwned::to_owned),
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        csp: None,
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
         blocking_tokens: browser_blocking_tokens(element),
         browsing_context_name: None,
@@ -10643,6 +10656,22 @@ fn browser_browsing_context_referrerpolicy(element: &Element) -> Option<String> 
     }
 }
 
+fn browser_browsing_context_fetchpriority(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("fetchpriority").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_csp(element: &Element) -> Option<String> {
+    if element.name == "iframe" {
+        element.attribute("csp").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
 fn browser_browsing_context_srcdoc(element: &Element) -> Option<String> {
     if element.name == "iframe" {
         element.attribute("srcdoc").map(ToOwned::to_owned)
@@ -10863,6 +10892,11 @@ fn browser_media_element(element: &Element, base_href: Option<&str>) -> BrowserM
         muted: browser_media_muted(element),
         playsinline: browser_media_playsinline(element),
         preload: browser_media_preload(element),
+        crossorigin: browser_media_crossorigin(element),
+        controlslist: browser_media_controlslist(element),
+        controlslist_tokens: browser_media_controlslist_tokens(element),
+        disableremoteplayback: browser_media_disableremoteplayback(element),
+        disablepictureinpicture: browser_media_disablepictureinpicture(element),
     }
 }
 
@@ -10902,6 +10936,38 @@ fn browser_media_playsinline(element: &Element) -> bool {
     matches!(element.name.as_str(), "audio" | "video")
         && (element.attribute("playsinline").is_some()
             || element.attribute("webkit-playsinline").is_some())
+}
+
+fn browser_media_crossorigin(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "audio" | "video") {
+        element.attribute("crossorigin").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_controlslist(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "audio" | "video") {
+        element.attribute("controlslist").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_controlslist_tokens(element: &Element) -> Vec<String> {
+    browser_media_controlslist(element)
+        .as_deref()
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_media_disableremoteplayback(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video")
+        && element.attribute("disableremoteplayback").is_some()
+}
+
+fn browser_media_disablepictureinpicture(element: &Element) -> bool {
+    element.name == "video" && element.attribute("disablepictureinpicture").is_some()
 }
 
 fn browser_table_section_kind(element: &Element) -> Option<String> {
