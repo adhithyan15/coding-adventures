@@ -135,6 +135,8 @@ struct ExpectedResourceHint {
     #[serde(default)]
     rel: Option<String>,
     #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
     as_hint: Option<String>,
     #[serde(default)]
     type_hint: Option<String>,
@@ -152,6 +154,8 @@ struct ExpectedResourceHint {
     fetchpriority: Option<String>,
     #[serde(default)]
     blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
     #[serde(default)]
     imagesrcset: Option<String>,
     #[serde(default)]
@@ -271,6 +275,8 @@ struct ExpectedResource {
     resolved_url: Option<String>,
     rel: Option<String>,
     #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
     as_hint: Option<String>,
     type_hint: Option<String>,
     media: Option<String>,
@@ -291,6 +297,8 @@ struct ExpectedResource {
     fetchpriority: Option<String>,
     #[serde(default)]
     blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
     #[serde(default)]
     browsing_context_name: Option<String>,
     #[serde(default)]
@@ -349,6 +357,8 @@ struct ExpectedScript {
     #[serde(default)]
     blocking: Option<String>,
     #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
     text: Option<String>,
 }
 
@@ -361,6 +371,8 @@ struct ExpectedStylesheet {
     resolved_href: Option<String>,
     #[serde(default)]
     rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
     #[serde(default)]
     type_hint: Option<String>,
     #[serde(default)]
@@ -383,6 +395,8 @@ struct ExpectedStylesheet {
     fetchpriority: Option<String>,
     #[serde(default)]
     blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
     #[serde(default)]
     text: Option<String>,
 }
@@ -866,6 +880,39 @@ fn browser_script_style_security_metadata_tracks_nonces_and_fetch_policy() {
 }
 
 #[test]
+fn browser_resource_priority_metadata_tracks_rel_and_blocking_tokens() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "script-style-loading-page")
+        .expect("script style loading fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("script style loading fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.metadata.resource_hints,
+        expected.metadata.resource_hints,
+        "resource hints should preserve rel and blocking token metadata",
+    );
+    assert_eq!(
+        actual.resources, expected.resources,
+        "resources should preserve rel and blocking token metadata",
+    );
+    assert_eq!(
+        actual.scripts, expected.scripts,
+        "scripts should preserve blocking token metadata",
+    );
+    assert_eq!(
+        actual.stylesheets, expected.stylesheets,
+        "stylesheets should preserve rel and blocking token metadata",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -1234,11 +1281,15 @@ impl ExpectedHttpEquivHint {
 
 impl ExpectedResourceHint {
     fn into_browser_resource_hint(self) -> BrowserResourceHint {
+        let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
         BrowserResourceHint {
             kind: self.kind,
             url: self.url,
             resolved_url: self.resolved_url,
             rel: self.rel,
+            rel_tokens,
             as_hint: self.as_hint,
             type_hint: self.type_hint,
             media: self.media,
@@ -1248,6 +1299,7 @@ impl ExpectedResourceHint {
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
+            blocking_tokens,
             imagesrcset: self.imagesrcset,
             resolved_imagesrcset: self.resolved_imagesrcset,
             imagesizes: self.imagesizes,
@@ -1362,11 +1414,15 @@ impl ExpectedDataAttribute {
 
 impl ExpectedResource {
     fn into_browser_resource(self) -> BrowserResource {
+        let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
         BrowserResource {
             kind: self.kind,
             url: self.url,
             resolved_url: self.resolved_url,
             rel: self.rel,
+            rel_tokens,
             as_hint: self.as_hint,
             type_hint: self.type_hint,
             media: self.media,
@@ -1379,6 +1435,7 @@ impl ExpectedResource {
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
+            blocking_tokens,
             browsing_context_name: self.browsing_context_name,
             loading: self.loading,
             sandbox: self.sandbox,
@@ -1401,6 +1458,8 @@ impl ExpectedResource {
 
 impl ExpectedScript {
     fn into_browser_script(self) -> BrowserScript {
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
         BrowserScript {
             script_kind: self.script_kind,
             src: self.src,
@@ -1415,6 +1474,7 @@ impl ExpectedScript {
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
+            blocking_tokens,
             text: self.text,
         }
     }
@@ -1422,11 +1482,15 @@ impl ExpectedScript {
 
 impl ExpectedStylesheet {
     fn into_browser_stylesheet(self) -> BrowserStylesheet {
+        let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
         BrowserStylesheet {
             source: self.source,
             href: self.href,
             resolved_href: self.resolved_href,
             rel: self.rel,
+            rel_tokens,
             type_hint: self.type_hint,
             media: self.media,
             title: self.title,
@@ -1438,9 +1502,24 @@ impl ExpectedStylesheet {
             referrerpolicy: self.referrerpolicy,
             fetchpriority: self.fetchpriority,
             blocking: self.blocking,
+            blocking_tokens,
             text: self.text,
         }
     }
+}
+
+fn expected_tokens_from_raw(tokens: Vec<String>, raw: Option<&str>) -> Vec<String> {
+    if !tokens.is_empty() {
+        return tokens;
+    }
+    raw.map(split_html_test_tokens).unwrap_or_default()
+}
+
+fn split_html_test_tokens(raw: &str) -> Vec<String> {
+    raw.split_ascii_whitespace()
+        .filter(|token| !token.is_empty())
+        .map(ToOwned::to_owned)
+        .collect()
 }
 
 impl ExpectedAnchor {
