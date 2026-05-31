@@ -4181,11 +4181,12 @@ impl Lowerer {
     // Phase 6n — range expressions `..` / `...`
     // -------------------------------------------------------------------
 
-    /// Lower a `range` node.  Grammar shape:
+    /// Lower a `range` node.  Grammar shape (Phase 10c made the trailing
+    /// operand optional):
     ///
-    ///   range = logical_or [ ( "..." | ".." ) logical_or ]
+    ///   range = logical_or [ ( "..." | ".." ) [ logical_or ] ]
     ///
-    /// Two cases:
+    /// Three cases:
     ///   - One operand child, no `..`/`...` token → pass through (the
     ///     range rule is just a transparent wrapper in this case).
     ///   - Two operand children with a `..` or `...` token between them
@@ -4193,6 +4194,9 @@ impl Lowerer {
     ///     The third argument carries the inclusive/exclusive flag so a
     ///     single builtin handles both forms without name multiplication.
     ///     `..` → exclusive=false; `...` → exclusive=true.
+    ///   - One operand child WITH a `..`/`...` token (Phase 10c endless
+    ///     range `1..`) → emit `BuiltinCall("range", [start, NilLit,
+    ///     BoolLit(exclusive)])`; the nil upper bound means "unbounded".
     ///
     /// Range is pure: building a range doesn't observe or mutate any
     /// state.  (Iterating over one *would* run code, but that's a
@@ -4238,13 +4242,36 @@ impl Lowerer {
                     span: op_span,
                 })
             }
+            // Phase 10c — endless range: one operand plus a range op,
+            // with no trailing operand (`1..`, `1...`).  The open end is
+            // encoded as `NilLit`, so the `range` builtin keeps its
+            // uniform `[start, end, exclusive]` shape — downstream
+            // consumers read a nil end as "unbounded above".  `..` and
+            // `...` are distinguished by the exclusive flag exactly as
+            // in the two-operand case.
+            (1, Some(tok)) => {
+                let start = self.lower_expression(operands[0])?;
+                let exclusive = tok.value == "...";
+                let op_span = self.span_of_token(tok);
+                Ok(Expr::BuiltinCall {
+                    name: "range".to_string(),
+                    args: vec![
+                        start,
+                        // Open (infinite) upper bound — `nil` end.
+                        Expr::NilLit { span: op_span.clone() },
+                        Expr::BoolLit { value: exclusive, span: op_span.clone() },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: op_span,
+                })
+            }
             // Shouldn't happen given the grammar shape — but be
-            // defensive: a missing operator with two operands or a
-            // present operator with the wrong operand count points
-            // at a grammar regeneration gone awry.
+            // defensive: a missing operator with two operands or any
+            // other operand/op combination points at a grammar
+            // regeneration gone awry.
             (n, _) => Err(RubyLowerError {
                 message: format!(
-                    "range node had {n} operand(s) and op={:?} — expected (1, None) or (2, Some(..|...))",
+                    "range node had {n} operand(s) and op={:?} — expected (1, None), (1, Some(..|...)), or (2, Some(..|...))",
                     op_tok.map(|t| t.value.clone()),
                 ),
                 line: node.start_line.unwrap_or(0),

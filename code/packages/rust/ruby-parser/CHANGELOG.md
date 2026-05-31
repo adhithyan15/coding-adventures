@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.52.0] - 2026-05-31
+
+### Added (Phase 10c (FC) — endless range `1..` / `1...`)
+
+The `range` rule's trailing operand is now **optional**, enabling
+endless ranges (a start with no end):
+
+- `range = logical_or [ ( "..." | ".." ) [ logical_or ] ] ;` — when the
+  range op is present but the next token is a closer (`)`, `]`, `,`,
+  newline, EOF) that cannot begin a `logical_or`, the inner optional
+  matches nothing and the node carries one operand plus the op token.
+  `1..5` still binds two operands; a bare `logical_or` still passes
+  through.  Beginless ranges (`..5`) remain deferred to Phase 10d.
+- Regenerated `_grammar.rs`.
+
+New parse pins (+3): `test_parse_endless_range_inclusive` (`1..`),
+`test_parse_endless_range_exclusive` (`1...`),
+`test_parse_endless_range_parenthesized` (`(1..)`).  Each asserts the
+range node carries exactly one `logical_or` operand.  Test count:
+186 → 189.
+
 ## [0.51.0] - 2026-05-31
 
 ### Added (Phase 10a (FC) — inclusive range `1..5` coverage confirmation)

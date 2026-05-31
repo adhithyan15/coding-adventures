@@ -427,6 +427,16 @@ expression_stmt = expression ;
 # Operator alternation lists `"..."` before `".."` defensively, but
 # the lexer already pre-fuses the two forms into distinct tokens so
 # the order is not actually significant.
+#
+# Phase 10c — endless ranges (`1..`, `1...`, `(1..)`, `arr[2..]`).  The
+# trailing operand is now ITSELF optional: `[ ( "..." | ".." ) [ logical_or ] ]`.
+# When the range operator is present but no `logical_or` follows (the
+# next token is a closer — `)`, `]`, `,`, newline, or EOF — which cannot
+# begin a `logical_or`), the optional cleanly matches nothing and the
+# node carries exactly one operand plus the op token: an endless range.
+# A bare `logical_or` (no op) still passes through; `1..5` still binds
+# two operands.  Beginless ranges (`..5`, a leading op with no LHS) are
+# a separate grammar shape and remain deferred to Phase 10d.
 # Phase 6o — ternary `cond ? a : b`.
 #
 # Precedence: ternary sits ABOVE range (looser than `..`/`...`)
@@ -450,7 +460,7 @@ expression_stmt = expression ;
 # consumes is the ternary separator, not a symbol opener.
 expression   = ternary ;
 ternary      = range [ "?" expression ":" expression ] ;
-range        = logical_or [ ( "..." | ".." ) logical_or ] ;
+range        = logical_or [ ( "..." | ".." ) [ logical_or ] ] ;
 logical_or   = logical_and { ( "||" | "or" ) logical_and } ;
 logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;
 # `logical_not` uses `{ }` (zero-or-more) instead of right-recursive
