@@ -1,11 +1,11 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
-    estimate_period, format_corner_distortion_table, format_corner_pole_zero_table,
-    format_corner_pss_table, format_corner_transient_table, format_dc_table,
-    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    estimate_period, format_corner_distortion_table, format_corner_fourier_table,
+    format_corner_pole_zero_table, format_corner_pss_table, format_corner_transient_table,
+    format_dc_table, format_distortion_table, format_fourier_table, format_pole_zero_table,
+    format_pss_table, format_transient_table, fourier, fourier_corners, pole_zero_rc_highpass,
+    pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass,
+    pole_zero_rlc_notch, pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
     pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
     pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
     pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
@@ -1788,6 +1788,53 @@ fn fourier_text_output_table_is_stable() {
     assert_eq!(
         format_fourier_table(&result),
         "Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\nV(out)\t1\t1.000000e+03\t1.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\t1.000000e-01\t2.500000e-02\nV(out)\t2\t2.000000e+03\t0.000000e+00\t-2.500000e-02\t2.500000e-02\t-9.000000e+01\t1.000000e-01\t2.500000e-02\n"
+    );
+}
+
+#[test]
+fn corner_fourier_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(0.0, 1.0, 1_000.0)),
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "out", 1_000.0)));
+    circuit.add(Element::Resistor(Resistor::new("R2", "out", "0", 1_000.0)));
+
+    let result = fourier_corners(
+        &circuit,
+        2.5e-4,
+        2.0e-3,
+        1_000.0,
+        &["V(out)"],
+        2,
+        &[
+            CornerSpec::new("nominal", vec![]),
+            CornerSpec::new(
+                "r2-high",
+                vec![CornerOverride::new("R2", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "r2-high");
+    assert_close(
+        result.points[0].result.probes[0].harmonics[0].magnitude,
+        0.5,
+    );
+    assert_close(
+        result.points[1].result.probes[0].harmonics[0].magnitude,
+        2.0 / 3.0,
+    );
+
+    assert_eq!(
+        format_corner_fourier_table(&result),
+        "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\nnominal\tV(out)\t1\t1.000000e+03\t6.018531e-33\t5.000000e-01\t5.000000e-01\t6.896729e-31\t0.000000e+00\t1.224647e-16\nnominal\tV(out)\t2\t2.000000e+03\t0.000000e+00\t-6.123234e-17\t6.123234e-17\t1.800000e+02\t0.000000e+00\t1.224647e-16\nr2-high\tV(out)\t1\t1.000000e+03\t7.523164e-33\t6.666667e-01\t6.666667e-01\t6.465683e-31\t1.355253e-17\t1.290373e-16\nr2-high\tV(out)\t2\t2.000000e+03\t2.710505e-17\t-8.164312e-17\t8.602490e-17\t1.616341e+02\t1.355253e-17\t1.290373e-16\n"
     );
 }
 
