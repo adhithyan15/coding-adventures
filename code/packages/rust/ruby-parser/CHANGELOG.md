@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.58.0] - 2026-05-31
+
+### Added (Phase 22a (FC) — `**` double-splat call argument, coverage)
+
+No grammar change.  The `call_arg = [ "*" | "**" ] expression ;` rule
+(Phase 6s) already admits a `**` double-splat prefix in both head
+`method_call` argument lists and `dot_call` argument lists.  This phase
+locks the parse shape with three new-angle pins that earlier `**`
+coverage never exercised:
+
+- `test_parse_double_splat_only_call_arg` (`f(**opts)`) — a lone `**`
+  arg with no positional/splat siblings (prior pins only ran `**`
+  alongside `f(1, *arr, **hsh)`).
+- `test_parse_double_splat_hash_literal_inner` (`f(**{a: 1})`) — the
+  double-splat operand is itself a `hash_literal`, confirming the
+  `call_arg` expression slot accepts a brace literal after `**`.
+- `test_parse_double_splat_in_dot_call` (`obj.merge(**opts)`) — the
+  `**` rides through a `dot_call` argument list, a distinct grammar
+  path from the head-call args.
+
+Test count: 204 → 207.
+
 ## [0.57.0] - 2026-05-31
 
 ### Added (Phase 19d (FC) — `%r{...}` regex literal)

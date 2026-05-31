@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.61.0] - 2026-05-31
+
+### Added (Phase 22a (FC) — `**` double-splat call argument, coverage)
+
+No lowering change.  `lower_call_arg` (Phase 6s) already maps a `**`
+double-splat call argument to `BuiltinCall("double_splat", [inner])`,
+mirroring the single-splat `BuiltinCall("splat", …)` shape.  This phase
+adds three new-angle lowering pins that earlier coverage did not run:
+
+- `double_splat_only_arg_passes_sir_validator` (`puts(**opts)`) — a
+  lone double-splat call arg both lowers to one `double_splat` builtin
+  AND passes `semantic_ir::validate` (the prior shape pins never ran the
+  validator on a double-splat-only call).
+- `double_splat_hash_literal_inner_lowers_and_validates`
+  (`puts(**{a: 1})`) — the double-splat operand lowers to a `MapLit`
+  wrapped by `double_splat`, and the module validates.
+- `double_splat_after_leading_positional_lowers_in_order`
+  (`f(7, **opts)`) — pins the positional-then-double-splat two-arg
+  ordering with no intervening single splat.
+
+(`puts` is used for the validator-backed pins because it is a known
+intrinsic — an unknown callee `f` trips the validator's
+unknown-function check; `puts` lowers to `BuiltinCall("puts", …)`.)
+
+Test count: 258 → 261.
+
 ## [0.60.0] - 2026-05-31
 
 ### Added (Phase 19d (FC) — `%r{...}` regex literal)

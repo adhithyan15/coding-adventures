@@ -3786,6 +3786,88 @@ mod tests {
     }
 
     #[test]
+    fn double_splat_only_arg_passes_sir_validator() {
+        // Phase 22a (coverage) — end-to-end: a lone `**opts` call arg
+        // lowers to a single `double_splat` BuiltinCall AND the resulting
+        // module validates cleanly.  Earlier pins asserted the node shape
+        // but never ran the validator on a double-splat-only call.
+        // Use `puts` (a known builtin) so the validator's unknown-callee
+        // check passes and we exercise only the double-splat arg path.
+        let m = lower("opts = {a: 1}\nputs(**opts)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected double-splat-only call: {:?}",
+            result
+        );
+        let b = main_body(&m);
+        // `puts` is an intrinsic — it lowers to BuiltinCall("puts", …),
+        // not a DirectCall.  Its sole argument is the double-splat.
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1, "expected exactly 1 arg");
+        assert!(matches!(
+            &args[0],
+            Expr::BuiltinCall { name, .. } if name == "double_splat"
+        ));
+    }
+
+    #[test]
+    fn double_splat_hash_literal_inner_lowers_and_validates() {
+        // Phase 22a (coverage) — `f(**{a: 1})`: the double-splat operand is
+        // an inline hash literal.  The inner expression must lower to a
+        // `MapLit` wrapped by `double_splat`, and the module must validate.
+        let m = lower("puts(**{a: 1})\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected double-splat of hash literal: {:?}",
+            result
+        );
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 1);
+        match &args[0] {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "double_splat");
+                assert_eq!(args.len(), 1);
+                assert!(
+                    matches!(&args[0], Expr::MapLit { .. }),
+                    "expected MapLit operand, got {:?}",
+                    args[0]
+                );
+            }
+            other => panic!("expected BuiltinCall(double_splat, ...), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn double_splat_after_leading_positional_lowers_in_order() {
+        // Phase 22a (coverage) — `f(7, **opts)`: a positional arg followed
+        // by a double-splat.  Distinct from the existing mixed pin (which
+        // also threads a single `*arr` splat between them); here the splat
+        // is absent so we lock the two-arg positional-then-double-splat
+        // ordering specifically.
+        let m = lower("opts = {a: 1}\nf(7, **opts)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => args,
+            other => panic!("expected DirectCall(f, ...), got {:?}", other),
+        };
+        assert_eq!(args.len(), 2, "expected 2 args, got {}", args.len());
+        assert!(matches!(&args[0], Expr::IntLit { value: 7, .. }));
+        assert!(matches!(
+            &args[1],
+            Expr::BuiltinCall { name, .. } if name == "double_splat"
+        ));
+    }
+
+    #[test]
     fn splat_call_arg_module_passes_sir_validator() {
         // End-to-end smoke check: a module that uses splat call args
         // validates cleanly.

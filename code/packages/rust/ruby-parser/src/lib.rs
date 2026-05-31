@@ -2539,6 +2539,53 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_double_splat_only_call_arg() {
+        // Phase 22a (coverage) — `f(**opts)` with the double-splat as the
+        // SOLE argument.  Earlier pins only exercised `**` alongside other
+        // args (`f(1, *arr, **hsh)`); this confirms a lone `**` arg still
+        // produces exactly one `call_arg` carrying the `**` prefix.
+        let ast = parse_ruby("f(**opts)");
+        let call = find_descendant(&ast, "method_call").expect("expected method_call");
+        let arg_count = call
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "call_arg"))
+            .count();
+        assert_eq!(arg_count, 1, "expected exactly 1 call_arg, got {arg_count}");
+        let call_arg = find_descendant(&ast, "call_arg").expect("expected call_arg");
+        assert!(tree_has_token_value(call_arg, "**"), "expected `**` prefix");
+        assert!(tree_has_token_value(call_arg, "opts"), "expected `opts` name");
+    }
+
+    #[test]
+    fn test_parse_double_splat_hash_literal_inner() {
+        // Phase 22a (coverage) — `f(**{a: 1})`: the double-splat operand is
+        // itself a hash literal, not a bare name.  Confirms the `call_arg`
+        // expression slot accepts a `hash_literal` after the `**` prefix.
+        let ast = parse_ruby("f(**{a: 1})");
+        let call_arg = find_descendant(&ast, "call_arg").expect("expected call_arg");
+        assert!(tree_has_token_value(call_arg, "**"), "expected `**` prefix");
+        // The inner hash literal must appear beneath the same call_arg.
+        let hash = find_descendant(call_arg, "hash_literal")
+            .expect("expected hash_literal inside the double-splat call_arg");
+        assert!(tree_has_token_value(hash, "a"), "expected key `a` in inner hash");
+    }
+
+    #[test]
+    fn test_parse_double_splat_in_dot_call() {
+        // Phase 22a (coverage) — `obj.merge(**opts)`: the double-splat rides
+        // through a `dot_call` argument list (a distinct grammar path from
+        // the head `method_call` args).  Both reuse `call_arg`, so `**`
+        // must surface there too.
+        let ast = parse_ruby("obj.merge(**opts)");
+        let dot = find_descendant(&ast, "dot_call").expect("expected dot_call");
+        let call_arg = find_descendant(dot, "call_arg")
+            .expect("expected call_arg inside dot_call");
+        assert!(tree_has_token_value(call_arg, "**"), "expected `**` in dot_call arg");
+        assert!(tree_has_token_value(call_arg, "opts"), "expected `opts` name");
+    }
+
+    #[test]
     fn test_parse_binary_star_still_parses_as_expression() {
         // Regression: `a * b` as a statement must still parse as a
         // bare expression-stmt with binary `*`, NOT as `a(splat b)`.
