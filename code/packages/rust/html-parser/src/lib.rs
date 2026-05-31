@@ -1667,8 +1667,19 @@ pub struct BrowserFormControl {
     pub checked: bool,
     pub multiple: bool,
     pub selected_options: Vec<String>,
+    pub option_items: Vec<BrowserSelectOption>,
     pub text: String,
     pub options: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSelectOption {
+    pub value: String,
+    pub label: Option<String>,
+    pub text: String,
+    pub selected: bool,
+    pub disabled: bool,
+    pub group_label: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12186,6 +12197,14 @@ fn browser_control_selected_options(element: &Element) -> Vec<String> {
     }
 }
 
+fn browser_control_option_items(element: &Element) -> Vec<BrowserSelectOption> {
+    if element.name != "select" {
+        return Vec::new();
+    }
+
+    collect_select_option_items(&element.children)
+}
+
 fn browser_control_datalist_options(element: &Element, body_root: &[Node]) -> Vec<String> {
     browser_control_list(element)
         .as_deref()
@@ -12758,6 +12777,7 @@ fn browser_form_control(
         checked: element.attribute("checked").is_some(),
         multiple: browser_multiple(element),
         selected_options: browser_control_selected_options(element),
+        option_items: browser_control_option_items(element),
         text,
         options: browser_content_options(element),
     }
@@ -12788,6 +12808,51 @@ fn collect_select_options_into(nodes: &[Node], options: &mut Vec<String>) {
         } else {
             collect_select_options_into(&element.children, options);
         }
+    }
+}
+
+fn collect_select_option_items(nodes: &[Node]) -> Vec<BrowserSelectOption> {
+    let mut items = Vec::new();
+    collect_select_option_items_into(nodes, &mut items, None, false);
+    items
+}
+
+fn collect_select_option_items_into(
+    nodes: &[Node],
+    items: &mut Vec<BrowserSelectOption>,
+    group_label: Option<&str>,
+    group_disabled: bool,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "option" {
+            items.push(BrowserSelectOption {
+                value: browser_option_value(element),
+                label: element.attribute("label").map(ToOwned::to_owned),
+                text: browser_option_display_text(element),
+                selected: element.attribute("selected").is_some(),
+                disabled: group_disabled || element.attribute("disabled").is_some(),
+                group_label: group_label.map(ToOwned::to_owned),
+            });
+            continue;
+        }
+
+        let child_group_label = if element.name == "optgroup" {
+            element.attribute("label").or(group_label)
+        } else {
+            group_label
+        };
+        let child_group_disabled = group_disabled
+            || (element.name == "optgroup" && element.attribute("disabled").is_some());
+        collect_select_option_items_into(
+            &element.children,
+            items,
+            child_group_label,
+            child_group_disabled,
+        );
     }
 }
 

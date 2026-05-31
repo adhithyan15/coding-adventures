@@ -4,8 +4,8 @@ use coding_adventures_html_parser::{
     BrowserFormControl, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
     BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -817,8 +817,24 @@ struct ExpectedFormControl {
     multiple: bool,
     #[serde(default)]
     selected_options: Vec<String>,
+    #[serde(default)]
+    option_items: Vec<ExpectedSelectOption>,
     text: String,
     options: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedSelectOption {
+    value: String,
+    #[serde(default)]
+    label: Option<String>,
+    text: String,
+    #[serde(default)]
+    selected: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    group_label: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1062,6 +1078,26 @@ fn browser_form_descriptor_metadata_tracks_accept_and_autocomplete_tokens() {
     assert_eq!(
         actual.forms, expected.forms,
         "form metadata should preserve tokenized accept-charset, autocomplete, and file accept descriptors",
+    );
+}
+
+#[test]
+fn browser_select_option_descriptor_metadata_tracks_values_labels_groups_and_state() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "select controls should preserve option values, labels, optgroup labels, selected state, and disabled state",
     );
 }
 
@@ -1950,8 +1986,26 @@ impl ExpectedFormControl {
             checked: self.checked,
             multiple: self.multiple,
             selected_options: self.selected_options,
+            option_items: self
+                .option_items
+                .into_iter()
+                .map(ExpectedSelectOption::into_browser_select_option)
+                .collect(),
             text: self.text,
             options: self.options,
+        }
+    }
+}
+
+impl ExpectedSelectOption {
+    fn into_browser_select_option(self) -> BrowserSelectOption {
+        BrowserSelectOption {
+            value: self.value,
+            label: self.label,
+            text: self.text,
+            selected: self.selected,
+            disabled: self.disabled,
+            group_label: self.group_label,
         }
     }
 }
