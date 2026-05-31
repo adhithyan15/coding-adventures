@@ -302,6 +302,9 @@ Status:
 - Stable text-output helpers for DC operating points and transient samples are
   implemented across Python, TypeScript, and Rust, with snapshot tests covering
   node-voltage and branch-current ordering.
+- Named-corner transient samples can now be evaluated and rendered as stable
+  tab-separated text tables in the live Rust SPICE package, preserving corner
+  order and covering selected voltage/current probes.
 - Named-corner DC operating-point results can now be rendered as stable
   tab-separated text tables in the live Rust SPICE package, preserving corner
   order and covering selected voltage/current probes.

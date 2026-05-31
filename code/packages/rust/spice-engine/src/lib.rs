@@ -2086,6 +2086,17 @@ pub struct TransientPoint {
     pub branch_currents: BTreeMap<String, f64>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerTransientPoint {
+    pub corner_name: String,
+    pub points: Vec<TransientPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerTransientResult {
+    pub points: Vec<CornerTransientPoint>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum TransientMethod {
     Euler,
@@ -3674,6 +3685,50 @@ pub fn format_transient_table(
             format_table_number(point.time),
             values?.join("\t")
         ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_corner_transient_table(
+    result: &CornerTransientResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .iter()
+            .find(|point| !point.points.is_empty())
+            .map(|point| default_transient_output_probes(&point.points))
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Corner\tIndex\tTime\t{}",
+        selected_probes.join("\t")
+    )];
+    for corner in &result.points {
+        for (index, point) in corner.points.iter().enumerate() {
+            let values: Result<Vec<String>, SpiceError> = selected_probes
+                .iter()
+                .map(|probe| {
+                    table_probe_value(
+                        &point.node_voltages,
+                        &point.branch_currents,
+                        probe,
+                        "format_corner_transient_table",
+                    )
+                    .map(format_table_number)
+                })
+                .collect();
+            rows.push(format!(
+                "{}\t{index}\t{}\t{}",
+                corner.corner_name,
+                format_table_number(point.time),
+                values?.join("\t")
+            ));
+        }
     }
     rows.push(String::new());
     Ok(rows.join("\n"))
@@ -5579,6 +5634,39 @@ pub fn transient_with_method(
         time += time_step;
     }
     Ok(points)
+}
+
+pub fn transient_corners(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerTransientResult, SpiceError> {
+    transient_corners_with_method(
+        circuit,
+        time_step,
+        stop_time,
+        TransientMethod::Euler,
+        corners,
+    )
+}
+
+pub fn transient_corners_with_method(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    method: TransientMethod,
+    corners: &[CornerSpec],
+) -> Result<CornerTransientResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerTransientPoint {
+            corner_name: corner.name.clone(),
+            points: transient_with_method(&corner_circuit, time_step, stop_time, method)?,
+        });
+    }
+    Ok(CornerTransientResult { points })
 }
 
 pub fn transient_adaptive(
