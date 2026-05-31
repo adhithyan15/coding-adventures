@@ -282,6 +282,12 @@ struct ExpectedResource {
     media: Option<String>,
     title: Option<String>,
     #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    color: Option<String>,
+    #[serde(default)]
     width: Option<String>,
     #[serde(default)]
     height: Option<String>,
@@ -928,6 +934,26 @@ fn browser_resource_priority_metadata_tracks_rel_and_blocking_tokens() {
 }
 
 #[test]
+fn browser_link_descriptor_metadata_tracks_icon_and_alternate_fields() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "link-resource-metadata-page")
+        .expect("link resource fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("link resource fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.resources, expected.resources,
+        "link resources should preserve icon sizes, mask colors, and alternate language descriptors",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -1490,6 +1516,9 @@ impl ExpectedResource {
             type_hint: self.type_hint,
             media: self.media,
             title: self.title,
+            sizes: self.sizes,
+            hreflang: self.hreflang,
+            color: self.color,
             width: self.width,
             height: self.height,
             integrity: self.integrity,
