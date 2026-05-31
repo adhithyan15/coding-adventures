@@ -885,6 +885,7 @@ pub struct BrowserResourceHint {
     pub url: String,
     pub resolved_url: Option<String>,
     pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
     pub as_hint: Option<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
@@ -894,6 +895,7 @@ pub struct BrowserResourceHint {
     pub referrerpolicy: Option<String>,
     pub fetchpriority: Option<String>,
     pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
     pub imagesrcset: Option<String>,
     pub resolved_imagesrcset: Option<String>,
     pub imagesizes: Option<String>,
@@ -927,6 +929,7 @@ pub struct BrowserResource {
     pub url: String,
     pub resolved_url: Option<String>,
     pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
     pub as_hint: Option<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
@@ -939,6 +942,7 @@ pub struct BrowserResource {
     pub referrerpolicy: Option<String>,
     pub fetchpriority: Option<String>,
     pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
     pub browsing_context_name: Option<String>,
     pub loading: Option<String>,
     pub sandbox: Vec<String>,
@@ -972,6 +976,7 @@ pub struct BrowserScript {
     pub referrerpolicy: Option<String>,
     pub fetchpriority: Option<String>,
     pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
     pub text: Option<String>,
 }
 
@@ -981,6 +986,7 @@ pub struct BrowserStylesheet {
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub title: Option<String>,
@@ -992,6 +998,7 @@ pub struct BrowserStylesheet {
     pub referrerpolicy: Option<String>,
     pub fetchpriority: Option<String>,
     pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
     pub text: Option<String>,
 }
 
@@ -9019,6 +9026,7 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         url: src.to_string(),
                         resolved_url: resolve_browser_url(src, summary.base_href.as_deref()),
                         rel: None,
+                        rel_tokens: Vec::new(),
                         as_hint: None,
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: None,
@@ -9031,6 +9039,7 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
                         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
                         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+                        blocking_tokens: browser_blocking_tokens(element),
                         browsing_context_name: None,
                         loading: None,
                         sandbox: Vec::new(),
@@ -9265,6 +9274,7 @@ fn browser_resource_hint_from_link(
         url: href.to_string(),
         resolved_url: resolve_browser_url(href, base_href),
         rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_tokens: browser_rel_tokens(element),
         as_hint: element.attribute("as").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
@@ -9274,6 +9284,7 @@ fn browser_resource_hint_from_link(
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
         resolved_imagesrcset: imagesrcset
             .as_deref()
             .map(|srcset| resolve_browser_srcset(srcset, base_href)),
@@ -9389,6 +9400,7 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         resolved_url: resolve_browser_url(&url, summary.base_href.as_deref()),
         url,
         rel: None,
+        rel_tokens: Vec::new(),
         as_hint: None,
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
@@ -9401,6 +9413,7 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
         browsing_context_name: browser_browsing_context_name(element),
         loading: browser_browsing_context_loading(element),
         sandbox: browser_browsing_context_sandbox(element),
@@ -9767,6 +9780,7 @@ fn browser_link_resource(
         url: href.to_string(),
         resolved_url: resolve_browser_url(href, base_href),
         rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_tokens: browser_rel_tokens(element),
         as_hint: element.attribute("as").map(ToOwned::to_owned),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
@@ -9779,6 +9793,7 @@ fn browser_link_resource(
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
         browsing_context_name: None,
         loading: None,
         sandbox: Vec::new(),
@@ -10727,6 +10742,7 @@ fn browser_script_element(element: &Element, base_href: Option<&str>) -> Browser
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
         text: element_text_if_non_empty(element),
     }
 }
@@ -10768,6 +10784,7 @@ fn browser_style_element(element: &Element, base_href: Option<&str>) -> BrowserS
             .and_then(|href| resolve_browser_url(href, base_href)),
         href,
         rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_tokens: browser_rel_tokens(element),
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         title: element.attribute("title").map(ToOwned::to_owned),
@@ -10779,6 +10796,7 @@ fn browser_style_element(element: &Element, base_href: Option<&str>) -> BrowserS
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
         blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
         text: if element.name == "style" {
             element_text_if_non_empty(element)
         } else {
@@ -10804,6 +10822,13 @@ fn browser_rel_tokens_contain(tokens: &[String], token: &str) -> bool {
 fn browser_rel_tokens(element: &Element) -> Vec<String> {
     element
         .attribute("rel")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_blocking_tokens(element: &Element) -> Vec<String> {
+    element
+        .attribute("blocking")
         .map(split_html_classes)
         .unwrap_or_default()
 }

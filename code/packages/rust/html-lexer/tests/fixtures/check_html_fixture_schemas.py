@@ -327,6 +327,8 @@ def check_browser_document_metadata(
             "imagesizes",
         ):
             require_optional_nullable_string(hint_path, hint, field, errors)
+        require_optional_string_list(hint_path, hint, "rel_tokens", errors)
+        require_optional_string_list(hint_path, hint, "blocking_tokens", errors)
 
     for index, theme_color in enumerate(object_list_items(metadata, "theme_colors")):
         theme_color_path = f"{metadata_path}.theme_colors[{index}]"
@@ -384,6 +386,8 @@ def check_browser_expected_lists(
             "track_label",
         ):
             require_optional_nullable_string(resource_path, resource, field, errors)
+        require_optional_string_list(resource_path, resource, "rel_tokens", errors)
+        require_optional_string_list(resource_path, resource, "blocking_tokens", errors)
         require_optional_string_list(resource_path, resource, "sandbox", errors)
         require_optional_boolean(resource_path, resource, "allowfullscreen", errors)
         require_optional_boolean(resource_path, resource, "credentialless", errors)
@@ -407,6 +411,7 @@ def check_browser_expected_lists(
             "text",
         ):
             require_optional_nullable_string(script_path, script, field, errors)
+        require_optional_string_list(script_path, script, "blocking_tokens", errors)
         for field in ("async_script", "defer_script", "nomodule"):
             require_optional_boolean(script_path, script, field, errors)
 
@@ -429,6 +434,8 @@ def check_browser_expected_lists(
             "text",
         ):
             require_optional_nullable_string(stylesheet_path, stylesheet, field, errors)
+        require_optional_string_list(stylesheet_path, stylesheet, "rel_tokens", errors)
+        require_optional_string_list(stylesheet_path, stylesheet, "blocking_tokens", errors)
         for field in ("disabled", "alternate"):
             require_optional_boolean(stylesheet_path, stylesheet, field, errors)
 
