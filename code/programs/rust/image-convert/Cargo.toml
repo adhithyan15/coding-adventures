@@ -1,0 +1,43 @@
+[package]
+name = "image-convert"
+version = "0.1.0"
+edition = "2021"
+description = "Universal image format converter — the pandoc of image files. Converts between PNG, BMP, TIFF, JPEG, WebP, JXL, GIF, ICO, QOI, PPM, and all major camera RAW formats (DNG, CR2, NEF, ARW, RAF, ORF, RW2)."
+license = "MIT"
+
+# Programs in code/programs/rust/ each declare their own [workspace] so they
+# stay independent from the packages workspace at code/packages/rust/Cargo.toml.
+[workspace]
+
+[[bin]]
+name = "image-convert"
+path = "src/main.rs"
+
+[lib]
+name = "image_convert"
+path = "src/lib.rs"
+
+[dependencies]
+# Pixel buffer — the universal intermediate representation.
+pixel-container    = { path = "../../../packages/rust/pixel-container" }
+
+# Standard format codecs.
+png                = { path = "../../../packages/rust/png" }
+image-codec-bmp    = { path = "../../../packages/rust/image-codec-bmp" }
+image-codec-ppm    = { path = "../../../packages/rust/image-codec-ppm" }
+image-codec-qoi    = { path = "../../../packages/rust/image-codec-qoi" }
+image-codec-jpeg   = { path = "../../../packages/rust/image-codec-jpeg" }
+image-codec-webp   = { path = "../../../packages/rust/image-codec-webp" }
+image-codec-jxl    = { path = "../../../packages/rust/image-codec-jxl" }
+image-codec-gif    = { path = "../../../packages/rust/image-codec-gif" }
+image-codec-ico    = { path = "../../../packages/rust/image-codec-ico" }
+image-codec-tiff   = { path = "../../../packages/rust/image-codec-tiff" }
+
+# Camera RAW codecs.
+image-codec-dng    = { path = "../../../packages/rust/image-codec-dng" }
+image-codec-cr2    = { path = "../../../packages/rust/image-codec-cr2" }
+image-codec-nef    = { path = "../../../packages/rust/image-codec-nef" }
+image-codec-arw    = { path = "../../../packages/rust/image-codec-arw" }
+image-codec-raf    = { path = "../../../packages/rust/image-codec-raf" }
+image-codec-orf    = { path = "../../../packages/rust/image-codec-orf" }
+image-codec-rw2    = { path = "../../../packages/rust/image-codec-rw2" }
