@@ -841,3 +841,333 @@ Same as §5 (Option F) but with sharper rationale:
 ---
 
 *End of amendment §9.*
+
+---
+
+## 10. Amendment — native UI per platform, NOT cross-platform visual consistency
+
+**Added after §9.** User clarified the perceived-nativeness goal:
+
+> *I am not trying to build pixel-perfect UI in every platform. I
+> am trying to native UI for each platform.*
+
+Translation: each platform should render in **its own** native
+widget style. Cross-platform visual consistency is **not** a goal.
+
+- iOS should look like iOS (UIKit / SwiftUI widget style).
+- Android should look like Android (Material / Compose widget style).
+- Windows should look like Windows (Fluent / WinUI widget style).
+- Web should look like the web (browser-native form controls,
+  modern flat styling, however the author skins it).
+
+This is what we want; *visual sameness across platforms is not even
+a secondary aim*.
+
+### 10.1 Why this is a bigger shift than it sounds
+
+§9's component-only constraint resolved *one* tension (the IR layer
+shouldn't expose pixels or widgets). This new constraint resolves a
+different one: **end-user perceived nativeness IS a first-class
+requirement**, not the "approximately satisfied when convenient"
+framing §9.3 used.
+
+§9.3 had a row that read:
+
+> Tier 1 — adopted-stack (Compose MP for mobile) — Honors
+> constraint 2 *approximately* — Material approximates iOS
+
+That "approximately" was hand-waved over an actual user-visible
+compromise. Compose MP on iOS draws Material/Compose widgets via
+Skia. They DO NOT look like UIKit. End users on iOS see "this
+isn't a real iOS app." Under the new constraint, **that's not
+acceptable**.
+
+The same critique applies to Flutter (renders its own widgets on
+all platforms — Cupertino approximates iOS, Material approximates
+Android, neither is native), Qt mobile (Qt Quick widgets on iOS
+look like Qt, not iOS), and any other draw-pixels cross-platform
+toolkit.
+
+### 10.2 The recommendation matrix updates
+
+§9.3's matrix had one tier-1 native-widget row plus one tier-1
+adopted-stack row. **Drop the adopted-stack row.** Every tier-1
+platform gets a native-widget emitter:
+
+| Tier | Platforms (UPDATED) | Approach |
+|------|---------------------|----------|
+| **Tier 1 — native-widget emit** | React DOM, SwiftUI (iOS+macOS+watchOS+tvOS+visionOS), Jetpack Compose (Android), WinUI XAML (Windows), HTML | Smart emitter encodes platform idioms deeply; output uses **the platform's own native widgets**; end-user experience is genuinely native |
+| **Tier 2 — view-only, no smart emit** | Flutter, Qt, Web Components, MAUI, Avalonia, React Native, Compose MP | Existing-style emitters; useful for hosts who want them but they don't honor constraint 2 (native per-platform feel) |
+| **Out of scope** | Vue, Svelte, Solid, Angular, UIKit (covered by SwiftUI), Tauri | Stay out unless real demand |
+
+The **Compose MP "free mobile coverage" shortcut is removed**. Mobile
+requires two separate tier-1 native-widget emitters: SwiftUI for
+Apple platforms (already in scope) and Jetpack Compose for Android
+(net-new). Both are first-class.
+
+### 10.3 What this changes about §7's open questions
+
+| Q  | Question                                                              | Re-resolved by §10                                                                                          |
+|----|-----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Q1 | Tier-1 set                                                             | **Updated.** React DOM + SwiftUI + Jetpack Compose + WinUI XAML + HTML. (Five tier-1 native-widget emitters, no adopted stack.) |
+| Q2 | Mobile adopted stack                                                   | **RESOLVED — no adopted stack.** Two separate native-widget emitters for mobile (SwiftUI for iOS, Jetpack Compose for Android). |
+| Q3 | Web framework breadth                                                  | No change.                                                                                                   |
+| Q4 | MAUI / Avalonia tier                                                   | **Tier-2.** They don't produce native-per-platform output any better than the XAML emitter already does on Windows. MAUI on Mac/iOS/Android is its own non-native style. |
+| Q5 | Smart-emit investment                                                  | **Cost goes UP.** Five tier-1 emitters instead of "four tier-1 + one adopted stack." Jetpack Compose emit is net-new heavy work. |
+| Q6 | Tier-2 demotion                                                        | No change — Flutter, Qt, WC, RN, MAUI, Avalonia, Compose MP all tier-2 now (Compose MP added to the demoted list). |
+| Q7 | Three pilots                                                           | **Changes to four pilots.** VisiCalc-React, VisiCalc-SwiftUI, VisiCalc-Compose-Android, plus one tier-2 sanity-check (VisiCalc-Flutter — to confirm view-only-emit still works). |
+| Q8 | Skip / SwiftCrossUI                                                    | **Re-resolved more interesting.** We don't *consume* Skip, but Skip's Swift→Compose widget-mapping logic is now directly relevant: it's exactly the kind of platform-equivalent translation our Jetpack Compose emitter has to internalize. **Study Skip's open-source mappings as engineering reference for our Compose emitter.** |
+| Q9 | Component catalogue scope                                              | No change (§9.9).                                                                                            |
+
+### 10.4 The Skip reconsideration (Q8 nuance)
+
+Skip is open-sourced, MIT-licensed, and ships production apps.
+What Skip does internally is: take SwiftUI source, AST-parse it,
+and emit Kotlin Jetpack Compose source. The hard work — what
+SwiftUI button maps to what Compose composable, how state flows,
+how navigation translates — is encoded in Skip's transpiler.
+
+We don't author in SwiftUI, so we can't consume Skip end-to-end.
+But our `mosaic-emit-jetpack-compose` will have to solve the
+**same widget-mapping problem** (Mosaic kernel primitive →
+Jetpack Compose composable). Skip's mappings are a free reference
+implementation of platform-equivalent translation that we can study,
+verify, and steal patterns from.
+
+This makes Skip MORE relevant under §10, not less. We're not
+consumers, we're peers studying open-source prior art for a piece
+of work we have to do ourselves.
+
+### 10.5 Engineering math, re-honest
+
+§5's Phase 7 was "Compose / Compose MP emitter — one emitter,
+mobile + iOS covered." That collapse-of-mobile-into-one-target is
+gone. Updated phasing:
+
+| Phase | PRs                    | What it ships                                                                                |
+|-------|------------------------|----------------------------------------------------------------------------------------------|
+| 7a    | UI33-E-compose-1..5    | **Jetpack Compose** smart emitter (Android only). State container: ViewModel + StateFlow. Project shell: Android Studio-friendly Gradle. |
+| 7b    | UI33-V-android         | VisiCalc-Android pilot                                                                       |
+| (removed) | ~~UI33-V-ios-via-CMP~~ | Compose MP iOS would have come "for free"; no longer applicable                          |
+
+The iOS coverage continues to come from the SwiftUI emit-target
+(Phase 5, already planned). Apple gets first-class native; Android
+gets first-class native; they don't share an emitter.
+
+**Cost impact:** Jetpack Compose emitter is heavy. Probably the
+single largest emitter investment in the plan (new language, new
+toolchain, new state container idiom, new project layout). Maybe
+2-3 months of focused work for the emitter alone, plus additional
+time for the reference Grid core's Compose mapping.
+
+### 10.6 What we explicitly accept under §10
+
+- Mobile coverage doubles in cost (two emitters, not one).
+- "Write Mosaic-UI app, build for iOS AND Android" still works, but
+  the per-platform emitters do the work, not an adopted cross-
+  platform stack.
+- We lose Flutter / Compose MP / Qt as serious tier-1 candidates.
+  They become tier-2 escape hatches for hosts who specifically want
+  them.
+- Linux desktop becomes a real question: there's no native-widget
+  tier-1 emitter for Linux unless we add GTK4. (Deferred — Linux
+  desktop is small market for new apps; revisit if demand emerges.)
+- The "intelligence in the framework" thesis sharpens. Each smart
+  emitter has to be deeply native-platform-fluent because the
+  output IS the user-visible native UI. No cross-platform-uniform
+  layer hides the per-platform fluency.
+
+### 10.7 What we explicitly do NOT accept under §10
+
+- **Authors compose components, not platform widgets.** §9's
+  constraint is preserved exactly. Authors write
+  `mosaic-pkg-toolkit::Button`; on iOS that emits a SwiftUI
+  `Button(...)`, on Android it emits a Compose `Button(...)`, on
+  Windows a `<Button>` XAML element. Author writes once. End user
+  sees genuinely native per platform.
+- **No theme abstraction trying to make Material look like iOS or
+  vice versa.** That's the wrong direction. Each platform looks
+  like itself.
+- **No "Mosaic look-and-feel."** There is no Mosaic visual identity
+  that overrides platform style. Mosaic is INVISIBLE to end users —
+  they just see iOS-native or Android-native or web-native UI,
+  authored once at the component level.
+
+### 10.8 Updated final recommendation
+
+> Mosaic UI is a **component framework that emits genuinely native
+> UI for each target platform**. Authors compose components in the
+> universal `.mil / .mll / .msl / .core / .disp` DSL set. The
+> emitter ecosystem is FIVE tier-1 native-widget smart emitters
+> (React DOM, SwiftUI, Jetpack Compose, WinUI XAML, HTML); a tier-2
+> set of view-only emitters for ecosystems that want them; and
+> nothing else in scope. There is no adopted cross-platform stack.
+> Skip and SwiftCrossUI are studied for their widget-mapping
+> patterns but not consumed. The end-user experience on every tier-1
+> platform is indistinguishable from a hand-written native app on
+> that platform.
+
+---
+
+*End of amendment §10.*
+
+---
+
+## 11. Amendment — cross-platform-consistency is an OPT-IN target choice, not a tier-2 demotion
+
+**Added after §10.** User insight:
+
+> *If someone wanted a pixel-perfect UI in all platforms, they can
+> emit to Flutter and then compile it down to all the platforms?*
+
+Yes — exactly. And this insight resolves something §10 didn't
+acknowledge cleanly: **there are two legitimate philosophies
+authors might want, and the framework can serve both** by treating
+the emit target itself as a user choice.
+
+### 11.1 The two legitimate philosophies
+
+| Philosophy                                       | Want                                                              | Best-fit emit target                                                |
+|--------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------|
+| **Native UI per platform** (§10's default)       | iOS to look like iOS, Android like Android, web like the web      | Tier-1A native-widget emit (SwiftUI, Jetpack Compose, React DOM, WinUI XAML, HTML) |
+| **Pixel-perfect cross-platform consistency**     | One UI authored once, looks identical everywhere it ships          | Tier-1B adopted-stack emit (Flutter primary; Compose MP, Qt as alternatives) |
+
+These aren't right vs. wrong. They're different choices for
+different apps:
+
+- **A B2C iOS-first app** wants native UI per platform — the
+  iOS-native feel is part of the brand and the App Store reviewer
+  will notice if it's not.
+- **An enterprise productivity tool** wants pixel-perfect
+  consistency — the company has trained users on one UI and the
+  rendering deviations between platforms are a support burden.
+- **A consumer game / drawing app** wants pixel-perfect consistency
+  — the brand IS the look, and platform-native widgets would clash.
+- **A native iOS extension built on Mosaic** wants native UI
+  per platform — extension UI needs to feel like the host app.
+
+Mosaic UI should support both. The author picks per-project (or per
+deploy target).
+
+### 11.2 The tier model expands
+
+§10's tier-2 row "Flutter, Qt, WC, MAUI, Avalonia, RN, Compose MP"
+collapsed too much. The right split:
+
+| Tier | Sub-tier | Platforms | Approach |
+|------|----------|-----------|----------|
+| **Tier 1A** | Native-widget smart emit | React DOM, SwiftUI, Jetpack Compose, WinUI XAML, HTML | "Native UI per platform" philosophy; the platform's blessed widgets are the output |
+| **Tier 1B** | Cross-platform-consistency smart emit | **Flutter** (primary), Compose MP, Qt | "Pixel-perfect consistency" philosophy; one binary, one look, all platforms |
+| **Tier 2** | View-only / niche | Web Components, MAUI, Avalonia, React Native, GTK4 | Useful for specific hosts; no smart core emit unless demand emerges |
+| **Out of scope** | — | Vue, Svelte, Solid, Angular, UIKit (covered by SwiftUI), Tauri (covered by HTML+web emit), Slint | Stay out unless real demand |
+
+Flutter is the most defensible Tier-1B primary choice:
+
+- Most mature draw-pixels cross-platform stack.
+- Covers iOS, Android, web, desktop (Win/Mac/Linux) from one
+  codebase.
+- Idiomatic state container (`flutter_bloc`) maps cleanly to
+  `.core` reducer semantics.
+- Largest ecosystem of Tier-1B-philosophy adopters.
+
+Compose MP and Qt are alternatives with their own trade-offs:
+Compose MP for Kotlin shops; Qt for desktop-first / C++ shops.
+
+### 11.3 What this changes about the rest of the doc
+
+| Section            | Change                                                                               |
+|--------------------|--------------------------------------------------------------------------------------|
+| §0 (empirical record) | The "draw-pixels-doesn't-feel-native" critique applies only to **Tier 1A** mismatches. Tier 1B users *want* draw-pixels because consistency is the goal. The graveyard is half a graveyard. |
+| §5 (recommendation)| Update tier classification to include Tier 1B as first-class. The investment per emitter increases but is justified by serving both philosophies. |
+| §9.3 (matrix)      | Replace adopted-stack-as-mobile-shortcut framing with adopted-stack-as-user-choice framing. |
+| §10.2 (matrix)     | Promote Flutter / Compose MP / Qt from "Tier 2" to "Tier 1B". They're not failures of Tier 1A — they're the answer for a different question. |
+| §10.6 (accepted costs) | Mobile cost doubles only for the Tier 1A path. Tier 1B users get mobile-and-desktop-and-web from one emit target (Flutter). |
+
+### 11.4 The new mental model for emit targets
+
+A Mosaic UI project's `mosaic.toml` (or equivalent) declares emit
+targets per deploy slot:
+
+```toml
+[targets.production]
+# An iOS-first consumer app, native feel preferred everywhere
+ios     = "swiftui"          # Tier 1A
+android = "jetpack-compose"  # Tier 1A
+web     = "react-dom"        # Tier 1A
+windows = "winui-xaml"       # Tier 1A
+
+[targets.kiosk]
+# A kiosk app shipped to industrial Android+Linux tablets, must look identical
+all-platforms = "flutter"   # Tier 1B — one binary, one look
+
+[targets.preview]
+# A web-only preview build for product review
+web = "html"                 # Tier 1A (server-rendered)
+```
+
+Authors pick per-deploy-slot. The framework wires whichever emit
+target the slot specifies. The component source is the same across
+all slots — only the emitter differs.
+
+### 11.5 Implementation phase impact
+
+§10.5 added Phase 7a (Jetpack Compose). §11 adds:
+
+| Phase | PRs                    | What it ships                                                                            |
+|-------|------------------------|------------------------------------------------------------------------------------------|
+| 8     | UI33-E-flutter-1..5    | **Flutter smart emit** (Tier 1B primary). State container: `flutter_bloc` sealed events + states. Project shell: pubspec.yaml + lib/main.dart. |
+| 8b    | UI33-V-flutter         | VisiCalc-Flutter as the Tier 1B pilot (proves cross-platform-consistency philosophy ships end-to-end) |
+| 9     | UI33-E-compose-mp-1..3 | **Compose MP smart emit** as Tier 1B alternative (smaller scope than Flutter — JVM-friendly shops) |
+| 10    | UI33-E-qt-smart-1..3   | **Promote existing Qt emitter to smart-emit** (state container: QObject Q_PROPERTY+Q_INVOKABLE; project shell: CMakeLists.txt + main.cpp) |
+
+Pilot story (§5.4 + §10.5 + §11) becomes:
+
+- VisiCalc-React (Tier 1A native web)
+- VisiCalc-SwiftUI (Tier 1A native Apple)
+- VisiCalc-Compose-Android (Tier 1A native Android)
+- VisiCalc-Flutter (Tier 1B cross-platform consistency) ← promoted from sanity-check to philosophy validator
+
+Four pilots — each validates one architectural axis. If all four
+ship, the architecture is proven across the two philosophies and
+across the smart-emit cost target.
+
+### 11.6 The hidden bonus — Tier 1B amortizes mobile
+
+Authors who want Tier 1B get *iOS + Android + web + desktop* from a
+single Flutter emit target. **For a small team that doesn't have the
+appetite for two native-mobile emitters (SwiftUI + Jetpack Compose
+separately), Tier 1B IS their mobile story.**
+
+This means:
+
+- Solo developers / small teams can ship to iOS+Android+web by
+  picking Tier 1B Flutter for their whole project.
+- Established companies with platform-native standards pick Tier 1A
+  per platform.
+- Mosaic UI's component source is the same. The choice is at the
+  emit-target level, not the IR level.
+
+That's the strongest argument for why Mosaic-UI-with-both-tiers is
+more valuable than either tier alone.
+
+### 11.7 §7 open question Q2 re-re-resolves
+
+| Q | Previous resolution                                                                          | Updated by §11                                                                                                  |
+|---|-----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Q2 | §10: "RESOLVED — no adopted stack. Two separate native-widget emitters for mobile."           | **Updated.** Both paths exist. Tier 1A users get separate SwiftUI + Jetpack Compose emit. Tier 1B users get Flutter (or Compose MP) emit covering iOS + Android + more. |
+
+### 11.8 Updated final recommendation (replaces §10.8)
+
+> Mosaic UI is a **component framework with two-philosophy emit
+> target ecosystem**: Tier 1A native-widget emit (React DOM,
+> SwiftUI, Jetpack Compose, WinUI XAML, HTML) for hosts who want
+> genuinely native UI per platform; Tier 1B cross-platform-
+> consistency emit (Flutter primary; Compose MP, Qt as alternatives)
+> for hosts who want one binary that looks identical everywhere.
+> Authors pick per-project or per-deploy-slot. Component source is
+> identical across both tiers — only the emitter differs. Tier 2
+> exists for niche hosts; the rest is out of scope.
+
+---
+
+*End of amendment §11.*
