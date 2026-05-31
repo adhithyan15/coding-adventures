@@ -233,8 +233,9 @@ IC parameters for C/L; AC phasor specs for V/I sources.
   `spice-1970s-compatibility.md`. JFET device/model-card support, mutual
   inductors, ideal transmission lines, Gear-2 transient integration,
   pseudo-transient DC continuation, 1970s model-card depth, classic text output
-  cards, and the first Phase 8 small-signal distortion / pole-zero footholds
-  are now reflected there with per-phase status.
+  cards including DC operating-point temperature tables, and the first Phase 8
+  small-signal distortion / pole-zero footholds are now reflected there with
+  per-phase status.
 
 ---
 

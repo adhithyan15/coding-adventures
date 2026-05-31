@@ -399,6 +399,9 @@ Status:
 - Deck-level `.temp` cards are resolved into Kelvin helper temperatures across
   Python, TypeScript, and Rust, and explicit `.noise temp=<kelvin>` values take
   precedence for noise-engine calls.
+- DC operating points can now be evaluated and rendered across explicit
+  `.temp`-style analysis temperatures in the live Rust SPICE package, covering
+  temperature, node-voltage, and branch-current rows with stable ordering.
 - `.disto` and `.pz` parser/control-card records plus first distortion and
   pole-zero result shapes are implemented across Python, TypeScript, and Rust,
   with smoke fixtures for nonlinear-device distortion output and a simple RC
