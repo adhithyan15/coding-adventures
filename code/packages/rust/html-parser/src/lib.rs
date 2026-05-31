@@ -1629,6 +1629,8 @@ pub struct BrowserFormControl {
     pub autocapitalize: Option<String>,
     pub enterkeyhint: Option<String>,
     pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
     pub accept: Option<String>,
     pub accept_tokens: Vec<String>,
     pub capture: Option<String>,
@@ -1645,6 +1647,9 @@ pub struct BrowserFormControl {
     pub minlength: Option<String>,
     pub maxlength: Option<String>,
     pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
     pub list: Option<String>,
     pub datalist_options: Vec<String>,
     pub output_for: Vec<String>,
@@ -11706,6 +11711,22 @@ fn browser_dirname(element: &Element) -> Option<String> {
     }
 }
 
+fn browser_spellcheck(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("spellcheck").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_autocorrect(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("autocorrect").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
 fn browser_control_accept(element: &Element) -> Option<String> {
     if element.name == "input" {
         element.attribute("accept").map(ToOwned::to_owned)
@@ -11805,6 +11826,30 @@ fn browser_control_maxlength(element: &Element) -> Option<String> {
 fn browser_control_size(element: &Element) -> Option<String> {
     if matches!(element.name.as_str(), "input" | "select") {
         element.attribute("size").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_rows(element: &Element) -> Option<String> {
+    if element.name == "textarea" {
+        element.attribute("rows").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_cols(element: &Element) -> Option<String> {
+    if element.name == "textarea" {
+        element.attribute("cols").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_wrap(element: &Element) -> Option<String> {
+    if element.name == "textarea" {
+        element.attribute("wrap").map(ToOwned::to_owned)
     } else {
         None
     }
@@ -12732,6 +12777,8 @@ fn browser_form_control(
         autocapitalize: browser_autocapitalize(element),
         enterkeyhint: browser_enterkeyhint(element),
         dirname: browser_dirname(element),
+        spellcheck: browser_spellcheck(element),
+        autocorrect: browser_autocorrect(element),
         accept_tokens: accept
             .as_deref()
             .map(split_browser_comma_tokens)
@@ -12753,6 +12800,9 @@ fn browser_form_control(
         minlength: browser_control_minlength(element),
         maxlength: browser_control_maxlength(element),
         size: browser_control_size(element),
+        rows: browser_control_rows(element),
+        cols: browser_control_cols(element),
+        wrap: browser_control_wrap(element),
         list: browser_control_list(element),
         datalist_options: browser_control_datalist_options(element, body_root),
         output_for: browser_output_for(element),

@@ -745,6 +745,10 @@ struct ExpectedFormControl {
     #[serde(default)]
     dirname: Option<String>,
     #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    autocorrect: Option<String>,
+    #[serde(default)]
     accept: Option<String>,
     #[serde(default)]
     accept_tokens: Vec<String>,
@@ -776,6 +780,12 @@ struct ExpectedFormControl {
     maxlength: Option<String>,
     #[serde(default)]
     size: Option<String>,
+    #[serde(default)]
+    rows: Option<String>,
+    #[serde(default)]
+    cols: Option<String>,
+    #[serde(default)]
+    wrap: Option<String>,
     #[serde(default)]
     list: Option<String>,
     #[serde(default)]
@@ -1078,6 +1088,26 @@ fn browser_form_descriptor_metadata_tracks_accept_and_autocomplete_tokens() {
     assert_eq!(
         actual.forms, expected.forms,
         "form metadata should preserve tokenized accept-charset, autocomplete, and file accept descriptors",
+    );
+}
+
+#[test]
+fn browser_text_control_descriptor_metadata_tracks_editing_and_layout_hints() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form accessibility fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.forms, expected.forms,
+        "text controls should preserve spellcheck, autocorrect, rows, cols, and wrapping hints",
     );
 }
 
@@ -1948,6 +1978,8 @@ impl ExpectedFormControl {
             autocapitalize: self.autocapitalize,
             enterkeyhint: self.enterkeyhint,
             dirname: self.dirname,
+            spellcheck: self.spellcheck,
+            autocorrect: self.autocorrect,
             accept: self.accept,
             accept_tokens: self.accept_tokens,
             capture: self.capture,
@@ -1964,6 +1996,9 @@ impl ExpectedFormControl {
             minlength: self.minlength,
             maxlength: self.maxlength,
             size: self.size,
+            rows: self.rows,
+            cols: self.cols,
+            wrap: self.wrap,
             list: self.list,
             datalist_options: self.datalist_options,
             output_for: self.output_for,
