@@ -2,6 +2,26 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.55.0] - 2026-05-31
+
+### Added (Phase 10c (FC) — endless range `1..` / `1...`)
+
+`lower_range` gained a third case for endless ranges (one operand plus
+a range op, no trailing operand).  The open upper bound is encoded as
+`NilLit`, keeping the `range` builtin's uniform shape:
+
+- `1..` → `BuiltinCall("range", [start, NilLit, BoolLit(false)])`
+- `1...` → `BuiltinCall("range", [start, NilLit, BoolLit(true)])`
+
+A nil end means "unbounded above"; the exclusive flag distinguishes
+`..` from `...` exactly as in the two-operand case, so no new SIR
+variant, `Feature`, or backend dispatch is required.
+
+New tests (+3): `endless_range_inclusive_lowers_with_nil_end` (`(1..)`),
+`endless_range_exclusive_lowers_with_nil_end` (`(1...)`),
+`endless_range_over_param_validates_e2e` (`(a..)` + validator E2E).
+Test count: 240 → 243.
+
 ## [0.54.0] - 2026-05-31
 
 ### Added (Phase 10a (FC) — inclusive range `1..5` coverage confirmation)

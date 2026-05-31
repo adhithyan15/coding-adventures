@@ -2171,6 +2171,79 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 10c (FC) — endless range `1..` / `1...` lowering.
+    //
+    // An endless range carries a start but no end.  It lowers to the
+    // same `range` builtin with the open upper bound encoded as
+    // `NilLit`: `BuiltinCall("range", [start, NilLit, BoolLit(excl)])`.
+    // The exclusive flag still distinguishes `..` (false) from `...`
+    // (true), so downstream emitters need no new dispatch — a nil end
+    // simply means "unbounded above".
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn endless_range_inclusive_lowers_with_nil_end() {
+        // `def r() (1..) end` — endless inclusive.  Parens keep the
+        // body off the bare-NAME method-call path (lessons.md).
+        let m = lower("def r\n  (1..)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert_eq!(args.len(), 3, "expected [start, nil_end, exclusive_flag]");
+                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+                assert!(
+                    matches!(&args[1], Expr::NilLit { .. }),
+                    "endless range end should be NilLit; got {:?}",
+                    &args[1]
+                );
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: false, .. }),
+                    "inclusive `..` should set the exclusive flag false; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn endless_range_exclusive_lowers_with_nil_end() {
+        // `def r() (1...) end` — endless exclusive sets the flag true.
+        let m = lower("def r\n  (1...)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert_eq!(args.len(), 3);
+                assert!(matches!(&args[1], Expr::NilLit { .. }), "end should be nil");
+                assert!(
+                    matches!(&args[2], Expr::BoolLit { value: true, .. }),
+                    "exclusive `...` should set the flag true; got {:?}",
+                    &args[2]
+                );
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn endless_range_over_param_validates_e2e() {
+        // `def r(a) (a..) end` — endless range whose start is a param
+        // (in scope, so the VarRef survives validation).  End-to-end pin:
+        // lower + validate succeeds, and the end is nil.
+        let m = lower("def r(a)\n  (a..)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "range" => {
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::NilLit { .. }));
+            }
+            other => panic!("expected BuiltinCall(range, …), got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected endless range: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //

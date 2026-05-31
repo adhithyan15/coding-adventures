@@ -1681,6 +1681,69 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 10c (FC) — endless range `1..` / `1...`.
+    //
+    // The `range` rule's trailing operand is now optional:
+    //   range = logical_or [ ( "..." | ".." ) [ logical_or ] ]
+    // so a range op with no following operand (the next token is a
+    // closer that cannot begin a `logical_or`) yields a `range` node
+    // with exactly ONE `logical_or` operand plus the op token.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_endless_range_inclusive() {
+        // `1..` — endless inclusive range: one operand, `..` token, no
+        // trailing operand.
+        let ast = parse_ruby("1..");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token in the endless range"
+        );
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 1, "endless range should carry exactly 1 operand");
+    }
+
+    #[test]
+    fn test_parse_endless_range_exclusive() {
+        // `1...` — endless exclusive range carries the `...` token.
+        let ast = parse_ruby("1...");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, "..."),
+            "expected `...` token in the endless exclusive range"
+        );
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 1, "endless range should carry exactly 1 operand");
+    }
+
+    #[test]
+    fn test_parse_endless_range_parenthesized() {
+        // `(1..)` — the closer here is `)`; the optional operand matches
+        // nothing and the range stays endless.
+        let ast = parse_ruby("(1..)");
+        let r = find_descendant(&ast, "range").expect("expected range node");
+        assert!(
+            tree_has_token_value(r, ".."),
+            "expected `..` token in the parenthesized endless range"
+        );
+        let operand_count = r
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "logical_or"))
+            .count();
+        assert_eq!(operand_count, 1, "endless range should carry exactly 1 operand");
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6p — compound assignment `+=`, `-=`, `*=`, `/=`, `||=`, `&&=`
     // -----------------------------------------------------------------------
     //
