@@ -1,7 +1,8 @@
 #![no_std]
 
 use board_vm_ir::{
-    parse_module, validate, CapabilitySet, Module, ModuleError, ValidateError, MODULE_VERSION,
+    collect_required_capabilities, parse_module, validate, CapabilitySet, Module, ModuleError,
+    RequiredCapabilitiesError, ValidateError, MODULE_VERSION,
 };
 use board_vm_protocol::{ProgramFormat, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
@@ -28,6 +29,7 @@ pub const EMBEDDED_BLINK_MODULE: [u8; 36] = [
 
 pub const SMOKE_INSTRUCTION_BUDGET: u32 = 100;
 pub const EJECTED_INSTRUCTION_BUDGET: u32 = SMOKE_INSTRUCTION_BUDGET;
+pub const MAX_EJECTED_REQUIRED_CAPABILITIES: usize = 16;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct EjectedFirmwareProgram<'a> {
@@ -39,6 +41,7 @@ pub struct EjectedFirmwareProgram<'a> {
     pub module_flags: u8,
     pub max_stack: u8,
     pub module_crc32: u32,
+    pub required_capabilities: &'a [u16],
     pub module: &'a [u8],
 }
 
@@ -57,6 +60,7 @@ impl<'a> EjectedFirmwareProgram<'a> {
             module_flags: ejected_blink::BOARD_VM_MODULE_FLAGS,
             max_stack: ejected_blink::BOARD_VM_MODULE_MAX_STACK,
             module_crc32: ejected_blink::BOARD_VM_PROGRAM_CRC32,
+            required_capabilities: &ejected_blink::BOARD_VM_REQUIRED_CAPABILITIES,
             module: &ejected_blink::BOARD_VM_PROGRAM,
         }
     }
@@ -67,9 +71,12 @@ pub enum FirmwareSmokeError {
     Module(ModuleError),
     Validate(ValidateError),
     Runtime(RuntimeError),
+    RequiredCapabilities(RequiredCapabilitiesError),
     UnsupportedProgramFormat(u8),
     InvalidBootPolicy(u8),
     ArtifactMetadataMismatch,
+    ArtifactCrcMismatch,
+    ArtifactRequiredCapabilitiesMismatch,
 }
 
 impl From<ModuleError> for FirmwareSmokeError {
@@ -87,6 +94,12 @@ impl From<ValidateError> for FirmwareSmokeError {
 impl From<RuntimeError> for FirmwareSmokeError {
     fn from(value: RuntimeError) -> Self {
         Self::Runtime(value)
+    }
+}
+
+impl From<RequiredCapabilitiesError> for FirmwareSmokeError {
+    fn from(value: RequiredCapabilitiesError) -> Self {
+        Self::RequiredCapabilities(value)
     }
 }
 
@@ -163,10 +176,33 @@ fn parse_checked_ejected_program(
     }
 
     let module = parse_module(program.module)?;
+    if crc32_ieee(program.module) != program.module_crc32 {
+        return Err(FirmwareSmokeError::ArtifactCrcMismatch);
+    }
     if module.flags != program.module_flags || module.max_stack != program.max_stack {
         return Err(FirmwareSmokeError::ArtifactMetadataMismatch);
     }
+    let mut required_capabilities = [0u16; MAX_EJECTED_REQUIRED_CAPABILITIES];
+    let required_len = collect_required_capabilities(&module, &mut required_capabilities)?;
+    if &required_capabilities[..required_len] != program.required_capabilities {
+        return Err(FirmwareSmokeError::ArtifactRequiredCapabilitiesMismatch);
+    }
     Ok(module)
+}
+
+fn crc32_ieee(bytes: &[u8]) -> u32 {
+    let mut crc = 0xFFFF_FFFFu32;
+    for byte in bytes {
+        crc ^= *byte as u32;
+        for _ in 0..8 {
+            if crc & 1 != 0 {
+                crc = (crc >> 1) ^ 0xEDB8_8320;
+            } else {
+                crc >>= 1;
+            }
+        }
+    }
+    !crc
 }
 
 #[cfg(any(test, not(target_arch = "arm")))]
@@ -175,7 +211,10 @@ extern crate std;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use board_vm_ir::{parse_module, CapabilitySet, FLAG_PROGRAM_MAY_RUN_FOREVER};
+    use board_vm_ir::{
+        parse_module, CapabilitySet, CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS,
+        FLAG_PROGRAM_MAY_RUN_FOREVER,
+    };
     use board_vm_runtime::{GpioMode, HalError, Level, RunStatus};
     use std::vec::Vec;
 
@@ -258,6 +297,11 @@ mod tests {
         assert_eq!(program.program_format, ProgramFormat::BvmModule.as_u8());
         assert_eq!(program.module_version, MODULE_VERSION);
         assert_eq!(program.module_len(), EMBEDDED_BLINK_MODULE.len());
+        assert_eq!(program.module_crc32, crc32_ieee(program.module));
+        assert_eq!(
+            program.required_capabilities,
+            [CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS]
+        );
         assert_eq!(program.module, &EMBEDDED_BLINK_MODULE);
         validate_ejected_blink_program(16).unwrap();
     }
@@ -270,6 +314,28 @@ mod tests {
         assert_eq!(
             validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
             FirmwareSmokeError::ArtifactMetadataMismatch
+        );
+    }
+
+    #[test]
+    fn rejects_ejected_artifact_crc_mismatch() {
+        let mut program = EjectedFirmwareProgram::blink();
+        program.module_crc32 ^= 1;
+
+        assert_eq!(
+            validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
+            FirmwareSmokeError::ArtifactCrcMismatch
+        );
+    }
+
+    #[test]
+    fn rejects_ejected_artifact_required_capabilities_mismatch() {
+        let mut program = EjectedFirmwareProgram::blink();
+        program.required_capabilities = &[CAP_GPIO_OPEN, CAP_TIME_SLEEP_MS];
+
+        assert_eq!(
+            validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
+            FirmwareSmokeError::ArtifactRequiredCapabilitiesMismatch
         );
     }
 

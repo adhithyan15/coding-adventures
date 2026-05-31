@@ -90,6 +90,7 @@ pub struct RustConstNames<'a> {
     pub module_flags: &'a str,
     pub max_stack: &'a str,
     pub module_crc32: &'a str,
+    pub required_capabilities: &'a str,
     pub module: &'a str,
 }
 
@@ -104,6 +105,7 @@ impl<'a> RustConstNames<'a> {
             module_flags: "BOARD_VM_MODULE_FLAGS",
             max_stack: "BOARD_VM_MODULE_MAX_STACK",
             module_crc32: "BOARD_VM_PROGRAM_CRC32",
+            required_capabilities: "BOARD_VM_REQUIRED_CAPABILITIES",
             module: "BOARD_VM_PROGRAM",
         }
     }
@@ -189,6 +191,20 @@ where
         "pub const {}: u32 = 0x{:08X};",
         names.module_crc32, artifact.module_crc32
     )?;
+    writeln!(
+        out,
+        "pub const {}: [u16; {}] = [",
+        names.required_capabilities,
+        artifact.required_capabilities.len()
+    )?;
+    for chunk in artifact.required_capabilities.chunks(8) {
+        write!(out, "    ")?;
+        for capability in chunk {
+            write!(out, "0x{capability:04X}, ")?;
+        }
+        writeln!(out)?;
+    }
+    writeln!(out, "];")?;
     writeln!(
         out,
         "pub const {}: [u8; {}] = [",
@@ -320,6 +336,8 @@ mod tests {
         assert!(source.contains("pub const BOARD_VM_MODULE_FLAGS: u8 = 0x01;"));
         assert!(source.contains("pub const BOARD_VM_MODULE_MAX_STACK: u8 = 4;"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM_CRC32: u32 = 0xBAD6949E;"));
+        assert!(source.contains("pub const BOARD_VM_REQUIRED_CAPABILITIES: [u16; 3] = ["));
+        assert!(source.contains("0x0001, 0x0002, 0x0010,"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM: [u8; 36] = ["));
         assert!(source.contains("0x42, 0x56, 0x4D, 0x31"));
         assert!(source.ends_with("];\n"));
