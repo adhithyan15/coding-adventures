@@ -934,6 +934,9 @@ pub struct BrowserResource {
     pub type_hint: Option<String>,
     pub media: Option<String>,
     pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
     pub integrity: Option<String>,
@@ -9039,6 +9042,9 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
                         type_hint: element.attribute("type").map(ToOwned::to_owned),
                         media: None,
                         title: None,
+                        sizes: None,
+                        hreflang: None,
+                        color: None,
                         width: None,
                         height: None,
                         integrity: element.attribute("integrity").map(ToOwned::to_owned),
@@ -9414,6 +9420,9 @@ fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         title: element.attribute("title").map(ToOwned::to_owned),
+        sizes: None,
+        hreflang: None,
+        color: None,
         width: element.attribute("width").map(ToOwned::to_owned),
         height: element.attribute("height").map(ToOwned::to_owned),
         integrity: element.attribute("integrity").map(ToOwned::to_owned),
@@ -9765,7 +9774,7 @@ fn link_resource_kind(rel: Option<&str>) -> String {
     }
     for token in rel_tokens {
         match token.as_str() {
-            "icon" | "shortcut" => return "icon".to_string(),
+            "icon" | "shortcut" | "mask-icon" => return "icon".to_string(),
             "preload" => return "preload".to_string(),
             "modulepreload" => return "modulepreload".to_string(),
             "prefetch" => return "prefetch".to_string(),
@@ -9797,6 +9806,9 @@ fn browser_link_resource(
         type_hint: element.attribute("type").map(ToOwned::to_owned),
         media: element.attribute("media").map(ToOwned::to_owned),
         title: element.attribute("title").map(ToOwned::to_owned),
+        sizes: element.attribute("sizes").map(ToOwned::to_owned),
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        color: element.attribute("color").map(ToOwned::to_owned),
         width: None,
         height: None,
         integrity: element.attribute("integrity").map(ToOwned::to_owned),
@@ -14536,12 +14548,14 @@ mod tests {
              <link rel=prefetch href=\"next.html\" as=document>\
              <link rel=manifest href=\"site.webmanifest\" crossorigin=use-credentials>\
              <link rel=canonical href=\"https://example.test/app/\">\
-             <link rel=\"shortcut icon\" href=\"favicon.ico\" sizes=any type=image/x-icon>",
+             <link rel=\"shortcut icon\" href=\"favicon.ico\" sizes=any type=image/x-icon>\
+             <link rel=\"mask-icon\" href=\"mask.svg\" color=\"#0055ff\">\
+             <link rel=alternate href=\"feed.xml\" type=\"application/rss+xml\" hreflang=en title=Feed>",
         )
         .unwrap();
 
         let summary = BrowserDocument::from_document(&document);
-        assert_eq!(summary.resources.len(), 8);
+        assert_eq!(summary.resources.len(), 10);
         let preconnect = &summary.resources[0];
         assert_eq!(preconnect.kind, "preconnect");
         assert_eq!(
@@ -14589,6 +14603,16 @@ mod tests {
             summary.resources[7].type_hint.as_deref(),
             Some("image/x-icon")
         );
+        assert_eq!(summary.resources[7].sizes.as_deref(), Some("any"));
+        assert_eq!(summary.resources[8].kind, "icon");
+        assert_eq!(summary.resources[8].color.as_deref(), Some("#0055ff"));
+        assert_eq!(summary.resources[9].kind, "alternate");
+        assert_eq!(
+            summary.resources[9].type_hint.as_deref(),
+            Some("application/rss+xml")
+        );
+        assert_eq!(summary.resources[9].hreflang.as_deref(), Some("en"));
+        assert_eq!(summary.resources[9].title.as_deref(), Some("Feed"));
 
         assert_eq!(summary.metadata.resource_hints.len(), 5);
         let preconnect_hint = &summary.metadata.resource_hints[0];
