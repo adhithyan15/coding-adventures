@@ -49,9 +49,11 @@ cargo run -p board-vm-cli --bin board-vm -- eject blink \
 ```
 
 `smoke` opens the selected serial device or endpoint, sends `HELLO`, queries
-capabilities, uploads the standard onboard LED blink module, and starts it with
-a bounded instruction budget. It is transport-hosting glue only; the board
-firmware still owns the protocol dispatcher and HAL behavior. The serial path
+capabilities, uploads the standard onboard LED blink module, starts it with
+a bounded instruction budget, verifies the board still answers `PING`, and
+then sends `STOP` to prove host control is recovered. It is transport-hosting
+glue only; the board firmware still owns the protocol dispatcher and HAL
+behavior. The serial path
 asks `board-vm-language-core` for the runtime serial open plan, then applies
 CLI `--baud` and `--timeout-ms` overrides before touching the OS port. That
 keeps DTR/open-settle, stale-byte clearing, endpoint metadata, and wire

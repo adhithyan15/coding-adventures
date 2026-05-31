@@ -874,12 +874,19 @@ pub struct SmokeReport {
     pub descriptor: BoardDescriptorInfo,
     pub upload: UploadReport,
     pub run: RunReportInfo,
+    pub ping: SmokePingReport,
+    pub stop: RunReportInfo,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BootloaderRebootReport {
     pub connection: SmokeConnectionReport,
     pub hello: HelloAckInfo,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SmokePingReport {
+    pub ok: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -920,6 +927,8 @@ pub enum SmokeStage {
     Capabilities,
     UploadBlink,
     RunBlink,
+    Ping,
+    StopBlink,
 }
 
 impl fmt::Display for SmokeStage {
@@ -929,6 +938,8 @@ impl fmt::Display for SmokeStage {
             Self::Capabilities => write!(f, "capabilities"),
             Self::UploadBlink => write!(f, "blink upload"),
             Self::RunBlink => write!(f, "blink run"),
+            Self::Ping => write!(f, "ping"),
+            Self::StopBlink => write!(f, "blink stop"),
         }
     }
 }
@@ -1264,6 +1275,14 @@ where
             stage: SmokeStage::RunBlink,
             source,
         })?;
+    client.ping().map_err(|source| CliError::Smoke {
+        stage: SmokeStage::Ping,
+        source,
+    })?;
+    let stop = client.stop().map_err(|source| CliError::Smoke {
+        stage: SmokeStage::StopBlink,
+        source,
+    })?;
     Ok(SmokeReport {
         connection: SmokeConnectionReport {
             transport: connection_transport,
@@ -1274,6 +1293,8 @@ where
         descriptor,
         upload,
         run,
+        ping: SmokePingReport { ok: true },
+        stop,
     })
 }
 
@@ -2134,7 +2155,9 @@ where
     write_hello(output, &report.hello)?;
     write_descriptor_summary(output, &report.descriptor)?;
     write_upload(output, &report.upload)?;
-    write_labeled_run(output, "blink", &report.run)
+    write_labeled_run(output, "blink", &report.run)?;
+    writeln!(output, "ping ok={}", report.ping.ok)?;
+    write_labeled_run(output, "stop", &report.stop)
 }
 
 fn format_run_values(values: &[RunValue]) -> String {
@@ -3182,6 +3205,10 @@ mod tests {
         assert!(report.run.instructions_executed > 0);
         assert_eq!(report.run.open_handles, 1);
         assert!(report.run.returns.is_empty());
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.program_id, 7);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
     }
 
     #[test]
@@ -3256,6 +3283,16 @@ mod tests {
                 open_handles: 0,
                 returns: vec![RunValue::U32(99)],
             },
+            ping: SmokePingReport { ok: true },
+            stop: RunReportInfo {
+                program_id: 3,
+                status: RunStatus::Stopped,
+                instructions_executed: 0,
+                elapsed_ms: 250,
+                stack_depth: 0,
+                open_handles: 0,
+                returns: vec![],
+            },
         };
         let mut out = Vec::new();
 
@@ -3267,7 +3304,9 @@ mod tests {
 hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x1234ABCD board_nonce=0xAABBCCDD\n\
 caps board=loopback-uno-r4 runtime=board-vm-loopback max_program_bytes=512 stack=8 handles=4 store=true capabilities=1\n\
 upload program_id=3 bytes=42 crc32=0xCAFEBABE\n\
-blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n"
+blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n\
+ping ok=true\n\
+stop program_id=3 status=Stopped instructions=0 elapsed_ms=250 stack_depth=0 open_handles=0\n"
         );
     }
 
@@ -3333,6 +3372,9 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_eq!(report.run.program_id, 8);
         assert_eq!(report.run.status, RunStatus::Running);
         assert_eq!(report.run.open_handles, 1);
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
     }
 
     #[test]
@@ -3371,11 +3413,14 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_eq!(report.run.program_id, 10);
         assert_eq!(report.run.status, RunStatus::Running);
         assert_eq!(report.run.open_handles, 1);
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
     }
 
     #[test]
     fn smoke_endpoint_runs_over_tcp_loopback_transport() {
-        let (endpoint, server) = spawn_loopback_tcp_board(6);
+        let (endpoint, server) = spawn_loopback_tcp_board(8);
         let options = SmokeOptions {
             port: None,
             endpoint: Some(endpoint.clone()),
@@ -3405,6 +3450,9 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_ne!(report.upload.program_crc32, 0);
         assert_eq!(report.run.program_id, 9);
         assert_eq!(report.run.status, RunStatus::Running);
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
         assert!(event_count > 0);
     }
 
