@@ -20,7 +20,8 @@ The initial slices implement:
   devices.
 - S-parameter extraction for two-port networks, including named corner sweeps.
 - Backward-Euler, trapezoidal, Gear-2, and adaptive transient analysis for
-  linear RC/RL circuits, including named corner sweeps for fixed-step runs.
+  linear RC/RL circuits, including named corner sweeps for fixed-step and
+  adaptive runs.
 - Periodic steady-state analysis for periodic source circuits, including named
   corner sweeps.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
@@ -31,7 +32,8 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents,
-  transient samples, cornered transient samples, AC phasors, cornered DC
+  transient samples, adaptive transient samples, cornered transient samples,
+  cornered adaptive transient samples, AC phasors, cornered DC
   operating points, cornered AC phasors, PSS steady-state periods,
   sensitivity entries, Fourier harmonics, cornered Fourier harmonics,
   transfer-function results, cornered transfer-function results, S-parameter

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `format_adaptive_transient_table`, `transient_adaptive_corners`, and
+  `format_corner_adaptive_transient_table` for stable tab-separated adaptive
+  transient sample text output snapshots, including method, rejected-step, and
+  convergence metadata.
 - Add `fourier_corners`, `fourier_corners_with_start_time`, and
   `format_corner_fourier_table` for stable tab-separated named-corner `.FOUR`
   harmonic coefficient, magnitude, phase, DC, and THD text output snapshots.

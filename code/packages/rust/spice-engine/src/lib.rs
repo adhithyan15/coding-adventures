@@ -2131,6 +2131,17 @@ pub struct AdaptiveTransientResult {
     pub converged: bool,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAdaptiveTransientPoint {
+    pub corner_name: String,
+    pub result: AdaptiveTransientResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAdaptiveTransientResult {
+    pub points: Vec<CornerAdaptiveTransientPoint>,
+}
+
 impl TransientPoint {
     pub fn voltage(&self, node: &str) -> Option<f64> {
         if is_ground(node) {
@@ -3754,6 +3765,53 @@ pub fn format_transient_table(
     Ok(rows.join("\n"))
 }
 
+fn format_transient_method(method: TransientMethod) -> &'static str {
+    match method {
+        TransientMethod::Euler => "euler",
+        TransientMethod::Trap => "trap",
+        TransientMethod::Gear2 => "gear2",
+    }
+}
+
+pub fn format_adaptive_transient_table(
+    result: &AdaptiveTransientResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        default_transient_output_probes(&result.points)
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Method\tStepsRejected\tConverged\tIndex\tTime\t{}",
+        selected_probes.join("\t")
+    )];
+    for (index, point) in result.points.iter().enumerate() {
+        let values: Result<Vec<String>, SpiceError> = selected_probes
+            .iter()
+            .map(|probe| {
+                table_probe_value(
+                    &point.node_voltages,
+                    &point.branch_currents,
+                    probe,
+                    "format_adaptive_transient_table",
+                )
+                .map(format_table_number)
+            })
+            .collect();
+        rows.push(format!(
+            "{}\t{}\t{}\t{index}\t{}\t{}",
+            format_transient_method(result.method),
+            result.steps_rejected,
+            result.converged,
+            format_table_number(point.time),
+            values?.join("\t")
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 pub fn format_corner_transient_table(
     result: &CornerTransientResult,
     probes: &[&str],
@@ -3789,6 +3847,53 @@ pub fn format_corner_transient_table(
             rows.push(format!(
                 "{}\t{index}\t{}\t{}",
                 corner.corner_name,
+                format_table_number(point.time),
+                values?.join("\t")
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_corner_adaptive_transient_table(
+    result: &CornerAdaptiveTransientResult,
+    probes: &[&str],
+) -> Result<String, SpiceError> {
+    let selected_probes = if probes.is_empty() {
+        result
+            .points
+            .iter()
+            .find(|point| !point.result.points.is_empty())
+            .map(|point| default_transient_output_probes(&point.result.points))
+            .unwrap_or_default()
+    } else {
+        probes.iter().map(|probe| probe.to_string()).collect()
+    };
+    let mut rows = vec![format!(
+        "Corner\tMethod\tStepsRejected\tConverged\tIndex\tTime\t{}",
+        selected_probes.join("\t")
+    )];
+    for corner in &result.points {
+        for (index, point) in corner.result.points.iter().enumerate() {
+            let values: Result<Vec<String>, SpiceError> = selected_probes
+                .iter()
+                .map(|probe| {
+                    table_probe_value(
+                        &point.node_voltages,
+                        &point.branch_currents,
+                        probe,
+                        "format_corner_adaptive_transient_table",
+                    )
+                    .map(format_table_number)
+                })
+                .collect();
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{index}\t{}\t{}",
+                corner.corner_name,
+                format_transient_method(corner.result.method),
+                corner.result.steps_rejected,
+                corner.result.converged,
                 format_table_number(point.time),
                 values?.join("\t")
             ));
@@ -5905,6 +6010,24 @@ pub fn transient_adaptive(
         steps_rejected,
         converged: true,
     })
+}
+
+pub fn transient_adaptive_corners(
+    circuit: &Circuit,
+    time_step: f64,
+    stop_time: f64,
+    options: AdaptiveTransientOptions,
+    corners: &[CornerSpec],
+) -> Result<CornerAdaptiveTransientResult, SpiceError> {
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerAdaptiveTransientPoint {
+            corner_name: corner.name.clone(),
+            result: transient_adaptive(&corner_circuit, time_step, stop_time, options)?,
+        });
+    }
+    Ok(CornerAdaptiveTransientResult { points })
 }
 
 pub fn pss_residual(
