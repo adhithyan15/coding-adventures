@@ -349,6 +349,10 @@ The crate keeps the boundary narrow:
   lane queue action-rollup route-digest queue action route-digest queue
   action-lane classifier label-integrity flags across queue-key and digest
   dashboards
+- supervisor drain reports and summaries bind host-run escalation dashboard
+  lane queue action-rollup route-digest queue action route-digest queue digest
+  action-lane labels back to their queue keys and source digests for host-log
+  drift checks
 - supervisor drain reports and summaries expose host-run escalation dashboard
   lane queue action-rollup route-digest queue action route-digest queue action
   keys and action digests that bind queue action lanes back to queue keys and
