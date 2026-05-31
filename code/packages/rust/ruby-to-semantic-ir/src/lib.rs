@@ -2319,6 +2319,77 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 19a (FC) — regex literal `/pattern/flags` lowering.
+    //
+    // The lexer resolves the `/`-is-regex-vs-division ambiguity and emits
+    // the literal as a verbatim `/p/flags` String token; the lowerer
+    // splits it and emits `BuiltinCall("regex", [StrLit(pattern),
+    // StrLit(flags)])` (flags = "" when none).  Pure; requests
+    // `Feature::Strings`.  A path-shaped string like `"/usr/bin"` is NOT a
+    // regex (the flag-letter check rejects it).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn regex_literal_lowers_to_regex_builtin() {
+        // `x = /foo/` — bare regex, no flags.
+        let m = lower("x = /foo/\n");
+        let value = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        }).expect("expected a binding for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "regex");
+                assert_eq!(args.len(), 2, "expected [pattern, flags]");
+                assert!(
+                    matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"),
+                    "expected pattern StrLit \"foo\"; got {:?}", &args[0]
+                );
+                assert!(
+                    matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()),
+                    "expected empty flags StrLit; got {:?}", &args[1]
+                );
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn regex_literal_with_flags_carries_flags() {
+        // `x = /foo/i` — case-insensitive flag preserved in args[1].
+        let m = lower("x = /foo/i\n");
+        let value = main_body(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { value, .. } | Stmt::Assign { value, .. } => Some(value.clone()),
+            _ => None,
+        }).expect("expected a binding for `x`");
+        match &value {
+            Expr::BuiltinCall { name, args, .. } if name == "regex" => {
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"));
+                assert!(
+                    matches!(&args[1], Expr::StrLit { value, .. } if value == "i"),
+                    "expected flags StrLit \"i\"; got {:?}", &args[1]
+                );
+            }
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn regex_literal_validates_e2e() {
+        // `def r() (/foo/) end` — regex as a method body survives
+        // validation end-to-end.  Parens keep the body off the bare-NAME
+        // method-call path (lessons.md).
+        let m = lower("def r\n  (/foo/)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "r").unwrap();
+        match &f.body.value {
+            Expr::BuiltinCall { name, .. } if name == "regex" => {}
+            other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected regex literal: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6o — ternary `cond ? a : b` lowering
     // -----------------------------------------------------------------
     //

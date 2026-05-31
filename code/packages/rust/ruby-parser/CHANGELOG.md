@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.54.0] - 2026-05-31
+
+### Added (Phase 19a (FC) — regex literal `/pattern/flags`)
+
+No grammar change.  The lexer already resolves the classic
+`/`-is-regex-vs-division ambiguity (`should_open_regex` / the
+`regex_body` sub-machine) and emits a regex as a `TokenType::String`
+token carrying the verbatim `/pattern/flags` source (slashes included)
+— the same lexeme-prefix sentinel trick percent literals, heredocs, and
+backticks use.  The parser therefore routes a regex through the ordinary
+string-literal slot.
+
+New parse pins (+3): `test_parse_regex_literal` (`x = /foo/`),
+`test_parse_regex_literal_with_flags` (`x = /foo/i`),
+`test_parse_regex_literal_in_call_argument` (`foo(/bar/)`) — each
+confirms the verbatim regex lexeme survives into the parse tree.  Test
+count: 192 → 195.
+
 ## [0.53.0] - 2026-05-31
 
 ### Added (Phase 10d (FC) — beginless range `..5` / `...5`)

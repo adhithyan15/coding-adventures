@@ -2,6 +2,32 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.57.0] - 2026-05-31
+
+### Added (Phase 19a (FC) — regex literal `/pattern/flags`)
+
+`lower_factor_atom` gained a regex dispatch: a `String` token whose
+verbatim value has regex shape (recognised by the new free helper
+`regex_pattern_flags`) lowers via `lower_regex_literal` to
+`BuiltinCall("regex", [StrLit(pattern), StrLit(flags)])` (flags = `""`
+when none).  Building a regex is pure; the literal requests
+`Feature::Strings` (it emits `StrLit`s), matching the backtick/heredoc
+stance.  No new SIR variant or backend dispatch — reuses the existing
+`BuiltinCall` + `StrLit`.
+
+`regex_pattern_flags` rejects path-shaped strings like `"/usr/bin"`
+(lexed value `/usr/bin`) by requiring the trailing segment after the
+final `/` to consist only of valid Ruby regex flag letters (`imxounes`)
+— `b` is not a flag, so it stays a string.  (Residual v0 ambiguity: a
+double-quoted string whose content has true regex shape, e.g. `"/a/i"`,
+is read as a regex — the same lexeme-prefix limitation backticks and
+heredocs already accept.  v0 does not unescape the body.)
+
+New tests (+3): `regex_literal_lowers_to_regex_builtin` (`/foo/` → empty
+flags), `regex_literal_with_flags_carries_flags` (`/foo/i`),
+`regex_literal_validates_e2e` (`(/foo/)` + validator E2E).  Test count:
+246 → 249.
+
 ## [0.56.0] - 2026-05-31
 
 ### Added (Phase 10d (FC) — beginless range `..5` / `...5`)
