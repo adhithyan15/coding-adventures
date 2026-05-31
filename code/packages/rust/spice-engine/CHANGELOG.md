@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `transient_corners`, `transient_corners_with_method`, and
+  `format_corner_transient_table` for stable tab-separated named-corner
+  transient sample text output snapshots.
 - Add `format_corner_dc_table` for stable tab-separated named-corner DC
   operating-point voltage and current text output snapshots.
 - Add `format_corner_tf_table` for stable tab-separated named-corner `.TF`

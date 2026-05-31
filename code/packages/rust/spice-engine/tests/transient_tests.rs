@@ -1,23 +1,23 @@
 use spice_engine::{
     dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
     estimate_period, format_corner_distortion_table, format_corner_pole_zero_table,
-    format_corner_pss_table, format_dc_table, format_distortion_table, format_fourier_table,
-    format_pole_zero_table, format_pss_table, format_transient_table, fourier,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, transient, transient_adaptive, transient_with_method,
-    AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit,
-    CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource,
-    DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic,
-    FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry,
-    PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
-    Waveform,
+    format_corner_pss_table, format_corner_transient_table, format_dc_table,
+    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
+    format_transient_table, fourier, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
+    transient_corners, transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult,
+    Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride,
+    CornerSpec, CurrentSource, DistortionHarmonic, DistortionPoint, DistortionResult, Element,
+    ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
+    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1600,6 +1600,37 @@ fn text_output_tables_are_stable_for_dc_and_transient_results() {
     assert_eq!(
         format_transient_table(&points, &["V(vin)", "V(mid)", "I(V1)"]).unwrap(),
         "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+    );
+}
+
+#[test]
+fn corner_transient_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+
+    let result = transient_corners(
+        &circuit,
+        1.0e-3,
+        2.0e-3,
+        &[
+            CornerSpec::new("nominal", vec![]),
+            CornerSpec::new(
+                "r2-high",
+                vec![CornerOverride::new("R2", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_transient_table(&result, &["V(vin)", "V(mid)", "I(V1)"]).unwrap(),
+        "Corner\tIndex\tTime\tV(vin)\tV(mid)\tI(V1)\nnominal\t0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\nnominal\t1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\nr2-high\t0\t1.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\nr2-high\t1\t2.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
     );
 }
 
