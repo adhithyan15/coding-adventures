@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.65.0] - 2026-05-31
+
+### Added (Phase 11a (FC) — `break`/`next` WITH VALUES, coverage-confirmation)
+
+No lowering change.  The Phase 6j arm
+(`return_statement | break_statement | next_statement`) already folds an
+optional trailing expression into the single `BuiltinCall` argument and
+falls back to `NilLit` when bare:
+
+```
+break 5   → ExprStmt(BuiltinCall("break", [IntLit 5], Divergent))
+next 7    → ExprStmt(BuiltinCall("next",  [IntLit 7], Divergent))
+break     → ExprStmt(BuiltinCall("break", [NilLit],   Divergent))
+```
+
+This release adds lowering pins from new angles so the value-carrying
+contract is nailed down independently of `return` (whose pins already
+existed): a value-carrying `break`, a value-carrying `next`, a bare
+`break` (NilLit arg), and a validator end-to-end run where the payload
+is a resolved local variable (`x = 1; break x`).
+
+New lowering pins (+4): `break_with_value_lowers_to_int_arg` (`break 5`),
+`next_with_value_lowers_to_int_arg` (`next 7`),
+`bare_break_lowers_with_nil_arg` (`break` → NilLit),
+`break_with_local_var_value_passes_sir_validator` (`x = 1; break x`,
+validates).  Test count: 270 → 274.
+
 ## [0.64.0] - 2026-05-31
 
 ### Added (Phase 22d (FC) — `super` keyword)

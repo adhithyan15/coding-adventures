@@ -1616,6 +1616,67 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 11a — `break`/`next` WITH VALUES (coverage-confirmation)
+    //
+    // The Phase 6j lowering arm already maps an optional trailing
+    // expression after `break`/`next` into the single `BuiltinCall`
+    // argument (bare → NilLit).  These pins lock that contract from
+    // additional angles: a value-carrying `break`, a value-carrying
+    // `next`, a bare `break` (NilLit arg), and a validator end-to-end
+    // run where the payload is a resolved local variable.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn break_with_value_lowers_to_int_arg() {
+        let m = lower("break 5");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "break");
+                assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(break, [5])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn next_with_value_lowers_to_int_arg() {
+        let m = lower("next 7");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "next");
+                assert!(matches!(args[0], Expr::IntLit { value: 7, .. }));
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(next, [7])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bare_break_lowers_with_nil_arg() {
+        let m = lower("break");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "break");
+                assert!(matches!(args[0], Expr::NilLit { .. }));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(break, [nil])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn break_with_local_var_value_passes_sir_validator() {
+        // Assign `x` first so the VarRef payload resolves, then break
+        // with it; the lowered module must satisfy the SIR validator.
+        let m = lower("x = 1\nbreak x\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6k — unary minus → BuiltinCall("neg", [x]).
     // -----------------------------------------------------------------
 

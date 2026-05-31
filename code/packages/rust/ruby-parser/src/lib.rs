@@ -1287,6 +1287,58 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 11a — `break`/`next` WITH VALUES (coverage-confirmation)
+    //
+    // The Phase 6j grammar rules already accept an optional trailing
+    // expression after `break`/`next` (`break_statement = "break" [ expression ]`).
+    // These pins lock in additional surface forms from new angles —
+    // a bare integer payload, `next` carrying a value, and a binary
+    // expression payload — so a future grammar edit cannot silently
+    // drop value-carrying loop control without tripping a test.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_break_with_int_value() {
+        // `break 5` — simple integer payload (distinct from the
+        // existing `break 1 + 2` pin, which exercises a binary expr).
+        let ast = parse_ruby("break 5");
+        let b = find_statement_inner(&ast, "break_statement")
+            .expect("expected break_statement");
+        assert!(b
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_next_with_value() {
+        // `next 7` — `next` carrying an integer payload (the existing
+        // `next` pin is bare; this confirms the optional-expr arm fires
+        // for `next` as well as `break`).
+        let ast = parse_ruby("next 7");
+        let n = find_statement_inner(&ast, "next_statement")
+            .expect("expected next_statement");
+        assert!(n
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(nn) if nn.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_break_with_binary_name_value() {
+        // `break x + 1` — a name-plus-literal binary expression payload;
+        // the `+` token must survive inside the break_statement subtree.
+        let ast = parse_ruby("break x + 1");
+        let b = find_statement_inner(&ast, "break_statement")
+            .expect("expected break_statement");
+        assert!(b
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+        assert!(tree_has_token_value(b, "+"));
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6k — unary minus `-5`, `-x`, `-(1+2)`
     // -----------------------------------------------------------------------
 
