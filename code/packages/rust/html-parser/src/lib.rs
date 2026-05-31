@@ -1600,7 +1600,9 @@ pub struct BrowserForm {
     pub target: Option<String>,
     pub effective_target: Option<String>,
     pub accept_charset: Option<String>,
+    pub accept_charset_tokens: Vec<String>,
     pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
     pub rel: Option<String>,
     pub rel_tokens: Vec<String>,
     pub rel_external: bool,
@@ -1623,10 +1625,12 @@ pub struct BrowserFormControl {
     pub accessible_description: Option<String>,
     pub placeholder: Option<String>,
     pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
     pub autocapitalize: Option<String>,
     pub enterkeyhint: Option<String>,
     pub dirname: Option<String>,
     pub accept: Option<String>,
+    pub accept_tokens: Vec<String>,
     pub capture: Option<String>,
     pub src: Option<String>,
     pub resolved_src: Option<String>,
@@ -9277,6 +9281,14 @@ fn browser_metadata_list(content: &str) -> Vec<String> {
         .collect()
 }
 
+fn split_browser_comma_tokens(value: &str) -> Vec<String> {
+    value
+        .split(',')
+        .map(|part| part.trim().to_string())
+        .filter(|part| !part.is_empty())
+        .collect()
+}
+
 fn browser_resource_hint_from_link(
     element: &Element,
     href: &str,
@@ -12426,6 +12438,8 @@ fn browser_form(
         .clone()
         .or_else(|| base_target.map(ToOwned::to_owned));
     let rel_tokens = browser_rel_tokens(element);
+    let accept_charset = element.attribute("accept-charset").map(ToOwned::to_owned);
+    let autocomplete = element.attribute("autocomplete").map(ToOwned::to_owned);
     let novalidate = element.attribute("novalidate").is_some();
     let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
     let submitters = browser_form_submitters(
@@ -12447,8 +12461,16 @@ fn browser_form(
         enctype,
         target,
         effective_target,
-        accept_charset: element.attribute("accept-charset").map(ToOwned::to_owned),
-        autocomplete: element.attribute("autocomplete").map(ToOwned::to_owned),
+        accept_charset_tokens: accept_charset
+            .as_deref()
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        accept_charset,
+        autocomplete_tokens: autocomplete
+            .as_deref()
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        autocomplete,
         rel: element.attribute("rel").map(ToOwned::to_owned),
         rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
         rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
@@ -12478,7 +12500,10 @@ fn browser_form_submitters(
             id: control.id.clone(),
             control_type: control.control_type.clone(),
             name: control.name.clone(),
-            accessible_name: control.accessible_name.clone().or_else(|| control.alt.clone()),
+            accessible_name: control
+                .accessible_name
+                .clone()
+                .or_else(|| control.alt.clone()),
             action: control
                 .form_action
                 .clone()
@@ -12621,6 +12646,8 @@ fn browser_form_control(
         "textarea" => element_text(element),
         _ => String::new(),
     };
+    let autocomplete = browser_autocomplete(element);
+    let accept = browser_control_accept(element);
 
     BrowserFormControl {
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -12631,11 +12658,19 @@ fn browser_form_control(
         accessible_description: browser_accessible_description(element, id_texts),
         labels: control_labels,
         placeholder: browser_placeholder(element),
-        autocomplete: browser_autocomplete(element),
+        autocomplete_tokens: autocomplete
+            .as_deref()
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        autocomplete,
         autocapitalize: browser_autocapitalize(element),
         enterkeyhint: browser_enterkeyhint(element),
         dirname: browser_dirname(element),
-        accept: browser_control_accept(element),
+        accept_tokens: accept
+            .as_deref()
+            .map(split_browser_comma_tokens)
+            .unwrap_or_default(),
+        accept,
         capture: browser_control_capture(element),
         resolved_src: browser_content_src(element)
             .as_deref()
@@ -13928,11 +13963,11 @@ mod tests {
     #[test]
     fn browser_form_accessibility_metadata_tracks_labels_and_control_state() {
         let document = parse_html(
-            "<base href=\"https://example.test/search/index.html\">\
+             "<base href=\"https://example.test/search/index.html\">\
              <body><form id=f name=searchForm aria-label=\"Search form\" action=find.html \
-             method=post accept-charset=utf-8 autocomplete=on rel=noreferrer novalidate>\
+             method=post accept-charset=\"utf-8 windows-1252\" autocomplete=on rel=noreferrer novalidate>\
              <label id=q-help for=q>Query</label>\
-             <input id=q name=q placeholder=\"Search terms\" required autocomplete=search \
+             <input id=q name=q placeholder=\"Search terms\" required autocomplete=\"section-primary shipping search\" \
              autocapitalize=words enterkeyhint=search dirname=q.dir autofocus \
              inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 \
              list=query-suggestions aria-describedby=q-help>\
@@ -13941,7 +13976,7 @@ mod tests {
              autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
              <fieldset disabled><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
              <select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select>\
-             <input id=upload type=file name=upload accept=\"image/png,image/jpeg\" capture=environment>\
+             <input id=upload type=file name=upload accept=\"image/png, image/jpeg, .webp\" capture=environment>\
              <button id=go type=submit aria-label=\"Run search\" formaction=run.html \
              formenctype=\"application/x-www-form-urlencoded\" formmethod=post \
              formtarget=results formnovalidate>Go</button>\
@@ -13961,8 +13996,16 @@ mod tests {
         );
         assert_eq!(summary.forms[0].name.as_deref(), Some("searchForm"));
         assert_eq!(summary.forms[0].method, "post");
-        assert_eq!(summary.forms[0].accept_charset.as_deref(), Some("utf-8"));
+        assert_eq!(
+            summary.forms[0].accept_charset.as_deref(),
+            Some("utf-8 windows-1252")
+        );
+        assert_eq!(
+            summary.forms[0].accept_charset_tokens,
+            vec!["utf-8", "windows-1252"]
+        );
         assert_eq!(summary.forms[0].autocomplete.as_deref(), Some("on"));
+        assert_eq!(summary.forms[0].autocomplete_tokens, vec!["on"]);
         assert_eq!(summary.forms[0].rel.as_deref(), Some("noreferrer"));
         assert!(summary.forms[0].novalidate);
         let controls = &summary.forms[0].controls;
@@ -13971,7 +14014,14 @@ mod tests {
         assert_eq!(controls[0].accessible_name.as_deref(), Some("Query"));
         assert_eq!(controls[0].accessible_description.as_deref(), Some("Query"));
         assert_eq!(controls[0].placeholder.as_deref(), Some("Search terms"));
-        assert_eq!(controls[0].autocomplete.as_deref(), Some("search"));
+        assert_eq!(
+            controls[0].autocomplete.as_deref(),
+            Some("section-primary shipping search")
+        );
+        assert_eq!(
+            controls[0].autocomplete_tokens,
+            vec!["section-primary", "shipping", "search"]
+        );
         assert_eq!(controls[0].autocapitalize.as_deref(), Some("words"));
         assert_eq!(controls[0].enterkeyhint.as_deref(), Some("search"));
         assert_eq!(controls[0].dirname.as_deref(), Some("q.dir"));
@@ -14013,7 +14063,14 @@ mod tests {
         assert_eq!(controls[3].selected_options, vec!["Books"]);
         assert_eq!(controls[3].submission_values, vec!["Books"]);
         assert_eq!(controls[4].control_type, "file");
-        assert_eq!(controls[4].accept.as_deref(), Some("image/png,image/jpeg"));
+        assert_eq!(
+            controls[4].accept.as_deref(),
+            Some("image/png, image/jpeg, .webp")
+        );
+        assert_eq!(
+            controls[4].accept_tokens,
+            vec!["image/png", "image/jpeg", ".webp"]
+        );
         assert_eq!(controls[4].capture.as_deref(), Some("environment"));
         assert!(controls[4].will_validate);
         assert!(controls[4].successful);
@@ -14129,7 +14186,10 @@ mod tests {
         assert_eq!(select.size.as_deref(), Some("5"));
         assert_eq!(select.accessible_name.as_deref(), Some("Kind"));
         let upload = &form.children[5];
-        assert_eq!(upload.accept.as_deref(), Some("image/png,image/jpeg"));
+        assert_eq!(
+            upload.accept.as_deref(),
+            Some("image/png, image/jpeg, .webp")
+        );
         assert_eq!(upload.capture.as_deref(), Some("environment"));
         let button = &form.children[6];
         assert_eq!(button.form_action.as_deref(), Some("run.html"));
