@@ -343,11 +343,19 @@ dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] R
 scope_resolution = "::" ( NAME | KEYWORD ) ;
 # Phase 6s — splat call arguments.  `f(*arr)` and `f(**hsh)` (and the
 # mixed form `f(1, *arr, **hsh, named: x)`) flow through here.  The
-# optional `[ "*" | "**" ]` prefix sits inside a single call_arg slot,
-# so positional and splat args interleave naturally on the COMMA
-# separator.  Lowering wraps the prefixed forms in
-# `BuiltinCall("splat", …)` / `BuiltinCall("double_splat", …)`.
-call_arg     = [ "*" | "**" ] expression ;
+# optional `[ "*" | "**" | "&" ]` prefix sits inside a single call_arg
+# slot, so positional, splat and block-pass args interleave naturally
+# on the COMMA separator.  Lowering wraps the prefixed forms in
+# `BuiltinCall("splat", …)` / `BuiltinCall("double_splat", …)` /
+# `BuiltinCall("block_pass", …)`.
+#
+# Phase 22b (FC) — block-pass argument `&blk`.  The lexer emits a lone
+# `&` as a Name-typed Op token (value "&"); the `&.` safe-nav fusion
+# only triggers when a `.` immediately follows, so `&blk` keeps the `&`
+# standalone.  There is no binary `&` rule in the expression hierarchy
+# (the chain is logical_or → logical_and → … → factor with no bitwise
+# layer), so admitting `&` as a call_arg prefix introduces no ambiguity.
+call_arg     = [ "*" | "**" | "&" ] expression ;
 # Phase 6h — paren-less method call.  Idiomatic Ruby allows
 # `puts 1, 2` (no parens) when the call has at least one argument.
 #

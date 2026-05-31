@@ -3459,9 +3459,9 @@ impl Lowerer {
         out
     }
 
-    /// Phase 6s — lower a single `call_arg` node.
+    /// Phase 6s / 22b — lower a single `call_arg` node.
     ///
-    /// Grammar shape: `call_arg = [ "*" | "**" ] expression ;`
+    /// Grammar shape: `call_arg = [ "*" | "**" | "&" ] expression ;`
     ///
     /// Lowering:
     /// - No prefix → return the lowered `expression` as-is.
@@ -3470,6 +3470,12 @@ impl Lowerer {
     ///   into target-language variadic forwarding.
     /// - `**` prefix → wrap in `BuiltinCall("double_splat", [inner])`
     ///   — same pattern, for keyword-argument spread.
+    /// - `&` prefix → wrap in `BuiltinCall("block_pass", [inner])`
+    ///   (Phase 22b) — the `&blk` block-pass argument, which converts
+    ///   the operand (a Proc, a Symbol via `&:sym`, or any object
+    ///   responding to `to_proc`) into the call's block.  Same marker
+    ///   pattern: SIR has no first-class block-argument slot, so the
+    ///   envelope lets downstream emitters reconstruct `&expr`.
     ///
     /// The BuiltinCall envelope preserves splat semantics through SIR
     /// (where the lossy v0 Param shape can't represent variadic
@@ -3479,13 +3485,15 @@ impl Lowerer {
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<Expr, RubyLowerError> {
-        // Detect the leading `*` / `**` token (if present).  Both
-        // forms land on Token children with their value preserved
+        // Detect the leading `*` / `**` / `&` token (if present).  All
+        // three land on Token children with their value preserved
         // (the 1.8-baseline state machine coalesces `**` into one
-        // Name-typed Op token; `*` is a Star token).
+        // Name-typed Op token; `*` is a Star token; `&` is a Name-typed
+        // Op token — the `&.` safe-nav fusion does not fire because no
+        // `.` follows a block-pass `&`).
         let prefix = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Token(t)
-                if matches!(t.value.as_str(), "*" | "**") =>
+                if matches!(t.value.as_str(), "*" | "**" | "&") =>
             {
                 Some(t.value.clone())
             }
@@ -3514,6 +3522,12 @@ impl Lowerer {
             },
             Some("**") => Expr::BuiltinCall {
                 name: "double_splat".to_string(),
+                args: vec![inner],
+                effects: EffectSet::PURE,
+                span,
+            },
+            Some("&") => Expr::BuiltinCall {
+                name: "block_pass".to_string(),
                 args: vec![inner],
                 effects: EffectSet::PURE,
                 span,
