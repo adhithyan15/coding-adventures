@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.62.0] - 2026-05-31
+
+### Added (Phase 11a (FC) — `break`/`next` WITH VALUES, coverage-confirmation)
+
+No grammar change.  The Phase 6j rules already accept an optional
+trailing expression after the loop-control keywords:
+
+```
+break_statement = "break" [ expression ] ;
+next_statement  = "next"  [ expression ] ;
+```
+
+This release adds parse pins from new angles so a future grammar edit
+cannot silently drop value-carrying loop control.  The pre-existing
+pins covered `break 1 + 2` and a bare `next`; the new pins cover a bare
+integer payload, a value-carrying `next`, and a name-plus-literal binary
+payload whose `+` token must survive inside the `break_statement`
+subtree.
+
+New parse pins (+3): `test_parse_break_with_int_value` (`break 5`),
+`test_parse_next_with_value` (`next 7`),
+`test_parse_break_with_binary_name_value` (`break x + 1`).  Test count:
+217 → 220.
+
 ## [0.61.0] - 2026-05-31
 
 ### Added (Phase 22d (FC) — `super` keyword)
