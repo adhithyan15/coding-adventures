@@ -575,13 +575,31 @@ struct ExpectedInteractiveElement {
     #[serde(default)]
     aria_controls: Vec<String>,
     #[serde(default)]
+    aria_owns: Vec<String>,
+    #[serde(default)]
+    aria_activedescendant: Option<String>,
+    #[serde(default)]
     aria_current: Option<String>,
     #[serde(default)]
     aria_expanded: Option<String>,
     #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_modal: Option<String>,
+    #[serde(default)]
     aria_pressed: Option<String>,
     #[serde(default)]
     aria_selected: Option<String>,
+    #[serde(default)]
+    aria_invalid: Option<String>,
+    #[serde(default)]
+    aria_live: Option<String>,
+    #[serde(default)]
+    aria_busy: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    aria_required: Option<String>,
     #[serde(default)]
     aria_hidden: bool,
     #[serde(default)]
@@ -977,6 +995,26 @@ fn browser_accessible_description_metadata_tracks_describedby_text() {
         actual_form.forms,
         form.expected.into_browser_document().forms,
         "form controls should resolve aria-describedby text into accessible descriptions",
+    );
+}
+
+#[test]
+fn browser_aria_state_relation_metadata_tracks_composite_and_live_states() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive ARIA state relation fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive ARIA state relation fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.interactive_elements,
+        case.expected.into_browser_document().interactive_elements,
+        "interactive summaries should preserve ARIA relationship, popup, modal, validation, disabled, required, and live-region states",
     );
 }
 
@@ -1554,10 +1592,19 @@ impl ExpectedInteractiveElement {
             aria_labelledby: self.aria_labelledby,
             aria_describedby: self.aria_describedby,
             aria_controls: self.aria_controls,
+            aria_owns: self.aria_owns,
+            aria_activedescendant: self.aria_activedescendant,
             aria_current: self.aria_current,
             aria_expanded: self.aria_expanded,
+            aria_haspopup: self.aria_haspopup,
+            aria_modal: self.aria_modal,
             aria_pressed: self.aria_pressed,
             aria_selected: self.aria_selected,
+            aria_invalid: self.aria_invalid,
+            aria_live: self.aria_live,
+            aria_busy: self.aria_busy,
+            aria_disabled: self.aria_disabled,
+            aria_required: self.aria_required,
             aria_hidden: self.aria_hidden,
             hidden: self.hidden,
             inert: self.inert,

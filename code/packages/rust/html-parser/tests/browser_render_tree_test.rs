@@ -161,13 +161,31 @@ struct ExpectedRenderNode {
     #[serde(default)]
     aria_controls: Vec<String>,
     #[serde(default)]
+    aria_owns: Vec<String>,
+    #[serde(default)]
+    aria_activedescendant: Option<String>,
+    #[serde(default)]
     aria_current: Option<String>,
     #[serde(default)]
     aria_expanded: Option<String>,
     #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_modal: Option<String>,
+    #[serde(default)]
     aria_pressed: Option<String>,
     #[serde(default)]
     aria_selected: Option<String>,
+    #[serde(default)]
+    aria_invalid: Option<String>,
+    #[serde(default)]
+    aria_live: Option<String>,
+    #[serde(default)]
+    aria_busy: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    aria_required: Option<String>,
     #[serde(default)]
     aria_hidden: bool,
     #[serde(default)]
@@ -463,10 +481,19 @@ impl ExpectedRenderNode {
             aria_labelledby: self.aria_labelledby,
             aria_describedby: self.aria_describedby,
             aria_controls: self.aria_controls,
+            aria_owns: self.aria_owns,
+            aria_activedescendant: self.aria_activedescendant,
             aria_current: self.aria_current,
             aria_expanded: self.aria_expanded,
+            aria_haspopup: self.aria_haspopup,
+            aria_modal: self.aria_modal,
             aria_pressed: self.aria_pressed,
             aria_selected: self.aria_selected,
+            aria_invalid: self.aria_invalid,
+            aria_live: self.aria_live,
+            aria_busy: self.aria_busy,
+            aria_disabled: self.aria_disabled,
+            aria_required: self.aria_required,
             aria_hidden: self.aria_hidden,
             hidden: self.hidden,
             inert: self.inert,

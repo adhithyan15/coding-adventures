@@ -544,10 +544,18 @@ def check_browser_expected_lists(
             "accessible_name",
             "accessible_description",
             "aria_label",
+            "aria_activedescendant",
             "aria_current",
             "aria_expanded",
+            "aria_haspopup",
+            "aria_modal",
             "aria_pressed",
             "aria_selected",
+            "aria_invalid",
+            "aria_live",
+            "aria_busy",
+            "aria_disabled",
+            "aria_required",
             "tabindex",
             "contenteditable",
             "editing_mode",
@@ -567,6 +575,7 @@ def check_browser_expected_lists(
             "aria_labelledby",
             "aria_describedby",
             "aria_controls",
+            "aria_owns",
             "accesskey",
             "event_handlers",
         ):
@@ -827,10 +836,18 @@ def check_browser_content_node(
         "accessible_name",
         "accessible_description",
         "aria_label",
+        "aria_activedescendant",
         "aria_current",
         "aria_expanded",
+        "aria_haspopup",
+        "aria_modal",
         "aria_pressed",
         "aria_selected",
+        "aria_invalid",
+        "aria_live",
+        "aria_busy",
+        "aria_disabled",
+        "aria_required",
         "tabindex",
         "contenteditable",
         "editing_mode",
@@ -917,6 +934,7 @@ def check_browser_content_node(
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
+    require_optional_string_list(node_path, node, "aria_owns", errors)
     require_optional_string_list(node_path, node, "item_type", errors)
     require_optional_string_list(node_path, node, "item_ref", errors)
     require_optional_string_list(node_path, node, "itemprop", errors)
@@ -1041,10 +1059,18 @@ def check_browser_render_node(
         "accessible_name",
         "accessible_description",
         "aria_label",
+        "aria_activedescendant",
         "aria_current",
         "aria_expanded",
+        "aria_haspopup",
+        "aria_modal",
         "aria_pressed",
         "aria_selected",
+        "aria_invalid",
+        "aria_live",
+        "aria_busy",
+        "aria_disabled",
+        "aria_required",
         "tabindex",
         "contenteditable",
         "editing_mode",
@@ -1131,6 +1157,7 @@ def check_browser_render_node(
     require_optional_string_list(node_path, node, "aria_labelledby", errors)
     require_optional_string_list(node_path, node, "aria_describedby", errors)
     require_optional_string_list(node_path, node, "aria_controls", errors)
+    require_optional_string_list(node_path, node, "aria_owns", errors)
     require_optional_string_list(node_path, node, "item_type", errors)
     require_optional_string_list(node_path, node, "item_ref", errors)
     require_optional_string_list(node_path, node, "itemprop", errors)
