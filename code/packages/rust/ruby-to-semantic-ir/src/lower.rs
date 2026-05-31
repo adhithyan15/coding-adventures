@@ -4194,9 +4194,12 @@ impl Lowerer {
     ///     The third argument carries the inclusive/exclusive flag so a
     ///     single builtin handles both forms without name multiplication.
     ///     `..` → exclusive=false; `...` → exclusive=true.
-    ///   - One operand child WITH a `..`/`...` token (Phase 10c endless
-    ///     range `1..`) → emit `BuiltinCall("range", [start, NilLit,
-    ///     BoolLit(exclusive)])`; the nil upper bound means "unbounded".
+    ///   - One operand child WITH a `..`/`...` token → either a Phase 10c
+    ///     endless range (`1..`, child order `[operand, op]`) or a Phase
+    ///     10d beginless range (`..5`, child order `[op, operand]`),
+    ///     disambiguated by the op token's position.  Endless emits
+    ///     `[start, NilLit, excl]`; beginless emits `[NilLit, end, excl]`
+    ///     — the missing endpoint is the nil one.
     ///
     /// Range is pure: building a range doesn't observe or mutate any
     /// state.  (Iterating over one *would* run code, but that's a
@@ -4242,25 +4245,48 @@ impl Lowerer {
                     span: op_span,
                 })
             }
-            // Phase 10c — endless range: one operand plus a range op,
-            // with no trailing operand (`1..`, `1...`).  The open end is
-            // encoded as `NilLit`, so the `range` builtin keeps its
-            // uniform `[start, end, exclusive]` shape — downstream
-            // consumers read a nil end as "unbounded above".  `..` and
-            // `...` are distinguished by the exclusive flag exactly as
-            // in the two-operand case.
+            // One operand plus a range op — this is EITHER a Phase 10c
+            // endless range (`1..`, child order `[operand, op]`) OR a
+            // Phase 10d beginless range (`..5`, child order `[op,
+            // operand]`).  They have identical arity, so we disambiguate
+            // by the position of the op token relative to the operand.
+            // Both lower to the uniform `range` builtin with the missing
+            // endpoint encoded as `NilLit`:
+            //   endless  `1..`  → [start,  NilLit, exclusive]  (nil end)
+            //   beginless `..5` → [NilLit, end,    exclusive]  (nil start)
+            // The exclusive flag distinguishes `..` from `...` as always.
             (1, Some(tok)) => {
-                let start = self.lower_expression(operands[0])?;
+                let op_idx = node.children.iter().position(|c| {
+                    matches!(c, ASTNodeOrToken::Token(t) if t.value == ".." || t.value == "...")
+                });
+                let operand_idx = node
+                    .children
+                    .iter()
+                    .position(|c| matches!(c, ASTNodeOrToken::Node(_)));
+                // Beginless when the op token comes BEFORE the operand.
+                let beginless = matches!((op_idx, operand_idx), (Some(o), Some(p)) if o < p);
+
+                let operand = self.lower_expression(operands[0])?;
                 let exclusive = tok.value == "...";
                 let op_span = self.span_of_token(tok);
-                Ok(Expr::BuiltinCall {
-                    name: "range".to_string(),
-                    args: vec![
-                        start,
-                        // Open (infinite) upper bound — `nil` end.
+                let args = if beginless {
+                    // `..5` — nil (unbounded) lower bound, `operand` is the end.
+                    vec![
+                        Expr::NilLit { span: op_span.clone() },
+                        operand,
+                        Expr::BoolLit { value: exclusive, span: op_span.clone() },
+                    ]
+                } else {
+                    // `1..` — `operand` is the start, nil (unbounded) upper bound.
+                    vec![
+                        operand,
                         Expr::NilLit { span: op_span.clone() },
                         Expr::BoolLit { value: exclusive, span: op_span.clone() },
-                    ],
+                    ]
+                };
+                Ok(Expr::BuiltinCall {
+                    name: "range".to_string(),
+                    args,
                     effects: EffectSet::PURE,
                     span: op_span,
                 })

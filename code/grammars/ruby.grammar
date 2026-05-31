@@ -435,8 +435,19 @@ expression_stmt = expression ;
 # begin a `logical_or`), the optional cleanly matches nothing and the
 # node carries exactly one operand plus the op token: an endless range.
 # A bare `logical_or` (no op) still passes through; `1..5` still binds
-# two operands.  Beginless ranges (`..5`, a leading op with no LHS) are
-# a separate grammar shape and remain deferred to Phase 10d.
+# two operands.
+#
+# Phase 10d — beginless ranges (`..5`, `...5`, `(..5)`, `arr[..2]`).  A
+# beginless range LEADS with the range op (no left operand), so it needs
+# its own production placed FIRST in the alternation:
+#   range = ( "..." | ".." ) logical_or
+#         | logical_or [ ( "..." | ".." ) [ logical_or ] ] ;
+# The two alternatives are disjoint on their first token — a beginless
+# range starts with `..`/`...` (a Name token from `fuse_range_ops`),
+# while the normal/endless form starts with a `logical_or`, which can
+# never begin with `..`.  So no ambiguity and no backtracking hazard.
+# The beginless alt requires a trailing `logical_or` (the end operand);
+# a lone `..` with nothing on either side is not valid Ruby.
 # Phase 6o — ternary `cond ? a : b`.
 #
 # Precedence: ternary sits ABOVE range (looser than `..`/`...`)
@@ -460,7 +471,7 @@ expression_stmt = expression ;
 # consumes is the ternary separator, not a symbol opener.
 expression   = ternary ;
 ternary      = range [ "?" expression ":" expression ] ;
-range        = logical_or [ ( "..." | ".." ) [ logical_or ] ] ;
+range        = ( "..." | ".." ) logical_or | logical_or [ ( "..." | ".." ) [ logical_or ] ] ;
 logical_or   = logical_and { ( "||" | "or" ) logical_and } ;
 logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;
 # `logical_not` uses `{ }` (zero-or-more) instead of right-recursive

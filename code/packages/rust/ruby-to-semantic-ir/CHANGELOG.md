@@ -2,6 +2,27 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.56.0] - 2026-05-31
+
+### Added (Phase 10d (FC) — beginless range `..5` / `...5`)
+
+`lower_range` now handles beginless ranges (an end with no start).  A
+beginless range has the SAME arity as an endless range (one operand +
+one op token), so the lowerer disambiguates by the op token's position
+relative to the operand:
+
+- endless  `1..` (child order `[operand, op]`) → `[start, NilLit, excl]`
+- beginless `..5` (child order `[op, operand]`) → `[NilLit, end, excl]`
+
+The missing endpoint is encoded as `NilLit` either way, keeping the
+`range` builtin's uniform shape.  No new SIR variant, `Feature`, or
+backend dispatch.
+
+New tests (+3): `beginless_range_inclusive_lowers_with_nil_start`
+(`(..5)`), `beginless_range_exclusive_lowers_with_nil_start` (`(...5)`),
+`beginless_range_over_param_validates_e2e` (`(..b)` + validator E2E).
+Test count: 243 → 246.
+
 ## [0.55.0] - 2026-05-31
 
 ### Added (Phase 10c (FC) — endless range `1..` / `1...`)
