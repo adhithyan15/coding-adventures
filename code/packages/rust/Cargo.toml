@@ -670,6 +670,7 @@ members = [
     "vm-debug",
     "basic-dap",
     "basic-semantic-tokens",
+    "nib-semantic-tokens",
     "nib-dap",
     "oct-dap",
     "twig-vm",

@@ -1,0 +1,9 @@
+[package]
+name = "nib-semantic-tokens"
+version = "0.1.0"
+edition = "2021"
+description = "NIB-ST01 — semantic-token extraction for Nib.  Walks the nib-lexer's token stream and emits a typed token stream (keywords / booleans / numbers / names / types / operators) suitable for LSP semantic-tokens, syntax highlighters, and editor extensions."
+
+[dependencies]
+coding-adventures-nib-lexer = { path = "../nib-lexer" }
+lexer                       = { path = "../lexer" }
