@@ -2,6 +2,68 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-31
+
+### Added — CLOC12.07: port subset of upstream `CodePrinterTest`
+
+Fourth port under CLOC12, first one targeting the emitter rather than
+a transform pass.
+
+- `tests/upstream/UPSTREAM_SHA` — pins
+  `google/closure-compiler@5bb35ec1245dc1d3557481e5f8b4db344bcd1e6b`.
+- `tests/upstream/ATTRIBUTION.md` — Apache-2.0 attribution per
+  CLOC12.01 §5.
+- `tests/upstream/code_printer_test.rs` — 12 ported test methods.
+
+### Test breakdown
+
+|     | passing | ignored |
+|-----|---------|---------|
+| CLOC12.07 | **6** | **6** |
+
+**Passing (6):** literal-position emits and bare unary that match our
+current emitter output exactly:
+
+- `test_binary_addition_with_parens_is_current_behaviour` — `2 + 3` emits as `(2 + 3);` (paren-wrapped; pins current behaviour).
+- `test_string_concat_with_parens_is_current_behaviour` — `"a" + "b"` emits as `("a" + "b");`.
+- `test_unary_not_emits_without_space` — `!x` emits as `!x;`.
+- `test_boolean_literal_at_statement_position` — `true;` / `false;`.
+- `test_integer_literals_at_statement_position` — `0;`, `42;`, `1;`.
+- `test_string_literal_at_statement_position` — `"hello";`, `"a";`.
+
+Two of those (`test_*_is_current_behaviour`) deliberately pin our
+*current* paren-wrapping behaviour even though it diverges from
+upstream — they serve as regression markers so when gap-024 is closed
+and the wrapping comes off, the assertions can flip at the same time.
+
+**Ignored (6):** record upstream's broader scope:
+
+| Test | Gap | Blocker |
+|------|-----|---------|
+| `test_big_int` | gap-021 | `BigIntLiteral` not in Phase 1 AST |
+| `test_trailing_comma_in_array_and_object_with_pretty_print` | gap-022 | array/object trailing-comma policy not modelled |
+| `test_no_trailing_comma_in_empty_array_literal` | gap-023 | VariableDeclaration round-trip ports deferred |
+| `test_number_formatting_shortest_form` | gap-025 | numeric exponential-form / shortest-form not implemented |
+| `test_string_quote_choice_minimises_escapes` | gap-026 | quote-choice optimisation not implemented |
+| `test_operator_precedence_inserts_inner_parens` | gap-027 | precedence-aware paren insertion not implemented |
+
+Plus the meta-divergence:
+
+- gap-024 — `ExpressionStatement` paren-wrapping is unconditional in our emitter, whereas upstream only wraps when ambiguity demands it. Not strictly "blocked" (we choose to wrap), but tracked so the eventual byte-identical match can flip the two `_is_current_behaviour` ports.
+
+### Why the bulk of upstream is ignored
+
+`CodePrinterTest` has 263 `@Test` methods. Most cover Phase 2+ AST
+nodes (BigInt, optional chaining, template literals, classes,
+spread, async/await, regex) or formatting policies (quote choice,
+exponential-form numerics, precedence-aware parens) that aren't in
+our emitter's v0.2.0 body. Each future emitter slice can re-port
+the relevant subset and convert ignored markers into asserts.
+
+### Version bump
+
+`0.2.0` → `0.3.0`.
+
 ## [0.2.0] - 2026-05-24
 
 ### Added — real `emit` body (first real pipeline output)

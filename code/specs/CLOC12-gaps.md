@@ -181,3 +181,59 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
 - **Why it fails:** No `ThrowStatement` variant in our typed AST.
 - **What it needs:** A Phase 1.x AST extension to model `throw expr;`. Then teach fold-control-flow that `if (x) foo() else throw 1` → `if (!x) throw 1; foo();` (the early-throw rearrangement).
+
+### gap-021 — `BigIntLiteral` not in Phase 1 AST
+
+- **Status:** OPEN
+- **Upstream test:** `CodePrinterTest::testBigInt`
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** No `Expression::BigIntLiteral` variant — `1n`, `0x4n`, `-5n` etc. have no AST representation in Phase 1.
+- **What it needs:** Phase 1.x AST extension: `BigIntLiteral { value: ?, raw: String }`. Then teach the emitter to render the literal with the `n` suffix, including for the negative-literal case.
+
+### gap-022 — Array/object trailing-comma policy not modelled
+
+- **Status:** OPEN
+- **Upstream test:** `CodePrinterTest::testTrailingCommaInArrayAndObjectWithPrettyPrint` and ~6 sibling tests
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** Our emitter doesn't model whether trailing commas are present in `[1,]` / `{a:1,}` — there's no `trailing_comma: bool` flag on the relevant AST nodes, and the emitter doesn't insert / preserve them.
+- **What it needs:** AST flag + emitter rule + (optional) pretty-print toggle.
+
+### gap-023 — `VariableDeclaration` round-trip ports deferred
+
+- **Status:** OPEN
+- **Upstream test:** Most `assertPrintSame("var x = …")` lines in `CodePrinterTest`
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** Hand-constructing `VariableDeclaration` ASTs (with `VariableDeclarator`s, `id`, `init`, `kind`) for every upstream test is verbose. Deferred to a dedicated future port file that focuses on declaration round-trips.
+- **What it needs:** Either a parser bridge (so the upstream `var x = ...` source string can be used directly), or a focused declarations-port-file that pays the verbosity cost. Likely the former.
+
+### gap-024 — `ExpressionStatement` paren-wrapping diverges from upstream
+
+- **Status:** DOCUMENTED divergence (not strictly a "missing feature")
+- **Upstream test:** Every upstream `assertPrintSame("foo();")` / `assertPrint("a+b", "a+b")` line
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** Our Phase 1 emitter wraps every `ExpressionStatement` body in parens for safety. Upstream only wraps when the expression at statement position would otherwise be ambiguous (e.g. an object literal that could be a block).
+- **What it needs:** A precedence- and ambiguity-aware emitter that wraps only when necessary. Closes when CLOC12.07's two `_is_current_behaviour` ports get their assertions flipped to upstream's exact bytes.
+
+### gap-025 — Numeric formatting (shortest-form / exponential) not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `CodePrinterTest` lines like `assertPrint("1000000000", "1E9")`
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** Upstream picks the shorter representation between decimal and exponential. Our emitter always uses the `raw` field on `NumericLiteral` (or a plain `f64.to_string()`).
+- **What it needs:** Add a "pick-shortest" numeric formatter and wire it into the `NumericLiteral` emit path.
+
+### gap-026 — String quote-choice optimisation not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `CodePrinterTest` quote-choice lines
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** Our emitter always uses double quotes. Upstream picks the quote style that minimises required escapes.
+- **What it needs:** Walk the string content, count `\"` vs `\'` escapes, pick the shorter side.
+
+### gap-027 — Precedence-aware paren insertion not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `CodePrinterTest` operator-precedence lines (e.g. `a*(b+c)` keeps inner parens)
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
+- **Why it fails:** Our emitter doesn't compare child operator precedence against parent operator precedence to decide whether to insert parens. Coupled with gap-024.
+- **What it needs:** Per-node precedence table + recursive emitter pass that checks parent vs. child precedence at every binary/unary/logical/conditional node.
