@@ -16,6 +16,8 @@ iir-to-wasm           = { path = "../iir-to-wasm" }
 iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
 iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
 iir-to-beam           = { path = "../iir-to-beam" }
+# tests/backend_encode.rs serialises WasmModule -> bytes.
+wasm-module-encoder   = { path = "../wasm-module-encoder" }
 # Used by tests/jit_e2e.rs to prove Nib programs run through the
 # JITCore + GenericCirJit chain.
 vm-core               = { path = "../vm-core" }
