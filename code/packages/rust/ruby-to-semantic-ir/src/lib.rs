@@ -6092,11 +6092,46 @@ b = "y"
     }
 
     #[test]
-    fn case_in_nested_array_pattern_keeps_marker_fallback() {
-        // Phase 13a (FC) — a nested sub-pattern (`[[1], 2]`) is not yet
-        // supported structurally, so the whole pattern keeps the v0
-        // `__pattern_match__` marker.
-        let m = lower("x = 1\ncase x\nin [[1], 2]\n  \"nested\"\nend\n");
+    fn case_in_nested_array_pattern_lowers_structurally() {
+        // Phase 13b (FC) — a nested array sub-pattern (`[[1], y]`) now
+        // lowers structurally: the cond AND-chain contains an inner
+        // `len(x[0]) == 1` check (proving recursion into `x[0]`), and the
+        // body binds `y = x[1]`.
+        let m = lower("x = 1\ncase x\nin [[1], y]\n  puts(y)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let (cond, then_branch) = match if_expr {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        // No __pattern_match__ marker anywhere in the cond tree.
+        let printed = format!("{:?}", cond);
+        assert!(
+            !printed.contains("__pattern_match__"),
+            "expected no marker in nested pattern cond, got {}",
+            printed
+        );
+        // The cond must contain a nested SeqLen over a SeqIndex
+        // (`len(x[0])`), which only the recursive lowering produces.
+        assert!(
+            printed.contains("SeqLen") && printed.contains("SeqIndex"),
+            "expected nested SeqLen(SeqIndex(..)) in cond, got {}",
+            printed
+        );
+        // Body binds `y = x[1]`.
+        let has_y = then_branch.stmts.iter().any(|s| {
+            matches!(s, Stmt::LetBinding { name, value, .. }
+                if name == "y" && matches!(value, Expr::SeqIndex { .. }))
+        });
+        assert!(has_y, "expected `let y = x[1]` binding in body");
+    }
+
+    #[test]
+    fn case_in_array_with_hash_element_keeps_marker_fallback() {
+        // Phase 13b (FC) — a hash sub-pattern is still unsupported, so an
+        // array pattern containing one (`[{a: 1}, 2]`) falls back to the
+        // whole-pattern `__pattern_match__` marker.
+        let m = lower("x = 1\ncase x\nin [{a: 1}, 2]\n  \"h\"\nend\n");
         let b = main_body(&m);
         let if_expr = extract_case_if(b);
         let cond = match if_expr {
@@ -6105,8 +6140,46 @@ b = "y"
         };
         assert!(
             matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "__pattern_match__"),
-            "expected __pattern_match__ marker for nested pattern, got {:?}",
+            "expected __pattern_match__ marker for hash-in-array pattern, got {:?}",
             cond
+        );
+    }
+
+    #[test]
+    fn case_in_literal_array_pattern_validates_e2e() {
+        // Phase 13b (FC) — regression: a literal array pattern emits
+        // `Expr::LogicalAnd`, so the module observes `Feature::ShortCircuit`
+        // and the manifest must declare it (a gap not exercised through
+        // the validator by the Phase 13a binding-only E2E test).
+        let m = lower("x = 1\ncase x\nin [1, 2]\n  puts(x)\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::ShortCircuit),
+            "expected ShortCircuit feature for literal array pattern; got {:?}",
+            m.manifest
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected literal-array-pattern module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn case_in_nested_array_pattern_validates_e2e() {
+        // Phase 13b (FC) — end-to-end: a nested binding array pattern
+        // lowers to real recursive SIR that round-trips the validator.
+        let m = lower("x = 1\ncase x\nin [[a], b]\n  puts(a)\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Sequences),
+            "expected Sequences feature; got {:?}",
+            m.manifest
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected nested-array-pattern module: {:?}",
+            result
         );
     }
 
