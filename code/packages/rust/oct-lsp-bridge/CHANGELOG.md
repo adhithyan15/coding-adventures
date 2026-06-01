@@ -1,5 +1,24 @@
 # Changelog — `oct-lsp-bridge`
 
+## 0.2.0 — 2026-06-01 (wires oct-formatter as the format_fn)
+
+oct-formatter 0.1.0 (OCT-FMT01) is now wired in as the
+`textDocument/formatting` provider.  Editors driving the Oct
+language server will get "Format Document" + "Format Selection"
+that produce canonical Oct (2-space indent inside `{}`, single
+space around operators, etc.).
+
+### Changed
+
+- `oct_language_spec().format_fn` flipped from `None` to
+  `Some(oct_format_wrapper)`.
+- Added `oct_format_wrapper(&str) -> Result<String, String>` adapter.
+- Two new tests (`format_fn_is_set`, `format_fn_produces_canonical_output`).
+
+### Dependencies
+
+- Added `oct-formatter` 0.1.0 as a path dependency.
+
 ## 0.1.0 — 2026-06-01 (OCT-LSP01 — initial Oct LSP bridge)
 
 Initial release.  Sibling of `twig-lsp-bridge` 0.2.0,
