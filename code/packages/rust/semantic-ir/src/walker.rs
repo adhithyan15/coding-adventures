@@ -244,6 +244,12 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
             v.visit_expr(lhs);
             v.visit_expr(rhs);
         }
+        // ── SIR18: string interpolation ────────────────────────────
+        Expr::StrConcat { parts, .. } => {
+            for p in parts {
+                v.visit_expr(p);
+            }
+        }
     }
 }
 

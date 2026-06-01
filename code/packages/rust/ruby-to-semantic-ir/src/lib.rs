@@ -2798,27 +2798,30 @@ mod tests {
     // The `regex_body` lexer state captures `#{...}` markers verbatim
     // into the pattern, so the lowerer runs the pattern through the SAME
     // interpolation splitter strings use.  `args[0]` of the `regex`
-    // builtin therefore becomes a `string_concat` (or a bare `VarRef`
+    // builtin therefore becomes a `StrConcat` node (or a bare `VarRef`
     // for a single `#{x}` segment) when the pattern interpolates, and a
     // plain `StrLit` when it doesn't (the 19a shape, unchanged).
+    // Phase 20b replaced the v0 `string_concat` builtin with the
+    // first-class `Expr::StrConcat` node — regex patterns share the
+    // same interpolation splitter, so they pick up the new shape too.
     // -----------------------------------------------------------------
 
     #[test]
     fn regex_interpolation_lowers_pattern_to_concat() {
         // `def r(b) (/a#{b}c/) end` — pattern splits into
-        // [StrLit("a"), VarRef(b), StrLit("c")] under string_concat.
+        // [StrLit("a"), VarRef(b), StrLit("c")] under StrConcat.
         let m = lower("def r(b)\n  (/a#{b}c/)\nend\n");
         let f = m.functions.iter().find(|f| f.name == "r").unwrap();
         match &f.body.value {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 match &args[0] {
-                    Expr::BuiltinCall { name, args: parts, .. } if name == "string_concat" => {
+                    Expr::StrConcat { parts, .. } => {
                         assert_eq!(parts.len(), 3, "expected 3 pattern segments");
                         assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "a"));
                         assert!(matches!(&parts[1], Expr::VarRef { name, .. } if name == "b"));
                         assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "c"));
                     }
-                    other => panic!("expected string_concat pattern, got {:?}", other),
+                    other => panic!("expected StrConcat pattern, got {:?}", other),
                 }
                 // Flags arg still present (empty here).
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
@@ -2830,7 +2833,7 @@ mod tests {
     #[test]
     fn regex_interpolation_single_marker_is_bare_varref() {
         // `def r(b) (/#{b}/) end` — a lone `#{b}` pattern lowers to a
-        // single `VarRef` (no string_concat wrapper), mirroring `"#{b}"`.
+        // single `VarRef` (no StrConcat wrapper), mirroring `"#{b}"`.
         let m = lower("def r(b)\n  (/#{b}/)\nend\n");
         let f = m.functions.iter().find(|f| f.name == "r").unwrap();
         match &f.body.value {
@@ -2853,8 +2856,8 @@ mod tests {
         match &f.body.value {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
-                    matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "string_concat"),
-                    "expected string_concat pattern; got {:?}", &args[0]
+                    matches!(&args[0], Expr::StrConcat { .. }),
+                    "expected StrConcat pattern; got {:?}", &args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "i"));
             }
@@ -5174,15 +5177,18 @@ mod tests {
     // Output shapes covered:
     //   "plain"              → StrLit("plain")
     //   "#{x}"               → VarRef("x")
-    //   "hi #{name}"         → BuiltinCall("string_concat",
-    //                            [StrLit("hi "), VarRef("name")])
-    //   "sum=#{1+2}"         → BuiltinCall("string_concat",
-    //                            [StrLit("sum="),
-    //                             BuiltinCall("__interp__", [StrLit("1+2")])])
+    //   "hi #{name}"         → StrConcat([StrLit("hi "), VarRef("name")])
+    //   "sum=#{1+2}"         → StrConcat([StrLit("sum="),
+    //                                     BuiltinCall("+", [1, 2])])
+    //
+    // Phase 20b replaced the v0 `BuiltinCall("string_concat", …)` marker
+    // with the first-class `Expr::StrConcat` node (mirroring how 20a
+    // replaced the `__interp__` body marker with real lowering).
     //
     // Plus an end-to-end smoke test that an interpolated module passes
-    // the SIR validator (proves the BuiltinCall + StrLit shape is
-    // well-formed semantic IR).
+    // the SIR validator (proves the StrConcat + StrLit shape is
+    // well-formed semantic IR and the manifest declares
+    // `StringInterpolation`).
     // -----------------------------------------------------------------------
 
     #[test]
@@ -5201,8 +5207,8 @@ mod tests {
     }
 
     #[test]
-    fn interpolated_string_with_bare_name_lowers_to_string_concat() {
-        // `"hi #{name}"` → string_concat(StrLit("hi "), VarRef("name"))
+    fn interpolated_string_with_bare_name_lowers_to_str_concat() {
+        // `"hi #{name}"` → StrConcat([StrLit("hi "), VarRef("name")])
         //
         // The interpolated literal is in *trailing-value* position so
         // it sees the prior LetBinding (the validator's parallel-let
@@ -5216,20 +5222,19 @@ mod tests {
         assert_eq!(b.stmts.len(), 1);
         assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "name"));
         match &b.value {
-            Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "string_concat");
-                assert_eq!(args.len(), 2, "expected 2 concat segments");
-                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "hi "));
-                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "name"));
+            Expr::StrConcat { parts, .. } => {
+                assert_eq!(parts.len(), 2, "expected 2 concat segments");
+                assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "hi "));
+                assert!(matches!(&parts[1], Expr::VarRef { name, .. } if name == "name"));
             }
-            other => panic!("expected string_concat BuiltinCall, got {:?}", other),
+            other => panic!("expected StrConcat, got {:?}", other),
         }
     }
 
     #[test]
     fn interpolated_string_that_is_only_interp_unwraps_to_a_single_segment() {
         // `"#{name}"` has no literal text — the lowerer should hand back
-        // the single segment directly (no `string_concat` wrapper).
+        // the single segment directly (no `StrConcat` wrapper).
         // Trailing-value position so the VarRef sees the LetBinding.
         let m = lower(r##"name = "world"
 "#{name}"
@@ -5251,6 +5256,7 @@ mod tests {
         // the raw body text, the lowerer now re-parses the body and lowers
         // it into genuine SIR: the `+` operator becomes `BuiltinCall("+", …)`.
         // The marker survives only as a fallback for bodies we cannot parse.
+        // Phase 20b — the outer concat is now an `Expr::StrConcat` node.
         let m = lower(r##"x = "sum=#{1+2}""##);
         let b = main_body(&m);
         let value = match &b.stmts[0] {
@@ -5258,11 +5264,10 @@ mod tests {
             other => panic!("expected LetBinding, got {:?}", other),
         };
         match value {
-            Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "string_concat");
-                assert_eq!(args.len(), 2);
-                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "sum="));
-                match &args[1] {
+            Expr::StrConcat { parts, .. } => {
+                assert_eq!(parts.len(), 2);
+                assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "sum="));
+                match &parts[1] {
                     Expr::BuiltinCall { name, args, .. } => {
                         assert_eq!(name, "+", "interp body 1+2 lowers to a real + call");
                         assert_eq!(args.len(), 2);
@@ -5272,7 +5277,7 @@ mod tests {
                     other => panic!("expected real `+` BuiltinCall, got {:?}", other),
                 }
             }
-            other => panic!("expected string_concat, got {:?}", other),
+            other => panic!("expected StrConcat, got {:?}", other),
         }
     }
 
@@ -5296,11 +5301,49 @@ puts("hi #{name}")
     }
 
     #[test]
+    fn adjacent_interps_with_no_literal_lower_to_str_concat_of_refs() {
+        // Phase 20b (FC) — `"#{a}#{b}"` has two interpolations and *no*
+        // literal text between them.  The concat still has two parts
+        // (both `VarRef`s), so it lowers to a two-part `StrConcat` — a
+        // concat is well-defined without any `StrLit` segment.
+        let m = lower(r##"a = "x"
+b = "y"
+"#{a}#{b}"
+"##);
+        let b = main_body(&m);
+        match &b.value {
+            Expr::StrConcat { parts, .. } => {
+                assert_eq!(parts.len(), 2);
+                assert!(matches!(&parts[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&parts[1], Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected StrConcat of two VarRefs, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn str_concat_module_declares_string_interpolation_feature() {
+        // Phase 20b (FC) — emitting a `StrConcat` must add
+        // `Feature::StringInterpolation` to the module manifest, or the
+        // validator would reject the module as using an undeclared
+        // feature.  This pins the manifest/observed agreement directly.
+        let m = lower(r##"name = "world"
+"hi #{name}"
+"##);
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::StringInterpolation),
+            "manifest should declare string-interpolation; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
     fn interpolated_string_with_multiple_expr_interps_lowers_each_recursively() {
         // Phase 20a (FC) — `"a#{1}b#{2}c"` carries two expression
         // interpolations interleaved with three literal runs.  Each `#{…}`
         // body re-parses and lowers to a real `IntLit`, producing a
-        // five-segment `string_concat` (no `__interp__` markers anywhere).
+        // five-segment concat (no `__interp__` markers anywhere).
+        // Phase 20b — the concat is now an `Expr::StrConcat` node.
         let m = lower(r##"x = "a#{1}b#{2}c""##);
         let b = main_body(&m);
         let value = match &b.stmts[0] {
@@ -5308,16 +5351,15 @@ puts("hi #{name}")
             other => panic!("expected LetBinding, got {:?}", other),
         };
         match value {
-            Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "string_concat");
-                assert_eq!(args.len(), 5, "a | 1 | b | 2 | c");
-                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "a"));
-                assert!(matches!(args[1], Expr::IntLit { value: 1, .. }));
-                assert!(matches!(&args[2], Expr::StrLit { value, .. } if value == "b"));
-                assert!(matches!(args[3], Expr::IntLit { value: 2, .. }));
-                assert!(matches!(&args[4], Expr::StrLit { value, .. } if value == "c"));
+            Expr::StrConcat { parts, .. } => {
+                assert_eq!(parts.len(), 5, "a | 1 | b | 2 | c");
+                assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "a"));
+                assert!(matches!(parts[1], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "b"));
+                assert!(matches!(parts[3], Expr::IntLit { value: 2, .. }));
+                assert!(matches!(&parts[4], Expr::StrLit { value, .. } if value == "c"));
             }
-            other => panic!("expected string_concat, got {:?}", other),
+            other => panic!("expected StrConcat, got {:?}", other),
         }
     }
 

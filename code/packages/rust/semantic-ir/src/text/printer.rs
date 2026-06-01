@@ -430,6 +430,11 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             print_expr_inline_depth(out, rhs, depth + 1);
             out.push(')');
         }
+        Expr::StrConcat { parts, .. } => {
+            let _ = write!(out, "(str-concat");
+            print_args(out, parts, depth);
+            out.push(')');
+        }
     }
 }
 
@@ -531,6 +536,20 @@ mod tests {
     fn print_negative_integer() {
         let e = Expr::IntLit { value: -7, span: s() };
         assert_eq!(print_expr(&e), "(int -7)");
+    }
+
+    #[test]
+    fn print_str_concat() {
+        // Phase 20b — `StrConcat` renders as `(str-concat <parts…>)`,
+        // each part printed inline like a builtin-call's args.
+        let e = Expr::StrConcat {
+            parts: vec![
+                Expr::StrLit { value: "hi ".into(), span: s() },
+                Expr::VarRef { name: "name".into(), scope: Scope::Local, span: s() },
+            ],
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(str-concat (str \"hi \") (var-ref name local))");
     }
 
     #[test]

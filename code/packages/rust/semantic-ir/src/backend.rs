@@ -344,6 +344,12 @@ where
             walk_intrinsics_in_expr(lhs, f, depth + 1);
             walk_intrinsics_in_expr(rhs, f, depth + 1);
         }
+        // ── SIR18: string interpolation ────────────────────────────
+        Expr::StrConcat { parts, .. } => {
+            for p in parts {
+                walk_intrinsics_in_expr(p, f, depth + 1);
+            }
+        }
     }
 }
 

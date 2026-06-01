@@ -136,6 +136,10 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // Phase 16a (FC) — `begin/rescue/ensure/end` (`Stmt::TryCatch`)
         // triggers the `Exceptions` feature.
         Feature::Exceptions,
+        // Phase 20b (FC) — a multi-segment interpolation/concat
+        // (`"a#{x}b"`) lowers to `Expr::StrConcat` and triggers the
+        // `StringInterpolation` feature.
+        Feature::StringInterpolation,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -227,6 +231,10 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
 
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
             expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+
+        Expr::StrConcat { parts, .. } => {
+            parts.iter().any(|p| expr_references_any_name(p, names))
         }
     }
 }
@@ -5359,7 +5367,11 @@ impl Lowerer {
         // - Empty string literal (`""`): emit a single empty `StrLit`.
         // - Exactly one segment: hand it back directly (no concat
         //   wrapper needed — keeps `"plain"` and `"#{x}"` lean).
-        // - Two or more segments: wrap in a `string_concat` builtin.
+        // - Two or more segments: wrap in a first-class `StrConcat`
+        //   node (Phase 20b).  This replaces the v0
+        //   `BuiltinCall("string_concat", …)` marker so backends can
+        //   emit native string building and the validator can track
+        //   interpolation usage via `Feature::StringInterpolation`.
         //
         // Any path that emits one or more segments needs the `Strings`
         // feature flag because we're producing `StrLit` data.
@@ -5373,10 +5385,12 @@ impl Lowerer {
         if segments.len() == 1 {
             return Ok(segments.into_iter().next().unwrap());
         }
-        Ok(Expr::BuiltinCall {
-            name: "string_concat".to_string(),
-            args: segments,
-            effects: EffectSet::PURE,
+        // 2+ segments → first-class concatenation node.  Declare the
+        // new feature so the manifest matches what the validator
+        // observes for the `StrConcat` node.
+        self.features_used.insert(Feature::StringInterpolation);
+        Ok(Expr::StrConcat {
+            parts: segments,
             span,
         })
     }

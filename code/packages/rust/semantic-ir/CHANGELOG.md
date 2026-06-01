@@ -2,6 +2,35 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.10.0 — SIR18: string interpolation (`Expr::StrConcat`)
+
+Introduced by the Ruby frontend's Phase 20b (`"a#{x}b"` interpolation).
+
+### Added
+
+- `Expr::StrConcat { parts, span }` — a first-class string-concatenation
+  node that replaces the v0 `BuiltinCall("string_concat", parts)` marker
+  (the same marker→node move `Stmt::TryCatch` made for
+  `__rescue_marker__`).  A dedicated node lets backends emit native
+  string building (`format!` / template literals / f-strings) instead of
+  routing through a runtime helper.  Invariant: `parts.len() >= 2`.
+- `Feature::StringInterpolation` — observed whenever a module contains a
+  `StrConcat` node.  Distinct from `Feature::Strings` (a plain `StrLit`):
+  a backend may support string literals without yet knowing how to build
+  a concatenation, so the two capabilities are tracked separately.
+
+### Validator
+
+- `StrConcat` observes `Feature::StringInterpolation` and recursively
+  checks every part.  A concat with fewer than two parts is a hard error
+  (a frontend should emit the bare part instead).
+
+### Text format
+
+- `print_expr` renders `StrConcat` as `(str-concat <part…>)` (kind name
+  `str-concat`).  Span and visitor (`walker`) coverage extended to the
+  new node.
+
 ## 0.9.0 — SIR17: structured exception handling (`Stmt::TryCatch`)
 
 Introduced by the Ruby frontend's Phase 16a (`begin/rescue/ensure/end`).

@@ -261,8 +261,9 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MapLit { span, .. }
         | Expr::MapGet { span, .. }
         | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. } => {
-            panic!("rust backend reached SIR16 expression at {} — capability check should have rejected it", span);
+        | Expr::LogicalOr { span, .. }
+        | Expr::StrConcat { span, .. } => {
+            panic!("rust backend reached SIR16+ expression at {} — capability check should have rejected it", span);
         }
     }
 }
