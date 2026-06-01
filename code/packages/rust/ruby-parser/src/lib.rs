@@ -3900,6 +3900,49 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_file_keyword_as_factor() {
+        // Phase 23a (FC) — `__FILE__` is NOT a lexer keyword (it starts
+        // with `_`, so it lexes as an ordinary NAME) and needs no grammar
+        // rule: it parses through `factor`'s bare-NAME alternative.  This
+        // pin confirms the `__FILE__` token survives into the tree when it
+        // appears as a standalone expression statement.
+        let ast = parse_ruby("__FILE__\n");
+        assert!(
+            tree_has_token_value(&ast, "__FILE__"),
+            "expected `__FILE__` token to be present in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_file_keyword_in_call_arg() {
+        // `puts(__FILE__)` — `__FILE__` parses as a call argument
+        // expression (factor → NAME), confirming it composes in argument
+        // position exactly like any other bare name.
+        let ast = parse_ruby("puts(__FILE__)\n");
+        assert!(
+            tree_has_token_value(&ast, "__FILE__"),
+            "expected `__FILE__` token in the `puts(__FILE__)` call args"
+        );
+    }
+
+    #[test]
+    fn test_parse_file_keyword_in_assignment_rhs() {
+        // `path = __FILE__` — `__FILE__` parses as the assignment RHS
+        // expression, the same NAME-factor path a normal variable read
+        // would take.  We assert both the LHS name and the `__FILE__`
+        // token are present.
+        let ast = parse_ruby("path = __FILE__\n");
+        assert!(
+            tree_has_token_value(&ast, "path"),
+            "expected LHS name `path` in the assignment"
+        );
+        assert!(
+            tree_has_token_value(&ast, "__FILE__"),
+            "expected `__FILE__` token as the assignment RHS"
+        );
+    }
+
+    #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
         let ast = parse_ruby("def hello = 1");

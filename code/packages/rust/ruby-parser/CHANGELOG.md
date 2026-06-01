@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.72.0] - 2026-06-01
+
+### Added (Phase 23a (FC) — `__FILE__` parse pins)
+
+Regression pins confirming Ruby's `__FILE__` pseudo-variable parses with
+**no grammar change**: because `__FILE__` begins with `_` it is not a
+lexer keyword — it arrives as an ordinary `NAME` token and is matched by
+`factor`'s existing bare-`NAME` alternative in every expression position
+(standalone statement, call argument, assignment RHS).  The feature's
+semantics are supplied entirely at lowering time (see the
+`ruby-to-semantic-ir` 0.80.0 entry); this crate's grammar is unchanged,
+so these are pure parse-shape pins.  New tests:
+`test_parse_file_keyword_as_factor`, `test_parse_file_keyword_in_call_arg`,
+`test_parse_file_keyword_in_assignment_rhs`.
+
 ## [0.71.0] - 2026-06-01
 
 ### Added (Phase 24b (FC) — `undef name` method removal)

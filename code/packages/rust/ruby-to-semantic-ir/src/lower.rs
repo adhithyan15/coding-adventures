@@ -6035,6 +6035,37 @@ impl Lowerer {
                                     span,
                                 });
                             }
+                            // Phase 23a (FC) — `__FILE__` is Ruby's pseudo-
+                            // variable for the path of the current source
+                            // file.  The lexer does NOT classify it as a
+                            // keyword (it starts with `_`, so it arrives as
+                            // an ordinary `Name` token) and the grammar
+                            // already matches it via `factor`'s bare-NAME
+                            // alternative — so NO grammar/lexer change is
+                            // needed; we intercept it here at lowering time,
+                            // exactly like the bare-`raise` case above.
+                            //
+                            // It lowers to a compile-time `StrLit` carrying
+                            // the lowerer's `file_name` (the SIR module
+                            // identifier the source was compiled under) —
+                            // the closest fixed value we have for "the
+                            // current file" without a runtime filesystem.
+                            // Emitting a `StrLit` means the module uses the
+                            // `strings` feature, so we declare it (already
+                            // permitted by the manifest builder allowlist).
+                            //
+                            // A `__FILE__` shadowed by a local binding
+                            // (`__FILE__ = 1`) keeps the local, mirroring
+                            // the `raise` shadow guard.
+                            if tok.value == "__FILE__"
+                                && !self.declared_locals.contains("__FILE__")
+                            {
+                                self.features_used.insert(Feature::Strings);
+                                return Ok(Expr::StrLit {
+                                    value: self.file_name.clone(),
+                                    span,
+                                });
+                            }
                             // Inside a function body, parameter
                             // names lex as `VarRef` with
                             // `Scope::Param` so the SIR validator

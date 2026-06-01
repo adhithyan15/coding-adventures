@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.80.0] - 2026-06-01
+
+### Added (Phase 23a (FC) — `__FILE__` pseudo-variable lowering)
+
+Ruby's `__FILE__` pseudo-variable now lowers to a compile-time `StrLit`
+carrying the lowerer's `file_name` (the SIR module identifier the source
+was compiled under) — the closest fixed value we have for "the current
+source file" absent a runtime filesystem.
+
+Because `__FILE__` begins with `_` it is **not** a lexer keyword: it
+arrives as an ordinary `Name` token and the parser already matches it via
+`factor`'s bare-`NAME` alternative, so **no grammar or lexer change** was
+needed.  The pseudo-variable's meaning is supplied entirely here, in
+`lower_factor_atom`, intercepting the bare `Name` exactly like the
+existing bare-`raise` case: when the token's value is `__FILE__` and it is
+**not** shadowed by a local binding, we emit the `StrLit` and declare
+`Feature::Strings` (already permitted by the manifest builder allowlist).
+A `__FILE__` shadowed by a prior local (`__FILE__ = 1`) keeps the local
+read (a `VarRef`), mirroring the `raise` shadow guard.
+
+New lowering tests: `file_keyword_lowers_to_strlit`,
+`file_keyword_declares_strings_feature`, `file_keyword_validates_e2e`
+(lower → validate round-trip), `file_keyword_shadowed_by_local_is_varref`.
+
 ## [0.79.0] - 2026-06-01
 
 ### Added (Phase 24b (FC) — `undef name` lowering)

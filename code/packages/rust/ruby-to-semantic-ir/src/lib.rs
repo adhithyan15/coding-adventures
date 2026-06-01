@@ -6404,6 +6404,71 @@ b = "y"
     }
 
     #[test]
+    fn file_keyword_lowers_to_strlit() {
+        // Phase 23a (FC) — `__FILE__` lowers to a compile-time StrLit
+        // carrying the lowerer's `file_name` (here the test module name
+        // "test"), surfaced as the argument of the enclosing `puts`.
+        let m = lower("puts(__FILE__)\n");
+        let b = main_body(&m);
+        // A lone `puts(...)` is the block's trailing VALUE, not a stmt.
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::StrLit { value, .. } if value == "test"),
+            "expected `__FILE__` to lower to StrLit(\"test\"), got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
+    fn file_keyword_declares_strings_feature() {
+        // Emitting the StrLit means the module must declare the `strings`
+        // feature — verify the manifest carries it.
+        let m = lower("puts(__FILE__)\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Strings),
+            "expected Strings feature for `__FILE__`; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn file_keyword_validates_e2e() {
+        // End-to-end: a `__FILE__`-using module round-trips the SIR
+        // validator (the StrLit is a self-contained literal — no unbound
+        // names, no undeclared features).
+        let m = lower("puts(__FILE__)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected `__FILE__`-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn file_keyword_shadowed_by_local_is_varref() {
+        // A `__FILE__` shadowed by a prior local binding keeps the local
+        // (mirrors the bare-`raise` shadow guard): the read lowers to a
+        // VarRef, NOT the file-name StrLit.
+        let m = lower("__FILE__ = 1\nputs(__FILE__)\n");
+        let b = main_body(&m);
+        // The `__FILE__ = 1` binding is a stmt; the trailing `puts(...)`
+        // is the block VALUE, where the shadowed read appears.
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::VarRef { name, .. } if name == "__FILE__"),
+            "expected shadowed `__FILE__` to stay a VarRef, got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
         // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips
