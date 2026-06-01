@@ -1502,6 +1502,47 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 21c (FC) — implicit `it` block parameter (Ruby 3.4).
+    //
+    // A header-less block referencing a bare `it` gets a single
+    // synthesized parameter named `it`.  Guard: `it` adjacent to a
+    // preceding `.` (method name) or a following `(` (call) does NOT
+    // trigger the implicit param.  Numbered params take precedence.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn implicit_it_synthesizes_single_param() {
+        let m = lower("each { puts(it) }");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        assert_eq!(block_fn.params.len(), 1);
+        assert_eq!(block_fn.params[0].name, "it");
+    }
+
+    #[test]
+    fn implicit_it_method_call_does_not_synthesize_param() {
+        // `it(1)` is a real method call, NOT the implicit param → the
+        // block should have zero synthesized params.
+        let m = lower("each { it(1) }");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        assert!(block_fn.params.is_empty(), "got {:?}", block_fn.params);
+    }
+
+    #[test]
+    fn implicit_it_passes_sir_validator() {
+        let m = lower("each { puts(it) }");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6h — paren-less method calls (`puts 1`, `puts 1, 2`).
     // -----------------------------------------------------------------
 

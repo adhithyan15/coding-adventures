@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.68.0] - 2026-05-31
+
+### Added (Phase 21c (FC) — implicit `it` block parameter, Ruby 3.4)
+
+No grammar change.  A header-less block may use a bare `it` in its body
+as the first block argument.  Parser-side, `it` lexes as a plain `Name`
+token (it is not a Ruby keyword), so such blocks already parse — these
+pins confirm it.
+
+New parse pins (+3): `test_parse_block_with_implicit_it_parses`
+(`each { puts(it) }` — no block_params, `it` token present),
+`test_parse_do_block_with_implicit_it_parses`
+(`each do\n puts(it)\nend`), `test_parse_block_with_it_dot_method_parses`
+(`each { puts(it.foo) }` — `it` as receiver).  Test count: 235 → 238.
+
 ## [0.67.0] - 2026-05-31
 
 ### Added (Phase 21b (FC) — implicit numbered block parameters `_1`..`_9`)

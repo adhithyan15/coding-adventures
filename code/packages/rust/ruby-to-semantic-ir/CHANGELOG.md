@@ -2,6 +2,29 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.71.0] - 2026-05-31
+
+### Added (Phase 21c (FC) — implicit `it` block parameter, Ruby 3.4)
+
+When a block has NO explicit `|...|` header, no block-locals, and no
+numbered params, the lowerer now detects a bare `it` reference in the
+body and synthesizes a single positional parameter named `it`
+(`Scope::Param`).
+
+Detection (`block_uses_implicit_it`) flattens the block body's tokens in
+source order — pruning nested `block` nodes — and treats an `it` `Name`
+token as the implicit parameter ONLY when it is neither immediately
+preceded by `.` (method name: `obj.it`) nor immediately followed by `(`
+(call: `it(x)`).  So `it.foo`, `it + 1`, and `puts(it)` qualify, while
+`it(1)` and `obj.it` do not.  Numbered params (`_N`) take precedence;
+Ruby forbids mixing them with `it` anyway.
+
+New lowering pins (+3): `implicit_it_synthesizes_single_param`
+(`each { puts(it) }` → `__block_0.params == [it]`),
+`implicit_it_method_call_does_not_synthesize_param`
+(`each { it(1) }` → zero params), `implicit_it_passes_sir_validator`
+(validator end-to-end).  Test count: 289 → 292.
+
 ## [0.70.0] - 2026-05-31
 
 ### Added (Phase 21b (FC) — implicit numbered block parameters `_1`..`_9`)
