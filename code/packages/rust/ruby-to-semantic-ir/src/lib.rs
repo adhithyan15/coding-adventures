@@ -5360,6 +5360,27 @@ puts("hi #{name}")
         );
     }
 
+    #[test]
+    fn deeply_nested_interpolation_terminates_without_stack_overflow() {
+        // Phase 20a (FC) DoS guard — the recursive interp lowerer caps
+        // re-parsing at MAX_INTERP_DEPTH (8).  Build an interpolation
+        // nested *far* beyond that (200 levels) and confirm lowering
+        // simply terminates — past the cap the body is kept as the
+        // verbatim `__interp__` marker rather than recursing until the
+        // thread stack is exhausted.  Before the guard this input would
+        // abort the process with an uncatchable stack overflow.
+        let mut src = String::from("1");
+        for _ in 0..200 {
+            // each wrap adds one `"#{ … }"` interpolation level
+            src = format!("\"#{{{src}}}\"");
+        }
+        let code = format!("x = {src}");
+        // The assertion is simply that this returns at all (no panic /
+        // overflow); we touch the body to ensure a real module came back.
+        let m = lower(&code);
+        let _ = main_body(&m);
+    }
+
     // -----------------------------------------------------------------------
     // Phase 6z — float / hex / bin / oct numeric literal lowering
     //

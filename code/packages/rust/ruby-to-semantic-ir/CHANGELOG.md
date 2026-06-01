@@ -21,7 +21,15 @@ Per the Tier-3 marker-replacement convention, the `__interp__` marker is
 multi-statement bodies (`#{a; b}`), and anything that doesn't parse to a
 single expression statement still emit the verbatim marker.
 
-New lowering pins (+3, one existing marker test rewritten):
+**DoS guard.** Because a `#{…}` body may itself contain a nested
+interpolated string (`"#{ "#{x}" }"`), the recursive re-parse path could
+otherwise recurse without bound and exhaust the thread stack (an
+uncatchable abort) on adversarial input.  A new `interp_depth` counter on
+`Lowerer` caps re-parsing at `MAX_INTERP_DEPTH = 8` — far beyond any
+legitimate nesting — and falls back to the safe `__interp__` marker past
+the cap.
+
+New lowering pins (+4, one existing marker test rewritten):
 `interpolated_string_with_expression_lowers_recursively`
 (`"sum=#{1+2}"` → real `+` call, not a marker),
 `interpolated_string_with_multiple_expr_interps_lowers_each_recursively`
@@ -29,8 +37,10 @@ New lowering pins (+3, one existing marker test rewritten):
 `interpolated_string_with_binary_var_expr_lowers_recursively`
 (`"#{a + b}"` → `+` over two `VarRef`s),
 `interpolated_expression_string_validates_e2e`
-(`puts("sum is #{1 + 2}")` round-trips the SIR validator).
-Test count: 292 → 295.
+(`puts("sum is #{1 + 2}")` round-trips the SIR validator),
+`deeply_nested_interpolation_terminates_without_stack_overflow`
+(200-level nesting terminates via the depth cap).
+Test count: 292 → 296.
 
 ## [0.71.0] - 2026-05-31
 
