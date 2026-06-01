@@ -268,6 +268,20 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 },
             )
         }
+        TaggedStatement::ThrowStatement(s) => {
+            // Recurse into the argument so any DCE work inside the
+            // expression (e.g. nested ConditionalExpression cleanup,
+            // once those become DCE-tracked) lands here. The throw
+            // is itself a definite terminator — the block-walker
+            // (`dce_block_statement`) treats it the same as
+            // `ReturnStatement` for dead-after-terminator purposes
+            // and that wiring lives there. This arm just preserves
+            // the node.
+            TaggedStatement::ThrowStatement(coding_adventures_javascript_ast::ThrowStatement {
+                cv: s.cv.clone(),
+                argument: dce_expression(&s.argument, st),
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),

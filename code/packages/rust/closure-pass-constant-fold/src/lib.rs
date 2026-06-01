@@ -299,6 +299,15 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
                 body: Box::new(fold_statement(&s.body, st)),
             })
         }
+        TaggedStatement::ThrowStatement(s) => {
+            // Fold the thrown expression — `throw 2+3;` becomes
+            // `throw 5;` exactly like every other expression-bearing
+            // statement.
+            TaggedStatement::ThrowStatement(coding_adventures_javascript_ast::ThrowStatement {
+                cv: s.cv.clone(),
+                argument: fold_expression(&s.argument, st),
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),

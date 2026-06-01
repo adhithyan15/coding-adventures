@@ -303,6 +303,7 @@ specifically (renaming, treeshaking, remove-unused-vars).
 | `BreakStatement`      | `cv: Option<CvId>`, `label: Option<Identifier>`                                                                                                             |
 | `ContinueStatement`   | `cv: Option<CvId>`, `label: Option<Identifier>`                                                                                                             |
 | `LabeledStatement`    | `cv: Option<CvId>`, `label: Identifier`, `body: Box<Statement>` — Phase 1.x (CLOC12.13)                                                                     |
+| `ThrowStatement`      | `cv: Option<CvId>`, `argument: Expression` — Phase 1.x (CLOC12.14)                                                                                          |
 | `EmptyStatement`      | `cv: Option<CvId>`                                                                                                                                          |
 | `Declaration`         | wraps `Declaration` so a top-level or block-scoped declaration is also a `Statement` (matches ESTree's lift of `VariableDeclaration` etc. into `Statement`) |
 
@@ -314,9 +315,8 @@ pub enum ForInit {
 ```
 
 (Phase 2 adds `SwitchStatement`, `TryStatement`,
-`ThrowStatement`, `DoWhileStatement`,
-`ForInStatement`, `ForOfStatement`, `DebuggerStatement`,
-`WithStatement`.)
+`DoWhileStatement`, `ForInStatement`, `ForOfStatement`,
+`DebuggerStatement`, `WithStatement`.)
 
 ### Phase 1.x amendments (post-CLOC09 ratification)
 
@@ -329,6 +329,15 @@ pub enum ForInit {
   existing tagged-statement consumers had to gain one match arm in
   constant-fold, fold-control-flow, and DCE, all of which recurse
   into the labelled body and leave the label untouched.
+- **CLOC12.14 — `ThrowStatement`.** The upstream Closure-Compiler
+  fold-control-flow test `testMinimizeIfWithThrow` rewrites
+  `if (x) foo(); else throw e;` into `if (!x) throw e; foo();`.
+  The rewrite is its own follow-up gap, but the structural
+  prerequisite — modelling `throw expr;` as an AST node — is
+  lifted from Phase 2 into Phase 1.x here. Per ECMAScript §13.14
+  the `argument` field is non-optional: `throw;` is a SyntaxError.
+  Existing pass crates gained one match arm each that folds the
+  argument expression and preserves the throw semantics.
 
 ## Phase 1 — Expression variants
 

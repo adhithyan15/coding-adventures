@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-01
+
+### Added — CLOC12.14: emit `ThrowStatement` (gap-020 AST partial close)
+
+Adds emitter support for the new `ThrowStatement` variant added to
+`javascript-ast` in CLOC12.14. Compact form is `throw <expr>;` with
+a mandatory single space between the keyword and the expression
+(without it `throw1` parses as an identifier in lenient lexers and
+is ambiguous in strict ones); the trailing `;` is always emitted.
+
+Tests cover `throw 1;` (NumericLiteral), `throw e;` (Identifier),
+and `throw "oops";` (StringLiteral — confirms the quote-choice path
+runs the same way it does for any other string expression context).
+
 ## [0.7.0] - 2026-06-01
 
 ### Added — CLOC12.13: emit `LabeledStatement` (gap-009 AST partial close)

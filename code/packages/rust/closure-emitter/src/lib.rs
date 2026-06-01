@@ -70,8 +70,8 @@ use coding_adventures_javascript_ast::{
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
-    UnaryExpression, UnaryOperator, VarKind, VariableDeclaration, VariableDeclarator,
-    WhileStatement,
+    ThrowStatement, UnaryExpression, UnaryOperator, VarKind, VariableDeclaration,
+    VariableDeclarator, WhileStatement,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -294,6 +294,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::BreakStatement(b) => self.emit_break(b),
             TaggedStatement::ContinueStatement(c) => self.emit_continue(c),
             TaggedStatement::LabeledStatement(l) => self.emit_labeled(l),
+            TaggedStatement::ThrowStatement(t) => self.emit_throw(t),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
         }
     }
@@ -458,6 +459,19 @@ impl<'a> Emitter<'a> {
         self.write_str(":");
         self.pretty_ws();
         self.emit_statement(&l.body);
+    }
+
+    /// `throw expr;` — keyword + REQUIRED whitespace + expression +
+    /// `;`. The space is mandatory: without it `throw1` parses as an
+    /// identifier in V8's relaxed mode and is ambiguous in others.
+    /// Per ECMAScript §13.14, `throw` has no no-argument form, so we
+    /// always emit the argument.
+    fn emit_throw(&mut self, t: &ThrowStatement) {
+        self.maybe_map(&t.cv);
+        self.write_str("throw");
+        self.required_ws();
+        self.emit_expression(&t.argument);
+        self.write_str(";");
     }
 
     // ---- Declarations --------------------------------------------
@@ -1703,6 +1717,39 @@ mod tests {
             body: Box::new(inner),
         });
         assert_eq!(emit_stmt(s), "a:break a;");
+    }
+
+    // ---- Throw (gap-020, CLOC12.14) -------------------------
+
+    #[test]
+    fn throw_numeric_literal_emits_throw_one_semicolon() {
+        // throw 1;
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: num(1.0),
+        });
+        assert_eq!(emit_stmt(s), "throw 1;");
+    }
+
+    #[test]
+    fn throw_identifier_emits_throw_e_semicolon() {
+        // throw e;
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: ident("e"),
+        });
+        assert_eq!(emit_stmt(s), "throw e;");
+    }
+
+    #[test]
+    fn throw_string_literal_emits_throw_quoted_semicolon() {
+        // throw "oops";
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: string("oops"),
+        });
+        // quote-choice picks double quotes by default for plain strings
+        assert_eq!(emit_stmt(s), "throw \"oops\";");
     }
 
     // ---- EmitError --------------------------------------------

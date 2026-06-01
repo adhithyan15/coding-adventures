@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.5.2] - 2026-06-01
+
+### Changed — CLOC12.14: handle new `ThrowStatement` variant
+
+The constant-fold pass gained a `TaggedStatement::ThrowStatement`
+match arm so it compiles against the new `javascript-ast 0.4.0` AST.
+Behaviour: fold the argument expression (so `throw 2+3;` → `throw 5;`),
+preserve the throw semantics.
+
 ## [0.5.1] - 2026-06-01
 
 ### Changed — CLOC12.13: handle new `LabeledStatement` variant

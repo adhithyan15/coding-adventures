@@ -174,11 +174,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-020 — `ThrowStatement` not in Phase 1 AST
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.14 (AST modelled). Residual: the actual *rewriting* of `if (x) foo(); else throw e;` → `if (!x) throw e; foo();` is a follow-up; modelling the node is the structural prerequisite.
 - **Upstream test:** `PeepholeMinimizeConditionsTest::testMinimizeIfWithThrow`
 - **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
-- **Why it fails:** No `ThrowStatement` variant in our typed AST.
-- **What it needs:** A Phase 1.x AST extension to model `throw expr;`. Then teach fold-control-flow that `if (x) foo() else throw 1` → `if (!x) throw 1; foo();` (the early-throw rearrangement).
+- **Resolution note:** CLOC12.14 adds `ThrowStatement { cv: Option<CvId>, argument: Expression }` to `javascript-ast` (argument non-optional per ECMAScript §13.14 — `throw;` is a SyntaxError). Wires it through `closure-emitter` (`throw expr;` with required whitespace between keyword and expression) and through all three rewriting passes (constant-fold, fold-control-flow, DCE — each folds the argument expression and preserves throw semantics; dead-after-throw collapse and the if-else early-throw rearrangement are separate follow-ups).
 
 ### gap-021 — `BigIntLiteral` not in Phase 1 AST
 

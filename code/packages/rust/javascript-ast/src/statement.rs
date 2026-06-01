@@ -14,12 +14,14 @@
 //! - [`ContinueStatement`]
 //! - [`LabeledStatement`] (Phase 1.x — added in CLOC12.13 to unblock
 //!   the DCE port's `testRemoveNoOpLabelledStatement` case)
+//! - [`ThrowStatement`] (Phase 1.x — added in CLOC12.14 to unblock
+//!   the fold-control-flow port's `testMinimizeIfWithThrow` case)
 //! - [`EmptyStatement`]
 //! - `Statement::Declaration(Declaration)` — untagged wrap so JSON
 //!   collapses to the inner `{"type": "VariableDeclaration", ...}`
 //!   shape directly.
 //!
-//! Phase 2 will add `SwitchStatement`, `TryStatement`, `ThrowStatement`,
+//! Phase 2 will add `SwitchStatement`, `TryStatement`,
 //! `DoWhileStatement`, `ForInStatement`, `ForOfStatement`,
 //! `DebuggerStatement`, and `WithStatement`.
 
@@ -63,6 +65,7 @@ pub enum TaggedStatement {
     BreakStatement(BreakStatement),
     ContinueStatement(ContinueStatement),
     LabeledStatement(LabeledStatement),
+    ThrowStatement(ThrowStatement),
     EmptyStatement(EmptyStatement),
 }
 
@@ -95,6 +98,9 @@ impl Statement {
     }
     pub fn labeled_statement(s: LabeledStatement) -> Self {
         Self::Tagged(TaggedStatement::LabeledStatement(s))
+    }
+    pub fn throw_statement(s: ThrowStatement) -> Self {
+        Self::Tagged(TaggedStatement::ThrowStatement(s))
     }
     pub fn empty_statement(s: EmptyStatement) -> Self {
         Self::Tagged(TaggedStatement::EmptyStatement(s))
@@ -219,6 +225,25 @@ pub struct LabeledStatement {
     pub cv: Option<CvId>,
     pub label: Identifier,
     pub body: Box<Statement>,
+}
+
+/// `throw expr;` — raises a runtime exception. Per ECMAScript
+/// §13.14, `throw;` (with no argument) is a SyntaxError, so the
+/// `argument` field is non-optional: a `ThrowStatement` always
+/// carries a value to throw.
+///
+/// Added in Phase 1.x (CLOC12.14) to unblock the
+/// fold-control-flow port's `testMinimizeIfWithThrow` case (gap-020).
+/// The optimisation that triggers off this node — rewriting
+/// `if (x) foo(); else throw e;` into `if (!x) throw e; foo();` —
+/// is a separate follow-up; modelling the node first is the
+/// structural prerequisite.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ThrowStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub argument: Expression,
 }
 
 /// A lone semicolon `;`. Rare in user code but legal everywhere a
@@ -483,6 +508,32 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "LabeledStatement");
+    }
+
+    #[test]
+    fn throw_statement_with_numeric_literal() {
+        // throw 1;
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: Some("th.1".to_string()),
+            argument: lit(1.0),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "ThrowStatement");
+    }
+
+    #[test]
+    fn throw_statement_with_identifier_no_cv() {
+        // throw e;  (untraced)
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: Expression::Identifier(Identifier {
+                cv: None,
+                name: "e".to_string(),
+            }),
+        });
+        let json = serde_json::to_string(&s).expect("serialize");
+        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(s.clone(), roundtrip(s));
     }
 
     #[test]
