@@ -1,0 +1,31 @@
+[package]
+name = "matrix-rust-ruby-native"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Rust native extension half of the matrix_rust_ruby gem — bridges Ruby ↔ matrix-cpu via ruby-bridge + c-bridge."
+
+[lib]
+# `cdylib` because Ruby loads native extensions as dynamic libraries.
+# No `rlib` — nothing in the Rust workspace depends on this crate; it's a
+# leaf that exists purely so the matrix_rust_ruby gem's extconf.rb can
+# `cargo build --release` it and shove the resulting .{so,dylib,dll} into
+# Ruby's extension path.
+name = "matrix_rust_ruby_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# `ruby-bridge` — workspace crate that wraps the Ruby C API in safe-ish
+# helpers (define_module, str_to_rb, raise_error, ...).  Same crate that
+# `conduit_native` uses; chosen here for consistency with the established
+# Ruby-bridging pattern.
+ruby-bridge = { path = "../ruby-bridge" }
+
+# `c-bridge` — the workspace crate that owns the pure-Rust function
+# `run_graph_on_cpu_via_json_envelope`.  We depend on c-bridge (not on the
+# lower-level matrix-* crates directly) so that the envelope shape and
+# error semantics stay defined in exactly one place: any future change to
+# c-bridge automatically propagates to every per-language native ext.
+c-bridge = { path = "../c-bridge" }
+
+[build-dependencies]

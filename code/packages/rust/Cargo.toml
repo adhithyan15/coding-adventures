@@ -423,6 +423,7 @@ members = [
     "matrix-runtime",
     "matrix-rust-napi",
     "matrix-rust-python",
+    "matrix-rust-ruby-native",
     "metal-compute",
     "paint-metal",
     "paint-vm-direct2d-c",
