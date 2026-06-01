@@ -2,6 +2,68 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-01
+
+### Added — CLOC12.09: close gap-005 typeof literal fold
+
+Implements `typeof <primitive literal>` constant-folding per the
+ECMAScript §UnaryTypeofExpression table:
+
+| Operand                  | Folded result |
+|--------------------------|---------------|
+| `NumericLiteral`         | `"number"`    |
+| `StringLiteral`          | `"string"`    |
+| `BooleanLiteral`         | `"boolean"`   |
+| `NullLiteral`            | `"object"`    |
+
+The `NullLiteral → "object"` case preserves the famous JavaScript quirk
+where `typeof null === "object"` (a historical bug baked into the spec).
+
+The four remaining `typeof` cases stay deferred:
+
+- `typeof undefined → "undefined"` — gated on gap-001 (no
+  `UndefinedLiteral` AST variant yet).
+- `typeof <BigIntLiteral> → "bigint"` — gated on gap-021 (no
+  `BigIntLiteral` AST variant yet).
+- `typeof <function expression> → "function"` — Phase 1.x AST work.
+- `typeof <Identifier>` — left alone (identifier may bind to anything at
+  runtime; matches upstream `testSame` lines).
+
+### gap-005 → RESOLVED via CLOC12.09
+
+The CLOC12.02 ignored port `test_typeof_lines_from_string_string_comparison`
+is replaced by three focused tests:
+
+| New test | Status |
+|----------|--------|
+| `test_typeof_literal_comparison_folds` | **passing** (`typeof 3 > typeof 4` → `false`) |
+| `test_typeof_identifier_is_left_alone` | **passing** (`testSame` shape) |
+| `test_typeof_identifier_identity_fold` | `#[ignore]` on **new gap-029** |
+
+### gap-029 — identity-of-typeof-same-identifier fold (NEW)
+
+Upstream folds `typeof a === typeof a` → `true` and
+`typeof a !== typeof a` → `false` because the two sub-expressions are
+structurally identical. Implementing that requires a *structural
+equality* check between operands, which is conceptually distinct from
+value-substitution folding. Filed as gap-029 for a future PR.
+
+### Port score (this crate)
+
+|             | passing | ignored |
+|-------------|---------|---------|
+| CLOC12.03   | 7       | 5       |
+| **CLOC12.09** | **9** | **5**   |
+
+(Net +2 passing, 0 net change to ignored. The previously-ignored
+`test_typeof_lines_from_string_string_comparison` stub got replaced
+by 2 new passing tests + 1 new `#[ignore]`-d gap-029 test, so total
+test count went 12 → 14.)
+
+### Version bump
+
+`0.4.0` → `0.5.0`.
+
 ## [0.4.0] - 2026-05-31
 
 ### Added — CLOC12.03: close gap-007 and gap-008

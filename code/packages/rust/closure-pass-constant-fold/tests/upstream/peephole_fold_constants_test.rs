@@ -307,14 +307,78 @@ fn test_basic_number_comparisons() {
     assert_fold(b(n(2.0), BinaryOperator::StrictEq, n(1.0)), bool_(false));
 }
 
-/// Upstream `testStringStringComparison` `testSame` lines using
-/// `typeof` are deferred to gap-005 (no `typeof` constant fold).
+/// Upstream `testStringStringComparison` line:
+///
+///   test("typeof 3 > typeof 4", "false")
+///
+/// `typeof <NumericLiteral>` folds to `"number"`, and `"number" >
+/// "number"` is `false` (string comparison via the existing
+/// string-vs-string branch). **gap-005 closed in CLOC12.09** for the
+/// primitive-literal-typeof cases.
 #[test]
-#[ignore = "blocked on gap-005: `typeof` operator constant-fold not implemented"]
-fn test_typeof_lines_from_string_string_comparison() {
-    // `typeof a < 'a'` → leave alone (unknown identifier);
-    // `typeof 3 > typeof 4` → 'number' > 'number' → false (fold-able);
-    // `typeof a === typeof a` → true (fold-able by identity).
+fn test_typeof_literal_comparison_folds() {
+    use coding_adventures_javascript_ast::{UnaryExpression, UnaryOperator};
+    let typeof_lit = |arg: Expression| {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::TypeOf,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    };
+    // typeof 3 > typeof 4  →  "number" > "number"  →  false
+    assert_fold(
+        b(typeof_lit(n(3.0)), BinaryOperator::Gt, typeof_lit(n(4.0))),
+        bool_(false),
+    );
+}
+
+/// Upstream `testStringStringComparison` lines:
+///
+///   testSame("typeof a < 'a'")
+///   testSame("'a' >= typeof a")
+///
+/// `typeof <identifier>` is *not* foldable — the identifier may bind to
+/// anything at runtime. **gap-005 closed in CLOC12.09**: our pass
+/// leaves these alone, which is exactly what upstream `testSame`
+/// asserts.
+#[test]
+fn test_typeof_identifier_is_left_alone() {
+    use coding_adventures_javascript_ast::{Identifier, UnaryExpression, UnaryOperator};
+    let ident_expr = |name: &str| {
+        Expression::Identifier(Identifier {
+            cv: None,
+            name: name.to_string(),
+        })
+    };
+    let typeof_a = Expression::UnaryExpression(UnaryExpression {
+        cv: None,
+        operator: UnaryOperator::TypeOf,
+        prefix: true,
+        argument: Box::new(ident_expr("a")),
+    });
+    // typeof a < "a"  →  leave alone (identifier means runtime-unknown)
+    assert_same(b(typeof_a.clone(), BinaryOperator::Lt, s("a")));
+    // "a" >= typeof a  →  same shape, flipped
+    assert_same(b(s("a"), BinaryOperator::GtEq, typeof_a));
+}
+
+/// Upstream `testStringStringComparison` lines using
+/// `typeof <identifier> === typeof <SAME identifier>`:
+///
+///   test("typeof a === typeof a", "true");
+///   test("typeof a !== typeof a", "false");
+///
+/// Folding these requires recognising that the two sub-expressions are
+/// *structurally identical* (same operator, same identifier name), not
+/// just folding each side independently. That's a different kind of
+/// fold rule — see gap-029. Stays `#[ignore]`-ed here.
+#[test]
+#[ignore = "blocked on gap-029: identity-of-typeof-same-identifier fold not implemented"]
+fn test_typeof_identifier_identity_fold() {
+    // Would assert:
+    //   typeof a === typeof a  →  true
+    //   typeof a !== typeof a  →  false
 }
 
 /// Upstream "and similar" lines that boil down to plain arithmetic on
