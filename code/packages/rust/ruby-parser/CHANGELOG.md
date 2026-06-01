@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.71.0] - 2026-06-01
+
+### Added (Phase 24b (FC) — `undef name` method removal)
+
+New grammar rule `undef_statement = "undef" NAME`, added to the
+`statement` alternation right after `alias_statement` (i.e. BEFORE
+`method_call`/`expression_stmt`).  Like `alias`, the lexer already
+classifies `undef` as a Ruby `KEYWORD` (matched here by value), so no
+lexer change was needed.  Placement matters for the same reason the
+Phase 23b `defined?` and Phase 24a `alias` rules document: a bare
+leading `undef` would otherwise be matched by the `KEYWORD` alternative
+of `factor` (via `expression_stmt`), consuming only `undef` and leaving
+the name operand dangling.  `_grammar.rs` regenerated.
+
+This first slice covers the canonical single-bare-name form (`undef
+foo`); the symbol form (`undef :name`) and the multi-name form (`undef
+a, b`) are deliberate follow-ups.  New parser pins:
+`test_parse_undef_basic`, `test_parse_undef_carries_name`,
+`test_parse_undef_not_shadowed_by_method_call`.
+
 ## [0.70.0] - 2026-06-01
 
 ### Added (Phase 24a (FC) — `alias new old` method aliasing)
