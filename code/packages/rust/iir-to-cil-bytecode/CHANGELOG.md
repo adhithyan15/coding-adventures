@@ -2,6 +2,55 @@
 
 All notable changes to this crate are documented here.
 
+## [0.7.0] — 2026-06-01 (G4 — `print_i64` host call → `env.BasicRuntime::PrintI64(int64)`)
+
+### Added — `call_builtin "print_i64"` whitelisted and lowered
+
+Completes the cross-backend trio for BASIC's `PRINT`:
+
+| Backend                  | Builtin     | Target                                            |
+|--------------------------|-------------|---------------------------------------------------|
+| iir-to-wasm v0.8.0       | `print_i64` | `env.__print_i64` host import                     |
+| iir-to-jvm-class-file v0.7.0 | `print_i64` | `invokestatic env/BasicRuntime.println(J)V`   |
+| **iir-to-cil-bytecode v0.7.0 (this)** | `print_i64` | `call void env.BasicRuntime::PrintI64(int64)` |
+
+After this release, BASIC's PRINT lowers to real bytecode on all three
+non-BEAM backends — gap G4 (final gap in the `print_i64` group) of the
+[multi-language backend plan][plan].
+
+#### Validator changes (`src/validate.rs`)
+
+* `CALL_BUILTIN_SUPPORTED_NAMES` widened from `["putchar", "getchar"]`
+  to `["putchar", "getchar", "print_i64"]`.  Defence in depth unchanged:
+  every other name still fails with `UnsupportedOp`.
+
+#### Lowering changes (`src/lower.rs`)
+
+* New sentinel metadata token
+  `BASIC_PRINT_I64_TOKEN: u32 = 0x0A00_0005` (MemberRef row 5, next
+  after `BF_GETCHAR_TOKEN` @ row 4).  At link / sim time the token
+  resolves to `env.BasicRuntime::PrintI64(int64)`.
+* New `"print_i64"` arm in the `call_builtin` match:
+  ```
+  srcs = [Var("print_i64"), Var(val: i64)]   dest = None
+  →
+  ldloc val_slot          ; via emit_load (picks width from reg_info)
+  call <BASIC_PRINT_I64_TOKEN>
+  ```
+
+Why a dedicated host class (vs. reusing `env.BFRuntime`): BASIC's I/O
+is line/value oriented; Brainfuck's is byte-stream oriented.  Separate
+host classes let a CLR runtime / launcher stub or provide either one
+independently.
+
+#### Tests added (`tests/test_backend.rs`)
+
+* `g4_validator_accepts_print_i64`
+* `g4_validator_still_rejects_unknown_builtin`
+* `g4_lowers_print_i64_to_call_with_basic_token`
+
+[plan]: ../../../specs/MULTILANG-BACKEND-PLAN.md
+
 ## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` + `mov` for ref types)
 
 ### Changed — `ref<any>` widens the supported reference types; `mov` for refs

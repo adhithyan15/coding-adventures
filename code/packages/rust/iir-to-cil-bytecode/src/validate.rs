@@ -112,17 +112,27 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// lowering time via reserved metadata tokens (MemberRef table rows on
 /// the simulated `env.BFRuntime` class):
 ///
-/// | Builtin     | CIL call                                            |
-/// |-------------|------------------------------------------------------|
-/// | `"putchar"` | `call void env.BFRuntime::putchar(int32)`            |
-/// | `"getchar"` | `call int32 env.BFRuntime::getchar()`                |
+/// | Builtin       | CIL call                                              |
+/// |---------------|-------------------------------------------------------|
+/// | `"putchar"`   | `call void env.BFRuntime::putchar(int32)`             |
+/// | `"getchar"`   | `call int32 env.BFRuntime::getchar()`                 |
+/// | `"print_i64"` | `call void env.BasicRuntime::PrintI64(int64)`         |
 ///
 /// Adding a new builtin requires:
 ///   1. Listing the name here so the validator accepts it.
 ///   2. Reserving a new metadata-token constant in `lower.rs`.
 ///   3. Adding a matching `case` to lower.rs's `call_builtin` arm
 ///      that emits the right `call <token>` sequence.
-pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
+///
+/// G4 note: `print_i64` is the CLR counterpart to wasm's `env.__print_i64`
+/// (iir-to-wasm v0.8.0) and JVM's `env/BasicRuntime.println(J)V`
+/// (iir-to-jvm-class-file v0.7.0).  Together the three lower BASIC's
+/// `PRINT` statement to real backend bytecode without the backend itself
+/// owning a stdout.  We pick a dedicated `env.BasicRuntime` host class
+/// (distinct from `env.BFRuntime`) because BASIC's I/O model is
+/// line/value oriented while Brainfuck's is byte-stream oriented; a CLR
+/// runtime can stub or provide either independently.
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar", "print_i64"];
 
 // ---------------------------------------------------------------------------
 // Heap ops that need special validation (type-restricted)

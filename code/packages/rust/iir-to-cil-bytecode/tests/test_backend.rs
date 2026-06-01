@@ -1517,3 +1517,105 @@ fn lang37_dispatch_method_contains_ldelem_i4() {
 // sequences that require dup to prime the array reference).
 #[allow(dead_code)]
 const _DUP_USED: u8 = DUP;
+
+// ===========================================================================
+// G4 — call_builtin "print_i64" → call env.BasicRuntime::PrintI64(int64)
+// ===========================================================================
+//
+// CLR counterpart to iir-to-wasm v0.8.0 (env.__print_i64 import) and
+// iir-to-jvm-class-file v0.7.0 (invokestatic env/BasicRuntime.println(J)V).
+// All three let BASIC's PRINT lower to real backend bytecode without the
+// backend itself owning a stdout.
+//
+// Convention picked: a new sentinel metadata token
+//   BASIC_PRINT_I64_TOKEN = 0x0A00_0005
+// reserved at MemberRef row 5, which a CLR runtime / launcher resolves to
+//   env.BasicRuntime::PrintI64(int64)
+// at link time.
+//
+// Reference: code/specs/MULTILANG-BACKEND-PLAN.md (item G4).
+
+/// Build a function that calls `print_i64` once with an i64 local.
+///
+/// IIR:
+///   fn print_42() -> void {
+///     v = const 42 : i64
+///     call_builtin print_i64(v)
+///     ret_void
+///   }
+fn g4_print_i64_module() -> IIRModule {
+    single_fn(vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![
+                Operand::Var("print_i64".into()),
+                Operand::Var("v".into()),
+            ],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ])
+}
+
+/// Validator must accept `call_builtin "print_i64"` after G4.
+#[test]
+fn g4_validator_accepts_print_i64() {
+    let module = g4_print_i64_module();
+    let errors = validate_iir_for_clr(&module);
+    assert!(
+        errors.is_empty(),
+        "validator should accept call_builtin \"print_i64\" after G4; got: {:?}",
+        errors
+    );
+}
+
+/// Validator still rejects unknown builtin names — guards against the
+/// whitelist accidentally widening.
+#[test]
+fn g4_validator_still_rejects_unknown_builtin() {
+    let module = single_fn(vec![
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("definitely_not_a_real_builtin".into())],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let errors = validate_iir_for_clr(&module);
+    assert!(
+        errors.iter().any(|e| e.contains("UnsupportedOp")),
+        "unknown call_builtin name must still produce UnsupportedOp; got: {:?}",
+        errors
+    );
+}
+
+/// Lowering `print_i64` emits a CALL (0x28) byte AND the little-endian
+/// 4-byte encoding of `BASIC_PRINT_I64_TOKEN` (0x0A00_0005) immediately
+/// after it.
+///
+/// CIL `call` is `0x28 <tok:le u32>`, so scanning for the byte sequence
+/// `[0x28, 0x05, 0x00, 0x00, 0x0A]` confirms both:
+///   1. We routed through the host-class `call` path (not silently dropped).
+///   2. The token is the new BASIC sentinel — *not* an accidental reuse of
+///      `CONSOLE_WRITELINE_I64_TOKEN` (0x0A00_0002, used by `io_out`),
+///      `BF_PUTCHAR_TOKEN` (0x0A00_0003), or `BF_GETCHAR_TOKEN`
+///      (0x0A00_0004).
+#[test]
+fn g4_lowers_print_i64_to_call_with_basic_token() {
+    let module = g4_print_i64_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let body = &artifact.methods[0].body;
+
+    // Expected byte sequence: call (0x28) + LE u32 0x0A00_0005.
+    let expected: [u8; 5] = [0x28, 0x05, 0x00, 0x00, 0x0A];
+    let found = body.windows(5).any(|w| w == expected);
+    assert!(
+        found,
+        "expected `call BASIC_PRINT_I64_TOKEN` byte sequence {:02X?} \
+         in print_42 body; got: {:02X?}",
+        expected, body
+    );
+}
