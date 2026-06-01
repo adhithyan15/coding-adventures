@@ -1,5 +1,25 @@
 # Changelog — `nib-lsp-bridge`
 
+## 0.2.0 — 2026-06-01 (wires nib-formatter as the format_fn)
+
+nib-formatter 0.1.0 (NIB-FMT01) is now wired in as the
+`textDocument/formatting` provider.  Editors driving the Nib
+language server will get "Format Document" + "Format Selection"
+that produce canonical Nib (2-space indent inside `{}`, single
+space around operators, etc.).
+
+### Changed
+
+- `nib_language_spec().format_fn` flipped from `None` to
+  `Some(nib_format_wrapper)`.
+- Added `nib_format_wrapper(&str) -> Result<String, String>`
+  adapter.
+- Two new tests (`format_fn_is_set`, `format_fn_produces_canonical_output`).
+
+### Dependencies
+
+- Added `nib-formatter` 0.1.0 as a path dependency.
+
 ## 0.1.0 — 2026-06-01 (NIB-LSP01 — initial Nib LSP bridge)
 
 Initial release.  Sibling of `twig-lsp-bridge` 0.2.0 and
