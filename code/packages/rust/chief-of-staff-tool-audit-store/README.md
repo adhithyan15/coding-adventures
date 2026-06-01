@@ -118,6 +118,8 @@ The crate keeps the boundary narrow:
 - supervisor drain plans, loops, reports, and summaries expose stable
   tick-budget pressure labels for slack, exact-boundary, and continuation
   scheduling decisions
+- supervisor drain reports and summaries flatten tick-budget pressure route,
+  priority, readiness, and queue-key labels for host scheduler queues
 - supervisor drain plan pages expose per-page drain, continuation, and
   checkpoint-advance helpers for host preflight scheduling
 - supervisor drain plan pages expose starting and next checkpoint scalar
