@@ -56,8 +56,8 @@ IIRModule
 
 | Version | Scope | Status |
 |---------|-------|--------|
-| **v0.1.0 (LLVM01 — this PR)** | crate skeleton: empty module header with `target triple` + `; ModuleID = …` comment. No instruction lowering yet. | this PR |
-| v0.2.0 (LLVM02) | function signatures + `ret`, `ret_void`, `const`, `mov` | next |
+| v0.1.0 (LLVM01) | crate skeleton: empty module header with `target triple` + `; ModuleID = …` comment. No instruction lowering yet. | **merged** |
+| **v0.2.0 (LLVM02 — this PR)** | function signatures + `ret`, `ret_void`, `const`, `mov` | this PR |
 | v0.3.0 (LLVM03) | typed arithmetic (`add`/`sub`/`mul`/`sdiv`/`udiv`) + cmp + branches | future |
 | v0.4.0 (LLVM04) | `call` + `call_builtin` print_i64 → `call void @__print_i64(i64)` extern decl | future |
 | (later) | memory ops, GC, debug info via `!dbg` metadata | future |

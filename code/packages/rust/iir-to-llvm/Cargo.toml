@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-llvm"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.1.0 (LLVM01): crate skeleton emitting `; ModuleID` + `target triple` header; instruction lowering deferred to v0.2.0+ (LLVM02 et al.)."
+description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.2.0 (LLVM02): adds function signature lowering + ret/ret_void/const/mov instructions.  const and mov are tracked in a side map rather than emitting no-op SSA assignments."
 
 [lib]
 name = "iir_to_llvm"
