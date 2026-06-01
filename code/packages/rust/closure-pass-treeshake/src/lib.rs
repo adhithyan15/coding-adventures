@@ -70,6 +70,7 @@
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::{analyze, BindingId, BindingKind};
 
 /// `Pass::depends_on` value. CLOC06 canonical order pins DCE
 /// before tree-shake. Kept as a `const` so future tests / sibling
@@ -131,19 +132,85 @@ impl Pass for TreeshakePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // v1: no ImportDeclaration / ExportDeclaration nodes in
-        // the AST yet, so there's nothing to shake. Pass through
-        // unchanged. The real two-phase walk slots in here once
-        // javascript-ast grows module syntax.
+        // CLOC13.C wiring: consume the shared `ScopeAnalysis` from
+        // `closure-scope-analyzer` to identify *module-shape
+        // candidates* — bindings whose kind (`Function` / `Class`)
+        // is the shape that becomes a module export once
+        // `javascript-ast` grows `ImportDeclaration` /
+        // `ExportDeclaration` variants.
+        //
+        // The algorithm (mark phase; sweep deferred):
+        //
+        //   1. Walk `analysis.bindings`. A binding is a
+        //      *module-shape candidate* when:
+        //        a. kind == Function OR kind == Class  (these are
+        //           the only binding shapes ESM allows to be
+        //           exported as a named export from the top
+        //           level. `Var`/`Let`/`Const` *can* be exported
+        //           but cross over to remove-unused-vars and
+        //           collapse-properties; the cleanest split is
+        //           kind-based.)
+        //   2. Track candidates in a Vec<BindingId> for the
+        //      observability path.
+        //   3. Sweep — deferred to CLOC13.C.1 because *removing* a
+        //      function/class binding cleanly requires the AST to
+        //      have ImportDeclaration / ExportDeclaration nodes
+        //      (otherwise treeshake can't tell an exported
+        //      function from an internal one).
+        //
+        // **Critical (lesson from CLOC13.E security review):**
+        // `changed` is hard-pinned to `false` until step 3 lands.
+        // Reporting `changed = true` while returning an unchanged
+        // program would cause the scheduler under
+        // `IterationPolicy::FixedPoint` to re-run forever — each
+        // iteration would find the same candidates, claim a
+        // change, return the same program, repeat. Documented in
+        // both the code and the CHANGELOG so the next contributor
+        // doesn't reintroduce the bug.
+        //
+        // **Why this is safe with the v0.1.0 analyzer body.** The
+        // current `analyze` returns empty bindings + references,
+        // so the candidate scan finds zero shapes, the candidates
+        // vec is empty, `nodes_touched` is small, and the program
+        // passes through unchanged. The wiring becomes *effective*
+        // (real shape-finding) the moment CLOC13.0 lands the
+        // analyzer body — no churn here.
+
+        let analysis = analyze(ctx.program);
+
+        // Step 1 + 2: shape-candidate scan.
+        let mut shape_candidates: Vec<BindingId> = Vec::new();
+        for (idx, binding) in analysis.bindings.iter().enumerate() {
+            let id = BindingId(idx as u32);
+            // `#[non_exhaustive]` on BindingKind: future variants
+            // conservatively passthrough via wildcard.
+            match binding.kind {
+                BindingKind::Function | BindingKind::Class => {
+                    shape_candidates.push(id);
+                }
+                // Var/Let/Const/Param: these go through DCE +
+                // remove-unused-vars + collapse-properties. Splitting
+                // by kind keeps the passes from arguing over the
+                // same binding.
+                _ => {}
+            }
+        }
+
+        // Step 3 deferred — keep `changed = false`.
+        let _shape_candidates = shape_candidates;
+
         Ok(PassOutput {
             program: ctx.program.clone(),
             contributions: Vec::new(),
             changed: false,
             diagnostics: Vec::new(),
             stats: PassStats {
-                // Visited the program root; no exports/imports
-                // removed.
-                nodes_touched: 1,
+                // Visited the program root + every binding +
+                // every reference. Real cost numbers for the
+                // scheduler.
+                nodes_touched: (1
+                    + analysis.bindings.len()
+                    + analysis.references.len()) as u32,
             },
         })
     }
