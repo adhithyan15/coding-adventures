@@ -72,6 +72,7 @@ members = [
     "cli-builder",
     "clock",
     "clr-simulator",
+    "c-bridge",
     "codabar",
     "code39",
     "code128",
