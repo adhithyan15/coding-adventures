@@ -2,11 +2,11 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel,
-    BrowserFormOutput, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
+    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -721,6 +721,8 @@ struct ExpectedForm {
     #[serde(default)]
     datalists: Vec<ExpectedFormDatalist>,
     #[serde(default)]
+    selects: Vec<ExpectedFormSelect>,
+    #[serde(default)]
     outputs: Vec<ExpectedFormOutput>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
@@ -779,6 +781,35 @@ struct ExpectedDatalistOption {
     text: String,
     #[serde(default)]
     disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormSelect {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    multiple: bool,
+    #[serde(default)]
+    size: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    selected_options: Vec<String>,
+    #[serde(default)]
+    options: Vec<ExpectedSelectOption>,
+    text: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1227,6 +1258,52 @@ fn browser_select_option_descriptor_metadata_tracks_values_labels_groups_and_sta
         actual.forms, expected.forms,
         "select controls should preserve option values, labels, optgroup labels, selected state, and disabled state",
     );
+}
+
+#[test]
+fn browser_form_select_descriptor_metadata_tracks_option_items_and_selection_state() {
+    let document = parse_browser_document(
+        "<form id=survey><label for=topic>Topic</label>\
+         <select id=topic name=topic required multiple size=4>\
+         <optgroup label=Primary><option value=rust selected>Rust<option value=html label=HTML>Markup</optgroup>\
+         <optgroup label=Archived disabled><option value=mosaic>Mosaic</optgroup>\
+         </select></form>\
+         <select id=external form=survey name=external><option>One<option selected>Two</select>",
+    )
+    .expect("form select descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("survey form should be summarized");
+    assert_eq!(form.selects.len(), 2);
+
+    let topic = &form.selects[0];
+    assert_eq!(topic.id.as_deref(), Some("topic"));
+    assert_eq!(topic.name.as_deref(), Some("topic"));
+    assert_eq!(topic.labels, vec!["Topic"]);
+    assert_eq!(topic.accessible_name.as_deref(), Some("Topic"));
+    assert!(topic.required);
+    assert!(topic.multiple);
+    assert_eq!(topic.size.as_deref(), Some("4"));
+    assert_eq!(topic.value.as_deref(), Some("rust"));
+    assert_eq!(topic.selected_options, vec!["rust"]);
+    assert_eq!(topic.text, "Rust Markup Mosaic");
+    assert_eq!(topic.options.len(), 3);
+    assert_eq!(topic.options[0].value, "rust");
+    assert_eq!(topic.options[0].group_label.as_deref(), Some("Primary"));
+    assert!(topic.options[0].selected);
+    assert_eq!(topic.options[1].label.as_deref(), Some("HTML"));
+    assert_eq!(topic.options[1].text, "Markup");
+    assert_eq!(topic.options[2].value, "mosaic");
+    assert_eq!(topic.options[2].group_label.as_deref(), Some("Archived"));
+    assert!(topic.options[2].disabled);
+
+    let external = &form.selects[1];
+    assert_eq!(external.id.as_deref(), Some("external"));
+    assert_eq!(external.form_owner.as_deref(), Some("survey"));
+    assert_eq!(external.selected_options, vec!["Two"]);
+    assert_eq!(external.options[1].value, "Two");
 }
 
 #[test]
@@ -2061,6 +2138,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormDatalist::into_browser_form_datalist)
                 .collect(),
+            selects: self
+                .selects
+                .into_iter()
+                .map(ExpectedFormSelect::into_browser_form_select)
+                .collect(),
             outputs: self
                 .outputs
                 .into_iter()
@@ -2141,6 +2223,30 @@ impl ExpectedFormOutput {
             form_owner: self.form_owner,
             for_tokens: self.for_tokens,
             value: self.value,
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormSelect {
+    fn into_browser_form_select(self) -> BrowserFormSelect {
+        BrowserFormSelect {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            disabled: self.disabled,
+            required: self.required,
+            multiple: self.multiple,
+            size: self.size,
+            value: self.value,
+            selected_options: self.selected_options,
+            options: self
+                .options
+                .into_iter()
+                .map(ExpectedSelectOption::into_browser_select_option)
+                .collect(),
             text: self.text,
         }
     }
