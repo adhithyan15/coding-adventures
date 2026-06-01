@@ -1611,6 +1611,8 @@ pub struct BrowserForm {
     pub rel_noreferrer: bool,
     pub novalidate: bool,
     pub fieldsets: Vec<BrowserFormFieldset>,
+    pub labels: Vec<BrowserFormLabel>,
+    pub outputs: Vec<BrowserFormOutput>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1623,6 +1625,27 @@ pub struct BrowserFormFieldset {
     pub disabled: bool,
     pub control_ids: Vec<String>,
     pub control_names: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormLabel {
+    pub id: Option<String>,
+    pub for_control: Option<String>,
+    pub text: String,
+    pub control_id: Option<String>,
+    pub control_name: Option<String>,
+    pub control_type: Option<String>,
+    pub association: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormOutput {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub for_tokens: Vec<String>,
+    pub value: Option<String>,
+    pub text: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -11663,7 +11686,7 @@ fn browser_accessible_description(
 fn browser_form_owner(element: &Element) -> Option<String> {
     if matches!(
         element.name.as_str(),
-        "button" | "fieldset" | "input" | "object" | "select" | "textarea"
+        "button" | "fieldset" | "input" | "object" | "output" | "select" | "textarea"
     ) {
         element.attribute("form").map(ToOwned::to_owned)
     } else {
@@ -12647,6 +12670,9 @@ fn browser_form(
     let novalidate = element.attribute("novalidate").is_some();
     let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
     let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
+    let form_labels =
+        collect_form_labels_for_form(body_root, element, element.attribute("id"), &controls);
+    let outputs = browser_form_outputs(&controls);
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12684,8 +12710,144 @@ fn browser_form(
         rel_tokens,
         novalidate,
         fieldsets,
+        labels: form_labels,
+        outputs,
         controls,
         submitters,
+    }
+}
+
+fn collect_form_labels_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    target_form_id: Option<&str>,
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormLabel> {
+    let mut labels = Vec::new();
+    collect_form_labels_for_form_into(
+        body_root,
+        &mut labels,
+        target_form as *const Element,
+        target_form_id,
+        None,
+        controls,
+    );
+    labels
+}
+
+fn collect_form_labels_for_form_into(
+    nodes: &[Node],
+    labels: &mut Vec<BrowserFormLabel>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    controls: &[BrowserFormControl],
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+
+        if element.name == "label" {
+            if let Some(label) =
+                browser_form_label(element, target_form, target_form_id, element_form, controls)
+            {
+                labels.push(label);
+            }
+        }
+
+        collect_form_labels_for_form_into(
+            &element.children,
+            labels,
+            target_form,
+            target_form_id,
+            element_form,
+            controls,
+        );
+    }
+}
+
+fn browser_form_label(
+    element: &Element,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    controls: &[BrowserFormControl],
+) -> Option<BrowserFormLabel> {
+    let text = visible_text_for_nodes(&element.children);
+    if text.is_empty() {
+        return None;
+    }
+
+    if let Some(for_control) = element.attribute("for") {
+        let control = controls
+            .iter()
+            .find(|control| control.id.as_deref() == Some(for_control))?;
+        return Some(BrowserFormLabel {
+            id: element.attribute("id").map(ToOwned::to_owned),
+            for_control: Some(for_control.to_string()),
+            text,
+            control_id: control.id.clone(),
+            control_name: control.name.clone(),
+            control_type: Some(control.control_type.clone()),
+            association: "explicit".to_string(),
+        });
+    }
+
+    let control_element = first_labelable_descendant(element)?;
+    if !form_control_associated_with_target(
+        control_element,
+        target_form,
+        target_form_id,
+        current_form,
+    ) {
+        return None;
+    }
+    let control_type = browser_content_control_type(control_element);
+    Some(BrowserFormLabel {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        for_control: None,
+        text,
+        control_id: control_element.attribute("id").map(ToOwned::to_owned),
+        control_name: control_element.attribute("name").map(ToOwned::to_owned),
+        control_type,
+        association: "implicit".to_string(),
+    })
+}
+
+fn first_labelable_descendant(element: &Element) -> Option<&Element> {
+    for child in &element.children {
+        let Node::Element(child_element) = child else {
+            continue;
+        };
+
+        if is_browser_labelable_element(&child_element.name) {
+            return Some(child_element);
+        }
+
+        if let Some(descendant) = first_labelable_descendant(child_element) {
+            return Some(descendant);
+        }
+    }
+
+    None
+}
+
+fn form_control_associated_with_target(
+    element: &Element,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+) -> bool {
+    match browser_form_owner(element).as_deref() {
+        Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+        None => current_form.is_some_and(|form| form == target_form),
     }
 }
 
@@ -12796,6 +12958,21 @@ fn browser_form_submitters(
                 .or_else(|| base_target.map(ToOwned::to_owned)),
             novalidate: novalidate || control.form_novalidate,
             value: control.value.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_outputs(controls: &[BrowserFormControl]) -> Vec<BrowserFormOutput> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "output")
+        .map(|control| BrowserFormOutput {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            for_tokens: control.output_for.clone(),
+            value: control.value.clone(),
+            text: control.text.clone(),
         })
         .collect()
 }
@@ -14336,6 +14513,41 @@ mod tests {
         assert_eq!(summary.forms[0].autocomplete_tokens, vec!["on"]);
         assert_eq!(summary.forms[0].rel.as_deref(), Some("noreferrer"));
         assert!(summary.forms[0].novalidate);
+        assert_eq!(summary.forms[0].labels.len(), 2);
+        assert_eq!(summary.forms[0].labels[0].id.as_deref(), Some("q-help"));
+        assert_eq!(summary.forms[0].labels[0].for_control.as_deref(), Some("q"));
+        assert_eq!(summary.forms[0].labels[0].text, "Query");
+        assert_eq!(summary.forms[0].labels[0].control_id.as_deref(), Some("q"));
+        assert_eq!(
+            summary.forms[0].labels[0].control_name.as_deref(),
+            Some("q")
+        );
+        assert_eq!(
+            summary.forms[0].labels[0].control_type.as_deref(),
+            Some("text")
+        );
+        assert_eq!(summary.forms[0].labels[0].association, "explicit");
+        assert_eq!(summary.forms[0].labels[1].for_control, None);
+        assert_eq!(summary.forms[0].labels[1].text, "NotesKeep me");
+        assert_eq!(
+            summary.forms[0].labels[1].control_id.as_deref(),
+            Some("notes")
+        );
+        assert_eq!(
+            summary.forms[0].labels[1].control_name.as_deref(),
+            Some("notes")
+        );
+        assert_eq!(
+            summary.forms[0].labels[1].control_type.as_deref(),
+            Some("textarea")
+        );
+        assert_eq!(summary.forms[0].labels[1].association, "implicit");
+        assert_eq!(summary.forms[0].outputs.len(), 1);
+        assert_eq!(summary.forms[0].outputs[0].id.as_deref(), Some("total"));
+        assert_eq!(summary.forms[0].outputs[0].name.as_deref(), Some("total"));
+        assert_eq!(summary.forms[0].outputs[0].for_tokens, vec!["q", "kind"]);
+        assert_eq!(summary.forms[0].outputs[0].value.as_deref(), Some("Ready"));
+        assert_eq!(summary.forms[0].outputs[0].text, "Ready");
         let controls = &summary.forms[0].controls;
         assert_eq!(controls[0].id.as_deref(), Some("q"));
         assert_eq!(controls[0].labels, vec!["Query"]);
@@ -14580,6 +14792,53 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_form_label_output_descriptor_metadata_tracks_external_associations() {
+        let document = parse_html(
+            "<form id=cart><label for=qty>Quantity</label><input id=qty name=qty>\
+             <output id=total name=total for=\"qty promo\">12</output></form>\
+             <label id=gift-label>Gift note<textarea id=gift form=cart name=gift>Thanks</textarea></label>\
+             <output id=external-total form=cart name=external-total for=gift>Saved</output>\
+             <form id=other><label for=ignored>Ignored</label><input id=ignored name=ignored></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.id.as_deref(), Some("cart"));
+        assert_eq!(form.labels.len(), 2);
+        assert_eq!(form.labels[0].for_control.as_deref(), Some("qty"));
+        assert_eq!(form.labels[0].text, "Quantity");
+        assert_eq!(form.labels[0].control_id.as_deref(), Some("qty"));
+        assert_eq!(form.labels[0].control_name.as_deref(), Some("qty"));
+        assert_eq!(form.labels[0].control_type.as_deref(), Some("text"));
+        assert_eq!(form.labels[0].association, "explicit");
+        assert_eq!(form.labels[1].id.as_deref(), Some("gift-label"));
+        assert_eq!(form.labels[1].for_control, None);
+        assert_eq!(form.labels[1].text, "Gift noteThanks");
+        assert_eq!(form.labels[1].control_id.as_deref(), Some("gift"));
+        assert_eq!(form.labels[1].control_name.as_deref(), Some("gift"));
+        assert_eq!(form.labels[1].control_type.as_deref(), Some("textarea"));
+        assert_eq!(form.labels[1].association, "implicit");
+
+        assert_eq!(form.outputs.len(), 2);
+        assert_eq!(form.outputs[0].id.as_deref(), Some("total"));
+        assert_eq!(form.outputs[0].name.as_deref(), Some("total"));
+        assert_eq!(form.outputs[0].form_owner, None);
+        assert_eq!(form.outputs[0].for_tokens, vec!["qty", "promo"]);
+        assert_eq!(form.outputs[0].value.as_deref(), Some("12"));
+        assert_eq!(form.outputs[0].text, "12");
+        assert_eq!(form.outputs[1].id.as_deref(), Some("external-total"));
+        assert_eq!(form.outputs[1].form_owner.as_deref(), Some("cart"));
+        assert_eq!(form.outputs[1].for_tokens, vec!["gift"]);
+        assert_eq!(form.outputs[1].value.as_deref(), Some("Saved"));
+        assert_eq!(form.outputs[1].text, "Saved");
+
+        assert_eq!(summary.forms[1].id.as_deref(), Some("other"));
+        assert_eq!(summary.forms[1].labels.len(), 1);
+        assert_eq!(summary.forms[1].labels[0].text, "Ignored");
     }
 
     #[test]
