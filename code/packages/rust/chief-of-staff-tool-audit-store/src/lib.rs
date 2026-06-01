@@ -1516,6 +1516,45 @@ impl ToolAuditSupervisorDrainPlanSummary {
         self.tick_budget_usage().is_full()
     }
 
+    /// Return the typed tick-budget pressure classification for this plan.
+    pub fn tick_budget_pressure(&self) -> ToolAuditSupervisorDrainTickBudgetPressure {
+        ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+            self.tick_budget_usage(),
+            self.reached_end_of_log(),
+        )
+    }
+
+    /// Return the stable tick-budget pressure label for this plan.
+    pub fn tick_budget_pressure_label(&self) -> &'static str {
+        self.tick_budget_pressure().as_str()
+    }
+
+    /// Return whether the tick-budget pressure label parses back to its classification.
+    pub fn tick_budget_pressure_label_matches_pressure(&self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressure::from_label(self.tick_budget_pressure_label())
+            == Some(self.tick_budget_pressure())
+    }
+
+    /// Return whether the plan stopped with tick-budget slack.
+    pub fn tick_budget_has_slack(&self) -> bool {
+        self.tick_budget_pressure().has_slack()
+    }
+
+    /// Return whether the plan used the full budget and reached the current log end.
+    pub fn tick_budget_full_at_end_of_log(&self) -> bool {
+        self.tick_budget_pressure().is_full_at_end_of_log()
+    }
+
+    /// Return whether the plan exhausted tick budget before the current log end.
+    pub fn tick_budget_exhausted_before_end_of_log(&self) -> bool {
+        self.tick_budget_pressure().is_exhausted_before_end_of_log()
+    }
+
+    /// Return whether tick-budget pressure asks for continuation.
+    pub fn tick_budget_pressure_requests_continuation(&self) -> bool {
+        self.tick_budget_pressure().requests_continuation()
+    }
+
     /// Return whether no rows are waiting in the planned run.
     pub fn is_idle(&self) -> bool {
         self.planned_records == 0
@@ -1845,6 +1884,45 @@ impl ToolAuditSupervisorDrainLoopSummary {
     /// Return whether the drain loop consumed the full requested tick budget.
     pub fn used_full_tick_budget(&self) -> bool {
         self.tick_budget_usage().is_full()
+    }
+
+    /// Return the typed tick-budget pressure classification for this drain loop.
+    pub fn tick_budget_pressure(&self) -> ToolAuditSupervisorDrainTickBudgetPressure {
+        ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+            self.tick_budget_usage(),
+            self.reached_end_of_log(),
+        )
+    }
+
+    /// Return the stable tick-budget pressure label for this drain loop.
+    pub fn tick_budget_pressure_label(&self) -> &'static str {
+        self.tick_budget_pressure().as_str()
+    }
+
+    /// Return whether the tick-budget pressure label parses back to its classification.
+    pub fn tick_budget_pressure_label_matches_pressure(&self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressure::from_label(self.tick_budget_pressure_label())
+            == Some(self.tick_budget_pressure())
+    }
+
+    /// Return whether the drain loop stopped with tick-budget slack.
+    pub fn tick_budget_has_slack(&self) -> bool {
+        self.tick_budget_pressure().has_slack()
+    }
+
+    /// Return whether the drain loop used the full budget and reached the current log end.
+    pub fn tick_budget_full_at_end_of_log(&self) -> bool {
+        self.tick_budget_pressure().is_full_at_end_of_log()
+    }
+
+    /// Return whether the drain loop exhausted tick budget before the current log end.
+    pub fn tick_budget_exhausted_before_end_of_log(&self) -> bool {
+        self.tick_budget_pressure().is_exhausted_before_end_of_log()
+    }
+
+    /// Return whether tick-budget pressure asks for continuation.
+    pub fn tick_budget_pressure_requests_continuation(&self) -> bool {
+        self.tick_budget_pressure().requests_continuation()
     }
 
     /// Return whether no audit rows were replayed.
@@ -12843,6 +12921,45 @@ impl ToolAuditSupervisorDrainRunReport {
         self.tick_budget_usage().is_full()
     }
 
+    /// Return the typed tick-budget pressure classification for the actual drain.
+    pub fn tick_budget_pressure(&self) -> ToolAuditSupervisorDrainTickBudgetPressure {
+        ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+            self.tick_budget_usage(),
+            self.reached_end_of_log(),
+        )
+    }
+
+    /// Return the stable tick-budget pressure label for the actual drain.
+    pub fn tick_budget_pressure_label(&self) -> &'static str {
+        self.tick_budget_pressure().as_str()
+    }
+
+    /// Return whether the tick-budget pressure label parses back to its classification.
+    pub fn tick_budget_pressure_label_matches_pressure(&self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressure::from_label(self.tick_budget_pressure_label())
+            == Some(self.tick_budget_pressure())
+    }
+
+    /// Return whether the actual drain stopped with tick-budget slack.
+    pub fn tick_budget_has_slack(&self) -> bool {
+        self.tick_budget_pressure().has_slack()
+    }
+
+    /// Return whether the actual drain used the full budget and reached the current log end.
+    pub fn tick_budget_full_at_end_of_log(&self) -> bool {
+        self.tick_budget_pressure().is_full_at_end_of_log()
+    }
+
+    /// Return whether the actual drain exhausted tick budget before the current log end.
+    pub fn tick_budget_exhausted_before_end_of_log(&self) -> bool {
+        self.tick_budget_pressure().is_exhausted_before_end_of_log()
+    }
+
+    /// Return whether tick-budget pressure asks for continuation.
+    pub fn tick_budget_pressure_requests_continuation(&self) -> bool {
+        self.tick_budget_pressure().requests_continuation()
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.plan.planned_records
@@ -12892,6 +13009,14 @@ impl ToolAuditSupervisorDrainRunReport {
             && self.used_partial_tick_budget()
                 == (self.drain_ticks() > 0 && self.drain_ticks() < self.max_ticks())
             && self.used_full_tick_budget() == self.used_all_ticks()
+            && self.tick_budget_pressure_label_matches_pressure()
+            && self.tick_budget_has_slack() == self.tick_budget_pressure().has_slack()
+            && self.tick_budget_full_at_end_of_log()
+                == self.tick_budget_pressure().is_full_at_end_of_log()
+            && self.tick_budget_exhausted_before_end_of_log()
+                == self.tick_budget_pressure().is_exhausted_before_end_of_log()
+            && self.tick_budget_pressure_requests_continuation()
+                == self.tick_budget_pressure().requests_continuation()
     }
 
     /// Return whether flattened drain status flags agree with source counts.
@@ -13198,6 +13323,16 @@ impl ToolAuditSupervisorDrainRunReport {
             used_no_ticks: self.used_no_ticks(),
             used_partial_tick_budget: self.used_partial_tick_budget(),
             used_full_tick_budget: self.used_full_tick_budget(),
+            tick_budget_pressure: self.tick_budget_pressure(),
+            tick_budget_pressure_label: self.tick_budget_pressure_label(),
+            tick_budget_pressure_label_matches_pressure: self
+                .tick_budget_pressure_label_matches_pressure(),
+            tick_budget_has_slack: self.tick_budget_has_slack(),
+            tick_budget_full_at_end_of_log: self.tick_budget_full_at_end_of_log(),
+            tick_budget_exhausted_before_end_of_log: self
+                .tick_budget_exhausted_before_end_of_log(),
+            tick_budget_pressure_requests_continuation: self
+                .tick_budget_pressure_requests_continuation(),
             planned_records: self.planned_records(),
             drained_records: self.drained_records(),
             planned_follow_up_records: self.planned_follow_up_records(),
@@ -16413,6 +16548,20 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub used_partial_tick_budget: bool,
     /// Whether the actual drain consumed the full requested tick budget.
     pub used_full_tick_budget: bool,
+    /// Typed tick-budget pressure classification for the actual drain.
+    pub tick_budget_pressure: ToolAuditSupervisorDrainTickBudgetPressure,
+    /// Stable tick-budget pressure label for host logs.
+    pub tick_budget_pressure_label: &'static str,
+    /// Whether the tick-budget pressure label parses back to its classification.
+    pub tick_budget_pressure_label_matches_pressure: bool,
+    /// Whether the actual drain stopped with tick-budget slack.
+    pub tick_budget_has_slack: bool,
+    /// Whether the actual drain used the full budget and reached the current log end.
+    pub tick_budget_full_at_end_of_log: bool,
+    /// Whether the actual drain exhausted tick budget before the current log end.
+    pub tick_budget_exhausted_before_end_of_log: bool,
+    /// Whether tick-budget pressure asks for continuation.
+    pub tick_budget_pressure_requests_continuation: bool,
     /// Total rows the preflight plan expected to replay.
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
@@ -23652,6 +23801,41 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.used_full_tick_budget
     }
 
+    /// Return the typed tick-budget pressure classification for the actual drain.
+    pub fn tick_budget_pressure(&self) -> ToolAuditSupervisorDrainTickBudgetPressure {
+        self.tick_budget_pressure
+    }
+
+    /// Return the stable tick-budget pressure label for host logs.
+    pub fn tick_budget_pressure_label(&self) -> &'static str {
+        self.tick_budget_pressure_label
+    }
+
+    /// Return whether the tick-budget pressure label parses back to its classification.
+    pub fn tick_budget_pressure_label_matches_pressure(&self) -> bool {
+        self.tick_budget_pressure_label_matches_pressure
+    }
+
+    /// Return whether the actual drain stopped with tick-budget slack.
+    pub fn tick_budget_has_slack(&self) -> bool {
+        self.tick_budget_has_slack
+    }
+
+    /// Return whether the actual drain used the full budget and reached the current log end.
+    pub fn tick_budget_full_at_end_of_log(&self) -> bool {
+        self.tick_budget_full_at_end_of_log
+    }
+
+    /// Return whether the actual drain exhausted tick budget before the current log end.
+    pub fn tick_budget_exhausted_before_end_of_log(&self) -> bool {
+        self.tick_budget_exhausted_before_end_of_log
+    }
+
+    /// Return whether tick-budget pressure asks for continuation.
+    pub fn tick_budget_pressure_requests_continuation(&self) -> bool {
+        self.tick_budget_pressure_requests_continuation
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.planned_records
@@ -29600,6 +29784,86 @@ impl ToolAuditSupervisorDrainTickBudgetUsage {
 }
 
 impl Display for ToolAuditSupervisorDrainTickBudgetUsage {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable host-log classification for drain tick-budget pressure.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainTickBudgetPressure {
+    /// No planned or actual drain ticks were used.
+    Unused,
+    /// The run stopped while requested ticks were still available.
+    SlackAvailable,
+    /// The run consumed the full requested tick budget at the current log end.
+    FullAtEndOfLog,
+    /// The run consumed the full requested tick budget before the current log end.
+    ExhaustedBeforeEndOfLog,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressure {
+    /// Classify pressure from tick-budget usage and end-of-log state.
+    pub fn from_usage_and_end_state(
+        usage: ToolAuditSupervisorDrainTickBudgetUsage,
+        reached_end_of_log: bool,
+    ) -> Self {
+        match (usage, reached_end_of_log) {
+            (ToolAuditSupervisorDrainTickBudgetUsage::Unused, _) => Self::Unused,
+            (ToolAuditSupervisorDrainTickBudgetUsage::Partial, _) => Self::SlackAvailable,
+            (ToolAuditSupervisorDrainTickBudgetUsage::Full, true) => Self::FullAtEndOfLog,
+            (ToolAuditSupervisorDrainTickBudgetUsage::Full, false) => Self::ExhaustedBeforeEndOfLog,
+        }
+    }
+
+    /// Return a stable snake_case label for logs and host summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Unused => "unused",
+            Self::SlackAvailable => "slack_available",
+            Self::FullAtEndOfLog => "full_at_end_of_log",
+            Self::ExhaustedBeforeEndOfLog => "exhausted_before_end_of_log",
+        }
+    }
+
+    /// Parse a stable snake_case tick-budget pressure label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "unused" => Some(Self::Unused),
+            "slack_available" => Some(Self::SlackAvailable),
+            "full_at_end_of_log" => Some(Self::FullAtEndOfLog),
+            "exhausted_before_end_of_log" => Some(Self::ExhaustedBeforeEndOfLog),
+            _ => None,
+        }
+    }
+
+    /// Return whether no ticks were used.
+    pub fn is_unused(self) -> bool {
+        matches!(self, Self::Unused)
+    }
+
+    /// Return whether the run stopped with tick-budget slack.
+    pub fn has_slack(self) -> bool {
+        matches!(self, Self::SlackAvailable)
+    }
+
+    /// Return whether the full tick budget was used at the current log end.
+    pub fn is_full_at_end_of_log(self) -> bool {
+        matches!(self, Self::FullAtEndOfLog)
+    }
+
+    /// Return whether tick budget was exhausted before the current log end.
+    pub fn is_exhausted_before_end_of_log(self) -> bool {
+        matches!(self, Self::ExhaustedBeforeEndOfLog)
+    }
+
+    /// Return whether this pressure classification asks for continuation.
+    pub fn requests_continuation(self) -> bool {
+        matches!(self, Self::ExhaustedBeforeEndOfLog)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressure {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -46954,6 +47218,159 @@ mod tests {
         );
         assert!(partial_report.used_partial_tick_budget());
         assert!(!partial_report.used_full_tick_budget());
+    }
+
+    #[test]
+    fn supervisor_drain_tick_budget_pressure_helpers_are_stable() {
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+                ToolAuditSupervisorDrainTickBudgetUsage::Unused,
+                false
+            ),
+            ToolAuditSupervisorDrainTickBudgetPressure::Unused
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+                ToolAuditSupervisorDrainTickBudgetUsage::Partial,
+                true
+            ),
+            ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+                ToolAuditSupervisorDrainTickBudgetUsage::Full,
+                true
+            ),
+            ToolAuditSupervisorDrainTickBudgetPressure::FullAtEndOfLog
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressure::from_usage_and_end_state(
+                ToolAuditSupervisorDrainTickBudgetUsage::Full,
+                false
+            ),
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressure::from_label("slack_available"),
+            Some(ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressure::from_label("over_pressure"),
+            None
+        );
+
+        let slack_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        let slack_plan = slack_store
+            .plan_supervisor_checkpoint_drain("supervisor", 10, 3)
+            .unwrap();
+        assert_eq!(
+            slack_plan.tick_budget_pressure(),
+            ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable
+        );
+        assert_eq!(slack_plan.tick_budget_pressure_label(), "slack_available");
+        assert!(slack_plan.tick_budget_pressure_label_matches_pressure());
+        assert!(slack_plan.tick_budget_has_slack());
+        assert!(!slack_plan.tick_budget_full_at_end_of_log());
+        assert!(!slack_plan.tick_budget_exhausted_before_end_of_log());
+        assert!(!slack_plan.tick_budget_pressure_requests_continuation());
+
+        let full_at_end_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(full_at_end_store
+            .record_audit_batch(vec![
+                sample_record("call_1"),
+                sample_record("call_2"),
+                sample_record("call_3"),
+                sample_record("call_4"),
+            ])
+            .completed_without_failures());
+        let full_at_end_plan = full_at_end_store
+            .plan_supervisor_checkpoint_drain("supervisor", 2, 3)
+            .unwrap();
+        assert_eq!(
+            full_at_end_plan.tick_budget_pressure(),
+            ToolAuditSupervisorDrainTickBudgetPressure::FullAtEndOfLog
+        );
+        assert_eq!(
+            full_at_end_plan.tick_budget_pressure_label(),
+            "full_at_end_of_log"
+        );
+        assert!(full_at_end_plan.tick_budget_full_at_end_of_log());
+        assert!(!full_at_end_plan.tick_budget_pressure_requests_continuation());
+
+        let exhausted_store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(exhausted_store
+            .record_audit_batch(vec![
+                sample_record("call_a"),
+                sample_record("call_b"),
+                sample_record("call_c"),
+                sample_record("call_d"),
+                sample_record("call_e"),
+            ])
+            .completed_without_failures());
+        let exhausted_plan = exhausted_store
+            .plan_supervisor_checkpoint_drain("supervisor", 2, 2)
+            .unwrap();
+        assert_eq!(
+            exhausted_plan.tick_budget_pressure(),
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog
+        );
+        assert_eq!(
+            exhausted_plan.tick_budget_pressure_label(),
+            "exhausted_before_end_of_log"
+        );
+        assert!(exhausted_plan.tick_budget_exhausted_before_end_of_log());
+        assert!(exhausted_plan.tick_budget_pressure_requests_continuation());
+
+        let mut sink = InMemoryToolAuditSink::new();
+        let exhausted_report = exhausted_store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 2, &mut sink)
+            .unwrap();
+        assert_eq!(
+            exhausted_report.drain.tick_budget_pressure(),
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog
+        );
+        assert_eq!(
+            exhausted_report.tick_budget_pressure(),
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog
+        );
+        assert_eq!(
+            exhausted_report.tick_budget_pressure_label(),
+            "exhausted_before_end_of_log"
+        );
+        assert!(exhausted_report.tick_budget_pressure_label_matches_pressure());
+        assert!(!exhausted_report.tick_budget_has_slack());
+        assert!(!exhausted_report.tick_budget_full_at_end_of_log());
+        assert!(exhausted_report.tick_budget_exhausted_before_end_of_log());
+        assert!(exhausted_report.tick_budget_pressure_requests_continuation());
+        assert!(exhausted_report.tick_budget_status_flags_match());
+
+        let exhausted_summary = exhausted_report.summary();
+        assert_eq!(
+            exhausted_summary.tick_budget_pressure,
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog
+        );
+        assert_eq!(
+            exhausted_summary.tick_budget_pressure(),
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog
+        );
+        assert_eq!(
+            exhausted_summary.tick_budget_pressure_label,
+            "exhausted_before_end_of_log"
+        );
+        assert_eq!(
+            exhausted_summary.tick_budget_pressure_label(),
+            "exhausted_before_end_of_log"
+        );
+        assert!(exhausted_summary.tick_budget_pressure_label_matches_pressure);
+        assert!(exhausted_summary.tick_budget_pressure_label_matches_pressure());
+        assert!(!exhausted_summary.tick_budget_has_slack);
+        assert!(!exhausted_summary.tick_budget_has_slack());
+        assert!(!exhausted_summary.tick_budget_full_at_end_of_log);
+        assert!(!exhausted_summary.tick_budget_full_at_end_of_log());
+        assert!(exhausted_summary.tick_budget_exhausted_before_end_of_log);
+        assert!(exhausted_summary.tick_budget_exhausted_before_end_of_log());
+        assert!(exhausted_summary.tick_budget_pressure_requests_continuation);
+        assert!(exhausted_summary.tick_budget_pressure_requests_continuation());
     }
 
     #[test]
