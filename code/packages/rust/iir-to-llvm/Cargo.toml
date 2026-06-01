@@ -1,0 +1,16 @@
+[package]
+name = "iir-to-llvm"
+version = "0.1.0"
+edition = "2021"
+description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.1.0 (LLVM01): crate skeleton emitting `; ModuleID` + `target triple` header; instruction lowering deferred to v0.2.0+ (LLVM02 et al.)."
+
+[lib]
+name = "iir_to_llvm"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"

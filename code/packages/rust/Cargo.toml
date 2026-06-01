@@ -649,6 +649,7 @@ members = [
     "iir-linker",
     "iir-to-beam",
     "iir-to-wasm",
+    "iir-to-llvm",
     "twig-to-beam",
     "twig-to-wasm",
     "twig-lexer",
