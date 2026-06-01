@@ -12960,6 +12960,130 @@ impl ToolAuditSupervisorDrainRunReport {
         self.tick_budget_pressure().requests_continuation()
     }
 
+    /// Return the host route for the actual drain tick-budget pressure.
+    pub fn tick_budget_pressure_route(&self) -> ToolAuditSupervisorDrainTickBudgetPressureRoute {
+        self.tick_budget_pressure().route()
+    }
+
+    /// Return the stable tick-budget pressure route label.
+    pub fn tick_budget_pressure_route_label(&self) -> &'static str {
+        self.tick_budget_pressure().route_label()
+    }
+
+    /// Return whether the pressure route label parses back to its route.
+    pub fn tick_budget_pressure_route_label_matches_route(&self) -> bool {
+        self.tick_budget_pressure().route_label_matches_route()
+    }
+
+    /// Return whether the actual drain tick-budget pressure has a concrete route.
+    pub fn tick_budget_pressure_has_route(&self) -> bool {
+        self.tick_budget_pressure().has_route()
+    }
+
+    /// Return whether the actual drain tick-budget pressure routes to budget observation.
+    pub fn tick_budget_pressure_routes_to_budget_observation(&self) -> bool {
+        self.tick_budget_pressure().routes_to_budget_observation()
+    }
+
+    /// Return whether the actual drain tick-budget pressure routes to continuation.
+    pub fn tick_budget_pressure_routes_to_continuation(&self) -> bool {
+        self.tick_budget_pressure().routes_to_continuation()
+    }
+
+    /// Return the host queue priority for the actual drain tick-budget pressure.
+    pub fn tick_budget_pressure_priority(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressurePriority {
+        self.tick_budget_pressure().priority()
+    }
+
+    /// Return the stable tick-budget pressure priority label.
+    pub fn tick_budget_pressure_priority_label(&self) -> &'static str {
+        self.tick_budget_pressure().priority_label()
+    }
+
+    /// Return whether the pressure priority label parses back to its priority.
+    pub fn tick_budget_pressure_priority_label_matches_priority(&self) -> bool {
+        self.tick_budget_pressure()
+            .priority_label_matches_priority()
+    }
+
+    /// Return the sortable tick-budget pressure priority rank.
+    pub fn tick_budget_pressure_priority_rank(&self) -> u8 {
+        self.tick_budget_pressure().priority_rank()
+    }
+
+    /// Return the host queue readiness for the actual drain tick-budget pressure.
+    pub fn tick_budget_pressure_readiness(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+        self.tick_budget_pressure().readiness()
+    }
+
+    /// Return the stable tick-budget pressure readiness label.
+    pub fn tick_budget_pressure_readiness_label(&self) -> &'static str {
+        self.tick_budget_pressure().readiness_label()
+    }
+
+    /// Return whether the pressure readiness label parses back to its readiness.
+    pub fn tick_budget_pressure_readiness_label_matches_readiness(&self) -> bool {
+        self.tick_budget_pressure()
+            .readiness_label_matches_readiness()
+    }
+
+    /// Return whether the pressure queue classification is settled.
+    pub fn tick_budget_pressure_is_settled_for_queue(&self) -> bool {
+        self.tick_budget_pressure().is_settled_for_queue()
+    }
+
+    /// Return whether the pressure queue classification is log-only context.
+    pub fn tick_budget_pressure_is_log_only_for_queue(&self) -> bool {
+        self.tick_budget_pressure().is_log_only_for_queue()
+    }
+
+    /// Return whether the pressure queue classification can route automatically.
+    pub fn tick_budget_pressure_is_auto_routable_for_queue(&self) -> bool {
+        self.tick_budget_pressure().is_auto_routable_for_queue()
+    }
+
+    /// Return the compact pressure queue key for the actual drain.
+    pub fn tick_budget_pressure_queue_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureQueueKey {
+        self.tick_budget_pressure().queue_key()
+    }
+
+    /// Return the stable pressure queue-key label for the actual drain.
+    pub fn tick_budget_pressure_queue_key_label(&self) -> String {
+        self.tick_budget_pressure().queue_key_label()
+    }
+
+    /// Return whether the pressure queue-key label parses back to its key.
+    pub fn tick_budget_pressure_queue_key_label_matches_key(&self) -> bool {
+        self.tick_budget_pressure().queue_key_label_matches_key()
+    }
+
+    /// Return whether every pressure queue-key component matches the pressure.
+    pub fn tick_budget_pressure_queue_key_parts_match(&self) -> bool {
+        self.tick_budget_pressure().queue_key_parts_match()
+    }
+
+    /// Return whether any pressure queue-key component drifted.
+    pub fn has_tick_budget_pressure_queue_key_integrity_drift(&self) -> bool {
+        self.tick_budget_pressure().has_queue_key_integrity_drift()
+    }
+
+    /// Return whether every pressure queue label parses back to its classifier.
+    pub fn tick_budget_pressure_queue_labels_match(&self) -> bool {
+        self.tick_budget_pressure().queue_labels_match()
+    }
+
+    /// Return whether any pressure queue label drifted from its classifier.
+    pub fn has_tick_budget_pressure_queue_label_integrity_drift(&self) -> bool {
+        self.tick_budget_pressure()
+            .has_queue_label_integrity_drift()
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.plan.planned_records
@@ -13017,6 +13141,27 @@ impl ToolAuditSupervisorDrainRunReport {
                 == self.tick_budget_pressure().is_exhausted_before_end_of_log()
             && self.tick_budget_pressure_requests_continuation()
                 == self.tick_budget_pressure().requests_continuation()
+            && self.tick_budget_pressure_route_label_matches_route()
+            && self.tick_budget_pressure_has_route() == self.tick_budget_pressure().has_route()
+            && self.tick_budget_pressure_routes_to_budget_observation()
+                == self.tick_budget_pressure().routes_to_budget_observation()
+            && self.tick_budget_pressure_routes_to_continuation()
+                == self.tick_budget_pressure().routes_to_continuation()
+            && self.tick_budget_pressure_priority_label_matches_priority()
+            && self.tick_budget_pressure_priority_rank()
+                == self.tick_budget_pressure().priority_rank()
+            && self.tick_budget_pressure_readiness_label_matches_readiness()
+            && self.tick_budget_pressure_is_settled_for_queue()
+                == self.tick_budget_pressure().is_settled_for_queue()
+            && self.tick_budget_pressure_is_log_only_for_queue()
+                == self.tick_budget_pressure().is_log_only_for_queue()
+            && self.tick_budget_pressure_is_auto_routable_for_queue()
+                == self.tick_budget_pressure().is_auto_routable_for_queue()
+            && self.tick_budget_pressure_queue_key_label_matches_key()
+            && self.tick_budget_pressure_queue_key_parts_match()
+            && !self.has_tick_budget_pressure_queue_key_integrity_drift()
+            && self.tick_budget_pressure_queue_labels_match()
+            && !self.has_tick_budget_pressure_queue_label_integrity_drift()
     }
 
     /// Return whether flattened drain status flags agree with source counts.
@@ -13333,6 +13478,41 @@ impl ToolAuditSupervisorDrainRunReport {
                 .tick_budget_exhausted_before_end_of_log(),
             tick_budget_pressure_requests_continuation: self
                 .tick_budget_pressure_requests_continuation(),
+            tick_budget_pressure_route: self.tick_budget_pressure_route(),
+            tick_budget_pressure_route_label: self.tick_budget_pressure_route_label(),
+            tick_budget_pressure_route_label_matches_route: self
+                .tick_budget_pressure_route_label_matches_route(),
+            tick_budget_pressure_has_route: self.tick_budget_pressure_has_route(),
+            tick_budget_pressure_routes_to_budget_observation: self
+                .tick_budget_pressure_routes_to_budget_observation(),
+            tick_budget_pressure_routes_to_continuation: self
+                .tick_budget_pressure_routes_to_continuation(),
+            tick_budget_pressure_priority: self.tick_budget_pressure_priority(),
+            tick_budget_pressure_priority_label: self.tick_budget_pressure_priority_label(),
+            tick_budget_pressure_priority_label_matches_priority: self
+                .tick_budget_pressure_priority_label_matches_priority(),
+            tick_budget_pressure_priority_rank: self.tick_budget_pressure_priority_rank(),
+            tick_budget_pressure_readiness: self.tick_budget_pressure_readiness(),
+            tick_budget_pressure_readiness_label: self.tick_budget_pressure_readiness_label(),
+            tick_budget_pressure_readiness_label_matches_readiness: self
+                .tick_budget_pressure_readiness_label_matches_readiness(),
+            tick_budget_pressure_is_settled_for_queue: self
+                .tick_budget_pressure_is_settled_for_queue(),
+            tick_budget_pressure_is_log_only_for_queue: self
+                .tick_budget_pressure_is_log_only_for_queue(),
+            tick_budget_pressure_is_auto_routable_for_queue: self
+                .tick_budget_pressure_is_auto_routable_for_queue(),
+            tick_budget_pressure_queue_key: self.tick_budget_pressure_queue_key(),
+            tick_budget_pressure_queue_key_label: self.tick_budget_pressure_queue_key_label(),
+            tick_budget_pressure_queue_key_label_matches_key: self
+                .tick_budget_pressure_queue_key_label_matches_key(),
+            tick_budget_pressure_queue_key_parts_match: self
+                .tick_budget_pressure_queue_key_parts_match(),
+            has_tick_budget_pressure_queue_key_integrity_drift: self
+                .has_tick_budget_pressure_queue_key_integrity_drift(),
+            tick_budget_pressure_queue_labels_match: self.tick_budget_pressure_queue_labels_match(),
+            has_tick_budget_pressure_queue_label_integrity_drift: self
+                .has_tick_budget_pressure_queue_label_integrity_drift(),
             planned_records: self.planned_records(),
             drained_records: self.drained_records(),
             planned_follow_up_records: self.planned_follow_up_records(),
@@ -16562,6 +16742,52 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub tick_budget_exhausted_before_end_of_log: bool,
     /// Whether tick-budget pressure asks for continuation.
     pub tick_budget_pressure_requests_continuation: bool,
+    /// Host route for the actual drain tick-budget pressure.
+    pub tick_budget_pressure_route: ToolAuditSupervisorDrainTickBudgetPressureRoute,
+    /// Stable tick-budget pressure route label for host queues.
+    pub tick_budget_pressure_route_label: &'static str,
+    /// Whether the pressure route label parses back to its route.
+    pub tick_budget_pressure_route_label_matches_route: bool,
+    /// Whether the pressure classification has a concrete route.
+    pub tick_budget_pressure_has_route: bool,
+    /// Whether pressure routes to routine budget observation.
+    pub tick_budget_pressure_routes_to_budget_observation: bool,
+    /// Whether pressure routes to continuation scheduling.
+    pub tick_budget_pressure_routes_to_continuation: bool,
+    /// Host priority for the actual drain tick-budget pressure.
+    pub tick_budget_pressure_priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+    /// Stable tick-budget pressure priority label.
+    pub tick_budget_pressure_priority_label: &'static str,
+    /// Whether the pressure priority label parses back to its priority.
+    pub tick_budget_pressure_priority_label_matches_priority: bool,
+    /// Sortable tick-budget pressure priority rank.
+    pub tick_budget_pressure_priority_rank: u8,
+    /// Host readiness for the actual drain tick-budget pressure.
+    pub tick_budget_pressure_readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+    /// Stable tick-budget pressure readiness label.
+    pub tick_budget_pressure_readiness_label: &'static str,
+    /// Whether the pressure readiness label parses back to its readiness.
+    pub tick_budget_pressure_readiness_label_matches_readiness: bool,
+    /// Whether the pressure queue classification is settled.
+    pub tick_budget_pressure_is_settled_for_queue: bool,
+    /// Whether the pressure queue classification is log-only context.
+    pub tick_budget_pressure_is_log_only_for_queue: bool,
+    /// Whether the pressure queue classification can route automatically.
+    pub tick_budget_pressure_is_auto_routable_for_queue: bool,
+    /// Compact tick-budget pressure queue key.
+    pub tick_budget_pressure_queue_key: ToolAuditSupervisorDrainTickBudgetPressureQueueKey,
+    /// Stable tick-budget pressure queue-key label.
+    pub tick_budget_pressure_queue_key_label: String,
+    /// Whether the pressure queue-key label parses back to its key.
+    pub tick_budget_pressure_queue_key_label_matches_key: bool,
+    /// Whether every pressure queue-key component matches the pressure.
+    pub tick_budget_pressure_queue_key_parts_match: bool,
+    /// Whether any pressure queue-key component drifted.
+    pub has_tick_budget_pressure_queue_key_integrity_drift: bool,
+    /// Whether every pressure queue label parses back to its classifier.
+    pub tick_budget_pressure_queue_labels_match: bool,
+    /// Whether any pressure queue label drifted from its classifier.
+    pub has_tick_budget_pressure_queue_label_integrity_drift: bool,
     /// Total rows the preflight plan expected to replay.
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
@@ -23836,6 +24062,127 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.tick_budget_pressure_requests_continuation
     }
 
+    /// Return the host route for the actual drain tick-budget pressure.
+    pub fn tick_budget_pressure_route(&self) -> ToolAuditSupervisorDrainTickBudgetPressureRoute {
+        self.tick_budget_pressure_route
+    }
+
+    /// Return the stable tick-budget pressure route label.
+    pub fn tick_budget_pressure_route_label(&self) -> &'static str {
+        self.tick_budget_pressure_route_label
+    }
+
+    /// Return whether the pressure route label parses back to its route.
+    pub fn tick_budget_pressure_route_label_matches_route(&self) -> bool {
+        self.tick_budget_pressure_route_label_matches_route
+    }
+
+    /// Return whether the actual drain tick-budget pressure has a concrete route.
+    pub fn tick_budget_pressure_has_route(&self) -> bool {
+        self.tick_budget_pressure_has_route
+    }
+
+    /// Return whether the actual drain tick-budget pressure routes to budget observation.
+    pub fn tick_budget_pressure_routes_to_budget_observation(&self) -> bool {
+        self.tick_budget_pressure_routes_to_budget_observation
+    }
+
+    /// Return whether the actual drain tick-budget pressure routes to continuation.
+    pub fn tick_budget_pressure_routes_to_continuation(&self) -> bool {
+        self.tick_budget_pressure_routes_to_continuation
+    }
+
+    /// Return the host queue priority for the actual drain tick-budget pressure.
+    pub fn tick_budget_pressure_priority(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressurePriority {
+        self.tick_budget_pressure_priority
+    }
+
+    /// Return the stable tick-budget pressure priority label.
+    pub fn tick_budget_pressure_priority_label(&self) -> &'static str {
+        self.tick_budget_pressure_priority_label
+    }
+
+    /// Return whether the pressure priority label parses back to its priority.
+    pub fn tick_budget_pressure_priority_label_matches_priority(&self) -> bool {
+        self.tick_budget_pressure_priority_label_matches_priority
+    }
+
+    /// Return the sortable tick-budget pressure priority rank.
+    pub fn tick_budget_pressure_priority_rank(&self) -> u8 {
+        self.tick_budget_pressure_priority_rank
+    }
+
+    /// Return the host queue readiness for the actual drain tick-budget pressure.
+    pub fn tick_budget_pressure_readiness(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+        self.tick_budget_pressure_readiness
+    }
+
+    /// Return the stable tick-budget pressure readiness label.
+    pub fn tick_budget_pressure_readiness_label(&self) -> &'static str {
+        self.tick_budget_pressure_readiness_label
+    }
+
+    /// Return whether the pressure readiness label parses back to its readiness.
+    pub fn tick_budget_pressure_readiness_label_matches_readiness(&self) -> bool {
+        self.tick_budget_pressure_readiness_label_matches_readiness
+    }
+
+    /// Return whether the pressure queue classification is settled.
+    pub fn tick_budget_pressure_is_settled_for_queue(&self) -> bool {
+        self.tick_budget_pressure_is_settled_for_queue
+    }
+
+    /// Return whether the pressure queue classification is log-only context.
+    pub fn tick_budget_pressure_is_log_only_for_queue(&self) -> bool {
+        self.tick_budget_pressure_is_log_only_for_queue
+    }
+
+    /// Return whether the pressure queue classification can route automatically.
+    pub fn tick_budget_pressure_is_auto_routable_for_queue(&self) -> bool {
+        self.tick_budget_pressure_is_auto_routable_for_queue
+    }
+
+    /// Return the compact pressure queue key for the actual drain.
+    pub fn tick_budget_pressure_queue_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureQueueKey {
+        self.tick_budget_pressure_queue_key
+    }
+
+    /// Return the stable pressure queue-key label for the actual drain.
+    pub fn tick_budget_pressure_queue_key_label(&self) -> &str {
+        &self.tick_budget_pressure_queue_key_label
+    }
+
+    /// Return whether the pressure queue-key label parses back to its key.
+    pub fn tick_budget_pressure_queue_key_label_matches_key(&self) -> bool {
+        self.tick_budget_pressure_queue_key_label_matches_key
+    }
+
+    /// Return whether every pressure queue-key component matches the pressure.
+    pub fn tick_budget_pressure_queue_key_parts_match(&self) -> bool {
+        self.tick_budget_pressure_queue_key_parts_match
+    }
+
+    /// Return whether any pressure queue-key component drifted.
+    pub fn has_tick_budget_pressure_queue_key_integrity_drift(&self) -> bool {
+        self.has_tick_budget_pressure_queue_key_integrity_drift
+    }
+
+    /// Return whether every pressure queue label parses back to its classifier.
+    pub fn tick_budget_pressure_queue_labels_match(&self) -> bool {
+        self.tick_budget_pressure_queue_labels_match
+    }
+
+    /// Return whether any pressure queue label drifted from its classifier.
+    pub fn has_tick_budget_pressure_queue_label_integrity_drift(&self) -> bool {
+        self.has_tick_budget_pressure_queue_label_integrity_drift
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.planned_records
@@ -29861,11 +30208,512 @@ impl ToolAuditSupervisorDrainTickBudgetPressure {
     pub fn requests_continuation(self) -> bool {
         matches!(self, Self::ExhaustedBeforeEndOfLog)
     }
+
+    /// Return the host route for this tick-budget pressure classification.
+    pub fn route(self) -> ToolAuditSupervisorDrainTickBudgetPressureRoute {
+        ToolAuditSupervisorDrainTickBudgetPressureRoute::from_pressure(self)
+    }
+
+    /// Return the stable tick-budget pressure route label.
+    pub fn route_label(self) -> &'static str {
+        self.route().as_str()
+    }
+
+    /// Return whether the route label parses back to its typed route.
+    pub fn route_label_matches_route(self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressureRoute::from_label(self.route_label())
+            == Some(self.route())
+    }
+
+    /// Return whether this pressure classification has a concrete host route.
+    pub fn has_route(self) -> bool {
+        self.route().has_route()
+    }
+
+    /// Return whether this pressure classification routes to routine budget logging.
+    pub fn routes_to_budget_observation(self) -> bool {
+        self.route().is_budget_observation()
+    }
+
+    /// Return whether this pressure classification routes to continuation scheduling.
+    pub fn routes_to_continuation(self) -> bool {
+        self.route().is_continuation()
+    }
+
+    /// Return the host queue priority for this tick-budget pressure classification.
+    pub fn priority(self) -> ToolAuditSupervisorDrainTickBudgetPressurePriority {
+        ToolAuditSupervisorDrainTickBudgetPressurePriority::from_pressure(self)
+    }
+
+    /// Return the stable tick-budget pressure priority label.
+    pub fn priority_label(self) -> &'static str {
+        self.priority().as_str()
+    }
+
+    /// Return whether the priority label parses back to its typed priority.
+    pub fn priority_label_matches_priority(self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressurePriority::from_label(self.priority_label())
+            == Some(self.priority())
+    }
+
+    /// Return the sortable tick-budget pressure priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.priority().rank()
+    }
+
+    /// Return the host queue readiness for this tick-budget pressure classification.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+        ToolAuditSupervisorDrainTickBudgetPressureReadiness::from_pressure(self)
+    }
+
+    /// Return the stable tick-budget pressure readiness label.
+    pub fn readiness_label(self) -> &'static str {
+        self.readiness().as_str()
+    }
+
+    /// Return whether the readiness label parses back to its typed readiness.
+    pub fn readiness_label_matches_readiness(self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressureReadiness::from_label(self.readiness_label())
+            == Some(self.readiness())
+    }
+
+    /// Return whether this pressure classification is settled.
+    pub fn is_settled_for_queue(self) -> bool {
+        self.readiness().is_settled()
+    }
+
+    /// Return whether this pressure classification is log-only budget context.
+    pub fn is_log_only_for_queue(self) -> bool {
+        self.readiness().is_log_only()
+    }
+
+    /// Return whether this pressure classification can route automatically.
+    pub fn is_auto_routable_for_queue(self) -> bool {
+        self.readiness().is_auto_routable()
+    }
+
+    /// Return the compact queue key for this tick-budget pressure classification.
+    pub fn queue_key(self) -> ToolAuditSupervisorDrainTickBudgetPressureQueueKey {
+        ToolAuditSupervisorDrainTickBudgetPressureQueueKey::from_pressure(self)
+    }
+
+    /// Return the stable tick-budget pressure queue-key label.
+    pub fn queue_key_label(self) -> String {
+        self.queue_key().label()
+    }
+
+    /// Return whether the queue-key label parses back to its typed key.
+    pub fn queue_key_label_matches_key(self) -> bool {
+        self.queue_key().label_matches_key()
+    }
+
+    /// Return whether every queue-key component matches this pressure classification.
+    pub fn queue_key_parts_match(self) -> bool {
+        self.queue_key().parts_match_pressure(self)
+    }
+
+    /// Return whether any queue-key component drifted from this pressure classification.
+    pub fn has_queue_key_integrity_drift(self) -> bool {
+        !self.queue_key_parts_match()
+    }
+
+    /// Return whether every pressure queue label parses back to its typed value.
+    pub fn queue_labels_match(self) -> bool {
+        self.route_label_matches_route()
+            && self.priority_label_matches_priority()
+            && self.readiness_label_matches_readiness()
+            && self.queue_key_label_matches_key()
+    }
+
+    /// Return whether any pressure queue label drifted from its classifier.
+    pub fn has_queue_label_integrity_drift(self) -> bool {
+        !self.queue_labels_match()
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainTickBudgetPressure {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
+    }
+}
+
+/// Stable host route for drain tick-budget pressure.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainTickBudgetPressureRoute {
+    /// No queue route is needed because no tick budget was consumed.
+    NoRoute,
+    /// The pressure should be retained as routine budget-observation context.
+    BudgetObservation,
+    /// The pressure should route to continuation scheduling.
+    Continuation,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressureRoute {
+    /// Classify the host route from a tick-budget pressure classification.
+    pub fn from_pressure(pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> Self {
+        match pressure {
+            ToolAuditSupervisorDrainTickBudgetPressure::Unused => Self::NoRoute,
+            ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable
+            | ToolAuditSupervisorDrainTickBudgetPressure::FullAtEndOfLog => Self::BudgetObservation,
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog => {
+                Self::Continuation
+            }
+        }
+    }
+
+    /// Return a stable snake_case label for host queue logs.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NoRoute => "no_route",
+            Self::BudgetObservation => "budget_observation",
+            Self::Continuation => "continuation",
+        }
+    }
+
+    /// Parse a stable snake_case pressure-route label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "no_route" => Some(Self::NoRoute),
+            "budget_observation" => Some(Self::BudgetObservation),
+            "continuation" => Some(Self::Continuation),
+            _ => None,
+        }
+    }
+
+    /// Return whether this route targets a concrete queue.
+    pub fn has_route(self) -> bool {
+        !matches!(self, Self::NoRoute)
+    }
+
+    /// Return whether this route is routine budget-observation context.
+    pub fn is_budget_observation(self) -> bool {
+        matches!(self, Self::BudgetObservation)
+    }
+
+    /// Return whether this route asks the scheduler to continue draining.
+    pub fn is_continuation(self) -> bool {
+        matches!(self, Self::Continuation)
+    }
+
+    /// Return whether this route can be handled automatically.
+    pub fn is_auto_routable(self) -> bool {
+        matches!(self, Self::Continuation)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressureRoute {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable host priority for drain tick-budget pressure.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainTickBudgetPressurePriority {
+    /// No budget work is present.
+    Settled,
+    /// The pressure is routine budget context.
+    Routine,
+    /// The pressure requires continuation scheduling.
+    Continuation,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressurePriority {
+    /// Classify priority from a tick-budget pressure classification.
+    pub fn from_pressure(pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> Self {
+        match pressure {
+            ToolAuditSupervisorDrainTickBudgetPressure::Unused => Self::Settled,
+            ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable
+            | ToolAuditSupervisorDrainTickBudgetPressure::FullAtEndOfLog => Self::Routine,
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog => {
+                Self::Continuation
+            }
+        }
+    }
+
+    /// Return a stable snake_case priority label.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::Routine => "routine",
+            Self::Continuation => "continuation",
+        }
+    }
+
+    /// Parse a stable snake_case pressure-priority label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "routine" => Some(Self::Routine),
+            "continuation" => Some(Self::Continuation),
+            _ => None,
+        }
+    }
+
+    /// Return a sortable host queue priority rank.
+    pub fn rank(self) -> u8 {
+        match self {
+            Self::Settled => 0,
+            Self::Routine => 20,
+            Self::Continuation => 60,
+        }
+    }
+
+    /// Return whether this priority is settled.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this priority is routine budget context.
+    pub fn is_routine(self) -> bool {
+        matches!(self, Self::Routine)
+    }
+
+    /// Return whether this priority requires continuation scheduling.
+    pub fn is_continuation(self) -> bool {
+        matches!(self, Self::Continuation)
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressurePriority {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable host readiness for drain tick-budget pressure.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+    /// No queue entry is needed.
+    Settled,
+    /// The pressure is useful log context but does not need scheduling work.
+    LogOnly,
+    /// The pressure can be routed to continuation scheduling automatically.
+    AutoRoute,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+    /// Classify readiness from a tick-budget pressure classification.
+    pub fn from_pressure(pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> Self {
+        match pressure {
+            ToolAuditSupervisorDrainTickBudgetPressure::Unused => Self::Settled,
+            ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable
+            | ToolAuditSupervisorDrainTickBudgetPressure::FullAtEndOfLog => Self::LogOnly,
+            ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog => Self::AutoRoute,
+        }
+    }
+
+    /// Return a stable snake_case readiness label.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Settled => "settled",
+            Self::LogOnly => "log_only",
+            Self::AutoRoute => "auto_route",
+        }
+    }
+
+    /// Parse a stable snake_case pressure-readiness label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "settled" => Some(Self::Settled),
+            "log_only" => Some(Self::LogOnly),
+            "auto_route" => Some(Self::AutoRoute),
+            _ => None,
+        }
+    }
+
+    /// Return whether this readiness is settled.
+    pub fn is_settled(self) -> bool {
+        matches!(self, Self::Settled)
+    }
+
+    /// Return whether this readiness is log-only context.
+    pub fn is_log_only(self) -> bool {
+        matches!(self, Self::LogOnly)
+    }
+
+    /// Return whether this readiness can be routed without manual review.
+    pub fn is_auto_routable(self) -> bool {
+        matches!(self, Self::AutoRoute)
+    }
+
+    /// Return whether this readiness represents scheduler action.
+    pub fn requires_action(self) -> bool {
+        self.is_auto_routable()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Compact host queue key for drain tick-budget pressure.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainTickBudgetPressureQueueKey {
+    pressure: ToolAuditSupervisorDrainTickBudgetPressure,
+    route: ToolAuditSupervisorDrainTickBudgetPressureRoute,
+    priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+    readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressureQueueKey {
+    /// Create a pressure queue key from typed classifier values.
+    pub fn new(
+        pressure: ToolAuditSupervisorDrainTickBudgetPressure,
+        route: ToolAuditSupervisorDrainTickBudgetPressureRoute,
+        priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+        readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+    ) -> Self {
+        Self {
+            pressure,
+            route,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Create a pressure queue key from a pressure classification.
+    pub fn from_pressure(pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> Self {
+        Self::new(
+            pressure,
+            pressure.route(),
+            pressure.priority(),
+            pressure.readiness(),
+        )
+    }
+
+    /// Parse a stable pressure queue-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let mut parts = label.split(':');
+        let pressure = ToolAuditSupervisorDrainTickBudgetPressure::from_label(parts.next()?)?;
+        let route = ToolAuditSupervisorDrainTickBudgetPressureRoute::from_label(parts.next()?)?;
+        let priority =
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::from_label(parts.next()?)?;
+        let readiness =
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::from_label(parts.next()?)?;
+        if parts.next().is_some() {
+            return None;
+        }
+        Some(Self::new(pressure, route, priority, readiness))
+    }
+
+    /// Return the queue-key pressure classification.
+    pub fn pressure(self) -> ToolAuditSupervisorDrainTickBudgetPressure {
+        self.pressure
+    }
+
+    /// Return the queue-key route.
+    pub fn route(self) -> ToolAuditSupervisorDrainTickBudgetPressureRoute {
+        self.route
+    }
+
+    /// Return the queue-key priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainTickBudgetPressurePriority {
+        self.priority
+    }
+
+    /// Return the queue-key readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+        self.readiness
+    }
+
+    /// Return a stable queue-key label for host logs.
+    pub fn label(self) -> String {
+        format!(
+            "{}:{}:{}:{}",
+            self.pressure.as_str(),
+            self.route.as_str(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this queue-key label parses back to this typed key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return the sortable queue priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.priority.rank()
+    }
+
+    /// Return whether this queue key is settled.
+    pub fn is_settled(self) -> bool {
+        self.pressure.is_unused()
+            && !self.route.has_route()
+            && self.priority.is_settled()
+            && self.readiness.is_settled()
+    }
+
+    /// Return whether this queue key is log-only context.
+    pub fn is_log_only(self) -> bool {
+        self.readiness.is_log_only()
+    }
+
+    /// Return whether this queue key can be routed automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.readiness.is_auto_routable()
+    }
+
+    /// Return whether this queue key requires scheduler action.
+    pub fn requires_action(self) -> bool {
+        self.readiness.requires_action()
+    }
+
+    /// Return whether this queue key routes to continuation scheduling.
+    pub fn routes_to_continuation(self) -> bool {
+        self.route.is_continuation()
+    }
+
+    /// Return whether this queue key routes to routine budget observation.
+    pub fn routes_to_budget_observation(self) -> bool {
+        self.route.is_budget_observation()
+    }
+
+    /// Return whether the pressure component matches.
+    pub fn pressure_matches(self, pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> bool {
+        self.pressure == pressure
+    }
+
+    /// Return whether the route component matches.
+    pub fn route_matches(self, route: ToolAuditSupervisorDrainTickBudgetPressureRoute) -> bool {
+        self.route == route
+    }
+
+    /// Return whether the priority component matches.
+    pub fn priority_matches(
+        self,
+        priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+    ) -> bool {
+        self.priority == priority
+    }
+
+    /// Return whether the readiness component matches.
+    pub fn readiness_matches(
+        self,
+        readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+    ) -> bool {
+        self.readiness == readiness
+    }
+
+    /// Return whether every queue-key component matches a pressure classification.
+    pub fn parts_match_pressure(
+        self,
+        pressure: ToolAuditSupervisorDrainTickBudgetPressure,
+    ) -> bool {
+        self.pressure_matches(pressure)
+            && self.route_matches(pressure.route())
+            && self.priority_matches(pressure.priority())
+            && self.readiness_matches(pressure.readiness())
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressureQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
     }
 }
 
@@ -47371,6 +48219,220 @@ mod tests {
         assert!(exhausted_summary.tick_budget_exhausted_before_end_of_log());
         assert!(exhausted_summary.tick_budget_pressure_requests_continuation);
         assert!(exhausted_summary.tick_budget_pressure_requests_continuation());
+    }
+
+    #[test]
+    fn supervisor_drain_tick_budget_pressure_queue_helpers_are_stable() {
+        let unused = ToolAuditSupervisorDrainTickBudgetPressure::Unused;
+        assert_eq!(
+            unused.route(),
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::NoRoute
+        );
+        assert_eq!(unused.route_label(), "no_route");
+        assert!(unused.route_label_matches_route());
+        assert!(!unused.has_route());
+        assert_eq!(
+            unused.priority(),
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::Settled
+        );
+        assert_eq!(unused.priority_label(), "settled");
+        assert!(unused.priority_label_matches_priority());
+        assert_eq!(unused.priority_rank(), 0);
+        assert_eq!(
+            unused.readiness(),
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::Settled
+        );
+        assert_eq!(unused.readiness_label(), "settled");
+        assert!(unused.readiness_label_matches_readiness());
+        assert!(unused.is_settled_for_queue());
+        assert!(!unused.is_log_only_for_queue());
+        assert!(!unused.is_auto_routable_for_queue());
+
+        let slack = ToolAuditSupervisorDrainTickBudgetPressure::SlackAvailable;
+        assert_eq!(
+            slack.route(),
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::BudgetObservation
+        );
+        assert!(slack.has_route());
+        assert!(slack.routes_to_budget_observation());
+        assert!(!slack.routes_to_continuation());
+        assert_eq!(
+            slack.priority(),
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::Routine
+        );
+        assert_eq!(slack.priority_rank(), 20);
+        assert_eq!(
+            slack.readiness(),
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::LogOnly
+        );
+        assert!(slack.is_log_only_for_queue());
+        assert!(!slack.is_auto_routable_for_queue());
+        assert_eq!(
+            slack.queue_key_label(),
+            "slack_available:budget_observation:routine:log_only"
+        );
+        assert!(slack.queue_key_label_matches_key());
+        assert!(slack.queue_key_parts_match());
+        assert!(!slack.has_queue_key_integrity_drift());
+        assert!(slack.queue_labels_match());
+        assert!(!slack.has_queue_label_integrity_drift());
+
+        let full_at_end = ToolAuditSupervisorDrainTickBudgetPressure::FullAtEndOfLog;
+        assert_eq!(
+            full_at_end.route(),
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::BudgetObservation
+        );
+        assert_eq!(
+            full_at_end.queue_key_label(),
+            "full_at_end_of_log:budget_observation:routine:log_only"
+        );
+
+        let exhausted = ToolAuditSupervisorDrainTickBudgetPressure::ExhaustedBeforeEndOfLog;
+        assert_eq!(
+            exhausted.route(),
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::Continuation
+        );
+        assert!(exhausted.routes_to_continuation());
+        assert_eq!(
+            exhausted.priority(),
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::Continuation
+        );
+        assert_eq!(exhausted.priority_rank(), 60);
+        assert_eq!(
+            exhausted.readiness(),
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::AutoRoute
+        );
+        assert!(exhausted.is_auto_routable_for_queue());
+        assert_eq!(
+            exhausted.queue_key_label(),
+            "exhausted_before_end_of_log:continuation:continuation:auto_route"
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::from_label("continuation"),
+            Some(ToolAuditSupervisorDrainTickBudgetPressureRoute::Continuation)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::from_label("routine"),
+            Some(ToolAuditSupervisorDrainTickBudgetPressurePriority::Routine)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::from_label("auto_route"),
+            Some(ToolAuditSupervisorDrainTickBudgetPressureReadiness::AutoRoute)
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureQueueKey::from_label(
+                "exhausted_before_end_of_log:continuation:continuation:auto_route"
+            ),
+            Some(exhausted.queue_key())
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureQueueKey::from_label(
+                "exhausted_before_end_of_log:continuation:continuation:auto_route:extra"
+            ),
+            None
+        );
+
+        let store = ToolAuditStore::new(InMemoryStorageBackend::new());
+        assert!(store
+            .record_audit_batch(vec![
+                sample_record("call_a"),
+                sample_record("call_b"),
+                sample_record("call_c"),
+                sample_record("call_d"),
+                sample_record("call_e"),
+            ])
+            .completed_without_failures());
+        let mut sink = InMemoryToolAuditSink::new();
+        let report = store
+            .drain_supervisor_checkpoint_loop_with_plan("supervisor", 2, 2, &mut sink)
+            .unwrap();
+        assert_eq!(
+            report.tick_budget_pressure_route(),
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::Continuation
+        );
+        assert_eq!(report.tick_budget_pressure_route_label(), "continuation");
+        assert!(report.tick_budget_pressure_route_label_matches_route());
+        assert!(report.tick_budget_pressure_has_route());
+        assert!(!report.tick_budget_pressure_routes_to_budget_observation());
+        assert!(report.tick_budget_pressure_routes_to_continuation());
+        assert_eq!(
+            report.tick_budget_pressure_priority(),
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::Continuation
+        );
+        assert_eq!(report.tick_budget_pressure_priority_label(), "continuation");
+        assert!(report.tick_budget_pressure_priority_label_matches_priority());
+        assert_eq!(report.tick_budget_pressure_priority_rank(), 60);
+        assert_eq!(
+            report.tick_budget_pressure_readiness(),
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::AutoRoute
+        );
+        assert_eq!(report.tick_budget_pressure_readiness_label(), "auto_route");
+        assert!(report.tick_budget_pressure_readiness_label_matches_readiness());
+        assert!(!report.tick_budget_pressure_is_settled_for_queue());
+        assert!(!report.tick_budget_pressure_is_log_only_for_queue());
+        assert!(report.tick_budget_pressure_is_auto_routable_for_queue());
+        assert_eq!(
+            report.tick_budget_pressure_queue_key(),
+            exhausted.queue_key()
+        );
+        assert_eq!(
+            report.tick_budget_pressure_queue_key_label(),
+            "exhausted_before_end_of_log:continuation:continuation:auto_route"
+        );
+        assert!(report.tick_budget_pressure_queue_key_label_matches_key());
+        assert!(report.tick_budget_pressure_queue_key_parts_match());
+        assert!(!report.has_tick_budget_pressure_queue_key_integrity_drift());
+        assert!(report.tick_budget_pressure_queue_labels_match());
+        assert!(!report.has_tick_budget_pressure_queue_label_integrity_drift());
+        assert!(report.tick_budget_status_flags_match());
+
+        let summary = report.summary();
+        assert_eq!(
+            summary.tick_budget_pressure_route,
+            ToolAuditSupervisorDrainTickBudgetPressureRoute::Continuation
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route(),
+            summary.tick_budget_pressure_route
+        );
+        assert_eq!(summary.tick_budget_pressure_route_label, "continuation");
+        assert_eq!(
+            summary.tick_budget_pressure_route_label(),
+            summary.tick_budget_pressure_route_label
+        );
+        assert!(summary.tick_budget_pressure_route_label_matches_route);
+        assert!(summary.tick_budget_pressure_route_label_matches_route());
+        assert!(summary.tick_budget_pressure_routes_to_continuation);
+        assert!(summary.tick_budget_pressure_routes_to_continuation());
+        assert_eq!(
+            summary.tick_budget_pressure_priority,
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::Continuation
+        );
+        assert_eq!(summary.tick_budget_pressure_priority_rank, 60);
+        assert_eq!(
+            summary.tick_budget_pressure_readiness,
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::AutoRoute
+        );
+        assert!(summary.tick_budget_pressure_is_auto_routable_for_queue);
+        assert!(summary.tick_budget_pressure_is_auto_routable_for_queue());
+        assert_eq!(
+            summary.tick_budget_pressure_queue_key,
+            exhausted.queue_key()
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_queue_key_label(),
+            "exhausted_before_end_of_log:continuation:continuation:auto_route"
+        );
+        assert!(summary.tick_budget_pressure_queue_key_label_matches_key);
+        assert!(summary.tick_budget_pressure_queue_key_label_matches_key());
+        assert!(summary.tick_budget_pressure_queue_key_parts_match);
+        assert!(summary.tick_budget_pressure_queue_key_parts_match());
+        assert!(!summary.has_tick_budget_pressure_queue_key_integrity_drift);
+        assert!(!summary.has_tick_budget_pressure_queue_key_integrity_drift());
+        assert!(summary.tick_budget_pressure_queue_labels_match);
+        assert!(summary.tick_budget_pressure_queue_labels_match());
+        assert!(!summary.has_tick_budget_pressure_queue_label_integrity_drift);
+        assert!(!summary.has_tick_budget_pressure_queue_label_integrity_drift());
     }
 
     #[test]
