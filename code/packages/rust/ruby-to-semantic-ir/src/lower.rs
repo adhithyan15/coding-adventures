@@ -1570,29 +1570,40 @@ impl Lowerer {
                 };
                 Ok((Expr::BoolLit { value: true, span }, vec![prefix]))
             }
-            "array_pattern" | "hash_pattern" => {
-                // v0 marker: emit `BuiltinCall("__pattern_match__",
-                // [scrutinee, StrLit(<raw pattern text>)])`.  The raw
-                // text is reconstructed by joining the immediate Token
-                // children of the pattern node — good enough for
-                // round-tripping the pattern back to a Ruby emitter.
-                let raw = self.pattern_node_raw_text(inner);
-                self.features_used.insert(Feature::Strings);
-                Ok((
-                    Expr::BuiltinCall {
-                        name: "__pattern_match__".to_string(),
-                        args: vec![
-                            scrutinee.clone(),
-                            Expr::StrLit {
-                                value: raw,
-                                span: span.clone(),
-                            },
-                        ],
-                        effects: EffectSet::PURE,
-                        span,
-                    },
-                    Vec::new(),
-                ))
+            "array_pattern" => {
+                // Phase 13a (FC) — a fixed-arity array pattern whose
+                // elements are all simple (literal_pattern /
+                // binding_pattern) lowers to a real structural match:
+                // a length check ANDed with per-element equality
+                // checks, plus a `LetBinding` for every binding element.
+                // Nested array/hash elements are not yet supported and
+                // fall back to the v0 `__pattern_match__` marker (kept
+                // for one phase per the Tier-3 marker-replacement
+                // convention).
+                let elem_patterns: Vec<&GrammarASTNode> = inner
+                    .children
+                    .iter()
+                    .filter_map(|c| match c {
+                        ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                        _ => None,
+                    })
+                    .collect();
+                let all_simple = elem_patterns.iter().all(|p| {
+                    matches!(
+                        self.first_node_child(p).map(|n| n.rule_name.as_str()),
+                        Some("literal_pattern") | Some("binding_pattern")
+                    )
+                });
+                if all_simple {
+                    self.lower_fixed_array_pattern(&elem_patterns, scrutinee, span)
+                } else {
+                    Ok(self.pattern_match_marker(inner, scrutinee, span))
+                }
+            }
+            "hash_pattern" => {
+                // v0 marker (unchanged): hash patterns keep the
+                // `__pattern_match__` marker pending a future phase.
+                Ok(self.pattern_match_marker(inner, scrutinee, span))
             }
             other => Err(RubyLowerError {
                 message: format!("unknown pattern kind `{}` in in_clause", other),
@@ -1600,6 +1611,155 @@ impl Lowerer {
                 column: inner.start_column.unwrap_or(0),
             }),
         }
+    }
+
+    /// Phase 13a (FC) — the v0 `__pattern_match__` marker for patterns
+    /// we cannot yet lower structurally (hash patterns, array patterns
+    /// with nested sub-patterns).  Emits
+    /// `BuiltinCall("__pattern_match__", [scrutinee, StrLit(<raw text>)])`
+    /// — the raw text round-trips the pattern back to a Ruby emitter.
+    /// Returns no body-prefix statements (the marker binds nothing).
+    fn pattern_match_marker(
+        &mut self,
+        inner: &GrammarASTNode,
+        scrutinee: &Expr,
+        span: Span,
+    ) -> (Expr, Vec<Stmt>) {
+        let raw = self.pattern_node_raw_text(inner);
+        self.features_used.insert(Feature::Strings);
+        (
+            Expr::BuiltinCall {
+                name: "__pattern_match__".to_string(),
+                args: vec![
+                    scrutinee.clone(),
+                    Expr::StrLit {
+                        value: raw,
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span,
+            },
+            Vec::new(),
+        )
+    }
+
+    /// Phase 13a (FC) — lower a fixed-arity array pattern whose elements
+    /// are all `literal_pattern` or `binding_pattern` into a real
+    /// structural match.
+    ///
+    /// `in [1, x, 3]` against scrutinee `s` produces:
+    ///
+    /// ```text
+    /// cond   = ((len(s) == 3) && (s[0] == 1)) && (s[2] == 3)
+    /// prefix = [ let x = s[1] ]
+    /// ```
+    ///
+    /// The length check leads so the short-circuiting `&&`
+    /// (`Expr::LogicalAnd`) guarantees every `s[i]` index is in bounds
+    /// before it is evaluated, and the binding `LetBinding`s run only in
+    /// the match arm's body (where the whole condition already held), so
+    /// they too are in bounds.  `Feature::Sequences` is requested for the
+    /// `SeqLen` / `SeqIndex` nodes.
+    fn lower_fixed_array_pattern(
+        &mut self,
+        elems: &[&GrammarASTNode],
+        scrutinee: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        self.features_used.insert(Feature::Sequences);
+
+        // Length check: `len(scrutinee) == elems.len()`.
+        let mut cond = Expr::BuiltinCall {
+            name: "==".to_string(),
+            args: vec![
+                Expr::SeqLen {
+                    seq: Box::new(scrutinee.clone()),
+                    span: span.clone(),
+                },
+                Expr::IntLit {
+                    value: elems.len() as i64,
+                    span: span.clone(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+
+        let mut prefix: Vec<Stmt> = Vec::new();
+        for (i, p) in elems.iter().enumerate() {
+            // `first_node_child` is guaranteed `Some` and one of
+            // literal_pattern / binding_pattern because the caller only
+            // routes here when `all_simple` held.
+            let elem_inner = self.first_node_child(p).ok_or_else(|| RubyLowerError {
+                message: "array_pattern element missing inner pattern".to_string(),
+                line: p.start_line.unwrap_or(0),
+                column: p.start_column.unwrap_or(0),
+            })?;
+            let index = Expr::SeqIndex {
+                seq: Box::new(scrutinee.clone()),
+                index: Box::new(Expr::IntLit {
+                    value: i as i64,
+                    span: span.clone(),
+                }),
+                span: span.clone(),
+            };
+            match elem_inner.rule_name.as_str() {
+                "literal_pattern" => {
+                    // Append `s[i] == lit` to the AND-chain.
+                    let lit = self.lower_pattern_literal(elem_inner)?;
+                    let eq = Expr::BuiltinCall {
+                        name: "==".to_string(),
+                        args: vec![index, lit],
+                        effects: EffectSet::PURE,
+                        span: span.clone(),
+                    };
+                    cond = Expr::LogicalAnd {
+                        lhs: Box::new(cond),
+                        rhs: Box::new(eq),
+                        span: span.clone(),
+                    };
+                }
+                "binding_pattern" => {
+                    // Bind `name = s[i]` (runs in the match body only).
+                    let name_tok = elem_inner
+                        .children
+                        .iter()
+                        .find_map(|c| match c {
+                            ASTNodeOrToken::Token(t)
+                                if matches!(t.type_, TokenType::Name) =>
+                            {
+                                Some(t)
+                            }
+                            _ => None,
+                        })
+                        .ok_or_else(|| RubyLowerError {
+                            message: "binding_pattern missing Name token".to_string(),
+                            line: elem_inner.start_line.unwrap_or(0),
+                            column: elem_inner.start_column.unwrap_or(0),
+                        })?;
+                    let bind_name = name_tok.value.clone();
+                    self.declared_locals.insert(bind_name.clone());
+                    prefix.push(Stmt::LetBinding {
+                        name: bind_name,
+                        sir_type: None,
+                        value: index,
+                        span: self.span_of_token(name_tok),
+                    });
+                }
+                other => {
+                    return Err(RubyLowerError {
+                        message: format!(
+                            "lower_fixed_array_pattern reached non-simple element `{}`",
+                            other
+                        ),
+                        line: elem_inner.start_line.unwrap_or(0),
+                        column: elem_inner.start_column.unwrap_or(0),
+                    });
+                }
+            }
+        }
+        Ok((cond, prefix))
     }
 
     /// Lower a `literal_pattern` Node into its `Expr` form.  Mirrors
