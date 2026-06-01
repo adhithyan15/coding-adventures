@@ -14,10 +14,18 @@
 //	     → and_expr
 //	     → not_expr
 //	     → comparison        (=, !=, <, >, <=, >=, BETWEEN, IN, LIKE, IS NULL)
-//	     → additive          (+, -)
+//	     → collated          (COLLATE postfix — affects sort/compare, not value)
+//	     → bitwise           (&, |, <<, >>)
+//	     → additive          (+, -, || string concat)
 //	     → multiplicative    (*, /, %)
-//	     → unary             (unary minus)
+//	     → unary             (unary -, +, ~ bitwise NOT)
 //	     → primary           (literals, column refs, function calls, parens)
+//
+// The collated and bitwise layers mirror SQLite's operator-precedence ladder
+// (https://sqlite.org/lang_expr.html#operators). They were added to the shared
+// sql.grammar after this evaluator was first written; every node below
+// comparison passes through them, so they must be handled here or column
+// references become unreachable.
 //
 // This chain ensures that "a + b > c AND d = e" is parsed as
 // "((a + b) > c) AND (d = e)" — arithmetic before comparison before logic.
@@ -91,6 +99,12 @@ func evalExpr(node *parser.ASTNode, rowCtx map[string]interface{}) interface{} {
 
 	case "comparison":
 		return evalComparison(node, rowCtx)
+
+	case "collated":
+		return evalCollated(node, rowCtx)
+
+	case "bitwise":
+		return evalBitwise(node, rowCtx)
 
 	case "additive":
 		return evalAdditive(node, rowCtx)
@@ -584,9 +598,106 @@ func likeMatch(s, p string) bool {
 	return likeMatch(s[1:], p[1:])
 }
 
+// ─── Collation ─────────────────────────────────────────────────────────────────
+
+// evalCollated handles: collated = bitwise [ "COLLATE" NAME ]
+//
+// A COLLATE clause selects the collating sequence used when the value
+// participates in a comparison or ORDER BY. It does NOT change the value
+// itself — "x COLLATE NOCASE" still evaluates to whatever x is. Since this
+// evaluator produces values (collation is applied later during compare/sort),
+// the COLLATE NAME token is simply ignored and we pass the inner value through.
+func evalCollated(node *parser.ASTNode, rowCtx map[string]interface{}) interface{} {
+	for _, child := range node.Children {
+		if childNode, ok := child.(*parser.ASTNode); ok {
+			return evalExpr(childNode, rowCtx)
+		}
+	}
+	return nil
+}
+
+// ─── Bitwise ─────────────────────────────────────────────────────────────────
+
+// evalBitwise handles: bitwise = additive { ( "&" | "|" | "<<" | ">>" ) additive }
+//
+// Bitwise operators work on integers. SQLite coerces operands to integers
+// before applying them; we follow the same rule and require int64 operands
+// (a non-integer operand yields NULL rather than a silent truncation).
+//
+// NULL propagation: if either operand is NULL, the result is NULL.
+func evalBitwise(node *parser.ASTNode, rowCtx map[string]interface{}) interface{} {
+	if len(node.Children) == 0 {
+		return nil
+	}
+
+	var values []interface{}
+	var ops []string
+	for _, child := range node.Children {
+		switch v := child.(type) {
+		case *parser.ASTNode:
+			values = append(values, evalExpr(v, rowCtx))
+		case lexer.Token:
+			if v.Value == "&" || v.Value == "|" || v.Value == "<<" || v.Value == ">>" {
+				ops = append(ops, v.Value)
+			}
+		}
+	}
+
+	if len(values) == 0 {
+		return nil
+	}
+
+	result := values[0]
+	for i, op := range ops {
+		if i+1 >= len(values) {
+			break
+		}
+		result = applyBitwise(result, op, values[i+1])
+		if _, ok := result.(*columnNotFound); ok {
+			return result
+		}
+		if result == nil {
+			return nil // NULL propagation
+		}
+	}
+	return result
+}
+
+// applyBitwise applies one bitwise operator to two SQL values.
+// Returns nil for NULL propagation or non-integer operands.
+func applyBitwise(a interface{}, op string, b interface{}) interface{} {
+	if _, ok := a.(*columnNotFound); ok {
+		return a
+	}
+	if _, ok := b.(*columnNotFound); ok {
+		return b
+	}
+	if a == nil || b == nil {
+		return nil
+	}
+
+	ai, aOk := a.(int64)
+	bi, bOk := b.(int64)
+	if !aOk || !bOk {
+		return nil // bitwise ops are integer-only
+	}
+
+	switch op {
+	case "&":
+		return ai & bi
+	case "|":
+		return ai | bi
+	case "<<":
+		return ai << uint64(bi)
+	case ">>":
+		return ai >> uint64(bi)
+	}
+	return nil
+}
+
 // ─── Arithmetic ──────────────────────────────────────────────────────────────
 
-// evalAdditive handles: additive = multiplicative { ( "+" | "-" ) multiplicative }
+// evalAdditive handles: additive = multiplicative { ( "+" | "-" | "||" ) multiplicative }
 //
 // Grammar structure in Children (example for "a + b - c"):
 //   - multiplicative node (a)
@@ -610,7 +721,7 @@ func evalAdditive(node *parser.ASTNode, rowCtx map[string]interface{}) interface
 		case *parser.ASTNode:
 			values = append(values, evalExpr(v, rowCtx))
 		case lexer.Token:
-			if v.Value == "+" || v.Value == "-" {
+			if v.Value == "+" || v.Value == "-" || v.Value == "||" {
 				ops = append(ops, v.Value)
 			}
 		}
@@ -692,6 +803,12 @@ func applyArithmetic(a interface{}, op string, b interface{}) interface{} {
 		return nil
 	}
 
+	// SQLite's "||" is text concatenation: both operands are coerced to text
+	// and joined. A NULL operand (handled above) makes the whole result NULL.
+	if op == "||" {
+		return sqlText(a) + sqlText(b)
+	}
+
 	af, aOk := toFloat64(a)
 	bf, bOk := toFloat64(b)
 
@@ -745,30 +862,60 @@ func applyArithmetic(a interface{}, op string, b interface{}) interface{} {
 	return result
 }
 
-// evalUnary handles: unary = "-" unary | primary
+// evalUnary handles: unary = ( "-" | "~" | "+" ) unary | primary
 //
-// Unary minus negates a numeric value. NOT is handled by not_expr.
+// Three unary prefix operators (matching SQLite):
+//   - "-" arithmetic negation
+//   - "+" identity no-op ("+5" ≡ "5")
+//   - "~" bitwise NOT (coerces to int64; non-integer operand → NULL)
+//
+// Operators stack, so we fold them inner-to-outer. Logical NOT is handled
+// separately by not_expr.
 func evalUnary(node *parser.ASTNode, rowCtx map[string]interface{}) interface{} {
-	hasMinus := false
+	// Collect the prefix operators in source order.
+	var ops []string
 	for _, child := range node.Children {
-		if tok, ok := child.(lexer.Token); ok && tok.Value == "-" {
-			hasMinus = !hasMinus // handle double negation: --x = x
+		if tok, ok := child.(lexer.Token); ok {
+			if tok.Value == "-" || tok.Value == "~" || tok.Value == "+" {
+				ops = append(ops, tok.Value)
+			}
 		}
 	}
 
-	// Find the inner expression (primary or another unary).
+	// Find the inner operand (primary or another unary).
+	var val interface{}
+	found := false
 	for _, child := range node.Children {
-		childNode, ok := child.(*parser.ASTNode)
-		if !ok {
-			continue
+		if childNode, ok := child.(*parser.ASTNode); ok {
+			val = evalExpr(childNode, rowCtx)
+			found = true
+			break
 		}
-		val := evalExpr(childNode, rowCtx)
-		if !hasMinus {
-			return val
-		}
-		if val == nil {
-			return nil
-		}
+	}
+	if !found {
+		return nil
+	}
+	if _, ok := val.(*columnNotFound); ok {
+		return val
+	}
+
+	// Apply operators right-to-left (innermost first): "-~5" = -(~5).
+	for i := len(ops) - 1; i >= 0; i-- {
+		val = applyUnary(ops[i], val)
+	}
+	return val
+}
+
+// applyUnary applies one unary prefix operator to a value.
+// NULL operands propagate; type-incompatible operands yield NULL.
+func applyUnary(op string, val interface{}) interface{} {
+	if val == nil {
+		return nil
+	}
+	switch op {
+	case "+":
+		return val // identity no-op
+	case "-":
 		switch n := val.(type) {
 		case int64:
 			return -n
@@ -776,8 +923,30 @@ func evalUnary(node *parser.ASTNode, rowCtx map[string]interface{}) interface{} 
 			return -n
 		}
 		return nil
+	case "~":
+		if n, ok := val.(int64); ok {
+			return ^n
+		}
+		return nil // bitwise NOT is integer-only
 	}
 	return nil
+}
+
+// sqlText coerces a SQL value to its text representation for the "||"
+// concatenation operator. Booleans render as 1/0 to match SQLite, which has
+// no native boolean type.
+func sqlText(v interface{}) string {
+	switch t := v.(type) {
+	case string:
+		return t
+	case bool:
+		if t {
+			return "1"
+		}
+		return "0"
+	default:
+		return fmt.Sprintf("%v", v)
+	}
 }
 
 // ─── Primary ─────────────────────────────────────────────────────────────────
