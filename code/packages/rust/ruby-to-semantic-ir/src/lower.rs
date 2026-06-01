@@ -1072,6 +1072,59 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "alias_statement" => {
+                // Phase 24a (FC) — `alias new old` aliases the existing
+                // method `old` under the name `new`.  Both operands are
+                // bare method-name NAME tokens (the symbol forms
+                // `alias :new :old` are a deliberate follow-up slice).
+                // We lower to a zero-side-effect
+                // `BuiltinCall("alias", [StrLit(new), StrLit(old)])`:
+                // the method names are surfaced as string literals — they
+                // are NOT local variables, so emitting `VarRef`s would be
+                // wrong and the SIR validator would reject the never-bound
+                // names.  Effects are `PURE`: in this model the alias
+                // declaration carries no runtime data effect, mirroring
+                // how the other declaration-ish keyword statements behave.
+                let names: Vec<&Token> = node
+                    .children
+                    .iter()
+                    .filter_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t),
+                        _ => None,
+                    })
+                    .collect();
+                if names.len() != 2 {
+                    return Err(RubyLowerError {
+                        message: format!(
+                            "alias_statement expects 2 name operands, found {}",
+                            names.len()
+                        ),
+                        line: node.start_line.unwrap_or(0),
+                        column: node.start_column.unwrap_or(0),
+                    });
+                }
+                let args = names
+                    .iter()
+                    .map(|t| Expr::StrLit {
+                        value: t.value.clone(),
+                        span: self.span_of_token(t),
+                    })
+                    .collect();
+                // The method names surface as `StrLit`s, so the module
+                // uses the `strings` feature — declare it (the manifest
+                // builder allowlist already permits `Feature::Strings`).
+                self.features_used.insert(Feature::Strings);
+                let expr = Expr::BuiltinCall {
+                    name: "alias".to_string(),
+                    args,
+                    effects: EffectSet::PURE,
+                    span: self.span_of(node),
+                };
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
                 line: node.start_line.unwrap_or(0),

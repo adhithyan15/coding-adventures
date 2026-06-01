@@ -2,6 +2,26 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.78.0] - 2026-06-01
+
+### Added (Phase 24a (FC) — `alias new old` lowering)
+
+An `alias_statement` node (`alias new old`) lowers to a statement-position
+`BuiltinCall("alias", [StrLit(new), StrLit(old)])` with `EffectSet::PURE`.
+The two method names are surfaced as `StrLit`s — they are method names,
+not local variables, so emitting `VarRef`s would be wrong and the SIR
+validator would reject the never-bound names.  Effects are `PURE`: in
+this model the alias declaration carries no runtime data effect, mirroring
+how the other declaration-ish keyword statements (`redo`/`retry`/`defined?`)
+are treated.  Because the operands are `StrLit`s, the lowerer now declares
+`Feature::Strings` for an `alias` (already permitted by the manifest
+builder allowlist).
+
+This first slice covers the canonical two-bare-name form; symbol operands
+(`alias :new :old`) are a deliberate follow-up.  New pins:
+`alias_lowers_to_builtin_call`, `alias_operands_are_string_literals`,
+`alias_is_pure_and_validates_e2e` (lower → validate round-trip).
+
 ## [0.77.0] - 2026-06-01
 
 ### Added (Phase 23b (FC) — `defined?` operator lowering)
