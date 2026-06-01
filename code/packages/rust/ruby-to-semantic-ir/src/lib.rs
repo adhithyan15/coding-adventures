@@ -1772,6 +1772,55 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 11d — `return` WITH VALUE (coverage-confirmation)
+    //
+    // The Phase 6j arm already folds an optional trailing expression
+    // after `return` into the single BuiltinCall argument (bare ->
+    // NilLit).  Existing pins cover `return 42`, bare `return`, and
+    // `return x + 1` inside a def, plus a def-body validator run.  These
+    // pins lock the contract from new payload angles: an array literal,
+    // a string literal, and a validator end-to-end run where the payload
+    // is a top-level local (distinct from the existing def-body pin).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn return_with_array_value_lowers_to_seqlit_arg() {
+        let m = lower("return [1, 2]");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "return");
+                assert!(matches!(args[0], Expr::SeqLit { .. }), "got {:?}", args[0]);
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(return, [array])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn return_with_string_value_lowers_to_strlit_arg() {
+        let m = lower("return \"ok\"");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "return");
+                assert!(matches!(args[0], Expr::StrLit { .. }), "got {:?}", args[0]);
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(return, [string])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn return_with_top_level_local_value_passes_sir_validator() {
+        // Assign `x` first so the VarRef payload resolves, then return it
+        // at top level (distinct from the existing def-body validator pin).
+        let m = lower("x = 5\nreturn x\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6k — unary minus → BuiltinCall("neg", [x]).
     // -----------------------------------------------------------------
 
