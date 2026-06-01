@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-llvm"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.3.0 (LLVM03): adds typed arithmetic (add/sub/mul/sdiv/udiv/srem/urem + float counterparts), comparisons (icmp/fcmp with signed/unsigned/ordered predicate selection), and control flow (label/jmp/jmp_if_true/jmp_if_false with auto-fallthrough)."
+description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.4.0 (LLVM04): adds `call` of user-defined functions (per-arg types resolved via pre-built callee-signature map) and `call_builtin print_i64` → `declare/call @__print_i64(i64)`, completing the LLVM backend's user-callable surface."
 
 [lib]
 name = "iir_to_llvm"

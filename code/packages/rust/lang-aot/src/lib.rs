@@ -125,6 +125,11 @@ pub enum LangAotError {
     AotError(twig_aot::AotError),
     /// Filesystem I/O failure.
     Io(std::io::Error),
+    /// The LLVM textual-IR backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-llvm` (which already
+    /// includes the failing function name and the unsupported op/type).
+    LlvmBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -136,6 +141,7 @@ impl fmt::Display for LangAotError {
                 "{language}: {message}"),
             LangAotError::AotError(e) => write!(f, "{e}"),
             LangAotError::Io(e) => write!(f, "io: {e}"),
+            LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
         }
     }
 }
@@ -215,6 +221,41 @@ pub fn compile_source_to_iir(
 // target — same policy as twig-aot.  Cross-OS object emission goes
 // through `compile_object_to_disk` instead.
 // ---------------------------------------------------------------------------
+
+/// Cross-platform: source → IIR → textual LLVM IR (`.ll`) on disk.
+///
+/// Unlike the native-executable pipelines below, this one does **not** link
+/// or run the LLVM toolchain — it just writes a `.ll` file.  Downstream
+/// `llc` / `opt` invocations are the caller's responsibility.
+///
+/// No `cfg(target_os = ...)` gating: emitting text is platform-agnostic.
+/// Pair this with `--emit=llvm-ir` on the `lang-aot` CLI.
+///
+/// Errors:
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `LlvmBackendError` — the IIR contained an op or type the LLVM backend
+///   does not yet handle (the error message names the function and op).
+/// * `Io` — failed to read the input or write the output.
+pub fn compile_file_to_llvm_ir(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Use the stem as both the LLVM module-id and the default triple stays
+    // at iir-to-llvm's deterministic `x86_64-unknown-linux-gnu` so test
+    // output is reproducible across CI runners.
+    let cfg = iir_to_llvm::IIRLlvmConfig::new(stem);
+    let ll = iir_to_llvm::lower_iir_to_llvm(&module, &cfg)
+        .map_err(|e| LangAotError::LlvmBackendError(format!("{e}")))?;
+
+    std::fs::write(out, ll)?;
+    Ok(())
+}
 
 /// Linux x86-64: source → IIR → ELF → executable (Linux host only).
 #[cfg(target_os = "linux")]

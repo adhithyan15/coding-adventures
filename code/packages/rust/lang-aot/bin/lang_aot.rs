@@ -39,7 +39,13 @@ fn main() -> ExitCode {
         Some(p) => p,
         None => { eprintln!("lang-aot: missing input file"); print_help(); return ExitCode::from(2); }
     };
-    let output = cmd.output.unwrap_or_else(|| input.with_extension(""));
+    // Default output extension depends on emit mode:
+    //   * Native → strip extension (foo.bas → foo)
+    //   * LlvmIr → .ll (foo.bas → foo.ll), matching downstream tooling
+    let output = cmd.output.unwrap_or_else(|| match cmd.emit {
+        EmitMode::Native => input.with_extension(""),
+        EmitMode::LlvmIr => input.with_extension("ll"),
+    });
 
     let language = match cmd.language {
         Some(l) => l,
@@ -53,16 +59,29 @@ fn main() -> ExitCode {
         },
     };
 
-    match dispatch(&input, &output, language) {
+    match dispatch(&input, &output, language, cmd.emit) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => { eprintln!("lang-aot: {e}"); ExitCode::from(1) }
     }
+}
+
+/// Choice of emission target.
+///
+/// `Native` is the default and matches the pre-LLVM04 behaviour: produce a
+/// native executable for the build host (Linux ELF / Windows PE / macOS
+/// Mach-O).  `LlvmIr` produces a `.ll` textual LLVM IR file; the LLVM
+/// toolchain (`llc` / `opt`) is the caller's job to run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum EmitMode {
+    Native,
+    LlvmIr,
 }
 
 struct CliArgs {
     input: Option<PathBuf>,
     output: Option<PathBuf>,
     language: Option<Language>,
+    emit: EmitMode,
     help: bool,
 }
 
@@ -70,6 +89,7 @@ fn parse_args(args: &[String]) -> Result<CliArgs, String> {
     let mut input = None;
     let mut output = None;
     let mut language = None;
+    let mut emit = EmitMode::Native;
     let mut help = false;
     let mut i = 1;
     while i < args.len() {
@@ -92,6 +112,28 @@ fn parse_args(args: &[String]) -> Result<CliArgs, String> {
             s if s.starts_with("--lang=") => {
                 language = Some(Language::parse(&s["--lang=".len()..])?);
             }
+            // --emit=<native|llvm-ir>  (LLVM04)
+            //
+            // We accept `llvm-ir` as the canonical spelling (matches the
+            // file extension downstream — `foo.ll` files are "LLVM IR").
+            // `native` is included for explicitness even though it's the
+            // default.
+            s if s.starts_with("--emit=") => {
+                emit = match &s["--emit=".len()..] {
+                    "native" => EmitMode::Native,
+                    "llvm-ir" | "llvm" | "ll" => EmitMode::LlvmIr,
+                    other => return Err(format!("unknown --emit value {other:?}; expected `native` or `llvm-ir`")),
+                };
+            }
+            "--emit" => {
+                i += 1;
+                let v = args.get(i).ok_or_else(|| "--emit requires a value".to_string())?;
+                emit = match v.as_str() {
+                    "native" => EmitMode::Native,
+                    "llvm-ir" | "llvm" | "ll" => EmitMode::LlvmIr,
+                    other => return Err(format!("unknown --emit value {other:?}; expected `native` or `llvm-ir`")),
+                };
+            }
             s if s.starts_with('-') => {
                 return Err(format!("unknown flag {s:?}"));
             }
@@ -104,7 +146,7 @@ fn parse_args(args: &[String]) -> Result<CliArgs, String> {
         }
         i += 1;
     }
-    Ok(CliArgs { input, output, language, help })
+    Ok(CliArgs { input, output, language, emit, help })
 }
 
 fn print_help() {
@@ -122,13 +164,30 @@ Supported languages:
   oct             (.oct)         — TODO (no Rust frontend yet)
 
 Options:
-  -o, --output <PATH>   Output executable path (default: input without extension).
-  -l, --lang <LANG>     Override language detection (twig, nib, bf, basic, oct).
-  -h, --help            Show this help.\
+  -o, --output <PATH>      Output path. Default: input without extension
+                           (native) or with .ll extension (--emit=llvm-ir).
+  -l, --lang <LANG>        Override language detection (twig, nib, bf, basic, oct).
+      --emit=<MODE>        What to emit. `native` (default) → host executable;
+                           `llvm-ir` (alias `llvm`, `ll`) → textual LLVM IR (.ll)
+                           via iir-to-llvm, cross-platform.  Downstream `opt`/`llc`
+                           are the caller's responsibility.
+  -h, --help               Show this help.\
 ");
 }
 
-fn dispatch(input: &Path, output: &Path, language: Language) -> Result<(), String> {
+fn dispatch(
+    input: &Path,
+    output: &Path,
+    language: Language,
+    emit: EmitMode,
+) -> Result<(), String> {
+    // LLVM IR emission is cross-platform — short-circuit before any host
+    // cfg gating below.  Reading a file and writing a `.ll` string out
+    // doesn't depend on the linker or platform binary format.
+    if emit == EmitMode::LlvmIr {
+        return lang_aot::compile_file_to_llvm_ir(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
     #[cfg(target_os = "linux")]
     { lang_aot::compile_file_to_linux_executable(input, output, language)
           .map_err(|e| format!("{e}")) }
