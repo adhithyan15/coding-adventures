@@ -1498,3 +1498,73 @@ fn g1_bare_eq_still_lowers_to_wasm() {
     let _ = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
         .expect("G1: bare `eq` (Twig form) must still lower");
 }
+
+// ===========================================================================
+// G2 — `call_builtin "print_i64"` reuses the `env.__print_i64` host import.
+//
+// BASIC's `PRINT` lowers to `call_builtin "print_i64"`.  Pre-G2 this was
+// rejected by the validator because `print_i64` wasn't in
+// `CALL_BUILTIN_SUPPORTED_NAMES`.  G2 adds it; the import is the SAME
+// one the `io_out` opcode injects (`env.__print_i64`), so a module that
+// already uses `io_out` and one that uses `print_i64` exclusively both
+// produce the same single import.
+// ===========================================================================
+
+#[test]
+fn g2_call_builtin_print_i64_validator_accepts() {
+    let m = module_one("main", vec![("x", "i64")], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("x".into())],
+            "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(),
+        "G2: validator must accept call_builtin print_i64; got {errs:?}");
+}
+
+#[test]
+fn g2_call_builtin_print_i64_lowers_to_wasm_bytes() {
+    let m = module_one("main", vec![("x", "i64")], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("x".into())],
+            "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("G2: lower must succeed for call_builtin print_i64");
+    let bytes = encode_module(&wm).expect("encode");
+    assert!(bytes.len() >= 8);
+    assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D], "wasm magic prefix");
+}
+
+#[test]
+fn g2_call_builtin_print_i64_injects_host_import() {
+    let m = module_one("main", vec![("x", "i64")], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("x".into())],
+            "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("lower");
+    let has_print = wm.imports.iter().any(|i|
+        i.module_name == "env" && i.name == "__print_i64");
+    assert!(has_print,
+        "G2: print_i64 builtin must inject the env.__print_i64 host import; got imports {:?}",
+        wm.imports.iter().map(|i| (&i.module_name, &i.name)).collect::<Vec<_>>());
+}
+
+#[test]
+fn g2_unknown_builtin_still_rejected() {
+    // Defense-in-depth: a builtin name not in the whitelist must still
+    // be rejected (so G2 didn't accidentally widen the gate).
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("does_not_exist".into())],
+            "void"),
+    ]);
+    let errs = validate_for_wasm(&m);
+    assert!(!errs.is_empty(),
+        "G2: unknown builtin must still be rejected; got no errors");
+}

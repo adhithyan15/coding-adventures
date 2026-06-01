@@ -6,20 +6,15 @@
 //! *encoder* (`lower_iir_to_*`) and asserts the output is real
 //! bytecode (correct magic prefix etc.).
 //!
-//! ## Known gap (intentional, documented)
+//! ## PRINT status
 //!
-//! These tests deliberately use BASIC programs WITHOUT `PRINT`.
-//! BASIC's `PRINT` lowers to `call_builtin "print_i64"`, and the
-//! `iir-to-wasm` / `iir-to-jvm-class-file` / `iir-to-cil-bytecode`
-//! backends currently only whitelist `putchar` / `getchar` as host
-//! imports.  Until those backends grow a `print_i64` host import
-//! (a small change: one entry in `CALL_BUILTIN_SUPPORTED_NAMES`
-//! and a lowering rule), BASIC programs that print don't make it
-//! all the way through the cross-platform encoders.
+//! As of G2 (iir-to-wasm 0.8.0), BASIC's `PRINT` reaches real
+//! `.wasm` bytecode — `call_builtin "print_i64"` is whitelisted
+//! and routed to the same `env.__print_i64` host import the
+//! `io_out` opcode uses.  See `print_lowers_to_wasm_bytes` below.
 //!
-//! BASIC programs without PRINT — pure arithmetic, control flow,
-//! GOTO/FOR/NEXT — DO make it through, which is what these tests
-//! prove.
+//! G3 and G4 (iir-to-jvm / iir-to-cil) are still pending — when
+//! those land, BASIC PRINT will lower through all three encoders.
 //!
 //! ## What's not here
 //!
@@ -176,22 +171,28 @@ fn basic_for_loop_lowers_to_clr_assembly() {
 // ===========================================================================
 
 #[test]
-fn print_is_blocked_until_backends_whitelist_print_i64() {
-    // This test is a regression marker: if it starts failing
-    // (the validator stops rejecting), the backends have grown a
-    // `print_i64` host import — at which point the file-level docs
-    // and the gating logic here should be reversed (PRINT becomes
-    // an officially-supported builtin across all 4 encoders).
+fn print_lowers_to_wasm_bytes() {
+    // G2 (PR #4738+) flipped this from "blocked" to "works" — BASIC's
+    // PRINT now reaches real wasm bytecode through the
+    // `env.__print_i64` host import that `iir-to-wasm` injects.
+    //
+    // We test the full path: BASIC source → IIR → validator (must
+    // accept) → lower (must succeed) → encode (must produce a
+    // .wasm-magic byte stream).
     let src = "10 PRINT 42\n20 END\n";
     let m = compile_source(src, "print_smoke")
-        .expect("BASIC compiles to IIR (frontend has no quarrel with PRINT)");
+        .expect("BASIC compiles to IIR");
     let errs = iir_to_wasm::validate::validate_for_wasm(&m);
-    assert!(
-        !errs.is_empty()
-            && errs.iter().any(|e| e.contains("print_i64")),
-        "expected wasm validator to reject `print_i64` until the host \
-         import is whitelisted; got {errs:?}.  If this assertion has \
-         started failing, congrats — extend the test to actually lower \
-         and run the wasm output."
-    );
+    assert!(errs.is_empty(),
+        "G2: wasm validator must now accept PRINT; got {errs:?}");
+    let wm = iir_to_wasm::lower::lower_iir_to_wasm(
+        &m, &iir_to_wasm::lower::IIRWasmConfig::default())
+        .expect("G2: lower must succeed for BASIC with PRINT");
+    let bytes = wasm_module_encoder::encode_module(&wm).expect("encode");
+    assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D],
+        "expected wasm magic prefix; got {:?}", &bytes[..bytes.len().min(8)]);
+    // The host import must exist.
+    let has_print = wm.imports.iter().any(|i|
+        i.module_name == "env" && i.name == "__print_i64");
+    assert!(has_print, "expected env.__print_i64 host import");
 }

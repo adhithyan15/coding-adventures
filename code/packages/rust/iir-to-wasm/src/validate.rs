@@ -126,10 +126,17 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// environment is expected to supply.  Today's list covers the
 /// Brainfuck I/O builtins:
 ///
-/// | Builtin     | Host import       | Signature |
-/// |-------------|-------------------|-----------|
-/// | `"putchar"` | `env.putchar`     | `(i32) -> ()`     |
-/// | `"getchar"` | `env.getchar`     | `() -> i32`       |
+/// | Builtin       | Host import         | Signature |
+/// |---------------|---------------------|-----------|
+/// | `"putchar"`   | `env.putchar`       | `(i32) -> ()`     |
+/// | `"getchar"`   | `env.getchar`       | `() -> i32`       |
+/// | `"print_i64"` | `env.__print_i64`   | `(i64) -> ()`     |
+///
+/// `print_i64` (G2) reuses the same `env.__print_i64` import the
+/// `io_out` opcode already injects.  This lets BASIC's `PRINT`
+/// statement (which lowers to `call_builtin "print_i64"`) and
+/// Twig's `io_out` opcode share a single host-provided printer
+/// function.
 ///
 /// Adding a new builtin requires:
 ///   1. Listing it here so the validator accepts it.
@@ -137,7 +144,8 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///      `call_builtin` branch that emits the right WASM call.
 ///   3. Injecting the import entry in `lower_iir_to_wasm` (see the
 ///      analogous wiring for `io_out` → `env.__print_i64`).
-pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
+    &["putchar", "getchar", "print_i64"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm

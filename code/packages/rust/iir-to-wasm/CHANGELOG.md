@@ -3,6 +3,47 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] — 2026-06-01 (G2 — whitelist `call_builtin "print_i64"`)
+
+### Changed — `call_builtin "print_i64"` now reaches real wasm bytecode
+
+Pre-0.8.0, BASIC's `PRINT` lowered to `call_builtin "print_i64"`,
+and the validator rejected it with
+`UnsupportedOp ... print_i64 ... not in the WASM backend's
+host-import whitelist (supported: ["putchar", "getchar"])`.
+
+The host import already existed under a different name: the
+`io_out` opcode (a Twig/Lispy mechanism) wires
+`env.__print_i64 : (i64) -> ()`.  G2 makes `call_builtin
+"print_i64"` reuse that same import — no new host function needed,
+no breaking change for existing `io_out` users.
+
+The end-to-end effect is that BASIC programs containing `PRINT`
+statements now reach real `.wasm` bytecode through the same single
+encoder pipeline as Twig.
+
+### Implementation
+
+- `validate.rs::CALL_BUILTIN_SUPPORTED_NAMES`: `"print_i64"` added.
+- `lower.rs::collect_module_features`: a `call_builtin "print_i64"`
+  flips `uses_io_out` so the `env.__print_i64` import is wired in
+  even when the module never uses the `io_out` opcode.
+- `lower.rs::emit_instr`: new `"print_i64"` arm in the
+  `call_builtin` branch loads the i64 argument and emits
+  `call <print_fn_idx>` — identical lowering to the `io_out`
+  opcode.
+
+### Tests
+
+- 4 new tests in `tests/test_backend.rs`:
+  - `g2_call_builtin_print_i64_validator_accepts`
+  - `g2_call_builtin_print_i64_lowers_to_wasm_bytes`
+  - `g2_call_builtin_print_i64_injects_host_import`
+  - `g2_unknown_builtin_still_rejected` (regression marker —
+    confirms G2 didn't widen the whitelist beyond `print_i64`)
+- All 95 existing tests still pass.
+
+
 ## [0.7.0] — 2026-06-01 (G1 — accept `cmp_*`-prefixed comparison opcodes)
 
 ### Changed — `cmp_eq` / `cmp_ne` / `cmp_lt` / `cmp_le` / `cmp_gt` / `cmp_ge` now lower
