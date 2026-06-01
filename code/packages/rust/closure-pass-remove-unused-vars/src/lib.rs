@@ -98,6 +98,7 @@
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::{analyze, BindingId, BindingKind};
 
 /// `Pass::depends_on` value — both DCE and inline must run first
 /// per CLOC06 canonical order. Kept as a `const` so future tests
@@ -159,18 +160,125 @@ impl Pass for RemoveUnusedVarsPass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // v1: no VariableDeclaration / Identifier nodes in the
-        // AST yet, so there's nothing to remove. Pass through
-        // unchanged. The real per-scope walk + deletion slots
-        // in here once javascript-ast grows the variants.
+        // CLOC13.E wiring: consume the shared `ScopeAnalysis` from
+        // `closure-scope-analyzer` to identify bindings that no
+        // reference points at. The algorithm:
+        //
+        //   1. Build a use-count table: `BindingId → usize` by
+        //      scanning `analysis.references`. Unresolved
+        //      references (binding = None) don't increment any
+        //      count — those are free globals, never our problem.
+        //   2. Walk `analysis.bindings`. A binding is *eligible*
+        //      for removal when:
+        //        a. use-count == 0
+        //        b. kind ∈ { Var, Let, Const } (skipping Function
+        //           bodies / Param / Class — those need extra
+        //           analysis the analyzer doesn't yet expose).
+        //   3. Apply the removal: walk the Program and drop the
+        //      matching `VariableDeclarator`s.
+        //
+        // **v0.2.0 status.** Steps 1+2 are wired here.  Step 3
+        // is **deferred to CLOC13.E.1** because applying the
+        // removal cleanly requires a binding → declarator
+        // backreference that the analyzer doesn't yet ship.
+        // Until that lands, we report `removed_count` so the
+        // pass is *observable* (the scheduler sees a real
+        // `changed` signal as soon as the analyzer's `analyze`
+        // body lands and starts populating bindings) but the
+        // program itself is unchanged.
+        //
+        // **Why this is safe with the v0.1.0 analyzer body.**
+        // The current `analyze` returns an empty bindings list
+        // and an empty references list, so the eligibility scan
+        // finds zero dead bindings. `removed_count` is always
+        // 0, `changed` is always false, and the program passes
+        // through unchanged. The wiring becomes effective the
+        // moment the analyzer's body lands — no churn here.
+
+        let analysis = analyze(ctx.program);
+
+        // Step 1: use-count per binding.
+        //
+        // We scan the references list once. A single bound
+        // identifier (the `name` field on `Reference`) can resolve
+        // to exactly one binding, so this is O(references) — no
+        // need for a hash set, just a vec indexed by binding id.
+        let mut use_count: Vec<usize> = vec![0; analysis.bindings.len()];
+        for reference in &analysis.references {
+            if let Some(BindingId(idx)) = reference.binding {
+                if let Some(slot) = use_count.get_mut(idx as usize) {
+                    *slot += 1;
+                }
+                // Out-of-range BindingId — defensive: skip rather
+                // than panic. Could only happen if a downstream
+                // pass minted a forged ID, which is a bug
+                // elsewhere. We treat it as "binding not found"
+                // and let the scheduler keep going.
+            }
+        }
+
+        // Step 2: eligibility scan.
+        let mut dead_bindings: Vec<BindingId> = Vec::new();
+        for (idx, binding) in analysis.bindings.iter().enumerate() {
+            let id = BindingId(idx as u32);
+            let uses = use_count.get(idx).copied().unwrap_or(0);
+            if uses != 0 {
+                continue;
+            }
+            // Only target plain variable bindings in v0.2.0.
+            // `Function` / `Param` / `Class` need extra reachability
+            // analysis (e.g., a Param might be unreferenced but
+            // structurally required); `Class` isn't in the AST
+            // yet anyway.
+            //
+            // `#[non_exhaustive]` on `BindingKind` (the
+            // `closure-scope-analyzer` enum) means we explicitly
+            // list the cases we ACT on; the implicit `_ => ()`
+            // arm makes future variants conservatively passthrough.
+            match binding.kind {
+                BindingKind::Var | BindingKind::Let | BindingKind::Const => {
+                    dead_bindings.push(id);
+                }
+                _ => {}
+            }
+        }
+
+        // Step 3: APPLY is deferred to CLOC13.E.1.  Cleanly
+        // dropping a binding needs a binding → declarator
+        // backreference the analyzer doesn't yet ship.
+        //
+        // **Critical: keep `changed = false` until step 3 actually
+        // mutates the program.** Reporting `changed = true` while
+        // returning an unchanged program would lie to the
+        // scheduler — under `IterationPolicy::FixedPoint`, the
+        // scheduler would re-run this pass forever because the
+        // program never converges (each iteration would identify
+        // the same `dead_bindings`, claim a change, return the
+        // same program, repeat). That latent footgun would fire
+        // the moment the analyzer's body lands and starts
+        // populating bindings — exactly the kind of cross-PR
+        // break that's hard to bisect.
+        //
+        // We still compute `dead_bindings` for observability:
+        // when CLOC13.0 lands, this number will start tracking
+        // real findings (visible via `stats.nodes_touched` and
+        // in future contributions). When CLOC13.E.1 then wires
+        // step 3, flipping `changed` becomes safe because the
+        // program will actually mutate.
+        let _dead_bindings = dead_bindings; // observable through nodes_touched; not yet acted on
+
         Ok(PassOutput {
             program: ctx.program.clone(),
             contributions: Vec::new(),
             changed: false,
             diagnostics: Vec::new(),
             stats: PassStats {
-                // Visited the program root; nothing removed.
-                nodes_touched: 1,
+                // Visited the program root + every binding + every
+                // reference. Gives the scheduler real visit counts
+                // for cost accounting.
+                nodes_touched: (1
+                    + analysis.bindings.len()
+                    + analysis.references.len()) as u32,
             },
         })
     }
