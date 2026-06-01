@@ -2,6 +2,92 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-01
+
+### Added — CLOC12.10: precedence-aware paren insertion (closes gap-024 + gap-027)
+
+Replaces the previous "wrap every expression-statement body in parens"
+policy with a precedence-aware emit. `emit_expression_inner(e, parent_prec)`
+inspects the expression's own precedence and wraps in parens **only**
+when the child binds more loosely than its parent context demands.
+
+Precedence ladder (low → high, per ESTree §13):
+
+```
+ 0   top level / statement / control-test position
+ 1   assignment
+ 2   conditional `? :`
+ 3   logical-or `||` / nullish `??`
+ 4   logical-and `&&`
+ 5-7 bitwise or/xor/and
+ 8   equality
+ 9   relational
+10   shift
+11   additive
+12   multiplicative
+13   exponent          right-assoc
+14   prefix unary
+17-18 call/member/primary       atomic — never wraps
+```
+
+Three new helper functions in `lib.rs`:
+
+- `binary_prec(BinaryOperator) -> u8`
+- `logical_prec(LogicalOperator) -> u8`
+- `expr_prec(&Expression) -> u8`
+
+`emit_binary` / `emit_logical` / `emit_conditional` no longer wrap
+themselves in parens. They delegate to `emit_expression_inner` for
+their children with appropriate `parent_prec` values
+(`my_prec` for the left side, `my_prec + 1` for the right side of
+left-associative operators).
+
+### Truth table
+
+| Source AST                     | Old emit               | New emit          |
+|--------------------------------|------------------------|-------------------|
+| `2 + 3`                        | `(2 + 3);`             | `2 + 3;`          |
+| `"a" + "b"`                    | `("a" + "b");`         | `"a" + "b";`      |
+| `(a + b) * c`                  | `((a + b) * c);`       | `(a + b) * c;`    |
+| `a + b * c`                    | `(a + (b * c));`       | `a + b * c;`      |
+| `!x`                           | `!x;` (unchanged)      | `!x;`             |
+| `({a:1})`                      | `({a:1});` (unchanged) | `({a:1});`        |
+
+### gap-024 → RESOLVED
+
+The two `_is_current_behaviour` ports in
+`tests/upstream/code_printer_test.rs` are renamed and their assertions
+flipped to upstream's byte-equivalent forms:
+
+| Old name (pinned divergence) | New name (matches upstream) | Was | Now |
+|-------------------------------|------------------------------|-----|-----|
+| `test_binary_addition_with_parens_is_current_behaviour` | `test_binary_addition_emits_without_outer_parens` | `(2 + 3);` | `2 + 3;` |
+| `test_string_concat_with_parens_is_current_behaviour` | `test_string_concat_emits_without_outer_parens` | `("a" + "b");` | `"a" + "b";` |
+
+The remaining whitespace difference between our `2 + 3;` (pretty-printed)
+and upstream's `2+3;` (minified) is addressed by the pretty/minify
+toggle work, not gap-024.
+
+### gap-027 → RESOLVED (incidental)
+
+The precedence ladder also closes gap-027 (precedence-aware paren
+insertion) — they were two views of the same underlying problem. The
+`test_operator_precedence_inserts_inner_parens` placeholder stays
+`#[ignore]`-d pending a follow-up that adds the actual upstream
+`a*(b+c)` test cases now that the emitter supports them.
+
+### Updated inline tests
+
+Three inline tests in `lib.rs`:
+
+- `binary_addition_with_parens` renamed to `binary_addition_emits_without_outer_parens`, assertion flipped to `"2 + 3;"`.
+- `string_concat_with_parens` renamed to `string_concat_emits_without_outer_parens`, assertion flipped to `"\"foo\" + \"bar\";"`.
+- `untraced_program_still_emits` assertion flipped to `"2 + 3;"`.
+
+### Version bump
+
+`0.3.0` → `0.4.0`.
+
 ## [0.3.0] - 2026-05-31
 
 ### Added — CLOC12.07: port subset of upstream `CodePrinterTest`
