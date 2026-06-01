@@ -6183,6 +6183,85 @@ b = "y"
         );
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 23b — `defined?` operator
+    //
+    // `defined?(expr)` / `defined? expr` lowers to
+    // `BuiltinCall("defined?", [operand])` (PURE).  Works in both
+    // expression position (assignment RHS) and statement position.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn defined_with_parens_lowers_to_builtin_call() {
+        // `y = defined?(x)` → LetBinding(y, BuiltinCall("defined?", [VarRef x])).
+        let m = lower("x = 1\ny = defined?(x)\n");
+        let b = main_body(&m);
+        let value = match &b.stmts[1] {
+            Stmt::LetBinding { name, value, .. } if name == "y" => value,
+            other => panic!("expected LetBinding y, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "defined?");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+            }
+            other => panic!("expected BuiltinCall(defined?, [x]), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn defined_of_literal_lowers_with_literal_operand() {
+        // `y = defined?(1)` → operand is an IntLit (no parens-vs-bare diff
+        // at the SIR level).
+        let m = lower("y = defined?(1)\n");
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "defined?");
+                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected BuiltinCall(defined?, [1]), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn defined_in_statement_position_is_expr_stmt() {
+        // `defined?(x)` as a bare statement → Stmt::ExprStmt wrapping the
+        // BuiltinCall (the grammar routes it via the statement-level
+        // `defined_expression` alternative, not `method_call`).
+        let m = lower("x = 1\ndefined?(x)\n");
+        let b = main_body(&m);
+        match &b.stmts[1] {
+            Stmt::ExprStmt { expr, .. } => match expr {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "defined?");
+                    assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                }
+                other => panic!("expected BuiltinCall(defined?, …), got {:?}", other),
+            },
+            other => panic!("expected ExprStmt for bare defined?, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn defined_expression_validates_e2e() {
+        // Phase 23b (FC) — end-to-end: `defined?(x)` in trailing-value
+        // position (so the operand VarRef sees the prior binding) lowers
+        // to a PURE BuiltinCall that round-trips the SIR validator.
+        let m = lower("x = 1\ndefined?(x)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected defined?-using module: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to

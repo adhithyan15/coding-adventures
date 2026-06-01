@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.69.0] - 2026-06-01
+
+### Added (Phase 23b (FC) — `defined?` operator)
+
+New grammar rule `defined_expression = "defined?" factor`, added as the
+first alternative of `factor` (so the `defined?` keyword wins over the
+bare `KEYWORD` alternative that would otherwise leave the operand
+unconsumed) and also to the `statement` alternation before `method_call`
+(so a bare `defined?(x)` statement parses as `defined_expression` rather
+than being swallowed as a `method_call` to a callee named `defined?`).
+The lexer already emits `defined?` as a single `KEYWORD` token (trailing
+`?` included), matched here by value. `_grammar.rs` regenerated.
+
+Covers both `defined?(x)` (operand = `LPAREN expression RPAREN`) and the
+bare tight form `defined? x` (operand = NAME). New parser pins:
+`test_parse_defined_with_parens`, `test_parse_defined_without_parens`,
+`test_parse_defined_statement_position`. Test count: 238 → 241.
+
 ## [0.68.0] - 2026-05-31
 
 ### Added (Phase 21c (FC) — implicit `it` block parameter, Ruby 3.4)
