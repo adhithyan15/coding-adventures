@@ -6094,6 +6094,46 @@ impl Lowerer {
                                     span,
                                 });
                             }
+                            // Phase 23d (FC) — `__dir__` is Ruby's
+                            // pseudo-variable for the directory name of the
+                            // current source file (`File.dirname(__FILE__)`,
+                            // expanded).  Like `__FILE__` / `__LINE__` it is
+                            // NOT a lexer keyword (it arrives as an ordinary
+                            // `Name` token) and the grammar already matches
+                            // it via `factor`'s bare-NAME alternative — so NO
+                            // grammar/lexer change is needed; we intercept it
+                            // here at lowering time, exactly like the sibling
+                            // pseudo-variables.
+                            //
+                            // It lowers to a compile-time `StrLit` carrying
+                            // the directory portion of the lowerer's
+                            // `file_name`: the substring before the final
+                            // path separator (`/` or `\`), or `"."` when the
+                            // name has no directory component (the closest
+                            // fixed value for "the current directory" without
+                            // a runtime filesystem — consistent with how
+                            // `__FILE__` surfaces the bare module name).
+                            // Emitting a `StrLit` means the module uses the
+                            // `strings` feature, so we declare it.
+                            //
+                            // A `__dir__` shadowed by a local binding
+                            // (`__dir__ = 1`) keeps the local, mirroring the
+                            // sibling shadow guards.  Scope: the bare form;
+                            // the explicit-call form `__dir__()` is a
+                            // deliberate follow-up slice.
+                            if tok.value == "__dir__"
+                                && !self.declared_locals.contains("__dir__")
+                            {
+                                let dir = match self
+                                    .file_name
+                                    .rfind(|c| c == '/' || c == '\\')
+                                {
+                                    Some(i) => self.file_name[..i].to_string(),
+                                    None => ".".to_string(),
+                                };
+                                self.features_used.insert(Feature::Strings);
+                                return Ok(Expr::StrLit { value: dir, span });
+                            }
                             // Inside a function body, parameter
                             // names lex as `VarRef` with
                             // `Scope::Param` so the SIR validator

@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.74.0] - 2026-06-01
+
+### Added (Phase 23d (FC) — `__dir__` parse pins)
+
+Regression pins confirming Ruby's `__dir__` pseudo-variable parses with
+**no grammar change** (sibling of Phase 23a `__FILE__` / 23c `__LINE__`):
+`__dir__` is not a lexer keyword — it arrives as an ordinary `NAME` token
+matched by `factor`'s existing bare-`NAME` alternative in every
+expression position (standalone statement, call argument, assignment
+RHS).  The feature's semantics are supplied entirely at lowering time
+(see the `ruby-to-semantic-ir` 0.82.0 entry); this crate's grammar is
+unchanged, so these are pure parse-shape pins.  New tests:
+`test_parse_dir_keyword_as_factor`, `test_parse_dir_keyword_in_call_arg`,
+`test_parse_dir_keyword_in_assignment_rhs`.
+
 ## [0.73.0] - 2026-06-01
 
 ### Added (Phase 23c (FC) — `__LINE__` parse pins)

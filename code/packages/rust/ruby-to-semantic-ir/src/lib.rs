@@ -6538,6 +6538,68 @@ b = "y"
     }
 
     #[test]
+    fn dir_keyword_lowers_to_strlit() {
+        // Phase 23d (FC) — `__dir__` lowers to a compile-time StrLit
+        // carrying the directory portion of the lowerer's `file_name`.
+        // The test module name is "test" (no path separator), so the
+        // directory is the conventional ".".
+        let m = lower("puts(__dir__)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::StrLit { value, .. } if value == "."),
+            "expected `__dir__` to lower to StrLit(\".\"), got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
+    fn dir_keyword_declares_strings_feature() {
+        // Emitting the StrLit means the module must declare the `strings`
+        // feature — verify the manifest carries it.
+        let m = lower("puts(__dir__)\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Strings),
+            "expected Strings feature for `__dir__`; got {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn dir_keyword_validates_e2e() {
+        // End-to-end: a `__dir__`-using module round-trips the SIR
+        // validator (the StrLit is a self-contained literal).
+        let m = lower("puts(__dir__)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected `__dir__`-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn dir_keyword_shadowed_by_local_is_varref() {
+        // A `__dir__` shadowed by a prior local binding keeps the local
+        // (mirrors the sibling shadow guards): the read lowers to a
+        // VarRef, NOT the directory StrLit.
+        let m = lower("__dir__ = 1\nputs(__dir__)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::VarRef { name, .. } if name == "__dir__"),
+            "expected shadowed `__dir__` to stay a VarRef, got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
         // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips

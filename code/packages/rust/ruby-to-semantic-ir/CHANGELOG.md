@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.82.0] - 2026-06-01
+
+### Added (Phase 23d (FC) — `__dir__` pseudo-variable lowering)
+
+Ruby's `__dir__` pseudo-variable now lowers to a compile-time `StrLit`
+carrying the directory portion of the lowerer's `file_name`: the
+substring before the final path separator (`/` or `\`), or `"."` when the
+name has no directory component — the closest fixed value for "the
+current directory" absent a runtime filesystem, consistent with how
+`__FILE__` surfaces the bare module name.
+
+Sibling of Phase 23a `__FILE__` / 23c `__LINE__`: because `__dir__` is
+**not** a lexer keyword it arrives as an ordinary `Name` token and the
+parser already matches it via `factor`'s bare-`NAME` alternative, so **no
+grammar or lexer change** was needed.  The meaning is supplied entirely in
+`lower_factor_atom`, intercepting the bare `Name` exactly like the sibling
+pseudo-variables: when the token value is `__dir__` and it is **not**
+shadowed by a local binding, we emit the `StrLit` and declare
+`Feature::Strings`.  A `__dir__` shadowed by a prior local (`__dir__ = 1`)
+keeps the local read (a `VarRef`), mirroring the existing shadow guards.
+Scope: the bare form; the explicit-call form `__dir__()` is a deliberate
+follow-up slice.
+
+New lowering tests: `dir_keyword_lowers_to_strlit`,
+`dir_keyword_declares_strings_feature`, `dir_keyword_validates_e2e`
+(lower → validate round-trip), `dir_keyword_shadowed_by_local_is_varref`.
+
 ## [0.81.0] - 2026-06-01
 
 ### Added (Phase 23c (FC) — `__LINE__` pseudo-variable lowering)
