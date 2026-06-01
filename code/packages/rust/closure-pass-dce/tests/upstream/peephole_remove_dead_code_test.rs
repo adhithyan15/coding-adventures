@@ -29,9 +29,9 @@ use coding_adventures_closure_pass_dce::DcePass;
 use coding_adventures_closure_pass_pipeline::{Pass, PassContext};
 use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, BlockStatement, Declaration, EmptyStatement, Expression,
-    ExpressionStatement, FunctionDeclaration, Identifier, NumericLiteral, Program, ProgramItem,
-    ReturnStatement, SourceType, Statement,
+    statement::TaggedStatement, BlockStatement, BreakStatement, Declaration, EmptyStatement,
+    Expression, ExpressionStatement, FunctionDeclaration, Identifier, LabeledStatement,
+    NumericLiteral, Program, ProgramItem, ReturnStatement, SourceType, Statement,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use coding_adventures_type_sidecar::Sidecar;
@@ -167,11 +167,34 @@ fn assert_dce_same(body: Vec<Statement>) {
 ///   fold("a: break a;", "");
 ///   fold("a: { break a; }", "");
 ///
-/// Labelled statements need an AST node we don't have yet.
+/// gap-009 PARTIALLY closed in CLOC12.13: the `LabeledStatement` /
+/// `BreakStatement` AST nodes are now modelled, so we can BUILD the
+/// input AST and assert that DCE handles it cleanly. The actual
+/// "collapse `a: break a;` to empty" optimisation is a separate
+/// gap — DCE today preserves the labelled-break-self verbatim
+/// because no other pass yet rewrites it. This test pins the
+/// **current** behaviour (passthrough) so the future collapse
+/// commit can flip the assertion when the optimisation lands.
 #[test]
-#[ignore = "blocked on gap-009: LabeledStatement / BreakStatement not modelled in Phase 1 AST"]
 fn test_remove_no_op_labelled_statement() {
-    // Would assert that `a: break a;` collapses to empty.
+    // a: break a;  — built by hand because we don't yet have a parser.
+    let label = Identifier {
+        cv: None,
+        name: "a".to_string(),
+    };
+    let inner_break = Statement::break_statement(BreakStatement {
+        cv: None,
+        label: Some(label.clone()),
+    });
+    let labelled = Statement::labeled_statement(LabeledStatement {
+        cv: None,
+        label,
+        body: Box::new(inner_break),
+    });
+    // Current DCE leaves it alone (passthrough). When the collapse
+    // optimisation lands, change `assert_dce_same` → `assert_dce_yields(
+    // vec![labelled], vec![])`.
+    assert_dce_same(vec![labelled]);
 }
 
 /// Upstream `testFoldBlock`:

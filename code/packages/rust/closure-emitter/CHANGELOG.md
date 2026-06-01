@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-01
+
+### Added — CLOC12.13: emit `LabeledStatement` (gap-009 AST partial close)
+
+Adds emitter support for the new `LabeledStatement` variant added to
+`javascript-ast` in CLOC12.13. Compact form is `label:body` with
+no whitespace; pretty form is `label: body` (single space between
+the colon and the body). The body's own emitter writes its trailing
+`;`, so we never double-print.
+
+Tests cover `a: foo();`, `break;`, `break a;`, and the literal
+upstream-test input `a: break a;`. The `BreakStatement` emit path
+was already in place from the original 0.1.0 scaffold — these tests
+pin its current behaviour now that there's a label node to combine
+with.
+
 ## [0.6.0] - 2026-06-01
 
 ### Added — CLOC12.12: number formatting shortest-form (closes gap-025)

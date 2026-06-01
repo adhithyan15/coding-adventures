@@ -87,11 +87,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-009 — `LabeledStatement` / `BreakStatement` not modelled in Phase 1 AST
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.13 (AST modelled; `testRemoveNoOpLabelledStatement` now exercises real nodes). Residual: the actual *collapse* of `a: break a;` to empty is its own follow-up gap (tracked in-test).
 - **Upstream test:** `PeepholeRemoveDeadCodeTest::testRemoveNoOpLabelledStatement`, `testRemoveUselessLabelWithFollowingBreak`
 - **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
-- **Why it fails:** The Phase 1 typed AST in `javascript-ast` doesn't include `LabeledStatement` or `BreakStatement` variants. Upstream's `a: break a;` requires both.
-- **What it needs:** Add Phase 1.x variants. `LabeledStatement { label: Identifier, body: Statement }` and `BreakStatement { label: Option<Identifier> }`. Then teach DCE that `a: break a;` collapses to empty. Probably a CLOC09 Phase 1.x amendment + a small DCE rule.
+- **Resolution note:** `BreakStatement` was already modelled in the original Phase 1 implementation; `LabeledStatement` was the missing piece. CLOC12.13 adds `LabeledStatement { label: Identifier, body: Box<Statement>, cv }` to `javascript-ast`, wires it through constant-fold / fold-control-flow / DCE (passthrough — recurse into body, label preserved), and teaches `closure-emitter` to print `label:body`. The test stub was un-ignored and rewritten to build the `a: break a;` AST by hand and assert the pipeline preserves it verbatim (which is the *current* behaviour). When the collapse optimisation lands the assertion flips from `assert_dce_same` → `assert_dce_yields(..., vec![])`.
 
 ### gap-010 — block-flattening (single-child block collapse) not implemented
 

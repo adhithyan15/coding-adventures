@@ -302,6 +302,7 @@ specifically (renaming, treeshaking, remove-unused-vars).
 | `ReturnStatement`     | `cv: Option<CvId>`, `argument: Option<Expression>`                                                                                                          |
 | `BreakStatement`      | `cv: Option<CvId>`, `label: Option<Identifier>`                                                                                                             |
 | `ContinueStatement`   | `cv: Option<CvId>`, `label: Option<Identifier>`                                                                                                             |
+| `LabeledStatement`    | `cv: Option<CvId>`, `label: Identifier`, `body: Box<Statement>` — Phase 1.x (CLOC12.13)                                                                     |
 | `EmptyStatement`      | `cv: Option<CvId>`                                                                                                                                          |
 | `Declaration`         | wraps `Declaration` so a top-level or block-scoped declaration is also a `Statement` (matches ESTree's lift of `VariableDeclaration` etc. into `Statement`) |
 
@@ -313,9 +314,21 @@ pub enum ForInit {
 ```
 
 (Phase 2 adds `SwitchStatement`, `TryStatement`,
-`ThrowStatement`, `LabeledStatement`, `DoWhileStatement`,
+`ThrowStatement`, `DoWhileStatement`,
 `ForInStatement`, `ForOfStatement`, `DebuggerStatement`,
 `WithStatement`.)
+
+### Phase 1.x amendments (post-CLOC09 ratification)
+
+- **CLOC12.13 — `LabeledStatement`.** The upstream Closure-Compiler
+  DCE test suite includes `testRemoveNoOpLabelledStatement` which
+  folds `a: break a;` to empty. The collapse optimisation itself is
+  a separate gap, but modelling the AST node is its blocking
+  prerequisite — so `LabeledStatement` is lifted from Phase 2 into
+  Phase 1.x to unblock the test port. Adding it is binary-compatible:
+  existing tagged-statement consumers had to gain one match arm in
+  constant-fold, fold-control-flow, and DCE, all of which recurse
+  into the labelled body and leave the label untouched.
 
 ## Phase 1 — Expression variants
 

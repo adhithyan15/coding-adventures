@@ -235,6 +235,19 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
                 argument: s.argument.as_ref().map(|e| fold_expression(e, st)),
             }))
         }
+        TaggedStatement::LabeledStatement(s) => {
+            // Fold inside the body. Don't try to peephole the label
+            // away yet — `a: break a;` collapse is its own gap, handled
+            // separately (it requires DCE/fold-control-flow to prove
+            // there's no other reference to the label).
+            Statement::Tagged(TaggedStatement::LabeledStatement(
+                coding_adventures_javascript_ast::LabeledStatement {
+                    cv: s.cv.clone(),
+                    label: s.label.clone(),
+                    body: Box::new(fold_statement(&s.body, st)),
+                },
+            ))
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => Statement::Tagged(stmt.clone()),

@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.3.1] - 2026-06-01
+
+### Changed — CLOC12.13: handle new `LabeledStatement` variant
+
+The fold-control-flow pass gained a
+`TaggedStatement::LabeledStatement` match arm so it compiles against
+the new `javascript-ast 0.3.0` AST. Behaviour: recurse into the
+labelled body, preserve the label verbatim. The collapse-to-empty
+optimisation for `a: break a;` lives elsewhere and is tracked under
+the gap-009 follow-up.
+
 ## [0.3.0] - 2026-05-31
 
 ### Added — CLOC12.05: port subset of upstream `PeepholeMinimizeConditionsTest`
