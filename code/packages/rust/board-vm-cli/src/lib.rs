@@ -31,8 +31,8 @@ use board_vm_language_core::{
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
-    decode_wire_frame, encode_wire_frame, ProtocolError, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST,
-    BOOT_STORE_ONLY,
+    decode_wire_frame, encode_wire_frame, ProgramFormat, ProtocolError, BOOT_RUN_AT_BOOT,
+    BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY,
 };
 use board_vm_serial::{
     available_ports, BoardSerialTransport, DataBits, FlowControl, Parity, SerialConfig, SerialPort,
@@ -950,6 +950,11 @@ pub struct EjectReport {
     pub program_id: u16,
     pub slot: u8,
     pub boot_policy: u8,
+    pub program_format: ProgramFormat,
+    pub module_version: u8,
+    pub module_flags: u8,
+    pub max_stack: u8,
+    pub required_capabilities: Vec<u16>,
     pub module_len: usize,
     pub module_crc32: u32,
 }
@@ -1503,6 +1508,11 @@ pub fn render_blink_eject(options: &EjectBlinkOptions) -> Result<(String, EjectR
         program_id: artifact.program_id,
         slot: artifact.slot,
         boot_policy: artifact.boot_policy,
+        program_format: artifact.format,
+        module_version: artifact.module_version,
+        module_flags: artifact.module_flags,
+        max_stack: artifact.max_stack,
+        required_capabilities: artifact.required_capabilities.to_vec(),
         module_len: artifact.module_len(),
         module_crc32: artifact.module_crc32,
     };
@@ -2158,6 +2168,41 @@ where
     write_labeled_run(output, "blink", &report.run)?;
     writeln!(output, "ping ok={}", report.ping.ok)?;
     write_labeled_run(output, "stop", &report.stop)
+}
+
+pub fn write_eject_report<W>(output: &mut W, report: &EjectReport) -> Result<(), CliError>
+where
+    W: Write,
+{
+    writeln!(
+        output,
+        "eject output={} program_id={} slot={} boot_policy={} format=0x{:02X} module_version={} module_flags=0x{:02X} max_stack={} required_capability_count={} required_capabilities={} bytes={} crc32=0x{:08X}",
+        report.output,
+        report.program_id,
+        report.slot,
+        report.boot_policy,
+        report.program_format.as_u8(),
+        report.module_version,
+        report.module_flags,
+        report.max_stack,
+        report.required_capabilities.len(),
+        format_capability_ids(&report.required_capabilities),
+        report.module_len,
+        report.module_crc32
+    )?;
+    Ok(())
+}
+
+fn format_capability_ids(capabilities: &[u16]) -> String {
+    let mut out = String::from("[");
+    for (index, capability) in capabilities.iter().enumerate() {
+        if index > 0 {
+            out.push(',');
+        }
+        out.push_str(&format!("0x{capability:04X}"));
+    }
+    out.push(']');
+    out
 }
 
 fn format_run_values(values: &[RunValue]) -> String {
@@ -3041,6 +3086,11 @@ mod tests {
                 program_id: 7,
                 slot: 2,
                 boot_policy: BOOT_RUN_IF_NO_HOST,
+                program_format: ProgramFormat::BvmModule,
+                module_version: 1,
+                module_flags: 1,
+                max_stack: 4,
+                required_capabilities: vec![0x0001, 0x0002, 0x0010],
                 module_len: BLINK_MODULE_LEN,
                 module_crc32: 0xBAD6_949E,
             }
@@ -3075,6 +3125,31 @@ mod tests {
 
         assert_eq!(report.output, options.output);
         assert!(source.contains("pub const BOARD_VM_PROGRAM_ID: u16 = 1;"));
+    }
+
+    #[test]
+    fn write_eject_report_surfaces_artifact_metadata() {
+        let report = EjectReport {
+            output: "blink.rs".to_owned(),
+            program_id: 7,
+            slot: 2,
+            boot_policy: BOOT_RUN_IF_NO_HOST,
+            program_format: ProgramFormat::BvmModule,
+            module_version: 1,
+            module_flags: 1,
+            max_stack: 4,
+            required_capabilities: vec![0x0001, 0x0002, 0x0010],
+            module_len: BLINK_MODULE_LEN,
+            module_crc32: 0xBAD6_949E,
+        };
+        let mut output = Vec::new();
+
+        write_eject_report(&mut output, &report).unwrap();
+
+        assert_eq!(
+            String::from_utf8(output).unwrap(),
+            "eject output=blink.rs program_id=7 slot=2 boot_policy=2 format=0x01 module_version=1 module_flags=0x01 max_stack=4 required_capability_count=3 required_capabilities=[0x0001,0x0002,0x0010] bytes=36 crc32=0xBAD6949E\n"
+        );
     }
 
     #[test]

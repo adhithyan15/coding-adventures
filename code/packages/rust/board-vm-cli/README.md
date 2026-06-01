@@ -88,7 +88,9 @@ with loopback coverage for interactive upload/run flows over serial endpoint
 metadata, TCP, BLE GATT, and RFCOMM.
 
 `eject blink` writes the current blink MVP as embeddable Rust constants with a
-program id, slot, boot policy, bytecode CRC, and BVM module bytes. That output
-is intentionally board-agnostic so Uno R4, ESP32, Pico, and future firmware
-backends can consume the same ejected artifact format while owning their own HAL
-and startup behavior.
+program id, slot, boot policy, BVM module metadata, required capabilities,
+bytecode CRC, and BVM module bytes. The command report mirrors that metadata so
+language frontends can stay thin over the Rust-owned artifact contract instead
+of parsing generated Rust constants. The output is intentionally board-agnostic
+so Uno R4, ESP32, Pico, and future firmware backends can consume the same
+ejected artifact format while owning their own HAL and startup behavior.
