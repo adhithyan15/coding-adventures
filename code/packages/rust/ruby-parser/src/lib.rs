@@ -3983,6 +3983,45 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_dir_keyword_as_factor() {
+        // Phase 23d (FC) — `__dir__`, like `__FILE__` / `__LINE__`, is NOT
+        // a lexer keyword (it lexes as an ordinary NAME) and needs no
+        // grammar rule: it parses through `factor`'s bare-NAME alternative.
+        let ast = parse_ruby("__dir__\n");
+        assert!(
+            tree_has_token_value(&ast, "__dir__"),
+            "expected `__dir__` token to be present in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_dir_keyword_in_call_arg() {
+        // `puts(__dir__)` — `__dir__` parses as a call argument expression
+        // (factor → NAME).
+        let ast = parse_ruby("puts(__dir__)\n");
+        assert!(
+            tree_has_token_value(&ast, "__dir__"),
+            "expected `__dir__` token in the `puts(__dir__)` call args"
+        );
+    }
+
+    #[test]
+    fn test_parse_dir_keyword_in_assignment_rhs() {
+        // `d = __dir__` — `__dir__` parses as the assignment RHS
+        // expression, the same NAME-factor path a normal variable read
+        // would take.
+        let ast = parse_ruby("d = __dir__\n");
+        assert!(
+            tree_has_token_value(&ast, "d"),
+            "expected LHS name `d` in the assignment"
+        );
+        assert!(
+            tree_has_token_value(&ast, "__dir__"),
+            "expected `__dir__` token as the assignment RHS"
+        );
+    }
+
+    #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
         let ast = parse_ruby("def hello = 1");
