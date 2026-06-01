@@ -6655,6 +6655,86 @@ b = "y"
     }
 
     #[test]
+    fn refine_lowers_to_builtin_call() {
+        // Phase 26b (FC) — `refine(Class) do … end` lowers to a
+        // statement-position BuiltinCall("refine", [<class>, <closure>])
+        // rather than an unknown DirectCall.  A lone trailing call is the
+        // block's VALUE.
+        let m = lower("String = 1\nrefine(String) do\n  1\nend\n");
+        let b = main_body(&m);
+        // A block-taking call at statement position lowers to an ExprStmt
+        // (not the block's trailing VALUE like a paren-less call does).
+        let call = refine_call(b);
+        match call {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "refine");
+                assert_eq!(
+                    args.len(),
+                    2,
+                    "expected [target class, refinement closure]"
+                );
+            }
+            other => panic!("expected BuiltinCall(refine, …), got {:?}", other),
+        }
+    }
+
+    /// Locate the `refine` BuiltinCall among a block's ExprStmts.
+    fn refine_call(b: &semantic_ir::Block) -> &Expr {
+        b.stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt {
+                    expr: e @ Expr::BuiltinCall { name, .. },
+                    ..
+                } if name == "refine" => Some(e),
+                _ => None,
+            })
+            .expect("expected a refine BuiltinCall ExprStmt")
+    }
+
+    #[test]
+    fn refine_block_is_makeclosure_arg() {
+        // The refinement body is hoisted to a `MakeClosure` trailing arg
+        // (the same shape `lower_method_with_block` uses for any
+        // block-taking call).
+        let m = lower("String = 1\nrefine(String) do\n  1\nend\n");
+        let b = main_body(&m);
+        let args = match refine_call(b) {
+            Expr::BuiltinCall { args, .. } => args,
+            other => panic!("expected refine BuiltinCall, got {:?}", other),
+        };
+        assert!(
+            matches!(&args[1], Expr::MakeClosure { .. }),
+            "expected the refinement block to lower to MakeClosure, got {:?}",
+            args[1]
+        );
+    }
+
+    #[test]
+    fn refine_is_pure_and_validates_e2e() {
+        // End-to-end: a `refine`-using module round-trips the SIR
+        // validator — the call is a first-class PURE builtin (not an
+        // undeclared DirectCall), the target class is declared by the
+        // preceding assignment, and the hoisted refinement closure is a
+        // well-formed function.
+        let m = lower("String = 1\nrefine(String) do\n  1\nend\n");
+        match refine_call(main_body(&m)) {
+            Expr::BuiltinCall { effects, .. } => assert!(
+                !effects.contains(Effect::Divergent),
+                "refine should be PURE (non-divergent), got {:?}",
+                effects
+            ),
+            other => panic!("expected refine BuiltinCall, got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected `refine`-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
         // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips
