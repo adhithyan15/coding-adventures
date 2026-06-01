@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.67.0] - 2026-05-31
+
+### Added (Phase 11c (FC) — `retry` keyword)
+
+New `retry_statement` lowering, folded into the Phase 11b arm
+(`redo_statement | retry_statement`):
+
+```
+retry → ExprStmt(BuiltinCall("retry", [], Divergent))
+```
+
+`retry` mirrors `redo`: a bare keyword lowering to a **zero-argument**
+Divergent `BuiltinCall`.  It re-executes the enclosing `begin` block
+from the top inside a `rescue` clause, so it diverges from straight-line
+control flow.  No new SIR variant — it reuses the existing `BuiltinCall`
+envelope, so the walker, validator, printer, and all four backends
+handle it generically by name (same as `redo`/`break`/`next`).
+
+New lowering pins (+3): `retry_lowers_to_zero_arg_divergent_builtin`
+(`retry` → `retry`, 0 args, Divergent),
+`retry_inside_begin_rescue_lowers` (`begin; x = 1; rescue; retry; end`
+— the marker lands inside a `Stmt::TryCatch` rescue-clause body),
+`retry_module_passes_sir_validator` (validates).  Test count: 277 → 280.
+
 ## [0.66.0] - 2026-05-31
 
 ### Added (Phase 11b (FC) — `redo` keyword)

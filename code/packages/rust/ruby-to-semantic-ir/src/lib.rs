@@ -1724,6 +1724,54 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 11c — `retry` keyword (re-execute enclosing begin block)
+    //
+    // `retry` mirrors `redo`: a bare keyword lowering to a ZERO-argument
+    // Divergent BuiltinCall.  It re-runs the enclosing `begin` block from
+    // the top inside a `rescue` clause, so it diverges from straight-line
+    // control flow.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn retry_lowers_to_zero_arg_divergent_builtin() {
+        let m = lower("retry");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, effects, .. }, .. } => {
+                assert_eq!(name, "retry");
+                assert!(args.is_empty(), "retry carries no operand, got {:?}", args);
+                assert!(effects.contains(Effect::Divergent));
+            }
+            other => panic!("expected ExprStmt(BuiltinCall(retry, [])), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn retry_inside_begin_rescue_lowers() {
+        // `retry` nested in a rescue clause lowers to its builtin; find
+        // the `Stmt::TryCatch` and confirm its catch block holds
+        // BuiltinCall(retry).
+        let m = lower("begin\n  x = 1\nrescue\n  retry\nend\n");
+        let b = main_body(&m);
+        let rescues = b.stmts.iter().find_map(|s| match s {
+            Stmt::TryCatch { rescues, .. } => Some(rescues),
+            _ => None,
+        }).expect("expected a Stmt::TryCatch in the module body");
+        let has_retry = rescues.iter().any(|rc| rc.body.iter().any(|s| matches!(
+            s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "retry"
+        )));
+        assert!(has_retry, "expected BuiltinCall(retry) in a rescue clause body");
+    }
+
+    #[test]
+    fn retry_module_passes_sir_validator() {
+        let m = lower("begin\n  x = 1\nrescue\n  retry\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6k — unary minus → BuiltinCall("neg", [x]).
     // -----------------------------------------------------------------
 

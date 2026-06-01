@@ -917,15 +917,22 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
-            "redo_statement" => {
-                // Phase 11b: `redo` restarts the current loop iteration
-                // without re-checking the condition.  It is a bare
-                // keyword that never carries a value, so it lowers to a
+            "redo_statement" | "retry_statement" => {
+                // Phase 11b/11c: `redo` restarts the current loop
+                // iteration without re-checking the condition; `retry`
+                // re-executes the enclosing `begin` block from the top
+                // (inside a `rescue` clause).  Both are bare keywords
+                // that never carry a value, so they lower to a
                 // zero-argument Divergent BuiltinCall — distinct from
                 // `break`/`next`, which always carry an operand (NilLit
                 // when bare).  No `expression` child to inspect.
+                let name = match node.rule_name.as_str() {
+                    "redo_statement" => "redo",
+                    "retry_statement" => "retry",
+                    _ => unreachable!(),
+                };
                 let expr = Expr::BuiltinCall {
-                    name: "redo".to_string(),
+                    name: name.to_string(),
                     args: vec![],
                     effects: EffectSet::PURE.with(Effect::Divergent),
                     span: self.span_of(node),

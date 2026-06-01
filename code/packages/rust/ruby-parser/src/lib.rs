@@ -1375,6 +1375,42 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 11c — `retry` keyword (re-execute enclosing begin block)
+    //
+    // `retry` is a bare control-flow keyword (lexer-tagged KEYWORD) that
+    // never carries a value.  The grammar rule `retry_statement = "retry"`
+    // sits in the `statement` alternation right after `redo_statement`.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_retry_bare() {
+        let ast = parse_ruby("retry");
+        assert!(find_statement_inner(&ast, "retry_statement").is_some());
+    }
+
+    #[test]
+    fn test_parse_retry_has_no_expression_child() {
+        // `retry` carries no operand — its subtree must contain NO
+        // `expression` node (like `redo`, unlike `break`/`next`).
+        let ast = parse_ruby("retry");
+        let r = find_statement_inner(&ast, "retry_statement")
+            .expect("expected retry_statement");
+        assert!(!r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_retry_inside_begin_rescue_body() {
+        // `retry` is idiomatic inside a `rescue` clause; confirm it parses
+        // as a statement within a `begin … rescue … end` block.  Use the
+        // recursive descendant search since the keyword nests deep.
+        let ast = parse_ruby("begin\n  x = 1\nrescue\n  retry\nend");
+        assert!(find_descendant(&ast, "retry_statement").is_some());
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6k — unary minus `-5`, `-x`, `-(1+2)`
     // -----------------------------------------------------------------------
 
