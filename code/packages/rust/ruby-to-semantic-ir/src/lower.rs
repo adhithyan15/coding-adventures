@@ -3736,28 +3736,46 @@ impl Lowerer {
         // classifies bare `|` ops as Name tokens (see
         // ruby-lexer/src/lib.rs::classify_op_token), so we filter
         // them out by value, not by type.
+        // Phase 21a (FC) — block-local variables.  The `block_params`
+        // pipe contents may contain a `;` (Semicolon token) that
+        // separates the parameter names (before) from block-local
+        // variable names (after): `{ |x; y, z| … }`.  Names before the
+        // semicolon are parameters; names after it are fresh locals
+        // scoped to the block body (declared so VarRefs resolve, but
+        // NOT added to the parameter list).  We walk the pipe tokens in
+        // order, flipping a flag when we hit the `;`.
         let params_node = self.find_node_child(inner, "block_params");
-        let params: Vec<Param> = match params_node {
-            Some(pn) => pn
-                .children
-                .iter()
-                .filter_map(|c| match c {
+        let mut params: Vec<Param> = Vec::new();
+        let mut block_locals: Vec<String> = Vec::new();
+        if let Some(pn) = params_node {
+            let mut seen_semicolon = false;
+            for c in &pn.children {
+                match c {
+                    ASTNodeOrToken::Token(t)
+                        if matches!(t.type_, TokenType::Semicolon) =>
+                    {
+                        seen_semicolon = true;
+                    }
                     ASTNodeOrToken::Token(t)
                         if matches!(t.type_, TokenType::Name) && t.value != "|" =>
                     {
-                        Some(Param {
-                            name: t.value.clone(),
-                            sir_type: None,
-                            span: self.span_of_token(t),
-                        })
+                        if seen_semicolon {
+                            block_locals.push(t.value.clone());
+                        } else {
+                            params.push(Param {
+                                name: t.value.clone(),
+                                sir_type: None,
+                                span: self.span_of_token(t),
+                            });
+                        }
                     }
-                    _ => None,
-                })
-                .collect(),
-            None => Vec::new(),
-        };
-        // Block params are untyped → declare dynamic-typing.
-        if !params.is_empty() {
+                    _ => {}
+                }
+            }
+        }
+        // Block params are untyped → declare dynamic-typing.  Block-local
+        // variables are likewise dynamically typed.
+        if !params.is_empty() || !block_locals.is_empty() {
             self.features_used.insert(Feature::DynamicTyping);
         }
 
@@ -3769,6 +3787,12 @@ impl Lowerer {
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
+        }
+        // Block-local variables (Phase 21a): fresh locals scoped to the
+        // block body.  Declared so VarRefs resolve, but NOT params —
+        // they shadow outer bindings and start unbound.
+        for name in &block_locals {
+            self.declared_locals.insert(name.clone());
         }
 
         // Body statements: every direct `statement` child of the
@@ -3824,6 +3848,27 @@ impl Lowerer {
         let value = value.unwrap_or(Expr::NilLit {
             span: self.span_of(inner),
         });
+
+        // Phase 21a (FC) — materialize block-local variables.  Each
+        // block-local needs an explicit `LetBinding <name> = nil` at the
+        // top of the body so the SIR validator knows the name exists
+        // (otherwise VarRefs to it report "references unknown name").
+        // They initialize to nil (unbound) — Ruby block-locals start nil.
+        if !block_locals.is_empty() {
+            let mut prefix: Vec<Stmt> = block_locals
+                .iter()
+                .map(|name| Stmt::LetBinding {
+                    name: name.clone(),
+                    sir_type: None,
+                    value: Expr::NilLit {
+                        span: self.span_of(inner),
+                    },
+                    span: self.span_of(inner),
+                })
+                .collect();
+            prefix.append(&mut stmts_out);
+            stmts_out = prefix;
+        }
 
         // Restore outer scope.
         self.declared_locals = saved_locals;

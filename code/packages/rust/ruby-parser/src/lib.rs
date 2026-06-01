@@ -1059,6 +1059,78 @@ mod tests {
         assert_eq!(names, vec!["x", "y"]);
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 21a (FC) — block-local variables `{ |x; y| … }`
+    //
+    // After the regular block parameters, an optional `;` introduces a list
+    // of block-local variables.  The pipe contents become
+    // `NAME { COMMA NAME } [ ";" NAME { COMMA NAME } ]`.  These pins confirm
+    // the `;` Semicolon token and the block-local names parse inside the
+    // `block_params` node.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_brace_block_with_one_block_local() {
+        let ast = parse_ruby("each { |x; y| x }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        // The `;` Semicolon token survives inside block_params.
+        assert!(bp.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Semicolon)
+        )));
+        // Both `x` (param) and `y` (block-local) appear as Name tokens.
+        let names: Vec<&str> = bp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) && t.value != "|" =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn test_parse_do_block_with_two_block_locals() {
+        let ast = parse_ruby("each do |a; b, c|\n  puts a\nend");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        let names: Vec<&str> = bp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) && t.value != "|" =>
+                {
+                    Some(t.value.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["a", "b", "c"]);
+    }
+
+    #[test]
+    fn test_parse_block_without_locals_has_no_semicolon() {
+        // Regression: a plain `|x, y|` block must NOT contain a Semicolon
+        // token in its block_params (the `;` clause is optional).
+        let ast = parse_ruby("each { |x, y| x }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        let bp = find_descendant(mwb, "block_params").expect("expected block_params");
+        assert!(!bp.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Semicolon)
+        )));
+    }
+
     #[test]
     fn test_parse_method_call_with_args_and_block() {
         let ast = parse_ruby("each(1, 2) { puts 1 }");
