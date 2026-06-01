@@ -203,14 +203,50 @@ fn test_remove_no_op_labelled_statement() {
 ///   fold("{foo();{}}", "foo()");
 ///   ... (block-flattening cases) ...
 ///
-/// Block flattening — collapsing nested `BlockStatement` that holds
-/// only one or zero meaningful statements into its child — is not
-/// part of our DCE today. Tracked separately from the dead-code
-/// removal DCE actually does.
+/// **gap-010 closed in CLOC12.19**: a new flatten step in
+/// `dce_block_statement` splices any direct-child BlockStatement's
+/// body into the enclosing block. Empty inner blocks disappear;
+/// multi-statement inner blocks hoist their contents up. The
+/// flatten is gated on a scope-safety check so `let`/`const`/
+/// `class`/`function` inner blocks stay put (their bindings would
+/// leak upward otherwise).
 #[test]
-#[ignore = "blocked on gap-010: block-flattening / single-child block collapse not implemented"]
 fn test_fold_block_flattening() {
-    // Would assert that `{{foo();}}` collapses to `foo();`.
+    let block = |body: Vec<Statement>| {
+        Statement::block_statement(BlockStatement { cv: None, body })
+    };
+    let foo_call = expr_stmt(Expression::Identifier(Identifier {
+        cv: None,
+        name: "foo".to_string(),
+    }));
+    let bar_call = expr_stmt(Expression::Identifier(Identifier {
+        cv: None,
+        name: "bar".to_string(),
+    }));
+
+    // {{foo();}}  →  {foo();}   (outer body unchanged, but inner
+    // {foo();} flattens, leaving the outer body with just the
+    // call after one DCE pass).
+    assert_dce_yields(vec![block(vec![foo_call.clone()])], vec![foo_call.clone()]);
+
+    // {foo();{}}  →  {foo();}   (empty inner block drops, then
+    // EmptyStatement-removal phase also drops the empty)
+    assert_dce_yields(
+        vec![foo_call.clone(), block(vec![])],
+        vec![foo_call.clone()],
+    );
+
+    // {{};foo();}  →  {foo();}
+    assert_dce_yields(
+        vec![block(vec![]), foo_call.clone()],
+        vec![foo_call.clone()],
+    );
+
+    // {foo();{bar();}}  →  {foo();bar();}
+    assert_dce_yields(
+        vec![foo_call.clone(), block(vec![bar_call.clone()])],
+        vec![foo_call.clone(), bar_call.clone()],
+    );
 }
 
 /// Upstream `testFoldBlock` line:

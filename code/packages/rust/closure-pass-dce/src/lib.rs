@@ -71,7 +71,7 @@ use coding_adventures_javascript_ast::{
     BlockStatement, CallExpression, ConditionalExpression, Declaration, Expression,
     ExpressionStatement, ForInit, ForStatement, FunctionDeclaration, IfStatement,
     LogicalExpression, MemberExpression, ObjectExpression, Program, ProgramItem, Property,
-    PropertyKey, ReturnStatement, Statement, UnaryExpression, VariableDeclaration,
+    PropertyKey, ReturnStatement, Statement, UnaryExpression, VarKind, VariableDeclaration,
     VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -303,6 +303,61 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
         .map(|s| dce_statement(s, st))
         .collect();
 
+    // Block flattening (closes CLOC12 gap-010).
+    //
+    // Splice any direct-child `BlockStatement`'s body into our own
+    // body. After the recurse-into-children step above, the inner
+    // block has already had its own DCE applied, so what we splice
+    // in is the already-cleaned version. Truth table:
+    //
+    //   {{foo();}}            → {foo();}           (1-stmt inner)
+    //   {foo();{}}            → {foo();}           (empty inner)
+    //   {{};foo();}           → {foo();}           (empty inner first)
+    //   {{a();b();};}         → {a();b();}         (multi-stmt inner)
+    //   {foo();{bar();baz();}} → {foo();bar();baz();}
+    //   {let x=1;{let x=2;}}  → unchanged          (scope-safety)
+    //
+    // Scope safety: ECMAScript block scope means `let`, `const`,
+    // `class`, and inner `function` declarations are bound to their
+    // enclosing block. Hoisting their bodies into our scope would
+    // either leak a binding upward (changing semantics) or trigger
+    // a redeclaration TDZ error if a same-named binding already
+    // exists. So we ONLY flatten an inner block when its body
+    // contains no scope-bound declarations. Plain `var` is fine
+    // — it's function-scoped, so hoisting it out of an inner
+    // block doesn't change the binding's containing scope.
+    //
+    // Why DCE owns this fold: block flattening is a pure structural
+    // simplification with no semantic prerequisites — it can run
+    // safely without scope/symbol info beyond the per-block scan
+    // we already do here, and it makes downstream emitter output
+    // tighter. Per gap-010 it lives here for v1.
+    let pre_flatten_len = working.len();
+    let mut flattened: Vec<Statement> = Vec::with_capacity(pre_flatten_len);
+    let mut flattening_happened = false;
+    for stmt in working.drain(..) {
+        match &stmt {
+            Statement::Tagged(TaggedStatement::BlockStatement(inner))
+                if block_is_scope_safe_to_flatten(inner) =>
+            {
+                flattening_happened = true;
+                for inner_stmt in inner.body.iter() {
+                    flattened.push(inner_stmt.clone());
+                }
+            }
+            _ => flattened.push(stmt),
+        }
+    }
+    working = flattened;
+    if flattening_happened {
+        st.record(
+            &b.cv,
+            "block-flattened",
+            &format!("block with {} statements", pre_flatten_len),
+            &format!("flattened to {} statements", working.len()),
+        );
+    }
+
     // Drop dead-after-terminator.
     let original_len = working.len();
     if let Some(terminator_idx) = working
@@ -348,6 +403,35 @@ fn is_terminator(stmt: &Statement) -> bool {
         stmt,
         Statement::Tagged(TaggedStatement::ReturnStatement(_))
     )
+}
+
+/// Returns `true` when an inner BlockStatement's body can be
+/// hoisted into the enclosing block without changing ECMAScript
+/// scoping semantics. Used by the block-flattening fold
+/// (CLOC12.19 / gap-010).
+///
+/// Block-scoped declarations (`let`, `const`, `class`, inner
+/// function declarations) are bound to their enclosing block.
+/// Hoisting them upward either leaks the binding to a wider
+/// scope or causes a redeclaration error against a same-named
+/// binding in the outer block — either way, observably different.
+///
+/// `var` is function-scoped, so hoisting `{var x = 1;}` out of
+/// an inner block to the function-body level produces the same
+/// effective binding (a `var` declaration was already implicitly
+/// hoisted to the function scope by the spec). Hence `Var`-kind
+/// declarations are safe to flatten.
+fn block_is_scope_safe_to_flatten(b: &BlockStatement) -> bool {
+    b.body.iter().all(|s| match s {
+        Statement::Declaration(Declaration::VariableDeclaration(v)) => {
+            matches!(v.kind, VarKind::Var)
+        }
+        Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // Tagged statements never introduce a new lexical binding
+        // by themselves. `ExpressionStatement`, control flow,
+        // `EmptyStatement`, etc. are all safe.
+        Statement::Tagged(_) => true,
+    })
 }
 
 fn is_empty_statement(stmt: &Statement) -> bool {
@@ -711,11 +795,18 @@ mod tests {
     // ---------------- nested blocks ---------------------------
 
     #[test]
-    fn recurses_into_nested_blocks() {
+    fn recurses_into_nested_blocks_and_flattens() {
         // { x; { return; y; } z; }
-        // Outer block: kept (no top-level terminator at outer
-        // scope; the `return` is inside the inner block).
-        // Inner block: { return; y; } → { return; } (drop y).
+        //
+        // Step 1 (recurse): inner `{ return; y; }` → `{ return; }`
+        //                   (drop dead-after-return)
+        // Step 2 (flatten, CLOC12.19 / gap-010): inner block has no
+        //         scope-bound decls, splice its body into outer:
+        //         `{ x; return; z; }`
+        // Step 3 (dead-after-return on outer): drop `z`:
+        //         `{ x; return; }`
+        //
+        // So the outer body ends with 2 statements (was 3 pre-fold).
         let inner_block = BlockStatement {
             cv: Some("inner.1".to_string()),
             body: vec![return_stmt(), expr_stmt(ident("y"))],
@@ -729,20 +820,21 @@ mod tests {
         let (out, _contribs, changed, _) = run_pass(prog);
         assert!(changed);
         let outer = extract_function_body(&out);
-        // Outer block still has 3 statements (x, block, z).
-        assert_eq!(outer.body.len(), 3);
-        // Inner block: extract and check.
-        match &outer.body[1] {
-            Statement::Tagged(TaggedStatement::BlockStatement(inner)) => {
-                assert_eq!(
-                    inner.body.len(),
-                    1,
-                    "inner block should have just `return`; got {:?}",
-                    inner.body
-                );
-            }
-            other => panic!("expected nested BlockStatement; got {:?}", other),
-        }
+        assert_eq!(
+            outer.body.len(),
+            2,
+            "expected outer body = [x; return;] after flatten+drop; got {:?}",
+            outer.body
+        );
+        // Second statement is `return;`.
+        assert!(
+            matches!(
+                &outer.body[1],
+                Statement::Tagged(TaggedStatement::ReturnStatement(_))
+            ),
+            "expected ReturnStatement at outer.body[1]; got {:?}",
+            outer.body[1]
+        );
     }
 
     // ---------------- untraced ---------------------------------

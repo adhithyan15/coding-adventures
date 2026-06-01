@@ -94,11 +94,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-010 — block-flattening (single-child block collapse) not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.19 (PR pending).
 - **Upstream test:** `PeepholeRemoveDeadCodeTest::testFoldBlock` (block-flattening lines)
 - **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
-- **Why it fails:** Upstream collapses `{{foo();}}` to `foo();`, `{foo();{}}` to `foo();`, etc. We don't flatten nested blocks — DCE's responsibility is dead-after-terminator and empty-statement removal, not structural simplification.
-- **What it needs:** Either extend DCE with a "block-with-single-statement → that statement" rule, or stand up a dedicated normaliser pass. Probably belongs in DCE for simplicity (~30 lines).
+- **Resolution note:** Added a flatten step at the top of `dce_block_statement` (after the recurse pass, before dead-after-terminator and EmptyStatement drops). For each direct-child statement, if it's a `BlockStatement` AND a new `block_is_scope_safe_to_flatten` helper returns true (i.e., contains no `let`/`const`/`class`/`function` declarations), splice its body into the enclosing block. `var` is fine because it's function-scoped. Cascades cleanly with the existing dead-code drops: `{x;{return;y;};z;}` → `{x;return;}` in one pass. `test_fold_block_flattening` un-ignored with four assertions; existing `recurses_into_nested_blocks` updated to reflect the new behaviour.
 
 ### gap-011 — `if`-with-constant-test collapse lives in `fold-control-flow`, not DCE
 
