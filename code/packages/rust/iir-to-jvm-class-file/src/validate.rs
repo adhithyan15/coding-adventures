@@ -82,17 +82,26 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// Each entry maps to a `(class, name, descriptor)` triple resolved at
 /// lowering time.  The standard host class is `env/BFRuntime`:
 ///
-/// | Builtin     | JVM call                                 |
-/// |-------------|-------------------------------------------|
-/// | `"putchar"` | `invokestatic env/BFRuntime.putchar(I)V`  |
-/// | `"getchar"` | `invokestatic env/BFRuntime.getchar()I`   |
+/// | Builtin       | JVM call                                       |
+/// |---------------|------------------------------------------------|
+/// | `"putchar"`   | `invokestatic env/BFRuntime.putchar(I)V`       |
+/// | `"getchar"`   | `invokestatic env/BFRuntime.getchar()I`        |
+/// | `"print_i64"` | `invokestatic env/BasicRuntime.println(J)V`    |
 ///
 /// Adding a new builtin requires:
 ///   1. Listing the name here so the validator accepts it.
 ///   2. Adding a matching `case` to `lower.rs::lower_function`'s
 ///      `call_builtin` branch that emits the right `invokestatic`.
 ///   3. Documenting the expected host-class signature.
-pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
+///
+/// G3 note: `print_i64` is the JVM counterpart to the wasm
+/// `env.__print_i64` host import (see `iir-to-wasm` v0.8.0).  It lets
+/// BASIC's `PRINT` statement reach real JVM bytecode by deferring the
+/// actual write to a host class that the launcher provides.  We pick a
+/// dedicated host class (`env/BasicRuntime`) rather than overloading
+/// `BFRuntime` because BASIC and Brainfuck have different I/O models:
+/// BF is byte-stream oriented, BASIC's PRINT is line/value oriented.
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar", "print_i64"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///

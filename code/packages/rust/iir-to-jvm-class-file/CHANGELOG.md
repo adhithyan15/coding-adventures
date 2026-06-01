@@ -3,6 +3,54 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] — 2026-06-01 (G3 — `print_i64` host import → `env/BasicRuntime.println(J)V`)
+
+### Added — `call_builtin "print_i64"` whitelisted and lowered
+
+Companion to `iir-to-wasm` v0.8.0 (gap G2 of the
+[multi-language backend plan][plan]).  The wasm backend lets BASIC's
+`PRINT` reach real wasm bytecode by routing `call_builtin "print_i64"`
+to the `env.__print_i64` host import.  This release does the same for
+the JVM backend: routes it to `invokestatic env/BasicRuntime.println(J)V`,
+so a BASIC program lowered through IIR-to-JVM produces a valid `.class`
+that runs against a launcher providing one extra host class.
+
+#### Validator changes (`src/validate.rs`)
+
+* `CALL_BUILTIN_SUPPORTED_NAMES` widened from `["putchar", "getchar"]`
+  to `["putchar", "getchar", "print_i64"]`.  Everything outside the
+  whitelist still fails with `UnsupportedOp` — defence in depth unchanged.
+
+#### Lowering changes (`src/lower.rs`)
+
+* Added `const BASIC_RUNTIME_CLASS: &str = "env/BasicRuntime"`.  We
+  deliberately pick a separate host class from `env/BFRuntime` because
+  BASIC's I/O model (line/value, mostly numeric) differs from
+  Brainfuck's (byte-stream), and the JVM launcher should be able to
+  stub or provide them independently.
+* New `"print_i64"` arm in the `call_builtin` match:
+  ```
+  srcs = [Var("print_i64"), Var(val: i64)]   dest = None
+  →
+  lload val_slot
+  invokestatic env/BasicRuntime.println(J)V
+  ```
+  Uses `emit_lload` rather than `emit_iload` because i64 occupies a
+  long slot; descriptor `(J)V` matches one long arg, void return.
+
+#### Tests added (`tests/test_backend.rs`)
+
+* `g3_validator_accepts_print_i64`
+* `g3_validator_still_rejects_unknown_builtin`
+* `g3_lowers_print_i64_to_invokestatic`
+* `g3_constant_pool_has_basicruntime_println_methodref`
+* `g3_print_i64_class_serializes_with_cafebabe_magic`
+
+All five exercise the validator + lowerer + serializer path and assert
+on the 0xCAFEBABE byte prefix to confirm a structurally valid `.class`.
+
+[plan]: ../../../specs/MULTILANG-BACKEND-PLAN.md
+
 ## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` for `field_load`)
 
 ### Changed — `ref<any>` widens the supported reference types
