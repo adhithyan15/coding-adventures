@@ -86,9 +86,38 @@ pub struct EjectedProgram<'a> {
     pub required_capabilities: &'static [u16],
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedProgramSummary {
+    pub program_id: u16,
+    pub slot: u8,
+    pub boot_policy: u8,
+    pub program_format: ProgramFormat,
+    pub module_version: u8,
+    pub module_flags: u8,
+    pub max_stack: u8,
+    pub module_crc32: u32,
+    pub required_capability_count: usize,
+    pub module_len: usize,
+}
+
 impl<'a> EjectedProgram<'a> {
     pub const fn module_len(self) -> usize {
         self.module.len()
+    }
+
+    pub const fn summary(self) -> EjectedProgramSummary {
+        EjectedProgramSummary {
+            program_id: self.program_id,
+            slot: self.slot,
+            boot_policy: self.boot_policy,
+            program_format: self.format,
+            module_version: self.module_version,
+            module_flags: self.module_flags,
+            max_stack: self.max_stack,
+            module_crc32: self.module_crc32,
+            required_capability_count: self.required_capabilities.len(),
+            module_len: self.module.len(),
+        }
     }
 }
 
@@ -276,6 +305,33 @@ mod tests {
         assert_eq!(artifact.module_crc32, crc32_ieee(artifact.module));
         assert_eq!(artifact.required_capabilities, BLINK_REQUIRED_CAPABILITIES);
         parse_module(artifact.module).unwrap();
+    }
+
+    #[test]
+    fn summarizes_blink_eject_artifact_contract() {
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let artifact = build_blink_eject_artifact(
+            BlinkProgram::onboard_led(),
+            EjectOptions::new(DEFAULT_PROGRAM_ID).slot(2),
+            &mut module,
+        )
+        .unwrap();
+
+        assert_eq!(
+            artifact.summary(),
+            EjectedProgramSummary {
+                program_id: DEFAULT_PROGRAM_ID,
+                slot: 2,
+                boot_policy: BOOT_RUN_IF_NO_HOST,
+                program_format: ProgramFormat::BvmModule,
+                module_version: MODULE_VERSION,
+                module_flags: 1,
+                max_stack: 4,
+                module_crc32: 0xBAD6_949E,
+                required_capability_count: 3,
+                module_len: BLINK_MODULE_LEN,
+            }
+        );
     }
 
     #[test]

@@ -1503,18 +1503,19 @@ pub fn render_blink_eject(options: &EjectBlinkOptions) -> Result<(String, EjectR
     write_embedded_rust_constants(&artifact, RustConstNames::board_vm_defaults(), &mut source)
         .map_err(|error| CliError::Eject(format!("{error:?}")))?;
 
+    let summary = artifact.summary();
     let report = EjectReport {
         output: options.output.clone(),
-        program_id: artifact.program_id,
-        slot: artifact.slot,
-        boot_policy: artifact.boot_policy,
-        program_format: artifact.format,
-        module_version: artifact.module_version,
-        module_flags: artifact.module_flags,
-        max_stack: artifact.max_stack,
+        program_id: summary.program_id,
+        slot: summary.slot,
+        boot_policy: summary.boot_policy,
+        program_format: summary.program_format,
+        module_version: summary.module_version,
+        module_flags: summary.module_flags,
+        max_stack: summary.max_stack,
         required_capabilities: artifact.required_capabilities.to_vec(),
-        module_len: artifact.module_len(),
-        module_crc32: artifact.module_crc32,
+        module_len: summary.module_len,
+        module_crc32: summary.module_crc32,
     };
     Ok((source, report))
 }
