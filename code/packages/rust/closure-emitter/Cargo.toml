@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-emitter"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "JavaScript code emitter for the Closure Compiler clone. Per CLOC07's emit contract. Takes a finalized Program + sidecar and produces output JavaScript text + companion source map. Runs after every pass in the pipeline."
 
@@ -17,3 +17,10 @@ coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 # End-to-end pipeline tests: constant-fold + pipeline scheduler.
 coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
 coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file
+# needs an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_code_printer"
+path = "tests/upstream/code_printer_test.rs"
