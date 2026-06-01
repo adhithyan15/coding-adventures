@@ -1683,6 +1683,31 @@ fn emit_instr(
                     code.extend(encode_call(fn_idx));
                     code.extend(encode_local_set(rd));
                 }
+                // G2: `print_i64` reuses the same `env.__print_i64`
+                // host import the `io_out` opcode injects.  Lowering
+                // is identical to `io_out`: load the i64 argument from
+                // its local and emit `call <print_fn_idx>`.
+                //
+                // Shape: `call_builtin "print_i64", val [void]`
+                // - srcs[0] = Var("print_i64")
+                // - srcs[1] = Var(val)
+                // - dest    = None (void)
+                "print_i64" => {
+                    let val_var = match instr.srcs.get(1) {
+                        Some(Operand::Var(v)) => v.as_str(),
+                        _ => return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val)".to_string(),
+                        }),
+                    };
+                    let val_slot = get_reg(val_var)?;
+                    let fn_idx = print_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"print_i64\": no env.__print_i64 import registered (internal error — collect_module_features should have set uses_io_out)".to_string(),
+                    })?;
+                    code.extend(encode_local_get(val_slot));
+                    code.extend(encode_call(fn_idx));
+                }
                 _ => {
                     // Validator should have rejected this; defense in depth.
                     return Err(IIRWasmError::UnsupportedOp {
@@ -2030,6 +2055,13 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         match name.as_str() {
                             "putchar" => uses_putchar = true,
                             "getchar" => uses_getchar = true,
+                            // G2: `print_i64` reuses the same
+                            // `env.__print_i64` import the `io_out`
+                            // opcode injects.  Flipping `uses_io_out`
+                            // ensures the import is wired in even when
+                            // the module uses `print_i64` exclusively
+                            // (no `io_out` opcodes).
+                            "print_i64" => uses_io_out = true,
                             // Other builtin names are rejected by the
                             // validator before we get here — be defensive
                             // and don't crash on unknown ones at compile time.
