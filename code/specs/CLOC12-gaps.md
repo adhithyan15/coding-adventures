@@ -26,11 +26,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-001 — typed AST lacks `undefined` / `NaN` / `Infinity` literal-equivalents
 
-- **Status:** OPEN
+- **Status:** PARTIALLY RESOLVED in CLOC12.16 — `UndefinedLiteral` is now in the AST. `NaN` and `Infinity` remain open (tracked under a follow-up since they're `Identifier { name: "NaN"/"Infinity" }` resolutions, not new literal nodes).
 - **Upstream test:** `PeepholeFoldConstantsTest::testUndefinedComparison1`
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** Upstream's `test("undefined == undefined", "true")` requires recognising the bare `undefined` identifier (and `NaN`, `Infinity`) as JS-spec literal-equivalents during the fold. The typed AST currently models them as plain `Identifier` nodes, so the fold pass sees identifiers and leaves them alone (the sound default).
-- **What it needs:** Either a new `Expression::UndefinedLiteral` variant (mirroring `NullLiteral`) plus parser support that emits it for the `undefined` identifier, or a fold-pass extension that special-cases `Identifier { name: "undefined" }` in the no-shadowing case. Same treatment for `NaN`, `Infinity`. Likely a CLOC11.* slice once the parser bridge is in.
+- **Resolution note:** CLOC12.16 adds `UndefinedLiteral { cv: Option<CvId> }` to `javascript-ast`. The closure-emitter writes it as `void 0` (shadow-safe — `undefined` is a writable identifier in non-strict mode, but `void <expr>` always produces the genuine undefined value). The closure-pass-constant-fold gained three new arms: leaf passthrough, `js_literal_type` → `"undefined"`, and `typeof <UndefinedLiteral>` → `"undefined"` (closes the last hole in CLOC12.09's typeof table). The cross-type strict-equality fold also automatically picks up undefined vs other types because `js_literal_type` produces a distinct tag for it.
 
 ### gap-002 — constant-fold doesn't treat `void 0` as `undefined`
 

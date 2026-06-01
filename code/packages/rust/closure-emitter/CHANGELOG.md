@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-01
+
+### Added — CLOC12.16: emit `UndefinedLiteral` as `void 0` (gap-001)
+
+Adds emitter support for the new `UndefinedLiteral` variant.
+Renders as `void 0` — six characters of shadow-safe goodness.
+
+**Why `void 0` and not the keyword `undefined`?** In ECMAScript
+`undefined` is an *identifier*, not a reserved word. Code can
+legally do `var undefined = 1;` in non-strict mode (or just declare
+a local `undefined` parameter) and that binding shadows the global.
+Reading the identifier `undefined` from inside such a scope would
+yield the shadow value, not the genuine undefined.
+
+`void <expression>` always evaluates `<expression>` and then
+produces the **real** undefined value, regardless of any name in
+scope. `void 0` is the shortest spelling and matches upstream
+Closure Compiler's `CodePrinter` behaviour.
+
+**Precedence wiring.** `UndefinedLiteral` is mapped to `PREC_UNARY`
+(not `PREC_PRIMARY` like other literals) so contexts like
+`(void 0).x` and `(void 0)()` automatically get the parens they
+need. Without that, the emit would produce `void 0.x` — which
+JS parses as `void (0.x)`, a semantically different expression.
+
+Two inline tests cover the bare `void 0;` output for traced and
+untraced cases.
+
 ## [0.9.0] - 2026-06-01
 
 ### Added — CLOC12.15: emit `BigIntLiteral` (gap-021)

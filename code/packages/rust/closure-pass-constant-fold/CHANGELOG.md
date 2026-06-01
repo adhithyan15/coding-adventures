@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.7.1] - 2026-06-01
+
+### Added — CLOC12.16: typeof `UndefinedLiteral` folds to `"undefined"`
+
+The constant-fold pass gained three `Expression::UndefinedLiteral`
+arms so it compiles against the new `javascript-ast 0.6.0` AST:
+
+1. Leaf passthrough — undefined is itself the folded form.
+2. `js_literal_type` returns `"undefined"` so the strict-equality
+   fold knows `undefined === <other type>` is `false`.
+3. `UnaryOperator::TypeOf` over an `UndefinedLiteral` folds to
+   `"undefined"`. This closes the final hole in CLOC12.09's
+   typeof-literal fold table.
+
 ## [0.7.0] - 2026-06-01
 
 ### Changed — CLOC12.15 rebase: handle new `BigIntLiteral` Expression variant

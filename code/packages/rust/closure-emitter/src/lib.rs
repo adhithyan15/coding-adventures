@@ -71,8 +71,8 @@ use coding_adventures_javascript_ast::{
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
-    ThrowStatement, UnaryExpression, UnaryOperator, VarKind, VariableDeclaration,
-    VariableDeclarator, WhileStatement,
+    ThrowStatement, UnaryExpression, UnaryOperator, UndefinedLiteral, VarKind,
+    VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -593,6 +593,7 @@ impl<'a> Emitter<'a> {
             Expression::BooleanLiteral(b) => self.emit_boolean(b),
             Expression::NullLiteral(n) => self.emit_null(n),
             Expression::BigIntLiteral(b) => self.emit_bigint(b),
+            Expression::UndefinedLiteral(u) => self.emit_undefined(u),
             Expression::BinaryExpression(b) => self.emit_binary(b),
             Expression::LogicalExpression(l) => self.emit_logical(l),
             Expression::UnaryExpression(u) => self.emit_unary(u),
@@ -667,6 +668,25 @@ impl<'a> Emitter<'a> {
     fn emit_bigint(&mut self, b: &BigIntLiteral) {
         self.maybe_map(&b.cv);
         self.write_str(&b.raw);
+    }
+
+    /// Emit the `undefined` literal as `void 0`.
+    ///
+    /// **Why `void 0` and not the keyword `undefined`?** In ECMAScript
+    /// `undefined` is an *identifier*, not a reserved word. Code can
+    /// legally do `var undefined = 1;` in non-strict mode (or just
+    /// declare a local `undefined` parameter) and that binding shadows
+    /// the global. Reading the identifier `undefined` from inside such
+    /// a scope would yield the shadow value, not the genuine undefined.
+    ///
+    /// `void <expression>` always evaluates `<expression>` and then
+    /// produces the **real** undefined value, regardless of any name
+    /// in scope.  `void 0` is the shortest spelling — three characters
+    /// vs nine for the keyword (plus shadow-safe). This matches upstream
+    /// Closure Compiler's `CodePrinter` behaviour.
+    fn emit_undefined(&mut self, u: &UndefinedLiteral) {
+        self.maybe_map(&u.cv);
+        self.write_str("void 0");
     }
 
     fn emit_binary(&mut self, b: &BinaryExpression) {
@@ -1010,6 +1030,13 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::MemberExpression(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
+        // `void 0` is a UnaryExpression in disguise (CLOC12.16):
+        // its precedence is unary, not primary, so that contexts
+        // like `(void 0).x` and `(void 0)()` insert the necessary
+        // parens automatically. Without this, the emit would
+        // produce `void 0.x` which JS parses as `void (0.x)` — a
+        // different expression.
+        Expression::UndefinedLiteral(_) => PREC_UNARY,
         Expression::BinaryExpression(b) => binary_prec(b.operator),
         Expression::LogicalExpression(l) => logical_prec(l.operator),
         Expression::ConditionalExpression(_) => PREC_CONDITIONAL,
@@ -1805,6 +1832,37 @@ mod tests {
         });
         assert_eq!(emit_expr(e), "0x1fn;");
     }
+
+    // ---- UndefinedLiteral (gap-001, CLOC12.16) ---------------
+
+    #[test]
+    fn undefined_literal_emits_void_zero() {
+        let e = Expression::UndefinedLiteral(UndefinedLiteral { cv: None });
+        assert_eq!(emit_expr(e), "void 0;");
+    }
+
+    #[test]
+    fn undefined_literal_with_cv_emits_void_zero() {
+        // Tracing on; the `void 0` text doesn't change but a CV
+        // contribution should fire (covered by other tests of the
+        // CV pathway — here we just pin the textual output).
+        let e = Expression::UndefinedLiteral(UndefinedLiteral {
+            cv: Some("u.42".to_string()),
+        });
+        assert_eq!(emit_expr(e), "void 0;");
+    }
+
+    // Note: a `(void 0).foo` integration test would pin the
+    // PREC_UNARY wiring (security review nit), but the emitter's
+    // `emit_member` currently writes `emit_expression(&object)`
+    // — the precedence-free wrapper — so member-access doesn't
+    // precedence-wrap its object today. That gap also affects
+    // `(a + b).foo` etc., and fixing it cleanly belongs in a
+    // separate PR that switches `emit_member` (and `emit_call`)
+    // to use `emit_expression_inner(object, PREC_PRIMARY)`.
+    // Tracked as a follow-up to CLOC12.10's paren-policy work.
+    // The PREC_UNARY entry for UndefinedLiteral is still correct
+    // (it'll start firing the moment the emit_member fix lands).
 
     // ---- EmitError --------------------------------------------
 

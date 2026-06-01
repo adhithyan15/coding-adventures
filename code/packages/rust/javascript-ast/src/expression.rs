@@ -3,7 +3,8 @@
 //! 15 variants:
 //! - Leaves: [`Identifier`], [`NumericLiteral`], [`StringLiteral`],
 //!   [`BooleanLiteral`], [`NullLiteral`], [`BigIntLiteral`] (Phase 1.x —
-//!   added in CLOC12.15).
+//!   added in CLOC12.15), [`UndefinedLiteral`] (Phase 1.x — added in
+//!   CLOC12.16).
 //! - Operators: [`BinaryExpression`], [`LogicalExpression`],
 //!   [`UnaryExpression`], [`AssignmentExpression`],
 //!   [`ConditionalExpression`].
@@ -33,6 +34,7 @@ pub enum Expression {
     BooleanLiteral(BooleanLiteral),
     NullLiteral(NullLiteral),
     BigIntLiteral(BigIntLiteral),
+    UndefinedLiteral(UndefinedLiteral),
     BinaryExpression(BinaryExpression),
     LogicalExpression(LogicalExpression),
     UnaryExpression(UnaryExpression),
@@ -98,6 +100,30 @@ pub struct BooleanLiteral {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NullLiteral {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+}
+
+/// The `undefined` literal.  Carries no payload beyond its `cv`.
+///
+/// **Note: `undefined` is technically an identifier in ECMAScript,
+/// not a reserved word — `var undefined = 1;` is legal in
+/// non-strict mode and shadows the global.** ESTree historically
+/// modelled it as `Identifier { name: "undefined" }`.  We follow
+/// the modern *typed* variant approach: a dedicated leaf node so
+/// passes can pattern-match on it without first checking the
+/// identifier name.  The emitter renders it as `void 0` (a fixed
+/// expression that always evaluates to the genuine undefined value
+/// regardless of any shadow binding in scope — upstream Closure's
+/// safe rendering).
+///
+/// Added in Phase 1.x (CLOC12.16) to close gap-001.  Closes the
+/// final hole in CLOC12.09's typeof-literal fold table — passes
+/// can now fold `typeof <UndefinedLiteral>` to `"undefined"`
+/// without needing the surrounding context.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UndefinedLiteral {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
 }
@@ -467,6 +493,23 @@ mod tests {
         });
         assert_eq!(n.clone(), roundtrip(n.clone()));
         assert_eq!(type_tag(&n), "NullLiteral");
+    }
+
+    #[test]
+    fn undefined_literal_roundtrips_traced() {
+        let u = Expression::UndefinedLiteral(UndefinedLiteral {
+            cv: Some("u.1".to_string()),
+        });
+        assert_eq!(u.clone(), roundtrip(u.clone()));
+        assert_eq!(type_tag(&u), "UndefinedLiteral");
+    }
+
+    #[test]
+    fn undefined_literal_untraced_omits_cv() {
+        let u = Expression::UndefinedLiteral(UndefinedLiteral { cv: None });
+        let json = serde_json::to_string(&u).expect("serialize");
+        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(u.clone(), roundtrip(u));
     }
 
     #[test]
