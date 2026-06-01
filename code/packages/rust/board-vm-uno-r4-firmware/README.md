@@ -56,7 +56,9 @@ ejected blink metadata before flashing hardware.
 The firmware crate also exposes a compact ejected-artifact summary, letting
 board-specific startup paths inspect the embedded program id, slot, boot policy,
 module metadata, CRC, capability count, and byte length without parsing the raw
-generated constants.
+generated constants. Host-side tests compare that firmware summary against the
+target-independent `board-vm-eject` artifact summary, so the board-specific view
+cannot drift from the Rust-owned eject contract.
 
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.

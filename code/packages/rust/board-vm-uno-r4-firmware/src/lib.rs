@@ -423,6 +423,43 @@ mod tests {
     }
 
     #[test]
+    fn ejected_blink_summary_matches_eject_generator_summary() {
+        let program = EjectedFirmwareProgram::blink();
+        let mut generated_module = [0u8; EMBEDDED_BLINK_MODULE.len()];
+
+        let artifact = build_blink_eject_artifact(
+            BlinkProgram::onboard_led(),
+            EjectOptions::new(program.program_id)
+                .slot(program.slot)
+                .boot_policy(program.boot_policy),
+            &mut generated_module,
+        )
+        .unwrap();
+        let firmware_summary = program.summary();
+        let eject_summary = artifact.summary();
+
+        assert_eq!(firmware_summary.program_id, eject_summary.program_id);
+        assert_eq!(firmware_summary.slot, eject_summary.slot);
+        assert_eq!(firmware_summary.boot_policy, eject_summary.boot_policy);
+        assert_eq!(
+            firmware_summary.program_format,
+            eject_summary.program_format.as_u8()
+        );
+        assert_eq!(
+            firmware_summary.module_version,
+            eject_summary.module_version
+        );
+        assert_eq!(firmware_summary.module_flags, eject_summary.module_flags);
+        assert_eq!(firmware_summary.max_stack, eject_summary.max_stack);
+        assert_eq!(firmware_summary.module_crc32, eject_summary.module_crc32);
+        assert_eq!(
+            firmware_summary.required_capability_count,
+            eject_summary.required_capability_count
+        );
+        assert_eq!(firmware_summary.module_len, eject_summary.module_len);
+    }
+
+    #[test]
     fn ejected_blink_boot_policy_runs_without_host() {
         assert_eq!(
             ejected_boot_action(EjectedFirmwareProgram::blink()).unwrap(),
