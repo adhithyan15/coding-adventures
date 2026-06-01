@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.4.1] - 2026-06-01
+
+### Changed — CLOC12.13: handle new `LabeledStatement` variant + un-ignore the upstream test
+
+The DCE pass gained a `TaggedStatement::LabeledStatement` match arm
+so it compiles against the new `javascript-ast 0.3.0` AST.
+Behaviour: recurse into the labelled body (so dead-after-return
+inside `a: { ...return... ...dead... }` still gets stripped),
+preserve the label verbatim. The collapse-to-empty optimisation
+for `a: break a;` is a separate gap.
+
+The previously-ignored upstream test
+`test_remove_no_op_labelled_statement` is now un-ignored — it
+builds the `a: break a;` AST by hand and asserts DCE leaves it
+alone (the *current* behaviour). When the collapse optimisation
+lands, the assertion flips from `assert_dce_same` →
+`assert_dce_yields(..., vec![])`. The upstream-test passthrough
+table in this CHANGELOG that previously listed
+`test_remove_no_op_labelled_statement | gap-009` should now read
+`gap-009 (AST modelled; collapse follow-up)` — see
+`code/specs/CLOC12-gaps.md`.
+
 ## [0.4.0] - 2026-05-31
 
 ### Changed — CLOC12.06: gap-011 marked RESOLVED via cross-crate routing

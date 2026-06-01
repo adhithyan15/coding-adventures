@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-01
+
+### Added — CLOC12.13: `LabeledStatement` (Phase 1.x, closes gap-009)
+
+Adds the `LabeledStatement { cv: Option<CvId>, label: Identifier,
+body: Box<Statement> }` variant and its `TaggedStatement::LabeledStatement`
+arm, plus the `Statement::labeled_statement(...)` convenience
+constructor. The `BreakStatement` already existed in the original
+Phase 1 implementation (the gap title was misleading — only the
+label-wrapping node was missing).
+
+This unblocks the upstream Closure-Compiler DCE port's
+`testRemoveNoOpLabelledStatement` test case (`a: break a;`). The
+actual *collapse* of a useless labelled-self-break to empty is a
+separate optimisation tracked under the gap-009 follow-up; modelling
+the AST node is its prerequisite.
+
+Wire format:
+
+```json
+{
+  "type": "LabeledStatement",
+  "label": { "type": "Identifier", "name": "a" },
+  "body": { "type": "BreakStatement", "label": { "type": "Identifier", "name": "a" } }
+}
+```
+
+Matches ESTree exactly. CV id is optional (untraced ASTs omit the
+`cv` key, per the CLOC09 amendment).
+
+Two new roundtrip tests cover `a: break a;` and `outer: { ; }`.
+
+### Note — Version bump reconciliation
+
+The pre-existing `[0.2.0] - 2026-05-24` entry below documents the
+Phase 1 ESTree-compat scaffolding work, but Cargo.toml never moved
+off `0.1.0` at the time. CLOC12.13 bumps Cargo straight to `0.3.0`
+to (a) flag the new Phase 1.x variant addition and (b) bring the
+two source-of-truth values back in sync. Future minor bumps
+follow the manifest from here on.
+
 ## [0.2.0] - 2026-05-24
 
 ### Added (CLOC09 Phase 1 — full ESTree-compat node taxonomy)

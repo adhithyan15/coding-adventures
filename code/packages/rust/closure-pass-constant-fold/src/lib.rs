@@ -288,6 +288,17 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
                 argument: s.argument.as_ref().map(|e| fold_expression(e, st)),
             })
         }
+        TaggedStatement::LabeledStatement(s) => {
+            // The label is just a name; folding only touches the body.
+            // We don't recursively label-rename, so the label survives
+            // verbatim. The body recurses through fold_statement so
+            // constant folds reach inside `a: { foo(2+3); }`.
+            TaggedStatement::LabeledStatement(coding_adventures_javascript_ast::LabeledStatement {
+                cv: s.cv.clone(),
+                label: s.label.clone(),
+                body: Box::new(fold_statement(&s.body, st)),
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),

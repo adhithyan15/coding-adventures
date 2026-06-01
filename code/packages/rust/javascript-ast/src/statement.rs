@@ -12,14 +12,16 @@
 //! - [`ReturnStatement`]
 //! - [`BreakStatement`]
 //! - [`ContinueStatement`]
+//! - [`LabeledStatement`] (Phase 1.x — added in CLOC12.13 to unblock
+//!   the DCE port's `testRemoveNoOpLabelledStatement` case)
 //! - [`EmptyStatement`]
 //! - `Statement::Declaration(Declaration)` — untagged wrap so JSON
 //!   collapses to the inner `{"type": "VariableDeclaration", ...}`
 //!   shape directly.
 //!
 //! Phase 2 will add `SwitchStatement`, `TryStatement`, `ThrowStatement`,
-//! `LabeledStatement`, `DoWhileStatement`, `ForInStatement`,
-//! `ForOfStatement`, `DebuggerStatement`, and `WithStatement`.
+//! `DoWhileStatement`, `ForInStatement`, `ForOfStatement`,
+//! `DebuggerStatement`, and `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
 use crate::expression::{Expression, Identifier};
@@ -60,6 +62,7 @@ pub enum TaggedStatement {
     ReturnStatement(ReturnStatement),
     BreakStatement(BreakStatement),
     ContinueStatement(ContinueStatement),
+    LabeledStatement(LabeledStatement),
     EmptyStatement(EmptyStatement),
 }
 
@@ -89,6 +92,9 @@ impl Statement {
     }
     pub fn continue_statement(s: ContinueStatement) -> Self {
         Self::Tagged(TaggedStatement::ContinueStatement(s))
+    }
+    pub fn labeled_statement(s: LabeledStatement) -> Self {
+        Self::Tagged(TaggedStatement::LabeledStatement(s))
     }
     pub fn empty_statement(s: EmptyStatement) -> Self {
         Self::Tagged(TaggedStatement::EmptyStatement(s))
@@ -195,6 +201,24 @@ pub struct ContinueStatement {
     pub cv: Option<CvId>,
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub label: Option<Identifier>,
+}
+
+/// `label: stmt` — attaches a name to any statement so that
+/// `break label;` and `continue label;` can target it. Almost always
+/// wraps a loop or block; the ECMAScript grammar allows it on any
+/// statement.
+///
+/// Added in Phase 1.x (CLOC12.13) to unblock the DCE port's
+/// `testRemoveNoOpLabelledStatement` case (gap-009). The actual
+/// "collapse `a: break a;` to empty" optimisation is a follow-up;
+/// modelling the node first is the structural prerequisite.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LabeledStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub label: Identifier,
+    pub body: Box<Statement>,
 }
 
 /// A lone semicolon `;`. Rare in user code but legal everywhere a
@@ -420,6 +444,45 @@ mod tests {
         assert_eq!(bare.clone(), roundtrip(bare.clone()));
         assert_eq!(labeled.clone(), roundtrip(labeled.clone()));
         assert_eq!(type_tag(&bare), "ContinueStatement");
+    }
+
+    #[test]
+    fn labeled_statement_roundtrips() {
+        // a: break a;
+        let s = Statement::labeled_statement(LabeledStatement {
+            cv: Some("lbl.1".to_string()),
+            label: Identifier {
+                cv: None,
+                name: "a".to_string(),
+            },
+            body: Box::new(Statement::break_statement(BreakStatement {
+                cv: None,
+                label: Some(Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                }),
+            })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "LabeledStatement");
+    }
+
+    #[test]
+    fn labeled_statement_with_block_body() {
+        // outer: { ; }
+        let s = Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier {
+                cv: None,
+                name: "outer".to_string(),
+            },
+            body: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![Statement::empty_statement(EmptyStatement { cv: None })],
+            })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "LabeledStatement");
     }
 
     #[test]

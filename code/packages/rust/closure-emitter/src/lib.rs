@@ -67,7 +67,7 @@ use coding_adventures_javascript_ast::{
     AssignmentTarget, BinaryExpression, BinaryOperator, BlockStatement, BooleanLiteral,
     BreakStatement, CallExpression, ConditionalExpression, ContinueStatement, Declaration,
     EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
-    FunctionParam, Identifier, IfStatement, LogicalExpression, LogicalOperator,
+    FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     UnaryExpression, UnaryOperator, VarKind, VariableDeclaration, VariableDeclarator,
@@ -293,6 +293,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::ReturnStatement(r) => self.emit_return(r),
             TaggedStatement::BreakStatement(b) => self.emit_break(b),
             TaggedStatement::ContinueStatement(c) => self.emit_continue(c),
+            TaggedStatement::LabeledStatement(l) => self.emit_labeled(l),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
         }
     }
@@ -440,6 +441,23 @@ impl<'a> Emitter<'a> {
     fn emit_empty(&mut self, e: &EmptyStatement) {
         self.maybe_map(&e.cv);
         self.write_str(";");
+    }
+
+    /// `label: stmt`. No trailing semicolon — the body statement
+    /// supplies its own (every `emit_*_statement` write_str's `;` at
+    /// the tail). For pretty mode we emit a single space after the
+    /// colon to match upstream's `printer.cont(":");` + the body's
+    /// own indentation; in compact mode there is no whitespace at all.
+    ///
+    /// Note: `label:` is not itself an expression so it doesn't enter
+    /// the precedence ladder; statements live above expressions in the
+    /// grammar.
+    fn emit_labeled(&mut self, l: &LabeledStatement) {
+        self.maybe_map(&l.cv);
+        self.emit_identifier(&l.label);
+        self.write_str(":");
+        self.pretty_ws();
+        self.emit_statement(&l.body);
     }
 
     // ---- Declarations --------------------------------------------
@@ -1626,6 +1644,65 @@ mod tests {
             "2+3 should fold to 5 then emit as `5;`; got {:?}",
             emit_out.code
         );
+    }
+
+    // ---- Labeled + break (gap-009, CLOC12.13) ----------------
+
+    /// Helper: emit a single labeled statement and return the code.
+    fn emit_stmt(s: Statement) -> String {
+        emit_default(program().with_body(vec![ProgramItem::Statement(s)])).code
+    }
+
+    #[test]
+    fn labeled_call_statement_emits_label_colon_call() {
+        // a: foo();
+        let body = Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: Expression::CallExpression(CallExpression {
+                cv: None,
+                callee: Box::new(ident("foo")),
+                arguments: vec![],
+            }),
+        });
+        let s = Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier { cv: None, name: "a".to_string() },
+            body: Box::new(body),
+        });
+        assert_eq!(emit_stmt(s), "a:foo();");
+    }
+
+    #[test]
+    fn bare_break_statement_emits_break_semicolon() {
+        let s = Statement::break_statement(BreakStatement { cv: None, label: None });
+        assert_eq!(emit_stmt(s), "break;");
+    }
+
+    #[test]
+    fn labeled_break_statement_emits_break_label_semicolon() {
+        let s = Statement::break_statement(BreakStatement {
+            cv: None,
+            label: Some(Identifier { cv: None, name: "a".to_string() }),
+        });
+        assert_eq!(emit_stmt(s), "break a;");
+    }
+
+    #[test]
+    fn label_wrapping_break_self_emits_label_colon_break_label() {
+        // a: break a;
+        // The exact upstream `testRemoveNoOpLabelledStatement` input.
+        // DCE will not (yet) collapse this; the emitter just needs to
+        // print it as-is.
+        let inner = Statement::break_statement(BreakStatement {
+            cv: None,
+            label: Some(Identifier { cv: None, name: "a".to_string() }),
+        });
+        let s = Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier { cv: None, name: "a".to_string() },
+            body: Box::new(inner),
+        });
+        assert_eq!(emit_stmt(s), "a:break a;");
     }
 
     // ---- EmitError --------------------------------------------

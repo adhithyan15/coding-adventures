@@ -254,6 +254,20 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 argument: s.argument.as_ref().map(|e| dce_expression(e, st)),
             })
         }
+        TaggedStatement::LabeledStatement(s) => {
+            // DCE recurses into the body so dead-after-return inside
+            // `a: { ... return; ...dead... }` still gets stripped.
+            // The label itself is preserved verbatim — collapsing
+            // `a: break a;` to empty is a separate optimisation
+            // tracked under the gap-009 follow-up.
+            TaggedStatement::LabeledStatement(
+                coding_adventures_javascript_ast::LabeledStatement {
+                    cv: s.cv.clone(),
+                    label: s.label.clone(),
+                    body: Box::new(dce_statement(&s.body, st)),
+                },
+            )
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),

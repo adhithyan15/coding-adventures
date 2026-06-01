@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.5.1] - 2026-06-01
+
+### Changed — CLOC12.13: handle new `LabeledStatement` variant
+
+The constant-fold pass gained a `TaggedStatement::LabeledStatement`
+match arm so it compiles against the new `javascript-ast 0.3.0` AST.
+Behaviour: recurse into the labelled body (so inner constant-folds
+reach inside `a: { foo(2+3); }`), preserve the label verbatim. No
+new optimisation; this is purely the "stay non-exhaustive-safe"
+mechanical change.
+
 ## [0.5.0] - 2026-06-01
 
 ### Added — CLOC12.09: close gap-005 typeof literal fold
