@@ -671,6 +671,7 @@ members = [
     "basic-dap",
     "basic-semantic-tokens",
     "nib-semantic-tokens",
+    "oct-semantic-tokens",
     "nib-dap",
     "oct-dap",
     "twig-vm",
