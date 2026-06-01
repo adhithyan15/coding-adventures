@@ -1407,6 +1407,59 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 21a (FC) — block-local variables `{ |x; y| … }`.
+    //
+    // Names after the `;` in the pipe header are *block-local*: declared
+    // in the block body's local scope (so VarRefs resolve as
+    // `Scope::Local`) but NOT added to the synthetic function's
+    // parameter list.  Params before the `;` stay `Scope::Param`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn block_local_is_not_a_param() {
+        let m = lower("each do |x; y|\n  puts(x)\nend\n");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        // Only `x` is a parameter; `y` (block-local) is excluded.
+        assert_eq!(block_fn.params.len(), 1);
+        assert_eq!(block_fn.params[0].name, "x");
+        assert!(block_fn.params.iter().all(|p| p.name != "y"));
+    }
+
+    #[test]
+    fn block_local_varref_resolves_as_local_not_param() {
+        // Assign the block-local inside the body, then reference it: the
+        // VarRef must resolve to Scope::Local (it is declared, not a param).
+        let m = lower("each do |x; y|\n  y = x\n  puts(y)\nend\n");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        // `y` is declared as a local (via the `;` clause) and is NOT a param.
+        assert!(block_fn.params.iter().all(|p| p.name != "y"));
+        // The `puts(y)` tail call references `y` as Scope::Local.
+        if let Expr::BuiltinCall { args, .. } = &block_fn.body.value {
+            assert!(matches!(
+                &args[0],
+                Expr::VarRef { name, scope, .. } if name == "y" && *scope == Scope::Local
+            ), "expected y as Scope::Local, got {:?}", args.first());
+        } else {
+            panic!("expected BuiltinCall body, got {:?}", block_fn.body.value);
+        }
+    }
+
+    #[test]
+    fn block_with_block_local_passes_sir_validator() {
+        let m = lower("each do |x; y|\n  y = x\n  puts(y)\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6h — paren-less method calls (`puts 1`, `puts 1, 2`).
     // -----------------------------------------------------------------
 

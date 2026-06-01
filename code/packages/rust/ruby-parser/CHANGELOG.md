@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.66.0] - 2026-05-31
+
+### Added (Phase 21a (FC) — block-local variables `{ |x; y| … }`)
+
+The `block_params` rule now accepts an optional `;`-introduced list of
+block-local variables after the regular parameters:
+
+```
+block_params = "|" NAME { COMMA NAME } [ ";" NAME { COMMA NAME } ] "|" ;
+```
+
+`{ |x; y, z| … }` declares `x` as a block parameter and `y`, `z` as
+fresh block-local variables scoped to the body.  The `;` is a
+`Semicolon` token; the lexer already emits it, so only the grammar rule
+(and a regen of `_grammar.rs`) was needed on the parser side.
+
+New parse pins (+3): `test_parse_brace_block_with_one_block_local`
+(`{ |x; y| x }` — Semicolon token + names `x`,`y`),
+`test_parse_do_block_with_two_block_locals` (`do |a; b, c|` — names
+`a`,`b`,`c`), `test_parse_block_without_locals_has_no_semicolon`
+(regression: plain `|x, y|` has no Semicolon).  Test count: 229 → 232.
+
 ## [0.65.0] - 2026-05-31
 
 ### Added (Phase 11d (FC) — `return` WITH VALUE, coverage-confirmation)

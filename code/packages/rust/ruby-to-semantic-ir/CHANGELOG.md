@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.69.0] - 2026-05-31
+
+### Added (Phase 21a (FC) — block-local variables `{ |x; y| … }`)
+
+The block lowerer now splits the `block_params` pipe contents at the
+`;` (Semicolon) token: names before it are block parameters
+(`Scope::Param`), names after it are **block-local variables** — fresh
+locals scoped to the block body.
+
+Block-locals are:
+- declared in the block's `declared_locals` scope so VarRefs to them
+  resolve as `Scope::Local` (NOT `Scope::Param`);
+- excluded from the synthetic function's parameter list;
+- materialized as explicit `LetBinding <name> = NilLit` statements
+  prepended to the block body, so the SIR validator recognizes them
+  (Ruby block-locals start unbound / nil).
+
+New lowering pins (+3): `block_local_is_not_a_param`
+(`do |x; y|` → `__block_0.params` is just `[x]`),
+`block_local_varref_resolves_as_local_not_param`
+(`do |x; y| y = x; puts(y) end` → `y` VarRef is `Scope::Local`),
+`block_with_block_local_passes_sir_validator` (validator end-to-end).
+Test count: 283 → 286.
+
 ## [0.68.0] - 2026-05-31
 
 ### Added (Phase 11d (FC) — `return` WITH VALUE, coverage-confirmation)

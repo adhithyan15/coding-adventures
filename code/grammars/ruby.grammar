@@ -148,7 +148,16 @@ method_with_block = ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression 
 block        = do_block | brace_block ;
 do_block     = "do" [ block_params ] { !"end" statement } "end" ;
 brace_block  = LBRACE [ block_params ] { statement } RBRACE ;
-block_params = "|" NAME { COMMA NAME } "|" ;
+# Phase 21a (FC) — block-local variables.  After the regular block
+# parameters, an optional `;` introduces a list of *block-local*
+# variables: `{ |x; y, z| … }`.  These are fresh locals scoped to the
+# block body (they shadow any same-named outer binding and never bind
+# to an argument).  The `;` is a `Semicolon` token; the names after it
+# are ordinary `NAME` tokens, so the lowerer splits the pipe contents
+# at the semicolon: names before it are params, names after it are
+# block-locals (declared in the block's local scope but NOT added to
+# the parameter list).
+block_params = "|" NAME { COMMA NAME } [ ";" NAME { COMMA NAME } ] "|" ;
 # Phase 6j — control-flow keywords: `return`, `break`, `next`.
 return_statement = "return" [ expression ] ;
 break_statement  = "break"  [ expression ] ;
