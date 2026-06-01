@@ -1125,6 +1125,59 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            "undef_statement" => {
+                // Phase 24b (FC) — `undef name` removes the method `name`
+                // from the current class/module.  The single operand is a
+                // bare method-name NAME token (the symbol form `undef :name`
+                // and the multi-name form `undef a, b` are deliberate
+                // follow-up slices).  We lower to a zero-side-effect
+                // `BuiltinCall("undef", [StrLit(name)])`, mirroring the
+                // Phase 24a `alias` lowering exactly: the method name is
+                // surfaced as a string literal — it is NOT a local variable,
+                // so emitting a `VarRef` would be wrong and the SIR validator
+                // would reject the never-bound name.  Effects are `PURE`: in
+                // this model the undef declaration carries no runtime data
+                // effect, like the other declaration-ish keyword statements.
+                let names: Vec<&Token> = node
+                    .children
+                    .iter()
+                    .filter_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t),
+                        _ => None,
+                    })
+                    .collect();
+                if names.len() != 1 {
+                    return Err(RubyLowerError {
+                        message: format!(
+                            "undef_statement expects 1 name operand, found {}",
+                            names.len()
+                        ),
+                        line: node.start_line.unwrap_or(0),
+                        column: node.start_column.unwrap_or(0),
+                    });
+                }
+                let args = names
+                    .iter()
+                    .map(|t| Expr::StrLit {
+                        value: t.value.clone(),
+                        span: self.span_of_token(t),
+                    })
+                    .collect();
+                // The method name surfaces as a `StrLit`, so the module uses
+                // the `strings` feature — declare it (the manifest builder
+                // allowlist already permits `Feature::Strings`).
+                self.features_used.insert(Feature::Strings);
+                let expr = Expr::BuiltinCall {
+                    name: "undef".to_string(),
+                    args,
+                    effects: EffectSet::PURE,
+                    span: self.span_of(node),
+                };
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
             other => Err(RubyLowerError {
                 message: format!("unsupported statement form `{other}`"),
                 line: node.start_line.unwrap_or(0),

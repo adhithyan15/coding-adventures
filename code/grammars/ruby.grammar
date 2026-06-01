@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | super_statement | alias_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | super_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -181,6 +181,18 @@ retry_statement  = "retry" ;
 # two name operands would be left unconsumed (same shadowing hazard the
 # Phase 23b `defined?` rule documents).
 alias_statement  = "alias" NAME NAME ;
+# Phase 24b (FC) — `undef name` removes the method `name` from the current
+# class/module.  Like `alias`, the lexer already classifies `undef` as a
+# Ruby KEYWORD (matched here by VALUE), so no lexer change is needed.  The
+# single operand is a bare method-name identifier (a NAME token); the
+# symbol form (`undef :name`) and the multi-name form (`undef a, b`) are
+# deliberate follow-up slices.  Placed in the `statement` alternation
+# BEFORE `method_call`/`expression_stmt` (right after `alias_statement`)
+# so the leading `undef` keyword wins — otherwise a bare `undef` would be
+# matched by the `KEYWORD` alternative of `factor` (via `expression_stmt`)
+# and the name operand would be left unconsumed (same shadowing hazard the
+# Phase 23b `defined?` and Phase 24a `alias` rules document).
+undef_statement  = "undef" NAME ;
 # Phase 6t — `yield` keyword.  Inside a method body, `yield` invokes
 # the block argument supplied by the caller (if any), forwarding the
 # given arguments to it.  All three surface forms supported:

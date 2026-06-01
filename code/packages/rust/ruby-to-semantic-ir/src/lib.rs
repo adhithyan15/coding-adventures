@@ -6341,6 +6341,69 @@ b = "y"
     }
 
     #[test]
+    fn undef_lowers_to_builtin_call() {
+        // `undef foo` → ExprStmt(BuiltinCall("undef", [StrLit])).
+        let m = lower("undef foo\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr, .. } => match expr {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "undef");
+                    assert_eq!(args.len(), 1);
+                }
+                other => panic!("expected BuiltinCall(undef, …), got {:?}", other),
+            },
+            other => panic!("expected ExprStmt for undef, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn undef_operand_is_string_literal() {
+        // The single operand surfaces as a StrLit carrying the verbatim
+        // method name — never a VarRef.
+        let m = lower("undef obsolete\n");
+        let b = main_body(&m);
+        let args = match &b.stmts[0] {
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { name, args, .. },
+                ..
+            } if name == "undef" => args,
+            other => panic!("expected undef BuiltinCall, got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::StrLit { value, .. } if value == "obsolete"),
+            "expected StrLit(\"obsolete\"), got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
+    fn undef_is_pure_and_validates_e2e() {
+        // Phase 24b (FC) — end-to-end: a bare `undef` statement lowers to a
+        // PURE BuiltinCall over a string-literal operand that round-trips
+        // the SIR validator (no unbound names, no effect surprises).
+        let m = lower("undef foo\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { effects, .. },
+                ..
+            } => assert!(
+                !effects.contains(Effect::Divergent),
+                "undef should be PURE (non-divergent), got {:?}",
+                effects
+            ),
+            other => panic!("expected undef BuiltinCall, got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected undef-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
         // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips

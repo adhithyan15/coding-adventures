@@ -3856,6 +3856,50 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_undef_basic() {
+        // `undef foo` — the canonical single-name form.
+        let ast = parse_ruby("undef foo\n");
+        assert!(
+            find_descendant(&ast, "undef_statement").is_some(),
+            "expected undef_statement node"
+        );
+        assert!(
+            tree_has_token_value(&ast, "undef"),
+            "expected the `undef` keyword token in the tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_undef_carries_name() {
+        // The single operand must appear under the undef_statement node.
+        let ast = parse_ruby("undef obsolete\n");
+        let u = find_descendant(&ast, "undef_statement")
+            .expect("expected undef_statement node");
+        assert!(
+            tree_has_token_value(u, "obsolete"),
+            "expected name operand `obsolete` under undef_statement"
+        );
+    }
+
+    #[test]
+    fn test_parse_undef_not_shadowed_by_method_call() {
+        // The leading `undef` keyword must win over the bare-KEYWORD
+        // `factor` alternative — i.e. `undef` is parsed as an
+        // undef_statement (consuming the name operand), not as a
+        // method_call / expression_stmt that swallows only `undef` and
+        // leaves the name dangling.
+        let ast = parse_ruby("undef quux\n");
+        assert!(
+            find_descendant(&ast, "undef_statement").is_some(),
+            "expected undef_statement node (undef must not be shadowed)"
+        );
+        assert!(
+            tree_has_token_value(&ast, "quux"),
+            "expected name operand `quux` to be consumed by undef_statement"
+        );
+    }
+
+    #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
         let ast = parse_ruby("def hello = 1");

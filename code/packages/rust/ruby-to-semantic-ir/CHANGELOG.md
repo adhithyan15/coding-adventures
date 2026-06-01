@@ -2,6 +2,26 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.79.0] - 2026-06-01
+
+### Added (Phase 24b (FC) — `undef name` lowering)
+
+An `undef_statement` node (`undef name`) lowers to a statement-position
+`BuiltinCall("undef", [StrLit(name)])` with `EffectSet::PURE`, mirroring
+the Phase 24a `alias` lowering exactly.  The method name is surfaced as
+a `StrLit` — it is a method name, **not** a local variable, so emitting
+a `VarRef` would be wrong and the SIR validator would reject the
+never-bound name.  `Feature::Strings` is declared for the `StrLit`
+operand (already permitted by the manifest builder allowlist).  Effects
+are `PURE`, like the other declaration-ish keyword statements
+(`redo`/`retry`/`defined?`/`alias`).
+
+This first slice covers the canonical single-bare-name form (`undef
+foo`); the symbol form (`undef :name`) and the multi-name form (`undef
+a, b`) are deliberate follow-ups.  New lowering tests:
+`undef_lowers_to_builtin_call`, `undef_operand_is_string_literal`,
+`undef_is_pure_and_validates_e2e` (lower → validate round-trip).
+
 ## [0.78.0] - 2026-06-01
 
 ### Added (Phase 24a (FC) — `alias new old` lowering)
