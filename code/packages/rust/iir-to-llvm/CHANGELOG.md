@@ -3,6 +3,83 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-06-01 (LLVM03 — typed arithmetic + comparison + branches)
+
+### Added — three op families
+
+Implements item LLVM03 of the [multi-language backend plan][plan].  After
+this release, the LLVM backend covers the IIR subset that BASIC, Twig,
+Nib, and Oct front-ends actually emit for straight-line and branching
+code (everything except `call`, `call_builtin`, and heap/memory ops —
+those land in LLVM04).
+
+#### Arithmetic — five op-families × signedness / float
+
+| IIR op | Signed int | Unsigned int | Float |
+|--------|------------|--------------|-------|
+| `add`  | `add`      | `add`        | `fadd` |
+| `sub`  | `sub`      | `sub`        | `fsub` |
+| `mul`  | `mul`      | `mul`        | `fmul` |
+| `div`  | `sdiv`     | `udiv`       | `fdiv` |
+| `rem`  | `srem`     | `urem`       | `frem` |
+
+Signedness comes from the IIR type_hint prefix (`i*` = signed, `u*` =
+unsigned).  `add`/`sub`/`mul` are signedness-agnostic at the bit level
+so they share opcodes.
+
+#### Comparison — `icmp`/`fcmp` + automatic zext
+
+| IIR op | i32 | u32 | f64 |
+|--------|-----|-----|-----|
+| `eq`   | `eq` | `eq` | `oeq` |
+| `ne`   | `ne` | `ne` | `one` |
+| `lt`   | `slt` | `ult` | `olt` |
+| `le`   | `sle` | `ule` | `ole` |
+| `gt`   | `sgt` | `ugt` | `ogt` |
+| `ge`   | `sge` | `uge` | `oge` |
+
+Both naked (`eq`) and `cmp_`-prefixed (`cmp_eq`) opcodes are accepted —
+the latter were introduced in gap G1 for the wasm backend and we accept
+them here for cross-backend consistency.
+
+Float predicates use `o<pred>` (ordered) — NaN compares false.  This
+matches the most common language-level expectation.
+
+LLVM `icmp`/`fcmp` always return `i1`.  When the IIR type_hint is wider
+than `i1`, we automatically emit a `zext` to widen.  The original `i1`
+form is preserved in a sidecar `env_i1` map so a downstream
+`jmp_if_true` / `jmp_if_false` can consume it directly without a
+redundant `trunc` round-trip.
+
+#### Control flow — three opcodes + auto-fallthrough
+
+* `label "name"`           → `name:`
+* `jmp "name"`             → `br label %name`
+* `jmp_if_true cond, name` → `br i1 <cond_i1>, label %name, label %__fallN`
+* `jmp_if_false cond, name`→ `br i1 <cond_i1>, label %__fallN, label %name`
+
+Conditional branches require both arms in LLVM IR; IIR's `jmp_if_*` only
+names one target.  We synthesize a fresh `__fallN` block immediately
+after the branch, so the next IIR instruction lands in a valid basic
+block.  No structural changes upstream are required.
+
+#### Type system additions
+
+* `llvm_type_for` now accepts `i1` and `bool` (both → LLVM `i1`).
+  Enables comparison results to be requested at i1 width directly, with
+  no zext.
+
+#### Tests added (37 total, was 22)
+
+* Arithmetic (6): add-i32, fadd-double, sdiv, udiv, srem/urem same
+  module, const-operand inlining.
+* Comparison (5): icmp eq i32 + zext, ult for u32, fcmp olt for f64,
+  `cmp_`-prefix alias, no-zext when type_hint=i1.
+* Control flow (4): label block header, unconditional br, jmp_if_true
+  with fallthrough block, jmp_if_false swaps arms.
+
+[plan]: ../../../specs/MULTILANG-BACKEND-PLAN.md
+
 ## [0.2.0] — 2026-06-01 (LLVM02 — function signatures + ret/ret_void/const/mov)
 
 ### Added — function lowering and four instructions
