@@ -585,20 +585,32 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_string(&mut self, s: &StringLiteral) {
+        // CLOC12.11 / gap-026: quote-choice optimisation.
+        //
+        // Upstream's CodePrinter picks the quote style that minimises
+        // required escape sequences. We do the same: count the number
+        // of double-quote chars in the value; if it strictly exceeds
+        // the single-quote count, the single-quote form is shorter.
+        //
+        // Truth table:
+        //
+        //   value content      dq count   sq count   choice
+        //   -----------------  --------   --------   ---------
+        //   hello                 0          0       double  (tie → "")
+        //   o'malley              0          1       double
+        //   she said "hi"         1          0       single
+        //   "mixed 'both'"        2          2       double  (tie → "")
+        //   one "two" three       1          0       single
+        //
+        // `ascii_only` always emits with double quotes (per upstream's
+        // explicit ASCII escape rules — switching mid-mode would
+        // confuse downstream readers).
         self.maybe_map(&s.cv);
         if self.opts.ascii_only {
-            // Re-render value with ASCII escapes (ignore raw,
-            // which may contain bare Unicode).
             self.write_str(&format!("\"{}\"", escape_ascii_only(&s.value)));
         } else {
-            // Use raw to preserve original quote style / escapes
-            // when present; fall back to a generated form if raw
-            // is empty (synthetic node).
-            if s.raw.is_empty() {
-                self.write_str(&format!("\"{}\"", escape_str_dq(&s.value)));
-            } else {
-                self.write_str(&s.raw);
-            }
+            let (quote_ch, escaped) = choose_quote_and_escape(&s.value);
+            self.write_str(&format!("{quote_ch}{escaped}{quote_ch}"));
         }
     }
 
@@ -991,6 +1003,46 @@ fn assignment_op_str(op: AssignmentOperator) -> &'static str {
     }
 }
 
+/// Pick the quote style (`'` or `"`) that yields the shorter
+/// escaped string for `value`, then escape against that style.
+/// Returns `(quote_char_as_str, escaped_body)`.
+///
+/// Algorithm: count occurrences of `'` and `"`. If `"` appears more
+/// often, single-quote is shorter (because we'd escape fewer chars).
+/// Ties keep double — that matches upstream `CodePrinter` and the
+/// existing test expectations (`"foo"` is the canonical form).
+///
+/// Closes CLOC12 gap-026.
+fn choose_quote_and_escape(value: &str) -> (&'static str, String) {
+    let dq = value.chars().filter(|c| *c == '"').count();
+    let sq = value.chars().filter(|c| *c == '\'').count();
+    if dq > sq {
+        ("'", escape_str_sq(value))
+    } else {
+        ("\"", escape_str_dq(value))
+    }
+}
+
+/// Like [`escape_str_dq`] but for a single-quoted string — escape
+/// `'` instead of `"`. Backslash and control char rules are
+/// identical because they're independent of which quote wraps the
+/// string.
+fn escape_str_sq(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for ch in s.chars() {
+        match ch {
+            '\\' => out.push_str("\\\\"),
+            '\'' => out.push_str("\\'"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c => out.push(c),
+        }
+    }
+    out
+}
+
 /// Escape `"` and `\` and control characters for inclusion in a
 /// double-quoted JS string. Used when StringLiteral.raw is empty
 /// (synthetic node).
@@ -1124,6 +1176,65 @@ mod tests {
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
         assert_eq!(out.code, "2 + 3;");
+    }
+
+    // ---- quote-choice (gap-026, CLOC12.11) -----------------
+
+    /// Helper: build a synthetic StringLiteral (no `raw`, so the
+    /// quote-choice path runs) and emit it as a single statement.
+    fn emit_string_value(value: &str) -> String {
+        let s = Expression::StringLiteral(StringLiteral {
+            cv: None,
+            value: value.to_string(),
+            raw: String::new(),
+        });
+        emit_default(program().with_body(vec![stmt(s)])).code
+    }
+
+    #[test]
+    fn quote_choice_no_quotes_uses_double() {
+        // No quotes either way — canonical form is double.
+        assert_eq!(emit_string_value("hello"), "\"hello\";");
+        assert_eq!(emit_string_value(""), "\"\";");
+    }
+
+    #[test]
+    fn quote_choice_single_quotes_in_value_uses_double() {
+        // Value contains `'`, no `"`. Double-quoted form needs no
+        // escapes; single-quoted would.
+        assert_eq!(emit_string_value("o'malley"), "\"o'malley\";");
+        assert_eq!(emit_string_value("it's"), "\"it's\";");
+    }
+
+    #[test]
+    fn quote_choice_double_quotes_in_value_switches_to_single() {
+        // Value contains `"`. Single-quoted form avoids the escape.
+        assert_eq!(emit_string_value("she said \"hi\""), "'she said \"hi\"';");
+    }
+
+    #[test]
+    fn quote_choice_tie_picks_double() {
+        // Value `'"` — exactly one of each. Tie breaks toward
+        // double. We assert the leading byte only so the test
+        // doesn't depend on the escape rendering of the single
+        // quote inside (which is left untouched in a double-quoted
+        // string).
+        let out = emit_string_value("'\"");
+        assert!(
+            out.starts_with('"'),
+            "tie should pick double-quote; got {out}"
+        );
+    }
+
+    #[test]
+    fn quote_choice_more_double_than_single_picks_single() {
+        // Value `""x` — 2 doubles, 0 singles. Single-quoted wins
+        // by 2 escapes saved.
+        let out = emit_string_value("\"\"x");
+        assert!(
+            out.starts_with('\''),
+            "majority-double value should pick single-quote; got {out}"
+        );
     }
 
     #[test]

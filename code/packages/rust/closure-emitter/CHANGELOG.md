@@ -2,6 +2,70 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-01
+
+### Added — CLOC12.11: string quote-choice optimisation (closes gap-026)
+
+`emit_string` now picks the quote style that minimises required
+escape characters. Upstream's CodePrinter does the same; matching it
+brings us a step closer to byte-identical output.
+
+**Algorithm** — count occurrences of `"` and `'` in the value. If
+`"` strictly outnumbers `'`, emit with single quotes (each saved
+`\"` is shorter); otherwise emit with double quotes (canonical form,
+ties broken toward double).
+
+```
+value                            chosen quote   why
+-----------------------------    ------------   -------------------
+hello                            double         no quotes anywhere
+o'malley                         double         no `"`; cheaper as `"o'malley"`
+she said "hi"                    single         `"` saves one escape
+"mixed 'both'"                   double         tie (2 each) → double
+""x                              single         two `"`, zero `'`
+```
+
+`ascii_only` mode still always uses double quotes — switching mid-mode
+would confuse downstream readers and upstream itself maintains that
+invariant.
+
+### New helpers in `lib.rs`
+
+- `choose_quote_and_escape(value: &str) -> (&'static str, String)` —
+  returns the chosen quote character plus the escaped body.
+- `escape_str_sq(s: &str) -> String` — single-quoted variant of
+  `escape_str_dq`. Identical control-char rules; differs only in
+  which quote it escapes.
+
+### New inline tests (6)
+
+- `quote_choice_no_quotes_uses_double` — `"hello"`, `""`.
+- `quote_choice_single_quotes_in_value_uses_double` — `"o'malley"`, `"it's"`.
+- `quote_choice_double_quotes_in_value_switches_to_single` — `'she said "hi"'`.
+- `quote_choice_tie_picks_double` — value `'"`, leading byte = `"`.
+- `quote_choice_more_double_than_single_picks_single` — value `""x`, leading byte = `'`.
+- (helper) `emit_string_value(value: &str) -> String` — emit a
+  synthetic StringLiteral and return the code; used by the four
+  parametric assertions.
+
+### Side effect
+
+The previous emit_string path used `s.raw` verbatim when present
+(preserving the source-file's quote style). That's no longer used —
+quote-choice now applies uniformly. The `raw` field is still
+preserved in the AST for tooling but isn't consulted by emit.
+
+### gap-026 → RESOLVED
+
+The `test_string_quote_choice_minimises_escapes` placeholder in
+`tests/upstream/code_printer_test.rs` stays `#[ignore]`-d pending a
+follow-up that re-ports it with real upstream `assertPrint` cases
+now that the underlying emitter behaviour is in place.
+
+### Version bump
+
+`0.4.0` → `0.5.0`.
+
 ## [0.4.0] - 2026-06-01
 
 ### Added — CLOC12.10: precedence-aware paren insertion (closes gap-024 + gap-027)
