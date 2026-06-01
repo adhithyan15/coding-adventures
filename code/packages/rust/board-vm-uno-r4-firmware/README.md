@@ -53,6 +53,11 @@ Host-side tests re-run the Rust eject generator and compare the generated
 artifact against the embedded constants, so firmware changes catch stale
 ejected blink metadata before flashing hardware.
 
+The firmware crate also exposes a compact ejected-artifact summary, letting
+board-specific startup paths inspect the embedded program id, slot, boot policy,
+module metadata, CRC, capability count, and byte length without parsing the raw
+generated constants.
+
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.
 
