@@ -1172,6 +1172,43 @@ mod tests {
         assert!(tree_has_token_value(mwb, "_1"));
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 21c (FC) — implicit `it` block parameter (Ruby 3.4).
+    //
+    // A header-less block may use a bare `it` in its body as the first
+    // block argument.  Parser-side `it` lexes as a plain Name token;
+    // these pins confirm such blocks parse with no block_params header
+    // and the `it` Name token reaches the body.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_block_with_implicit_it_parses() {
+        let ast = parse_ruby("each { puts(it) }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(find_descendant(mwb, "block_params").is_none());
+        assert!(tree_has_token_value(mwb, "it"));
+    }
+
+    #[test]
+    fn test_parse_do_block_with_implicit_it_parses() {
+        let ast = parse_ruby("each do\n  puts(it)\nend");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(find_descendant(mwb, "do_block").is_some());
+        assert!(tree_has_token_value(mwb, "it"));
+    }
+
+    #[test]
+    fn test_parse_block_with_it_dot_method_parses() {
+        // `it.foo` — `it` as a receiver still parses; the `it` token is
+        // present in the block body.
+        let ast = parse_ruby("each { puts(it.foo) }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(tree_has_token_value(mwb, "it"));
+    }
+
     #[test]
     fn test_parse_method_call_with_args_and_block() {
         let ast = parse_ruby("each(1, 2) { puts 1 }");

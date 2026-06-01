@@ -482,6 +482,52 @@ fn collect_max_numbered_block_param(node: &GrammarASTNode, max: &mut u8) {
     }
 }
 
+/// Phase 21c (FC) — flatten a subtree's tokens into source order,
+/// pruning nested `block` nodes (their tokens belong to the inner
+/// block's own implicit-parameter scope).  Used to detect the implicit
+/// `it` parameter with reliable left/right adjacency.
+fn flatten_block_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) => out.push(t),
+            ASTNodeOrToken::Node(n) => {
+                if n.rule_name != "block" {
+                    flatten_block_tokens(n, out);
+                }
+            }
+        }
+    }
+}
+
+/// Phase 21c (FC) — does this block body use the implicit `it`
+/// parameter (Ruby 3.4)?  A bare `it` with no explicit `|...|` header
+/// is the first block argument.  We treat an `it` Name token as the
+/// implicit param ONLY when it is:
+///   - NOT immediately preceded by `.` (else it's a method name:
+///     `obj.it`), and
+///   - NOT immediately followed by `(` (else it's a call: `it(x)`).
+/// `it.foo`, `it + 1`, `puts(it)` all qualify (the `.`/`(` there are
+/// not adjacent in the disqualifying position).  This is a heuristic;
+/// an `it` used as a local (`it = …`) or parenless callee is a rare
+/// edge not handled in v0.
+fn block_uses_implicit_it(inner: &GrammarASTNode) -> bool {
+    let mut toks: Vec<&Token> = Vec::new();
+    flatten_block_tokens(inner, &mut toks);
+    for (i, t) in toks.iter().enumerate() {
+        if !matches!(t.type_, TokenType::Name) || t.value != "it" {
+            continue;
+        }
+        let prev_is_dot = i > 0 && matches!(toks[i - 1].type_, TokenType::Dot);
+        let next_is_lparen = toks
+            .get(i + 1)
+            .is_some_and(|n| matches!(n.type_, TokenType::LParen));
+        if !prev_is_dot && !next_is_lparen {
+            return true;
+        }
+    }
+    false
+}
+
 // ---------------------------------------------------------------------------
 // Lowerer
 // ---------------------------------------------------------------------------
@@ -3830,6 +3876,17 @@ impl Lowerer {
                         span: self.span_of(inner),
                     });
                 }
+            } else if block_uses_implicit_it(inner) {
+                // Phase 21c (FC) — implicit `it` parameter (Ruby 3.4).
+                // A header-less block referencing bare `it` gets a single
+                // synthesized parameter named `it`.  Mutually exclusive
+                // with numbered params (`_N` takes precedence above; Ruby
+                // forbids mixing them anyway).
+                params.push(Param {
+                    name: "it".to_string(),
+                    sir_type: None,
+                    span: self.span_of(inner),
+                });
             }
         }
 
