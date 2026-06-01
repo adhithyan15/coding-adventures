@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.2 — SIR18 exhaustiveness (no behaviour change)
+
+semantic-ir 0.10.0 adds `Expr::StrConcat` (the SIR18 string-concat
+node).  This backend gains a `StrConcat` arm in its expression emitter
+so it stays exhaustive.  The arm joins the existing SIR16+ reject group
+and `panic!`s with a "capability check should have rejected it"
+message: `Feature::StringInterpolation` is not in this backend's
+accepted-feature set, so a concat-using module is rejected at the
+capability check before emit, making the arm unreachable.  No output or
+accepted-feature changes.
+
 ## 0.1.1 — SIR17 exhaustiveness (no behaviour change)
 
 semantic-ir 0.2.0 adds `Stmt::ClassDef` (the SIR17 class node).  This

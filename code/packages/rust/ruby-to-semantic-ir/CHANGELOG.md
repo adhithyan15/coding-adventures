@@ -2,6 +2,35 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.73.0] - 2026-06-01
+
+### Changed (Phase 20b (FC) — interpolation lowers to first-class `StrConcat`)
+
+A multi-segment interpolated/concatenated string (`"a#{x}b"`) now lowers
+to the new `Expr::StrConcat` node instead of the v0
+`BuiltinCall("string_concat", …)` marker.  This is the marker→node
+counterpart of Phase 20a (which replaced the `__interp__` body marker
+with real recursive lowering): 20a turned each `#{…}` *body* into real
+SIR, and 20b turns the *concatenation wrapper* into a real SIR node.
+
+`lower_string_literal_with_interp` (shared by string **and** regex-pattern
+interpolation) keeps its result-shape selection — empty → empty `StrLit`,
+one segment → the bare segment, two-or-more → concat — but the 2+ case now
+emits `StrConcat { parts }` and declares the new
+`Feature::StringInterpolation` in the module manifest (alongside `Strings`
+for any `StrLit` parts).
+
+New / updated lowering pins:
+`interpolated_string_with_bare_name_lowers_to_str_concat`,
+`interpolated_string_with_expression_lowers_recursively`,
+`interpolated_string_with_multiple_expr_interps_lowers_each_recursively`,
+and the regex `regex_interpolation_lowers_pattern_to_concat` /
+`regex_interpolation_validates_e2e` all now assert the `StrConcat` shape.
+Added `adjacent_interps_with_no_literal_lower_to_str_concat_of_refs`
+(`"#{a}#{b}"` → two-`VarRef` concat) and
+`str_concat_module_declares_string_interpolation_feature` (manifest
+agreement).  Test count: 296 → 298.
+
 ## [0.72.0] - 2026-05-31
 
 ### Changed (Phase 20a (FC) — string interpolation lowers to real SIR)

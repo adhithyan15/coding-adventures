@@ -550,6 +550,25 @@ impl<'m> ValidatorState<'m> {
                 self.check_expr(lhs, env, depth + 1);
                 self.check_expr(rhs, env, depth + 1);
             }
+            // ── SIR18: string interpolation ────────────────────────
+            Expr::StrConcat { parts, span } => {
+                self.observed.add(Feature::StringInterpolation);
+                // A concat is only meaningful with at least two parts;
+                // a degenerate one-part concat signals a frontend bug
+                // (it should have emitted the bare part instead).
+                if parts.len() < 2 {
+                    self.error(
+                        format!(
+                            "str-concat needs at least 2 parts, got {}",
+                            parts.len()
+                        ),
+                        span,
+                    );
+                }
+                for p in parts {
+                    self.check_expr(p, env, depth + 1);
+                }
+            }
         }
     }
 
@@ -1169,6 +1188,64 @@ mod tests {
         });
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn str_concat_observes_string_interpolation_feature() {
+        // Phase 20b — a well-formed two-part `StrConcat` validates when
+        // the manifest declares `StringInterpolation`.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[Feature::StringInterpolation, Feature::Strings]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::StrConcat {
+                    parts: vec![
+                        Expr::StrLit { value: "a".into(), span: s() },
+                        Expr::StrLit { value: "b".into(), span: s() },
+                    ],
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn str_concat_with_fewer_than_two_parts_is_rejected() {
+        // Phase 20b — a one-part concat is degenerate; the frontend
+        // should have emitted the bare part instead.  The validator
+        // flags it so a buggy lowerer is caught early.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[Feature::StringInterpolation, Feature::Strings]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::StrConcat {
+                    parts: vec![Expr::StrLit { value: "lonely".into(), span: s() }],
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for 1-part str-concat, got ok");
     }
 
     #[test]

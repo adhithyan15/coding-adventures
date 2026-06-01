@@ -543,6 +543,25 @@ pub enum Expr {
         rhs: Box<Expr>,
         span: Span,
     },
+
+    // ── SIR18: string interpolation ────────────────────────────────
+    /// String concatenation of two or more `parts`, evaluated left to
+    /// right and joined into a single string.  This is the first-class
+    /// replacement for the v0 `BuiltinCall("string_concat", parts)`
+    /// marker that Ruby's `"a#{x}b"` interpolation used to lower to —
+    /// the same relationship `SeqLen` has to `BuiltinCall("len", ...)`
+    /// or `TryCatch` has to the old `__rescue_marker__` builtin.
+    ///
+    /// Giving concatenation a dedicated node lets a backend emit native
+    /// string building (`format!` / template literals / f-strings)
+    /// instead of routing through a runtime helper, and lets the
+    /// validator track interpolation usage via
+    /// `Feature::StringInterpolation` distinctly from a plain `StrLit`.
+    ///
+    /// Invariant: `parts.len() >= 2`.  A zero- or one-part concat is
+    /// degenerate — frontends emit a bare `StrLit` (empty string) or the
+    /// single part directly rather than wrapping it.
+    StrConcat { parts: Vec<Expr>, span: Span },
 }
 
 /// A single capture provided to `MakeClosure`.  The `name` matches a
@@ -586,6 +605,7 @@ impl Expr {
             Expr::MapGet { span, .. } => span,
             Expr::LogicalAnd { span, .. } => span,
             Expr::LogicalOr { span, .. } => span,
+            Expr::StrConcat { span, .. } => span,
         }
     }
 
@@ -614,6 +634,7 @@ impl Expr {
             Expr::MapGet { .. } => "map-get",
             Expr::LogicalAnd { .. } => "and",
             Expr::LogicalOr { .. } => "or",
+            Expr::StrConcat { .. } => "str-concat",
         }
     }
 }
@@ -762,6 +783,16 @@ mod tests {
                     span: span.clone(),
                 },
                 "or",
+            ),
+            (
+                Expr::StrConcat {
+                    parts: vec![
+                        Expr::StrLit { value: "a".into(), span: span.clone() },
+                        Expr::StrLit { value: "b".into(), span: span.clone() },
+                    ],
+                    span: span.clone(),
+                },
+                "str-concat",
             ),
         ];
         for (e, expected) in &cases {

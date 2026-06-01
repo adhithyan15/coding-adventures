@@ -25,6 +25,7 @@ use std::fmt;
 /// | `TailCalls`                | tail-call optimisation required       |
 /// | `Globals`                  | any top-level value `define`          |
 /// | `Intrinsics`               | any `Intrinsic` node                  |
+/// | `StringInterpolation`      | an `Expr::StrConcat` node             |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -75,6 +76,16 @@ pub enum Feature {
     /// earlier `__rescue_marker__`/`__ensure_marker__` placeholder
     /// builtins with a first-class node.
     Exceptions,
+    // ── SIR18 (rich string handling) ─────────────────────────────────
+    /// Module contains at least one `Expr::StrConcat` node — string
+    /// concatenation / interpolation (Ruby `"a#{x}b"`).  Phase 20b
+    /// (Ruby) introduces this feature, replacing the v0
+    /// `BuiltinCall("string_concat", ...)` marker with a first-class
+    /// node.  Distinct from `Strings` (a plain `StrLit`): a backend may
+    /// support string literals yet not (yet) know how to build a
+    /// concatenation natively, so the two capabilities are tracked
+    /// separately.
+    StringInterpolation,
 }
 
 impl Feature {
@@ -102,6 +113,7 @@ impl Feature {
         Feature::ClassVars,
         Feature::Constants,
         Feature::Exceptions,
+        Feature::StringInterpolation,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -129,6 +141,7 @@ impl Feature {
             Feature::ClassVars => "class-vars",
             Feature::Constants => "constants",
             Feature::Exceptions => "exceptions",
+            Feature::StringInterpolation => "string-interpolation",
         }
     }
 
