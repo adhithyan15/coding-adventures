@@ -6496,6 +6496,19 @@ fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
         | "partition" | "each_slice" | "each_cons" => {
             Some(EffectSet::PURE)
         }
+        // Phase 26a (FC) — `using Mod` activates a refinement module in
+        // the current lexical scope.  It is an ordinary method call
+        // (`using` is a `Kernel`/`Module` method, not a keyword), so it
+        // arrives here as a `method_call_no_paren` with callee `using`
+        // and the refinement module as its sole argument.  Without this
+        // entry it would fall through to a `DirectCall("using", …)`,
+        // which the SIR validator rejects as an undeclared callee.
+        // Tagging it a PURE builtin — like the other declaration-style
+        // forms (`alias` / `undef`) — lets it lower and validate as a
+        // first-class call whose argument (the module, e.g. a `Const`
+        // ref) is lowered through the normal expression path.  In this
+        // model the activation carries no runtime data effect.
+        "using" => Some(EffectSet::PURE),
         _ => None,
     }
 }

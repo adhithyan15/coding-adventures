@@ -6600,6 +6600,61 @@ b = "y"
     }
 
     #[test]
+    fn using_lowers_to_builtin_call() {
+        // Phase 26a (FC) — `using Mod` lowers to a statement-position
+        // BuiltinCall("using", [<module>]) rather than an unknown
+        // DirectCall.  A lone trailing call is the block's VALUE.
+        let m = lower("Foo = 1\nusing Foo\n");
+        let b = main_body(&m);
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "using");
+                assert_eq!(args.len(), 1, "expected exactly the module arg");
+            }
+            other => panic!("expected BuiltinCall(using, …), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn using_operand_is_the_module_ref() {
+        // The sole argument is the refinement module, lowered through the
+        // normal expression path — here a constant reference `Foo`.
+        let m = lower("Foo = 1\nusing Foo\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "using" => args,
+            other => panic!("expected using BuiltinCall, got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::VarRef { name, .. } if name == "Foo"),
+            "expected module operand VarRef(\"Foo\"), got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
+    fn using_is_pure_and_validates_e2e() {
+        // End-to-end: a `using`-activated module round-trips the SIR
+        // validator — the call is no longer an undeclared DirectCall, and
+        // the constant operand is declared by the preceding assignment.
+        let m = lower("Foo = 1\nusing Foo\n");
+        match &main_body(&m).value {
+            Expr::BuiltinCall { effects, .. } => assert!(
+                !effects.contains(Effect::Divergent),
+                "using should be PURE (non-divergent), got {:?}",
+                effects
+            ),
+            other => panic!("expected using BuiltinCall, got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected `using`-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
         // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips
