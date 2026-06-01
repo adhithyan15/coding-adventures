@@ -49,6 +49,8 @@
  * then composed by `forme-doc-site-emitter.emitSite`.
  */
 
+import { createHash } from "node:crypto";
+
 import { extractFrontmatter } from "@coding-adventures/forme-doc-frontmatter";
 import { parse as parseMarkdown } from "@coding-adventures/commonmark-parser";
 import { generateHeadingAnchors } from "@coding-adventures/forme-doc-heading-anchors";
@@ -111,8 +113,40 @@ export function build(files: readonly MarkdownFile[], options: BuildOptions): Pa
   const sidebar = normaliseSidebarPaths(rawSidebar);
 
   // -- Step 3: render every page's HTML -------------------------
+  //
+  // headExtra carries:
+  //   - the inlined theme stylesheet, and
+  //   - (if `options.searchClientJs` is set) a <script> tag
+  //     that loads /search/client.js with `defer` so DOM is
+  //     parsed before the bootstrap runs.
+  //
+  // Loading the search script from a separate URL (rather
+  // than inlining the entire bundle into every page) means it
+  // is cached once per visit; the manifest fetch fires
+  // exactly once across the whole session via SearchClient's
+  // built-in caching.
+  //
+  // CACHE-BUST: the script src includes a `?v=<buildId>` query
+  // string derived from a SHA-256 of the bundle bytes (or the
+  // process start timestamp if no bundle is supplied — irrelevant
+  // there since there's nothing to load).  Safari in particular
+  // is aggressive about caching same-URL JS / JSON; without a
+  // unique query each build, a returning visitor sees the
+  // PREVIOUS build's search client even after we redeploy.
+  // We pass the same `?v=` to the manifest + shard fetches via
+  // an inlined `window.__formeDocSearchBuildId` constant the
+  // bootstrap reads.
   const themeCss = options.themeCss ?? DEFAULT_THEME_CSS;
-  const headExtra = `<style>${themeCss}</style>`;
+  const hasSearch =
+    options.searchClientJs !== undefined && options.searchClientJs.length > 0;
+  const buildId = hasSearch
+    ? buildIdFor(options.searchClientJs!)
+    : "";
+  const searchScriptTag = hasSearch
+    ? `<script>window.__formeDocSearchBuildId=${JSON.stringify(buildId)};</script>` +
+      `<script src="/search/client.js?v=${encodeURIComponent(buildId)}" defer></script>`
+    : "";
+  const headExtra = `<style>${themeCss}</style>${searchScriptTag}`;
   const pages = parsed.map((p) => renderPage(p, sidebar, options, headExtra));
 
   // -- Step 4: build the search index ---------------------------
@@ -365,6 +399,26 @@ function normaliseOne<
 }
 
 /**
+ * Compute a short, content-addressed build ID from the bundled
+ * search-client source.  Used as a cache-bust query string on
+ * the script tag + fetch URLs so a returning visitor never
+ * sees a stale bundle after we rebuild.
+ *
+ * Content-addressed (first 12 hex chars of SHA-256) means:
+ *   - Same bundle content → same ID → browser reuses its cache
+ *     (good — we WANT cache hits when nothing changed).
+ *   - Different bundle content → different ID → forced re-fetch
+ *     (good — we want fresh content when we ship).
+ *
+ * 12 hex chars = 48 bits of entropy — collisions essentially
+ * impossible across realistic build counts.  Short enough to
+ * keep URLs readable.
+ */
+export function buildIdFor(bundleSource: string): string {
+  return createHash("sha256").update(bundleSource).digest("hex").slice(0, 12);
+}
+
+/**
  * A minimal stylesheet — just enough to make the demo look
  * presentable.  Two-column layout, lightly-styled sidebar,
  * monospace for code.  Inlined into every page's <head>.
@@ -385,8 +439,11 @@ header { display: flex; align-items: center; gap: 1rem; padding: .8rem 1.5rem;
          border-bottom: 1px solid var(--border); position: sticky; top: 0;
          background: var(--bg); z-index: 10; }
 header .site-title { font-weight: 600; font-size: 1.05rem; color: var(--fg); }
-header .search input { padding: .35rem .6rem; border: 1px solid var(--border);
-                       border-radius: 4px; min-width: 240px; }
+header input.search { padding: .35rem .6rem; border: 1px solid var(--border);
+                      border-radius: 4px; min-width: 280px; font: inherit;
+                      background: var(--bg); color: var(--fg);
+                      outline: none; transition: border-color .15s; }
+header input.search:focus { border-color: var(--accent); }
 header .github-link { margin-left: auto; }
 .layout { display: grid; grid-template-columns: 240px minmax(0,1fr) 200px;
           gap: 0; min-height: calc(100vh - 56px); }

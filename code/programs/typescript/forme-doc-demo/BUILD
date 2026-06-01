@@ -18,6 +18,7 @@ cd ../../../packages/typescript/forme-doc-sidebar-builder && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-page-shell && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-search-tokenizer && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-search-index-builder && npm ci --quiet
+cd ../../../packages/typescript/forme-doc-search-client-js && npm ci --quiet
 cd ../../../packages/typescript/forme-aot-page-bundle-emitter && npm ci --quiet
 cd ../../../packages/typescript/forme-aot-html-doc-emitter && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-site-emitter && npm ci --quiet
