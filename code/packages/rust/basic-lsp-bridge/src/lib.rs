@@ -86,6 +86,17 @@ static BASIC_KEYWORD_NAMES: &[&str] = &[
 // document-symbols pane
 // ===========================================================================
 
+// ===========================================================================
+// Format wrapper
+// ===========================================================================
+
+/// Adapter turning [`basic_formatter::format`] into the
+/// `fn(&str) -> Result<String, String>` shape required by
+/// [`LanguageSpec::format_fn`].
+fn basic_format_wrapper(source: &str) -> Result<String, String> {
+    basic_formatter::format(source).map_err(|e| e.to_string())
+}
+
 /// Grammar rule names that represent a top-level declaration.
 ///
 /// `def_stmt` is BASIC's `DEF FNa = …` — the only V1 user-named
@@ -107,9 +118,9 @@ static BASIC_LANGUAGE_SPEC: LanguageSpec = LanguageSpec {
     token_kind_map:    BASIC_TOKEN_KIND_MAP,
     declaration_rules: BASIC_DECLARATION_RULES,
     keyword_names:     BASIC_KEYWORD_NAMES,
-    // basic-formatter is the follow-up PR; until it lands the bridge
-    // advertises no `textDocument/formatting` capability.
-    format_fn:         None,
+    // BASIC-FMT01: basic-formatter wires textDocument/formatting
+    // (BASIC-FMT01 — same PR as the bridge update).
+    format_fn:         Some(basic_format_wrapper),
     symbol_table_fn:   None,
 };
 
@@ -179,9 +190,18 @@ mod tests {
     }
 
     #[test]
-    fn format_fn_is_none_in_v1() {
-        // basic-formatter is a follow-up PR.
-        assert!(basic_language_spec().format_fn.is_none());
+    fn format_fn_is_set() {
+        // basic-formatter (BASIC-FMT01) is now wired in.
+        assert!(basic_language_spec().format_fn.is_some());
+    }
+
+    #[test]
+    fn format_fn_uppercases_keywords() {
+        // End-to-end sanity check: the wired-in formatter runs and
+        // produces the expected canonical form.
+        let fmt = basic_language_spec().format_fn.expect("format_fn set");
+        let out = fmt("10 let a = 1\n").expect("ok");
+        assert!(out.contains("LET"), "expected uppercase LET; got {out:?}");
     }
 
     #[test]
