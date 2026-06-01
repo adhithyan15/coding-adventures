@@ -1615,6 +1615,7 @@ pub struct BrowserForm {
     pub datalists: Vec<BrowserFormDatalist>,
     pub selects: Vec<BrowserFormSelect>,
     pub outputs: Vec<BrowserFormOutput>,
+    pub successful_controls: Vec<BrowserFormSuccessfulControl>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1681,6 +1682,15 @@ pub struct BrowserFormOutput {
     pub for_tokens: Vec<String>,
     pub value: Option<String>,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSuccessfulControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: String,
+    pub form_owner: Option<String>,
+    pub submission_values: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12735,6 +12745,7 @@ fn browser_form(
     let datalists = browser_form_datalists(body_root, &controls);
     let selects = browser_form_selects(&controls);
     let outputs = browser_form_outputs(&controls);
+    let successful_controls = browser_form_successful_controls(&controls);
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12776,6 +12787,7 @@ fn browser_form(
         datalists,
         selects,
         outputs,
+        successful_controls,
         controls,
         submitters,
     }
@@ -13099,6 +13111,24 @@ fn browser_form_selects(controls: &[BrowserFormControl]) -> Vec<BrowserFormSelec
             selected_options: control.selected_options.clone(),
             options: control.option_items.clone(),
             text: control.text.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_successful_controls(
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormSuccessfulControl> {
+    controls
+        .iter()
+        .filter(|control| control.successful)
+        .filter_map(|control| {
+            Some(BrowserFormSuccessfulControl {
+                id: control.id.clone(),
+                control_type: control.control_type.clone(),
+                name: control.name.clone()?,
+                form_owner: control.form_owner.clone(),
+                submission_values: control.submission_values.clone(),
+            })
         })
         .collect()
 }

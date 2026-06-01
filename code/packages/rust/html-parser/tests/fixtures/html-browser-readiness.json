@@ -77,6 +77,13 @@
             "selects": [
               { "name": "section", "value": "manuals", "selected_options": ["manuals"], "options": [{ "value": "books", "text": "Books" }, { "value": "manuals", "text": "Manuals", "selected": true }], "text": "Books Manuals" }
             ],
+            "successful_controls": [
+              { "control_type": "text", "name": "q", "submission_values": ["rust html"] },
+              { "control_type": "hidden", "name": "page", "submission_values": ["1"] },
+              { "control_type": "checkbox", "name": "in_stock", "submission_values": ["yes"] },
+              { "control_type": "select", "name": "section", "submission_values": ["manuals"] },
+              { "control_type": "textarea", "name": "notes", "submission_values": ["Line one Line two"] }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
@@ -210,6 +217,14 @@
             ],
             "outputs": [
               { "id": "total", "name": "total", "for_tokens": ["q", "kind"], "value": "Ready", "text": "Ready" }
+            ],
+            "successful_controls": [
+              { "id": "q", "control_type": "text", "name": "q", "submission_values": [""] },
+              { "id": "count", "control_type": "number", "name": "count", "submission_values": ["2"] },
+              { "id": "notes", "control_type": "textarea", "name": "notes", "submission_values": ["Keep me"] },
+              { "id": "kind", "control_type": "select", "name": "kind", "submission_values": ["books"] },
+              { "id": "upload", "control_type": "file", "name": "upload", "submission_values": [] },
+              { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "submission_values": [""] }
             ],
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "successful": true, "submission_values": [""], "autofocus": true, "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"], "checked": false, "text": "", "options": [] },

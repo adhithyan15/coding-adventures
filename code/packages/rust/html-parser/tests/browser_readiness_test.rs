@@ -2,11 +2,12 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel,
-    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
-    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl,
+    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -724,6 +725,8 @@ struct ExpectedForm {
     selects: Vec<ExpectedFormSelect>,
     #[serde(default)]
     outputs: Vec<ExpectedFormOutput>,
+    #[serde(default)]
+    successful_controls: Vec<ExpectedFormSuccessfulControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -825,6 +828,18 @@ struct ExpectedFormOutput {
     #[serde(default)]
     value: Option<String>,
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormSuccessfulControl {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    name: String,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    submission_values: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1197,6 +1212,59 @@ fn browser_form_successful_control_metadata_tracks_submission_values() {
     assert_eq!(
         actual.forms, expected.forms,
         "form controls should preserve successful-control and submission value metadata",
+    );
+}
+
+#[test]
+fn browser_form_successful_control_descriptor_metadata_tracks_submission_entries() {
+    let document = parse_browser_document(
+        "<form id=checkout>\
+         <input id=item name=item value=book>\
+         <input id=gift type=checkbox name=gift value=yes checked>\
+         <input id=skip type=checkbox name=skip value=yes>\
+         <input id=disabled name=disabled value=no disabled>\
+         <select id=shipping name=shipping><option value=ground>Ground<option value=air selected>Air</select>\
+         <textarea id=note name=note>Leave at desk</textarea>\
+         <input id=file type=file name=upload>\
+         <button name=go>Submit</button></form>\
+         <input id=outside form=checkout name=outside value=external>",
+    )
+    .expect("form successful-control descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("checkout form should be summarized");
+    let names: Vec<&str> = form
+        .successful_controls
+        .iter()
+        .map(|control| control.name.as_str())
+        .collect();
+    assert_eq!(
+        names,
+        vec!["item", "gift", "shipping", "note", "upload", "outside"]
+    );
+    assert_eq!(form.successful_controls[0].id.as_deref(), Some("item"));
+    assert_eq!(form.successful_controls[0].control_type, "text");
+    assert_eq!(form.successful_controls[0].submission_values, vec!["book"]);
+    assert_eq!(form.successful_controls[1].control_type, "checkbox");
+    assert_eq!(form.successful_controls[1].submission_values, vec!["yes"]);
+    assert_eq!(form.successful_controls[2].control_type, "select");
+    assert_eq!(form.successful_controls[2].submission_values, vec!["air"]);
+    assert_eq!(form.successful_controls[3].control_type, "textarea");
+    assert_eq!(
+        form.successful_controls[3].submission_values,
+        vec!["Leave at desk"]
+    );
+    assert_eq!(form.successful_controls[4].control_type, "file");
+    assert!(form.successful_controls[4].submission_values.is_empty());
+    assert_eq!(
+        form.successful_controls[5].form_owner.as_deref(),
+        Some("checkout")
+    );
+    assert_eq!(
+        form.successful_controls[5].submission_values,
+        vec!["external"]
     );
 }
 
@@ -2148,6 +2216,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormOutput::into_browser_form_output)
                 .collect(),
+            successful_controls: self
+                .successful_controls
+                .into_iter()
+                .map(ExpectedFormSuccessfulControl::into_browser_form_successful_control)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -2224,6 +2297,18 @@ impl ExpectedFormOutput {
             for_tokens: self.for_tokens,
             value: self.value,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormSuccessfulControl {
+    fn into_browser_form_successful_control(self) -> BrowserFormSuccessfulControl {
+        BrowserFormSuccessfulControl {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            submission_values: self.submission_values,
         }
     }
 }

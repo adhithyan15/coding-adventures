@@ -750,6 +750,18 @@ def check_browser_expected_lists(
                 require_optional_nullable_string(output_path, output, field, errors)
             require_optional_string_list(output_path, output, "for_tokens", errors)
             require_string(output_path, output, "text", errors)
+        require_optional_object_list(form_path, form, "successful_controls", errors)
+        for successful_index, control in enumerate(
+            object_list_items(form, "successful_controls")
+        ):
+            successful_path = f"{form_path}.successful_controls[{successful_index}]"
+            require_optional_nullable_string(successful_path, control, "id", errors)
+            require_string(successful_path, control, "control_type", errors)
+            require_string(successful_path, control, "name", errors)
+            require_optional_nullable_string(successful_path, control, "form_owner", errors)
+            require_optional_string_list(
+                successful_path, control, "submission_values", errors
+            )
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):
