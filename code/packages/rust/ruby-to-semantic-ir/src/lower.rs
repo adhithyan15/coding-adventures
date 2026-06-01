@@ -6509,6 +6509,22 @@ fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
         // ref) is lowered through the normal expression path.  In this
         // model the activation carries no runtime data effect.
         "using" => Some(EffectSet::PURE),
+        // Phase 26b (FC) — `refine Class do ... end` reopens `Class`
+        // within a refinement module, defining methods that are only
+        // visible where the enclosing module is later `using`-activated.
+        // `refine` is an ordinary `Module` method that takes the target
+        // class as its argument and a block holding the refinement body,
+        // so it arrives as a `method_with_block` with callee `refine`.
+        // Without this entry it would fall through to a
+        // `DirectCall("refine", …)`, which the SIR validator rejects as
+        // an undeclared callee.  Tagging it a PURE builtin — like the
+        // block-taking `lambda`/`proc` and the `using` companion form —
+        // lets it lower and validate as a first-class call: the target
+        // class is lowered through the normal expression path and the
+        // refinement block is hoisted to a `MakeClosure` trailing arg by
+        // `lower_method_with_block`.  This completes the Ruby 3.4
+        // refinement surface (`using` + `refine`).
+        "refine" => Some(EffectSet::PURE),
         _ => None,
     }
 }

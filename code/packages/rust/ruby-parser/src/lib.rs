@@ -4064,6 +4064,46 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_refine_is_method_with_block() {
+        // Phase 26b (FC) — `refine(Class) do ... end` is a block-taking
+        // method call: it parses as a `method_with_block` with the target
+        // class as a parenned argument and the refinement body as a block.
+        let ast = parse_ruby("refine(String) do\n  1\nend\n");
+        assert!(
+            find_descendant(&ast, "method_with_block").is_some(),
+            "expected `refine(String) do…end` to parse as method_with_block"
+        );
+    }
+
+    #[test]
+    fn test_parse_refine_carries_callee_and_class() {
+        // Both the `refine` callee and the `String` target-class operand
+        // must appear in the parse tree.
+        let ast = parse_ruby("refine(String) do\n  1\nend\n");
+        assert!(
+            tree_has_token_value(&ast, "refine"),
+            "expected the `refine` callee token in the tree"
+        );
+        assert!(
+            tree_has_token_value(&ast, "String"),
+            "expected the `String` target-class token in the tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_refine_has_block_subnode() {
+        // The trailing `do … end` must parse into a `block` subnode under
+        // the method_with_block (where the refinement body lives).
+        let ast = parse_ruby("refine(String) do\n  1\nend\n");
+        let mwb = find_descendant(&ast, "method_with_block")
+            .expect("expected method_with_block node");
+        assert!(
+            find_descendant(mwb, "block").is_some(),
+            "expected a `block` subnode under the refine method_with_block"
+        );
+    }
+
+    #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
         let ast = parse_ruby("def hello = 1");

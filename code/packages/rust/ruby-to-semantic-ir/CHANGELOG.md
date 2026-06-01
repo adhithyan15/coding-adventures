@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.84.0] - 2026-06-01
+
+### Added (Phase 26b (FC) — `refine Class do … end` refinement body)
+
+`refine(Class) do … end` now lowers to a first-class
+`BuiltinCall("refine", [<class>, <closure>])` with `EffectSet::PURE`,
+rather than falling through to a `DirectCall("refine", …)` that the SIR
+validator rejected as an undeclared callee.
+
+`refine` is an ordinary block-taking method, so it arrives as a
+`method_with_block` with the target class as its argument and the
+refinement body as a block — **no grammar or lexer change** was needed.
+The fix adds `"refine"` to the lowerer's `ruby_builtin_effects` table as a
+PURE builtin (alongside `using` and the block-taking `lambda`/`proc`); the
+target class is lowered through the normal expression path and the
+refinement block is hoisted to a `MakeClosure` trailing argument by the
+existing `lower_method_with_block` machinery.
+
+This completes the Ruby 3.4 refinement surface (`using` + `refine`) — the
+final slice of the Ruby 3.4 frontend full-coverage convergence.
+
+New lowering tests: `refine_lowers_to_builtin_call`,
+`refine_block_is_makeclosure_arg`, `refine_is_pure_and_validates_e2e`
+(lower → validate round-trip).
+
 ## [0.83.0] - 2026-06-01
 
 ### Added (Phase 26a (FC) — `using Mod` refinement activation)

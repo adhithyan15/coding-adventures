@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.76.0] - 2026-06-01
+
+### Added (Phase 26b (FC) — `refine Class do … end` parse pins)
+
+Regression pins confirming Ruby's `refine(Class) do … end` (refinement
+body definition) parses with **no grammar change**: `refine` is an
+ordinary block-taking method, so `refine(String) do … end` parses as a
+`method_with_block` with the target class as a parenned argument and the
+refinement body as a `block` subnode.  The feature's semantics (lowering
+to a PURE `BuiltinCall` with the block hoisted to a `MakeClosure`, instead
+of an undeclared `DirectCall`) are supplied entirely in the lowerer (see
+the `ruby-to-semantic-ir` 0.84.0 entry); this crate's grammar is
+unchanged, so these are pure parse-shape pins.  New tests:
+`test_parse_refine_is_method_with_block`,
+`test_parse_refine_carries_callee_and_class`,
+`test_parse_refine_has_block_subnode`.
+
+This completes the Ruby 3.4 refinement surface (`using` + `refine`) and
+the full-coverage frontend convergence.
+
 ## [0.75.0] - 2026-06-01
 
 ### Added (Phase 26a (FC) — `using Mod` parse pins)
