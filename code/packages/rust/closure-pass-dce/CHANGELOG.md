@@ -2,6 +2,52 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-01
+
+### Added — CLOC12.19: block flattening (closes gap-010)
+
+Adds a flatten step to `dce_block_statement` that splices any
+direct-child `BlockStatement`'s body into the enclosing block —
+after the recurse-into-children pass and before the existing
+dead-after-terminator + empty-statement sweeps.
+
+Truth table:
+
+| Input                       | Output                  |
+|-----------------------------|-------------------------|
+| `{{foo();}}`                | `{foo();}`              |
+| `{foo();{}}`                | `{foo();}`              |
+| `{{};foo();}`               | `{foo();}`              |
+| `{{a();b();};}`             | `{a();b();}`            |
+| `{foo();{bar();baz();}}`    | `{foo();bar();baz();}`  |
+| `{let x=1;{let x=2;}}`      | unchanged (scope-safe)  |
+| `{var x=1;{var y=2;}}`      | `{var x=1;var y=2;}`    |
+
+**Scope safety.** ECMAScript block scope means `let`, `const`,
+`class`, and inner `function` declarations are bound to their
+enclosing block. Hoisting them into the outer block would either
+leak the binding to a wider scope or trigger a redeclaration TDZ
+error against a same-named outer binding. The new helper
+`block_is_scope_safe_to_flatten(b) -> bool` walks an inner
+block's body and returns `false` if any statement is a block-bound
+declaration — those inner blocks stay put. Plain `var` is fine
+because `var` is function-scoped, not block-scoped, so hoisting
+`{var x = 1;}` upward produces the same effective binding.
+
+The flatten contributes a `block-flattened` record per outer
+block where any splicing happened (not per child — that'd be
+noisy). Dead-after-return and EmptyStatement drops still cascade
+afterward, so input like `{x;{return;y;};z;}` collapses to
+`{x;return;}` in a single pass.
+
+Un-ignores upstream-port `test_fold_block_flattening` with four
+assertions covering the `{{foo();}}`, `{foo();{}}`, `{{};foo();}`,
+and `{foo();{bar();}}` cases. Updates the existing
+`recurses_into_nested_blocks` inline test (renamed to
+`recurses_into_nested_blocks_and_flattens`) to reflect the new
+cascade behaviour where the inner block is now spliced into the
+outer rather than preserved.
+
 ## [0.4.2] - 2026-06-01
 
 ### Changed — CLOC12.14: handle new `ThrowStatement` variant
