@@ -3,6 +3,37 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] — 2026-06-01 (G1 — accept `cmp_*`-prefixed comparison opcodes)
+
+### Changed — `cmp_eq` / `cmp_ne` / `cmp_lt` / `cmp_le` / `cmp_gt` / `cmp_ge` now lower
+
+Pre-0.7.0, the `lower_iir_to_wasm` step only recognised the bare
+shape (`eq` / `ne` / `lt` / `le` / `gt` / `ge`) — the form
+`twig-ir-compiler` emits.  Languages that prefix the mnemonic with
+`cmp_` — BASIC, Nib, Oct — would fail at lowering even though the
+validator accepted them, surfacing as
+`IIR -> WasmModule: UnsupportedOp { op: "cmp_gt" }`.
+
+This release accepts both shapes.  The implementation strips a
+leading `cmp_` from the opcode name and routes the bare form
+through the existing per-type opcode dispatch (i32/i64 signed/
+unsigned + f32/f64).  No new opcodes are added; the wasm
+comparison opcode table is unchanged.  Twig's existing bare-form
+emissions continue to lower identically.
+
+This unblocks:
+- BASIC `IF A > 5 THEN 100` lowering to wasm
+- BASIC `FOR I = 1 TO 3 / NEXT I` (cmp_le) lowering to wasm
+- Nib `if a < b { ... }` lowering to wasm
+- Oct `while x < 10 { ... }` lowering to wasm
+
+### Tests
+
+- 7 new tests in `tests/test_backend.rs`: one per `cmp_*` variant
+  asserting `lower_iir_to_wasm` no longer rejects, plus a
+  back-compat test for the bare-`eq` form.
+- All 95 existing unit tests still pass.
+
 ## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` for `field_load`)
 
 ### Changed — `ref<any>` joins `SUPPORTED_REF_TYPES`
