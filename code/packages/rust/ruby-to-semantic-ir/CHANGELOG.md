@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.77.0] - 2026-06-01
+
+### Added (Phase 23b (FC) — `defined?` operator lowering)
+
+A `defined_expression` node (`defined?(x)` / `defined? x`) lowers to
+`BuiltinCall("defined?", [operand])` with `EffectSet::PURE` — `defined?`
+inspects whether its operand is defined, never raises, and has no side
+effects.  Handled in both expression position (`lower_expression`, e.g.
+an assignment RHS) and statement position (the statement dispatch wraps
+it in `Stmt::ExprStmt`).  The operand is carried as a lowered argument so
+a downstream emitter can reconstruct the source; a faithful backend does
+not evaluate it.
+
+v0 limitation: the operand lowers like any expression, so
+`defined?(undefined_local)` produces a `VarRef` the validator rejects as
+an unknown name — `defined?` on a never-bound bare local is not
+representable yet (operands are bound names, calls, or literals in
+practice).
+
+New lowering pins: `defined_with_parens_lowers_to_builtin_call`,
+`defined_of_literal_lowers_with_literal_operand`,
+`defined_in_statement_position_is_expr_stmt`,
+`defined_expression_validates_e2e`. Test count: 307 → 311.
+
 ## [0.76.0] - 2026-06-01
 
 ### Changed (Phase 13b (FC) — nested array patterns lower structurally)

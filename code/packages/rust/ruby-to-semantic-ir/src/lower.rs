@@ -737,6 +737,17 @@ impl Lowerer {
         match node.rule_name.as_str() {
             "assignment" => self.lower_assignment(node),
             "rightward_assignment" => self.lower_rightward_assignment(node),
+            // Phase 23b (FC) — `defined?(x)` in statement position (the
+            // grammar lists `defined_expression` in the statement
+            // alternation so a bare `defined?(x)` doesn't get swallowed
+            // by `method_call`).  Wrap the lowered operator in ExprStmt.
+            "defined_expression" => {
+                let expr = self.lower_defined_expression(node)?;
+                Ok(Stmt::ExprStmt {
+                    expr,
+                    span: self.span_of(node),
+                })
+            }
             "method_call" => {
                 let expr = self.lower_method_call(node)?;
                 Ok(Stmt::ExprStmt {
@@ -4530,6 +4541,9 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
+            // Phase 23b (FC) — `defined?(x)` in expression position
+            // (assignment RHS, condition, …).
+            "defined_expression" => self.lower_defined_expression(node),
             "array_literal" => self.lower_array_literal(node),
             "hash_literal" => self.lower_hash_literal(node),
             "symbol_literal" => self.lower_symbol_literal(node),
@@ -5747,6 +5761,40 @@ impl Lowerer {
         })();
         self.interp_depth -= 1;
         result
+    }
+
+    /// Phase 23b (FC) — lower a `defined_expression` node
+    /// (`defined? <operand>` / `defined?(<operand>)`) to
+    /// `BuiltinCall("defined?", [operand])`.
+    ///
+    /// Effects are `PURE`: `defined?` inspects whether its operand is
+    /// defined and never raises (even on an undefined name) and has no
+    /// side effects.  The operand is carried as a lowered argument so a
+    /// downstream emitter can reconstruct the source; a faithful backend
+    /// does NOT evaluate it (Ruby's `defined?(foo.bar)` does not call
+    /// `foo.bar`).
+    ///
+    /// v0 limitation: the operand is lowered like any expression, so
+    /// `defined?(undefined_local)` lowers to a `VarRef` the SIR validator
+    /// will reject as an unknown name — `defined?` on a never-bound bare
+    /// local is not representable yet.  In practice the operand is a
+    /// bound name, a method call, or a literal.
+    fn lower_defined_expression(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let operand_node = self.first_node_child(node).ok_or_else(|| RubyLowerError {
+            message: "defined_expression missing operand".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })?;
+        let operand = self.lower_expression(operand_node)?;
+        Ok(Expr::BuiltinCall {
+            name: "defined?".to_string(),
+            args: vec![operand],
+            effects: EffectSet::PURE,
+            span: self.span_of(node),
+        })
     }
 
     fn lower_factor(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {

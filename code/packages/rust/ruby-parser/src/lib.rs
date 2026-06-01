@@ -3750,6 +3750,57 @@ mod tests {
     // to the block-bodied def.
     // -----------------------------------------------------------------------
 
+    // -----------------------------------------------------------------------
+    // Phase 23b — `defined?` operator
+    //
+    // The lexer emits `defined?` as a single KEYWORD token (trailing `?`
+    // included).  Grammar: `defined_expression = "defined?" factor`,
+    // placed first in the `factor` alternation so the keyword wins over
+    // the bare-KEYWORD alternative.  Covers both the parenthesised form
+    // `defined?(x)` and the bare tight form `defined? x`.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_defined_with_parens() {
+        // `x = defined?(y)` — parenthesised operand on an assignment RHS.
+        let ast = parse_ruby("x = defined?(y)\n");
+        assert!(
+            find_descendant(&ast, "assignment").is_some(),
+            "expected assignment node"
+        );
+        assert!(
+            find_descendant(&ast, "defined_expression").is_some(),
+            "expected defined_expression node"
+        );
+        assert!(
+            tree_has_token_value(&ast, "defined?"),
+            "expected the `defined?` keyword token in the tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_defined_without_parens() {
+        // `x = defined? y` — bare tight form (operand is a NAME factor).
+        let ast = parse_ruby("x = defined? y\n");
+        let d = find_descendant(&ast, "defined_expression")
+            .expect("expected defined_expression node");
+        // The operand `y` is present as a Name token under the node.
+        assert!(
+            tree_has_token_value(d, "y"),
+            "expected operand `y` under defined_expression"
+        );
+    }
+
+    #[test]
+    fn test_parse_defined_statement_position() {
+        // `defined?(x)` as a bare expression statement (no assignment).
+        let ast = parse_ruby("defined?(x)\n");
+        assert!(
+            find_descendant(&ast, "defined_expression").is_some(),
+            "expected defined_expression node in statement position"
+        );
+    }
+
     #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
