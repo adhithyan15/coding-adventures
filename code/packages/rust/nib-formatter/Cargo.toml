@@ -1,0 +1,10 @@
+[package]
+name = "nib-formatter"
+version = "0.1.0"
+edition = "2021"
+description = "NIB-FMT01 — canonical Nib pretty-printer.  Tokens → format-doc Doc → canonical source.  Sibling of basic-formatter and twig-formatter."
+
+[dependencies]
+format-doc                  = { path = "../format-doc" }
+coding-adventures-nib-lexer = { path = "../nib-lexer" }
+lexer                       = { path = "../lexer" }

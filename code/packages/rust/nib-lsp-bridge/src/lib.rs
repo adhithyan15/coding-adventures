@@ -76,6 +76,17 @@ static NIB_KEYWORD_NAMES: &[&str] = &[
 // Declaration rules
 // ===========================================================================
 
+// ===========================================================================
+// Format wrapper
+// ===========================================================================
+
+/// Adapter turning [`nib_formatter::format`] into the
+/// `fn(&str) -> Result<String, String>` shape required by
+/// [`LanguageSpec::format_fn`].
+fn nib_format_wrapper(source: &str) -> Result<String, String> {
+    nib_formatter::format(source).map_err(|e| e.to_string())
+}
+
 /// Grammar rule names that represent a top-level declaration.
 ///
 /// `fn_decl` is Nib's function declaration form (`fn name(…) -> ty { … }`).
@@ -96,7 +107,8 @@ static NIB_LANGUAGE_SPEC: LanguageSpec = LanguageSpec {
     token_kind_map:    NIB_TOKEN_KIND_MAP,
     declaration_rules: NIB_DECLARATION_RULES,
     keyword_names:     NIB_KEYWORD_NAMES,
-    format_fn:         None,
+    // NIB-FMT01: nib-formatter wires textDocument/formatting.
+    format_fn:         Some(nib_format_wrapper),
     symbol_table_fn:   None,
 };
 
@@ -159,8 +171,17 @@ mod tests {
     }
 
     #[test]
-    fn format_fn_is_none_in_v1() {
-        assert!(nib_language_spec().format_fn.is_none());
+    fn format_fn_is_set() {
+        // nib-formatter (NIB-FMT01) is now wired in.
+        assert!(nib_language_spec().format_fn.is_some());
+    }
+
+    #[test]
+    fn format_fn_produces_canonical_output() {
+        // End-to-end sanity: the wired-in formatter runs.
+        let fmt = nib_language_spec().format_fn.expect("format_fn set");
+        let out = fmt("fn main() { return 42; }").expect("ok");
+        assert!(out.contains("return 42"), "expected return 42; got {out:?}");
     }
 
     #[test]
