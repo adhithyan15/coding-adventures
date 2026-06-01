@@ -1,5 +1,25 @@
 # Changelog — `basic-lsp-bridge`
 
+## 0.2.0 — 2026-06-01 (wires basic-formatter as the format_fn)
+
+basic-formatter 0.1.0 (BASIC-FMT01) is now wired in as the
+`textDocument/formatting` provider.  Editors driving the BASIC
+language server will get "Format Document" + "Format Selection"
+that produce canonical BASIC.
+
+### Changed
+
+- `basic_language_spec().format_fn` flipped from `None` to
+  `Some(basic_format_wrapper)`.
+- Added `basic_format_wrapper(&str) -> Result<String, String>` that
+  adapts `basic_formatter::format`'s `FormatError` into the
+  string-error shape `LanguageSpec::format_fn` expects.
+- Two new tests (`format_fn_is_set`, `format_fn_uppercases_keywords`).
+
+### Dependencies
+
+- Added `basic-formatter` 0.1.0 as a path dependency.
+
 ## 0.1.0 — 2026-06-01 (BASIC-LSP01 — initial Dartmouth BASIC LSP bridge)
 
 Initial release.  Sibling of `twig-lsp-bridge` 0.2.0 — first crate
