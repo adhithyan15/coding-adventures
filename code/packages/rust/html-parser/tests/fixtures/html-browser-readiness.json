@@ -199,6 +199,9 @@
               { "text": "NotesKeep me", "control_id": "notes", "control_name": "notes", "control_type": "textarea", "association": "implicit" },
               { "text": "Fast", "control_id": "fast", "control_name": "fast", "control_type": "checkbox", "association": "implicit" }
             ],
+            "datalists": [
+              { "id": "query-suggestions", "control_ids": ["q"], "control_names": ["q"], "options": [{ "value": "Rust", "text": "" }, { "value": "HTML", "label": "Markup", "text": "Markup" }, { "value": "Browser APIs", "text": "Browser APIs" }] }
+            ],
             "outputs": [
               { "id": "total", "name": "total", "for_tokens": ["q", "kind"], "value": "Ready", "text": "Ready" }
             ],

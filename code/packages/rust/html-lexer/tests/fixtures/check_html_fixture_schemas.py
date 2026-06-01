@@ -709,6 +709,21 @@ def check_browser_expected_lists(
             for field in ("control_id", "control_name", "control_type"):
                 require_optional_nullable_string(label_path, label, field, errors)
             require_string(label_path, label, "association", errors)
+        require_optional_object_list(form_path, form, "datalists", errors)
+        for datalist_index, datalist in enumerate(object_list_items(form, "datalists")):
+            datalist_path = f"{form_path}.datalists[{datalist_index}]"
+            require_optional_nullable_string(datalist_path, datalist, "id", errors)
+            require_optional_string_list(datalist_path, datalist, "control_ids", errors)
+            require_optional_string_list(datalist_path, datalist, "control_names", errors)
+            require_optional_object_list(datalist_path, datalist, "options", errors)
+            for option_index, option in enumerate(
+                object_list_items(datalist, "options")
+            ):
+                option_path = f"{datalist_path}.options[{option_index}]"
+                require_string(option_path, option, "value", errors)
+                require_optional_nullable_string(option_path, option, "label", errors)
+                require_string(option_path, option, "text", errors)
+                require_optional_boolean(option_path, option, "disabled", errors)
         require_optional_object_list(form_path, form, "outputs", errors)
         for output_index, output in enumerate(object_list_items(form, "outputs")):
             output_path = f"{form_path}.outputs[{output_index}]"

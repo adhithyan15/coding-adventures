@@ -1,12 +1,12 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
-    BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext, BrowserForm,
-    BrowserFormControl, BrowserFormFieldset, BrowserFormLabel, BrowserFormOutput,
-    BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
+    BrowserForm, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel,
+    BrowserFormOutput, BrowserFormSubmitter, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -719,6 +719,8 @@ struct ExpectedForm {
     #[serde(default)]
     labels: Vec<ExpectedFormLabel>,
     #[serde(default)]
+    datalists: Vec<ExpectedFormDatalist>,
+    #[serde(default)]
     outputs: Vec<ExpectedFormOutput>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
@@ -755,6 +757,28 @@ struct ExpectedFormLabel {
     #[serde(default)]
     control_type: Option<String>,
     association: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormDatalist {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    control_ids: Vec<String>,
+    #[serde(default)]
+    control_names: Vec<String>,
+    #[serde(default)]
+    options: Vec<ExpectedDatalistOption>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedDatalistOption {
+    value: String,
+    #[serde(default)]
+    label: Option<String>,
+    text: String,
+    #[serde(default)]
+    disabled: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2032,6 +2056,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormLabel::into_browser_form_label)
                 .collect(),
+            datalists: self
+                .datalists
+                .into_iter()
+                .map(ExpectedFormDatalist::into_browser_form_datalist)
+                .collect(),
             outputs: self
                 .outputs
                 .into_iter()
@@ -2074,6 +2103,32 @@ impl ExpectedFormLabel {
             control_name: self.control_name,
             control_type: self.control_type,
             association: self.association,
+        }
+    }
+}
+
+impl ExpectedFormDatalist {
+    fn into_browser_form_datalist(self) -> BrowserFormDatalist {
+        BrowserFormDatalist {
+            id: self.id,
+            control_ids: self.control_ids,
+            control_names: self.control_names,
+            options: self
+                .options
+                .into_iter()
+                .map(ExpectedDatalistOption::into_browser_datalist_option)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedDatalistOption {
+    fn into_browser_datalist_option(self) -> BrowserDatalistOption {
+        BrowserDatalistOption {
+            value: self.value,
+            label: self.label,
+            text: self.text,
+            disabled: self.disabled,
         }
     }
 }

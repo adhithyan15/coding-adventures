@@ -1612,6 +1612,7 @@ pub struct BrowserForm {
     pub novalidate: bool,
     pub fieldsets: Vec<BrowserFormFieldset>,
     pub labels: Vec<BrowserFormLabel>,
+    pub datalists: Vec<BrowserFormDatalist>,
     pub outputs: Vec<BrowserFormOutput>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
@@ -1636,6 +1637,22 @@ pub struct BrowserFormLabel {
     pub control_name: Option<String>,
     pub control_type: Option<String>,
     pub association: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormDatalist {
+    pub id: Option<String>,
+    pub control_ids: Vec<String>,
+    pub control_names: Vec<String>,
+    pub options: Vec<BrowserDatalistOption>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDatalistOption {
+    pub value: String,
+    pub label: Option<String>,
+    pub text: String,
+    pub disabled: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12340,6 +12357,31 @@ fn collect_datalist_options_into(nodes: &[Node], options: &mut Vec<String>) {
     }
 }
 
+fn collect_datalist_option_items(nodes: &[Node]) -> Vec<BrowserDatalistOption> {
+    let mut options = Vec::new();
+    collect_datalist_option_items_into(nodes, &mut options);
+    options
+}
+
+fn collect_datalist_option_items_into(nodes: &[Node], options: &mut Vec<BrowserDatalistOption>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "option" {
+            options.push(BrowserDatalistOption {
+                value: browser_option_value(element),
+                label: element.attribute("label").map(ToOwned::to_owned),
+                text: browser_option_display_text(element),
+                disabled: element.attribute("disabled").is_some(),
+            });
+        } else {
+            collect_datalist_option_items_into(&element.children, options);
+        }
+    }
+}
+
 fn selected_option_value(nodes: &[Node]) -> Option<String> {
     let mut first = None;
     selected_option_value_in(nodes, &mut first).or(first)
@@ -12672,6 +12714,7 @@ fn browser_form(
     let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
     let form_labels =
         collect_form_labels_for_form(body_root, element, element.attribute("id"), &controls);
+    let datalists = browser_form_datalists(body_root, &controls);
     let outputs = browser_form_outputs(&controls);
     let submitters = browser_form_submitters(
         &controls,
@@ -12711,6 +12754,7 @@ fn browser_form(
         novalidate,
         fieldsets,
         labels: form_labels,
+        datalists,
         outputs,
         controls,
         submitters,
@@ -12849,6 +12893,46 @@ fn form_control_associated_with_target(
         Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
         None => current_form.is_some_and(|form| form == target_form),
     }
+}
+
+fn browser_form_datalists(
+    body_root: &[Node],
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormDatalist> {
+    let mut datalists = Vec::new();
+    for control in controls {
+        let Some(list_id) = control.list.as_deref() else {
+            continue;
+        };
+        if datalists
+            .iter()
+            .any(|datalist: &BrowserFormDatalist| datalist.id.as_deref() == Some(list_id))
+        {
+            continue;
+        }
+        let Some(element) =
+            find_element_by_id(body_root, list_id).filter(|element| element.name == "datalist")
+        else {
+            continue;
+        };
+        let matching_controls: Vec<&BrowserFormControl> = controls
+            .iter()
+            .filter(|control| control.list.as_deref() == Some(list_id))
+            .collect();
+        datalists.push(BrowserFormDatalist {
+            id: Some(list_id.to_string()),
+            control_ids: matching_controls
+                .iter()
+                .filter_map(|control| control.id.clone())
+                .collect(),
+            control_names: matching_controls
+                .iter()
+                .filter_map(|control| control.name.clone())
+                .collect(),
+            options: collect_datalist_option_items(&element.children),
+        });
+    }
+    datalists
 }
 
 fn browser_form_fieldset(
@@ -14542,6 +14626,32 @@ mod tests {
             Some("textarea")
         );
         assert_eq!(summary.forms[0].labels[1].association, "implicit");
+        assert_eq!(summary.forms[0].datalists.len(), 1);
+        assert_eq!(
+            summary.forms[0].datalists[0].id.as_deref(),
+            Some("query-suggestions")
+        );
+        assert_eq!(summary.forms[0].datalists[0].control_ids, vec!["q"]);
+        assert_eq!(summary.forms[0].datalists[0].control_names, vec!["q"]);
+        assert_eq!(summary.forms[0].datalists[0].options.len(), 3);
+        assert_eq!(summary.forms[0].datalists[0].options[0].value, "Rust");
+        assert_eq!(summary.forms[0].datalists[0].options[0].label, None);
+        assert_eq!(summary.forms[0].datalists[0].options[0].text, "");
+        assert!(!summary.forms[0].datalists[0].options[0].disabled);
+        assert_eq!(summary.forms[0].datalists[0].options[1].value, "HTML");
+        assert_eq!(
+            summary.forms[0].datalists[0].options[1].label.as_deref(),
+            Some("Markup")
+        );
+        assert_eq!(summary.forms[0].datalists[0].options[1].text, "Markup");
+        assert_eq!(
+            summary.forms[0].datalists[0].options[2].value,
+            "Browser APIs"
+        );
+        assert_eq!(
+            summary.forms[0].datalists[0].options[2].text,
+            "Browser APIs"
+        );
         assert_eq!(summary.forms[0].outputs.len(), 1);
         assert_eq!(summary.forms[0].outputs[0].id.as_deref(), Some("total"));
         assert_eq!(summary.forms[0].outputs[0].name.as_deref(), Some("total"));
@@ -14839,6 +14949,47 @@ mod tests {
         assert_eq!(summary.forms[1].id.as_deref(), Some("other"));
         assert_eq!(summary.forms[1].labels.len(), 1);
         assert_eq!(summary.forms[1].labels[0].text, "Ignored");
+    }
+
+    #[test]
+    fn browser_form_datalist_descriptor_metadata_tracks_option_items_and_controls() {
+        let document = parse_html(
+            "<form id=search>\
+             <input id=q name=q list=suggestions>\
+             <input id=alt name=alt list=suggestions>\
+             <datalist id=suggestions>\
+             <option value=rust label=Rust>\
+             <option value=html disabled>HTML</option>\
+             <option>Browser APIs</option>\
+             </datalist>\
+             <input id=missing name=missing list=missing-list>\
+             </form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.datalists.len(), 1);
+        let datalist = &form.datalists[0];
+        assert_eq!(datalist.id.as_deref(), Some("suggestions"));
+        assert_eq!(datalist.control_ids, vec!["q", "alt"]);
+        assert_eq!(datalist.control_names, vec!["q", "alt"]);
+        assert_eq!(datalist.options.len(), 3);
+        assert_eq!(datalist.options[0].value, "rust");
+        assert_eq!(datalist.options[0].label.as_deref(), Some("Rust"));
+        assert_eq!(datalist.options[0].text, "Rust");
+        assert!(!datalist.options[0].disabled);
+        assert_eq!(datalist.options[1].value, "html");
+        assert_eq!(datalist.options[1].text, "HTML");
+        assert!(datalist.options[1].disabled);
+        assert_eq!(datalist.options[2].value, "Browser APIs");
+        assert_eq!(datalist.options[2].label, None);
+        assert_eq!(datalist.options[2].text, "Browser APIs");
+        assert_eq!(
+            form.controls[0].datalist_options,
+            vec!["rust", "html", "Browser APIs"]
+        );
+        assert!(form.controls[2].datalist_options.is_empty());
     }
 
     #[test]
