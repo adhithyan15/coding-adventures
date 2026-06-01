@@ -58,11 +58,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-005 — `typeof` operator constant-fold not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.09 (literal-typeof cases) — residual identity-fold tracked as gap-029
 - **Upstream test:** `PeepholeFoldConstantsTest::testStringStringComparison` (lines using `typeof`)
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** Crate-level docs already flag `typeof` as deferred. `typeof <literal>` → corresponding string literal needs no runtime info; identity-comparison fold (`typeof x === typeof x` → `true`) is a separate optimization.
-- **What it needs:** Implement `UnaryExpression { op: TypeOf, argument: literal }` → corresponding `StringLiteral` ("number" / "string" / "boolean" / "object" / "undefined" / "function").
+- **Resolution:** Added a `UnaryOperator::TypeOf` branch to `fold_unary` that pattern-matches the argument against the four Phase 1 primitive literals and returns the corresponding string: `NumericLiteral → "number"`, `StringLiteral → "string"`, `BooleanLiteral → "boolean"`, `NullLiteral → "object"` (the JS quirk). The remaining cases (`undefined`, BigInt, function expression, identifier) stay deferred per their respective gaps (gap-001, gap-021, Phase 1.x AST, runtime-unknown). The identity-comparison fold (`typeof x === typeof x` → `true`) is conceptually different — see gap-029.
 
 ### gap-007 — `NullLiteral OP NullLiteral` fold not implemented
 
@@ -245,3 +244,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Ported file:** `closure-source-map/tests/upstream/source_map_generator_v3_test.rs`
 - **Why it fails:** Our `SourceMapBuilder` v0.1.0 accumulates raw `(line, column, cv_id)` mappings but the `build()` step produces a `SourceMap` with `mappings: String::new()` — VLQ encoding is documented as v2 work in the crate's source. Upstream tests assert specific VLQ strings like `"A,aAAAA,QAASA,UAAS,EAAG;"` and need the encoder to produce them.
 - **What it needs:** Implement the VLQ encoder per the source-map v3 spec. The encoder receives per-token `(generated_line, generated_column)` paired with `cv_id`, resolves each `cv_id` to `(source_index, original_line, original_column)` via the `CVLog`, and emits the standard base64-VLQ delta-encoded `mappings` string. Once it lands, the seven `#[ignore]`-ed ports in `source_map_generator_v3_test.rs` flip to real assertions and we re-port the rest of upstream's `SourceMapGeneratorV3Test`.
+
+### gap-029 — identity-of-typeof-same-identifier fold not implemented
+
+- **Status:** OPEN
+- **Upstream test:** `PeepholeFoldConstantsTest::testStringStringComparison` (`typeof a === typeof a` lines)
+- **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
+- **Why it fails:** Upstream folds `typeof a === typeof a` → `true` and `typeof a !== typeof a` → `false` because the two sub-expressions are *structurally identical*. Our constant-fold pass folds by *value substitution* — it doesn't compare two expressions for structural equality.
+- **What it needs:** A new fold rule on `BinaryExpression` with `StrictEq`/`StrictNotEq` that, when neither side is foldable to a literal, tests whether the two sides are syntactically equivalent. If both sides are the same `UnaryExpression { op: TypeOf, argument: <pure expression> }` shape with `argument` being the same identifier, fold to `true`/`false` respectively. Care needed: only fire when the argument is provably side-effect-free (an `Identifier` or another literal). Roughly 30-40 lines in `try_fold_binary_op`.

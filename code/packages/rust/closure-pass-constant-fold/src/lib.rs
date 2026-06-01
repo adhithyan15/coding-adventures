@@ -748,8 +748,40 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 _ => None,
             }
         }
-        // Skipped: BitNot (int32 coercion), TypeOf (need undefined),
-        // Void (need undefined), Delete (side effects).
+        UnaryOperator::TypeOf => {
+            // `typeof <primitive literal>` → corresponding string,
+            // per the ECMAScript §UnaryTypeofExpression table:
+            //
+            //   typeof <NumericLiteral>   →  "number"
+            //   typeof <StringLiteral>    →  "string"
+            //   typeof <BooleanLiteral>   →  "boolean"
+            //   typeof <NullLiteral>      →  "object"   (the famous JS quirk)
+            //   typeof <undefined>        →  "undefined" (gap-001: no
+            //                                            UndefinedLiteral
+            //                                            variant yet)
+            //   typeof <BigIntLiteral>    →  "bigint"   (gap-021: no
+            //                                            BigIntLiteral
+            //                                            variant yet)
+            //   typeof <function expr>    →  "function" (Phase 1.x; not
+            //                                            in v0.4.0's
+            //                                            fold-set)
+            //
+            // Closes CLOC12 gap-005 for the four primitive-literal cases
+            // we can already model. The identifier-typeof identity-fold
+            // (`typeof a === typeof a` → `true`) is structurally a
+            // *different* operation — it requires equality between two
+            // syntactically-identical operands, not a value-substitution
+            // fold. That part stays gated under the new gap-029.
+            match &arg {
+                Expression::NumericLiteral(_) => Some(FoldedLiteral::String("number".to_string())),
+                Expression::StringLiteral(_) => Some(FoldedLiteral::String("string".to_string())),
+                Expression::BooleanLiteral(_) => Some(FoldedLiteral::String("boolean".to_string())),
+                Expression::NullLiteral(_) => Some(FoldedLiteral::String("object".to_string())),
+                _ => None,
+            }
+        }
+        // Skipped: BitNot (int32 coercion), Void (need undefined),
+        // Delete (side effects).
         _ => None,
     };
 
