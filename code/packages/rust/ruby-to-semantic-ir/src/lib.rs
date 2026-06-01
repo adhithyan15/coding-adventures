@@ -5647,6 +5647,12 @@ b = "y"
     // value is the canonical `<<TAG\n<body>TAG` form (with `<<~TAG`
     // indent-stripping pre-applied).  The lowerer detects the `<<` prefix
     // and emits `StrLit(body)` — the inner body, tag suffix stripped.
+    //
+    // Phase 17a (FC): heredocs interpolate like double-quoted strings, so
+    // the extracted body is routed through the shared interpolation
+    // splitter.  A body with no `#{…}` still lowers to a single `StrLit`
+    // (the tests below), while an interpolating body lowers to a
+    // `StrConcat` of literal runs + lowered `#{…}` expressions.
     // -----------------------------------------------------------------------
 
     #[test]
@@ -5726,6 +5732,79 @@ b = "y"
         assert!(
             result.is_ok(),
             "validator rejected heredoc-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn interpolated_heredoc_lowers_body_to_str_concat() {
+        // Phase 17a (FC) — a heredoc body interpolates like a
+        // double-quoted string.  `<<EOF\nhi #{name}\nEOF` → the body
+        // `hi #{name}\n` splits into ["hi ", VarRef(name), "\n"] under a
+        // three-part `StrConcat`.  `name` is bound first so it resolves
+        // as a local.
+        let m = lower("name = \"bob\"\ny = <<EOF\nhi #{name}\nEOF\n");
+        let b = main_body(&m);
+        // stmts[0] binds `name`; stmts[1] binds `y` to the heredoc.
+        let value = match &b.stmts[1] {
+            Stmt::LetBinding { name, value, .. } if name == "y" => value,
+            other => panic!("expected LetBinding y, got {:?}", other),
+        };
+        match value {
+            Expr::StrConcat { parts, .. } => {
+                assert_eq!(parts.len(), 3, "hi  | name | newline");
+                assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "hi "));
+                assert!(matches!(&parts[1], Expr::VarRef { name, .. } if name == "name"));
+                assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "\n"));
+            }
+            other => panic!("expected StrConcat, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_tilde_heredoc_with_expression_lowers_recursively() {
+        // Phase 17a (FC) — interpolation works through the `<<~`
+        // indent-stripping form too, and the `#{1+2}` body lowers to a
+        // real `+` call (via Phase 20a recursive interp lowering).
+        let m = lower("x = <<~EOF\n  sum #{1 + 2}\n  EOF\n");
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::StrConcat { parts, .. } => {
+                assert_eq!(parts.len(), 3, "sum  | 1+2 | newline");
+                assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "sum "));
+                assert!(
+                    matches!(&parts[1], Expr::BuiltinCall { name, .. } if name == "+"),
+                    "expected real `+` call, got {:?}", &parts[1]
+                );
+                assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "\n"));
+            }
+            other => panic!("expected StrConcat, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_heredoc_validates_e2e_and_declares_feature() {
+        // Phase 17a (FC) — end-to-end: an interpolating heredoc lowers to
+        // a `StrConcat`, declares `Feature::StringInterpolation`, and the
+        // module round-trips the SIR validator.  The heredoc is the
+        // block's trailing value expression (not a `LetBinding` RHS) so
+        // its `#{name}` VarRef sees the prior binding under the
+        // validator's parallel-let rule — mirroring the double-quoted
+        // `interpolated_string_module_passes_sir_validator` test.
+        let m = lower("name = \"bob\"\n<<EOF\nhi #{name}\nEOF\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::StringInterpolation),
+            "expected string-interpolation feature; got {:?}",
+            m.manifest
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected interpolating-heredoc module: {:?}",
             result
         );
     }
