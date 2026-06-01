@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-01
+
+### Added — CLOC12.14: `ThrowStatement` (Phase 1.x, closes gap-020)
+
+Adds `ThrowStatement { cv: Option<CvId>, argument: Expression }` and
+its `TaggedStatement::ThrowStatement` arm, plus the
+`Statement::throw_statement(...)` convenience constructor.
+
+Wire format:
+
+```json
+{ "type": "ThrowStatement", "argument": { "type": "NumericLiteral", "value": 1.0, ... } }
+```
+
+Per ECMAScript §13.14 the `argument` field is non-optional — `throw;`
+with no value is a SyntaxError. Matches ESTree exactly.
+
+Two new roundtrip tests cover `throw 1;` (traced) and `throw e;`
+(untraced; asserts the `cv` key is omitted from the JSON wire
+format).
+
+This unblocks the upstream Closure-Compiler fold-control-flow port's
+`testMinimizeIfWithThrow` test case
+(`if (x) foo(); else throw e;` → `if (!x) throw e; foo();`). The
+actual *rewriting* is a separate optimisation tracked under the
+gap-020 follow-up; modelling the AST node is its prerequisite.
+
 ## [0.3.0] - 2026-06-01
 
 ### Added — CLOC12.13: `LabeledStatement` (Phase 1.x, closes gap-009)

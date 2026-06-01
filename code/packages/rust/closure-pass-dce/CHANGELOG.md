@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.4.2] - 2026-06-01
+
+### Changed — CLOC12.14: handle new `ThrowStatement` variant
+
+The DCE pass gained a `TaggedStatement::ThrowStatement` match arm
+so it compiles against the new `javascript-ast 0.4.0` AST.
+Behaviour: recurse into the argument expression. `throw` is a
+definite terminator — the dead-after-throw collapse inside
+`BlockStatement` (analogous to dead-after-return) is a follow-up
+gap; this PR only adds the structural walk.
+
 ## [0.4.1] - 2026-06-01
 
 ### Changed — CLOC12.13: handle new `LabeledStatement` variant + un-ignore the upstream test

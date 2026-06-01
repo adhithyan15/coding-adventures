@@ -248,6 +248,19 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
                 },
             ))
         }
+        TaggedStatement::ThrowStatement(s) => {
+            // `throw` terminates control flow like `return` does, so
+            // future fold-control-flow rules (e.g. drop-dead-after-throw,
+            // `if (x) foo() else throw e` → `if (!x) throw e; foo();`)
+            // will live here. For CLOC12.14 the pass just walks through
+            // and folds the argument expression.
+            Statement::Tagged(TaggedStatement::ThrowStatement(
+                coding_adventures_javascript_ast::ThrowStatement {
+                    cv: s.cv.clone(),
+                    argument: fold_expression(&s.argument, st),
+                },
+            ))
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => Statement::Tagged(stmt.clone()),

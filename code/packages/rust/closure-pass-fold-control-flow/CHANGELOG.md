@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.3.2] - 2026-06-01
+
+### Changed — CLOC12.14: handle new `ThrowStatement` variant
+
+The fold-control-flow pass gained a `TaggedStatement::ThrowStatement`
+match arm so it compiles against the new `javascript-ast 0.4.0` AST.
+Behaviour: fold the argument expression. `throw` is a definite
+terminator like `return` — the dead-after-throw rule and the
+`if (x) foo(); else throw e;` early-throw rewrite will land here
+in follow-up gaps.
+
 ## [0.3.1] - 2026-06-01
 
 ### Changed — CLOC12.13: handle new `LabeledStatement` variant

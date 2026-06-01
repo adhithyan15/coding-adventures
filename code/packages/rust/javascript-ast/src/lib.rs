@@ -141,7 +141,7 @@ pub use expression::{
 pub use statement::{
     BlockStatement, BreakStatement, ContinueStatement, EmptyStatement, ExpressionStatement,
     ForInit, ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement,
-    WhileStatement,
+    ThrowStatement, WhileStatement,
 };
 
 /// A correlation-vector identifier. Aliased to `String` for v1 to match
