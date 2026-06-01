@@ -1,0 +1,13 @@
+[package]
+name = "basic-lsp-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "BASIC-LSP01 — Dartmouth BASIC instantiation of grammar-lsp-bridge; provides basic_language_spec() and the basic-lsp-server binary.  Sibling of twig-lsp-bridge."
+
+[dependencies]
+grammar-lsp-bridge      = { path = "../grammar-lsp-bridge" }
+coding-adventures-ls00  = { path = "../ls00" }
+
+[[bin]]
+name = "basic-lsp-server"
+path = "bin/basic_lsp_server.rs"
