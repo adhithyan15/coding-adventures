@@ -608,6 +608,55 @@ fn try_fold_binary_op(
         }
     }
 
+    // typeof-identity fold (closes CLOC12 gap-029).
+    //
+    // `typeof x === typeof x` → true
+    // `typeof x !== typeof x` → false
+    //
+    // Fires only when:
+    // 1. The operator is `===` or `!==`.
+    // 2. Both sides are `typeof <Identifier>` with the SAME
+    //    identifier name.
+    //
+    // Why Identifier-only is provably safe: ECMAScript §UnaryTypeofExpression
+    // special-cases `typeof <undeclared-identifier>` so it returns
+    // the string `"undefined"` *instead* of throwing a
+    // ReferenceError. So even if `x` is never declared in the
+    // program, evaluating `typeof x` twice produces the same
+    // string both times — guaranteeing the equality. No shadowing
+    // / no race / no side effect can flip the result between the
+    // two evaluations because reading a binding from a scope chain
+    // is observably deterministic within a single expression's
+    // evaluation.
+    //
+    // Why we don't bother with NumericLiteral / StringLiteral /
+    // BooleanLiteral / NullLiteral / BigIntLiteral on the inside:
+    // by the time we get here, the inner `typeof <literal>` has
+    // already been folded to a StringLiteral by the unary-fold
+    // path (CLOC12.09 + the bigint extension), and the resulting
+    // two StringLiterals were then collapsed by the string-string
+    // comparison branch above. So the only new behaviour this
+    // arm adds is the identifier case.
+    if matches!(op, StrictEq | StrictNotEq) {
+        if let (Expression::UnaryExpression(lu), Expression::UnaryExpression(ru)) = (left, right) {
+            if lu.operator == UnaryOperator::TypeOf
+                && ru.operator == UnaryOperator::TypeOf
+            {
+                if let (Expression::Identifier(la), Expression::Identifier(ra)) =
+                    (lu.argument.as_ref(), ru.argument.as_ref())
+                {
+                    if la.name == ra.name {
+                        return match op {
+                            StrictEq => Some(FoldedLiteral::Boolean(true)),
+                            StrictNotEq => Some(FoldedLiteral::Boolean(false)),
+                            _ => unreachable!(),
+                        };
+                    }
+                }
+            }
+        }
+    }
+
     None
 }
 

@@ -241,8 +241,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-029 — identity-of-typeof-same-identifier fold not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.17 (PR pending).
 - **Upstream test:** `PeepholeFoldConstantsTest::testStringStringComparison` (`typeof a === typeof a` lines)
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** Upstream folds `typeof a === typeof a` → `true` and `typeof a !== typeof a` → `false` because the two sub-expressions are *structurally identical*. Our constant-fold pass folds by *value substitution* — it doesn't compare two expressions for structural equality.
-- **What it needs:** A new fold rule on `BinaryExpression` with `StrictEq`/`StrictNotEq` that, when neither side is foldable to a literal, tests whether the two sides are syntactically equivalent. If both sides are the same `UnaryExpression { op: TypeOf, argument: <pure expression> }` shape with `argument` being the same identifier, fold to `true`/`false` respectively. Care needed: only fire when the argument is provably side-effect-free (an `Identifier` or another literal). Roughly 30-40 lines in `try_fold_binary_op`.
+- **Resolution note:** Added a new structural-equality arm in `try_fold_binary_op` for `StrictEq`/`StrictNotEq` operators where both sides are `UnaryExpression { op: TypeOf, argument: Identifier }` with the same identifier name. Folds to `true`/`false` respectively. Identifier-only because `typeof <undeclared>` is special-cased by ECMAScript §UnaryTypeofExpression to return `"undefined"` rather than throw, so the fold is safe even without declaration-tracking — `typeof x` evaluated twice deterministically produces the same string. Member/call expressions are deliberately NOT folded because they can have side effects that we can't prove are absent without a heavier purity analysis. `test_typeof_identifier_identity_fold` un-ignored.

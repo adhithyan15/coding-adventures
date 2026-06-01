@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-01
+
+### Added — CLOC12.17: typeof-identity fold (closes gap-029)
+
+Adds a new structural-equality arm in `try_fold_binary_op` that
+recognises `typeof <Identifier> === typeof <same Identifier>` and
+folds to `true`; the `!==` form folds to `false`.
+
+Truth table:
+
+| Input                       | Output      | Why                          |
+|-----------------------------|-------------|------------------------------|
+| `typeof a === typeof a`     | `true`      | identical sub-expressions    |
+| `typeof a !== typeof a`     | `false`     | identical sub-expressions    |
+| `typeof a === typeof b`     | unchanged   | different identifier names   |
+| `typeof a == typeof a`      | unchanged   | only strict ops are folded   |
+
+**Safety:** ECMAScript §UnaryTypeofExpression special-cases
+`typeof <undeclared-identifier>` to return the string `"undefined"`
+instead of throwing a ReferenceError, so even when the binding
+doesn't exist, evaluating `typeof x` twice produces the same string
+both times. This makes the fold sound regardless of whether the
+identifier resolves to a real binding.
+
+The fold deliberately fires only on `Identifier` arguments — not
+on member/call expressions — because those can have observable
+side effects (getter invocation, function call) that we can't
+prove are absent without a heavier purity analysis.
+
+Un-ignores `test_typeof_identifier_identity_fold` in the upstream
+test port (`tests/upstream/peephole_fold_constants_test.rs`).
+
 ## [0.5.2] - 2026-06-01
 
 ### Changed — CLOC12.14: handle new `ThrowStatement` variant
