@@ -71,6 +71,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         features_used: HashSet::new(),
         block_counter: 0,
         multi_assign_counter: 0,
+        interp_depth: 0,
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -567,7 +568,29 @@ struct Lowerer {
     /// temps so the original RHS values are captured *before* any LHS
     /// is rebound — matching Ruby's parallel-binding semantics.
     multi_assign_counter: usize,
+    /// Phase 20a (FC): current nesting depth of string-interpolation
+    /// re-parsing.  `try_lower_interp_body` re-invokes the Ruby parser
+    /// on each `#{…}` body, and a body may itself contain a nested
+    /// interpolated string (`"#{ "#{x}" }"`), which recurses back into
+    /// the same path.  Neither the parser nor the lowerer has its own
+    /// recursion limit, so without this counter an adversarial deeply
+    /// nested literal could exhaust the thread stack (an uncatchable
+    /// abort — a DoS for any host that compiles untrusted source).  We
+    /// stop recursing at `MAX_INTERP_DEPTH` and fall back to the safe
+    /// `__interp__` marker, which preserves correctness.
+    interp_depth: usize,
 }
+
+/// Phase 20a (FC): hard ceiling on nested string-interpolation
+/// re-parsing depth.  Real Ruby almost never nests interpolation more
+/// than a level or two (`"a#{ "b#{x}" }"` is already exotic), so 8 is
+/// far beyond any legitimate use.  We deliberately keep it small: each
+/// recursion level re-enters the full recursive-descent lowering stack
+/// (`lower_expression` → … → `try_lower_interp_body`), whose frames are
+/// large, so an over-generous cap could itself approach the thread
+/// stack limit.  Past the cap we fall back to the safe `__interp__`
+/// marker, bounding stack growth regardless of how deeply input nests.
+const MAX_INTERP_DEPTH: usize = 8;
 
 impl Lowerer {
     /// Build a `Span` from a node's recorded start/end positions.
@@ -5403,6 +5426,19 @@ impl Lowerer {
                 span,
             };
         }
+        // Phase 20a (FC) — recursively parse+lower the interpolation
+        // body so `#{1 + 2}`, `#{foo.bar}`, `#{a * b}` etc. become real
+        // SIR (a BuiltinCall/DirectCall/BinaryOp tree) instead of an
+        // opaque marker.  We re-invoke the Ruby parser on the trimmed
+        // body and lower its single tail expression in the CURRENT
+        // scope (so VarRefs to enclosing params/locals resolve
+        // correctly).  Anything that doesn't cleanly parse to exactly
+        // one expression/method-call statement falls back to the
+        // `__interp__` marker below (kept for one phase per the Tier-3
+        // marker-replacement convention).
+        if let Some(expr) = self.try_lower_interp_body(trimmed) {
+            return expr;
+        }
         // Fallback marker.  Triggers `Strings` because we embed the
         // raw text as a `StrLit`.
         self.features_used.insert(Feature::Strings);
@@ -5415,6 +5451,60 @@ impl Lowerer {
             effects: EffectSet::PURE,
             span,
         }
+    }
+
+    /// Phase 20a (FC) — try to lower an interpolation body by
+    /// re-invoking the Ruby parser on it and lowering the resulting
+    /// single tail expression.  Returns `None` (→ marker fallback) if
+    /// the body is empty, doesn't parse to exactly one statement, or
+    /// that statement isn't a plain expression / method call.  Lowering
+    /// runs in the current scope so `#{x + 1}` resolves `x` the same way
+    /// the surrounding code would.
+    fn try_lower_interp_body(&mut self, body: &str) -> Option<Expr> {
+        if body.is_empty() {
+            return None;
+        }
+        // DoS guard (Phase 20a): a nested interpolated literal
+        // (`"#{ "#{x}" }"`) recurses back through this path on every
+        // level.  Beyond MAX_INTERP_DEPTH we stop re-parsing and let the
+        // caller fall back to the `__interp__` marker, bounding stack
+        // growth no matter how deeply an adversarial input nests.
+        if self.interp_depth >= MAX_INTERP_DEPTH {
+            return None;
+        }
+        self.interp_depth += 1;
+        // Run the parse+lower in a closure so a single `?`/early-return
+        // can't skip the depth decrement below.
+        let result = (|| {
+            let ast = coding_adventures_ruby_parser::parse_ruby(body);
+            if ast.rule_name != "program" {
+                return None;
+            }
+            let stmts: Vec<&GrammarASTNode> = ast
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                    _ => None,
+                })
+                .collect();
+            // Exactly one statement; multi-statement bodies (`#{a; b}`)
+            // are rare and kept as the verbatim marker.
+            if stmts.len() != 1 {
+                return None;
+            }
+            let inner = self.first_node_child(stmts[0])?;
+            match inner.rule_name.as_str() {
+                "expression_stmt" => {
+                    let expr_node = self.first_node_child(inner)?;
+                    self.lower_expression(expr_node).ok()
+                }
+                "method_call" | "method_call_no_paren" => self.lower_method_call(inner).ok(),
+                _ => None,
+            }
+        })();
+        self.interp_depth -= 1;
+        result
     }
 
     fn lower_factor(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
