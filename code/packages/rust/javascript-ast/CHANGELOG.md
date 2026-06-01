@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-01
+
+### Added — CLOC12.15: `BigIntLiteral` Expression variant (Phase 1.x, closes gap-021)
+
+Adds `BigIntLiteral { cv: Option<CvId>, value: String, raw: String }`
+and its `Expression::BigIntLiteral` arm.
+
+Wire format:
+
+```json
+{ "type": "BigIntLiteral", "value": "123", "raw": "123n" }
+```
+
+`value` is the **decimal expansion** of the bigint as a JSON string
+(per ESTree's bigint-as-string convention — bigints can exceed the
+double-precision range that JSON `number` can faithfully represent).
+`raw` preserves the original source representation including the
+trailing `n` suffix and the source radix, so a literal written as
+`0x1fn` round-trips as `0x1fn` rather than `31n`.
+
+Matches ESTree exactly. The `-` in `-123n` is a `UnaryExpression`
+over a `BigIntLiteral`, never part of the literal itself.
+
+Two new roundtrip tests cover decimal-source (`123n`) and
+hex-source (`0x1fn`) cases.
+
+This unblocks gap-021 modelling. No optimisation rides on it yet —
+passes treat a `BigIntLiteral` as already-folded the same way they
+treat `NumericLiteral`. The downstream `typeof <BigIntLiteral>`
+fold (constant-fold pass) does evaluate to `"bigint"` per
+ECMAScript §UnaryTypeofExpression.
+
 ## [0.4.0] - 2026-06-01
 
 ### Added — CLOC12.14: `ThrowStatement` (Phase 1.x, closes gap-020)

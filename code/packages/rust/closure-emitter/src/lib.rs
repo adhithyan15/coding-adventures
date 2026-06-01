@@ -64,7 +64,8 @@ use coding_adventures_closure_source_map::SourceMapBuilder;
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
-    AssignmentTarget, BinaryExpression, BinaryOperator, BlockStatement, BooleanLiteral,
+    AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
+    BooleanLiteral,
     BreakStatement, CallExpression, ConditionalExpression, ContinueStatement, Declaration,
     EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
@@ -591,6 +592,7 @@ impl<'a> Emitter<'a> {
             Expression::StringLiteral(s) => self.emit_string(s),
             Expression::BooleanLiteral(b) => self.emit_boolean(b),
             Expression::NullLiteral(n) => self.emit_null(n),
+            Expression::BigIntLiteral(b) => self.emit_bigint(b),
             Expression::BinaryExpression(b) => self.emit_binary(b),
             Expression::LogicalExpression(l) => self.emit_logical(l),
             Expression::UnaryExpression(u) => self.emit_unary(u),
@@ -654,6 +656,17 @@ impl<'a> Emitter<'a> {
     fn emit_null(&mut self, n: &NullLiteral) {
         self.maybe_map(&n.cv);
         self.write_str("null");
+    }
+
+    /// BigInt literals print their `raw` source representation
+    /// verbatim. We keep `raw` (e.g. `"0x1fn"`, `"123n"`) instead of
+    /// reformatting from `value` because hex/octal/binary radixes are
+    /// part of the literal's source identity, and shorter-form
+    /// rewriting (e.g. `1000000000n` → `1e9n`) isn't valid for bigints
+    /// — there's no exponential bigint syntax. So no normalisation.
+    fn emit_bigint(&mut self, b: &BigIntLiteral) {
+        self.maybe_map(&b.cv);
+        self.write_str(&b.raw);
     }
 
     fn emit_binary(&mut self, b: &BinaryExpression) {
@@ -990,6 +1003,7 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::StringLiteral(_)
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
         | Expression::ArrayExpression(_)
         | Expression::ObjectExpression(_)
         | Expression::CallExpression(_)
@@ -1750,6 +1764,46 @@ mod tests {
         });
         // quote-choice picks double quotes by default for plain strings
         assert_eq!(emit_stmt(s), "throw \"oops\";");
+    }
+
+    // ---- BigIntLiteral (gap-021, CLOC12.15) -----------------
+
+    fn emit_expr(e: Expression) -> String {
+        emit_default(program().with_body(vec![stmt(e)])).code
+    }
+
+    #[test]
+    fn bigint_literal_decimal_emits_raw() {
+        // 123n  → "123n;"
+        let e = Expression::BigIntLiteral(BigIntLiteral {
+            cv: None,
+            value: "123".to_string(),
+            raw: "123n".to_string(),
+        });
+        assert_eq!(emit_expr(e), "123n;");
+    }
+
+    #[test]
+    fn bigint_literal_zero_emits_raw() {
+        // 0n  → "0n;"
+        let e = Expression::BigIntLiteral(BigIntLiteral {
+            cv: None,
+            value: "0".to_string(),
+            raw: "0n".to_string(),
+        });
+        assert_eq!(emit_expr(e), "0n;");
+    }
+
+    #[test]
+    fn bigint_literal_hex_preserves_radix() {
+        // 0x1fn  — value "31" semantically, but emitter respects `raw`
+        // so hex stays hex on the way out.
+        let e = Expression::BigIntLiteral(BigIntLiteral {
+            cv: None,
+            value: "31".to_string(),
+            raw: "0x1fn".to_string(),
+        });
+        assert_eq!(emit_expr(e), "0x1fn;");
     }
 
     // ---- EmitError --------------------------------------------

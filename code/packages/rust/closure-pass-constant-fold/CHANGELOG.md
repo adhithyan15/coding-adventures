@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-01
+
+### Changed — CLOC12.15 rebase: handle new `BigIntLiteral` Expression variant
+
+The constant-fold pass gained `Expression::BigIntLiteral` arms in
+three places so it compiles against the new `javascript-ast 0.5.0`
+AST:
+
+1. Leaf passthrough — a `BigIntLiteral` is already in folded form,
+   no children to recurse into.
+2. `js_literal_type` returns `"bigint"` so the strict-equality
+   fold knows two bigint literals share a type tag with each other
+   but not with `NumericLiteral` / `StringLiteral`.
+3. `UnaryOperator::TypeOf` over a `BigIntLiteral` folds to
+   `"bigint"` (the ECMAScript-correct typeof result).
+
+Bigint arithmetic folding (`1n + 2n` → `3n`) is **not** implemented —
+it would require a bigint runtime in the pass crate, which is out
+of scope for CLOC12.15. The literal is itself the folded form.
+
+Bumped to 0.7.0 (rather than 0.5.3 originally planned) because this
+PR was rebased on top of CLOC12.17 (0.6.0, already on main) — both
+landings are additive, so a single fresh minor captures the union.
+
 ## [0.6.0] - 2026-06-01
 
 ### Added — CLOC12.17: typeof-identity fold (closes gap-029)

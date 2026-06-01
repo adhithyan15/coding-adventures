@@ -372,11 +372,15 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
     st.visit();
     match expr {
         // Leaves: no children to recurse into, nothing to fold.
+        // BigIntLiteral joins this list — bigint arithmetic folding
+        // is a future enhancement (would need bigint runtime support);
+        // for now the literal is itself the folded form.
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
         | Expression::BooleanLiteral(_)
-        | Expression::NullLiteral(_) => expr.clone(),
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => fold_binary(b, st),
         Expression::LogicalExpression(l) => fold_logical(l, st),
@@ -676,6 +680,7 @@ fn js_literal_type(expr: &Expression) -> Option<&'static str> {
         Expression::StringLiteral(_) => Some("string"),
         Expression::BooleanLiteral(_) => Some("boolean"),
         Expression::NullLiteral(_) => Some("null"),
+        Expression::BigIntLiteral(_) => Some("bigint"),
         _ => None,
     }
 }
@@ -828,9 +833,9 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
             //   typeof <undefined>        →  "undefined" (gap-001: no
             //                                            UndefinedLiteral
             //                                            variant yet)
-            //   typeof <BigIntLiteral>    →  "bigint"   (gap-021: no
-            //                                            BigIntLiteral
-            //                                            variant yet)
+            //   typeof <BigIntLiteral>    →  "bigint"   (Phase 1.x;
+            //                                            gap-021 closed
+            //                                            in CLOC12.15)
             //   typeof <function expr>    →  "function" (Phase 1.x; not
             //                                            in v0.4.0's
             //                                            fold-set)
@@ -846,6 +851,7 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 Expression::StringLiteral(_) => Some(FoldedLiteral::String("string".to_string())),
                 Expression::BooleanLiteral(_) => Some(FoldedLiteral::String("boolean".to_string())),
                 Expression::NullLiteral(_) => Some(FoldedLiteral::String("object".to_string())),
+                Expression::BigIntLiteral(_) => Some(FoldedLiteral::String("bigint".to_string())),
                 _ => None,
             }
         }

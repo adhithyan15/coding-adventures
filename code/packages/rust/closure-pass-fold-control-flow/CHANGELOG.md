@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.4.1] - 2026-06-01
+
+### Changed — CLOC12.15 rebase: handle new `BigIntLiteral` Expression variant
+
+The fold-control-flow pass gained an `Expression::BigIntLiteral`
+arm in its expression-walk leaf list so it compiles against the
+new `javascript-ast 0.5.0` AST. `literal_truthy` falls through
+the wildcard (returns `None`) for bigints — we don't yet model
+the `0n is falsy, anything else truthy` rule, so the if-collapse
+optimisation stays conservative around bigint tests.
+
+Bumped to 0.4.1 (rather than 0.3.3 originally planned) because this
+PR was rebased on top of CLOC12.18 (0.4.0, already on main).
+
 ## [0.4.0] - 2026-06-01
 
 ### Added — CLOC12.18: if-else→ternary fold (closes gap-017)

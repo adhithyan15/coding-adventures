@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.5.1] - 2026-06-01
+
+### Changed — CLOC12.15 rebase: handle new `BigIntLiteral` Expression variant
+
+The DCE pass gained an `Expression::BigIntLiteral` arm in its
+expression-walk leaf list so it compiles against the new
+`javascript-ast 0.5.0` AST. Behaviour: passthrough — bigint
+literals are leaves with no children to recurse into.
+
+Bumped to 0.5.1 (rather than 0.4.3 originally planned) because this
+PR was rebased on top of CLOC12.19 (0.5.0, already on main).
+
 ## [0.5.0] - 2026-06-01
 
 ### Added — CLOC12.19: block flattening (closes gap-010)

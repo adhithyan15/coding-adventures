@@ -179,11 +179,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-021 — `BigIntLiteral` not in Phase 1 AST
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.15 (AST modelled; emitter writes the literal verbatim; `typeof <BigIntLiteral>` folds to `"bigint"` in constant-fold).
 - **Upstream test:** `CodePrinterTest::testBigInt`
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** No `Expression::BigIntLiteral` variant — `1n`, `0x4n`, `-5n` etc. have no AST representation in Phase 1.
-- **What it needs:** Phase 1.x AST extension: `BigIntLiteral { value: ?, raw: String }`. Then teach the emitter to render the literal with the `n` suffix, including for the negative-literal case.
+- **Resolution note:** CLOC12.15 adds `BigIntLiteral { cv: Option<CvId>, value: String, raw: String }` to `javascript-ast`. Per ESTree's JSON-safety convention `value` is the decimal expansion as a string (bigints can exceed `f64` range); `raw` keeps the source representation (including the trailing `n` and the source radix). The emitter writes `raw` verbatim — preserving hex/octal/binary radixes — because there is no shorter equivalent form for bigints (no exponential bigint syntax exists in JS). Negative bigints (`-5n`) are a `UnaryExpression` over a `BigIntLiteral`, never part of the literal itself. Bigint arithmetic folding (`1n + 2n → 3n`) is **not** implemented — would require a bigint runtime in the constant-fold pass; tracked as a follow-up gap. The `typeof <BigIntLiteral>` → `"bigint"` fold IS implemented since it requires no arithmetic.
 
 ### gap-022 — Array/object trailing-comma policy not modelled
 
