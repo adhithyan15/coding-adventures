@@ -57,7 +57,7 @@ both compose by the same arithmetic.
               ├──▶ ADJ11 v2 (connector: lowers contributes/prior subtypes)
               │
               ▼
-        LP19d (engine: LR-aggregation inference mode)
+        LP19e (engine: LR-aggregation inference mode)
               │
               ▼
         ADJ15 (proof DAG in audit trail — typed, includes LRContribution)
@@ -67,7 +67,7 @@ both compose by the same arithmetic.
 ```
 
 ADJ14 stacks on ADJ01 v2 and depends on a new engine sub-spec
-**LP19d** (the LR-aggregation inference algorithm in `logic-engine`),
+**LP19e** (the LR-aggregation inference algorithm in `logic-engine`),
 which is the engineering deliverable that makes this spec executable.
 ADJ11 grows a v2 that recognises the two new rule subtypes; the
 existing `definitional` / `constraint` / `default` subtypes are
@@ -228,7 +228,7 @@ useful for audit (which spans the model flagged as uncertain) and
 for ADJ06 escalation (which uncertainties to ask about), but the
 inference math is uniform.
 
-## The inference algorithm (LP19d)
+## The inference algorithm (LP19e)
 
 Pseudocode for evaluating `P(c | E)` under LR aggregation:
 
@@ -314,7 +314,7 @@ Proof {
   ],
   via_facts: [F1, F2],
   via_rules: [R1, R2, R3],
-  posterior_logit: 0.285,         // new field on Proof in LP19d
+  posterior_logit: 0.285,         // new field on Proof in LP19e
   posterior_probability: 0.571,   // new field
 }
 ```
@@ -387,7 +387,7 @@ connector and in `logic-engine`. The two inference paths coexist:
   enumeration over Bernoulli-distributed clauses. Used for
   ProbLog-style joint conjunctive rules and for queries that mix
   conjunctive deterministic rules with probabilistic indicators.
-- **LR-aggregation path** (`SearchMode::LRAggregate`, new in LP19d):
+- **LR-aggregation path** (`SearchMode::LRAggregate`, new in LP19e):
   log-odds composition over `prior` + `contributes` clauses. Used
   when the query's conclusion is the target of one or more
   `contributes` clauses.
@@ -496,7 +496,7 @@ inherits the tradition.
    recomputing from scratch is trivial. But does the framework
    want an incremental update API (`update_logit(conclusion,
    new_evidence)`)? Probably yes, as a performance optimization in
-   LP19d v0.2.
+   LP19e v0.2.
 
 ## Limitations
 
@@ -518,7 +518,8 @@ inherits the tradition.
 ## Status
 
 Draft. The grammar is sufficient to implement; the engine work
-lives in `LP19d` (to be drafted as a sibling sub-spec to LP19c).
+lives in `LP19e` (to be drafted as a sibling sub-spec to LP19c and
+LP19d).
 The connector v2 (ADJ11 v2) will recognise the two new rule
 subtypes and emit the new clause variants; this is purely additive
 to the existing ADJ11.
@@ -530,8 +531,9 @@ to the existing ADJ11.
 - [ADJ11](ADJ11-problog-connector.md) — the existing connector
   this spec grows a v2 of.
 - [LP19](LP19-probabilistic-logic-core.md) — the engine foundation
-  this spec depends on. LP19d will be the LR-aggregation sub-spec
-  that complements LP19c (conditional probability via WMC ratio).
+  this spec depends on. LP19e will be the LR-aggregation sub-spec
+  that complements LP19c (conditional probability via WMC ratio)
+  and LP19d (approximate inference via Monte Carlo).
 - [ADJ15](ADJ15-lowering-map-and-proof-dag.md) — the audit-trail
   integration that surfaces this spec's outputs.
 - [ADJ16](ADJ16-derivation-rendering.md) — the human-readable
