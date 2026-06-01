@@ -135,39 +135,37 @@ fn test_no_trailing_comma_in_empty_array_literal() {
     // Belongs in a future declarations-focused port file.
 }
 
-/// Upstream-style `assertPrint("2 + 3", "2+3")` line shape — checks
-/// that a `+` binary expression emits with the operator and both
-/// operands in the right order. Our Phase 1 emitter wraps the whole
-/// expression-statement in parens and pads the operator with spaces:
+/// Upstream `assertPrint("2 + 3", "2+3")` — `+` binary expression at
+/// statement position. **gap-024 closed in CLOC12.10**: the emitter no
+/// longer wraps `ExpressionStatement` bodies in parens except for the
+/// leading-token-ambiguous `ObjectExpression` case.
 ///
-///   2 + 3   →  `(2 + 3);`
-///
-/// This isn't matching upstream's exact byte output today
-/// (`2+3;`), so it's filed as gap-024 and the assertion here pins
-/// what we actually produce so a future paren-policy fix has a
-/// regression target to flip.
+/// Our output is now `2 + 3;` — byte-equivalent to upstream's pretty-
+/// printed form. Upstream's minified output `2+3;` (no whitespace
+/// around the operator) will be matched when pretty/minify toggles get
+/// wired up in a follow-up.
 #[test]
-fn test_binary_addition_with_parens_is_current_behaviour() {
+fn test_binary_addition_emits_without_outer_parens() {
     let e = Expression::BinaryExpression(BinaryExpression {
         cv: None,
         operator: BinaryOperator::Add,
         left: Box::new(num(2.0)),
         right: Box::new(num(3.0)),
     });
-    assert_emits(e, "(2 + 3);");
+    assert_emits(e, "2 + 3;");
 }
 
-/// Same shape as upstream `assertPrint("\"a\" + \"b\"", "\"a\"+\"b\"")`.
-/// We currently emit `("a" + "b");` — paren-wrapped, space-padded.
+/// Same shape for string concatenation: `\"a\" + \"b\";` without outer
+/// parens. **gap-024 closed in CLOC12.10**.
 #[test]
-fn test_string_concat_with_parens_is_current_behaviour() {
+fn test_string_concat_emits_without_outer_parens() {
     let e = Expression::BinaryExpression(BinaryExpression {
         cv: None,
         operator: BinaryOperator::Add,
         left: Box::new(string("a")),
         right: Box::new(string("b")),
     });
-    assert_emits(e, "(\"a\" + \"b\");");
+    assert_emits(e, "\"a\" + \"b\";");
 }
 
 /// Upstream `assertPrintSame("!x")` — unary-not on identifier, no

@@ -299,13 +299,21 @@ impl<'a> Emitter<'a> {
 
     fn emit_expression_statement(&mut self, es: &ExpressionStatement) {
         // Object expressions at the start of a statement parse as
-        // blocks. Wrap in parens unconditionally for safety in v1.
+        // blocks. The leading-token-disambiguation wrap (per CLOC12.10
+        // / gap-024) covers that one case only. Everything else gets
+        // precedence-aware emit at parent_prec = 0, which means no
+        // wrapping unless an inner expression has a lower-precedence
+        // child that requires it.
         let needs_paren = matches!(es.expression, Expression::ObjectExpression(_));
         self.maybe_map(&es.cv);
         if needs_paren {
             self.write_str("(");
         }
-        self.emit_expression(&es.expression);
+        // Statement position is the loosest binding context — every
+        // expression's own precedence is >= 0, so the precedence
+        // wrapper won't insert outer parens here. Inner precedence
+        // requirements still propagate through child calls.
+        self.emit_expression_inner(&es.expression, 0);
         if needs_paren {
             self.write_str(")");
         }
@@ -510,7 +518,41 @@ impl<'a> Emitter<'a> {
 
     // ---- Expressions ---------------------------------------------
 
+    /// Public entry: emit an expression assuming the loosest binding
+    /// context (parent_prec = 0). Used by statement-position callers
+    /// and control-position contexts (if-test, while-test, etc.)
+    /// where the JS grammar surrounds the expression with its own
+    /// punctuation and no parens are required.
     fn emit_expression(&mut self, e: &Expression) {
+        self.emit_expression_inner(e, 0);
+    }
+
+    /// Precedence-aware expression emit. Wraps in parens when the
+    /// child expression's own precedence is strictly less than the
+    /// parent context's binding strength.
+    ///
+    /// Truth table for the wrap decision:
+    ///
+    /// | child  | parent | wrap? | why                                  |
+    /// |--------|--------|-------|--------------------------------------|
+    /// |   18   |   0    |  no   | top-level: anything binds tighter    |
+    /// |   11   |   12   |  yes  | `a + b` inside `* c` needs parens    |
+    /// |   12   |   11   |  no   | `a * b` inside `+ c` doesn't         |
+    /// |   11   |   11   |  no   | left-assoc tie on the LEFT child     |
+    /// |   11   |   12   |  yes  | (same as above, just emphasised)     |
+    /// |   14   |   12   |  no   | unary `-x` inside `* c` no parens    |
+    ///
+    /// `expr_prec` resolves the child's own precedence. For primary
+    /// expressions (identifiers, literals, call, member, array,
+    /// object) the precedence is high enough that they never need
+    /// wrapping. For binary / logical / conditional / assignment
+    /// the precedence depends on the operator.
+    fn emit_expression_inner(&mut self, e: &Expression, parent_prec: u8) {
+        let my_prec = expr_prec(e);
+        let needs_parens = my_prec < parent_prec;
+        if needs_parens {
+            self.write_str("(");
+        }
         match e {
             Expression::Identifier(i) => self.emit_identifier(i),
             Expression::NumericLiteral(n) => self.emit_numeric(n),
@@ -526,6 +568,9 @@ impl<'a> Emitter<'a> {
             Expression::MemberExpression(m) => self.emit_member(m),
             Expression::ArrayExpression(a) => self.emit_array(a),
             Expression::ObjectExpression(o) => self.emit_object(o),
+        }
+        if needs_parens {
+            self.write_str(")");
         }
     }
 
@@ -568,28 +613,33 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_binary(&mut self, b: &BinaryExpression) {
+        // Precedence-aware emit: left at my_prec (since `a + b + c`
+        // groups left-to-right, the left child can be the same
+        // precedence without parens), right at my_prec + 1 (the
+        // right child must be strictly higher precedence to avoid
+        // parens, because the operator is left-associative). The
+        // outer wrap (if any) is the caller's responsibility — see
+        // `emit_expression_inner`.
         self.maybe_map(&b.cv);
-        self.write_str("(");
-        self.emit_expression(&b.left);
+        let my_prec = binary_prec(b.operator);
+        self.emit_expression_inner(&b.left, my_prec);
         // Binary operators always get spaces in our output —
         // makes `1 in obj` and `a instanceof b` unambiguous even
         // in minified mode.
         self.required_ws();
         self.write_str(binary_op_str(b.operator));
         self.required_ws();
-        self.emit_expression(&b.right);
-        self.write_str(")");
+        self.emit_expression_inner(&b.right, my_prec + 1);
     }
 
     fn emit_logical(&mut self, l: &LogicalExpression) {
         self.maybe_map(&l.cv);
-        self.write_str("(");
-        self.emit_expression(&l.left);
+        let my_prec = logical_prec(l.operator);
+        self.emit_expression_inner(&l.left, my_prec);
         self.required_ws();
         self.write_str(logical_op_str(l.operator));
         self.required_ws();
-        self.emit_expression(&l.right);
-        self.write_str(")");
+        self.emit_expression_inner(&l.right, my_prec + 1);
     }
 
     fn emit_unary(&mut self, u: &UnaryExpression) {
@@ -620,18 +670,25 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_conditional(&mut self, c: &ConditionalExpression) {
+        // Conditional is right-associative with precedence PREC_CONDITIONAL.
+        // - test:        must bind tighter than conditional itself
+        // - consequent:  assignment-precedence in ESTree, here we use
+        //                conditional-precedence (close enough for
+        //                Phase 1 without SequenceExpression)
+        // - alternate:   right-associative, so accepts conditional
+        //                precedence on the right
+        // Outer wrap (if any) is the caller's responsibility — see
+        // `emit_expression_inner`.
         self.maybe_map(&c.cv);
-        self.write_str("(");
-        self.emit_expression(&c.test);
+        self.emit_expression_inner(&c.test, PREC_CONDITIONAL + 1);
         self.pretty_ws();
         self.write_str("?");
         self.pretty_ws();
-        self.emit_expression(&c.consequent);
+        self.emit_expression_inner(&c.consequent, PREC_CONDITIONAL + 1);
         self.pretty_ws();
         self.write_str(":");
         self.pretty_ws();
-        self.emit_expression(&c.alternate);
-        self.write_str(")");
+        self.emit_expression_inner(&c.alternate, PREC_CONDITIONAL);
     }
 
     fn emit_call(&mut self, c: &CallExpression) {
@@ -777,6 +834,94 @@ fn format_js_number(n: f64) -> String {
         return format!("{}", n as i64);
     }
     n.to_string()
+}
+
+// =====================================================================
+// Operator precedence (per CLOC12.10 / gap-024 + gap-027)
+//
+// The emitter inserts parens around expressions exactly when the
+// child's own binding strength is *strictly* lower than the parent
+// context's. The numeric values themselves don't matter — only their
+// relative ordering. They follow the ECMAScript §13 expression
+// grammar ladder, low → high.
+//
+// 0   — top level (statement position, control-test position, etc.)
+//        Anything can sit here without parens.
+// 1   — assignment (`=`, `+=`, …)
+// 2   — conditional `? :`
+// 3   — logical OR `||`, nullish coalescing `??`
+// 4   — logical AND `&&`
+// 5–7 — bitwise OR / XOR / AND
+// 8   — equality (`==`, `!=`, `===`, `!==`)
+// 9   — relational (`<`, `<=`, `>`, `>=`, `in`, `instanceof`)
+// 10  — shift (`<<`, `>>`, `>>>`)
+// 11  — additive (`+`, `-`)
+// 12  — multiplicative (`*`, `/`, `%`)
+// 13  — exponent (`**`)   right-associative
+// 14  — prefix unary (`!`, `-`, `+`, `~`, `typeof`, `void`, `delete`)
+// 17  — call / member / new (left-associative; never needs wrapping
+//                            as a child)
+// 18  — primary (literals, identifiers, parens) — atomic
+//
+// `binary_prec`, `logical_prec`, `expr_prec` resolve the precedence
+// of a given AST node.
+// =====================================================================
+
+const PREC_CONDITIONAL: u8 = 2;
+const PREC_UNARY: u8 = 14;
+const PREC_PRIMARY: u8 = 18;
+const PREC_ASSIGNMENT: u8 = 1;
+
+fn binary_prec(op: BinaryOperator) -> u8 {
+    use BinaryOperator::*;
+    match op {
+        BitOr => 5,
+        BitXor => 6,
+        BitAnd => 7,
+        Eq | NotEq | StrictEq | StrictNotEq => 8,
+        Lt | LtEq | Gt | GtEq | In | InstanceOf => 9,
+        LeftShift | RightShift | UnsignedRightShift => 10,
+        Add | Sub => 11,
+        Mul | Div | Mod => 12,
+        Exp => 13,
+    }
+}
+
+fn logical_prec(op: LogicalOperator) -> u8 {
+    use LogicalOperator::*;
+    match op {
+        Or | NullishCoalescing => 3,
+        And => 4,
+    }
+}
+
+/// Resolve the own precedence of any `Expression`. Used by
+/// `emit_expression_inner` to decide whether to wrap a child in
+/// parens given the parent's context precedence.
+fn expr_prec(e: &Expression) -> u8 {
+    match e {
+        // Atomic / left-associative primaries — never need wrapping
+        // from any parent (their precedence is higher than every
+        // operator). Member/call left-associativity means they bind
+        // tighter than unary as a unit; tagging them at PREC_PRIMARY
+        // keeps emit_expression_inner from inserting unnecessary
+        // parens in `f(x).y[z]` chains.
+        Expression::Identifier(_)
+        | Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::ArrayExpression(_)
+        | Expression::ObjectExpression(_)
+        | Expression::CallExpression(_)
+        | Expression::MemberExpression(_) => PREC_PRIMARY,
+
+        Expression::UnaryExpression(_) => PREC_UNARY,
+        Expression::BinaryExpression(b) => binary_prec(b.operator),
+        Expression::LogicalExpression(l) => logical_prec(l.operator),
+        Expression::ConditionalExpression(_) => PREC_CONDITIONAL,
+        Expression::AssignmentExpression(_) => PREC_ASSIGNMENT,
+    }
 }
 
 fn binary_op_str(op: BinaryOperator) -> &'static str {
@@ -966,7 +1111,10 @@ mod tests {
     // ---- basic expressions ----------------------------------
 
     #[test]
-    fn binary_addition_with_parens() {
+    fn binary_addition_emits_without_outer_parens() {
+        // gap-024 closed in CLOC12.10: only ObjectExpression at
+        // statement position needs the leading-token disambiguation
+        // wrap. Plain binary expressions emit directly.
         let e = Expression::BinaryExpression(BinaryExpression {
             cv: None,
             operator: BinaryOperator::Add,
@@ -975,11 +1123,11 @@ mod tests {
         });
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "(2 + 3);");
+        assert_eq!(out.code, "2 + 3;");
     }
 
     #[test]
-    fn string_concat_with_parens() {
+    fn string_concat_emits_without_outer_parens() {
         let e = Expression::BinaryExpression(BinaryExpression {
             cv: None,
             operator: BinaryOperator::Add,
@@ -988,7 +1136,7 @@ mod tests {
         });
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "(\"foo\" + \"bar\");");
+        assert_eq!(out.code, "\"foo\" + \"bar\";");
     }
 
     #[test]
@@ -1221,7 +1369,7 @@ mod tests {
         });
         let prog = untraced_program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "(2 + 3);");
+        assert_eq!(out.code, "2 + 3;");
     }
 
     // ---- END-TO-END: pipeline produces real output ----------

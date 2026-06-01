@@ -207,11 +207,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-024 — `ExpressionStatement` paren-wrapping diverges from upstream
 
-- **Status:** DOCUMENTED divergence (not strictly a "missing feature")
+- **Status:** RESOLVED in CLOC12.10
 - **Upstream test:** Every upstream `assertPrintSame("foo();")` / `assertPrint("a+b", "a+b")` line
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** Our Phase 1 emitter wraps every `ExpressionStatement` body in parens for safety. Upstream only wraps when the expression at statement position would otherwise be ambiguous (e.g. an object literal that could be a block).
-- **What it needs:** A precedence- and ambiguity-aware emitter that wraps only when necessary. Closes when CLOC12.07's two `_is_current_behaviour` ports get their assertions flipped to upstream's exact bytes.
+- **Resolution:** Added a precedence ladder (`PREC_PRIMARY`, `PREC_UNARY`, `PREC_CONDITIONAL`, `PREC_ASSIGNMENT`, plus per-operator `binary_prec` / `logical_prec` / `expr_prec`) and a `emit_expression_inner(e, parent_prec)` helper that wraps in parens only when the child's own precedence is strictly less than the parent context's. Statement position uses `parent_prec = 0`, so primary / call / member / binary / etc. emit without outer parens. The leading-token disambiguation wrap stays in place for `ObjectExpression` at statement position. The two `_is_current_behaviour` ports got their assertions flipped to upstream-byte-identical forms (`"2 + 3;"`, `"\"a\" + \"b\";"`). Three inline tests also flipped.
 
 ### gap-025 — Numeric formatting (shortest-form / exponential) not implemented
 
@@ -231,11 +230,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-027 — Precedence-aware paren insertion not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.10 (incidental, via the same fix as gap-024)
 - **Upstream test:** `CodePrinterTest` operator-precedence lines (e.g. `a*(b+c)` keeps inner parens)
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** Our emitter doesn't compare child operator precedence against parent operator precedence to decide whether to insert parens. Coupled with gap-024.
-- **What it needs:** Per-node precedence table + recursive emitter pass that checks parent vs. child precedence at every binary/unary/logical/conditional node.
+- **Resolution:** The precedence ladder added for gap-024 covers this directly. `emit_expression_inner(e, parent_prec)` checks `expr_prec(e) < parent_prec` and inserts parens when so — which means `a * (b + c)` correctly keeps the inner parens because `+` (prec 11) < `*` (prec 12). The `test_operator_precedence_inserts_inner_parens` ignored placeholder will be re-port'd with real upstream test cases in a follow-up; the emitter machinery is already in place.
 
 ### gap-028 — VLQ encoder for source-map `mappings` field not implemented
 
