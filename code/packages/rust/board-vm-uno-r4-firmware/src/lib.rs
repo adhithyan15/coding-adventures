@@ -45,9 +45,38 @@ pub struct EjectedFirmwareProgram<'a> {
     pub module: &'a [u8],
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedFirmwareProgramSummary {
+    pub program_id: u16,
+    pub slot: u8,
+    pub boot_policy: u8,
+    pub program_format: u8,
+    pub module_version: u8,
+    pub module_flags: u8,
+    pub max_stack: u8,
+    pub module_crc32: u32,
+    pub required_capability_count: usize,
+    pub module_len: usize,
+}
+
 impl<'a> EjectedFirmwareProgram<'a> {
     pub const fn module_len(self) -> usize {
         self.module.len()
+    }
+
+    pub const fn summary(self) -> EjectedFirmwareProgramSummary {
+        EjectedFirmwareProgramSummary {
+            program_id: self.program_id,
+            slot: self.slot,
+            boot_policy: self.boot_policy,
+            program_format: self.program_format,
+            module_version: self.module_version,
+            module_flags: self.module_flags,
+            max_stack: self.max_stack,
+            module_crc32: self.module_crc32,
+            required_capability_count: self.required_capabilities.len(),
+            module_len: self.module.len(),
+        }
     }
 
     pub const fn blink() -> Self {
@@ -343,6 +372,25 @@ mod tests {
         );
         assert_eq!(program.module, &EMBEDDED_BLINK_MODULE);
         validate_ejected_blink_program(16).unwrap();
+    }
+
+    #[test]
+    fn ejected_blink_summary_surfaces_embedded_artifact_contract() {
+        assert_eq!(
+            EjectedFirmwareProgram::blink().summary(),
+            EjectedFirmwareProgramSummary {
+                program_id: 1,
+                slot: 0,
+                boot_policy: BOOT_RUN_IF_NO_HOST,
+                program_format: ProgramFormat::BvmModule.as_u8(),
+                module_version: MODULE_VERSION,
+                module_flags: FLAG_PROGRAM_MAY_RUN_FOREVER,
+                max_stack: 4,
+                module_crc32: 0xBAD6_949E,
+                required_capability_count: 3,
+                module_len: EMBEDDED_BLINK_MODULE.len(),
+            }
+        );
     }
 
     #[test]
