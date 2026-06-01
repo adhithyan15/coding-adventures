@@ -700,6 +700,22 @@ def check_browser_expected_lists(
             require_optional_boolean(fieldset_path, fieldset, "disabled", errors)
             require_optional_string_list(fieldset_path, fieldset, "control_ids", errors)
             require_optional_string_list(fieldset_path, fieldset, "control_names", errors)
+        require_optional_object_list(form_path, form, "labels", errors)
+        for label_index, label in enumerate(object_list_items(form, "labels")):
+            label_path = f"{form_path}.labels[{label_index}]"
+            require_optional_nullable_string(label_path, label, "id", errors)
+            require_optional_nullable_string(label_path, label, "for_control", errors)
+            require_string(label_path, label, "text", errors)
+            for field in ("control_id", "control_name", "control_type"):
+                require_optional_nullable_string(label_path, label, field, errors)
+            require_string(label_path, label, "association", errors)
+        require_optional_object_list(form_path, form, "outputs", errors)
+        for output_index, output in enumerate(object_list_items(form, "outputs")):
+            output_path = f"{form_path}.outputs[{output_index}]"
+            for field in ("id", "name", "form_owner", "value"):
+                require_optional_nullable_string(output_path, output, field, errors)
+            require_optional_string_list(output_path, output, "for_tokens", errors)
+            require_string(output_path, output, "text", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):

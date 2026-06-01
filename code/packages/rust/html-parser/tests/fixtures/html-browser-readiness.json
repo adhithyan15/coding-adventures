@@ -193,6 +193,15 @@
             "fieldsets": [
               { "legend": "Options", "disabled": true, "control_ids": ["fast"], "control_names": ["fast"] }
             ],
+            "labels": [
+              { "id": "q-help", "for_control": "q", "text": "Query", "control_id": "q", "control_name": "q", "control_type": "text", "association": "explicit" },
+              { "text": "Count", "control_id": "count", "control_name": "count", "control_type": "number", "association": "implicit" },
+              { "text": "NotesKeep me", "control_id": "notes", "control_name": "notes", "control_type": "textarea", "association": "implicit" },
+              { "text": "Fast", "control_id": "fast", "control_name": "fast", "control_type": "checkbox", "association": "implicit" }
+            ],
+            "outputs": [
+              { "id": "total", "name": "total", "for_tokens": ["q", "kind"], "value": "Ready", "text": "Ready" }
+            ],
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "successful": true, "submission_values": [""], "autofocus": true, "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"], "checked": false, "text": "", "options": [] },
               { "id": "count", "control_type": "number", "name": "count", "labels": ["Count"], "accessible_name": "Count", "min": "1", "max": "10", "step": "0.5", "value": "2", "successful": true, "submission_values": ["2"], "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "min", "max", "step"], "checked": false, "text": "", "options": [] },
