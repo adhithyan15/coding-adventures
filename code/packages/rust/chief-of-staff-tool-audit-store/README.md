@@ -120,6 +120,8 @@ The crate keeps the boundary narrow:
   scheduling decisions
 - supervisor drain reports and summaries flatten tick-budget pressure route,
   priority, readiness, and queue-key labels for host scheduler queues
+- supervisor drain reports and summaries flatten tick-budget pressure rollup
+  keys and queue digests for compact host-log grouping and drift checks
 - supervisor drain plan pages expose per-page drain, continuation, and
   checkpoint-advance helpers for host preflight scheduling
 - supervisor drain plan pages expose starting and next checkpoint scalar
