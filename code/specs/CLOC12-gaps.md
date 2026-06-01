@@ -222,11 +222,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-026 — String quote-choice optimisation not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.11
 - **Upstream test:** `CodePrinterTest` quote-choice lines
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** Our emitter always uses double quotes. Upstream picks the quote style that minimises required escapes.
-- **What it needs:** Walk the string content, count `\"` vs `\'` escapes, pick the shorter side.
+- **Resolution:** Added `choose_quote_and_escape(value)` + `escape_str_sq` helpers in `closure-emitter/src/lib.rs`. `emit_string` now picks single-quote when value contains strictly more `"` than `'` (each saved `\"` is one fewer escape); double-quote otherwise (canonical, ties picked toward double). `ascii_only` mode still always uses double — that's upstream's own invariant. Six new inline tests cover all branches. The `test_string_quote_choice_minimises_escapes` ignored placeholder in the upstream port file will be re-port'd with real upstream `assertPrint` cases in a follow-up.
 
 ### gap-027 — Precedence-aware paren insertion not implemented
 
