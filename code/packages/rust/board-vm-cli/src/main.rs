@@ -3,7 +3,7 @@ use std::env;
 use board_vm_cli::{
     format_onboard_led, list_pico_bootsel_mounts, list_ports, list_targets, parse_args,
     run_bootloader_reboot, run_eject_blink, run_esp_detect, run_esp_upload, run_pico_uf2_upload,
-    run_repl, run_smoke, usage, write_smoke_report, CliCommand,
+    run_repl, run_smoke, usage, write_eject_report, write_smoke_report, CliCommand,
 };
 
 fn main() {
@@ -104,16 +104,8 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
         }
         CliCommand::EjectBlink(options) => {
             let report = run_eject_blink(&options)?;
-            println!(
-                "eject output={} program_id={} slot={} boot_policy={} bytes={} crc32=0x{:08X}",
-                report.output,
-                report.program_id,
-                report.slot,
-                report.boot_policy,
-                report.module_len,
-                report.module_crc32
-            );
-            Ok(())
+            let mut stdout = std::io::stdout();
+            write_eject_report(&mut stdout, &report)
         }
         CliCommand::Help => {
             println!("{}", usage());
