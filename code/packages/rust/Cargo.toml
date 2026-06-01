@@ -652,6 +652,7 @@ members = [
     "iir-to-beam",
     "iir-to-wasm",
     "iir-to-llvm",
+    "aot-debug",
     "twig-to-beam",
     "twig-to-wasm",
     "twig-lexer",
