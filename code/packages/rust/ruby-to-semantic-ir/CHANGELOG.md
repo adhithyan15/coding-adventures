@@ -2,6 +2,27 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.70.0] - 2026-05-31
+
+### Added (Phase 21b (FC) — implicit numbered block parameters `_1`..`_9`)
+
+When a block has NO explicit `|...|` header and no block-locals, the
+lowerer now scans the block body for `_1`..`_9` `Name` tokens, takes the
+highest index used, and synthesizes positional parameters `_1`..`_<max>`
+(`Scope::Param`).  Arity follows Ruby semantics: a body using `_2`
+implies arity 2 (params `_1, _2`), even if `_1` is unreferenced.
+
+The scan does NOT descend into nested `block` nodes — a `_N` inside an
+inner block belongs to that inner block's own implicit parameter scope.
+An explicit pipe header (or `;` block-locals) always wins; numbered
+params apply only when no header is present.
+
+New lowering pins (+3): `numbered_block_param_synthesizes_single_param`
+(`each { puts(_1) }` → `__block_0.params == [_1]`),
+`numbered_block_param_arity_is_highest_index` (`each { puts(_2) }` →
+params `_1, _2`), `numbered_block_param_passes_sir_validator`
+(validator end-to-end).  Test count: 286 → 289.
+
 ## [0.69.0] - 2026-05-31
 
 ### Added (Phase 21a (FC) — block-local variables `{ |x; y| … }`)

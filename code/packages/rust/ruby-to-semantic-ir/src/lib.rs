@@ -1460,6 +1460,48 @@ mod tests {
     }
 
     // -----------------------------------------------------------------
+    // Phase 21b (FC) — implicit numbered block parameters `_1`..`_9`.
+    //
+    // A block with NO explicit `|...|` header may reference `_1`..`_9`
+    // as positional parameters; arity = the highest index used.  The
+    // lowerer scans the body and synthesizes params `_1`..`_<max>`
+    // (Scope::Param), without descending into nested blocks.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn numbered_block_param_synthesizes_single_param() {
+        let m = lower("each { puts(_1) }");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        assert_eq!(block_fn.params.len(), 1);
+        assert_eq!(block_fn.params[0].name, "_1");
+    }
+
+    #[test]
+    fn numbered_block_param_arity_is_highest_index() {
+        // Using `_2` implies arity 2 → params `_1, _2`, even though `_1`
+        // is not referenced.
+        let m = lower("each { puts(_2) }");
+        let block_fn = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("expected __block_0");
+        let names: Vec<&str> = block_fn.params.iter().map(|p| p.name.as_str()).collect();
+        assert_eq!(names, vec!["_1", "_2"]);
+    }
+
+    #[test]
+    fn numbered_block_param_passes_sir_validator() {
+        let m = lower("each { puts(_1) }");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
+    // -----------------------------------------------------------------
     // Phase 6h — paren-less method calls (`puts 1`, `puts 1, 2`).
     // -----------------------------------------------------------------
 
