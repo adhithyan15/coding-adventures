@@ -724,6 +724,25 @@ def check_browser_expected_lists(
                 require_optional_nullable_string(option_path, option, "label", errors)
                 require_string(option_path, option, "text", errors)
                 require_optional_boolean(option_path, option, "disabled", errors)
+        require_optional_object_list(form_path, form, "selects", errors)
+        for select_index, select in enumerate(object_list_items(form, "selects")):
+            select_path = f"{form_path}.selects[{select_index}]"
+            for field in ("id", "name", "form_owner", "accessible_name", "size", "value"):
+                require_optional_nullable_string(select_path, select, field, errors)
+            require_optional_string_list(select_path, select, "labels", errors)
+            for field in ("disabled", "required", "multiple"):
+                require_optional_boolean(select_path, select, field, errors)
+            require_optional_string_list(select_path, select, "selected_options", errors)
+            require_optional_object_list(select_path, select, "options", errors)
+            for option_index, option in enumerate(object_list_items(select, "options")):
+                option_path = f"{select_path}.options[{option_index}]"
+                require_string(option_path, option, "value", errors)
+                require_optional_nullable_string(option_path, option, "label", errors)
+                require_string(option_path, option, "text", errors)
+                require_optional_boolean(option_path, option, "selected", errors)
+                require_optional_boolean(option_path, option, "disabled", errors)
+                require_optional_nullable_string(option_path, option, "group_label", errors)
+            require_string(select_path, select, "text", errors)
         require_optional_object_list(form_path, form, "outputs", errors)
         for output_index, output in enumerate(object_list_items(form, "outputs")):
             output_path = f"{form_path}.outputs[{output_index}]"

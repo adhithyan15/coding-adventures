@@ -1613,6 +1613,7 @@ pub struct BrowserForm {
     pub fieldsets: Vec<BrowserFormFieldset>,
     pub labels: Vec<BrowserFormLabel>,
     pub datalists: Vec<BrowserFormDatalist>,
+    pub selects: Vec<BrowserFormSelect>,
     pub outputs: Vec<BrowserFormOutput>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
@@ -1653,6 +1654,23 @@ pub struct BrowserDatalistOption {
     pub label: Option<String>,
     pub text: String,
     pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSelect {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub multiple: bool,
+    pub size: Option<String>,
+    pub value: Option<String>,
+    pub selected_options: Vec<String>,
+    pub options: Vec<BrowserSelectOption>,
+    pub text: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12715,6 +12733,7 @@ fn browser_form(
     let form_labels =
         collect_form_labels_for_form(body_root, element, element.attribute("id"), &controls);
     let datalists = browser_form_datalists(body_root, &controls);
+    let selects = browser_form_selects(&controls);
     let outputs = browser_form_outputs(&controls);
     let submitters = browser_form_submitters(
         &controls,
@@ -12755,6 +12774,7 @@ fn browser_form(
         fieldsets,
         labels: form_labels,
         datalists,
+        selects,
         outputs,
         controls,
         submitters,
@@ -13056,6 +13076,28 @@ fn browser_form_outputs(controls: &[BrowserFormControl]) -> Vec<BrowserFormOutpu
             form_owner: control.form_owner.clone(),
             for_tokens: control.output_for.clone(),
             value: control.value.clone(),
+            text: control.text.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_selects(controls: &[BrowserFormControl]) -> Vec<BrowserFormSelect> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "select")
+        .map(|control| BrowserFormSelect {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            disabled: control.disabled,
+            required: control.required,
+            multiple: control.multiple,
+            size: control.size.clone(),
+            value: control.value.clone(),
+            selected_options: control.selected_options.clone(),
+            options: control.option_items.clone(),
             text: control.text.clone(),
         })
         .collect()

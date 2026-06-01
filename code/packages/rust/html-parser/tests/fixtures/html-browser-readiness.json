@@ -74,6 +74,9 @@
             "enctype": "multipart/form-data",
             "target": "results",
             "effective_target": "results",
+            "selects": [
+              { "name": "section", "value": "manuals", "selected_options": ["manuals"], "options": [{ "value": "books", "text": "Books" }, { "value": "manuals", "text": "Manuals", "selected": true }], "text": "Books Manuals" }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
@@ -201,6 +204,9 @@
             ],
             "datalists": [
               { "id": "query-suggestions", "control_ids": ["q"], "control_names": ["q"], "options": [{ "value": "Rust", "text": "" }, { "value": "HTML", "label": "Markup", "text": "Markup" }, { "value": "Browser APIs", "text": "Browser APIs" }] }
+            ],
+            "selects": [
+              { "id": "kind", "name": "kind", "accessible_name": "Kind", "multiple": true, "size": "5", "value": "books", "selected_options": ["books"], "options": [{ "value": "books", "text": "Books", "selected": true, "group_label": "Print" }, { "value": "manuals", "label": "Manuals", "text": "Manuals", "group_label": "Print" }, { "value": "fiche", "text": "Microfiche", "disabled": true, "group_label": "Legacy" }], "text": "Books Manuals Microfiche" }
             ],
             "outputs": [
               { "id": "total", "name": "total", "for_tokens": ["q", "kind"], "value": "Ready", "text": "Ready" }
