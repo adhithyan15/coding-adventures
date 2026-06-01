@@ -25,6 +25,7 @@ panic-halt = "0.2"
 board-vm-serial = { path = "../board-vm-serial" }
 
 [dev-dependencies]
+board-vm-eject = { path = "../board-vm-eject" }
 board-vm-host = { path = "../board-vm-host" }
 
 [lib]
