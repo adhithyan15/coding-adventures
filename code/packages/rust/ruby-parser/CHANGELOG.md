@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.65.0] - 2026-05-31
+
+### Added (Phase 11d (FC) — `return` WITH VALUE, coverage-confirmation)
+
+No grammar change.  The Phase 6j rule already accepts an optional
+trailing expression after `return`:
+
+```
+return_statement = "return" [ expression ] ;
+```
+
+The pre-existing pins covered `return 42`, bare `return`, and
+`return x + 1` inside a def.  These pins add new payload shapes from
+fresh angles so a future grammar edit cannot silently drop
+value-carrying returns.
+
+New parse pins (+3): `test_parse_return_with_array_value` (`return [1, 2]`),
+`test_parse_return_with_string_value` (`return "ok"`),
+`test_parse_return_with_paren_value` (`return (1 + 2)`, `+` token
+survives).  Test count: 226 → 229.
+
 ## [0.64.0] - 2026-05-31
 
 ### Added (Phase 11c (FC) — `retry` keyword)

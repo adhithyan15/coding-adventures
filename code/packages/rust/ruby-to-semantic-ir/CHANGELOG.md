@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.68.0] - 2026-05-31
+
+### Added (Phase 11d (FC) — `return` WITH VALUE, coverage-confirmation)
+
+No lowering change.  The Phase 6j arm already folds an optional trailing
+expression after `return` into the single `BuiltinCall` argument
+(bare → `NilLit`):
+
+```
+return [1, 2]  → ExprStmt(BuiltinCall("return", [SeqLit ...], Divergent))
+return "ok"    → ExprStmt(BuiltinCall("return", [StrLit ...], Divergent))
+```
+
+The pre-existing pins covered `return 42`, bare `return`, `return x + 1`
+inside a def, and a def-body validator run.  These pins add new payload
+angles so the value-carrying contract stays nailed down.
+
+New lowering pins (+3): `return_with_array_value_lowers_to_seqlit_arg`
+(`return [1, 2]` → `SeqLit` arg, Divergent),
+`return_with_string_value_lowers_to_strlit_arg` (`return "ok"` →
+`StrLit` arg, Divergent),
+`return_with_top_level_local_value_passes_sir_validator`
+(`x = 5; return x` at top level validates — distinct from the existing
+def-body pin).  Test count: 280 → 283.
+
 ## [0.67.0] - 2026-05-31
 
 ### Added (Phase 11c (FC) — `retry` keyword)

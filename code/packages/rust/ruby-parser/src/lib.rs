@@ -1411,6 +1411,53 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase 11d — `return` WITH VALUE (coverage-confirmation)
+    //
+    // The Phase 6j rule `return_statement = "return" [ expression ]` already
+    // accepts a trailing expression.  Existing pins cover `return 42`, bare
+    // `return`, and `return x + 1` inside a def.  These pins lock in new
+    // payload shapes — an array literal, a string literal, and a
+    // parenthesized binary expression — so a future grammar edit cannot
+    // silently drop value-carrying returns.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_return_with_array_value() {
+        let ast = parse_ruby("return [1, 2]");
+        let r = find_statement_inner(&ast, "return_statement")
+            .expect("expected return_statement");
+        assert!(r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_return_with_string_value() {
+        let ast = parse_ruby("return \"ok\"");
+        let r = find_statement_inner(&ast, "return_statement")
+            .expect("expected return_statement");
+        assert!(r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+    }
+
+    #[test]
+    fn test_parse_return_with_paren_value() {
+        // `return (1 + 2)` — parenthesized payload; the `+` token must
+        // survive somewhere inside the return_statement subtree.
+        let ast = parse_ruby("return (1 + 2)");
+        let r = find_statement_inner(&ast, "return_statement")
+            .expect("expected return_statement");
+        assert!(r
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")));
+        assert!(tree_has_token_value(r, "+"));
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 6k — unary minus `-5`, `-x`, `-(1+2)`
     // -----------------------------------------------------------------------
 
