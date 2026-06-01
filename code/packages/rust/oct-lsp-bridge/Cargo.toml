@@ -1,0 +1,13 @@
+[package]
+name = "oct-lsp-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "OCT-LSP01 — Oct instantiation of grammar-lsp-bridge; provides oct_language_spec() and the oct-lsp-server binary."
+
+[dependencies]
+grammar-lsp-bridge      = { path = "../grammar-lsp-bridge" }
+coding-adventures-ls00  = { path = "../ls00" }
+
+[[bin]]
+name = "oct-lsp-server"
+path = "bin/oct_lsp_server.rs"
