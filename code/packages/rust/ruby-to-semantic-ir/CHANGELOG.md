@@ -2,6 +2,29 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.81.0] - 2026-06-01
+
+### Added (Phase 23c (FC) — `__LINE__` pseudo-variable lowering)
+
+Ruby's `__LINE__` pseudo-variable now lowers to a compile-time `IntLit`
+carrying the (1-based) source line of the `__LINE__` token itself.
+
+Sibling of Phase 23a `__FILE__`: because `__LINE__` begins with `_` it is
+**not** a lexer keyword — it arrives as an ordinary `Name` token and the
+parser already matches it via `factor`'s bare-`NAME` alternative, so **no
+grammar or lexer change** was needed.  The meaning is supplied entirely in
+`lower_factor_atom`, intercepting the bare `Name` exactly like the
+`__FILE__` / bare-`raise` cases: when the token value is `__LINE__` and it
+is **not** shadowed by a local binding, we emit `IntLit { value:
+tok.line }`.  Unlike `__FILE__`'s `StrLit`, **no `Feature` declaration is
+required** — integers are a baseline SIR capability.  A `__LINE__`
+shadowed by a prior local (`__LINE__ = 7`) keeps the local read (a
+`VarRef`), mirroring the existing shadow guards.
+
+New lowering tests: `line_keyword_lowers_to_intlit`,
+`line_keyword_tracks_source_line`, `line_keyword_validates_e2e`
+(lower → validate round-trip), `line_keyword_shadowed_by_local_is_varref`.
+
 ## [0.80.0] - 2026-06-01
 
 ### Added (Phase 23a (FC) — `__FILE__` pseudo-variable lowering)

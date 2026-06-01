@@ -6066,6 +6066,34 @@ impl Lowerer {
                                     span,
                                 });
                             }
+                            // Phase 23c (FC) — `__LINE__` is Ruby's pseudo-
+                            // variable for the (1-based) line number of the
+                            // source line on which it appears.  Like
+                            // `__FILE__` it is NOT a lexer keyword (it
+                            // arrives as an ordinary `Name` token) and the
+                            // grammar already matches it via `factor`'s
+                            // bare-NAME alternative — so NO grammar/lexer
+                            // change is needed; we intercept it here at
+                            // lowering time, exactly like `__FILE__` /
+                            // bare-`raise`.
+                            //
+                            // It lowers to a compile-time `IntLit` carrying
+                            // the token's own line number (`tok.line`).
+                            // Integers are a baseline SIR capability, so —
+                            // unlike `__FILE__`'s StrLit — no `Feature`
+                            // declaration is required.
+                            //
+                            // A `__LINE__` shadowed by a local binding
+                            // (`__LINE__ = 1`) keeps the local, mirroring
+                            // the `__FILE__` / `raise` shadow guards.
+                            if tok.value == "__LINE__"
+                                && !self.declared_locals.contains("__LINE__")
+                            {
+                                return Ok(Expr::IntLit {
+                                    value: tok.line as i64,
+                                    span,
+                                });
+                            }
                             // Inside a function body, parameter
                             // names lex as `VarRef` with
                             // `Scope::Param` so the SIR validator

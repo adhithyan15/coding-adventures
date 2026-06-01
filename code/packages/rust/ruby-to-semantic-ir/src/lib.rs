@@ -6469,6 +6469,75 @@ b = "y"
     }
 
     #[test]
+    fn line_keyword_lowers_to_intlit() {
+        // Phase 23c (FC) — `__LINE__` lowers to a compile-time IntLit
+        // carrying the token's 1-based source line, surfaced as the
+        // argument of the enclosing `puts`.  A lone `puts(...)` is the
+        // block's trailing VALUE, not a stmt.
+        let m = lower("puts(__LINE__)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::IntLit { value, .. } if *value == 1),
+            "expected `__LINE__` on line 1 to lower to IntLit(1), got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
+    fn line_keyword_tracks_source_line() {
+        // The IntLit value is the actual (1-based) line of the `__LINE__`
+        // token — here line 2, after a leading statement — proving it is
+        // not a hard-coded constant.
+        let m = lower("x = 1\nputs(__LINE__)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::IntLit { value, .. } if *value == 2),
+            "expected `__LINE__` on line 2 to lower to IntLit(2), got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
+    fn line_keyword_validates_e2e() {
+        // End-to-end: a `__LINE__`-using module round-trips the SIR
+        // validator (the IntLit is a self-contained literal — no unbound
+        // names, no feature requirement since integers are baseline).
+        let m = lower("puts(__LINE__)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected `__LINE__`-using module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn line_keyword_shadowed_by_local_is_varref() {
+        // A `__LINE__` shadowed by a prior local binding keeps the local
+        // (mirrors the `__FILE__` / bare-`raise` shadow guards): the read
+        // lowers to a VarRef, NOT the line-number IntLit.
+        let m = lower("__LINE__ = 7\nputs(__LINE__)\n");
+        let b = main_body(&m);
+        let args = match &b.value {
+            Expr::BuiltinCall { name, args, .. } if name == "puts" => args,
+            other => panic!("expected BuiltinCall(puts, ...), got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::VarRef { name, .. } if name == "__LINE__"),
+            "expected shadowed `__LINE__` to stay a VarRef, got {:?}",
+            args[0]
+        );
+    }
+
+    #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
         // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips

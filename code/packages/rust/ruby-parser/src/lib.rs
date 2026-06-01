@@ -3943,6 +3943,46 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_line_keyword_as_factor() {
+        // Phase 23c (FC) — `__LINE__`, like `__FILE__`, is NOT a lexer
+        // keyword (it starts with `_`, so it lexes as an ordinary NAME) and
+        // needs no grammar rule: it parses through `factor`'s bare-NAME
+        // alternative.  This pin confirms the token survives into the tree.
+        let ast = parse_ruby("__LINE__\n");
+        assert!(
+            tree_has_token_value(&ast, "__LINE__"),
+            "expected `__LINE__` token to be present in the parse tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_line_keyword_in_call_arg() {
+        // `puts(__LINE__)` — `__LINE__` parses as a call argument
+        // expression (factor → NAME).
+        let ast = parse_ruby("puts(__LINE__)\n");
+        assert!(
+            tree_has_token_value(&ast, "__LINE__"),
+            "expected `__LINE__` token in the `puts(__LINE__)` call args"
+        );
+    }
+
+    #[test]
+    fn test_parse_line_keyword_in_assignment_rhs() {
+        // `n = __LINE__` — `__LINE__` parses as the assignment RHS
+        // expression, the same NAME-factor path a normal variable read
+        // would take.
+        let ast = parse_ruby("n = __LINE__\n");
+        assert!(
+            tree_has_token_value(&ast, "n"),
+            "expected LHS name `n` in the assignment"
+        );
+        assert!(
+            tree_has_token_value(&ast, "__LINE__"),
+            "expected `__LINE__` token as the assignment RHS"
+        );
+    }
+
+    #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
         let ast = parse_ruby("def hello = 1");
