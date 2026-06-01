@@ -34,8 +34,11 @@ Open the printed URL.  The demo includes:
   css).
 - A working sidebar with one group (Guide) and three top-level
   pages.
-- A pre-built search index (one manifest + ten alphabetised
-  shards under `/search/`).
+- A pre-built search index (one manifest + ~130 alphabetised
+  shards under `/search/`) PLUS a working browser search box
+  in the header — try typing `install`, `widget`, `theme`,
+  `deno`, `render`.  Results dropdown is debounced (120 ms);
+  ESC clears; click outside dismisses.
 
 ## What it actually does
 
@@ -197,6 +200,56 @@ Putting the demo here means:
 - Killing or replacing the demo doesn't churn any of the 11
   shipped library packages.
 
+## Search wire-up
+
+The demo bundles `forme-doc-search-client-js` (plus its only
+dep, `forme-doc-search-tokenizer`) via esbuild into a single
+~9KB self-executing IIFE, written to `/search/client.js` and
+loaded by every page with a `<script defer>` tag.  The
+bootstrap inside the bundle:
+
+- Finds the page-shell's existing `<input class="search">`.
+- Lazily fetches `/search/manifest.json` on the first
+  keystroke (one round-trip per session; cached via
+  `SearchClient`'s built-in LRU).
+- Renders results as a floating dropdown anchored under the
+  input via `getBoundingClientRect()` + `position: fixed` —
+  doesn't disturb the header flex layout, doesn't depend on
+  any ancestor's positioning context.
+- Every keystroke is debounced 120 ms; stale-query guard
+  via a monotonic `queryId`.
+- ESC clears, click-outside dismisses, focus re-opens if
+  there's text.
+
+### Cache busting
+
+Every build computes a 12-hex-char SHA-256 of the bundle and
+uses it as a `?v=<id>` query string on the script tag AND on
+the manifest / shard fetches.  Same content → same hash →
+browser cache reused; different content → new URL → browser
+re-fetches.  Defeats Safari's aggressive same-URL caching,
+which would otherwise pin a stale client.js across rebuilds.
+
+### Shape adapter
+
+`forme-doc-site-emitter` serialises shard `postings` as plain
+JSON objects (Maps don't survive `JSON.stringify`).  The
+browser-side `fetchShard` callback converts each object back
+into a `Map<token, Posting[]>` so `SearchClient.isLikelyShard`
+accepts the shape:
+
+```ts
+async function fetchShard(key) {
+  const raw = await (await fetch(`/search/${key}.json?v=${buildId}`)).json();
+  return { shardKey: raw.shardKey, postings: new Map(Object.entries(raw.postings)) };
+}
+```
+
+This adapter lives at the consumer boundary, not in either
+library — neither `forme-doc-search-client-js` (capability
+`[]`) nor `forme-doc-site-emitter` (capability `[]`) had to
+change to make search work in the browser.
+
 ## v0 simplifications
 
 - No watch mode / live reload (run `npm start` again after
@@ -204,9 +257,7 @@ Putting the demo here means:
 - No multi-locale support.
 - No custom theme system — one inlined stylesheet.
 - No image / asset copying — corpus is text-only.
-- No search-client JS yet (the demo emits manifest + shards but
-  no `client.js` — building the bundle is the consumer-side
-  concern documented in `forme-doc-search-client-js`).
+- Search bundle uses esbuild; v1 could swap for rollup / tsc.
 
-These belong in v1+; the point of this demo is to prove the
-cluster composes correctly end-to-end.
+The cluster composes correctly end-to-end and the search
+loop closes in the browser.

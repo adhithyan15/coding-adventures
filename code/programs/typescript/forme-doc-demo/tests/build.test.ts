@@ -25,7 +25,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { generatePageBundle } from "@coding-adventures/forme-aot-page-bundle-emitter";
 
-import { build, routeFor, titleOf, injectHeadingIds, normaliseSidebarPaths, type MarkdownFile } from "../src/build.js";
+import { build, routeFor, titleOf, injectHeadingIds, normaliseSidebarPaths, buildIdFor, type MarkdownFile } from "../src/build.js";
 import { readCorpus, writeBundle, safeJoin, validateOutDir } from "../src/main.js";
 import { plainText } from "../src/plain-text.js";
 
@@ -317,22 +317,68 @@ describe("writeBundle", () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
+// buildIdFor
+// ─────────────────────────────────────────────────────────────────────
+
+describe("buildIdFor", () => {
+  it("returns a 12-char hex string", () => {
+    const id = buildIdFor("some bundle source");
+    expect(id).toMatch(/^[0-9a-f]{12}$/);
+  });
+
+  it("is deterministic for the same input", () => {
+    expect(buildIdFor("hello")).toBe(buildIdFor("hello"));
+  });
+
+  it("differs when the bundle source changes (cache-bust correctness)", () => {
+    const a = buildIdFor("bundle version A");
+    const b = buildIdFor("bundle version B");
+    expect(a).not.toBe(b);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────
 // plainText
 // ─────────────────────────────────────────────────────────────────────
 
 describe("plainText", () => {
-  it("extracts text from a flat node", () => {
+  it("extracts text from a flat node (text field)", () => {
     expect(plainText({ type: "text", text: "hello" })).toBe("hello");
+  });
+
+  it("extracts text from a flat node (value field — the IR's actual choice)", () => {
+    // commonmark-parser's TextNode uses `value`, not `text`.
+    // Both names supported defensively.
+    expect(plainText({ type: "text", value: "hello" })).toBe("hello");
   });
 
   it("recurses into children and joins with spaces", () => {
     const ast = {
       type: "doc",
       children: [
-        { type: "p", children: [{ type: "text", text: "hello" }, { type: "text", text: "world" }] },
+        { type: "p", children: [{ type: "text", value: "hello" }, { type: "text", value: "world" }] },
       ],
     };
     expect(plainText(ast)).toBe("hello world");
+  });
+
+  it("extracts text from a realistic commonmark-parser AST", () => {
+    // Shape mirrors what commonmark-parser actually emits — nested
+    // paragraphs with text children using `value`.  This is the
+    // regression test for the bug where plainText returned "" for
+    // every page because it only checked `text` and never `value`.
+    const ast = {
+      type: "document",
+      children: [
+        { type: "paragraph", children: [
+          { type: "text", value: "Hello world" },
+        ]},
+        { type: "heading", level: 2, children: [
+          { type: "text", value: "Install" },
+        ]},
+      ],
+    };
+    expect(plainText(ast)).toBe("Hello world Install");
   });
 
   it("returns empty string for null / undefined / non-object", () => {
