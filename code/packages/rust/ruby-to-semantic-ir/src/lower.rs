@@ -4952,7 +4952,13 @@ impl Lowerer {
     ///   state, so we treat every heredoc the same.
     /// - Escape sequences inside the body are kept literal (the lexer's
     ///   heredoc capture does not unescape; same v0 stance as backticks).
-    fn lower_heredoc_literal(&mut self, raw: &str, span: Span) -> Expr {
+    fn lower_heredoc_literal(
+        &mut self,
+        raw: &str,
+        span: Span,
+        err_line: usize,
+        err_column: usize,
+    ) -> Expr {
         // Step 1: strip the opener prefix.  Order matters — `<<~` and
         // `<<-` must be tried *before* `<<`, because `<<~`/`<<-` both
         // start with `<<`.
@@ -4982,8 +4988,23 @@ impl Lowerer {
             after_prefix.to_string()
         };
 
-        self.features_used.insert(Feature::Strings);
-        Expr::StrLit { value: body, span }
+        // Step 3 (Phase 17a FC): a plain / `<<-` / `<<~` heredoc
+        // interpolates like a double-quoted string, so route the
+        // extracted body through the shared interpolation splitter
+        // rather than treating it as fully literal.  Bodies with no
+        // `#{…}` come back as a single `StrLit` (the prior behaviour);
+        // bodies that interpolate become a `StrConcat` whose segments
+        // are the literal runs and the lowered `#{…}` expressions —
+        // exactly as `"a#{x}b"` lowers.  A lowering error (malformed
+        // interpolation body) falls back to the verbatim body as a
+        // plain `StrLit`, keeping heredoc lowering infallible.
+        match self.lower_string_literal_with_interp(&body, span.clone(), err_line, err_column) {
+            Ok(expr) => expr,
+            Err(_) => {
+                self.features_used.insert(Feature::Strings);
+                Expr::StrLit { value: body, span }
+            }
+        }
     }
 
     // -------------------------------------------------------------------
@@ -5583,6 +5604,8 @@ impl Lowerer {
                                 return Ok(self.lower_heredoc_literal(
                                     &tok.value,
                                     span,
+                                    tok.line,
+                                    tok.column,
                                 ));
                             }
                             // Phase 19d (FC) — `%r{...}` regex literal

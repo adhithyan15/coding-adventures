@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.74.0] - 2026-06-01
+
+### Changed (Phase 17a (FC) — heredoc bodies interpolate)
+
+A heredoc (`<<EOF` / `<<-EOF` / `<<~EOF`) interpolates `#{…}` like a
+double-quoted string, but `lower_heredoc_literal` previously emitted the
+extracted body as a single raw `StrLit` — so `<<EOF\nhi #{name}\nEOF`
+mis-lowered `#{name}` as literal text.  The lowerer now routes the
+extracted body through the shared `lower_string_literal_with_interp`
+splitter:
+
+- A body with no `#{…}` still lowers to one `StrLit` (unchanged — the
+  existing plain/`<<-`/`<<~` pins still hold).
+- An interpolating body lowers to a `StrConcat` of literal runs and the
+  lowered `#{…}` expressions, exactly as `"a#{x}b"` does (and so picks up
+  Phase 20a recursive expression lowering + Phase 20b `StrConcat` +
+  `Feature::StringInterpolation` for free).  A malformed-interp lowering
+  error falls back to the verbatim body as a plain `StrLit`, keeping
+  heredoc lowering infallible.
+
+New lowering pins (+3): `interpolated_heredoc_lowers_body_to_str_concat`
+(`<<EOF\nhi #{name}\nEOF` → 3-part `StrConcat`),
+`interpolated_tilde_heredoc_with_expression_lowers_recursively`
+(`<<~EOF` body `#{1 + 2}` → real `+` call),
+`interpolated_heredoc_validates_e2e_and_declares_feature` (manifest +
+validator round-trip).  Test count: 298 → 301.
+
 ## [0.73.0] - 2026-06-01
 
 ### Changed (Phase 20b (FC) — interpolation lowers to first-class `StrConcat`)
