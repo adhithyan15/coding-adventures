@@ -6262,6 +6262,84 @@ b = "y"
         );
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 24a — `alias new old` method aliasing
+    //
+    // `alias new old` lowers to a statement-position
+    // `BuiltinCall("alias", [StrLit(new), StrLit(old)])` (PURE).  The two
+    // method names are surfaced as string literals (not VarRefs): they are
+    // method names, not locals, so they must not be subject to
+    // unbound-variable validation.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn alias_lowers_to_builtin_call() {
+        // `alias foo bar` → ExprStmt(BuiltinCall("alias", [StrLit, StrLit])).
+        let m = lower("alias foo bar\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt { expr, .. } => match expr {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "alias");
+                    assert_eq!(args.len(), 2);
+                }
+                other => panic!("expected BuiltinCall(alias, …), got {:?}", other),
+            },
+            other => panic!("expected ExprStmt for alias, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn alias_operands_are_string_literals() {
+        // Both operands surface as StrLit carrying the verbatim method
+        // names — never VarRefs.
+        let m = lower("alias size length\n");
+        let b = main_body(&m);
+        let args = match &b.stmts[0] {
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { name, args, .. },
+                ..
+            } if name == "alias" => args,
+            other => panic!("expected alias BuiltinCall, got {:?}", other),
+        };
+        assert!(
+            matches!(&args[0], Expr::StrLit { value, .. } if value == "size"),
+            "expected new-name StrLit(\"size\"), got {:?}",
+            args[0]
+        );
+        assert!(
+            matches!(&args[1], Expr::StrLit { value, .. } if value == "length"),
+            "expected old-name StrLit(\"length\"), got {:?}",
+            args[1]
+        );
+    }
+
+    #[test]
+    fn alias_is_pure_and_validates_e2e() {
+        // Phase 24a (FC) — end-to-end: a bare `alias` statement lowers to a
+        // PURE BuiltinCall over string-literal operands that round-trips
+        // the SIR validator (no unbound names, no effect surprises).
+        let m = lower("alias foo bar\n");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall { effects, .. },
+                ..
+            } => assert!(
+                !effects.contains(Effect::Divergent),
+                "alias should be PURE (non-divergent), got {:?}",
+                effects
+            ),
+            other => panic!("expected alias BuiltinCall, got {:?}", other),
+        }
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected alias-using module: {:?}",
+            result
+        );
+    }
+
     #[test]
     fn case_in_array_pattern_validates_e2e() {
         // Phase 13a (FC) — end-to-end: a binding array pattern lowers to

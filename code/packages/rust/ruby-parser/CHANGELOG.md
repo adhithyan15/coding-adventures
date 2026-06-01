@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.70.0] - 2026-06-01
+
+### Added (Phase 24a (FC) — `alias new old` method aliasing)
+
+New grammar rule `alias_statement = "alias" NAME NAME`, added to the
+`statement` alternation BEFORE `method_call`/`expression_stmt`.  The
+lexer already classifies `alias` as a Ruby `KEYWORD` (matched here by
+value), so no lexer change was needed.  Placement matters for the same
+reason the Phase 23b `defined?` rule documents: a bare leading `alias`
+would otherwise be matched by the `KEYWORD` alternative of `factor` (via
+`expression_stmt`), consuming only `alias` and leaving the two name
+operands dangling.  `_grammar.rs` regenerated.
+
+This first slice covers the canonical two-bare-name form (`alias foo
+bar`); the symbol operand forms (`alias :new :old`) are a deliberate
+follow-up.  New parser pins: `test_parse_alias_basic`,
+`test_parse_alias_carries_both_names`,
+`test_parse_alias_not_shadowed_by_method_call`.
+
 ## [0.69.0] - 2026-06-01
 
 ### Added (Phase 23b (FC) — `defined?` operator)

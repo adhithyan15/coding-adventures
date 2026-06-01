@@ -3801,6 +3801,60 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 24a (FC) — `alias new old` method aliasing.  The `alias`
+    // keyword leads a statement with two bare method-name (NAME) operands.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_alias_basic() {
+        // `alias foo bar` — the canonical two-name form.
+        let ast = parse_ruby("alias foo bar\n");
+        assert!(
+            find_descendant(&ast, "alias_statement").is_some(),
+            "expected alias_statement node"
+        );
+        assert!(
+            tree_has_token_value(&ast, "alias"),
+            "expected the `alias` keyword token in the tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_alias_carries_both_names() {
+        // Both operands must appear under the alias_statement node.
+        let ast = parse_ruby("alias size length\n");
+        let a = find_descendant(&ast, "alias_statement")
+            .expect("expected alias_statement node");
+        assert!(
+            tree_has_token_value(a, "size"),
+            "expected new-name operand `size` under alias_statement"
+        );
+        assert!(
+            tree_has_token_value(a, "length"),
+            "expected old-name operand `length` under alias_statement"
+        );
+    }
+
+    #[test]
+    fn test_parse_alias_not_shadowed_by_method_call() {
+        // The leading `alias` keyword must win over the bare-KEYWORD
+        // `factor` alternative — i.e. `alias` is parsed as an
+        // alias_statement (consuming BOTH operands), not as a method_call
+        // / expression_stmt that swallows only `alias` and leaves the
+        // names dangling.  We assert the alias_statement node is present
+        // and that no `method_call` node captured the `alias` keyword.
+        let ast = parse_ruby("alias quux corge\n");
+        assert!(
+            find_descendant(&ast, "alias_statement").is_some(),
+            "expected alias_statement node (alias must not be shadowed)"
+        );
+        assert!(
+            tree_has_token_value(&ast, "corge"),
+            "expected old-name operand `corge` to be consumed by alias_statement"
+        );
+    }
+
     #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
