@@ -214,11 +214,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-025 — Numeric formatting (shortest-form / exponential) not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.12
 - **Upstream test:** `CodePrinterTest` lines like `assertPrint("1000000000", "1E9")`
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** Upstream picks the shorter representation between decimal and exponential. Our emitter always uses the `raw` field on `NumericLiteral` (or a plain `f64.to_string()`).
-- **What it needs:** Add a "pick-shortest" numeric formatter and wire it into the `NumericLiteral` emit path.
+- **Resolution:** `format_js_number` now computes both decimal and exponential forms for finite non-zero numbers and returns the shorter (ties → decimal). `format_exponential_uppercase` wraps Rust's `{:e}` formatter and uppercases the `e`. Examples: `1000000000` → `1E9`, `5000000` → `5E6`, `1.5e-10` → `1.5E-10`. Small integers and decimals stay decimal. NaN/Infinity unchanged. The `test_number_formatting_shortest_form` ignored placeholder in `tests/upstream/code_printer_test.rs` stays — to be re-port'd with real upstream `assertPrint` lines in a follow-up; the underlying emitter behaviour is in place.
 
 ### gap-026 — String quote-choice optimisation not implemented
 
