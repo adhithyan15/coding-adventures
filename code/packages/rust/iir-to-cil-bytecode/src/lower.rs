@@ -96,6 +96,23 @@ const BF_TAPE_TOKEN: u32     = 0x0400_0001; // FieldRef row 1
 const BF_PUTCHAR_TOKEN: u32  = 0x0A00_0003; // MemberRef row 3 (after WriteLine @ row 2)
 const BF_GETCHAR_TOKEN: u32  = 0x0A00_0004; // MemberRef row 4
 
+// ─── BASIC host-class metadata token (G4) ─────────────────────────────────────
+//
+// Sentinel for `env.BasicRuntime::PrintI64(int64)` — the CLR counterpart to
+// wasm's `env.__print_i64` import (iir-to-wasm v0.8.0) and JVM's
+// `env/BasicRuntime.println(J)V` invokestatic target (iir-to-jvm-class-file
+// v0.7.0).  Reserved at MemberRef row 5 (next after BF_GETCHAR_TOKEN @ row 4).
+//
+// Host contract: a CLR runtime / launcher must provide `env.BasicRuntime`
+// with:
+//
+//   * `public static void PrintI64(int64)`  ← print one i64 followed by a newline
+//
+// We pick a separate class from `env.BFRuntime` because BASIC's I/O model
+// (line/value, mostly numeric) differs from Brainfuck's (byte-stream); a CLR
+// runtime can stub or provide either one independently.
+const BASIC_PRINT_I64_TOKEN: u32 = 0x0A00_0005; // MemberRef row 5
+
 use crate::validate::validate_iir_for_clr;
 
 // ===========================================================================
@@ -1695,8 +1712,9 @@ pub fn lower_iir_to_cil(
                 //
                 // | Builtin   | Operand layout                        | CIL emitted                                                  |
                 // |-----------|----------------------------------------|---------------------------------------------------------------|
-                // | `putchar` | srcs = [Var("putchar"), Var(val)]; no dest | `ldloc val; call <BF_PUTCHAR_TOKEN>`                          |
-                // | `getchar` | srcs = [Var("getchar")]; dest = byte slot  | `call <BF_GETCHAR_TOKEN>; stloc dest`                         |
+                // | `putchar`   | srcs = [Var("putchar"), Var(val)]; no dest    | `ldloc val; call <BF_PUTCHAR_TOKEN>`                          |
+                // | `getchar`   | srcs = [Var("getchar")]; dest = byte slot     | `call <BF_GETCHAR_TOKEN>; stloc dest`                         |
+                // | `print_i64` | srcs = [Var("print_i64"), Var(val:i64)]; no dest | `ldloc val; call <BASIC_PRINT_I64_TOKEN>`                     |
                 "call_builtin" => {
                     let builtin_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -1728,6 +1746,27 @@ pub fn lower_iir_to_cil(
                             let dest_info = reg_info!(dest_name).clone();
                             builder.emit_call(BF_GETCHAR_TOKEN);
                             emit_store(&mut builder, &dest_info, fn_name)?;
+                        }
+                        "print_i64" => {
+                            // G4: BASIC PRINT → env.BasicRuntime::PrintI64(int64).
+                            // Layout: srcs = [Var("print_i64"), Var(val: i64)],
+                            // dest = None.  Emits `ldloc val; call <token>` — the
+                            // load opcode chosen by emit_load already matches the
+                            // val's register width (long → ldloc / ldarg etc.).
+                            //
+                            // Mirrors iir-to-wasm v0.8.0 (env.__print_i64 import)
+                            // and iir-to-jvm-class-file v0.7.0
+                            // (invokestatic env/BasicRuntime.println(J)V).
+                            let val_name = match instr.srcs.get(1) {
+                                Some(Operand::Var(v)) => v.clone(),
+                                _ => return Err(IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val:i64)".to_string(),
+                                }),
+                            };
+                            let val_info = reg_info!(val_name).clone();
+                            emit_load(&mut builder, &val_info, fn_name)?;
+                            builder.emit_call(BASIC_PRINT_I64_TOKEN);
                         }
                         _ => {
                             // Validator should have rejected this; defense in depth.
