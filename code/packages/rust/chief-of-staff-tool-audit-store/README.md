@@ -115,6 +115,9 @@ The crate keeps the boundary narrow:
   helpers for host scheduler budget logs
 - supervisor drain plans, loops, reports, and summaries expose stable
   tick-budget usage classifications and labels for host scheduler logs
+- supervisor drain plans, loops, reports, and summaries expose stable
+  tick-budget pressure labels for slack, exact-boundary, and continuation
+  scheduling decisions
 - supervisor drain plan pages expose per-page drain, continuation, and
   checkpoint-advance helpers for host preflight scheduling
 - supervisor drain plan pages expose starting and next checkpoint scalar
