@@ -857,7 +857,14 @@ fn emit_instr(
         // WASM comparisons always produce an i32 result (0 or 1).
         // The source operands have the type described by `ty`; the result
         // is always i32.
-        "eq" | "ne" | "lt" | "le" | "gt" | "ge" => {
+        //
+        // **Naming**.  Twig historically emitted bare `eq` / `ne` / `lt` etc.
+        // — the names we still match below.  BASIC, Nib, and Oct emit the
+        // `cmp_*`-prefixed form (`cmp_eq`, `cmp_ne`, …).  We accept both
+        // shapes by stripping the `cmp_` prefix on entry and routing the
+        // bare form through the same opcode table.
+        "eq" | "ne" | "lt" | "le" | "gt" | "ge"
+        | "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: format!("{} must have a dest", instr.op),
@@ -869,7 +876,11 @@ fn emit_instr(
             code.extend(encode_local_get(r1));
             code.extend(encode_local_get(r2));
 
-            let opcode: u8 = match (instr.op.as_str(), ty) {
+            // Strip the `cmp_` prefix so the existing per-type lookup table
+            // doesn't need 12 extra arms.
+            let bare = instr.op.strip_prefix("cmp_").unwrap_or(instr.op.as_str());
+
+            let opcode: u8 = match (bare, ty) {
                 // i64
                 ("eq", t) if is_i64_hint(t) => I64_EQ,
                 ("ne", t) if is_i64_hint(t) => I64_NE,

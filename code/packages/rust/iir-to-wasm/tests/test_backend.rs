@@ -1420,3 +1420,81 @@ fn lang35_closure_opcode_error_not_untyped() {
         "error must not say UntypedInstruction for closure ops; got: {errs:?}"
     );
 }
+
+// ===========================================================================
+// G1 — cmp_* opcode lowerings (BASIC / Nib / Oct emit `cmp_lt` etc.).
+//
+// The lower step pre-G1 only matched the bare `eq | ne | lt | le | gt | ge`
+// shape (the form Twig historically emitted).  Languages that prefix with
+// `cmp_` would lower to `UnsupportedOp` even though the validator accepted
+// them.  G1 extends the match to strip the prefix.
+// ===========================================================================
+
+/// Helper: build a module where `main(a: i64, b: i64) -> i64` runs `cmp_<op>`
+/// over its parameters and returns the result.  The dest's type at the IIR
+/// level is `bool` because that's how the BASIC/Nib/Oct frontends emit it,
+/// but the underlying wasm opcode produces i32, which we widen to i64 with a
+/// final `i64.extend_i32_u` step modeled by a separate `mov`-style helper
+/// in real frontends.  For this unit test we keep the return type `i32` so
+/// no widening is needed.
+fn cmp_i64_module(op: &str) -> IIRModule {
+    module_one("main", vec![("a", "i64"), ("b", "i64")], "i32", vec![
+        IIRInstr::new(op, Some("r".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())],
+            "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+    ])
+}
+
+#[test]
+fn g1_cmp_eq_i64_lowers_to_wasm() {
+    let m = cmp_i64_module("cmp_eq");
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "validator accepted cmp_eq before G1; got {errs:?}");
+    let _wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("G1: cmp_eq must lower; pre-G1 this would have returned UnsupportedOp");
+}
+
+#[test]
+fn g1_cmp_ne_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_ne"), &IIRWasmConfig::default())
+        .expect("G1: cmp_ne must lower");
+}
+
+#[test]
+fn g1_cmp_lt_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_lt"), &IIRWasmConfig::default())
+        .expect("G1: cmp_lt must lower");
+}
+
+#[test]
+fn g1_cmp_le_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_le"), &IIRWasmConfig::default())
+        .expect("G1: cmp_le must lower");
+}
+
+#[test]
+fn g1_cmp_gt_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_gt"), &IIRWasmConfig::default())
+        .expect("G1: cmp_gt must lower");
+}
+
+#[test]
+fn g1_cmp_ge_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_ge"), &IIRWasmConfig::default())
+        .expect("G1: cmp_ge must lower");
+}
+
+/// Backwards-compatibility: Twig's existing bare `eq` / `lt` / etc.  must
+/// still lower.  The prefix-stripper passes the bare form through unchanged.
+#[test]
+fn g1_bare_eq_still_lowers_to_wasm() {
+    let m = module_one("main", vec![("a", "i64"), ("b", "i64")], "i32", vec![
+        IIRInstr::new("eq", Some("r".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())],
+            "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+    ]);
+    let _ = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("G1: bare `eq` (Twig form) must still lower");
+}
