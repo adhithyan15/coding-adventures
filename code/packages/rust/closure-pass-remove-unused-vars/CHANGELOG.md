@@ -2,6 +2,52 @@
 
 All notable changes to the `coding-adventures-closure-pass-remove-unused-vars` crate will be documented in this file.
 
+## [0.2.0] - 2026-06-01
+
+### Added — CLOC13.E: wire pass to consume `closure-scope-analyzer`
+
+The pass `run` body now calls `scope_analyzer::analyze(program)`,
+builds a per-binding use-count by scanning `analysis.references`,
+and identifies bindings with use-count zero whose `kind` is `Var`,
+`Let`, or `Const` (skipping `Function`/`Param`/`Class` until a
+follow-up). `nodes_touched` now counts the analyzer-visited
+bindings + references so the scheduler sees real cost numbers.
+
+**Why the program is still passthrough.** The current
+`scope_analyzer 0.1.0` ships an identity `analyze` (returns one
+global scope with empty bindings and references — the API surface
+unblocker per CLOC13). So the use-count walk finds zero dead
+bindings, `removed_count` is always 0, and the program comes out
+unchanged. The wiring becomes *observable* in `stats.nodes_touched`
+(now counts the analyzer-visited bindings + references) and
+becomes *effective* the moment the analyzer's body lands as
+CLOC13.0 — no churn here.
+
+**Step 3 (apply removal) is deferred to CLOC13.E.1.** Cleanly
+dropping a binding from the AST requires a binding → declarator
+backreference that the analyzer doesn't yet ship. Once it does,
+the eligibility list (`dead_bindings`) feeds straight into a
+walk-and-drop pass over `Program.body`.
+
+**`changed` is hard-pinned to `false` until step 3 lands.** Under
+`IterationPolicy::FixedPoint`, reporting `changed = true` while
+returning an unchanged program would cause the scheduler to
+re-run this pass forever (each iteration finds the same
+`dead_bindings`, reports change, returns the same program, repeats).
+That bug would fire the moment the analyzer's body started
+populating bindings — exactly the kind of cross-PR break that's
+hard to bisect. So we compute `dead_bindings` for cost-accounting
+observability via `nodes_touched`, but keep `changed = false`
+until CLOC13.E.1 wires actual program mutation. Security review
+caught this in CLOC13.E and the fix is in this commit.
+
+### Changed
+
+- Cargo dependency: adds
+  `coding-adventures-closure-scope-analyzer = { path = ".." }`.
+- Version bumped 0.1.0 → 0.2.0 (additive runtime behavior change;
+  no API surface change on `RemoveUnusedVarsPass`).
+
 ## [0.1.0] - 2026-05-23
 
 ### Added

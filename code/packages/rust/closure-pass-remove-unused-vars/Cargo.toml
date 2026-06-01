@@ -1,11 +1,12 @@
 [package]
 name = "coding-adventures-closure-pass-remove-unused-vars"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Unreferenced-variable cleanup pass for the Closure Compiler clone. Per CLOC06's canonical pass set. The final sweep: deletes variable bindings that have zero post-DCE / post-inline references and whose initializers are pure."
 
 [dependencies]
 coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+coding-adventures-closure-scope-analyzer = { path = "../closure-scope-analyzer" }
 coding-adventures-javascript-ast = { path = "../javascript-ast" }
 coding-adventures-type-sidecar = { path = "../type-sidecar" }
 coding_adventures_correlation_vector = { path = "../correlation-vector" }
