@@ -1131,6 +1131,47 @@ mod tests {
         )));
     }
 
+    // -----------------------------------------------------------------------
+    // Phase 21b (FC) — implicit numbered block parameters `_1`..`_9`.
+    //
+    // A block with NO explicit `|...|` header may use `_1`..`_9` in its
+    // body as positional parameters.  Parser-side, `_1` lexes as a plain
+    // Name token (the lexer flags it with NUMBERED_BLOCK_PARAM_FLAG but
+    // keeps the type); these pins confirm such blocks parse and the
+    // `_N` Name token reaches the brace_block / do_block body with no
+    // block_params header.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_block_with_numbered_param_parses() {
+        let ast = parse_ruby("each { puts(_1) }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        // No explicit pipe header.
+        assert!(find_descendant(mwb, "block_params").is_none());
+        // The `_1` Name token reaches the block body.
+        assert!(tree_has_token_value(mwb, "_1"));
+    }
+
+    #[test]
+    fn test_parse_block_with_two_numbered_params_parses() {
+        let ast = parse_ruby("each { puts(_1 + _2) }");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(find_descendant(mwb, "block_params").is_none());
+        assert!(tree_has_token_value(mwb, "_1"));
+        assert!(tree_has_token_value(mwb, "_2"));
+    }
+
+    #[test]
+    fn test_parse_do_block_with_numbered_param_parses() {
+        let ast = parse_ruby("each do\n  puts(_1)\nend");
+        let mwb = find_statement_inner(&ast, "method_with_block")
+            .expect("expected method_with_block");
+        assert!(find_descendant(mwb, "do_block").is_some());
+        assert!(tree_has_token_value(mwb, "_1"));
+    }
+
     #[test]
     fn test_parse_method_call_with_args_and_block() {
         let ast = parse_ruby("each(1, 2) { puts 1 }");

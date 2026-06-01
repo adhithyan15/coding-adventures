@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.67.0] - 2026-05-31
+
+### Added (Phase 21b (FC) — implicit numbered block parameters `_1`..`_9`)
+
+No grammar change.  A block with NO explicit `|...|` header may use
+`_1`..`_9` in its body as positional parameters.  Parser-side, `_1`
+lexes as a plain `Name` token (the lexer flags it with
+`NUMBERED_BLOCK_PARAM_FLAG` but keeps the type), so such blocks already
+parse — these pins confirm it.
+
+New parse pins (+3): `test_parse_block_with_numbered_param_parses`
+(`each { puts(_1) }` — no block_params, `_1` token present),
+`test_parse_block_with_two_numbered_params_parses`
+(`each { puts(_1 + _2) }`), `test_parse_do_block_with_numbered_param_parses`
+(`each do\n puts(_1)\nend`).  Test count: 232 → 235.
+
 ## [0.66.0] - 2026-05-31
 
 ### Added (Phase 21a (FC) — block-local variables `{ |x; y| … }`)

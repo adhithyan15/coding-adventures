@@ -444,6 +444,44 @@ fn is_constant_name(name: &str) -> bool {
     name.chars().next().is_some_and(|c| c.is_ascii_uppercase())
 }
 
+/// Phase 21b (FC) — is `s` a numbered block parameter `_1`..`_9`?
+/// (Two chars: `_` then a digit 1-9.  `_0` and `_10` are NOT numbered
+/// params in Ruby.)  Mirrors the lexer's `is_numbered_block_param`.
+fn numbered_block_param_index(s: &str) -> Option<u8> {
+    let b = s.as_bytes();
+    if b.len() == 2 && b[0] == b'_' && (b'1'..=b'9').contains(&b[1]) {
+        Some(b[1] - b'0')
+    } else {
+        None
+    }
+}
+
+/// Recursively walk an AST subtree, recording the highest numbered
+/// block parameter (`_1`..`_9`) that appears as a `Name` token.  Does
+/// NOT descend into nested `block` nodes — a `_N` inside an inner block
+/// belongs to that inner block's parameter scope, not the outer one.
+fn collect_max_numbered_block_param(node: &GrammarASTNode, max: &mut u8) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => {
+                if let Some(idx) = numbered_block_param_index(&t.value) {
+                    if idx > *max {
+                        *max = idx;
+                    }
+                }
+            }
+            ASTNodeOrToken::Node(n) => {
+                // Don't cross into a nested block — its `_N` refs are
+                // scoped to that block's own implicit parameters.
+                if n.rule_name != "block" {
+                    collect_max_numbered_block_param(n, max);
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Lowerer
 // ---------------------------------------------------------------------------
@@ -3773,6 +3811,28 @@ impl Lowerer {
                 }
             }
         }
+        // Phase 21b (FC) — implicit numbered block parameters.  When a
+        // block has NO explicit `|...|` header, Ruby allows the body to
+        // reference `_1`..`_9` as positional parameters.  The arity is
+        // the highest numbered param used (e.g. a body using `_2` gets
+        // params `_1, _2`).  We scan the body tokens for `_1`..`_9`,
+        // take the max, and synthesize params `_1`..`_<max>`.  This
+        // only applies when no explicit params/block-locals were given
+        // (an explicit header always wins; numbered params can't mix).
+        if params.is_empty() && block_locals.is_empty() {
+            let mut max_numbered: u8 = 0;
+            collect_max_numbered_block_param(inner, &mut max_numbered);
+            if max_numbered > 0 {
+                for n in 1..=max_numbered {
+                    params.push(Param {
+                        name: format!("_{n}"),
+                        sir_type: None,
+                        span: self.span_of(inner),
+                    });
+                }
+            }
+        }
+
         // Block params are untyped → declare dynamic-typing.  Block-local
         // variables are likewise dynamically typed.
         if !params.is_empty() || !block_locals.is_empty() {
