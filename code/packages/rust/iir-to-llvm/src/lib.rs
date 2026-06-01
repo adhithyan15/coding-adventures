@@ -186,6 +186,9 @@ impl std::error::Error for IIRLlvmError {}
 fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlvmError> {
     match type_hint {
         "void" => Ok("void"),
+        // i1 is LLVM's boolean — added in LLVM03 so comparison results can
+        // be requested at i1 width without a redundant zext+trunc round-trip.
+        "i1"  | "bool" => Ok("i1"),
         "i8"  | "u8"  => Ok("i8"),
         "i16" | "u16" => Ok("i16"),
         "i32" | "u32" => Ok("i32"),
@@ -203,11 +206,27 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
 // validate_for_llvm
 // ===========================================================================
 
-/// Supported instruction opcodes in v0.2.0 (LLVM02).
+/// Supported instruction opcodes through v0.3.0 (LLVM03).
 ///
 /// Adding an opcode here requires also handling it in
 /// [`lower_instr`] — the validator and the lowerer must stay in lockstep.
-const SUPPORTED_OPS: &[&str] = &["const", "mov", "ret", "ret_void"];
+///
+/// LLVM02 added: `const`, `mov`, `ret`, `ret_void`.
+/// LLVM03 added: arithmetic (`add`/`sub`/`mul`/`div`/`rem`), comparison
+/// (`eq`/`ne`/`lt`/`le`/`gt`/`ge` plus their `cmp_`-prefixed aliases per
+/// gap G1 in the multi-language backend plan), and control flow
+/// (`label`/`jmp`/`jmp_if_true`/`jmp_if_false`).
+const SUPPORTED_OPS: &[&str] = &[
+    // LLVM02
+    "const", "mov", "ret", "ret_void",
+    // LLVM03 — arithmetic
+    "add", "sub", "mul", "div", "rem",
+    // LLVM03 — comparison (both naked and cmp_-prefixed; see G1)
+    "eq", "ne", "lt", "le", "gt", "ge",
+    "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
+    // LLVM03 — control flow
+    "label", "jmp", "jmp_if_true", "jmp_if_false",
+];
 
 /// Pre-flight validation for IIR → LLVM lowering.
 ///
@@ -228,13 +247,12 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
 
     for func in &module.functions {
         // Return type check.
-        if let Err(e) = llvm_type_for(&func.return_type, &func.name) {
+        if llvm_type_for(&func.return_type, &func.name).is_err() {
             errors.push(format!(
                 "UnsupportedType: function {:?}, return type {:?} not supported by LLVM backend",
                 func.name, func.return_type
             ));
             // Don't bail — keep collecting so the caller sees everything.
-            drop(e);
         }
         // Per-param type check.
         for (pname, pty) in &func.params {
@@ -249,7 +267,7 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
         for instr in &func.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
-                    "UnsupportedOp: function {:?}, op {:?} not in LLVM backend's v0.2.0 whitelist (supported: {:?})",
+                    "UnsupportedOp: function {:?}, op {:?} not in LLVM backend's whitelist (supported: {:?})",
                     func.name, instr.op, SUPPORTED_OPS
                 ));
             }
@@ -307,6 +325,33 @@ pub fn lower_iir_to_llvm(
     Ok(out)
 }
 
+/// Per-function lowering state.
+///
+/// Splitting this out keeps `lower_instr`'s signature manageable now that
+/// LLVM03 needs both an SSA env, a sidecar i1-form env (for comparisons
+/// consumed by `jmp_if_*`), and a fresh-name counter for synthesized
+/// fallthrough basic blocks.
+struct FnState<'a> {
+    /// IIR var name → emitted LLVM operand (e.g. `%v0` or `42`).
+    env: HashMap<String, String>,
+    /// IIR var name → its LLVM i1 form, when the var was produced by a
+    /// comparison.  `jmp_if_true` / `jmp_if_false` consume this directly
+    /// without an extra `trunc` round-trip.
+    env_i1: HashMap<String, String>,
+    /// Per-function counter for synthesized SSA names — used both for
+    /// post-cmp zext'd values and for fallthrough block labels.
+    counter: u32,
+    /// The function name (for error messages).
+    fn_name: &'a str,
+}
+
+impl FnState<'_> {
+    fn fresh(&mut self, hint: &str) -> String {
+        self.counter += 1;
+        format!("%__{}{}", hint, self.counter)
+    }
+}
+
 /// Emit one LLVM `define` block for one IIR function.
 fn lower_function(func: &IIRFunction, out: &mut String) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
@@ -321,26 +366,35 @@ fn lower_function(func: &IIRFunction, out: &mut String) -> Result<(), IIRLlvmErr
     }
     out.push_str(") {\n");
 
-    // ── Local-name → emitted-LLVM-operand map ─────────────────────────────
+    // ── Per-function state ───────────────────────────────────────────────
     //
-    // We seed this with the parameters (each param `a` is referenced in the
-    // body as `%a` in our scheme).  As we walk the body:
+    // Seed the env with parameters (each param `a` is referenced in the
+    // body as `%a`).  As we walk the body:
     //
-    //   * `const` adds a literal mapping (`dest → "42"`).
-    //   * `mov`   adds an alias mapping  (`dest → operand_of(src)`).
-    //   * `ret`   looks up the source's operand and emits a single line.
+    //   * `const` adds a literal mapping (`dest → "42"`) — no LLVM line.
+    //   * `mov`   adds an alias mapping (`dest → operand_of(src)`) — no LLVM line.
+    //   * `add`/`sub`/etc. emit `%dest = <op> <ty> <a>, <b>`, dest → "%dest".
+    //   * `eq`/`lt`/etc. emit `%dest.i1 = icmp <op> <ty> <a>, <b>`; if the
+    //     IIR type_hint is wider than i1, zext to that width.  env_i1 keeps
+    //     the i1 form for downstream `jmp_if_*`.
+    //   * `label`/`jmp`/`jmp_if_*` emit basic-block headers and terminators.
     //
-    // This sidesteps the "no-op SSA assignment" pattern that LLVM verifiers
-    // and `opt` would otherwise have to clean up — the result is tighter
-    // and closer to what hand-written `.ll` looks like.
-    let mut env: HashMap<String, String> = HashMap::new();
+    // This side-map trick (rather than emitting `%dest = add 0, x` no-ops
+    // for const/mov) keeps output close to what `opt -mem2reg` would
+    // produce — short, idiomatic, easy to eyeball-verify.
+    let mut state = FnState {
+        env: HashMap::new(),
+        env_i1: HashMap::new(),
+        counter: 0,
+        fn_name: &func.name,
+    };
     for (pname, _) in &func.params {
-        env.insert(pname.clone(), format!("%{pname}"));
+        state.env.insert(pname.clone(), format!("%{pname}"));
     }
 
     // ── Body ──────────────────────────────────────────────────────────────
     for instr in &func.instructions {
-        lower_instr(instr, &func.name, &mut env, out)?;
+        lower_instr(instr, &mut state, out)?;
     }
 
     out.push_str("}\n");
@@ -350,39 +404,25 @@ fn lower_function(func: &IIRFunction, out: &mut String) -> Result<(), IIRLlvmErr
 /// Emit (or record state for) one IIR instruction.
 fn lower_instr(
     instr: &IIRInstr,
-    fn_name: &str,
-    env: &mut HashMap<String, String>,
+    state: &mut FnState,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
+    let fn_name = state.fn_name;
     match instr.op.as_str() {
         // ── const: tracked, not emitted ──────────────────────────────────
-        //
-        // `srcs[0]` carries the literal payload (Int / Float / Bool); `dest`
-        // names the IIR var that should be bound to it.  We render the
-        // literal in LLVM textual form and remember it for later use sites.
         "const" => {
-            let dest = instr.dest.as_deref().ok_or_else(|| IIRLlvmError::InvalidOperand {
-                function: fn_name.into(),
-                detail: "const requires a dest".into(),
-            })?;
+            let dest = require_dest(instr, "const", fn_name)?;
             let lit = render_literal(instr.srcs.first(), &instr.type_hint, fn_name)?;
-            env.insert(dest.to_string(), lit);
+            state.env.insert(dest.to_string(), lit);
             Ok(())
         }
 
         // ── mov: alias, not emitted ──────────────────────────────────────
-        //
-        // `mov dest, src` aliases dest to whatever operand src already
-        // resolves to.  For const-source it becomes a literal pass-through;
-        // for var-source it becomes a register alias.  Either way no LLVM
-        // line is needed — the alias lives in `env`.
         "mov" => {
-            let dest = instr.dest.as_deref().ok_or_else(|| IIRLlvmError::InvalidOperand {
-                function: fn_name.into(),
-                detail: "mov requires a dest".into(),
-            })?;
-            let src_operand = resolve_operand(instr.srcs.first(), env, &instr.type_hint, fn_name)?;
-            env.insert(dest.to_string(), src_operand);
+            let dest = require_dest(instr, "mov", fn_name)?;
+            let src_operand =
+                resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, fn_name)?;
+            state.env.insert(dest.to_string(), src_operand);
             Ok(())
         }
 
@@ -395,16 +435,261 @@ fn lower_instr(
         // ── ret <var> ───────────────────────────────────────────────────
         "ret" => {
             let ty = llvm_type_for(&instr.type_hint, fn_name)?;
-            let operand = resolve_operand(instr.srcs.first(), env, &instr.type_hint, fn_name)?;
+            let operand =
+                resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, fn_name)?;
             out.push_str(&format!("  ret {ty} {operand}\n"));
             Ok(())
         }
+
+        // ── arithmetic ──────────────────────────────────────────────────
+        //
+        // Two-operand integer or float operation.  Signedness comes from
+        // the type_hint prefix (`i*` = signed, `u*` = unsigned), which only
+        // matters for `div` and `rem` (LLVM splits these into `sdiv`/`udiv`
+        // and `srem`/`urem`; `add`/`sub`/`mul` are signedness-agnostic).
+        "add" | "sub" | "mul" | "div" | "rem" => {
+            lower_arith(instr.op.as_str(), instr, state, out)
+        }
+
+        // ── comparison ──────────────────────────────────────────────────
+        //
+        // LLVM `icmp` and `fcmp` always return i1.  IIR's type_hint on a
+        // comparison is the *operand* type (matching the wasm convention
+        // where cmps produce i32 0/1).  If the type_hint is wider than i1
+        // we zext the i1 to that width; either way we remember the i1 form
+        // in `env_i1` so a downstream `jmp_if_*` can use it directly.
+        //
+        // Both naked (`eq`) and `cmp_`-prefixed (`cmp_eq`) opcodes work —
+        // the latter were introduced in gap G1 for the wasm backend and
+        // we accept them here for consistency.
+        "eq" | "ne" | "lt" | "le" | "gt" | "ge"
+        | "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+            let bare = instr.op.strip_prefix("cmp_").unwrap_or(instr.op.as_str());
+            lower_cmp(bare, instr, state, out)
+        }
+
+        // ── label "<name>": open a new basic block ──────────────────────
+        //
+        // LLVM requires every basic block to begin with a label (except the
+        // implicit entry block).  The name comes from srcs[0] as a Var.
+        "label" => {
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRLlvmError::InvalidOperand {
+                    function: fn_name.into(),
+                    detail: "label requires srcs[0] = Operand::Var(name)".into(),
+                }),
+            };
+            out.push_str(&format!("{name}:\n"));
+            Ok(())
+        }
+
+        // ── jmp "<name>": unconditional branch ──────────────────────────
+        "jmp" => {
+            let target = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRLlvmError::InvalidOperand {
+                    function: fn_name.into(),
+                    detail: "jmp requires srcs[0] = Operand::Var(name)".into(),
+                }),
+            };
+            out.push_str(&format!("  br label %{target}\n"));
+            Ok(())
+        }
+
+        // ── jmp_if_true <cond>, "<name>" ────────────────────────────────
+        //
+        // LLVM conditional branches require *both* arms.  IIR's
+        // `jmp_if_true` only names the true target; the false arm is the
+        // implicit fallthrough to the next IIR instruction.  We synthesize
+        // a fresh block label `%__fall<N>` and immediately emit it after
+        // the branch, so the next instruction lands in a valid block.
+        //
+        // `jmp_if_false` is the same with arms swapped.
+        "jmp_if_true" => lower_jmp_if(instr, state, out, /*true_first=*/ true),
+        "jmp_if_false" => lower_jmp_if(instr, state, out, /*true_first=*/ false),
 
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
             op: other.into(),
         }),
     }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers for LLVM03
+// ---------------------------------------------------------------------------
+
+fn require_dest<'a>(
+    instr: &'a IIRInstr,
+    op: &str,
+    fn_name: &str,
+) -> Result<&'a str, IIRLlvmError> {
+    instr.dest.as_deref().ok_or_else(|| IIRLlvmError::InvalidOperand {
+        function: fn_name.into(),
+        detail: format!("{op} requires a dest"),
+    })
+}
+
+fn is_float_type(s: &str) -> bool {
+    s == "f32" || s == "f64"
+}
+
+fn is_unsigned_type(s: &str) -> bool {
+    s.starts_with('u')
+}
+
+/// Pick the LLVM opcode for a binary arithmetic instruction.
+///
+/// The result is signedness-aware for `div` and `rem` (split into
+/// `sdiv`/`udiv` and `srem`/`urem`), and operand-type-aware for floats
+/// (use `f*` variants).  `add`/`sub`/`mul` share opcodes between signed
+/// and unsigned because in two's-complement they produce the same bits.
+fn llvm_arith_op(iir_op: &str, type_hint: &str) -> &'static str {
+    let f = is_float_type(type_hint);
+    let u = is_unsigned_type(type_hint);
+    match iir_op {
+        "add" => if f { "fadd" } else { "add" },
+        "sub" => if f { "fsub" } else { "sub" },
+        "mul" => if f { "fmul" } else { "mul" },
+        "div" => {
+            if f { "fdiv" } else if u { "udiv" } else { "sdiv" }
+        }
+        "rem" => {
+            if f { "frem" } else if u { "urem" } else { "srem" }
+        }
+        _ => unreachable!("llvm_arith_op called with non-arith op {iir_op}"),
+    }
+}
+
+fn lower_arith(
+    iir_op: &str,
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, iir_op, state.fn_name)?.to_string();
+    let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
+    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
+    let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
+    let llvm_op = llvm_arith_op(iir_op, &instr.type_hint);
+    out.push_str(&format!("  %{dest} = {llvm_op} {ty} {a}, {b}\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Pick the LLVM `icmp`/`fcmp` predicate for a comparison.
+///
+/// Equality predicates (`eq`/`ne`) are signedness-agnostic for integers.
+/// Inequality predicates split by signedness (`slt`/`ult` etc.).  Float
+/// comparisons use `o<pred>` (ordered) — meaning NaN compares false — to
+/// match the most common language-level expectation.
+fn llvm_cmp_predicate(bare_op: &str, type_hint: &str) -> Result<&'static str, IIRLlvmError> {
+    let f = is_float_type(type_hint);
+    let u = is_unsigned_type(type_hint);
+    Ok(match bare_op {
+        "eq" => if f { "oeq" } else { "eq" },
+        "ne" => if f { "one" } else { "ne" },
+        "lt" => if f { "olt" } else if u { "ult" } else { "slt" },
+        "le" => if f { "ole" } else if u { "ule" } else { "sle" },
+        "gt" => if f { "ogt" } else if u { "ugt" } else { "sgt" },
+        "ge" => if f { "oge" } else if u { "uge" } else { "sge" },
+        _ => unreachable!("llvm_cmp_predicate called with non-cmp op {bare_op}"),
+    })
+}
+
+fn lower_cmp(
+    bare_op: &str,
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, bare_op, state.fn_name)?.to_string();
+    let operand_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
+    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
+    let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
+    let pred = llvm_cmp_predicate(bare_op, &instr.type_hint)?;
+    let icmp_or_fcmp = if is_float_type(&instr.type_hint) { "fcmp" } else { "icmp" };
+
+    // i1 form: always synthesized.  Lives in env_i1 for downstream jmp_if_*.
+    let i1_name = format!("%{dest}.i1");
+    out.push_str(&format!(
+        "  {i1_name} = {icmp_or_fcmp} {pred} {operand_ty} {a}, {b}\n"
+    ));
+    state.env_i1.insert(dest.clone(), i1_name.clone());
+
+    // If the IIR type_hint is i1 (width 1), use the i1 form directly.
+    // Otherwise zext to the wider type so subsequent arithmetic stays
+    // typed-correctly.  We approximate "is i1" as type_hint == "i1" since
+    // IIR doesn't currently emit a literal "i1" — most callers use the
+    // operand type as the result type (wasm convention).
+    if instr.type_hint == "i1" {
+        state.env.insert(dest, i1_name);
+    } else {
+        out.push_str(&format!(
+            "  %{dest} = zext i1 {i1_name} to {operand_ty}\n"
+        ));
+        state.env.insert(dest.clone(), format!("%{dest}"));
+    }
+    Ok(())
+}
+
+fn lower_jmp_if(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+    true_first: bool,
+) -> Result<(), IIRLlvmError> {
+    // Operand layout: srcs = [Var(cond), Var(target_label)].
+    let cond_name = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "jmp_if_* requires srcs[0] = Operand::Var(cond)".into(),
+        }),
+    };
+    let target = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "jmp_if_* requires srcs[1] = Operand::Var(target_label)".into(),
+        }),
+    };
+
+    // Prefer the i1 form when the cond was produced by a comparison; else
+    // truncate the env operand back to i1.  type_hint on jmp_if_* carries
+    // the cond's type (typically same as the producing cmp).
+    let cond_i1 = if let Some(i1) = state.env_i1.get(&cond_name).cloned() {
+        i1
+    } else {
+        let cond_op = state.env.get(&cond_name).cloned().ok_or_else(|| {
+            IIRLlvmError::UndefinedVariable {
+                function: state.fn_name.into(),
+                name: cond_name.clone(),
+            }
+        })?;
+        // Truncate to i1.  Need to know the cond's current type for the
+        // trunc — use the instr's type_hint as the operand type.
+        let cond_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
+        let i1 = state.fresh("trunc");
+        out.push_str(&format!("  {i1} = trunc {cond_ty} {cond_op} to i1\n"));
+        i1
+    };
+
+    let fallthrough = format!("__fall{}", {
+        state.counter += 1;
+        state.counter
+    });
+    let (t_label, f_label) = if true_first {
+        (target.clone(), fallthrough.clone())
+    } else {
+        (fallthrough.clone(), target.clone())
+    };
+    out.push_str(&format!(
+        "  br i1 {cond_i1}, label %{t_label}, label %{f_label}\n"
+    ));
+    out.push_str(&format!("{fallthrough}:\n"));
+    Ok(())
 }
 
 /// Resolve an `Operand` to its LLVM textual form using `env` for variables

@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-llvm"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.2.0 (LLVM02): adds function signature lowering + ret/ret_void/const/mov instructions.  const and mov are tracked in a side map rather than emitting no-op SSA assignments."
+description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.3.0 (LLVM03): adds typed arithmetic (add/sub/mul/sdiv/udiv/srem/urem + float counterparts), comparisons (icmp/fcmp with signed/unsigned/ordered predicate selection), and control flow (label/jmp/jmp_if_true/jmp_if_false with auto-fallthrough)."
 
 [lib]
 name = "iir_to_llvm"

@@ -61,18 +61,17 @@ fn validate_accepts_supported_ret_void_function() {
     assert!(validate_for_llvm(&module_with(f)).is_empty());
 }
 
-/// Unsupported op (e.g. `add`, not in v0.2.0 whitelist) is flagged.
+/// Unsupported op (e.g. `safepoint`, still outside the LLVM03 whitelist) is flagged.
 #[test]
 fn validate_rejects_unsupported_op() {
-    let f = IIRFunction::new("main", vec![], "i32",
+    let f = IIRFunction::new("main", vec![], "void",
         vec![
-            IIRInstr::new("add", Some("v".into()),
-                vec![Operand::Int(1), Operand::Int(2)], "i32"),
-            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+            IIRInstr::new("safepoint", None, vec![], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
         ]);
     let errors = validate_for_llvm(&module_with(f));
     assert!(errors.iter().any(|e| e.contains("UnsupportedOp")),
-        "expected UnsupportedOp for `add`; got: {errors:?}");
+        "expected UnsupportedOp for `safepoint`; got: {errors:?}");
 }
 
 /// Unsupported type (e.g. `ref<X>`) is flagged.
@@ -313,6 +312,322 @@ fn new_sets_module_name_keeps_default_triple() {
 
 // ===========================================================================
 // 7. Error display
+// ===========================================================================
+
+// ===========================================================================
+// 8. LLVM03 — arithmetic
+// ===========================================================================
+//
+// IIR's `add`/`sub`/`mul`/`div`/`rem` lower to LLVM `add`/`sub`/`mul` for
+// signedness-agnostic ops, and to `sdiv`/`udiv`/`srem`/`urem` for the
+// signedness-sensitive ones.  Floats use `fadd`/`fsub`/`fmul`/`fdiv`/`frem`.
+//
+// Signedness comes from the IIR type_hint prefix: `i*` → signed, `u*` →
+// unsigned.
+
+#[test]
+fn arith_add_i32_emits_add() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("add", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%v = add i32 %a, %b"),
+        "expected `%v = add i32 %a, %b` in:\n{ll}");
+}
+
+#[test]
+fn arith_add_f64_emits_fadd_double() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "f64".into()), ("b".into(), "f64".into())],
+        "f64",
+        vec![
+            IIRInstr::new("add", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%v = fadd double %a, %b"),
+        "expected `%v = fadd double %a, %b` in:\n{ll}");
+}
+
+#[test]
+fn arith_div_signed_emits_sdiv() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("div", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%v = sdiv i32 %a, %b"),
+        "expected sdiv for i32; got:\n{ll}");
+}
+
+#[test]
+fn arith_div_unsigned_emits_udiv() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "u32".into()), ("b".into(), "u32".into())],
+        "u32",
+        vec![
+            IIRInstr::new("div", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%v = udiv i32 %a, %b"),
+        "expected udiv for u32; got:\n{ll}");
+}
+
+#[test]
+fn arith_rem_signed_emits_srem_unsigned_urem() {
+    // Both functions in one module to confirm sign-discrimination.
+    let signed = IIRFunction::new(
+        "s",
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("rem", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ]);
+    let unsigned = IIRFunction::new(
+        "u",
+        vec![("a".into(), "u64".into()), ("b".into(), "u64".into())],
+        "u64",
+        vec![
+            IIRInstr::new("rem", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u64"),
+        ]);
+    let module = IIRModule {
+        name: "two".into(),
+        functions: vec![signed, unsigned],
+        entry_point: None,
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains("srem i64"), "expected srem for i64; got:\n{ll}");
+    assert!(ll.contains("urem i64"), "expected urem for u64; got:\n{ll}");
+}
+
+#[test]
+fn arith_inlines_const_operand() {
+    // const c = 5 ; add v, a, c ; ret v
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("c".into()), vec![Operand::Int(5)], "i32"),
+            IIRInstr::new("add",   Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("c".into())], "i32"),
+            IIRInstr::new("ret",   None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%v = add i32 %a, 5"),
+        "const operand should inline literally; got:\n{ll}");
+}
+
+// ===========================================================================
+// 9. LLVM03 — comparison
+// ===========================================================================
+//
+// Cmps emit `icmp <pred>` (or `fcmp <pred>`) and produce an i1; if the IIR
+// type_hint is wider than i1 we zext to that width.  Signedness predicates:
+//
+// | IIR op | i32 | u32 | f64 |
+// |--------|-----|-----|-----|
+// | eq     | eq  | eq  | oeq |
+// | ne     | ne  | ne  | one |
+// | lt     | slt | ult | olt |
+// | gt     | sgt | ugt | ogt |
+
+#[test]
+fn cmp_eq_i32_emits_icmp_eq_and_zext_i32() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("eq", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%v.i1 = icmp eq i32 %a, %b"),
+        "expected icmp eq i32; got:\n{ll}");
+    assert!(ll.contains("%v = zext i1 %v.i1 to i32"),
+        "expected zext to i32; got:\n{ll}");
+}
+
+#[test]
+fn cmp_lt_unsigned_emits_ult() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "u32".into()), ("b".into(), "u32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("lt", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("icmp ult i32"),
+        "expected ult for u32 operand; got:\n{ll}");
+}
+
+#[test]
+fn cmp_lt_float_emits_fcmp_olt() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "f64".into()), ("b".into(), "f64".into())],
+        "i32",
+        vec![
+            IIRInstr::new("lt", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("fcmp olt double"),
+        "expected fcmp olt double for f64; got:\n{ll}");
+}
+
+#[test]
+fn cmp_prefixed_aliases_accepted() {
+    // G1 compat: `cmp_eq` should lower the same as `eq`.
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("cmp_eq", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("icmp eq i32 %a, %b"),
+        "`cmp_eq` should lower like `eq`; got:\n{ll}");
+}
+
+#[test]
+fn cmp_to_i1_avoids_zext() {
+    // When the cmp's type_hint is "i1", we should NOT emit a zext.
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i1",
+        vec![
+            IIRInstr::new("eq", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i1"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i1"),
+        ]);
+    let ll = lower(&module_with(f));
+    // Note: this emits `icmp eq i1 ...` because type_hint drives the
+    // operand type as well; whether that matches IIR semantics is a higher-
+    // level question.  What matters here: NO zext was emitted.
+    assert!(!ll.contains("zext"),
+        "type_hint=i1 should skip the zext step; got:\n{ll}");
+}
+
+// ===========================================================================
+// 10. LLVM03 — control flow
+// ===========================================================================
+
+#[test]
+fn label_emits_basic_block_header() {
+    let f = IIRFunction::new(
+        "f",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("jmp", None, vec![Operand::Var("L1".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("L1".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("\nL1:\n"), "expected `L1:` block header; got:\n{ll}");
+}
+
+#[test]
+fn jmp_emits_unconditional_br() {
+    let f = IIRFunction::new(
+        "f",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("jmp", None, vec![Operand::Var("done".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("done".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("br label %done"),
+        "expected `br label %done`; got:\n{ll}");
+}
+
+#[test]
+fn jmp_if_true_emits_br_with_fallthrough_block() {
+    // Function: compare two i32s, branch to taken label if equal.
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "void",
+        vec![
+            IIRInstr::new("eq", Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("jmp_if_true", None,
+                vec![Operand::Var("c".into()), Operand::Var("taken".into())], "i32"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("taken".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let ll = lower(&module_with(f));
+    // The conditional br uses the i1 form (no trunc round-trip), and the
+    // false arm is a synthesized fallthrough block.
+    assert!(ll.contains("br i1 %c.i1, label %taken, label %__fall"),
+        "expected `br i1 %c.i1, label %taken, label %__fall…` (with i1 form, no trunc); got:\n{ll}");
+    assert!(ll.contains("\n__fall"),
+        "expected a synthesized `__fall…:` fallthrough block; got:\n{ll}");
+}
+
+#[test]
+fn jmp_if_false_swaps_arms() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "void",
+        vec![
+            IIRInstr::new("eq", Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var("c".into()), Operand::Var("not_taken".into())], "i32"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("not_taken".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let ll = lower(&module_with(f));
+    // jmp_if_false: TRUE arm is the synthesized fallthrough, FALSE arm is `not_taken`.
+    let needle = "br i1 %c.i1, label %__fall";
+    assert!(ll.contains(needle),
+        "expected jmp_if_false to put fallthrough in the TRUE arm; got:\n{ll}");
+    assert!(ll.contains(", label %not_taken"),
+        "expected `not_taken` in the FALSE arm; got:\n{ll}");
+}
+
+// ===========================================================================
+// 11. Error display (kept green from LLVM02)
 // ===========================================================================
 
 #[test]
