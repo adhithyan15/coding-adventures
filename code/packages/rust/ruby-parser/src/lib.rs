@@ -4022,6 +4022,48 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_using_is_method_call_no_paren() {
+        // Phase 26a (FC) — `using Mod` is an ordinary paren-less method
+        // call (`using` is a method, not a keyword): it parses as a
+        // `method_call_no_paren` with the module as its sole argument.
+        let ast = parse_ruby("using Foo\n");
+        assert!(
+            find_descendant(&ast, "method_call_no_paren").is_some(),
+            "expected `using Foo` to parse as method_call_no_paren"
+        );
+    }
+
+    #[test]
+    fn test_parse_using_carries_callee_and_module() {
+        // Both the `using` callee and the `Foo` module operand must
+        // appear in the parse tree.
+        let ast = parse_ruby("using Foo\n");
+        assert!(
+            tree_has_token_value(&ast, "using"),
+            "expected the `using` callee token in the tree"
+        );
+        assert!(
+            tree_has_token_value(&ast, "Foo"),
+            "expected the `Foo` module operand token in the tree"
+        );
+    }
+
+    #[test]
+    fn test_parse_using_scoped_module() {
+        // `using Foo::Bar` — the operand may be a scoped constant; the
+        // scope-resolution tokens survive into the tree.
+        let ast = parse_ruby("using Foo::Bar\n");
+        assert!(
+            find_descendant(&ast, "method_call_no_paren").is_some(),
+            "expected `using Foo::Bar` to parse as method_call_no_paren"
+        );
+        assert!(
+            tree_has_token_value(&ast, "Bar"),
+            "expected the scoped `Bar` operand token in the tree"
+        );
+    }
+
+    #[test]
     fn test_parse_endless_def_no_params() {
         // `def hello = 1` — endless method with no parameters.
         let ast = parse_ruby("def hello = 1");

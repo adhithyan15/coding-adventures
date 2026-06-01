@@ -2,6 +2,27 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.83.0] - 2026-06-01
+
+### Added (Phase 26a (FC) — `using Mod` refinement activation)
+
+`using Mod` (refinement activation) now lowers to a first-class
+`BuiltinCall("using", [<module>])` with `EffectSet::PURE`, rather than
+falling through to a `DirectCall("using", …)` that the SIR validator
+rejected as an undeclared callee.
+
+`using` is an ordinary method (not a keyword), so it arrives as a
+`method_call_no_paren` with the refinement module as its sole argument —
+**no grammar or lexer change** was needed.  The fix adds `"using"` to the
+lowerer's `ruby_builtin_effects` table as a PURE builtin, alongside the
+other declaration-style forms; the module operand is lowered through the
+normal expression path (e.g. a `Const` reference for `using Foo`).  In
+this model the activation carries no runtime data effect.
+
+New lowering tests: `using_lowers_to_builtin_call`,
+`using_operand_is_the_module_ref`, `using_is_pure_and_validates_e2e`
+(lower → validate round-trip).
+
 ## [0.82.0] - 2026-06-01
 
 ### Added (Phase 23d (FC) — `__dir__` pseudo-variable lowering)

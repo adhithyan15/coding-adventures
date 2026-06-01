@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.75.0] - 2026-06-01
+
+### Added (Phase 26a (FC) — `using Mod` parse pins)
+
+Regression pins confirming Ruby's `using Mod` refinement-activation
+statement parses with **no grammar change**: `using` is an ordinary
+method (not a keyword), so `using Foo` / `using Foo::Bar` parse as a
+`method_call_no_paren` with the refinement module as the sole argument.
+The feature's semantics (lowering to a PURE `BuiltinCall` instead of an
+undeclared `DirectCall`) are supplied entirely in the lowerer (see the
+`ruby-to-semantic-ir` 0.83.0 entry); this crate's grammar is unchanged,
+so these are pure parse-shape pins.  New tests:
+`test_parse_using_is_method_call_no_paren`,
+`test_parse_using_carries_callee_and_module`,
+`test_parse_using_scoped_module`.
+
 ## [0.74.0] - 2026-06-01
 
 ### Added (Phase 23d (FC) — `__dir__` parse pins)
