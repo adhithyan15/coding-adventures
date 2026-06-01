@@ -49,6 +49,10 @@ The constants match the output shape produced by:
 cargo run -p board-vm-cli --bin board-vm -- eject blink --out src/ejected_blink.rs
 ```
 
+Host-side tests re-run the Rust eject generator and compare the generated
+artifact against the embedded constants, so firmware changes catch stale
+ejected blink metadata before flashing hardware.
+
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.
 

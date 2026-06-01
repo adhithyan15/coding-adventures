@@ -248,6 +248,8 @@ extern crate std;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use board_vm_eject::{build_blink_eject_artifact, EjectOptions};
+    use board_vm_host::BlinkProgram;
     use board_vm_ir::{
         parse_module, CapabilitySet, CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS,
         FLAG_PROGRAM_MAY_RUN_FOREVER,
@@ -341,6 +343,35 @@ mod tests {
         );
         assert_eq!(program.module, &EMBEDDED_BLINK_MODULE);
         validate_ejected_blink_program(16).unwrap();
+    }
+
+    #[test]
+    fn ejected_blink_program_matches_eject_generator_output() {
+        let program = EjectedFirmwareProgram::blink();
+        let mut generated_module = [0u8; EMBEDDED_BLINK_MODULE.len()];
+
+        let artifact = build_blink_eject_artifact(
+            BlinkProgram::onboard_led(),
+            EjectOptions::new(program.program_id)
+                .slot(program.slot)
+                .boot_policy(program.boot_policy),
+            &mut generated_module,
+        )
+        .unwrap();
+
+        assert_eq!(program.program_id, artifact.program_id);
+        assert_eq!(program.slot, artifact.slot);
+        assert_eq!(program.boot_policy, artifact.boot_policy);
+        assert_eq!(program.program_format, artifact.format.as_u8());
+        assert_eq!(program.module_version, artifact.module_version);
+        assert_eq!(program.module_flags, artifact.module_flags);
+        assert_eq!(program.max_stack, artifact.max_stack);
+        assert_eq!(program.module_crc32, artifact.module_crc32);
+        assert_eq!(
+            program.required_capabilities,
+            artifact.required_capabilities
+        );
+        assert_eq!(program.module, artifact.module);
     }
 
     #[test]
