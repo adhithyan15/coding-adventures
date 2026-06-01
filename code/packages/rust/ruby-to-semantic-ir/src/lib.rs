@@ -5245,10 +5245,12 @@ mod tests {
     }
 
     #[test]
-    fn interpolated_string_with_expression_uses_interp_marker() {
-        // `"sum=#{1+2}"` — the interp body `1+2` is not a bare name, so
-        // it must lower as the v0 `__interp__` marker carrying the raw
-        // body text.  Same marker pattern as Phase 6v rescue/ensure.
+    fn interpolated_string_with_expression_lowers_recursively() {
+        // Phase 20a (FC) — `"sum=#{1+2}"` — the interp body `1+2` is a real
+        // expression.  Rather than emit the v0 `__interp__` marker carrying
+        // the raw body text, the lowerer now re-parses the body and lowers
+        // it into genuine SIR: the `+` operator becomes `BuiltinCall("+", …)`.
+        // The marker survives only as a fallback for bodies we cannot parse.
         let m = lower(r##"x = "sum=#{1+2}""##);
         let b = main_body(&m);
         let value = match &b.stmts[0] {
@@ -5262,14 +5264,12 @@ mod tests {
                 assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "sum="));
                 match &args[1] {
                     Expr::BuiltinCall { name, args, .. } => {
-                        assert_eq!(name, "__interp__");
-                        assert_eq!(args.len(), 1);
-                        assert!(
-                            matches!(&args[0], Expr::StrLit { value, .. } if value == "1+2"),
-                            "expected the raw interp body preserved in the marker"
-                        );
+                        assert_eq!(name, "+", "interp body 1+2 lowers to a real + call");
+                        assert_eq!(args.len(), 2);
+                        assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+                        assert!(matches!(args[1], Expr::IntLit { value: 2, .. }));
                     }
-                    other => panic!("expected __interp__ marker, got {:?}", other),
+                    other => panic!("expected real `+` BuiltinCall, got {:?}", other),
                 }
             }
             other => panic!("expected string_concat, got {:?}", other),
@@ -5291,6 +5291,71 @@ puts("hi #{name}")
         assert!(
             result.is_ok(),
             "validator rejected interpolated-string module: {:?}",
+            result
+        );
+    }
+
+    #[test]
+    fn interpolated_string_with_multiple_expr_interps_lowers_each_recursively() {
+        // Phase 20a (FC) — `"a#{1}b#{2}c"` carries two expression
+        // interpolations interleaved with three literal runs.  Each `#{…}`
+        // body re-parses and lowers to a real `IntLit`, producing a
+        // five-segment `string_concat` (no `__interp__` markers anywhere).
+        let m = lower(r##"x = "a#{1}b#{2}c""##);
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "string_concat");
+                assert_eq!(args.len(), 5, "a | 1 | b | 2 | c");
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "a"));
+                assert!(matches!(args[1], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[2], Expr::StrLit { value, .. } if value == "b"));
+                assert!(matches!(args[3], Expr::IntLit { value: 2, .. }));
+                assert!(matches!(&args[4], Expr::StrLit { value, .. } if value == "c"));
+            }
+            other => panic!("expected string_concat, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_string_with_binary_var_expr_lowers_recursively() {
+        // Phase 20a (FC) — `"#{a + b}"` is a sole interpolation whose body is
+        // a binary expression over two names.  It unwraps to the lowered
+        // `+` call directly (single-segment unwrap), with both operands as
+        // `VarRef`s — proving the recursive lowerer threads the current
+        // scope through, not a `__interp__` marker.
+        let m = lower(r##"x = "#{a + b}""##);
+        let b = main_body(&m);
+        let value = match &b.stmts[0] {
+            Stmt::LetBinding { value, .. } => value,
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+", "single interp body unwraps to the real + call");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected real `+` BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn interpolated_expression_string_validates_e2e() {
+        // Phase 20a (FC) — end-to-end: an arithmetic interpolation lowers to
+        // real SIR (`string_concat([StrLit, BuiltinCall("+", …)])`) and that
+        // shape round-trips cleanly through the SIR validator.  Guards
+        // against effect/arg-shape regressions in the new recursive path.
+        let m = lower(r##"puts("sum is #{1 + 2}")"##);
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected expression-interpolation module: {:?}",
             result
         );
     }

@@ -2,6 +2,36 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.72.0] - 2026-05-31
+
+### Changed (Phase 20a (FC) — string interpolation lowers to real SIR)
+
+Expression interpolations inside double-quoted strings now lower to
+genuine SIR instead of the v0 `__interp__` marker.  When a `#{…}` body
+re-parses to exactly one expression / method-call statement, the new
+`try_lower_interp_body` helper re-invokes `parse_ruby` on the body and
+lowers its tail expression **in the current scope** — so `"sum=#{1+2}"`
+becomes `string_concat([StrLit("sum="), BuiltinCall("+", [1, 2])])` and
+`"#{a + b}"` resolves `a`/`b` as `VarRef`s the same way surrounding code
+would.  Bare-name bodies (`"#{name}"`) keep their existing `VarRef`
+fast-path.
+
+Per the Tier-3 marker-replacement convention, the `__interp__` marker is
+**retained as a fallback** for one phase: empty bodies (`#{}`),
+multi-statement bodies (`#{a; b}`), and anything that doesn't parse to a
+single expression statement still emit the verbatim marker.
+
+New lowering pins (+3, one existing marker test rewritten):
+`interpolated_string_with_expression_lowers_recursively`
+(`"sum=#{1+2}"` → real `+` call, not a marker),
+`interpolated_string_with_multiple_expr_interps_lowers_each_recursively`
+(`"a#{1}b#{2}c"` → five-segment concat),
+`interpolated_string_with_binary_var_expr_lowers_recursively`
+(`"#{a + b}"` → `+` over two `VarRef`s),
+`interpolated_expression_string_validates_e2e`
+(`puts("sum is #{1 + 2}")` round-trips the SIR validator).
+Test count: 292 → 295.
+
 ## [0.71.0] - 2026-05-31
 
 ### Added (Phase 21c (FC) — implicit `it` block parameter, Ruby 3.4)

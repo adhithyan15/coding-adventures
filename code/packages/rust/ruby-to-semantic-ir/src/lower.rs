@@ -5403,6 +5403,19 @@ impl Lowerer {
                 span,
             };
         }
+        // Phase 20a (FC) — recursively parse+lower the interpolation
+        // body so `#{1 + 2}`, `#{foo.bar}`, `#{a * b}` etc. become real
+        // SIR (a BuiltinCall/DirectCall/BinaryOp tree) instead of an
+        // opaque marker.  We re-invoke the Ruby parser on the trimmed
+        // body and lower its single tail expression in the CURRENT
+        // scope (so VarRefs to enclosing params/locals resolve
+        // correctly).  Anything that doesn't cleanly parse to exactly
+        // one expression/method-call statement falls back to the
+        // `__interp__` marker below (kept for one phase per the Tier-3
+        // marker-replacement convention).
+        if let Some(expr) = self.try_lower_interp_body(trimmed) {
+            return expr;
+        }
         // Fallback marker.  Triggers `Strings` because we embed the
         // raw text as a `StrLit`.
         self.features_used.insert(Feature::Strings);
@@ -5414,6 +5427,45 @@ impl Lowerer {
             }],
             effects: EffectSet::PURE,
             span,
+        }
+    }
+
+    /// Phase 20a (FC) — try to lower an interpolation body by
+    /// re-invoking the Ruby parser on it and lowering the resulting
+    /// single tail expression.  Returns `None` (→ marker fallback) if
+    /// the body is empty, doesn't parse to exactly one statement, or
+    /// that statement isn't a plain expression / method call.  Lowering
+    /// runs in the current scope so `#{x + 1}` resolves `x` the same way
+    /// the surrounding code would.
+    fn try_lower_interp_body(&mut self, body: &str) -> Option<Expr> {
+        if body.is_empty() {
+            return None;
+        }
+        let ast = coding_adventures_ruby_parser::parse_ruby(body);
+        if ast.rule_name != "program" {
+            return None;
+        }
+        let stmts: Vec<&GrammarASTNode> = ast
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        // Exactly one statement; multi-statement bodies (`#{a; b}`) are
+        // rare and kept as the verbatim marker.
+        if stmts.len() != 1 {
+            return None;
+        }
+        let inner = self.first_node_child(stmts[0])?;
+        match inner.rule_name.as_str() {
+            "expression_stmt" => {
+                let expr_node = self.first_node_child(inner)?;
+                self.lower_expression(expr_node).ok()
+            }
+            "method_call" | "method_call_no_paren" => self.lower_method_call(inner).ok(),
+            _ => None,
         }
     }
 
