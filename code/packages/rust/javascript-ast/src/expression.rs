@@ -1,8 +1,9 @@
 //! ESTree-compatible expression nodes (CLOC09 Phase 1).
 //!
-//! 14 variants:
+//! 15 variants:
 //! - Leaves: [`Identifier`], [`NumericLiteral`], [`StringLiteral`],
-//!   [`BooleanLiteral`], [`NullLiteral`].
+//!   [`BooleanLiteral`], [`NullLiteral`], [`BigIntLiteral`] (Phase 1.x —
+//!   added in CLOC12.15).
 //! - Operators: [`BinaryExpression`], [`LogicalExpression`],
 //!   [`UnaryExpression`], [`AssignmentExpression`],
 //!   [`ConditionalExpression`].
@@ -31,6 +32,7 @@ pub enum Expression {
     StringLiteral(StringLiteral),
     BooleanLiteral(BooleanLiteral),
     NullLiteral(NullLiteral),
+    BigIntLiteral(BigIntLiteral),
     BinaryExpression(BinaryExpression),
     LogicalExpression(LogicalExpression),
     UnaryExpression(UnaryExpression),
@@ -98,6 +100,33 @@ pub struct BooleanLiteral {
 pub struct NullLiteral {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
+}
+
+/// A BigInt literal — `123n`, `0n`, `0x1fn`. ESTree models this as a
+/// separate node from [`NumericLiteral`] because bigints can exceed
+/// the `f64` range — the `value` field is therefore a `String` (per
+/// ESTree's JSON-safety convention) holding the decimal expansion of
+/// the bigint, while `raw` keeps the original source representation
+/// including the trailing `n` suffix.
+///
+/// Added in Phase 1.x (CLOC12.15) to model the bigint primitive
+/// (gap-021). No optimisation rides on this yet — passes treat a
+/// `BigIntLiteral` as already-folded the same way `NumericLiteral`
+/// is treated.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BigIntLiteral {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// Decimal expansion of the bigint as a string. E.g. `"123"`,
+    /// `"0"`, `"31"` (for `0x1fn`). Always non-negative — the `-` in
+    /// `-123n` is a [`UnaryExpression`] over a `BigIntLiteral`, never
+    /// part of the literal itself.
+    pub value: String,
+    /// Original source representation including the trailing `n`,
+    /// e.g. `"123n"`, `"0x1fn"`. Preserved so that hex-typed bigints
+    /// round-trip through the emitter without losing their radix.
+    pub raw: String,
 }
 
 // ---------------------------------------------------------------------
@@ -438,6 +467,34 @@ mod tests {
         });
         assert_eq!(n.clone(), roundtrip(n.clone()));
         assert_eq!(type_tag(&n), "NullLiteral");
+    }
+
+    #[test]
+    fn bigint_literal_decimal_roundtrips() {
+        // 123n  — decimal-source bigint
+        let b = Expression::BigIntLiteral(BigIntLiteral {
+            cv: Some("bi.1".to_string()),
+            value: "123".to_string(),
+            raw: "123n".to_string(),
+        });
+        assert_eq!(b.clone(), roundtrip(b.clone()));
+        assert_eq!(type_tag(&b), "BigIntLiteral");
+    }
+
+    #[test]
+    fn bigint_literal_hex_preserves_raw() {
+        // 0x1fn → value "31", raw "0x1fn"
+        let b = Expression::BigIntLiteral(BigIntLiteral {
+            cv: None,
+            value: "31".to_string(),
+            raw: "0x1fn".to_string(),
+        });
+        let json = serde_json::to_string(&b).expect("serialize");
+        // cv omitted; value + raw preserved as strings.
+        assert!(!json.contains("\"cv\""), "cv key should be absent; got {}", json);
+        assert!(json.contains("\"value\":\"31\""), "value mismatch; got {}", json);
+        assert!(json.contains("\"raw\":\"0x1fn\""), "raw mismatch; got {}", json);
+        assert_eq!(b.clone(), roundtrip(b));
     }
 
     #[test]

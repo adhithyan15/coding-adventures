@@ -513,7 +513,8 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
         | Expression::BooleanLiteral(_)
-        | Expression::NullLiteral(_) => expr.clone(),
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {
             cv: b.cv.clone(),

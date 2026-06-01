@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-01
+
+### Added — CLOC12.15: emit `BigIntLiteral` (gap-021)
+
+Adds emitter support for the new `BigIntLiteral` variant added to
+`javascript-ast` in CLOC12.15. The emitter writes the `raw` field
+verbatim — we deliberately do NOT reformat from `value` because:
+
+1. Hex/octal/binary radixes (`0x1fn`, `0o17n`, `0b11111n`) are part
+   of the literal's source identity and shorter than their decimal
+   equivalents.
+2. There is no exponential bigint syntax (`1e9n` is not valid JS),
+   so the number-formatter's shortest-form trick from CLOC12.12
+   doesn't apply.
+
+Therefore: `raw` in, same string out. The PREC_PRIMARY table also
+lists `BigIntLiteral` so emit_expression_inner never inserts
+unnecessary parens around bigint literals in nested contexts.
+
+Three new inline tests cover decimal (`123n`), zero (`0n`), and
+hex (`0x1fn`) cases.
+
 ## [0.8.0] - 2026-06-01
 
 ### Added — CLOC12.14: emit `ThrowStatement` (gap-020 AST partial close)

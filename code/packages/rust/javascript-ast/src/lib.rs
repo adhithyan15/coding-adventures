@@ -133,8 +133,9 @@ pub use declaration::{
 };
 pub use expression::{
     ArrayExpression, AssignmentExpression, AssignmentOperator, AssignmentTarget,
-    BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression, ConditionalExpression,
-    Expression, Identifier, LogicalExpression, LogicalOperator, MemberExpression,
+    BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
+    ConditionalExpression, Expression, Identifier, LogicalExpression, LogicalOperator,
+    MemberExpression,
     NullLiteral, NumericLiteral, ObjectExpression, Property, PropertyKey, PropertyKind,
     StringLiteral, UnaryExpression, UnaryOperator,
 };

@@ -338,6 +338,19 @@ pub enum ForInit {
   the `argument` field is non-optional: `throw;` is a SyntaxError.
   Existing pass crates gained one match arm each that folds the
   argument expression and preserves the throw semantics.
+- **CLOC12.15 — `BigIntLiteral`.** Adds the BigInt primitive
+  literal as a sixth leaf in the Expression variants list. Per
+  ESTree's bigint-as-JSON-string convention, the `value` field is
+  the **decimal expansion of the bigint as a string** rather than
+  a `f64` (bigints can exceed the double-precision range that JSON
+  `number` can faithfully represent). `raw` keeps the original
+  source spelling, so a literal written as `0x1fn` round-trips as
+  `0x1fn` rather than `31n`. The emitter writes `raw` verbatim —
+  no normalisation, no shortest-form rewriting (there is no
+  exponential bigint syntax). Bigint arithmetic folding is **not**
+  implemented in CLOC12.15 (would require a bigint runtime in
+  constant-fold); however the `typeof <BigIntLiteral>` → `"bigint"`
+  fold IS implemented since it requires no arithmetic.
 
 ## Phase 1 — Expression variants
 
@@ -348,6 +361,7 @@ pub enum ForInit {
 | `StringLiteral`         | `cv: Option<CvId>`, `value: String`, `raw: String`                                                                                                          |
 | `BooleanLiteral`        | `cv: Option<CvId>`, `value: bool`                                                                                                                           |
 | `NullLiteral`           | `cv: Option<CvId>`                                                                                                                                          |
+| `BigIntLiteral`         | `cv: Option<CvId>`, `value: String`, `raw: String` — Phase 1.x (CLOC12.15)                                                                                  |
 | `BinaryExpression`      | `cv: Option<CvId>`, `operator: BinaryOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                           |
 | `LogicalExpression`     | `cv: Option<CvId>`, `operator: LogicalOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                          |
 | `UnaryExpression`       | `cv: Option<CvId>`, `operator: UnaryOperator`, `prefix: bool`, `argument: Box<Expression>`                                                                  |
