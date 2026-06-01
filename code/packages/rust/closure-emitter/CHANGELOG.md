@@ -2,6 +2,62 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-01
+
+### Added — CLOC12.12: number formatting shortest-form (closes gap-025)
+
+`format_js_number` now computes both decimal and exponential
+representations for finite non-zero numbers and returns whichever is
+shorter. Ties pick decimal (canonical). Matches upstream
+`CodePrinter`'s behaviour.
+
+| Value | Old emit | New emit |
+|-------|----------|----------|
+| `1` | `1` | `1` |
+| `100` | `100` | `100` (tie 3=3 → decimal) |
+| `1_000_000_000` | `1000000000` | `1E9` |
+| `5_000_000` | `5000000` | `5E6` |
+| `0.5` | `0.5` | `0.5` |
+| `1.5e-10` | `0.00000000015` | `1.5E-10` |
+| `NaN` | `NaN` | `NaN` |
+| `Infinity` | `Infinity` | `Infinity` |
+
+Exponential form follows JS / upstream conventions: uppercase `E`,
+no leading `+` for positive exponents, stripped trailing zeros in
+the mantissa (`1E9`, not `1.0E+9`).
+
+### New helper
+
+`format_exponential_uppercase(n: f64) -> String` — wraps Rust's
+`{:e}` formatter and uppercases the `E`.
+
+### New inline tests (5)
+
+- `number_shortest_form_small_integers_stay_decimal` — `0`, `1`, `42`, `100`, `-7`.
+- `number_shortest_form_big_integers_switch_to_exponential` — `1E9`, `5E6`.
+- `number_shortest_form_small_decimals_stay_decimal` — `0.5`, `3.14`.
+- `number_shortest_form_tiny_floats_switch_to_exponential` — `1.5E-10`.
+- `number_shortest_form_nan_and_infinity_unchanged` — sanity check.
+
+Plus `emit_number_value(v: f64) -> String` helper.
+
+### gap-025 → RESOLVED
+
+### Reconciles missing version bump from CLOC12.11
+
+CLOC12.11 (PR #4703) updated the CHANGELOG to `[0.5.0]` but the
+`Cargo.toml` change was dropped, leaving the published crate at
+`0.4.0`. This PR bumps directly `0.4.0` → `0.6.0`: the `0.5.0`
+CHANGELOG entry below stays valid as the description of quote-choice
+work; `0.6.0` is the first published version that actually includes
+both quote-choice (CLOC12.11) AND shortest-form number rendering
+(CLOC12.12).
+
+### Version
+
+`0.4.0` → `0.6.0` (skips `0.5.0` to absorb the missed CLOC12.11
+Cargo.toml bump).
+
 ## [0.5.0] - 2026-06-01
 
 ### Added — CLOC12.11: string quote-choice optimisation (closes gap-026)

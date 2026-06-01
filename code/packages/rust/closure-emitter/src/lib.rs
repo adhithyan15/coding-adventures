@@ -825,9 +825,20 @@ impl<'a> Emitter<'a> {
 // =====================================================================
 
 /// JavaScript-style number rendering — matches `String(x)` so
-/// emitted output round-trips numerically. Mirrors the helper of
-/// the same name in `closure-pass-constant-fold` so both crates
-/// produce consistent text for the same value.
+/// emitted output round-trips numerically. CLOC12.12 / gap-025:
+/// for finite non-zero numbers we now compute BOTH the decimal and
+/// exponential forms and return whichever is shorter. Ties pick
+/// decimal (canonical).
+///
+/// Examples:
+///
+///   1                 →  "1"      (decimal shorter)
+///   100               →  "100"    (tie → decimal)
+///   1000000000        →  "1E9"    (decimal 10 chars vs expo 3)
+///   0.5               →  "0.5"    (decimal shorter)
+///   1.5e-10           →  "1.5E-10" (decimal 13 chars vs expo 7)
+///   1e21              →  "1E21"   (expo shorter)
+///   NaN / Infinity    →  unchanged from JS String(x)
 fn format_js_number(n: f64) -> String {
     if n.is_nan() {
         return "NaN".to_string();
@@ -842,10 +853,34 @@ fn format_js_number(n: f64) -> String {
     if n == 0.0 {
         return "0".to_string();
     }
-    if n.fract() == 0.0 && n.abs() < 1e21 {
-        return format!("{}", n as i64);
+    let decimal = if n.fract() == 0.0 && n.abs() < 1e21 {
+        format!("{}", n as i64)
+    } else {
+        n.to_string()
+    };
+    let expo = format_exponential_uppercase(n);
+    if expo.len() < decimal.len() {
+        expo
+    } else {
+        decimal
     }
-    n.to_string()
+}
+
+/// Build the JS-style exponential form for a finite non-zero
+/// number. Rust's `{:e}` formatter produces `"1e9"` / `"1.5e-10"` /
+/// `"1.2345e4"`; we just uppercase the `e`. We do *not* emit a `+`
+/// for positive exponents — upstream's CodePrinter writes `1E9`,
+/// not `1E+9`.
+fn format_exponential_uppercase(n: f64) -> String {
+    // Rust's `{:e}` never inserts a `+` for positive exponents and
+    // strips trailing zeros from the mantissa fraction. So a direct
+    // `e → E` substitution is sufficient.
+    let mut s = format!("{:e}", n);
+    // Convert "1.5e-10" → "1.5E-10"
+    if let Some(pos) = s.find('e') {
+        s.replace_range(pos..pos + 1, "E");
+    }
+    s
 }
 
 // =====================================================================
@@ -1189,6 +1224,57 @@ mod tests {
             raw: String::new(),
         });
         emit_default(program().with_body(vec![stmt(s)])).code
+    }
+
+    // ---- number shortest-form (gap-025, CLOC12.12) ---------
+
+    /// Helper: emit a synthetic NumericLiteral and return the code
+    /// (without the trailing `;`).
+    fn emit_number_value(v: f64) -> String {
+        let n = Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: v,
+            raw: String::new(),
+        });
+        let code = emit_default(program().with_body(vec![stmt(n)])).code;
+        // strip trailing ";"
+        code.trim_end_matches(';').to_string()
+    }
+
+    #[test]
+    fn number_shortest_form_small_integers_stay_decimal() {
+        assert_eq!(emit_number_value(0.0), "0");
+        assert_eq!(emit_number_value(1.0), "1");
+        assert_eq!(emit_number_value(42.0), "42");
+        assert_eq!(emit_number_value(100.0), "100"); // tie 3=3 → decimal
+        assert_eq!(emit_number_value(-7.0), "-7");
+    }
+
+    #[test]
+    fn number_shortest_form_big_integers_switch_to_exponential() {
+        // 1000000000 (10 chars) vs 1E9 (3 chars) → 1E9
+        assert_eq!(emit_number_value(1_000_000_000.0), "1E9");
+        // 5_000_000 vs 5E6 → 5E6
+        assert_eq!(emit_number_value(5_000_000.0), "5E6");
+    }
+
+    #[test]
+    fn number_shortest_form_small_decimals_stay_decimal() {
+        assert_eq!(emit_number_value(0.5), "0.5");
+        assert_eq!(emit_number_value(3.14), "3.14");
+    }
+
+    #[test]
+    fn number_shortest_form_tiny_floats_switch_to_exponential() {
+        // 1.5e-10 → "0.00000000015" (13) vs "1.5E-10" (7)
+        assert_eq!(emit_number_value(1.5e-10), "1.5E-10");
+    }
+
+    #[test]
+    fn number_shortest_form_nan_and_infinity_unchanged() {
+        assert_eq!(emit_number_value(f64::NAN), "NaN");
+        assert_eq!(emit_number_value(f64::INFINITY), "Infinity");
+        assert_eq!(emit_number_value(f64::NEG_INFINITY), "-Infinity");
     }
 
     #[test]
