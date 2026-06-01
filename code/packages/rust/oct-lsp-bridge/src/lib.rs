@@ -79,6 +79,17 @@ static OCT_KEYWORD_NAMES: &[&str] = &[
 // Declaration rules
 // ===========================================================================
 
+// ===========================================================================
+// Format wrapper
+// ===========================================================================
+
+/// Adapter turning [`oct_formatter::format`] into the
+/// `fn(&str) -> Result<String, String>` shape required by
+/// [`LanguageSpec::format_fn`].
+fn oct_format_wrapper(source: &str) -> Result<String, String> {
+    oct_formatter::format(source).map_err(|e| e.to_string())
+}
+
 /// Grammar rule names that represent a top-level declaration.
 ///
 /// `fn_decl` is Oct's function declaration form (`fn name(…) -> ty { … }`).
@@ -97,7 +108,8 @@ static OCT_LANGUAGE_SPEC: LanguageSpec = LanguageSpec {
     token_kind_map:    OCT_TOKEN_KIND_MAP,
     declaration_rules: OCT_DECLARATION_RULES,
     keyword_names:     OCT_KEYWORD_NAMES,
-    format_fn:         None,
+    // OCT-FMT01: oct-formatter wires textDocument/formatting.
+    format_fn:         Some(oct_format_wrapper),
     symbol_table_fn:   None,
 };
 
@@ -165,8 +177,17 @@ mod tests {
     }
 
     #[test]
-    fn format_fn_is_none_in_v1() {
-        assert!(oct_language_spec().format_fn.is_none());
+    fn format_fn_is_set() {
+        // oct-formatter (OCT-FMT01) is now wired in.
+        assert!(oct_language_spec().format_fn.is_some());
+    }
+
+    #[test]
+    fn format_fn_produces_canonical_output() {
+        let fmt = oct_language_spec().format_fn.expect("format_fn set");
+        let out = fmt("fn main() { let x: u8 = 5; }").expect("ok");
+        // Statement should be indented by 2 spaces inside the body.
+        assert!(out.contains("\n  let "), "expected indented body in {out:?}");
     }
 
     #[test]

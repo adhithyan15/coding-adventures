@@ -677,6 +677,7 @@ members = [
     "oct-lsp-bridge",
     "basic-formatter",
     "nib-formatter",
+    "oct-formatter",
     "nib-dap",
     "oct-dap",
     "twig-vm",
