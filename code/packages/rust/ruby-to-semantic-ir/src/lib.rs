@@ -5922,7 +5922,10 @@ b = "y"
     // Patterns covered here:
     //   literal_pattern  → `==` comparison cond, no bindings
     //   binding_pattern  → `BoolLit(true)` cond + LetBinding prefix
-    //   array_pattern    → `__pattern_match__` marker, no bindings
+    //   array_pattern    → Phase 13a: fixed-arity literal/binding
+    //                      elements lower structurally (`len(s)==N &&
+    //                      s[i]==lit …` + element LetBindings); nested
+    //                      sub-patterns keep the `__pattern_match__` marker
     //   hash_pattern     → `__pattern_match__` marker, no bindings
     // -----------------------------------------------------------------------
 
@@ -6008,9 +6011,12 @@ b = "y"
     }
 
     #[test]
-    fn case_in_array_pattern_lowers_to_pattern_match_marker() {
-        // `case x; in [1, 2]; "pair"; end` — array pattern lowers as
-        // `BuiltinCall("__pattern_match__", [scrut, StrLit("<raw>")])`.
+    fn case_in_literal_array_pattern_lowers_to_structural_match() {
+        // Phase 13a (FC) — `case x; in [1, 2]; "pair"; end` — a
+        // fixed-arity all-literal array pattern lowers structurally to
+        // `((len(x) == 2) && (x[0] == 1)) && (x[1] == 2)` (an AND-chain
+        // of a length check and per-element equality), no longer the
+        // `__pattern_match__` marker.
         let m = lower("x = 1\ncase x\nin [1, 2]\n  \"pair\"\nend\n");
         let b = main_body(&m);
         let if_expr = extract_case_if(b);
@@ -6018,24 +6024,109 @@ b = "y"
             Expr::If { cond, .. } => cond,
             other => panic!("expected If, got {:?}", other),
         };
-        match cond.as_ref() {
-            Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "__pattern_match__");
-                assert_eq!(args.len(), 2);
-                // args[1] is StrLit with the raw pattern text.
-                match &args[1] {
-                    Expr::StrLit { value, .. } => {
-                        assert!(
-                            value.contains('1') && value.contains('2'),
-                            "expected raw text to contain `1` and `2`, got `{}`",
-                            value
-                        );
-                    }
-                    other => panic!("expected StrLit raw pattern, got {:?}", other),
-                }
+        // Outermost node is the final `&& (x[1] == 2)`.
+        let (lhs, rhs) = match cond.as_ref() {
+            Expr::LogicalAnd { lhs, rhs, .. } => (lhs, rhs),
+            other => panic!("expected LogicalAnd cond, got {:?}", other),
+        };
+        // rhs: x[1] == 2
+        match rhs.as_ref() {
+            Expr::BuiltinCall { name, args, .. } if name == "==" => {
+                assert!(matches!(&args[0], Expr::SeqIndex { .. }));
+                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
             }
-            other => panic!("expected __pattern_match__ BuiltinCall, got {:?}", other),
+            other => panic!("expected `x[1] == 2`, got {:?}", other),
         }
+        // lhs: (len(x) == 2) && (x[0] == 1)
+        let (len_chk, first) = match lhs.as_ref() {
+            Expr::LogicalAnd { lhs, rhs, .. } => (lhs, rhs),
+            other => panic!("expected nested LogicalAnd, got {:?}", other),
+        };
+        match len_chk.as_ref() {
+            Expr::BuiltinCall { name, args, .. } if name == "==" => {
+                assert!(matches!(&args[0], Expr::SeqLen { .. }), "expected len() check");
+                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected `len(x) == 2`, got {:?}", other),
+        }
+        assert!(
+            matches!(first.as_ref(), Expr::BuiltinCall { name, .. } if name == "=="),
+            "expected `x[0] == 1`, got {:?}", first
+        );
+    }
+
+    #[test]
+    fn case_in_array_pattern_binds_name_elements() {
+        // Phase 13a (FC) — `in [a, b]` matches any 2-element sequence and
+        // binds `a = x[0]`, `b = x[1]` as prefix LetBindings in the body.
+        // Cond is just the length check (no per-element equality).
+        let m = lower("x = 1\ncase x\nin [a, b]\n  puts(a)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let (cond, then_branch) = match if_expr {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        // Cond: len(x) == 2 (no element equality for pure bindings).
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } if name == "==" => {
+                assert!(matches!(&args[0], Expr::SeqLen { .. }));
+                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected `len(x) == 2` cond, got {:?}", other),
+        }
+        // Body prefix: let a = x[0]; let b = x[1].
+        let names: Vec<&str> = then_branch
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::LetBinding { name, value, .. }
+                    if matches!(value, Expr::SeqIndex { .. }) =>
+                {
+                    Some(name.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(names, vec!["a", "b"], "expected element bindings a, b");
+    }
+
+    #[test]
+    fn case_in_nested_array_pattern_keeps_marker_fallback() {
+        // Phase 13a (FC) — a nested sub-pattern (`[[1], 2]`) is not yet
+        // supported structurally, so the whole pattern keeps the v0
+        // `__pattern_match__` marker.
+        let m = lower("x = 1\ncase x\nin [[1], 2]\n  \"nested\"\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        assert!(
+            matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "__pattern_match__"),
+            "expected __pattern_match__ marker for nested pattern, got {:?}",
+            cond
+        );
+    }
+
+    #[test]
+    fn case_in_array_pattern_validates_e2e() {
+        // Phase 13a (FC) — end-to-end: a binding array pattern lowers to
+        // real SIR (`SeqLen`/`SeqIndex` + `LetBinding`) that round-trips
+        // the SIR validator, and declares `Feature::Sequences`.
+        let m = lower("x = 1\ncase x\nin [a, b]\n  puts(a)\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Sequences),
+            "expected Sequences feature; got {:?}",
+            m.manifest
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected array-pattern module: {:?}",
+            result
+        );
     }
 
     #[test]

@@ -2,6 +2,38 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.75.0] - 2026-06-01
+
+### Changed (Phase 13a (FC) — fixed-arity array patterns lower structurally)
+
+`case/in` array patterns whose elements are all simple (`literal_pattern`
+or `binding_pattern`) now lower to a real structural match instead of the
+v0 `BuiltinCall("__pattern_match__", …)` marker:
+
+```text
+case x
+in [1, b, 3] then …    # cond:   ((len(x) == 3) && (x[0] == 1)) && (x[2] == 3)
+                       # prefix: let b = x[1]   (runs only in the match arm)
+```
+
+The length check (`SeqLen == N`) leads the short-circuiting `&&`
+(`Expr::LogicalAnd`) chain so every `x[i]` (`Expr::SeqIndex`) is in bounds
+before evaluation, and binding `LetBinding`s run only in the match body
+(where the whole condition already held).  `Feature::Sequences` is
+requested for the new sequence nodes.
+
+Nested sub-patterns (`in [[1], 2]`) and all hash patterns keep the v0
+`__pattern_match__` marker (refactored into a shared
+`pattern_match_marker` helper) — to be replaced in a later phase per the
+Tier-3 marker-replacement convention.
+
+New / updated lowering pins:
+`case_in_literal_array_pattern_lowers_to_structural_match` (replaces the
+old marker assertion), `case_in_array_pattern_binds_name_elements`
+(`in [a, b]` → element bindings), `case_in_nested_array_pattern_keeps_marker_fallback`,
+`case_in_array_pattern_validates_e2e` (manifest + validator round-trip).
+Test count: 301 → 304.
+
 ## [0.74.0] - 2026-06-01
 
 ### Changed (Phase 17a (FC) — heredoc bodies interpolate)
