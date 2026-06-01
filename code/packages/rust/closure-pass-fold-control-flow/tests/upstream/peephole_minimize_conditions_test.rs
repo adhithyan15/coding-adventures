@@ -176,13 +176,70 @@ fn test_fold_one_child_blocks_if_to_logical_and() {
 ///   fold("function f(){if(x){foo()}else{bar()}}",
 ///        "function f(){x?foo():bar()}");
 ///
-/// Converting `if (x) C; else A;` to `x ? C : A;` (a
-/// ConditionalExpression statement) is upstream's compaction. We
-/// don't perform it.
+/// **gap-017 closed in CLOC12.18**: when both `consequent` and
+/// `alternate` reduce to a single `ExpressionStatement` (directly
+/// or via single-statement BlockStatement layers), the IfStatement
+/// rewrites to an `ExpressionStatement` wrapping a
+/// `ConditionalExpression`. Side-effect order is preserved because
+/// a ternary evaluates `test`, then exactly one branch — identical
+/// to the if-else.
 #[test]
-#[ignore = "blocked on gap-017: `if (x) C else A` → `x ? C : A` rewrite not implemented"]
 fn test_fold_one_child_blocks_if_else_to_ternary() {
-    // Would assert `if (x) foo(); else bar();` becomes `x ? foo() : bar();`.
+    use coding_adventures_javascript_ast::{
+        BlockStatement, CallExpression, ConditionalExpression,
+    };
+    let call = |name: &str| {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(name)),
+            arguments: vec![],
+        })
+    };
+    let block = |s: Statement| {
+        Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![s],
+        })
+    };
+    let expect_ternary = |t: Expression, c: Expression, a: Expression| -> Statement {
+        Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: Expression::ConditionalExpression(ConditionalExpression {
+                cv: None,
+                test: Box::new(t),
+                consequent: Box::new(c),
+                alternate: Box::new(a),
+            }),
+        })
+    };
+
+    // if (x) foo(); else bar();  →  x ? foo() : bar();
+    let inp = if_stmt(
+        ident("x"),
+        expr_stmt(call("foo")),
+        Some(expr_stmt(call("bar"))),
+    );
+    assert_fold(inp, expect_ternary(ident("x"), call("foo"), call("bar")));
+
+    // if (x) { foo(); } else { bar(); }  →  same ternary (single-
+    // statement block unwraps).
+    let inp_blocks = if_stmt(
+        ident("x"),
+        block(expr_stmt(call("foo"))),
+        Some(block(expr_stmt(call("bar")))),
+    );
+    assert_fold(
+        inp_blocks,
+        expect_ternary(ident("x"), call("foo"), call("bar")),
+    );
+
+    // testSame: no alternate → stays an IfStatement.
+    let inp_no_alt = if_stmt(ident("x"), expr_stmt(call("foo")), None);
+    assert_fold(
+        inp_no_alt.clone(),
+        // Identity fold: the IfStatement comes back unchanged.
+        inp_no_alt,
+    );
 }
 
 /// Constant true test always selects the consequent. Mirrors upstream's
@@ -255,10 +312,23 @@ fn test_if_null_folds_to_alternate() {
     assert_fold(inp, expr_stmt(ident("y")));
 }
 
-/// `testSame("if (x) C else A")` — non-literal test must be left alone.
+/// Upstream `testSame("if (x) C else A")` (when C and A are not single
+/// ExpressionStatements) — non-literal test stays as an IfStatement.
+///
+/// **Updated in CLOC12.18**: the original `if (x) c; else a;` shape
+/// (two single ExpressionStatement branches) is no longer a testSame —
+/// the new gap-017 ternary fold rewrites it. So this test now uses a
+/// multi-statement consequent block to keep the testSame behaviour
+/// at this seam. The original single-expr case is covered by
+/// `test_fold_one_child_blocks_if_else_to_ternary` above.
 #[test]
 fn test_if_non_literal_test_left_alone() {
-    let inp = if_stmt(ident("x"), expr_stmt(ident("c")), Some(expr_stmt(ident("a"))));
+    use coding_adventures_javascript_ast::BlockStatement;
+    let multi_block = Statement::block_statement(BlockStatement {
+        cv: None,
+        body: vec![expr_stmt(ident("c1")), expr_stmt(ident("c2"))],
+    });
+    let inp = if_stmt(ident("x"), multi_block, Some(expr_stmt(ident("a"))));
     assert_same(inp);
 }
 

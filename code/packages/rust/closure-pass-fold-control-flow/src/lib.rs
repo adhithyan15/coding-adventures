@@ -346,7 +346,60 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             })
         }
         None => {
-            // Non-literal test — keep the IfStatement.
+            // Non-literal test. Try the if-else→ternary fold first
+            // (CLOC12.18 / gap-017): when both branches reduce to a
+            // single ExpressionStatement, rewrite the whole
+            // IfStatement to an ExpressionStatement wrapping a
+            // ConditionalExpression.
+            //
+            // Truth table (assuming `test` has no literal-truthy
+            // resolution — those cases are handled above):
+            //
+            //   if (x) foo(); else bar();      → x ? foo() : bar();
+            //   if (x) { foo(); } else { bar(); }
+            //                                  → x ? foo() : bar();
+            //                                    (single-statement
+            //                                     blocks unwrap)
+            //   if (x) foo();                  → unchanged (no
+            //                                    alternate to fold)
+            //   if (x) { a; b; } else { c; }   → unchanged (multi-
+            //                                    statement consequent)
+            //   if (x) return 1; else return 2;
+            //                                  → unchanged (return is
+            //                                    not an expression
+            //                                    statement; tracked
+            //                                    as gap-019)
+            //
+            // Why this is safe: a ConditionalExpression has the same
+            // evaluation order as the if-else — `test` is evaluated
+            // first, then exactly one of the two branches. Side
+            // effects in `test`, in `consequent`, in `alternate`
+            // observed in the original program are all preserved in
+            // the rewritten form.
+            if let Some(alt) = &alternate {
+                if let (Some(c_expr), Some(a_expr)) =
+                    (single_expr_stmt(&consequent), single_expr_stmt(alt))
+                {
+                    st.record_fold(
+                        &s.cv,
+                        "if-else-to-ternary",
+                        "if (<test>) <expr1>; else <expr2>;",
+                        "<test> ? <expr1> : <expr2>;",
+                    );
+                    let cond = Expression::ConditionalExpression(ConditionalExpression {
+                        cv: None,
+                        test: Box::new(test),
+                        consequent: Box::new(c_expr),
+                        alternate: Box::new(a_expr),
+                    });
+                    return Statement::expression_statement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: cond,
+                    });
+                }
+            }
+
+            // Couldn't ternarise — keep the IfStatement.
             Statement::if_statement(IfStatement {
                 cv: s.cv.clone(),
                 test,
@@ -354,6 +407,27 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 alternate: alternate.map(Box::new),
             })
         }
+    }
+}
+
+/// Helper for the if-else→ternary fold (gap-017). Returns the inner
+/// expression when `stmt` is exactly one ExpressionStatement
+/// (possibly wrapped in single-statement BlockStatement layers);
+/// returns `None` for everything else.
+///
+/// We recurse through BlockStatement so source like `if (x) { foo(); }`
+/// (with explicit braces around a single statement) folds the same
+/// way as `if (x) foo();`. We do NOT recurse into anything that
+/// changes statement count — multi-statement blocks bail out.
+fn single_expr_stmt(stmt: &Statement) -> Option<Expression> {
+    match stmt {
+        Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+            Some(es.expression.clone())
+        }
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) if b.body.len() == 1 => {
+            single_expr_stmt(&b.body[0])
+        }
+        _ => None,
     }
 }
 
@@ -774,7 +848,9 @@ mod tests {
     }
 
     #[test]
-    fn if_non_literal_test_passes_through() {
+    fn if_non_literal_test_with_single_expr_branches_folds_to_ternary() {
+        // CLOC12.18 / gap-017: `if (flag) x; else y;` now ternarises
+        // to `flag ? x : y;` even when `flag` isn't a known literal.
         let if_stmt = Statement::if_statement(IfStatement {
             cv: Some("if.1".to_string()),
             test: ident("flag"),
@@ -783,11 +859,37 @@ mod tests {
         });
         let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
         let (out, contribs, changed, _) = run_pass(prog);
-        assert!(!changed);
-        assert!(contribs.is_empty());
+        assert!(changed);
+        assert!(!contribs.is_empty());
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                match &es.expression {
+                    Expression::ConditionalExpression(_) => {}
+                    other => panic!("expected ConditionalExpression; got {:?}", other),
+                }
+            }
+            other => panic!("expected ExpressionStatement; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn if_non_literal_test_with_no_alternate_passes_through() {
+        // No alternate → can't ternarise (gap-016 territory, not 017).
+        // Verifies the new fold doesn't over-fire.
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.2".to_string()),
+            test: ident("flag"),
+            consequent: Box::new(expr_stmt(ident("x"), None)),
+            alternate: None,
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _contribs, _changed, _) = run_pass(prog);
+        // Don't assert !changed — the test field gets fold-walked and
+        // could in principle gain a contribution. What we DO assert
+        // is that the top-level structure stays IfStatement.
         match first_stmt(&out) {
             Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
-            other => panic!("expected IfStatement intact; got {:?}", other),
+            other => panic!("expected IfStatement intact (no alternate); got {:?}", other),
         }
     }
 

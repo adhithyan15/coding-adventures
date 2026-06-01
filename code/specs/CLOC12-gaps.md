@@ -150,11 +150,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-017 — `if (x) C else A` → `x ? C : A` rewrite not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.18 (PR pending).
 - **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldOneChildBlocks` (`if(x){foo()}else{bar()}` → `x?foo():bar()` lines)
 - **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
-- **Why it fails:** Upstream rewrites an `IfStatement` with single-`ExpressionStatement` branches into an `ExpressionStatement` wrapping a `ConditionalExpression`. Our pass keeps the `IfStatement`.
-- **What it needs:** A rewrite rule that recognises the `if (test) C else A` shape where both branches are single `ExpressionStatement`s and produces `ConditionalExpression { test, consequent, alternate }`.
+- **Resolution note:** Added a rewrite arm in `fold_if_statement` that fires when the test isn't a literal AND both branches reduce to a single `ExpressionStatement` (recursively unwrapping single-statement `BlockStatement` layers via a `single_expr_stmt` helper). Emits an `ExpressionStatement` wrapping a `ConditionalExpression`. Side-effect-safe because ternary preserves the same evaluation order as if-else (test first, then exactly one branch). `test_fold_one_child_blocks_if_else_to_ternary` un-ignored.
 
 ### gap-018 — De Morgan / negation-swap rewrites not implemented
 

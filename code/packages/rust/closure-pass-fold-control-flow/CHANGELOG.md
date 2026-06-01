@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-01
+
+### Added — CLOC12.18: if-else→ternary fold (closes gap-017)
+
+Adds a rewrite rule in `fold_if_statement`: when the test is not a
+known literal AND both branches reduce to a single ExpressionStatement
+(directly or via single-statement BlockStatement layers), the
+IfStatement rewrites to an ExpressionStatement wrapping a
+ConditionalExpression.
+
+Truth table:
+
+| Input                                       | Output                  |
+|---------------------------------------------|-------------------------|
+| `if (x) foo(); else bar();`                 | `x ? foo() : bar();`    |
+| `if (x) { foo(); } else { bar(); }`         | `x ? foo() : bar();`    |
+| `if (x) foo();`                             | unchanged (no alternate)|
+| `if (x) { a; b; } else c;`                  | unchanged (multi-stmt)  |
+| `if (x) return 1; else return 2;`           | unchanged (return ≠ expr; tracked as gap-019) |
+
+Side-effect safety: a ConditionalExpression evaluates `test` first
+then exactly one of the two branches — identical to the if-else.
+
+Un-ignores `test_fold_one_child_blocks_if_else_to_ternary` in the
+upstream port. Updates two existing tests
+(`test_if_non_literal_test_left_alone`,
+`if_non_literal_test_passes_through`) to reflect the new fold.
+
+The helper `single_expr_stmt(stmt) -> Option<Expression>` recursively
+unwraps single-statement BlockStatement layers.
+
 ## [0.3.2] - 2026-06-01
 
 ### Changed — CLOC12.14: handle new `ThrowStatement` variant
