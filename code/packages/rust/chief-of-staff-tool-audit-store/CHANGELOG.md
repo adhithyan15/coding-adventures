@@ -13,6 +13,8 @@ All notable changes to this package will be documented in this file.
   loops, reports, and flattened run summaries.
 - Flattened tick-budget pressure route, priority, readiness, and queue-key
   labels for supervisor drain run scheduler queues.
+- Flattened tick-budget pressure rollup keys and queue digests for compact
+  supervisor drain scheduler queue grouping.
 - Flattened host-run escalation dashboard lane queue action-rollup digest status
   and routing flags for compact host-log queues.
 - JSON encoding/decoding for payload-free `ToolAuditRecord` rows.
