@@ -140,6 +140,10 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // (`"a#{x}b"`) lowers to `Expr::StrConcat` and triggers the
         // `StringInterpolation` feature.
         Feature::StringInterpolation,
+        // Phase 13a/13b (FC) — a structural array pattern with a literal
+        // or nested element ANDs its checks via `Expr::LogicalAnd`, which
+        // triggers the `ShortCircuit` feature.
+        Feature::ShortCircuit,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -1571,31 +1575,19 @@ impl Lowerer {
                 Ok((Expr::BoolLit { value: true, span }, vec![prefix]))
             }
             "array_pattern" => {
-                // Phase 13a (FC) — a fixed-arity array pattern whose
-                // elements are all simple (literal_pattern /
-                // binding_pattern) lowers to a real structural match:
-                // a length check ANDed with per-element equality
-                // checks, plus a `LetBinding` for every binding element.
-                // Nested array/hash elements are not yet supported and
-                // fall back to the v0 `__pattern_match__` marker (kept
-                // for one phase per the Tier-3 marker-replacement
+                // Phase 13a/13b (FC) — a fixed-arity array pattern whose
+                // every element is itself lowerable (literal_pattern,
+                // binding_pattern, or — Phase 13b — a nested
+                // `array_pattern` of the same kind) lowers to a real
+                // structural match: a length check ANDed with per-element
+                // equality checks and nested sub-conditions, plus a
+                // `LetBinding` for every binding element (at any depth).
+                // Hash sub-patterns are still unsupported and make the
+                // whole pattern fall back to the v0 `__pattern_match__`
+                // marker (kept per the Tier-3 marker-replacement
                 // convention).
-                let elem_patterns: Vec<&GrammarASTNode> = inner
-                    .children
-                    .iter()
-                    .filter_map(|c| match c {
-                        ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
-                        _ => None,
-                    })
-                    .collect();
-                let all_simple = elem_patterns.iter().all(|p| {
-                    matches!(
-                        self.first_node_child(p).map(|n| n.rule_name.as_str()),
-                        Some("literal_pattern") | Some("binding_pattern")
-                    )
-                });
-                if all_simple {
-                    self.lower_fixed_array_pattern(&elem_patterns, scrutinee, span)
+                if self.array_pattern_is_lowerable(inner) {
+                    self.lower_array_pattern(inner, scrutinee, span)
                 } else {
                     Ok(self.pattern_match_marker(inner, scrutinee, span))
                 }
@@ -1644,37 +1636,76 @@ impl Lowerer {
         )
     }
 
-    /// Phase 13a (FC) — lower a fixed-arity array pattern whose elements
-    /// are all `literal_pattern` or `binding_pattern` into a real
-    /// structural match.
+    /// Phase 13b (FC) — collect the element `pattern` subnodes of an
+    /// `array_pattern` node, in source order.
+    fn array_pattern_elements<'a>(
+        &self,
+        array_inner: &'a GrammarASTNode,
+    ) -> Vec<&'a GrammarASTNode> {
+        array_inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Phase 13b (FC) — can this `array_pattern` node be lowered to a real
+    /// structural match?  True when every element is a `literal_pattern`,
+    /// a `binding_pattern`, or (recursively) a lowerable nested
+    /// `array_pattern`.  Hash sub-patterns (and any other shape) make the
+    /// whole pattern fall back to the `__pattern_match__` marker.
+    fn array_pattern_is_lowerable(&self, array_inner: &GrammarASTNode) -> bool {
+        self.array_pattern_elements(array_inner).iter().all(|p| {
+            match self.first_node_child(p) {
+                Some(elem) => match elem.rule_name.as_str() {
+                    "literal_pattern" | "binding_pattern" => true,
+                    "array_pattern" => self.array_pattern_is_lowerable(elem),
+                    _ => false,
+                },
+                None => false,
+            }
+        })
+    }
+
+    /// Phase 13a/13b (FC) — lower an `array_pattern` node into a real
+    /// structural match of `target` (the scrutinee, or a `SeqIndex` into
+    /// it for a nested pattern).
     ///
-    /// `in [1, x, 3]` against scrutinee `s` produces:
+    /// `in [1, x, [2, y]]` against `s` produces:
     ///
     /// ```text
-    /// cond   = ((len(s) == 3) && (s[0] == 1)) && (s[2] == 3)
-    /// prefix = [ let x = s[1] ]
+    /// cond   = (((len(s) == 3) && (s[0] == 1))
+    ///            && ((len(s[2]) == 2) && (s[2][0] == 2)))
+    /// prefix = [ let x = s[1], let y = s[2][1] ]
     /// ```
     ///
-    /// The length check leads so the short-circuiting `&&`
-    /// (`Expr::LogicalAnd`) guarantees every `s[i]` index is in bounds
-    /// before it is evaluated, and the binding `LetBinding`s run only in
-    /// the match arm's body (where the whole condition already held), so
-    /// they too are in bounds.  `Feature::Sequences` is requested for the
-    /// `SeqLen` / `SeqIndex` nodes.
-    fn lower_fixed_array_pattern(
+    /// Every length check leads its sub-match, and all checks are joined
+    /// with the short-circuiting `&&` (`Expr::LogicalAnd`) in the order
+    /// outer-length → element → (nested) inner-length → …, so each
+    /// `SeqIndex` is only evaluated once the enclosing length check has
+    /// held — keeping every index in bounds.  Binding `LetBinding`s run
+    /// only in the match arm's body (reached only when the whole
+    /// condition held), so they too are in bounds.  Assumes the caller
+    /// verified `array_pattern_is_lowerable`.  `Feature::Sequences` is
+    /// requested for the `SeqLen` / `SeqIndex` nodes.
+    fn lower_array_pattern(
         &mut self,
-        elems: &[&GrammarASTNode],
-        scrutinee: &Expr,
+        array_inner: &GrammarASTNode,
+        target: &Expr,
         span: Span,
     ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
         self.features_used.insert(Feature::Sequences);
+        let elems = self.array_pattern_elements(array_inner);
 
-        // Length check: `len(scrutinee) == elems.len()`.
+        // Length check: `len(target) == elems.len()`.
         let mut cond = Expr::BuiltinCall {
             name: "==".to_string(),
             args: vec![
                 Expr::SeqLen {
-                    seq: Box::new(scrutinee.clone()),
+                    seq: Box::new(target.clone()),
                     span: span.clone(),
                 },
                 Expr::IntLit {
@@ -1688,16 +1719,15 @@ impl Lowerer {
 
         let mut prefix: Vec<Stmt> = Vec::new();
         for (i, p) in elems.iter().enumerate() {
-            // `first_node_child` is guaranteed `Some` and one of
-            // literal_pattern / binding_pattern because the caller only
-            // routes here when `all_simple` held.
             let elem_inner = self.first_node_child(p).ok_or_else(|| RubyLowerError {
                 message: "array_pattern element missing inner pattern".to_string(),
                 line: p.start_line.unwrap_or(0),
                 column: p.start_column.unwrap_or(0),
             })?;
+            // `target[i]` — reused for the equality check, the binding
+            // value, or the nested sub-match's target.
             let index = Expr::SeqIndex {
-                seq: Box::new(scrutinee.clone()),
+                seq: Box::new(target.clone()),
                 index: Box::new(Expr::IntLit {
                     value: i as i64,
                     span: span.clone(),
@@ -1706,7 +1736,7 @@ impl Lowerer {
             };
             match elem_inner.rule_name.as_str() {
                 "literal_pattern" => {
-                    // Append `s[i] == lit` to the AND-chain.
+                    // Append `target[i] == lit` to the AND-chain.
                     let lit = self.lower_pattern_literal(elem_inner)?;
                     let eq = Expr::BuiltinCall {
                         name: "==".to_string(),
@@ -1714,6 +1744,7 @@ impl Lowerer {
                         effects: EffectSet::PURE,
                         span: span.clone(),
                     };
+                    self.features_used.insert(Feature::ShortCircuit);
                     cond = Expr::LogicalAnd {
                         lhs: Box::new(cond),
                         rhs: Box::new(eq),
@@ -1721,7 +1752,7 @@ impl Lowerer {
                     };
                 }
                 "binding_pattern" => {
-                    // Bind `name = s[i]` (runs in the match body only).
+                    // Bind `name = target[i]` (runs in the match body only).
                     let name_tok = elem_inner
                         .children
                         .iter()
@@ -1747,10 +1778,26 @@ impl Lowerer {
                         span: self.span_of_token(name_tok),
                     });
                 }
+                "array_pattern" => {
+                    // Phase 13b — recurse: match `target[i]` against the
+                    // nested array pattern.  AND the sub-condition into
+                    // the chain (after this level's length check, so the
+                    // `target[i]` index is already in bounds) and append
+                    // any nested bindings to the prefix.
+                    let (sub_cond, sub_prefix) =
+                        self.lower_array_pattern(elem_inner, &index, span.clone())?;
+                    self.features_used.insert(Feature::ShortCircuit);
+                    cond = Expr::LogicalAnd {
+                        lhs: Box::new(cond),
+                        rhs: Box::new(sub_cond),
+                        span: span.clone(),
+                    };
+                    prefix.extend(sub_prefix);
+                }
                 other => {
                     return Err(RubyLowerError {
                         message: format!(
-                            "lower_fixed_array_pattern reached non-simple element `{}`",
+                            "lower_array_pattern reached non-lowerable element `{}`",
                             other
                         ),
                         line: elem_inner.start_line.unwrap_or(0),

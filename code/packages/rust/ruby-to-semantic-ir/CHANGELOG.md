@@ -2,6 +2,40 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.76.0] - 2026-06-01
+
+### Changed (Phase 13b (FC) — nested array patterns lower structurally)
+
+`case/in` array patterns now lower **recursively**: a nested array
+sub-pattern (`in [[1], y]`) is matched structurally instead of dropping
+the whole pattern to the `__pattern_match__` marker.
+`lower_fixed_array_pattern` was generalized to `lower_array_pattern`,
+which takes a `target` expression (the scrutinee, or a `SeqIndex` into it
+for a nested level) and recurses on `array_pattern` elements:
+
+```text
+in [[1], y]   # cond:   ((len(x)==2) && ((len(x[0])==1) && (x[0][0]==1)))
+              # prefix: let y = x[1]
+```
+
+Each level's length check leads its sub-match in the short-circuiting
+`&&` (`Expr::LogicalAnd`) chain, so every `SeqIndex` is in bounds before
+evaluation (outer length → element → inner length → …). A new recursive
+`array_pattern_is_lowerable` gate decides marker-vs-structural: literal /
+binding / nested-array elements are lowerable; **hash sub-patterns at any
+depth** keep the whole pattern on the `__pattern_match__` marker.
+
+Also declares `Feature::ShortCircuit` whenever a structural pattern emits
+`Expr::LogicalAnd` (a literal or nested element) and adds it to the
+manifest builder allowlist — fixing a latent gap where a literal array
+pattern (`in [1, 2]`, Phase 13a) emitted `LogicalAnd` without declaring
+the feature (not previously exercised through the validator).
+
+New / updated lowering pins: `case_in_nested_array_pattern_lowers_structurally`
+(replaces the 13a marker assertion), `case_in_array_with_hash_element_keeps_marker_fallback`,
+`case_in_literal_array_pattern_validates_e2e` (ShortCircuit regression),
+`case_in_nested_array_pattern_validates_e2e`. Test count: 304 → 307.
+
 ## [0.75.0] - 2026-06-01
 
 ### Changed (Phase 13a (FC) — fixed-arity array patterns lower structurally)
