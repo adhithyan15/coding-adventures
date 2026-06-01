@@ -369,16 +369,40 @@ fn test_typeof_identifier_is_left_alone() {
 ///   test("typeof a === typeof a", "true");
 ///   test("typeof a !== typeof a", "false");
 ///
-/// Folding these requires recognising that the two sub-expressions are
-/// *structurally identical* (same operator, same identifier name), not
-/// just folding each side independently. That's a different kind of
-/// fold rule — see gap-029. Stays `#[ignore]`-ed here.
+/// **gap-029 closed in CLOC12.17**: a new structural-equality arm in
+/// `try_fold_binary_op` recognises `typeof <Identifier> {===,!==} typeof
+/// <same Identifier>` and folds to `true`/`false` respectively.
+///
+/// Safety: ECMAScript §UnaryTypeofExpression special-cases
+/// `typeof <undeclared-identifier>` to return `"undefined"` instead of
+/// throwing a ReferenceError, so even if `a` is never declared the two
+/// evaluations produce the same string and the fold is sound.
 #[test]
-#[ignore = "blocked on gap-029: identity-of-typeof-same-identifier fold not implemented"]
 fn test_typeof_identifier_identity_fold() {
-    // Would assert:
+    use coding_adventures_javascript_ast::{Identifier, UnaryExpression, UnaryOperator};
+    let typeof_ = |name: &str| {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::TypeOf,
+            prefix: true,
+            argument: Box::new(Expression::Identifier(Identifier {
+                cv: None,
+                name: name.to_string(),
+            })),
+        })
+    };
     //   typeof a === typeof a  →  true
+    assert_fold(
+        b(typeof_("a"), BinaryOperator::StrictEq, typeof_("a")),
+        bool_(true),
+    );
     //   typeof a !== typeof a  →  false
+    assert_fold(
+        b(typeof_("a"), BinaryOperator::StrictNotEq, typeof_("a")),
+        bool_(false),
+    );
+    //   typeof a === typeof b  →  NOT folded (different identifiers)
+    assert_same(b(typeof_("a"), BinaryOperator::StrictEq, typeof_("b")));
 }
 
 /// Upstream "and similar" lines that boil down to plain arithmetic on
