@@ -226,7 +226,24 @@ const SUPPORTED_OPS: &[&str] = &[
     "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
     // LLVM03 — control flow
     "label", "jmp", "jmp_if_true", "jmp_if_false",
+    // LLVM04 — calls
+    "call", "call_builtin",
 ];
+
+/// Builtins the LLVM backend knows how to lower.
+///
+/// Each entry maps to an extern declaration emitted once per module (at the
+/// top, after the header) and a `call` site at each use point.  Today only
+/// `print_i64` is supported — the LLVM counterpart to wasm's
+/// `env.__print_i64` import (iir-to-wasm v0.8.0), JVM's
+/// `env/BasicRuntime.println(J)V` (iir-to-jvm-class-file v0.7.0), and CLR's
+/// `env.BasicRuntime::PrintI64(int64)` (iir-to-cil-bytecode v0.7.0).
+///
+/// Convention: BASIC's PRINT lowers to `@__print_i64` in textual LLVM IR.
+/// We pick that name (rather than `@env.__print_i64` etc.) because LLVM
+/// global names commonly use `__` for runtime / launcher symbols, and the
+/// downstream linker resolves the host implementation.
+const SUPPORTED_BUILTINS: &[&str] = &["print_i64"];
 
 /// Pre-flight validation for IIR → LLVM lowering.
 ///
@@ -311,18 +328,73 @@ pub fn lower_iir_to_llvm(
         return Err(IIRLlvmError::ValidationFailed(errors));
     }
 
+    // ── Build the callee signature table ──────────────────────────────────
+    //
+    // Every `call <name>(...)` site needs the param types of `<name>` to
+    // emit a well-typed LLVM call.  IIR's `call` instruction carries the
+    // return type in its `type_hint` but not the param types, so we
+    // pre-scan the module once and stash a `name → FnSig` map.  This is
+    // O(n) in the number of functions and avoids re-scanning per call.
+    let mut callee_sigs: HashMap<String, FnSig> = HashMap::new();
+    for f in &module.functions {
+        let ret = llvm_type_for(&f.return_type, &f.name)?;
+        let mut params = Vec::with_capacity(f.params.len());
+        for (_, pty) in &f.params {
+            params.push(llvm_type_for(pty, &f.name)?);
+        }
+        callee_sigs.insert(f.name.clone(), FnSig {
+            param_types: params,
+            return_type: ret,
+        });
+    }
+
     // ── Header ────────────────────────────────────────────────────────────
     let mut out = String::with_capacity(256);
     out.push_str(&format!("; ModuleID = '{}'\n", cfg.module_name));
     out.push_str(&format!("target triple = \"{}\"\n", cfg.target_triple));
 
+    // ── Extern declarations for builtins actually used ────────────────────
+    //
+    // Pre-scan to find every `call_builtin "<name>"` that appears in any
+    // function body, and emit one `declare` line per used builtin.  We do
+    // this up-front (rather than incrementally as we lower) so the output
+    // has the canonical LLVM shape: header → declares → defines.
+    //
+    // Currently the only supported builtin is `print_i64` (LLVM convention
+    // chosen for BASIC's PRINT — see `SUPPORTED_BUILTINS` doc above).
+    let mut used_print_i64 = false;
+    for f in &module.functions {
+        for i in &f.instructions {
+            if i.op == "call_builtin" {
+                if let Some(Operand::Var(name)) = i.srcs.first() {
+                    if name == "print_i64" {
+                        used_print_i64 = true;
+                    }
+                }
+            }
+        }
+    }
+    if used_print_i64 {
+        out.push('\n');
+        out.push_str("declare void @__print_i64(i64)\n");
+    }
+
     // ── Function bodies ───────────────────────────────────────────────────
     for func in &module.functions {
         out.push('\n');
-        lower_function(func, &mut out)?;
+        lower_function(func, &callee_sigs, &mut out)?;
     }
 
     Ok(out)
+}
+
+/// A user-defined function's signature, captured at the start of module
+/// lowering so each `call` site knows the param types of its callee.
+struct FnSig {
+    /// LLVM type names for each parameter, in order.
+    param_types: Vec<&'static str>,
+    /// LLVM return type name.
+    return_type: &'static str,
 }
 
 /// Per-function lowering state.
@@ -330,7 +402,10 @@ pub fn lower_iir_to_llvm(
 /// Splitting this out keeps `lower_instr`'s signature manageable now that
 /// LLVM03 needs both an SSA env, a sidecar i1-form env (for comparisons
 /// consumed by `jmp_if_*`), and a fresh-name counter for synthesized
-/// fallthrough basic blocks.
+/// fallthrough basic blocks; LLVM04 adds a reference to a module-wide map
+/// of callee signatures so `call` knows each arg's type, and a flag set
+/// when the function uses any extern builtin (so the module-level emitter
+/// can emit `declare` lines).
 struct FnState<'a> {
     /// IIR var name → emitted LLVM operand (e.g. `%v0` or `42`).
     env: HashMap<String, String>,
@@ -343,6 +418,9 @@ struct FnState<'a> {
     counter: u32,
     /// The function name (for error messages).
     fn_name: &'a str,
+    /// Module-wide map of every user-defined function's signature.  Built
+    /// up-front by `lower_iir_to_llvm` before any function body is lowered.
+    callee_sigs: &'a HashMap<String, FnSig>,
 }
 
 impl FnState<'_> {
@@ -353,7 +431,11 @@ impl FnState<'_> {
 }
 
 /// Emit one LLVM `define` block for one IIR function.
-fn lower_function(func: &IIRFunction, out: &mut String) -> Result<(), IIRLlvmError> {
+fn lower_function(
+    func: &IIRFunction,
+    callee_sigs: &HashMap<String, FnSig>,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
     let ret_ty = llvm_type_for(&func.return_type, &func.name)?;
     out.push_str(&format!("define {ret_ty} @{}(", func.name));
@@ -387,6 +469,7 @@ fn lower_function(func: &IIRFunction, out: &mut String) -> Result<(), IIRLlvmErr
         env_i1: HashMap::new(),
         counter: 0,
         fn_name: &func.name,
+        callee_sigs,
     };
     for (pname, _) in &func.params {
         state.env.insert(pname.clone(), format!("%{pname}"));
@@ -508,6 +591,23 @@ fn lower_instr(
         // `jmp_if_false` is the same with arms swapped.
         "jmp_if_true" => lower_jmp_if(instr, state, out, /*true_first=*/ true),
         "jmp_if_false" => lower_jmp_if(instr, state, out, /*true_first=*/ false),
+
+        // ── call <name>(<args>...) — user-defined function call ─────────
+        //
+        // Layout: srcs = [Var(callee), Var(arg1), Var(arg2), ...].  dest is
+        // Some(name) for non-void return, None for void.  The IIR
+        // type_hint is the callee's return type.  Per-arg types come from
+        // the pre-built `callee_sigs` map; without it we cannot emit
+        // well-typed LLVM (`call` requires explicit per-arg types).
+        "call" => lower_call(instr, state, out),
+
+        // ── call_builtin "<name>"(<args>...) — extern host call ─────────
+        //
+        // Layout: srcs = [Var("<builtin_name>"), Var(arg1), ...].  Today
+        // only `print_i64` is supported (lowers to
+        // `call void @__print_i64(i64 %v)`).  The matching `declare` line
+        // is emitted once at the module top by `lower_iir_to_llvm`.
+        "call_builtin" => lower_call_builtin(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
@@ -754,5 +854,144 @@ fn render_literal(
             function: fn_name.into(),
             detail: format!("missing literal for type {type_hint}"),
         }),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// LLVM04 — call / call_builtin
+// ---------------------------------------------------------------------------
+
+/// Lower an IIR `call` of a user-defined function.
+///
+/// Layout: `srcs = [Var(callee), Var(arg1), Var(arg2), ...]` and `dest =
+/// Some(name)` for non-void return, `None` for void.  The IIR `type_hint`
+/// is the callee's return type.
+///
+/// Output:
+///
+/// ```llvm
+/// %dest = call <ret_ty> @<callee>(<arg_ty> <arg>, ...)   ; non-void
+///         call void     @<callee>(<arg_ty> <arg>, ...)   ; void
+/// ```
+fn lower_call(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    // srcs[0] is the callee name.
+    let callee = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "call requires srcs[0] = Operand::Var(callee_name)".into(),
+        }),
+    };
+    let sig = state.callee_sigs.get(&callee).ok_or_else(|| {
+        IIRLlvmError::UndefinedVariable {
+            function: state.fn_name.into(),
+            name: format!("callee {callee:?} not in module"),
+        }
+    })?;
+
+    // Validate arg count matches signature so we fail fast rather than
+    // emitting malformed LLVM that `opt` would reject later.
+    let arg_srcs = &instr.srcs[1..];
+    if arg_srcs.len() != sig.param_types.len() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!(
+                "call to {callee:?}: arg-count mismatch (got {}, want {})",
+                arg_srcs.len(),
+                sig.param_types.len()
+            ),
+        });
+    }
+
+    // Resolve each operand and pair it with its declared param type.
+    let mut arg_parts = Vec::with_capacity(arg_srcs.len());
+    for (src, pty) in arg_srcs.iter().zip(sig.param_types.iter()) {
+        let op = match src {
+            Operand::Var(name) => state.env.get(name).cloned().ok_or_else(|| {
+                IIRLlvmError::UndefinedVariable {
+                    function: state.fn_name.into(),
+                    name: name.clone(),
+                }
+            })?,
+            other => render_literal(Some(other), pty, state.fn_name)?,
+        };
+        arg_parts.push(format!("{pty} {op}"));
+    }
+    let args_joined = arg_parts.join(", ");
+
+    let ret_ty = sig.return_type;
+    if let Some(dest) = &instr.dest {
+        out.push_str(&format!(
+            "  %{dest} = call {ret_ty} @{callee}({args_joined})\n"
+        ));
+        state.env.insert(dest.clone(), format!("%{dest}"));
+    } else {
+        // Void return — no dest binding.  Per LLVM IR, a void `call` must
+        // not be on the LHS of an assignment.
+        out.push_str(&format!("  call {ret_ty} @{callee}({args_joined})\n"));
+    }
+    Ok(())
+}
+
+/// Lower an IIR `call_builtin "<name>"(...)` to an extern call.
+///
+/// Today only `print_i64` is supported (the LLVM counterpart to wasm's
+/// `env.__print_i64`, JVM's `env/BasicRuntime.println(J)V`, and CLR's
+/// `env.BasicRuntime::PrintI64(int64)`).  Layout:
+///
+/// ```text
+/// srcs = [Var("print_i64"), Var(val: i64)]
+/// dest = None
+/// ```
+///
+/// emits:
+///
+/// ```llvm
+/// call void @__print_i64(i64 <val>)
+/// ```
+///
+/// The matching `declare void @__print_i64(i64)` is emitted at the module
+/// top by `lower_iir_to_llvm` if any function uses the builtin.
+fn lower_call_builtin(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let name = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "call_builtin requires srcs[0] = Operand::Var(builtin_name)".into(),
+        }),
+    };
+    if !SUPPORTED_BUILTINS.contains(&name.as_str()) {
+        return Err(IIRLlvmError::UnsupportedOp {
+            function: state.fn_name.into(),
+            op: format!("call_builtin {name:?}: not in LLVM backend whitelist"),
+        });
+    }
+    match name.as_str() {
+        "print_i64" => {
+            let val = match instr.srcs.get(1) {
+                Some(Operand::Var(s)) => state.env.get(s).cloned().ok_or_else(|| {
+                    IIRLlvmError::UndefinedVariable {
+                        function: state.fn_name.into(),
+                        name: s.clone(),
+                    }
+                })?,
+                Some(other) => render_literal(Some(other), "i64", state.fn_name)?,
+                None => return Err(IIRLlvmError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val:i64)".into(),
+                }),
+            };
+            out.push_str(&format!("  call void @__print_i64(i64 {val})\n"));
+            Ok(())
+        }
+        _ => unreachable!("SUPPORTED_BUILTINS guard above prevents this"),
     }
 }

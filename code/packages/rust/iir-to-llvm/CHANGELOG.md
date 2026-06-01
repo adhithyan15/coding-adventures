@@ -3,6 +3,64 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] — 2026-06-01 (LLVM04 — `call` + `call_builtin print_i64` + `lang-aot --emit=llvm-ir`)
+
+### Added — user-defined `call`
+
+Per-arg LLVM types come from a pre-built callee-signature side map:
+`lower_iir_to_llvm` walks every function in the module once at the
+start and stashes a `name → FnSig { param_types, return_type }` map.
+Each `call` site looks up its callee in that map, validates the arg
+count against the signature, and emits:
+
+```llvm
+%dest = call <ret_ty> @<callee>(<arg_ty> <arg>, ...)   ; non-void
+        call void     @<callee>(<arg_ty> <arg>, ...)   ; void
+```
+
+Why pre-scan rather than synthesize from each call site's `type_hint`:
+IIR's `call` carries only the **return** type in `type_hint`; param
+types live on the *callee*.  Without pre-scan we'd need a second pass
+or some hacky heuristic.
+
+#### Validation
+
+* `call`'s callee must exist in the module (else `UndefinedVariable`).
+* Arg count must match the callee's param count (else `InvalidOperand`
+  with an `arg-count` discriminator string).
+
+### Added — `call_builtin "print_i64"` → extern `@__print_i64`
+
+Completes the print_i64 trio across the four backend targets:
+
+| Backend            | print_i64 lowering                                    |
+|--------------------|-------------------------------------------------------|
+| iir-to-wasm        | `env.__print_i64` host import                         |
+| iir-to-jvm-class-file | `invokestatic env/BasicRuntime.println(J)V`         |
+| iir-to-cil-bytecode | `call void env.BasicRuntime::PrintI64(int64)`        |
+| **iir-to-llvm (this)** | `declare void @__print_i64(i64)` + `call void @__print_i64(i64 …)` |
+
+The extern `declare` is emitted exactly **once** per module, at the
+top, after the header.  `lower_iir_to_llvm` pre-scans the whole module
+to decide whether to emit it (so the unused-builtin case doesn't pay
+the extern cost).
+
+#### Whitelist gate
+
+* `SUPPORTED_BUILTINS = ["print_i64"]`.  Any other builtin name fails
+  with `UnsupportedOp` — defence in depth even though `call_builtin`
+  is in the validator whitelist.
+
+### Tests added (45 total, was 37)
+
+* `call` (4): non-void user fn typed call, void-return omits LHS,
+  unknown callee → UndefinedVariable, arg-count mismatch error.
+* `call_builtin` (4): print_i64 emits extern + call, declare emitted
+  exactly once per module, declare omitted when print_i64 unused,
+  unknown builtin name → UnsupportedOp.
+
+[plan]: ../../../specs/MULTILANG-BACKEND-PLAN.md
+
 ## [0.3.0] — 2026-06-01 (LLVM03 — typed arithmetic + comparison + branches)
 
 ### Added — three op families

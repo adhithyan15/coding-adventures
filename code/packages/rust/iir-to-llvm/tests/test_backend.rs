@@ -627,7 +627,233 @@ fn jmp_if_false_swaps_arms() {
 }
 
 // ===========================================================================
-// 11. Error display (kept green from LLVM02)
+// 11. LLVM04 — call / call_builtin print_i64
+// ===========================================================================
+//
+// `call` lowers user-defined function calls.  Per-arg LLVM types come from
+// the callee's signature, which `lower_iir_to_llvm` pre-scans into a side
+// map.  `call_builtin "print_i64"` lowers to `call void @__print_i64(i64 …)`
+// + a module-top `declare void @__print_i64(i64)`.
+
+#[test]
+fn call_user_fn_non_void_emits_typed_call() {
+    // square(x) { ret x*x }
+    // f() -> i32 { v = const 5 : i32; r = call square(v) : i32; ret r }
+    let square = IIRFunction::new(
+        "square",
+        vec![("x".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("mul", Some("r".into()),
+                vec![Operand::Var("x".into()), Operand::Var("x".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ]);
+    let f = IIRFunction::new(
+        "f",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "i32"),
+            IIRInstr::new("call",  Some("r".into()),
+                vec![Operand::Var("square".into()), Operand::Var("v".into())], "i32"),
+            IIRInstr::new("ret",   None, vec![Operand::Var("r".into())], "i32"),
+        ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![square, f],
+        entry_point: Some("f".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains("%r = call i32 @square(i32 5)"),
+        "expected `%r = call i32 @square(i32 5)`; got:\n{ll}");
+}
+
+#[test]
+fn call_void_return_omits_lhs() {
+    // sink(x) { ret_void }
+    // f() { v = const 7; call sink(v); ret_void }
+    let sink = IIRFunction::new(
+        "sink",
+        vec![("x".into(), "i32".into())],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+    let f = IIRFunction::new(
+        "f",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("call",  None,
+                vec![Operand::Var("sink".into()), Operand::Var("v".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![sink, f],
+        entry_point: Some("f".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains("  call void @sink(i32 7)"),
+        "expected `  call void @sink(i32 7)`; got:\n{ll}");
+    // Must NOT contain `%??? = call void` — LLVM rejects void on the LHS.
+    assert!(!ll.contains("= call void"),
+        "void call must not appear on LHS of `=`; got:\n{ll}");
+}
+
+#[test]
+fn call_unknown_callee_is_error() {
+    let f = IIRFunction::new(
+        "f",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("call", Some("r".into()),
+                vec![Operand::Var("ghost".into())], "i32"),
+            IIRInstr::new("ret",  None, vec![Operand::Var("r".into())], "i32"),
+        ]);
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default())
+        .expect_err("unknown callee should fail lowering");
+    match err {
+        IIRLlvmError::UndefinedVariable { name, .. } => {
+            assert!(name.contains("ghost"),
+                "expected error mentioning \"ghost\"; got: {name}");
+        }
+        other => panic!("expected UndefinedVariable, got: {other:?}"),
+    }
+}
+
+#[test]
+fn call_arg_count_mismatch_is_error() {
+    let callee = IIRFunction::new(
+        "g",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i32")]);
+    let f = IIRFunction::new(
+        "f",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("call",  Some("r".into()),
+                vec![Operand::Var("g".into()), Operand::Var("v".into())], "i32"), // only 1 arg, g wants 2
+            IIRInstr::new("ret",   None, vec![Operand::Var("r".into())], "i32"),
+        ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![callee, f],
+        entry_point: Some("f".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let err = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())
+        .expect_err("arg-count mismatch should fail");
+    match err {
+        IIRLlvmError::InvalidOperand { detail, .. } => {
+            assert!(detail.contains("arg-count"), "expected arg-count error; got: {detail}");
+        }
+        other => panic!("expected InvalidOperand, got: {other:?}"),
+    }
+}
+
+#[test]
+fn call_builtin_print_i64_emits_extern_call_and_declare() {
+    // f() { v = const 42 : i64; call_builtin print_i64(v); ret_void }
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("call_builtin", None,
+                vec![Operand::Var("print_i64".into()), Operand::Var("v".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("declare void @__print_i64(i64)"),
+        "expected extern declare for @__print_i64; got:\n{ll}");
+    assert!(ll.contains("call void @__print_i64(i64 42)"),
+        "expected call site for @__print_i64; got:\n{ll}");
+}
+
+#[test]
+fn declare_for_print_i64_is_emitted_exactly_once_per_module() {
+    // Two functions both use print_i64 → only ONE declare line.
+    let f1 = IIRFunction::new(
+        "a",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("call_builtin", None,
+                vec![Operand::Var("print_i64".into()), Operand::Var("v".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let f2 = IIRFunction::new(
+        "b",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("call_builtin", None,
+                vec![Operand::Var("print_i64".into()), Operand::Var("v".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let module = IIRModule {
+        name: "two".into(),
+        functions: vec![f1, f2],
+        entry_point: Some("a".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert_eq!(
+        ll.matches("declare void @__print_i64(i64)").count(),
+        1,
+        "expected exactly one `declare` for @__print_i64; got:\n{ll}"
+    );
+}
+
+#[test]
+fn declare_omitted_when_print_i64_unused() {
+    let f = IIRFunction::new(
+        "main", vec![], "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+    let ll = lower(&module_with(f));
+    assert!(!ll.contains("@__print_i64"),
+        "no print_i64 use → no extern; got:\n{ll}");
+}
+
+#[test]
+fn call_builtin_unknown_name_is_unsupported_op() {
+    let f = IIRFunction::new(
+        "main", vec![], "void",
+        vec![
+            IIRInstr::new("call_builtin", None,
+                vec![Operand::Var("definitely_unknown".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default())
+        .expect_err("unknown builtin should fail lowering");
+    match err {
+        IIRLlvmError::UnsupportedOp { op, .. } => {
+            assert!(op.contains("definitely_unknown"),
+                "expected error to mention the unknown builtin; got: {op}");
+        }
+        other => panic!("expected UnsupportedOp, got: {other:?}"),
+    }
+}
+
+// ===========================================================================
+// 12. Error display (kept green from LLVM02)
 // ===========================================================================
 
 #[test]
