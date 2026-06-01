@@ -203,6 +203,24 @@ const BASTORE: u8 = 0x54;
 /// into the bytecode — the host can dial that knob without recompiling.
 const BF_RUNTIME_CLASS: &str = "env/BFRuntime";
 
+/// Host class name for BASIC's `PRINT` builtin (and future BASIC I/O).
+///
+/// The host (Java runtime / launcher) must provide a class with this binary
+/// name (slash-separated) containing:
+///
+///   * `public static void println(long)` — print a 64-bit integer value
+///     followed by a newline to stdout.
+///
+/// We pick a dedicated class instead of overloading [`BF_RUNTIME_CLASS`]
+/// because BASIC's I/O model (line/value oriented, mostly numeric) differs
+/// from Brainfuck's (byte-stream oriented).  Keeping them separate lets a
+/// JVM launcher provide just one, or stub them independently.
+///
+/// This mirrors the wasm backend's `env.__print_i64` host import (see
+/// `iir-to-wasm` v0.8.0, gap G2): both let BASIC's `PRINT` reach real
+/// backend bytecode by deferring the actual write to the host.
+const BASIC_RUNTIME_CLASS: &str = "env/BasicRuntime";
+
 // ── Comparison and branching ───────────────────────────────────────────────
 const IFEQ: u8 = 0x99;      // branch if TOS int == 0
 const IFNE: u8 = 0x9A;      // branch if TOS int != 0
@@ -2084,8 +2102,9 @@ fn lower_function(
             //
             // | Builtin   | Operand layout                          | Bytecode emitted |
             // |-----------|------------------------------------------|-------------------|
-            // | `putchar` | srcs = [Var("putchar"), Var(val)]; no dest | iload val; invokestatic env/BFRuntime.putchar(I)V |
-            // | `getchar` | srcs = [Var("getchar")]; dest = byte slot  | invokestatic env/BFRuntime.getchar()I; istore dest |
+            // | `putchar`   | srcs = [Var("putchar"), Var(val)]; no dest    | iload val; invokestatic env/BFRuntime.putchar(I)V |
+            // | `getchar`   | srcs = [Var("getchar")]; dest = byte slot     | invokestatic env/BFRuntime.getchar()I; istore dest |
+            // | `print_i64` | srcs = [Var("print_i64"), Var(val:i64)]; no dest | lload val; invokestatic env/BasicRuntime.println(J)V |
             "call_builtin" => {
                 let builtin_name = match instr.srcs.first() {
                     Some(Operand::Var(s)) => s.clone(),
@@ -2124,6 +2143,29 @@ fn lower_function(
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_istore(&mut code, dest_slot);
+                    }
+                    "print_i64" => {
+                        // print_i64 takes one i64 (`long` on the JVM) arg and
+                        // returns void.  This is BASIC's `PRINT` lowered: the
+                        // value is loaded with `lload` (long load) and then
+                        // we invokestatic the host's `println(J)V` method on
+                        // [`BASIC_RUNTIME_CLASS`].  The host is responsible
+                        // for the actual write — we just hand the long to it.
+                        //
+                        // Mirrors the wasm backend (iir-to-wasm v0.8.0) which
+                        // routes the same builtin to `env.__print_i64`.
+                        let val_name = match instr.srcs.get(1) {
+                            Some(Operand::Var(s)) => s.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val:i64)".to_string(),
+                            }),
+                        };
+                        let (val_slot, _) = lookup_var(&val_name)?;
+                        emit_lload(&mut code, val_slot);
+                        let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "println", "(J)V");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
                     }
                     _ => {
                         // Validator should have rejected this; defense in depth.
