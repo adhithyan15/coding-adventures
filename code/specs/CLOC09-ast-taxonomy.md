@@ -351,6 +351,19 @@ pub enum ForInit {
   implemented in CLOC12.15 (would require a bigint runtime in
   constant-fold); however the `typeof <BigIntLiteral>` → `"bigint"`
   fold IS implemented since it requires no arithmetic.
+- **CLOC12.16 — `UndefinedLiteral`.** Adds a typed `undefined`
+  leaf node so passes can pattern-match on it without first
+  checking an `Identifier`'s name. Note that in ECMAScript
+  `undefined` is technically an *identifier*, not a reserved word
+  — `var undefined = 1;` is legal in non-strict mode and shadows
+  the global. ESTree historically modelled it as
+  `Identifier { name: "undefined" }`; we follow the modern typed-
+  variant approach. The emitter renders it as `void 0` — shadow-
+  safe, since `void <expr>` always produces the genuine undefined
+  value regardless of any name in scope. The `typeof
+  <UndefinedLiteral>` → `"undefined"` fold closes the last hole
+  in CLOC12.09's typeof-literal fold table. Partially closes
+  gap-001 (the `NaN` and `Infinity` cases remain).
 
 ## Phase 1 — Expression variants
 
@@ -362,6 +375,7 @@ pub enum ForInit {
 | `BooleanLiteral`        | `cv: Option<CvId>`, `value: bool`                                                                                                                           |
 | `NullLiteral`           | `cv: Option<CvId>`                                                                                                                                          |
 | `BigIntLiteral`         | `cv: Option<CvId>`, `value: String`, `raw: String` — Phase 1.x (CLOC12.15)                                                                                  |
+| `UndefinedLiteral`      | `cv: Option<CvId>` — Phase 1.x (CLOC12.16)                                                                                                                  |
 | `BinaryExpression`      | `cv: Option<CvId>`, `operator: BinaryOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                           |
 | `LogicalExpression`     | `cv: Option<CvId>`, `operator: LogicalOperator`, `left: Box<Expression>`, `right: Box<Expression>`                                                          |
 | `UnaryExpression`       | `cv: Option<CvId>`, `operator: UnaryOperator`, `prefix: bool`, `argument: Box<Expression>`                                                                  |

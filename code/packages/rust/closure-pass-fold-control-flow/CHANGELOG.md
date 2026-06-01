@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.4.2] - 2026-06-01
+
+### Changed — CLOC12.16: handle new `UndefinedLiteral` Expression variant
+
+The fold-control-flow pass gained an `Expression::UndefinedLiteral`
+arm in its expression-walk leaf list so it compiles against the new
+`javascript-ast 0.6.0` AST. Behaviour: passthrough.
+
 ## [0.4.1] - 2026-06-01
 
 ### Changed — CLOC12.15 rebase: handle new `BigIntLiteral` Expression variant

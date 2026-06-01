@@ -380,7 +380,8 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         | Expression::StringLiteral(_)
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
-        | Expression::BigIntLiteral(_) => expr.clone(),
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => fold_binary(b, st),
         Expression::LogicalExpression(l) => fold_logical(l, st),
@@ -681,6 +682,7 @@ fn js_literal_type(expr: &Expression) -> Option<&'static str> {
         Expression::BooleanLiteral(_) => Some("boolean"),
         Expression::NullLiteral(_) => Some("null"),
         Expression::BigIntLiteral(_) => Some("bigint"),
+        Expression::UndefinedLiteral(_) => Some("undefined"),
         _ => None,
     }
 }
@@ -852,6 +854,9 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 Expression::BooleanLiteral(_) => Some(FoldedLiteral::String("boolean".to_string())),
                 Expression::NullLiteral(_) => Some(FoldedLiteral::String("object".to_string())),
                 Expression::BigIntLiteral(_) => Some(FoldedLiteral::String("bigint".to_string())),
+                Expression::UndefinedLiteral(_) => {
+                    Some(FoldedLiteral::String("undefined".to_string()))
+                }
                 _ => None,
             }
         }

@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-01
+
+### Added — CLOC12.16: `UndefinedLiteral` Expression variant (Phase 1.x, closes gap-001)
+
+Adds `UndefinedLiteral { cv: Option<CvId> }` and its
+`Expression::UndefinedLiteral` arm. No value field — there is
+exactly one `undefined`.
+
+Wire format:
+
+```json
+{ "type": "UndefinedLiteral" }
+```
+
+**Note: `undefined` is technically an identifier in ECMAScript,
+not a reserved word.** `var undefined = 1;` is legal in non-strict
+mode and shadows the global. ESTree historically modelled it as
+`Identifier { name: "undefined" }`; we follow the modern typed
+variant approach so passes can pattern-match on the leaf without
+first checking the identifier name. The emitter renders it as
+`void 0` (shadow-safe — see closure-emitter CHANGELOG).
+
+Two new roundtrip tests cover traced and untraced cases.
+
+This closes the final hole in CLOC12.09's typeof-literal fold
+table: constant-fold now folds `typeof <UndefinedLiteral>` to
+`"undefined"`.
+
 ## [0.5.0] - 2026-06-01
 
 ### Added — CLOC12.15: `BigIntLiteral` Expression variant (Phase 1.x, closes gap-021)
