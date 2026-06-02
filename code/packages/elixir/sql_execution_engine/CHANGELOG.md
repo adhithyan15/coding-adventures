@@ -10,8 +10,11 @@
   `signed_number` nodes. Three things broke once the engine was rebuilt:
   - `Expression.eval_rule/3` had no clause for `collated`/`bitwise`, raising
     `no function clause matching` on every `WHERE`/`SELECT` expression. Added
-    transparent `collated` and `bitwise` clauses (plus integer bitwise
-    operators `& | << >>` in `apply_arith/3`).
+    transparent `collated` and `bitwise` clauses, plus the integer bitwise
+    operators `& | << >>` in `apply_arith/3` using SQLite's signed-64-bit
+    semantics (operands reduced mod 2**64, shift counts capped at 64 so a
+    query like `1 << 1000000000` returns `0` rather than allocating a huge
+    bignum).
   - `Executor.default_column_name/1` did not list `collated`/`bitwise` as
     transparent wrappers, so projected/ORDER BY columns were mislabelled
     `"expr"`. Added them to `@transparent_rules`.

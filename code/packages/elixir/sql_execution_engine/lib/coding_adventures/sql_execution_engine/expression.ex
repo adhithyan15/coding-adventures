@@ -608,10 +608,63 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   defp apply_arith("%", a, b) when b != 0, do: rem(a, b)
   defp apply_arith("%", _, 0), do: nil
   # Integer bitwise operators (the `bitwise` grammar layer).
-  defp apply_arith("&", a, b), do: Bitwise.band(a, b)
-  defp apply_arith("|", a, b), do: Bitwise.bor(a, b)
-  defp apply_arith("<<", a, b), do: Bitwise.bsl(a, b)
-  defp apply_arith(">>", a, b), do: Bitwise.bsr(a, b)
+  #
+  # SQLite does bitwise math on *signed 64-bit* integers, so we truncate the
+  # operands to integers, reduce mod 2**64, and reinterpret the result as
+  # signed.  Capping the shift count at 64 before shifting is also what keeps
+  # `<<` safe: `1 << 1000000000` collapses to 0 rather than allocating an
+  # enormous bignum.
+  defp apply_arith("&", a, b), do: to_i64(Bitwise.band(mask64(a), mask64(b)))
+  defp apply_arith("|", a, b), do: to_i64(Bitwise.bor(mask64(a), mask64(b)))
+  defp apply_arith("<<", a, b), do: sql_shift(trunc_int(a), trunc_int(b), :left)
+  defp apply_arith(">>", a, b), do: sql_shift(trunc_int(a), trunc_int(b), :right)
+
+  @mask64 0xFFFFFFFFFFFFFFFF
+  @sign64 0x8000000000000000
+
+  defp trunc_int(v) when is_integer(v), do: v
+  defp trunc_int(v) when is_float(v), do: trunc(v)
+
+  # Mask an integer to its unsigned 64-bit representation.
+  defp mask64(v), do: Bitwise.band(trunc_int(v), @mask64)
+
+  # Reinterpret an unsigned 64-bit value as signed (two's complement).
+  defp to_i64(v) do
+    v = Bitwise.band(v, @mask64)
+    if v >= @sign64, do: v - 0x10000000000000000, else: v
+  end
+
+  # SQLite shift semantics on signed 64-bit integers (VDBE OP_ShiftLeft/Right):
+  # a negative shift count reverses direction; a magnitude of 64 or more
+  # collapses to 0 (or -1 for an arithmetic right shift of a negative value);
+  # a right shift sign-extends.
+  defp sql_shift(value, 0, _dir), do: to_i64(value)
+
+  defp sql_shift(value, shift, dir) when shift < 0 do
+    flipped = if dir == :left, do: :right, else: :left
+    sql_shift(value, if(shift > -64, do: -shift, else: 64), flipped)
+  end
+
+  defp sql_shift(value, shift, dir) when shift >= 64 do
+    if value >= 0 or dir == :left, do: 0, else: -1
+  end
+
+  defp sql_shift(value, shift, :left) do
+    to_i64(Bitwise.bsl(mask64(value), shift))
+  end
+
+  defp sql_shift(value, shift, :right) do
+    bits = Bitwise.bsr(mask64(value), shift)
+
+    bits =
+      if value < 0 do
+        Bitwise.bor(bits, Bitwise.band(Bitwise.bsl(@mask64, 64 - shift), @mask64))
+      else
+        bits
+      end
+
+    to_i64(bits)
+  end
 
   # Lookup a column key in the row context, raising if not found.
   defp lookup_column(key, row_ctx) do
