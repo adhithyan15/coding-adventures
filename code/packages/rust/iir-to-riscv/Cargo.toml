@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-riscv"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
-description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.3.0 (A1++ first slice): adds wide constants via lui+addi (any i32 now lowers cleanly), comparison ops eq/ne/lt/le/gt/ge producing i32 0/1 (slt/sltu + xor synth), and call_builtin print_i64 via ecall with a7=1 syscall convention.  Defers branches/calls/stack-spilling to A1++.5."
+description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.3.1 (A1++.5 control-flow slice): adds label/jmp/jmp_if_true/jmp_if_false with two-pass label resolution, PC-relative offset computation via beq/bne/jal, and BranchOutOfRange/UndefinedLabel errors.  Calls + stack spilling still deferred."
 
 [lib]
 name = "iir_to_riscv"

@@ -3,6 +3,62 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.1] — 2026-06-02 (A1++.5 control-flow slice — `label` / `jmp` / `jmp_if_*` with two-pass label resolution)
+
+### Added — control flow within a single function
+
+Lands the control-flow piece of the A1++ bundle.  Cross-function `call`
+and stack spilling remain deferred to A1++.5.5 — splitting them keeps
+each PR's review surface focused.
+
+| IIR op | RV32I lowering |
+|--------|----------------|
+| `label "L"` | byte-offset marker, emits zero machine words |
+| `jmp "L"` | `jal x0, +offset` (J-type, ±1 MiB range) |
+| `jmp_if_true cond, "L"` | `bne cond, x0, +offset` (B-type, ±4 KiB range) |
+| `jmp_if_false cond, "L"` | `beq cond, x0, +offset` (B-type, ±4 KiB range) |
+
+### Implementation — two-pass label resolution
+
+Single traversal of IIR, two visits of the words vector:
+
+1. Each `label` records `labels[name] = out.len() * 4` (current byte
+   offset).  Zero machine words emitted.
+2. Each branch (`jmp` / `jmp_if_*`) pushes a placeholder zero word and
+   records `(word_idx, target_label, BranchKind)` in
+   `state.branches`.
+3. After all instructions are lowered, `lower_function` walks
+   `state.branches` and re-emits each placeholder via the right
+   encoder with the resolved offset.
+
+This keeps the per-instruction lowerer simple — no special "is this a
+forward branch?" logic — and produces the same byte layout as a real
+two-pass assembler.
+
+### New error variants
+
+* `IIRRiscvError::UndefinedLabel` — branch to a `label` that was never
+  defined in the same function.
+* `IIRRiscvError::BranchOutOfRange` — target so far away it would overflow
+  the encoding (`±4096` bytes for `beq`/`bne`, `±1 MiB` for `jal`).
+
+### Tests added (31 total, was 26)
+
+* `jmp_around_a_dead_block_patches_jal_with_real_offset` — pinned the
+  exact `jal x0, +8` encoding for a forward jump over a dead block.
+* `jmp_if_true_emits_bne_with_resolved_offset`
+* `jmp_if_false_emits_beq_with_resolved_offset`
+* `backward_jmp_emits_negative_offset` — infinite loop case (`jal x0, +0`).
+* `undefined_label_is_rejected` — error path.
+
+### What is NOT in this PR (deferred to A1++.5.5)
+
+* **Cross-function calls.**  `call` with `jal` + `ra` save/restore needs
+  a real stack frame.
+* **Stack-spilling register allocator.**  Locals beyond `t0..t6` still
+  produce `OutOfRegisters`.
+* **64-bit register-pair handling.**
+
 ## [0.3.0] — 2026-06-02 (A1++ first slice — wide consts + comparisons + `ecall print_i64`)
 
 ### Added — three more op families on RV32I

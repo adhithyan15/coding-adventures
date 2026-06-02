@@ -53,8 +53,9 @@ IIRModule
 |---------|-------|--------|
 | v0.1.0 (A1) | crate skeleton: any module → single `ret` (`0x0000_8067`) | **merged** |
 | v0.2.0 (A1+) | const/mov/add/sub/ret + linear register allocator | **merged** |
-| **v0.3.0 (A1++ first slice — this PR)** | wide consts (`lui+addi`) + comparisons (slt/sltu + xor synth) + `ecall print_i64` | this PR |
-| v0.3.1 (A1++.5) | branches (`label`/`jmp`/`jmp_if_*` + 2-pass offsets) + calls (`jal` + ra save/restore + stack spilling) + i64 register pairs | future |
+| v0.3.0 (A1++ first slice) | wide consts (`lui+addi`) + comparisons + `ecall print_i64` | **merged** |
+| **v0.3.1 (A1++.5 control-flow slice — this PR)** | `label` / `jmp` / `jmp_if_true` / `jmp_if_false` with two-pass label resolution (beq/bne/jal) | this PR |
+| v0.3.2 (A1++.5.5) | calls (`jal` + ra save/restore + stack spilling) + i64 register pairs | future |
 | v0.4.0 (A1+++) | `lang-aot --target=riscv32` wiring | future |
 | (later) | RV32M (mul/div), RV32A (atomics), RV32F (floats), DWARF emission via aot-debug | future |
 
