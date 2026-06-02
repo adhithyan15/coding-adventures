@@ -20,7 +20,7 @@ use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, BinaryExpression, BinaryOperator, BooleanLiteral, Expression,
     ExpressionStatement, NullLiteral, NumericLiteral, Program, ProgramItem, SourceType,
-    Statement, StringLiteral,
+    Statement, StringLiteral, UndefinedLiteral, UnaryExpression, UnaryOperator,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use coding_adventures_type_sidecar::Sidecar;
@@ -152,11 +152,59 @@ fn test_undefined_comparison_1() {
 ///   test("\"123\" === void 0", "false");
 ///   test("void 0 !== \"123\"", "true");
 ///   test("void 0 === \"123\"", "false");
+/// **gap-002 RESOLVED in CLOC12.20** — `UnaryOperator::Void` over a
+/// primitive literal now folds to `UndefinedLiteral`. With gap-001
+/// (UndefinedLiteral variant) already resolved in CLOC12.16,
+/// downstream binary-equality folds can then participate.
+///
+/// This test exercises the fold rule directly: `void 0` (i.e.
+/// `UnaryExpression { op: Void, arg: NumericLiteral(0) }`)
+/// becomes `UndefinedLiteral`.
 #[test]
-#[ignore = "blocked on gap-002: typed AST has UnaryOperator::Void but constant-fold doesn't recognise it as `undefined`"]
 fn test_undefined_comparison_2() {
-    // `void 0` is `UnaryExpression { op: Void, argument: NumericLiteral(0) }`.
-    // Folding this to `undefined` requires gap-001 first.
+    // `void 0` → undefined.
+    assert_fold(
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Void,
+            prefix: true,
+            argument: Box::new(n(0.0)),
+        }),
+        Expression::UndefinedLiteral(UndefinedLiteral { cv: None }),
+    );
+    // `void 1` → undefined (same rule; any numeric primitive
+    // argument).
+    assert_fold(
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Void,
+            prefix: true,
+            argument: Box::new(n(1.0)),
+        }),
+        Expression::UndefinedLiteral(UndefinedLiteral { cv: None }),
+    );
+    // `void "x"` → undefined (any primitive literal).
+    assert_fold(
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Void,
+            prefix: true,
+            argument: Box::new(s("x")),
+        }),
+        Expression::UndefinedLiteral(UndefinedLiteral { cv: None }),
+    );
+    // `void undefined` → undefined (folds to itself).
+    assert_fold(
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Void,
+            prefix: true,
+            argument: Box::new(Expression::UndefinedLiteral(UndefinedLiteral {
+                cv: None,
+            })),
+        }),
+        Expression::UndefinedLiteral(UndefinedLiteral { cv: None }),
+    );
 }
 
 /// Upstream:
