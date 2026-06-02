@@ -1,13 +1,13 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
-    BrowserForm, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel,
-    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserForm, BrowserFormButton, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormLabel, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormValidationControl, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
+    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -729,6 +729,8 @@ struct ExpectedForm {
     successful_controls: Vec<ExpectedFormSuccessfulControl>,
     #[serde(default)]
     validation_controls: Vec<ExpectedFormValidationControl>,
+    #[serde(default)]
+    buttons: Vec<ExpectedFormButton>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -1016,6 +1018,51 @@ struct ExpectedFormSubmitter {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormButton {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    autofocus: bool,
+    #[serde(default)]
+    submitter: bool,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    value: Option<String>,
+    text: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1356,6 +1403,94 @@ fn browser_form_successful_control_descriptor_metadata_tracks_submission_entries
         form.successful_controls[5].submission_values,
         vec!["external"]
     );
+}
+
+#[test]
+fn browser_form_button_descriptor_metadata_tracks_submitters_and_button_controls() {
+    let document = parse_browser_document(
+        "<base href=\"https://example.test/forms/index.html\" target=_base>\
+         <form id=actions action=submit method=post target=_form novalidate>\
+         <button id=save name=save value=s type=submit formaction=save formenctype=text/plain \
+             formmethod=get formtarget=_save formnovalidate autofocus>Save</button>\
+         <button id=reset type=reset name=reset value=r>Reset</button>\
+         <input id=plain type=button name=plain value=Plain>\
+         <input id=image type=image name=img src=go.png alt=Image width=20 height=10>\
+         <button id=disabled name=disabled disabled>Disabled</button>\
+         </form>\
+         <button id=external form=actions type=submit name=outside formtarget=_outside>Outside</button>",
+    )
+    .expect("form button descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("actions form should be summarized");
+    let ids: Vec<&str> = form
+        .buttons
+        .iter()
+        .filter_map(|button| button.id.as_deref())
+        .collect();
+    assert_eq!(
+        ids,
+        vec!["save", "reset", "plain", "image", "disabled", "external"]
+    );
+
+    let save = &form.buttons[0];
+    assert!(save.submitter);
+    assert!(save.autofocus);
+    assert_eq!(save.accessible_name.as_deref(), Some("Save"));
+    assert_eq!(save.action.as_deref(), Some("save"));
+    assert_eq!(
+        save.resolved_action.as_deref(),
+        Some("https://example.test/forms/save")
+    );
+    assert_eq!(save.method, "get");
+    assert_eq!(save.enctype.as_deref(), Some("text/plain"));
+    assert_eq!(save.target.as_deref(), Some("_save"));
+    assert_eq!(save.effective_target.as_deref(), Some("_save"));
+    assert!(save.novalidate);
+    assert_eq!(save.value.as_deref(), Some("s"));
+    assert_eq!(save.text, "Save");
+
+    let reset = &form.buttons[1];
+    assert_eq!(reset.control_type, "reset");
+    assert!(!reset.submitter);
+    assert_eq!(reset.method, "post");
+    assert_eq!(reset.text, "Reset");
+
+    let plain = &form.buttons[2];
+    assert_eq!(plain.control_type, "button");
+    assert!(!plain.submitter);
+    assert_eq!(plain.value.as_deref(), Some("Plain"));
+    assert!(plain.text.is_empty());
+
+    let image = &form.buttons[3];
+    assert_eq!(image.control_type, "image");
+    assert!(image.submitter);
+    assert_eq!(image.accessible_name.as_deref(), Some("Image"));
+    assert_eq!(
+        image.resolved_action.as_deref(),
+        Some("https://example.test/forms/submit")
+    );
+    assert_eq!(image.effective_target.as_deref(), Some("_form"));
+    assert_eq!(image.src.as_deref(), Some("go.png"));
+    assert_eq!(
+        image.resolved_src.as_deref(),
+        Some("https://example.test/forms/go.png")
+    );
+    assert_eq!(image.width.as_deref(), Some("20"));
+    assert_eq!(image.height.as_deref(), Some("10"));
+
+    let disabled = &form.buttons[4];
+    assert!(disabled.disabled);
+    assert!(!disabled.submitter);
+    assert!(!disabled.novalidate);
+
+    let external = &form.buttons[5];
+    assert_eq!(external.form_owner.as_deref(), Some("actions"));
+    assert!(external.submitter);
+    assert_eq!(external.effective_target.as_deref(), Some("_outside"));
+    assert_eq!(external.text, "Outside");
 }
 
 #[test]
@@ -2316,6 +2451,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormValidationControl::into_browser_form_validation_control)
                 .collect(),
+            buttons: self
+                .buttons
+                .into_iter()
+                .map(ExpectedFormButton::into_browser_form_button)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -2545,6 +2685,35 @@ impl ExpectedFormSubmitter {
             effective_target: self.effective_target,
             novalidate: self.novalidate,
             value: self.value,
+        }
+    }
+}
+
+impl ExpectedFormButton {
+    fn into_browser_form_button(self) -> BrowserFormButton {
+        BrowserFormButton {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            accessible_name: self.accessible_name,
+            disabled: self.disabled,
+            autofocus: self.autofocus,
+            submitter: self.submitter,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            effective_target: self.effective_target,
+            novalidate: self.novalidate,
+            value: self.value,
+            text: self.text,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            alt: self.alt,
+            width: self.width,
+            height: self.height,
         }
     }
 }

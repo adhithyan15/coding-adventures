@@ -779,6 +779,32 @@ def check_browser_expected_lists(
             require_optional_nullable_string(
                 validation_path, control, "validation_barred_reason", errors
             )
+        require_optional_object_list(form_path, form, "buttons", errors)
+        for button_index, button in enumerate(object_list_items(form, "buttons")):
+            button_path = f"{form_path}.buttons[{button_index}]"
+            require_optional_nullable_string(button_path, button, "id", errors)
+            require_string(button_path, button, "control_type", errors)
+            for field in (
+                "name",
+                "form_owner",
+                "accessible_name",
+                "action",
+                "resolved_action",
+                "enctype",
+                "target",
+                "effective_target",
+                "value",
+                "src",
+                "resolved_src",
+                "alt",
+                "width",
+                "height",
+            ):
+                require_optional_nullable_string(button_path, button, field, errors)
+            for field in ("disabled", "autofocus", "submitter", "novalidate"):
+                require_optional_boolean(button_path, button, field, errors)
+            require_string(button_path, button, "method", errors)
+            require_string(button_path, button, "text", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):

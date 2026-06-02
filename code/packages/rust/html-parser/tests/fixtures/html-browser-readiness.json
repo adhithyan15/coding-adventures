@@ -93,6 +93,9 @@
               { "control_type": "textarea", "name": "notes", "will_validate": true },
               { "control_type": "submit", "name": "go", "will_validate": true }
             ],
+            "buttons": [
+              { "control_type": "submit", "name": "go", "accessible_name": "Search", "submitter": true, "action": "/search", "method": "post", "enctype": "multipart/form-data", "target": "results", "effective_target": "results", "text": "Search" }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
@@ -246,6 +249,10 @@
               { "id": "imageGo", "control_type": "image", "name": "image-go", "validation_barred_reason": "input-type-image" },
               { "id": "total", "control_type": "output", "name": "total", "validation_barred_reason": "output" },
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "will_validate": true }
+            ],
+            "buttons": [
+              { "id": "go", "control_type": "submit", "accessible_name": "Run search", "submitter": true, "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "effective_target": "results", "novalidate": true, "text": "Go" },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "submitter": true, "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "effective_target": "_search", "novalidate": true, "text": "", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16" }
             ],
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "successful": true, "submission_values": [""], "autofocus": true, "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"], "checked": false, "text": "", "options": [] },
