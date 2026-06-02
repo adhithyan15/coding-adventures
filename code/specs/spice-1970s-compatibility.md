@@ -400,6 +400,9 @@ Status:
 - DC operating-point named-corner sweeps can now be evaluated with an
   order-preserving parallel helper in the live Rust SPICE package, giving the
   multi-corner orchestration roadmap its first parallel execution foothold.
+- `.DC` source-sweep named-corner runs can now be evaluated with an
+  order-preserving parallel helper in the live Rust SPICE package, preserving
+  source value traces and selected-probe table compatibility.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

@@ -8,7 +8,8 @@ The initial slices implement:
   (MNA).
 - DC operating-point sweeps across explicit analysis temperatures, including
   named corner sweeps and order-preserving parallel named corner DC sweeps.
-- DC source sweeps over independent voltage and current sources.
+- DC source sweeps over independent voltage and current sources, including
+  order-preserving parallel named corner source sweeps.
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters, including named corner sweeps.
 - Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian

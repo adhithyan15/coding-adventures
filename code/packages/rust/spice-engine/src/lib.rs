@@ -5999,6 +5999,50 @@ pub fn dc_sweep_corners(
     })
 }
 
+pub fn dc_sweep_corners_parallel(
+    circuit: &Circuit,
+    source_name: &str,
+    start: f64,
+    stop: f64,
+    step: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerDcSweepResult, SpiceError> {
+    validate_sweep(source_name, start, stop, step)?;
+
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let source_name = source_name.to_string();
+                scope.spawn(move || -> Result<CornerDcSweepPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerDcSweepPoint {
+                        corner_name: corner.name,
+                        points: dc_sweep(&corner_circuit, &source_name, start, stop, step)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "dc_sweep_corners_parallel".to_string(),
+                reason: "parallel DC source-sweep corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerDcSweepResult {
+        source_name: source_name.to_string(),
+        points,
+    })
+}
+
 pub fn mc_dc(
     circuit: &Circuit,
     output_node: &str,

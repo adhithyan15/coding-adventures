@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `dc_sweep_corners_parallel` for order-preserving parallel Rust `.DC`
+  source-sweep evaluation across named PVT corners.
 - Add `dc_corners_parallel` for order-preserving parallel Rust DC
   operating-point evaluation across named PVT corners.
 - Add `digital_event_streams_to_bridge_schedule` and
