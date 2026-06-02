@@ -1,4 +1,4 @@
-//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.7.0, A5+++++++).
+//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.8.0, A5+++++++++).
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
@@ -247,12 +247,12 @@ const ACC_MARKER: u8 = 16;
 /// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
 const GP_REGISTER_COUNT: usize = 16;
 
-/// Supported instruction opcodes in v0.7.0 (A5+++++++).
+/// Supported instruction opcodes in v0.8.0 (A5+++++++++).
 const SUPPORTED_OPS: &[&str] = &[
     "const", "mov", "add", "sub",
     "cmp_lt", "cmp_eq", "cmp_ne", "cmp_le", "cmp_gt", "cmp_ge",
     "label", "jmp", "jmp_if_true", "jmp_if_false",
-    "call",
+    "call", "call_builtin",
     "ret", "ret_void",
 ];
 
@@ -974,6 +974,69 @@ pub fn lower_iir_to_ge225(
                         // Discarded return value — leave ACC unowned.
                         acc_owner = None;
                     }
+                }
+
+                // ── call_builtin (dest =)? builtin_name, arg1, arg2 ...
+                //
+                // v0.8.0 lowering: NO-OP.  The GE-225 historically
+                // routed I/O through a teletype the modern simulator
+                // doesn't model, so there's no real opcode that fits
+                // a "print" or "input" builtin.  We still:
+                //
+                //   * Validate that the first src is a Var (the
+                //     builtin name) — catches IR-shape bugs.
+                //   * Validate that every Var argument is bound in
+                //     `env` — catches use-before-definition.
+                //   * If a `dest` is bound, evict the current ACC
+                //     owner and emit a deterministic `LDA 0` so dest
+                //     has a well-defined value (instead of leaving
+                //     env in an inconsistent state).
+                //
+                // No-dest call_builtin (e.g. `print_i64(x)`) emits
+                // **zero bytes** — the entire instruction collapses
+                // to a no-op.  A future increment could dispatch on
+                // the builtin name and emit a synthesised I/O word
+                // (e.g. JSR to a host-stub address).
+                "call_builtin" => {
+                    // First src: the builtin name (Var).
+                    if !matches!(instr.srcs.first(), Some(Operand::Var(_))) {
+                        return Err(IIRGe225Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail:
+                                "call_builtin requires srcs[0] = Operand::Var(builtin_name)"
+                                    .into(),
+                        });
+                    }
+                    // Validate remaining Var args are bound.
+                    for arg in instr.srcs.iter().skip(1) {
+                        if let Operand::Var(name) = arg {
+                            if !env.contains_key(name) {
+                                return Err(IIRGe225Error::UndefinedVariable {
+                                    function: f.name.clone(),
+                                    name: name.clone(),
+                                });
+                            }
+                        }
+                        // Non-Var args (Int/Bool literals) are
+                        // tolerated silently — the IIR shape allows
+                        // them and they don't reference env.
+                    }
+                    // If a dest is bound, give it a deterministic
+                    // placeholder value (0) in ACC.
+                    if let Some(dest) = instr.dest.as_deref() {
+                        evict_acc(
+                            &mut bytes,
+                            &mut env,
+                            &mut acc_owner,
+                            &mut next_reg,
+                            &f.name,
+                        )?;
+                        bytes.extend_from_slice(&encode_lda(0));
+                        env.insert(dest.to_string(), ACC_MARKER);
+                        acc_owner = Some(dest.to_string());
+                    }
+                    // No-dest case: zero bytes emitted; acc_owner
+                    // and env both unchanged.
                 }
 
                 // ── ret <var>: (LD r_var)? + HLT-or-RTS ───────────────

@@ -582,6 +582,164 @@ fn cmp_result_can_be_added() {
     assert_eq!(&bytes[bytes.len() - 3..], &HALT_WORD);
 }
 
+// ===========================================================================
+// §7. v0.8.0 NEW — call_builtin no-op lowering
+// ===========================================================================
+
+/// `call_builtin print_i64, v` with no dest emits ZERO bytes —
+/// the entire instruction collapses to a no-op.
+///
+/// Trace: const v=5; call_builtin print_i64, v; ret_void
+///   0: LDA 5    (v → ACC, owner=v)
+///   3: (call_builtin emits 0 bytes — no I/O opcode on this skeleton)
+///   3: HLT      (entry function ret_void)
+/// Total: 6 bytes (same as the trivial-case ROM).
+#[test]
+fn call_builtin_no_dest_emits_zero_bytes() {
+    let f = IIRFunction::new(
+        "print_v",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "i16"),
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("print_i64".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x01, 0x00, 0x05, // LDA 5
+            0x00, 0x00, 0x00, // HLT (entry function ret_void)
+        ],
+        "call_builtin without dest must emit zero bytes; got: {bytes:02x?}"
+    );
+    assert_eq!(bytes.len(), 6, "trivial print-of-const should still be 6 bytes");
+}
+
+/// `call_builtin input_i64` WITH dest emits `LDA 0` (deterministic
+/// placeholder return value), then dest claims ACC.
+///
+/// Trace: call_builtin x = input_i64; ret x
+///   0: LDA 0   (placeholder return value; x → ACC, owner=x)
+///   3: HLT     (entry function ret x — x in ACC, no LD needed)
+#[test]
+fn call_builtin_with_dest_emits_lda_zero() {
+    let f = IIRFunction::new(
+        "read_x",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("x".into()),
+                vec![Operand::Var("input_i64".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x01, 0x00, 0x00, // LDA 0 (placeholder return)
+            0x00, 0x00, 0x00, // HLT (x in ACC)
+        ]
+    );
+}
+
+/// `call_builtin` with an undefined arg var errors crisply.
+#[test]
+fn call_builtin_undefined_arg_errors() {
+    let f = IIRFunction::new(
+        "print_undef",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("print_i64".into()), Operand::Var("never_bound".into())],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect_err("call_builtin with undefined arg must error");
+    match err {
+        IIRGe225Error::UndefinedVariable { name, .. } => assert_eq!(name, "never_bound"),
+        other => panic!("expected UndefinedVariable, got {other:?}"),
+    }
+}
+
+/// `call_builtin` with no srcs (missing builtin name) errors with
+/// `InvalidOperand`.
+#[test]
+fn call_builtin_no_srcs_errors() {
+    let f = IIRFunction::new(
+        "bad",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("call_builtin", None, vec![], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect_err("call_builtin without builtin name must error");
+    assert!(matches!(err, IIRGe225Error::InvalidOperand { .. }));
+}
+
+/// `call_builtin` evicts a live ACC owner when a dest is bound
+/// (so the LDA 0 doesn't lose existing state).
+///
+/// Trace: const a=5; call_builtin x = input_i64; ret a
+///   0: LDA 5     (a → ACC)
+///   3: STA r0    (evict a → r0 because call_builtin with dest emits LDA 0)
+///   6: LDA 0     (x → ACC)
+///   9: LD r0     (reload a for ret)
+///   12: HLT
+#[test]
+fn call_builtin_with_dest_evicts_acc_owner() {
+    let f = IIRFunction::new(
+        "save_a",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(5)], "i16"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("x".into()),
+                vec![Operand::Var("input_i64".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x01, 0x00, 0x05, // LDA 5
+            0x02, 0x00, 0x00, // STA r0 (evict a)
+            0x01, 0x00, 0x00, // LDA 0 (x placeholder)
+            0x03, 0x00, 0x00, // LD r0 (reload a for ret)
+            0x00, 0x00, 0x00, // HLT
+        ]
+    );
+}
+
 /// Unsupported op (e.g., `mul`) still errors.
 #[test]
 fn mul_still_unsupported() {
