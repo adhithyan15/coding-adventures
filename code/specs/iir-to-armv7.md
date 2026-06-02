@@ -75,7 +75,8 @@ IIRModule
 | v0.4.2 (A3++.5.5 second slice) | Carry-chained DP-register ops `adc` (`0xE0A0_0000`) and `sbb` (`0xE0C0_0000`) | **merged** |
 | v0.4.3 (A3++.5.5 third slice) | `cmp` equality with flag-to-bool capture via `MOVEQ` (`0x03A0_0000`) | **merged** |
 | v0.4.4 (A3++.5.5 fourth slice) | Full comparison family `cmp_ne`/`cmp_lt`/`cmp_gt`/`cmp_gte`/`cmp_lte` via condition prefixes | **merged** |
-| **v0.4.5 (A3++.5.5 fifth slice — this PR)** | Control flow: `label` + `jmp` (B `0xEA00_0000`) + `jmp_if_true` (CMP rn,#0 + BNE `0x1A00_0000`) + `jmp_if_false` (CMP + BEQ `0x0A00_0000`).  Per-function two-pass backpatching of 24-bit signed PC-relative word offsets (with the ARM +8 prefetch quirk). | this PR |
+| v0.4.5 (A3++.5.5 fifth slice) | Control flow: `label` + `jmp` + `jmp_if_true`/`jmp_if_false` via Bcond + two-pass backpatching | **merged** |
+| **v0.4.6 (A3++.6 — this PR)** | Real `call` via `BL` (branch with link, `0xEB00_0000` — NOT `0xEA00_0000` which is B) + module-level call-backpatching (analogous to the 8008's v0.3.9).  ARMv7 backend now feature-complete for AOT. | this PR |
 | v0.3.x (A3++.5.5) | Comparisons + conditional branches via the cond-field on every A32 instruction (a stronger version of the 8008's flag-based jumps) | future |
 | v0.3.x (A3++.6) | Function calls via `bl` with PC-relative offsets + stack spilling | future |
 | v0.4.0 (A3+++) | `lang-aot --emit=armv7` wiring | future |

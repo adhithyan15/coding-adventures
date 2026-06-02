@@ -3,6 +3,120 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.6] — 2026-06-02 (A3++.6 — real `call` via BL + module-level call backpatching)
+
+### Added — function calls
+
+Wires the final control-flow primitive needed before AOT integration:
+real cross-function calls via ARMv7's `BL` (branch with link).
+
+| IIR op | A32 lowering |
+|--------|--------------|
+| `call dest, "fn"` | `BL <fn_pc_rel>` (1 word) + (optional `MOV dest_reg, r0`) |
+
+The silicon writes `PC + 4` (the return address) into `LR` (`r14`)
+before branching, so a subsequent `BX LR` in the callee returns to
+the next instruction in the caller.  `ret` already emits `BX LR`
+from v0.3.0 — no changes needed there.
+
+#### CRITICAL encoding note
+
+`BL` is `0xEB00_0000`, NOT `0xEA00_0000`.  The bit-24 difference
+distinguishes "branch with link" (function call) from "branch"
+(goto).  Same family-bit hazard as the 8008's `JMP 0x7C ↔ CAL 0x7E`
+and `JFC 0x40 ↔ JTC 0x44` confusions flagged in v0.3.4 and v0.3.8.
+
+#### Module-level call backpatching
+
+Module-level resolution mirrors the 8008's v0.3.9 pattern:
+
+* `function_addrs: HashMap<String, usize>` records each function's
+  start **word index** as we walk `module.functions` in source order.
+* `pending_calls: Vec<(usize, String, String)>` records `(slot,
+  callee, caller)` for every emitted BL.
+* Post-loop pass walks `pending_calls`, resolves callees via
+  `function_addrs` (returns `UndefinedFunction` if missing),
+  computes `imm24 = target - slot - 2` (PC-relative with the +8
+  prefetch quirk), range-checks against signed 24-bit
+  (`BranchOutOfRange`), and ORs the encoded word into the
+  placeholder slot.
+
+#### Why no entry-point HLT-vs-RET special case (unlike the 8008)?
+
+On the 8008, calling RET from the entry-point function would
+underflow the empty internal return stack — that's why v0.3.9
+introduced the `is_entry` HLT-vs-RET discipline.
+
+ARMv7 has no internal return stack — LR is just a normal register.
+At module entry, LR holds whatever the OS (or boot loader) passed
+in; `BX LR` from the entry function returns to that address, which
+is the correct behaviour for a userspace program.  No special case
+needed.
+
+#### Calling convention
+
+`call dest, "fn"` lowers to:
+
+```text
+BL <fn>                       ; 1 word (0xEB00_0000 | imm24)
+[optional]  MOV dest_reg, r0  ; capture return value if dest != r0
+```
+
+ARMv7 AAPCS uses `r0` as both the first argument and the return
+value register.  v0.4.6 only supports zero-arg calls — the
+register-allocator contract for arg passing folds into the AOT
+wiring in A3+++ (mirrors the 8008's deferral pattern).
+
+#### New constant
+
+* `pub const BL_BASE: u32 = 0xEB00_0000;` — BL with cond=AL.
+
+#### New error variant
+
+* `IIRArmv7Error::UndefinedFunction { caller, callee }` — `call`
+  referenced a name not present in `module.functions`.
+
+#### Tests added (67 total, was 61)
+
+* `bl_base_pinned_to_0xeb000000` — guards against the bit-24
+  `B ↔ BL` confusion.
+* `call_emits_bl_with_backpatched_pc_relative_offset` — pinned
+  full 4-word `main → helper` byte stream `EB000000 E12FFF1E
+  E3A00007 E12FFF1E` for a forward call with imm24=0.
+* `call_with_helper_before_main_emits_negative_offset` — pinned
+  `0xEBFFFFFC` for a backward call (imm24=-4 in 24-bit
+  two's-complement).
+* `call_to_undefined_function_is_rejected`.
+* `call_with_no_dest_discards_return_value` — void-call shape.
+* `errors_for_undefined_function_display_without_panic`.
+
+A new `multi_fn_module(entry, functions)` test helper was added.
+
+### What is NOT in v0.4.6 (deferred to A3+++ / future)
+
+* **Argument passing** — calls are zero-arg.  Arg passing needs a
+  per-call register-allocation contract (which AAPCS argument
+  registers the callee preserves) and folds into the AOT wiring.
+* **Cross-module calls** — `call` to a function defined in a
+  different module needs external symbol resolution.  Same.
+* **Stack spilling** once the 13-register pool exhausts.
+* **`lang-aot --emit=armv7`** — A3+++ (v0.5.0).
+
+### A3++.6 complete: ARMv7 backend feature-complete for AOT
+
+After 6 slices (A3 skeleton + A3+/A3++ register allocator + A3++.5
+arithmetic + A3++.5.5 bitwise/carry/cmp/branches + A3++.6 calls),
+the ARMv7 backend now supports the full IIR core:
+
+* All arithmetic + bitwise ops (add/sub/adc/sbb/and/or/xor)
+* All six boolean comparisons (cmp/cmp_ne/cmp_lt/cmp_gt/cmp_gte/cmp_lte)
+* Control flow (label/jmp/jmp_if_true/jmp_if_false)
+* Function calls and returns (call/ret/ret_void)
+
+~60 IIR opcodes mapped to ~25 distinct ARMv7-A instruction families,
+all byte-exact tested.  The crate is now feature-complete for AOT
+wiring in A3+++.
+
 ## [0.4.5] — 2026-06-02 (A3++.5.5 fifth slice — `label` + `jmp` + `jmp_if_true`/`jmp_if_false`)
 
 ### Added — control flow via Bcond + two-pass backpatching
