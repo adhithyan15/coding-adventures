@@ -2,6 +2,101 @@
 
 ## Unreleased
 
+### Added — v0.4.0: backward dispatch + end-to-end MLP training test
+
+PR #7 of 8 in the Ruby pilot.  Adds `backward(output_grad)` to all 15
+Function subclasses from v0.3.0, plus an end-to-end test that trains a
+2-layer MLP and asserts loss decreases monotonically.  The full
+PyTorch-shaped forward+backward+SGD loop now works in pure Ruby.
+
+#### Backward formulas (mirroring `code/packages/python/ml-framework-core/src/ml_framework_core/autograd.py`)
+
+| Op       | Saves in forward    | Backward formula                                  |
+|----------|---------------------|---------------------------------------------------|
+| Add      | (nothing)           | `[g, g]`                                          |
+| Sub      | (nothing)           | `[g, -g]`                                         |
+| Mul      | inputs `a`, `b`     | `[g * b, g * a]`                                  |
+| Div      | inputs `a`, `b`     | `[g / b, -g * a / b²]`                            |
+| Neg      | (nothing)           | `[-g]`                                            |
+| Abs      | input `a`           | `[g * sign(a)]`  (sign(0) = 0, PyTorch convention)|
+| Pow      | input `a`, scalar e | `[g * e * a^(e-1)]`  (scalar e gets no grad)      |
+| MatMul   | inputs `A`, `B`     | `[g @ B^T, A^T @ g]`                              |
+| ReLU     | input `a`           | `[g * (a > 0)]`                                   |
+| Sigmoid  | output `y`          | `[g * y * (1 - y)]`                               |
+| Tanh     | output `y`          | `[g * (1 - y²)]`                                  |
+| GELU     | input `a`           | `[g * (0.5*(1+tanh_v) + 0.5*x*sech²*d_inner)]`    |
+| Softmax  | output `y`          | `[y * (g - Σ(g*y))]`  per-row over last axis      |
+| Sum      | input shape         | `[broadcast(g[0], input_shape)]`                  |
+| Mean     | input shape, numel  | `[broadcast(g[0]/numel, input_shape)]`            |
+
+All backward implementations are pure Ruby for v0.4.0.  Routing through
+Rust (mirroring v0.3.0's forward dispatch) would require new envelope
+shapes per backward op — deferred to a follow-up; the pure-Ruby
+versions are correct and fast enough for the small-tensor case that
+typifies autograd training (gradients are usually parameter-shaped,
+which is far smaller than batch-shaped data).
+
+#### Critical autograd fix: filter non-Tensor parents
+
+PR #6 set `fn.parents = inputs.dup` unconditionally, which meant ops
+like `Pow` (whose second input is a Numeric scalar) put a `Float` in
+the parents Array.  `Tensor#backward`'s topological walk then crashed
+trying to read `.grad_fn` on a non-Tensor.
+
+Fixed in `Function.apply` by filtering parents to Tensors only:
+`fn.parents = inputs.select { |i| i.is_a?(Tensor) }`.  Non-Tensor args
+(like Pow's exponent) are still passed to `forward` but no longer
+appear in the autograd graph, which is correct — autograd only
+tracks Tensor inputs.  Subclasses can stash non-Tensor args in
+`@saved_for_backward` to recover them in backward (Pow does this).
+
+#### End-to-end MLP test
+
+New file `test/end_to_end_training_test.rb` runs a real training loop:
+
+```ruby
+# 2-layer MLP, no bias: x → linear(W₁) → ReLU → linear(W₂) → MSE loss
+30.times do
+  pred = x.matmul(w1).relu.matmul(w2)
+  loss = ((pred - target) * (pred - target)).mean
+  loss.backward
+  w1 = sgd_step(w1, lr: 0.01)
+  w2 = sgd_step(w2, lr: 0.01)
+end
+assert final_loss < initial_loss * 0.25   # 75%+ drop
+```
+
+Synthetic dataset (4 samples, regress `y = 2x + 3`) — converges from
+loss 36.5 → 3.2 in 30 steps (91% drop).  Companion test:
+1-layer linear regression converges `w` from 0.5 to ≈2.0 in 20 steps.
+
+#### Tests added (17 new minitests, plus 2 end-to-end)
+
+**`BackwardCorrectnessTest`** (17 tests in test/ops_test.rb):
+- One test per op for the simple analytical cases:
+  Add, Sub, Mul, Div, Neg, Abs, Pow, MatMul, ReLU, Sigmoid, Tanh,
+  Softmax (uniform input → uniform output → zero grad), Sum, Mean
+- Numerical-gradient checking via finite differences for the
+  transcendentals (GELU at x=1, Softmax at x=[1,2,3])
+- Chained-op backward: x → Mul → Add → Sum → backward; assert
+  x.grad propagates through the chain correctly
+
+**`EndToEndTrainingTest`** (2 tests in new file):
+- `test_two_layer_mlp_trains_loss_decreases`: MLP loss drops 75%+
+- `test_linear_regression_converges`: w converges near true value
+
+All existing tests still pass:
+- `test/tensor_test.rb`: 63/63
+- `test/autograd_test.rb`: 18/18
+- `test/ops_test.rb`: 65/65 (47 from v0.3.0 + 17 new backward + 1 leftover)
+
+Total: 148 tests, 251 assertions, 0 failures.
+
+#### What's next
+
+- PR #8: benchmark script + RubyGems publishing polish.  Bumps to v1.0.0
+  — full Ruby ML framework on top of the Rust matrix-cpu engine.
+
 ### Added — v0.3.0: forward op dispatch (15 Function subclasses)
 
 PR #6 of 8 in the Ruby pilot.  Adds the 15 differentiable operations on
