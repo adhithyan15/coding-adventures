@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.44.0] - 2026-06-02
+
+### Added — CLOC14: end-to-end byte-identity test harness
+
+Introduces the missing instrument for measuring real upstream parity.
+Until now, every gap-fix PR was theoretical: unit tests went green but
+the *composed* compiler's output was never compared byte-for-byte
+against Google Closure Compiler's. CLOC14 closes that loop.
+
+- **`tests/diff_minify.rs`**: single discovery-based test runner. Walks
+  `tests/diff/` at test time, runs every `minify_*` fixture through the
+  closurec binary, compares stdout against `expected.stdout`, and panics
+  with an aggregate report if any non-ignored fixture diverged.
+- **Verdict model**: each fixture reports `Match` / `Diverge` / `Error` /
+  `Skipped`. Skipped fixtures are listed in `IGNORE_FIXTURES` with a
+  documented reason; this is intentionally an embarrassment that shrinks
+  as gaps close.
+- **Adding a fixture is data, not code**: drop a `minify_<name>/`
+  directory with `flags.txt`, `input/*`, `expected.stdout`, and a
+  README. The runner picks it up automatically — no Rust changes.
+- **Seed fixture set (v0.1)**:
+  - `minify_minimal_var` (PASS) — `var x=1;` round-trip pins
+    trailing-newline contract + lex/parse/emit identity.
+  - `minify_string_literal` (PASS) — `var x="hi";` pins quote-style
+    preservation under WHITESPACE_ONLY.
+  - `minify_two_statements` (PASS) — `var x=null;var y=1;` pins
+    statement-separator behaviour and null-literal round-trip.
+  - `minify_empty` (IGNORED) — first real divergence surfaced by the
+    harness: closurec emits `\n` for empty input; upstream may emit
+    zero bytes. Pinned as IGNORED with reason until a real upstream
+    capture resolves it.
+
+Spec: `code/specs/CLOC14-byte-identity-harness.md`.
+
 ## [0.43.0] - 2026-05-31
 
 ### Added — CLOC11.80: end-to-end integration test for JSON summary format
