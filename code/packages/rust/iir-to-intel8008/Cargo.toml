@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-intel8008"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
-description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.0 (A2++): adds a linear register allocator over A/B/C/D/E/H/L, multi-register `const` → MVI rrr,n, `mov dest,src` → MOV ddd,sss (family 01 ddd sss), and ret-value staging into A.  ALU + real RET via CALL/stack land in A2++.5."
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.1 (A2++.5 first slice): adds `add`/`sub` ALU on the accumulator (family 10 ooo sss) — stage left source into A, execute ADD/SUB right_reg, capture result into dest_reg if it isn't already A.  Real RET via CALL/stack still pending."
 
 [lib]
 name = "iir_to_intel8008"

@@ -181,17 +181,18 @@ fn ret_void_alone_emits_just_hlt() {
 
 #[test]
 fn unsupported_op_is_rejected_with_function_name() {
+    // After A2++.5 added add/sub, `safepoint` is still outside the
+    // whitelist — use it as the canonical never-supported probe.
     let f = IIRFunction::new("boom", vec![], "void", vec![
-        IIRInstr::new("add", Some("v".into()),
-            vec![Operand::Int(1), Operand::Int(2)], "u8"),
+        IIRInstr::new("safepoint", None, vec![], "void"),
         IIRInstr::new("ret_void", None, vec![], "void"),
     ]);
     let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
-        .expect_err("`add` should be UnsupportedOp in A2++");
+        .expect_err("`safepoint` should be UnsupportedOp");
     match err {
         IIRIntel8008Error::UnsupportedOp { function, op } => {
             assert_eq!(function, "boom");
-            assert_eq!(op, "add");
+            assert_eq!(op, "safepoint");
         }
         other => panic!("expected UnsupportedOp, got: {other:?}"),
     }
@@ -306,4 +307,97 @@ fn undefined_variable_in_mov_is_rejected() {
         }
         other => panic!("expected UndefinedVariable, got: {other:?}"),
     }
+}
+
+// ===========================================================================
+// 7. A2++.5 — accumulator-target ALU (ADD, SUB)
+// ===========================================================================
+//
+// All 8008 ALU ops use A as both left source and destination.  The
+// lowering shape is therefore:
+//
+//   if a not in A: MOV A, a_reg
+//   ADD/SUB b_reg                    ; result lands in A
+//   if dest_reg not A: MOV dest_reg, A
+//
+// The first const allocates to A so the leading mv is usually skipped.
+
+#[test]
+fn add_two_consts_returns_their_sum_via_accumulator() {
+    // const v=3; const w=4; add r v w; ret r
+    //
+    // Allocator: v→A, w→B, r→C.
+    //   MVI A,3   = 0x3E 0x03
+    //   MVI B,4   = 0x06 0x04
+    //   ADD B     = 0x80           (10 000 000 — sss=B=0)
+    //   MOV C,A   = 01 001 111 = 0x4F
+    //   MOV A,C   = 01 111 001 = 0x79  (stage r into A for ret)
+    //   HLT       = 0x76
+    let f = IIRFunction::new("add3plus4", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(3)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(4)], "u8"),
+        IIRInstr::new("add", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x03,    // MVI A, 3
+        0x06,  0x04,    // MVI B, 4
+        0x80,           // ADD B
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C (stage r into A for ret)
+        HLT,
+    ], "add 3+4 expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn sub_two_consts_emits_sub_b_after_mov() {
+    // const v=10; const w=4; sub r v w; ret r
+    // Same shape but using 0x90 (SUB B, family 10 010 000) instead of 0x80.
+    let f = IIRFunction::new("ten_minus_four", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(4)], "u8"),
+        IIRInstr::new("sub", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // MVI A, 10
+        0x06,  0x04,    // MVI B, 4
+        0x90,           // SUB B   (10 010 000)
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C
+        HLT,
+    ], "sub 10-4 expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn add_when_lhs_is_already_in_a_skips_the_staging_mov() {
+    // const v=5; add r v v; ret r
+    // v is in A.  add r v v means r = v + v.  Sequence:
+    //   MVI A, 5
+    //   ADD A   (10 000 111 = 0x87)  ← uses v (in A) as both src and right operand
+    //   MOV B, A — bind r → B
+    //   MOV A, B — stage r back into A for ret
+    //   HLT
+    let f = IIRFunction::new("double", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("add", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    // Note: no leading "MOV A, A" since v is already in A.
+    assert_eq!(bytes, vec![
+        MVI_A, 0x05,    // MVI A, 5
+        0x87,           // ADD A    (10 000 111 — sss=A=7)
+        0x47,           // MOV B, A
+        0x78,           // MOV A, B
+        HLT,
+    ], "double-of-A expected; got: {bytes:02x?}");
 }
