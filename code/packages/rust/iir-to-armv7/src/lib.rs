@@ -84,6 +84,7 @@
 //! ```
 
 use interpreter_ir::{IIRModule, Operand};
+use std::collections::HashMap;
 use std::fmt;
 
 // ===========================================================================
@@ -189,6 +190,43 @@ pub(crate) fn encode_mov_imm(rd: u8, imm8: u8) -> u32 {
     MOV_IMM_R0_BASE | ((rd as u32) << 12) | (imm8 as u32)
 }
 
+/// ARMv7-A `MOV Rd, Rm` (data-processing register) base encoding —
+/// `0xE1A0_0000`.  OR in the destination register (bits 15..12) and
+/// the source register (bits 3..0) to form the full instruction word.
+///
+/// Bit layout (cond=AL, S=0, Rn=0, shift=0, type=00):
+///
+/// ```text
+/// 31..28  cond    = 0xE = 1110            (always — unconditional)
+/// 27..21          = 0001 101             (data-processing register, MOV opcode)
+/// 20      S       = 0                     (don't set flags)
+/// 19..16  Rn      = 0000                  (unused for MOV)
+/// 15..12  Rd      = (in this base, 0)    (target register)
+/// 11.. 7  shift_imm = 00000               (no shift)
+///  6.. 5  type    = 00                    (LSL — but shift_imm=0 means no shift)
+///  4              = 0                     (shift by immediate, not register)
+///  3.. 0  Rm      = (in this base, 0)    (source register)
+/// ```
+///
+/// For `MOV r0, r0`: `1110 0001 1010 0000 0000 0000 0000 0000` =
+/// `0xE1A00000`.  For arbitrary `MOV Rd, Rm`: OR in
+/// `(Rd << 12) | Rm`.
+///
+/// CAREFUL: This is the register-to-register MOV, distinct from
+/// `MOV_IMM_R0_BASE = 0xE3A0_0000` (note the bit-25 difference —
+/// data-processing-immediate has bit-25 set, register form doesn't).
+pub const MOV_REG_BASE: u32 = 0xE1A0_0000;
+
+/// Encode an ARMv7-A `MOV Rd, Rm` (register-to-register) instruction.
+///
+/// Both `rd` and `rm` must be in `[0, 15]` (4-bit ARM register
+/// selectors).
+pub(crate) fn encode_mov_reg(rd: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    MOV_REG_BASE | ((rd as u32) << 12) | (rm as u32)
+}
+
 // ===========================================================================
 // IIRArmv7Config
 // ===========================================================================
@@ -237,6 +275,14 @@ pub enum IIRArmv7Error {
     UnsupportedType { function: String, type_hint: String },
     /// An operand has an unexpected shape.
     InvalidOperand { function: String, detail: String },
+    /// A variable name was used (via `mov` or `ret`) before it was
+    /// bound by `const` or `mov`.
+    UndefinedVariable { function: String, name: String },
+    /// The function tried to bind more locals than the 13 general-
+    /// purpose ARMv7 registers (r0..r12) can hold.  Stack spilling
+    /// lands in a future increment (A3++.5 or later).  r13 (sp),
+    /// r14 (lr), and r15 (pc) are not part of the pool.
+    OutOfRegisters { function: String, name: String },
 }
 
 impl fmt::Display for IIRArmv7Error {
@@ -253,6 +299,12 @@ impl fmt::Display for IIRArmv7Error {
             }
             Self::InvalidOperand { function, detail } => {
                 write!(f, "invalid operand in function {function:?}: {detail}")
+            }
+            Self::UndefinedVariable { function, name } => {
+                write!(f, "undefined variable {name:?} in function {function:?}")
+            }
+            Self::OutOfRegisters { function, name } => {
+                write!(f, "out of ARMv7 registers (r0..r12) while binding {name:?} in function {function:?}; stack spilling not yet supported")
             }
         }
     }
@@ -283,19 +335,29 @@ pub fn validate_for_armv7(_module: &IIRModule) -> Vec<String> {
 // ===========================================================================
 
 /// Register `r0` — the AAPCS first-argument / return-value register.
-/// Every `const` in v0.2.0 (A3+) lowers to `mov r0, #imm` because
-/// we don't yet have a multi-register allocator (A3++).
+/// `ret <var>` stages the value into `r0` (via `MOV r0, var_reg` if
+/// the var lives elsewhere) before `BX LR`.
 const REG_R0: u8 = 0;
 
-/// Supported instruction opcodes in v0.2.0 (A3+).
+/// Linear-allocator pool ordered to keep the trivial `const v; ret v`
+/// case at one MVI byte: r0 is handed out first, so `ret v` finds the
+/// value already in r0 and skips the redundant `MOV r0, X` round-trip.
 ///
-/// * `const dest, Int(n)` lowers to `mov r0, #n` (every value goes
-///   into `r0` in this slice).
-/// * `ret <var>` and `ret_void` both lower to `bx lr` (the AAPCS
-///   return convention — the value is already in `r0` by
-///   construction).
+/// `r13` (`sp`), `r14` (`lr`), and `r15` (`pc`) are NOT in the pool —
+/// touching them as locals would break the calling convention's
+/// stack discipline, the return address, or the instruction pointer
+/// (respectively).
+const REGISTER_POOL: [u8; 13] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+/// Supported instruction opcodes in v0.3.0 (A3++).
+///
+/// * `const dest, Int(n)` lowers to `MOV rrr, #n` with `rrr` allocated
+///   from `REGISTER_POOL`.
+/// * `mov dest, src` lowers to `MOV Rd, Rm` (no-op when Rd == Rm).
+/// * `ret <var>` stages the value into `r0` (if not already there) and
+///   emits `BX LR`.  `ret_void` just emits `BX LR`.
 const SUPPORTED_OPS: &[&str] = &[
-    "const", "ret", "ret_void",
+    "const", "mov", "ret", "ret_void",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -338,6 +400,15 @@ pub fn lower_iir_to_armv7(
 
     let mut words = Vec::new();
     for f in &module.functions {
+        // ── Per-function allocator state ──────────────────────────────
+        //
+        // IIR var name → its assigned 4-bit register index.  Sequentially
+        // hands out registers from REGISTER_POOL starting with r0 — this
+        // keeps the trivial `const v; ret v` case at the same 2-word
+        // shape as v0.2.0 (no redundant `MOV r0, X` round-trip).
+        let mut env: HashMap<String, u8> = HashMap::new();
+        let mut next_reg: usize = 0;
+
         for instr in &f.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
                 return Err(IIRArmv7Error::UnsupportedOp {
@@ -346,33 +417,52 @@ pub fn lower_iir_to_armv7(
                 });
             }
             match instr.op.as_str() {
-                // ── const dest, Int(n) → MOV R0, #n ─────────────────
-                //
-                // The accumulator-only first slice: every const goes
-                // into r0.  Multi-register allocation lands in A3++.
+                // ── const dest, Int(n) → MOV rrr, #n ────────────────────
                 "const" => {
-                    let _dest = require_dest(instr, "const", &f.name)?;
+                    let dest = require_dest(instr, "const", &f.name)?;
                     let imm8 = encode_immediate_byte(instr.srcs.first(), &f.name)?;
-                    words.push(encode_mov_imm(REG_R0, imm8));
+                    let rrr = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    words.push(encode_mov_imm(rrr, imm8));
                 }
 
-                // ── ret <var> → BX LR ──────────────────────────────
+                // ── mov dest, src → MOV Rd, Rm ──────────────────────────
                 //
-                // The value is already in r0 (every const lowers
-                // there in v0.2.0).  Per AAPCS, returning a value
-                // means leaving it in r0 and branching to lr.  No
-                // staging MOV needed in this slice.
+                // If the source and dest happen to be the same register
+                // (unlikely under SSA but possible if upstream re-binds a
+                // name), we emit no word — the move is a no-op.
+                "mov" => {
+                    let dest = require_dest(instr, "mov", &f.name)?;
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "mov srcs[0] must be Var".into(),
+                        }),
+                    };
+                    let rm = lookup_register(&env, &src_name, &f.name)?;
+                    let rd = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    if rd != rm {
+                        words.push(encode_mov_reg(rd, rm));
+                    }
+                }
+
+                // ── ret <var>: stage value in r0, then BX LR ────────────
+                //
+                // If `var`'s register is already r0, the MOV is omitted.
+                // Per AAPCS, the return value lives in r0; we
+                // unconditionally branch to lr after staging.
                 "ret" => {
-                    // Validate that srcs[0] is a Var — front-end bugs
-                    // surface as `InvalidOperand` rather than producing
-                    // surprising silence.
-                    match instr.srcs.first() {
-                        Some(Operand::Var(_)) => {}
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
                         _ => return Err(IIRArmv7Error::InvalidOperand {
                             function: f.name.clone(),
                             detail: "ret srcs[0] must be Var".into(),
                         }),
                     };
+                    let rm = lookup_register(&env, &src_name, &f.name)?;
+                    if rm != REG_R0 {
+                        words.push(encode_mov_reg(REG_R0, rm));
+                    }
                     words.push(BX_LR);
                 }
 
@@ -407,6 +497,35 @@ fn require_dest<'a>(
     instr.dest.as_deref().ok_or_else(|| IIRArmv7Error::InvalidOperand {
         function: fn_name.to_string(),
         detail: format!("{op} requires a dest"),
+    })
+}
+
+fn alloc_register(
+    next_reg: &mut usize,
+    dest: &str,
+    env: &mut HashMap<String, u8>,
+    fn_name: &str,
+) -> Result<u8, IIRArmv7Error> {
+    if *next_reg >= REGISTER_POOL.len() {
+        return Err(IIRArmv7Error::OutOfRegisters {
+            function: fn_name.to_string(),
+            name: dest.to_string(),
+        });
+    }
+    let rrr = REGISTER_POOL[*next_reg];
+    *next_reg += 1;
+    env.insert(dest.to_string(), rrr);
+    Ok(rrr)
+}
+
+fn lookup_register(
+    env: &HashMap<String, u8>,
+    name: &str,
+    fn_name: &str,
+) -> Result<u8, IIRArmv7Error> {
+    env.get(name).copied().ok_or_else(|| IIRArmv7Error::UndefinedVariable {
+        function: fn_name.to_string(),
+        name: name.to_string(),
     })
 }
 

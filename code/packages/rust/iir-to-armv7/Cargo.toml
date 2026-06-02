@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-armv7"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.2.0 (A3+): first real instruction lowering — `const dest, Int(n)` → `mov r0, #imm8` (data-processing immediate, 0xE3A0_00NN) and `ret <var>`/`ret_void` → `bx lr` (0xE12FFF1E, branch-to-link-register).  Accumulator-only first slice: every const goes into r0, the AAPCS return-value register, so `ret v` doesn't need a staging MOV.  Multi-register allocation + arithmetic lands in A3++.  Carries forward the v0.1.0 (A3) BKPT #0xFFFF (0xE12FFF7F) halt sentinel for the empty-module case."
+description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.3.0 (A3++): linear register allocator over r0..r12 + multi-register `const` + `mov` (register-to-register, 0xE1A0_0000 base) + ret-value staging.  r0 comes first in the pool to keep the trivial `const v; ret v` case at the 2-word v0.2.0 shape (MOV r0, #imm + BX LR — no redundant staging MOV).  r13 (sp), r14 (lr), and r15 (pc) are NOT in the pool — touching them would break the calling convention.  Stack spilling + arithmetic land in A3++.5."
 
 [lib]
 name = "iir_to_armv7"

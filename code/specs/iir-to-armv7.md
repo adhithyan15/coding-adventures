@@ -68,9 +68,11 @@ IIRModule
 | Version | Scope | Status |
 |---------|-------|--------|
 | v0.1.0 (A3) | crate skeleton: any module → single `BKPT #0xFFFF` (`0xE12FFF7F`) | **merged** |
-| **v0.2.0 (A3+ — this PR)** | `const` → `MOV r0, #imm8` (accumulator-only) + `ret`/`ret_void` → `BX LR` (AAPCS return) | this PR |
-| v0.3.0 (A3++) | Linear register allocator over `r0..r12` + arithmetic (add/sub) + function calls via `bl` with PC-relative offsets | future |
+| v0.2.0 (A3+) | `const` → `MOV r0, #imm8` (accumulator-only) + `ret`/`ret_void` → `BX LR` (AAPCS return) | **merged** |
+| **v0.3.0 (A3++ — this PR)** | Linear register allocator over `r0..r12` + multi-register `const` + `mov` (`MOV Rd, Rm`, `0xE1A0_0000` base) + ret-value staging via `MOV r0, var_reg` | this PR |
+| v0.3.x (A3++.5) | Arithmetic (`add`/`sub`) on the data-processing-register family | future |
 | v0.3.x (A3++.5.5) | Comparisons + conditional branches via the cond-field on every A32 instruction (a stronger version of the 8008's flag-based jumps) | future |
+| v0.3.x (A3++.6) | Function calls via `bl` with PC-relative offsets + stack spilling | future |
 | v0.4.0 (A3+++) | `lang-aot --emit=armv7` wiring | future |
 
 ## Public surface (v0.1.0)
