@@ -8,6 +8,25 @@ build/
 .pub/
 pubspec.lock
 
+# Per-platform native build caches & toolchain droppings.  The
+# platform scaffolds themselves (android/, ios/, web/) are checked
+# in so the build-tool can reach them, but the volatile caches
+# under each are gitignored.
+android/.gradle/
+android/local.properties
+android/app/.cxx/
+android/.kotlin/
+ios/Pods/
+ios/Podfile.lock
+ios/.symlinks/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Generated.xcconfig
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+
 # IDE
 .idea/
 .vscode/
