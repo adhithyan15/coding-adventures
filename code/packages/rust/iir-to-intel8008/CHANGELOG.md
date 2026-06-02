@@ -3,6 +3,91 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.7] — 2026-06-02 (A2++.5.5 sixth slice — `cmp_ne`/`cmp_lt`/`cmp_gt` via shared capture helper)
+
+### Added — inequality + ordering comparisons
+
+Extends v0.3.6 with three more boolean comparison ops:
+
+| IIR op | Skip-jump opcode | Operand swap? | Semantics |
+|--------|------------------|---------------|-----------|
+| `cmp_ne dest, a, b` | `JTZ` (`0x4C`) | no | `dest = (a != b) ? 1 : 0` |
+| `cmp_lt dest, a, b` | **`JFC` (`0x40`)** | no | `dest = (a <  b) ? 1 : 0` |
+| `cmp_gt dest, a, b` | `JFC` | **yes** | `dest = (a >  b) ? 1 : 0` |
+
+All four boolean comparisons (`cmp` + the three new ones) now share
+a single capture-emission helper `emit_cmp_capture`.  The four-line
+match arm picks the skip-jump opcode and swap flag, then delegates:
+
+```rust
+let (skip_op, swap) = match instr.op.as_str() {
+    "cmp"    => (JFZ, false),
+    "cmp_ne" => (JTZ, false),
+    "cmp_lt" => (JFC, false),
+    "cmp_gt" => (JFC, true),
+    _ => unreachable!("outer arm restricts to these 4"),
+};
+let (left, right) = if swap { (b_reg, a_reg) } else { (a_reg, b_reg) };
+emit_cmp_capture(&mut bytes, left, right, dest_reg, skip_op, &f.name)?;
+```
+
+#### Why `cmp_gt = cmp_lt + operand swap`
+
+`cmp_gt a, b` (is `a > b`?) is logically equivalent to `cmp_lt b, a`
+(is `b < a`?).  Both compute "carry-set after CMP" — for cmp_lt that
+means A=a, CMP b, carry-set ⇔ `a < b`.  For cmp_gt, swapping puts
+A=b, CMP a, carry-set ⇔ `b < a` ⇔ `a > b`.  Same skeleton, just
+different staging direction.
+
+This avoids needing a new "JFC AND NOT JTZ" combined jump (which the
+8008 doesn't have anyway) and keeps the lowering uniform.
+
+#### New constant
+
+* `pub const JFC: u8 = 0x40;` — jump if flag-carry CLEAR (i.e. when
+  `A >= r` after `CMP r`).  Bit pattern `01 000 000`: jump family
+  `01 ccc T 00` with `ccc = 000` (carry flag) and `T = 0` (test-clear).
+
+#### Refactor — shared `emit_cmp_capture` helper
+
+The v0.3.6 inline CMP + capture sequence was extracted to a helper:
+
+```rust
+fn emit_cmp_capture(
+    bytes: &mut Vec<u8>,
+    left_reg: u8,
+    right_reg: u8,
+    dest_reg: u8,
+    skip_op: u8,
+    fn_name: &str,
+) -> Result<(), IIRIntel8008Error>;
+```
+
+Single source of truth for the 7-byte (or 8-byte with staging MOV)
+boolean-comparison capture sequence.  Future cmp_lte / cmp_gte / etc.
+hook in by passing their own skip-jump opcode + swap polarity.
+
+#### Tests added (46 total, was 42)
+
+* `jfc_constant_pinned_to_0x40` — guards the JFC constant.
+* `cmp_ne_pins_full_capture_byte_stream` — `B8 0E 00 4C 0C 00 0E 01`.
+* `cmp_lt_pins_full_capture_byte_stream` — `B8 0E 00 40 0C 00 0E 01`.
+* `cmp_gt_swaps_operands_then_uses_jfc` — pins the swap-induced
+  `MOV A, B; CMP A` (`78 BF`) prefix.
+
+### What is NOT in v0.3.7 (deferred to v0.3.8 / v0.3.9 / A2+++)
+
+* `cmp_lte` / `cmp_gte` — need either a two-branch capture (`Z=1 OR
+  C=1`) or a `cmp_lt` + boolean negation; both more complex than
+  the single-skip-jump pattern this helper assumes.  Land alongside
+  the remaining 5 conditional-flag jump opcodes.
+* The remaining 5 conditional-flag jump opcodes: `JTC` (`0x44`),
+  `JFS` (`0x50`), `JTS` (`0x54`), `JFP` (`0x58`), `JTP` (`0x5C`).
+* Real `RET` (`0x07`) via `CAL` (`0x7E`, NOT `0x46` which is CFZ) +
+  per-function internal return-stack discipline — v0.3.9.
+* `lang-aot --target=intel8008` wiring + module-level CALL
+  backpatching — A2+++.
+
 ## [0.3.6] — 2026-06-02 (A2++.5.5 fifth slice — `cmp` equality with flag-to-bool capture)
 
 ### Added — boolean equality comparison

@@ -6,7 +6,7 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel8008::{
     lower_iir_to_intel8008, validate_for_intel8008,
-    IIRIntel8008Config, IIRIntel8008Error, HLT, JFZ, JMP, JTZ, MVI_A,
+    IIRIntel8008Config, IIRIntel8008Error, HLT, JFC, JFZ, JMP, JTZ, MVI_A,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -1064,6 +1064,148 @@ fn cmp_followed_by_jmp_if_true_composes_correctly() {
         0x11,  0x00,    // 0F 10   end at offset 0x11
         HLT,            // 11
     ], "cmp + jmp_if_true compose expected; got: {bytes:02x?}");
+}
+
+// ===========================================================================
+// 13. A2++.5.5 sixth slice — cmp_ne / cmp_lt / cmp_gt
+// ===========================================================================
+//
+// All three reuse v0.3.6's CMP + capture skeleton, differing only
+// in (a) which conditional jump skips the "set-true" overwrite and
+// (b) whether the operands are swapped before staging:
+//
+//   cmp     → skip=JFZ (skip if Z clear / a != b), no swap
+//   cmp_ne  → skip=JTZ (skip if Z set   / a == b), no swap
+//   cmp_lt  → skip=JFC (skip if C clear / a >= b), no swap
+//   cmp_gt  → skip=JFC, OPERANDS SWAPPED so CMP becomes b - a
+//             ⇒ carry-set iff b < a iff a > b.
+//
+// Byte streams below pin each variant against the canonical
+// "v=10, w=20" template.  Allocator: v→A, w→B, r→C.
+//
+//   00 01  MVI A, 10                        (3E 0A)
+//   02 03  MVI B, 20                        (06 14)
+//   04     CMP B                            (B8)
+//   05 06  MVI C, 0                         (0E 00)
+//   07     <skip_op>                        (one of JFZ/JTZ/JFC)
+//   08 09  target = 0x000C
+//   0A 0B  MVI C, 1                         (0E 01)
+//   0C     MOV A, C  (ret r into A)         (79)
+//   0D     HLT                              (76)
+//
+// For cmp_gt the only byte that changes is the CMP source register
+// (B becomes A because we swapped — a was in A, b was in B, after
+// swap left=B's reg, right=A's reg; staging emits MOV A, B then
+// CMP A) — so the byte stream differs by one MOV + one CMP byte.
+
+#[test]
+fn jfc_constant_pinned_to_0x40() {
+    // JFC = 01 000 000 (ccc=000 carry, T=0 clear)
+    assert_eq!(JFC, 0x40,
+        "JFC (jump if carry clear) should be 0x40; got 0x{:02x}", JFC);
+}
+
+#[test]
+fn cmp_ne_pins_full_capture_byte_stream() {
+    // const v=10; const w=20; cmp_ne r v w; ret r
+    let f = IIRFunction::new("ne", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("cmp_ne", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // 00 01  MVI A, 10
+        0x06,  0x14,    // 02 03  MVI B, 20
+        0xB8,           // 04     CMP B
+        0x0E,  0x00,    // 05 06  MVI C, 0 (default false)
+        JTZ,           // 07     JTZ (skip if Z set / a == b)
+        0x0C,  0x00,    // 08 09  target = 0x000C
+        0x0E,  0x01,    // 0A 0B  MVI C, 1
+        0x79,           // 0C     MOV A, C (ret r)
+        HLT,            // 0D
+    ], "cmp_ne expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn cmp_lt_pins_full_capture_byte_stream() {
+    // const v=10; const w=20; cmp_lt r v w; ret r
+    // v < w → carry SET after CMP, JFC NOT taken, falls through → MVI C, 1 → dest=1 ✓
+    let f = IIRFunction::new("lt", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("cmp_lt", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // 00 01  MVI A, 10
+        0x06,  0x14,    // 02 03  MVI B, 20
+        0xB8,           // 04     CMP B
+        0x0E,  0x00,    // 05 06  MVI C, 0
+        JFC,           // 07     JFC (skip if carry clear / a >= b)
+        0x0C,  0x00,    // 08 09  target = 0x000C
+        0x0E,  0x01,    // 0A 0B  MVI C, 1
+        0x79,           // 0C     MOV A, C
+        HLT,            // 0D
+    ], "cmp_lt expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn cmp_gt_swaps_operands_then_uses_jfc() {
+    // const v=10; const w=20; cmp_gt r v w; ret r
+    //
+    // cmp_gt a, b is implemented as cmp_lt b, a — swap operands then
+    // emit identical skeleton.  After swap: left=w(B), right=v(A).
+    //
+    // Staging: B → A via MOV A, B (0x78), then CMP A (since right=v in A).
+    // CMP A = 0xBF (10 111 111).
+    //
+    //   00 01  MVI A, 10        (v → A)
+    //   02 03  MVI B, 20        (w → B)
+    //   04     MOV A, B         (stage w into A — was in B)   = 0x78
+    //   05     CMP A            (right=A which was the v reg) = 0xBF
+    //
+    // Wait — the swap means left=b_reg (=B=0), right=a_reg (=A=7).
+    // Staging emits MOV A, B because left=0 != A.  Then CMP right=A
+    // → CMP A.  So CMP A = 0xBF.
+    //
+    //   00 01  MVI A, 10
+    //   02 03  MVI B, 20
+    //   04     MOV A, B    (0x78)
+    //   05     CMP A       (0xBF)
+    //   06 07  MVI C, 0
+    //   08     JFC
+    //   09 0A  target = 0x0D
+    //   0B 0C  MVI C, 1
+    //   0D     MOV A, C
+    //   0E     HLT
+    let f = IIRFunction::new("gt", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("cmp_gt", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // 00 01   MVI A, 10
+        0x06,  0x14,    // 02 03   MVI B, 20
+        0x78,           // 04      MOV A, B (stage swapped left=B into A)
+        0xBF,           // 05      CMP A    (right=A after swap)
+        0x0E,  0x00,    // 06 07   MVI C, 0
+        JFC,           // 08      JFC (skip if carry clear / b >= a / NOT a>b)
+        0x0D,  0x00,    // 09 0A   target = 0x000D
+        0x0E,  0x01,    // 0B 0C   MVI C, 1
+        0x79,           // 0D      MOV A, C
+        HLT,            // 0E
+    ], "cmp_gt expected; got: {bytes:02x?}");
 }
 
 // Note on the high-byte split + AddressOutOfRange coverage gap:
