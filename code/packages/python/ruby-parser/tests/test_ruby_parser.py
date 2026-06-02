@@ -201,9 +201,14 @@ class TestOperatorPrecedence:
     """Test that the parser correctly handles operator precedence.
 
     The grammar encodes precedence through rule nesting:
-    - ``expression`` handles ``+`` and ``-`` (lowest precedence)
+    - ``sum`` handles ``+`` and ``-`` (lower precedence)
     - ``term`` handles ``*`` and ``/`` (higher precedence)
     - ``factor`` handles atoms and parentheses (highest precedence)
+
+    (``expression`` itself is the entry point of a longer precedence
+    chain — ``expression -> ternary -> ... -> sum`` — so the additive
+    operators surface at the ``sum`` level rather than directly under
+    ``expression``.)
 
     This means ``1 + 2 * 3`` parses as ``1 + (2 * 3)`` because ``*``
     is handled at the ``term`` level, which is deeper in the parse tree.
@@ -226,17 +231,21 @@ class TestOperatorPrecedence:
     def test_multiplication_before_addition(self) -> None:
         """Parse ``1 + 2 * 3`` — multiplication has higher precedence.
 
-        In the AST, ``2 * 3`` should be grouped together inside a ``term``
-        node, while ``1`` and ``2 * 3`` are children of the ``expression``.
+        The grammar threads expressions through a precedence chain
+        (``expression -> ternary -> ... -> sum -> term -> factor``).
+        Addition lives at the ``sum`` level, which holds the ``+`` token
+        directly, while ``2 * 3`` is grouped one level deeper inside a
+        ``term`` node.
         """
         ast = parse_ruby("1 + 2 * 3")
 
-        # The top-level expression should have a PLUS
-        expressions = find_nodes(ast, "expression")
-        expr_direct_tokens = [
-            c for c in expressions[0].children if isinstance(c, Token)
+        # The ``sum`` node (addition level) should hold the PLUS directly
+        sums = find_nodes(ast, "sum")
+        assert len(sums) >= 1
+        sum_direct_tokens = [
+            c for c in sums[0].children if isinstance(c, Token)
         ]
-        plus_tokens = [t for t in expr_direct_tokens if t.value == "+"]
+        plus_tokens = [t for t in sum_direct_tokens if t.value == "+"]
         assert len(plus_tokens) == 1
 
         # There should be term nodes containing the multiplication
@@ -296,18 +305,22 @@ class TestOperatorPrecedence:
         assert "2" in values
 
     def test_chained_addition(self) -> None:
-        """Parse ``1 + 2 + 3`` — left-associative addition."""
+        """Parse ``1 + 2 + 3`` — left-associative addition.
+
+        Chained ``+`` flattens into a single ``sum`` node holding both
+        PLUS tokens directly (``sum = term { ( PLUS | MINUS ) term }``).
+        """
         ast = parse_ruby("1 + 2 + 3")
 
-        expressions = find_nodes(ast, "expression")
-        assert len(expressions) >= 1
+        sums = find_nodes(ast, "sum")
+        assert len(sums) >= 1
 
-        # Should have two PLUS tokens in the expression
-        expr_tokens = [
-            c for c in expressions[0].children
+        # Should have two PLUS tokens at the ``sum`` (addition) level
+        sum_tokens = [
+            c for c in sums[0].children
             if isinstance(c, Token) and c.value == "+"
         ]
-        assert len(expr_tokens) == 2
+        assert len(sum_tokens) == 2
 
 
 # ============================================================================
