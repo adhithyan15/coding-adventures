@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Minimal Material theme.  Compose drives the real visuals; the
+      Android system theme just provides a dark status bar + a
+      no-action-bar window background that doesn't fight the
+      Compose surface below it.
+    -->
+    <style name="Theme.VisiCalc" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">#FF1E1E1E</item>
+    </style>
+</resources>
