@@ -67,8 +67,9 @@ IIRModule
 | Version | Scope | Status |
 |---------|-------|--------|
 | v0.1.0 (A4) | crate skeleton: any module → single `JUN 0x000` (`0x40 0x00`) infinite-loop halt sentinel | **merged** |
-| **v0.2.0 (A4+ — this PR)** | `const dest, Int(n)` → `LDM n` (load immediate to accumulator, 4-bit n; range `[-8, 15]` via two's-complement) + `ret`/`ret_void` → JUN-self halt sentinel | this PR |
-| v0.3.0 (A4++) | Register-pair allocator over `r0r1..r14r15` + arithmetic via accumulator (`ADD`, `SUB` family) | future |
+| v0.2.0 (A4+) | `const dest, Int(n)` → `LDM n` + `ret`/`ret_void` → JUN-self | **merged** |
+| **v0.3.0 (A4++ — this PR)** | ACC-first linear allocator over `r0..r15` (`ACC` comes first in pool to preserve v0.2.0's trivial-case shape) + `mov` (via `LD`/`XCH` pairs) + ret-value staging via `LD r_var` if not already in ACC.  Adds `LD_OPCODE = 0xA0` and `XCH_OPCODE = 0xB0` constants. | this PR |
+| v0.4.0 (A4+++) | Arithmetic via accumulator (`ADD`, `SUB`, `IAC`, `DAC`) + conditional jumps via `JCN` | future |
 | v0.4.0 (A4+++) | `lang-aot --emit=intel4004` wiring + Brainfuck end-to-end | future |
 
 ## Public surface (v0.1.0)
