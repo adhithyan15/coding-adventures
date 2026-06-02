@@ -116,6 +116,48 @@ pub const MVI_A: u8 = 0x3E;
 /// the "set-true" path.
 pub const JFC: u8 = 0x40;
 
+/// Intel 8008 conditional `JTC addr` (jump if flag-carry set) first
+/// byte — `0x44`.  Three-byte instruction.
+///
+/// Bit pattern: `01 000 100` (carry flag, `T = 1 = jump if flag set`).
+/// `JTC` is the "skip if `A < r`" half — used by `cmp_gte` to default
+/// to `0` and only set `1` when the carry isn't set after CMP.
+///
+/// CAREFUL: `0x44` is NOT the unconditional `JMP` (which is `0x7C`).
+/// The encoding cheat-sheet in `iir-to-intel8008.md` lists every
+/// group-01 jump/call opcode side-by-side so this confusion doesn't
+/// recur — same hazard the v0.3.4 commit message flagged for
+/// `JMP ↔ JFC` and `CAL ↔ CFZ`.
+pub const JTC: u8 = 0x44;
+
+/// Intel 8008 conditional `JFS addr` (jump if sign clear, "positive
+/// or zero") first byte — `0x50`.  Three-byte instruction.
+///
+/// Bit pattern: `01 010 000` (sign flag, T = 0).  After `CMP r`,
+/// sign is SET when the high bit of `A - r` is 1 — useful only for
+/// signed integer ordering, which doesn't yet land in IIR.  Pinned
+/// here so the spec's encoding cheat-sheet stays in sync with the
+/// public surface.
+pub const JFS: u8 = 0x50;
+
+/// Intel 8008 conditional `JTS addr` (jump if sign set, "negative")
+/// first byte — `0x54`.  Three-byte instruction.  Bit pattern:
+/// `01 010 100`.  Sibling of `JFS`; both pinned for forward
+/// compatibility with signed-arithmetic lowerings.
+pub const JTS: u8 = 0x54;
+
+/// Intel 8008 conditional `JFP addr` (jump if parity clear, "odd")
+/// first byte — `0x58`.  Three-byte instruction.  Bit pattern:
+/// `01 011 000`.  Parity flag is rarely used by high-level IIR
+/// constructs; pinned for completeness and round-trip fidelity with
+/// the simulator's decoder.
+pub const JFP: u8 = 0x58;
+
+/// Intel 8008 conditional `JTP addr` (jump if parity set, "even")
+/// first byte — `0x5C`.  Three-byte instruction.  Bit pattern:
+/// `01 011 100`.  Sibling of `JFP`.
+pub const JTP: u8 = 0x5C;
+
 /// Intel 8008 conditional `JFZ addr` (jump if flag-zero clear) first
 /// byte — `0x48`.  Three-byte instruction (`JFZ` + low addr + high addr).
 ///
@@ -379,6 +421,12 @@ const SUPPORTED_OPS: &[&str] = &[
     // "set true" path, and (b) whether the operands are swapped
     // before staging.
     "cmp_ne", "cmp_lt", "cmp_gt",
+    // A2++.5.5 seventh slice — closed-end ordering (a >= b, a <= b).
+    // Both slot into the same shared `emit_cmp_capture` helper via
+    // `JTC` (jump if carry SET) — the natural complement of `JFC` —
+    // with `cmp_lte` reusing `cmp_gte` via the same operand-swap
+    // trick that v0.3.7 used for `cmp_gt`.
+    "cmp_gte", "cmp_lte",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -638,7 +686,7 @@ pub fn lower_iir_to_intel8008(
                 // Both axes feed a single helper below so any future
                 // tweak to the capture shape (e.g. shrinking via a
                 // different idiom) only needs one site change.
-                "cmp" | "cmp_ne" | "cmp_lt" | "cmp_gt" => {
+                "cmp" | "cmp_ne" | "cmp_lt" | "cmp_gt" | "cmp_gte" | "cmp_lte" => {
                     let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -658,11 +706,17 @@ pub fn lower_iir_to_intel8008(
                     let b_reg = lookup_register(&env, &b_name, &f.name)?;
                     // Decide skip-jump opcode AND whether to swap.
                     let (skip_op, swap) = match instr.op.as_str() {
-                        "cmp"    => (JFZ, false),
-                        "cmp_ne" => (JTZ, false),
-                        "cmp_lt" => (JFC, false),
-                        "cmp_gt" => (JFC, true),
-                        _ => unreachable!("outer arm restricts to these 4"),
+                        "cmp"     => (JFZ, false),
+                        "cmp_ne"  => (JTZ, false),
+                        "cmp_lt"  => (JFC, false),
+                        "cmp_gt"  => (JFC, true),
+                        // a >= b iff NOT (a < b) iff carry CLEAR after CMP b.
+                        // Skip-when-true (false) means skip when carry SET → JTC.
+                        "cmp_gte" => (JTC, false),
+                        // a <= b iff b >= a — same skip opcode as cmp_gte,
+                        // operands swapped (so CMP a runs after staging b).
+                        "cmp_lte" => (JTC, true),
+                        _ => unreachable!("outer arm restricts to these 6"),
                     };
                     let (left, right) = if swap { (b_reg, a_reg) } else { (a_reg, b_reg) };
                     // Allocate dest_reg up front so the helper can
