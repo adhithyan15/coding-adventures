@@ -78,12 +78,12 @@ fn validate_accepts_supported_ret_void_function() {
 #[test]
 fn validate_rejects_unsupported_op() {
     let f = IIRFunction::new("main", vec![], "void", vec![
-        IIRInstr::new("call_builtin", None, vec![], "void"),
+        IIRInstr::new("safepoint", None, vec![], "void"),
         IIRInstr::new("ret_void", None, vec![], "void"),
     ]);
     let errors = validate_for_riscv(&module_with(f));
     assert!(errors.iter().any(|e| e.contains("UnsupportedOp")),
-        "expected UnsupportedOp for `call_builtin`; got: {errors:?}");
+        "expected UnsupportedOp for `safepoint`; got: {errors:?}");
 }
 
 #[test]
@@ -164,16 +164,20 @@ fn const_of_negative_small_int_is_supported() {
 }
 
 #[test]
-fn const_out_of_imm12_range_is_rejected() {
+fn const_out_of_i32_range_is_rejected() {
+    // After A1++ added lui+addi, the rejection threshold moved up from
+    // i12::MAX to i32::MAX.  Values that fit in i32 lower cleanly via
+    // the wide-immediate idiom; values outside i32 still need 64-bit
+    // pair handling (A1++.5).
+    let v = (i32::MAX as i64) + 1;
     let f = IIRFunction::new("f", vec![], "i32", vec![
-        // 0x1000 = 4096 — outside [-2048, 2047].
-        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(4096)], "i32"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(v)], "i32"),
         IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "i32"),
     ]);
     let err = lower_iir_to_riscv(&module_with(f), &IIRRiscvConfig::default())
-        .expect_err("oversized const should fail");
+        .expect_err("oversized (>i32) const should fail");
     match err {
-        IIRRiscvError::ImmediateOutOfRange { value, .. } => assert_eq!(value, 4096),
+        IIRRiscvError::ImmediateOutOfRange { value, .. } => assert_eq!(value, v),
         other => panic!("expected ImmediateOutOfRange, got: {other:?}"),
     }
 }
@@ -323,4 +327,197 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRRiscvError::ImmediateOutOfRange {
         function: "f".into(), value: 99_999,
     });
+}
+
+// ===========================================================================
+// 12. A1++ — wide constants via lui+addi
+// ===========================================================================
+//
+// After A1++ shipped lui+addi, `const v = 4096` no longer rejects — it
+// lowers to `lui + (optionally) addi` for the upper 20 / lower 12 split.
+// Carry handling: when low12 is negative (top bit set) we add 1 to
+// upper20.  The two tests below pin both the no-addi and with-addi
+// paths.
+
+#[test]
+fn const_4096_lowers_via_lui_then_addi_skipped() {
+    // 4096 == 0x1000 — exactly upper20=1, lower12=0 → just lui, no addi.
+    let f = IIRFunction::new("f", vec![], "i32", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(4096)], "i32"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "i32"),
+    ]);
+    let words = lower(&module_with(f));
+    // Expected: lui t0, 1 ;  mv a0, t0 (addi) ;  ret
+    assert_eq!(words.len(), 3,
+        "4096 should lower as `lui t0, 1` + mv + ret (no extra addi); got {words:#x?}");
+}
+
+#[test]
+fn const_4097_lowers_via_lui_plus_addi() {
+    // 4097 == 0x1001 — upper20=1, lower12=1 (positive 1), no carry.
+    let f = IIRFunction::new("f", vec![], "i32", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(4097)], "i32"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "i32"),
+    ]);
+    let words = lower(&module_with(f));
+    // Expected: lui t0, 1 ;  addi t0, t0, 1 ;  mv a0, t0 ;  ret
+    assert_eq!(words.len(), 4,
+        "4097 should lower as lui + addi + mv + ret; got {words:#x?}");
+}
+
+// ===========================================================================
+// 13. A1++ — comparison ops produce 0/1 in a register
+// ===========================================================================
+
+#[test]
+fn cmp_lt_signed_emits_slt() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("lt", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let words = lower(&module_with(f));
+    let expected = riscv_simulator::encoding::encode_slt(T0, A0, A1);
+    assert_eq!(words[0], expected,
+        "expected slt t0, a0, a1; got 0x{:08x}", words[0]);
+}
+
+#[test]
+fn cmp_lt_unsigned_emits_sltu() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "u32".into()), ("b".into(), "u32".into())],
+        "u32",
+        vec![
+            IIRInstr::new("lt", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u32"),
+        ],
+    );
+    let words = lower(&module_with(f));
+    let expected = riscv_simulator::encoding::encode_sltu(T0, A0, A1);
+    assert_eq!(words[0], expected,
+        "expected sltu t0, a0, a1; got 0x{:08x}", words[0]);
+}
+
+#[test]
+fn cmp_eq_synthesizes_xor_plus_sltiu() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("eq", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let words = lower(&module_with(f));
+    let xor = riscv_simulator::encoding::encode_xor(T0, A0, A1);
+    let sltiu_ = riscv_simulator::encoding::encode_sltiu(T0, T0, 1);
+    assert_eq!(words[0], xor);
+    assert_eq!(words[1], sltiu_);
+}
+
+#[test]
+fn cmp_ne_synthesizes_xor_plus_sltu_with_x0() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("ne", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let words = lower(&module_with(f));
+    let xor = riscv_simulator::encoding::encode_xor(T0, A0, A1);
+    let sltu_x0 = riscv_simulator::encoding::encode_sltu(T0, X0, T0);
+    assert_eq!(words[0], xor);
+    assert_eq!(words[1], sltu_x0);
+}
+
+#[test]
+fn cmp_prefixed_alias_lowers_like_naked() {
+    // `cmp_lt` should produce identical bytes to `lt`.
+    let f1 = IIRFunction::new(
+        "g",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("cmp_lt", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let w1 = lower(&module_with(f1));
+    let f2 = IIRFunction::new(
+        "g",
+        vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+        "i32",
+        vec![
+            IIRInstr::new("lt", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let w2 = lower(&module_with(f2));
+    assert_eq!(w1, w2, "`cmp_lt` should lower identically to `lt`");
+}
+
+// ===========================================================================
+// 14. A1++ — call_builtin "print_i64" → ecall on RV32I
+// ===========================================================================
+
+#[test]
+fn call_builtin_print_i64_emits_ecall_with_a7_syscall() {
+    use riscv_simulator::encoding::{encode_addi, encode_ecall};
+    const A7: u32 = 17;
+    let f = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i32"),
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("v".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower(&module_with(f));
+    // Sequence:
+    //   addi t0, x0, 42       ; v = 42
+    //   addi a0, t0, 0        ; mv a0, v
+    //   addi a7, x0, 1        ; syscall #1 (print_i64)
+    //   ecall
+    //   ret
+    let expected = vec![
+        encode_addi(T0, X0, 42),
+        encode_addi(A0, T0, 0),
+        encode_addi(A7, X0, 1),
+        encode_ecall(),
+        CANONICAL_RET,
+    ];
+    assert_eq!(words, expected,
+        "print_i64 sequence mismatch; got {words:#x?}, expected {expected:#x?}");
+}
+
+#[test]
+fn call_builtin_unknown_name_is_unsupported() {
+    let f = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("not_a_real_builtin".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_riscv(&module_with(f), &IIRRiscvConfig::default())
+        .expect_err("unknown builtin should fail");
+    match err {
+        IIRRiscvError::UnsupportedOp { op, .. } => {
+            assert!(op.contains("not_a_real_builtin"),
+                "error should mention the unknown name; got: {op}");
+        }
+        other => panic!("expected UnsupportedOp, got: {other:?}"),
+    }
 }

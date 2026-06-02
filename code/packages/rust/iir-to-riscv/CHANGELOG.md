@@ -3,6 +3,72 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-06-02 (A1++ first slice — wide consts + comparisons + `ecall print_i64`)
+
+### Added — three more op families on RV32I
+
+A1++ as originally scoped was a large bundle (comparisons, branches,
+calls, stack spilling, wide consts, ecall).  This release lands the
+three self-contained pieces:
+
+1. **Wide constants via `lui + addi`.**  Any i32 literal now lowers
+   cleanly.  Values that fit in i12 still use the single-`addi` form;
+   anything wider gets the canonical `lui rd, upper20; addi rd, rd,
+   lower12` sequence with the standard carry adjustment when low12 is
+   negative.  Values outside i32 still produce `ImmediateOutOfRange`
+   (64-bit register-pair handling lands in A1++.5).
+2. **Comparisons** — `eq`/`ne`/`lt`/`le`/`gt`/`ge` (and their
+   `cmp_`-prefixed aliases per gap G1) producing i32 `0`/`1` results
+   in a register:
+   * `lt`/`gt` → `slt` (or `sltu` for `u*` operands)
+   * `le`/`ge` → `slt` + `xori 1`
+   * `eq` → `xor` + `sltiu 1`
+   * `ne` → `xor` + `sltu x0, t`
+   All idioms reuse the dest register for the synth intermediate so no
+   extra temp is needed — important until A1++.5 ships stack spilling.
+3. **`call_builtin "print_i64"` via `ecall`** — completes the
+   cross-backend print_i64 parity:
+
+   | Backend            | Print sentinel |
+   |--------------------|----------------|
+   | iir-to-wasm        | `env.__print_i64` host import |
+   | iir-to-jvm-class-file | `invokestatic env/BasicRuntime.println(J)V` |
+   | iir-to-cil-bytecode | `call void env.BasicRuntime::PrintI64(int64)` |
+   | iir-to-llvm        | `declare void @__print_i64(i64)` + extern call |
+   | **iir-to-riscv (this)** | `ecall` with `a7 = ECALL_PRINT_I64_NUM = 1` |
+
+   We pick syscall `1` (Linux `__NR_write` slot) because a future
+   real-syscall pass can fold this into `write(2)` without a
+   convention change.
+
+### What is NOT in this PR (deferred to A1++.5)
+
+* **Branches and label resolution.**  `label` / `jmp` / `jmp_if_*`
+  need a two-pass over the function body to compute PC-relative
+  offsets for `beq`/`bne`/`jal`.
+* **Calls + stack spilling.**  Cross-function `jal` + `ra` save/restore
+  needs a real stack frame, which forces an allocator rework.
+* **64-bit register-pair handling.**  i64 literals + arithmetic on
+  RV32 needs register pairs.
+
+Splitting A1++ this way keeps the data-flow + ecall slice independently
+reviewable — branches and stack spilling are orthogonal concerns that
+benefit from landing as their own PR.
+
+### Tests added (26 total, was 17)
+
+* Wide const (2): `4096` → just `lui` (no `addi`); `4097` → `lui + addi`.
+* Comparisons (5): signed `slt`, unsigned `sltu`, `eq` synthesis,
+  `ne` synthesis, `cmp_`-prefix alias parity.
+* `ecall print_i64` (2): exact 5-word sequence pinned; unknown builtin
+  rejected.
+
+Pre-existing tests rewritten:
+* `const_out_of_imm12_range_is_rejected` → `const_out_of_i32_range_is_rejected`
+  (the threshold moved up from i12 to i32 after lui+addi landed).
+* `validate_rejects_unsupported_op` flipped to use `safepoint`
+  (since `call_builtin` is now supported).
+
 ## [0.2.0] — 2026-06-02 (A1+ — const/mov/add/sub/ret + linear register allocator)
 
 ### Added — first real instruction lowering
