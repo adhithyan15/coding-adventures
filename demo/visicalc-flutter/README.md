@@ -45,6 +45,30 @@ flutter run -d android # Android emulator
 
 (Requires Flutter SDK 3.0+. Install via https://flutter.dev/docs/get-started/install.)
 
+## How to build deployable artefacts (CI-friendly)
+
+```bash
+flutter build apk --debug            # Android — debug-signed APK
+flutter build apk --release          # Android — release APK (needs signing config)
+flutter build ios --no-codesign      # iOS — .app bundle (sideload-ready)
+flutter build web --release          # Web — static dist/
+flutter build macos --release        # Desktop — .app
+```
+
+Verified locally on macOS arm64:
+
+| Target | Command | Output | Result |
+| --- | --- | --- | --- |
+| Android | `flutter build apk --debug` | `build/app/outputs/flutter-apk/app-debug.apk` | ✅ |
+| iOS | `flutter build ios --no-codesign` | `build/ios/iphoneos/Runner.app` (15.2 MB) | ✅ |
+| Web | `flutter build web --release` | `build/web/` | ✅ |
+
+The `android/` and `ios/` platform-runner scaffolds are generated
+by `flutter create --platforms=ios,android .` and checked in.
+Volatile per-platform caches (`android/.gradle/`, `ios/Pods/`,
+`xcuserdata/`, etc.) are gitignored — `flutter build` regenerates
+them on first run.
+
 ## The Grid gap
 
 The `mosaic-emit-flutter` pipeline emits a placeholder
