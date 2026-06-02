@@ -142,6 +142,12 @@ pub enum LangAotError {
     /// (which already includes the failing function name and the
     /// unsupported op/type/operand).
     Intel8008BackendError(String),
+    /// The ARMv7 (A32) backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-armv7` (which
+    /// already includes the failing function name and the
+    /// unsupported op/type/operand).
+    Armv7BackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -156,6 +162,7 @@ impl fmt::Display for LangAotError {
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
+            LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
         }
     }
 }
@@ -380,6 +387,76 @@ pub fn compile_file_to_intel8008_bin(
     let bytes = iir_to_intel8008::lower_iir_to_intel8008(&module, &cfg)
         .map_err(|e| LangAotError::Intel8008BackendError(format!("{e}")))?;
 
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → ARMv7 (A32) machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 32-bit
+/// ARMv7-A instruction words encoded as little-endian bytes.
+/// Downstream consumers:
+///
+/// * [`arm-simulator`](../arm-simulator) — load + execute in-process.
+/// * `qemu-arm` — `qemu-arm -kernel out.bin`.
+/// * `objcopy` + a phone-class Linux linker for an ELF executable on
+///   a Cortex-A7/A8/A9-era SoC.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Wire format
+///
+/// Each emitted A32 word is written as **little-endian** bytes.
+/// ARMv7 is configurable-endian but defaults to little-endian on
+/// every modern Linux / Android distribution, on QEMU, and on the
+/// in-tree `arm-simulator`.  `Vec<u32>::iter().flat_map(u32::to_le_bytes)`
+/// is the canonical Rust expression of that encoding.
+///
+/// # Why no host gating?
+///
+/// ARMv7 host execution would require an ARM Cortex-A class CPU.
+/// Most LANG VM developers don't have one as their dev host, so we
+/// never produce a "native" binary the host can execute — the
+/// downstream consumer is always a simulator (in-tree
+/// `arm-simulator`, `qemu-arm`), a phone-class Linux board, or a
+/// flash loader.  All host OSes can write a flat byte file, so the
+/// pipeline is universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Armv7BackendError` — the IIR contained an op or type the ARMv7
+///   backend does not yet handle (the message names the function and
+///   op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=armv7 -o foo.bin
+/// # Then load foo.bin into the simulator or QEMU:
+/// qemu-arm -kernel foo.bin
+/// ```
+pub fn compile_file_to_armv7_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_armv7::IIRArmv7Config::new(stem);
+    let words = iir_to_armv7::lower_iir_to_armv7(&module, &cfg)
+        .map_err(|e| LangAotError::Armv7BackendError(format!("{e}")))?;
+
+    // Flatten Vec<u32> → Vec<u8> via little-endian ARMv7 word encoding.
+    let mut bytes = Vec::with_capacity(words.len() * 4);
+    for w in &words {
+        bytes.extend_from_slice(&w.to_le_bytes());
+    }
     std::fs::write(out, &bytes)?;
     Ok(())
 }
