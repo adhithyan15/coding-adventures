@@ -25,7 +25,7 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.8.0 (A5+++++++++ call_builtin no-op — BASIC PRINT works)
+## Status — v0.9.0 (A5++++++++++ neg via 0 - src — BASIC unary minus works)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
@@ -33,6 +33,7 @@ pipeline:
 | `mov dest, src` | `(STA r_evict_src)?` + `LD r_src` + `STA r_dest` |
 | `add dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `ADD r_rhs` |
 | `sub dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `SUB r_rhs` |
+| `neg dest, src` | (evict)? + `LDA 0` + `SUB r_src` |
 | `cmp_lt dest, a, b` | LD/SUB + `BMI true` + LDA 0 + BR end + LDA 1 |
 | `cmp_eq dest, a, b` | LD/SUB + `BZ true` + LDA 0 + BR end + LDA 1 |
 | `cmp_ne dest, a, b` | LD/SUB + `BNZ true` + LDA 0 + BR end + LDA 1 |

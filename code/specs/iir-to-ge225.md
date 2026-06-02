@@ -1,6 +1,6 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
-**Status:** v0.8.0 — call_builtin no-op, BASIC PRINT works end-to-end (A5+++++++++)
+**Status:** v0.9.0 — neg via 0-src, BASIC unary minus works end-to-end (A5++++++++++)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
 
@@ -95,7 +95,8 @@ IIRModule
 | v0.6.0 (A5++++++) | Call/return discipline: `JSR` (0x9), `RTS` (0xA) + module-level `call` backpatching; `BMI` (0xB) reserved; non-entry-fn ret emits RTS instead of HLT | **merged** |
 | v0.7.0 (A5+++++++) | Six comparison ops `cmp_lt`/`cmp_eq`/`cmp_ne`/`cmp_le`/`cmp_gt`/`cmp_ge` via SUB-then-test boolean materialization.  Activates `BMI` (0xB) for the lt/le/gt/ge family.  Operand-swap pattern handles gt/ge with no new code | **merged** |
 | (A5++++++++ in lang-aot tests) | BASIC end-to-end smoke tests: `LET A = 5`, `LET A = 1 + 2`, PRINT-gap documentation | **merged** |
-| **v0.8.0 (A5+++++++++ — this PR)** | `call_builtin` no-op lowering: closes BASIC PRINT gap.  No-dest case emits zero bytes; with-dest case emits `LDA 0` placeholder.  Mirrors the simulator-no-op pattern for unmodeled I/O | this PR |
+| v0.8.0 (A5+++++++++) | `call_builtin` no-op lowering: closes BASIC PRINT gap.  No-dest case emits zero bytes; with-dest case emits `LDA 0` placeholder | **merged** |
+| **v0.9.0 (A5++++++++++ — this PR)** | `neg dest, src` lowering via `LDA 0 + SUB r_src` (0 - src = -src).  Closes BASIC unary-minus gap.  15-byte trivial ROM for `const v=N; neg w, v; ret w` | this PR |
 | v0.4.0 (A5+++) | `lang-aot --emit=ge225` wiring + BASIC end-to-end | future |
 
 ## Public surface (v0.1.0)
