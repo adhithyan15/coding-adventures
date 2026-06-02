@@ -1,15 +1,26 @@
 // Main.kt — entry point for the VisiCalc Compose Desktop demo.
 //
-// Mounts the FormulaBar above a hand-written 5×5 grid.  Both are
-// driven from local Compose state (`remember { mutableStateOf(...) }`);
-// when the mosaic-emit-compose backend lands, the FormulaBar will be
-// replaced by a generated composable and the local state will move
-// to a `MosaicStore<AppState>` per the strict-Flux contract.
+// Mounts a *generated* `FormulaBar` composable (from
+// `src/main/kotlin/generated/FormulaBar.kt`, produced by
+// `mosaic-compile --backend compose` against
+// `demo/visicalc/mosaic/FormulaBar.{mil,desktop.mll,dark.msl}`)
+// above a hand-written 5×5 grid.  Both surface and dispatch shape
+// match what every sibling backend ships.
+//
+// Strict-Flux wiring: the FormulaBar receives a single
+// `dispatch: (FormulaBarEvent) -> Unit` callback (per
+// `code/specs/UI33-rewrite-unified-architecture.md` §6).  This file
+// pattern-matches the event union back into local `mutableStateOf`
+// for v0.1.0; a follow-up will swap the local state for a
+// `MosaicStore<AppState>` from the `mosaic-flux-compose` runtime
+// (already pulled in as an `includeBuild` composite-build dep).
 //
 // Visual contract: identical to the React / HTML / WebComponent /
-// SwiftUI / Qt / Flutter demos — dark theme, A1 selected (excel-blue
-// highlight), formula bar reads "A1 / =SUM(B1:B5)".
+// SwiftUI / Qt / Flutter demos — dark theme, A1 selected
+// (excel-blue highlight), formula bar reads "A1 / =SUM(B1:B5)".
 
+import generated.FormulaBar
+import generated.FormulaBarEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -86,9 +97,15 @@ private fun VisiCalcApp() {
             FormulaBar(
                 cellAddress = "${('A' + selectedCol)}${selectedRow + 1}",
                 formula = formulaText,
-                onFormulaChange = { newValue -> formulaText = newValue },
-                onCommit = { /* no-op for v0.1.0 */ },
-                onCancel = { formulaText = sampleRows[selectedRow][selectedCol] },
+                readOnly = false,
+                dispatch = { event ->
+                    when (event) {
+                        is FormulaBarEvent.FormulaChange -> formulaText = event.value
+                        is FormulaBarEvent.Commit -> { /* no-op for v0.1.0 */ }
+                        is FormulaBarEvent.Cancel ->
+                            formulaText = sampleRows[selectedRow][selectedCol]
+                    }
+                },
             )
         }
 
