@@ -37,6 +37,7 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents,
+  sampled digital event streams,
   DC operating-point temperature sweeps, cornered DC operating-point
   temperature sweeps, transient samples, adaptive transient samples, cornered
   transient samples, cornered adaptive transient samples, AC phasors, cornered DC

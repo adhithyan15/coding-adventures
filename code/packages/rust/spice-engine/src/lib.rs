@@ -712,6 +712,40 @@ pub fn sample_transient_probe_as_digital_events(
     Ok(events)
 }
 
+pub fn format_digital_event_table(events: &[DigitalEvent]) -> Result<String, SpiceError> {
+    let mut rows = vec!["Index\tTime\tState".to_string()];
+    let mut previous_time = f64::NEG_INFINITY;
+    for (index, event) in events.iter().enumerate() {
+        if !event.time_seconds.is_finite() || event.time_seconds < 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital event times must be finite and non-negative".to_string(),
+            });
+        }
+        if event.time_seconds <= previous_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital event times must be strictly increasing".to_string(),
+            });
+        }
+        previous_time = event.time_seconds;
+        rows.push(format!(
+            "{index}\t{}\t{}",
+            format_table_number(event.time_seconds),
+            format_digital_state(event.state)
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+fn format_digital_state(state: DigitalState) -> &'static str {
+    match state {
+        DigitalState::Low => "low",
+        DigitalState::High => "high",
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct SinWaveform {
     pub offset: f64,
