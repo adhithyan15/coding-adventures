@@ -70,7 +70,10 @@
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
-use coding_adventures_closure_scope_analyzer::{analyze, BindingId, BindingKind};
+use std::collections::HashSet;
+
+use coding_adventures_closure_scope_analyzer::{analyze, BindingId, BindingKind, ScopeId};
+use coding_adventures_javascript_ast::{Declaration, ProgramItem};
 
 /// `Pass::depends_on` value. CLOC06 canonical order pins DCE
 /// before tree-shake. Kept as a `const` so future tests / sibling
@@ -178,31 +181,102 @@ impl Pass for TreeshakePass {
 
         let analysis = analyze(ctx.program);
 
-        // Step 1 + 2: shape-candidate scan.
-        let mut shape_candidates: Vec<BindingId> = Vec::new();
+        // Step 1: use-count per binding (same shape as
+        // remove-unused-vars / collapse-properties / inline).
+        // Unresolved references (binding = None) — free globals
+        // like `console` — don't increment any count.
+        let mut use_count: Vec<usize> = vec![0; analysis.bindings.len()];
+        for reference in &analysis.references {
+            if let Some(BindingId(idx)) = reference.binding {
+                if let Some(slot) = use_count.get_mut(idx as usize) {
+                    *slot += 1;
+                }
+            }
+        }
+
+        // Step 2: dead-shape scan. A binding is *dead* (removable
+        // by treeshake) when ALL of:
+        //   - kind ∈ { Function, Class } (the module-export-shaped
+        //     kinds; Var/Let/Const cross over to remove-unused-vars
+        //     and collapse-properties)
+        //   - uses == 0 (no reference resolves to it)
+        //   - scope == ScopeId::GLOBAL (the only scope CLOC13.0
+        //     populates today; restricting here keeps the apply
+        //     step correct when CLOC13.0.2 introduces nested
+        //     scopes, since we only act on top-level names below)
+        //
+        // `#[non_exhaustive]` on BindingKind: future variants
+        // conservatively passthrough via wildcard.
+        let mut dead_names: HashSet<String> = HashSet::new();
         for (idx, binding) in analysis.bindings.iter().enumerate() {
-            let id = BindingId(idx as u32);
-            // `#[non_exhaustive]` on BindingKind: future variants
-            // conservatively passthrough via wildcard.
+            let uses = use_count.get(idx).copied().unwrap_or(0);
+            if uses != 0 {
+                continue;
+            }
+            if binding.scope != ScopeId::GLOBAL {
+                continue;
+            }
             match binding.kind {
                 BindingKind::Function | BindingKind::Class => {
-                    shape_candidates.push(id);
+                    dead_names.insert(binding.name.clone());
                 }
-                // Var/Let/Const/Param: these go through DCE +
-                // remove-unused-vars + collapse-properties. Splitting
-                // by kind keeps the passes from arguing over the
-                // same binding.
                 _ => {}
             }
         }
 
-        // Step 3 deferred — keep `changed = false`.
-        let _shape_candidates = shape_candidates;
+        // Step 3 — APPLY. CLOC13.C.1 lifts the hard-pin on
+        // `changed` and actually mutates the program.
+        //
+        // Walk program.body. For each item:
+        //   - Declaration::FunctionDeclaration: drop if its name
+        //     is in dead_names; passthrough otherwise.
+        //   - Declaration::VariableDeclaration: passthrough
+        //     unconditionally (Var/Let/Const are not treeshake's
+        //     responsibility — remove-unused-vars handles them).
+        //   - ProgramItem::Statement: passthrough. Statement
+        //     walking lands as references arrive (CLOC13.0.1).
+        //
+        // **Pin lifted; safety preserved.** `changed = removed >
+        // 0` is safe because we genuinely mutated when we say we
+        // did. If `removed == 0` (no dead Function/Class bindings
+        // in GLOBAL), the program passes through unchanged with
+        // `changed = false`.
+        //
+        // **Why this stays safe under FixedPoint.** Each iteration
+        // strictly reduces the binding set: a removed
+        // FunctionDeclaration produces no new bindings, and the
+        // dropped function body can't introduce *new* references
+        // because those references were already inside the dead
+        // function and resolved either (a) to other dead bindings
+        // (removed in this same iteration) or (b) to live
+        // bindings (whose use_count was incremented by those refs;
+        // removing the refs decrements the count, possibly making
+        // *those* bindings newly-dead in the next iteration). The
+        // fixed point reaches when no Function/Class binding has
+        // zero refs.
+
+        let mut new_body: Vec<ProgramItem> = Vec::with_capacity(ctx.program.body.len());
+        let mut removed_count: usize = 0;
+        for item in &ctx.program.body {
+            match item {
+                ProgramItem::Declaration(Declaration::FunctionDeclaration(fd))
+                    if dead_names.contains(&fd.id.name) =>
+                {
+                    removed_count += 1;
+                    // Drop.
+                }
+                _ => new_body.push(item.clone()),
+            }
+        }
+
+        let mut new_program = ctx.program.clone();
+        new_program.body = new_body;
+        let changed = removed_count > 0;
 
         Ok(PassOutput {
-            program: ctx.program.clone(),
+            program: new_program,
             contributions: Vec::new(),
-            changed: false,
+            changed,
             diagnostics: Vec::new(),
             stats: PassStats {
                 // Visited the program root + every binding +
@@ -349,5 +423,168 @@ mod tests {
         let _b: TreeshakePass = TreeshakePass::new();
         let _c = _b;
         let _d = _c.clone();
+    }
+
+    // -----------------------------------------------------------------
+    // CLOC13.C.1 — apply-step tests.
+    //
+    // Treeshake drops top-level FunctionDeclarations whose names are
+    // in the dead set (Function/Class kind, scope=GLOBAL, uses=0).
+    // These tests exercise the body-walk machinery directly via the
+    // Pass trait, not through the pipeline.
+    // -----------------------------------------------------------------
+
+    use coding_adventures_javascript_ast::{
+        BindingTarget, BlockStatement, Expression, ExpressionStatement, FunctionDeclaration,
+        Identifier, NumericLiteral, Statement, VarKind, VariableDeclaration,
+        VariableDeclarator,
+    };
+
+    fn ident(name: &str) -> Identifier {
+        Identifier {
+            cv: None,
+            name: name.to_string(),
+        }
+    }
+
+    fn fn_decl(name: &str) -> ProgramItem {
+        ProgramItem::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: ident(name),
+            params: Vec::new(),
+            body: BlockStatement {
+                cv: None,
+                body: Vec::new(),
+            },
+            generator: false,
+            is_async: false,
+        }))
+    }
+
+    fn var_decl_simple(name: &str) -> ProgramItem {
+        ProgramItem::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(ident(name)),
+                init: None,
+            }],
+        }))
+    }
+
+    fn program_with(items: Vec<ProgramItem>) -> Program {
+        let mut p = program();
+        p.body = items;
+        p
+    }
+
+    fn run_pass(prog: Program) -> coding_adventures_closure_pass_pipeline::PassOutput {
+        let pass = TreeshakePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        let ctx = coding_adventures_closure_pass_pipeline::PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        };
+        pass.run(ctx).expect("pass ran")
+    }
+
+    #[test]
+    fn apply_step_drops_unreferenced_function() {
+        // `function f() {}` with no callers anywhere → f is dead
+        // → apply step drops it. Works under both pre- and post-
+        // CLOC13.0.1 analyzer (no `f()` call site means use_count=0
+        // either way).
+        let prog = program_with(vec![fn_decl("f")]);
+        let out = run_pass(prog);
+        assert!(out.changed, "unreferenced function should be removed");
+        assert!(out.program.body.is_empty(), "no items survive");
+    }
+
+    #[test]
+    fn apply_step_drops_multiple_unreferenced_functions() {
+        // `function f() {} function g() {} function h() {}` — all
+        // dropped. Pin that the loop processes every item.
+        let prog = program_with(vec![fn_decl("f"), fn_decl("g"), fn_decl("h")]);
+        let out = run_pass(prog);
+        assert!(out.changed);
+        assert!(out.program.body.is_empty());
+    }
+
+    #[test]
+    fn apply_step_passes_var_declarations_through() {
+        // `let x;` — treeshake does NOT remove Var/Let/Const,
+        // even when use_count == 0. That's remove-unused-vars'
+        // job. Passthrough should leave the item intact.
+        let prog = program_with(vec![var_decl_simple("x")]);
+        let out = run_pass(prog.clone());
+        assert!(!out.changed, "Let-kind binding is not treeshake's target");
+        assert_eq!(out.program.body, prog.body);
+    }
+
+    #[test]
+    fn apply_step_passes_statements_through() {
+        // Top-level ExpressionStatements are not declarations and
+        // never enter the dead-set; passthrough unconditionally.
+        let stmt = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                }),
+            },
+        ));
+        let prog = program_with(vec![stmt]);
+        let out = run_pass(prog.clone());
+        assert!(!out.changed);
+        assert_eq!(out.program.body, prog.body);
+    }
+
+    #[test]
+    fn apply_step_mixed_program_drops_only_functions() {
+        // `let x; function f() {} let y;` — only `f` is dropped;
+        // the `let` declarations pass through. Pins that the apply
+        // step's `match` arm correctly partitions Function decls
+        // from other items.
+        //
+        // Under empty analyzer references (pre-CLOC13.0.1), use
+        // counts are all 0; only `f` enters the dead set because of
+        // the BindingKind::Function | Class filter at step 2.
+        let prog = program_with(vec![
+            var_decl_simple("x"),
+            fn_decl("f"),
+            var_decl_simple("y"),
+        ]);
+        let out = run_pass(prog);
+        assert!(out.changed);
+        assert_eq!(out.program.body.len(), 2);
+        // Surviving items are the two var declarations, in order.
+        match &out.program.body[0] {
+            ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) => {
+                let BindingTarget::Identifier(id) = &vd.declarations[0].id;
+                assert_eq!(id.name, "x");
+            }
+            _ => panic!("expected the let x declaration to survive at index 0"),
+        }
+        match &out.program.body[1] {
+            ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) => {
+                let BindingTarget::Identifier(id) = &vd.declarations[0].id;
+                assert_eq!(id.name, "y");
+            }
+            _ => panic!("expected the let y declaration to survive at index 1"),
+        }
+    }
+
+    #[test]
+    fn apply_step_empty_program_no_change() {
+        // Pin the invariant: empty program → no work → changed=false.
+        let prog = program();
+        let out = run_pass(prog.clone());
+        assert!(!out.changed);
+        assert_eq!(out.program.body, prog.body);
     }
 }
