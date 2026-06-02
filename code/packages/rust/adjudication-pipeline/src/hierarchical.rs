@@ -206,7 +206,17 @@ pub enum HierarchicalDecomposeError {
     },
     /// After the per-parent retry budget was exhausted at some
     /// level, coverage still failed at one or more parents.
-    CoverageUnresolved { gaps: Vec<HierarchicalGap> },
+    ///
+    /// `partial_ir` is the IR state at the moment the orchestrator
+    /// gave up — every node spliced in by levels that succeeded,
+    /// plus whatever the failing level produced before exhaustion.
+    /// Surfaced for diagnostic tooling (the foundation bench
+    /// emits it as JSON so reviewers can see WHAT the model is
+    /// actually producing on the failing parent).
+    CoverageUnresolved {
+        gaps: Vec<HierarchicalGap>,
+        partial_ir: IRDocument,
+    },
 }
 
 impl std::fmt::Display for HierarchicalDecomposeError {
@@ -230,7 +240,7 @@ impl std::fmt::Display for HierarchicalDecomposeError {
                 "hierarchical-decompose unparseable response at {:?} for parent {:?}",
                 level, parent_node_id.0
             ),
-            Self::CoverageUnresolved { gaps } => write!(
+            Self::CoverageUnresolved { gaps, .. } => write!(
                 f,
                 "hierarchical-decompose coverage unresolved after retries ({} gap(s))",
                 gaps.len()
@@ -397,7 +407,10 @@ pub fn decompose_hierarchical(
         if !made_progress {
             // Every gap is either FlattenedAtom or every parent has
             // exhausted its budget; we cannot drive convergence further.
-            return Err(HierarchicalDecomposeError::CoverageUnresolved { gaps });
+            return Err(HierarchicalDecomposeError::CoverageUnresolved {
+                gaps,
+                partial_ir: ir,
+            });
         }
     }
 
@@ -1388,7 +1401,7 @@ mod tests {
         // Document has no children (the fabricated text was rejected);
         // coverage check surfaces NoChildrenAtLevel.
         match err {
-            HierarchicalDecomposeError::CoverageUnresolved { gaps } => {
+            HierarchicalDecomposeError::CoverageUnresolved { gaps, .. } => {
                 assert!(gaps.iter().any(|g| matches!(
                     g.kind,
                     HierarchicalGapKind::NoChildrenAtLevel
@@ -1433,7 +1446,7 @@ mod tests {
         };
         let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
         match err {
-            HierarchicalDecomposeError::CoverageUnresolved { gaps } => {
+            HierarchicalDecomposeError::CoverageUnresolved { gaps, .. } => {
                 assert!(gaps.iter().any(|g| matches!(
                     g.kind,
                     HierarchicalGapKind::NoChildrenAtLevel
