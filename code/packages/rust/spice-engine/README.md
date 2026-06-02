@@ -27,6 +27,9 @@ The initial slices implement:
 - Periodic steady-state analysis for periodic source circuits, including named
   corner sweeps.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
+- Mixed-signal boundary helpers that map binary digital event timelines to
+  finite-edge PWL voltage sources and sample transient probes back into
+  thresholded digital events.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,

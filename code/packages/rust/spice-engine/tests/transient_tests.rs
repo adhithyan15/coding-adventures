@@ -9,16 +9,18 @@ use spice_engine::{
     pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
     pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
     pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_adaptive_corners, transient_corners, transient_with_method, AdaptiveTransientOptions,
-    AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint,
-    CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic,
-    DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult,
-    FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
-    PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult,
-    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
-    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
-    TransientPoint, TransmissionLine, VoltageSource, Waveform,
+    pss_residual_with_tolerance, pss_with_tolerance, sample_transient_probe_as_digital_events,
+    transient, transient_adaptive, transient_adaptive_corners, transient_corners,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
+    CurrentSource, DigitalEvent, DigitalLogicLevels, DigitalState, DigitalThresholds,
+    DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic,
+    FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry,
+    PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult,
+    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
+    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
+    Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2016,4 +2018,72 @@ fn transient_rejects_invalid_pwl_waveform() {
         transient(&circuit, 0.1, 0.1),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Vin"
     ));
+}
+
+#[test]
+fn digital_events_build_finite_edge_pwl_voltage_source() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let levels = DigitalLogicLevels::cmos_1v8(0.25e-9);
+
+    let source =
+        spice_engine::digital_events_to_voltage_source("Vdin", "din", "0", &events, levels)
+            .unwrap();
+    let waveform = source.waveform.as_ref().unwrap();
+
+    assert_close(source.voltage, 0.0);
+    assert_close(waveform.value_at(0.25e-9), 0.0);
+    assert_close(waveform.value_at(0.625e-9), 0.9);
+    assert_close(waveform.value_at(0.75e-9), 1.8);
+    assert_close(waveform.value_at(1.5e-9), 0.0);
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+
+    assert_close(points[0].voltage("din").unwrap(), 0.0);
+    assert_close(points[2].voltage("din").unwrap(), 1.8);
+    assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
+}
+
+#[test]
+fn transient_probe_samples_back_to_digital_events() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let source = spice_engine::digital_events_to_voltage_source(
+        "Vdin",
+        "din",
+        "0",
+        &events,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let sampled =
+        sample_transient_probe_as_digital_events(&points, "V(din)", DigitalThresholds::cmos_1v8())
+            .unwrap();
+
+    assert_eq!(sampled.len(), 3);
+    assert_eq!(sampled[0].state, DigitalState::Low);
+    assert_close(sampled[0].time_seconds, 0.25e-9);
+    assert_eq!(sampled[1].state, DigitalState::High);
+    assert_close(sampled[1].time_seconds, 0.75e-9);
+    assert_eq!(sampled[2].state, DigitalState::Low);
+    assert_close(sampled[2].time_seconds, 1.5e-9);
 }
