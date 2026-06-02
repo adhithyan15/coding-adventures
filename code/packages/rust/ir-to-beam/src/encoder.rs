@@ -297,42 +297,44 @@ const ETF_META: [u8; 29] = [
 // Chunk encoders
 // ===========================================================================
 
-/// Encode the `AtU8` atom-table chunk using the **OTP 25+ new format**.
+/// Encode the `AtU8` atom-table chunk using the **classic (positive-count)
+/// format**, which every OTP release from 20 through 28 loads.
 ///
-/// # Format (OTP 25+, used by OTP 28 C-level loader)
+/// # Format
 ///
 /// ```text
-/// <i32 BE negative count>   4 bytes — e.g. -3 atoms → 0xFFFFFFFD
+/// <u32 BE count>            4 bytes — number of atoms
 /// For each atom:
-///   len < 16  → 1 byte: (len as u8) << 4          (high nibble = len, low = 0)
-///   len ≥ 16  → 2 bytes: [0x08, len as u8]        (marker + raw length)
-///   <utf-8 bytes>
+///   <u8 length>            1 byte — atom length in bytes (0..=255)
+///   <utf-8 bytes>          the atom text
 /// ```
 ///
-/// # Why negative count?
+/// # Why not the "OTP 25+" nibble-packed format?
 ///
-/// OTP 25 extended the AtU8 chunk to support atoms up to 255 bytes with a
-/// richer per-atom length encoding.  The runtime distinguishes the old format
-/// (positive count) from the new format (negative count as a signed 32-bit
-/// big-endian integer) in the first 4 bytes.  The C-level loader in OTP 28
-/// **requires** the new format — passing the old positive count causes the
-/// loader to report "compiled for an old version of the runtime system" and
-/// reject the file.
+/// An earlier version of this encoder emitted a *negative* count followed by a
+/// `(len << 4)` / `[0x08, len]` per-atom length encoding, on the belief that
+/// the OTP 28 C-loader **required** it.  That belief was wrong: OTP 28 accepts
+/// both formats, but **OTP 27 rejects the nibble-packed form** with
+/// `beam_load.c: corrupt atom table`, so any module produced this way fails to
+/// load on OTP 27 (CI's pinned runtime) even though it loads on OTP 28.
 ///
-/// Empirically verified from hex analysis of `erlc`-compiled `.beam` files
-/// under OTP 28:
+/// Empirically verified by encoding `iir_arith_test:main/0` both ways and
+/// round-tripping through `erl`:
 ///
 /// ```text
-/// atom "main" (4 bytes) → length byte 0x40 = (4 << 4)
-/// atom "testmod" (7 bytes) → length byte 0x70 = (7 << 4)
-/// atom of 34 bytes       → [0x08, 0x22]
+///                  OTP 27 load    OTP 28 load
+///   nibble form    badfile ✗      ok ✓
+///   classic form   ok ✓           ok ✓
 /// ```
+///
+/// The classic form is a strict superset of what we need (atoms are capped at
+/// 255 bytes by `validate_for_beam`), so we emit it unconditionally to stay
+/// portable across every supported OTP.
 fn encode_atu8(atoms: &[String]) -> Vec<u8> {
     let mut payload = Vec::new();
 
-    // OTP 25+ new format: emit a *negative* count so the runtime switches to
-    // the new per-atom length encoding below.
-    let count = -(atoms.len() as i32);
+    // Classic format: a plain positive atom count.
+    let count = atoms.len() as u32;
     payload.extend_from_slice(&count.to_be_bytes());
 
     for atom in atoms {
@@ -351,17 +353,8 @@ fn encode_atu8(atoms: &[String]) -> Vec<u8> {
         // callers must validate before encoding.
         let len = bytes.len().min(255);
 
-        if len < 16 {
-            // 1-byte length form: length packed into the high nibble.
-            //   e.g. len=4 → 0x40,  len=7 → 0x70,  len=0 → 0x00
-            payload.push((len as u8) << 4);
-        } else {
-            // 2-byte length form: 0x08 marker followed by the raw length byte.
-            //   e.g. len=34 → [0x08, 0x22]
-            payload.push(0x08u8);
-            payload.push(len as u8);
-        }
-
+        // 1-byte raw length followed by the UTF-8 bytes.
+        payload.push(len as u8);
         payload.extend_from_slice(&bytes[..len]);
     }
     payload
@@ -567,54 +560,44 @@ mod tests {
         assert_eq!(chunk.len(), 12); // 4 tag + 4 size + 4 payload = 12
     }
 
-    /// OTP 25+ AtU8 format: count is negative, lengths use nibble encoding.
+    /// Classic AtU8 format: the count is a plain positive atom count.
     #[test]
-    fn test_encode_atu8_new_format_count_is_negative() {
+    fn test_encode_atu8_count_is_positive() {
         let atoms = vec!["hello".to_string(), "world".to_string()];
         let encoded = encode_atu8(&atoms);
-        // Count = -2 as signed i32 big-endian = 0xFFFFFFFE
-        let count = i32::from_be_bytes(encoded[0..4].try_into().unwrap());
-        assert_eq!(count, -2, "AtU8 count must be negative (OTP 25+ format)");
+        let count = u32::from_be_bytes(encoded[0..4].try_into().unwrap());
+        assert_eq!(count, 2, "AtU8 count must be the positive atom count");
     }
 
-    /// Atoms with len < 16 use single-byte `(len << 4)` encoding.
+    /// Each atom is encoded as a single raw length byte then its UTF-8 bytes.
     #[test]
     fn test_encode_atu8_short_atom_length_encoding() {
         let atoms = vec!["hello".to_string()]; // len = 5
         let encoded = encode_atu8(&atoms);
-        // After 4-byte count: 1 length byte then atom bytes
-        assert_eq!(encoded[4], 5u8 << 4, "len=5 should encode as 0x50");
+        // After 4-byte count: 1 raw length byte then atom bytes.
+        assert_eq!(encoded[4], 5u8, "len=5 encodes as the raw byte 0x05");
         assert_eq!(&encoded[5..10], b"hello");
     }
 
-    /// Atoms with len in [16, 255] use two-byte `[0x08, len]` encoding.
+    /// Longer atoms (up to 255 bytes) use the same single raw length byte.
     #[test]
     fn test_encode_atu8_long_atom_length_encoding() {
-        // "some_long_atom_name" = 19 bytes  (len >= 16)
+        // "some_long_atom_name" = 19 bytes
         let name = "some_long_atom_name".to_string();
         let name_len = name.len(); // 19
         let atoms = vec![name.clone()];
         let encoded = encode_atu8(&atoms);
-        assert_eq!(encoded[4], 0x08u8, "long-atom marker byte must be 0x08");
-        assert_eq!(encoded[5], name_len as u8, "second byte must be raw length");
-        assert_eq!(&encoded[6..6 + name_len], name.as_bytes());
+        assert_eq!(encoded[4], name_len as u8, "length byte must be the raw length");
+        assert_eq!(&encoded[5..5 + name_len], name.as_bytes());
     }
 
-    /// Boundary: atom of exactly 15 bytes still uses 1-byte encoding.
+    /// Boundary: a 255-byte atom (the maximum) still fits in one length byte.
     #[test]
-    fn test_encode_atu8_boundary_len_15() {
-        let name = "a".repeat(15);
+    fn test_encode_atu8_boundary_len_255() {
+        let name = "a".repeat(255);
         let encoded = encode_atu8(&[name]);
-        assert_eq!(encoded[4], 15u8 << 4);
-    }
-
-    /// Boundary: atom of exactly 16 bytes switches to 2-byte encoding.
-    #[test]
-    fn test_encode_atu8_boundary_len_16() {
-        let name = "a".repeat(16);
-        let encoded = encode_atu8(&[name]);
-        assert_eq!(encoded[4], 0x08u8);
-        assert_eq!(encoded[5], 16u8);
+        assert_eq!(encoded[4], 255u8);
+        assert_eq!(&encoded[5..5 + 255], "a".repeat(255).as_bytes());
     }
 
     // ------------------------------------------------------------------

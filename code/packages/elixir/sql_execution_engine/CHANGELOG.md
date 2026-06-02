@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.1] - 2026-06-02
+
+### Fixed
+
+- Caught up with the SQLite-compatible `sql.grammar`. The grammar grew two new
+  expression-precedence layers (`collated` and `bitwise`) between `comparison`
+  and `additive`, and switched `limit_clause` from bare `NUMBER` tokens to
+  `signed_number` nodes. Three things broke once the engine was rebuilt:
+  - `Expression.eval_rule/3` had no clause for `collated`/`bitwise`, raising
+    `no function clause matching` on every `WHERE`/`SELECT` expression. Added
+    transparent `collated` and `bitwise` clauses (plus integer bitwise
+    operators `& | << >>` in `apply_arith/3`).
+  - `Executor.default_column_name/1` did not list `collated`/`bitwise` as
+    transparent wrappers, so projected/ORDER BY columns were mislabelled
+    `"expr"`. Added them to `@transparent_rules`.
+  - `Executor.extract_limit/1` filtered for bare `NUMBER` tokens and crashed
+    with `no case clause matching: []`. It now reads `signed_number` nodes,
+    handles the SQLite `LIMIT offset, count` comma form, and treats a negative
+    LIMIT as "no limit".
+
 ## [0.1.0] - 2026-03-25
 
 ### Added

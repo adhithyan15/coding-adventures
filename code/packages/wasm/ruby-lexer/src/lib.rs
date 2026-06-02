@@ -1,17 +1,16 @@
 use grammar_wasm_support::tokens_to_json_string;
-use language_lexer::create_ruby_lexer;
+use language_lexer::tokenize_ruby;
 use wasm_bindgen::prelude::*;
-
-fn to_js_error(message: impl Into<String>) -> JsValue {
-    JsValue::from_str(&message.into())
-}
 
 #[wasm_bindgen]
 pub fn tokenize(source: &str) -> Result<String, JsValue> {
-    let mut lexer = create_ruby_lexer(source);
-    let tokens = lexer
-        .tokenize()
-        .map_err(|e| to_js_error(format!("Ruby tokenization failed: {e}")))?;
+    // The Ruby lexer is an era-aware state machine rather than a generic
+    // grammar-driven lexer, so it exposes `tokenize_ruby` (infallible — it
+    // emits error tokens instead of raising) rather than the
+    // `create_*_lexer(...).tokenize()` shape used by the grammar-backed
+    // wasm wrappers.  Both crates share the same `lexer::token::Token`, so
+    // the token vector feeds straight into the shared JSON serializer.
+    let tokens = tokenize_ruby(source);
     tokens_to_json_string(tokens).map_err(|e| JsValue::from_str(&e.to_string()))
 }
 

@@ -222,14 +222,15 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # Comparison expressions
   # ---------------------------------------------------------------------------
   #
-  # Grammar:
-  #   comparison = additive [ cmp_op additive
-  #              | "BETWEEN" additive "AND" additive
-  #              | "NOT" "BETWEEN" additive "AND" additive
+  # Grammar (the comparison operands are `collated`, which is transparent
+  # down through `bitwise`/`additive` to the underlying value):
+  #   comparison = collated [ cmp_op collated
+  #              | "BETWEEN" collated "AND" collated
+  #              | "NOT" "BETWEEN" collated "AND" collated
   #              | "IN" "(" value_list ")"
   #              | "NOT" "IN" "(" value_list ")"
-  #              | "LIKE" additive
-  #              | "NOT" "LIKE" additive
+  #              | "LIKE" collated
+  #              | "NOT" "LIKE" collated
   #              | "IS" "NULL"
   #              | "IS" "NOT" "NULL" ]
   #
@@ -317,6 +318,31 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
         rhs = eval_expr(rhs_node, row_ctx)
         eval_cmp(op_token.value, lhs, rhs)
     end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Collation and bitwise layers
+  # ---------------------------------------------------------------------------
+  #
+  # SQLite's precedence ladder threads two extra rules between `comparison`
+  # and `additive`:
+  #
+  #   collated = bitwise [ "COLLATE" NAME ]
+  #   bitwise  = additive { ( "&" | "|" | "<<" | ">>" ) additive }
+  #
+  # `collated` only attaches a collation *sequence* (BINARY / NOCASE / …)
+  # used to order string comparisons.  This engine compares values
+  # directly and does not model collation ordering, so we evaluate the
+  # underlying value and ignore any trailing `COLLATE NAME`.
+  defp eval_rule("collated", %ASTNode{children: [value_node | _collate]}, row_ctx) do
+    eval_expr(value_node, row_ctx)
+  end
+
+  # `bitwise` is a left-associative operator chain, exactly like the
+  # arithmetic rules below — the integer bitwise operators are handled in
+  # `apply_arith/3`.
+  defp eval_rule("bitwise", %ASTNode{children: children}, row_ctx) do
+    eval_arithmetic_chain(children, row_ctx)
   end
 
   # ---------------------------------------------------------------------------
@@ -581,6 +607,11 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   defp apply_arith("/", _, 0), do: nil
   defp apply_arith("%", a, b) when b != 0, do: rem(a, b)
   defp apply_arith("%", _, 0), do: nil
+  # Integer bitwise operators (the `bitwise` grammar layer).
+  defp apply_arith("&", a, b), do: Bitwise.band(a, b)
+  defp apply_arith("|", a, b), do: Bitwise.bor(a, b)
+  defp apply_arith("<<", a, b), do: Bitwise.bsl(a, b)
+  defp apply_arith(">>", a, b), do: Bitwise.bsr(a, b)
 
   # Lookup a column key in the row context, raising if not found.
   defp lookup_column(key, row_ctx) do
