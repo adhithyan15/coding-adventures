@@ -2,6 +2,111 @@
 
 ## Unreleased
 
+### Added — v0.2.0: autograd engine (Function.apply + Tensor#backward)
+
+PR #5 of 8 in the Ruby pilot.  Adds reverse-mode automatic differentiation
+on top of v0.1's Tensor class.  All math still pure Ruby; PR #6 layers on
+the ~15 concrete Function subclasses that route large ops through Rust.
+
+#### New API
+
+```ruby
+# Base class for every differentiable op
+class CodingAdventures::MLFrameworkCore::Function
+  # Subclasses override these two:
+  def forward(*inputs)            # → Tensor
+  def backward(output_grad)       # → Array<Tensor, nil>
+
+  # Class method that wires up the autograd graph and runs forward:
+  def self.apply(*inputs)         # → Tensor
+end
+
+# Built-in subclass for testing the machinery (PR #6 adds the real ops):
+class Identity < Function
+end
+
+# Tensor extensions:
+x.backward(grad = nil)            # kicks off backprop; mutates leaf .grad
+Tensor.ones_like(t)               # shape-matching ones tensor
+Tensor.zeros_like(t)              # shape-matching zeros tensor
+```
+
+#### How it works
+
+`Function.apply(*inputs)`:
+
+  1. Instantiates the Function (so it can hold state for backward).
+  2. Calls `forward(*inputs)` — subclass-defined; returns Tensor.
+  3. If any input has `requires_grad`, sets `output.requires_grad = true`
+     and `output.grad_fn = function_instance`.
+  4. Returns the output Tensor.
+
+`Tensor#backward(grad = nil)`:
+
+  1. Defaults `grad` to ones-like(self).
+  2. DFS post-order to build the topological list of Tensors upstream
+     through the `grad_fn` chain.
+  3. Walks topo list in REVERSE; for each non-leaf, calls
+     `grad_fn.backward(node_grad)` to get per-input grads, accumulates
+     them into a per-parent `grad_map`.
+  4. For each leaf with `requires_grad`, copies the accumulated grad
+     into the leaf's public `.grad` slot (accumulating on top if a
+     previous backward already wrote there — supports repeated
+     backward without zero_grad between).
+
+Algorithm is O(V + E) where V is the number of operations and E the
+number of tensor edges.  Mirrors PyTorch's reference algorithm and the
+Python reference at
+`code/packages/python/ml-framework-core/src/ml_framework_core/autograd.py`.
+
+#### Architecture choices
+
+- **Tensor reopened in autograd.rb** rather than edited in tensor.rb.
+  Keeps the v0.1 Tensor file storage-only; concentrates autograd-related
+  additions in one reviewable file.
+- **`grad_map` keyed on `object_id`**, so the same Tensor reaching a
+  Function via two paths (e.g. `Add.apply(x, x)`) gets its gradients
+  summed correctly.
+- **Identity subclass** ships for testing the machinery without
+  introducing op-math; the real ops land in PR #6.
+
+#### Tests added (18 minitests, 31 assertions, all passing)
+
+- `AutogradApplyTest` (5):
+  - requires_grad propagates through Identity
+  - no grad_fn when no input requires grad
+  - apply() returns a NEW tensor (object identity ≠ value equality)
+  - Function subclass must implement forward (NotImplementedError)
+  - Function subclass must implement backward (NotImplementedError)
+- `TensorBackwardSanityTest` (3):
+  - backward on non-grad tensor raises
+  - backward with mismatched grad shape raises
+  - backward returns nil
+- `AutogradEndToEndTest` (6):
+  - identity backward writes ones to leaf grad
+  - identity backward with explicit seed grad
+  - backward twice accumulates into leaf grad
+  - chain of identities propagates
+  - shared parent accumulates from both paths (x → Id → a; x → Id → b)
+  - leaf node without requires_grad is skipped
+- `AutogradFunctionIntrospectionTest` (2):
+  - Function#inspect shows class name + parent count
+  - Function#initialize has empty parents + saved_for_backward
+- `TensorHelperFactoriesTest` (2):
+  - ones_like / zeros_like
+
+Existing 63 Tensor tests continue to pass — no regressions.
+
+#### What's next
+
+- PR #6: `ops.rb` — 15+ Function subclasses (Add, Sub, Mul, Div, Neg,
+  Abs, Pow, MatMul, ReLU, Sigmoid, Tanh, GELU, Softmax, Sum, Mean).
+  Each `forward` builds a matrix-ir-json envelope matching the Python
+  `_rust_backend.py` shapes and dispatches large tensors through
+  `MatrixRustRuby.run_graph_on_cpu`.
+- PR #7: backward dispatch on every op subclass + end-to-end MLP test.
+- PR #8: benchmark + RubyGems polish.
+
 ### Added — v0.1.0: pure-Ruby Tensor class
 
 First release.  Ships the bottom layer of the Ruby ML framework stack: a
