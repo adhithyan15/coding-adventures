@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-ge225"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
-description = "IIR → GE-225 machine code backend.  v0.7.0 (A5+++++++): adds the comparison family — six IIR ops (`cmp_lt`, `cmp_eq`, `cmp_ne`, `cmp_le`, `cmp_gt`, `cmp_ge`) lower to a SUB-then-test pattern that materialises a 0/1 boolean in ACC.  Finally activates the `BMI` opcode (0xB, reserved in v0.6.0) for `cmp_lt` and `cmp_le`.  `cmp_gt` and `cmp_ge` reuse the lt/le emit paths via operand swap.  Mirrors iir-to-intel4004 v0.5.0 / iir-to-armv7 v0.4.x cmp slice.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
+description = "IIR → GE-225 machine code backend.  v0.8.0 (A5+++++++++): adds a no-op `call_builtin` lowering, closing the BASIC PRINT gap.  The GE-225 historically routed I/O through a teletype the modern simulator doesn't model, so `call_builtin` emits zero bytes (or a deterministic `LDA 0` if a return-value dest is bound).  This is enough to compile BASIC programs containing PRINT statements end-to-end without errors.  Mirrors the simulator-no-op pattern other backends use for unsupported builtins.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
 
 [lib]
 name = "iir_to_ge225"

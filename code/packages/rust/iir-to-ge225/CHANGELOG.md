@@ -2,6 +2,79 @@
 
 All notable changes to this crate are documented here.
 
+## v0.8.0 — 2026-06-02 — A5+++++++++ `call_builtin` no-op lowering (closes BASIC PRINT gap)
+
+Seventh lowering increment.  Adds a minimal `call_builtin`
+lowering that lets BASIC programs containing `PRINT` (and other
+built-in calls) compile end-to-end without errors.  The GE-225
+historically routed I/O through a teletype the modern simulator
+doesn't model, so this is genuinely a no-op at the byte level.
+
+### Lowering shape
+
+| Case | Bytes emitted |
+|------|---------------|
+| `call_builtin print_i64, v` (no dest) | **zero bytes** (true no-op) |
+| `call_builtin x = input_i64` (with dest) | `(STA r_evict)?` + `LDA 0` (deterministic placeholder return value) |
+
+### Why a no-op?
+
+The GE-225 in 1959 had a teletype-connected terminal for I/O;
+modern GE-225 simulators don't model the teletype, and our
+skeleton ISA has no I/O opcode.  Rather than fail the lowering
+(which would break BASIC PRINT end-to-end), we emit zero bytes
+for the void case and a deterministic `LDA 0` placeholder for
+the return-value case.
+
+This is **exactly enough** to round-trip Dartmouth BASIC programs
+that use PRINT through the full pipeline:
+
+```text
+10 LET A = 5
+20 PRINT A
+30 END
+```
+
+now compiles to a non-empty word-aligned .bin (instead of erroring
+with `UnsupportedOp { op: "call_builtin" }`).
+
+A future increment could:
+- Synthesise a `JSR <host_stub>` to a known address the simulator
+  watches for I/O hooking.
+- Add a new opcode (e.g. `0xC TTY`) dedicated to teletype output.
+- Emit a busy-loop pattern matching real GE-225 teletype I/O timing.
+
+### Public surface delta
+
+- `"call_builtin"` added to `SUPPORTED_OPS`.
+- No new pub constants, no new error variants — validation flows
+  through existing `InvalidOperand` and `UndefinedVariable`.
+
+### Tests (27 unit + 1 doctest, all passing)
+
+New v0.8.0 coverage:
+- `call_builtin_no_dest_emits_zero_bytes` — print case is truly
+  zero bytes; trivial-print-of-const ROM stays at 6 bytes.
+- `call_builtin_with_dest_emits_lda_zero` — input case → `LDA 0`.
+- `call_builtin_undefined_arg_errors` — undefined arg →
+  `UndefinedVariable`.
+- `call_builtin_no_srcs_errors` — missing builtin name →
+  `InvalidOperand`.
+- `call_builtin_with_dest_evicts_acc_owner` — LDA 0 doesn't
+  silently clobber a live ACC owner.
+
+### Lang-aot e2e (3 BASIC tests, all 3 now pass on Ok path)
+
+The `end_to_end_basic_print_documents_call_builtin_gap` test in
+lang-aot, originally a gap documentation test, now takes the Ok
+path — BASIC PRINT compiles to a non-empty word-aligned GE-225
+.bin without errors.
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+
 ## v0.7.0 — 2026-06-02 — A5+++++++ comparison ops (`cmp_lt/eq/ne/le/gt/ge`)
 
 Sixth lowering increment.  Adds six new IIR ops that materialise a

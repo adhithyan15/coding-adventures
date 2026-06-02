@@ -25,7 +25,7 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.7.0 (A5+++++++ comparison ops — BMI now active)
+## Status — v0.8.0 (A5+++++++++ call_builtin no-op — BASIC PRINT works)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
@@ -39,6 +39,8 @@ pipeline:
 | `cmp_le dest, a, b` | LD/SUB + `BMI true` + `BZ true` + LDA 0 + BR end + LDA 1 |
 | `cmp_gt dest, a, b` | same as `cmp_lt b, a` (operand swap) |
 | `cmp_ge dest, a, b` | same as `cmp_le b, a` (operand swap) |
+| `call_builtin name, args...` (no dest) | **zero bytes** (no-op — historical teletype is unmodeled) |
+| `call_builtin dest = name, args...` | `(STA r_evict)?` + `LDA 0` (deterministic placeholder return) |
 | `label "<name>"` | zero bytes — records position |
 | `jmp "<target>"` | `BR <target_addr>` |
 | `jmp_if_true cond, "<target>"` | `(LD r_cond)?` + `BNZ <target_addr>` |
