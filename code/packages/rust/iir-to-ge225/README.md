@@ -25,23 +25,33 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.1.0 (A5 skeleton)
+## Status — v0.2.0 (A5+ first real lowering)
 
-Any module lowers to a single canonical halt sentinel — the
-**all-zeros 20-bit HLT word**, packed as `[0x00, 0x00, 0x00]`.
+| IIR op | GE-225 lowering |
+|--------|-----------------|
+| `const dest, Int(n)` (16-bit signed/unsigned) | `LDA n` — `[0x01, hi, lo]` |
+| `const dest, Bool(b)` | `LDA 0` / `LDA 1` |
+| `ret <var>` | `HLT` (if `<var>` is the current ACC owner; else `UndefinedVariable`) |
+| `ret_void` | `HLT` |
 
-Real instruction lowering arrives in v0.2.0+ (A5+).
+Accumulator-only first slice — most recent `const` owns the ACC.
+Multi-register allocation, arithmetic, and branches arrive in A5++.
 
 ## Quick start
 
 ```rust
-use interpreter_ir::IIRModule;
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_ge225::{validate_for_ge225, lower_iir_to_ge225, IIRGe225Config};
 
+// const v=5; ret v
+let f = IIRFunction::new("five", vec![], "i16", vec![
+    IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "i16"),
+    IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "i16"),
+]);
 let module = IIRModule {
     name: "demo".into(),
-    functions: vec![],
-    entry_point: None,
+    functions: vec![f],
+    entry_point: Some("five".into()),
     language: "demo".into(),
     exports: vec![],
     imports: vec![],
@@ -51,8 +61,8 @@ assert!(validate_for_ge225(&module).is_empty());
 
 let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
     .expect("lowering should succeed");
-// HLT = all-zeros 20-bit word, packed as 3 bytes.
-assert_eq!(bytes, vec![0x00, 0x00, 0x00]);
+// LDA 5 + HLT = 6 bytes.
+assert_eq!(bytes, vec![0x01, 0x00, 0x05, 0x00, 0x00, 0x00]);
 ```
 
 ## Word packing

@@ -2,6 +2,71 @@
 
 All notable changes to this crate are documented here.
 
+## v0.2.0 — 2026-06-02 — A5+ first real lowering
+
+First lowering increment after the A5 skeleton.  Adds:
+
+| IIR op | GE-225 lowering |
+|--------|-----------------|
+| `const dest, Int(n)` (16-bit signed/unsigned) | `LDA n` — 20-bit word: opcode nibble `0x1` + 16-bit immediate, packed `[0x01, hi, lo]` |
+| `const dest, Bool(b)` | `LDA 0` or `LDA 1` |
+| `ret <var>` | `HLT` (the all-zeros 20-bit word) — but only if `<var>` is the current ACC owner |
+| `ret_void` | `HLT` |
+
+### Added
+
+- `pub const LDA_OPCODE_NIBBLE: u8 = 0x1` — the GE-225 `LDA` opcode
+  nibble, lives in the low 4 bits of byte 0 in the 3-byte word
+  packing.
+- `IIRGe225Error::UndefinedVariable { function, name }` — fired
+  when `ret <var>` references a var that is either never bound or
+  no longer the current accumulator owner.  v0.2.0 has only the
+  accumulator; multi-register liveness arrives in A5++.
+- Real per-function lowering with accumulator tracking:
+  `env: HashMap<String, u8>` (single sentinel `ACC_MARKER = 16`
+  in v0.2.0) and `acc_owner: Option<String>`.  Mirrors the
+  iir-to-intel4004 v0.2.0 → v0.3.0 progression.
+
+### Acceptance test
+
+The trivial-case ROM (`const v = N; ret v`) is always 6 bytes —
+3 for `LDA N` + 3 for `HLT` — regardless of `N`.  Pinned by the
+`trivial_rom_is_six_bytes` test across N ∈ {0, 1, 42, 255, 256,
+32767, -1, -32768}.
+
+### Word format pinned by this PR
+
+```
+byte 0: 0000 OOOO   (top 4 bits zero + 4-bit opcode nibble)
+byte 1: IIII IIII   (high 8 bits of the 16-bit immediate)
+byte 2: IIII IIII   (low  8 bits of the 16-bit immediate)
+```
+
+Opcodes used in v0.2.0: `0x0` (HLT), `0x1` (LDA).  Future opcodes
+will populate `0x2..0xF`.
+
+### Tests
+
+21 unit + 1 doctest passing.  New coverage:
+- LDA opcode nibble pinned.
+- `const N; ret v` for N ∈ {0, 5}: exact byte sequence.
+- max positive (32767), min negative (-32768), and -1: two's
+  complement reinterpretation.
+- 16-bit overflow (65536) errors with `InvalidOperand`.
+- `Bool(true)` / `Bool(false)` lower to `LDA 1` / `LDA 0`.
+- `ret_void`-only function: 3-byte HLT.
+- Trivial-case 6-byte ROM size pinned across 8 value points.
+- Multi-const where ret targets the current ACC owner: works.
+- `ret` of a stale ACC owner: `UndefinedVariable`.
+- `ret` of a never-defined variable: `UndefinedVariable`.
+- `mov` (unsupported in v0.2.0): `UnsupportedOp { op: "mov" }`.
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+- Mirrors iir-to-intel4004 v0.2.0 (A4+) exactly in spirit.
+
 ## v0.1.0 — 2026-06-02 — A5 skeleton
 
 Initial release.  Establishes the IIR → GE-225 backend's public
