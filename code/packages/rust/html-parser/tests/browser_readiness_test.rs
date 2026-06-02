@@ -840,9 +840,27 @@ struct ExpectedFormOutput {
     #[serde(default)]
     form_owner: Option<String>,
     #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
     for_tokens: Vec<String>,
     #[serde(default)]
+    for_control_ids: Vec<String>,
+    #[serde(default)]
+    for_control_names: Vec<String>,
+    #[serde(default)]
+    for_control_types: Vec<String>,
+    #[serde(default)]
     value: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
     text: String,
 }
 
@@ -1523,6 +1541,70 @@ fn browser_form_validation_control_descriptors_track_candidates_and_barred_contr
     assert_eq!(descriptors[7].form_owner.as_deref(), Some("signup"));
     assert!(descriptors[7].will_validate);
     assert_eq!(descriptors[7].validation_attributes, vec!["required"]);
+}
+
+#[test]
+fn browser_form_output_descriptor_metadata_tracks_for_references_and_labels() {
+    let document = parse_browser_document(
+        "<form id=calc>\
+         <label for=sum>Sum</label>\
+         <input id=a name=a value=1>\
+         <input id=b name=b value=2>\
+         <p id=hint>Total of inputs</p>\
+         <output id=sum name=sum for=\"a b missing\" aria-describedby=hint>3</output>\
+         <fieldset disabled><legend>Preview</legend><output id=disabled name=preview for=a>Disabled output</output></fieldset>\
+         </form>\
+         <output id=external form=calc name=external for=sum aria-label=External>External</output>",
+    )
+    .expect("form output descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("calc form should be summarized");
+    let ids: Vec<&str> = form
+        .outputs
+        .iter()
+        .filter_map(|output| output.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["sum", "disabled", "external"]);
+
+    let sum = &form.outputs[0];
+    assert_eq!(sum.name.as_deref(), Some("sum"));
+    assert_eq!(sum.labels, vec!["Sum"]);
+    assert_eq!(sum.accessible_name.as_deref(), Some("Sum"));
+    assert_eq!(
+        sum.accessible_description.as_deref(),
+        Some("Total of inputs")
+    );
+    assert_eq!(sum.for_tokens, vec!["a", "b", "missing"]);
+    assert_eq!(sum.for_control_ids, vec!["a", "b"]);
+    assert_eq!(sum.for_control_names, vec!["a", "b"]);
+    assert_eq!(sum.for_control_types, vec!["text", "text"]);
+    assert_eq!(sum.value.as_deref(), Some("3"));
+    assert_eq!(sum.text, "3");
+    assert!(!sum.disabled);
+    assert!(!sum.will_validate);
+    assert_eq!(sum.validation_barred_reason.as_deref(), Some("output"));
+
+    let disabled = &form.outputs[1];
+    assert_eq!(disabled.name.as_deref(), Some("preview"));
+    assert!(disabled.disabled);
+    assert_eq!(
+        disabled.validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+    assert_eq!(disabled.for_control_ids, vec!["a"]);
+    assert_eq!(disabled.for_control_names, vec!["a"]);
+
+    let external = &form.outputs[2];
+    assert_eq!(external.form_owner.as_deref(), Some("calc"));
+    assert_eq!(external.accessible_name.as_deref(), Some("External"));
+    assert_eq!(external.for_tokens, vec!["sum"]);
+    assert_eq!(external.for_control_ids, vec!["sum"]);
+    assert_eq!(external.for_control_names, vec!["sum"]);
+    assert_eq!(external.for_control_types, vec!["output"]);
+    assert_eq!(external.value.as_deref(), Some("External"));
 }
 
 #[test]
@@ -3083,8 +3165,17 @@ impl ExpectedFormOutput {
             id: self.id,
             name: self.name,
             form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
             for_tokens: self.for_tokens,
+            for_control_ids: self.for_control_ids,
+            for_control_names: self.for_control_names,
+            for_control_types: self.for_control_types,
             value: self.value,
+            disabled: self.disabled,
+            will_validate: self.will_validate,
+            validation_barred_reason: self.validation_barred_reason,
             text: self.text,
         }
     }
