@@ -2,6 +2,92 @@
 
 All notable changes to this crate are documented here.
 
+## v0.4.0 — 2026-06-02 — A5+++ accumulator arithmetic (`ADD r`, `SUB r`)
+
+Third lowering increment.  Adds `add dest, lhs, rhs` and
+`sub dest, lhs, rhs` IIR lowering via two new opcodes — `ADD r`
+and `SUB r` — both 20-bit words emitted after an `LD r_lhs` that
+stages the lhs into ACC.
+
+| IIR op | GE-225 lowering |
+|--------|-----------------|
+| `add dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `ADD r_rhs` |
+| `sub dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `SUB r_rhs` |
+
+### Added
+
+- `pub const ADD_OPCODE_NIBBLE: u8 = 0x4` — accumulator-anchored
+  addition.  Word layout `[0x04, 0x00, r]` (r = 4-bit register
+  index in the low nibble of byte 2).
+- `pub const SUB_OPCODE_NIBBLE: u8 = 0x5` — accumulator-anchored
+  subtraction.  Word layout `[0x05, 0x00, r]`.
+- `"add"` and `"sub"` in `SUPPORTED_OPS`.
+- `parse_binop_srcs` helper — extracts `(lhs, rhs)` Var names
+  from a binary-op `IIRInstr`, returning `InvalidOperand` if
+  either is not a `Var`.
+
+### Lowering strategy
+
+For both add and sub the lowering walks 3 prep steps then emits 2
+arithmetic words:
+
+1. Evict lhs from ACC (if there).  After this, lhs has a stable
+   register home.
+2. Evict rhs from ACC (if there — only possible when lhs == rhs).
+3. Evict any remaining ACC owner so ACC is free.
+4. Emit `LD r_lhs` (ACC ← lhs's value).
+5. Emit `ADD r_rhs` or `SUB r_rhs` (ACC ← lhs ± rhs).
+6. `env[dest] = ACC_MARKER; acc_owner = Some(dest)` — the result
+   takes over the accumulator.
+
+The conservative scheme always emits the `LD` even when lhs
+happens to be the current ACC owner.  This keeps the arithmetic
+shape predictable (always 2 words) at a small byte cost; a future
+release may peephole-elide that `LD`.
+
+### Opcode map (cumulative)
+
+| Nibble | Mnemonic | Word | Effect |
+|--------|----------|------|--------|
+| `0x0` | `HLT`   | `[0x00, 0x00, 0x00]`         | halt              |
+| `0x1` | `LDA n` | `[0x01, hi, lo]`             | ACC ← n           |
+| `0x2` | `STA r` | `[0x02, 0x00, r]`            | ACC ↔ r (XCH)     |
+| `0x3` | `LD r`  | `[0x03, 0x00, r]`            | ACC ← r           |
+| `0x4` | `ADD r` | `[0x04, 0x00, r]`            | ACC ← ACC + r     |
+| `0x5` | `SUB r` | `[0x05, 0x00, r]`            | ACC ← ACC - r     |
+
+Future slices reserve `0x6..0xF` for `BR`/`BMI`/`BNZ`/`JSR`/etc.
+
+### Tests (24 unit + 1 doctest, all passing)
+
+New v0.4.0 coverage:
+- `add_opcode_nibble_pinned_to_0x4`, `sub_opcode_nibble_pinned_to_0x5`.
+- `trivial_add_byte_sequence` — exact 7-word sequence for
+  `const a=3; const b=4; add c, a, b; ret c` = 21 bytes.
+- `trivial_sub_byte_sequence` — same shape with `SUB r1`.
+- `self_add_uses_same_register_twice` — `add c, a, a` emits
+  `LD r0 + ADD r0` (same register cited twice).
+- `chained_add_works` — `(a+b)+d` = 12-word / 36-byte sequence.
+- `add_undefined_lhs_errors` / `add_undefined_rhs_errors`.
+- `sub_undefined_rhs_errors`.
+- `add_with_immediate_operand_errors` — `InvalidOperand` (both
+  operands must be `Var`).
+- `mul_still_unsupported` — `UnsupportedOp { op: "mul" }`.
+
+Regressions from v0.2.0 / v0.3.0 still pinned:
+- All opcode constants pinned to their nibbles.
+- `trivial_rom_is_still_six_bytes` (6 N values).
+- `ret_void_only_still_emits_just_halt`.
+- `const_out_of_range_still_errors`.
+- `mov_still_works`.
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+- Mirrors `iir-to-intel4004` v0.4.0 (A4++++) — same accumulator-
+  through-LD-then-ADD/SUB pattern.
+
 ## v0.3.0 — 2026-06-02 — A5++ ACC-first GP allocator + `mov`
 
 Second lowering increment.  Adds the GE-225 GP register file

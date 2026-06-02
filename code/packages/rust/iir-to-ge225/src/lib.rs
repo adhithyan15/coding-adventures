@@ -1,4 +1,4 @@
-//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.3.0, A5++).
+//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.4.0, A5+++).
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
@@ -86,8 +86,10 @@
 //! | `0x1` | `LDA n` | load ACC with 16-bit signed immediate  | `[0x01, hi, lo]` |
 //! | `0x2` | `STA r` | exchange ACC with `r` (XCH semantics)  | `[0x02, 0x00, r]` |
 //! | `0x3` | `LD r`  | load ACC with the value of `r` (copy)  | `[0x03, 0x00, r]` |
+//! | `0x4` | `ADD r` | `ACC ← ACC + r` (r unchanged)          | `[0x04, 0x00, r]` |
+//! | `0x5` | `SUB r` | `ACC ← ACC - r` (r unchanged)          | `[0x05, 0x00, r]` |
 //!
-//! Future slices take `0x4..0xF` for `ADD`/`SUB`/`BR`/`JSR`/etc.
+//! Future slices take `0x6..0xF` for `BR`/`BMI`/`BNZ`/`JSR`/etc.
 //!
 //! ## Quick start
 //!
@@ -142,6 +144,21 @@ pub const STA_OPCODE_NIBBLE: u8 = 0x2;
 /// `[0x03, 0x00, r]`.
 pub const LD_OPCODE_NIBBLE: u8 = 0x3;
 
+/// GE-225 `ADD` opcode nibble — `0x4`.  Accumulator-anchored add:
+/// `ACC ← ACC + r`.  `r` is unchanged.  Word layout:
+/// `[0x04, 0x00, r]`.
+///
+/// The 20-bit ACC absorbs signed addition; overflow / carry
+/// reporting via condition flags is documented in A5+++ (this
+/// release) but not yet observable from the IR — A5++++ will surface
+/// flags via `BMI` / `BNZ` branches.
+pub const ADD_OPCODE_NIBBLE: u8 = 0x4;
+
+/// GE-225 `SUB` opcode nibble — `0x5`.  Accumulator-anchored
+/// subtract: `ACC ← ACC - r`.  `r` is unchanged.  Word layout:
+/// `[0x05, 0x00, r]`.
+pub const SUB_OPCODE_NIBBLE: u8 = 0x5;
+
 /// Sentinel `env` value meaning "this var currently lives in the
 /// accumulator (ACC)", distinct from real register indices `0..=15`.
 const ACC_MARKER: u8 = 16;
@@ -150,8 +167,8 @@ const ACC_MARKER: u8 = 16;
 /// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
 const GP_REGISTER_COUNT: usize = 16;
 
-/// Supported instruction opcodes in v0.3.0 (A5++).
-const SUPPORTED_OPS: &[&str] = &["const", "mov", "ret", "ret_void"];
+/// Supported instruction opcodes in v0.4.0 (A5+++).
+const SUPPORTED_OPS: &[&str] = &["const", "mov", "add", "sub", "ret", "ret_void"];
 
 // ===========================================================================
 // IIRGe225Config
@@ -383,6 +400,89 @@ pub fn lower_iir_to_ge225(
                     acc_owner = None;
                 }
 
+                // ── add / sub dest, lhs, rhs ──────────────────────────
+                //
+                // Lowering shape (3-step prep + 2-instruction arith):
+                //
+                //   1. If lhs lives in ACC, evict it (STA r) so it
+                //      has a stable register home.
+                //   2. If rhs lives in ACC (post-lhs-eviction, this
+                //      requires lhs==rhs in the original IR), evict
+                //      too.  After this both lhs and rhs are in real
+                //      registers.
+                //   3. Evict any remaining ACC owner so ACC is free
+                //      for the LD r_lhs below.
+                //
+                //   LD  r_lhs          ; ACC ← lhs
+                //   ADD r_rhs          ; ACC ← lhs + rhs   (or SUB)
+                //
+                //   env[dest] = ACC_MARKER; acc_owner = Some(dest).
+                //
+                // This deliberately conservative scheme always emits
+                // the LD even when lhs was already the ACC owner —
+                // it keeps the lowering shape predictable (always 2
+                // words for the arithmetic step) at a small byte cost.
+                // A future v0.5.0 may peephole-elide the LD when
+                // lhs == acc_owner.
+                "add" | "sub" => {
+                    let dest = require_dest(instr, instr.op.as_str(), &f.name)?;
+                    let (lhs_name, rhs_name) = parse_binop_srcs(instr, &f.name)?;
+                    // Bind-check both operands up front for crisp errors.
+                    if !env.contains_key(&lhs_name) {
+                        return Err(IIRGe225Error::UndefinedVariable {
+                            function: f.name.clone(),
+                            name: lhs_name,
+                        });
+                    }
+                    if !env.contains_key(&rhs_name) {
+                        return Err(IIRGe225Error::UndefinedVariable {
+                            function: f.name.clone(),
+                            name: rhs_name,
+                        });
+                    }
+                    // Step 1: evict lhs from ACC if present.
+                    if matches!(env.get(&lhs_name), Some(&ACC_MARKER)) {
+                        evict_acc(
+                            &mut bytes,
+                            &mut env,
+                            &mut acc_owner,
+                            &mut next_reg,
+                            &f.name,
+                        )?;
+                    }
+                    // Step 2: evict rhs from ACC if present.
+                    if matches!(env.get(&rhs_name), Some(&ACC_MARKER)) {
+                        evict_acc(
+                            &mut bytes,
+                            &mut env,
+                            &mut acc_owner,
+                            &mut next_reg,
+                            &f.name,
+                        )?;
+                    }
+                    // Step 3: evict any remaining ACC owner.
+                    evict_acc(
+                        &mut bytes,
+                        &mut env,
+                        &mut acc_owner,
+                        &mut next_reg,
+                        &f.name,
+                    )?;
+                    // Both operands are now in real GP registers; ACC is free.
+                    let r_lhs = lookup_register(&env, &lhs_name, &f.name)?;
+                    let r_rhs = lookup_register(&env, &rhs_name, &f.name)?;
+                    debug_assert!(r_lhs <= 15 && r_rhs <= 15);
+                    bytes.extend_from_slice(&encode_ld(r_lhs));
+                    let arith = match instr.op.as_str() {
+                        "add" => encode_add(r_rhs),
+                        "sub" => encode_sub(r_rhs),
+                        _ => unreachable!(),
+                    };
+                    bytes.extend_from_slice(&arith);
+                    env.insert(dest.to_string(), ACC_MARKER);
+                    acc_owner = Some(dest.to_string());
+                }
+
                 // ── ret <var>: (LD r_var)? + HLT ──────────────────────
                 //
                 // If var is already the ACC owner, no LD is needed —
@@ -523,6 +623,45 @@ fn encode_sta(r: u8) -> [u8; 3] {
 /// Encode an `LD r` 20-bit word as 3 bytes.
 fn encode_ld(r: u8) -> [u8; 3] {
     [LD_OPCODE_NIBBLE, 0x00, r & 0x0F]
+}
+
+/// Encode an `ADD r` 20-bit word as 3 bytes.  After execution:
+/// `ACC ← ACC + r` (r unchanged).
+fn encode_add(r: u8) -> [u8; 3] {
+    [ADD_OPCODE_NIBBLE, 0x00, r & 0x0F]
+}
+
+/// Encode a `SUB r` 20-bit word as 3 bytes.  After execution:
+/// `ACC ← ACC - r` (r unchanged).
+fn encode_sub(r: u8) -> [u8; 3] {
+    [SUB_OPCODE_NIBBLE, 0x00, r & 0x0F]
+}
+
+/// Parse `(Var(lhs), Var(rhs))` out of a binary-op `IIRInstr.srcs`.
+/// Returns `InvalidOperand` if the shape doesn't match.
+fn parse_binop_srcs(
+    instr: &interpreter_ir::IIRInstr,
+    fn_name: &str,
+) -> Result<(String, String), IIRGe225Error> {
+    let lhs = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => {
+            return Err(IIRGe225Error::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} srcs[0] must be Var", instr.op),
+            })
+        }
+    };
+    let rhs = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => {
+            return Err(IIRGe225Error::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} srcs[1] must be Var", instr.op),
+            })
+        }
+    };
+    Ok((lhs, rhs))
 }
 
 /// Decode and range-check a `const` immediate operand into a 16-bit
