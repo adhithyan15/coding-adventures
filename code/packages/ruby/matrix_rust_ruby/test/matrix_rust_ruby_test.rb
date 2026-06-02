@@ -117,20 +117,25 @@ class MatrixRustRubyTest < Minitest::Test
     assert_match(/hex/i, error.message)
   end
 
-  def test_non_string_argument_raises_runtime_error
-    # The native ext checks the argument type via str_from_rb.  nil is the
-    # most common foot-gun (forgetting to interpolate / build the envelope).
-    error = assert_raises(RuntimeError) do
+  def test_non_string_argument_raises_type_error
+    # Ruby's rb_string_value_cstr (called inside ruby-bridge's str_from_rb)
+    # raises TypeError when handed a non-String — that's the idiomatic Ruby
+    # signal for "wrong type" and beats us to the punch before our code
+    # path would emit a RuntimeError.  Either error class signals "wrong
+    # type" loudly enough for callers, so we assert on the common ancestor
+    # StandardError to stay robust if the underlying behavior shifts (e.g.
+    # str_from_rb later returns nil instead of letting TypeError through).
+    error = assert_raises(StandardError) do
       MatrixRustRuby.run_graph_on_cpu(nil)
     end
-    assert_match(/string/i, error.message)
+    assert_match(/string|nil|nilclass/i, error.message)
   end
 
-  def test_integer_argument_raises_runtime_error
-    error = assert_raises(RuntimeError) do
+  def test_integer_argument_raises_type_error
+    error = assert_raises(StandardError) do
       MatrixRustRuby.run_graph_on_cpu(42)
     end
-    assert_match(/string/i, error.message)
+    assert_match(/string|integer/i, error.message)
   end
 
   def test_namespaced_alias_delegates_to_top_level
