@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `digital_event_streams_to_voltage_sources` for converting named
+  mixed-signal event streams into finite-edge PWL voltage sources.
 - Add `sample_transient_probes_as_digital_event_streams` for collecting
   multiple thresholded transient probes as named mixed-signal event streams.
 - Add `DigitalEventStream` and `format_digital_event_stream_table` for stable
@@ -9,8 +11,8 @@
 - Add `format_digital_event_table` for stable tab-separated mixed-signal
   digital event stream snapshots.
 - Add binary mixed-signal boundary helpers that convert digital event timelines
-  into finite-edge PWL voltage sources and threshold transient probes back into
-  digital events.
+  and named event streams into finite-edge PWL voltage sources and threshold
+  transient probes back into digital events.
 - Add `dc_temperature_sweep_corners` and
   `format_corner_temperature_dc_table` for stable tab-separated named-corner
   DC operating-point snapshots across explicit `.temp`-style analysis
