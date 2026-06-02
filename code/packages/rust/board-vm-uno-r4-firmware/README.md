@@ -70,6 +70,9 @@ the parsed BVM module, so the boot runner uses one board-checked artifact view
 for both store-only decisions and direct execution. The checked boot-run result
 returns that plan with the optional runtime report, letting diagnostics describe
 whether startup validated-and-ran or validated-and-skipped a store-only artifact.
+Its compact summary preserves the boot plan plus run status, instruction count,
+and open-handle count when execution happened, without inventing a second
+artifact interpretation path.
 
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.
