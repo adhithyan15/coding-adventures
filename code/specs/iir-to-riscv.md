@@ -51,9 +51,9 @@ IIRModule
 
 | Version | Scope | Status |
 |---------|-------|--------|
-| **v0.1.0 (A1 — this PR)** | crate skeleton: any module → single `ret` (`jalr x0, x1, 0` = `0x0000_8067`) | this PR |
-| v0.2.0 (A1+) | function entry/exit prologue/epilogue + arith + cmp + control flow | future |
-| v0.3.0 (A1++) | calls + locals on stack + `ecall` for print | future |
+| v0.1.0 (A1) | crate skeleton: any module → single `ret` (`0x0000_8067`) | **merged** |
+| **v0.2.0 (A1+ — this PR)** | const/mov/add/sub/ret + linear register allocator (a0..a7 + t0..t6) | this PR |
+| v0.3.0 (A1++) | comparisons, branches, calls + stack-spilling allocator + `ecall` for print + `lui`/`addi` for wide consts | future |
 | v0.4.0 (A1+++) | `lang-aot --target=riscv32` wiring | future |
 | (later) | RV32M (mul/div), RV32A (atomics), RV32F (floats), DWARF emission via aot-debug | future |
 

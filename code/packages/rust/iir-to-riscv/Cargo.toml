@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-riscv"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.1.0 (A1): crate skeleton emitting a single `ret` (jalr x0, x1, 0); instruction lowering deferred to v0.2.0+."
+description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.2.0 (A1+): adds real lowering for const (addi imm12) / mov (addi rd,rs1,0) / add+sub (R-type) / ret (mv a0 + jalr); linear register allocator over t0..t6; param ABI mapping to a0..a7."
 
 [lib]
 name = "iir_to_riscv"
