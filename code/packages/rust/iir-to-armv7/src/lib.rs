@@ -479,6 +479,81 @@ pub(crate) fn encode_mov_imm_cond(cond_base: u32, rd: u8, imm8: u8) -> u32 {
     cond_base | ((rd as u32) << 12) | (imm8 as u32)
 }
 
+/// ARMv7-A `B addr` (unconditional branch) base — `0xEA00_0000`.
+///
+/// Bit layout (cond=AL):
+///
+/// ```text
+/// 31..28  cond     = 0xE = 1110            (always — unconditional)
+/// 27..25           = 101                    (branch family)
+/// 24               = 0                      (B; 1 = BL with link)
+/// 23.. 0  imm24    = (signed PC-relative offset in WORDS)
+/// ```
+///
+/// At execute time the PC reads `instruction_address + 8` (the
+/// classic ARM 2-stage pipeline prefetch offset).  So for a branch
+/// at byte offset `A` targeting byte offset `T`:
+///
+/// ```text
+/// imm24 = (T - A - 8) / 4    ; sign-extended 24 bits
+/// ```
+///
+/// OR this base with `imm24 & 0x00FF_FFFF` to form the full word.
+pub const B_BASE: u32 = 0xEA00_0000;
+
+/// ARMv7-A `BNE addr` (branch if Z flag CLEAR) base — `0x1A00_0000`.
+///
+/// Same shape as `B_BASE` but with cond = NE = `0001`.  After
+/// CMP/TST that sets the Z flag, BNE branches when the comparison
+/// was non-equal / non-zero — which `jmp_if_true cond_var, label`
+/// lowers to after CMP cond_var, #0.
+pub const B_NE_BASE: u32 = 0x1A00_0000;
+
+/// ARMv7-A `BEQ addr` (branch if Z flag SET) base — `0x0A00_0000`.
+///
+/// Same shape as `B_BASE` but with cond = EQ = `0000`.  Pairs with
+/// `jmp_if_false cond_var, label` after CMP cond_var, #0.
+pub const B_EQ_BASE: u32 = 0x0A00_0000;
+
+/// ARMv7-A `CMP Rn, #0` base — `0xE350_0000`.
+///
+/// Data-processing-immediate form of CMP.  Compares `Rn` against the
+/// 8-bit immediate `0` and sets Z if equal (i.e. Rn == 0).  The
+/// canonical "test whether a boolean register is zero" idiom.
+///
+/// Bit layout (cond=AL, S=1, Rn=0, imm=0):
+///
+/// ```text
+/// 31..28  cond     = 0xE = 1110            (always — unconditional)
+/// 27..25           = 001                    (data-processing immediate)
+/// 24..21  opcode   = 1010                   (CMP)
+/// 20      S        = 1                      (CMP always sets flags)
+/// 19..16  Rn       = (in this base, 0)     (the register to compare)
+/// 15..12           = 0000                   (Rd unused for CMP)
+/// 11.. 8  rotate   = 0000
+///  7.. 0  imm8     = 0                      (we compare against 0)
+/// ```
+///
+/// For `CMP Rn, #0`: OR in `(Rn << 16)`.
+pub const CMP_IMM_ZERO_BASE: u32 = 0xE350_0000;
+
+/// Encode an ARMv7-A `CMP Rn, #0` instruction.
+pub(crate) fn encode_cmp_imm_zero(rn: u8) -> u32 {
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    CMP_IMM_ZERO_BASE | ((rn as u32) << 16)
+}
+
+/// Encode an ARMv7-A branch instruction (`B`/`BEQ`/`BNE`/...).
+///
+/// `cond_base` is one of `B_BASE`/`B_EQ_BASE`/`B_NE_BASE`/...  The
+/// `imm24` argument is the signed 24-bit word offset; the encoder
+/// masks it to 24 bits and ORs it with the base.  Range check is
+/// the caller's responsibility — `lower_iir_to_armv7` returns
+/// `BranchOutOfRange` if the offset doesn't fit.
+pub(crate) fn encode_branch(cond_base: u32, imm24: i32) -> u32 {
+    cond_base | ((imm24 as u32) & 0x00FF_FFFF)
+}
+
 // ===========================================================================
 // IIRArmv7Config
 // ===========================================================================
@@ -535,6 +610,13 @@ pub enum IIRArmv7Error {
     /// lands in a future increment (A3++.5 or later).  r13 (sp),
     /// r14 (lr), and r15 (pc) are not part of the pool.
     OutOfRegisters { function: String, name: String },
+    /// A `jmp`/`jmp_if_*` referenced a label name not defined in
+    /// the same function.
+    UndefinedLabel { function: String, label: String },
+    /// A computed branch offset doesn't fit in ARM's signed 24-bit
+    /// immediate (range ±32 MiB, more than enough for any practical
+    /// function).
+    BranchOutOfRange { function: String, target: usize, current: usize },
 }
 
 impl fmt::Display for IIRArmv7Error {
@@ -557,6 +639,12 @@ impl fmt::Display for IIRArmv7Error {
             }
             Self::OutOfRegisters { function, name } => {
                 write!(f, "out of ARMv7 registers (r0..r12) while binding {name:?} in function {function:?}; stack spilling not yet supported")
+            }
+            Self::UndefinedLabel { function, label } => {
+                write!(f, "undefined label {label:?} referenced by jmp/jmp_if in function {function:?}")
+            }
+            Self::BranchOutOfRange { function, target, current } => {
+                write!(f, "branch in function {function:?} from word offset {current} to word offset {target} doesn't fit in ARM's signed 24-bit imm")
             }
         }
     }
@@ -625,6 +713,9 @@ const SUPPORTED_OPS: &[&str] = &[
     // A3++.5.5 fourth slice — remaining 5 comparison ops using
     // distinct condition prefixes on the trailing MOV.
     "cmp_ne", "cmp_lt", "cmp_gt", "cmp_gte", "cmp_lte",
+    // A3++.5.5 fifth slice — labels + branches.  Two-pass per-function
+    // backpatching for PC-relative offsets.
+    "label", "jmp", "jmp_if_true", "jmp_if_false",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -675,6 +766,24 @@ pub fn lower_iir_to_armv7(
         // shape as v0.2.0 (no redundant `MOV r0, X` round-trip).
         let mut env: HashMap<String, u8> = HashMap::new();
         let mut next_reg: usize = 0;
+
+        // ── Per-function label-resolution state (v0.4.5) ──────────────
+        //
+        // ARMv7's branch instructions carry a 24-bit signed PC-relative
+        // offset (in words; the silicon shifts left 2 to convert to
+        // bytes).  Pass 1 emits each branch with a placeholder zero
+        // offset and records `(word_index_of_branch, target_label,
+        // cond_base)` in `pending_branches`.  After all instructions in
+        // the function are emitted, pass 2 looks up each pending
+        // branch's label in `labels`, computes the PC-relative offset
+        // (accounting for ARM's +8 PC prefetch quirk), range-checks it
+        // against signed 24-bit, and ORs it into the placeholder word.
+        //
+        // Labels are keyed by name → word index (not byte index — every
+        // A32 instruction is a fixed 4 bytes, and the branch offset is
+        // already in word units).
+        let mut labels: HashMap<String, usize> = HashMap::new();
+        let mut pending_branches: Vec<(usize, String, u32)> = Vec::new();
 
         for instr in &f.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
@@ -852,8 +961,100 @@ pub fn lower_iir_to_armv7(
                     words.push(word);
                 }
 
+                // ── label "<name>": record current word index ──────────
+                "label" => {
+                    let name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "label requires srcs[0] = Operand::Var(name)".into(),
+                        }),
+                    };
+                    labels.insert(name, words.len());
+                }
+
+                // ── jmp "<name>": B with cond=AL ───────────────────────
+                "jmp" => {
+                    let target = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "jmp requires srcs[0] = Operand::Var(target_label)".into(),
+                        }),
+                    };
+                    pending_branches.push((words.len(), target, B_BASE));
+                    words.push(0); // placeholder — pass 2 overwrites
+                }
+
+                // ── jmp_if_true / jmp_if_false ─────────────────────────
+                //
+                // ARMv7 has no "branch on register"; we provoke the Z
+                // flag via `CMP cond_reg, #0` and use BNE / BEQ:
+                //
+                //   CMP   cond_reg, #0    ; sets Z if cond == 0
+                //   BNE   target          ; jmp_if_true  — branch if cond != 0
+                //   BEQ   target          ; jmp_if_false — branch if cond == 0
+                //
+                // The CMP-imm-zero idiom is one word; the conditional
+                // branch is another.  2 words total — neat parallel to
+                // the 8008's MOV A, r; ANA A; JFZ/JTZ sequence.
+                "jmp_if_true" | "jmp_if_false" => {
+                    let cond_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} requires srcs[0] = Operand::Var(cond)", instr.op),
+                        }),
+                    };
+                    let target = match instr.srcs.get(1) {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} requires srcs[1] = Operand::Var(target_label)", instr.op),
+                        }),
+                    };
+                    let cond_reg = lookup_register(&env, &cond_name, &f.name)?;
+                    words.push(encode_cmp_imm_zero(cond_reg));
+                    let branch_base = if instr.op == "jmp_if_true" {
+                        B_NE_BASE
+                    } else {
+                        B_EQ_BASE
+                    };
+                    pending_branches.push((words.len(), target, branch_base));
+                    words.push(0); // placeholder
+                }
+
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
             }
+        }
+
+        // ── Pass 2: backpatch pending branches ─────────────────────────
+        //
+        // For each pending entry (slot, target_label, cond_base):
+        //   1. Resolve target_label → target_word_index via `labels`.
+        //   2. Compute the signed 24-bit word offset:
+        //        imm24 = target - slot - 2
+        //      (the `- 2` accounts for ARM's PC = current_instruction + 8
+        //      = current_instruction + 2 words; the branch's "current"
+        //      address is `slot * 4` bytes, and the silicon adds 8.)
+        //   3. Range-check imm24 against signed 24-bit (±2^23 words).
+        //   4. OR the encoded imm24 into the placeholder word.
+        for (slot, label, cond_base) in &pending_branches {
+            let target = *labels.get(label).ok_or_else(|| {
+                IIRArmv7Error::UndefinedLabel {
+                    function: f.name.clone(),
+                    label: label.clone(),
+                }
+            })?;
+            let imm24: i32 = (target as i32) - (*slot as i32) - 2;
+            if !(-(1 << 23)..(1 << 23)).contains(&imm24) {
+                return Err(IIRArmv7Error::BranchOutOfRange {
+                    function: f.name.clone(),
+                    target,
+                    current: *slot,
+                });
+            }
+            words[*slot] = encode_branch(*cond_base, imm24);
         }
     }
 

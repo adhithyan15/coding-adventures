@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-armv7"
-version = "0.4.4"
+version = "0.4.5"
 edition = "2021"
-description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.4 (A3++.5.5 fourth slice): completes the boolean comparison family with `cmp_ne` (NE = 0x13A0..), `cmp_lt` (CC = 0x33A0..), `cmp_gt` (HI = 0x83A0..), `cmp_gte` (CS = 0x23A0..), `cmp_lte` (LS = 0x93A0..).  All six comparisons share the CMP + MOV + MOV<cond> capture skeleton; only the trailing MOV's condition prefix nibble changes.  ARMv7's HI condition handles unsigned > natively — no operand-swap trick like 8008/RV32I.  A new `encode_mov_imm_cond(base, rd, imm8)` helper avoids cluttering the API with 6 nearly-identical encoders."
+description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.5 (A3++.5.5 fifth slice): adds control flow via `label`, `jmp` (B with cond=AL = 0xEA00_0000), `jmp_if_true` (CMP rn,#0 + BNE 0x1A00_0000), `jmp_if_false` (CMP + BEQ 0x0A00_0000).  Per-function two-pass backpatching mirrors the 8008's v0.3.4.  ARMv7 branches carry a 24-bit signed PC-relative offset in WORDS — silicon shifts left 2 to bytes and adds the +8 PC prefetch quirk.  New errors: UndefinedLabel and BranchOutOfRange."
 
 [lib]
 name = "iir_to_armv7"

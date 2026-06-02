@@ -7,8 +7,8 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
     IIRArmv7Config, IIRArmv7Error,
-    ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, CMP_REG_BASE,
-    EOR_REG_BASE,
+    ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, B_BASE, B_EQ_BASE, B_NE_BASE,
+    BKPT, BX_LR, CMP_IMM_ZERO_BASE, CMP_REG_BASE, EOR_REG_BASE,
     MOV_IMM_CC_BASE, MOV_IMM_CS_BASE, MOV_IMM_EQ_BASE, MOV_IMM_HI_BASE,
     MOV_IMM_LS_BASE, MOV_IMM_NE_BASE, MOV_IMM_R0_BASE, MOV_REG_BASE,
     ORR_REG_BASE, SBC_REG_BASE, SUB_REG_BASE,
@@ -851,6 +851,184 @@ fn cmp_gte_uses_movcs_for_set_true() {
 fn cmp_lte_uses_movls_for_set_true() {
     // MOVLS r2, #1 = 0x93A0_0000 | (2<<12) | 1 = 0x93A0_2001
     assert_cmp_variant("cmp_lte", 0x93A0_2001);
+}
+
+// ===========================================================================
+// 12. A3++.5.5 fifth slice — branches (`label` + `jmp` + `jmp_if_*`)
+// ===========================================================================
+//
+// ARMv7's B instruction carries a 24-bit signed PC-relative offset
+// in WORDS (shifted left 2 to convert to bytes by the silicon).
+// PC at execute time = current_instruction_address + 8 (the classic
+// ARM 2-stage pipeline prefetch offset).
+//
+// For a branch at word index `S` targeting word index `T`:
+//   imm24 = T - S - 2     (the -2 = 8 bytes / 4 = 2 words for the
+//                          PC prefetch quirk)
+//
+// The boolean-branch idiom adds a CMP cond_reg, #0 in front to
+// provoke the Z flag from the cond register, then uses BNE/BEQ.
+
+#[test]
+fn b_base_pinned_to_0xea000000() {
+    assert_eq!(B_BASE, 0xEA00_0000,
+        "B (cond=AL) base should be 0xEA000000; got 0x{:08x}", B_BASE);
+}
+
+#[test]
+fn b_ne_base_pinned_to_0x1a000000() {
+    assert_eq!(B_NE_BASE, 0x1A00_0000);
+}
+
+#[test]
+fn b_eq_base_pinned_to_0x0a000000() {
+    assert_eq!(B_EQ_BASE, 0x0A00_0000);
+}
+
+#[test]
+fn cmp_imm_zero_base_pinned_to_0xe3500000() {
+    assert_eq!(CMP_IMM_ZERO_BASE, 0xE350_0000,
+        "CMP Rn, #0 base should be 0xE3500000; got 0x{:08x}", CMP_IMM_ZERO_BASE);
+}
+
+#[test]
+fn jmp_to_forward_label_backpatches_correct_offset() {
+    // const v=42; jmp end; const w=99; label end; ret v
+    //
+    // Layout (word indices):
+    //   0: MOV r0, #42       (3E A0 002A — wait, 0xE3A0_002A)
+    //   1: B end             (0xEA00_???? — backpatched)
+    //   2: MOV r1, #99       (0xE3A0_1063)
+    //   <-- label "end" at word index 3 -->
+    //   3: BX LR             (0xE12F_FF1E)
+    //
+    // For B at slot 1 targeting word index 3:
+    //   imm24 = 3 - 1 - 2 = 0
+    // So the B word = 0xEA00_0000 | 0 = 0xEA00_0000.
+    let f = IIRFunction::new("fwd", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("jmp",   None,             vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(99)], "u8"),
+        IIRInstr::new("label", None,             vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_002A,    // 0: MOV r0, #42  (v)
+        B_BASE | 0,     // 1: B 0 (target = current + 8 = +0 words past prefetch)
+        0xE3A0_1063,    // 2: MOV r1, #99 (w, unreachable)
+        // label "end" at word index 3
+        BX_LR,          // 3: BX LR (ret v — v is already in r0)
+    ], "forward jmp expected; got: {words:08x?}");
+}
+
+#[test]
+fn jmp_to_backward_label_emits_negative_offset() {
+    // label loop; const v=1; jmp loop; ret_void
+    //
+    //   <-- label "loop" at word index 0 -->
+    //   0: MOV r0, #1
+    //   1: B loop  (target = 0; imm24 = 0 - 1 - 2 = -3)
+    //   2: BX LR
+    //
+    // imm24 = -3 = 0xFFFFFD in signed 24-bit.  Masked to 24 bits and
+    // OR'd into B_BASE: 0xEA00_0000 | 0xFFFFFD = 0xEAFFFFFD.
+    let f = IIRFunction::new("backward", vec![], "void", vec![
+        IIRInstr::new("label", None,             vec![Operand::Var("loop".into())], "void"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "u8"),
+        IIRInstr::new("jmp",   None,             vec![Operand::Var("loop".into())], "void"),
+        IIRInstr::new("ret_void", None,          vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0001,    // 0: MOV r0, #1
+        0xEAFF_FFFD,    // 1: B loop (imm24 = -3)
+        BX_LR,          // 2: BX LR
+    ], "backward jmp expected; got: {words:08x?}");
+}
+
+#[test]
+fn jmp_to_undefined_label_is_rejected() {
+    let f = IIRFunction::new("dangling", vec![], "void", vec![
+        IIRInstr::new("jmp", None, vec![Operand::Var("nowhere".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect_err("jmp to nonexistent label should fail");
+    match err {
+        IIRArmv7Error::UndefinedLabel { function, label } => {
+            assert_eq!(function, "dangling");
+            assert_eq!(label, "nowhere");
+        }
+        other => panic!("expected UndefinedLabel, got: {other:?}"),
+    }
+}
+
+#[test]
+fn jmp_if_true_emits_cmp_zero_then_bne() {
+    // const cond=1; jmp_if_true cond, end; const x=0; label end; ret_void
+    //
+    //   0: MOV r0, #1         (cond → r0)
+    //   1: CMP r0, #0         (0xE350_0000 | (0<<16) = 0xE350_0000)
+    //   2: BNE end            (target = word 5; imm24 = 5-2-2 = 1)
+    //   3: MOV r1, #0         (x — unreachable)
+    //   <-- label end at word 4 -->
+    //   4: BX LR
+    //
+    // Wait, the count: words[0]=MOV r0, words[1]=CMP, words[2]=BNE, words[3]=MOV r1.
+    // Then label "end" at word index 4. Then BX LR at word 4.
+    // imm24 = target - slot - 2 = 4 - 2 - 2 = 0.
+    let f = IIRFunction::new("if_true", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("cond".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(0)], "u8"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0001,    // 0: MOV r0, #1 (cond)
+        0xE350_0000,    // 1: CMP r0, #0
+        B_NE_BASE | 0,  // 2: BNE end (imm24 = 4 - 2 - 2 = 0)
+        0xE3A0_1000,    // 3: MOV r1, #0 (x — unreachable)
+        BX_LR,          // 4: BX LR
+    ], "jmp_if_true expected; got: {words:08x?}");
+}
+
+#[test]
+fn jmp_if_false_emits_cmp_zero_then_beq() {
+    // Same layout as jmp_if_true but with BEQ.
+    let f = IIRFunction::new("if_false", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(0)], "bool"),
+        IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var("cond".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(99)], "u8"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0000,    // 0: MOV r0, #0 (cond)
+        0xE350_0000,    // 1: CMP r0, #0
+        B_EQ_BASE | 0,  // 2: BEQ end
+        0xE3A0_1063,    // 3: MOV r1, #99 (unreachable)
+        BX_LR,          // 4: BX LR
+    ], "jmp_if_false expected; got: {words:08x?}");
+}
+
+#[test]
+fn errors_for_branch_variants_display_without_panic() {
+    let _ = format!("{}", IIRArmv7Error::UndefinedLabel {
+        function: "f".into(), label: "ghost".into(),
+    });
+    let _ = format!("{}", IIRArmv7Error::BranchOutOfRange {
+        function: "huge".into(), target: 10_000_000, current: 0,
+    });
 }
 
 #[test]
