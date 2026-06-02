@@ -78,17 +78,26 @@ use std::fmt;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use riscv_simulator::encoding::{
     encode_add, encode_addi, encode_beq, encode_bne, encode_ecall, encode_jal,
-    encode_jalr, encode_lui, encode_slt, encode_sltiu, encode_sltu, encode_sub,
-    encode_xor, encode_xori,
+    encode_jalr, encode_lui, encode_lw, encode_slt, encode_sltiu, encode_sltu,
+    encode_sub, encode_sw, encode_xor, encode_xori,
 };
 
 // ===========================================================================
 // Register layout
 // ===========================================================================
 
-// Hardwired zero (x0) and return address (x1) used by the ret encoding.
+// Hardwired zero (x0), return address (x1), stack pointer (x2) — the
+// three "system" registers we touch by index rather than via a
+// general-purpose allocation.
 const X0_ZERO: u32 = 0;
 const X1_RA:   u32 = 1;
+const X2_SP:   u32 = 2;
+
+/// Frame size used by A1++.5.5's call prologue/epilogue.  Currently fixed
+/// at 16 bytes: 4 for `ra` + 12 bytes of padding to keep the stack 16-byte
+/// aligned per the RISC-V calling convention.  Saved-register and local
+/// spilling will grow this in A1++.6.
+const CALL_FRAME_BYTES: i32 = 16;
 
 /// Argument / return-value registers `a0..a7` per the RISC-V calling
 /// convention.  The first 8 function parameters land here, in order; the
@@ -158,6 +167,15 @@ pub enum IIRRiscvError {
     /// A branch's target is too far away to encode.  B-type (beq/bne)
     /// gives ±4096 bytes; J-type (jal) gives ±1 MiB.
     BranchOutOfRange { function: String, label: String, offset: i64, max: i64 },
+    /// A `call` instruction referenced a callee name that was not
+    /// defined as a function in the module.
+    UndefinedCallee { function: String, callee: String },
+    /// A `call` instruction's PC-relative offset to the callee would
+    /// exceed `jal`'s ±1 MiB encoding range.
+    CallOutOfRange { function: String, callee: String, offset: i64 },
+    /// A1++.5.5 only supports `call`s with no arguments and void
+    /// returns.  Args + return values land in A1++.5.5.5.
+    UnsupportedCallShape { function: String, callee: String, detail: String },
 }
 
 impl fmt::Display for IIRRiscvError {
@@ -182,6 +200,12 @@ impl fmt::Display for IIRRiscvError {
                 write!(f, "branch to undefined label {label:?} in function {function:?}"),
             Self::BranchOutOfRange { function, label, offset, max } =>
                 write!(f, "branch to label {label:?} in function {function:?} would require offset {offset} bytes, exceeding the ±{max}-byte range of this branch encoding"),
+            Self::UndefinedCallee { function, callee } =>
+                write!(f, "call to undefined function {callee:?} in function {function:?}"),
+            Self::CallOutOfRange { function, callee, offset } =>
+                write!(f, "call to {callee:?} in function {function:?} would require offset {offset} bytes, exceeding jal's ±1 MiB range"),
+            Self::UnsupportedCallShape { function, callee, detail } =>
+                write!(f, "call to {callee:?} in function {function:?}: {detail}"),
         }
     }
 }
@@ -216,6 +240,8 @@ const SUPPORTED_OPS: &[&str] = &[
     "call_builtin",
     // A1++.5 — control flow within a function
     "label", "jmp", "jmp_if_true", "jmp_if_false",
+    // A1++.5.5 — cross-function call (0-arg / void only in this slice)
+    "call",
 ];
 
 /// Syscall number used by the RV32I `ecall` for `call_builtin print_i64`.
@@ -317,15 +343,53 @@ pub fn lower_iir_to_riscv(
         return Err(IIRRiscvError::ValidationFailed(errors));
     }
 
-    let mut words = Vec::new();
+    // Pass 1: lower every function in order, recording each function's
+    // start byte in `function_starts` so cross-function `call`s can
+    // resolve their PC-relative offsets in pass 2.
+    let mut all_words: Vec<u32> = Vec::new();
+    let mut function_starts: HashMap<String, usize> = HashMap::new();
+    let mut pending_calls: Vec<(String, usize, CallSite)> = Vec::new();
+    //                              ^^^^^^^                ^^^^^^^^^
+    //                              caller-fn-name         site (with word_idx_in_fn)
+    //                                        ^^^^^^^^ caller's function start byte
+    //                                        (snapshotted so the resolver
+    //                                         can recover the global byte
+    //                                         offset of the call site)
+
     for f in &module.functions {
-        let fn_words = lower_function(f)?;
-        words.extend(fn_words);
+        let fn_start = all_words.len() * 4;
+        function_starts.insert(f.name.clone(), fn_start);
+        let (fn_words, fn_call_sites) = lower_function(f)?;
+        for cs in fn_call_sites {
+            pending_calls.push((f.name.clone(), fn_start, cs));
+        }
+        all_words.extend(fn_words);
     }
-    // An empty module emits no words at all.  This is the trivial-input
-    // contract: callers that want a minimum 1-instruction `.text` should
-    // wrap the result accordingly.
-    Ok(words)
+
+    // Pass 2: resolve every cross-function call site.  For each, compute
+    // the PC-relative offset from the call's jal slot to the callee's
+    // start byte, range-check (±1 MiB for jal), re-emit, and write back.
+    for (caller_name, caller_start, site) in &pending_calls {
+        let callee_start = function_starts.get(&site.callee).copied().ok_or_else(|| {
+            IIRRiscvError::UndefinedCallee {
+                function: caller_name.clone(),
+                callee: site.callee.clone(),
+            }
+        })?;
+        let src_byte = caller_start + site.word_idx_in_fn * 4;
+        let offset = callee_start as i64 - src_byte as i64;
+        let max: i64 = 1 << 20;
+        if offset < -max || offset >= max {
+            return Err(IIRRiscvError::CallOutOfRange {
+                function: caller_name.clone(),
+                callee: site.callee.clone(),
+                offset,
+            });
+        }
+        all_words[src_byte / 4] = encode_jal(X1_RA, offset as i32);
+    }
+
+    Ok(all_words)
 }
 
 /// Kind of branch placeholder waiting to be patched once the target
@@ -347,24 +411,39 @@ enum BranchKind {
     JalDiscard,
 }
 
+/// A cross-function call site needing module-level resolution.
+///
+/// Each `call` instruction emits a placeholder `jal ra, 0` word.  We
+/// record `(word_idx_in_fn, callee_name)` here so the module-level
+/// resolver can compute the final offset once every function's start
+/// byte is known.
+#[derive(Debug, Clone)]
+struct CallSite {
+    word_idx_in_fn: usize,
+    callee: String,
+}
+
 /// Per-function state shared by `lower_function` and `lower_instr`.
 struct FnState<'a> {
     fn_name: &'a str,
     /// IIR var name → assigned RV32I register index (`x*`).
     env: HashMap<String, u32>,
     /// Next free index into [`TEMP_REGISTERS`].  When this exceeds the
-    /// pool length we return `OutOfRegisters` — A1++.5 replaces this with
-    /// a stack-spilling allocator.
+    /// pool length we return `OutOfRegisters` — stack spilling lands in
+    /// A1++.6.
     next_temp: usize,
     /// Label name → byte offset within the function body.
     /// Filled lazily as `label "<name>"` instructions are emitted.
     labels: HashMap<String, usize>,
-    /// Pending branch patches.  Each entry records:
-    ///   - the word index into the function body that needs patching,
-    ///   - the target label name,
-    ///   - the encoding kind (so we know which encoder to call once we
-    ///     know the resolved byte offset).
+    /// Pending intra-function branch patches.
     branches: Vec<(usize, String, BranchKind)>,
+    /// Pending cross-function call patches.
+    call_sites: Vec<CallSite>,
+    /// Set when any `call` was emitted in this function — drives whether
+    /// `lower_function` emits a prologue (`addi sp, sp, -16; sw ra, 12(sp)`)
+    /// and matching epilogue before every `ret` / `ret_void` (`lw ra,
+    /// 12(sp); addi sp, sp, 16`).  Leaf functions skip both.
+    has_calls: bool,
 }
 
 impl FnState<'_> {
@@ -393,19 +472,37 @@ impl FnState<'_> {
 
 /// Lower one IIR function.  Emits the body words; no prologue/epilogue
 /// stack-frame setup yet (v0.2.0 has no locals on the stack).
-fn lower_function(func: &IIRFunction) -> Result<Vec<u32>, IIRRiscvError> {
+fn lower_function(func: &IIRFunction) -> Result<(Vec<u32>, Vec<CallSite>), IIRRiscvError> {
+    // ── Pre-scan: does this function contain any `call`s? ───────────────
+    //
+    // We need to know this BEFORE we start lowering so we can decide
+    // whether to emit a prologue and (correspondingly) epilogues before
+    // every `ret`/`ret_void`.  Leaf functions skip both.
+    let has_calls = func.instructions.iter().any(|i| i.op == "call");
+
     let mut state = FnState {
         fn_name: &func.name,
         env: HashMap::new(),
         next_temp: 0,
         labels: HashMap::new(),
         branches: Vec::new(),
+        call_sites: Vec::new(),
+        has_calls,
     };
     // Bind parameters to a0..a7.  Validator already guarantees count <= 8.
     for (i, (pname, _)) in func.params.iter().enumerate() {
         state.env.insert(pname.clone(), ARG_REGISTERS[i]);
     }
-    let mut words = Vec::with_capacity(func.instructions.len() + 1);
+    let mut words = Vec::with_capacity(func.instructions.len() + 4);
+
+    // ── Prologue (only when calls are present) ──────────────────────────
+    //
+    //   addi sp, sp, -CALL_FRAME_BYTES
+    //   sw   ra, (CALL_FRAME_BYTES - 4)(sp)
+    if has_calls {
+        emit_call_frame_prologue(&mut words);
+    }
+
     for instr in &func.instructions {
         lower_instr(instr, &mut state, &mut words)?;
     }
@@ -445,7 +542,22 @@ fn lower_function(func: &IIRFunction) -> Result<Vec<u32>, IIRRiscvError> {
         words[*word_idx] = new_word;
     }
 
-    Ok(words)
+    Ok((words, state.call_sites))
+}
+
+/// Emit `addi sp, sp, -16; sw ra, 12(sp)` — call-frame prologue.
+fn emit_call_frame_prologue(out: &mut Vec<u32>) {
+    out.push(encode_addi(X2_SP, X2_SP, -CALL_FRAME_BYTES));
+    out.push(encode_sw(X1_RA, X2_SP, CALL_FRAME_BYTES - 4));
+}
+
+/// Emit `lw ra, 12(sp); addi sp, sp, 16` — call-frame epilogue.
+///
+/// Called immediately before `jalr` in `ret` / `ret_void` when the
+/// function emitted a prologue.
+fn emit_call_frame_epilogue(out: &mut Vec<u32>) {
+    out.push(encode_lw(X1_RA, X2_SP, CALL_FRAME_BYTES - 4));
+    out.push(encode_addi(X2_SP, X2_SP, CALL_FRAME_BYTES));
 }
 
 fn check_branch_offset(
@@ -563,6 +675,9 @@ fn lower_instr(
         }
 
         // ── ret <var> — move var to a0 (mv pseudo), then ret ────────────
+        //
+        // When the function had a call-frame prologue, emit the matching
+        // epilogue immediately before `jalr` so `ra` is restored.
         "ret" => {
             let src = match instr.srcs.first() {
                 Some(Operand::Var(s)) => s.clone(),
@@ -572,18 +687,21 @@ fn lower_instr(
                 }),
             };
             let rs1 = state.lookup(&src)?;
-            // mv a0, rs1   →   addi a0, rs1, 0
-            // Skip the move if the value already lives in a0 — common
-            // when the return value comes from arg0 of a 1-param fn.
             if rs1 != ARG_REGISTERS[0] {
                 out.push(encode_addi(ARG_REGISTERS[0], rs1, 0));
+            }
+            if state.has_calls {
+                emit_call_frame_epilogue(out);
             }
             out.push(encode_jalr(X0_ZERO, X1_RA, 0));
             Ok(())
         }
 
-        // ── ret_void — just `ret` ────────────────────────────────────────
+        // ── ret_void — epilogue (if needed), then `ret` ──────────────────
         "ret_void" => {
+            if state.has_calls {
+                emit_call_frame_epilogue(out);
+            }
             out.push(encode_jalr(X0_ZERO, X1_RA, 0));
             Ok(())
         }
@@ -610,6 +728,24 @@ fn lower_instr(
         // For `print_i64`: load the syscall number ECALL_PRINT_I64_NUM
         // into a7, ensure the value is in a0, then `ecall`.
         "call_builtin" => lower_call_builtin(instr, state, out),
+
+        // ── call dest, callee(args...) — cross-function call ────────────
+        //
+        // A1++.5.5 first slice restrictions:
+        //   * 0 arguments
+        //   * void return (no dest)
+        //
+        // Args + return values land in A1++.5.5.5.  The restriction is
+        // signalled via `UnsupportedCallShape` with a precise message.
+        //
+        // What this emits:
+        //   jal ra, <callee>     ; placeholder; patched at module level
+        //
+        // The function's prologue (allocated by `lower_function` when
+        // `has_calls` is true) has already saved `ra`, so we just need
+        // the bare `jal` here.  The matching epilogue is emitted before
+        // every `ret`/`ret_void`.
+        "call" => lower_call(instr, state, out),
 
         // ── label "<name>": record byte offset for backpatching ─────────
         //
@@ -840,4 +976,57 @@ fn lower_call_builtin(
         }
         _ => unreachable!("SUPPORTED_BUILTINS guard above prevents this"),
     }
+}
+
+// ---------------------------------------------------------------------------
+// A1++.5.5 helper — cross-function `call`
+// ---------------------------------------------------------------------------
+
+/// Lower a `call dest, callee(args...)`.
+///
+/// v0.3.2 first slice supports only the smallest meaningful shape:
+/// 0 args and void return.  Anything else returns `UnsupportedCallShape`
+/// with a descriptive message.  Argument passing + return values land
+/// in A1++.5.5.5.
+///
+/// Layout:
+///   `srcs = [Var(callee_name), arg1, arg2, ...]`
+///   `dest = None` (void) or `Some(name)` (non-void return)
+fn lower_call(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut Vec<u32>,
+) -> Result<(), IIRRiscvError> {
+    let callee = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRRiscvError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "call requires srcs[0] = Operand::Var(callee_name)".into(),
+        }),
+    };
+    let arg_count = instr.srcs.len().saturating_sub(1);
+    if arg_count != 0 {
+        return Err(IIRRiscvError::UnsupportedCallShape {
+            function: state.fn_name.into(),
+            callee,
+            detail: format!("v0.3.2 first slice supports only 0-arg calls; got {arg_count} args (args land in A1++.5.5.5)"),
+        });
+    }
+    if instr.dest.is_some() {
+        return Err(IIRRiscvError::UnsupportedCallShape {
+            function: state.fn_name.into(),
+            callee,
+            detail: "v0.3.2 first slice supports only void-return calls; remove the dest (return values land in A1++.5.5.5)".into(),
+        });
+    }
+
+    // Record patch site and emit placeholder.  Module-level pass will
+    // overwrite with the real `jal ra, +offset` once it knows the
+    // callee's start byte.
+    state.call_sites.push(CallSite {
+        word_idx_in_fn: out.len(),
+        callee,
+    });
+    out.push(0); // placeholder
+    Ok(())
 }

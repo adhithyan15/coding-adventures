@@ -3,6 +3,82 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.2] — 2026-06-02 (A1++.5.5 first slice — cross-function `call` (0-arg, void))
+
+### Added — cross-function `call` with module-level resolution
+
+First slice of A1++.5.5: lands `call` of user-defined functions with
+the smallest meaningful restrictions (0 args + void return).  Args +
+non-void returns land in A1++.5.5.5.  Stack spilling lands in A1++.6.
+
+### What's emitted per `call`
+
+A function that contains at least one `call` gets a **call-frame
+prologue and epilogue**:
+
+```text
+caller:
+    addi sp, sp, -16              ; prologue
+    sw   ra, 12(sp)
+
+    …caller body…
+    jal  ra, +offset              ; call site — patched at module level
+    …more caller body…
+
+    lw   ra, 12(sp)               ; epilogue (before every ret/ret_void)
+    addi sp, sp, 16
+    jalr x0, x1, 0                ; ret
+```
+
+Leaf functions (no `call` in body) skip the prologue/epilogue entirely
+— preserves the single-word `ret` shape from earlier slices.
+
+### Module-level call-site resolution (pass 1 + pass 2)
+
+`lower_iir_to_riscv` becomes two-pass:
+
+1. **Pass 1**: walk every function, record its start byte in
+   `function_starts: HashMap<String, usize>`; per-function lowering
+   returns `(Vec<u32>, Vec<CallSite>)`; the module-level loop
+   collects all call sites into a global list with their owning
+   function's start byte snapshotted.
+2. **Pass 2**: for each call site, compute
+   `offset = callee_start - call_site_byte`, range-check ±1 MiB,
+   re-emit via `encode_jal(ra, offset)`, write back into the words
+   vector.
+
+Inter-function branches (`jmp`/`jmp_if_*`) still resolve in pass 1
+because they're function-local.
+
+### Public error variants added
+
+* `IIRRiscvError::UndefinedCallee` — `call` to a name that isn't a
+  function in the module.
+* `IIRRiscvError::CallOutOfRange` — target so far away it would
+  overflow `jal`'s ±1 MiB range.
+* `IIRRiscvError::UnsupportedCallShape` — first-slice restriction:
+  current scope is 0 args + void return.
+
+### Tests added (36 total, was 31)
+
+* `cross_function_void_call_resolves_jal_offset` — pins the exact
+  7-word two-function sequence (callee ret + caller prologue + jal -12
+  + epilogue + ret), proving the module-level resolver produced the
+  right PC-relative offset.
+* `leaf_function_still_omits_prologue` — regression test for the
+  single-word leaf shape.
+* `call_with_args_is_rejected_as_unsupported_shape` (1-arg case).
+* `call_with_non_void_return_is_rejected_as_unsupported_shape`.
+* `undefined_callee_is_rejected_at_module_level` — error path.
+
+### What is NOT in this PR (deferred to A1++.5.5.5 / A1++.6)
+
+* **Call arguments** — A1++.5.5.5.  Two-phase mv-through-temp dance
+  to avoid the swap-clobbering problem.
+* **Non-void return values** — A1++.5.5.5.  Allocate a temp for the
+  dest and `addi dest, a0, 0` after the `jal`.
+* **Stack-spilling register allocator** — A1++.6.
+
 ## [0.3.1] — 2026-06-02 (A1++.5 control-flow slice — `label` / `jmp` / `jmp_if_*` with two-pass label resolution)
 
 ### Added — control flow within a single function
