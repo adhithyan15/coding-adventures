@@ -25,17 +25,30 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.2.0 (A5+ first real lowering)
+## Status — v0.3.0 (A5++ ACC-first allocator + `mov`)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
-| `const dest, Int(n)` (16-bit signed/unsigned) | `LDA n` — `[0x01, hi, lo]` |
-| `const dest, Bool(b)` | `LDA 0` / `LDA 1` |
-| `ret <var>` | `HLT` (if `<var>` is the current ACC owner; else `UndefinedVariable`) |
+| `const dest, Int(n)` | `(STA r_evict)?` + `LDA n` |
+| `const dest, Bool(b)` | `(STA r_evict)?` + `LDA 0 \| 1` |
+| `mov dest, src` | `(STA r_evict_src)?` + `LD r_src` + `STA r_dest` |
+| `ret <var>` | `(LD r_var)?` + `HLT` |
 | `ret_void` | `HLT` |
 
-Accumulator-only first slice — most recent `const` owns the ACC.
-Multi-register allocation, arithmetic, and branches arrive in A5++.
+17-slot register pool (ACC + r0..r15) — identical capacity to the
+`iir-to-intel4004` v0.3.0 pool.  Trivial 6-byte ROM for
+`const v; ret v` preserved from v0.2.0.
+
+### Cumulative opcode map
+
+| Nibble | Mnemonic | Word |
+|--------|----------|------|
+| `0x0` | `HLT`   | `[0x00, 0x00, 0x00]` |
+| `0x1` | `LDA n` | `[0x01, hi, lo]` |
+| `0x2` | `STA r` | `[0x02, 0x00, r]` (XCH semantics on this skeleton) |
+| `0x3` | `LD r`  | `[0x03, 0x00, r]` |
+
+Arithmetic, branches, and call/return follow in A5+++.
 
 ## Quick start
 
