@@ -70,7 +70,7 @@
 //! assert_eq!(bytes, vec![0x40, 0x00]);
 //! ```
 
-use interpreter_ir::IIRModule;
+use interpreter_ir::{IIRModule, Operand};
 use std::fmt;
 
 // ===========================================================================
@@ -80,6 +80,27 @@ use std::fmt;
 // The 4004 has no formal HLT.  The canonical "halt" idiom is `JUN
 // 0x000` — an unconditional jump back to ROM address 0, which
 // (when itself at address 0) loops forever, simulating halt.
+
+/// Intel 4004 `LDM n` opcode high nibble — `0xD0`.  Loads the 4-bit
+/// immediate `n` (low nibble) into the accumulator.
+///
+/// Bit pattern: `1101 nnnn` (immediate-load family).  Single-byte
+/// instruction — OR in the 4-bit immediate value (0..=15) to form
+/// the full opcode byte.
+///
+/// Example:
+/// ```text
+/// LDM 0  = 0xD0     (0b1101_0000)
+/// LDM 7  = 0xD7     (0b1101_0111)
+/// LDM 15 = 0xDF     (0b1101_1111)
+/// ```
+///
+/// The 4004's accumulator is exactly 4 bits wide, so `LDM` is the
+/// only "load immediate" instruction needed — there's no wider
+/// immediate idiom (no `LDM_16` etc.).  Values wider than 4 bits
+/// must be built up via multiple `LDM`/arithmetic-op pairs in
+/// future slices.
+pub const LDM_OPCODE: u8 = 0xD0;
 
 /// Canonical "halt" sentinel for the Intel 4004 — two bytes:
 /// `0x40 0x00` (= `JUN 0x000`, jump-unconditional to ROM address 0).
@@ -209,13 +230,54 @@ pub fn validate_for_intel4004(_module: &IIRModule) -> Vec<String> {
 // lower_iir_to_intel4004
 // ===========================================================================
 
+/// Supported instruction opcodes in v0.2.0 (A4+).
+///
+/// * `const dest, Int(n)` lowers to `LDM n` (every value goes
+///   into the accumulator in this accumulator-only first slice).
+/// * `ret <var>` and `ret_void` both lower to `JUN 0x000` (the
+///   halt sentinel — real `RET` via `BBL` + the 4004's 3-deep
+///   internal call stack lands in A4++).
+const SUPPORTED_OPS: &[&str] = &[
+    "const", "ret", "ret_void",
+];
+
 /// Lower an [`IIRModule`] to a `Vec<u8>` of Intel 4004 opcode bytes.
 ///
-/// **v0.1.0 scope**: emits the canonical 2-byte halt sentinel `JUN
-/// 0x000` (`0x40 0x00`) regardless of the input.  This is the
-/// smallest "valid Intel 4004 program" we can produce — enough to
-/// load into a simulator, step once, and confirm the CPU is stuck
-/// at address 0.  Real lowering arrives in v0.2.0+ (A4+).
+/// **v0.2.0 scope** (A4+ — first real lowering):
+///
+/// | IIR op | 4004 lowering |
+/// |--------|---------------|
+/// | `const dest, Int(n)` (4-bit imm) | `LDM n` (`0xD0 \| n`) |
+/// | `ret <var>` | `JUN 0x000` (halt sentinel — real RET in A4++) |
+/// | `ret_void` | `JUN 0x000` |
+///
+/// ### Accumulator-only first slice
+///
+/// Every `const` loads into the accumulator.  Multi-register
+/// allocation via the 4004's 8 register pairs (`r0r1..r14r15`)
+/// arrives in A4++ alongside arithmetic.
+///
+/// ### Why `ret` → halt sentinel for now?
+///
+/// The 4004's real `RET` is `BBL` (Branch Back to Last; opcode
+/// `1100 dddd`).  But `BBL` requires that a corresponding `JMS`
+/// (Jump to SubRoutine, opcode `0101 aaaa aaaaaaaa`) have pushed
+/// the return address onto the 4004's 3-deep internal call stack
+/// first.  Without proper call/return discipline (which lands in
+/// A4++), `BBL` from a fresh-start ROM would pop a garbage
+/// address from the stack and jump to it — undefined behaviour
+/// on most 4004 simulators.
+///
+/// `JUN 0x000` gives the simulator a clean, deterministic
+/// stopping point in the meantime.
+///
+/// ### Empty-module contract
+///
+/// Preserves v0.1.0's behaviour for the trivial "fn main() {}"
+/// case: any module with no functions emits the bare
+/// `HALT_LOOP` so the simulator halts deterministically.  Once
+/// at least one function is lowered, the halt sentinel terminates
+/// the last function's instruction stream.
 pub fn lower_iir_to_intel4004(
     module: &IIRModule,
     _cfg: &IIRIntel4004Config,
@@ -224,5 +286,117 @@ pub fn lower_iir_to_intel4004(
     if !errors.is_empty() {
         return Err(IIRIntel4004Error::ValidationFailed(errors));
     }
-    Ok(HALT_LOOP.to_vec())
+
+    // Trivial empty-module contract — preserves v0.1.0 callable
+    // behaviour for the canonical "fn main() {}" minimal case.
+    if module.functions.is_empty() {
+        return Ok(HALT_LOOP.to_vec());
+    }
+
+    let mut bytes = Vec::new();
+    for f in &module.functions {
+        for instr in &f.instructions {
+            if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
+                return Err(IIRIntel4004Error::UnsupportedOp {
+                    function: f.name.clone(),
+                    op: instr.op.clone(),
+                });
+            }
+            match instr.op.as_str() {
+                // ── const dest, Int(n) → LDM n ─────────────────────────
+                //
+                // The 4004's accumulator is 4 bits wide.  Values in
+                // [0, 15] cast straight to the LDM low nibble.
+                // [-8, -1] reinterpreted via two's-complement
+                // (`-1 → 0xF`).  Anything outside surfaces as
+                // `InvalidOperand`.
+                "const" => {
+                    let _dest = require_dest(instr, "const", &f.name)?;
+                    let n = encode_immediate_nibble(instr.srcs.first(), &f.name)?;
+                    bytes.push(LDM_OPCODE | n);
+                }
+
+                // ── ret <var>: JUN 0x000 ───────────────────────────────
+                //
+                // The value is already in the accumulator (every const
+                // lowers there in v0.2.0).  Real `RET` via `BBL` + the
+                // 4004's 3-deep return stack lands in A4++.  Until then,
+                // JUN-self is the universal stopping primitive.
+                "ret" => {
+                    // Validate that srcs[0] is a Var — front-end bugs
+                    // surface as `InvalidOperand` rather than producing
+                    // surprising silence.
+                    match instr.srcs.first() {
+                        Some(Operand::Var(_)) => {}
+                        _ => return Err(IIRIntel4004Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "ret srcs[0] must be Var".into(),
+                        }),
+                    };
+                    bytes.extend_from_slice(&HALT_LOOP);
+                }
+
+                // ── ret_void: JUN 0x000 ────────────────────────────────
+                "ret_void" => {
+                    bytes.extend_from_slice(&HALT_LOOP);
+                }
+
+                _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
+            }
+        }
+    }
+
+    // Defensive — if a function had no instructions at all, fall
+    // back to HALT_LOOP so the output is still a valid halting
+    // program.
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&HALT_LOOP);
+    }
+
+    Ok(bytes)
+}
+
+// ---------------------------------------------------------------------------
+// Per-instruction helpers
+// ---------------------------------------------------------------------------
+
+fn require_dest<'a>(
+    instr: &'a interpreter_ir::IIRInstr,
+    op: &str,
+    fn_name: &str,
+) -> Result<&'a str, IIRIntel4004Error> {
+    instr.dest.as_deref().ok_or_else(|| IIRIntel4004Error::InvalidOperand {
+        function: fn_name.to_string(),
+        detail: format!("{op} requires a dest"),
+    })
+}
+
+fn encode_immediate_nibble(
+    op: Option<&Operand>,
+    fn_name: &str,
+) -> Result<u8, IIRIntel4004Error> {
+    let n = match op {
+        Some(Operand::Int(n)) => *n,
+        Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
+        _ => return Err(IIRIntel4004Error::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: "const srcs[0] must be Int or Bool".into(),
+        }),
+    };
+    if (0..=15).contains(&n) {
+        Ok(n as u8)
+    } else if (-8..0).contains(&n) {
+        // Two's-complement reinterpretation: -1 → 0xF, -8 → 0x8.
+        Ok((n & 0xF) as u8)
+    } else {
+        Err(IIRIntel4004Error::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "const {n} exceeds 4-bit nibble range ([-8, 15]); the \
+                 4004's accumulator and LDM immediate are both 4 bits \
+                 wide — wider values must be built up via multiple \
+                 LDM/arithmetic-op pairs in A4++"
+            ),
+        })
+    }
 }

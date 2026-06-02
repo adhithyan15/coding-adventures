@@ -66,8 +66,8 @@ IIRModule
 
 | Version | Scope | Status |
 |---------|-------|--------|
-| **v0.1.0 (A4 — this PR)** | crate skeleton: any module → single `JUN 0x000` (`0x40 0x00`) infinite-loop halt sentinel | this PR |
-| v0.2.0 (A4+) | `const dest, Int(n)` → `LDM n` (load immediate to accumulator, 4-bit n) + `ret`/`ret_void` → JUN-self | future |
+| v0.1.0 (A4) | crate skeleton: any module → single `JUN 0x000` (`0x40 0x00`) infinite-loop halt sentinel | **merged** |
+| **v0.2.0 (A4+ — this PR)** | `const dest, Int(n)` → `LDM n` (load immediate to accumulator, 4-bit n; range `[-8, 15]` via two's-complement) + `ret`/`ret_void` → JUN-self halt sentinel | this PR |
 | v0.3.0 (A4++) | Register-pair allocator over `r0r1..r14r15` + arithmetic via accumulator (`ADD`, `SUB` family) | future |
 | v0.4.0 (A4+++) | `lang-aot --emit=intel4004` wiring + Brainfuck end-to-end | future |
 

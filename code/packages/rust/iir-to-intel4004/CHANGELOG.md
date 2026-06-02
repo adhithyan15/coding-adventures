@@ -3,6 +3,83 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-06-02 (A4+ — `const` → `LDM n`; `ret`/`ret_void` → `JUN 0x000`)
+
+### Added — first real instruction lowering
+
+Extends v0.1.0's HALT_LOOP-only skeleton with three IIR ops:
+
+| IIR op | 4004 lowering |
+|--------|---------------|
+| `const dest, Int(n)` (4-bit imm) | `LDM n` (`0xD0 \| n`, single byte) |
+| `ret <var>` | `JUN 0x000` (halt sentinel — real RET in A4++) |
+| `ret_void` | `JUN 0x000` |
+
+The accumulator-only first slice: every `const` goes into the
+4004's 4-bit accumulator.  Multi-register-pair allocation via the
+8 register pairs (`r0r1..r14r15`) arrives in A4++ alongside
+arithmetic.
+
+#### Why `ret` → halt sentinel for now?
+
+The 4004's real `RET` is `BBL` (Branch Back to Last, opcode
+`1100 dddd`).  But `BBL` requires a corresponding `JMS` (Jump to
+SubRoutine, opcode `0101 aaaa aaaaaaaa`) to have pushed the
+return address onto the 4004's 3-deep internal call stack first.
+Without proper call/return discipline (which lands in A4++),
+`BBL` from a fresh-start ROM would pop a garbage address from
+the stack and jump there — undefined behaviour on most 4004
+simulators.
+
+`JUN 0x000` gives the simulator a clean stopping point until A4++
+wires up the call stack.  Same pattern as iir-to-intel8008
+v0.2.0's HLT-for-ret stand-in.
+
+#### New constant in the public surface
+
+* `pub const LDM_OPCODE: u8 = 0xD0;` — Intel 4004 `LDM n` opcode
+  high nibble.  OR in the 4-bit immediate (0..=15) to form the
+  full byte (`LDM 0 = 0xD0`, `LDM 15 = 0xDF`).
+
+#### Immediate nibble range
+
+`const` accepts integers in `[-8, 15]` (signed 4-bit interval):
+* `[0, 15]` cast straight to the low nibble.
+* `[-8, -1]` reinterpreted as 4-bit two's-complement (`-1 → 0xF`).
+* Anything outside → `InvalidOperand` with a precise message
+  naming the 4-bit limit and pointing forward to A4++'s wider-
+  immediate idiom (LDM/arithmetic-op pairs).
+
+The 4004 has **no wide-immediate idiom** comparable to the 8008's
+8-bit `MVI` or RV32I's 12-bit `addi` — `LDM` is exactly 4 bits.
+Multi-nibble values require explicit decomposition.
+
+#### Tests added (16 total, was 7)
+
+* `ldm_opcode_pinned_to_0xd0` — sanity check on the constant.
+* `const_5_then_ret_lowers_to_ldm_5_then_jun_self` — pinned
+  3-byte sequence `0xD5 0x40 0x00`.
+* `const_15_then_ret_lowers_to_ldm_15_then_jun_self` — max
+  4-bit value `0xDF`.
+* `const_0_then_ret_emits_ldm_0` — minimum positive (LDM 0 = 0xD0,
+  the bare opcode).
+* `const_negative_uses_twos_complement_nibble` (`-1 → 0xF`).
+* `const_negative_minus_eight_uses_8_nibble` (`-8 → 0x8`, the
+  minimum signed 4-bit value).
+* `const_out_of_nibble_range_is_rejected` (`16` overflows).
+* `ret_void_alone_emits_just_jun_self`.
+* `unsupported_op_is_rejected_with_function_name` (`safepoint`
+  rejected with function name preserved).
+
+### What is NOT in v0.2.0 (deferred to A4++ and beyond)
+
+* Register-pair allocator over `r0r1..r14r15` (the 4004's 8 register
+  pairs — 16 4-bit registers organised as 8 pairs).
+* Arithmetic via accumulator (`ADD`, `SUB`, `IAC`, `DAC`).
+* Real `RET` via `BBL` + the 4004's 3-deep internal call stack.
+* Conditional jumps via `JCN` (Jump on Condition).
+* `lang-aot --emit=intel4004` wiring — A4+++.
+
 ## [0.1.0] — 2026-06-02 (A4 — crate skeleton)
 
 ### Added — `JUN 0x000`-only emission
