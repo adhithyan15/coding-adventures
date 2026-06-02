@@ -620,6 +620,14 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         "HostTooltip" => emit_host_tooltip(node, indent),
         "HostNumberInput" => emit_host_number_input(node, indent),
 
+        // UI26 §6.2 — `Grid` is the high-level spreadsheet primitive.
+        // It's a *userland-composed* shape (header row + data rows
+        // with selection highlight + tap-to-navigate dispatch) that
+        // sits above HostTable in the layering.  Lowers to a
+        // VStack-of-HStacks with `.onTapGesture` per cell.  See
+        // [`emit_grid_swift`] for the slot/emit mapping.
+        "Grid" => emit_grid_swift(node, indent),
+
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
         // See [`emit_host_table`] for the lowering rationale (VStack +
         // HStack rows, not SwiftUI.Table — for now).
@@ -1486,6 +1494,171 @@ fn emit_host_number_input(
 ///
 /// ## `part_name` on the table itself
 ///
+/// Lower the `Grid` userland primitive (UI26 §6.2 v2 shape) to SwiftUI.
+///
+/// The Grid carries enough slots to act as a self-contained spreadsheet
+/// view:
+///
+/// | Mosaic slot      | SwiftUI usage                                              |
+/// |------------------|------------------------------------------------------------|
+/// | `headers`        | Required.  Header row labels.  `list<text>`.               |
+/// | `rows`           | Required.  Body rows of cells.  `list<list<text>>`.        |
+/// | `column-widths`  | Optional.  Per-column width override (px).  `list<number>`.|
+/// | `selected-row`   | Optional.  Highlights the matching cell on render.         |
+/// | `selected-col`   | Optional.  See above.  When both bind, the (r,c) cell      |
+/// |                  | gets the excel-blue background.                            |
+/// | `onNavigate`     | Optional emit.  Per-cell `.onTapGesture` dispatches it     |
+/// |                  | with `(row, col)` if the signal has params, else no args.  |
+///
+/// ## Shape
+///
+/// ```swift
+/// VStack(alignment: .leading, spacing: 0) {
+///     HStack(spacing: 0) {                 // header row
+///         ForEach(Array(headers.enumerated()), id: \.offset) { (i, h) in
+///             Text(h).frame(width: 96, height: 24).background(...)
+///         }
+///     }
+///     ForEach(Array(rows.enumerated()), id: \.offset) { (r, row) in
+///         HStack(spacing: 0) {              // body row
+///             ForEach(Array(row.enumerated()), id: \.offset) { (c, v) in
+///                 Text(v)
+///                     .frame(width: 96, height: 22)
+///                     .background(r == selectedRow && c == selectedCol
+///                                 ? Color(red:0.149, green:0.31, blue:0.471)
+///                                 : Color(red:0.118, green:0.118, blue:0.118))
+///                     .onTapGesture { dispatch(.navigate(row: r, col: c)) }
+///             }
+///         }
+///     }
+/// }
+/// ```
+///
+/// ## Deliberate simplifications (v0.1.0)
+///
+/// - Column widths default to 96pt; the `column-widths` slot is accepted
+///   but the optional per-column override isn't yet plumbed through the
+///   `.frame(width:)` call (would need an `Array` indexing closure).
+/// - No inline edit cell — the host is expected to render an external
+///   editor (FormulaBar) and push state via the `edit-*` slots; the
+///   Mosaic React backend's v2 shape matches.
+/// - Selection highlight uses excel-blue (`#264F78`) hard-coded; the
+///   .msl-driven `state selected` lowering lands in a follow-up.
+/// - `onNavigate` arity is respected: parameterless signal → `dispatch(.x)`,
+///   one-or-more-param signal → `dispatch(.x(row: r, col: c))`.
+fn emit_grid_swift(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let inner2 = " ".repeat(indent + 8);
+    let inner3 = " ".repeat(indent + 12);
+
+    // Required slots.
+    let headers_slot = find_slot_ref_prop(node, "headers").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'headers'".to_string())
+    })?;
+    let rows_slot = find_slot_ref_prop(node, "rows").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'rows'".to_string())
+    })?;
+    let headers_var = to_camel_case_first_lower(headers_slot);
+    let rows_var = to_camel_case_first_lower(rows_slot);
+    validate_slot_or_field_name(&headers_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+    validate_slot_or_field_name(&rows_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+
+    // Optional selection slots.  When unbound, the highlight check
+    // is short-circuited to a constant false so the cell always
+    // renders unselected.
+    let selected_row_var = find_slot_ref_prop(node, "selected-row")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let selected_col_var = find_slot_ref_prop(node, "selected-col")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    if let Some(v) = selected_row_var.as_deref() {
+        validate_slot_or_field_name(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+    if let Some(v) = selected_col_var.as_deref() {
+        validate_slot_or_field_name(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+    let selected_predicate = match (&selected_row_var, &selected_col_var) {
+        (Some(r), Some(c)) => format!("r == {r} && c == {c}"),
+        _ => "false".to_string(),
+    };
+
+    // Optional onNavigate emit.
+    let on_navigate_dispatch: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onNavigate") {
+        let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        // For v0.1.0, always pass `(row: r, col: c)` if the signal
+        // is bound.  A future PR can look up the .mil's emit arity
+        // to drop the args for parameterless declarations.
+        Some(format!("dispatch(.{case}(row: r, col: c))"))
+    } else {
+        None
+    };
+
+    let mut out = String::new();
+    writeln!(
+        &mut out,
+        "{pad}VStack(alignment: .leading, spacing: 0) {{"
+    )
+    .unwrap();
+
+    // Header row.
+    writeln!(&mut out, "{inner}HStack(spacing: 0) {{").unwrap();
+    writeln!(
+        &mut out,
+        "{inner2}ForEach(Array({headers_var}.enumerated()), id: \\.offset) {{ (_, h) in"
+    )
+    .unwrap();
+    writeln!(&mut out, "{inner3}Text(h)").unwrap();
+    writeln!(
+        &mut out,
+        "{inner3}    .frame(width: 96, height: 24)"
+    )
+    .unwrap();
+    writeln!(
+        &mut out,
+        "{inner3}    .background(Color(red: 0.176, green: 0.176, blue: 0.188))"
+    )
+    .unwrap();
+    writeln!(&mut out, "{inner2}}}").unwrap();
+    writeln!(&mut out, "{inner}}}").unwrap();
+
+    // Body rows.
+    writeln!(
+        &mut out,
+        "{inner}ForEach(Array({rows_var}.enumerated()), id: \\.offset) {{ (r, row) in"
+    )
+    .unwrap();
+    writeln!(&mut out, "{inner2}HStack(spacing: 0) {{").unwrap();
+    writeln!(
+        &mut out,
+        "{inner3}ForEach(Array(row.enumerated()), id: \\.offset) {{ (c, v) in"
+    )
+    .unwrap();
+    let cell_pad = " ".repeat(indent + 16);
+    writeln!(&mut out, "{cell_pad}Text(v)").unwrap();
+    writeln!(&mut out, "{cell_pad}    .frame(width: 96, height: 22)").unwrap();
+    writeln!(
+        &mut out,
+        "{cell_pad}    .background(({selected_predicate}) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color(red: 0.118, green: 0.118, blue: 0.118))"
+    )
+    .unwrap();
+    if let Some(call) = on_navigate_dispatch {
+        writeln!(
+            &mut out,
+            "{cell_pad}    .onTapGesture {{ {call} }}"
+        )
+        .unwrap();
+    }
+    writeln!(&mut out, "{inner3}}}").unwrap();
+    writeln!(&mut out, "{inner2}}}").unwrap();
+    writeln!(&mut out, "{inner}}}").unwrap();
+
+    writeln!(&mut out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
 /// SwiftUI has no native concept matching CSS `part`. For now we emit a
 /// Swift comment `// part: <name>` ahead of the VStack so the part
 /// metadata survives in the generated source for downstream tooling.
@@ -2653,6 +2826,159 @@ mod tests {
             matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == "Scroll"),
             "got: {err:?}"
         );
+    }
+
+    // ---------------------------------------------------------------------
+    // Grid primitive — UI26 §6.2 v2 shape, exercised by every VisiCalc demo.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn grid_with_headers_and_rows_emits_vstack_of_hstacks() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                slot(
+                    "column-headers",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(
+                        ListInnerType::Text,
+                    )))),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let layout = layout_with(
+            "VisiCalc",
+            leaf(
+                "Grid",
+                vec![
+                    prop_slot_ref("headers", "column-headers"),
+                    prop_slot_ref("rows", "viewport-rows"),
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &layout, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(
+            out.contains("VStack(alignment: .leading, spacing: 0)"),
+            "expected Grid root VStack, got:\n{out}"
+        );
+        assert!(
+            out.contains("HStack(spacing: 0)"),
+            "expected HStack rows, got:\n{out}"
+        );
+        assert!(
+            out.contains("ForEach(Array(columnHeaders.enumerated()), id: \\.offset)"),
+            "expected header ForEach over columnHeaders, got:\n{out}"
+        );
+        assert!(
+            out.contains("ForEach(Array(viewportRows.enumerated()), id: \\.offset)"),
+            "expected body ForEach over viewportRows, got:\n{out}"
+        );
+        assert!(
+            out.contains(".frame(width: 96, height: 22)"),
+            "expected cell frame, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn grid_with_selection_slots_emits_tinted_cell_background() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(
+                        ListInnerType::Text,
+                    )))),
+                    true,
+                ),
+                slot("selected-row", SlotType::Number, true),
+                slot("selected-col", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let layout = layout_with(
+            "VisiCalc",
+            leaf(
+                "Grid",
+                vec![
+                    prop_slot_ref("headers", "column-headers"),
+                    prop_slot_ref("rows", "viewport-rows"),
+                    prop_slot_ref("selected-row", "selected-row"),
+                    prop_slot_ref("selected-col", "selected-col"),
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &layout, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(
+            out.contains("r == selectedRow && c == selectedCol"),
+            "expected selection predicate, got:\n{out}"
+        );
+        assert!(
+            out.contains("Color(red: 0.149, green: 0.31, blue: 0.471)"),
+            "expected excel-blue highlight, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn grid_with_on_navigate_emit_dispatches_per_cell_tap() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(
+                        ListInnerType::Text,
+                    )))),
+                    true,
+                ),
+            ],
+            vec![emit(
+                "onNavigate",
+                vec![
+                    param("row", EmitPayloadType::Number),
+                    param("col", EmitPayloadType::Number),
+                ],
+            )],
+        );
+        let layout = layout_with(
+            "VisiCalc",
+            leaf(
+                "Grid",
+                vec![
+                    prop_slot_ref("headers", "column-headers"),
+                    prop_slot_ref("rows", "viewport-rows"),
+                    prop_emit_ref("onNavigate", "onNavigate"),
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &layout, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(
+            out.contains(".onTapGesture { dispatch(.navigate(row: r, col: c)) }"),
+            "expected per-cell tap dispatch, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn grid_missing_required_headers_is_a_clear_error() {
+        let m = component("X", vec![], vec![]);
+        let layout = layout_with(
+            "X",
+            leaf("Grid", vec![prop_slot_ref("rows", "rows-slot")]),
+        );
+        let err = from_pipeline(&m, &layout, &empty_style("X"))
+            .expect_err("missing headers should error");
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(ref t) if t.contains("headers")));
     }
 
     // ---------------------------------------------------------------------
