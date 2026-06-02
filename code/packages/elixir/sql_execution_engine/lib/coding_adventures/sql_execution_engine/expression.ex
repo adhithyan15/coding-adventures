@@ -222,14 +222,15 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # Comparison expressions
   # ---------------------------------------------------------------------------
   #
-  # Grammar:
-  #   comparison = additive [ cmp_op additive
-  #              | "BETWEEN" additive "AND" additive
-  #              | "NOT" "BETWEEN" additive "AND" additive
+  # Grammar (the comparison operands are `collated`, which is transparent
+  # down through `bitwise`/`additive` to the underlying value):
+  #   comparison = collated [ cmp_op collated
+  #              | "BETWEEN" collated "AND" collated
+  #              | "NOT" "BETWEEN" collated "AND" collated
   #              | "IN" "(" value_list ")"
   #              | "NOT" "IN" "(" value_list ")"
-  #              | "LIKE" additive
-  #              | "NOT" "LIKE" additive
+  #              | "LIKE" collated
+  #              | "NOT" "LIKE" collated
   #              | "IS" "NULL"
   #              | "IS" "NOT" "NULL" ]
   #
@@ -317,6 +318,31 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
         rhs = eval_expr(rhs_node, row_ctx)
         eval_cmp(op_token.value, lhs, rhs)
     end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Collation and bitwise layers
+  # ---------------------------------------------------------------------------
+  #
+  # SQLite's precedence ladder threads two extra rules between `comparison`
+  # and `additive`:
+  #
+  #   collated = bitwise [ "COLLATE" NAME ]
+  #   bitwise  = additive { ( "&" | "|" | "<<" | ">>" ) additive }
+  #
+  # `collated` only attaches a collation *sequence* (BINARY / NOCASE / …)
+  # used to order string comparisons.  This engine compares values
+  # directly and does not model collation ordering, so we evaluate the
+  # underlying value and ignore any trailing `COLLATE NAME`.
+  defp eval_rule("collated", %ASTNode{children: [value_node | _collate]}, row_ctx) do
+    eval_expr(value_node, row_ctx)
+  end
+
+  # `bitwise` is a left-associative operator chain, exactly like the
+  # arithmetic rules below — the integer bitwise operators are handled in
+  # `apply_arith/3`.
+  defp eval_rule("bitwise", %ASTNode{children: children}, row_ctx) do
+    eval_arithmetic_chain(children, row_ctx)
   end
 
   # ---------------------------------------------------------------------------
@@ -581,6 +607,64 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   defp apply_arith("/", _, 0), do: nil
   defp apply_arith("%", a, b) when b != 0, do: rem(a, b)
   defp apply_arith("%", _, 0), do: nil
+  # Integer bitwise operators (the `bitwise` grammar layer).
+  #
+  # SQLite does bitwise math on *signed 64-bit* integers, so we truncate the
+  # operands to integers, reduce mod 2**64, and reinterpret the result as
+  # signed.  Capping the shift count at 64 before shifting is also what keeps
+  # `<<` safe: `1 << 1000000000` collapses to 0 rather than allocating an
+  # enormous bignum.
+  defp apply_arith("&", a, b), do: to_i64(Bitwise.band(mask64(a), mask64(b)))
+  defp apply_arith("|", a, b), do: to_i64(Bitwise.bor(mask64(a), mask64(b)))
+  defp apply_arith("<<", a, b), do: sql_shift(trunc_int(a), trunc_int(b), :left)
+  defp apply_arith(">>", a, b), do: sql_shift(trunc_int(a), trunc_int(b), :right)
+
+  @mask64 0xFFFFFFFFFFFFFFFF
+  @sign64 0x8000000000000000
+
+  defp trunc_int(v) when is_integer(v), do: v
+  defp trunc_int(v) when is_float(v), do: trunc(v)
+
+  # Mask an integer to its unsigned 64-bit representation.
+  defp mask64(v), do: Bitwise.band(trunc_int(v), @mask64)
+
+  # Reinterpret an unsigned 64-bit value as signed (two's complement).
+  defp to_i64(v) do
+    v = Bitwise.band(v, @mask64)
+    if v >= @sign64, do: v - 0x10000000000000000, else: v
+  end
+
+  # SQLite shift semantics on signed 64-bit integers (VDBE OP_ShiftLeft/Right):
+  # a negative shift count reverses direction; a magnitude of 64 or more
+  # collapses to 0 (or -1 for an arithmetic right shift of a negative value);
+  # a right shift sign-extends.
+  defp sql_shift(value, 0, _dir), do: to_i64(value)
+
+  defp sql_shift(value, shift, dir) when shift < 0 do
+    flipped = if dir == :left, do: :right, else: :left
+    sql_shift(value, if(shift > -64, do: -shift, else: 64), flipped)
+  end
+
+  defp sql_shift(value, shift, dir) when shift >= 64 do
+    if value >= 0 or dir == :left, do: 0, else: -1
+  end
+
+  defp sql_shift(value, shift, :left) do
+    to_i64(Bitwise.bsl(mask64(value), shift))
+  end
+
+  defp sql_shift(value, shift, :right) do
+    bits = Bitwise.bsr(mask64(value), shift)
+
+    bits =
+      if value < 0 do
+        Bitwise.bor(bits, Bitwise.band(Bitwise.bsl(@mask64, 64 - shift), @mask64))
+      else
+        bits
+      end
+
+    to_i64(bits)
+  end
 
   # Lookup a column key in the row context, raising if not found.
   defp lookup_column(key, row_ctx) do

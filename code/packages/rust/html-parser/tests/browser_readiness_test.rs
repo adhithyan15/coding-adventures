@@ -1,13 +1,15 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
-    BrowserForm, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel,
-    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormOutput,
+    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -726,7 +728,23 @@ struct ExpectedForm {
     #[serde(default)]
     outputs: Vec<ExpectedFormOutput>,
     #[serde(default)]
+    measurements: Vec<ExpectedFormMeasurement>,
+    #[serde(default)]
     successful_controls: Vec<ExpectedFormSuccessfulControl>,
+    #[serde(default)]
+    validation_controls: Vec<ExpectedFormValidationControl>,
+    #[serde(default)]
+    buttons: Vec<ExpectedFormButton>,
+    #[serde(default)]
+    text_entries: Vec<ExpectedFormTextEntry>,
+    #[serde(default)]
+    choice_controls: Vec<ExpectedFormChoiceControl>,
+    #[serde(default)]
+    file_controls: Vec<ExpectedFormFileControl>,
+    #[serde(default)]
+    hidden_controls: Vec<ExpectedFormHiddenControl>,
+    #[serde(default)]
+    image_controls: Vec<ExpectedFormImageControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -824,9 +842,55 @@ struct ExpectedFormOutput {
     #[serde(default)]
     form_owner: Option<String>,
     #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
     for_tokens: Vec<String>,
     #[serde(default)]
+    for_control_ids: Vec<String>,
+    #[serde(default)]
+    for_control_names: Vec<String>,
+    #[serde(default)]
+    for_control_types: Vec<String>,
+    #[serde(default)]
     value: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+    text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormMeasurement {
+    #[serde(default)]
+    id: Option<String>,
+    measurement_type: String,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    low: Option<String>,
+    #[serde(default)]
+    high: Option<String>,
+    #[serde(default)]
+    optimum: Option<String>,
+    #[serde(default)]
+    indeterminate: bool,
     text: String,
 }
 
@@ -840,6 +904,246 @@ struct ExpectedFormSuccessfulControl {
     form_owner: Option<String>,
     #[serde(default)]
     submission_values: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormValidationControl {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormTextEntry {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    placeholder: Option<String>,
+    value: Option<String>,
+    text: String,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    autocapitalize: Option<String>,
+    #[serde(default)]
+    enterkeyhint: Option<String>,
+    #[serde(default)]
+    dirname: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    autocorrect: Option<String>,
+    #[serde(default)]
+    inputmode: Option<String>,
+    #[serde(default)]
+    pattern: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    step: Option<String>,
+    #[serde(default)]
+    minlength: Option<String>,
+    #[serde(default)]
+    maxlength: Option<String>,
+    #[serde(default)]
+    size: Option<String>,
+    #[serde(default)]
+    rows: Option<String>,
+    #[serde(default)]
+    cols: Option<String>,
+    #[serde(default)]
+    wrap: Option<String>,
+    #[serde(default)]
+    list: Option<String>,
+    #[serde(default)]
+    datalist_options: Vec<String>,
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormChoiceControl {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    checked: bool,
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    group_required: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+    #[serde(default)]
+    group_name: Option<String>,
+    #[serde(default)]
+    group_checked_ids: Vec<String>,
+    #[serde(default)]
+    group_checked_values: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormFileControl {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accept: Option<String>,
+    #[serde(default)]
+    accept_tokens: Vec<String>,
+    #[serde(default)]
+    capture: Option<String>,
+    #[serde(default)]
+    multiple: bool,
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormHiddenControl {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    disabled: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormImageControl {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    disabled: bool,
+    #[serde(default)]
+    autofocus: bool,
+    #[serde(default)]
+    submitter: bool,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    coordinate_names: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -995,6 +1299,51 @@ struct ExpectedFormSubmitter {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormButton {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    autofocus: bool,
+    #[serde(default)]
+    submitter: bool,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    value: Option<String>,
+    text: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1156,6 +1505,139 @@ fn browser_form_validation_descriptor_metadata_tracks_constraint_attributes_and_
 }
 
 #[test]
+fn browser_form_validation_control_descriptors_track_candidates_and_barred_controls() {
+    let document = parse_browser_document(
+        "<form id=signup>\
+         <input id=email name=email type=email required minlength=3 maxlength=80>\
+         <input id=age name=age type=number min=18 max=120 step=1>\
+         <textarea id=bio name=bio readonly maxlength=200>About me</textarea>\
+         <input id=token type=hidden name=token value=abc>\
+         <fieldset disabled><legend>Legacy</legend><input id=legacy name=legacy required></fieldset>\
+         <output id=preview name=preview for=\"email age\">Preview</output>\
+         <input id=go type=image name=go src=go.png alt=Go>\
+         </form>\
+         <input id=external form=signup name=outside required>",
+    )
+    .expect("form validation descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("signup form should be summarized");
+    let descriptors = &form.validation_controls;
+    let ids: Vec<&str> = descriptors
+        .iter()
+        .filter_map(|control| control.id.as_deref())
+        .collect();
+    assert_eq!(
+        ids,
+        vec!["email", "age", "bio", "token", "legacy", "preview", "go", "external"]
+    );
+
+    assert!(descriptors[0].will_validate);
+    assert!(descriptors[0].required);
+    assert_eq!(
+        descriptors[0].validation_attributes,
+        vec!["required", "minlength", "maxlength"]
+    );
+    assert!(descriptors[1].will_validate);
+    assert_eq!(
+        descriptors[1].validation_attributes,
+        vec!["min", "max", "step"]
+    );
+    assert!(!descriptors[2].will_validate);
+    assert_eq!(
+        descriptors[2].validation_barred_reason.as_deref(),
+        Some("readonly")
+    );
+    assert_eq!(
+        descriptors[3].validation_barred_reason.as_deref(),
+        Some("input-type-hidden")
+    );
+    assert!(!descriptors[4].will_validate);
+    assert!(descriptors[4].required);
+    assert_eq!(
+        descriptors[4].validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+    assert_eq!(
+        descriptors[5].validation_barred_reason.as_deref(),
+        Some("output")
+    );
+    assert_eq!(
+        descriptors[6].validation_barred_reason.as_deref(),
+        Some("input-type-image")
+    );
+    assert_eq!(descriptors[7].form_owner.as_deref(), Some("signup"));
+    assert!(descriptors[7].will_validate);
+    assert_eq!(descriptors[7].validation_attributes, vec!["required"]);
+}
+
+#[test]
+fn browser_form_output_descriptor_metadata_tracks_for_references_and_labels() {
+    let document = parse_browser_document(
+        "<form id=calc>\
+         <label for=sum>Sum</label>\
+         <input id=a name=a value=1>\
+         <input id=b name=b value=2>\
+         <p id=hint>Total of inputs</p>\
+         <output id=sum name=sum for=\"a b missing\" aria-describedby=hint>3</output>\
+         <fieldset disabled><legend>Preview</legend><output id=disabled name=preview for=a>Disabled output</output></fieldset>\
+         </form>\
+         <output id=external form=calc name=external for=sum aria-label=External>External</output>",
+    )
+    .expect("form output descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("calc form should be summarized");
+    let ids: Vec<&str> = form
+        .outputs
+        .iter()
+        .filter_map(|output| output.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["sum", "disabled", "external"]);
+
+    let sum = &form.outputs[0];
+    assert_eq!(sum.name.as_deref(), Some("sum"));
+    assert_eq!(sum.labels, vec!["Sum"]);
+    assert_eq!(sum.accessible_name.as_deref(), Some("Sum"));
+    assert_eq!(
+        sum.accessible_description.as_deref(),
+        Some("Total of inputs")
+    );
+    assert_eq!(sum.for_tokens, vec!["a", "b", "missing"]);
+    assert_eq!(sum.for_control_ids, vec!["a", "b"]);
+    assert_eq!(sum.for_control_names, vec!["a", "b"]);
+    assert_eq!(sum.for_control_types, vec!["text", "text"]);
+    assert_eq!(sum.value.as_deref(), Some("3"));
+    assert_eq!(sum.text, "3");
+    assert!(!sum.disabled);
+    assert!(!sum.will_validate);
+    assert_eq!(sum.validation_barred_reason.as_deref(), Some("output"));
+
+    let disabled = &form.outputs[1];
+    assert_eq!(disabled.name.as_deref(), Some("preview"));
+    assert!(disabled.disabled);
+    assert_eq!(
+        disabled.validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+    assert_eq!(disabled.for_control_ids, vec!["a"]);
+    assert_eq!(disabled.for_control_names, vec!["a"]);
+
+    let external = &form.outputs[2];
+    assert_eq!(external.form_owner.as_deref(), Some("calc"));
+    assert_eq!(external.accessible_name.as_deref(), Some("External"));
+    assert_eq!(external.for_tokens, vec!["sum"]);
+    assert_eq!(external.for_control_ids, vec!["sum"]);
+    assert_eq!(external.for_control_names, vec!["sum"]);
+    assert_eq!(external.for_control_types, vec!["output"]);
+    assert_eq!(external.value.as_deref(), Some("External"));
+}
+
+#[test]
 fn browser_form_fieldset_metadata_disables_descendant_controls() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -1269,6 +1751,158 @@ fn browser_form_successful_control_descriptor_metadata_tracks_submission_entries
 }
 
 #[test]
+fn browser_form_hidden_descriptor_metadata_tracks_hidden_entries_and_form_owners() {
+    let document = parse_browser_document(
+        "<form id=session>\
+         <input id=csrf type=hidden name=csrf value=token autocomplete=\"section-auth one-time-code\">\
+         <input id=charset type=hidden name=_charset_ value=utf-8>\
+         <input id=disabled-token type=hidden name=disabled value=no disabled>\
+         </form>\
+         <input id=external type=hidden form=session name=outside value=external>",
+    )
+    .expect("form hidden descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("session form should be summarized");
+    let ids: Vec<&str> = form
+        .hidden_controls
+        .iter()
+        .filter_map(|hidden| hidden.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["csrf", "charset", "disabled-token", "external"]);
+
+    let csrf = &form.hidden_controls[0];
+    assert_eq!(csrf.name.as_deref(), Some("csrf"));
+    assert_eq!(csrf.value.as_deref(), Some("token"));
+    assert_eq!(
+        csrf.autocomplete.as_deref(),
+        Some("section-auth one-time-code")
+    );
+    assert_eq!(
+        csrf.autocomplete_tokens,
+        vec!["section-auth", "one-time-code"]
+    );
+    assert!(csrf.successful);
+    assert_eq!(csrf.submission_values, vec!["token"]);
+    assert!(!csrf.will_validate);
+    assert_eq!(
+        csrf.validation_barred_reason.as_deref(),
+        Some("input-type-hidden")
+    );
+
+    let charset = &form.hidden_controls[1];
+    assert_eq!(charset.name.as_deref(), Some("_charset_"));
+    assert_eq!(charset.value.as_deref(), Some("utf-8"));
+    assert!(charset.successful);
+    assert_eq!(charset.submission_values, vec!["utf-8"]);
+
+    let disabled = &form.hidden_controls[2];
+    assert_eq!(disabled.name.as_deref(), Some("disabled"));
+    assert!(disabled.disabled);
+    assert!(!disabled.successful);
+    assert!(disabled.submission_values.is_empty());
+    assert_eq!(
+        disabled.validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+
+    let external = &form.hidden_controls[3];
+    assert_eq!(external.form_owner.as_deref(), Some("session"));
+    assert_eq!(external.name.as_deref(), Some("outside"));
+    assert_eq!(external.submission_values, vec!["external"]);
+}
+
+#[test]
+fn browser_form_button_descriptor_metadata_tracks_submitters_and_button_controls() {
+    let document = parse_browser_document(
+        "<base href=\"https://example.test/forms/index.html\" target=_base>\
+         <form id=actions action=submit method=post target=_form novalidate>\
+         <button id=save name=save value=s type=submit formaction=save formenctype=text/plain \
+             formmethod=get formtarget=_save formnovalidate autofocus>Save</button>\
+         <button id=reset type=reset name=reset value=r>Reset</button>\
+         <input id=plain type=button name=plain value=Plain>\
+         <input id=image type=image name=img src=go.png alt=Image width=20 height=10>\
+         <button id=disabled name=disabled disabled>Disabled</button>\
+         </form>\
+         <button id=external form=actions type=submit name=outside formtarget=_outside>Outside</button>",
+    )
+    .expect("form button descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("actions form should be summarized");
+    let ids: Vec<&str> = form
+        .buttons
+        .iter()
+        .filter_map(|button| button.id.as_deref())
+        .collect();
+    assert_eq!(
+        ids,
+        vec!["save", "reset", "plain", "image", "disabled", "external"]
+    );
+
+    let save = &form.buttons[0];
+    assert!(save.submitter);
+    assert!(save.autofocus);
+    assert_eq!(save.accessible_name.as_deref(), Some("Save"));
+    assert_eq!(save.action.as_deref(), Some("save"));
+    assert_eq!(
+        save.resolved_action.as_deref(),
+        Some("https://example.test/forms/save")
+    );
+    assert_eq!(save.method, "get");
+    assert_eq!(save.enctype.as_deref(), Some("text/plain"));
+    assert_eq!(save.target.as_deref(), Some("_save"));
+    assert_eq!(save.effective_target.as_deref(), Some("_save"));
+    assert!(save.novalidate);
+    assert_eq!(save.value.as_deref(), Some("s"));
+    assert_eq!(save.text, "Save");
+
+    let reset = &form.buttons[1];
+    assert_eq!(reset.control_type, "reset");
+    assert!(!reset.submitter);
+    assert_eq!(reset.method, "post");
+    assert_eq!(reset.text, "Reset");
+
+    let plain = &form.buttons[2];
+    assert_eq!(plain.control_type, "button");
+    assert!(!plain.submitter);
+    assert_eq!(plain.value.as_deref(), Some("Plain"));
+    assert!(plain.text.is_empty());
+
+    let image = &form.buttons[3];
+    assert_eq!(image.control_type, "image");
+    assert!(image.submitter);
+    assert_eq!(image.accessible_name.as_deref(), Some("Image"));
+    assert_eq!(
+        image.resolved_action.as_deref(),
+        Some("https://example.test/forms/submit")
+    );
+    assert_eq!(image.effective_target.as_deref(), Some("_form"));
+    assert_eq!(image.src.as_deref(), Some("go.png"));
+    assert_eq!(
+        image.resolved_src.as_deref(),
+        Some("https://example.test/forms/go.png")
+    );
+    assert_eq!(image.width.as_deref(), Some("20"));
+    assert_eq!(image.height.as_deref(), Some("10"));
+
+    let disabled = &form.buttons[4];
+    assert!(disabled.disabled);
+    assert!(!disabled.submitter);
+    assert!(!disabled.novalidate);
+
+    let external = &form.buttons[5];
+    assert_eq!(external.form_owner.as_deref(), Some("actions"));
+    assert!(external.submitter);
+    assert_eq!(external.effective_target.as_deref(), Some("_outside"));
+    assert_eq!(external.text, "Outside");
+}
+
+#[test]
 fn browser_form_descriptor_metadata_tracks_accept_and_autocomplete_tokens() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -1306,6 +1940,238 @@ fn browser_text_control_descriptor_metadata_tracks_editing_and_layout_hints() {
         actual.forms, expected.forms,
         "text controls should preserve spellcheck, autocorrect, rows, cols, and wrapping hints",
     );
+}
+
+#[test]
+fn browser_form_text_entry_descriptor_metadata_tracks_textual_controls_and_editing_hints() {
+    let document = parse_browser_document(
+        "<form id=profile>\
+         <label for=email>Email</label>\
+         <input id=email type=email name=email placeholder=Email required \
+             autocomplete=\"section-contact email\" inputmode=email minlength=3 maxlength=80 size=30>\
+         <input id=search type=search name=q value=rust autocapitalize=words \
+             enterkeyhint=search dirname=q.dir spellcheck=false autocorrect=off list=suggestions>\
+         <datalist id=suggestions><option value=Rust><option value=HTML label=Markup></datalist>\
+         <textarea id=bio name=bio rows=4 cols=40 wrap=hard readonly maxlength=200>About me</textarea>\
+         <input id=age type=number name=age value=42 min=18 max=120 step=1>\
+         <input id=check type=checkbox name=check checked>\
+         </form>\
+         <textarea id=external form=profile name=outside placeholder=Outside>External note</textarea>",
+    )
+    .expect("form text-entry descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("profile form should be summarized");
+    let ids: Vec<&str> = form
+        .text_entries
+        .iter()
+        .filter_map(|entry| entry.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["email", "search", "bio", "age", "external"]);
+
+    let email = &form.text_entries[0];
+    assert_eq!(email.control_type, "email");
+    assert_eq!(email.labels, vec!["Email"]);
+    assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+    assert_eq!(email.placeholder.as_deref(), Some("Email"));
+    assert_eq!(email.autocomplete_tokens, vec!["section-contact", "email"]);
+    assert_eq!(email.inputmode.as_deref(), Some("email"));
+    assert_eq!(email.minlength.as_deref(), Some("3"));
+    assert_eq!(email.maxlength.as_deref(), Some("80"));
+    assert_eq!(email.size.as_deref(), Some("30"));
+    assert!(email.required);
+    assert!(email.will_validate);
+    assert_eq!(
+        email.validation_attributes,
+        vec!["required", "minlength", "maxlength"]
+    );
+
+    let search = &form.text_entries[1];
+    assert_eq!(search.control_type, "search");
+    assert_eq!(search.value.as_deref(), Some("rust"));
+    assert_eq!(search.autocapitalize.as_deref(), Some("words"));
+    assert_eq!(search.enterkeyhint.as_deref(), Some("search"));
+    assert_eq!(search.dirname.as_deref(), Some("q.dir"));
+    assert_eq!(search.spellcheck.as_deref(), Some("false"));
+    assert_eq!(search.autocorrect.as_deref(), Some("off"));
+    assert_eq!(search.list.as_deref(), Some("suggestions"));
+    assert_eq!(search.datalist_options, vec!["Rust", "HTML"]);
+
+    let bio = &form.text_entries[2];
+    assert_eq!(bio.control_type, "textarea");
+    assert_eq!(bio.text, "About me");
+    assert_eq!(bio.rows.as_deref(), Some("4"));
+    assert_eq!(bio.cols.as_deref(), Some("40"));
+    assert_eq!(bio.wrap.as_deref(), Some("hard"));
+    assert!(bio.readonly);
+    assert!(!bio.will_validate);
+    assert_eq!(bio.validation_barred_reason.as_deref(), Some("readonly"));
+
+    let age = &form.text_entries[3];
+    assert_eq!(age.control_type, "number");
+    assert_eq!(age.min.as_deref(), Some("18"));
+    assert_eq!(age.max.as_deref(), Some("120"));
+    assert_eq!(age.step.as_deref(), Some("1"));
+
+    let external = &form.text_entries[4];
+    assert_eq!(external.form_owner.as_deref(), Some("profile"));
+    assert_eq!(external.name.as_deref(), Some("outside"));
+    assert_eq!(external.placeholder.as_deref(), Some("Outside"));
+    assert_eq!(external.text, "External note");
+}
+
+#[test]
+fn browser_form_choice_descriptor_metadata_tracks_checkbox_radio_state_and_groups() {
+    let document = parse_browser_document(
+        "<form id=prefs>\
+         <label><input id=news type=checkbox name=news value=yes checked required>Newsletter</label>\
+         <input id=updates type=checkbox name=updates>\
+         <label for=plan-basic>Basic</label>\
+         <input id=plan-basic type=radio name=plan value=basic checked required>\
+         <input id=plan-pro type=radio name=plan value=pro>\
+         <fieldset disabled><label><input id=legacy type=radio name=legacy value=old checked>Legacy</label></fieldset>\
+         </form>\
+         <input id=external type=radio form=prefs name=plan value=outside>",
+    )
+    .expect("form choice descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("prefs form should be summarized");
+    let ids: Vec<&str> = form
+        .choice_controls
+        .iter()
+        .filter_map(|choice| choice.id.as_deref())
+        .collect();
+    assert_eq!(
+        ids,
+        vec![
+            "news",
+            "updates",
+            "plan-basic",
+            "plan-pro",
+            "legacy",
+            "external"
+        ]
+    );
+
+    let news = &form.choice_controls[0];
+    assert_eq!(news.control_type, "checkbox");
+    assert_eq!(news.labels, vec!["Newsletter"]);
+    assert_eq!(news.accessible_name.as_deref(), Some("Newsletter"));
+    assert_eq!(news.value.as_deref(), Some("yes"));
+    assert!(news.checked);
+    assert!(news.required);
+    assert!(news.group_required);
+    assert!(news.successful);
+    assert_eq!(news.submission_values, vec!["yes"]);
+    assert_eq!(news.group_checked_ids, vec!["news"]);
+    assert_eq!(news.group_checked_values, vec!["yes"]);
+    assert_eq!(news.validation_attributes, vec!["required"]);
+
+    let updates = &form.choice_controls[1];
+    assert_eq!(updates.control_type, "checkbox");
+    assert_eq!(updates.value.as_deref(), Some("on"));
+    assert!(!updates.checked);
+    assert!(!updates.successful);
+    assert!(updates.submission_values.is_empty());
+    assert!(updates.group_checked_ids.is_empty());
+    assert!(updates.group_checked_values.is_empty());
+
+    let plan_basic = &form.choice_controls[2];
+    assert_eq!(plan_basic.control_type, "radio");
+    assert_eq!(plan_basic.labels, vec!["Basic"]);
+    assert_eq!(plan_basic.group_name.as_deref(), Some("plan"));
+    assert!(plan_basic.checked);
+    assert!(plan_basic.required);
+    assert!(plan_basic.group_required);
+    assert_eq!(plan_basic.group_checked_ids, vec!["plan-basic"]);
+    assert_eq!(plan_basic.group_checked_values, vec!["basic"]);
+
+    let plan_pro = &form.choice_controls[3];
+    assert_eq!(plan_pro.control_type, "radio");
+    assert_eq!(plan_pro.group_name.as_deref(), Some("plan"));
+    assert!(!plan_pro.required);
+    assert!(plan_pro.group_required);
+    assert_eq!(plan_pro.group_checked_ids, vec!["plan-basic"]);
+    assert_eq!(plan_pro.group_checked_values, vec!["basic"]);
+
+    let legacy = &form.choice_controls[4];
+    assert_eq!(legacy.control_type, "radio");
+    assert!(legacy.checked);
+    assert!(legacy.disabled);
+    assert!(!legacy.successful);
+    assert_eq!(legacy.validation_barred_reason.as_deref(), Some("disabled"));
+    assert_eq!(legacy.group_checked_values, vec!["old"]);
+
+    let external = &form.choice_controls[5];
+    assert_eq!(external.form_owner.as_deref(), Some("prefs"));
+    assert_eq!(external.group_name.as_deref(), Some("plan"));
+    assert_eq!(external.group_checked_ids, vec!["plan-basic"]);
+    assert_eq!(external.group_checked_values, vec!["basic"]);
+}
+
+#[test]
+fn browser_form_file_descriptor_metadata_tracks_upload_controls_and_hints() {
+    let document = parse_browser_document(
+        "<form id=uploads enctype=multipart/form-data>\
+         <label for=avatar>Avatar</label>\
+         <input id=avatar type=file name=avatar accept=\"image/png, image/jpeg, .webp\" capture=user multiple required>\
+         <label>Attachment<input id=attachment type=file name=attachment disabled></label>\
+         </form>\
+         <input id=external type=file form=uploads name=outside accept=\"application/pdf\">",
+    )
+    .expect("form file descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("uploads form should be summarized");
+    let ids: Vec<&str> = form
+        .file_controls
+        .iter()
+        .filter_map(|file| file.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["avatar", "attachment", "external"]);
+
+    let avatar = &form.file_controls[0];
+    assert_eq!(avatar.name.as_deref(), Some("avatar"));
+    assert_eq!(avatar.labels, vec!["Avatar"]);
+    assert_eq!(avatar.accessible_name.as_deref(), Some("Avatar"));
+    assert_eq!(
+        avatar.accept.as_deref(),
+        Some("image/png, image/jpeg, .webp")
+    );
+    assert_eq!(
+        avatar.accept_tokens,
+        vec!["image/png", "image/jpeg", ".webp"]
+    );
+    assert_eq!(avatar.capture.as_deref(), Some("user"));
+    assert!(avatar.multiple);
+    assert!(avatar.required);
+    assert!(avatar.successful);
+    assert!(avatar.submission_values.is_empty());
+    assert!(avatar.will_validate);
+    assert_eq!(avatar.validation_attributes, vec!["required"]);
+
+    let attachment = &form.file_controls[1];
+    assert_eq!(attachment.labels, vec!["Attachment"]);
+    assert!(attachment.disabled);
+    assert!(!attachment.successful);
+    assert!(!attachment.will_validate);
+    assert_eq!(
+        attachment.validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+
+    let external = &form.file_controls[2];
+    assert_eq!(external.form_owner.as_deref(), Some("uploads"));
+    assert_eq!(external.accept.as_deref(), Some("application/pdf"));
+    assert_eq!(external.accept_tokens, vec!["application/pdf"]);
+    assert!(external.successful);
 }
 
 #[test]
@@ -2216,10 +3082,50 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormOutput::into_browser_form_output)
                 .collect(),
+            measurements: self
+                .measurements
+                .into_iter()
+                .map(ExpectedFormMeasurement::into_browser_form_measurement)
+                .collect(),
             successful_controls: self
                 .successful_controls
                 .into_iter()
                 .map(ExpectedFormSuccessfulControl::into_browser_form_successful_control)
+                .collect(),
+            validation_controls: self
+                .validation_controls
+                .into_iter()
+                .map(ExpectedFormValidationControl::into_browser_form_validation_control)
+                .collect(),
+            buttons: self
+                .buttons
+                .into_iter()
+                .map(ExpectedFormButton::into_browser_form_button)
+                .collect(),
+            text_entries: self
+                .text_entries
+                .into_iter()
+                .map(ExpectedFormTextEntry::into_browser_form_text_entry)
+                .collect(),
+            choice_controls: self
+                .choice_controls
+                .into_iter()
+                .map(ExpectedFormChoiceControl::into_browser_form_choice_control)
+                .collect(),
+            file_controls: self
+                .file_controls
+                .into_iter()
+                .map(ExpectedFormFileControl::into_browser_form_file_control)
+                .collect(),
+            hidden_controls: self
+                .hidden_controls
+                .into_iter()
+                .map(ExpectedFormHiddenControl::into_browser_form_hidden_control)
+                .collect(),
+            image_controls: self
+                .image_controls
+                .into_iter()
+                .map(ExpectedFormImageControl::into_browser_form_image_control)
                 .collect(),
             controls: self
                 .controls
@@ -2294,8 +3200,37 @@ impl ExpectedFormOutput {
             id: self.id,
             name: self.name,
             form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
             for_tokens: self.for_tokens,
+            for_control_ids: self.for_control_ids,
+            for_control_names: self.for_control_names,
+            for_control_types: self.for_control_types,
             value: self.value,
+            disabled: self.disabled,
+            will_validate: self.will_validate,
+            validation_barred_reason: self.validation_barred_reason,
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormMeasurement {
+    fn into_browser_form_measurement(self) -> BrowserFormMeasurement {
+        BrowserFormMeasurement {
+            id: self.id,
+            measurement_type: self.measurement_type,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            value: self.value,
+            min: self.min,
+            max: self.max,
+            low: self.low,
+            high: self.high,
+            optimum: self.optimum,
+            indeterminate: self.indeterminate,
             text: self.text,
         }
     }
@@ -2309,6 +3244,21 @@ impl ExpectedFormSuccessfulControl {
             name: self.name,
             form_owner: self.form_owner,
             submission_values: self.submission_values,
+        }
+    }
+}
+
+impl ExpectedFormValidationControl {
+    fn into_browser_form_validation_control(self) -> BrowserFormValidationControl {
+        BrowserFormValidationControl {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            will_validate: self.will_validate,
+            required: self.required,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
         }
     }
 }
@@ -2333,6 +3283,147 @@ impl ExpectedFormSelect {
                 .map(ExpectedSelectOption::into_browser_select_option)
                 .collect(),
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormTextEntry {
+    fn into_browser_form_text_entry(self) -> BrowserFormTextEntry {
+        BrowserFormTextEntry {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            placeholder: self.placeholder,
+            value: self.value,
+            text: self.text,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            autocapitalize: self.autocapitalize,
+            enterkeyhint: self.enterkeyhint,
+            dirname: self.dirname,
+            spellcheck: self.spellcheck,
+            autocorrect: self.autocorrect,
+            inputmode: self.inputmode,
+            pattern: self.pattern,
+            min: self.min,
+            max: self.max,
+            step: self.step,
+            minlength: self.minlength,
+            maxlength: self.maxlength,
+            size: self.size,
+            rows: self.rows,
+            cols: self.cols,
+            wrap: self.wrap,
+            list: self.list,
+            datalist_options: self.datalist_options,
+            disabled: self.disabled,
+            required: self.required,
+            readonly: self.readonly,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+        }
+    }
+}
+
+impl ExpectedFormChoiceControl {
+    fn into_browser_form_choice_control(self) -> BrowserFormChoiceControl {
+        BrowserFormChoiceControl {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            value: self.value,
+            checked: self.checked,
+            disabled: self.disabled,
+            required: self.required,
+            group_required: self.group_required,
+            successful: self.successful,
+            submission_values: self.submission_values,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+            group_name: self.group_name,
+            group_checked_ids: self.group_checked_ids,
+            group_checked_values: self.group_checked_values,
+        }
+    }
+}
+
+impl ExpectedFormFileControl {
+    fn into_browser_form_file_control(self) -> BrowserFormFileControl {
+        BrowserFormFileControl {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accept: self.accept,
+            accept_tokens: self.accept_tokens,
+            capture: self.capture,
+            multiple: self.multiple,
+            disabled: self.disabled,
+            required: self.required,
+            successful: self.successful,
+            submission_values: self.submission_values,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+        }
+    }
+}
+
+impl ExpectedFormHiddenControl {
+    fn into_browser_form_hidden_control(self) -> BrowserFormHiddenControl {
+        BrowserFormHiddenControl {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            value: self.value,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            disabled: self.disabled,
+            successful: self.successful,
+            submission_values: self.submission_values,
+            will_validate: self.will_validate,
+            validation_barred_reason: self.validation_barred_reason,
+        }
+    }
+}
+
+impl ExpectedFormImageControl {
+    fn into_browser_form_image_control(self) -> BrowserFormImageControl {
+        BrowserFormImageControl {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            alt: self.alt,
+            width: self.width,
+            height: self.height,
+            disabled: self.disabled,
+            autofocus: self.autofocus,
+            submitter: self.submitter,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            effective_target: self.effective_target,
+            novalidate: self.novalidate,
+            value: self.value,
+            coordinate_names: self.coordinate_names,
+            will_validate: self.will_validate,
+            validation_barred_reason: self.validation_barred_reason,
         }
     }
 }
@@ -2435,6 +3526,35 @@ impl ExpectedFormSubmitter {
             effective_target: self.effective_target,
             novalidate: self.novalidate,
             value: self.value,
+        }
+    }
+}
+
+impl ExpectedFormButton {
+    fn into_browser_form_button(self) -> BrowserFormButton {
+        BrowserFormButton {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            accessible_name: self.accessible_name,
+            disabled: self.disabled,
+            autofocus: self.autofocus,
+            submitter: self.submitter,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            effective_target: self.effective_target,
+            novalidate: self.novalidate,
+            value: self.value,
+            text: self.text,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            alt: self.alt,
+            width: self.width,
+            height: self.height,
         }
     }
 }

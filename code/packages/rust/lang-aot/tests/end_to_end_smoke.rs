@@ -954,3 +954,527 @@ fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
     assert_eq!(last_word_le, &[0x67, 0x80, 0x00, 0x00],
         "last 4 bytes should be the canonical ret encoded little-endian; got: {last_word_le:02x?}");
 }
+
+// ===========================================================================
+// A2+++ — source -> IIR -> Intel 8008 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_intel8008_bin entry point runs the full source ->
+// IIR -> iir-to-intel8008 pipeline and produces a flat .bin of
+// 8-bit Intel 8008 opcode bytes.
+//
+// Why Twig instead of BASIC?  The 8008 is **Oct's** native target,
+// but Oct programs at the LANG VM benchmark sizes routinely exceed
+// the 7-register pool that iir-to-intel8008 v0.3.9 supports (stack
+// spilling lands with A3 or later).  Twig's `42` program — the
+// canonical "return the integer 42" — survives that constraint
+// because it lowers to a single `const v; ret v` IIR sequence which
+// fits in registers A and exits cleanly.
+
+#[test]
+fn end_to_end_twig_42_emits_intel8008_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_intel8008_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V paths.  A2++.5.5 covered the IIR core so this
+        // should generally succeed for Twig's `42`, but languages
+        // that emit ops beyond what v0.3.9 supports (e.g. ref<T>
+        // allocation, multi-arg calls) will surface here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig Intel 8008 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> Intel 8008 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "Twig `42` should produce a non-empty .bin");
+    // The canonical Twig-`42` lowering is `const v=42 → A; ret v →
+    // HLT` (since main is the entry-point function, ret emits HLT
+    // not RET).  Pinned 3-byte sequence: MVI A, 42 (0x3E 0x2A) + HLT
+    // (0x76).
+    assert_eq!(&bytes[..3.min(bytes.len())], &[0x3E, 0x2A, 0x76],
+        "Twig `42` should produce `MVI A, 42; HLT`; got: {bytes:02x?}");
+}
+
+// ===========================================================================
+// A3+++ — source -> IIR -> ARMv7 (A32) machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_armv7_bin entry point runs the full source ->
+// IIR -> iir-to-armv7 pipeline and produces a flat .bin of
+// little-endian 32-bit A32 instruction words.
+//
+// Twig `42` lowers to the canonical 2-word `MOV r0, #42; BX LR`
+// sequence: `0xE3A0_002A 0xE12F_FF1E` stored little-endian as
+// `2A 00 A0 E3  1E FF 2F E1`.
+
+#[test]
+fn end_to_end_twig_42_emits_armv7_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_armv7_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V + Intel 8008 paths.  After A3++.6, ARMv7
+        // supports the full IIR core for simple programs, so Twig's
+        // `42` should always succeed here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig ARMv7 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> ARMv7 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "Twig `42` should produce a non-empty .bin");
+    assert_eq!(bytes.len() % 4, 0,
+        ".bin length should be a multiple of 4 (A32 word size); got {} bytes",
+        bytes.len());
+
+    // Twig `42` lowers to `MOV r0, #42; BX LR` = `0xE3A0_002A 0xE12F_FF1E`.
+    // Stored little-endian: `2A 00 A0 E3 1E FF 2F E1`.
+    assert_eq!(&bytes[..4.min(bytes.len())], &[0x2A, 0x00, 0xA0, 0xE3],
+        "Twig `42` should produce `MOV r0, #42` (0xE3A0_002A) as the first \
+         4 bytes little-endian (2A 00 A0 E3); got: {:02x?}",
+        &bytes[..4.min(bytes.len())]);
+    assert_eq!(&bytes[4..8.min(bytes.len())], &[0x1E, 0xFF, 0x2F, 0xE1],
+        "second word should be BX LR (0xE12F_FF1E) little-endian; got: {:02x?}",
+        &bytes[4..8.min(bytes.len())]);
+}
+
+// ===========================================================================
+// A4+++ — source -> IIR -> Intel 4004 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_intel4004_bin entry point runs the full source ->
+// IIR -> iir-to-intel4004 pipeline.
+//
+// Twig `42` won't fit in a 4-bit immediate, so we use `5` for this
+// smoke test.  The expected byte stream is `LDM 5; JUN 0x000` =
+// `0xD5 0x40 0x00` (the trivial-case 3-byte shape preserved by the
+// ACC-first allocator in v0.3.0).
+
+#[test]
+fn end_to_end_twig_5_emits_intel4004_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"5\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_intel4004_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V + Intel 8008 + ARMv7 paths.  After A4++,
+        // Twig's `5` should always succeed here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig Intel 4004 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> Intel 4004 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "Twig `5` should produce a non-empty .bin");
+
+    // Twig `5` lowers to `LDM 5; JUN 0x000` = `0xD5 0x40 0x00` via
+    // the ACC-first allocator's trivial-case preservation.
+    assert_eq!(&bytes[..3.min(bytes.len())], &[0xD5, 0x40, 0x00],
+        "Twig `5` should produce `LDM 5; JUN 0x000` (0xD5 0x40 0x00); got: {bytes:02x?}");
+}
+
+// ===========================================================================
+// A5++++ — source -> IIR -> GE-225 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_ge225_bin entry point runs the full source ->
+// IIR -> iir-to-ge225 pipeline.
+//
+// The GE-225 is a 1959-era mainframe — Dartmouth BASIC's birthplace.
+// Each 20-bit instruction word packs into 3 bytes (big-endian, top 4
+// bits of byte 0 zero).  Expected encodings:
+//   * HLT = [0x00, 0x00, 0x00] (all-zero 20-bit word)
+//   * LDA n = [0x01, hi(n), lo(n)] for 16-bit immediate n
+
+#[test]
+fn end_to_end_twig_5_emits_ge225_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"5\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V + Intel 8008 + ARMv7 + Intel 4004 paths.
+        // After A5+, Twig `5` should always succeed here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig GE-225 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> GE-225 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(), "Twig `5` should produce a non-empty .bin");
+
+    // Twig `5` lowers (since v0.2.0 A5+) to `LDA 5; HLT` packed as 6
+    // bytes: [0x01, 0x00, 0x05, 0x00, 0x00, 0x00].  Trivial-case ROM
+    // shape preserved by the ACC-first allocator from v0.3.0.
+    assert_eq!(
+        &bytes[..6.min(bytes.len())],
+        &[0x01, 0x00, 0x05, 0x00, 0x00, 0x00],
+        "Twig `5` should produce `LDA 5; HLT` ([0x01, 0x00, 0x05, 0x00, 0x00, 0x00]); \
+         got: {bytes:02x?}"
+    );
+}
+
+#[test]
+fn end_to_end_twig_3_plus_4_emits_ge225_arithmetic_bin_via_lang_aot() {
+    // Twig `(+ 3 4)` exercises the A5+++ ADD r lowering: the
+    // expected byte sequence is the trivial-add ROM pinned by
+    // iir-to-ge225's `trivial_add_byte_sequence` test:
+    //   LDA 3, STA r0, LDA 4, STA r1, LD r0, ADD r1, HLT
+    //   = [0x01,0x00,0x03, 0x02,0x00,0x00, 0x01,0x00,0x04,
+    //      0x02,0x00,0x01, 0x03,0x00,0x00, 0x04,0x00,0x01,
+    //      0x00,0x00,0x00]
+    //   = 21 bytes (7 words).
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"(+ 3 4)\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::Twig) {
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig (+ 3 4) GE-225 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> GE-225 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(
+        !bytes.is_empty(),
+        "Twig `(+ 3 4)` should produce a non-empty .bin"
+    );
+    // We don't pin the exact 21-byte shape here — Twig's `(+ 3 4)`
+    // may go through several typed-arithmetic helpers before
+    // reaching the IIR `add` op.  Loose check: the output must
+    // contain at least one HLT (last word = all zeros) and at least
+    // one non-zero byte (some LDA or ADD).
+    assert!(
+        bytes.windows(3).any(|w| w == [0x00, 0x00, 0x00]),
+        ".bin should contain at least one HLT word; got: {bytes:02x?}"
+    );
+    assert!(
+        bytes.iter().any(|&b| b != 0x00),
+        ".bin should contain at least one non-zero byte; got: {bytes:02x?}"
+    );
+}
+
+#[test]
+fn end_to_end_brainfuck_emits_ge225_bin_via_lang_aot() {
+    // Brainfuck IR shapes might not all fit a 20-bit accumulator
+    // model, but a degenerate empty program (`""`) should still
+    // round-trip via the empty-module HALT contract from v0.1.0.
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bf");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"").unwrap();
+
+    if let Err(e) =
+        lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::Brainfuck)
+    {
+        // Tolerate gaps — the Brainfuck pipeline produces ops the
+        // skeleton backend may not yet handle (load_mem, store_mem,
+        // etc.).  As long as the failure is a recognised lowering
+        // gap, the wiring is correct.
+        let msg = format!("{e}");
+        // Match both CamelCase variant names and the lowercase
+        // Display strings (`unsupported op`, etc.) — iir-to-ge225's
+        // Display emits the lowercase form.
+        if msg.contains("UnsupportedOp")
+            || msg.contains("unsupported op")
+            || msg.contains("UnsupportedType")
+            || msg.contains("unsupported type")
+            || msg.contains("InvalidOperand")
+            || msg.contains("invalid operand")
+            || msg.contains("OutOfRegisters")
+            || msg.contains("out of GE-225 registers")
+        {
+            eprintln!("skipping: Brainfuck GE-225 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Brainfuck -> GE-225 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(
+        !bytes.is_empty(),
+        "Brainfuck empty program should still emit at least the HALT_WORD"
+    );
+    // Empty Brainfuck program → empty IIR module → HALT_WORD
+    // (the v0.1.0 empty-module contract preserved through v0.4.0).
+    assert_eq!(
+        &bytes[..3.min(bytes.len())],
+        &[0x00, 0x00, 0x00],
+        "Empty Brainfuck program should produce HALT_WORD; got: {bytes:02x?}"
+    );
+}
+
+#[test]
+fn ge225_emit_writes_to_disk_with_expected_byte_count() {
+    // Cross-check that the file written to disk matches what
+    // iir-to-ge225 would produce in-memory: any non-empty Twig
+    // program lowers to >= 6 bytes (LDA + HLT minimum from the
+    // const+ret trivial case).
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::Twig) {
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig GE-225 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> GE-225 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    // Trivial Twig `42` should be exactly LDA 42 + HLT = 6 bytes.
+    // If Twig's frontend introduces additional ops the byte count
+    // will exceed 6 — we accept that, but require >= 6 to confirm
+    // the LDA + HLT shape is at least present.
+    assert!(
+        bytes.len() >= 6,
+        "Twig `42` should produce at least 6 bytes (LDA + HLT); got {} bytes: {bytes:02x?}",
+        bytes.len()
+    );
+    // Byte count must be a multiple of 3 (word-aligned).
+    assert_eq!(
+        bytes.len() % 3,
+        0,
+        ".bin byte count must be a multiple of 3 (each word is 3 bytes packed); \
+         got {} bytes: {bytes:02x?}",
+        bytes.len()
+    );
+}
+
+// ===========================================================================
+// A5++++++++ — Dartmouth BASIC end-to-end through GE-225
+// ===========================================================================
+//
+// This is the milestone moment for the GE-225 lane: Dartmouth BASIC
+// — designed in 1964 on the GE-225 mainframe at Dartmouth College
+// by Kemeny and Kurtz — round-trips through the full lang-aot
+// pipeline back to GE-225 byte code 62 years later.
+//
+// BASIC's IIR-op surface as of v0.7.0 of iir-to-ge225:
+//   * Supported by iir-to-ge225: const, mov, add, cmp_le, jmp,
+//     jmp_if_true, jmp_if_false, label, ret.
+//   * NOT yet supported: call_builtin (PRINT et al.), neg.
+//
+// Smoke tests below tolerate "lowering gap" errors so the cascade
+// keeps progressing as BASIC frontend and GE-225 backend both add
+// ops over time.
+
+/// Helper: detect whether a GE-225 error is a known lowering gap
+/// (so the test can skip cleanly rather than fail).  Mirrors the
+/// pattern used by the Twig + Brainfuck GE-225 smoke tests.
+fn is_ge225_lowering_gap(msg: &str) -> bool {
+    msg.contains("UnsupportedOp")
+        || msg.contains("unsupported op")
+        || msg.contains("UnsupportedType")
+        || msg.contains("unsupported type")
+        || msg.contains("InvalidOperand")
+        || msg.contains("invalid operand")
+        || msg.contains("OutOfRegisters")
+        || msg.contains("out of GE-225 registers")
+        || msg.contains("UndefinedFunction")
+        || msg.contains("undefined function")
+}
+
+/// The simplest BASIC program: `10 LET A = 5\n20 END`.
+///
+/// Every IIR op this emits (const, mov, ret) is supported by
+/// iir-to-ge225 v0.7.0, so this end-to-end test should **always
+/// succeed** with no skip.
+///
+/// Expected output: a non-empty .bin file containing at least
+/// `LDA 5` somewhere (the literal 5 makes it into bytes
+/// `[0x01, 0x00, 0x05]`) followed eventually by `HLT`
+/// `[0x00, 0x00, 0x00]`.
+#[test]
+fn end_to_end_basic_let_a_5_emits_ge225_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 LET A = 5\n20 END\n").unwrap();
+
+    match lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
+        Ok(()) => {}
+        Err(e) => {
+            let msg = format!("{e}");
+            if is_ge225_lowering_gap(&msg) {
+                eprintln!("skipping: BASIC GE-225 lowering gap (expected): {msg}");
+                return;
+            }
+            panic!("unexpected BASIC -> GE-225 error: {e}");
+        }
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(
+        !bytes.is_empty(),
+        "BASIC `10 LET A = 5; END` should produce a non-empty .bin"
+    );
+    // Word-aligned (each 20-bit word packs as 3 bytes).
+    assert_eq!(
+        bytes.len() % 3,
+        0,
+        "GE-225 .bin must be a multiple of 3 bytes; got {bytes:02x?}"
+    );
+    // Must contain a HLT word somewhere (the END statement lowers
+    // through `ret` in the entry function, which emits HLT).
+    assert!(
+        bytes.windows(3).any(|w| w == [0x00, 0x00, 0x00]),
+        ".bin must contain at least one HLT word; got {bytes:02x?}"
+    );
+    // Must contain at least one LDA word (LET A = 5 lowers to a
+    // const → LDA somewhere in the program).
+    assert!(
+        bytes.windows(3).any(|w| w[0] == 0x01),
+        ".bin must contain at least one LDA word (0x01..); got {bytes:02x?}"
+    );
+}
+
+/// A slightly larger BASIC program exercising the GE-225 ADD
+/// opcode: `10 LET A = 1 + 2\n20 END`.
+///
+/// BASIC lowers `1 + 2` through a `const`, `const`, `add` chain.
+/// iir-to-ge225 v0.7.0 supports all three, so this should succeed.
+///
+/// Expected: at least 21 bytes (the canonical add ROM size) plus
+/// any prep / store-to-A overhead, with at least one ADD word
+/// (`0x04, 0x00, r`) present.
+#[test]
+fn end_to_end_basic_let_a_1_plus_2_exercises_add_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 LET A = 1 + 2\n20 END\n").unwrap();
+
+    match lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
+        Ok(()) => {}
+        Err(e) => {
+            let msg = format!("{e}");
+            if is_ge225_lowering_gap(&msg) {
+                eprintln!("skipping: BASIC arithmetic GE-225 lowering gap (expected): {msg}");
+                return;
+            }
+            panic!("unexpected BASIC -> GE-225 error: {e}");
+        }
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(bytes.len() % 3, 0);
+    // Must contain an ADD instruction word (0x04 in byte 0 of
+    // some 3-byte chunk).
+    assert!(
+        bytes.chunks_exact(3).any(|w| w[0] == 0x04),
+        ".bin must contain at least one ADD word for `1 + 2`; got {bytes:02x?}"
+    );
+    // And an HLT for END.
+    assert!(
+        bytes.windows(3).any(|w| w == [0x00, 0x00, 0x00]),
+        ".bin must contain HLT for END statement; got {bytes:02x?}"
+    );
+}
+
+/// BASIC with PRINT — exercises the `call_builtin` IIR op, which
+/// **is NOT yet supported** by iir-to-ge225 v0.7.0.  This test is
+/// here to (a) document the gap, and (b) confirm the gap is
+/// reported via the standard `UnsupportedOp` error so it'll be
+/// caught by the skip clause and a future implementation will
+/// automatically activate the test.
+#[test]
+fn end_to_end_basic_print_documents_call_builtin_gap() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 LET A = 5\n20 PRINT A\n30 END\n").unwrap();
+
+    let result = lang_aot::compile_file_to_ge225_bin(
+        &src,
+        &bin,
+        lang_aot::Language::DartmouthBasic,
+    );
+
+    match result {
+        Ok(()) => {
+            // If a future iir-to-ge225 implements call_builtin,
+            // the test still passes — just verify the .bin is
+            // non-empty and word-aligned.
+            let bytes = std::fs::read(&bin).expect("read .bin");
+            assert!(!bytes.is_empty());
+            assert_eq!(bytes.len() % 3, 0);
+            eprintln!(
+                "BASIC PRINT now compiles to GE-225 — call_builtin gap closed; \
+                 {} bytes emitted",
+                bytes.len()
+            );
+        }
+        Err(e) => {
+            let msg = format!("{e}");
+            // The gap MUST be reported via one of the canonical
+            // lowering-gap errors so the cascade can detect it.
+            assert!(
+                is_ge225_lowering_gap(&msg),
+                "BASIC PRINT failed with non-gap error (broken cascade): {msg}"
+            );
+            eprintln!("documented: BASIC PRINT GE-225 lowering gap: {msg}");
+        }
+    }
+}

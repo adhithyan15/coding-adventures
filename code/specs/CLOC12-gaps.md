@@ -33,11 +33,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-002 — constant-fold doesn't treat `void 0` as `undefined`
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.20 — `UnaryOperator::Void` over a primitive literal now folds to `UndefinedLiteral`. `closure-pass-constant-fold 0.8.0` adds the `Void` arm in `fold_unary` and the `FoldedLiteral::Undefined` variant; `test_undefined_comparison_2` is un-ignored.
 - **Upstream test:** `PeepholeFoldConstantsTest::testUndefinedComparison2`
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** `void 0` is `UnaryExpression { operator: Void, argument: NumericLiteral(0) }` in our typed AST. Upstream folds it to `undefined`, which then participates in equality folds. We need both gap-001 first and a `void <literal>` → `undefined` fold rule.
-- **What it needs:** A unary-`void`-of-literal fold rule plus the `undefined` literal from gap-001.
+- **Why it failed:** `void 0` is `UnaryExpression { operator: Void, argument: NumericLiteral(0) }` in our typed AST. Upstream folds it to `undefined`, which then participates in equality folds. We needed both gap-001 first (UndefinedLiteral variant, closed in CLOC12.16) and a `void <literal>` → `undefined` fold rule (this PR).
+- **What it needed:** A unary-`void`-of-literal fold rule plus the `undefined` literal from gap-001. Both shipped.
 
 ### gap-003 — cross-type `null == x` fold not implemented
 

@@ -40,13 +40,20 @@ fn main() -> ExitCode {
         None => { eprintln!("lang-aot: missing input file"); print_help(); return ExitCode::from(2); }
     };
     // Default output extension depends on emit mode:
-    //   * Native      → strip extension (foo.bas → foo)
-    //   * LlvmIr      → .ll  (foo.bas → foo.ll),  matching `llc` input convention
-    //   * Riscv32Bin  → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
+    //   * Native       → strip extension (foo.bas → foo)
+    //   * LlvmIr       → .ll  (foo.bas → foo.ll),  matching `llc` input convention
+    //   * Riscv32Bin   → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
+    //   * Intel8008Bin → .bin (foo.oct → foo.bin), shares the `.bin` convention with RV32I
+    //   * Armv7Bin     → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * Intel4004Bin → .bin (foo.bf → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
-        EmitMode::Native     => input.with_extension(""),
-        EmitMode::LlvmIr     => input.with_extension("ll"),
-        EmitMode::Riscv32Bin => input.with_extension("bin"),
+        EmitMode::Native       => input.with_extension(""),
+        EmitMode::LlvmIr       => input.with_extension("ll"),
+        EmitMode::Riscv32Bin   => input.with_extension("bin"),
+        EmitMode::Intel8008Bin => input.with_extension("bin"),
+        EmitMode::Armv7Bin     => input.with_extension("bin"),
+        EmitMode::Intel4004Bin => input.with_extension("bin"),
+        EmitMode::Ge225Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -81,6 +88,32 @@ enum EmitMode {
     /// Cross-platform (no host gating).  Downstream consumers: the
     /// in-tree `riscv-simulator`, `qemu-riscv32`, or a flash loader.
     Riscv32Bin,
+    /// Flat `.bin` of 8-bit Intel 8008 opcode bytes via
+    /// `iir-to-intel8008`.  Cross-platform.  Downstream consumers:
+    /// the in-tree `intel8008-simulator`, an external 8008 emulator,
+    /// or a 1702 EPROM burner.  Oct's native target — its IIR is
+    /// designed to round-trip through 8008 silicon.
+    Intel8008Bin,
+    /// Flat `.bin` of little-endian 32-bit ARMv7-A (A32) instruction
+    /// words via `iir-to-armv7`.  Cross-platform.  Downstream
+    /// consumers: the in-tree `arm-simulator`, `qemu-arm`,
+    /// `objcopy` + a phone-class Linux linker, or a Cortex-A7/A8/A9-
+    /// era SoC flash loader.  Phone-class target — billions of
+    /// deployed silicon units.
+    Armv7Bin,
+    /// Flat `.bin` of 1- or 2-byte Intel 4004 opcodes via
+    /// `iir-to-intel4004`.  Cross-platform.  Downstream consumers:
+    /// any 4004 simulator, `intel-4004-assembler` for round-trip,
+    /// or an EPROM burner for a 4004 dev board.  The 4004 (1971)
+    /// is the world's first commercial microprocessor.
+    Intel4004Bin,
+    /// Flat `.bin` of 20-bit GE-225 instruction words via
+    /// `iir-to-ge225`, packed as 3 bytes per word (big-endian, top
+    /// 4 bits of byte 0 always zero).  Cross-platform.  Downstream
+    /// consumers: any GE-225 simulator or a custom 3-byte-per-word
+    /// decoder.  The GE-225 (1959) was the mainframe at Dartmouth
+    /// College where Dartmouth BASIC was DESIGNED in 1964.
+    Ge225Bin,
 }
 
 struct CliArgs {
@@ -156,9 +189,13 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "native"                      => Ok(EmitMode::Native),
         "llvm-ir" | "llvm" | "ll"     => Ok(EmitMode::LlvmIr),
         "riscv32" | "rv32" | "bin"    => Ok(EmitMode::Riscv32Bin),
+        "intel8008" | "i8008" | "8008" => Ok(EmitMode::Intel8008Bin),
+        "armv7" | "arm" | "arm32" => Ok(EmitMode::Armv7Bin),
+        "intel4004" | "i4004" | "4004" => Ok(EmitMode::Intel4004Bin),
+        "ge225" | "ge-225" | "225" => Ok(EmitMode::Ge225Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225"
         )),
     }
 }
@@ -190,6 +227,32 @@ Options:
                                               → flat .bin of little-endian RV32I words
                                                 via iir-to-riscv; cross-platform; load
                                                 into riscv-simulator or qemu-riscv32
+                             intel8008 | i8008 | 8008
+                                              → flat .bin of 8-bit Intel 8008 opcodes
+                                                via iir-to-intel8008; cross-platform;
+                                                load into intel8008-simulator or burn
+                                                to a 1702 EPROM (Oct's native target)
+                             armv7 | arm | arm32
+                                              → flat .bin of little-endian 32-bit
+                                                ARMv7-A instruction words via
+                                                iir-to-armv7; cross-platform; load
+                                                into arm-simulator, qemu-arm, or
+                                                objcopy + a phone-class Linux linker
+                                                (Cortex-A7/A8/A9-era SoCs)
+                             intel4004 | i4004 | 4004
+                                              → flat .bin of 1- or 2-byte Intel 4004
+                                                opcodes via iir-to-intel4004; cross-
+                                                platform; load into a 4004 simulator
+                                                or burn to an EPROM (the world's
+                                                first commercial microprocessor, 1971)
+                             ge225 | ge-225 | 225
+                                              → flat .bin of 20-bit GE-225 instruction
+                                                words via iir-to-ge225 (packed 3 bytes
+                                                per word, big-endian, top 4 bits zero);
+                                                cross-platform; load into a GE-225
+                                                simulator or decode 3 bytes at a time
+                                                (the mainframe where Dartmouth BASIC
+                                                was DESIGNED in 1964)
   -h, --help               Show this help.\
 ");
 }
@@ -211,6 +274,44 @@ fn dispatch(
     // encoded words as little-endian bytes.  No linker, no host gating.
     if emit == EmitMode::Riscv32Bin {
         return lang_aot::compile_file_to_riscv32_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 8008 .bin emission is also cross-platform — just write the
+    // encoded 8-bit opcodes byte-for-byte.  No linker, no endianness
+    // conversion (the 8008 has no concept of word endianness — every
+    // instruction is a byte sequence).  Oct's native target.
+    if emit == EmitMode::Intel8008Bin {
+        return lang_aot::compile_file_to_intel8008_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // ARMv7 .bin emission is also cross-platform — flatten each
+    // 32-bit A32 word to little-endian bytes (ARM's default endian
+    // on every modern Linux/Android/qemu setup).  No linker, no
+    // host gating (an ARM Cortex-A class CPU isn't a common dev
+    // host; downstream is always arm-simulator, qemu-arm, or a
+    // phone-class Linux board).
+    if emit == EmitMode::Armv7Bin {
+        return lang_aot::compile_file_to_armv7_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 4004 .bin emission is also cross-platform — write the
+    // 1- or 2-byte opcodes byte-for-byte (no endianness conversion;
+    // the 4004 has no concept of word endian, like the 8008).
+    // World's first commercial microprocessor; downstream is always
+    // a simulator, the intel-4004-assembler crate, or an EPROM
+    // burner.
+    if emit == EmitMode::Intel4004Bin {
+        return lang_aot::compile_file_to_intel4004_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // GE-225 .bin emission is also cross-platform — write each
+    // 20-bit instruction word as 3 bytes (big-endian, top 4 bits of
+    // byte 0 zero) as iir-to-ge225 emits them.  The GE-225 (1959) is
+    // the mainframe where Dartmouth BASIC was designed in 1964 —
+    // primarily a BASIC fit.  Downstream is always a simulator or
+    // a custom decoder.
+    if emit == EmitMode::Ge225Bin {
+        return lang_aot::compile_file_to_ge225_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

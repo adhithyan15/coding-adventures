@@ -4,6 +4,21 @@
 
 ### Fixed
 
+- Caught up with the SQLite-compatible `sql.grammar`, which grew two new
+  expression-precedence layers (`collated` and `bitwise`) between `comparison`
+  and `additive`, and switched `limit_clause` from bare `NUMBER` tokens to
+  `signed_number` nodes:
+  - `Executor#apply_limit` read `child.value` on what is now a `signed_number`
+    AST node, raising `NoMethodError: undefined method 'value' for ASTNode`.
+    It now reads `signed_number` nodes via a `signed_number_value` helper,
+    handles the SQLite `LIMIT offset, count` comma form, and treats a nil or
+    negative LIMIT as "no limit".
+  - `Executor::PASS_THROUGH_RULES` did not list `collated`/`bitwise`, so the
+    column-name/aggregate unwrap (`infer_col_name`) stopped short of the
+    `column_ref`/`function_call` and `GROUP BY` aggregates returned `nil`.
+    Both layers are now treated as transparent wrappers.
+  - Added `Expression.eval_bitwise` so the integer bitwise operators
+    (`& | << >>`) evaluate as a left-associative chain.
 - `IN` and `NOT IN` expression evaluation now locates the nested parsed
   `value_list` node, so multi-value predicates evaluate every listed value
   instead of only the first one.

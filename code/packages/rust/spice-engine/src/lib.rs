@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
+use std::thread;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD: usize = 30;
@@ -7,6 +8,7 @@ const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
+const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
@@ -465,6 +467,751 @@ impl PwlWaveform {
             previous_time = *time;
         }
         Ok(())
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum DigitalState {
+    Low,
+    High,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DigitalEvent {
+    pub time_seconds: f64,
+    pub state: DigitalState,
+}
+
+impl DigitalEvent {
+    pub fn new(time_seconds: f64, state: DigitalState) -> Self {
+        Self {
+            time_seconds,
+            state,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DigitalEventStream {
+    pub signal_name: String,
+    pub events: Vec<DigitalEvent>,
+}
+
+impl DigitalEventStream {
+    pub fn new(signal_name: impl Into<String>, events: impl Into<Vec<DigitalEvent>>) -> Self {
+        Self {
+            signal_name: signal_name.into(),
+            events: events.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DigitalTransientBridgeResult {
+    pub points: Vec<TransientPoint>,
+    pub output_streams: Vec<DigitalEventStream>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerDigitalTransientBridgePoint {
+    pub corner_name: String,
+    pub result: DigitalTransientBridgeResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerDigitalTransientBridgeResult {
+    pub points: Vec<CornerDigitalTransientBridgePoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AdaptiveDigitalTransientBridgeResult {
+    pub result: AdaptiveTransientResult,
+    pub output_streams: Vec<DigitalEventStream>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAdaptiveDigitalTransientBridgePoint {
+    pub corner_name: String,
+    pub result: AdaptiveDigitalTransientBridgeResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAdaptiveDigitalTransientBridgeResult {
+    pub points: Vec<CornerAdaptiveDigitalTransientBridgePoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DigitalBridgeSchedule {
+    pub stop_time: f64,
+    pub breakpoints: Vec<f64>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DigitalLogicLevels {
+    pub low_voltage: f64,
+    pub high_voltage: f64,
+    pub transition_seconds: f64,
+}
+
+impl DigitalLogicLevels {
+    pub fn new(low_voltage: f64, high_voltage: f64, transition_seconds: f64) -> Self {
+        Self {
+            low_voltage,
+            high_voltage,
+            transition_seconds,
+        }
+    }
+
+    pub fn cmos_1v8(transition_seconds: f64) -> Self {
+        Self::new(0.0, 1.8, transition_seconds)
+    }
+
+    pub fn voltage_for(self, state: DigitalState) -> f64 {
+        match state {
+            DigitalState::Low => self.low_voltage,
+            DigitalState::High => self.high_voltage,
+        }
+    }
+
+    fn validate(self) -> Result<(), String> {
+        if !self.low_voltage.is_finite()
+            || !self.high_voltage.is_finite()
+            || !self.transition_seconds.is_finite()
+        {
+            return Err("digital logic levels must be finite".to_string());
+        }
+        if self.high_voltage <= self.low_voltage {
+            return Err("digital high voltage must be greater than low voltage".to_string());
+        }
+        if self.transition_seconds <= 0.0 {
+            return Err("digital transition time must be finite and positive".to_string());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DigitalThresholds {
+    pub low_max_voltage: f64,
+    pub high_min_voltage: f64,
+}
+
+impl DigitalThresholds {
+    pub fn new(low_max_voltage: f64, high_min_voltage: f64) -> Self {
+        Self {
+            low_max_voltage,
+            high_min_voltage,
+        }
+    }
+
+    pub fn cmos_1v8() -> Self {
+        Self::new(0.6, 1.2)
+    }
+
+    pub fn classify(self, voltage: f64) -> Option<DigitalState> {
+        if voltage <= self.low_max_voltage {
+            Some(DigitalState::Low)
+        } else if voltage >= self.high_min_voltage {
+            Some(DigitalState::High)
+        } else {
+            None
+        }
+    }
+
+    fn validate(self) -> Result<(), String> {
+        if !self.low_max_voltage.is_finite() || !self.high_min_voltage.is_finite() {
+            return Err("digital thresholds must be finite".to_string());
+        }
+        if self.high_min_voltage <= self.low_max_voltage {
+            return Err("digital high threshold must be greater than low threshold".to_string());
+        }
+        Ok(())
+    }
+}
+
+pub fn digital_events_to_pwl_waveform(
+    events: &[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> Result<PwlWaveform, SpiceError> {
+    levels
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason,
+        })?;
+    if events.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason: "at least one digital event is required".to_string(),
+        });
+    }
+
+    let mut previous_time = f64::NEG_INFINITY;
+    for event in events {
+        if !event.time_seconds.is_finite() || event.time_seconds < 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital event times must be finite and non-negative".to_string(),
+            });
+        }
+        if event.time_seconds <= previous_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital event times must be strictly increasing".to_string(),
+            });
+        }
+        previous_time = event.time_seconds;
+    }
+
+    let mut points = Vec::new();
+    let mut current_state = events[0].state;
+    points.push((events[0].time_seconds, levels.voltage_for(current_state)));
+
+    for event in events.iter().skip(1) {
+        if event.state == current_state {
+            continue;
+        }
+        let start_time = event.time_seconds;
+        let end_time = start_time + levels.transition_seconds;
+        let last_time = points
+            .last()
+            .map(|point| point.0)
+            .unwrap_or(f64::NEG_INFINITY);
+        if start_time <= last_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital transition overlaps the previous transition".to_string(),
+            });
+        }
+        points.push((start_time, levels.voltage_for(current_state)));
+        points.push((end_time, levels.voltage_for(event.state)));
+        current_state = event.state;
+    }
+
+    if points.len() == 1 {
+        points.push((
+            points[0].0 + levels.transition_seconds,
+            levels.voltage_for(current_state),
+        ));
+    }
+
+    let waveform = PwlWaveform::new(points);
+    waveform
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason,
+        })?;
+    Ok(waveform)
+}
+
+pub fn digital_events_to_voltage_source(
+    name: impl Into<String>,
+    positive: impl Into<String>,
+    negative: impl Into<String>,
+    events: &[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> Result<VoltageSource, SpiceError> {
+    let initial_voltage = events
+        .first()
+        .map(|event| levels.voltage_for(event.state))
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason: "at least one digital event is required".to_string(),
+        })?;
+    let waveform = digital_events_to_pwl_waveform(events, levels)?;
+    Ok(VoltageSource::with_waveform(
+        name,
+        positive,
+        negative,
+        initial_voltage,
+        Waveform::Pwl(waveform),
+    ))
+}
+
+pub fn digital_event_streams_to_voltage_sources(
+    streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+) -> Result<Vec<VoltageSource>, SpiceError> {
+    let negative = negative.as_ref().trim();
+    if negative.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_streams".to_string(),
+            reason: "digital event stream negative node must not be empty".to_string(),
+        });
+    }
+
+    let mut sources = Vec::new();
+    let mut seen_signal_names = HashSet::new();
+    for stream in streams {
+        let signal_name = validate_digital_event_stream_name(stream, &mut seen_signal_names)?;
+
+        sources.push(digital_events_to_voltage_source(
+            format!("V{signal_name}"),
+            signal_name.to_string(),
+            negative.to_string(),
+            &stream.events,
+            levels,
+        )?);
+    }
+    Ok(sources)
+}
+
+pub fn digital_event_streams_to_bridge_schedule(
+    streams: &[DigitalEventStream],
+    levels: DigitalLogicLevels,
+) -> Result<DigitalBridgeSchedule, SpiceError> {
+    levels
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_bridge_schedule".to_string(),
+            reason,
+        })?;
+
+    let mut seen_signal_names = HashSet::new();
+    let mut breakpoints = Vec::new();
+    let mut stop_time: f64 = 0.0;
+    for stream in streams {
+        validate_digital_event_stream_name(stream, &mut seen_signal_names)?;
+        digital_events_to_pwl_waveform(&stream.events, levels)?;
+
+        let mut current_state = stream.events[0].state;
+        for (index, event) in stream.events.iter().enumerate() {
+            breakpoints.push(event.time_seconds);
+            stop_time = stop_time.max(event.time_seconds);
+
+            if index > 0 && event.state != current_state {
+                let transition_end = event.time_seconds + levels.transition_seconds;
+                breakpoints.push(transition_end);
+                stop_time = stop_time.max(transition_end);
+                current_state = event.state;
+            }
+        }
+    }
+
+    breakpoints.sort_by(|left, right| left.total_cmp(right));
+    breakpoints.dedup_by(|left, right| (*left - *right).abs() <= DIGITAL_BRIDGE_TIME_EPSILON);
+
+    Ok(DigitalBridgeSchedule {
+        stop_time,
+        breakpoints,
+    })
+}
+
+pub fn transient_with_digital_event_streams(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+) -> Result<DigitalTransientBridgeResult, SpiceError> {
+    let mut bridged = circuit.clone();
+    for source in digital_event_streams_to_voltage_sources(input_streams, negative, levels)? {
+        bridged.add(Element::VoltageSource(source));
+    }
+    let points = transient(&bridged, time_step, stop_time)?;
+    let output_streams =
+        sample_transient_probes_as_digital_event_streams(&points, output_probes, thresholds)?;
+    Ok(DigitalTransientBridgeResult {
+        points,
+        output_streams,
+    })
+}
+
+pub fn transient_with_digital_event_streams_corners(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+    corners: &[CornerSpec],
+) -> Result<CornerDigitalTransientBridgeResult, SpiceError> {
+    let negative = negative.as_ref();
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerDigitalTransientBridgePoint {
+            corner_name: corner.name.clone(),
+            result: transient_with_digital_event_streams(
+                &corner_circuit,
+                input_streams,
+                negative,
+                levels,
+                time_step,
+                stop_time,
+                output_probes,
+                thresholds,
+            )?,
+        });
+    }
+    Ok(CornerDigitalTransientBridgeResult { points })
+}
+
+pub fn transient_adaptive_with_digital_event_streams(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    options: AdaptiveTransientOptions,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+) -> Result<AdaptiveDigitalTransientBridgeResult, SpiceError> {
+    let mut bridged = circuit.clone();
+    for source in digital_event_streams_to_voltage_sources(input_streams, negative, levels)? {
+        bridged.add(Element::VoltageSource(source));
+    }
+    let result = transient_adaptive(&bridged, time_step, stop_time, options)?;
+    let output_streams = sample_transient_probes_as_digital_event_streams(
+        &result.points,
+        output_probes,
+        thresholds,
+    )?;
+    Ok(AdaptiveDigitalTransientBridgeResult {
+        result,
+        output_streams,
+    })
+}
+
+pub fn transient_adaptive_with_digital_event_streams_corners(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    options: AdaptiveTransientOptions,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+    corners: &[CornerSpec],
+) -> Result<CornerAdaptiveDigitalTransientBridgeResult, SpiceError> {
+    let negative = negative.as_ref();
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerAdaptiveDigitalTransientBridgePoint {
+            corner_name: corner.name.clone(),
+            result: transient_adaptive_with_digital_event_streams(
+                &corner_circuit,
+                input_streams,
+                negative,
+                levels,
+                time_step,
+                stop_time,
+                options,
+                output_probes,
+                thresholds,
+            )?,
+        });
+    }
+    Ok(CornerAdaptiveDigitalTransientBridgeResult { points })
+}
+
+pub fn sample_transient_probe_as_digital_events(
+    points: &[TransientPoint],
+    probe: &str,
+    thresholds: DigitalThresholds,
+) -> Result<Vec<DigitalEvent>, SpiceError> {
+    thresholds
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_thresholds".to_string(),
+            reason,
+        })?;
+
+    let mut events = Vec::new();
+    let mut previous_state = None;
+    let mut previous_time = f64::NEG_INFINITY;
+    for point in points {
+        if !point.time.is_finite() || point.time < 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "transient_points".to_string(),
+                reason: "transient sample times must be finite and non-negative".to_string(),
+            });
+        }
+        if point.time <= previous_time {
+            return Err(SpiceError::InvalidElement {
+                name: "transient_points".to_string(),
+                reason: "transient sample times must be strictly increasing".to_string(),
+            });
+        }
+        previous_time = point.time;
+
+        if let Some(state) = thresholds.classify(probe_value(point, probe)?) {
+            if previous_state != Some(state) {
+                events.push(DigitalEvent::new(point.time, state));
+                previous_state = Some(state);
+            }
+        }
+    }
+    Ok(events)
+}
+
+pub fn sample_transient_probes_as_digital_event_streams(
+    points: &[TransientPoint],
+    probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+) -> Result<Vec<DigitalEventStream>, SpiceError> {
+    thresholds
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_thresholds".to_string(),
+            reason,
+        })?;
+
+    let mut streams = Vec::new();
+    for (signal_name, probe) in probes {
+        let signal_name = signal_name.trim();
+        if signal_name.is_empty() {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_event_stream".to_string(),
+                reason: "digital event stream signal name must not be empty".to_string(),
+            });
+        }
+        if streams
+            .iter()
+            .any(|stream: &DigitalEventStream| stream.signal_name == signal_name)
+        {
+            return Err(SpiceError::InvalidElement {
+                name: signal_name.to_string(),
+                reason: "digital event stream signal names must be unique".to_string(),
+            });
+        }
+
+        let events = sample_transient_probe_as_digital_events(points, probe, thresholds)?;
+        streams.push(DigitalEventStream::new(signal_name, events));
+    }
+    Ok(streams)
+}
+
+pub fn format_digital_event_table(events: &[DigitalEvent]) -> Result<String, SpiceError> {
+    let mut rows = vec!["Index\tTime\tState".to_string()];
+    let mut previous_time = f64::NEG_INFINITY;
+    for (index, event) in events.iter().enumerate() {
+        validate_digital_event_time(event.time_seconds, previous_time, "digital_events")?;
+        previous_time = event.time_seconds;
+        rows.push(format!(
+            "{index}\t{}\t{}",
+            format_table_number(event.time_seconds),
+            format_digital_state(event.state)
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_digital_event_stream_table(
+    streams: &[DigitalEventStream],
+) -> Result<String, SpiceError> {
+    let mut rows = vec!["Signal\tIndex\tTime\tState".to_string()];
+    for stream in streams {
+        if stream.signal_name.trim().is_empty() {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_event_stream".to_string(),
+                reason: "digital event stream signal name must not be empty".to_string(),
+            });
+        }
+        let mut previous_time = f64::NEG_INFINITY;
+        for (index, event) in stream.events.iter().enumerate() {
+            validate_digital_event_time(event.time_seconds, previous_time, &stream.signal_name)?;
+            previous_time = event.time_seconds;
+            rows.push(format!(
+                "{}\t{index}\t{}\t{}",
+                stream.signal_name,
+                format_table_number(event.time_seconds),
+                format_digital_state(event.state)
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_corner_digital_event_stream_table(
+    result: &CornerDigitalTransientBridgeResult,
+) -> Result<String, SpiceError> {
+    let mut rows = vec!["Corner\tSignal\tIndex\tTime\tState".to_string()];
+    for corner in &result.points {
+        for stream in &corner.result.output_streams {
+            if stream.signal_name.trim().is_empty() {
+                return Err(SpiceError::InvalidElement {
+                    name: "digital_event_stream".to_string(),
+                    reason: "digital event stream signal name must not be empty".to_string(),
+                });
+            }
+            let mut previous_time = f64::NEG_INFINITY;
+            for (index, event) in stream.events.iter().enumerate() {
+                validate_digital_event_time(
+                    event.time_seconds,
+                    previous_time,
+                    &stream.signal_name,
+                )?;
+                previous_time = event.time_seconds;
+                rows.push(format!(
+                    "{}\t{}\t{index}\t{}\t{}",
+                    corner.corner_name,
+                    stream.signal_name,
+                    format_table_number(event.time_seconds),
+                    format_digital_state(event.state)
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_adaptive_digital_event_stream_table(
+    result: &AdaptiveDigitalTransientBridgeResult,
+) -> Result<String, SpiceError> {
+    let mut rows = vec!["Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState".to_string()];
+    for stream in &result.output_streams {
+        if stream.signal_name.trim().is_empty() {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_event_stream".to_string(),
+                reason: "digital event stream signal name must not be empty".to_string(),
+            });
+        }
+        let mut previous_time = f64::NEG_INFINITY;
+        for (index, event) in stream.events.iter().enumerate() {
+            validate_digital_event_time(event.time_seconds, previous_time, &stream.signal_name)?;
+            previous_time = event.time_seconds;
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{index}\t{}\t{}",
+                format_transient_method(result.result.method),
+                result.result.steps_rejected,
+                result.result.converged,
+                stream.signal_name,
+                format_table_number(event.time_seconds),
+                format_digital_state(event.state)
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_corner_adaptive_digital_event_stream_table(
+    result: &CornerAdaptiveDigitalTransientBridgeResult,
+) -> Result<String, SpiceError> {
+    let mut rows =
+        vec!["Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState".to_string()];
+    for corner in &result.points {
+        for stream in &corner.result.output_streams {
+            if stream.signal_name.trim().is_empty() {
+                return Err(SpiceError::InvalidElement {
+                    name: "digital_event_stream".to_string(),
+                    reason: "digital event stream signal name must not be empty".to_string(),
+                });
+            }
+            let mut previous_time = f64::NEG_INFINITY;
+            for (index, event) in stream.events.iter().enumerate() {
+                validate_digital_event_time(
+                    event.time_seconds,
+                    previous_time,
+                    &stream.signal_name,
+                )?;
+                previous_time = event.time_seconds;
+                rows.push(format!(
+                    "{}\t{}\t{}\t{}\t{}\t{index}\t{}\t{}",
+                    corner.corner_name,
+                    format_transient_method(corner.result.result.method),
+                    corner.result.result.steps_rejected,
+                    corner.result.result.converged,
+                    stream.signal_name,
+                    format_table_number(event.time_seconds),
+                    format_digital_state(event.state)
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_digital_bridge_schedule_table(
+    schedule: &DigitalBridgeSchedule,
+) -> Result<String, SpiceError> {
+    if !schedule.stop_time.is_finite() || schedule.stop_time < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_bridge_schedule".to_string(),
+            reason: "digital bridge stop time must be finite and non-negative".to_string(),
+        });
+    }
+
+    let mut rows = vec!["Index\tTime\tStopTime".to_string()];
+    let mut previous_time = f64::NEG_INFINITY;
+    for (index, time_seconds) in schedule.breakpoints.iter().enumerate() {
+        validate_digital_event_time(*time_seconds, previous_time, "digital_bridge_schedule")?;
+        if *time_seconds > schedule.stop_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_bridge_schedule".to_string(),
+                reason: "digital bridge breakpoint must not exceed stop time".to_string(),
+            });
+        }
+        previous_time = *time_seconds;
+        rows.push(format!(
+            "{index}\t{}\t{}",
+            format_table_number(*time_seconds),
+            format_table_number(schedule.stop_time)
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+fn validate_digital_event_stream_name<'a>(
+    stream: &'a DigitalEventStream,
+    seen_signal_names: &mut HashSet<String>,
+) -> Result<&'a str, SpiceError> {
+    let signal_name = stream.signal_name.trim();
+    if signal_name.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream".to_string(),
+            reason: "digital event stream signal name must not be empty".to_string(),
+        });
+    }
+    if !seen_signal_names.insert(signal_name.to_string()) {
+        return Err(SpiceError::InvalidElement {
+            name: signal_name.to_string(),
+            reason: "digital event stream signal names must be unique".to_string(),
+        });
+    }
+    Ok(signal_name)
+}
+
+fn validate_digital_event_time(
+    time_seconds: f64,
+    previous_time: f64,
+    name: &str,
+) -> Result<(), SpiceError> {
+    if !time_seconds.is_finite() || time_seconds < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: name.to_string(),
+            reason: "digital event times must be finite and non-negative".to_string(),
+        });
+    }
+    if time_seconds <= previous_time {
+        return Err(SpiceError::InvalidElement {
+            name: name.to_string(),
+            reason: "digital event times must be strictly increasing".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn format_digital_state(state: DigitalState) -> &'static str {
+    match state {
+        DigitalState::Low => "low",
+        DigitalState::High => "high",
     }
 }
 
@@ -4790,6 +5537,41 @@ pub fn dc_corners(
     Ok(CornerSweepResult { points })
 }
 
+pub fn dc_corners_parallel(
+    circuit: &Circuit,
+    corners: &[CornerSpec],
+    options: DcOpOptions,
+) -> Result<CornerSweepResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                scope.spawn(move || -> Result<CornerPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerPoint {
+                        corner_name: corner.name,
+                        result: dc_op_with_options(&corner_circuit, options)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "dc_corners_parallel".to_string(),
+                reason: "parallel DC corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerSweepResult { points })
+}
+
 pub fn dc_temperature_sweep(
     circuit: &Circuit,
     temperatures_kelvin: &[f64],
@@ -5217,6 +5999,50 @@ pub fn dc_sweep_corners(
     })
 }
 
+pub fn dc_sweep_corners_parallel(
+    circuit: &Circuit,
+    source_name: &str,
+    start: f64,
+    stop: f64,
+    step: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerDcSweepResult, SpiceError> {
+    validate_sweep(source_name, start, stop, step)?;
+
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let source_name = source_name.to_string();
+                scope.spawn(move || -> Result<CornerDcSweepPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerDcSweepPoint {
+                        corner_name: corner.name,
+                        points: dc_sweep(&corner_circuit, &source_name, start, stop, step)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "dc_sweep_corners_parallel".to_string(),
+                reason: "parallel DC source-sweep corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerDcSweepResult {
+        source_name: source_name.to_string(),
+        points,
+    })
+}
+
 pub fn mc_dc(
     circuit: &Circuit,
     output_node: &str,
@@ -5487,25 +6313,7 @@ pub fn ac_sweep(
     stop_hz: f64,
     points_per_decade: usize,
 ) -> Result<Vec<AcPoint>, SpiceError> {
-    if !start_hz.is_finite() || !stop_hz.is_finite() || start_hz <= 0.0 || stop_hz <= 0.0 {
-        return Err(SpiceError::InvalidElement {
-            name: "ac_sweep".to_string(),
-            reason: "frequency bounds must be finite and positive".to_string(),
-        });
-    }
-    if stop_hz < start_hz {
-        return Err(SpiceError::InvalidElement {
-            name: "ac_sweep".to_string(),
-            reason: "stop frequency must be greater than or equal to start frequency".to_string(),
-        });
-    }
-    if points_per_decade == 0 {
-        return Err(SpiceError::InvalidElement {
-            name: "ac_sweep".to_string(),
-            reason: "points per decade must be positive".to_string(),
-        });
-    }
-
+    validate_ac_sweep(start_hz, stop_hz, points_per_decade)?;
     validate_reactive_elements(circuit)?;
 
     let mut points = Vec::new();
@@ -5524,6 +6332,32 @@ pub fn ac_sweep(
     Ok(points)
 }
 
+fn validate_ac_sweep(
+    start_hz: f64,
+    stop_hz: f64,
+    points_per_decade: usize,
+) -> Result<(), SpiceError> {
+    if !start_hz.is_finite() || !stop_hz.is_finite() || start_hz <= 0.0 || stop_hz <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "frequency bounds must be finite and positive".to_string(),
+        });
+    }
+    if stop_hz < start_hz {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "stop frequency must be greater than or equal to start frequency".to_string(),
+        });
+    }
+    if points_per_decade == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "points per decade must be positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
 pub fn ac_sweep_corners(
     circuit: &Circuit,
     start_hz: f64,
@@ -5539,6 +6373,45 @@ pub fn ac_sweep_corners(
             points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
         });
     }
+    Ok(CornerAcSweepResult { points })
+}
+
+pub fn ac_sweep_corners_parallel(
+    circuit: &Circuit,
+    start_hz: f64,
+    stop_hz: f64,
+    points_per_decade: usize,
+    corners: &[CornerSpec],
+) -> Result<CornerAcSweepResult, SpiceError> {
+    validate_ac_sweep(start_hz, stop_hz, points_per_decade)?;
+
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                scope.spawn(move || -> Result<CornerAcSweepPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerAcSweepPoint {
+                        corner_name: corner.name,
+                        points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "ac_sweep_corners_parallel".to_string(),
+                reason: "parallel AC corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
     Ok(CornerAcSweepResult { points })
 }
 

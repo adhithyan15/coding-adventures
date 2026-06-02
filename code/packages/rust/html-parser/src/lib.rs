@@ -1615,7 +1615,15 @@ pub struct BrowserForm {
     pub datalists: Vec<BrowserFormDatalist>,
     pub selects: Vec<BrowserFormSelect>,
     pub outputs: Vec<BrowserFormOutput>,
+    pub measurements: Vec<BrowserFormMeasurement>,
     pub successful_controls: Vec<BrowserFormSuccessfulControl>,
+    pub validation_controls: Vec<BrowserFormValidationControl>,
+    pub buttons: Vec<BrowserFormButton>,
+    pub text_entries: Vec<BrowserFormTextEntry>,
+    pub choice_controls: Vec<BrowserFormChoiceControl>,
+    pub file_controls: Vec<BrowserFormFileControl>,
+    pub hidden_controls: Vec<BrowserFormHiddenControl>,
+    pub image_controls: Vec<BrowserFormImageControl>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1679,8 +1687,34 @@ pub struct BrowserFormOutput {
     pub id: Option<String>,
     pub name: Option<String>,
     pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
     pub for_tokens: Vec<String>,
+    pub for_control_ids: Vec<String>,
+    pub for_control_names: Vec<String>,
+    pub for_control_types: Vec<String>,
     pub value: Option<String>,
+    pub disabled: bool,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormMeasurement {
+    pub id: Option<String>,
+    pub measurement_type: String,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub value: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
+    pub indeterminate: bool,
     pub text: String,
 }
 
@@ -1691,6 +1725,170 @@ pub struct BrowserFormSuccessfulControl {
     pub name: String,
     pub form_owner: Option<String>,
     pub submission_values: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormValidationControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub will_validate: bool,
+    pub required: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormButton {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub accessible_name: Option<String>,
+    pub disabled: bool,
+    pub autofocus: bool,
+    pub submitter: bool,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+    pub text: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormTextEntry {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub placeholder: Option<String>,
+    pub value: Option<String>,
+    pub text: String,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
+    pub list: Option<String>,
+    pub datalist_options: Vec<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormChoiceControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub checked: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub group_required: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub group_name: Option<String>,
+    pub group_checked_ids: Vec<String>,
+    pub group_checked_values: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormFileControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accept: Option<String>,
+    pub accept_tokens: Vec<String>,
+    pub capture: Option<String>,
+    pub multiple: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormHiddenControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub disabled: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormImageControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub disabled: bool,
+    pub autofocus: bool,
+    pub submitter: bool,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+    pub coordinate_names: Vec<String>,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -11318,6 +11516,10 @@ fn is_browser_form_control_element(name: &str) -> bool {
     matches!(name, "button" | "input" | "output" | "select" | "textarea")
 }
 
+fn is_browser_form_measurement_element(name: &str) -> bool {
+    matches!(name, "meter" | "progress")
+}
+
 fn is_browser_labelable_element(name: &str) -> bool {
     matches!(
         name,
@@ -12645,6 +12847,74 @@ fn collect_form_fieldsets_for_form(
     fieldsets
 }
 
+fn collect_form_measurements_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> Vec<BrowserFormMeasurement> {
+    let mut measurements = Vec::new();
+    collect_form_measurements_for_form_into(
+        body_root,
+        &mut measurements,
+        labels,
+        id_texts,
+        target_form as *const Element,
+        None,
+        None,
+    );
+    measurements
+}
+
+fn collect_form_measurements_for_form_into(
+    nodes: &[Node],
+    measurements: &mut Vec<BrowserFormMeasurement>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_form: *const Element,
+    current_form: Option<*const Element>,
+    current_label_text: Option<&str>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+        let element_label_text = (element.name == "label")
+            .then(|| visible_text_for_nodes(&element.children))
+            .filter(|text| !text.is_empty());
+        let child_label_text = element_label_text.as_deref().or(current_label_text);
+
+        if is_browser_form_measurement_element(&element.name)
+            && current_form.is_some_and(|form| form == target_form)
+        {
+            measurements.push(browser_form_measurement(
+                element,
+                labels,
+                id_texts,
+                current_label_text,
+            ));
+        }
+
+        for child in &element.children {
+            collect_form_measurements_for_form_into(
+                std::slice::from_ref(child),
+                measurements,
+                labels,
+                id_texts,
+                target_form,
+                element_form,
+                child_label_text,
+            );
+        }
+    }
+}
+
 fn collect_form_fieldsets_for_form_into(
     nodes: &[Node],
     fieldsets: &mut Vec<BrowserFormFieldset>,
@@ -12740,12 +13010,43 @@ fn browser_form(
     let novalidate = element.attribute("novalidate").is_some();
     let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
     let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
-    let form_labels =
-        collect_form_labels_for_form(body_root, element, element.attribute("id"), &controls);
+    let measurements = collect_form_measurements_for_form(body_root, element, labels, id_texts);
+    let form_labels = collect_form_labels_for_form(
+        body_root,
+        element,
+        element.attribute("id"),
+        &controls,
+        &measurements,
+    );
     let datalists = browser_form_datalists(body_root, &controls);
     let selects = browser_form_selects(&controls);
     let outputs = browser_form_outputs(&controls);
     let successful_controls = browser_form_successful_controls(&controls);
+    let validation_controls = browser_form_validation_controls(&controls);
+    let buttons = browser_form_buttons(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
+    let text_entries = browser_form_text_entries(&controls);
+    let choice_controls = browser_form_choice_controls(&controls, element.attribute("id"));
+    let file_controls = browser_form_file_controls(&controls);
+    let hidden_controls = browser_form_hidden_controls(&controls);
+    let image_controls = browser_form_image_controls(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12787,7 +13088,15 @@ fn browser_form(
         datalists,
         selects,
         outputs,
+        measurements,
         successful_controls,
+        validation_controls,
+        buttons,
+        text_entries,
+        choice_controls,
+        file_controls,
+        hidden_controls,
+        image_controls,
         controls,
         submitters,
     }
@@ -12798,6 +13107,7 @@ fn collect_form_labels_for_form(
     target_form: &Element,
     target_form_id: Option<&str>,
     controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
 ) -> Vec<BrowserFormLabel> {
     let mut labels = Vec::new();
     collect_form_labels_for_form_into(
@@ -12807,6 +13117,7 @@ fn collect_form_labels_for_form(
         target_form_id,
         None,
         controls,
+        measurements,
     );
     labels
 }
@@ -12818,6 +13129,7 @@ fn collect_form_labels_for_form_into(
     target_form_id: Option<&str>,
     current_form: Option<*const Element>,
     controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
 ) {
     for node in nodes {
         let Node::Element(element) = node else {
@@ -12831,9 +13143,14 @@ fn collect_form_labels_for_form_into(
         };
 
         if element.name == "label" {
-            if let Some(label) =
-                browser_form_label(element, target_form, target_form_id, element_form, controls)
-            {
+            if let Some(label) = browser_form_label(
+                element,
+                target_form,
+                target_form_id,
+                element_form,
+                controls,
+                measurements,
+            ) {
                 labels.push(label);
             }
         }
@@ -12845,6 +13162,7 @@ fn collect_form_labels_for_form_into(
             target_form_id,
             element_form,
             controls,
+            measurements,
         );
     }
 }
@@ -12855,6 +13173,7 @@ fn browser_form_label(
     target_form_id: Option<&str>,
     current_form: Option<*const Element>,
     controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
 ) -> Option<BrowserFormLabel> {
     let text = visible_text_for_nodes(&element.children);
     if text.is_empty() {
@@ -12862,16 +13181,30 @@ fn browser_form_label(
     }
 
     if let Some(for_control) = element.attribute("for") {
-        let control = controls
+        if let Some(control) = controls
             .iter()
-            .find(|control| control.id.as_deref() == Some(for_control))?;
+            .find(|control| control.id.as_deref() == Some(for_control))
+        {
+            return Some(BrowserFormLabel {
+                id: element.attribute("id").map(ToOwned::to_owned),
+                for_control: Some(for_control.to_string()),
+                text,
+                control_id: control.id.clone(),
+                control_name: control.name.clone(),
+                control_type: Some(control.control_type.clone()),
+                association: "explicit".to_string(),
+            });
+        }
+        let measurement = measurements
+            .iter()
+            .find(|measurement| measurement.id.as_deref() == Some(for_control))?;
         return Some(BrowserFormLabel {
             id: element.attribute("id").map(ToOwned::to_owned),
             for_control: Some(for_control.to_string()),
             text,
-            control_id: control.id.clone(),
-            control_name: control.name.clone(),
-            control_type: Some(control.control_type.clone()),
+            control_id: measurement.id.clone(),
+            control_name: None,
+            control_type: Some(measurement.measurement_type.clone()),
             association: "explicit".to_string(),
         });
     }
@@ -12885,7 +13218,7 @@ fn browser_form_label(
     ) {
         return None;
     }
-    let control_type = browser_content_control_type(control_element);
+    let control_type = browser_labelable_element_type(control_element);
     Some(BrowserFormLabel {
         id: element.attribute("id").map(ToOwned::to_owned),
         for_control: None,
@@ -12894,6 +13227,12 @@ fn browser_form_label(
         control_name: control_element.attribute("name").map(ToOwned::to_owned),
         control_type,
         association: "implicit".to_string(),
+    })
+}
+
+fn browser_labelable_element_type(element: &Element) -> Option<String> {
+    browser_content_control_type(element).or_else(|| {
+        is_browser_form_measurement_element(&element.name).then(|| element.name.clone())
     })
 }
 
@@ -13086,11 +13425,90 @@ fn browser_form_outputs(controls: &[BrowserFormControl]) -> Vec<BrowserFormOutpu
             id: control.id.clone(),
             name: control.name.clone(),
             form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accessible_description: control.accessible_description.clone(),
             for_tokens: control.output_for.clone(),
+            for_control_ids: browser_output_for_control_ids(controls, control),
+            for_control_names: browser_output_for_control_names(controls, control),
+            for_control_types: browser_output_for_control_types(controls, control),
             value: control.value.clone(),
+            disabled: control.disabled,
+            will_validate: control.will_validate,
+            validation_barred_reason: control.validation_barred_reason.clone(),
             text: control.text.clone(),
         })
         .collect()
+}
+
+fn browser_output_for_control_ids(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .filter_map(|control| control.id.clone())
+        .collect()
+}
+
+fn browser_output_for_control_names(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .filter_map(|control| control.name.clone())
+        .collect()
+}
+
+fn browser_output_for_control_types(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .map(|control| control.control_type.clone())
+        .collect()
+}
+
+fn browser_output_for_controls<'a>(
+    controls: &'a [BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<&'a BrowserFormControl> {
+    output
+        .output_for
+        .iter()
+        .filter_map(|token| {
+            controls
+                .iter()
+                .find(|control| control.id.as_deref() == Some(token.as_str()))
+        })
+        .collect()
+}
+
+fn browser_form_measurement(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    current_label_text: Option<&str>,
+) -> BrowserFormMeasurement {
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let value = browser_content_value(element);
+    BrowserFormMeasurement {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        measurement_type: element.name.clone(),
+        accessible_name: browser_accessible_name(element, &element.name, &control_labels, id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        labels: control_labels,
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        low: browser_meter_low(element),
+        high: browser_meter_high(element),
+        optimum: browser_meter_optimum(element),
+        indeterminate: element.name == "progress" && value.is_none(),
+        value,
+        text: visible_text_for_nodes(&element.children),
+    }
 }
 
 fn browser_form_selects(controls: &[BrowserFormControl]) -> Vec<BrowserFormSelect> {
@@ -13133,8 +13551,404 @@ fn browser_form_successful_controls(
         .collect()
 }
 
+fn browser_form_validation_controls(
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormValidationControl> {
+    controls
+        .iter()
+        .filter(|control| {
+            control.will_validate
+                || control.required
+                || !control.validation_attributes.is_empty()
+                || control.validation_barred_reason.is_some()
+        })
+        .map(|control| BrowserFormValidationControl {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            will_validate: control.will_validate,
+            required: control.required,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_buttons(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormButton> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_button(control))
+        .map(|control| {
+            let submitter = is_browser_form_submitter(control);
+            BrowserFormButton {
+                id: control.id.clone(),
+                control_type: control.control_type.clone(),
+                name: control.name.clone(),
+                form_owner: control.form_owner.clone(),
+                accessible_name: control
+                    .accessible_name
+                    .clone()
+                    .or_else(|| control.alt.clone()),
+                disabled: control.disabled,
+                autofocus: control.autofocus,
+                submitter,
+                action: if submitter {
+                    control
+                        .form_action
+                        .clone()
+                        .or_else(|| action.map(ToOwned::to_owned))
+                } else {
+                    control.form_action.clone()
+                },
+                resolved_action: if submitter {
+                    control
+                        .resolved_form_action
+                        .clone()
+                        .or_else(|| resolved_action.map(ToOwned::to_owned))
+                } else {
+                    control.resolved_form_action.clone()
+                },
+                method: control
+                    .form_method
+                    .clone()
+                    .unwrap_or_else(|| method.to_string()),
+                enctype: if submitter {
+                    control
+                        .form_enctype
+                        .clone()
+                        .or_else(|| enctype.map(ToOwned::to_owned))
+                } else {
+                    control.form_enctype.clone()
+                },
+                target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                effective_target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                        .or_else(|| base_target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                novalidate: submitter && (novalidate || control.form_novalidate),
+                value: control.value.clone(),
+                text: control.text.clone(),
+                src: control.src.clone(),
+                resolved_src: control.resolved_src.clone(),
+                alt: control.alt.clone(),
+                width: control.width.clone(),
+                height: control.height.clone(),
+            }
+        })
+        .collect()
+}
+
+fn is_browser_form_button(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "button" | "image" | "reset" | "submit"
+    )
+}
+
 fn is_browser_form_submitter(control: &BrowserFormControl) -> bool {
     !control.disabled && matches!(control.control_type.as_str(), "submit" | "image")
+}
+
+fn browser_form_text_entries(controls: &[BrowserFormControl]) -> Vec<BrowserFormTextEntry> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_text_entry(control))
+        .map(|control| BrowserFormTextEntry {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accessible_description: control.accessible_description.clone(),
+            placeholder: control.placeholder.clone(),
+            value: control.value.clone(),
+            text: control.text.clone(),
+            autocomplete: control.autocomplete.clone(),
+            autocomplete_tokens: control.autocomplete_tokens.clone(),
+            autocapitalize: control.autocapitalize.clone(),
+            enterkeyhint: control.enterkeyhint.clone(),
+            dirname: control.dirname.clone(),
+            spellcheck: control.spellcheck.clone(),
+            autocorrect: control.autocorrect.clone(),
+            inputmode: control.inputmode.clone(),
+            pattern: control.pattern.clone(),
+            min: control.min.clone(),
+            max: control.max.clone(),
+            step: control.step.clone(),
+            minlength: control.minlength.clone(),
+            maxlength: control.maxlength.clone(),
+            size: control.size.clone(),
+            rows: control.rows.clone(),
+            cols: control.cols.clone(),
+            wrap: control.wrap.clone(),
+            list: control.list.clone(),
+            datalist_options: control.datalist_options.clone(),
+            disabled: control.disabled,
+            required: control.required,
+            readonly: control.readonly,
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn is_browser_form_text_entry(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "text" | "search" | "url" | "tel" | "email" | "password" | "number" | "textarea"
+    )
+}
+
+fn browser_form_choice_controls(
+    controls: &[BrowserFormControl],
+    form_id: Option<&str>,
+) -> Vec<BrowserFormChoiceControl> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_choice_control(control))
+        .map(|control| BrowserFormChoiceControl {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            value: control.value.clone(),
+            checked: control.checked,
+            disabled: control.disabled,
+            required: control.required,
+            group_required: browser_choice_group_required(controls, control, form_id),
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+            group_name: control.name.clone(),
+            group_checked_ids: browser_choice_group_checked_ids(controls, control, form_id),
+            group_checked_values: browser_choice_group_checked_values(controls, control, form_id),
+        })
+        .collect()
+}
+
+fn is_browser_form_choice_control(control: &BrowserFormControl) -> bool {
+    matches!(control.control_type.as_str(), "checkbox" | "radio")
+}
+
+fn browser_choice_group_required(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> bool {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id))
+        .any(|control| control.required)
+}
+
+fn browser_choice_group_checked_ids(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> Vec<String> {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id) && control.checked)
+        .filter_map(|control| control.id.clone())
+        .collect()
+}
+
+fn browser_choice_group_checked_values(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> Vec<String> {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id) && control.checked)
+        .filter_map(|control| control.value.clone())
+        .collect()
+}
+
+fn browser_choice_group_peer(
+    control: &BrowserFormControl,
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> bool {
+    target.name.is_some()
+        && control.control_type == target.control_type
+        && control.name == target.name
+        && browser_choice_group_form_owner(control, form_id)
+            == browser_choice_group_form_owner(target, form_id)
+}
+
+fn browser_choice_group_form_owner<'a>(
+    control: &'a BrowserFormControl,
+    form_id: Option<&'a str>,
+) -> Option<&'a str> {
+    control.form_owner.as_deref().or(form_id)
+}
+
+fn browser_form_file_controls(controls: &[BrowserFormControl]) -> Vec<BrowserFormFileControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "file")
+        .map(|control| BrowserFormFileControl {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accept: control.accept.clone(),
+            accept_tokens: control.accept_tokens.clone(),
+            capture: control.capture.clone(),
+            multiple: control.multiple,
+            disabled: control.disabled,
+            required: control.required,
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_hidden_controls(controls: &[BrowserFormControl]) -> Vec<BrowserFormHiddenControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "hidden")
+        .map(|control| BrowserFormHiddenControl {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            value: control.value.clone(),
+            autocomplete: control.autocomplete.clone(),
+            autocomplete_tokens: control.autocomplete_tokens.clone(),
+            disabled: control.disabled,
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_image_controls(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormImageControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "image")
+        .map(|control| {
+            let submitter = is_browser_form_submitter(control);
+            BrowserFormImageControl {
+                id: control.id.clone(),
+                name: control.name.clone(),
+                form_owner: control.form_owner.clone(),
+                labels: control.labels.clone(),
+                accessible_name: control
+                    .accessible_name
+                    .clone()
+                    .or_else(|| control.alt.clone()),
+                src: control.src.clone(),
+                resolved_src: control.resolved_src.clone(),
+                alt: control.alt.clone(),
+                width: control.width.clone(),
+                height: control.height.clone(),
+                disabled: control.disabled,
+                autofocus: control.autofocus,
+                submitter,
+                action: if submitter {
+                    control
+                        .form_action
+                        .clone()
+                        .or_else(|| action.map(ToOwned::to_owned))
+                } else {
+                    control.form_action.clone()
+                },
+                resolved_action: if submitter {
+                    control
+                        .resolved_form_action
+                        .clone()
+                        .or_else(|| resolved_action.map(ToOwned::to_owned))
+                } else {
+                    control.resolved_form_action.clone()
+                },
+                method: control
+                    .form_method
+                    .clone()
+                    .unwrap_or_else(|| method.to_string()),
+                enctype: if submitter {
+                    control
+                        .form_enctype
+                        .clone()
+                        .or_else(|| enctype.map(ToOwned::to_owned))
+                } else {
+                    control.form_enctype.clone()
+                },
+                target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                effective_target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                        .or_else(|| base_target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                novalidate: submitter && (novalidate || control.form_novalidate),
+                value: control.value.clone(),
+                coordinate_names: browser_image_submitter_coordinate_names(control.name.as_deref()),
+                will_validate: control.will_validate,
+                validation_barred_reason: control.validation_barred_reason.clone(),
+            }
+        })
+        .collect()
+}
+
+fn browser_image_submitter_coordinate_names(name: Option<&str>) -> Vec<String> {
+    match name.filter(|name| !name.is_empty()) {
+        Some(name) => vec![format!("{name}.x"), format!("{name}.y")],
+        None => vec!["x".to_string(), "y".to_string()],
+    }
 }
 
 fn collect_form_controls_for_form_into(
@@ -14977,6 +15791,68 @@ mod tests {
     }
 
     #[test]
+    fn browser_form_image_descriptor_metadata_tracks_submitter_coordinates_and_assets() {
+        let document = parse_html(
+            "<base href=\"https://example.test/search/index.html\" target=_top>\
+             <form id=search action=find.html method=post novalidate>\
+             <input id=imageGo type=image name=spot src=buttons/search.png \
+             alt=\"Search image\" width=32 height=16 formaction=run.html \
+             formmethod=get formenctype=multipart/form-data formtarget=results \
+             formnovalidate autofocus>\
+             <input id=plainImage type=image alt=Plain disabled></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.image_controls.len(), 2);
+
+        let image = &form.image_controls[0];
+        assert_eq!(image.id.as_deref(), Some("imageGo"));
+        assert_eq!(image.name.as_deref(), Some("spot"));
+        assert_eq!(image.accessible_name.as_deref(), Some("Search image"));
+        assert_eq!(image.src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            image.resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(image.alt.as_deref(), Some("Search image"));
+        assert_eq!(image.width.as_deref(), Some("32"));
+        assert_eq!(image.height.as_deref(), Some("16"));
+        assert!(!image.disabled);
+        assert!(image.autofocus);
+        assert!(image.submitter);
+        assert_eq!(image.action.as_deref(), Some("run.html"));
+        assert_eq!(
+            image.resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(image.method, "get");
+        assert_eq!(image.enctype.as_deref(), Some("multipart/form-data"));
+        assert_eq!(image.target.as_deref(), Some("results"));
+        assert_eq!(image.effective_target.as_deref(), Some("results"));
+        assert!(image.novalidate);
+        assert_eq!(image.coordinate_names, vec!["spot.x", "spot.y"]);
+        assert!(!image.will_validate);
+        assert_eq!(
+            image.validation_barred_reason.as_deref(),
+            Some("input-type-image")
+        );
+
+        let plain = &form.image_controls[1];
+        assert_eq!(plain.id.as_deref(), Some("plainImage"));
+        assert_eq!(plain.name, None);
+        assert_eq!(plain.accessible_name.as_deref(), Some("Plain"));
+        assert!(plain.disabled);
+        assert!(!plain.submitter);
+        assert_eq!(plain.coordinate_names, vec!["x", "y"]);
+        assert_eq!(plain.method, "post");
+        assert_eq!(plain.action, None);
+        assert_eq!(plain.effective_target, None);
+        assert!(!plain.novalidate);
+    }
+
+    #[test]
     fn browser_form_label_output_descriptor_metadata_tracks_external_associations() {
         let document = parse_html(
             "<form id=cart><label for=qty>Quantity</label><input id=qty name=qty>\
@@ -15062,6 +15938,97 @@ mod tests {
             vec!["rust", "html", "Browser APIs"]
         );
         assert!(form.controls[2].datalist_options.is_empty());
+    }
+
+    #[test]
+    fn browser_form_measurement_descriptor_metadata_tracks_meter_progress_ranges_and_labels() {
+        let document = parse_html(
+            "<form id=telemetry>\
+             <label for=disk>Disk</label>\
+             <meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7 aria-describedby=disk-help>72%</meter>\
+             <p id=disk-help>Capacity used</p>\
+             <label for=upload>Upload</label>\
+             <progress id=upload value=30 max=100>30%</progress>\
+             <progress id=sync max=1 aria-label=Sync>Loading</progress>\
+             <input name=token value=ok>\
+             </form>\
+             <meter id=outside value=1>Outside</meter>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.id.as_deref(), Some("telemetry"));
+        assert_eq!(form.controls.len(), 1);
+        assert_eq!(form.controls[0].control_type, "text");
+
+        assert_eq!(form.measurements.len(), 3);
+        let disk = &form.measurements[0];
+        assert_eq!(disk.id.as_deref(), Some("disk"));
+        assert_eq!(disk.measurement_type, "meter");
+        assert_eq!(disk.labels, vec!["Disk"]);
+        assert_eq!(disk.accessible_name.as_deref(), Some("Disk"));
+        assert_eq!(
+            disk.accessible_description.as_deref(),
+            Some("Capacity used")
+        );
+        assert_eq!(disk.value.as_deref(), Some("0.72"));
+        assert_eq!(disk.min.as_deref(), Some("0"));
+        assert_eq!(disk.max.as_deref(), Some("1"));
+        assert_eq!(disk.low.as_deref(), Some("0.25"));
+        assert_eq!(disk.high.as_deref(), Some("0.9"));
+        assert_eq!(disk.optimum.as_deref(), Some("0.7"));
+        assert!(!disk.indeterminate);
+        assert_eq!(disk.text, "72%");
+
+        let upload = &form.measurements[1];
+        assert_eq!(upload.id.as_deref(), Some("upload"));
+        assert_eq!(upload.measurement_type, "progress");
+        assert_eq!(upload.labels, vec!["Upload"]);
+        assert_eq!(upload.accessible_name.as_deref(), Some("Upload"));
+        assert_eq!(upload.value.as_deref(), Some("30"));
+        assert_eq!(upload.max.as_deref(), Some("100"));
+        assert!(!upload.indeterminate);
+        assert_eq!(upload.text, "30%");
+
+        let sync = &form.measurements[2];
+        assert_eq!(sync.id.as_deref(), Some("sync"));
+        assert_eq!(sync.measurement_type, "progress");
+        assert_eq!(sync.accessible_name.as_deref(), Some("Sync"));
+        assert_eq!(sync.value, None);
+        assert_eq!(sync.max.as_deref(), Some("1"));
+        assert!(sync.indeterminate);
+        assert_eq!(sync.text, "Loading");
+    }
+
+    #[test]
+    fn browser_form_label_descriptor_metadata_tracks_measurement_associations() {
+        let document = parse_html(
+            "<form id=telemetry>\
+             <label for=disk>Disk</label>\
+             <meter id=disk value=0.72>72%</meter>\
+             <label>Sync<progress id=sync max=1>Loading</progress></label>\
+             <input name=token value=ok>\
+             </form>\
+             <label for=outside>Outside</label><meter id=outside value=1>Outside</meter>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.labels.len(), 2);
+        assert_eq!(form.labels[0].for_control.as_deref(), Some("disk"));
+        assert_eq!(form.labels[0].text, "Disk");
+        assert_eq!(form.labels[0].control_id.as_deref(), Some("disk"));
+        assert_eq!(form.labels[0].control_name, None);
+        assert_eq!(form.labels[0].control_type.as_deref(), Some("meter"));
+        assert_eq!(form.labels[0].association, "explicit");
+        assert_eq!(form.labels[1].for_control, None);
+        assert_eq!(form.labels[1].text, "SyncLoading");
+        assert_eq!(form.labels[1].control_id.as_deref(), Some("sync"));
+        assert_eq!(form.labels[1].control_name, None);
+        assert_eq!(form.labels[1].control_type.as_deref(), Some("progress"));
+        assert_eq!(form.labels[1].association, "implicit");
     }
 
     #[test]

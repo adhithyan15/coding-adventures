@@ -1,24 +1,33 @@
 use spice_engine::{
-    dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
-    estimate_period, format_adaptive_transient_table, format_corner_adaptive_transient_table,
-    format_corner_distortion_table, format_corner_fourier_table, format_corner_pole_zero_table,
-    format_corner_pss_table, format_corner_transient_table, format_dc_table,
-    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, fourier_corners, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, transient, transient_adaptive,
-    transient_adaptive_corners, transient_corners, transient_with_method, AdaptiveTransientOptions,
-    AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint,
-    CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource, DistortionHarmonic,
-    DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult,
-    FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
-    PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult,
-    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
-    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
-    TransientPoint, TransmissionLine, VoltageSource, Waveform,
+    dc_op, digital_event_streams_to_voltage_sources, distortion_from_fourier,
+    distortion_from_transient, distortion_from_transient_corners, estimate_period,
+    format_adaptive_digital_event_stream_table, format_adaptive_transient_table,
+    format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
+    format_corner_digital_event_stream_table, format_corner_distortion_table,
+    format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
+    format_corner_transient_table, format_dc_table, format_digital_bridge_schedule_table,
+    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
+    format_fourier_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, fourier_corners, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
+    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
+    transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
+    transient_adaptive_with_digital_event_streams_corners, transient_corners,
+    transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
+    CurrentSource, DigitalBridgeSchedule, DigitalEvent, DigitalEventStream, DigitalLogicLevels,
+    DigitalState, DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult,
+    Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet,
+    JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2016,4 +2025,581 @@ fn transient_rejects_invalid_pwl_waveform() {
         transient(&circuit, 0.1, 0.1),
         Err(SpiceError::InvalidElement { name, .. }) if name == "Vin"
     ));
+}
+
+#[test]
+fn digital_events_build_finite_edge_pwl_voltage_source() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let levels = DigitalLogicLevels::cmos_1v8(0.25e-9);
+
+    let source =
+        spice_engine::digital_events_to_voltage_source("Vdin", "din", "0", &events, levels)
+            .unwrap();
+    let waveform = source.waveform.as_ref().unwrap();
+
+    assert_close(source.voltage, 0.0);
+    assert_close(waveform.value_at(0.25e-9), 0.0);
+    assert_close(waveform.value_at(0.625e-9), 0.9);
+    assert_close(waveform.value_at(0.75e-9), 1.8);
+    assert_close(waveform.value_at(1.5e-9), 0.0);
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+
+    assert_close(points[0].voltage("din").unwrap(), 0.0);
+    assert_close(points[2].voltage("din").unwrap(), 1.8);
+    assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
+}
+
+#[test]
+fn named_digital_event_streams_build_pwl_voltage_sources() {
+    let streams = [
+        DigitalEventStream::new(
+            "din",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.25e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::High),
+                DigitalEvent::new(1.0e-9, DigitalState::Low),
+            ],
+        ),
+    ];
+    let sources = digital_event_streams_to_voltage_sources(
+        &streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+
+    assert_eq!(sources.len(), 2);
+    assert_eq!(sources[0].name, "Vdin");
+    assert_eq!(sources[0].positive, "din");
+    assert_eq!(sources[1].name, "Venable");
+    assert_eq!(sources[1].positive, "enable");
+
+    let mut circuit = Circuit::new();
+    for source in sources {
+        circuit.add(Element::VoltageSource(source));
+    }
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rdin", "din", "0", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Renable", "enable", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+
+    assert_close(points[0].voltage("din").unwrap(), 0.0);
+    assert_close(points[2].voltage("din").unwrap(), 1.8);
+    assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
+    assert_close(points[0].voltage("enable").unwrap(), 1.8);
+    assert_close(points.last().unwrap().voltage("enable").unwrap(), 0.0);
+}
+
+#[test]
+fn digital_bridge_schedule_collects_unique_event_and_transition_breakpoints() {
+    let streams = [
+        DigitalEventStream::new(
+            "clk",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.25e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.25e-9, DigitalState::Low),
+                DigitalEvent::new(0.75e-9, DigitalState::High),
+            ],
+        ),
+    ];
+
+    let schedule = spice_engine::digital_event_streams_to_bridge_schedule(
+        &streams,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+
+    assert_close(schedule.stop_time, 1.5e-9);
+    assert_eq!(schedule.breakpoints.len(), 7);
+    assert_close(schedule.breakpoints[0], 0.0);
+    assert_close(schedule.breakpoints[1], 0.25e-9);
+    assert_close(schedule.breakpoints[2], 0.5e-9);
+    assert_close(schedule.breakpoints[3], 0.75e-9);
+    assert_close(schedule.breakpoints[4], 1.0e-9);
+    assert_close(schedule.breakpoints[5], 1.25e-9);
+    assert_close(schedule.breakpoints[6], 1.5e-9);
+    assert_eq!(
+        format_digital_bridge_schedule_table(&schedule).unwrap(),
+        "Index\tTime\tStopTime\n0\t0.000000e+00\t1.500000e-09\n1\t2.500000e-10\t1.500000e-09\n2\t5.000000e-10\t1.500000e-09\n3\t7.500000e-10\t1.500000e-09\n4\t1.000000e-09\t1.500000e-09\n5\t1.250000e-09\t1.500000e-09\n6\t1.500000e-09\t1.500000e-09\n"
+    );
+}
+
+#[test]
+fn digital_bridge_schedule_rejects_overlapping_transitions() {
+    let streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(0.6e-9, DigitalState::Low),
+        ],
+    )];
+
+    assert!(matches!(
+        spice_engine::digital_event_streams_to_bridge_schedule(
+            &streams,
+            DigitalLogicLevels::cmos_1v8(0.25e-9),
+        ),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "digital_events"
+    ));
+}
+
+#[test]
+fn digital_bridge_schedule_table_rejects_unsorted_breakpoints() {
+    let schedule = DigitalBridgeSchedule {
+        stop_time: 1.0e-9,
+        breakpoints: vec![0.5e-9, 0.25e-9],
+    };
+
+    assert!(matches!(
+        format_digital_bridge_schedule_table(&schedule),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "digital_bridge_schedule"
+    ));
+}
+
+#[test]
+fn transient_bridge_runs_digital_input_and_samples_output_stream() {
+    let input_streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(1.25e-9, DigitalState::Low),
+        ],
+    )];
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rout", "din", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 0.1e-12,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 10_000.0,
+    )));
+
+    let result = transient_with_digital_event_streams(
+        &circuit,
+        &input_streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+        0.25e-9,
+        1.5e-9,
+        &[("dout", "V(out)")],
+        DigitalThresholds::cmos_1v8(),
+    )
+    .unwrap();
+
+    assert_eq!(result.output_streams.len(), 1);
+    assert_eq!(result.output_streams[0].signal_name, "dout");
+    assert_eq!(
+        format_digital_event_stream_table(&result.output_streams).unwrap(),
+        "Signal\tIndex\tTime\tState\ndout\t0\t2.500000e-10\tlow\ndout\t1\t7.500000e-10\thigh\ndout\t2\t1.500000e-09\tlow\n"
+    );
+    assert!(result
+        .points
+        .iter()
+        .any(|point| point.voltage("out").unwrap() > 1.2));
+}
+
+#[test]
+fn digital_transient_bridge_runs_across_named_corners_and_formats_stream_table() {
+    let input_streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(1.25e-9, DigitalState::Low),
+        ],
+    )];
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rout", "din", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 0.1e-12,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 10_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", vec![]),
+        CornerSpec::new(
+            "cout-large",
+            vec![CornerOverride::new("Cout", "capacitance", 10.0e-12)],
+        ),
+    ];
+
+    let result = transient_with_digital_event_streams_corners(
+        &circuit,
+        &input_streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+        0.25e-9,
+        1.5e-9,
+        &[("dout", "V(out)")],
+        DigitalThresholds::cmos_1v8(),
+        &corners,
+    )
+    .unwrap();
+
+    assert_eq!(result.points.len(), 2);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "cout-large");
+    assert!(result.points[0]
+        .result
+        .points
+        .iter()
+        .any(|point| point.voltage("out").unwrap() > 1.2));
+    assert!(result.points[1]
+        .result
+        .points
+        .iter()
+        .all(|point| point.voltage("out").unwrap() < 1.2));
+    assert_eq!(
+        format_corner_digital_event_stream_table(&result).unwrap(),
+        "Corner\tSignal\tIndex\tTime\tState\nnominal\tdout\t0\t2.500000e-10\tlow\nnominal\tdout\t1\t7.500000e-10\thigh\nnominal\tdout\t2\t1.500000e-09\tlow\ncout-large\tdout\t0\t2.500000e-10\tlow\n"
+    );
+}
+
+#[test]
+fn adaptive_digital_transient_bridge_samples_output_stream_and_formats_metadata() {
+    let input_streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(1.25e-9, DigitalState::Low),
+        ],
+    )];
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rout", "din", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 0.1e-12,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 10_000.0,
+    )));
+
+    let result = transient_adaptive_with_digital_event_streams(
+        &circuit,
+        &input_streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+        0.25e-9,
+        1.5e-9,
+        AdaptiveTransientOptions {
+            method: TransientMethod::Euler,
+            tolerance: 1.0e-3,
+            min_step: Some(0.25e-9),
+            max_step: Some(0.25e-9),
+        },
+        &[("dout", "V(out)")],
+        DigitalThresholds::cmos_1v8(),
+    )
+    .unwrap();
+
+    assert_eq!(result.result.method, TransientMethod::Euler);
+    assert!(result.result.converged);
+    assert_eq!(result.result.steps_rejected, 0);
+    assert_eq!(result.output_streams.len(), 1);
+    assert_eq!(result.output_streams[0].signal_name, "dout");
+    assert_eq!(
+        format_adaptive_digital_event_stream_table(&result).unwrap(),
+        "Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\neuler\t0\ttrue\tdout\t0\t2.500000e-10\tlow\neuler\t0\ttrue\tdout\t1\t7.500000e-10\thigh\neuler\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
+    );
+    assert!(result
+        .result
+        .points
+        .iter()
+        .any(|point| point.voltage("out").unwrap() > 1.2));
+}
+
+#[test]
+fn adaptive_digital_transient_bridge_runs_named_corners_and_formats_stream_table() {
+    let input_streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(1.25e-9, DigitalState::Low),
+        ],
+    )];
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rout", "din", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 0.1e-12,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 10_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", vec![]),
+        CornerSpec::new(
+            "cout-large",
+            vec![CornerOverride::new("Cout", "capacitance", 10.0e-12)],
+        ),
+    ];
+
+    let result = transient_adaptive_with_digital_event_streams_corners(
+        &circuit,
+        &input_streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+        0.25e-9,
+        1.5e-9,
+        AdaptiveTransientOptions {
+            method: TransientMethod::Euler,
+            tolerance: 1.0e-3,
+            min_step: Some(0.25e-9),
+            max_step: Some(0.25e-9),
+        },
+        &[("dout", "V(out)")],
+        DigitalThresholds::cmos_1v8(),
+        &corners,
+    )
+    .unwrap();
+
+    assert_eq!(result.points.len(), 2);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "cout-large");
+    assert!(result.points[0].result.result.converged);
+    assert!(result.points[1].result.result.converged);
+    assert!(result.points[0]
+        .result
+        .result
+        .points
+        .iter()
+        .any(|point| point.voltage("out").unwrap() > 1.2));
+    assert!(result.points[1]
+        .result
+        .result
+        .points
+        .iter()
+        .all(|point| point.voltage("out").unwrap() < 1.2));
+    assert_eq!(
+        format_corner_adaptive_digital_event_stream_table(&result).unwrap(),
+        "Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\nnominal\teuler\t0\ttrue\tdout\t0\t2.500000e-10\tlow\nnominal\teuler\t0\ttrue\tdout\t1\t7.500000e-10\thigh\nnominal\teuler\t0\ttrue\tdout\t2\t1.500000e-09\tlow\ncout-large\teuler\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+    );
+}
+
+#[test]
+fn transient_probe_samples_back_to_digital_events() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let source = spice_engine::digital_events_to_voltage_source(
+        "Vdin",
+        "din",
+        "0",
+        &events,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let sampled =
+        sample_transient_probe_as_digital_events(&points, "V(din)", DigitalThresholds::cmos_1v8())
+            .unwrap();
+
+    assert_eq!(sampled.len(), 3);
+    assert_eq!(sampled[0].state, DigitalState::Low);
+    assert_close(sampled[0].time_seconds, 0.25e-9);
+    assert_eq!(sampled[1].state, DigitalState::High);
+    assert_close(sampled[1].time_seconds, 0.75e-9);
+    assert_eq!(sampled[2].state, DigitalState::Low);
+    assert_close(sampled[2].time_seconds, 1.5e-9);
+}
+
+#[test]
+fn digital_event_text_output_table_is_stable() {
+    let events = [
+        DigitalEvent::new(0.25e-9, DigitalState::Low),
+        DigitalEvent::new(0.75e-9, DigitalState::High),
+        DigitalEvent::new(1.5e-9, DigitalState::Low),
+    ];
+
+    assert_eq!(
+        format_digital_event_table(&events).unwrap(),
+        "Index\tTime\tState\n0\t2.500000e-10\tlow\n1\t7.500000e-10\thigh\n2\t1.500000e-09\tlow\n"
+    );
+}
+
+#[test]
+fn sampled_digital_event_text_output_table_is_stable() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let source = spice_engine::digital_events_to_voltage_source(
+        "Vdin",
+        "din",
+        "0",
+        &events,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let sampled =
+        sample_transient_probe_as_digital_events(&points, "V(din)", DigitalThresholds::cmos_1v8())
+            .unwrap();
+
+    assert_eq!(
+        format_digital_event_table(&sampled).unwrap(),
+        "Index\tTime\tState\n0\t2.500000e-10\tlow\n1\t7.500000e-10\thigh\n2\t1.500000e-09\tlow\n"
+    );
+}
+
+#[test]
+fn named_digital_event_stream_text_output_table_is_stable() {
+    let streams = [
+        DigitalEventStream::new(
+            "clk",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.0e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.25e-9, DigitalState::Low),
+                DigitalEvent::new(0.75e-9, DigitalState::High),
+            ],
+        ),
+    ];
+
+    assert_eq!(
+        format_digital_event_stream_table(&streams).unwrap(),
+        "Signal\tIndex\tTime\tState\nclk\t0\t0.000000e+00\tlow\nclk\t1\t5.000000e-10\thigh\nclk\t2\t1.000000e-09\tlow\nenable\t0\t2.500000e-10\tlow\nenable\t1\t7.500000e-10\thigh\n"
+    );
+}
+
+#[test]
+fn sampled_named_digital_event_stream_text_output_table_is_stable() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let source = spice_engine::digital_events_to_voltage_source(
+        "Vdin",
+        "din",
+        "0",
+        &events,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let sampled =
+        sample_transient_probe_as_digital_events(&points, "V(din)", DigitalThresholds::cmos_1v8())
+            .unwrap();
+    let streams = [DigitalEventStream::new("din", sampled)];
+
+    assert_eq!(
+        format_digital_event_stream_table(&streams).unwrap(),
+        "Signal\tIndex\tTime\tState\ndin\t0\t2.500000e-10\tlow\ndin\t1\t7.500000e-10\thigh\ndin\t2\t1.500000e-09\tlow\n"
+    );
+}
+
+#[test]
+fn multiple_transient_probes_sample_to_named_digital_event_streams() {
+    let din_events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let enable_events = [
+        DigitalEvent::new(0.0, DigitalState::High),
+        DigitalEvent::new(1.0e-9, DigitalState::Low),
+    ];
+    let levels = DigitalLogicLevels::cmos_1v8(0.25e-9);
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(
+        spice_engine::digital_events_to_voltage_source("Vdin", "din", "0", &din_events, levels)
+            .unwrap(),
+    ));
+    circuit.add(Element::VoltageSource(
+        spice_engine::digital_events_to_voltage_source(
+            "Venable",
+            "enable",
+            "0",
+            &enable_events,
+            levels,
+        )
+        .unwrap(),
+    ));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rdin", "din", "0", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Renable", "enable", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let streams = sample_transient_probes_as_digital_event_streams(
+        &points,
+        &[("din", "V(din)"), ("enable", "V(enable)")],
+        DigitalThresholds::cmos_1v8(),
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_digital_event_stream_table(&streams).unwrap(),
+        "Signal\tIndex\tTime\tState\ndin\t0\t2.500000e-10\tlow\ndin\t1\t7.500000e-10\thigh\ndin\t2\t1.500000e-09\tlow\nenable\t0\t2.500000e-10\thigh\nenable\t1\t1.250000e-09\tlow\n"
+    );
 }

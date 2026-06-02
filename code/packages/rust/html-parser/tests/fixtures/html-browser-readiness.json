@@ -84,6 +84,29 @@
               { "control_type": "select", "name": "section", "submission_values": ["manuals"] },
               { "control_type": "textarea", "name": "notes", "submission_values": ["Line one Line two"] }
             ],
+            "validation_controls": [
+              { "control_type": "text", "name": "q", "will_validate": true },
+              { "control_type": "hidden", "name": "page", "validation_barred_reason": "input-type-hidden" },
+              { "control_type": "checkbox", "name": "in_stock", "will_validate": true },
+              { "control_type": "text", "name": "disabled", "validation_barred_reason": "disabled" },
+              { "control_type": "select", "name": "section", "will_validate": true },
+              { "control_type": "textarea", "name": "notes", "will_validate": true },
+              { "control_type": "submit", "name": "go", "will_validate": true }
+            ],
+            "buttons": [
+              { "control_type": "submit", "name": "go", "accessible_name": "Search", "submitter": true, "action": "/search", "method": "post", "enctype": "multipart/form-data", "target": "results", "effective_target": "results", "text": "Search" }
+            ],
+            "text_entries": [
+              { "control_type": "text", "name": "q", "value": "rust html", "text": "", "disabled": false, "will_validate": true },
+              { "control_type": "text", "name": "disabled", "value": "no", "text": "", "disabled": true, "validation_barred_reason": "disabled" },
+              { "control_type": "textarea", "name": "notes", "value": "Line one Line two", "text": "Line one Line two", "disabled": false, "will_validate": true }
+            ],
+            "choice_controls": [
+              { "control_type": "checkbox", "name": "in_stock", "value": "yes", "checked": true, "disabled": false, "successful": true, "submission_values": ["yes"], "will_validate": true, "group_name": "in_stock", "group_checked_values": ["yes"] }
+            ],
+            "hidden_controls": [
+              { "name": "page", "value": "1", "disabled": false, "successful": true, "submission_values": ["1"], "validation_barred_reason": "input-type-hidden" }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
@@ -151,7 +174,7 @@
     {
       "id": "form-accessibility-document-page",
       "description": "Browser document form summaries include labels, accessible names, fieldset group descriptors, submission metadata, validation descriptors, select option descriptors, text-control editing/layout descriptors, autocomplete/accept token metadata, and control state.",
-      "input": "<base href=\"https://example.test/search/index.html\" target=_search><body><form id=search name=searchForm aria-label=\"Search form\" action=find.html method=post accept-charset=\"utf-8 windows-1252\" autocomplete=on rel=\"noreferrer external\" novalidate><label id=q-help for=q>Query</label><input id=q name=q aria-describedby=q-help placeholder=\"Search terms\" required autocomplete=\"section-primary shipping search\" autocapitalize=words enterkeyhint=search dirname=q.dir spellcheck=false autocorrect=off autofocus inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions><datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist><label>Count<input id=count type=number name=count min=1 max=10 step=0.5 required value=2></label><label>Notes<textarea id=notes name=notes placeholder=Details readonly maxlength=500 autocapitalize=sentences enterkeyhint=done dirname=notes.dir spellcheck=true autocorrect=on rows=4 cols=40 wrap=hard>Keep me</textarea></label><fieldset disabled><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple size=5><optgroup label=Print><option value=books selected>Books<option value=manuals label=Manuals>Manuals</optgroup><optgroup label=Legacy disabled><option value=fiche>Microfiche</optgroup></select><input id=upload type=file name=upload accept=\"image/png, image/jpeg, .webp\" capture=environment><button id=go type=submit aria-label=\"Run search\" formaction=run.html formenctype=\"application/x-www-form-urlencoded\" formmethod=post formtarget=results formnovalidate>Go</button><input id=imageGo type=image name=image-go src=buttons/search.png alt=\"Search image\" width=32 height=16><output id=total name=total for=\"q kind\">Ready</output></form><input id=external form=search name=outside placeholder=Outside>",
+      "input": "<base href=\"https://example.test/search/index.html\" target=_search><body><form id=search name=searchForm aria-label=\"Search form\" action=find.html method=post accept-charset=\"utf-8 windows-1252\" autocomplete=on rel=\"noreferrer external\" novalidate><label id=q-help for=q>Query</label><input id=q name=q aria-describedby=q-help placeholder=\"Search terms\" required autocomplete=\"section-primary shipping search\" autocapitalize=words enterkeyhint=search dirname=q.dir spellcheck=false autocorrect=off autofocus inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=query-suggestions><datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist><label>Count<input id=count type=number name=count min=1 max=10 step=0.5 required value=2></label><label>Notes<textarea id=notes name=notes placeholder=Details readonly maxlength=500 autocapitalize=sentences enterkeyhint=done dirname=notes.dir spellcheck=true autocorrect=on rows=4 cols=40 wrap=hard>Keep me</textarea></label><fieldset disabled><legend>Options</legend><label>Fast<input id=fast type=checkbox name=fast checked></label></fieldset><select id=kind name=kind title=Kind multiple size=5><optgroup label=Print><option value=books selected>Books<option value=manuals label=Manuals>Manuals</optgroup><optgroup label=Legacy disabled><option value=fiche>Microfiche</optgroup></select><input id=upload type=file name=upload accept=\"image/png, image/jpeg, .webp\" capture=environment><button id=go type=submit aria-label=\"Run search\" formaction=run.html formenctype=\"application/x-www-form-urlencoded\" formmethod=post formtarget=results formnovalidate>Go</button><input id=imageGo type=image name=image-go src=buttons/search.png alt=\"Search image\" width=32 height=16><output id=total name=total for=\"q kind missing\" aria-label=Total aria-describedby=q-help>Ready</output></form><input id=external form=search name=outside placeholder=Outside>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/search/index.html",
@@ -216,7 +239,7 @@
               { "id": "kind", "name": "kind", "accessible_name": "Kind", "multiple": true, "size": "5", "value": "books", "selected_options": ["books"], "options": [{ "value": "books", "text": "Books", "selected": true, "group_label": "Print" }, { "value": "manuals", "label": "Manuals", "text": "Manuals", "group_label": "Print" }, { "value": "fiche", "text": "Microfiche", "disabled": true, "group_label": "Legacy" }], "text": "Books Manuals Microfiche" }
             ],
             "outputs": [
-              { "id": "total", "name": "total", "for_tokens": ["q", "kind"], "value": "Ready", "text": "Ready" }
+              { "id": "total", "name": "total", "accessible_name": "Total", "accessible_description": "Query", "for_tokens": ["q", "kind", "missing"], "for_control_ids": ["q", "kind"], "for_control_names": ["q", "kind"], "for_control_types": ["text", "select"], "value": "Ready", "disabled": false, "validation_barred_reason": "output", "text": "Ready" }
             ],
             "successful_controls": [
               { "id": "q", "control_type": "text", "name": "q", "submission_values": [""] },
@@ -225,6 +248,37 @@
               { "id": "kind", "control_type": "select", "name": "kind", "submission_values": ["books"] },
               { "id": "upload", "control_type": "file", "name": "upload", "submission_values": [] },
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "submission_values": [""] }
+            ],
+            "validation_controls": [
+              { "id": "q", "control_type": "text", "name": "q", "will_validate": true, "required": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"] },
+              { "id": "count", "control_type": "number", "name": "count", "will_validate": true, "required": true, "validation_attributes": ["required", "min", "max", "step"] },
+              { "id": "notes", "control_type": "textarea", "name": "notes", "validation_attributes": ["readonly", "maxlength"], "validation_barred_reason": "readonly" },
+              { "id": "fast", "control_type": "checkbox", "name": "fast", "validation_barred_reason": "disabled" },
+              { "id": "kind", "control_type": "select", "name": "kind", "will_validate": true },
+              { "id": "upload", "control_type": "file", "name": "upload", "will_validate": true },
+              { "id": "go", "control_type": "submit", "will_validate": true },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "validation_barred_reason": "input-type-image" },
+              { "id": "total", "control_type": "output", "name": "total", "validation_barred_reason": "output" },
+              { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "will_validate": true }
+            ],
+            "buttons": [
+              { "id": "go", "control_type": "submit", "accessible_name": "Run search", "submitter": true, "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "effective_target": "results", "novalidate": true, "text": "Go" },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "submitter": true, "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "effective_target": "_search", "novalidate": true, "text": "", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16" }
+            ],
+            "text_entries": [
+              { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "value": null, "text": "", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"] },
+              { "id": "count", "control_type": "number", "name": "count", "labels": ["Count"], "accessible_name": "Count", "value": "2", "text": "", "min": "1", "max": "10", "step": "0.5", "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "min", "max", "step"] },
+              { "id": "notes", "control_type": "textarea", "name": "notes", "labels": ["NotesKeep me"], "accessible_name": "NotesKeep me", "placeholder": "Details", "value": "Keep me", "text": "Keep me", "autocapitalize": "sentences", "enterkeyhint": "done", "dirname": "notes.dir", "spellcheck": "true", "autocorrect": "on", "maxlength": "500", "rows": "4", "cols": "40", "wrap": "hard", "disabled": false, "readonly": true, "validation_attributes": ["readonly", "maxlength"], "validation_barred_reason": "readonly" },
+              { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "text": "", "disabled": false, "will_validate": true }
+            ],
+            "choice_controls": [
+              { "id": "fast", "control_type": "checkbox", "name": "fast", "labels": ["Fast"], "accessible_name": "Fast", "value": "on", "checked": true, "disabled": true, "validation_barred_reason": "disabled", "group_name": "fast", "group_checked_ids": ["fast"], "group_checked_values": ["on"] }
+            ],
+            "file_controls": [
+              { "id": "upload", "name": "upload", "accept": "image/png, image/jpeg, .webp", "accept_tokens": ["image/png", "image/jpeg", ".webp"], "capture": "environment", "multiple": false, "disabled": false, "successful": true, "submission_values": [], "will_validate": true }
+            ],
+            "image_controls": [
+              { "id": "imageGo", "name": "image-go", "accessible_name": "Search image", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16", "disabled": false, "submitter": true, "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "effective_target": "_search", "novalidate": true, "value": null, "coordinate_names": ["image-go.x", "image-go.y"], "validation_barred_reason": "input-type-image" }
             ],
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "successful": true, "submission_values": [""], "autofocus": true, "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"], "checked": false, "text": "", "options": [] },
@@ -235,7 +289,7 @@
               { "id": "upload", "control_type": "file", "name": "upload", "accept": "image/png, image/jpeg, .webp", "accept_tokens": ["image/png", "image/jpeg", ".webp"], "capture": "environment", "value": null, "successful": true, "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "id": "go", "control_type": "submit", "name": null, "accessible_name": "Run search", "form_action": "run.html", "resolved_form_action": "https://example.test/search/run.html", "form_enctype": "application/x-www-form-urlencoded", "form_method": "post", "form_target": "results", "form_novalidate": true, "value": null, "disabled": false, "will_validate": true, "checked": false, "text": "Go", "options": [] },
               { "id": "imageGo", "control_type": "image", "name": "image-go", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16", "value": null, "disabled": false, "validation_barred_reason": "input-type-image", "checked": false, "text": "", "options": [] },
-              { "id": "total", "control_type": "output", "name": "total", "output_for": ["q", "kind"], "value": "Ready", "disabled": false, "validation_barred_reason": "output", "checked": false, "text": "Ready", "options": [] },
+              { "id": "total", "control_type": "output", "name": "total", "accessible_name": "Total", "accessible_description": "Query", "output_for": ["q", "kind", "missing"], "value": "Ready", "disabled": false, "validation_barred_reason": "output", "checked": false, "text": "Ready", "options": [] },
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "successful": true, "submission_values": [""], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] }
             ],
             "submitters": [
@@ -742,6 +796,62 @@
           { "element": "span", "id": "decorative", "role": "inline", "text": "Decorative", "aria_hidden": true }
         ],
         "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "form-measurement-descriptor-page",
+      "description": "Browser document form summaries expose in-form meter and progress descriptors without adding them to submission controls.",
+      "input": "<form id=telemetry><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7 aria-describedby=disk-help>72%</meter><p id=disk-help>Capacity used</p><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=sync max=1 aria-label=Sync>Loading</progress><input name=token value=ok></form><meter id=outside value=1>Outside</meter>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Disk 72% Capacity used Upload 30% Loading Outside",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "telemetry", "name": null, "text": "Disk 72% Capacity used Upload 30% Loading" },
+          { "id": "disk", "name": null, "text": "72%" },
+          { "id": "disk-help", "name": null, "text": "Capacity used" },
+          { "id": "upload", "name": null, "text": "30%" },
+          { "id": "sync", "name": null, "text": "Loading" },
+          { "id": "outside", "name": null, "text": "Outside" }
+        ],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [
+          {
+            "id": "telemetry",
+            "action": null,
+            "resolved_action": null,
+            "method": "get",
+            "enctype": null,
+            "target": null,
+            "labels": [
+              { "for_control": "disk", "text": "Disk", "control_id": "disk", "control_type": "meter", "association": "explicit" },
+              { "for_control": "upload", "text": "Upload", "control_id": "upload", "control_type": "progress", "association": "explicit" }
+            ],
+            "measurements": [
+              { "id": "disk", "measurement_type": "meter", "labels": ["Disk"], "accessible_name": "Disk", "accessible_description": "Capacity used", "value": "0.72", "min": "0", "max": "1", "low": "0.25", "high": "0.9", "optimum": "0.7", "text": "72%" },
+              { "id": "upload", "measurement_type": "progress", "labels": ["Upload"], "accessible_name": "Upload", "value": "30", "max": "100", "text": "30%" },
+              { "id": "sync", "measurement_type": "progress", "accessible_name": "Sync", "max": "1", "indeterminate": true, "text": "Loading" }
+            ],
+            "successful_controls": [
+              { "control_type": "text", "name": "token", "submission_values": ["ok"] }
+            ],
+            "validation_controls": [
+              { "control_type": "text", "name": "token", "will_validate": true }
+            ],
+            "text_entries": [
+              { "control_type": "text", "name": "token", "value": "ok", "text": "", "disabled": false, "will_validate": true }
+            ],
+            "controls": [
+              { "control_type": "text", "name": "token", "value": "ok", "successful": true, "submission_values": ["ok"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] }
+            ]
+          }
+        ],
         "tables": []
       }
     },

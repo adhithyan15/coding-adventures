@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.7.0"
+version = "0.11.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.7.0 (A1+++): adds `--emit=riscv32` flag (aliases `rv32`, `bin`) that routes source → IIR → RV32I machine code (.bin) via iir-to-riscv, cross-platform.  Downstream consumers: riscv-simulator, qemu-riscv32, flash loaders."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.11.0 (A5++++): adds `--emit=ge225` flag (aliases `ge-225`, `225`) that routes source → IIR → GE-225 machine code (.bin) via iir-to-ge225, cross-platform.  The GE-225 (1959) was the mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz — primarily a BASIC fit.  Previous targets: v0.10.0 (A4+++ intel4004), v0.9.0 (A3+++ armv7), v0.8.0 (A2+++ intel8008), v0.7.0 (A1+++ riscv32)."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -15,6 +15,10 @@ interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
 iir-to-riscv          = { path = "../iir-to-riscv" }
+iir-to-intel8008      = { path = "../iir-to-intel8008" }
+iir-to-armv7          = { path = "../iir-to-armv7" }
+iir-to-intel4004      = { path = "../iir-to-intel4004" }
+iir-to-ge225          = { path = "../iir-to-ge225" }
 
 [[bin]]
 name = "lang-aot"

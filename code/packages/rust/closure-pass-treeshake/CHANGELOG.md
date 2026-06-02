@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-pass-treeshake` crate will be documented in this file.
 
+## [0.3.1] - 2026-06-02
+
+### Added — retention test (paired with CLOC13.0.2 activation)
+
+A single new test: `apply_step_keeps_function_when_called`. Fixture: `function f() {} f();`. Now that PR #4825 (CLOC13.0.2 nested scopes) is on main, the analyzer walks reference sites both at the top level AND inside function bodies under nested Function scopes. The `f()` callee Identifier emits a Reference resolving to the function binding, so `use_count[f] = 1` and the apply step's dead-shape scan correctly skips `f`.
+
+This test was intentionally deferred from CLOC13.C.1 (PR #4803) because at that time:
+- The analyzer body (CLOC13.0 / PR #4787) populated bindings but not references.
+- Reference activation (CLOC13.0.1 / PR #4800) was about to land but #4803 was forked from earlier main.
+- Including the retention test in #4803 would have made it fail pre-#4800 and pass post-#4800 — fragile across PR sequencing.
+
+Bundling it now as a tiny follow-up keeps the test surface complete without coupling to a mid-flight rebase.
+
+No code changes to the pass body — just test coverage. No version bump beyond the patch level (`0.3.0` → `0.3.1`).
+
 ## [0.3.0] - 2026-06-02
 
 ### Added (CLOC13.C.1 — the apply step, `changed` unpinned)

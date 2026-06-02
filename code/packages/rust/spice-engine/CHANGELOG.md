@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- Add `ac_sweep_corners_parallel` for order-preserving parallel Rust `.AC`
+  frequency-sweep evaluation across named PVT corners.
+- Add `dc_sweep_corners_parallel` for order-preserving parallel Rust `.DC`
+  source-sweep evaluation across named PVT corners.
+- Add `dc_corners_parallel` for order-preserving parallel Rust DC
+  operating-point evaluation across named PVT corners.
+- Add `digital_event_streams_to_bridge_schedule` and
+  `format_digital_bridge_schedule_table` for stable SPICE-side mixed-signal
+  bridge breakpoint schedules over digital event starts and finite-edge
+  transition endpoints.
+- Add `transient_adaptive_with_digital_event_streams`,
+  `transient_adaptive_with_digital_event_streams_corners`, and adaptive
+  digital event stream table formatters for SPICE-side mixed-signal bridge
+  snapshots that carry method, rejected-step, and convergence metadata.
+- Add `transient_with_digital_event_streams_corners` and
+  `format_corner_digital_event_stream_table` for stable named-corner
+  mixed-signal transient bridge output stream snapshots.
+- Add `transient_with_digital_event_streams` for a SPICE-side mixed-signal
+  transient bridge from named digital input streams to sampled output streams.
+- Add `digital_event_streams_to_voltage_sources` for converting named
+  mixed-signal event streams into finite-edge PWL voltage sources.
+- Add `sample_transient_probes_as_digital_event_streams` for collecting
+  multiple thresholded transient probes as named mixed-signal event streams.
+- Add `DigitalEventStream` and `format_digital_event_stream_table` for stable
+  tab-separated named mixed-signal digital event stream snapshots.
+- Add `format_digital_event_table` for stable tab-separated mixed-signal
+  digital event stream snapshots.
+- Add binary mixed-signal boundary helpers that convert digital event timelines
+  and named event streams into finite-edge PWL voltage sources and threshold
+  transient probes back into digital events.
 - Add `dc_temperature_sweep_corners` and
   `format_corner_temperature_dc_table` for stable tab-separated named-corner
   DC operating-point snapshots across explicit `.temp`-style analysis
