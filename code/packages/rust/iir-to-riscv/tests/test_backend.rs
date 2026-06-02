@@ -521,3 +521,119 @@ fn call_builtin_unknown_name_is_unsupported() {
         other => panic!("expected UnsupportedOp, got: {other:?}"),
     }
 }
+
+// ===========================================================================
+// 15. A1++.5 — control flow within a function
+// ===========================================================================
+//
+// `label "L"` records a byte offset; `jmp "L"` → `jal x0, +offset`;
+// `jmp_if_true cond, L` → `bne cond, x0, +offset`;
+// `jmp_if_false cond, L` → `beq cond, x0, +offset`.
+//
+// Offsets are resolved in a second pass after every label is known.
+
+#[test]
+fn jmp_around_a_dead_block_patches_jal_with_real_offset() {
+    use riscv_simulator::encoding::encode_jal;
+    // Module:
+    //   const v = 1
+    //   jmp "L_end"
+    //   const dead = 99    ; unreachable but kept to grow the gap
+    //   label "L_end"
+    //   ret v
+    let f = IIRFunction::new("f", vec![], "i32", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("jmp",   None,             vec![Operand::Var("L_end".into())], "void"),
+        IIRInstr::new("const", Some("dead".into()), vec![Operand::Int(99)], "i32"),
+        IIRInstr::new("label", None, vec![Operand::Var("L_end".into())], "void"),
+        IIRInstr::new("ret",   None, vec![Operand::Var("v".into())], "i32"),
+    ]);
+    let words = lower(&module_with(f));
+    // Expected layout:
+    //   [0] addi t0, x0, 1      ; v = 1                    @ byte 0
+    //   [1] jal  x0, +8         ; jmp to L_end             @ byte 4
+    //   [2] addi t1, x0, 99     ; dead = 99                @ byte 8
+    //   [3] (label L_end here)  ; addi a0, t0, 0  @ byte 12  ← target
+    //   [4] jalr x0, x1, 0      ; ret                      @ byte 16
+    //
+    // So jal at byte 4 should jump +8 bytes (target byte 12).
+    assert_eq!(words[1], encode_jal(X0, 8),
+        "jal at byte 4 should encode +8 offset; got 0x{:08x}", words[1]);
+}
+
+#[test]
+fn jmp_if_true_emits_bne_with_resolved_offset() {
+    use riscv_simulator::encoding::encode_bne;
+    // const cond = 1
+    // jmp_if_true cond, "L_end"
+    // const dead = 99
+    // label "L_end"
+    // ret_void
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("cond".into()), Operand::Var("L_end".into())], "i32"),
+        IIRInstr::new("const", Some("dead".into()), vec![Operand::Int(99)], "i32"),
+        IIRInstr::new("label", None, vec![Operand::Var("L_end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower(&module_with(f));
+    // [0] addi t0, x0, 1     @ byte 0   (cond = 1, t0)
+    // [1] bne  t0, x0, +8    @ byte 4   ← jmp_if_true
+    // [2] addi t1, x0, 99    @ byte 8   (dead)
+    // [3] jalr x0, x1, 0     @ byte 12  ← L_end, ret
+    assert_eq!(words[1], encode_bne(T0, X0, 8),
+        "bne t0, x0, +8 expected at byte 4; got 0x{:08x}", words[1]);
+}
+
+#[test]
+fn jmp_if_false_emits_beq_with_resolved_offset() {
+    use riscv_simulator::encoding::encode_beq;
+    // Same shape as jmp_if_true but with the opposite branch.
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var("cond".into()), Operand::Var("L_end".into())], "i32"),
+        IIRInstr::new("const", Some("dead".into()), vec![Operand::Int(99)], "i32"),
+        IIRInstr::new("label", None, vec![Operand::Var("L_end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower(&module_with(f));
+    assert_eq!(words[1], encode_beq(T0, X0, 8),
+        "beq t0, x0, +8 expected at byte 4; got 0x{:08x}", words[1]);
+}
+
+#[test]
+fn backward_jmp_emits_negative_offset() {
+    use riscv_simulator::encoding::encode_jal;
+    // Trivial infinite loop:
+    //   label "top"
+    //   jmp "top"
+    //   ret_void   (unreachable)
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("label", None, vec![Operand::Var("top".into())], "void"),
+        IIRInstr::new("jmp", None, vec![Operand::Var("top".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower(&module_with(f));
+    // label "top" sits at byte 0, jal is at byte 0 (first emitted word).
+    // Wait — label emits 0 words, so jal is at word index 0 (byte 0).
+    // Target byte = 0, source byte = 0, offset = 0.
+    // That's `jal x0, +0` — encoding 0x6F.
+    assert_eq!(words[0], encode_jal(X0, 0),
+        "jal x0, +0 expected for label-at-jmp; got 0x{:08x}", words[0]);
+}
+
+#[test]
+fn undefined_label_is_rejected() {
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("jmp", None, vec![Operand::Var("nowhere".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_riscv(&module_with(f), &IIRRiscvConfig::default())
+        .expect_err("undefined label should fail");
+    match err {
+        IIRRiscvError::UndefinedLabel { label, .. } => assert_eq!(label, "nowhere"),
+        other => panic!("expected UndefinedLabel, got: {other:?}"),
+    }
+}

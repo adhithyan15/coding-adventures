@@ -77,8 +77,9 @@ use std::fmt;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use riscv_simulator::encoding::{
-    encode_add, encode_addi, encode_ecall, encode_jalr, encode_lui,
-    encode_slt, encode_sltiu, encode_sltu, encode_sub, encode_xor, encode_xori,
+    encode_add, encode_addi, encode_beq, encode_bne, encode_ecall, encode_jal,
+    encode_jalr, encode_lui, encode_slt, encode_sltiu, encode_sltu, encode_sub,
+    encode_xor, encode_xori,
 };
 
 // ===========================================================================
@@ -151,6 +152,12 @@ pub enum IIRRiscvError {
     /// immediate range (-2048..2047).  v0.2.0 doesn't synthesise the
     /// `lui` + `addi` pair for wider constants — A1++ adds it.
     ImmediateOutOfRange { function: String, value: i64 },
+    /// A `jmp` / `jmp_if_*` referenced a label that was never defined
+    /// by a `label "<name>"` instruction in the same function.
+    UndefinedLabel { function: String, label: String },
+    /// A branch's target is too far away to encode.  B-type (beq/bne)
+    /// gives ±4096 bytes; J-type (jal) gives ±1 MiB.
+    BranchOutOfRange { function: String, label: String, offset: i64, max: i64 },
 }
 
 impl fmt::Display for IIRRiscvError {
@@ -171,6 +178,10 @@ impl fmt::Display for IIRRiscvError {
                 write!(f, "out of temporary registers (t0..t6) while binding {name:?} in function {function:?}; stack spilling lands in A1++"),
             Self::ImmediateOutOfRange { function, value } =>
                 write!(f, "literal {value} exceeds RV32I 12-bit signed immediate range (-2048..2047) in function {function:?}; lui+addi lowering lands in A1++"),
+            Self::UndefinedLabel { function, label } =>
+                write!(f, "branch to undefined label {label:?} in function {function:?}"),
+            Self::BranchOutOfRange { function, label, offset, max } =>
+                write!(f, "branch to label {label:?} in function {function:?} would require offset {offset} bytes, exceeding the ±{max}-byte range of this branch encoding"),
         }
     }
 }
@@ -203,6 +214,8 @@ const SUPPORTED_OPS: &[&str] = &[
     "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
     // A1++ — host call
     "call_builtin",
+    // A1++.5 — control flow within a function
+    "label", "jmp", "jmp_if_true", "jmp_if_false",
 ];
 
 /// Syscall number used by the RV32I `ecall` for `call_builtin print_i64`.
@@ -315,15 +328,43 @@ pub fn lower_iir_to_riscv(
     Ok(words)
 }
 
+/// Kind of branch placeholder waiting to be patched once the target
+/// label's byte offset is known.
+///
+/// `B_TYPE_*` cover the conditional branches (`beq`/`bne`) emitted by
+/// `jmp_if_true` / `jmp_if_false`; the placeholder records which
+/// registers were already encoded into the opcode word but with a zero
+/// offset, plus the comparison kind so the patcher can re-emit with
+/// the right offset.  `J_TYPE_JAL` covers the unconditional `jmp` →
+/// `jal x0, offset`.
+#[derive(Debug, Clone, Copy)]
+enum BranchKind {
+    /// `beq rs1, x0, +offset` — fire branch when cond is zero (false).
+    BeqZero { rs1: u32 },
+    /// `bne rs1, x0, +offset` — fire branch when cond is non-zero (true).
+    BneZero { rs1: u32 },
+    /// `jal x0, +offset` — unconditional jump, discard return address.
+    JalDiscard,
+}
+
 /// Per-function state shared by `lower_function` and `lower_instr`.
 struct FnState<'a> {
     fn_name: &'a str,
     /// IIR var name → assigned RV32I register index (`x*`).
     env: HashMap<String, u32>,
     /// Next free index into [`TEMP_REGISTERS`].  When this exceeds the
-    /// pool length we return `OutOfRegisters` — A1++ replaces this with
+    /// pool length we return `OutOfRegisters` — A1++.5 replaces this with
     /// a stack-spilling allocator.
     next_temp: usize,
+    /// Label name → byte offset within the function body.
+    /// Filled lazily as `label "<name>"` instructions are emitted.
+    labels: HashMap<String, usize>,
+    /// Pending branch patches.  Each entry records:
+    ///   - the word index into the function body that needs patching,
+    ///   - the target label name,
+    ///   - the encoding kind (so we know which encoder to call once we
+    ///     know the resolved byte offset).
+    branches: Vec<(usize, String, BranchKind)>,
 }
 
 impl FnState<'_> {
@@ -357,6 +398,8 @@ fn lower_function(func: &IIRFunction) -> Result<Vec<u32>, IIRRiscvError> {
         fn_name: &func.name,
         env: HashMap::new(),
         next_temp: 0,
+        labels: HashMap::new(),
+        branches: Vec::new(),
     };
     // Bind parameters to a0..a7.  Validator already guarantees count <= 8.
     for (i, (pname, _)) in func.params.iter().enumerate() {
@@ -366,7 +409,60 @@ fn lower_function(func: &IIRFunction) -> Result<Vec<u32>, IIRRiscvError> {
     for instr in &func.instructions {
         lower_instr(instr, &mut state, &mut words)?;
     }
+
+    // ── Second pass: resolve branch offsets ─────────────────────────────
+    //
+    // After all instructions are emitted we know the byte offset of every
+    // label (recorded in `state.labels`).  Walk the pending patch list
+    // and replace each placeholder word with the real encoded branch.
+    //
+    // PC-relative offset = target_byte - source_byte.  RV32I branch
+    // encoders take a signed byte offset directly; range-check before
+    // re-encoding.
+    for (word_idx, label_name, kind) in &state.branches {
+        let target = state.labels.get(label_name).copied().ok_or_else(|| {
+            IIRRiscvError::UndefinedLabel {
+                function: state.fn_name.into(),
+                label: label_name.clone(),
+            }
+        })?;
+        let src_byte = (*word_idx) * 4;
+        let offset = target as i64 - src_byte as i64;
+        let new_word = match kind {
+            BranchKind::BeqZero { rs1 } => {
+                check_branch_offset(state.fn_name, label_name, offset, 4096)?;
+                encode_beq(*rs1, X0_ZERO, offset as i32)
+            }
+            BranchKind::BneZero { rs1 } => {
+                check_branch_offset(state.fn_name, label_name, offset, 4096)?;
+                encode_bne(*rs1, X0_ZERO, offset as i32)
+            }
+            BranchKind::JalDiscard => {
+                check_branch_offset(state.fn_name, label_name, offset, 1 << 20)?;
+                encode_jal(X0_ZERO, offset as i32)
+            }
+        };
+        words[*word_idx] = new_word;
+    }
+
     Ok(words)
+}
+
+fn check_branch_offset(
+    fn_name: &str,
+    label: &str,
+    offset: i64,
+    max: i64,
+) -> Result<(), IIRRiscvError> {
+    if offset < -max || offset >= max {
+        return Err(IIRRiscvError::BranchOutOfRange {
+            function: fn_name.into(),
+            label: label.into(),
+            offset,
+            max,
+        });
+    }
+    Ok(())
 }
 
 /// Emit one IIR instruction's worth of RV32I words.
@@ -514,6 +610,78 @@ fn lower_instr(
         // For `print_i64`: load the syscall number ECALL_PRINT_I64_NUM
         // into a7, ensure the value is in a0, then `ecall`.
         "call_builtin" => lower_call_builtin(instr, state, out),
+
+        // ── label "<name>": record byte offset for backpatching ─────────
+        //
+        // `label` emits zero machine words — it's purely a marker.  The
+        // current byte offset is `out.len() * 4` (each word is 4 bytes).
+        // A duplicate label name silently overwrites; that's a frontend
+        // bug we could catch with a validator pass, but for v0.3.1 we
+        // accept any name and let the latest definition win.
+        "label" => {
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRRiscvError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: "label requires srcs[0] = Operand::Var(name)".into(),
+                }),
+            };
+            state.labels.insert(name, out.len() * 4);
+            Ok(())
+        }
+
+        // ── jmp "<name>": unconditional `jal x0, +offset` ───────────────
+        //
+        // We emit a placeholder zero word and record a patch site so the
+        // second pass can compute the PC-relative offset once the label
+        // is known.
+        "jmp" => {
+            let target = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRRiscvError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: "jmp requires srcs[0] = Operand::Var(target_label)".into(),
+                }),
+            };
+            state.branches.push((out.len(), target, BranchKind::JalDiscard));
+            out.push(0); // placeholder
+            Ok(())
+        }
+
+        // ── jmp_if_true / jmp_if_false ──────────────────────────────────
+        //
+        // The cond var is interpreted as a boolean (any non-zero = true).
+        // We compare against `x0`:
+        //
+        //   jmp_if_true  cond, L  →  bne cond, x0, L
+        //   jmp_if_false cond, L  →  beq cond, x0, L
+        //
+        // Operand layout: srcs = [Var(cond), Var(target_label)].
+        "jmp_if_true" | "jmp_if_false" => {
+            let cond_name = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRRiscvError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: format!("{} requires srcs[0] = Operand::Var(cond)", instr.op),
+                }),
+            };
+            let target = match instr.srcs.get(1) {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRRiscvError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: format!("{} requires srcs[1] = Operand::Var(target_label)", instr.op),
+                }),
+            };
+            let rs1 = state.lookup(&cond_name)?;
+            let kind = if instr.op == "jmp_if_true" {
+                BranchKind::BneZero { rs1 }
+            } else {
+                BranchKind::BeqZero { rs1 }
+            };
+            state.branches.push((out.len(), target, kind));
+            out.push(0); // placeholder
+            Ok(())
+        }
 
         other => Err(IIRRiscvError::UnsupportedOp {
             function: state.fn_name.into(),
