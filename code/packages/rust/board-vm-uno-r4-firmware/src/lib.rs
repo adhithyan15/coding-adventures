@@ -148,6 +148,14 @@ pub enum EjectedBootDiagnosticOutcome {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EjectedBootDiagnosticStatus {
+    Ran,
+    SkippedStoreOnly,
+    ValidationFailed,
+    RuntimeFailed,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct EjectedBootDiagnosticSummary {
     pub outcome: EjectedBootDiagnosticOutcome,
     pub program: EjectedFirmwareProgramSummary,
@@ -156,6 +164,43 @@ pub struct EjectedBootDiagnosticSummary {
     pub instructions_executed: Option<u32>,
     pub open_handles: Option<u8>,
     pub error: Option<FirmwareSmokeError>,
+}
+
+impl EjectedBootDiagnosticSummary {
+    pub fn completed(self) -> bool {
+        matches!(self.outcome, EjectedBootDiagnosticOutcome::Completed)
+    }
+
+    pub fn failed(self) -> bool {
+        matches!(self.outcome, EjectedBootDiagnosticOutcome::Failed)
+    }
+
+    pub fn validated(self) -> bool {
+        self.boot_plan.is_some()
+    }
+
+    pub fn ran(self) -> bool {
+        matches!(self.status(), EjectedBootDiagnosticStatus::Ran)
+    }
+
+    pub fn skipped_store_only(self) -> bool {
+        matches!(self.status(), EjectedBootDiagnosticStatus::SkippedStoreOnly)
+    }
+
+    pub fn status(self) -> EjectedBootDiagnosticStatus {
+        match (self.outcome, self.boot_plan.map(|plan| plan.action)) {
+            (EjectedBootDiagnosticOutcome::Completed, Some(EjectedBootAction::StoreOnly)) => {
+                EjectedBootDiagnosticStatus::SkippedStoreOnly
+            }
+            (EjectedBootDiagnosticOutcome::Completed, _) => EjectedBootDiagnosticStatus::Ran,
+            (EjectedBootDiagnosticOutcome::Failed, Some(_)) => {
+                EjectedBootDiagnosticStatus::RuntimeFailed
+            }
+            (EjectedBootDiagnosticOutcome::Failed, None) => {
+                EjectedBootDiagnosticStatus::ValidationFailed
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1000,6 +1045,12 @@ mod tests {
         )
         .summary();
 
+        assert!(summary.completed());
+        assert!(!summary.failed());
+        assert!(summary.validated());
+        assert!(summary.ran());
+        assert!(!summary.skipped_store_only());
+        assert_eq!(summary.status(), EjectedBootDiagnosticStatus::Ran);
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1016,6 +1067,44 @@ mod tests {
             }
         );
         assert!(!runtime.hal().events.is_empty());
+    }
+
+    #[test]
+    fn ejected_boot_diagnostic_summary_status_surfaces_store_only_skip() {
+        let hal = FakeHal::new();
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+        let mut program = EjectedFirmwareProgram::blink();
+        program.boot_policy = BOOT_STORE_ONLY;
+
+        let summary =
+            diagnose_ejected_boot_program_once(&mut runtime, program, EJECTED_INSTRUCTION_BUDGET)
+                .summary();
+
+        assert!(summary.completed());
+        assert!(!summary.failed());
+        assert!(summary.validated());
+        assert!(!summary.ran());
+        assert!(summary.skipped_store_only());
+        assert_eq!(
+            summary.status(),
+            EjectedBootDiagnosticStatus::SkippedStoreOnly
+        );
+        assert_eq!(
+            summary,
+            EjectedBootDiagnosticSummary {
+                outcome: EjectedBootDiagnosticOutcome::Completed,
+                program: program.summary(),
+                boot_plan: Some(EjectedBootPlan {
+                    action: EjectedBootAction::StoreOnly,
+                    summary: program.summary(),
+                }),
+                run_status: None,
+                instructions_executed: None,
+                open_handles: None,
+                error: None,
+            }
+        );
+        assert!(runtime.hal().events.is_empty());
     }
 
     #[test]
@@ -1056,6 +1145,15 @@ mod tests {
         )
         .summary();
 
+        assert!(!summary.completed());
+        assert!(summary.failed());
+        assert!(!summary.validated());
+        assert!(!summary.ran());
+        assert!(!summary.skipped_store_only());
+        assert_eq!(
+            summary.status(),
+            EjectedBootDiagnosticStatus::ValidationFailed
+        );
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1119,6 +1217,12 @@ mod tests {
         )
         .summary();
 
+        assert!(!summary.completed());
+        assert!(summary.failed());
+        assert!(summary.validated());
+        assert!(!summary.ran());
+        assert!(!summary.skipped_store_only());
+        assert_eq!(summary.status(), EjectedBootDiagnosticStatus::RuntimeFailed);
         assert_eq!(summary.outcome, EjectedBootDiagnosticOutcome::Failed);
         assert_eq!(summary.program, EjectedFirmwareProgram::blink().summary());
         assert_eq!(

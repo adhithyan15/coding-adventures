@@ -77,7 +77,9 @@ the embedded program summary plus the firmware smoke error, and preserve the
 checked boot plan when failure happens after validation. Their compact summary
 normalizes completed and failed boot attempts into one board-facing status shape,
 so a board-specific entrypoint can report what happened without re-parsing the
-generated constants or duplicating enum-specific reporting logic.
+generated constants or duplicating enum-specific reporting logic. The summary
+also classifies that status as ran, store-only skip, validation failure, or
+runtime failure, keeping optional-field interpretation inside the firmware crate.
 
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.
