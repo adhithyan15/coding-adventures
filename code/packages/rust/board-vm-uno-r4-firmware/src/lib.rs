@@ -109,6 +109,37 @@ pub enum FirmwareSmokeError {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FirmwareSmokeErrorKind {
+    Module,
+    Validate,
+    Runtime,
+    RequiredCapabilities,
+    UnsupportedProgramFormat,
+    InvalidBootPolicy,
+    ArtifactMetadataMismatch,
+    ArtifactCrcMismatch,
+    ArtifactRequiredCapabilitiesMismatch,
+}
+
+impl FirmwareSmokeError {
+    pub const fn kind(self) -> FirmwareSmokeErrorKind {
+        match self {
+            Self::Module(_) => FirmwareSmokeErrorKind::Module,
+            Self::Validate(_) => FirmwareSmokeErrorKind::Validate,
+            Self::Runtime(_) => FirmwareSmokeErrorKind::Runtime,
+            Self::RequiredCapabilities(_) => FirmwareSmokeErrorKind::RequiredCapabilities,
+            Self::UnsupportedProgramFormat(_) => FirmwareSmokeErrorKind::UnsupportedProgramFormat,
+            Self::InvalidBootPolicy(_) => FirmwareSmokeErrorKind::InvalidBootPolicy,
+            Self::ArtifactMetadataMismatch => FirmwareSmokeErrorKind::ArtifactMetadataMismatch,
+            Self::ArtifactCrcMismatch => FirmwareSmokeErrorKind::ArtifactCrcMismatch,
+            Self::ArtifactRequiredCapabilitiesMismatch => {
+                FirmwareSmokeErrorKind::ArtifactRequiredCapabilitiesMismatch
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EjectedBootAction {
     StoreOnly,
     Run,
@@ -200,6 +231,10 @@ impl EjectedBootDiagnosticSummary {
                 EjectedBootDiagnosticStatus::ValidationFailed
             }
         }
+    }
+
+    pub fn error_kind(self) -> Option<FirmwareSmokeErrorKind> {
+        self.error.map(FirmwareSmokeError::kind)
     }
 }
 
@@ -782,24 +817,56 @@ mod tests {
 
     #[test]
     fn rejects_validated_ejected_boot_plan_without_required_capability() {
-        assert_eq!(
+        let error =
             validate_ejected_boot_plan(EjectedFirmwareProgram::blink(), CapabilitySet::empty(), 16)
-                .unwrap_err(),
+                .unwrap_err();
+
+        assert_eq!(
+            error,
             FirmwareSmokeError::Validate(ValidateError::UnsupportedCapability(CAP_GPIO_OPEN))
         );
+        assert_eq!(error.kind(), FirmwareSmokeErrorKind::Validate);
     }
 
     #[test]
     fn rejects_validated_ejected_boot_plan_when_board_stack_is_too_small() {
+        let error = validate_ejected_boot_plan(
+            EjectedFirmwareProgram::blink(),
+            CapabilitySet::blink_mvp(),
+            3,
+        )
+        .unwrap_err();
+
         assert_eq!(
-            validate_ejected_boot_plan(
-                EjectedFirmwareProgram::blink(),
-                CapabilitySet::blink_mvp(),
-                3
-            )
-            .unwrap_err(),
+            error,
             FirmwareSmokeError::Validate(ValidateError::DeclaredStackTooLarge)
         );
+        assert_eq!(error.kind(), FirmwareSmokeErrorKind::Validate);
+    }
+
+    #[test]
+    fn rejects_ejected_boot_plan_for_unsupported_program_format() {
+        let mut program = EjectedFirmwareProgram::blink();
+        program.program_format = 0xFF;
+
+        let error = ejected_boot_plan(program).unwrap_err();
+
+        assert_eq!(error, FirmwareSmokeError::UnsupportedProgramFormat(0xFF));
+        assert_eq!(
+            error.kind(),
+            FirmwareSmokeErrorKind::UnsupportedProgramFormat
+        );
+    }
+
+    #[test]
+    fn rejects_ejected_boot_plan_for_invalid_boot_policy() {
+        let mut program = EjectedFirmwareProgram::blink();
+        program.boot_policy = 0xFF;
+
+        let error = ejected_boot_plan(program).unwrap_err();
+
+        assert_eq!(error, FirmwareSmokeError::InvalidBootPolicy(0xFF));
+        assert_eq!(error.kind(), FirmwareSmokeErrorKind::InvalidBootPolicy);
     }
 
     #[test]
@@ -807,10 +874,10 @@ mod tests {
         let mut program = EjectedFirmwareProgram::blink();
         program.module_crc32 ^= 1;
 
-        assert_eq!(
-            ejected_boot_plan(program).unwrap_err(),
-            FirmwareSmokeError::ArtifactCrcMismatch
-        );
+        let error = ejected_boot_plan(program).unwrap_err();
+
+        assert_eq!(error, FirmwareSmokeError::ArtifactCrcMismatch);
+        assert_eq!(error.kind(), FirmwareSmokeErrorKind::ArtifactCrcMismatch);
     }
 
     #[test]
@@ -818,9 +885,12 @@ mod tests {
         let mut program = EjectedFirmwareProgram::blink();
         program.max_stack = program.max_stack.saturating_add(1);
 
+        let error = validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err();
+
+        assert_eq!(error, FirmwareSmokeError::ArtifactMetadataMismatch);
         assert_eq!(
-            validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
-            FirmwareSmokeError::ArtifactMetadataMismatch
+            error.kind(),
+            FirmwareSmokeErrorKind::ArtifactMetadataMismatch
         );
     }
 
@@ -829,10 +899,10 @@ mod tests {
         let mut program = EjectedFirmwareProgram::blink();
         program.module_crc32 ^= 1;
 
-        assert_eq!(
-            validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
-            FirmwareSmokeError::ArtifactCrcMismatch
-        );
+        let error = validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err();
+
+        assert_eq!(error, FirmwareSmokeError::ArtifactCrcMismatch);
+        assert_eq!(error.kind(), FirmwareSmokeErrorKind::ArtifactCrcMismatch);
     }
 
     #[test]
@@ -840,9 +910,15 @@ mod tests {
         let mut program = EjectedFirmwareProgram::blink();
         program.required_capabilities = &[CAP_GPIO_OPEN, CAP_TIME_SLEEP_MS];
 
+        let error = validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err();
+
         assert_eq!(
-            validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
+            error,
             FirmwareSmokeError::ArtifactRequiredCapabilitiesMismatch
+        );
+        assert_eq!(
+            error.kind(),
+            FirmwareSmokeErrorKind::ArtifactRequiredCapabilitiesMismatch
         );
     }
 
@@ -1051,6 +1127,7 @@ mod tests {
         assert!(summary.ran());
         assert!(!summary.skipped_store_only());
         assert_eq!(summary.status(), EjectedBootDiagnosticStatus::Ran);
+        assert_eq!(summary.error_kind(), None);
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1089,6 +1166,7 @@ mod tests {
             summary.status(),
             EjectedBootDiagnosticStatus::SkippedStoreOnly
         );
+        assert_eq!(summary.error_kind(), None);
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1154,6 +1232,7 @@ mod tests {
             summary.status(),
             EjectedBootDiagnosticStatus::ValidationFailed
         );
+        assert_eq!(summary.error_kind(), Some(FirmwareSmokeErrorKind::Validate));
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1223,6 +1302,7 @@ mod tests {
         assert!(!summary.ran());
         assert!(!summary.skipped_store_only());
         assert_eq!(summary.status(), EjectedBootDiagnosticStatus::RuntimeFailed);
+        assert_eq!(summary.error_kind(), Some(FirmwareSmokeErrorKind::Runtime));
         assert_eq!(summary.outcome, EjectedBootDiagnosticOutcome::Failed);
         assert_eq!(summary.program, EjectedFirmwareProgram::blink().summary());
         assert_eq!(
