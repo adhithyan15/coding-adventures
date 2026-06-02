@@ -483,7 +483,7 @@ fn emit_widget_class(
     writeln!(out, "  @override").unwrap();
     writeln!(out, "  Widget build(BuildContext context) {{").unwrap();
     writeln!(out, "    return").unwrap();
-    let tree = emit_widget_tree(layout_root, 6, part_styles)?;
+    let tree = emit_widget_tree(layout_root, 6, part_styles, component)?;
     out.push_str(&tree);
     // Trim trailing newline before adding the closing `;`.
     if out.ends_with('\n') {
@@ -508,30 +508,31 @@ fn emit_widget_tree(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
     // --- Routing: kernel primitives with custom lowerings ---
     if node.tag == "HostInput" {
-        return emit_host_input(node, indent, part_styles);
+        return emit_host_input(node, indent, part_styles, component);
     }
     if node.tag == "HostButton" {
-        return emit_host_button(node, indent, part_styles);
+        return emit_host_button(node, indent, part_styles, component);
     }
     if node.tag == "HostCheckbox" {
-        return emit_host_checkbox(node, indent, part_styles);
+        return emit_host_checkbox(node, indent, part_styles, component);
     }
     if node.tag == "HostRadio" {
-        return emit_host_radio(node, indent, part_styles);
+        return emit_host_radio(node, indent, part_styles, component);
     }
     if node.tag == "HostScroll" {
-        return emit_host_scroll(node, indent, part_styles);
+        return emit_host_scroll(node, indent, part_styles, component);
     }
     if node.tag == "HostDialog" {
-        return emit_host_dialog(node, indent, part_styles);
+        return emit_host_dialog(node, indent, part_styles, component);
     }
     if node.tag == "HostTable" {
-        return emit_host_table(node, indent, part_styles);
+        return emit_host_table(node, indent, part_styles, component);
     }
     // UI29-4 kernel — three new primitives. `HostLink` lowers to an
     // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
@@ -541,13 +542,13 @@ fn emit_widget_tree(
     // `TextField` configured with `TextInputType.number` so mobile
     // devices show the numeric keypad.
     if node.tag == "HostLink" {
-        return emit_host_link(node, indent);
+        return emit_host_link(node, indent, component);
     }
     if node.tag == "HostTooltip" {
-        return emit_host_tooltip(node, indent, part_styles);
+        return emit_host_tooltip(node, indent, part_styles, component);
     }
     if node.tag == "HostNumberInput" {
-        return emit_host_number_input(node, indent);
+        return emit_host_number_input(node, indent, component);
     }
     if node.tag == "Text" {
         return Ok(emit_text(node, indent));
@@ -604,7 +605,7 @@ fn emit_widget_tree(
         ));
     }
     if let Some(widget) = container {
-        return emit_container(node, widget, indent, part_styles);
+        return emit_container(node, widget, indent, part_styles, component);
     }
 
     // --- Routing: meta-primitives ---
@@ -632,11 +633,11 @@ fn emit_widget_tree(
     // (`emit_container_paired_children`) handles the multi-child case
     // where `If`/`Else` siblings need to combine.
     match node.tag.as_str() {
-        "For" => return emit_for_dart(node, indent, part_styles),
+        "For" => return emit_for_dart(node, indent, part_styles, component),
         // Standalone If — no Else paired. The container walker fuses
         // sibling pairs, so this branch fires only when If is the lone
         // child or the parent didn't pair-walk.
-        "If" => return emit_if_dart(node, None, indent, part_styles),
+        "If" => return emit_if_dart(node, None, indent, part_styles, component),
         "Else" => {
             return Ok(format!(
                 "{pad}/* orphan Else — analyzer should have rejected this */ const SizedBox.shrink()\n"
@@ -689,6 +690,7 @@ fn emit_container(
     widget: &str,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
@@ -717,7 +719,7 @@ fn emit_container(
         if node.children.len() == 1 {
             // Single child — emit a `child:` arg + trailing style args
             // (style_args already starts with a comma).
-            let child_src = emit_widget_tree(&node.children[0], indent + 2, part_styles)?;
+            let child_src = emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?;
             let child_src = child_src.trim_end_matches('\n');
             return Ok(format!(
                 "{pad}Container(\n{inner_pad}child: {child_src}{style_args}\n{pad})\n",
@@ -725,14 +727,14 @@ fn emit_container(
             ));
         }
         // Multiple children — wrap in Column inside the Container.
-        let children = emit_paired_children(&node.children, indent + 4, part_styles)?;
+        let children = emit_paired_children(&node.children, indent + 4, part_styles, component)?;
         return Ok(format!(
             "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
         ));
     }
 
     // Row / Column / Stack — direct Flutter widgets with a children list.
-    let children = emit_paired_children(&node.children, indent + 4, part_styles)?;
+    let children = emit_paired_children(&node.children, indent + 4, part_styles, component)?;
 
     if children.is_empty() {
         return Ok(format!("{pad}const {widget}(children: [])\n"));
@@ -761,6 +763,7 @@ fn emit_paired_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -769,7 +772,7 @@ fn emit_paired_children(
         if child.tag == "If" {
             // Peek for `Else` immediately after; pair if present.
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            let if_src = emit_if_dart(child, else_node, indent, part_styles)?;
+            let if_src = emit_if_dart(child, else_node, indent, part_styles, component)?;
             let trimmed = if_src.trim_end_matches('\n');
             out.push_str(trimmed);
             out.push_str(",\n");
@@ -778,7 +781,7 @@ fn emit_paired_children(
         }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let sub = emit_widget_tree(child, indent, part_styles)?;
+        let sub = emit_widget_tree(child, indent, part_styles, component)?;
         let sub = sub.trim_end_matches('\n');
         out.push_str(sub);
         out.push_str(",\n");
@@ -811,10 +814,10 @@ fn emit_paired_children(
 /// `Expr` (passed through verbatim — author-controlled). A defensive
 /// fall-back to `<dynamic>[]` keeps the file type-checking when the
 /// validator somehow allowed a bad shape.
-fn emit_for_dart(
-    node: &LayoutNode,
+fn emit_for_dart(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -851,13 +854,13 @@ fn emit_for_dart(
     let body = if node.children.is_empty() {
         format!("{}const SizedBox.shrink()", " ".repeat(body_pad))
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], body_pad, part_styles)?
+        emit_widget_tree(&node.children[0], body_pad, part_styles, component)?
             .trim_end_matches('\n')
             .to_string()
     } else {
         // Multiple children — wrap in a Column so the map closure
         // returns a single Widget.
-        let inner = emit_paired_children(&node.children, body_pad + 4, part_styles)?;
+        let inner = emit_paired_children(&node.children, body_pad + 4, part_styles, component)?;
         format!(
             "{}Column(children: [\n{}{}])",
             " ".repeat(body_pad),
@@ -914,11 +917,11 @@ fn emit_for_dart(
 ///
 /// Empty branches collapse to `const SizedBox.shrink()` so the
 /// ternary always returns a concrete Widget.
-fn emit_if_dart(
-    if_node: &LayoutNode,
+fn emit_if_dart(if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -935,9 +938,9 @@ fn emit_if_dart(
     };
 
     let body_pad = indent + 2;
-    let then_branch = render_branch(&if_node.children, body_pad, part_styles)?;
+    let then_branch = render_branch(&if_node.children, body_pad, part_styles, component)?;
     let else_branch = match else_node {
-        Some(en) => render_branch(&en.children, body_pad, part_styles)?,
+        Some(en) => render_branch(&en.children, body_pad, part_styles, component)?,
         None => "const SizedBox.shrink()".to_string(),
     };
 
@@ -959,15 +962,16 @@ fn render_branch(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     if children.is_empty() {
         return Ok("const SizedBox.shrink()".to_string());
     }
     if children.len() == 1 {
-        let s = emit_widget_tree(&children[0], indent, part_styles)?;
+        let s = emit_widget_tree(&children[0], indent, part_styles, component)?;
         return Ok(s.trim_end_matches('\n').trim_start().to_string());
     }
-    let inner = emit_paired_children(children, indent + 2, part_styles)?;
+    let inner = emit_paired_children(children, indent + 2, part_styles, component)?;
     Ok(format!(
         "Column(children: [\n{}{}])",
         inner,
@@ -1124,6 +1128,7 @@ fn emit_host_input(
     node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     // UI28-1 / U29-D1 — accept Expr in `value:` so
@@ -1164,14 +1169,32 @@ fn emit_host_input(
         .unwrap();
     }
 
-    // onChange — wraps the new value in the dispatch call.
+    // onChange — wraps the new value in a dispatched event.
+    //
+    // The dispatched event subclass is named `<Component>Event<Case>`
+    // — matching the sealed-class hierarchy `emit_widget_class`
+    // generates at the top of the file (see also the
+    // `dispatch: void Function(<Component>Event)` field).  Both
+    // pieces — the component name and the case — are in scope here,
+    // so we produce a real call.  v0.1.0 of the emitter wrote a
+    // literal `/* TODO: ... */` placeholder in the dispatch argument
+    // position, which broke compilation of every generated widget
+    // that wired an onChange handler.
+    //
+    // Single named field `value: String` matches the .mil
+    // declaration `emit on<Case> ( value : text )` used by VisiCalc's
+    // FormulaBar.  Components whose `onChange` carries a different
+    // payload shape will need to extend this codegen — for now any
+    // alternate shape would produce a Dart compile error rather than
+    // a silent TODO that ships at runtime.
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        // Note: the closure assumes the event subclass takes a single
-        // `value: String` field. Components whose `onChange` carries
-        // a different shape will need to update their .mil to match.
-        writeln!(out, "{pad}  onChanged: (value) => dispatch(/* TODO: {case}(value: value) */),").unwrap();
+        writeln!(
+            out,
+            "{pad}  onChanged: (value) => dispatch({component}Event{case}(value: value)),"
+        )
+        .unwrap();
     }
     writeln!(out, "{pad})").unwrap();
     Ok(out)
@@ -1179,10 +1202,10 @@ fn emit_host_input(
 
 /// `HostButton` → `ElevatedButton`. Label can be a string literal,
 /// a slot ref, or empty; `disabled` toggles via `onPressed: null`.
-fn emit_host_button(
-    node: &LayoutNode,
+fn emit_host_button(node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let label_expr: String = if let Some(s) = find_string_prop(node, "label") {
@@ -1227,10 +1250,10 @@ fn emit_host_button(
 /// slot is accepted but ignored (Flutter `Checkbox` has a
 /// `tristate: true` mode, but the visual is a dash — close enough for
 /// a follow-up).
-fn emit_host_checkbox(
-    node: &LayoutNode,
+fn emit_host_checkbox(node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let checked_expr: String = if let Some(slot) = find_slot_ref_prop(node, "checked") {
@@ -1265,10 +1288,10 @@ fn emit_host_checkbox(
 /// `HostRadio` → `Radio<String>`. Group coordination via `groupValue`
 /// matches HTML's shared-`name` pattern; the host owns the
 /// currently-selected value.
-fn emit_host_radio(
-    node: &LayoutNode,
+fn emit_host_radio(node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let value_expr: String = if let Some(s) = find_string_prop(node, "value") {
@@ -1323,17 +1346,17 @@ fn emit_host_radio(
 /// the children in a `Column`. The legacy Mosaic spec keeps
 /// `HostScroll` direction-agnostic; Flutter's default is vertical
 /// scroll which matches the most common use case.
-fn emit_host_scroll(
-    node: &LayoutNode,
+fn emit_host_scroll(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
         return Ok(format!("{pad}const SingleChildScrollView()\n"));
     }
     if node.children.len() == 1 {
-        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles)?;
+        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?;
         let child = child.trim_end_matches('\n');
         return Ok(format!(
             "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
@@ -1342,7 +1365,7 @@ fn emit_host_scroll(
     // Multi-child path. Use the paired walker so an `If`/`Else`
     // sibling pair (Cell-style conditionals inside a scroll viewport)
     // is consumed correctly.
-    let children = emit_paired_children(&node.children, indent + 6, part_styles)?;
+    let children = emit_paired_children(&node.children, indent + 6, part_styles, component)?;
     Ok(format!(
         "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
     ))
@@ -1353,10 +1376,10 @@ fn emit_host_scroll(
 /// anchor-shaped `SizedBox.shrink()` carrying the dialog logic; full
 /// fidelity (modal vs non-modal, dismiss-on-backdrop, title, onClose
 /// dispatch) is a follow-up PR.
-fn emit_host_dialog(
-    _node: &LayoutNode,
+fn emit_host_dialog(_node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     Ok(format!(
@@ -1388,10 +1411,10 @@ fn emit_host_dialog(
 /// into the generated source because it never reaches the format
 /// string. Slot refs go through `is_safe_dart_identifier` so they
 /// can't either.
-fn emit_host_table(
-    node: &LayoutNode,
+fn emit_host_table(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1425,7 +1448,7 @@ fn emit_host_table(
     let body_inner = if node.children.is_empty() {
         format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
     } else {
-        emit_paired_children(&node.children, indent + 4, part_styles)?
+        emit_paired_children(&node.children, indent + 4, part_styles, component)?
     };
     let table_body = format!(
         "Column(\n{p}children: [\n{body}{p}],\n{pad})",
@@ -1520,7 +1543,7 @@ fn emit_host_table(
 /// list before being interpolated into comments, so a malicious
 /// keyword like `false*/dispatch(evil())/*` can't terminate the
 /// `/* ... */` block-comment early.
-fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_link(node: &LayoutNode, indent: usize, component: &str) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
     // href — slot ref takes priority over literal (slot refs are
@@ -1627,10 +1650,10 @@ fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
 /// into the `"..."` literal. Slot-ref form passes a validated
 /// identifier; no interpolation through unvalidated input is
 /// possible.
-fn emit_host_tooltip(
-    node: &LayoutNode,
+fn emit_host_tooltip(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
@@ -1651,12 +1674,12 @@ fn emit_host_tooltip(
     let child_src: String = if node.children.is_empty() {
         format!("{inner_pad}const SizedBox.shrink()\n")
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], indent + 2, part_styles)?
+        emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?
     } else {
         // Multiple children — wrap in Column. Shouldn't happen for a
         // spec-conformant HostTooltip but we handle it defensively
         // (and through the paired walker so `If`/`Else` still fuses).
-        let children = emit_paired_children(&node.children, indent + 6, part_styles)?;
+        let children = emit_paired_children(&node.children, indent + 6, part_styles, component)?;
         format!(
             "{inner_pad}Column(\n{inner_pad}  children: [\n{children}{inner_pad}  ],\n{inner_pad})\n"
         )
@@ -1685,9 +1708,9 @@ fn emit_host_tooltip(
 /// `onChanged` (per-keystroke), because spec §3.3 explicitly
 /// rejects per-keystroke dispatch for numeric fields ("12 while
 /// typing 12.5 isn't a meaningful value").
-fn emit_host_number_input(
-    node: &LayoutNode,
+fn emit_host_number_input(node: &LayoutNode,
     indent: usize,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2374,6 +2397,49 @@ mod tests {
         assert!(out.contains("TextField("));
         assert!(out.contains("TextEditingController(text: formula)"));
         assert!(out.contains("hintText: \"Type a formula\""));
+    }
+
+    /// Regression: `HostInput { onChange: emit: onFormulaChange }`
+    /// must lower to a real `dispatch(...)` call, not a literal
+    /// `/* TODO: ... */` placeholder.  The dispatched event subclass
+    /// is named `<Component>Event<Case>` to match the sealed-class
+    /// hierarchy emitted at the top of the Dart file.  v0.1.0 of the
+    /// emitter shipped the TODO directly in the output, breaking the
+    /// VisiCalc Flutter demo at compile time.
+    #[test]
+    fn host_input_on_change_emits_real_dispatch_call() {
+        let m = component(
+            "FormulaBar",
+            vec![slot("formula", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "FormulaBar",
+            node_with(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("formula".into()),
+                    },
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onFormulaChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("FormulaBar")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("onChanged: (value) => dispatch(FormulaBarEventFormulaChange(value: value))"),
+            "expected real dispatch call in:\n{out}"
+        );
+        assert!(
+            !out.contains("/* TODO"),
+            "regenerated output should not contain TODO placeholders:\n{out}"
+        );
     }
 
     // ----- HostCheckbox + HostRadio scaffolds --------------------------
