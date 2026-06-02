@@ -159,7 +159,7 @@ fn run(result: cli_builder::types::ParseResult) {
     // also kept here for back-compat.
     let allowed_backends = [
         "webcomponent", "html", "react", "paint", "xaml",
-        "swiftui", "qt", "flutter",
+        "swiftui", "qt", "flutter", "compose",
     ];
     if !allowed_backends.contains(&backend) {
         eprintln!(
@@ -1073,6 +1073,26 @@ fn run_pipeline(
                 write_file_or_die(&main_dart_path, &proj.main_dart);
                 eprintln!("Written: {main_dart_path}");
             }
+        }
+        "compose" => {
+            // mosaic-emit-compose v0.1.0 — Jetpack Compose /
+            // Compose Multiplatform Kotlin codegen.  Targets both
+            // Android (Jetpack Compose) and Desktop / iOS / Web
+            // (Compose Multiplatform) from the same `.kt` output.
+            let result = mosaic_emit_compose::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: compose pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.kt", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
         }
         _ => {
             eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");
