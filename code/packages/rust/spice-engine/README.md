@@ -32,7 +32,7 @@ The initial slices implement:
   fixed-step and adaptive digital-input transient bridge fixtures, and sample
   transient probes back into thresholded digital events, including multi-probe
   named event streams and named-corner digital-input bridge runs with event
-  stream table output.
+  stream table output plus bridge breakpoint schedules.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,
@@ -41,7 +41,8 @@ The initial slices implement:
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents,
   sampled digital event streams and named multi-probe digital event streams,
-  cornered and adaptive mixed-signal bridge output streams,
+  mixed-signal bridge breakpoint schedules, cornered and adaptive mixed-signal
+  bridge output streams,
   DC operating-point temperature sweeps, cornered DC operating-point
   temperature sweeps, transient samples, adaptive transient samples, cornered
   transient samples, cornered adaptive transient samples, AC phasors, cornered DC

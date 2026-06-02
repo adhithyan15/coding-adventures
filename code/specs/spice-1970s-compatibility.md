@@ -393,6 +393,10 @@ Status:
   text tables in the live Rust SPICE package, preserving corner order and
   covering real, imaginary, magnitude, and phase rows for S11/S21/S12/S22
   entries.
+- Mixed-signal bridge breakpoint schedules can now be derived and rendered as
+  stable tab-separated text tables in the live Rust SPICE package, covering
+  ordered digital event starts, finite-edge transition endpoints, and the
+  resulting stop time for scheduler-facing SPICE bridge snapshots.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

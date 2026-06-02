@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `digital_event_streams_to_bridge_schedule` and
+  `format_digital_bridge_schedule_table` for stable SPICE-side mixed-signal
+  bridge breakpoint schedules over digital event starts and finite-edge
+  transition endpoints.
 - Add `transient_adaptive_with_digital_event_streams`,
   `transient_adaptive_with_digital_event_streams_corners`, and adaptive
   digital event stream table formatters for SPICE-side mixed-signal bridge

@@ -7,6 +7,7 @@ const TWO_PI: f64 = std::f64::consts::PI * 2.0;
 const BOLTZMANN: f64 = 1.380_649e-23;
 const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
+const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
@@ -538,6 +539,12 @@ pub struct CornerAdaptiveDigitalTransientBridgeResult {
     pub points: Vec<CornerAdaptiveDigitalTransientBridgePoint>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DigitalBridgeSchedule {
+    pub stop_time: f64,
+    pub breakpoints: Vec<f64>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct DigitalLogicLevels {
     pub low_voltage: f64,
@@ -735,23 +742,9 @@ pub fn digital_event_streams_to_voltage_sources(
     }
 
     let mut sources = Vec::new();
+    let mut seen_signal_names = HashSet::new();
     for stream in streams {
-        let signal_name = stream.signal_name.trim();
-        if signal_name.is_empty() {
-            return Err(SpiceError::InvalidElement {
-                name: "digital_event_stream".to_string(),
-                reason: "digital event stream signal name must not be empty".to_string(),
-            });
-        }
-        if sources
-            .iter()
-            .any(|source: &VoltageSource| source.positive == signal_name)
-        {
-            return Err(SpiceError::InvalidElement {
-                name: signal_name.to_string(),
-                reason: "digital event stream signal names must be unique".to_string(),
-            });
-        }
+        let signal_name = validate_digital_event_stream_name(stream, &mut seen_signal_names)?;
 
         sources.push(digital_events_to_voltage_source(
             format!("V{signal_name}"),
@@ -762,6 +755,47 @@ pub fn digital_event_streams_to_voltage_sources(
         )?);
     }
     Ok(sources)
+}
+
+pub fn digital_event_streams_to_bridge_schedule(
+    streams: &[DigitalEventStream],
+    levels: DigitalLogicLevels,
+) -> Result<DigitalBridgeSchedule, SpiceError> {
+    levels
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_bridge_schedule".to_string(),
+            reason,
+        })?;
+
+    let mut seen_signal_names = HashSet::new();
+    let mut breakpoints = Vec::new();
+    let mut stop_time: f64 = 0.0;
+    for stream in streams {
+        validate_digital_event_stream_name(stream, &mut seen_signal_names)?;
+        digital_events_to_pwl_waveform(&stream.events, levels)?;
+
+        let mut current_state = stream.events[0].state;
+        for (index, event) in stream.events.iter().enumerate() {
+            breakpoints.push(event.time_seconds);
+            stop_time = stop_time.max(event.time_seconds);
+
+            if index > 0 && event.state != current_state {
+                let transition_end = event.time_seconds + levels.transition_seconds;
+                breakpoints.push(transition_end);
+                stop_time = stop_time.max(transition_end);
+                current_state = event.state;
+            }
+        }
+    }
+
+    breakpoints.sort_by(|left, right| left.total_cmp(right));
+    breakpoints.dedup_by(|left, right| (*left - *right).abs() <= DIGITAL_BRIDGE_TIME_EPSILON);
+
+    Ok(DigitalBridgeSchedule {
+        stop_time,
+        breakpoints,
+    })
 }
 
 pub fn transient_with_digital_event_streams(
@@ -1100,6 +1134,57 @@ pub fn format_corner_adaptive_digital_event_stream_table(
     }
     rows.push(String::new());
     Ok(rows.join("\n"))
+}
+
+pub fn format_digital_bridge_schedule_table(
+    schedule: &DigitalBridgeSchedule,
+) -> Result<String, SpiceError> {
+    if !schedule.stop_time.is_finite() || schedule.stop_time < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_bridge_schedule".to_string(),
+            reason: "digital bridge stop time must be finite and non-negative".to_string(),
+        });
+    }
+
+    let mut rows = vec!["Index\tTime\tStopTime".to_string()];
+    let mut previous_time = f64::NEG_INFINITY;
+    for (index, time_seconds) in schedule.breakpoints.iter().enumerate() {
+        validate_digital_event_time(*time_seconds, previous_time, "digital_bridge_schedule")?;
+        if *time_seconds > schedule.stop_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_bridge_schedule".to_string(),
+                reason: "digital bridge breakpoint must not exceed stop time".to_string(),
+            });
+        }
+        previous_time = *time_seconds;
+        rows.push(format!(
+            "{index}\t{}\t{}",
+            format_table_number(*time_seconds),
+            format_table_number(schedule.stop_time)
+        ));
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+fn validate_digital_event_stream_name<'a>(
+    stream: &'a DigitalEventStream,
+    seen_signal_names: &mut HashSet<String>,
+) -> Result<&'a str, SpiceError> {
+    let signal_name = stream.signal_name.trim();
+    if signal_name.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream".to_string(),
+            reason: "digital event stream signal name must not be empty".to_string(),
+        });
+    }
+    if !seen_signal_names.insert(signal_name.to_string()) {
+        return Err(SpiceError::InvalidElement {
+            name: signal_name.to_string(),
+            reason: "digital event stream signal names must be unique".to_string(),
+        });
+    }
+    Ok(signal_name)
 }
 
 fn validate_digital_event_time(
