@@ -1621,6 +1621,7 @@ pub struct BrowserForm {
     pub text_entries: Vec<BrowserFormTextEntry>,
     pub choice_controls: Vec<BrowserFormChoiceControl>,
     pub file_controls: Vec<BrowserFormFileControl>,
+    pub hidden_controls: Vec<BrowserFormHiddenControl>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1816,6 +1817,21 @@ pub struct BrowserFormFileControl {
     pub submission_values: Vec<String>,
     pub will_validate: bool,
     pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormHiddenControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub disabled: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
     pub validation_barred_reason: Option<String>,
 }
 
@@ -12886,6 +12902,7 @@ fn browser_form(
     let text_entries = browser_form_text_entries(&controls);
     let choice_controls = browser_form_choice_controls(&controls, element.attribute("id"));
     let file_controls = browser_form_file_controls(&controls);
+    let hidden_controls = browser_form_hidden_controls(&controls);
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12933,6 +12950,7 @@ fn browser_form(
         text_entries,
         choice_controls,
         file_controls,
+        hidden_controls,
         controls,
         submitters,
     }
@@ -13559,6 +13577,26 @@ fn browser_form_file_controls(controls: &[BrowserFormControl]) -> Vec<BrowserFor
             submission_values: control.submission_values.clone(),
             will_validate: control.will_validate,
             validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_hidden_controls(controls: &[BrowserFormControl]) -> Vec<BrowserFormHiddenControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "hidden")
+        .map(|control| BrowserFormHiddenControl {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            value: control.value.clone(),
+            autocomplete: control.autocomplete.clone(),
+            autocomplete_tokens: control.autocomplete_tokens.clone(),
+            disabled: control.disabled,
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
             validation_barred_reason: control.validation_barred_reason.clone(),
         })
         .collect()

@@ -2,13 +2,14 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormLabel,
-    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserFormTextEntry, BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint,
-    BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia,
-    BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint,
-    BrowserScript, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormLabel, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -738,6 +739,8 @@ struct ExpectedForm {
     choice_controls: Vec<ExpectedFormChoiceControl>,
     #[serde(default)]
     file_controls: Vec<ExpectedFormFileControl>,
+    #[serde(default)]
+    hidden_controls: Vec<ExpectedFormHiddenControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -1014,6 +1017,31 @@ struct ExpectedFormFileControl {
     will_validate: bool,
     #[serde(default)]
     validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormHiddenControl {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    disabled: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
     #[serde(default)]
     validation_barred_reason: Option<String>,
 }
@@ -1556,6 +1584,70 @@ fn browser_form_successful_control_descriptor_metadata_tracks_submission_entries
         form.successful_controls[5].submission_values,
         vec!["external"]
     );
+}
+
+#[test]
+fn browser_form_hidden_descriptor_metadata_tracks_hidden_entries_and_form_owners() {
+    let document = parse_browser_document(
+        "<form id=session>\
+         <input id=csrf type=hidden name=csrf value=token autocomplete=\"section-auth one-time-code\">\
+         <input id=charset type=hidden name=_charset_ value=utf-8>\
+         <input id=disabled-token type=hidden name=disabled value=no disabled>\
+         </form>\
+         <input id=external type=hidden form=session name=outside value=external>",
+    )
+    .expect("form hidden descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("session form should be summarized");
+    let ids: Vec<&str> = form
+        .hidden_controls
+        .iter()
+        .filter_map(|hidden| hidden.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["csrf", "charset", "disabled-token", "external"]);
+
+    let csrf = &form.hidden_controls[0];
+    assert_eq!(csrf.name.as_deref(), Some("csrf"));
+    assert_eq!(csrf.value.as_deref(), Some("token"));
+    assert_eq!(
+        csrf.autocomplete.as_deref(),
+        Some("section-auth one-time-code")
+    );
+    assert_eq!(
+        csrf.autocomplete_tokens,
+        vec!["section-auth", "one-time-code"]
+    );
+    assert!(csrf.successful);
+    assert_eq!(csrf.submission_values, vec!["token"]);
+    assert!(!csrf.will_validate);
+    assert_eq!(
+        csrf.validation_barred_reason.as_deref(),
+        Some("input-type-hidden")
+    );
+
+    let charset = &form.hidden_controls[1];
+    assert_eq!(charset.name.as_deref(), Some("_charset_"));
+    assert_eq!(charset.value.as_deref(), Some("utf-8"));
+    assert!(charset.successful);
+    assert_eq!(charset.submission_values, vec!["utf-8"]);
+
+    let disabled = &form.hidden_controls[2];
+    assert_eq!(disabled.name.as_deref(), Some("disabled"));
+    assert!(disabled.disabled);
+    assert!(!disabled.successful);
+    assert!(disabled.submission_values.is_empty());
+    assert_eq!(
+        disabled.validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+
+    let external = &form.hidden_controls[3];
+    assert_eq!(external.form_owner.as_deref(), Some("session"));
+    assert_eq!(external.name.as_deref(), Some("outside"));
+    assert_eq!(external.submission_values, vec!["external"]);
 }
 
 #[test]
@@ -2856,6 +2948,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormFileControl::into_browser_form_file_control)
                 .collect(),
+            hidden_controls: self
+                .hidden_controls
+                .into_iter()
+                .map(ExpectedFormHiddenControl::into_browser_form_hidden_control)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -3074,6 +3171,24 @@ impl ExpectedFormFileControl {
             submission_values: self.submission_values,
             will_validate: self.will_validate,
             validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+        }
+    }
+}
+
+impl ExpectedFormHiddenControl {
+    fn into_browser_form_hidden_control(self) -> BrowserFormHiddenControl {
+        BrowserFormHiddenControl {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            value: self.value,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            disabled: self.disabled,
+            successful: self.successful,
+            submission_values: self.submission_values,
+            will_validate: self.will_validate,
             validation_barred_reason: self.validation_barred_reason,
         }
     }
