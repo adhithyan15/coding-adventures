@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `transient_with_digital_event_streams_corners` and
+  `format_corner_digital_event_stream_table` for stable named-corner
+  mixed-signal transient bridge output stream snapshots.
 - Add `transient_with_digital_event_streams` for a SPICE-side mixed-signal
   transient bridge from named digital input streams to sampled output streams.
 - Add `digital_event_streams_to_voltage_sources` for converting named

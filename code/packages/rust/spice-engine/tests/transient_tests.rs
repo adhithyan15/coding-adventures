@@ -2,28 +2,29 @@ use spice_engine::{
     dc_op, digital_event_streams_to_voltage_sources, distortion_from_fourier,
     distortion_from_transient, distortion_from_transient_corners, estimate_period,
     format_adaptive_transient_table, format_corner_adaptive_transient_table,
-    format_corner_distortion_table, format_corner_fourier_table, format_corner_pole_zero_table,
-    format_corner_pss_table, format_corner_transient_table, format_dc_table,
-    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
-    format_fourier_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
-    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    format_corner_digital_event_stream_table, format_corner_distortion_table,
+    format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
+    format_corner_transient_table, format_dc_table, format_digital_event_stream_table,
+    format_digital_event_table, format_distortion_table, format_fourier_table,
+    format_pole_zero_table, format_pss_table, format_transient_table, fourier, fourier_corners,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
     pss_with_tolerance, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_corners, transient_with_digital_event_streams,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
-    CurrentSource, DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState,
-    DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
-    FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
-    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology,
-    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
-    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, VoltageSource, Waveform,
+    transient_with_digital_event_streams_corners, transient_with_method, AdaptiveTransientOptions,
+    AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint,
+    CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource, DigitalEvent,
+    DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds, DistortionHarmonic,
+    DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult,
+    FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
+    PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult,
+    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
+    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
+    TransientPoint, TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2151,6 +2152,66 @@ fn transient_bridge_runs_digital_input_and_samples_output_stream() {
         .points
         .iter()
         .any(|point| point.voltage("out").unwrap() > 1.2));
+}
+
+#[test]
+fn digital_transient_bridge_runs_across_named_corners_and_formats_stream_table() {
+    let input_streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(1.25e-9, DigitalState::Low),
+        ],
+    )];
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rout", "din", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 0.1e-12,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 10_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", vec![]),
+        CornerSpec::new(
+            "cout-large",
+            vec![CornerOverride::new("Cout", "capacitance", 10.0e-12)],
+        ),
+    ];
+
+    let result = transient_with_digital_event_streams_corners(
+        &circuit,
+        &input_streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+        0.25e-9,
+        1.5e-9,
+        &[("dout", "V(out)")],
+        DigitalThresholds::cmos_1v8(),
+        &corners,
+    )
+    .unwrap();
+
+    assert_eq!(result.points.len(), 2);
+    assert_eq!(result.points[0].corner_name, "nominal");
+    assert_eq!(result.points[1].corner_name, "cout-large");
+    assert!(result.points[0]
+        .result
+        .points
+        .iter()
+        .any(|point| point.voltage("out").unwrap() > 1.2));
+    assert!(result.points[1]
+        .result
+        .points
+        .iter()
+        .all(|point| point.voltage("out").unwrap() < 1.2));
+    assert_eq!(
+        format_corner_digital_event_stream_table(&result).unwrap(),
+        "Corner\tSignal\tIndex\tTime\tState\nnominal\tdout\t0\t2.500000e-10\tlow\nnominal\tdout\t1\t7.500000e-10\thigh\nnominal\tdout\t2\t1.500000e-09\tlow\ncout-large\tdout\t0\t2.500000e-10\tlow\n"
+    );
 }
 
 #[test]
