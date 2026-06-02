@@ -44,9 +44,10 @@ use logic_core::{LogicVar, Substitution, Term, unify};
 
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
-    lr_aggregate, sigmoid, ContributionClause, JointContributionClause, KbError,
-    LRAggregateResult, LrAggregateWarning, PriorClause, UncertaintyMarker,
-    UncertaintyReport,
+    counterfactual, lr_aggregate, sigmoid, source_disagreements,
+    source_disagreements_with_threshold, ContributionClause, JointContributionClause, KbError,
+    KickbackReport, LRAggregateResult, LrAggregateWarning, PriorClause,
+    SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 pub use provenance::{Provenance, TrustTier};
@@ -243,7 +244,11 @@ impl ClauseIndex {
 /// SLD-resolution / WMC paths ignore these and the LR-aggregation
 /// path ignores `facts` and `rules` except via the `observed_evidence`
 /// query — the two inference shapes coexist without interference.
-#[derive(Debug, Default)]
+///
+/// **Cloneable** (ADJ47-E): so counterfactual queries can be served
+/// by cloning the KB, mutating the clone, and rerunning aggregation
+/// without disturbing the caller's KB.
+#[derive(Debug, Default, Clone)]
 pub struct KnowledgeBase {
     facts: HashMap<ClauseIndex, Vec<Fact>>,
     rules: HashMap<ClauseIndex, Vec<Rule>>,

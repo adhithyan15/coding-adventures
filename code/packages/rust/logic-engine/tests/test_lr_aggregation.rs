@@ -5,8 +5,9 @@
 
 use logic_core::{atom, compound, Term};
 use logic_engine::{
-    search, ContributionClause, Fact, JointContributionClause, KnowledgeBase, LrAggregateWarning,
-    PriorClause, Provenance, SearchMode, SearchResult, TrustTier, UncertaintyMarker,
+    counterfactual, search, source_disagreements, ContributionClause, Fact,
+    JointContributionClause, KnowledgeBase, LrAggregateWarning, PriorClause, Provenance,
+    SearchMode, SearchResult, TrustTier, UncertaintyMarker,
 };
 
 fn approx_eq(a: f64, b: f64, tol: f64) -> bool {
@@ -477,6 +478,208 @@ fn uncertainty_marker_with_no_matching_contributions_has_zero_voi() {
     } else {
         panic!("expected LRAggregateResult");
     }
+}
+
+#[test]
+fn counterfactual_assuming_precipitator_exertional_raises_posterior() {
+    // Baseline ACS posterior is ~0.281 with no precipitator info.
+    // Knowing the precipitator was exertional adds log(2.5) to the
+    // log-odds, so the counterfactual posterior should be higher.
+    let mut kb = build_acs_kb();
+    add_jane_doe(&mut kb);
+
+    let baseline = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    let baseline_p = match baseline {
+        SearchResult::LRAggregateResult { posterior, .. } => posterior,
+        _ => panic!(),
+    };
+
+    let counter = counterfactual(
+        &atom("acs"),
+        &kb,
+        &[compound("precipitator", vec![atom("exertional")])],
+    );
+
+    assert!(
+        counter.posterior > baseline_p,
+        "exertional precipitator should raise posterior; baseline={baseline_p}, counter={}",
+        counter.posterior
+    );
+    // logit(0.281) + ln(2.5) → sigmoid ≈ 0.494
+    assert!(
+        (counter.posterior - 0.494).abs() < 0.01,
+        "expected ~0.494, got {}",
+        counter.posterior
+    );
+}
+
+#[test]
+fn counterfactual_does_not_mutate_the_caller_kb() {
+    // After running counterfactual, the original KB must be
+    // unchanged — the precipitator fact must not leak back.
+    let mut kb = build_acs_kb();
+    add_jane_doe(&mut kb);
+    let _ = counterfactual(
+        &atom("acs"),
+        &kb,
+        &[compound("precipitator", vec![atom("exertional")])],
+    );
+    // Re-run aggregation: same as before, no precipitator fact.
+    let after = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    let after_p = match after {
+        SearchResult::LRAggregateResult { posterior, .. } => posterior,
+        _ => panic!(),
+    };
+    assert!(
+        (after_p - 0.281).abs() < 0.005,
+        "baseline posterior should be unchanged; got {after_p}"
+    );
+}
+
+#[test]
+fn kickback_suggested_when_uncertainty_band_straddles_decision_threshold() {
+    // Patient case with no precipitator → posterior ~0.281, with
+    // VOI ranging from log(0.6) to log(2.5). At threshold 0.30, the
+    // band ~[0.19, 0.49] straddles the threshold → kickback should
+    // suggest.
+    let mut kb = build_acs_kb();
+    add_jane_doe(&mut kb);
+    kb.add_uncertainty_marker(UncertaintyMarker::new(
+        atom("acs"),
+        vec![
+            compound("precipitator", vec![atom("exertional")]),
+            compound("precipitator", vec![atom("rest")]),
+            compound("precipitator", vec![atom("positional")]),
+        ],
+    ));
+    let result = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    let lr = match result {
+        SearchResult::LRAggregateResult {
+            dag,
+            posterior,
+            posterior_logit,
+            warnings,
+            uncertainties,
+        } => logic_engine::LRAggregateResult {
+            dag,
+            posterior,
+            posterior_logit,
+            warnings,
+            uncertainties,
+        },
+        _ => panic!(),
+    };
+    let kb_back = lr.suggest_kickback(0.30);
+    assert!(kb_back.is_some(), "expected kickback at threshold 0.30");
+    let k = kb_back.unwrap();
+    assert!(k.posterior_lo < 0.30);
+    assert!(k.posterior_hi > 0.30);
+    assert_eq!(k.recommended_resolutions.len(), 1);
+}
+
+#[test]
+fn no_kickback_when_uncertainty_band_lies_on_one_side_of_threshold() {
+    // Same setup but with a threshold of 0.05 — well below the
+    // band — kickback should NOT trigger because every resolution
+    // would still leave the posterior above the threshold.
+    let mut kb = build_acs_kb();
+    add_jane_doe(&mut kb);
+    kb.add_uncertainty_marker(UncertaintyMarker::new(
+        atom("acs"),
+        vec![
+            compound("precipitator", vec![atom("exertional")]),
+            compound("precipitator", vec![atom("rest")]),
+            compound("precipitator", vec![atom("positional")]),
+        ],
+    ));
+    let result = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    let lr = match result {
+        SearchResult::LRAggregateResult {
+            dag,
+            posterior,
+            posterior_logit,
+            warnings,
+            uncertainties,
+        } => logic_engine::LRAggregateResult {
+            dag,
+            posterior,
+            posterior_logit,
+            warnings,
+            uncertainties,
+        },
+        _ => panic!(),
+    };
+    assert!(lr.suggest_kickback(0.05).is_none());
+}
+
+#[test]
+fn source_disagreement_detected_when_two_contributions_disagree() {
+    // Same evidence, two ContributionClauses with different LRs —
+    // simulates AHA saying LR=2.5, ESC saying LR=4.0 for the same
+    // finding. The detector should flag them.
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("acs"), 0.10))
+        .unwrap();
+    kb.add_contribution(
+        ContributionClause::from_lr(
+            atom("acs"),
+            compound("symptom", vec![atom("pressure")]),
+            2.5,
+        )
+        .with_provenance(Provenance::cited("AHA 2021")),
+    );
+    kb.add_contribution(
+        ContributionClause::from_lr(
+            atom("acs"),
+            compound("symptom", vec![atom("pressure")]),
+            4.0,
+        )
+        .with_provenance(Provenance::cited("ESC 2023")),
+    );
+    let reports = source_disagreements(&kb, &atom("acs"));
+    assert_eq!(reports.len(), 1);
+    let r = &reports[0];
+    assert_eq!(r.evidence_term, compound("symptom", vec![atom("pressure")]));
+    assert_eq!(r.source_logit_deltas.len(), 2);
+    // disagreement range = ln(4.0) - ln(2.5) ≈ 0.47
+    assert!(
+        (r.disagreement_logit_range - (4.0_f64.ln() - 2.5_f64.ln())).abs() < 1e-9,
+        "got {}",
+        r.disagreement_logit_range
+    );
+}
+
+#[test]
+fn no_disagreement_reported_when_only_one_source() {
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("acs"), 0.10))
+        .unwrap();
+    kb.add_contribution(ContributionClause::from_lr(
+        atom("acs"),
+        compound("symptom", vec![atom("pressure")]),
+        2.5,
+    ));
+    assert!(source_disagreements(&kb, &atom("acs")).is_empty());
+}
+
+#[test]
+fn no_disagreement_reported_when_sources_agree() {
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("acs"), 0.10))
+        .unwrap();
+    // Two ContributionClauses with the same LR — even though they
+    // share an evidence term, they don't *disagree*. No report.
+    kb.add_contribution(ContributionClause::from_lr(
+        atom("acs"),
+        compound("symptom", vec![atom("pressure")]),
+        2.5,
+    ));
+    kb.add_contribution(ContributionClause::from_lr(
+        atom("acs"),
+        compound("symptom", vec![atom("pressure")]),
+        2.5,
+    ));
+    assert!(source_disagreements(&kb, &atom("acs")).is_empty());
 }
 
 #[test]

@@ -2,6 +2,69 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-06-02
+
+### Added
+
+- `counterfactual(query, kb, &[Term])` — clones the KB, adds the
+  given Facts as Certain, and reruns `lr_aggregate`. Lets the
+  caller answer "what would the posterior be if X were true?"
+  without disturbing the original KB. Cloning the whole KB makes
+  the contract obvious; cost is linear and small.
+- `LRAggregateResult::suggest_kickback(decision_threshold)` —
+  computes a worst-case / best-case posterior band by reducing
+  each active uncertainty marker to its min/max contribution,
+  summing the shifts independently across markers, and applying
+  to the current `posterior_logit`. Returns `Some(KickbackReport)`
+  iff the band straddles `decision_threshold`. Includes
+  `recommended_resolutions` sorted by individual VOI.
+- `source_disagreements(kb, conclusion)` /
+  `source_disagreements_with_threshold(kb, conclusion, min_spread)`
+  — scans contributions on `conclusion`, groups by `evidence_term`,
+  flags groups where the `logit_delta`s have spread > threshold.
+  Per-source records include the clause id and provenance so the
+  audit reader can render "AHA 2021 says LR=2.5; ESC 2023 says
+  LR=4.0; sources disagree by 0.47 logits."
+- New types: `KickbackReport`, `SourceDisagreementReport`,
+  `SourceLogitDelta`.
+- `KnowledgeBase: Clone`.
+- 7 new tests covering counterfactual upward shift, KB
+  non-mutation invariant, kickback firing inside the band, no
+  kickback outside the band, source-disagreement detection on two
+  conflicting sources, no-disagreement when only one source, and
+  no-disagreement when sources agree.
+
+Total tests: 69 (was 62 in 0.5.0).
+
+### ADJ46 awkwardness items dissolved by 0.6.0
+
+- **A7** (no kickback search variant) — addressed via
+  `suggest_kickback` method on the result rather than a separate
+  search mode. Lower-friction API and the same diagnostic power.
+- **A8** (counterfactuals require KB clone + rerun) — `counterfactual`
+  function does the clone + rerun once, atomically; caller's KB
+  is invariant.
+- **A9** (source-disagreement aggregation) — detector +
+  per-source records surface conflicting LRs from the rulebook.
+
+### Status of the original 10 ADJ46 awkwardness items
+
+| Item | Status |
+|---|---|
+| A1 (LR magnitudes) | ✅ 0.3.0 |
+| A2 (provenance) | ✅ 0.4.0 |
+| A3 (prior) | ✅ 0.3.0 |
+| A4 (joint contributions syntax) | ✅ 0.1.0 (adj-lang) |
+| A5 (uncertainty markers) | ✅ 0.5.0 |
+| A6 (WMC vs LR) | ✅ 0.3.0 |
+| A7 (kickback) | ✅ 0.6.0 |
+| A8 (counterfactuals) | ✅ 0.6.0 |
+| A9 (source disagreement) | ✅ 0.6.0 |
+| A10 (surface syntax) | ✅ 0.1.0 (adj-lang) |
+
+All ten items dissolved as of logic-engine 0.6.0 +
+adj-lang 0.2.0.
+
 ## [0.5.0] - 2026-06-02
 
 ### Added
