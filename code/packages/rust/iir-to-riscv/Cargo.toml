@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-riscv"
-version = "0.3.2"
+version = "0.3.3"
 edition = "2021"
-description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.3.2 (A1++.5.5 first slice): adds cross-function `call` (0-arg / void-return only this PR) with module-level call-site resolution + per-function call-frame prologue/epilogue (sw/lw ra, 16-byte stack).  Args + non-void return values land in A1++.5.5.5; stack spilling lands in A1++.6."
+description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.3.3 (A1++.5.5.5): generalises cross-function `call` to support up to 8 args via two-phase move-through-temp (avoids swap-clobbering) and non-void returns (allocate dest temp, addi dest, a0, 0 after jal).  Stack-spilling allocator + i64 register pairs land in A1++.6."
 
 [lib]
 name = "iir_to_riscv"

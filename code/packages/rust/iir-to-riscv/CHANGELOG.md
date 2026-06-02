@@ -3,6 +3,69 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.3] — 2026-06-02 (A1++.5.5.5 — call args + non-void returns)
+
+### Added — full call ABI (up to 8 args, non-void returns)
+
+Removes the v0.3.2 first-slice restrictions: `call dest, callee(arg1,
+arg2, …)` now supports up to 8 arguments per the RV32I calling
+convention (`a0..a7`) and non-void return values bound via `dest`.
+
+### Two-phase move-through-temp (the swap-clobbering fix)
+
+Naive sequential moves corrupt arguments when an arg's source register
+coincides with another arg's *target* a-register.  The classic example:
+calling `f(y, x)` from within a function where `x` lives in `a0` and
+`y` lives in `a1`.  Naive `mv a0, a1; mv a1, a0` gets `f(y, y)` because
+the first `mv` clobbers `a0` before the second `mv` reads it.
+
+Fix: two-phase scheme.
+
+* **Phase 1** copies each arg source into a fresh scratch temp from
+  `TEMP_REGISTERS[next_temp .. next_temp + arg_count]`.  Sources read
+  BEFORE any `a*` write.
+* **Phase 2** copies each scratch temp into the corresponding `a_i`.
+  Temps are still untouched because phase 1 wrote into disjoint slots.
+
+The scratch slots are **transient** — not added to `state.env`, no
+permanent reservation — but they still need to be available from the
+pool.  `next_temp + arg_count > 7` yields `OutOfRegisters`.
+
+For literal args (`Operand::Int`, `Operand::Bool`) we materialise the
+constant directly into the scratch temp via the existing
+`emit_const_i32` path (re-using lui+addi for wide consts) and the
+canonical bool encoding.
+
+### Non-void returns
+
+After the patched `jal`, the callee's return value lives in `a0`.  When
+`dest` is `Some`, we allocate a fresh temp via the existing
+`alloc_temp` path and emit `addi dest_reg, a0, 0`.
+
+### New error variant
+
+* `UnsupportedCallShape` now also fires when `args.len() > 8`
+  (RV32I `a0..a7` only).  Stack-based arg passing lands in A1++.6.
+
+### Tests added (38 total, was 36)
+
+* `call_with_one_const_arg_emits_arg_setup` — pins the exact two-phase
+  move sequence (`addi t1, t0, 0; addi a0, t1, 0`) and the resolved
+  `jal ra, -24` offset.
+* `call_with_non_void_return_binds_dest_from_a0` — pins the
+  post-jal `addi t0, a0, 0` binding.
+* `call_too_many_args_is_rejected_as_unsupported_shape` (9-arg case).
+* `call_with_too_many_scratch_temps_needed_is_rejected` (5 locals
+  already allocated + 3-arg call → `OutOfRegisters`).
+
+Pre-existing tests in section 16 (`cross_function_void_call_*`,
+`leaf_function_*`, `undefined_callee_*`) continue to pass — they
+exercise the 0-arg/void degenerate case.
+
+The two restriction tests from v0.3.2
+(`call_with_args_is_rejected_*` and `call_with_non_void_return_is_rejected_*`)
+are removed because their preconditions no longer reject.
+
 ## [0.3.2] — 2026-06-02 (A1++.5.5 first slice — cross-function `call` (0-arg, void))
 
 ### Added — cross-function `call` with module-level resolution

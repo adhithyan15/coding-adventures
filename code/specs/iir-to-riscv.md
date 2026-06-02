@@ -55,9 +55,9 @@ IIRModule
 | v0.2.0 (A1+) | const/mov/add/sub/ret + linear register allocator | **merged** |
 | v0.3.0 (A1++ first slice) | wide consts (`lui+addi`) + comparisons + `ecall print_i64` | **merged** |
 | v0.3.1 (A1++.5 control-flow slice) | `label` / `jmp` / `jmp_if_*` with two-pass label resolution | **merged** |
-| **v0.3.2 (A1++.5.5 first slice — this PR)** | cross-function `call` (0-arg, void only) + module-level call-site resolution + per-fn prologue/epilogue | this PR |
-| v0.3.3 (A1++.5.5.5) | call arguments + non-void return values | future |
-| v0.4.0 (A1++.6) | stack-spilling register allocator + i64 register pairs | future |
+| v0.3.2 (A1++.5.5 first slice) | cross-function `call` (0-arg, void only) + module-level resolution + per-fn prologue/epilogue | **merged** |
+| **v0.3.3 (A1++.5.5.5 — this PR)** | call arguments (up to 8, two-phase mv-through-temp) + non-void return values | this PR |
+| v0.4.0 (A1++.6) | stack-spilling register allocator + i64 register pairs + stack arg passing for > 8 args | future |
 | v0.5.0 (A1+++) | `lang-aot --target=riscv32` wiring | future |
 | (later) | RV32M (mul/div), RV32A (atomics), RV32F (floats), DWARF emission via aot-debug | future |
 
