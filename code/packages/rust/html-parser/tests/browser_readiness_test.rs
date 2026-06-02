@@ -3,11 +3,11 @@ use coding_adventures_html_parser::{
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel,
     BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -727,6 +727,8 @@ struct ExpectedForm {
     outputs: Vec<ExpectedFormOutput>,
     #[serde(default)]
     successful_controls: Vec<ExpectedFormSuccessfulControl>,
+    #[serde(default)]
+    validation_controls: Vec<ExpectedFormValidationControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -840,6 +842,25 @@ struct ExpectedFormSuccessfulControl {
     form_owner: Option<String>,
     #[serde(default)]
     submission_values: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormValidationControl {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1153,6 +1174,75 @@ fn browser_form_validation_descriptor_metadata_tracks_constraint_attributes_and_
         actual.forms, expected.forms,
         "form controls should preserve validation attributes and barred validation reasons",
     );
+}
+
+#[test]
+fn browser_form_validation_control_descriptors_track_candidates_and_barred_controls() {
+    let document = parse_browser_document(
+        "<form id=signup>\
+         <input id=email name=email type=email required minlength=3 maxlength=80>\
+         <input id=age name=age type=number min=18 max=120 step=1>\
+         <textarea id=bio name=bio readonly maxlength=200>About me</textarea>\
+         <input id=token type=hidden name=token value=abc>\
+         <fieldset disabled><legend>Legacy</legend><input id=legacy name=legacy required></fieldset>\
+         <output id=preview name=preview for=\"email age\">Preview</output>\
+         <input id=go type=image name=go src=go.png alt=Go>\
+         </form>\
+         <input id=external form=signup name=outside required>",
+    )
+    .expect("form validation descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("signup form should be summarized");
+    let descriptors = &form.validation_controls;
+    let ids: Vec<&str> = descriptors
+        .iter()
+        .filter_map(|control| control.id.as_deref())
+        .collect();
+    assert_eq!(
+        ids,
+        vec!["email", "age", "bio", "token", "legacy", "preview", "go", "external"]
+    );
+
+    assert!(descriptors[0].will_validate);
+    assert!(descriptors[0].required);
+    assert_eq!(
+        descriptors[0].validation_attributes,
+        vec!["required", "minlength", "maxlength"]
+    );
+    assert!(descriptors[1].will_validate);
+    assert_eq!(
+        descriptors[1].validation_attributes,
+        vec!["min", "max", "step"]
+    );
+    assert!(!descriptors[2].will_validate);
+    assert_eq!(
+        descriptors[2].validation_barred_reason.as_deref(),
+        Some("readonly")
+    );
+    assert_eq!(
+        descriptors[3].validation_barred_reason.as_deref(),
+        Some("input-type-hidden")
+    );
+    assert!(!descriptors[4].will_validate);
+    assert!(descriptors[4].required);
+    assert_eq!(
+        descriptors[4].validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+    assert_eq!(
+        descriptors[5].validation_barred_reason.as_deref(),
+        Some("output")
+    );
+    assert_eq!(
+        descriptors[6].validation_barred_reason.as_deref(),
+        Some("input-type-image")
+    );
+    assert_eq!(descriptors[7].form_owner.as_deref(), Some("signup"));
+    assert!(descriptors[7].will_validate);
+    assert_eq!(descriptors[7].validation_attributes, vec!["required"]);
 }
 
 #[test]
@@ -2221,6 +2311,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormSuccessfulControl::into_browser_form_successful_control)
                 .collect(),
+            validation_controls: self
+                .validation_controls
+                .into_iter()
+                .map(ExpectedFormValidationControl::into_browser_form_validation_control)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -2309,6 +2404,21 @@ impl ExpectedFormSuccessfulControl {
             name: self.name,
             form_owner: self.form_owner,
             submission_values: self.submission_values,
+        }
+    }
+}
+
+impl ExpectedFormValidationControl {
+    fn into_browser_form_validation_control(self) -> BrowserFormValidationControl {
+        BrowserFormValidationControl {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            will_validate: self.will_validate,
+            required: self.required,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
         }
     }
 }

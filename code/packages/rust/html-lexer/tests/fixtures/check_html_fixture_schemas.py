@@ -762,6 +762,23 @@ def check_browser_expected_lists(
             require_optional_string_list(
                 successful_path, control, "submission_values", errors
             )
+        require_optional_object_list(form_path, form, "validation_controls", errors)
+        for validation_index, control in enumerate(
+            object_list_items(form, "validation_controls")
+        ):
+            validation_path = f"{form_path}.validation_controls[{validation_index}]"
+            require_optional_nullable_string(validation_path, control, "id", errors)
+            require_string(validation_path, control, "control_type", errors)
+            require_optional_nullable_string(validation_path, control, "name", errors)
+            require_optional_nullable_string(validation_path, control, "form_owner", errors)
+            require_optional_boolean(validation_path, control, "will_validate", errors)
+            require_optional_boolean(validation_path, control, "required", errors)
+            require_optional_string_list(
+                validation_path, control, "validation_attributes", errors
+            )
+            require_optional_nullable_string(
+                validation_path, control, "validation_barred_reason", errors
+            )
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):
