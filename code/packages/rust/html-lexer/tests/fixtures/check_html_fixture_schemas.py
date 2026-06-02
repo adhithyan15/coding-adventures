@@ -764,6 +764,27 @@ def check_browser_expected_lists(
             for field in ("disabled", "will_validate"):
                 require_optional_boolean(output_path, output, field, errors)
             require_string(output_path, output, "text", errors)
+        require_optional_object_list(form_path, form, "measurements", errors)
+        for measurement_index, measurement in enumerate(
+            object_list_items(form, "measurements")
+        ):
+            measurement_path = f"{form_path}.measurements[{measurement_index}]"
+            require_optional_nullable_string(measurement_path, measurement, "id", errors)
+            require_string(measurement_path, measurement, "measurement_type", errors)
+            for field in (
+                "accessible_name",
+                "accessible_description",
+                "value",
+                "min",
+                "max",
+                "low",
+                "high",
+                "optimum",
+            ):
+                require_optional_nullable_string(measurement_path, measurement, field, errors)
+            require_optional_string_list(measurement_path, measurement, "labels", errors)
+            require_optional_boolean(measurement_path, measurement, "indeterminate", errors)
+            require_string(measurement_path, measurement, "text", errors)
         require_optional_object_list(form_path, form, "successful_controls", errors)
         for successful_index, control in enumerate(
             object_list_items(form, "successful_controls")
