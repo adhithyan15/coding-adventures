@@ -2,6 +2,56 @@
 
 All notable changes to the `coding-adventures-closure-pass-treeshake` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-02
+
+### Added (CLOC13.C.1 — the apply step, `changed` unpinned)
+
+Second apply step in the CLOC13 family (after CLOC13.E.1 / PR #4790). Walks `ctx.program.body` and actually drops dead `FunctionDeclaration` items.
+
+Strategy:
+
+1. **Use-count.** Per-binding scan over `analysis.references`, same shape as CLOC13.E.1. Unresolved references (free globals) don't increment any count.
+2. **Dead-shape scan.** A binding is dead when ALL of: `kind ∈ { Function, Class }`, `uses == 0`, `scope == ScopeId::GLOBAL`. Restricting to GLOBAL keeps the apply step correct under future analyzer extensions that surface nested bindings — only top-level names get acted on here.
+3. **Walk + drop.** For each `ProgramItem`:
+   - `Declaration::FunctionDeclaration`: drop if name ∈ `dead_names`; passthrough otherwise.
+   - `Declaration::VariableDeclaration`: passthrough unconditionally. Var/Let/Const aren't treeshake's responsibility — `remove-unused-vars` owns them.
+   - `ProgramItem::Statement`: passthrough.
+4. `changed = removed_count > 0`.
+
+### Hard-pin lifted; safety preserved
+
+`changed` is now derived from `removed_count`. Safe because we genuinely mutate when we report it: zero removals → `changed = false` (identical to v0.2.0 behavior), at-least-one removal → `changed = true` and the program is actually different.
+
+**Why it stays safe under `IterationPolicy::FixedPoint`.** Each iteration strictly reduces the binding set. A removed `FunctionDeclaration` produces no new bindings; the dropped function body can't introduce new references either (those refs were inside the dead function and resolved either to other dead bindings — removed in the same iteration — or to live bindings whose use_count was incremented by those refs; removing the refs decrements the count, possibly making *those* newly-dead in the next iteration). The fixed point reaches when no Function/Class binding has zero refs.
+
+### Cross-PR interaction with #4800 (CLOC13.0.1)
+
+This PR is **forked from origin/main BEFORE #4800 merges.** That means the in-tree scope-analyzer has populated bindings (CLOC13.0) but empty references (CLOC13.0.1 not yet on main).
+
+Under empty-references the apply step still works correctly — bindings with zero refs are dead. The tests in this PR are designed to work both pre- and post-#4800:
+
+- *Drops unreferenced function* tests use fixtures with NO `f()` call site, so use_count is 0 either way → consistent result.
+- *Passthrough Var/Let/Const* tests use Let/Const declarations, which are filtered out at step 2 regardless of references.
+- *Passthrough Statement* tests use literal-only `ExpressionStatement` (no Identifier expressions to walk).
+- *Empty program* test is the canonical identity case.
+
+The "function with use" retention test (`function f() {} f();` should keep `f`) is intentionally NOT included here — it'd pass post-#4800 but fail pre-#4800 because the empty-refs state makes `f` look dead. That test belongs to the follow-up paired with the CLOC13.0.1 activation.
+
+### Tests added (6 new; 15 total, was 9)
+
+- `apply_step_drops_unreferenced_function`
+- `apply_step_drops_multiple_unreferenced_functions`
+- `apply_step_passes_var_declarations_through`
+- `apply_step_passes_statements_through`
+- `apply_step_mixed_program_drops_only_functions`
+- `apply_step_empty_program_no_change`
+
+All 9 v0.2.0 tests still pass unchanged.
+
+### Bumped 0.2.0 → 0.3.0
+
+`Pass::run` API unchanged. Behavior under empty analysis is unchanged. Version bump signals the pass now mutates the program when there's dead work to do.
+
 ## [0.2.0] - 2026-06-01
 
 ### Added (CLOC13.C — consume `closure-scope-analyzer`)
