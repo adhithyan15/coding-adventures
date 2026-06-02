@@ -17,6 +17,8 @@ All notable changes to this package will be documented in this file.
   supervisor drain scheduler queue grouping.
 - Flattened tick-budget pressure route keys and route digests that bind route
   buckets back to queue digests for host-log grouping and drift checks.
+- Flattened tick-budget pressure route-digest queue keys and queue digests for
+  priority/readiness grouping and drift checks.
 - Flattened host-run escalation dashboard lane queue action-rollup digest status
   and routing flags for compact host-log queues.
 - JSON encoding/decoding for payload-free `ToolAuditRecord` rows.

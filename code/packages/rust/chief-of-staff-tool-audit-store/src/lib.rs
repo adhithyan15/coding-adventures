@@ -13279,6 +13279,129 @@ impl ToolAuditSupervisorDrainRunReport {
             .has_route_digest_label_integrity_drift()
     }
 
+    /// Return the pressure route-digest queue key for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+        self.tick_budget_pressure().route_digest_queue_key()
+    }
+
+    /// Return the stable pressure route-digest queue-key label for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_key_label(&self) -> String {
+        self.tick_budget_pressure().route_digest_queue_key_label()
+    }
+
+    /// Return whether the pressure route-digest queue-key label parses back.
+    pub fn tick_budget_pressure_route_digest_queue_key_label_matches_key(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key_label_matches_key()
+    }
+
+    /// Return whether the queue key's route digest matches the typed digest.
+    pub fn tick_budget_pressure_route_digest_queue_key_digest_matches_digest(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key_digest_matches_digest()
+    }
+
+    /// Return whether the queue key's priority matches its route digest.
+    pub fn tick_budget_pressure_route_digest_queue_key_priority_matches_digest(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key_priority_matches_digest()
+    }
+
+    /// Return whether the queue key's readiness matches its route digest.
+    pub fn tick_budget_pressure_route_digest_queue_key_readiness_matches_digest(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key_readiness_matches_digest()
+    }
+
+    /// Return whether every route-digest queue-key component matches the pressure.
+    pub fn tick_budget_pressure_route_digest_queue_key_parts_match(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key_parts_match()
+    }
+
+    /// Return whether any route-digest queue-key component drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_key_integrity_drift(&self) -> bool {
+        self.tick_budget_pressure()
+            .has_route_digest_queue_key_integrity_drift()
+    }
+
+    /// Return whether route-digest queue-key labels match their source classifiers.
+    pub fn tick_budget_pressure_route_digest_queue_key_labels_match(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key_labels_match()
+    }
+
+    /// Return whether any route-digest queue-key label drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift(&self) -> bool {
+        self.tick_budget_pressure()
+            .has_route_digest_queue_key_label_integrity_drift()
+    }
+
+    /// Return the pressure route-digest queue digest for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_digest(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest {
+        self.tick_budget_pressure().route_digest_queue_digest()
+    }
+
+    /// Return the stable pressure route-digest queue-digest label for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_digest_label(&self) -> String {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_label()
+    }
+
+    /// Return whether the pressure route-digest queue-digest label parses back.
+    pub fn tick_budget_pressure_route_digest_queue_digest_label_matches_digest(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_label_matches_digest()
+    }
+
+    /// Return whether the queue digest's key matches the typed key.
+    pub fn tick_budget_pressure_route_digest_queue_digest_key_matches_key(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_key_matches_key()
+    }
+
+    /// Return whether the queue digest's route digest matches the typed digest.
+    pub fn tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest(
+        &self,
+    ) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_route_digest_matches_digest()
+    }
+
+    /// Return whether the queue digest's key matches its source digest.
+    pub fn tick_budget_pressure_route_digest_queue_digest_key_matches_digest(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_key_matches_digest()
+    }
+
+    /// Return whether every route-digest queue-digest component matches the pressure.
+    pub fn tick_budget_pressure_route_digest_queue_digest_parts_match(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_parts_match()
+    }
+
+    /// Return whether any route-digest queue-digest component drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_digest_integrity_drift(&self) -> bool {
+        self.tick_budget_pressure()
+            .has_route_digest_queue_digest_integrity_drift()
+    }
+
+    /// Return whether route-digest queue-digest labels match their source classifiers.
+    pub fn tick_budget_pressure_route_digest_queue_digest_labels_match(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest_labels_match()
+    }
+
+    /// Return whether any route-digest queue-digest label drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift(&self) -> bool {
+        self.tick_budget_pressure()
+            .has_route_digest_queue_digest_label_integrity_drift()
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.plan.planned_records
@@ -13782,6 +13905,46 @@ impl ToolAuditSupervisorDrainRunReport {
                 .tick_budget_pressure_route_digest_labels_match(),
             has_tick_budget_pressure_route_digest_label_integrity_drift: self
                 .has_tick_budget_pressure_route_digest_label_integrity_drift(),
+            tick_budget_pressure_route_digest_queue_key: self
+                .tick_budget_pressure_route_digest_queue_key(),
+            tick_budget_pressure_route_digest_queue_key_label: self
+                .tick_budget_pressure_route_digest_queue_key_label(),
+            tick_budget_pressure_route_digest_queue_key_label_matches_key: self
+                .tick_budget_pressure_route_digest_queue_key_label_matches_key(),
+            tick_budget_pressure_route_digest_queue_key_digest_matches_digest: self
+                .tick_budget_pressure_route_digest_queue_key_digest_matches_digest(),
+            tick_budget_pressure_route_digest_queue_key_priority_matches_digest: self
+                .tick_budget_pressure_route_digest_queue_key_priority_matches_digest(),
+            tick_budget_pressure_route_digest_queue_key_readiness_matches_digest: self
+                .tick_budget_pressure_route_digest_queue_key_readiness_matches_digest(),
+            tick_budget_pressure_route_digest_queue_key_parts_match: self
+                .tick_budget_pressure_route_digest_queue_key_parts_match(),
+            has_tick_budget_pressure_route_digest_queue_key_integrity_drift: self
+                .has_tick_budget_pressure_route_digest_queue_key_integrity_drift(),
+            tick_budget_pressure_route_digest_queue_key_labels_match: self
+                .tick_budget_pressure_route_digest_queue_key_labels_match(),
+            has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift: self
+                .has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift(),
+            tick_budget_pressure_route_digest_queue_digest: self
+                .tick_budget_pressure_route_digest_queue_digest(),
+            tick_budget_pressure_route_digest_queue_digest_label: self
+                .tick_budget_pressure_route_digest_queue_digest_label(),
+            tick_budget_pressure_route_digest_queue_digest_label_matches_digest: self
+                .tick_budget_pressure_route_digest_queue_digest_label_matches_digest(),
+            tick_budget_pressure_route_digest_queue_digest_key_matches_key: self
+                .tick_budget_pressure_route_digest_queue_digest_key_matches_key(),
+            tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest: self
+                .tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest(),
+            tick_budget_pressure_route_digest_queue_digest_key_matches_digest: self
+                .tick_budget_pressure_route_digest_queue_digest_key_matches_digest(),
+            tick_budget_pressure_route_digest_queue_digest_parts_match: self
+                .tick_budget_pressure_route_digest_queue_digest_parts_match(),
+            has_tick_budget_pressure_route_digest_queue_digest_integrity_drift: self
+                .has_tick_budget_pressure_route_digest_queue_digest_integrity_drift(),
+            tick_budget_pressure_route_digest_queue_digest_labels_match: self
+                .tick_budget_pressure_route_digest_queue_digest_labels_match(),
+            has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift: self
+                .has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift(),
             planned_records: self.planned_records(),
             drained_records: self.drained_records(),
             planned_follow_up_records: self.planned_follow_up_records(),
@@ -17127,6 +17290,48 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub tick_budget_pressure_route_digest_labels_match: bool,
     /// Whether any pressure route-digest label drifted.
     pub has_tick_budget_pressure_route_digest_label_integrity_drift: bool,
+    /// Tick-budget pressure route-digest queue key.
+    pub tick_budget_pressure_route_digest_queue_key:
+        ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey,
+    /// Stable tick-budget pressure route-digest queue-key label.
+    pub tick_budget_pressure_route_digest_queue_key_label: String,
+    /// Whether the pressure route-digest queue-key label parses back.
+    pub tick_budget_pressure_route_digest_queue_key_label_matches_key: bool,
+    /// Whether the pressure route-digest queue-key digest matches the typed digest.
+    pub tick_budget_pressure_route_digest_queue_key_digest_matches_digest: bool,
+    /// Whether the pressure route-digest queue-key priority matches its digest.
+    pub tick_budget_pressure_route_digest_queue_key_priority_matches_digest: bool,
+    /// Whether the pressure route-digest queue-key readiness matches its digest.
+    pub tick_budget_pressure_route_digest_queue_key_readiness_matches_digest: bool,
+    /// Whether every pressure route-digest queue-key component matches the pressure.
+    pub tick_budget_pressure_route_digest_queue_key_parts_match: bool,
+    /// Whether any pressure route-digest queue-key component drifted.
+    pub has_tick_budget_pressure_route_digest_queue_key_integrity_drift: bool,
+    /// Whether every pressure route-digest queue-key label matches its source classifier.
+    pub tick_budget_pressure_route_digest_queue_key_labels_match: bool,
+    /// Whether any pressure route-digest queue-key label drifted.
+    pub has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift: bool,
+    /// Tick-budget pressure route-digest queue digest.
+    pub tick_budget_pressure_route_digest_queue_digest:
+        ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest,
+    /// Stable tick-budget pressure route-digest queue-digest label.
+    pub tick_budget_pressure_route_digest_queue_digest_label: String,
+    /// Whether the pressure route-digest queue-digest label parses back.
+    pub tick_budget_pressure_route_digest_queue_digest_label_matches_digest: bool,
+    /// Whether the pressure route-digest queue-digest key matches the typed key.
+    pub tick_budget_pressure_route_digest_queue_digest_key_matches_key: bool,
+    /// Whether the pressure route-digest queue-digest source digest matches the typed digest.
+    pub tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest: bool,
+    /// Whether the pressure route-digest queue-digest key matches its source digest.
+    pub tick_budget_pressure_route_digest_queue_digest_key_matches_digest: bool,
+    /// Whether every pressure route-digest queue-digest component matches the pressure.
+    pub tick_budget_pressure_route_digest_queue_digest_parts_match: bool,
+    /// Whether any pressure route-digest queue-digest component drifted.
+    pub has_tick_budget_pressure_route_digest_queue_digest_integrity_drift: bool,
+    /// Whether every pressure route-digest queue-digest label matches its source classifier.
+    pub tick_budget_pressure_route_digest_queue_digest_labels_match: bool,
+    /// Whether any pressure route-digest queue-digest label drifted.
+    pub has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift: bool,
     /// Total rows the preflight plan expected to replay.
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
@@ -24705,6 +24910,112 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.has_tick_budget_pressure_route_digest_label_integrity_drift
     }
 
+    /// Return the pressure route-digest queue key for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_key(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+        self.tick_budget_pressure_route_digest_queue_key
+    }
+
+    /// Return the stable pressure route-digest queue-key label for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_key_label(&self) -> &str {
+        &self.tick_budget_pressure_route_digest_queue_key_label
+    }
+
+    /// Return whether the pressure route-digest queue-key label parses back.
+    pub fn tick_budget_pressure_route_digest_queue_key_label_matches_key(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_label_matches_key
+    }
+
+    /// Return whether the route-digest queue key's digest matches the typed digest.
+    pub fn tick_budget_pressure_route_digest_queue_key_digest_matches_digest(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_digest_matches_digest
+    }
+
+    /// Return whether the route-digest queue key's priority matches its digest.
+    pub fn tick_budget_pressure_route_digest_queue_key_priority_matches_digest(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_priority_matches_digest
+    }
+
+    /// Return whether the route-digest queue key's readiness matches its digest.
+    pub fn tick_budget_pressure_route_digest_queue_key_readiness_matches_digest(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_readiness_matches_digest
+    }
+
+    /// Return whether every pressure route-digest queue-key component matches.
+    pub fn tick_budget_pressure_route_digest_queue_key_parts_match(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_parts_match
+    }
+
+    /// Return whether any pressure route-digest queue-key component drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_key_integrity_drift(&self) -> bool {
+        self.has_tick_budget_pressure_route_digest_queue_key_integrity_drift
+    }
+
+    /// Return whether pressure route-digest queue-key labels match their source classifiers.
+    pub fn tick_budget_pressure_route_digest_queue_key_labels_match(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_labels_match
+    }
+
+    /// Return whether any pressure route-digest queue-key label drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift(&self) -> bool {
+        self.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift
+    }
+
+    /// Return the pressure route-digest queue digest for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_digest(
+        &self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest {
+        self.tick_budget_pressure_route_digest_queue_digest
+    }
+
+    /// Return the stable pressure route-digest queue-digest label for the actual drain.
+    pub fn tick_budget_pressure_route_digest_queue_digest_label(&self) -> &str {
+        &self.tick_budget_pressure_route_digest_queue_digest_label
+    }
+
+    /// Return whether the pressure route-digest queue-digest label parses back.
+    pub fn tick_budget_pressure_route_digest_queue_digest_label_matches_digest(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_label_matches_digest
+    }
+
+    /// Return whether the route-digest queue digest's key matches the typed key.
+    pub fn tick_budget_pressure_route_digest_queue_digest_key_matches_key(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_key_matches_key
+    }
+
+    /// Return whether the route-digest queue digest's source digest matches the typed digest.
+    pub fn tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest(
+        &self,
+    ) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest
+    }
+
+    /// Return whether the route-digest queue digest's key matches its source digest.
+    pub fn tick_budget_pressure_route_digest_queue_digest_key_matches_digest(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_key_matches_digest
+    }
+
+    /// Return whether every pressure route-digest queue-digest component matches.
+    pub fn tick_budget_pressure_route_digest_queue_digest_parts_match(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_parts_match
+    }
+
+    /// Return whether any pressure route-digest queue-digest component drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_digest_integrity_drift(&self) -> bool {
+        self.has_tick_budget_pressure_route_digest_queue_digest_integrity_drift
+    }
+
+    /// Return whether pressure route-digest queue-digest labels match their source classifiers.
+    pub fn tick_budget_pressure_route_digest_queue_digest_labels_match(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_labels_match
+    }
+
+    /// Return whether any pressure route-digest queue-digest label drifted.
+    pub fn has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift(&self) -> bool {
+        self.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift
+    }
+
     /// Return the total rows the preflight plan expected to replay.
     pub fn planned_records(&self) -> usize {
         self.planned_records
@@ -31049,6 +31360,138 @@ impl ToolAuditSupervisorDrainTickBudgetPressure {
     pub fn has_route_digest_label_integrity_drift(self) -> bool {
         !self.route_digest_labels_match()
     }
+
+    /// Return the route-digest queue key for this pressure classification.
+    pub fn route_digest_queue_key(
+        self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+        ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey::from_pressure(self)
+    }
+
+    /// Return the stable tick-budget pressure route-digest queue-key label.
+    pub fn route_digest_queue_key_label(self) -> String {
+        self.route_digest_queue_key().label()
+    }
+
+    /// Return whether the route-digest queue-key label parses back to its typed key.
+    pub fn route_digest_queue_key_label_matches_key(self) -> bool {
+        self.route_digest_queue_key().label_matches_key()
+    }
+
+    /// Return whether the route-digest queue key matches this pressure route digest.
+    pub fn route_digest_queue_key_digest_matches_digest(self) -> bool {
+        self.route_digest_queue_key()
+            .route_digest_matches(self.route_digest())
+    }
+
+    /// Return whether the route-digest queue key priority matches its digest.
+    pub fn route_digest_queue_key_priority_matches_digest(self) -> bool {
+        self.route_digest_queue_key().priority_matches_digest()
+    }
+
+    /// Return whether the route-digest queue key readiness matches its digest.
+    pub fn route_digest_queue_key_readiness_matches_digest(self) -> bool {
+        self.route_digest_queue_key().readiness_matches_digest()
+    }
+
+    /// Return whether every route-digest queue-key component matches this pressure.
+    pub fn route_digest_queue_key_parts_match(self) -> bool {
+        self.route_digest_queue_key().parts_match(
+            self.route_digest(),
+            self.priority(),
+            self.readiness(),
+        )
+    }
+
+    /// Return whether any route-digest queue-key component drifted from this pressure.
+    pub fn has_route_digest_queue_key_integrity_drift(self) -> bool {
+        !self.route_digest_queue_key_parts_match()
+            || !self.route_digest_queue_key_digest_matches_digest()
+            || !self.route_digest_queue_key_priority_matches_digest()
+            || !self.route_digest_queue_key_readiness_matches_digest()
+            || self.route_digest_queue_key().has_integrity_drift()
+    }
+
+    /// Return whether pressure route-digest queue-key labels match their source values.
+    pub fn route_digest_queue_key_labels_match(self) -> bool {
+        self.route_digest_labels_match()
+            && self.route_digest_queue_key_label_matches_key()
+            && self.route_digest_queue_key_digest_matches_digest()
+            && self.route_digest_queue_key_priority_matches_digest()
+            && self.route_digest_queue_key_readiness_matches_digest()
+            && self.route_digest_queue_key_parts_match()
+            && self.route_digest_queue_key().labels_match()
+    }
+
+    /// Return whether any pressure route-digest queue-key label drifted.
+    pub fn has_route_digest_queue_key_label_integrity_drift(self) -> bool {
+        !self.route_digest_queue_key_labels_match()
+    }
+
+    /// Return the route-digest queue digest for this pressure classification.
+    pub fn route_digest_queue_digest(
+        self,
+    ) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest {
+        ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest::from_pressure(self)
+    }
+
+    /// Return the stable tick-budget pressure route-digest queue-digest label.
+    pub fn route_digest_queue_digest_label(self) -> String {
+        self.route_digest_queue_digest().label()
+    }
+
+    /// Return whether the route-digest queue-digest label parses back.
+    pub fn route_digest_queue_digest_label_matches_digest(self) -> bool {
+        self.route_digest_queue_digest().label_matches_digest()
+    }
+
+    /// Return whether the route-digest queue digest's key matches this pressure.
+    pub fn route_digest_queue_digest_key_matches_key(self) -> bool {
+        self.route_digest_queue_digest()
+            .queue_key_matches(self.route_digest_queue_key())
+    }
+
+    /// Return whether the route-digest queue digest's source digest matches this pressure.
+    pub fn route_digest_queue_digest_route_digest_matches_digest(self) -> bool {
+        self.route_digest_queue_digest()
+            .route_digest_matches(self.route_digest())
+    }
+
+    /// Return whether the route-digest queue digest's key matches its source digest.
+    pub fn route_digest_queue_digest_key_matches_digest(self) -> bool {
+        self.route_digest_queue_digest().queue_key_matches_digest()
+    }
+
+    /// Return whether every route-digest queue-digest component matches this pressure.
+    pub fn route_digest_queue_digest_parts_match(self) -> bool {
+        self.route_digest_queue_digest()
+            .parts_match(self.route_digest_queue_key(), self.route_digest())
+    }
+
+    /// Return whether any route-digest queue-digest component drifted.
+    pub fn has_route_digest_queue_digest_integrity_drift(self) -> bool {
+        !self.route_digest_queue_digest_parts_match()
+            || !self.route_digest_queue_digest_key_matches_key()
+            || !self.route_digest_queue_digest_route_digest_matches_digest()
+            || !self.route_digest_queue_digest_key_matches_digest()
+            || self.route_digest_queue_digest().has_integrity_drift()
+    }
+
+    /// Return whether pressure route-digest queue-digest labels match their source values.
+    pub fn route_digest_queue_digest_labels_match(self) -> bool {
+        self.route_digest_queue_key_labels_match()
+            && self.route_digest_queue_digest_label_matches_digest()
+            && self.route_digest_queue_digest_key_matches_key()
+            && self.route_digest_queue_digest_route_digest_matches_digest()
+            && self.route_digest_queue_digest_key_matches_digest()
+            && self.route_digest_queue_digest_parts_match()
+            && self.route_digest_queue_digest().labels_match()
+    }
+
+    /// Return whether any pressure route-digest queue-digest label drifted.
+    pub fn has_route_digest_queue_digest_label_integrity_drift(self) -> bool {
+        !self.route_digest_queue_digest_labels_match()
+    }
 }
 
 impl Display for ToolAuditSupervisorDrainTickBudgetPressure {
@@ -32104,6 +32547,411 @@ impl ToolAuditSupervisorDrainTickBudgetPressureRouteDigest {
 }
 
 impl Display for ToolAuditSupervisorDrainTickBudgetPressureRouteDigest {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable queue key that binds pressure route digests to priority and readiness.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+    route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+    readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+    /// Create a pressure route-digest queue key from typed classifiers.
+    pub fn new(
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+        priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+        readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+    ) -> Self {
+        Self {
+            route_digest,
+            priority,
+            readiness,
+        }
+    }
+
+    /// Create a pressure route-digest queue key from a route digest.
+    pub fn from_route_digest(
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    ) -> Self {
+        Self::new(
+            route_digest,
+            route_digest.queue_digest().priority(),
+            route_digest.queue_digest().readiness(),
+        )
+    }
+
+    /// Create a pressure route-digest queue key from a pressure classification.
+    pub fn from_pressure(pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> Self {
+        Self::from_route_digest(pressure.route_digest())
+    }
+
+    /// Parse a stable tick-budget pressure route-digest queue-key label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("route_digest=")?;
+        let (route_digest_label, rest) = rest.split_once("|priority=")?;
+        let (priority_label, readiness_label) = rest.split_once("|readiness=")?;
+        let route_digest =
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigest::from_label(route_digest_label)?;
+        let priority =
+            ToolAuditSupervisorDrainTickBudgetPressurePriority::from_label(priority_label)?;
+        let readiness =
+            ToolAuditSupervisorDrainTickBudgetPressureReadiness::from_label(readiness_label)?;
+        Some(Self::new(route_digest, priority, readiness))
+    }
+
+    /// Return the source pressure route digest.
+    pub fn route_digest(self) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigest {
+        self.route_digest
+    }
+
+    /// Return the stable pressure route-digest label.
+    pub fn route_digest_label(self) -> String {
+        self.route_digest.label()
+    }
+
+    /// Return the queue priority.
+    pub fn priority(self) -> ToolAuditSupervisorDrainTickBudgetPressurePriority {
+        self.priority
+    }
+
+    /// Return the stable queue priority label.
+    pub fn priority_label(self) -> &'static str {
+        self.priority.as_str()
+    }
+
+    /// Return whether the priority label parses back to the typed priority.
+    pub fn priority_label_matches_priority(self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressurePriority::from_label(self.priority_label())
+            == Some(self.priority)
+    }
+
+    /// Return the queue readiness.
+    pub fn readiness(self) -> ToolAuditSupervisorDrainTickBudgetPressureReadiness {
+        self.readiness
+    }
+
+    /// Return the stable queue readiness label.
+    pub fn readiness_label(self) -> &'static str {
+        self.readiness.as_str()
+    }
+
+    /// Return whether the readiness label parses back to the typed readiness.
+    pub fn readiness_label_matches_readiness(self) -> bool {
+        ToolAuditSupervisorDrainTickBudgetPressureReadiness::from_label(self.readiness_label())
+            == Some(self.readiness)
+    }
+
+    /// Return a stable route-digest queue-key label.
+    pub fn label(self) -> String {
+        format!(
+            "route_digest={}|priority={}|readiness={}",
+            self.route_digest.label(),
+            self.priority.as_str(),
+            self.readiness.as_str()
+        )
+    }
+
+    /// Return whether this route-digest queue-key label parses back to this key.
+    pub fn label_matches_key(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this key's route digest matches the supplied digest.
+    pub fn route_digest_matches(
+        self,
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    ) -> bool {
+        self.route_digest == route_digest
+    }
+
+    /// Return whether this key's priority matches the supplied priority.
+    pub fn priority_matches(
+        self,
+        priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+    ) -> bool {
+        self.priority == priority
+    }
+
+    /// Return whether this key's readiness matches the supplied readiness.
+    pub fn readiness_matches(
+        self,
+        readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+    ) -> bool {
+        self.readiness == readiness
+    }
+
+    /// Return whether this key's priority matches its route digest.
+    pub fn priority_matches_digest(self) -> bool {
+        self.priority == self.route_digest.queue_digest().priority()
+    }
+
+    /// Return whether this key's readiness matches its route digest.
+    pub fn readiness_matches_digest(self) -> bool {
+        self.readiness == self.route_digest.queue_digest().readiness()
+    }
+
+    /// Return whether every queue-key component matches the supplied values.
+    pub fn parts_match(
+        self,
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+        priority: ToolAuditSupervisorDrainTickBudgetPressurePriority,
+        readiness: ToolAuditSupervisorDrainTickBudgetPressureReadiness,
+    ) -> bool {
+        self.route_digest_matches(route_digest)
+            && self.priority_matches(priority)
+            && self.readiness_matches(readiness)
+    }
+
+    /// Return whether route-digest queue-key labels match their source digest.
+    pub fn labels_match(self) -> bool {
+        self.route_digest.labels_match()
+            && self.label_matches_key()
+            && self.priority_label_matches_priority()
+            && self.readiness_label_matches_readiness()
+            && self.priority_matches_digest()
+            && self.readiness_matches_digest()
+    }
+
+    /// Return whether any route-digest queue-key component drifted.
+    pub fn has_integrity_drift(self) -> bool {
+        !self.priority_matches_digest() || !self.readiness_matches_digest()
+    }
+
+    /// Return whether any route-digest queue-key label drifted.
+    pub fn has_label_integrity_drift(self) -> bool {
+        !self.labels_match()
+    }
+
+    /// Return whether this queue key is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.route_digest.is_settled() && self.priority.is_settled() && self.readiness.is_settled()
+    }
+
+    /// Return whether this queue key is log-only context.
+    pub fn is_log_only(self) -> bool {
+        self.route_digest.is_log_only() && self.readiness.is_log_only()
+    }
+
+    /// Return whether this queue key can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.route_digest.is_auto_routable() && self.readiness.is_auto_routable()
+    }
+
+    /// Return whether this queue key requires scheduler action.
+    pub fn requires_action(self) -> bool {
+        self.route_digest.requires_action()
+            || self.priority.is_continuation()
+            || self.readiness.requires_action()
+    }
+
+    /// Return the sortable route-digest queue-key priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.route_digest.priority_rank().max(self.priority.rank())
+    }
+
+    /// Return whether this queue key has a concrete route.
+    pub fn has_route(self) -> bool {
+        self.route_digest.has_route()
+    }
+
+    /// Return whether this queue key routes to continuation scheduling.
+    pub fn routes_to_continuation(self) -> bool {
+        self.route_digest.routes_to_continuation()
+    }
+
+    /// Return whether this queue key routes to budget observation.
+    pub fn routes_to_budget_observation(self) -> bool {
+        self.route_digest.routes_to_budget_observation()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.label())
+    }
+}
+
+/// Stable digest that binds pressure route-digest queue keys back to route digests.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest {
+    queue_key: ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey,
+    route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+}
+
+impl ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest {
+    /// Create a pressure route-digest queue digest from queue key and source digest.
+    pub fn new(
+        queue_key: ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey,
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    ) -> Self {
+        Self {
+            queue_key,
+            route_digest,
+        }
+    }
+
+    /// Create a pressure route-digest queue digest from a source route digest.
+    pub fn from_route_digest(
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    ) -> Self {
+        Self::new(
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey::from_route_digest(
+                route_digest,
+            ),
+            route_digest,
+        )
+    }
+
+    /// Create a pressure route-digest queue digest from a pressure classification.
+    pub fn from_pressure(pressure: ToolAuditSupervisorDrainTickBudgetPressure) -> Self {
+        Self::from_route_digest(pressure.route_digest())
+    }
+
+    /// Parse a stable tick-budget pressure route-digest queue-digest label.
+    pub fn from_label(label: &str) -> Option<Self> {
+        let rest = label.strip_prefix("queue_key=")?;
+        let (queue_key_label, route_digest_label) = rest.split_once("|source_route_digest=")?;
+        let queue_key = ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey::from_label(
+            queue_key_label,
+        )?;
+        let route_digest =
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigest::from_label(route_digest_label)?;
+        Some(Self::new(queue_key, route_digest))
+    }
+
+    /// Return the compact route-digest queue key.
+    pub fn queue_key(self) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey {
+        self.queue_key
+    }
+
+    /// Return the stable route-digest queue-key label.
+    pub fn queue_key_label(self) -> String {
+        self.queue_key.label()
+    }
+
+    /// Return the source pressure route digest.
+    pub fn route_digest(self) -> ToolAuditSupervisorDrainTickBudgetPressureRouteDigest {
+        self.route_digest
+    }
+
+    /// Return the stable source route-digest label.
+    pub fn route_digest_label(self) -> String {
+        self.route_digest.label()
+    }
+
+    /// Return a stable route-digest queue-digest label.
+    pub fn label(self) -> String {
+        format!(
+            "queue_key={}|source_route_digest={}",
+            self.queue_key.label(),
+            self.route_digest.label()
+        )
+    }
+
+    /// Return whether this route-digest queue-digest label parses back.
+    pub fn label_matches_digest(self) -> bool {
+        Self::from_label(&self.label()) == Some(self)
+    }
+
+    /// Return whether this digest's queue key matches the supplied key.
+    pub fn queue_key_matches(
+        self,
+        queue_key: ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey,
+    ) -> bool {
+        self.queue_key == queue_key
+    }
+
+    /// Return whether this digest's route digest matches the supplied digest.
+    pub fn route_digest_matches(
+        self,
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    ) -> bool {
+        self.route_digest == route_digest
+    }
+
+    /// Return whether this digest's queue key matches its source route digest.
+    pub fn queue_key_matches_digest(self) -> bool {
+        self.queue_key.parts_match(
+            self.route_digest,
+            self.route_digest.queue_digest().priority(),
+            self.route_digest.queue_digest().readiness(),
+        )
+    }
+
+    /// Return whether every queue-digest component matches the supplied values.
+    pub fn parts_match(
+        self,
+        queue_key: ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey,
+        route_digest: ToolAuditSupervisorDrainTickBudgetPressureRouteDigest,
+    ) -> bool {
+        self.queue_key_matches(queue_key) && self.route_digest_matches(route_digest)
+    }
+
+    /// Return whether route-digest queue-digest labels match their source key.
+    pub fn labels_match(self) -> bool {
+        self.queue_key.labels_match()
+            && self.route_digest.labels_match()
+            && self.label_matches_digest()
+            && self.queue_key_matches_digest()
+    }
+
+    /// Return whether any route-digest queue-digest component drifted.
+    pub fn has_integrity_drift(self) -> bool {
+        !self.queue_key_matches_digest()
+    }
+
+    /// Return whether any route-digest queue-digest label drifted.
+    pub fn has_label_integrity_drift(self) -> bool {
+        !self.labels_match()
+    }
+
+    /// Return whether this queue digest is fully settled.
+    pub fn is_settled(self) -> bool {
+        self.queue_key.is_settled()
+    }
+
+    /// Return whether this queue digest is log-only context.
+    pub fn is_log_only(self) -> bool {
+        self.queue_key.is_log_only()
+    }
+
+    /// Return whether this queue digest can route automatically.
+    pub fn is_auto_routable(self) -> bool {
+        self.queue_key.is_auto_routable()
+    }
+
+    /// Return whether this queue digest requires scheduler action.
+    pub fn requires_action(self) -> bool {
+        self.queue_key.requires_action()
+    }
+
+    /// Return the sortable route-digest queue-digest priority rank.
+    pub fn priority_rank(self) -> u8 {
+        self.queue_key.priority_rank()
+    }
+
+    /// Return whether this queue digest has a concrete route.
+    pub fn has_route(self) -> bool {
+        self.queue_key.has_route()
+    }
+
+    /// Return whether this queue digest routes to continuation scheduling.
+    pub fn routes_to_continuation(self) -> bool {
+        self.queue_key.routes_to_continuation()
+    }
+
+    /// Return whether this queue digest routes to budget observation.
+    pub fn routes_to_budget_observation(self) -> bool {
+        self.queue_key.routes_to_budget_observation()
+    }
+}
+
+impl Display for ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.write_str(&self.label())
     }
@@ -49768,6 +50616,42 @@ mod tests {
         assert!(exhausted.route_digest_labels_match());
         assert!(!exhausted.has_route_digest_label_integrity_drift());
         assert_eq!(
+            exhausted.route_digest_queue_key(),
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey::from_route_digest(
+                exhausted.route_digest()
+            )
+        );
+        assert_eq!(
+            exhausted.route_digest_queue_key_label(),
+            "route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route"
+        );
+        assert!(exhausted.route_digest_queue_key_label_matches_key());
+        assert!(exhausted.route_digest_queue_key_digest_matches_digest());
+        assert!(exhausted.route_digest_queue_key_priority_matches_digest());
+        assert!(exhausted.route_digest_queue_key_readiness_matches_digest());
+        assert!(exhausted.route_digest_queue_key_parts_match());
+        assert!(!exhausted.has_route_digest_queue_key_integrity_drift());
+        assert!(exhausted.route_digest_queue_key_labels_match());
+        assert!(!exhausted.has_route_digest_queue_key_label_integrity_drift());
+        assert_eq!(
+            exhausted.route_digest_queue_digest(),
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest::from_route_digest(
+                exhausted.route_digest()
+            )
+        );
+        assert_eq!(
+            exhausted.route_digest_queue_digest_label(),
+            "queue_key=route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route|source_route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route"
+        );
+        assert!(exhausted.route_digest_queue_digest_label_matches_digest());
+        assert!(exhausted.route_digest_queue_digest_key_matches_key());
+        assert!(exhausted.route_digest_queue_digest_route_digest_matches_digest());
+        assert!(exhausted.route_digest_queue_digest_key_matches_digest());
+        assert!(exhausted.route_digest_queue_digest_parts_match());
+        assert!(!exhausted.has_route_digest_queue_digest_integrity_drift());
+        assert!(exhausted.route_digest_queue_digest_labels_match());
+        assert!(!exhausted.has_route_digest_queue_digest_label_integrity_drift());
+        assert_eq!(
             ToolAuditSupervisorDrainTickBudgetPressureRoute::from_label("continuation"),
             Some(ToolAuditSupervisorDrainTickBudgetPressureRoute::Continuation)
         );
@@ -49836,6 +50720,30 @@ mod tests {
         assert_eq!(
             ToolAuditSupervisorDrainTickBudgetPressureRouteDigest::from_label(
                 "route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route:extra"
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey::from_label(
+                "route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route"
+            ),
+            Some(exhausted.route_digest_queue_key())
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueKey::from_label(
+                "route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route:extra"
+            ),
+            None
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest::from_label(
+                "queue_key=route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route|source_route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route"
+            ),
+            Some(exhausted.route_digest_queue_digest())
+        );
+        assert_eq!(
+            ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest::from_label(
+                "queue_key=route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route|source_route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route:extra"
             ),
             None
         );
@@ -49951,6 +50859,38 @@ mod tests {
         assert!(!report.has_tick_budget_pressure_route_digest_integrity_drift());
         assert!(report.tick_budget_pressure_route_digest_labels_match());
         assert!(!report.has_tick_budget_pressure_route_digest_label_integrity_drift());
+        assert_eq!(
+            report.tick_budget_pressure_route_digest_queue_key(),
+            exhausted.route_digest_queue_key()
+        );
+        assert_eq!(
+            report.tick_budget_pressure_route_digest_queue_key_label(),
+            "route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route"
+        );
+        assert!(report.tick_budget_pressure_route_digest_queue_key_label_matches_key());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_digest_matches_digest());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_priority_matches_digest());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_readiness_matches_digest());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_parts_match());
+        assert!(!report.has_tick_budget_pressure_route_digest_queue_key_integrity_drift());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_labels_match());
+        assert!(!report.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift());
+        assert_eq!(
+            report.tick_budget_pressure_route_digest_queue_digest(),
+            exhausted.route_digest_queue_digest()
+        );
+        assert_eq!(
+            report.tick_budget_pressure_route_digest_queue_digest_label(),
+            "queue_key=route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route|source_route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route"
+        );
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_label_matches_digest());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_key_matches_key());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_key_matches_digest());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_parts_match());
+        assert!(!report.has_tick_budget_pressure_route_digest_queue_digest_integrity_drift());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_labels_match());
+        assert!(!report.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift());
         assert!(report.tick_budget_status_flags_match());
 
         let summary = report.summary();
@@ -50102,6 +51042,64 @@ mod tests {
         assert!(summary.tick_budget_pressure_route_digest_labels_match());
         assert!(!summary.has_tick_budget_pressure_route_digest_label_integrity_drift);
         assert!(!summary.has_tick_budget_pressure_route_digest_label_integrity_drift());
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_key,
+            exhausted.route_digest_queue_key()
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_key(),
+            summary.tick_budget_pressure_route_digest_queue_key
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_key_label(),
+            "route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route"
+        );
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_label_matches_key);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_label_matches_key());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_digest_matches_digest);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_digest_matches_digest());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_priority_matches_digest);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_priority_matches_digest());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_readiness_matches_digest);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_readiness_matches_digest());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_parts_match);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_parts_match());
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_key_integrity_drift);
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_key_integrity_drift());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_labels_match);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_labels_match());
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift);
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift());
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_digest,
+            exhausted.route_digest_queue_digest()
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_digest(),
+            summary.tick_budget_pressure_route_digest_queue_digest
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_digest_label(),
+            "queue_key=route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|priority=continuation|readiness=auto_route|source_route_digest=route_key=route=continuation|queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route|source_queue_digest=exhausted_before_end_of_log:continuation:continuation:auto_route=>continuation:continuation:auto_route"
+        );
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_label_matches_digest);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_label_matches_digest());
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_key_matches_key);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_key_matches_key());
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest);
+        assert!(
+            summary.tick_budget_pressure_route_digest_queue_digest_route_digest_matches_digest()
+        );
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_key_matches_digest);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_key_matches_digest());
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_parts_match);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_parts_match());
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_digest_integrity_drift);
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_digest_integrity_drift());
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_labels_match);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_labels_match());
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift);
+        assert!(!summary.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift());
     }
 
     #[test]
