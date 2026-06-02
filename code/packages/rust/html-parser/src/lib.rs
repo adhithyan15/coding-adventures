@@ -1617,6 +1617,7 @@ pub struct BrowserForm {
     pub outputs: Vec<BrowserFormOutput>,
     pub successful_controls: Vec<BrowserFormSuccessfulControl>,
     pub validation_controls: Vec<BrowserFormValidationControl>,
+    pub buttons: Vec<BrowserFormButton>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1704,6 +1705,32 @@ pub struct BrowserFormValidationControl {
     pub required: bool,
     pub validation_attributes: Vec<String>,
     pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormButton {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub accessible_name: Option<String>,
+    pub disabled: bool,
+    pub autofocus: bool,
+    pub submitter: bool,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+    pub text: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12760,6 +12787,16 @@ fn browser_form(
     let outputs = browser_form_outputs(&controls);
     let successful_controls = browser_form_successful_controls(&controls);
     let validation_controls = browser_form_validation_controls(&controls);
+    let buttons = browser_form_buttons(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12803,6 +12840,7 @@ fn browser_form(
         outputs,
         successful_controls,
         validation_controls,
+        buttons,
         controls,
         submitters,
     }
@@ -13170,6 +13208,98 @@ fn browser_form_validation_controls(
             validation_barred_reason: control.validation_barred_reason.clone(),
         })
         .collect()
+}
+
+fn browser_form_buttons(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormButton> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_button(control))
+        .map(|control| {
+            let submitter = is_browser_form_submitter(control);
+            BrowserFormButton {
+                id: control.id.clone(),
+                control_type: control.control_type.clone(),
+                name: control.name.clone(),
+                form_owner: control.form_owner.clone(),
+                accessible_name: control
+                    .accessible_name
+                    .clone()
+                    .or_else(|| control.alt.clone()),
+                disabled: control.disabled,
+                autofocus: control.autofocus,
+                submitter,
+                action: if submitter {
+                    control
+                        .form_action
+                        .clone()
+                        .or_else(|| action.map(ToOwned::to_owned))
+                } else {
+                    control.form_action.clone()
+                },
+                resolved_action: if submitter {
+                    control
+                        .resolved_form_action
+                        .clone()
+                        .or_else(|| resolved_action.map(ToOwned::to_owned))
+                } else {
+                    control.resolved_form_action.clone()
+                },
+                method: control
+                    .form_method
+                    .clone()
+                    .unwrap_or_else(|| method.to_string()),
+                enctype: if submitter {
+                    control
+                        .form_enctype
+                        .clone()
+                        .or_else(|| enctype.map(ToOwned::to_owned))
+                } else {
+                    control.form_enctype.clone()
+                },
+                target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                effective_target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                        .or_else(|| base_target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                novalidate: submitter && (novalidate || control.form_novalidate),
+                value: control.value.clone(),
+                text: control.text.clone(),
+                src: control.src.clone(),
+                resolved_src: control.resolved_src.clone(),
+                alt: control.alt.clone(),
+                width: control.width.clone(),
+                height: control.height.clone(),
+            }
+        })
+        .collect()
+}
+
+fn is_browser_form_button(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "button" | "image" | "reset" | "submit"
+    )
 }
 
 fn is_browser_form_submitter(control: &BrowserFormControl) -> bool {
