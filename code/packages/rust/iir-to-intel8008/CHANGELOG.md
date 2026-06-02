@@ -3,6 +3,74 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.3] — 2026-06-02 (A2++.5.5 second slice — carry/borrow ALU `adc`/`sbb`)
+
+### Added — carry-chained accumulator-target ALU
+
+Extends v0.3.2 with two more accumulator-anchored ALU ops in family
+`10 ooo sss` that read the carry/borrow flag set by a *prior*
+flag-producing op:
+
+| IIR op | Intel 8008 mnemonic | `ooo` | First byte |
+|--------|---------------------|-------|------------|
+| `adc dest, a, b` | `ACA b_reg` | `001` | `0x88 \| sss` |
+| `sbb dest, a, b` | `SCA b_reg` | `011` | `0x98 \| sss` |
+
+The lowering shape is identical to add/sub/and/or/xor — only the
+`ooo` selector changes.  No new encoder code; `encode_alu(ooo, sss)`
+from v0.3.1 carries the wider dispatch.
+
+#### Carry-flag contract (front-end responsibility)
+
+The 8008's `ACA`/`SCA` consume the carry flag bit set by a prior
+flag-affecting ALU op (`ADD`, `SUB`, `ADC`, `SBB`, `ANA`, `ORA`,
+`XRA`, `CMP`).  This backend emits instructions in source order with
+no reordering — so if the IIR front-end emits
+
+```
+add r_lo lo_a lo_b   ; sets carry on overflow
+adc r_hi hi_a hi_b   ; consumes that carry
+```
+
+the carry survives between the two.  However, the staging MOVs
+inserted by the allocator (`MOV A, hi_a`) sit between them.  Per
+Intel's 8008 docs MOV does NOT affect flags, so the carry survives
+the MOV too.  Front-ends MUST NOT insert flag-clobbering ops between
+the producer and the ADC/SBB consumer.
+
+#### Why no `cmp` in this slice?
+
+`cmp` in IIR is shaped `cmp dest, a, b` and produces a boolean dest.
+The 8008's `CMP` (`ooo = 0b111`) computes `A - r`, sets flags, and
+**discards** the result — there's no register dest in 8008-speak.
+Lowering `cmp` therefore requires an additional sequence that
+captures the resulting condition into a register, which is typically
+done as part of the same lowering that handles conditional branches.
+That work lands together in v0.3.4.
+
+#### New opcode constants
+
+* `const ALU_ADC: u8 = 0b001;`
+* `const ALU_SBB: u8 = 0b011;`
+
+#### Tests added (27 total, was 24)
+
+* `adc_two_consts_emits_aca_b_after_mov` — pinned full sequence with
+  `0x88` (ACA B).
+* `sbb_two_consts_emits_sca_b_after_mov` — `0x98` (SCA B).
+* `adc_when_lhs_is_already_in_a_skips_the_staging_mov` — `0x8F`
+  (ACA A) for the self-ADC idiom, generalising the self-add/self-AND
+  tests.
+
+### What is NOT in v0.3.3 (deferred to v0.3.4 / v0.3.5 / A2+++)
+
+* `cmp` — paired with the branch ops in v0.3.4.
+* Real `RET` (`0x07`) via `CALL` (`0x46` + 14-bit address) + the
+  internal return stack — v0.3.5.
+* Conditional + unconditional jumps with 14-bit address backpatching
+  — v0.3.4 (alongside `cmp`).
+* `lang-aot --target=intel8008` wiring — A2+++.
+
 ## [0.3.2] — 2026-06-02 (A2++.5.5 first slice — bitwise ALU `and`/`or`/`xor`)
 
 ### Added — bitwise accumulator-target ALU

@@ -512,3 +512,90 @@ fn and_when_lhs_is_already_in_a_skips_the_staging_mov() {
         HLT,
     ], "self-AND expected; got: {bytes:02x?}");
 }
+
+// ===========================================================================
+// 9. A2++.5.5 second slice — carry/borrow chained ALU (ADC, SBB)
+// ===========================================================================
+//
+// Same accumulator-anchored shape as add/sub.  Only the 3-bit `ooo`
+// selector changes:
+//
+//   ADC = 0b001 → ACA r   first byte = 0x88 | sss
+//   SBB = 0b011 → SCA r   first byte = 0x98 | sss
+//
+// These add or subtract the carry/borrow flag set by a PRIOR ALU op.
+// The backend doesn't enforce flag-producer ordering — the front-end
+// must arrange for the producer (an ADD that overflowed) to be the
+// immediately-preceding flag-affecting instruction.
+//
+// In the canonical multi-byte addition idiom:
+//
+//   r_lo = lo_a + lo_b      ; ADD — sets carry if overflow
+//   r_hi = hi_a +carry hi_b ; ADC — consumes carry
+//
+// the two-instruction sequence is what makes ADC useful.
+
+#[test]
+fn adc_two_consts_emits_aca_b_after_mov() {
+    // ACA B = 10 001 000 = 0x88
+    let f = IIRFunction::new("adc_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x20)], "u8"),
+        IIRInstr::new("adc", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x10,    // MVI A, 0x10
+        0x06,  0x20,    // MVI B, 0x20
+        0x88,           // ACA B   (10 001 000)
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C
+        HLT,
+    ], "adc expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn sbb_two_consts_emits_sca_b_after_mov() {
+    // SCA B = 10 011 000 = 0x98
+    let f = IIRFunction::new("sbb_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x80)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x01)], "u8"),
+        IIRInstr::new("sbb", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x80,    // MVI A, 0x80
+        0x06,  0x01,    // MVI B, 0x01
+        0x98,           // SCA B   (10 011 000)
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C
+        HLT,
+    ], "sbb expected; got: {bytes:02x?}");
+}
+
+/// Self-op variant of adc — `adc r v v` where v→A skips the staging
+/// MOV, identical to the self-add pattern.  ACA A = 0x89 (10 001 111).
+#[test]
+fn adc_when_lhs_is_already_in_a_skips_the_staging_mov() {
+    let f = IIRFunction::new("self_adc", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x40)], "u8"),
+        IIRInstr::new("adc", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x40,    // MVI A, 0x40
+        0x8F,           // ACA A   (10 001 111 — sss=A=7)
+        0x47,           // MOV B, A
+        0x78,           // MOV A, B
+        HLT,
+    ], "self-ADC expected; got: {bytes:02x?}");
+}

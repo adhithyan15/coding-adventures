@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-intel8008"
-version = "0.3.2"
+version = "0.3.3"
 edition = "2021"
-description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.2 (A2++.5.5 first slice): extends v0.3.1's add/sub with the bitwise accumulator-target ALU ops `and` (ANA, 10 100 sss = 0xA0|sss), `or` (ORA, 10 110 sss = 0xB0|sss), `xor` (XRA, 10 101 sss = 0xA8|sss).  cmp/adc/sbb + real RET via CALL/stack still pending (v0.3.3)."
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.3 (A2++.5.5 second slice): adds the carry/borrow-chained accumulator ALU ops `adc` (ACA, 10 001 sss = 0x88|sss) and `sbb` (SCA, 10 011 sss = 0x98|sss), enabling multi-byte arithmetic idioms.  `cmp` deferred to v0.3.4 because its IIR semantics (boolean dest) don't match the 8008's flag-only CMP — needs a paired flag-capture sequence wired with the branch ops.  Real RET via CALL/stack still pending (v0.3.5)."
 
 [lib]
 name = "iir_to_intel8008"
