@@ -1,14 +1,14 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
-    BrowserForm, BrowserFormButton, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormLabel, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel, BrowserFormOutput,
+    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -734,6 +734,8 @@ struct ExpectedForm {
     buttons: Vec<ExpectedFormButton>,
     #[serde(default)]
     text_entries: Vec<ExpectedFormTextEntry>,
+    #[serde(default)]
+    choice_controls: Vec<ExpectedFormChoiceControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -938,6 +940,45 @@ struct ExpectedFormTextEntry {
     validation_attributes: Vec<String>,
     #[serde(default)]
     validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormChoiceControl {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    checked: bool,
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    group_required: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+    #[serde(default)]
+    group_name: Option<String>,
+    #[serde(default)]
+    group_checked_ids: Vec<String>,
+    #[serde(default)]
+    group_checked_values: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1686,6 +1727,98 @@ fn browser_form_text_entry_descriptor_metadata_tracks_textual_controls_and_editi
     assert_eq!(external.name.as_deref(), Some("outside"));
     assert_eq!(external.placeholder.as_deref(), Some("Outside"));
     assert_eq!(external.text, "External note");
+}
+
+#[test]
+fn browser_form_choice_descriptor_metadata_tracks_checkbox_radio_state_and_groups() {
+    let document = parse_browser_document(
+        "<form id=prefs>\
+         <label><input id=news type=checkbox name=news value=yes checked required>Newsletter</label>\
+         <input id=updates type=checkbox name=updates>\
+         <label for=plan-basic>Basic</label>\
+         <input id=plan-basic type=radio name=plan value=basic checked required>\
+         <input id=plan-pro type=radio name=plan value=pro>\
+         <fieldset disabled><label><input id=legacy type=radio name=legacy value=old checked>Legacy</label></fieldset>\
+         </form>\
+         <input id=external type=radio form=prefs name=plan value=outside>",
+    )
+    .expect("form choice descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("prefs form should be summarized");
+    let ids: Vec<&str> = form
+        .choice_controls
+        .iter()
+        .filter_map(|choice| choice.id.as_deref())
+        .collect();
+    assert_eq!(
+        ids,
+        vec![
+            "news",
+            "updates",
+            "plan-basic",
+            "plan-pro",
+            "legacy",
+            "external"
+        ]
+    );
+
+    let news = &form.choice_controls[0];
+    assert_eq!(news.control_type, "checkbox");
+    assert_eq!(news.labels, vec!["Newsletter"]);
+    assert_eq!(news.accessible_name.as_deref(), Some("Newsletter"));
+    assert_eq!(news.value.as_deref(), Some("yes"));
+    assert!(news.checked);
+    assert!(news.required);
+    assert!(news.group_required);
+    assert!(news.successful);
+    assert_eq!(news.submission_values, vec!["yes"]);
+    assert_eq!(news.group_checked_ids, vec!["news"]);
+    assert_eq!(news.group_checked_values, vec!["yes"]);
+    assert_eq!(news.validation_attributes, vec!["required"]);
+
+    let updates = &form.choice_controls[1];
+    assert_eq!(updates.control_type, "checkbox");
+    assert_eq!(updates.value.as_deref(), Some("on"));
+    assert!(!updates.checked);
+    assert!(!updates.successful);
+    assert!(updates.submission_values.is_empty());
+    assert!(updates.group_checked_ids.is_empty());
+    assert!(updates.group_checked_values.is_empty());
+
+    let plan_basic = &form.choice_controls[2];
+    assert_eq!(plan_basic.control_type, "radio");
+    assert_eq!(plan_basic.labels, vec!["Basic"]);
+    assert_eq!(plan_basic.group_name.as_deref(), Some("plan"));
+    assert!(plan_basic.checked);
+    assert!(plan_basic.required);
+    assert!(plan_basic.group_required);
+    assert_eq!(plan_basic.group_checked_ids, vec!["plan-basic"]);
+    assert_eq!(plan_basic.group_checked_values, vec!["basic"]);
+
+    let plan_pro = &form.choice_controls[3];
+    assert_eq!(plan_pro.control_type, "radio");
+    assert_eq!(plan_pro.group_name.as_deref(), Some("plan"));
+    assert!(!plan_pro.required);
+    assert!(plan_pro.group_required);
+    assert_eq!(plan_pro.group_checked_ids, vec!["plan-basic"]);
+    assert_eq!(plan_pro.group_checked_values, vec!["basic"]);
+
+    let legacy = &form.choice_controls[4];
+    assert_eq!(legacy.control_type, "radio");
+    assert!(legacy.checked);
+    assert!(legacy.disabled);
+    assert!(!legacy.successful);
+    assert_eq!(legacy.validation_barred_reason.as_deref(), Some("disabled"));
+    assert_eq!(legacy.group_checked_values, vec!["old"]);
+
+    let external = &form.choice_controls[5];
+    assert_eq!(external.form_owner.as_deref(), Some("prefs"));
+    assert_eq!(external.group_name.as_deref(), Some("plan"));
+    assert_eq!(external.group_checked_ids, vec!["plan-basic"]);
+    assert_eq!(external.group_checked_values, vec!["basic"]);
 }
 
 #[test]
@@ -2616,6 +2749,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormTextEntry::into_browser_form_text_entry)
                 .collect(),
+            choice_controls: self
+                .choice_controls
+                .into_iter()
+                .map(ExpectedFormChoiceControl::into_browser_form_choice_control)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -2786,6 +2924,32 @@ impl ExpectedFormTextEntry {
             will_validate: self.will_validate,
             validation_attributes: self.validation_attributes,
             validation_barred_reason: self.validation_barred_reason,
+        }
+    }
+}
+
+impl ExpectedFormChoiceControl {
+    fn into_browser_form_choice_control(self) -> BrowserFormChoiceControl {
+        BrowserFormChoiceControl {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            value: self.value,
+            checked: self.checked,
+            disabled: self.disabled,
+            required: self.required,
+            group_required: self.group_required,
+            successful: self.successful,
+            submission_values: self.submission_values,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+            group_name: self.group_name,
+            group_checked_ids: self.group_checked_ids,
+            group_checked_values: self.group_checked_values,
         }
     }
 }
