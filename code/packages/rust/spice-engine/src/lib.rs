@@ -521,6 +521,23 @@ pub struct CornerDigitalTransientBridgeResult {
     pub points: Vec<CornerDigitalTransientBridgePoint>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct AdaptiveDigitalTransientBridgeResult {
+    pub result: AdaptiveTransientResult,
+    pub output_streams: Vec<DigitalEventStream>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAdaptiveDigitalTransientBridgePoint {
+    pub corner_name: String,
+    pub result: AdaptiveDigitalTransientBridgeResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CornerAdaptiveDigitalTransientBridgeResult {
+    pub points: Vec<CornerAdaptiveDigitalTransientBridgePoint>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct DigitalLogicLevels {
     pub low_voltage: f64,
@@ -802,6 +819,67 @@ pub fn transient_with_digital_event_streams_corners(
     Ok(CornerDigitalTransientBridgeResult { points })
 }
 
+pub fn transient_adaptive_with_digital_event_streams(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    options: AdaptiveTransientOptions,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+) -> Result<AdaptiveDigitalTransientBridgeResult, SpiceError> {
+    let mut bridged = circuit.clone();
+    for source in digital_event_streams_to_voltage_sources(input_streams, negative, levels)? {
+        bridged.add(Element::VoltageSource(source));
+    }
+    let result = transient_adaptive(&bridged, time_step, stop_time, options)?;
+    let output_streams = sample_transient_probes_as_digital_event_streams(
+        &result.points,
+        output_probes,
+        thresholds,
+    )?;
+    Ok(AdaptiveDigitalTransientBridgeResult {
+        result,
+        output_streams,
+    })
+}
+
+pub fn transient_adaptive_with_digital_event_streams_corners(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    options: AdaptiveTransientOptions,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+    corners: &[CornerSpec],
+) -> Result<CornerAdaptiveDigitalTransientBridgeResult, SpiceError> {
+    let negative = negative.as_ref();
+    let mut points = Vec::with_capacity(corners.len());
+    for corner in corners {
+        let corner_circuit = circuit_with_corner(circuit, corner)?;
+        points.push(CornerAdaptiveDigitalTransientBridgePoint {
+            corner_name: corner.name.clone(),
+            result: transient_adaptive_with_digital_event_streams(
+                &corner_circuit,
+                input_streams,
+                negative,
+                levels,
+                time_step,
+                stop_time,
+                options,
+                output_probes,
+                thresholds,
+            )?,
+        });
+    }
+    Ok(CornerAdaptiveDigitalTransientBridgeResult { points })
+}
+
 pub fn sample_transient_probe_as_digital_events(
     points: &[TransientPoint],
     probe: &str,
@@ -945,6 +1023,74 @@ pub fn format_corner_digital_event_stream_table(
                 rows.push(format!(
                     "{}\t{}\t{index}\t{}\t{}",
                     corner.corner_name,
+                    stream.signal_name,
+                    format_table_number(event.time_seconds),
+                    format_digital_state(event.state)
+                ));
+            }
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_adaptive_digital_event_stream_table(
+    result: &AdaptiveDigitalTransientBridgeResult,
+) -> Result<String, SpiceError> {
+    let mut rows = vec!["Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState".to_string()];
+    for stream in &result.output_streams {
+        if stream.signal_name.trim().is_empty() {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_event_stream".to_string(),
+                reason: "digital event stream signal name must not be empty".to_string(),
+            });
+        }
+        let mut previous_time = f64::NEG_INFINITY;
+        for (index, event) in stream.events.iter().enumerate() {
+            validate_digital_event_time(event.time_seconds, previous_time, &stream.signal_name)?;
+            previous_time = event.time_seconds;
+            rows.push(format!(
+                "{}\t{}\t{}\t{}\t{index}\t{}\t{}",
+                format_transient_method(result.result.method),
+                result.result.steps_rejected,
+                result.result.converged,
+                stream.signal_name,
+                format_table_number(event.time_seconds),
+                format_digital_state(event.state)
+            ));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
+pub fn format_corner_adaptive_digital_event_stream_table(
+    result: &CornerAdaptiveDigitalTransientBridgeResult,
+) -> Result<String, SpiceError> {
+    let mut rows =
+        vec!["Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState".to_string()];
+    for corner in &result.points {
+        for stream in &corner.result.output_streams {
+            if stream.signal_name.trim().is_empty() {
+                return Err(SpiceError::InvalidElement {
+                    name: "digital_event_stream".to_string(),
+                    reason: "digital event stream signal name must not be empty".to_string(),
+                });
+            }
+            let mut previous_time = f64::NEG_INFINITY;
+            for (index, event) in stream.events.iter().enumerate() {
+                validate_digital_event_time(
+                    event.time_seconds,
+                    previous_time,
+                    &stream.signal_name,
+                )?;
+                previous_time = event.time_seconds;
+                rows.push(format!(
+                    "{}\t{}\t{}\t{}\t{}\t{index}\t{}\t{}",
+                    corner.corner_name,
+                    format_transient_method(corner.result.result.method),
+                    corner.result.result.steps_rejected,
+                    corner.result.result.converged,
                     stream.signal_name,
                     format_table_number(event.time_seconds),
                     format_digital_state(event.state)
