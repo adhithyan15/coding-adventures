@@ -3,6 +3,76 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.3] — 2026-06-02 (A3++.5.5 third slice — `cmp` equality via the EQ condition prefix)
+
+### Added — boolean equality with conditional MOV capture
+
+Wires IIR's `cmp dest, a, b` (boolean equality) to ARMv7's CMP +
+flag-to-bool capture using the **EQ condition prefix on MOV** — a
+feature unique to ARMv7 among the three architecture backends.
+
+#### Lowering shape (4 words after the const-loads — no
+backpatching!)
+
+```text
+CMP   rn, rm             ; sets Z if rn == rm
+MOV   dest, #0           ; default false (cond = AL)
+MOVEQ dest, #1           ; if Z=1 (equal), overwrite to true
+```
+
+The cond-field is the 4 high bits of every A32 instruction.  Setting
+it to **EQ = 0000** instead of the usual **AL = 1110** changes the
+opcode word from `0xE3A0_X00N` to `0x03A0_X00N` — the silicon
+checks the Z flag and either executes or no-ops the instruction.
+
+#### Compare with other backends' flag-to-bool capture
+
+| Backend | Words/bytes | Mechanism |
+|---------|-------------|-----------|
+| **ARMv7** | **4 words** | CMP + MOV + MOVEQ — no backpatching |
+| RV32I | 1 word (`sltu`) | Set-less-than-unsigned reads the comparison and writes 0/1 directly |
+| Intel 8008 | 8 bytes | CMP + MVI dest,0 + JFZ + 2 addr bytes + MVI dest,1 — inline-backpatched JFZ target |
+
+ARMv7's `cond` field gives it middle ground: more verbose than
+RV32I's purpose-built SLT but cleaner than the 8008's address-
+backpatched skip-jump-over-MVI dance.
+
+#### New constants
+
+* `pub const CMP_REG_BASE: u32 = 0xE150_0000;` — CMP Rn, Rm base
+  (S=1 forced, no Rd output).
+* `pub const MOV_IMM_EQ_BASE: u32 = 0x03A0_0000;` — MOV imm under
+  EQ condition prefix.  Identical to `MOV_IMM_R0_BASE` except the
+  top nibble is `0` (EQ) instead of `E` (AL).
+
+#### New encoder helpers
+
+* `encode_cmp_reg(rn, rm) -> u32` — note: only two args because
+  CMP has no Rd.
+* `encode_mov_imm_eq(rd, imm8) -> u32` — MOV imm with EQ cond.
+
+#### Tests added (41 total, was 37)
+
+* `cmp_reg_base_pinned_to_0xe1500000` / `mov_imm_eq_base_pinned_to_0x03a00000`.
+* `cmp_pins_full_capture_word_stream` — pinned full 7-word sequence
+  `0xE3A0_0005 0xE3A0_1005 0xE150_0001 0xE3A0_2000 0x03A0_2001
+  0xE1A0_0002 0xE12F_FF1E`.
+* `cmp_with_same_register_emits_cmp_a_a_then_capture` — `cmp r v v`
+  case: `CMP r0, r0 = 0xE150_0000`.
+
+### What is NOT in v0.4.3 (deferred to v0.4.4 / A3++.6 / A3+++)
+
+* `cmp_ne`/`cmp_lt`/`cmp_gt`/`cmp_gte`/`cmp_lte` — would use NE,
+  CC, HI, CS, LS condition prefixes respectively.  The same capture
+  shape applies; only the cond-field on the second MOV varies.
+* Conditional branches (`Bcond`) — `B` opcode with a non-AL cond
+  prefix.
+* S-suffix flag-setting variants of all 7 ALU ops (ADDS, SUBS,
+  ANDS, etc.) — needed for cmp_lt / cmp_gt which read the carry
+  and sign flags.
+* Function calls via `bl` + stack spilling.
+* `lang-aot --emit=armv7` wiring — A3+++ (v0.5.0).
+
 ## [0.4.2] — 2026-06-02 (A3++.5.5 second slice — carry-chained `adc`/`sbb` on the DP-register family)
 
 ### Added — carry-chained DP-register ALU

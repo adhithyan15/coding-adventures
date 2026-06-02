@@ -7,8 +7,9 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
     IIRArmv7Config, IIRArmv7Error,
-    ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, EOR_REG_BASE,
-    MOV_IMM_R0_BASE, MOV_REG_BASE, ORR_REG_BASE, SBC_REG_BASE, SUB_REG_BASE,
+    ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, CMP_REG_BASE,
+    EOR_REG_BASE, MOV_IMM_EQ_BASE, MOV_IMM_R0_BASE, MOV_REG_BASE,
+    ORR_REG_BASE, SBC_REG_BASE, SUB_REG_BASE,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -646,6 +647,100 @@ fn sbb_three_consts_emits_single_sbc_instruction() {
         0xE1A0_0002,    // MOV r0, r2
         BX_LR,
     ], "sbb expected; got: {words:08x?}");
+}
+
+// ===========================================================================
+// 10. A3++.5.5 third slice — `cmp` equality with flag-to-bool capture
+// ===========================================================================
+//
+// ARMv7's KEY architectural feature — the 4-bit `cond` field at
+// bits 31..28 of every A32 instruction — makes the equality capture
+// remarkably clean:
+//
+//   CMP   rn, rm        ; sets Z if rn == rm
+//   MOV   dest, #0      ; default false (cond = AL = 0xE)
+//   MOVEQ dest, #1      ; if Z=1, overwrite to true (cond = EQ = 0x0)
+//
+// 4 words.  No address backpatching (the 8008 needed an inline
+// JFZ + 2-byte address slot), no synthetic labels.
+
+#[test]
+fn cmp_reg_base_pinned_to_0xe1500000() {
+    // CMP r0, r0 (S=1 forced, no Rd) = 0xE150_0000.
+    assert_eq!(CMP_REG_BASE, 0xE150_0000,
+        "CMP Rn, Rm base should be 0xE1500000; got 0x{:08x}", CMP_REG_BASE);
+}
+
+#[test]
+fn mov_imm_eq_base_pinned_to_0x03a00000() {
+    // MOVEQ r0, #0 = 0x03A0_0000.  Identical to MOV_IMM_R0_BASE
+    // (0xE3A0_0000) except the top nibble (cond field) is 0 (EQ)
+    // instead of E (AL).
+    assert_eq!(MOV_IMM_EQ_BASE, 0x03A0_0000,
+        "MOVEQ Rd, #imm base should be 0x03A00000; got 0x{:08x}", MOV_IMM_EQ_BASE);
+}
+
+#[test]
+fn cmp_pins_full_capture_word_stream() {
+    // const v=5; const w=5; cmp r v w; ret r
+    //
+    // Allocator: v→r0, w→r1, r→r2.
+    //   MOV r0, #5    = 0xE3A0_0005
+    //   MOV r1, #5    = 0xE3A0_1005
+    //   CMP r0, r1    = 0xE150_0000 | (0<<16) | 1 = 0xE150_0001
+    //   MOV r2, #0    = 0xE3A0_2000
+    //   MOVEQ r2, #1  = 0x03A0_2001  ← cond=EQ (0) instead of AL (E)
+    //   MOV r0, r2    = 0xE1A0_0002  ← stage r into r0 for ret
+    //   BX LR         = 0xE12F_FF1E
+    let f = IIRFunction::new("eq", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("cmp", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0005,    // MOV r0, #5
+        0xE3A0_1005,    // MOV r1, #5
+        0xE150_0001,    // CMP r0, r1
+        0xE3A0_2000,    // MOV r2, #0   (default false)
+        0x03A0_2001,    // MOVEQ r2, #1 (Z=1 path)
+        0xE1A0_0002,    // MOV r0, r2   (stage r into r0 for ret)
+        BX_LR,
+    ], "cmp expected 7-word sequence; got: {words:08x?}");
+}
+
+/// `cmp r v v` — same register as both operands.  The CMP encodes
+/// with Rn == Rm; the result is always Z=1 at runtime.  Lowering
+/// shape is identical — the optimisation of constant-folding this to
+/// `MOV r, #1` is upstream's job.
+#[test]
+fn cmp_with_same_register_emits_cmp_a_a_then_capture() {
+    // const v=42; cmp r v v; ret_void
+    //
+    // Allocator: v→r0, r→r1.
+    //   MOV r0, #42      = 0xE3A0_002A
+    //   CMP r0, r0       = 0xE150_0000 | (0<<16) | 0 = 0xE150_0000
+    //   MOV r1, #0       = 0xE3A0_1000
+    //   MOVEQ r1, #1     = 0x03A0_1001
+    //   BX LR
+    let f = IIRFunction::new("self_cmp", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("cmp", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("v".into())], "bool"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_002A,    // MOV r0, #42
+        0xE150_0000,    // CMP r0, r0 (Rn=Rm=0)
+        0xE3A0_1000,    // MOV r1, #0
+        0x03A0_1001,    // MOVEQ r1, #1
+        BX_LR,
+    ], "self-cmp expected; got: {words:08x?}");
 }
 
 #[test]

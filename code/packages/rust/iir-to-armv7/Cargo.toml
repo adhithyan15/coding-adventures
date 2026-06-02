@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-armv7"
-version = "0.4.2"
+version = "0.4.3"
 edition = "2021"
-description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.2 (A3++.5.5 second slice): adds carry-chained `adc` (ADC opcode 0101 = 0xE0A0_0000) and `sbb` (SBC opcode 0110 = 0xE0C0_0000) on the DP-register family.  All seven ALU ops (add/sub/and/or/xor/adc/sbb) now flow through a single 7-way match arm.  ADC/SBC emit the non-S variant by default; front-ends arrange for the producer to use the S-suffix variant so the carry survives.  S-suffix flag-setting variants land alongside `cmp` in v0.4.3."
+description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.3 (A3++.5.5 third slice): adds `cmp` (CMP opcode 1010 = 0xE150_0000, no Rd output — only sets flags) with a flag-to-bool capture sequence using `MOVEQ` (0x03A0_0000 = MOV imm under the EQ condition prefix).  ARMv7's 4-bit `cond` field on every instruction makes this elegantly 4 words with no address backpatching, vs the 8008's 8-byte JFZ-skip-MVI dance.  Equality only — less-than/greater-than need MOVCC/MOVGT etc. and land alongside conditional branches in future slices."
 
 [lib]
 name = "iir_to_armv7"
