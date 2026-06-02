@@ -173,10 +173,40 @@ fn main() {
                     format!("coverage_unresolved({} gap(s))", gaps.len())
                 }
             };
+            // ADJ31 instrumentation: surface per-level gap distribution
+            // on CoverageUnresolved errors so reviewers can see WHICH
+            // boundary the residual gaps live at without diffing the
+            // raw IR. ADJ30 falsified the "bump FactToTypedComponent
+            // budget" intervention precisely because the surviving
+            // g=1 gaps were not at that level; without this field the
+            // bench data couldn't surface that.
+            let per_level_gap_distribution = if let HierarchicalDecomposeError::CoverageUnresolved { gaps } = &e {
+                let mut doc_sent = 0usize;
+                let mut sent_phrase = 0usize;
+                let mut phrase_claim = 0usize;
+                let mut fact_typed = 0usize;
+                for g in gaps {
+                    match g.level {
+                        DecompLevel::DocumentToSentence => doc_sent += 1,
+                        DecompLevel::SentenceToPhrase => sent_phrase += 1,
+                        DecompLevel::PhraseToClaim => phrase_claim += 1,
+                        DecompLevel::FactToTypedComponent => fact_typed += 1,
+                    }
+                }
+                Some(json!({
+                    "document_to_sentence": doc_sent,
+                    "sentence_to_phrase": sent_phrase,
+                    "phrase_to_claim": phrase_claim,
+                    "fact_to_typed_component": fact_typed,
+                }))
+            } else {
+                None
+            };
             let record = json!({
                 "model": model,
                 "source": source,
                 "wallclock_secs": elapsed,
+                "per_level_gap_distribution": per_level_gap_distribution,
                 "error": {
                     "kind": kind,
                     "message": e.to_string(),
