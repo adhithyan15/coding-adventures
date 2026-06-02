@@ -120,6 +120,12 @@ pub struct EjectedBootPlan {
     pub summary: EjectedFirmwareProgramSummary,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ValidatedEjectedFirmwareProgram<'a> {
+    pub module: Module<'a>,
+    pub boot_plan: EjectedBootPlan,
+}
+
 impl From<ModuleError> for FirmwareSmokeError {
     fn from(value: ModuleError) -> Self {
         Self::Module(value)
@@ -159,7 +165,7 @@ pub fn validate_ejected_program(
     capabilities: CapabilitySet,
     board_max_stack: u8,
 ) -> Result<(), FirmwareSmokeError> {
-    validate_ejected_boot_plan(program, capabilities, board_max_stack).map(|_| ())
+    validate_ejected_firmware_program(program, capabilities, board_max_stack).map(|_| ())
 }
 
 pub fn validate_ejected_boot_plan(
@@ -167,11 +173,22 @@ pub fn validate_ejected_boot_plan(
     capabilities: CapabilitySet,
     board_max_stack: u8,
 ) -> Result<EjectedBootPlan, FirmwareSmokeError> {
+    Ok(validate_ejected_firmware_program(program, capabilities, board_max_stack)?.boot_plan)
+}
+
+pub fn validate_ejected_firmware_program<'a>(
+    program: EjectedFirmwareProgram<'a>,
+    capabilities: CapabilitySet,
+    board_max_stack: u8,
+) -> Result<ValidatedEjectedFirmwareProgram<'a>, FirmwareSmokeError> {
     let module = parse_checked_ejected_program(program)?;
     validate(&module, capabilities, board_max_stack)?;
-    Ok(EjectedBootPlan {
-        action: boot_action_for_policy(program.boot_policy)?,
-        summary: program.summary(),
+    Ok(ValidatedEjectedFirmwareProgram {
+        module,
+        boot_plan: EjectedBootPlan {
+            action: boot_action_for_policy(program.boot_policy)?,
+            summary: program.summary(),
+        },
     })
 }
 
@@ -207,13 +224,15 @@ pub fn run_ejected_boot_program_once<H, const MAX_STACK: usize, const MAX_HANDLE
 where
     H: BoardHal,
 {
-    let module = parse_checked_ejected_program(program)?;
-    match boot_action_for_policy(program.boot_policy)? {
+    let validated =
+        validate_ejected_firmware_program(program, runtime.hal().capabilities(), MAX_STACK as u8)?;
+    match validated.boot_plan.action {
         EjectedBootAction::StoreOnly => Ok(None),
         EjectedBootAction::Run => {
-            validate(&module, runtime.hal().capabilities(), MAX_STACK as u8)?;
             runtime.reset_vm();
-            Ok(Some(runtime.run_module(&module, instruction_budget)?))
+            Ok(Some(
+                runtime.run_module(&validated.module, instruction_budget)?,
+            ))
         }
     }
 }
@@ -226,10 +245,10 @@ pub fn run_ejected_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: us
 where
     H: BoardHal,
 {
-    let module = parse_checked_ejected_program(program)?;
-    validate(&module, runtime.hal().capabilities(), MAX_STACK as u8)?;
+    let validated =
+        validate_ejected_firmware_program(program, runtime.hal().capabilities(), MAX_STACK as u8)?;
     runtime.reset_vm();
-    Ok(runtime.run_module(&module, instruction_budget)?)
+    Ok(runtime.run_module(&validated.module, instruction_budget)?)
 }
 
 pub fn run_blink_smoke_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
@@ -320,6 +339,7 @@ mod tests {
     }
 
     struct FakeHal {
+        capabilities: CapabilitySet,
         now_ms: u32,
         next_token: u32,
         events: Vec<Event>,
@@ -327,7 +347,12 @@ mod tests {
 
     impl FakeHal {
         fn new() -> Self {
+            Self::with_capabilities(CapabilitySet::blink_mvp())
+        }
+
+        fn with_capabilities(capabilities: CapabilitySet) -> Self {
             Self {
+                capabilities,
                 now_ms: 0,
                 next_token: 1,
                 events: Vec::new(),
@@ -337,7 +362,7 @@ mod tests {
 
     impl BoardHal for FakeHal {
         fn capabilities(&self) -> CapabilitySet {
-            CapabilitySet::blink_mvp()
+            self.capabilities
         }
 
         fn gpio_open(&mut self, pin: u16, mode: GpioMode) -> Result<u32, HalError> {
@@ -521,6 +546,26 @@ mod tests {
     }
 
     #[test]
+    fn validated_ejected_blink_program_carries_module_and_boot_plan() {
+        let validated = validate_ejected_firmware_program(
+            EjectedFirmwareProgram::blink(),
+            CapabilitySet::blink_mvp(),
+            16,
+        )
+        .unwrap();
+
+        assert_eq!(validated.module.code.len(), 26);
+        assert_eq!(validated.module.max_stack, 4);
+        assert_eq!(
+            validated.boot_plan,
+            EjectedBootPlan {
+                action: EjectedBootAction::Run,
+                summary: EjectedFirmwareProgram::blink().summary(),
+            }
+        );
+    }
+
+    #[test]
     fn rejects_validated_ejected_boot_plan_without_required_capability() {
         assert_eq!(
             validate_ejected_boot_plan(EjectedFirmwareProgram::blink(), CapabilitySet::empty(), 16)
@@ -663,6 +708,24 @@ mod tests {
                 .unwrap();
 
         assert!(report.is_none());
+        assert!(runtime.hal().events.is_empty());
+    }
+
+    #[test]
+    fn ejected_boot_cycle_validates_store_only_artifact_before_skip() {
+        let hal = FakeHal::with_capabilities(CapabilitySet::empty());
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+        let mut program = EjectedFirmwareProgram::blink();
+        program.boot_policy = BOOT_STORE_ONLY;
+
+        let error =
+            run_ejected_boot_program_once(&mut runtime, program, EJECTED_INSTRUCTION_BUDGET)
+                .unwrap_err();
+
+        assert_eq!(
+            error,
+            FirmwareSmokeError::Validate(ValidateError::UnsupportedCapability(CAP_GPIO_OPEN))
+        );
         assert!(runtime.hal().events.is_empty());
     }
 }
