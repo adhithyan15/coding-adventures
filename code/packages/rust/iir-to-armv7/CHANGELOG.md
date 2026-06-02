@@ -3,6 +3,97 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.5] — 2026-06-02 (A3++.5.5 fifth slice — `label` + `jmp` + `jmp_if_true`/`jmp_if_false`)
+
+### Added — control flow via Bcond + two-pass backpatching
+
+Wires the first control-flow primitives.  Four new IIR ops:
+
+| IIR op | A32 lowering |
+|--------|--------------|
+| `label "<name>"` | zero words; records `(name → current_word_index)` |
+| `jmp "<name>"` | `B target` (1 word; cond = AL = `0xEA00_0000`) |
+| `jmp_if_true cond, "<name>"` | `CMP cond_reg, #0; BNE target` (2 words) |
+| `jmp_if_false cond, "<name>"` | `CMP cond_reg, #0; BEQ target` (2 words) |
+
+#### Why the CMP + Bcond pattern for boolean branches?
+
+ARMv7 has no branch-on-register.  But unlike the 8008 (which needed
+ANA A as the TEST idiom), ARMv7 ships a dedicated **CMP Rn, #0**
+form on the data-processing-immediate family — it sets the Z flag
+from `Rn - 0 == 0` and discards the difference.  Pair it with BNE
+(branch if Z clear) or BEQ (branch if Z set) and you've got
+2-word boolean branches.
+
+#### Two-pass backpatching, ARMv7-style
+
+ARMv7's B carries a **24-bit signed PC-relative offset in WORDS**
+(the silicon shifts left 2 to get bytes).  Pass 1 emits each branch
+with a placeholder 0 offset and records `(slot, target_label,
+cond_base)` in `pending_branches`.  Pass 2 computes:
+
+```rust
+imm24 = target_word_index - slot - 2
+```
+
+The `- 2` accounts for ARM's classic 2-stage pipeline prefetch:
+at execute time PC = current_instruction_address + 8 bytes = +2 words.
+The branch silicon then computes `target = current + 8 + imm24*4`,
+giving us back the intended target word index.
+
+Range check: imm24 must fit in signed 24 bits (±2^23 words = ±32 MiB
+of code).  Practical functions are far below this; the
+`BranchOutOfRange` error variant is forward-compat with much larger
+modules.
+
+#### New constants
+
+* `pub const B_BASE: u32 = 0xEA00_0000;` — B with cond=AL
+* `pub const B_NE_BASE: u32 = 0x1A00_0000;` — BNE
+* `pub const B_EQ_BASE: u32 = 0x0A00_0000;` — BEQ
+* `pub const CMP_IMM_ZERO_BASE: u32 = 0xE350_0000;` — CMP Rn, #0
+
+The condition nibble pattern continues from v0.4.4: each
+conditional branch base is just `(cond << 28) | 0x0A00_0000`.
+
+#### New encoder helpers
+
+* `encode_cmp_imm_zero(rn: u8) -> u32`
+* `encode_branch(cond_base: u32, imm24: i32) -> u32` — masks the
+  signed 24-bit imm and ORs it with the base.
+
+#### New error variants
+
+* `IIRArmv7Error::UndefinedLabel { function, label }`
+* `IIRArmv7Error::BranchOutOfRange { function, target, current }`
+
+#### Tests added (61 total, was 51)
+
+* 4 constant-pinning tests (`B_BASE`, `B_NE_BASE`, `B_EQ_BASE`,
+  `CMP_IMM_ZERO_BASE`).
+* `jmp_to_forward_label_backpatches_correct_offset` — pinned
+  `B target = 0xEA00_0000 | 0` for a forward jump to imm24=0.
+* `jmp_to_backward_label_emits_negative_offset` — pinned
+  `0xEAFFFFFD` for an imm24 of -3 (showing the two's-complement
+  24-bit masking).
+* `jmp_to_undefined_label_is_rejected` — confirms the
+  `UndefinedLabel` error path.
+* `jmp_if_true_emits_cmp_zero_then_bne` — pinned
+  `0xE3A0_0001 / 0xE350_0000 / 0x1A00_0000 / 0xE3A0_1000 / BX_LR`.
+* `jmp_if_false_emits_cmp_zero_then_beq` — same shape with
+  `0x0A00_0000` (BEQ).
+* `errors_for_branch_variants_display_without_panic`.
+
+### What is NOT in v0.4.5 (deferred to v0.4.6 / A3++.6 / A3+++)
+
+* `call <fn_name>` — `BL` instruction (B with link, opcode 1
+  instead of 0) + return-value-from-r0 capture.
+* `ret` for non-entry functions emits BX LR — that already works
+  from v0.3.0.  Real RET via the AAPCS frame-pointer dance lands
+  in A3++.6.
+* Stack spilling once the 13-register pool exhausts.
+* `lang-aot --emit=armv7` wiring — A3+++ (v0.5.0).
+
 ## [0.4.4] — 2026-06-02 (A3++.5.5 fourth slice — `cmp_ne`/`cmp_lt`/`cmp_gt`/`cmp_gte`/`cmp_lte` via condition prefixes)
 
 ### Added — full boolean comparison family
