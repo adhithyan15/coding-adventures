@@ -2,6 +2,130 @@
 
 ## Unreleased
 
+### Added — v0.3.0: forward op dispatch (15 Function subclasses)
+
+PR #3 of 5 in the JS/TS pilot.  Adds the 15 differentiable operations on
+top of v0.2's autograd engine.  Every op is a `Function` subclass with a
+`forward` method; the autograd graph builds automatically when any input
+has `requiresGrad`.  Backward implementations land in PR #4.
+
+#### The 15 ops
+
+| Op       | Class      | Rust dispatch?     | matrix-ir kind                   |
+|----------|------------|--------------------|----------------------------------|
+| Add      | `AddOp`    | yes (≥ 10k cells)  | `Add (lhs/rhs/output)`           |
+| Sub      | `SubOp`    | yes                | `Sub`                            |
+| Mul      | `MulOp`    | yes                | `Mul`                            |
+| Div      | `DivOp`    | yes                | `Div`                            |
+| Neg      | `NegOp`    | yes                | `Neg (input/output)`             |
+| Abs      | `AbsOp`    | yes                | `Abs`                            |
+| Tanh     | `TanhOp`   | yes                | `Tanh`                           |
+| MatMul   | `MatMulOp` | yes (2-D only)     | `MatMul (a/b/output)`            |
+| Sum      | `SumOp`    | yes (reduce-all)   | `ReduceSum (axes/keep_dims)`     |
+| Mean     | `MeanOp`   | yes                | `ReduceMean`                     |
+| Pow      | `PowOp`    | pure TS            | —  (Rust Pow takes 2 tensors)    |
+| ReLU     | `ReLUOp`   | pure TS            | —  (Max + zero-tensor constant)  |
+| Sigmoid  | `SigmoidOp`| pure TS            | —  (4-op multi-graph)            |
+| GELU     | `GELUOp`   | pure TS            | —  (large multi-op graph)        |
+| Softmax  | `SoftmaxOp`| pure TS            | —  (multi-op graph)              |
+
+The "pure TS" five have working Rust paths in the Python reference;
+left in pure TS for v0.3.0 to keep this PR focused (matches Ruby's
+PR #6).  Follow-ups can lift them individually.
+
+#### Dispatch threshold
+
+`DISPATCH_THRESHOLD = 10_000` cells.  Below it, every op uses pure
+TypeScript — fast at small sizes, avoids the JSON-build + hex-encode
++ FFI overhead.  Above it, the eligible ops dispatch into the Rust
+executor via `@coding-adventures/matrix-rust-napi.runGraphOnCpu`.
+
+#### Lazy require for matrix-rust-napi
+
+`@coding-adventures/matrix-rust-napi` is `require`d LAZILY inside
+`runEnvelope` — only when we actually need to dispatch to Rust.  This
+keeps small-tensor / pure-TS workflows runnable even when the
+`matrix_rust_napi.node` addon isn't built (e.g. CI machines without a
+Rust toolchain, or fresh checkouts).  We use `createRequire(import.meta.url)`
+since this package is ESM but the addon is loaded as CJS.
+
+#### Hex packing helpers
+
+```ts
+packF32Hex([1.0, 2.5])           // → "0000803f00002040"
+unpackF32Hex("0000803f", 1)      // → Float32Array([1.0])
+```
+
+Uses Node's `Buffer.from(...).toString("hex")` for encode and
+`Buffer.from(hex, "hex")` view-over-Float32Array for decode.  Matches
+the Python reference's `struct.pack("<{n}f", ...)` byte-for-byte so
+envelopes built here are bit-compatible with Python and Ruby.
+
+#### Tensor extensions
+
+```ts
+// Element-wise math — now routes through Op classes (autograd-aware)
+a.add(b)   a.sub(b)   a.mul(b)   a.div(b)   a.pow(2)   a.neg()
+
+// Scalar broadcasting (small-tensor only for v0.3.0)
+a.add(5)
+
+// Named op methods
+a.matmul(b)
+a.relu()  a.sigmoid()  a.tanh()  a.gelu()  a.softmax()
+a.sum()   a.mean()
+a.abs()
+```
+
+The previous v0.2.0 inline `add`/`sub`/`mul`/`div`/`pow`/`neg` methods
+are REPLACED by versions that go through `<Op>.apply(...)`.  Numeric
+results are unchanged (Tensor `equals` is value-based), but each call
+now builds a graph node if any input has `requiresGrad`.
+
+#### Architecture choices
+
+- **Function.apply always, threshold in forward**: every op routes
+  through `Function.apply` (autograd graph builds uniformly); each
+  `forward` chooses Rust vs. TS based on numel.  Same shape as
+  Ruby's PR #6.
+- **Shared `binaryElementwise` / `unaryElementwise` helpers**: each
+  op subclass is ~5 lines.
+- **Envelope shapes mirror Python `_rust_backend.py` byte-for-byte**:
+  same `kind` strings, same tensor/op/inputs/outputs JSON layout.
+  Cross-language wire compatibility is the contract.
+
+#### Tests added (49 vitest cases, all passing)
+
+- `HexHelpers` (5): pack/unpack round-trip + known-value spot checks
+  + wrong-length rejection
+- `ForwardSmall` (22): every op's small-tensor (pure-TS) path —
+  Add/Sub/Mul/Div/Neg/Abs/Pow/MatMul/ReLU/Sigmoid/Tanh/GELU/Softmax/Sum/Mean
+  with numerical correctness assertions + edge cases (sigmoid at 0,
+  tanh approaches 1, softmax sums to 1, softmax numerical stability
+  with 1000-magnitude inputs, GELU at 1 ≈ 0.8413, matmul argument
+  validation) + backward-not-implemented stub
+- `AutogradWiring` (5): every op produces a tensor with the right
+  `gradFn` class when input has `requiresGrad`
+- `TensorMethods` (14): each `t.<op>()` dispatches correctly,
+  including scalar broadcasting, unsupported operand rejection
+- `DispatchPathBranching` (2): threshold constant + small tensor
+  doesn't trigger matrix-rust-napi lazy require
+
+Existing tests:
+- `tests/tensor.test.ts` — 61/61 pass (no regressions)
+- `tests/autograd.test.ts` — 18/18 pass (no regressions)
+
+Total: 128 tests, all passing.
+
+#### What's next
+
+- PR #4: backward dispatch — implement `backward(outputGrad)` on each
+  of the 15 Function subclasses using the analytical gradient formulas
+  from the Ruby pilot's PR #7 (same as Python autograd.py).  End-to-end
+  test: train a 2-layer MLP on a tiny synthetic dataset for 30 SGD
+  steps; assert loss drops 91%.
+- PR #5: benchmark script + v1.0.0 polish.
+
 ### Added — v0.2.0: autograd engine (Function.apply + Tensor#backward)
 
 PR #2 of 5 in the JS/TS pilot.  Adds reverse-mode automatic
