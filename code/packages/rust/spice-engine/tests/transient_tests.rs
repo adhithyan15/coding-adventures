@@ -10,7 +10,8 @@ use spice_engine::{
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, sample_transient_probe_as_digital_events, transient, transient_adaptive,
+    pss_with_tolerance, sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_corners, transient_with_method, AdaptiveTransientOptions,
     AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint,
     CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource, DigitalEvent,
@@ -2190,5 +2191,53 @@ fn sampled_named_digital_event_stream_text_output_table_is_stable() {
     assert_eq!(
         format_digital_event_stream_table(&streams).unwrap(),
         "Signal\tIndex\tTime\tState\ndin\t0\t2.500000e-10\tlow\ndin\t1\t7.500000e-10\thigh\ndin\t2\t1.500000e-09\tlow\n"
+    );
+}
+
+#[test]
+fn multiple_transient_probes_sample_to_named_digital_event_streams() {
+    let din_events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let enable_events = [
+        DigitalEvent::new(0.0, DigitalState::High),
+        DigitalEvent::new(1.0e-9, DigitalState::Low),
+    ];
+    let levels = DigitalLogicLevels::cmos_1v8(0.25e-9);
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(
+        spice_engine::digital_events_to_voltage_source("Vdin", "din", "0", &din_events, levels)
+            .unwrap(),
+    ));
+    circuit.add(Element::VoltageSource(
+        spice_engine::digital_events_to_voltage_source(
+            "Venable",
+            "enable",
+            "0",
+            &enable_events,
+            levels,
+        )
+        .unwrap(),
+    ));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rdin", "din", "0", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Renable", "enable", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let streams = sample_transient_probes_as_digital_event_streams(
+        &points,
+        &[("din", "V(din)"), ("enable", "V(enable)")],
+        DigitalThresholds::cmos_1v8(),
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_digital_event_stream_table(&streams).unwrap(),
+        "Signal\tIndex\tTime\tState\ndin\t0\t2.500000e-10\tlow\ndin\t1\t7.500000e-10\thigh\ndin\t2\t1.500000e-09\tlow\nenable\t0\t2.500000e-10\thigh\nenable\t1\t1.250000e-09\tlow\n"
     );
 }

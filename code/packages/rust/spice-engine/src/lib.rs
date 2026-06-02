@@ -727,6 +727,43 @@ pub fn sample_transient_probe_as_digital_events(
     Ok(events)
 }
 
+pub fn sample_transient_probes_as_digital_event_streams(
+    points: &[TransientPoint],
+    probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+) -> Result<Vec<DigitalEventStream>, SpiceError> {
+    thresholds
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_thresholds".to_string(),
+            reason,
+        })?;
+
+    let mut streams = Vec::new();
+    for (signal_name, probe) in probes {
+        let signal_name = signal_name.trim();
+        if signal_name.is_empty() {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_event_stream".to_string(),
+                reason: "digital event stream signal name must not be empty".to_string(),
+            });
+        }
+        if streams
+            .iter()
+            .any(|stream: &DigitalEventStream| stream.signal_name == signal_name)
+        {
+            return Err(SpiceError::InvalidElement {
+                name: signal_name.to_string(),
+                reason: "digital event stream signal names must be unique".to_string(),
+            });
+        }
+
+        let events = sample_transient_probe_as_digital_events(points, probe, thresholds)?;
+        streams.push(DigitalEventStream::new(signal_name, events));
+    }
+    Ok(streams)
+}
+
 pub fn format_digital_event_table(events: &[DigitalEvent]) -> Result<String, SpiceError> {
     let mut rows = vec!["Index\tTime\tState".to_string()];
     let mut previous_time = f64::NEG_INFINITY;

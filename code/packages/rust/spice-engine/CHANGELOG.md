@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `sample_transient_probes_as_digital_event_streams` for collecting
+  multiple thresholded transient probes as named mixed-signal event streams.
 - Add `DigitalEventStream` and `format_digital_event_stream_table` for stable
   tab-separated named mixed-signal digital event stream snapshots.
 - Add `format_digital_event_table` for stable tab-separated mixed-signal
