@@ -167,6 +167,9 @@ fn encode_alu(ooo: u8, sss: u8) -> u8 {
 /// ALU operation codes (`ooo` field in `10 ooo sss`).
 const ALU_ADD: u8 = 0b000; // ADD r
 const ALU_SUB: u8 = 0b010; // SUB r
+const ALU_AND: u8 = 0b100; // ANA r (logical AND)
+const ALU_XOR: u8 = 0b101; // XRA r (logical XOR)
+const ALU_OR:  u8 = 0b110; // ORA r (logical OR)
 
 // ===========================================================================
 // IIRIntel8008Config
@@ -292,6 +295,8 @@ const SUPPORTED_OPS: &[&str] = &[
     "const", "mov", "ret", "ret_void",
     // A2++.5 — accumulator ALU
     "add", "sub",
+    // A2++.5.5 — bitwise accumulator ALU
+    "and", "or", "xor",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -383,18 +388,20 @@ pub fn lower_iir_to_intel8008(
                     bytes.push(HLT);
                 }
 
-                // ── add dest, a, b → MOV A,a; ADD b_reg; MOV dest,A ─────
+                // ── add / sub / and / or / xor → MOV A,a; OP b_reg; MOV dest,A
                 //
-                // The 8008's accumulator-based ALU forces all binary ops
-                // through `A`.  If `a` already lives there, the leading
-                // `MOV A, a_reg` is skipped.  Likewise, if the
-                // newly-allocated `dest_reg` IS A, the trailing
-                // `MOV dest_reg, A` is skipped — common when this is the
-                // first arithmetic op in the function and the allocator
-                // hands out A.
+                // All five accumulator-target ALU ops share an identical
+                // shape, differing only in the 3-bit `ooo` selector:
                 //
-                // sub: identical shape, just family-`10 010 sss`.
-                "add" | "sub" => {
+                //   ADD = 0b000   AND = 0b100
+                //   SUB = 0b010   XOR = 0b101
+                //                 OR  = 0b110
+                //
+                // The 8008's ALU is *always* accumulator-anchored: left
+                // source AND destination are A; only the right source is
+                // a variable register.  Optional MOVs at the ends collapse
+                // when a_reg or dest_reg already coincide with A.
+                "add" | "sub" | "and" | "or" | "xor" => {
                     let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -416,8 +423,19 @@ pub fn lower_iir_to_intel8008(
                     if a_reg != REG_A {
                         bytes.push(encode_mov(REG_A, a_reg));
                     }
-                    // Execute the ALU op (result lands in A).
-                    let ooo = if instr.op == "add" { ALU_ADD } else { ALU_SUB };
+                    // Execute the ALU op (result lands in A).  Dispatch
+                    // on op-name → 3-bit `ooo` selector.  The `_` arm is
+                    // unreachable because the outer match arm above is the
+                    // only path here and it covers exactly these five
+                    // strings.
+                    let ooo = match instr.op.as_str() {
+                        "add" => ALU_ADD,
+                        "sub" => ALU_SUB,
+                        "and" => ALU_AND,
+                        "or"  => ALU_OR,
+                        "xor" => ALU_XOR,
+                        _ => unreachable!("outer arm restricts to these 5"),
+                    };
                     bytes.push(encode_alu(ooo, b_reg));
                     // Capture the result into dest_reg unless dest_reg is A.
                     let dest_reg = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
