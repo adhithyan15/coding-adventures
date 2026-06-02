@@ -53,6 +53,7 @@ fn main() -> ExitCode {
         EmitMode::Intel8008Bin => input.with_extension("bin"),
         EmitMode::Armv7Bin     => input.with_extension("bin"),
         EmitMode::Intel4004Bin => input.with_extension("bin"),
+        EmitMode::Ge225Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -106,6 +107,13 @@ enum EmitMode {
     /// or an EPROM burner for a 4004 dev board.  The 4004 (1971)
     /// is the world's first commercial microprocessor.
     Intel4004Bin,
+    /// Flat `.bin` of 20-bit GE-225 instruction words via
+    /// `iir-to-ge225`, packed as 3 bytes per word (big-endian, top
+    /// 4 bits of byte 0 always zero).  Cross-platform.  Downstream
+    /// consumers: any GE-225 simulator or a custom 3-byte-per-word
+    /// decoder.  The GE-225 (1959) was the mainframe at Dartmouth
+    /// College where Dartmouth BASIC was DESIGNED in 1964.
+    Ge225Bin,
 }
 
 struct CliArgs {
@@ -184,9 +192,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "intel8008" | "i8008" | "8008" => Ok(EmitMode::Intel8008Bin),
         "armv7" | "arm" | "arm32" => Ok(EmitMode::Armv7Bin),
         "intel4004" | "i4004" | "4004" => Ok(EmitMode::Intel4004Bin),
+        "ge225" | "ge-225" | "225" => Ok(EmitMode::Ge225Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225"
         )),
     }
 }
@@ -236,6 +245,14 @@ Options:
                                                 platform; load into a 4004 simulator
                                                 or burn to an EPROM (the world's
                                                 first commercial microprocessor, 1971)
+                             ge225 | ge-225 | 225
+                                              → flat .bin of 20-bit GE-225 instruction
+                                                words via iir-to-ge225 (packed 3 bytes
+                                                per word, big-endian, top 4 bits zero);
+                                                cross-platform; load into a GE-225
+                                                simulator or decode 3 bytes at a time
+                                                (the mainframe where Dartmouth BASIC
+                                                was DESIGNED in 1964)
   -h, --help               Show this help.\
 ");
 }
@@ -285,6 +302,16 @@ fn dispatch(
     // burner.
     if emit == EmitMode::Intel4004Bin {
         return lang_aot::compile_file_to_intel4004_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // GE-225 .bin emission is also cross-platform — write each
+    // 20-bit instruction word as 3 bytes (big-endian, top 4 bits of
+    // byte 0 zero) as iir-to-ge225 emits them.  The GE-225 (1959) is
+    // the mainframe where Dartmouth BASIC was designed in 1964 —
+    // primarily a BASIC fit.  Downstream is always a simulator or
+    // a custom decoder.
+    if emit == EmitMode::Ge225Bin {
+        return lang_aot::compile_file_to_ge225_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]
