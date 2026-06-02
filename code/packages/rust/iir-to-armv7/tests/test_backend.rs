@@ -7,8 +7,8 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
     IIRArmv7Config, IIRArmv7Error,
-    ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, EOR_REG_BASE,
-    MOV_IMM_R0_BASE, MOV_REG_BASE, ORR_REG_BASE, SUB_REG_BASE,
+    ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, EOR_REG_BASE,
+    MOV_IMM_R0_BASE, MOV_REG_BASE, ORR_REG_BASE, SBC_REG_BASE, SUB_REG_BASE,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -575,6 +575,77 @@ fn xor_three_consts_emits_single_eor_instruction() {
         0xE1A0_0002,    // MOV r0, r2
         BX_LR,
     ], "xor 0xFF ^ 0x55 expected; got: {words:08x?}");
+}
+
+// ===========================================================================
+// 9. A3++.5.5 second slice — carry-chained DP-register ALU (ADC, SBC)
+// ===========================================================================
+//
+// Same 3-register shape as add/sub.  Only the 4-bit `opcode` field
+// changes:
+//
+//   ADC = 0101 → 0xE0A0_0000 base   (add with carry-in)
+//   SBC = 0110 → 0xE0C0_0000 base   (sub with borrow-in)
+//
+// ADC/SBC consume the C flag set by a PRIOR flag-affecting ALU op.
+// This crate emits the non-S form by default — front-ends arrange
+// for the producer to use the S-suffix variant so the carry chain
+// survives.  The S-suffix variants land alongside `cmp` in v0.4.3.
+
+#[test]
+fn adc_reg_base_pinned_to_0xe0a00000() {
+    assert_eq!(ADC_REG_BASE, 0xE0A0_0000,
+        "ADC Rd, Rn, Rm base should be 0xE0A00000; got 0x{:08x}", ADC_REG_BASE);
+}
+
+#[test]
+fn sbc_reg_base_pinned_to_0xe0c00000() {
+    assert_eq!(SBC_REG_BASE, 0xE0C0_0000,
+        "SBC Rd, Rn, Rm base should be 0xE0C00000; got 0x{:08x}", SBC_REG_BASE);
+}
+
+#[test]
+fn adc_three_consts_emits_single_adc_instruction() {
+    // const v=0x10; const w=0x20; adc r v w; ret r
+    //   ADC r2, r0, r1 = 0xE0A0_0000 | (0<<16) | (2<<12) | 1 = 0xE0A0_2001
+    let f = IIRFunction::new("adc_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x20)], "u8"),
+        IIRInstr::new("adc", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0010,    // MOV r0, #0x10
+        0xE3A0_1020,    // MOV r1, #0x20
+        0xE0A0_2001,    // ADC r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "adc expected; got: {words:08x?}");
+}
+
+#[test]
+fn sbb_three_consts_emits_single_sbc_instruction() {
+    // const v=0x80; const w=0x01; sbb r v w; ret r
+    //   SBC r2, r0, r1 = 0xE0C0_0000 | (0<<16) | (2<<12) | 1 = 0xE0C0_2001
+    let f = IIRFunction::new("sbb_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x80)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x01)], "u8"),
+        IIRInstr::new("sbb", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0080,    // MOV r0, #0x80
+        0xE3A0_1001,    // MOV r1, #0x01
+        0xE0C0_2001,    // SBC r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "sbb expected; got: {words:08x?}");
 }
 
 #[test]

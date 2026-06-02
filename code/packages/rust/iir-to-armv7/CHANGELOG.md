@@ -3,6 +3,66 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.2] — 2026-06-02 (A3++.5.5 second slice — carry-chained `adc`/`sbb` on the DP-register family)
+
+### Added — carry-chained DP-register ALU
+
+Extends v0.4.1 with two more DP-register ops that consume the C flag
+set by a PRIOR flag-affecting ALU op:
+
+| IIR op | ARM mnemonic | Opcode | First word base |
+|--------|--------------|--------|-----------------|
+| `adc dest, a, b` | `ADC Rd, Rn, Rm` | `0101` | `0xE0A0_0000` |
+| `sbb dest, a, b` | `SBC Rd, Rn, Rm` | `0110` | `0xE0C0_0000` |
+
+The match arm widens from `add | sub | and | or | xor` to `add |
+sub | and | or | xor | adc | sbb` — 7-way inner dispatch on
+op-name → encoder.
+
+#### Carry-flag contract
+
+This crate emits the **non-S** form by default (no flag update).
+Front-ends that need the carry chain must arrange for the producer
+to use the S-suffix variant (`ADDS` / `SUBS` etc.) so the C flag
+survives.  The S-suffix flag-setting variants of all seven ops land
+alongside `cmp` in v0.4.3, paired with conditional branches.
+
+In the canonical u16-add idiom:
+
+```text
+adds r_lo lo_a lo_b   ; sets C if overflow
+adc  r_hi hi_a hi_b   ; consumes that C
+```
+
+#### New constants
+
+* `pub const ADC_REG_BASE: u32 = 0xE0A0_0000;`
+* `pub const SBC_REG_BASE: u32 = 0xE0C0_0000;`
+
+#### New encoder helpers
+
+* `encode_adc_reg(rd, rn, rm) -> u32`
+* `encode_sbc_reg(rd, rn, rm) -> u32`
+
+#### Tests added (37 total, was 33)
+
+* `adc_reg_base_pinned_to_0xe0a00000` / `sbc_reg_base_pinned_to_0xe0c00000`.
+* `adc_three_consts_emits_single_adc_instruction` — pinned
+  `ADC r2, r0, r1 = 0xE0A0_2001`.
+* `sbb_three_consts_emits_single_sbc_instruction` — `SBC r2, r0, r1
+  = 0xE0C0_2001`.
+
+### What is NOT in v0.4.2 (deferred to v0.4.3 / A3++.6 / A3+++)
+
+* The S-suffix (flag-setting) variants of all 7 ALU ops (ADDS,
+  SUBS, ANDS, etc.) — needed to make ADC/SBC actually chain.
+* `cmp` (CMP opcode `1010`) + flag-to-bool capture using
+  conditional jumps.
+* Conditional branches via the `cond` field every A32 instruction
+  carries (using bits 31..28 instead of the usual 0xE = always).
+* Function calls via `bl` + stack spilling.
+* `lang-aot --emit=armv7` wiring — A3+++ (v0.5.0).
+
 ## [0.4.1] — 2026-06-02 (A3++.5.5 first slice — bitwise `and`/`or`/`xor` on the DP-register family)
 
 ### Added — bitwise DP-register ALU
