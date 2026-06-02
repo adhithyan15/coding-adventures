@@ -1,118 +1,122 @@
-# ml_framework_core — idiomatic Ruby Tensor + autograd
+# ml_framework_core — Ruby ML framework on the Rust matrix-cpu engine
 
-A small, PyTorch-shaped Ruby ML library that runs the heavy stuff on the
-Rust `matrix-cpu` engine and falls back to pure Ruby for small or
-debugging workloads.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ruby](https://img.shields.io/badge/Ruby-%3E%3D%202.6.0-red)](https://www.ruby-lang.org/)
+[![Tests](https://img.shields.io/badge/tests-148%20passing-brightgreen)]()
+
+A small, PyTorch-shaped Ruby ML library.  All 15 differentiable ops, full
+autograd, end-to-end MLP training — all in idiomatic Ruby.  Tensors
+under 10k cells stay in pure Ruby; tensors above auto-dispatch through
+the `matrix_rust_ruby` gem to the Rust `matrix-cpu` executor for
+SIMD-accelerated f32 math.
+
+## Quick start
 
 ```ruby
 require "coding_adventures/ml_framework_core"
-include CodingAdventures::MLFrameworkCore       # or use MLFrameworkCore alias
-
-x = Tensor.new([[1, 2, 3], [4, 5, 6]])
-y = Tensor.eye(3)
-
-x.matmul(y) == x                # forthcoming (PR #6)
-(x + 1.0).to_nested_a           # works today
-```
-
-## Where this v0.1 sits in the multi-language stack
-
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│  ml_framework_core (this gem)        ← v0.1 = Tensor only       │
-│    Tensor + factories + shape ops + operator overloads          │
-│    PR #5: autograd engine                                       │
-│    PR #6: forward op dispatch via matrix_rust_ruby              │
-│    PR #7: backward dispatch + end-to-end MLP test               │
-│    PR #8: benchmark + RubyGems publishing polish                │
-│    ↓                                                             │
-│  matrix_rust_ruby (Ruby gem)               ← PR #3 (merged)     │
-│    MatrixRustRuby.run_graph_on_cpu(envelope)                    │
-│    ↓                                                             │
-│  matrix_rust_ruby_native (Rust cdylib)     ← PR #2 (merged)     │
-│    ↓                                                             │
-│  c-bridge (Rust workspace crate)           ← PR #1 (merged)     │
-│    ↓                                                             │
-│  matrix-cpu execution engine                                    │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## What v0.1 ships
-
-This PR (#4 of 8 in the Ruby pilot) is intentionally pure Ruby — no
-native ext, no Rust calls.  That keeps it small, reviewable, and
-independently testable.
-
-### `Tensor` class
-
-```ruby
 T = CodingAdventures::MLFrameworkCore::Tensor
 
-# Construction
-T.new([1, 2, 3])                        # 1-D from flat
-T.new([[1, 2], [3, 4]])                 # 2-D from nested (shape inferred)
-T.new([1, 2, 3, 4], shape: [2, 2])      # flat + explicit shape
+# A 2-layer MLP, no bias: 1 input → 2 hidden ReLU → 1 output
+w1 = T.new([[0.5, -0.3]]); w1.requires_grad = true
+w2 = T.new([[0.4], [0.7]]); w2.requires_grad = true
 
-# Factories
-T.zeros(2, 3)
-T.ones(3)
-T.full([2, 2], 7.5)
-T.eye(3)                                # 3x3 identity
-T.eye(2, 3)                             # rectangular
-T.arange(5)                             # 0, 1, 2, 3, 4
-T.arange(2, 10, 2)                      # 2, 4, 6, 8
-T.randn(3, 4, seed: 42)                 # standard-normal via Box-Muller
-T.from_array([[1, 2], [3, 4]])          # alias for new(nested)
+# Synthetic data: regress y = 2x + 3 over 4 samples
+x      = T.new([[0.0], [1.0], [2.0], [3.0]])
+target = T.new([[3.0], [5.0], [7.0], [9.0]])
 
-# Shape ops
-t.reshape(3, 4)
-t.transpose                             # 2-D only in v0.1
-t.flatten
-t.squeeze(axis = nil)
-t.unsqueeze(axis)
+def sgd_step(p, lr)
+  new_data = p.to_a.each_with_index.map { |v, i| v - lr * p.grad.to_a[i] }
+  T.new(new_data, shape: p.shape).tap { |t| t.requires_grad = true }
+end
 
-# Operator overloads — element-wise, same shape only in v0.1
-a + b   a - b   a * b   a / b   a**2   -a
-a + 5   a - 5   a * 5   a / 5   a**2          # scalar broadcasts
+30.times do
+  pred = x.matmul(w1).relu.matmul(w2)
+  loss = ((pred - target) * (pred - target)).mean
+  loss.backward
+  w1 = sgd_step(w1, 0.01)
+  w2 = sgd_step(w2, 0.01)
+end
 
-# Conversions + introspection
-t.shape          # => [2, 3]
-t.dtype          # => :f32
-t.ndim           # => 2
-t.numel          # => 6
-t.to_a           # flat Array<Float>
-t.to_nested_a    # nested Array matching shape
-
-# Autograd-prep slots (PR #5 wires them up; here they're just storage)
-t.requires_grad        # => false by default
-t.requires_grad = true
-t.grad                 # => nil until backward() runs
-t.grad_fn              # => nil for leaf tensors
+# Loss drops 91% (36.5 → 3.2) in 30 SGD steps.
 ```
 
-## What's intentionally NOT in v0.1
+That whole snippet runs in pure Ruby today (no native ext required).
+The test suite exercises this exact training loop in
+`test/end_to_end_training_test.rb`.
 
-| Feature           | Lands in | Why deferred                         |
-|-------------------|----------|--------------------------------------|
-| Broadcasting      | PR #6    | Couples Tensor to shape algebra      |
-| Indexing/slicing  | post-#8  | 50+ lines of arg-shape handling      |
-| `sum` / `mean`    | PR #6    | These will be Function subclasses    |
-| Autograd `apply`  | PR #5    | Needs its own focused PR             |
-| Rust dispatch     | PR #6    | Needs autograd graph first           |
-| Higher-rank `transpose` | post-#8 | Strided index math not needed yet |
+## What's in the box
 
-## Storage model
+### `Tensor` (lib/.../tensor.rb)
 
-- `@data` is a flat `Array<Float>` (Ruby Floats are f64).
-- `@shape` is an `Array<Integer>`.
-- `@dtype` is `:f32` (matches matrix-cpu; in-memory f64 just happens to be
-  Ruby's only float primitive).
+```ruby
+# Construction
+T.new(nested_or_flat, shape: nil, dtype: :f32, requires_grad: false)
 
-The lossy f64→f32 conversion only happens at the Rust dispatch boundary
-(PR #6), where we pack each f64 into 4 bytes of little-endian f32 before
-hex-encoding for the JSON envelope.
+# Factories
+T.zeros(2, 3)   T.ones(3)    T.full([2, 2], 7.5)
+T.eye(3)        T.eye(2, 3)
+T.arange(5)     T.arange(0, 10, 2)    T.arange(5, 0, -1)
+T.randn(3, 4, seed: 42)
+T.from_array([[1, 2], [3, 4]])
+T.ones_like(t)  T.zeros_like(t)
 
-## Running the test suite
+# Shape ops
+t.reshape(3, 4)   t.transpose   t.flatten   t.squeeze   t.unsqueeze(0)
+
+# Operators (autograd-aware)
+a + b   a - b   a * b   a / b   a**2   -a
+a + 5   a * 2.0                                 # scalar broadcasts
+
+# Named ops
+a.matmul(b)
+a.relu   a.sigmoid   a.tanh   a.gelu   a.softmax
+a.sum    a.mean      a.abs
+
+# Introspection
+shape  dtype  ndim  numel  ==  eql?  hash  inspect  to_a  to_nested_a
+requires_grad  grad  grad_fn
+```
+
+### Autograd (lib/.../autograd.rb)
+
+```ruby
+# Function base class (subclass to define new ops)
+class MyOp < CodingAdventures::MLFrameworkCore::Function
+  def forward(x)
+    @saved_for_backward[:x] = x       # stash what backward needs
+    # ... return a Tensor ...
+  end
+
+  def backward(grad)
+    x = @saved_for_backward[:x]
+    # ... return Array<Tensor, nil> ...
+  end
+end
+
+# Tensor#backward — reverse-mode autodiff
+loss.backward
+loss.backward(custom_grad_tensor)     # explicit seed gradient
+```
+
+### Ops (lib/.../ops.rb)
+
+| Op       | Rust dispatch?     | Notes                                    |
+|----------|--------------------|------------------------------------------|
+| Add/Sub  | ≥10k cells         | Elementwise                              |
+| Mul/Div  | ≥10k cells         | Elementwise                              |
+| Neg/Abs  | ≥10k cells         | Elementwise                              |
+| Tanh     | ≥10k cells         | Elementwise activation                   |
+| MatMul   | ≥10k cells         | 2-D only in v1.0                         |
+| Sum/Mean | ≥10k cells         | Reduce-all (output shape `(1,)`)         |
+| Pow      | pure Ruby          | Scalar exponent                          |
+| ReLU     | pure Ruby          | Routes through Max+const in follow-up    |
+| Sigmoid  | pure Ruby          | Multi-op graph in follow-up              |
+| GELU     | pure Ruby          | Multi-op graph in follow-up              |
+| Softmax  | pure Ruby          | Multi-op graph; numerically stable       |
+
+## Installation
+
+### From source (workspace)
 
 ```bash
 cd code/packages/ruby/ml_framework_core
@@ -120,14 +124,81 @@ bundle install
 bundle exec rake test
 ```
 
-The suite has ~50 tests covering:
+### From RubyGems (planned)
 
-- Construction (flat, nested, scalar, explicit shape, ragged-rejection)
-- Every factory (zeros, ones, full, eye, arange, randn, from_array)
-- Every shape op (reshape, transpose, flatten, squeeze, unsqueeze)
-- Every operator overload (+, -, *, /, **, unary -, scalar broadcast)
-- Equality, hash, inspect
-- Round-trip properties (`reshape(t.shape) == t`,
-  `unsqueeze(0).squeeze(0) == t`, `transpose.transpose == t`,
-  `to_nested_a → new → to_nested_a` is identity)
-- Version constant + `MLFrameworkCore` short-alias
+```bash
+gem install coding_adventures_ml_framework_core
+```
+
+The gem itself is pure Ruby.  To enable Rust dispatch above the
+10k-cell threshold, also install `coding_adventures_matrix_rust_ruby`
+(which builds a native ext via `cargo`).
+
+## Benchmark
+
+```bash
+cd code/packages/ruby/ml_framework_core
+ruby -Ilib scripts/benchmark.rb
+```
+
+Example output (Apple M-series, Ruby 2.6, pure-Ruby fallback only):
+
+```
+| batch  | forward (ms) | backward (ms) | total (ms) | dispatch       |
+|--------|--------------|---------------|------------|----------------|
+|    100 |         0.15 |          0.23 |       0.38 | Ruby (no Rust) |
+|   1000 |         1.23 |          2.20 |       3.44 | Ruby (no Rust) |
+|   5000 |    (skipped) |     (skipped) |  (skipped) | Rust needed    |
+|  10000 |    (skipped) |     (skipped) |  (skipped) | Rust needed    |
+|  50000 |    (skipped) |     (skipped) |  (skipped) | Rust needed    |
+```
+
+Build the matrix_rust_ruby native ext (`cd ../matrix_rust_ruby &&
+bundle exec rake compile`) to see the Rust-dispatch numbers.
+
+## Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  ml_framework_core (THIS GEM, v1.0.0)                            │
+│    Tensor + autograd + 15 differentiable ops                     │
+│    ↓ dispatch large tensors through ↓                            │
+│  matrix_rust_ruby (Ruby gem)                                     │
+│    MatrixRustRuby.run_graph_on_cpu(envelope_json)                │
+│    ↓                                                              │
+│  matrix_rust_ruby_native (Rust cdylib)                           │
+│    ↓                                                              │
+│  c-bridge (Rust workspace crate)                                 │
+│    pure-Rust run_graph_on_cpu_via_json_envelope                  │
+│    ↓                                                              │
+│  matrix-ir-json → matrix-ir → matrix-runtime → matrix-cpu        │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+This stack — c-bridge → matrix_rust_ruby_native → matrix_rust_ruby →
+ml_framework_core — is the **Ruby pilot** for a multi-language plan.
+The same shape will be replicated for Lua, JS/TS, Go, and Swift in
+future pilots: each language gets its own `<lang>-bridge` workspace
+crate, then its own low-level binding, then its own idiomatic
+ml_framework_core.
+
+## Tests
+
+148 tests, 251 assertions across 4 files:
+
+```bash
+ruby -Ilib -Itest test/tensor_test.rb               #  63 tests
+ruby -Ilib -Itest test/autograd_test.rb             #  18 tests
+ruby -Ilib -Itest test/ops_test.rb                  #  65 tests
+ruby -Ilib -Itest test/end_to_end_training_test.rb  #   2 tests
+```
+
+Or all at once:
+
+```bash
+bundle exec rake test
+```
+
+## License
+
+MIT.  See LICENSE in the repository root.
