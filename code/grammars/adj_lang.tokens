@@ -1,0 +1,89 @@
+# @version 1
+
+# Adj-Lang token grammar — the surface syntax for the adjudication
+# framework's probabilistic-logic rulebooks. Compiles to a
+# `logic-engine` KnowledgeBase via the adj-lang crate.
+#
+# Token shapes are deliberately conservative: every literal symbol
+# is its own token, the regex-defined tokens (STRING, NUMBER, IDENT)
+# cover only what real rulebooks need, and the only trivia skipped
+# is whitespace and `%`-prefixed line comments.
+#
+# Surface examples this grammar tokenises:
+#
+#   prior 0.10 for acs
+#     source "Pope JH et al., NEJM 1995"
+#
+#   contributes 1.5 from pmh(hypertension) to acs
+#     trust empirical
+#
+#   uncertain { precipitator(exertional),
+#               precipitator(rest),
+#               precipitator(positional) } for acs
+#
+#   observe pmh(smoker)
+#   ? acs
+
+skip:
+  WHITESPACE      = /[ \t\r\n]+/
+  LINE_COMMENT    = /%[^\n]*/
+
+# ----------------------------------------------------------------
+# Punctuation — every symbolic token gets its own kind so the
+# parser grammar can reference it directly.
+# ----------------------------------------------------------------
+
+LPAREN            = "("
+RPAREN            = ")"
+LBRACE            = "{"
+RBRACE            = "}"
+COMMA             = ","
+QUESTION          = "?"
+
+# ----------------------------------------------------------------
+# Literals.
+#
+# NUMBER allows an optional leading minus + optional decimal +
+# optional exponent. Used for both probability values (0.10) and
+# LR magnitudes (1.5, 2.5, 0.4).
+#
+# STRING is double-quoted with backslash escapes for `\"` and `\\`.
+# ----------------------------------------------------------------
+
+STRING            = /"([^"\\]|\\.)*"/
+NUMBER            = /-?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][+-]?[0-9]+)?/
+
+# ----------------------------------------------------------------
+# Identifiers — lowercase, snake_case, optionally with digits.
+#
+# Compound terms like `pmh(hypertension)` parse as IDENT followed by
+# `(` IDENT `)` in the parser grammar; the lexer makes no
+# compound/atomic distinction.
+# ----------------------------------------------------------------
+
+IDENT             = /[a-z_][a-z0-9_]*/
+
+# ----------------------------------------------------------------
+# Keywords — recognised at the lexer level so the parser grammar
+# can match by token kind rather than by value.
+# ----------------------------------------------------------------
+
+keywords:
+  prior
+  for
+  contributes
+  from
+  to
+  interacts
+  when
+  and
+  observe
+  uncertain
+  source
+  trust
+  locator
+  consensus
+  authoritative
+  empirical
+  inferred
+  unattributed

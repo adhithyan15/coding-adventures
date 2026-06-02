@@ -1,0 +1,79 @@
+# @version 1
+
+# Adj-Lang parser grammar — compiles the surface DSL into a parse
+# tree the adj-lang crate's lowerer translates into a
+# `logic-engine` KnowledgeBase.
+#
+# Notation (from grammar-tools):
+#   |     alternation
+#   { }   zero or more
+#   [ ]   zero or one
+#   ( )   grouping
+#   "x"   literal keyword match (token IDENT whose value equals x)
+#   UPPERCASE = token reference
+#   lowercase = rule reference
+
+# ----------------------------------------------------------------
+# program — the start symbol.
+# ----------------------------------------------------------------
+
+program     = { statement } EOF ;
+
+statement   = prior_decl
+            | contributes_decl
+            | interacts_decl
+            | uncertain_decl
+            | observe_decl
+            | query_decl
+            ;
+
+# ----------------------------------------------------------------
+# Clause kinds — one production per Statement variant in the
+# Adj-Lang AST.
+# ----------------------------------------------------------------
+
+prior_decl       = "prior" NUMBER "for" term { annotation } ;
+
+contributes_decl = "contributes" NUMBER "from" term "to" term { annotation } ;
+
+interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation } ;
+
+uncertain_decl   = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { annotation } ;
+
+observe_decl     = "observe" term ;
+
+query_decl       = QUESTION term ;
+
+# ----------------------------------------------------------------
+# Annotations attach a citation / locator / trust tier to the
+# preceding clause. The lowerer accepts at most one of each kind
+# per statement.
+# ----------------------------------------------------------------
+
+annotation = source_annotation
+           | locator_annotation
+           | trust_annotation
+           ;
+
+source_annotation  = "source" STRING ;
+locator_annotation = "locator" STRING ;
+trust_annotation   = "trust" trust_tier ;
+
+trust_tier = "consensus"
+           | "authoritative"
+           | "empirical"
+           | "inferred"
+           | "unattributed"
+           ;
+
+# ----------------------------------------------------------------
+# term — atom or compound. Compound terms allow one or more
+# comma-separated argument terms.
+#
+# Recursive on the argument side: each argument is itself a term.
+# Depth of recursion is bounded by the parser engine's input length
+# in practice; the parser crate provides a separate guard for
+# adversarial nesting.
+# ----------------------------------------------------------------
+
+term = IDENT [ LPAREN term { COMMA term } RPAREN ] ;

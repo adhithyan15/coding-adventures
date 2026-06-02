@@ -1,0 +1,566 @@
+//! # Adapter — generic GrammarASTNode → typed `ast::Program`.
+//!
+//! The grammar-driven parser produces a generic tree of
+//! [`GrammarASTNode`]s and [`Token`]s. The lowerer (`lower.rs`)
+//! consumes a typed [`crate::ast::Program`] with semantically rich
+//! variants. This module bridges the two.
+//!
+//! The mapping is mechanical: each rule in `adj_lang.grammar` has
+//! one matching variant in the typed AST. The adapter walks the
+//! parse tree by rule name, extracting tokens and child rule nodes
+//! by structural position.
+//!
+//! ## Why a typed AST at all
+//!
+//! Keeping the lowerer's input typed has two benefits:
+//!
+//! 1. **Lowering stays small.** Walking a generic AST by
+//!    `node.rule_name == "prior_decl"` works but is fragile;
+//!    matching on `Statement::Prior { … }` is checked by the
+//!    compiler.
+//! 2. **The typed AST is reusable.** Other Rust consumers (an
+//!    LSP, a formatter, a documentation generator) can build on
+//!    `Statement` / `Term` without re-implementing the adapter.
+//!
+//! The adapter is small (~250 LOC) and shares the failure modes of
+//! the generic parser: if the grammar accepts an input but the
+//! adapter can't map it, that's an adapter bug, not a malformed
+//! program.
+
+use lexer::token::TokenType;
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+use crate::ast::{Annotation, Program, Statement, Term, TrustTierName};
+
+/// Errors raised while adapting a generic AST to the typed AST.
+///
+/// These are *structural* — they fire when the parse tree doesn't
+/// match the shape the adapter expects from the grammar. In
+/// practice, a `Mismatch` indicates a divergence between
+/// `adj_lang.grammar` and this adapter; a `MissingChild` indicates
+/// an empty production where the grammar guarantees at least one
+/// element.
+#[derive(Debug, Clone, PartialEq)]
+pub enum AdapterError {
+    /// The parse tree's root rule was not `program`.
+    NotProgram {
+        actual: String,
+    },
+    /// A node had a rule name the adapter did not expect at this
+    /// position. Carries the expected name(s) for debugging.
+    UnexpectedRule {
+        expected: &'static str,
+        actual: String,
+    },
+    /// A node was missing a required child element. `position` is a
+    /// human-readable description of the slot.
+    MissingChild {
+        rule: String,
+        position: &'static str,
+    },
+    /// A token had an unexpected type or shape (e.g. a NUMBER token
+    /// whose `value` does not parse as `f64`).
+    BadToken {
+        rule: String,
+        kind: TokenType,
+        value: String,
+        reason: &'static str,
+    },
+    /// An unknown trust tier keyword reached the adapter; should be
+    /// impossible if the grammar's `trust_tier` rule stays in sync
+    /// with [`TrustTierName`].
+    UnknownTrustTier {
+        actual: String,
+    },
+}
+
+/// Adapt the root `program` node.
+pub fn adapt_program(root: &GrammarASTNode) -> Result<Program, AdapterError> {
+    if root.rule_name != "program" {
+        return Err(AdapterError::NotProgram {
+            actual: root.rule_name.clone(),
+        });
+    }
+    let mut statements = Vec::new();
+    for child in &root.children {
+        if let ASTNodeOrToken::Node(node) = child {
+            // The `program` rule produces `statement` children plus
+            // a trailing EOF token (which is `ASTNodeOrToken::Token`,
+            // not a Node, so it skips this branch).
+            if node.rule_name == "statement" {
+                statements.push(adapt_statement(node)?);
+            }
+        }
+    }
+    Ok(Program { statements })
+}
+
+fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    if node.rule_name != "statement" {
+        return Err(AdapterError::UnexpectedRule {
+            expected: "statement",
+            actual: node.rule_name.clone(),
+        });
+    }
+    let child = first_child_node(node, "statement", "decl")?;
+    match child.rule_name.as_str() {
+        "prior_decl" => adapt_prior(child),
+        "contributes_decl" => adapt_contributes(child),
+        "interacts_decl" => adapt_interacts(child),
+        "uncertain_decl" => adapt_uncertain(child),
+        "observe_decl" => adapt_observe(child),
+        "query_decl" => adapt_query(child),
+        other => Err(AdapterError::UnexpectedRule {
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl",
+            actual: other.to_string(),
+        }),
+    }
+}
+
+fn adapt_prior(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // prior_decl = "prior" NUMBER "for" term { annotation }
+    let probability = expect_number_at(node, 1)?;
+    let conclusion = expect_term_child(node, "prior_decl")?;
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Prior {
+        probability,
+        conclusion,
+        annotations,
+    })
+}
+
+fn adapt_contributes(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // contributes_decl = "contributes" NUMBER "from" term "to" term { annotation }
+    let lr = expect_number_at(node, 1)?;
+    let terms = collect_term_children(node);
+    let evidence = terms.first().cloned().ok_or(AdapterError::MissingChild {
+        rule: "contributes_decl".into(),
+        position: "evidence term",
+    })?;
+    let conclusion = terms.get(1).cloned().ok_or(AdapterError::MissingChild {
+        rule: "contributes_decl".into(),
+        position: "conclusion term",
+    })?;
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Contributes {
+        lr,
+        evidence,
+        conclusion,
+        annotations,
+    })
+}
+
+fn adapt_interacts(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // interacts_decl = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation }
+    let lr = expect_number_at(node, 1)?;
+    let terms = collect_term_children(node);
+    if terms.len() < 3 {
+        return Err(AdapterError::MissingChild {
+            rule: "interacts_decl".into(),
+            position: "at least two evidence terms + one conclusion",
+        });
+    }
+    let conclusion = terms.last().cloned().unwrap();
+    let evidence_set: Vec<Term> = terms[..terms.len() - 1].to_vec();
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Interacts {
+        lr,
+        evidence_set,
+        conclusion,
+        annotations,
+    })
+}
+
+fn adapt_uncertain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // uncertain_decl = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { annotation }
+    //
+    // The grammar guarantees: 1+ domain terms inside the braces,
+    // then 1 conclusion term after `for`. So `collect_term_children`
+    // returns N+1 terms where the last one is the conclusion and
+    // the first N are the domain.
+    let terms = collect_term_children(node);
+    if terms.len() < 2 {
+        return Err(AdapterError::MissingChild {
+            rule: "uncertain_decl".into(),
+            position: "at least one domain term + one conclusion",
+        });
+    }
+    let conclusion = terms.last().cloned().unwrap();
+    let domain: Vec<Term> = terms[..terms.len() - 1].to_vec();
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Uncertain {
+        domain,
+        conclusion,
+        annotations,
+    })
+}
+
+fn adapt_observe(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // observe_decl = "observe" term
+    let term = expect_term_child(node, "observe_decl")?;
+    Ok(Statement::Observe { term })
+}
+
+fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // query_decl = QUESTION term
+    let conclusion = expect_term_child(node, "query_decl")?;
+    Ok(Statement::Query { conclusion })
+}
+
+fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
+    if node.rule_name != "term" {
+        return Err(AdapterError::UnexpectedRule {
+            expected: "term",
+            actual: node.rule_name.clone(),
+        });
+    }
+    // term = IDENT [ LPAREN term { COMMA term } RPAREN ]
+    let mut idents = node.children.iter().filter_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+        // grammar-tools emits IDENT-typed identifiers as TokenType::Name
+        _ => None,
+    });
+    let functor = idents.next().ok_or(AdapterError::MissingChild {
+        rule: "term".into(),
+        position: "identifier",
+    })?;
+    let args = collect_term_children(node);
+    if args.is_empty() {
+        Ok(Term::Atom(functor))
+    } else {
+        Ok(Term::Compound { functor, args })
+    }
+}
+
+fn adapt_annotation(node: &GrammarASTNode) -> Result<Annotation, AdapterError> {
+    if node.rule_name != "annotation" {
+        return Err(AdapterError::UnexpectedRule {
+            expected: "annotation",
+            actual: node.rule_name.clone(),
+        });
+    }
+    let child = first_child_node(node, "annotation", "kind")?;
+    match child.rule_name.as_str() {
+        "source_annotation" => {
+            let value = expect_string_at(child, 1)?;
+            Ok(Annotation::Source(value))
+        }
+        "locator_annotation" => {
+            let value = expect_string_at(child, 1)?;
+            Ok(Annotation::Locator(value))
+        }
+        "trust_annotation" => {
+            // trust_annotation = "trust" trust_tier
+            let tier_node = child
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "trust_tier" => Some(n),
+                    _ => None,
+                })
+                .ok_or(AdapterError::MissingChild {
+                    rule: "trust_annotation".into(),
+                    position: "trust_tier rule",
+                })?;
+            let tier = trust_tier_from_node(tier_node)?;
+            Ok(Annotation::Trust(tier))
+        }
+        other => Err(AdapterError::UnexpectedRule {
+            expected: "one of source_annotation / locator_annotation / trust_annotation",
+            actual: other.to_string(),
+        }),
+    }
+}
+
+fn trust_tier_from_node(node: &GrammarASTNode) -> Result<TrustTierName, AdapterError> {
+    // trust_tier = "consensus" | "authoritative" | "empirical"
+    //            | "inferred" | "unattributed"
+    //
+    // The grammar-driven lexer emits all identifier-shaped tokens
+    // (including keywords) with TokenType::Name and the keyword name
+    // in `value`. Distinguish by value, not by type. The grammar's
+    // alternation has already constrained `value` to one of the five
+    // trust-tier keywords; an unknown value here means the grammar
+    // and the adapter drifted out of sync.
+    let tier_kw = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "trust_tier".into(),
+            position: "keyword token",
+        })?;
+    match tier_kw.as_str() {
+        "consensus" => Ok(TrustTierName::Consensus),
+        "authoritative" => Ok(TrustTierName::Authoritative),
+        "empirical" => Ok(TrustTierName::Empirical),
+        "inferred" => Ok(TrustTierName::Inferred),
+        "unattributed" => Ok(TrustTierName::Unattributed),
+        _ => Err(AdapterError::UnknownTrustTier { actual: tier_kw }),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+fn collect_term_children(node: &GrammarASTNode) -> Vec<Term> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "term" => adapt_term(n).ok(),
+            _ => None,
+        })
+        .collect()
+}
+
+fn collect_annotations(
+    node: &GrammarASTNode,
+) -> Result<Vec<Annotation>, AdapterError> {
+    let mut out = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "annotation" {
+                out.push(adapt_annotation(n)?);
+            }
+        }
+    }
+    Ok(out)
+}
+
+fn first_child_node<'a>(
+    node: &'a GrammarASTNode,
+    parent_rule: &'static str,
+    position: &'static str,
+) -> Result<&'a GrammarASTNode, AdapterError> {
+    node.children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: parent_rule.into(),
+            position,
+        })
+}
+
+fn expect_number_at(node: &GrammarASTNode, skip: usize) -> Result<f64, AdapterError> {
+    // The grammar guarantees the NUMBER token is the (skip)-th
+    // child relative to the keyword. We linearly scan for the first
+    // NUMBER token whose position respects `skip`.
+    let mut seen = 0usize;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Number {
+                if seen == skip.saturating_sub(1) {
+                    return t.value.parse::<f64>().map_err(|_| AdapterError::BadToken {
+                        rule: node.rule_name.clone(),
+                        kind: t.type_,
+                        value: t.value.clone(),
+                        reason: "not a finite f64",
+                    });
+                }
+                seen += 1;
+            }
+        }
+    }
+    Err(AdapterError::MissingChild {
+        rule: node.rule_name.clone(),
+        position: "NUMBER token",
+    })
+}
+
+fn expect_string_at(node: &GrammarASTNode, _skip: usize) -> Result<String, AdapterError> {
+    // The grammar's source/locator annotations have at most one
+    // STRING child. Return its unescaped value verbatim.
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::String {
+                return Ok(unquote_string(&t.value));
+            }
+        }
+    }
+    Err(AdapterError::MissingChild {
+        rule: node.rule_name.clone(),
+        position: "STRING token",
+    })
+}
+
+fn expect_term_child(
+    node: &GrammarASTNode,
+    parent_rule: &'static str,
+) -> Result<Term, AdapterError> {
+    let term_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "term" => Some(n),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: parent_rule.into(),
+            position: "term",
+        })?;
+    adapt_term(term_node)
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parse;
+
+    fn parse_one(src: &str) -> Statement {
+        let program = parse(src).expect("parse");
+        program.statements.into_iter().next().expect("at least one statement")
+    }
+
+    #[test]
+    fn round_trips_prior() {
+        match parse_one("prior 0.10 for acs") {
+            Statement::Prior {
+                probability,
+                conclusion,
+                annotations,
+            } => {
+                assert_eq!(probability, 0.10);
+                assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
+                assert!(annotations.is_empty());
+            }
+            other => panic!("expected Prior, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn round_trips_contributes_with_source_and_trust() {
+        let src = r#"contributes 1.5 from pmh(hypertension) to acs
+            source "HEART Score"
+            trust empirical"#;
+        match parse_one(src) {
+            Statement::Contributes {
+                lr,
+                evidence,
+                conclusion,
+                annotations,
+            } => {
+                assert_eq!(lr, 1.5);
+                assert!(matches!(evidence, Term::Compound { ref functor, .. } if functor == "pmh"));
+                assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
+                assert_eq!(annotations.len(), 2);
+                assert!(matches!(annotations[0], Annotation::Source(_)));
+                assert!(matches!(annotations[1], Annotation::Trust(TrustTierName::Empirical)));
+            }
+            other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn round_trips_interacts_with_two_evidence() {
+        let src = "interacts 1.3 when symptom(a) and symptom(b) for acs";
+        match parse_one(src) {
+            Statement::Interacts {
+                lr,
+                evidence_set,
+                conclusion,
+                ..
+            } => {
+                assert_eq!(lr, 1.3);
+                assert_eq!(evidence_set.len(), 2);
+                assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
+            }
+            other => panic!("expected Interacts, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn line_comments_are_skipped() {
+        let src = "% leading comment\n? acs";
+        let stmt = parse_one(src);
+        assert!(matches!(stmt, Statement::Query { .. }));
+    }
+
+    #[test]
+    fn round_trips_uncertain_with_domain_and_annotations() {
+        // Regression guard for the grammar-driven re-introduction of
+        // `uncertain { e1, e2, ... } for <conclusion>`. The
+        // hand-written 0.2.0 supported this; #4945's 0.3.0 had to
+        // re-add it to the .grammar / .tokens / adapter triple.
+        let src = r#"
+            uncertain { precipitator(exertional),
+                        precipitator(rest),
+                        precipitator(positional) } for acs
+              source "patient did not specify"
+        "#;
+        match parse_one(src) {
+            Statement::Uncertain {
+                domain,
+                conclusion,
+                annotations,
+            } => {
+                assert_eq!(domain.len(), 3);
+                assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
+                assert_eq!(annotations.len(), 1);
+                assert!(matches!(annotations[0], Annotation::Source(_)));
+            }
+            other => panic!("expected Uncertain, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn all_five_trust_tier_keywords_round_trip() {
+        for (kw, expected) in &[
+            ("consensus", TrustTierName::Consensus),
+            ("authoritative", TrustTierName::Authoritative),
+            ("empirical", TrustTierName::Empirical),
+            ("inferred", TrustTierName::Inferred),
+            ("unattributed", TrustTierName::Unattributed),
+        ] {
+            let src = format!("contributes 1.0 from x to y trust {kw}");
+            match parse_one(&src) {
+                Statement::Contributes { annotations, .. } => match &annotations[0] {
+                    Annotation::Trust(t) => assert_eq!(t, expected),
+                    other => panic!("expected Trust, got {other:?}"),
+                },
+                other => panic!("expected Contributes, got {other:?}"),
+            }
+        }
+    }
+}
+
+/// Strip surrounding double quotes and process backslash escapes.
+/// The grammar-driven lexer hands us the raw lexeme including the
+/// outer `"`; we unescape `\"` → `"`, `\\` → `\`, `\n` → newline.
+fn unquote_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            if let Some(esc) = chars.next() {
+                match esc {
+                    '"' => out.push('"'),
+                    '\\' => out.push('\\'),
+                    'n' => out.push('\n'),
+                    other => {
+                        // Unknown escape — keep verbatim.
+                        out.push('\\');
+                        out.push(other);
+                    }
+                }
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
