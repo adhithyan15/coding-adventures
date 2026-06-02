@@ -128,6 +128,8 @@ The crate keeps the boundary narrow:
 - supervisor drain reports and summaries flatten tick-budget pressure
   route-digest queue keys and queue digests for priority/readiness host-log
   grouping and drift checks
+- supervisor drain reports and summaries expose route-digest queue key and
+  digest outcome helpers for settled/log-only/action routing decisions
 - supervisor drain plan pages expose per-page drain, continuation, and
   checkpoint-advance helpers for host preflight scheduling
 - supervisor drain plan pages expose starting and next checkpoint scalar
