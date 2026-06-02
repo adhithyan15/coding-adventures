@@ -43,6 +43,23 @@
  */
 
 import { backwardImpl } from "./autograd.js";
+import {
+  AddOp,
+  SubOp,
+  MulOp,
+  DivOp,
+  PowOp,
+  NegOp,
+  AbsOp,
+  MatMulOp,
+  ReLUOp,
+  SigmoidOp,
+  TanhOp,
+  GELUOp,
+  SoftmaxOp,
+  SumOp,
+  MeanOp,
+} from "./ops.js";
 
 export type Dtype = "f32";
 
@@ -356,36 +373,83 @@ export class Tensor {
   // they're plain in-place math.
   // -------------------------------------------------------------------------
 
+  // Element-wise math methods.  PR #3 routes these through the autograd-aware
+  // Op classes (AddOp.apply etc.) so a Tensor with requiresGrad gets a gradFn
+  // attached automatically.  Below-threshold tensors stay in pure-TS math
+  // inside each Op's forward; above-threshold dispatch to Rust.
+  //
+  // Scalar broadcasting (`t.add(5)`) materializes a same-shape tensor first
+  // via `Tensor.full(this.shape, scalar)` — wasteful for huge tensors but
+  // keeps the autograd story simple in v0.3.0.  Lifting to a proper scalar-
+  // broadcast envelope is post-v1.0 work.
+
   add(other: Tensor | number): Tensor {
-    return this.binaryOp(other, (a, b) => a + b);
+    return AddOp.apply(this, this.coerceToTensor(other));
   }
 
   sub(other: Tensor | number): Tensor {
-    return this.binaryOp(other, (a, b) => a - b);
+    return SubOp.apply(this, this.coerceToTensor(other));
   }
 
   mul(other: Tensor | number): Tensor {
-    return this.binaryOp(other, (a, b) => a * b);
+    return MulOp.apply(this, this.coerceToTensor(other));
   }
 
   div(other: Tensor | number): Tensor {
-    return this.binaryOp(other, (a, b) => a / b);
+    return DivOp.apply(this, this.coerceToTensor(other));
   }
 
   pow(exponent: number): Tensor {
-    const out = new Float32Array(this.numel);
-    for (let i = 0; i < this.numel; i++) {
-      out[i] = Math.pow(this.data[i]!, exponent);
-    }
-    return new Tensor(Array.from(out), { shape: this.shape.slice() });
+    return PowOp.apply(this, exponent);
   }
 
   neg(): Tensor {
-    const out = new Float32Array(this.numel);
-    for (let i = 0; i < this.numel; i++) {
-      out[i] = -this.data[i]!;
-    }
-    return new Tensor(Array.from(out), { shape: this.shape.slice() });
+    return NegOp.apply(this);
+  }
+
+  // ─── Named ops added in PR #3 ────────────────────────────────────────
+
+  abs(): Tensor {
+    return AbsOp.apply(this);
+  }
+
+  matmul(other: Tensor): Tensor {
+    return MatMulOp.apply(this, other);
+  }
+
+  relu(): Tensor {
+    return ReLUOp.apply(this);
+  }
+
+  sigmoid(): Tensor {
+    return SigmoidOp.apply(this);
+  }
+
+  tanh(): Tensor {
+    return TanhOp.apply(this);
+  }
+
+  gelu(): Tensor {
+    return GELUOp.apply(this);
+  }
+
+  softmax(): Tensor {
+    return SoftmaxOp.apply(this);
+  }
+
+  sum(): Tensor {
+    return SumOp.apply(this);
+  }
+
+  mean(): Tensor {
+    return MeanOp.apply(this);
+  }
+
+  /** Coerce a number into a same-shape tensor for scalar broadcasting. */
+  private coerceToTensor(other: Tensor | number): Tensor {
+    if (other instanceof Tensor) return other;
+    if (typeof other === "number") return Tensor.full(this.shape.slice(), other);
+    throw new TypeError(`cannot combine Tensor with ${typeof other}`);
   }
 
   /**
@@ -416,29 +480,6 @@ export class Tensor {
     // backwardImpl) and resolved before either runs.
     // eslint-enable
     backwardImpl(this, grad);
-  }
-
-  private binaryOp(other: Tensor | number, fn: (a: number, b: number) => number): Tensor {
-    if (other instanceof Tensor) {
-      if (!shapesEqual(this.shape, other.shape)) {
-        throw new RangeError(
-          `shape mismatch: [${this.shape.join(", ")}] vs [${other.shape.join(", ")}] (broadcasting not in v0.1)`,
-        );
-      }
-      const out = new Float32Array(this.numel);
-      for (let i = 0; i < this.numel; i++) {
-        out[i] = fn(this.data[i]!, other.data[i]!);
-      }
-      return new Tensor(Array.from(out), { shape: this.shape.slice() });
-    } else if (typeof other === "number") {
-      const out = new Float32Array(this.numel);
-      for (let i = 0; i < this.numel; i++) {
-        out[i] = fn(this.data[i]!, other);
-      }
-      return new Tensor(Array.from(out), { shape: this.shape.slice() });
-    } else {
-      throw new TypeError(`cannot combine Tensor with ${typeof other}`);
-    }
   }
 
   // -------------------------------------------------------------------------

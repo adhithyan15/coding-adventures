@@ -40,4 +40,25 @@
 export { Tensor, inferShape, flattenToFloat32 } from "./tensor.js";
 export type { Dtype, Shape, TensorOptions } from "./tensor.js";
 export { Function, Identity, backwardImpl } from "./autograd.js";
+export {
+  AddOp,
+  SubOp,
+  MulOp,
+  DivOp,
+  NegOp,
+  AbsOp,
+  PowOp,
+  MatMulOp,
+  ReLUOp,
+  SigmoidOp,
+  TanhOp,
+  GELUOp,
+  SoftmaxOp,
+  SumOp,
+  MeanOp,
+  DISPATCH_THRESHOLD,
+  packF32Hex,
+  unpackF32Hex,
+  runEnvelope,
+} from "./ops.js";
 export { VERSION } from "./version.js";
