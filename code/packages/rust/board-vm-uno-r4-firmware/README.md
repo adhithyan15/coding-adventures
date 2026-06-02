@@ -67,7 +67,9 @@ metadata validation. The stricter validated boot-plan path also checks the
 artifact against the board capability set and maximum stack before startup code
 acts on that plan. The runtime handoff keeps that validated plan together with
 the parsed BVM module, so the boot runner uses one board-checked artifact view
-for both store-only decisions and direct execution.
+for both store-only decisions and direct execution. The checked boot-run result
+returns that plan with the optional runtime report, letting diagnostics describe
+whether startup validated-and-ran or validated-and-skipped a store-only artifact.
 
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.

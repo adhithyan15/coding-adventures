@@ -121,6 +121,12 @@ pub struct EjectedBootPlan {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedBootRun {
+    pub boot_plan: EjectedBootPlan,
+    pub report: Option<RunReport>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ValidatedEjectedFirmwareProgram<'a> {
     pub module: Module<'a>,
     pub boot_plan: EjectedBootPlan,
@@ -224,17 +230,30 @@ pub fn run_ejected_boot_program_once<H, const MAX_STACK: usize, const MAX_HANDLE
 where
     H: BoardHal,
 {
+    Ok(run_ejected_boot_program_checked_once(runtime, program, instruction_budget)?.report)
+}
+
+pub fn run_ejected_boot_program_checked_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
+    runtime: &mut Runtime<H, MAX_STACK, MAX_HANDLES>,
+    program: EjectedFirmwareProgram<'_>,
+    instruction_budget: u32,
+) -> Result<EjectedBootRun, FirmwareSmokeError>
+where
+    H: BoardHal,
+{
     let validated =
         validate_ejected_firmware_program(program, runtime.hal().capabilities(), MAX_STACK as u8)?;
-    match validated.boot_plan.action {
-        EjectedBootAction::StoreOnly => Ok(None),
+    let report = match validated.boot_plan.action {
+        EjectedBootAction::StoreOnly => None,
         EjectedBootAction::Run => {
             runtime.reset_vm();
-            Ok(Some(
-                runtime.run_module(&validated.module, instruction_budget)?,
-            ))
+            Some(runtime.run_module(&validated.module, instruction_budget)?)
         }
-    }
+    };
+    Ok(EjectedBootRun {
+        boot_plan: validated.boot_plan,
+        report,
+    })
 }
 
 pub fn run_ejected_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
@@ -694,6 +713,74 @@ mod tests {
                 Event::Sleep(250),
             ]
         );
+    }
+
+    #[test]
+    fn ejected_boot_cycle_reports_checked_run_outcome() {
+        let hal = FakeHal::new();
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+
+        let boot_run = run_ejected_boot_program_checked_once(
+            &mut runtime,
+            EjectedFirmwareProgram::blink(),
+            EJECTED_INSTRUCTION_BUDGET,
+        )
+        .unwrap();
+
+        assert_eq!(
+            boot_run.boot_plan,
+            EjectedBootPlan {
+                action: EjectedBootAction::Run,
+                summary: EjectedFirmwareProgram::blink().summary(),
+            }
+        );
+        let report = boot_run.report.unwrap();
+        assert_eq!(report.status, RunStatus::BudgetExceeded);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            &runtime.hal().events[..5],
+            &[
+                Event::Open {
+                    pin: 13,
+                    mode: GpioMode::Output
+                },
+                Event::Write {
+                    token: 1,
+                    level: Level::High
+                },
+                Event::Sleep(250),
+                Event::Write {
+                    token: 1,
+                    level: Level::Low
+                },
+                Event::Sleep(250),
+            ]
+        );
+    }
+
+    #[test]
+    fn ejected_boot_cycle_reports_checked_store_only_skip() {
+        let hal = FakeHal::new();
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+        let mut program = EjectedFirmwareProgram::blink();
+        program.boot_policy = BOOT_STORE_ONLY;
+
+        let boot_run = run_ejected_boot_program_checked_once(
+            &mut runtime,
+            program,
+            EJECTED_INSTRUCTION_BUDGET,
+        )
+        .unwrap();
+
+        assert_eq!(
+            boot_run.boot_plan,
+            EjectedBootPlan {
+                action: EjectedBootAction::StoreOnly,
+                summary: program.summary(),
+            }
+        );
+        assert_eq!(boot_run.report, None);
+        assert!(runtime.hal().events.is_empty());
     }
 
     #[test]
