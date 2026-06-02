@@ -1356,6 +1356,19 @@ mod tests {
         })
     }
 
+    /// ADJ34: an LLM response with zero accepted children — drives
+    /// the deterministic `no_children_fallback` path. Use this to
+    /// script every level below a level whose initial response
+    /// also fails (kind filter, text-match, or empty list), so the
+    /// cascade can complete by synthesizing one fallback node per
+    /// level rather than panicking on an exhausted gateway.
+    fn empty_nodes_response() -> serde_json::Value {
+        serde_json::json!({
+            "document_id": "doc1",
+            "nodes": []
+        })
+    }
+
     #[test]
     fn adj25_orchestrator_assembles_clean_hierarchy_for_single_word_source() {
         // Source: "matches" (7 bytes).
@@ -1443,31 +1456,39 @@ mod tests {
 
     #[test]
     fn adj27_text_not_in_parent_is_skipped() {
-        // LLM emits text that doesn't appear in the parent at all —
-        // the framework skips the child (no spans assigned). The
-        // coverage check then surfaces the bytes as uncovered.
+        // ADJ34 behaviour: the LLM emits text that doesn't appear in
+        // the parent at all — the framework rejects the child (no
+        // spans assigned), and the orchestrator's
+        // `no_children_fallback` synthesizes a Sentence node so the
+        // cascade can continue. Subsequent levels are scripted with
+        // empty-nodes responses, so the same fallback fires at every
+        // level.
+        //
+        // The contract this test enforces: the text-match filter
+        // still rejects fabricated text; what changes is that the
+        // orchestrator no longer hard-fails — it records the
+        // synthesis in node metadata so the audit trail is honest.
         let gateway = gateway_with(vec![
             one_node_response(child_node(
                 "Sa", "Sentence", 0, 5, "sent", "ZZZZZZZ", // not in "hello"
             )),
+            empty_nodes_response(), // Sentence → Phrase
+            empty_nodes_response(), // Phrase → Claim
+            empty_nodes_response(), // Fact → TypedComponent
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
             max_retries_per_parent: PerLevelRetryBudget::uniform(0),
         };
-        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
-        // Document has no children (the fabricated text was rejected);
-        // coverage check surfaces NoChildrenAtLevel.
-        match err {
-            HierarchicalDecomposeError::CoverageUnresolved { gaps, .. } => {
-                assert!(gaps.iter().any(|g| matches!(
-                    g.kind,
-                    HierarchicalGapKind::NoChildrenAtLevel
-                )));
-            }
-            other => panic!("expected CoverageUnresolved, got {other:?}"),
-        }
+        let outcome = decompose_hierarchical(&req, &gateway, clock())
+            .expect("ADJ34 fallback should produce an Ok IR for text-not-in-parent");
+        assert!(outcome
+            .ir_document
+            .nodes
+            .iter()
+            .any(|n| n.metadata.get("adj.synthesized")
+                == Some(&"no_children_fallback".to_string())));
     }
 
     #[test]
@@ -1491,28 +1512,41 @@ mod tests {
 
     #[test]
     fn adj25_orchestrator_filters_kinds_not_allowed_at_level() {
-        // First response (Doc → Sentence) returns a Phrase, not a
-        // Sentence. The Phrase is rejected by the allowed-kinds
-        // filter, leaving the Document with no children — then
-        // the coverage check will report no_children_at_level.
+        // ADJ34 behaviour: the first response (Doc → Sentence)
+        // returns a Phrase, not a Sentence. The Phrase is rejected
+        // by the allowed-kinds filter, leaving the Document with no
+        // children — and the orchestrator's `no_children_fallback`
+        // synthesizes a Sentence node so the cascade can continue.
+        // Each subsequent level (Sentence → Phrase, Phrase → Claim,
+        // Fact → TypedComponent) is scripted with an empty-nodes
+        // response so the same fallback fires per level, producing
+        // a complete IR built entirely from framework defaults.
+        //
+        // The contract this test enforces: kind-filtering still
+        // works (the Phrase emitted as a Sentence is rejected); but
+        // the orchestrator no longer returns `CoverageUnresolved`
+        // for a NoChildrenAtLevel gap that the fallback handles.
         let gateway = gateway_with(vec![
             one_node_response(child_node("Px", "Phrase", 0, 5, "phr", "hello")),
+            empty_nodes_response(), // Sentence → Phrase
+            empty_nodes_response(), // Phrase → Claim
+            empty_nodes_response(), // Fact → TypedComponent
         ]);
         let req = HierarchicalDecomposeRequest {
             document_id: "doc1".into(),
             source_text: "hello".into(),
-            max_retries_per_parent: PerLevelRetryBudget::uniform(0), // no retries — fail fast
+            max_retries_per_parent: PerLevelRetryBudget::uniform(0), // no retries — every level falls back
         };
-        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
-        match err {
-            HierarchicalDecomposeError::CoverageUnresolved { gaps, .. } => {
-                assert!(gaps.iter().any(|g| matches!(
-                    g.kind,
-                    HierarchicalGapKind::NoChildrenAtLevel
-                )));
-            }
-            other => panic!("expected CoverageUnresolved, got {other:?}"),
-        }
+        let outcome = decompose_hierarchical(&req, &gateway, clock())
+            .expect("ADJ34 fallback should produce an Ok IR even when no model children are accepted");
+        // At least one node must carry the synthesized marker; in
+        // this scenario every non-Document node is synthesized.
+        assert!(outcome
+            .ir_document
+            .nodes
+            .iter()
+            .any(|n| n.metadata.get("adj.synthesized")
+                == Some(&"no_children_fallback".to_string())));
     }
 
     #[test]
@@ -1801,16 +1835,24 @@ mod tests {
 
     #[test]
     fn adj29_zero_budget_at_one_level_aborts_only_there() {
-        // Set Fact→TypedComponent budget to 0; shallow levels keep
-        // generous budgets. A non-matching text at level 4 should
-        // immediately fail without consuming retries (because the
-        // budget is 0), while levels 1-3 still complete cleanly.
+        // ADJ29 + ADJ34 contract: Fact→TypedComponent budget is 0
+        // and the only Entity response carries bogus text. Pre-ADJ34
+        // the orchestrator aborted at level 4 with
+        // `CoverageUnresolved`; ADJ34 changes this so the
+        // `no_children_fallback` synthesizes a Typed Component
+        // covering the parent text, marked with
+        // `adj.synthesized=no_children_fallback`. Levels 1-3 still
+        // complete from the model responses; only the leaf level
+        // falls back. The test now asserts the Ok outcome and that
+        // the synthesized node is present at the Fact→TypedComp
+        // level.
         let gateway = gateway_with(vec![
             one_node_response(child_node("S1", "Sentence", 0, 7, "sent", "matches")),
             one_node_response(child_node("P1", "Phrase", 0, 7, "phr", "matches")),
             one_node_response(child_node("F1", "Fact", 0, 7, "matches", "matches")),
-            // Bogus text — would normally trigger a retry, but the
-            // level-4 budget is 0, so the orchestrator gives up.
+            // Bogus text at the leaf level — rejected by text-match;
+            // ADJ34's fallback then synthesizes a TypedComponent
+            // rather than failing the whole decomposition.
             one_node_response(child_node("E1", "Entity", 0, 7, "x", "DOES_NOT_MATCH")),
         ]);
         let req = HierarchicalDecomposeRequest {
@@ -1823,11 +1865,23 @@ mod tests {
                 fact_to_typed_component: 0,
             },
         };
-        let err = decompose_hierarchical(&req, &gateway, clock()).unwrap_err();
-        assert!(matches!(
-            err,
-            HierarchicalDecomposeError::CoverageUnresolved { .. }
-        ));
+        let outcome = decompose_hierarchical(&req, &gateway, clock())
+            .expect("ADJ34 fallback should turn the zero-budget leaf abort into a synthesized leaf");
+        // Exactly one node should carry the fallback marker, and it
+        // should be a TypedComponent (the leaf level). The shallow
+        // levels (S1, P1, F1) come from the scripted responses.
+        let synth: Vec<_> = outcome
+            .ir_document
+            .nodes
+            .iter()
+            .filter(|n| n.metadata.get("adj.synthesized")
+                == Some(&"no_children_fallback".to_string()))
+            .collect();
+        assert_eq!(synth.len(), 1, "expected exactly one fallback node, got {}", synth.len());
+        assert_eq!(
+            synth[0].metadata.get("adj.synthesized_at_level"),
+            Some(&"FactToTypedComponent".to_string())
+        );
     }
 
     #[test]
