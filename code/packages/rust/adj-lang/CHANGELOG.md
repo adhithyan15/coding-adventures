@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.0] - 2026-06-02
+
+### Added
+
+- New `uncertain { e1, e2, ... } for <conclusion>` statement,
+  lowering to `logic_engine::UncertaintyMarker`. Accepts the
+  standard `source`/`locator`/`trust` annotations.
+- New lexer tokens: `KwUncertain`, `LBrace`, `RBrace`.
+- 2 new parser tests (basic + annotated forms), 1 new lower test
+  (`uncertain_statement_produces_voi_report_on_aggregation`
+  confirms end-to-end: surface syntax compiles, runs through
+  `SearchMode::LRAggregate`, and produces a non-empty
+  `uncertainties` vector with the right VOI logit range).
+
+Total tests: 29 (was 26 in 0.1.0).
+
+### ADJ46 awkwardness items dissolved by 0.2.0
+
+- **A5** (uncertainty markers) — fully addressed at the surface
+  layer. The IR pipeline can now hand off "no clear precipitator"
+  as a structured `uncertain { … } for …` clause, and the engine
+  surfaces it back to the user as a VOI report.
+
 ## [0.1.0] - 2026-06-02
 
 ### Added

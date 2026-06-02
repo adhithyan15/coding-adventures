@@ -22,7 +22,7 @@
 use logic_core::{atom as core_atom, compound, Term as CoreTerm};
 use logic_engine::{
     ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase, PriorClause,
-    Provenance, TrustTier,
+    Provenance, TrustTier, UncertaintyMarker,
 };
 
 use crate::ast::{Annotation, Program, Statement, Term as AstTerm, TrustTierName};
@@ -99,6 +99,19 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             }
             Statement::Query { conclusion } => {
                 queries.push(lower_term(conclusion));
+            }
+            Statement::Uncertain {
+                domain,
+                conclusion,
+                annotations,
+            } => {
+                let prov = annotations_to_provenance(annotations)?;
+                let marker = UncertaintyMarker::new(
+                    lower_term(conclusion),
+                    domain.iter().map(lower_term).collect(),
+                )
+                .with_provenance(prov);
+                kb.add_uncertainty_marker(marker);
             }
         }
     }
@@ -285,6 +298,49 @@ mod tests {
         let src = "observe pmh(hypertension)";
         let lowered = compile(src).unwrap();
         assert_eq!(lowered.queries.len(), 0);
+    }
+
+    #[test]
+    fn uncertain_statement_produces_voi_report_on_aggregation() {
+        // The ACS rulebook with a `uncertain {…}` clause for the
+        // precipitator, no precipitator observation. The aggregator
+        // should return a VOI report listing the three candidate
+        // values and the maximum log-odds swing knowing one of
+        // them would produce.
+        let src = r#"
+            prior 0.10 for acs
+
+            contributes 1.5 from pmh(hypertension) to acs
+            contributes 2.5 from precipitator(exertional) to acs
+            contributes 0.6 from precipitator(rest) to acs
+            contributes 0.8 from precipitator(positional) to acs
+
+            observe pmh(hypertension)
+
+            uncertain { precipitator(exertional),
+                        precipitator(rest),
+                        precipitator(positional) } for acs
+              source "patient did not specify"
+
+            ? acs
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let result = search(query, &lowered.kb, SearchMode::LRAggregate);
+        match result {
+            SearchResult::LRAggregateResult { uncertainties, .. } => {
+                assert_eq!(uncertainties.len(), 1);
+                let report = &uncertainties[0];
+                assert_eq!(report.domain.len(), 3);
+                // VOI = ln(2.5) - ln(0.6) ≈ 1.4271
+                assert!(
+                    (report.voi_logit_range - (2.5_f64.ln() - 0.6_f64.ln())).abs() < 1e-9,
+                    "got VOI {}",
+                    report.voi_logit_range
+                );
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
     }
 
     #[test]

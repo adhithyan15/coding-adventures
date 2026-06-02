@@ -6,7 +6,7 @@
 use logic_core::{atom, compound, Term};
 use logic_engine::{
     search, ContributionClause, Fact, JointContributionClause, KnowledgeBase, LrAggregateWarning,
-    PriorClause, Provenance, SearchMode, SearchResult, TrustTier,
+    PriorClause, Provenance, SearchMode, SearchResult, TrustTier, UncertaintyMarker,
 };
 
 fn approx_eq(a: f64, b: f64, tol: f64) -> bool {
@@ -350,6 +350,133 @@ fn unattributed_provenance_is_the_default() {
     let prior = kb.prior_for(&atom("acs")).unwrap();
     assert_eq!(prior.provenance, Provenance::unattributed());
     assert_eq!(prior.provenance.trust_tier, TrustTier::Unattributed);
+}
+
+#[test]
+fn uncertainty_marker_with_no_observed_domain_value_produces_report() {
+    // Build the ACS rulebook (without the precipitator observations)
+    // and attach an UncertaintyMarker stating that the patient did
+    // not specify their precipitator. The LR aggregator should:
+    //   1. Skip all precipitator contributions (no observation).
+    //   2. Emit an UncertaintyReport listing the candidate values
+    //      and the log-odds delta each would contribute.
+    let mut kb = build_acs_kb();
+    add_jane_doe(&mut kb);
+    kb.add_uncertainty_marker(
+        UncertaintyMarker::new(
+            atom("acs"),
+            vec![
+                compound("precipitator", vec![atom("exertional")]),
+                compound("precipitator", vec![atom("rest")]),
+                compound("precipitator", vec![atom("positional")]),
+            ],
+        )
+        .with_provenance(Provenance::cited("patient did not specify precipitator")),
+    );
+
+    let result = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    let (posterior, uncertainties) = match result {
+        SearchResult::LRAggregateResult {
+            posterior,
+            uncertainties,
+            ..
+        } => (posterior, uncertainties),
+        other => panic!("expected LRAggregateResult, got {other:?}"),
+    };
+
+    // Posterior should still be ~0.281 (the unmodified ADJ36 number),
+    // because the marker reports but doesn't change aggregation.
+    assert!(
+        (posterior - 0.281).abs() < 0.005,
+        "expected ~0.281, got {posterior}"
+    );
+
+    // Exactly one uncertainty report — for the precipitator.
+    assert_eq!(uncertainties.len(), 1);
+    let report = &uncertainties[0];
+    assert_eq!(report.conclusion, atom("acs"));
+    assert_eq!(report.domain.len(), 3);
+    assert_eq!(report.if_observed_logit_delta.len(), 3);
+
+    // VOI: log(2.5) - log(0.6) = ln(2.5/0.6) ≈ 1.4271
+    assert!(
+        (report.voi_logit_range - (2.5_f64.ln() - 0.6_f64.ln())).abs() < 1e-9,
+        "expected VOI ≈ 1.4271, got {}",
+        report.voi_logit_range
+    );
+
+    // Spot-check individual deltas: the first domain entry is
+    // precipitator(exertional), which has contributes 2.5 → log(2.5).
+    assert!(
+        (report.if_observed_logit_delta[0] - 2.5_f64.ln()).abs() < 1e-9,
+        "expected log(2.5) ≈ 0.916, got {}",
+        report.if_observed_logit_delta[0]
+    );
+}
+
+#[test]
+fn observing_one_domain_value_suppresses_uncertainty_report() {
+    // Same rulebook + marker, but observe precipitator(exertional).
+    // The marker should not produce a report because the
+    // uncertainty is "resolved" by the observation.
+    let mut kb = build_acs_kb();
+    add_jane_doe(&mut kb);
+    kb.add_fact(Fact::certain(compound(
+        "precipitator",
+        vec![atom("exertional")],
+    )));
+    kb.add_uncertainty_marker(UncertaintyMarker::new(
+        atom("acs"),
+        vec![
+            compound("precipitator", vec![atom("exertional")]),
+            compound("precipitator", vec![atom("rest")]),
+            compound("precipitator", vec![atom("positional")]),
+        ],
+    ));
+
+    let result = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    if let SearchResult::LRAggregateResult { uncertainties, .. } = result {
+        assert!(
+            uncertainties.is_empty(),
+            "marker should be suppressed when domain is observed; got {uncertainties:?}"
+        );
+    } else {
+        panic!("expected LRAggregateResult");
+    }
+}
+
+#[test]
+fn uncertainty_marker_with_no_matching_contributions_has_zero_voi() {
+    // A marker whose domain values are not the target of any
+    // ContributionClause for the conclusion. The report should
+    // exist (the marker is active because nothing is observed)
+    // but every if_observed_logit_delta is 0.0 and VOI is 0.0 —
+    // a "rulebook gap" the modeller should know about.
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("c"), 0.10)).unwrap();
+    kb.add_contribution(ContributionClause::from_lr(
+        atom("c"),
+        atom("some_evidence"),
+        2.0,
+    ));
+    // Force this conclusion into the LR-aggregation regime via
+    // the participates check — the contribution above does that.
+    kb.add_uncertainty_marker(UncertaintyMarker::new(
+        atom("c"),
+        vec![atom("uncovered_a"), atom("uncovered_b")],
+    ));
+
+    let result = search(&atom("c"), &kb, SearchMode::LRAggregate);
+    if let SearchResult::LRAggregateResult { uncertainties, .. } = result {
+        assert_eq!(uncertainties.len(), 1);
+        assert_eq!(
+            uncertainties[0].if_observed_logit_delta,
+            vec![0.0, 0.0]
+        );
+        assert_eq!(uncertainties[0].voi_logit_range, 0.0);
+    } else {
+        panic!("expected LRAggregateResult");
+    }
 }
 
 #[test]

@@ -45,7 +45,8 @@ use logic_core::{LogicVar, Substitution, Term, unify};
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
     lr_aggregate, sigmoid, ContributionClause, JointContributionClause, KbError,
-    LRAggregateResult, LrAggregateWarning, PriorClause,
+    LRAggregateResult, LrAggregateWarning, PriorClause, UncertaintyMarker,
+    UncertaintyReport,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 pub use provenance::{Provenance, TrustTier};
@@ -79,6 +80,20 @@ pub struct ContributionClauseId(pub u64);
 /// Stable identifier for a [`JointContributionClause`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct JointContributionClauseId(pub u64);
+
+/// Stable identifier for an
+/// [`UncertaintyMarker`](crate::lr_aggregate::UncertaintyMarker).
+///
+/// LP19e + ADJ47-D: uncertainty markers are the engine-layer
+/// representation of "the patient (or the source) did not specify
+/// this value, but we know the domain it ranges over." The
+/// LR-aggregation result surfaces an
+/// [`UncertaintyReport`](crate::lr_aggregate::UncertaintyReport) for
+/// every active marker whose domain has zero observed members — so
+/// the audit reader can see *what would shift the answer* without
+/// having to look it up themselves.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct UncertaintyMarkerId(pub u64);
 
 /// Probability annotation on a clause.
 ///
@@ -242,11 +257,18 @@ pub struct KnowledgeBase {
     priors: Vec<PriorClause>,
     contributions: Vec<ContributionClause>,
     joint_contributions: Vec<JointContributionClause>,
+    /// LP19e + ADJ47-D: uncertainty markers attached to conclusions.
+    /// Each marker carries a domain of candidate evidence terms; if
+    /// none of them is observed, the aggregator emits an
+    /// [`UncertaintyReport`] in the result so the audit reader sees
+    /// what's missing.
+    uncertainty_markers: Vec<UncertaintyMarker>,
     next_fact_id: u64,
     next_rule_id: u64,
     next_prior_id: u64,
     next_contribution_id: u64,
     next_joint_contribution_id: u64,
+    next_uncertainty_marker_id: u64,
 }
 
 impl KnowledgeBase {
@@ -392,7 +414,10 @@ impl KnowledgeBase {
 
     /// True iff at least one contribution (single or joint) names
     /// `conclusion`. This is the discriminator that `AutoDetect` uses
-    /// to route to LR aggregation rather than SLD / WMC.
+    /// to route to LR aggregation rather than SLD / WMC. Uncertainty
+    /// markers alone do not promote a query to LR-aggregation —
+    /// they're meaningful only relative to contribution clauses,
+    /// because they describe domain gaps inside an LR-shape query.
     pub fn participates_in_lr_aggregation(&self, conclusion: &Term) -> bool {
         self.contributions
             .iter()
@@ -401,6 +426,27 @@ impl KnowledgeBase {
                 .joint_contributions
                 .iter()
                 .any(|c| &c.conclusion == conclusion)
+    }
+
+    /// Insert an [`UncertaintyMarker`], assigning a fresh
+    /// [`UncertaintyMarkerId`].
+    pub fn add_uncertainty_marker(
+        &mut self,
+        mut marker: UncertaintyMarker,
+    ) -> UncertaintyMarkerId {
+        let id = UncertaintyMarkerId(self.next_uncertainty_marker_id);
+        self.next_uncertainty_marker_id += 1;
+        marker.id = id;
+        self.uncertainty_markers.push(marker);
+        id
+    }
+
+    /// Iterate the uncertainty markers attached to `conclusion`.
+    pub fn uncertainty_markers_for(&self, conclusion: &Term) -> Vec<&UncertaintyMarker> {
+        self.uncertainty_markers
+            .iter()
+            .filter(|m| &m.conclusion == conclusion)
+            .collect()
     }
 
     /// LP19e "observation gate." If `evidence_term` is asserted in
@@ -484,6 +530,10 @@ pub enum SearchResult {
         posterior: f64,
         posterior_logit: f64,
         warnings: Vec<LrAggregateWarning>,
+        /// Active uncertainty reports — one per
+        /// [`UncertaintyMarker`] on the query whose domain is
+        /// entirely unobserved. Empty in the common case.
+        uncertainties: Vec<UncertaintyReport>,
     },
 }
 
@@ -526,6 +576,7 @@ pub fn search(query: &Term, kb: &KnowledgeBase, mode: SearchMode) -> SearchResul
                 posterior: result.posterior,
                 posterior_logit: result.posterior_logit,
                 warnings: result.warnings,
+                uncertainties: result.uncertainties,
             }
         }
         // AutoDetect was rewritten above.

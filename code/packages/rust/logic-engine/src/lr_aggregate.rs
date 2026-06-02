@@ -38,7 +38,7 @@ use logic_core::{Substitution, Term};
 
 use crate::{
     ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase, PriorClauseId,
-    Provenance,
+    Provenance, UncertaintyMarkerId,
 };
 use crate::proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 
@@ -215,6 +215,79 @@ impl JointContributionClause {
 }
 
 // ---------------------------------------------------------------------------
+// Uncertainty markers — ADJ47-D, addresses ADJ46 awkwardness A5
+// ---------------------------------------------------------------------------
+
+/// An explicit "we don't know which value of X applies here" annotation.
+///
+/// Dissolves ADJ46 awkwardness item **A5**. When a patient case
+/// says "no clear precipitator," the IR pipeline lowers it to an
+/// `UncertaintyMarker` whose `domain` is the candidate precipitator
+/// terms. The aggregator detects markers whose domain is entirely
+/// unobserved and emits an [`UncertaintyReport`] in the result, so
+/// the framework's user-facing output can say "if you can determine
+/// the precipitator, the posterior could shift by up to X."
+///
+/// This is the engine-layer enabler of VOI (ADJ18). The full VOI
+/// computation lives in [`LRAggregateResult::uncertainties`], which
+/// the user-facing layer can rank, render, or act on.
+#[derive(Debug, Clone, PartialEq)]
+pub struct UncertaintyMarker {
+    pub id: UncertaintyMarkerId,
+    pub conclusion: Term,
+    /// Candidate evidence terms. Treated as mutually exclusive in
+    /// v0.1: the aggregator computes the maximum log-odds swing
+    /// across the domain, not the expected posterior under a prior
+    /// over the domain. Richer treatment is a follow-up.
+    pub domain: Vec<Term>,
+    pub provenance: Provenance,
+}
+
+impl UncertaintyMarker {
+    pub fn new(conclusion: Term, domain: Vec<Term>) -> Self {
+        Self {
+            id: UncertaintyMarkerId(u64::MAX),
+            conclusion,
+            domain,
+            provenance: Provenance::unattributed(),
+        }
+    }
+
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
+    }
+}
+
+/// A user-facing report on an active uncertainty in the
+/// LR-aggregation result.
+///
+/// Active means: the marker's domain has zero observed evidence
+/// terms in the KB, so the aggregator skipped every related
+/// contribution. The report tells the audit reader what each domain
+/// value would have contributed if observed, plus the VOI summary
+/// — the log-odds range that resolving the uncertainty could
+/// produce.
+#[derive(Debug, Clone, PartialEq)]
+pub struct UncertaintyReport {
+    pub marker_id: UncertaintyMarkerId,
+    pub conclusion: Term,
+    pub domain: Vec<Term>,
+    /// One entry per domain term, in `domain` order. The f64 is the
+    /// log(LR) that would be added to the running log-odds if that
+    /// particular value were observed. `0.0` when no
+    /// [`ContributionClause`] names the (conclusion, value) pair —
+    /// i.e. the rulebook covers the uncertainty marker but not the
+    /// individual value, which is a modeller signal worth surfacing.
+    pub if_observed_logit_delta: Vec<f64>,
+    /// `max(if_observed_logit_delta) - min(if_observed_logit_delta)`.
+    /// The simple v0.1 VOI proxy: "knowing this value could swing
+    /// the running log-odds by up to this much." Higher is more
+    /// informative.
+    pub voi_logit_range: f64,
+}
+
+// ---------------------------------------------------------------------------
 // KB-construction error type
 // ---------------------------------------------------------------------------
 
@@ -274,6 +347,11 @@ pub struct LRAggregateResult {
     /// branch — e.g. "no prior declared," "no contributions active,"
     /// "a contribution with LR=1.0 was silently a no-op."
     pub warnings: Vec<LrAggregateWarning>,
+    /// Active uncertainty reports. One entry per
+    /// [`UncertaintyMarker`] on the query whose domain has zero
+    /// observed evidence — exactly the markers worth showing the
+    /// user as "if you can determine this, the answer would shift."
+    pub uncertainties: Vec<UncertaintyReport>,
 }
 
 /// Conditions worth surfacing to the audit trail without hard-failing
@@ -401,7 +479,52 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
         });
     }
 
-    // Step 4: package the proof.
+    // Step 4: uncertainty reports — for every marker on `query`
+    // whose domain has zero observed evidence, build a report
+    // listing what each domain value would contribute.
+    let mut uncertainties: Vec<UncertaintyReport> = Vec::new();
+    for marker in kb.uncertainty_markers_for(query) {
+        let any_observed = marker
+            .domain
+            .iter()
+            .any(|ev| kb.observed_evidence(ev).is_some());
+        if any_observed {
+            // The marker is "resolved" — one of its domain values
+            // was observed; the aggregator already counted that
+            // contribution above, so no report.
+            continue;
+        }
+        let deltas: Vec<f64> = marker
+            .domain
+            .iter()
+            .map(|ev| {
+                // Find the ContributionClause(s) for (query, ev) and
+                // sum their logit_delta; 0.0 if no clause names this
+                // pair.
+                kb.contributions_for(query)
+                    .iter()
+                    .filter(|c| &c.evidence_term == ev)
+                    .map(|c| c.logit_delta)
+                    .sum::<f64>()
+            })
+            .collect();
+        let voi = if deltas.is_empty() {
+            0.0
+        } else {
+            let max = deltas.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+            let min = deltas.iter().copied().fold(f64::INFINITY, f64::min);
+            max - min
+        };
+        uncertainties.push(UncertaintyReport {
+            marker_id: marker.id,
+            conclusion: marker.conclusion.clone(),
+            domain: marker.domain.clone(),
+            if_observed_logit_delta: deltas,
+            voi_logit_range: voi,
+        });
+    }
+
+    // Step 5: package the proof.
     via_facts.sort();
     via_facts.dedup();
     let posterior = sigmoid(running_logit);
@@ -420,6 +543,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
         posterior,
         posterior_logit: running_logit,
         warnings,
+        uncertainties,
     }
 }
 

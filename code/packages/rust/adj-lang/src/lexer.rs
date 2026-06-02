@@ -41,6 +41,11 @@ pub enum TokenKind {
     KwWhen,
     KwAnd,
     KwObserve,
+    /// ADJ47-D: `uncertain {a, b, c} for conclusion` — annotates a
+    /// conclusion with a domain of candidate evidence values none of
+    /// which has been observed. The LR aggregator surfaces a VOI
+    /// report listing what each value would contribute if learned.
+    KwUncertain,
     KwSource,
     KwTrust,
     KwLocator,
@@ -52,6 +57,10 @@ pub enum TokenKind {
     // Punctuation
     LParen,
     RParen,
+    /// `{` — opens the domain set in `uncertain {…}`.
+    LBrace,
+    /// `}` — closes the domain set.
+    RBrace,
     Comma,
     Question,
     // Literals
@@ -104,6 +113,16 @@ pub fn lex(src: &str) -> Result<Vec<Token>, LexError> {
             }
             ')' => {
                 tokens.push(Token { kind: TokenKind::RParen, line, col });
+                chars.next();
+                col += 1;
+            }
+            '{' => {
+                tokens.push(Token { kind: TokenKind::LBrace, line, col });
+                chars.next();
+                col += 1;
+            }
+            '}' => {
+                tokens.push(Token { kind: TokenKind::RBrace, line, col });
                 chars.next();
                 col += 1;
             }
@@ -240,6 +259,7 @@ fn keyword_or_ident(s: &str) -> TokenKind {
         "when" => TokenKind::KwWhen,
         "and" => TokenKind::KwAnd,
         "observe" => TokenKind::KwObserve,
+        "uncertain" => TokenKind::KwUncertain,
         "source" => TokenKind::KwSource,
         "trust" => TokenKind::KwTrust,
         "locator" => TokenKind::KwLocator,

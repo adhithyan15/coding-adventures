@@ -49,6 +49,16 @@ pub enum Statement {
     Observe { term: Term },
     /// `? <conclusion>` — query the engine for the posterior.
     Query { conclusion: Term },
+    /// `uncertain { <e1>, <e2>, ... } for <conclusion>` — annotate
+    /// the conclusion with a domain of candidate evidence terms,
+    /// none of which has been observed. The LR aggregator surfaces
+    /// a VOI report listing what each value would contribute.
+    /// Dissolves ADJ46 awkwardness item A5.
+    Uncertain {
+        domain: Vec<Term>,
+        conclusion: Term,
+        annotations: Vec<Annotation>,
+    },
 }
 
 /// Per-statement annotation. Multiple annotations per statement
