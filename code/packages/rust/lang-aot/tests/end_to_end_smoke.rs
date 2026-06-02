@@ -1062,3 +1062,49 @@ fn end_to_end_twig_42_emits_armv7_bin_via_lang_aot() {
         "second word should be BX LR (0xE12F_FF1E) little-endian; got: {:02x?}",
         &bytes[4..8.min(bytes.len())]);
 }
+
+// ===========================================================================
+// A4+++ — source -> IIR -> Intel 4004 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_intel4004_bin entry point runs the full source ->
+// IIR -> iir-to-intel4004 pipeline.
+//
+// Twig `42` won't fit in a 4-bit immediate, so we use `5` for this
+// smoke test.  The expected byte stream is `LDM 5; JUN 0x000` =
+// `0xD5 0x40 0x00` (the trivial-case 3-byte shape preserved by the
+// ACC-first allocator in v0.3.0).
+
+#[test]
+fn end_to_end_twig_5_emits_intel4004_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"5\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_intel4004_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V + Intel 8008 + ARMv7 paths.  After A4++,
+        // Twig's `5` should always succeed here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig Intel 4004 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> Intel 4004 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "Twig `5` should produce a non-empty .bin");
+
+    // Twig `5` lowers to `LDM 5; JUN 0x000` = `0xD5 0x40 0x00` via
+    // the ACC-first allocator's trivial-case preservation.
+    assert_eq!(&bytes[..3.min(bytes.len())], &[0xD5, 0x40, 0x00],
+        "Twig `5` should produce `LDM 5; JUN 0x000` (0xD5 0x40 0x00); got: {bytes:02x?}");
+}

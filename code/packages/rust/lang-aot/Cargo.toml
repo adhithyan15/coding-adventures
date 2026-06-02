@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.9.0 (A3+++): adds `--emit=armv7` flag (aliases `arm`, `arm32`) that routes source → IIR → ARMv7 (A32) machine code (.bin) via iir-to-armv7, cross-platform.  Downstream consumers: the in-tree arm-simulator, qemu-arm, objcopy + a phone-class Linux linker, or a Cortex-A7/A8/A9-era SoC flash loader.  Previous targets: v0.8.0 (A2+++ intel8008), v0.7.0 (A1+++ riscv32)."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.10.0 (A4+++): adds `--emit=intel4004` flag (aliases `i4004`, `4004`) that routes source → IIR → Intel 4004 machine code (.bin) via iir-to-intel4004, cross-platform.  Downstream consumers: any 4004 simulator, the intel-4004-assembler crate for round-trip, or an EPROM burner for a 4004 dev board.  Previous targets: v0.9.0 (A3+++ armv7), v0.8.0 (A2+++ intel8008), v0.7.0 (A1+++ riscv32)."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -17,6 +17,7 @@ iir-to-llvm           = { path = "../iir-to-llvm" }
 iir-to-riscv          = { path = "../iir-to-riscv" }
 iir-to-intel8008      = { path = "../iir-to-intel8008" }
 iir-to-armv7          = { path = "../iir-to-armv7" }
+iir-to-intel4004      = { path = "../iir-to-intel4004" }
 
 [[bin]]
 name = "lang-aot"

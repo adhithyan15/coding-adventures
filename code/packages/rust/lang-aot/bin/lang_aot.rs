@@ -45,12 +45,14 @@ fn main() -> ExitCode {
     //   * Riscv32Bin   → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
     //   * Intel8008Bin → .bin (foo.oct → foo.bin), shares the `.bin` convention with RV32I
     //   * Armv7Bin     → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * Intel4004Bin → .bin (foo.bf → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
         EmitMode::Riscv32Bin   => input.with_extension("bin"),
         EmitMode::Intel8008Bin => input.with_extension("bin"),
         EmitMode::Armv7Bin     => input.with_extension("bin"),
+        EmitMode::Intel4004Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -98,6 +100,12 @@ enum EmitMode {
     /// era SoC flash loader.  Phone-class target — billions of
     /// deployed silicon units.
     Armv7Bin,
+    /// Flat `.bin` of 1- or 2-byte Intel 4004 opcodes via
+    /// `iir-to-intel4004`.  Cross-platform.  Downstream consumers:
+    /// any 4004 simulator, `intel-4004-assembler` for round-trip,
+    /// or an EPROM burner for a 4004 dev board.  The 4004 (1971)
+    /// is the world's first commercial microprocessor.
+    Intel4004Bin,
 }
 
 struct CliArgs {
@@ -175,9 +183,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "riscv32" | "rv32" | "bin"    => Ok(EmitMode::Riscv32Bin),
         "intel8008" | "i8008" | "8008" => Ok(EmitMode::Intel8008Bin),
         "armv7" | "arm" | "arm32" => Ok(EmitMode::Armv7Bin),
+        "intel4004" | "i4004" | "4004" => Ok(EmitMode::Intel4004Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004"
         )),
     }
 }
@@ -221,6 +230,12 @@ Options:
                                                 into arm-simulator, qemu-arm, or
                                                 objcopy + a phone-class Linux linker
                                                 (Cortex-A7/A8/A9-era SoCs)
+                             intel4004 | i4004 | 4004
+                                              → flat .bin of 1- or 2-byte Intel 4004
+                                                opcodes via iir-to-intel4004; cross-
+                                                platform; load into a 4004 simulator
+                                                or burn to an EPROM (the world's
+                                                first commercial microprocessor, 1971)
   -h, --help               Show this help.\
 ");
 }
@@ -260,6 +275,16 @@ fn dispatch(
     // phone-class Linux board).
     if emit == EmitMode::Armv7Bin {
         return lang_aot::compile_file_to_armv7_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 4004 .bin emission is also cross-platform — write the
+    // 1- or 2-byte opcodes byte-for-byte (no endianness conversion;
+    // the 4004 has no concept of word endian, like the 8008).
+    // World's first commercial microprocessor; downstream is always
+    // a simulator, the intel-4004-assembler crate, or an EPROM
+    // burner.
+    if emit == EmitMode::Intel4004Bin {
+        return lang_aot::compile_file_to_intel4004_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

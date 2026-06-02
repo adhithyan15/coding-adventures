@@ -148,6 +148,12 @@ pub enum LangAotError {
     /// already includes the failing function name and the
     /// unsupported op/type/operand).
     Armv7BackendError(String),
+    /// The Intel 4004 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-intel4004`
+    /// (which already includes the failing function name and the
+    /// unsupported op/type/operand).
+    Intel4004BackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -163,6 +169,7 @@ impl fmt::Display for LangAotError {
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
+            LangAotError::Intel4004BackendError(m) => write!(f, "intel4004: {m}"),
         }
     }
 }
@@ -457,6 +464,68 @@ pub fn compile_file_to_armv7_bin(
     for w in &words {
         bytes.extend_from_slice(&w.to_le_bytes());
     }
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 4004 machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 1- or
+/// 2-byte Intel 4004 opcodes.  Downstream consumers:
+///
+/// * Any 4004 simulator (in-tree, MAME, custom emulator).
+/// * The in-tree `intel-4004-assembler` for round-trip
+///   disassembly.
+/// * An EPROM burner for a 4004 dev board (the 4004 was paired
+///   with 1702 EPROMs).
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Wire format
+///
+/// 4004 instructions are 1 or 2 bytes each, in the order the
+/// silicon's program counter walks them.  No endianness conversion
+/// needed — every byte is written exactly as `iir-to-intel4004`
+/// emits it.  This is the same byte-aligned format as
+/// `iir-to-intel8008`'s output.
+///
+/// # Why no host gating?
+///
+/// The 4004 is a 1971-era 4-bit microprocessor with no modern
+/// host equivalent.  Downstream is always a simulator, an
+/// assembler round-trip tool, or an EPROM burner.  All host OSes
+/// can write a flat byte file, so the pipeline is universally
+/// available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Intel4004BackendError` — the IIR contained an op or type the
+///   Intel 4004 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=intel4004 -o foo.bin
+/// # Then disassemble or load into a simulator
+/// ```
+pub fn compile_file_to_intel4004_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_intel4004::IIRIntel4004Config::new(stem);
+    let bytes = iir_to_intel4004::lower_iir_to_intel4004(&module, &cfg)
+        .map_err(|e| LangAotError::Intel4004BackendError(format!("{e}")))?;
+
     std::fs::write(out, &bytes)?;
     Ok(())
 }

@@ -68,8 +68,9 @@ IIRModule
 |---------|-------|--------|
 | v0.1.0 (A4) | crate skeleton: any module → single `JUN 0x000` (`0x40 0x00`) infinite-loop halt sentinel | **merged** |
 | v0.2.0 (A4+) | `const dest, Int(n)` → `LDM n` + `ret`/`ret_void` → JUN-self | **merged** |
-| **v0.3.0 (A4++ — this PR)** | ACC-first linear allocator over `r0..r15` (`ACC` comes first in pool to preserve v0.2.0's trivial-case shape) + `mov` (via `LD`/`XCH` pairs) + ret-value staging via `LD r_var` if not already in ACC.  Adds `LD_OPCODE = 0xA0` and `XCH_OPCODE = 0xB0` constants. | this PR |
-| v0.4.0 (A4+++) | Arithmetic via accumulator (`ADD`, `SUB`, `IAC`, `DAC`) + conditional jumps via `JCN` | future |
+| v0.3.0 (A4++) | ACC-first linear allocator over `r0..r15` + `mov` + ret-value staging | **merged** |
+| **A4+++ (this PR, in `lang-aot` v0.9.0 → v0.10.0)** | `lang-aot --emit=intel4004` (aliases `i4004`, `4004`) routes source → IIR → Intel 4004 `.bin` via `iir-to-intel4004`; cross-platform; no host gating; no version bump for the iir-to-intel4004 crate itself | this PR |
+| v0.4.0 (A4++++) | Arithmetic via accumulator (`ADD`, `SUB`, `IAC`, `DAC`) + conditional jumps via `JCN` | future |
 | v0.4.0 (A4+++) | `lang-aot --emit=intel4004` wiring + Brainfuck end-to-end | future |
 
 ## Public surface (v0.1.0)
