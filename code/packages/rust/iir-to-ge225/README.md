@@ -25,30 +25,32 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.3.0 (A5++ ACC-first allocator + `mov`)
+## Status — v0.4.0 (A5+++ accumulator arithmetic)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
 | `const dest, Int(n)` | `(STA r_evict)?` + `LDA n` |
-| `const dest, Bool(b)` | `(STA r_evict)?` + `LDA 0 \| 1` |
 | `mov dest, src` | `(STA r_evict_src)?` + `LD r_src` + `STA r_dest` |
+| `add dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `ADD r_rhs` |
+| `sub dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `SUB r_rhs` |
 | `ret <var>` | `(LD r_var)?` + `HLT` |
 | `ret_void` | `HLT` |
 
-17-slot register pool (ACC + r0..r15) — identical capacity to the
-`iir-to-intel4004` v0.3.0 pool.  Trivial 6-byte ROM for
+17-slot pool (ACC + r0..r15).  Trivial-case 6-byte ROM for
 `const v; ret v` preserved from v0.2.0.
 
 ### Cumulative opcode map
 
-| Nibble | Mnemonic | Word |
-|--------|----------|------|
-| `0x0` | `HLT`   | `[0x00, 0x00, 0x00]` |
-| `0x1` | `LDA n` | `[0x01, hi, lo]` |
-| `0x2` | `STA r` | `[0x02, 0x00, r]` (XCH semantics on this skeleton) |
-| `0x3` | `LD r`  | `[0x03, 0x00, r]` |
+| Nibble | Mnemonic | Word | Effect |
+|--------|----------|------|--------|
+| `0x0` | `HLT`   | `[0x00, 0x00, 0x00]` | halt |
+| `0x1` | `LDA n` | `[0x01, hi, lo]` | ACC ← n |
+| `0x2` | `STA r` | `[0x02, 0x00, r]` | ACC ↔ r (XCH semantics) |
+| `0x3` | `LD r`  | `[0x03, 0x00, r]` | ACC ← r |
+| `0x4` | `ADD r` | `[0x04, 0x00, r]` | ACC ← ACC + r |
+| `0x5` | `SUB r` | `[0x05, 0x00, r]` | ACC ← ACC - r |
 
-Arithmetic, branches, and call/return follow in A5+++.
+Branches and call/return follow in A5++++.
 
 ## Quick start
 

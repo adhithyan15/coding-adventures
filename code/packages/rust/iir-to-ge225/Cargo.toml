@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-ge225"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "IIR → GE-225 machine code backend.  v0.3.0 (A5++): adds an ACC-first GP register allocator over ACC + r0..r15 (17-slot pool, identical capacity to the iir-to-intel4004 v0.3.0 pool), the `STA r` opcode (0x2, XCH semantics on this skeleton) and `LD r` opcode (0x3), and `mov dest, src` lowering.  Eviction pattern: `STA r` exchanges ACC with a fresh GP register before `LDA n` would clobber it.  Trivial-case 6-byte ROM for `const v; ret v` preserved from v0.2.0.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
+description = "IIR → GE-225 machine code backend.  v0.4.0 (A5+++): adds accumulator-anchored arithmetic — `add dest, lhs, rhs` and `sub dest, lhs, rhs` IIR ops lower to `ADD r` (opcode 0x4) and `SUB r` (opcode 0x5) emitted after an `LD r_lhs` that stages lhs into ACC.  Binary-op lowering is 2 instruction words (LD + ADD/SUB) preceded by up to 3 STA evictions to ensure both operands sit in real GP registers.  Builds on v0.3.0's 17-slot ACC + r0..r15 allocator.  Mirrors iir-to-intel4004 v0.4.0 (A4++++).  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
 
 [lib]
 name = "iir_to_ge225"

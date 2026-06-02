@@ -1,6 +1,6 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
-**Status:** v0.3.0 — ACC-first GP allocator + `mov` (A5++)
+**Status:** v0.4.0 — accumulator arithmetic ADD/SUB (A5+++)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
 
@@ -88,9 +88,9 @@ IIRModule
 |---------|-------|--------|
 | v0.1.0 (A5) | crate skeleton: any module → single `HLT` (`0x00000`, packed `[0x00, 0x00, 0x00]`) | **merged** |
 | v0.2.0 (A5+) | `const dest, Int(n)` → `LDA n` + `ret`/`ret_void` → HLT.  Single-ACC liveness model. | **merged** |
-| **v0.3.0 (A5++ — this PR)** | ACC-first GP register allocator over ACC + r0..r15 (17-slot pool) + `STA r` (0x2, XCH semantics) + `LD r` (0x3) + `mov dest, src` lowering | this PR |
-| v0.4.0 (A5+++) | Accumulator-based arithmetic (`ADD`, `SUB`) + branch family (`BR`, `BMI`, `BNZ`) | future |
-| v0.5.0 (A5++++) | `lang-aot --emit=ge225` wiring + Dartmouth BASIC end-to-end | future |
+| v0.3.0 (A5++) | ACC-first GP register allocator over ACC + r0..r15 (17-slot pool) + `STA r` (0x2, XCH semantics) + `LD r` (0x3) + `mov dest, src` lowering | **merged** |
+| **v0.4.0 (A5+++ — this PR)** | Accumulator-based arithmetic: `add` and `sub` IIR ops → `ADD r` (0x4) and `SUB r` (0x5) opcodes preceded by `LD r_lhs` staging | this PR |
+| v0.5.0 (A5++++) | Branch family (`BR`, `BMI`, `BNZ`) + `lang-aot --emit=ge225` wiring + Dartmouth BASIC end-to-end | future |
 | v0.4.0 (A5+++) | `lang-aot --emit=ge225` wiring + BASIC end-to-end | future |
 
 ## Public surface (v0.1.0)
@@ -118,6 +118,8 @@ pub const HALT_WORD: [u8; 3] = [0x00, 0x00, 0x00];
 pub const LDA_OPCODE_NIBBLE: u8 = 0x1;  // v0.2.0
 pub const STA_OPCODE_NIBBLE: u8 = 0x2;  // v0.3.0 — XCH semantics
 pub const LD_OPCODE_NIBBLE:  u8 = 0x3;  // v0.3.0 — pure copy
+pub const ADD_OPCODE_NIBBLE: u8 = 0x4;  // v0.4.0 — ACC ← ACC + r
+pub const SUB_OPCODE_NIBBLE: u8 = 0x5;  // v0.4.0 — ACC ← ACC - r
 ```
 
 ## Word format
@@ -128,18 +130,19 @@ byte 1: IIII IIII   (high 8 bits of the 16-bit immediate)
 byte 2: IIII IIII   (low  8 bits of the 16-bit immediate)
 ```
 
-Opcodes assigned through v0.3.0: `0x0` (HLT), `0x1` (LDA),
-`0x2` (STA — XCH semantics), `0x3` (LD).  Future slices take
-`0x4..0xF`.
+Opcodes assigned through v0.4.0: `0x0` (HLT), `0x1` (LDA),
+`0x2` (STA — XCH semantics), `0x3` (LD), `0x4` (ADD), `0x5` (SUB).
+Future slices take `0x6..0xF`.
 
-## Non-goals (v0.3.0)
+## Non-goals (v0.4.0)
 
-* No arithmetic (`ADD`, `SUB`) — A5+++.
-* No conditional branches — A5+++.
-* No call/return discipline — A5+++.
+* No conditional branches (`BR`, `BMI`, `BNZ`) — A5++++.
+* No call/return discipline (`JSR`) — A5++++.
 * No memory spilling beyond the 17-slot ACC + r0..r15 pool — future.
 * No `lang-aot --emit=ge225` wiring — A5++++.
 * No external assembler / linker integration.
+* No peephole optimisation: `add c, c, x` always emits the
+  `LD r_c` even when `c` is already in ACC.
 
 ## Tests (v0.2.0 — 21 unit + 1 doctest)
 
