@@ -3,24 +3,24 @@ use spice_engine::{
     estimate_period, format_adaptive_transient_table, format_corner_adaptive_transient_table,
     format_corner_distortion_table, format_corner_fourier_table, format_corner_pole_zero_table,
     format_corner_pss_table, format_corner_transient_table, format_dc_table,
-    format_distortion_table, format_fourier_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, fourier_corners, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, sample_transient_probe_as_digital_events,
-    transient, transient_adaptive, transient_adaptive_corners, transient_corners,
-    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
-    Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
-    CurrentSource, DigitalEvent, DigitalLogicLevels, DigitalState, DigitalThresholds,
-    DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic,
-    FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry,
-    PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult,
-    PssNewtonIterationResult, PssNewtonSolveResult, PssNewtonUpdateResult,
-    PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, VoltageSource,
-    Waveform,
+    format_digital_event_table, format_distortion_table, format_fourier_table,
+    format_pole_zero_table, format_pss_table, format_transient_table, fourier, fourier_corners,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, sample_transient_probe_as_digital_events, transient, transient_adaptive,
+    transient_adaptive_corners, transient_corners, transient_with_method, AdaptiveTransientOptions,
+    AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint,
+    CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource, DigitalEvent,
+    DigitalLogicLevels, DigitalState, DigitalThresholds, DistortionHarmonic, DistortionPoint,
+    DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult,
+    Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2086,4 +2086,50 @@ fn transient_probe_samples_back_to_digital_events() {
     assert_close(sampled[1].time_seconds, 0.75e-9);
     assert_eq!(sampled[2].state, DigitalState::Low);
     assert_close(sampled[2].time_seconds, 1.5e-9);
+}
+
+#[test]
+fn digital_event_text_output_table_is_stable() {
+    let events = [
+        DigitalEvent::new(0.25e-9, DigitalState::Low),
+        DigitalEvent::new(0.75e-9, DigitalState::High),
+        DigitalEvent::new(1.5e-9, DigitalState::Low),
+    ];
+
+    assert_eq!(
+        format_digital_event_table(&events).unwrap(),
+        "Index\tTime\tState\n0\t2.500000e-10\tlow\n1\t7.500000e-10\thigh\n2\t1.500000e-09\tlow\n"
+    );
+}
+
+#[test]
+fn sampled_digital_event_text_output_table_is_stable() {
+    let events = [
+        DigitalEvent::new(0.0, DigitalState::Low),
+        DigitalEvent::new(0.5e-9, DigitalState::High),
+        DigitalEvent::new(1.25e-9, DigitalState::Low),
+    ];
+    let source = spice_engine::digital_events_to_voltage_source(
+        "Vdin",
+        "din",
+        "0",
+        &events,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(source));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "din", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+    let sampled =
+        sample_transient_probe_as_digital_events(&points, "V(din)", DigitalThresholds::cmos_1v8())
+            .unwrap();
+
+    assert_eq!(
+        format_digital_event_table(&sampled).unwrap(),
+        "Index\tTime\tState\n0\t2.500000e-10\tlow\n1\t7.500000e-10\thigh\n2\t1.500000e-09\tlow\n"
+    );
 }

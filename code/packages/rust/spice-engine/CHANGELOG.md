@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_digital_event_table` for stable tab-separated mixed-signal
+  digital event stream snapshots.
 - Add binary mixed-signal boundary helpers that convert digital event timelines
   into finite-edge PWL voltage sources and threshold transient probes back into
   digital events.
