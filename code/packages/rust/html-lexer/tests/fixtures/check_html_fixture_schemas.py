@@ -805,6 +805,48 @@ def check_browser_expected_lists(
                 require_optional_boolean(button_path, button, field, errors)
             require_string(button_path, button, "method", errors)
             require_string(button_path, button, "text", errors)
+        require_optional_object_list(form_path, form, "text_entries", errors)
+        for entry_index, entry in enumerate(object_list_items(form, "text_entries")):
+            entry_path = f"{form_path}.text_entries[{entry_index}]"
+            require_optional_nullable_string(entry_path, entry, "id", errors)
+            require_string(entry_path, entry, "control_type", errors)
+            for field in (
+                "name",
+                "form_owner",
+                "accessible_name",
+                "accessible_description",
+                "placeholder",
+                "value",
+                "autocomplete",
+                "autocapitalize",
+                "enterkeyhint",
+                "dirname",
+                "spellcheck",
+                "autocorrect",
+                "inputmode",
+                "pattern",
+                "min",
+                "max",
+                "step",
+                "minlength",
+                "maxlength",
+                "size",
+                "rows",
+                "cols",
+                "wrap",
+                "list",
+                "validation_barred_reason",
+            ):
+                require_optional_nullable_string(entry_path, entry, field, errors)
+            require_optional_string_list(entry_path, entry, "labels", errors)
+            require_optional_string_list(entry_path, entry, "autocomplete_tokens", errors)
+            require_optional_string_list(entry_path, entry, "datalist_options", errors)
+            for field in ("disabled", "required", "readonly", "will_validate"):
+                require_optional_boolean(entry_path, entry, field, errors)
+            require_optional_string_list(
+                entry_path, entry, "validation_attributes", errors
+            )
+            require_string(entry_path, entry, "text", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):

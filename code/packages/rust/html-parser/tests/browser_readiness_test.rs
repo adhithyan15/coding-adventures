@@ -3,11 +3,12 @@ use coding_adventures_html_parser::{
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormButton, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
     BrowserFormLabel, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormValidationControl, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
-    BrowserMedia, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -731,6 +732,8 @@ struct ExpectedForm {
     validation_controls: Vec<ExpectedFormValidationControl>,
     #[serde(default)]
     buttons: Vec<ExpectedFormButton>,
+    #[serde(default)]
+    text_entries: Vec<ExpectedFormTextEntry>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -859,6 +862,78 @@ struct ExpectedFormValidationControl {
     will_validate: bool,
     #[serde(default)]
     required: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormTextEntry {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    placeholder: Option<String>,
+    value: Option<String>,
+    text: String,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    autocapitalize: Option<String>,
+    #[serde(default)]
+    enterkeyhint: Option<String>,
+    #[serde(default)]
+    dirname: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    autocorrect: Option<String>,
+    #[serde(default)]
+    inputmode: Option<String>,
+    #[serde(default)]
+    pattern: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    step: Option<String>,
+    #[serde(default)]
+    minlength: Option<String>,
+    #[serde(default)]
+    maxlength: Option<String>,
+    #[serde(default)]
+    size: Option<String>,
+    #[serde(default)]
+    rows: Option<String>,
+    #[serde(default)]
+    cols: Option<String>,
+    #[serde(default)]
+    wrap: Option<String>,
+    #[serde(default)]
+    list: Option<String>,
+    #[serde(default)]
+    datalist_options: Vec<String>,
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    will_validate: bool,
     #[serde(default)]
     validation_attributes: Vec<String>,
     #[serde(default)]
@@ -1531,6 +1606,86 @@ fn browser_text_control_descriptor_metadata_tracks_editing_and_layout_hints() {
         actual.forms, expected.forms,
         "text controls should preserve spellcheck, autocorrect, rows, cols, and wrapping hints",
     );
+}
+
+#[test]
+fn browser_form_text_entry_descriptor_metadata_tracks_textual_controls_and_editing_hints() {
+    let document = parse_browser_document(
+        "<form id=profile>\
+         <label for=email>Email</label>\
+         <input id=email type=email name=email placeholder=Email required \
+             autocomplete=\"section-contact email\" inputmode=email minlength=3 maxlength=80 size=30>\
+         <input id=search type=search name=q value=rust autocapitalize=words \
+             enterkeyhint=search dirname=q.dir spellcheck=false autocorrect=off list=suggestions>\
+         <datalist id=suggestions><option value=Rust><option value=HTML label=Markup></datalist>\
+         <textarea id=bio name=bio rows=4 cols=40 wrap=hard readonly maxlength=200>About me</textarea>\
+         <input id=age type=number name=age value=42 min=18 max=120 step=1>\
+         <input id=check type=checkbox name=check checked>\
+         </form>\
+         <textarea id=external form=profile name=outside placeholder=Outside>External note</textarea>",
+    )
+    .expect("form text-entry descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("profile form should be summarized");
+    let ids: Vec<&str> = form
+        .text_entries
+        .iter()
+        .filter_map(|entry| entry.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["email", "search", "bio", "age", "external"]);
+
+    let email = &form.text_entries[0];
+    assert_eq!(email.control_type, "email");
+    assert_eq!(email.labels, vec!["Email"]);
+    assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+    assert_eq!(email.placeholder.as_deref(), Some("Email"));
+    assert_eq!(email.autocomplete_tokens, vec!["section-contact", "email"]);
+    assert_eq!(email.inputmode.as_deref(), Some("email"));
+    assert_eq!(email.minlength.as_deref(), Some("3"));
+    assert_eq!(email.maxlength.as_deref(), Some("80"));
+    assert_eq!(email.size.as_deref(), Some("30"));
+    assert!(email.required);
+    assert!(email.will_validate);
+    assert_eq!(
+        email.validation_attributes,
+        vec!["required", "minlength", "maxlength"]
+    );
+
+    let search = &form.text_entries[1];
+    assert_eq!(search.control_type, "search");
+    assert_eq!(search.value.as_deref(), Some("rust"));
+    assert_eq!(search.autocapitalize.as_deref(), Some("words"));
+    assert_eq!(search.enterkeyhint.as_deref(), Some("search"));
+    assert_eq!(search.dirname.as_deref(), Some("q.dir"));
+    assert_eq!(search.spellcheck.as_deref(), Some("false"));
+    assert_eq!(search.autocorrect.as_deref(), Some("off"));
+    assert_eq!(search.list.as_deref(), Some("suggestions"));
+    assert_eq!(search.datalist_options, vec!["Rust", "HTML"]);
+
+    let bio = &form.text_entries[2];
+    assert_eq!(bio.control_type, "textarea");
+    assert_eq!(bio.text, "About me");
+    assert_eq!(bio.rows.as_deref(), Some("4"));
+    assert_eq!(bio.cols.as_deref(), Some("40"));
+    assert_eq!(bio.wrap.as_deref(), Some("hard"));
+    assert!(bio.readonly);
+    assert!(!bio.will_validate);
+    assert_eq!(bio.validation_barred_reason.as_deref(), Some("readonly"));
+
+    let age = &form.text_entries[3];
+    assert_eq!(age.control_type, "number");
+    assert_eq!(age.min.as_deref(), Some("18"));
+    assert_eq!(age.max.as_deref(), Some("120"));
+    assert_eq!(age.step.as_deref(), Some("1"));
+
+    let external = &form.text_entries[4];
+    assert_eq!(external.form_owner.as_deref(), Some("profile"));
+    assert_eq!(external.name.as_deref(), Some("outside"));
+    assert_eq!(external.placeholder.as_deref(), Some("Outside"));
+    assert_eq!(external.text, "External note");
 }
 
 #[test]
@@ -2456,6 +2611,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormButton::into_browser_form_button)
                 .collect(),
+            text_entries: self
+                .text_entries
+                .into_iter()
+                .map(ExpectedFormTextEntry::into_browser_form_text_entry)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -2583,6 +2743,49 @@ impl ExpectedFormSelect {
                 .map(ExpectedSelectOption::into_browser_select_option)
                 .collect(),
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormTextEntry {
+    fn into_browser_form_text_entry(self) -> BrowserFormTextEntry {
+        BrowserFormTextEntry {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            placeholder: self.placeholder,
+            value: self.value,
+            text: self.text,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            autocapitalize: self.autocapitalize,
+            enterkeyhint: self.enterkeyhint,
+            dirname: self.dirname,
+            spellcheck: self.spellcheck,
+            autocorrect: self.autocorrect,
+            inputmode: self.inputmode,
+            pattern: self.pattern,
+            min: self.min,
+            max: self.max,
+            step: self.step,
+            minlength: self.minlength,
+            maxlength: self.maxlength,
+            size: self.size,
+            rows: self.rows,
+            cols: self.cols,
+            wrap: self.wrap,
+            list: self.list,
+            datalist_options: self.datalist_options,
+            disabled: self.disabled,
+            required: self.required,
+            readonly: self.readonly,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
         }
     }
 }
