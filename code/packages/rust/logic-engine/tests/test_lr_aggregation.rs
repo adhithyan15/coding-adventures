@@ -6,7 +6,7 @@
 use logic_core::{atom, compound, Term};
 use logic_engine::{
     search, ContributionClause, Fact, JointContributionClause, KnowledgeBase, LrAggregateWarning,
-    PriorClause, SearchMode, SearchResult,
+    PriorClause, Provenance, SearchMode, SearchResult, TrustTier,
 };
 
 fn approx_eq(a: f64, b: f64, tol: f64) -> bool {
@@ -274,6 +274,82 @@ fn term_equality_on_compounds_works_for_contribution_lookup() {
     } else {
         panic!("expected LRAggregateResult");
     }
+}
+
+#[test]
+fn provenance_is_recoverable_from_kb_after_aggregation() {
+    // Build a tiny rulebook with citations on every clause, run LR
+    // aggregation, and confirm that for every step in the proof we
+    // can recover the citation by joining the step's clause id back
+    // to the KB. This is the ADJ47-B contract: clauses carry
+    // provenance, and the audit reader recovers it without a
+    // side-table.
+    use logic_engine::DerivationOrigin;
+
+    let mut kb = KnowledgeBase::new();
+    let prior_id = kb
+        .add_prior(
+            PriorClause::from_probability(atom("acs"), 0.10)
+                .with_provenance(Provenance::cited(
+                    "Pope JH et al., NEJM 1995;342(16):1163-70",
+                )),
+        )
+        .unwrap();
+    let contrib_id = kb.add_contribution(
+        ContributionClause::from_lr(
+            atom("acs"),
+            compound("pmh", vec![atom("hypertension")]),
+            1.5,
+        )
+        .with_provenance(
+            Provenance::empirical("HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6")
+                .with_locator("Table 2"),
+        ),
+    );
+    kb.add_fact(Fact::certain(compound("pmh", vec![atom("hypertension")])));
+
+    let result = search(&atom("acs"), &kb, SearchMode::LRAggregate);
+    let dag = if let SearchResult::LRAggregateResult { dag, .. } = result {
+        dag
+    } else {
+        panic!("expected LRAggregateResult")
+    };
+    let proof = &dag.proofs[0];
+
+    // For each step, recover the provenance via the clause id.
+    for step in &proof.steps {
+        match &step.origin {
+            DerivationOrigin::FromPrior { clause_id, .. } => {
+                assert_eq!(*clause_id, prior_id);
+                let p = kb.prior_for(&atom("acs")).unwrap();
+                assert_eq!(p.provenance.trust_tier, TrustTier::Authoritative);
+                assert_eq!(p.provenance.source, "Pope JH et al., NEJM 1995;342(16):1163-70");
+            }
+            DerivationOrigin::FromContribution { clause_id, .. } => {
+                assert_eq!(*clause_id, contrib_id);
+                let contribs = kb.contributions_for(&atom("acs"));
+                let c = contribs.iter().find(|c| c.id == contrib_id).unwrap();
+                assert_eq!(c.provenance.trust_tier, TrustTier::Empirical);
+                assert!(c.provenance.source.contains("HEART"));
+                assert_eq!(c.provenance.locator.as_deref(), Some("Table 2"));
+            }
+            _ => {}
+        }
+    }
+}
+
+#[test]
+fn unattributed_provenance_is_the_default() {
+    // Clauses constructed without `.with_provenance(...)` should
+    // round-trip with Provenance::unattributed(). This is the
+    // legacy-compatible behaviour: pre-ADJ47-B code that doesn't
+    // know about provenance keeps working.
+    let mut kb = KnowledgeBase::new();
+    kb.add_prior(PriorClause::from_probability(atom("acs"), 0.10))
+        .unwrap();
+    let prior = kb.prior_for(&atom("acs")).unwrap();
+    assert_eq!(prior.provenance, Provenance::unattributed());
+    assert_eq!(prior.provenance.trust_tier, TrustTier::Unattributed);
 }
 
 #[test]
