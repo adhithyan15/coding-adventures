@@ -637,3 +637,151 @@ fn undefined_label_is_rejected() {
         other => panic!("expected UndefinedLabel, got: {other:?}"),
     }
 }
+
+// ===========================================================================
+// 16. A1++.5.5 — cross-function call (0-arg, void only in this slice)
+// ===========================================================================
+//
+// Two-function modules exercise the module-level call-site resolver:
+// pass 1 lowers each function and records call sites; pass 2 patches
+// the placeholder `jal ra, 0` words with PC-relative offsets to the
+// callee's start byte.
+//
+// Leaf functions emit no prologue/epilogue (preserves the existing
+// single-word `ret` shape).  Functions that contain at least one call
+// emit a 16-byte frame around the body: `addi sp, sp, -16; sw ra,
+// 12(sp); … body …; lw ra, 12(sp); addi sp, sp, 16; ret`.
+
+#[test]
+fn cross_function_void_call_resolves_jal_offset() {
+    use riscv_simulator::encoding::{encode_addi, encode_lw, encode_jal, encode_sw};
+    // callee() void { ret_void }                          ; leaf, single ret word
+    // caller() void { call callee(); ret_void }           ; has prologue/epilogue
+    let callee = IIRFunction::new("callee", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let caller = IIRFunction::new("caller", vec![], "void", vec![
+        IIRInstr::new("call", None, vec![Operand::Var("callee".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![callee, caller],
+        entry_point: Some("caller".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let words = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
+        .expect("lowering");
+
+    // Layout (byte offsets):
+    //   callee:
+    //     [0] jalr x0, x1, 0                  ; byte 0
+    //   caller:
+    //     [1] addi sp, sp, -16                ; byte 4  ← prologue
+    //     [2] sw   ra, 12(sp)                 ; byte 8
+    //     [3] jal  ra, +offset (to callee=0)  ; byte 12  ← call site
+    //     [4] lw   ra, 12(sp)                 ; byte 16  ← epilogue
+    //     [5] addi sp, sp, 16                 ; byte 20
+    //     [6] jalr x0, x1, 0                  ; byte 24  ← ret
+    //
+    // call site byte = 12, callee start byte = 0, offset = -12.
+    const SP: u32 = 2;
+    const RA: u32 = 1;
+    assert_eq!(words[0], CANONICAL_RET, "callee should be a single ret word");
+    assert_eq!(words[1], encode_addi(SP, SP, -16), "caller prologue: addi sp, sp, -16");
+    assert_eq!(words[2], encode_sw(RA, SP, 12), "caller prologue: sw ra, 12(sp)");
+    assert_eq!(words[3], encode_jal(RA, -12),
+        "call site: jal ra, -12 (back to callee at byte 0); got 0x{:08x}", words[3]);
+    assert_eq!(words[4], encode_lw(RA, SP, 12), "caller epilogue: lw ra, 12(sp)");
+    assert_eq!(words[5], encode_addi(SP, SP, 16), "caller epilogue: addi sp, sp, 16");
+    assert_eq!(words[6], CANONICAL_RET, "caller ret");
+}
+
+#[test]
+fn leaf_function_still_omits_prologue() {
+    // Sanity: a function with no `call` continues to emit just the body.
+    let f = IIRFunction::new("leaf", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower(&module_with(f));
+    assert_eq!(words, vec![CANONICAL_RET],
+        "leaf function should be one-word; got {words:#x?}");
+}
+
+#[test]
+fn call_with_args_is_rejected_as_unsupported_shape() {
+    // 1 arg → UnsupportedCallShape (first slice only handles 0 args).
+    let callee = IIRFunction::new(
+        "g",
+        vec![("x".into(), "i32".into())],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let caller = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("call", None,
+            vec![Operand::Var("g".into()), Operand::Var("v".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![callee, caller],
+        entry_point: None,
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let err = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
+        .expect_err("1-arg call should be UnsupportedCallShape");
+    match err {
+        IIRRiscvError::UnsupportedCallShape { detail, .. } => {
+            assert!(detail.contains("0-arg") && detail.contains("got 1"),
+                "expected message naming 0-arg restriction; got: {detail}");
+        }
+        other => panic!("expected UnsupportedCallShape, got: {other:?}"),
+    }
+}
+
+#[test]
+fn call_with_non_void_return_is_rejected_as_unsupported_shape() {
+    let callee = IIRFunction::new("g", vec![], "i32",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+    let caller = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("call", Some("r".into()),
+            vec![Operand::Var("g".into())], "i32"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![callee, caller],
+        entry_point: None,
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let err = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
+        .expect_err("non-void return call should be UnsupportedCallShape");
+    match err {
+        IIRRiscvError::UnsupportedCallShape { detail, .. } => {
+            assert!(detail.contains("void-return"),
+                "expected message naming void-return restriction; got: {detail}");
+        }
+        other => panic!("expected UnsupportedCallShape, got: {other:?}"),
+    }
+}
+
+#[test]
+fn undefined_callee_is_rejected_at_module_level() {
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("call", None, vec![Operand::Var("ghost".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_riscv(&module_with(f), &IIRRiscvConfig::default())
+        .expect_err("undefined callee should fail");
+    match err {
+        IIRRiscvError::UndefinedCallee { callee, .. } => assert_eq!(callee, "ghost"),
+        other => panic!("expected UndefinedCallee, got: {other:?}"),
+    }
+}
