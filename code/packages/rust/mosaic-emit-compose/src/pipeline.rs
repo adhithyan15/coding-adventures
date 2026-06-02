@@ -73,15 +73,11 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Spacer").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.fillMaxWidth").unwrap();
-    writeln!(out, "import androidx.compose.foundation.layout.size").unwrap();
-    writeln!(out, "import androidx.compose.foundation.background").unwrap();
-    writeln!(out, "import androidx.compose.foundation.clickable").unwrap();
     writeln!(out, "import androidx.compose.foundation.text.BasicTextField").unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
-    writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out).unwrap();
 
     out.push_str(&emit_event_sealed_class(&name, &component.emits)?);
@@ -196,143 +192,8 @@ fn emit_compose_tree(
         )),
         "HostInput" => emit_host_input(node, depth, component_name, emits),
         "HostButton" => emit_host_button(node, depth, component_name, emits),
-        // UI26 §6.2 — Grid userland primitive.  See [`emit_grid`]
-        // for the slot/emit mapping; produces a Column-of-Rows
-        // layout via Jetpack Compose's `itemsIndexed` + nested
-        // `forEach`.
-        "Grid" => emit_grid(node, depth, component_name, emits),
         other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     }
-}
-
-/// Lower the `Grid` userland primitive (UI26 §6.2 v2 shape) to
-/// Jetpack Compose / Compose Multiplatform.
-///
-/// ## Slot / emit mapping
-///
-/// | Mosaic prop      | Compose usage                                       |
-/// |------------------|-----------------------------------------------------|
-/// | `headers`        | Required.  `List<String>`.  Header row of cells.    |
-/// | `rows`           | Required.  `List<List<String>>`.  Body rows.        |
-/// | `column-widths`  | Accepted but not yet plumbed (v0.2.0).              |
-/// | `selected-row`   | Optional.  Indexes the highlighted cell.            |
-/// | `selected-col`   | Optional.                                           |
-/// | `onNavigate`     | Optional emit.  Each cell's `Modifier.clickable`    |
-/// |                  | dispatches it.  Arity-aware: parameterless ->       |
-/// |                  | `dispatch(<C>Event<Case>)`; ≥1-param ->             |
-/// |                  | `dispatch(<C>Event<Case>(row, col))`.               |
-///
-/// ## Shape
-///
-/// ```kotlin
-/// Column {
-///     Row {                                          // header row
-///         headers.forEach { h ->
-///             Box(modifier = Modifier.size(96.dp, 24.dp).background(...)) {
-///                 Text(text = h)
-///             }
-///         }
-///     }
-///     rows.forEachIndexed { r, row ->                // body rows
-///         Row {
-///             row.forEachIndexed { c, v ->
-///                 Box(modifier = Modifier
-///                     .size(96.dp, 22.dp)
-///                     .background(if (r == selectedRow && c == selectedCol) ... else ...)
-///                     .clickable { dispatch(<C>Event<Case>(row = r, col = c)) }) {
-///                     Text(text = v)
-///                 }
-///             }
-///         }
-///     }
-/// }
-/// ```
-fn emit_grid(
-    node: &LayoutNode,
-    depth: usize,
-    component_name: &str,
-    emits: &[EmitDecl],
-) -> Result<String, PipelineEmitError> {
-    let pad = "    ".repeat(depth);
-    let p1 = "    ".repeat(depth + 1);
-    let p2 = "    ".repeat(depth + 2);
-    let p3 = "    ".repeat(depth + 3);
-    let p4 = "    ".repeat(depth + 4);
-
-    let headers_slot = find_slot_ref_prop(node, "headers").ok_or_else(|| {
-        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'headers'".to_string())
-    })?;
-    let rows_slot = find_slot_ref_prop(node, "rows").ok_or_else(|| {
-        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'rows'".to_string())
-    })?;
-    let headers_var = to_camel_case_first_lower(headers_slot);
-    let rows_var = to_camel_case_first_lower(rows_slot);
-    validate_safe_identifier(&headers_var).map_err(PipelineEmitError::UnsafeSlotName)?;
-    validate_safe_identifier(&rows_var).map_err(PipelineEmitError::UnsafeSlotName)?;
-
-    let selected_row_var = find_slot_ref_prop(node, "selected-row").map(to_camel_case_first_lower);
-    let selected_col_var = find_slot_ref_prop(node, "selected-col").map(to_camel_case_first_lower);
-    if let Some(v) = selected_row_var.as_deref() {
-        validate_safe_identifier(v).map_err(PipelineEmitError::UnsafeSlotName)?;
-    }
-    if let Some(v) = selected_col_var.as_deref() {
-        validate_safe_identifier(v).map_err(PipelineEmitError::UnsafeSlotName)?;
-    }
-    let selected_expr = match (&selected_row_var, &selected_col_var) {
-        (Some(r), Some(c)) => format!("r == {r} && c == {c}"),
-        _ => "false".to_string(),
-    };
-
-    let on_navigate_call: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onNavigate") {
-        let case = pascalize(&strip_on_prefix(emit_name));
-        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = emits.iter().find(|e| e.name == *emit_name)
-            .map(|e| e.params.len()).unwrap_or(0);
-        Some(if arity == 0 {
-            format!("dispatch({component_name}Event.{case})")
-        } else {
-            format!("dispatch({component_name}Event.{case}(row = r, col = c))")
-        })
-    } else {
-        None
-    };
-
-    let mut out = String::new();
-    writeln!(out, "{pad}Column {{").unwrap();
-
-    // Header row.
-    writeln!(out, "{p1}Row {{").unwrap();
-    writeln!(out, "{p2}{headers_var}.forEach {{ h ->").unwrap();
-    writeln!(out, "{p3}Box(modifier = Modifier.size(96.dp, 24.dp)) {{").unwrap();
-    writeln!(out, "{p4}Text(text = h)").unwrap();
-    writeln!(out, "{p3}}}").unwrap();
-    writeln!(out, "{p2}}}").unwrap();
-    writeln!(out, "{p1}}}").unwrap();
-
-    // Body rows.
-    writeln!(out, "{p1}{rows_var}.forEachIndexed {{ r, row ->").unwrap();
-    writeln!(out, "{p2}Row {{").unwrap();
-    writeln!(out, "{p3}row.forEachIndexed {{ c, v ->").unwrap();
-    let p5 = "    ".repeat(depth + 5);
-    let cell_modifier = if on_navigate_call.is_some() {
-        format!(
-            "Modifier\n{p5}    .size(96.dp, 22.dp)\n{p5}    .background(if ({selected_expr}) androidx.compose.ui.graphics.Color(0xFF264F78) else androidx.compose.ui.graphics.Color(0xFF1E1E1E))\n{p5}    .clickable {{ {} }}",
-            on_navigate_call.unwrap()
-        )
-    } else {
-        format!(
-            "Modifier\n{p5}    .size(96.dp, 22.dp)\n{p5}    .background(if ({selected_expr}) androidx.compose.ui.graphics.Color(0xFF264F78) else androidx.compose.ui.graphics.Color(0xFF1E1E1E))"
-        )
-    };
-    writeln!(out, "{p4}Box(modifier = {cell_modifier}) {{").unwrap();
-    writeln!(out, "{p5}Text(text = v)").unwrap();
-    writeln!(out, "{p4}}}").unwrap();
-    writeln!(out, "{p3}}}").unwrap();
-    writeln!(out, "{p2}}}").unwrap();
-    writeln!(out, "{p1}}}").unwrap();
-
-    writeln!(out, "{pad}}}").unwrap();
-    Ok(out)
 }
 
 fn emit_container(
@@ -959,80 +820,5 @@ mod tests {
         let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
         let msg = format!("{err}");
         assert!(msg.contains("FloobertyFlobble"));
-    }
-
-    // -------- Grid primitive --------
-
-    #[test]
-    fn grid_with_headers_and_rows_emits_column_of_rows() {
-        let m = component(
-            "VisiCalc",
-            vec![
-                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
-                slot(
-                    "viewport-rows",
-                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
-                    true,
-                ),
-            ],
-            vec![],
-        );
-        let l = layout(
-            "VisiCalc",
-            node(
-                "Grid",
-                vec![
-                    LayoutProp { name: "headers".into(), value: LayoutPropValue::SlotRef("column-headers".into()) },
-                    LayoutProp { name: "rows".into(), value: LayoutPropValue::SlotRef("viewport-rows".into()) },
-                ],
-                vec![],
-            ),
-        );
-        let out = from_pipeline(&m, &l, &empty_style("VisiCalc")).unwrap().output;
-        assert!(out.contains("Column {"), "missing Column in:\n{out}");
-        assert!(out.contains("columnHeaders.forEach"), "missing header forEach in:\n{out}");
-        assert!(out.contains("viewportRows.forEachIndexed"), "missing row forEachIndexed in:\n{out}");
-        assert!(out.contains("Modifier.size(96.dp, 24.dp)"), "missing header cell size in:\n{out}");
-        assert!(out.contains("Modifier"), "missing cell modifier in:\n{out}");
-    }
-
-    #[test]
-    fn grid_with_on_navigate_emit_dispatches_per_cell_clickable() {
-        let m = component(
-            "VisiCalc",
-            vec![
-                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
-                slot(
-                    "viewport-rows",
-                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
-                    true,
-                ),
-            ],
-            vec![emit_decl(
-                "onNavigate",
-                vec![
-                    param("row", EmitPayloadType::Number),
-                    param("col", EmitPayloadType::Number),
-                ],
-            )],
-        );
-        let l = layout(
-            "VisiCalc",
-            node(
-                "Grid",
-                vec![
-                    LayoutProp { name: "headers".into(), value: LayoutPropValue::SlotRef("column-headers".into()) },
-                    LayoutProp { name: "rows".into(), value: LayoutPropValue::SlotRef("viewport-rows".into()) },
-                    LayoutProp { name: "onNavigate".into(), value: LayoutPropValue::EmitRef("onNavigate".into()) },
-                ],
-                vec![],
-            ),
-        );
-        let out = from_pipeline(&m, &l, &empty_style("VisiCalc")).unwrap().output;
-        assert!(
-            out.contains("dispatch(VisiCalcEvent.Navigate(row = r, col = c))"),
-            "expected per-cell dispatch, got:\n{out}"
-        );
-        assert!(out.contains(".clickable {"), "missing clickable modifier in:\n{out}");
     }
 }
