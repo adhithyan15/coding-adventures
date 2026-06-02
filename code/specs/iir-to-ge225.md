@@ -1,6 +1,6 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
-**Status:** v0.5.0 — branch family BR/BNZ/BZ + label backpatching (A5+++++)
+**Status:** v0.6.0 — call/return JSR/RTS + BMI reserved (A5++++++)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
 
@@ -91,8 +91,9 @@ IIRModule
 | v0.3.0 (A5++) | ACC-first GP register allocator over ACC + r0..r15 (17-slot pool) + `STA r` (0x2, XCH semantics) + `LD r` (0x3) + `mov dest, src` lowering | **merged** |
 | v0.4.0 (A5+++) | Accumulator-based arithmetic: `add` and `sub` IIR ops → `ADD r` (0x4) and `SUB r` (0x5) opcodes preceded by `LD r_lhs` staging | **merged** |
 | (A5++++ in lang-aot v0.11.0) | `lang-aot --emit=ge225` wiring (aliases `ge-225`, `225`) | **merged** |
-| **v0.5.0 (A5+++++ — this PR)** | Branch family `BR` (0x6), `BNZ` (0x7), `BZ` (0x8) + per-function label backpatching for `label`, `jmp`, `jmp_if_true`, `jmp_if_false` IIR ops | this PR |
-| v0.6.0 (A5++++++) | `JSR` (call subroutine) + `RTS` (return) + `BMI` (branch if minus) — true call/return discipline | future |
+| v0.5.0 (A5+++++) | Branch family `BR` (0x6), `BNZ` (0x7), `BZ` (0x8) + per-function label backpatching for `label`, `jmp`, `jmp_if_true`, `jmp_if_false` IIR ops | **merged** |
+| **v0.6.0 (A5++++++ — this PR)** | Call/return discipline: `JSR` (0x9), `RTS` (0xA) + module-level `call` backpatching; `BMI` (0xB) reserved; non-entry-fn ret emits RTS instead of HLT | this PR |
+| v0.7.0 (A5+++++++) | BASIC end-to-end with arithmetic + branches + calls, plus future BMI driver | future |
 | v0.4.0 (A5+++) | `lang-aot --emit=ge225` wiring + BASIC end-to-end | future |
 
 ## Public surface (v0.1.0)
@@ -125,6 +126,10 @@ pub const SUB_OPCODE_NIBBLE: u8 = 0x5;  // v0.4.0 — ACC ← ACC - r
 pub const BR_OPCODE_NIBBLE:  u8 = 0x6;  // v0.5.0 — unconditional branch
 pub const BNZ_OPCODE_NIBBLE: u8 = 0x7;  // v0.5.0 — branch if ACC ≠ 0
 pub const BZ_OPCODE_NIBBLE:  u8 = 0x8;  // v0.5.0 — branch if ACC = 0
+pub const JSR_OPCODE_NIBBLE: u8 = 0x9;  // v0.6.0 — jump subroutine
+pub const RTS_OPCODE_NIBBLE: u8 = 0xA;  // v0.6.0 — return from subroutine
+pub const BMI_OPCODE_NIBBLE: u8 = 0xB;  // v0.6.0 — reserved (no IIR op yet)
+pub const RTS_WORD: [u8; 3] = [0x0A, 0x00, 0x00];  // v0.6.0
 ```
 
 ## Word format
@@ -135,15 +140,17 @@ byte 1: IIII IIII   (high 8 bits of the 16-bit immediate)
 byte 2: IIII IIII   (low  8 bits of the 16-bit immediate)
 ```
 
-Opcodes assigned through v0.5.0: `0x0` (HLT), `0x1` (LDA),
+Opcodes assigned through v0.6.0: `0x0` (HLT), `0x1` (LDA),
 `0x2` (STA — XCH semantics), `0x3` (LD), `0x4` (ADD), `0x5` (SUB),
-`0x6` (BR), `0x7` (BNZ), `0x8` (BZ).  Future slices take `0x9..0xF`
-for `BMI`, `JSR`, `RTS`, etc.
+`0x6` (BR), `0x7` (BNZ), `0x8` (BZ), `0x9` (JSR), `0xA` (RTS),
+`0xB` (BMI — reserved).  Future slices take `0xC..0xF`.
 
-## Non-goals (v0.5.0)
+## Non-goals (v0.6.0)
 
-* No `BMI` (branch if minus) — A5++++++.
-* No call/return discipline (`JSR` / `RTS`) — A5++++++.
+* No IIR op currently lowers to `BMI` — the opcode is reserved
+  for a future `jmp_if_neg` driver (planned for v0.7.0+).
+* No call arguments — calls are zero-arg, single-return-value
+  (via ACC) in v0.6.0.  Argument-passing arrives in a future slice.
 * No memory spilling beyond the 17-slot ACC + r0..r15 pool — future.
 * No external assembler / linker integration.
 * No peephole optimisation: `add c, c, x` always emits the

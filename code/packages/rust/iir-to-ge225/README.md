@@ -25,7 +25,7 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.5.0 (A5+++++ branch family + label backpatching)
+## Status — v0.6.0 (A5++++++ call/return + BMI reserved)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
@@ -33,16 +33,25 @@ pipeline:
 | `mov dest, src` | `(STA r_evict_src)?` + `LD r_src` + `STA r_dest` |
 | `add dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `ADD r_rhs` |
 | `sub dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `SUB r_rhs` |
-| `label "<name>"` | zero bytes — records position for backpatching |
+| `label "<name>"` | zero bytes — records position |
 | `jmp "<target>"` | `BR <target_addr>` |
 | `jmp_if_true cond, "<target>"` | `(LD r_cond)?` + `BNZ <target_addr>` |
 | `jmp_if_false cond, "<target>"` | `(LD r_cond)?` + `BZ <target_addr>` |
-| `ret <var>` | `(LD r_var)?` + `HLT` |
-| `ret_void` | `HLT` |
+| `call (dest =)? fn_name` | (evict ACC)? + `JSR <callee_addr>` + (claim ACC for dest)? |
+| `ret <var>` in entry fn | `(LD r_var)?` + `HLT` |
+| `ret <var>` in non-entry fn | `(LD r_var)?` + `RTS` |
+| `ret_void` in entry fn | `HLT` |
+| `ret_void` in non-entry fn | `RTS` |
 
 17-slot pool (ACC + r0..r15).  Trivial-case 6-byte ROM for
-`const v; ret v` preserved from v0.2.0.  Forward / backward
-branches resolve via per-function two-pass backpatching.
+`const v; ret v` in the entry function preserved from v0.2.0.
+Forward / backward branches resolve via per-function two-pass
+backpatching; forward / backward calls resolve via module-level
+backpatching after every function has been emitted.
+
+Entry function = the one named by `IIRModule::entry_point`.  Its
+returns emit `HLT` (program halts when main returns).  All other
+functions emit `RTS` (return from subroutine).
 
 ### Cumulative opcode map
 
@@ -57,8 +66,12 @@ branches resolve via per-function two-pass backpatching.
 | `0x6` | `BR a`  | `[0x06, hi, lo]` | unconditional branch |
 | `0x7` | `BNZ a` | `[0x07, hi, lo]` | branch if ACC ≠ 0 |
 | `0x8` | `BZ a`  | `[0x08, hi, lo]` | branch if ACC = 0 |
+| `0x9` | `JSR a` | `[0x09, hi, lo]` | push PC+3, branch to `a` |
+| `0xA` | `RTS`   | `[0x0A, 0x00, 0x00]` | pop, branch to popped address |
+| `0xB` | `BMI a` | `[0x0B, hi, lo]` | branch if ACC sign bit set (**reserved**) |
 
-Call/return (`JSR` / `RTS`) and `BMI` follow in A5++++++.
+`BMI` reserved for future signed-comparison lowering.  `0xC..0xF`
+reserved for future ISA extensions.
 
 ## Quick start
 
