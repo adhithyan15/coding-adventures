@@ -13339,6 +13339,62 @@ impl ToolAuditSupervisorDrainRunReport {
             .has_route_digest_queue_key_label_integrity_drift()
     }
 
+    /// Return whether the route-digest queue key is fully settled.
+    pub fn tick_budget_pressure_route_digest_queue_key_is_settled(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .is_settled()
+    }
+
+    /// Return whether the route-digest queue key is log-only context.
+    pub fn tick_budget_pressure_route_digest_queue_key_is_log_only(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .is_log_only()
+    }
+
+    /// Return whether the route-digest queue key requires scheduler action.
+    pub fn tick_budget_pressure_route_digest_queue_key_requires_action(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .requires_action()
+    }
+
+    /// Return the sortable route-digest queue-key priority rank.
+    pub fn tick_budget_pressure_route_digest_queue_key_priority_rank(&self) -> u8 {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .priority_rank()
+    }
+
+    /// Return whether the route-digest queue key can route automatically.
+    pub fn tick_budget_pressure_route_digest_queue_key_is_auto_routable(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .is_auto_routable()
+    }
+
+    /// Return whether the route-digest queue key has a concrete route.
+    pub fn tick_budget_pressure_route_digest_queue_key_has_route(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .has_route()
+    }
+
+    /// Return whether the route-digest queue key routes to budget observation.
+    pub fn tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .routes_to_budget_observation()
+    }
+
+    /// Return whether the route-digest queue key routes to continuation scheduling.
+    pub fn tick_budget_pressure_route_digest_queue_key_routes_to_continuation(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_key()
+            .routes_to_continuation()
+    }
+
     /// Return the pressure route-digest queue digest for the actual drain.
     pub fn tick_budget_pressure_route_digest_queue_digest(
         &self,
@@ -13400,6 +13456,64 @@ impl ToolAuditSupervisorDrainRunReport {
     pub fn has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift(&self) -> bool {
         self.tick_budget_pressure()
             .has_route_digest_queue_digest_label_integrity_drift()
+    }
+
+    /// Return whether the route-digest queue digest is fully settled.
+    pub fn tick_budget_pressure_route_digest_queue_digest_is_settled(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .is_settled()
+    }
+
+    /// Return whether the route-digest queue digest is log-only context.
+    pub fn tick_budget_pressure_route_digest_queue_digest_is_log_only(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .is_log_only()
+    }
+
+    /// Return whether the route-digest queue digest requires scheduler action.
+    pub fn tick_budget_pressure_route_digest_queue_digest_requires_action(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .requires_action()
+    }
+
+    /// Return the sortable route-digest queue-digest priority rank.
+    pub fn tick_budget_pressure_route_digest_queue_digest_priority_rank(&self) -> u8 {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .priority_rank()
+    }
+
+    /// Return whether the route-digest queue digest can route automatically.
+    pub fn tick_budget_pressure_route_digest_queue_digest_is_auto_routable(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .is_auto_routable()
+    }
+
+    /// Return whether the route-digest queue digest has a concrete route.
+    pub fn tick_budget_pressure_route_digest_queue_digest_has_route(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .has_route()
+    }
+
+    /// Return whether the route-digest queue digest routes to budget observation.
+    pub fn tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation(
+        &self,
+    ) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .routes_to_budget_observation()
+    }
+
+    /// Return whether the route-digest queue digest routes to continuation scheduling.
+    pub fn tick_budget_pressure_route_digest_queue_digest_routes_to_continuation(&self) -> bool {
+        self.tick_budget_pressure()
+            .route_digest_queue_digest()
+            .routes_to_continuation()
     }
 
     /// Return the total rows the preflight plan expected to replay.
@@ -13925,6 +14039,22 @@ impl ToolAuditSupervisorDrainRunReport {
                 .tick_budget_pressure_route_digest_queue_key_labels_match(),
             has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift: self
                 .has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift(),
+            tick_budget_pressure_route_digest_queue_key_is_settled: self
+                .tick_budget_pressure_route_digest_queue_key_is_settled(),
+            tick_budget_pressure_route_digest_queue_key_is_log_only: self
+                .tick_budget_pressure_route_digest_queue_key_is_log_only(),
+            tick_budget_pressure_route_digest_queue_key_requires_action: self
+                .tick_budget_pressure_route_digest_queue_key_requires_action(),
+            tick_budget_pressure_route_digest_queue_key_priority_rank: self
+                .tick_budget_pressure_route_digest_queue_key_priority_rank(),
+            tick_budget_pressure_route_digest_queue_key_is_auto_routable: self
+                .tick_budget_pressure_route_digest_queue_key_is_auto_routable(),
+            tick_budget_pressure_route_digest_queue_key_has_route: self
+                .tick_budget_pressure_route_digest_queue_key_has_route(),
+            tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation: self
+                .tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation(),
+            tick_budget_pressure_route_digest_queue_key_routes_to_continuation: self
+                .tick_budget_pressure_route_digest_queue_key_routes_to_continuation(),
             tick_budget_pressure_route_digest_queue_digest: self
                 .tick_budget_pressure_route_digest_queue_digest(),
             tick_budget_pressure_route_digest_queue_digest_label: self
@@ -13945,6 +14075,22 @@ impl ToolAuditSupervisorDrainRunReport {
                 .tick_budget_pressure_route_digest_queue_digest_labels_match(),
             has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift: self
                 .has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift(),
+            tick_budget_pressure_route_digest_queue_digest_is_settled: self
+                .tick_budget_pressure_route_digest_queue_digest_is_settled(),
+            tick_budget_pressure_route_digest_queue_digest_is_log_only: self
+                .tick_budget_pressure_route_digest_queue_digest_is_log_only(),
+            tick_budget_pressure_route_digest_queue_digest_requires_action: self
+                .tick_budget_pressure_route_digest_queue_digest_requires_action(),
+            tick_budget_pressure_route_digest_queue_digest_priority_rank: self
+                .tick_budget_pressure_route_digest_queue_digest_priority_rank(),
+            tick_budget_pressure_route_digest_queue_digest_is_auto_routable: self
+                .tick_budget_pressure_route_digest_queue_digest_is_auto_routable(),
+            tick_budget_pressure_route_digest_queue_digest_has_route: self
+                .tick_budget_pressure_route_digest_queue_digest_has_route(),
+            tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation: self
+                .tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation(),
+            tick_budget_pressure_route_digest_queue_digest_routes_to_continuation: self
+                .tick_budget_pressure_route_digest_queue_digest_routes_to_continuation(),
             planned_records: self.planned_records(),
             drained_records: self.drained_records(),
             planned_follow_up_records: self.planned_follow_up_records(),
@@ -17311,6 +17457,22 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub tick_budget_pressure_route_digest_queue_key_labels_match: bool,
     /// Whether any pressure route-digest queue-key label drifted.
     pub has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift: bool,
+    /// Whether the pressure route-digest queue key is fully settled.
+    pub tick_budget_pressure_route_digest_queue_key_is_settled: bool,
+    /// Whether the pressure route-digest queue key is log-only context.
+    pub tick_budget_pressure_route_digest_queue_key_is_log_only: bool,
+    /// Whether the pressure route-digest queue key requires scheduler action.
+    pub tick_budget_pressure_route_digest_queue_key_requires_action: bool,
+    /// Sortable pressure route-digest queue-key priority rank.
+    pub tick_budget_pressure_route_digest_queue_key_priority_rank: u8,
+    /// Whether the pressure route-digest queue key can route automatically.
+    pub tick_budget_pressure_route_digest_queue_key_is_auto_routable: bool,
+    /// Whether the pressure route-digest queue key has a concrete route.
+    pub tick_budget_pressure_route_digest_queue_key_has_route: bool,
+    /// Whether the pressure route-digest queue key routes to budget observation.
+    pub tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation: bool,
+    /// Whether the pressure route-digest queue key routes to continuation scheduling.
+    pub tick_budget_pressure_route_digest_queue_key_routes_to_continuation: bool,
     /// Tick-budget pressure route-digest queue digest.
     pub tick_budget_pressure_route_digest_queue_digest:
         ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest,
@@ -17332,6 +17494,22 @@ pub struct ToolAuditSupervisorDrainRunSummary {
     pub tick_budget_pressure_route_digest_queue_digest_labels_match: bool,
     /// Whether any pressure route-digest queue-digest label drifted.
     pub has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift: bool,
+    /// Whether the pressure route-digest queue digest is fully settled.
+    pub tick_budget_pressure_route_digest_queue_digest_is_settled: bool,
+    /// Whether the pressure route-digest queue digest is log-only context.
+    pub tick_budget_pressure_route_digest_queue_digest_is_log_only: bool,
+    /// Whether the pressure route-digest queue digest requires scheduler action.
+    pub tick_budget_pressure_route_digest_queue_digest_requires_action: bool,
+    /// Sortable pressure route-digest queue-digest priority rank.
+    pub tick_budget_pressure_route_digest_queue_digest_priority_rank: u8,
+    /// Whether the pressure route-digest queue digest can route automatically.
+    pub tick_budget_pressure_route_digest_queue_digest_is_auto_routable: bool,
+    /// Whether the pressure route-digest queue digest has a concrete route.
+    pub tick_budget_pressure_route_digest_queue_digest_has_route: bool,
+    /// Whether the pressure route-digest queue digest routes to budget observation.
+    pub tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation: bool,
+    /// Whether the pressure route-digest queue digest routes to continuation scheduling.
+    pub tick_budget_pressure_route_digest_queue_digest_routes_to_continuation: bool,
     /// Total rows the preflight plan expected to replay.
     pub planned_records: usize,
     /// Total rows actually replayed into the sink.
@@ -24962,6 +25140,46 @@ impl ToolAuditSupervisorDrainRunSummary {
         self.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift
     }
 
+    /// Return whether the pressure route-digest queue key is fully settled.
+    pub fn tick_budget_pressure_route_digest_queue_key_is_settled(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_is_settled
+    }
+
+    /// Return whether the pressure route-digest queue key is log-only context.
+    pub fn tick_budget_pressure_route_digest_queue_key_is_log_only(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_is_log_only
+    }
+
+    /// Return whether the pressure route-digest queue key requires scheduler action.
+    pub fn tick_budget_pressure_route_digest_queue_key_requires_action(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_requires_action
+    }
+
+    /// Return the sortable pressure route-digest queue-key priority rank.
+    pub fn tick_budget_pressure_route_digest_queue_key_priority_rank(&self) -> u8 {
+        self.tick_budget_pressure_route_digest_queue_key_priority_rank
+    }
+
+    /// Return whether the pressure route-digest queue key can route automatically.
+    pub fn tick_budget_pressure_route_digest_queue_key_is_auto_routable(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_is_auto_routable
+    }
+
+    /// Return whether the pressure route-digest queue key has a concrete route.
+    pub fn tick_budget_pressure_route_digest_queue_key_has_route(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_has_route
+    }
+
+    /// Return whether the pressure route-digest queue key routes to budget observation.
+    pub fn tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation
+    }
+
+    /// Return whether the pressure route-digest queue key routes to continuation scheduling.
+    pub fn tick_budget_pressure_route_digest_queue_key_routes_to_continuation(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_key_routes_to_continuation
+    }
+
     /// Return the pressure route-digest queue digest for the actual drain.
     pub fn tick_budget_pressure_route_digest_queue_digest(
         &self,
@@ -25014,6 +25232,48 @@ impl ToolAuditSupervisorDrainRunSummary {
     /// Return whether any pressure route-digest queue-digest label drifted.
     pub fn has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift(&self) -> bool {
         self.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift
+    }
+
+    /// Return whether the pressure route-digest queue digest is fully settled.
+    pub fn tick_budget_pressure_route_digest_queue_digest_is_settled(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_is_settled
+    }
+
+    /// Return whether the pressure route-digest queue digest is log-only context.
+    pub fn tick_budget_pressure_route_digest_queue_digest_is_log_only(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_is_log_only
+    }
+
+    /// Return whether the pressure route-digest queue digest requires scheduler action.
+    pub fn tick_budget_pressure_route_digest_queue_digest_requires_action(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_requires_action
+    }
+
+    /// Return the sortable pressure route-digest queue-digest priority rank.
+    pub fn tick_budget_pressure_route_digest_queue_digest_priority_rank(&self) -> u8 {
+        self.tick_budget_pressure_route_digest_queue_digest_priority_rank
+    }
+
+    /// Return whether the pressure route-digest queue digest can route automatically.
+    pub fn tick_budget_pressure_route_digest_queue_digest_is_auto_routable(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_is_auto_routable
+    }
+
+    /// Return whether the pressure route-digest queue digest has a concrete route.
+    pub fn tick_budget_pressure_route_digest_queue_digest_has_route(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_has_route
+    }
+
+    /// Return whether the pressure route-digest queue digest routes to budget observation.
+    pub fn tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation(
+        &self,
+    ) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation
+    }
+
+    /// Return whether the pressure route-digest queue digest routes to continuation scheduling.
+    pub fn tick_budget_pressure_route_digest_queue_digest_routes_to_continuation(&self) -> bool {
+        self.tick_budget_pressure_route_digest_queue_digest_routes_to_continuation
     }
 
     /// Return the total rows the preflight plan expected to replay.
@@ -50633,6 +50893,22 @@ mod tests {
         assert!(!exhausted.has_route_digest_queue_key_integrity_drift());
         assert!(exhausted.route_digest_queue_key_labels_match());
         assert!(!exhausted.has_route_digest_queue_key_label_integrity_drift());
+        assert!(unused.route_digest_queue_key().is_settled());
+        assert!(!unused.route_digest_queue_key().requires_action());
+        assert!(slack.route_digest_queue_key().is_log_only());
+        assert!(!slack.route_digest_queue_key().requires_action());
+        assert!(slack
+            .route_digest_queue_key()
+            .routes_to_budget_observation());
+        let exhausted_route_digest_queue_key = exhausted.route_digest_queue_key();
+        assert!(!exhausted_route_digest_queue_key.is_settled());
+        assert!(!exhausted_route_digest_queue_key.is_log_only());
+        assert!(exhausted_route_digest_queue_key.requires_action());
+        assert_eq!(exhausted_route_digest_queue_key.priority_rank(), 60);
+        assert!(exhausted_route_digest_queue_key.is_auto_routable());
+        assert!(exhausted_route_digest_queue_key.has_route());
+        assert!(!exhausted_route_digest_queue_key.routes_to_budget_observation());
+        assert!(exhausted_route_digest_queue_key.routes_to_continuation());
         assert_eq!(
             exhausted.route_digest_queue_digest(),
             ToolAuditSupervisorDrainTickBudgetPressureRouteDigestQueueDigest::from_route_digest(
@@ -50651,6 +50927,22 @@ mod tests {
         assert!(!exhausted.has_route_digest_queue_digest_integrity_drift());
         assert!(exhausted.route_digest_queue_digest_labels_match());
         assert!(!exhausted.has_route_digest_queue_digest_label_integrity_drift());
+        assert!(unused.route_digest_queue_digest().is_settled());
+        assert!(!unused.route_digest_queue_digest().requires_action());
+        assert!(slack.route_digest_queue_digest().is_log_only());
+        assert!(!slack.route_digest_queue_digest().requires_action());
+        assert!(slack
+            .route_digest_queue_digest()
+            .routes_to_budget_observation());
+        let exhausted_route_digest_queue_digest = exhausted.route_digest_queue_digest();
+        assert!(!exhausted_route_digest_queue_digest.is_settled());
+        assert!(!exhausted_route_digest_queue_digest.is_log_only());
+        assert!(exhausted_route_digest_queue_digest.requires_action());
+        assert_eq!(exhausted_route_digest_queue_digest.priority_rank(), 60);
+        assert!(exhausted_route_digest_queue_digest.is_auto_routable());
+        assert!(exhausted_route_digest_queue_digest.has_route());
+        assert!(!exhausted_route_digest_queue_digest.routes_to_budget_observation());
+        assert!(exhausted_route_digest_queue_digest.routes_to_continuation());
         assert_eq!(
             ToolAuditSupervisorDrainTickBudgetPressureRoute::from_label("continuation"),
             Some(ToolAuditSupervisorDrainTickBudgetPressureRoute::Continuation)
@@ -50875,6 +51167,17 @@ mod tests {
         assert!(!report.has_tick_budget_pressure_route_digest_queue_key_integrity_drift());
         assert!(report.tick_budget_pressure_route_digest_queue_key_labels_match());
         assert!(!report.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift());
+        assert!(!report.tick_budget_pressure_route_digest_queue_key_is_settled());
+        assert!(!report.tick_budget_pressure_route_digest_queue_key_is_log_only());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_requires_action());
+        assert_eq!(
+            report.tick_budget_pressure_route_digest_queue_key_priority_rank(),
+            60
+        );
+        assert!(report.tick_budget_pressure_route_digest_queue_key_is_auto_routable());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_has_route());
+        assert!(!report.tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation());
+        assert!(report.tick_budget_pressure_route_digest_queue_key_routes_to_continuation());
         assert_eq!(
             report.tick_budget_pressure_route_digest_queue_digest(),
             exhausted.route_digest_queue_digest()
@@ -50891,6 +51194,19 @@ mod tests {
         assert!(!report.has_tick_budget_pressure_route_digest_queue_digest_integrity_drift());
         assert!(report.tick_budget_pressure_route_digest_queue_digest_labels_match());
         assert!(!report.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift());
+        assert!(!report.tick_budget_pressure_route_digest_queue_digest_is_settled());
+        assert!(!report.tick_budget_pressure_route_digest_queue_digest_is_log_only());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_requires_action());
+        assert_eq!(
+            report.tick_budget_pressure_route_digest_queue_digest_priority_rank(),
+            60
+        );
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_is_auto_routable());
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_has_route());
+        assert!(
+            !report.tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation()
+        );
+        assert!(report.tick_budget_pressure_route_digest_queue_digest_routes_to_continuation());
         assert!(report.tick_budget_status_flags_match());
 
         let summary = report.summary();
@@ -51070,6 +51386,28 @@ mod tests {
         assert!(summary.tick_budget_pressure_route_digest_queue_key_labels_match());
         assert!(!summary.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift);
         assert!(!summary.has_tick_budget_pressure_route_digest_queue_key_label_integrity_drift());
+        assert!(!summary.tick_budget_pressure_route_digest_queue_key_is_settled);
+        assert!(!summary.tick_budget_pressure_route_digest_queue_key_is_settled());
+        assert!(!summary.tick_budget_pressure_route_digest_queue_key_is_log_only);
+        assert!(!summary.tick_budget_pressure_route_digest_queue_key_is_log_only());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_requires_action);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_requires_action());
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_key_priority_rank,
+            60
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_key_priority_rank(),
+            60
+        );
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_is_auto_routable);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_is_auto_routable());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_has_route);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_has_route());
+        assert!(!summary.tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation);
+        assert!(!summary.tick_budget_pressure_route_digest_queue_key_routes_to_budget_observation());
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_routes_to_continuation);
+        assert!(summary.tick_budget_pressure_route_digest_queue_key_routes_to_continuation());
         assert_eq!(
             summary.tick_budget_pressure_route_digest_queue_digest,
             exhausted.route_digest_queue_digest()
@@ -51100,6 +51438,32 @@ mod tests {
         assert!(summary.tick_budget_pressure_route_digest_queue_digest_labels_match());
         assert!(!summary.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift);
         assert!(!summary.has_tick_budget_pressure_route_digest_queue_digest_label_integrity_drift());
+        assert!(!summary.tick_budget_pressure_route_digest_queue_digest_is_settled);
+        assert!(!summary.tick_budget_pressure_route_digest_queue_digest_is_settled());
+        assert!(!summary.tick_budget_pressure_route_digest_queue_digest_is_log_only);
+        assert!(!summary.tick_budget_pressure_route_digest_queue_digest_is_log_only());
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_requires_action);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_requires_action());
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_digest_priority_rank,
+            60
+        );
+        assert_eq!(
+            summary.tick_budget_pressure_route_digest_queue_digest_priority_rank(),
+            60
+        );
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_is_auto_routable);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_is_auto_routable());
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_has_route);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_has_route());
+        assert!(
+            !summary.tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation
+        );
+        assert!(
+            !summary.tick_budget_pressure_route_digest_queue_digest_routes_to_budget_observation()
+        );
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_routes_to_continuation);
+        assert!(summary.tick_budget_pressure_route_digest_queue_digest_routes_to_continuation());
     }
 
     #[test]
