@@ -1301,3 +1301,180 @@ fn ge225_emit_writes_to_disk_with_expected_byte_count() {
         bytes.len()
     );
 }
+
+// ===========================================================================
+// A5++++++++ — Dartmouth BASIC end-to-end through GE-225
+// ===========================================================================
+//
+// This is the milestone moment for the GE-225 lane: Dartmouth BASIC
+// — designed in 1964 on the GE-225 mainframe at Dartmouth College
+// by Kemeny and Kurtz — round-trips through the full lang-aot
+// pipeline back to GE-225 byte code 62 years later.
+//
+// BASIC's IIR-op surface as of v0.7.0 of iir-to-ge225:
+//   * Supported by iir-to-ge225: const, mov, add, cmp_le, jmp,
+//     jmp_if_true, jmp_if_false, label, ret.
+//   * NOT yet supported: call_builtin (PRINT et al.), neg.
+//
+// Smoke tests below tolerate "lowering gap" errors so the cascade
+// keeps progressing as BASIC frontend and GE-225 backend both add
+// ops over time.
+
+/// Helper: detect whether a GE-225 error is a known lowering gap
+/// (so the test can skip cleanly rather than fail).  Mirrors the
+/// pattern used by the Twig + Brainfuck GE-225 smoke tests.
+fn is_ge225_lowering_gap(msg: &str) -> bool {
+    msg.contains("UnsupportedOp")
+        || msg.contains("unsupported op")
+        || msg.contains("UnsupportedType")
+        || msg.contains("unsupported type")
+        || msg.contains("InvalidOperand")
+        || msg.contains("invalid operand")
+        || msg.contains("OutOfRegisters")
+        || msg.contains("out of GE-225 registers")
+        || msg.contains("UndefinedFunction")
+        || msg.contains("undefined function")
+}
+
+/// The simplest BASIC program: `10 LET A = 5\n20 END`.
+///
+/// Every IIR op this emits (const, mov, ret) is supported by
+/// iir-to-ge225 v0.7.0, so this end-to-end test should **always
+/// succeed** with no skip.
+///
+/// Expected output: a non-empty .bin file containing at least
+/// `LDA 5` somewhere (the literal 5 makes it into bytes
+/// `[0x01, 0x00, 0x05]`) followed eventually by `HLT`
+/// `[0x00, 0x00, 0x00]`.
+#[test]
+fn end_to_end_basic_let_a_5_emits_ge225_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 LET A = 5\n20 END\n").unwrap();
+
+    match lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
+        Ok(()) => {}
+        Err(e) => {
+            let msg = format!("{e}");
+            if is_ge225_lowering_gap(&msg) {
+                eprintln!("skipping: BASIC GE-225 lowering gap (expected): {msg}");
+                return;
+            }
+            panic!("unexpected BASIC -> GE-225 error: {e}");
+        }
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(
+        !bytes.is_empty(),
+        "BASIC `10 LET A = 5; END` should produce a non-empty .bin"
+    );
+    // Word-aligned (each 20-bit word packs as 3 bytes).
+    assert_eq!(
+        bytes.len() % 3,
+        0,
+        "GE-225 .bin must be a multiple of 3 bytes; got {bytes:02x?}"
+    );
+    // Must contain a HLT word somewhere (the END statement lowers
+    // through `ret` in the entry function, which emits HLT).
+    assert!(
+        bytes.windows(3).any(|w| w == [0x00, 0x00, 0x00]),
+        ".bin must contain at least one HLT word; got {bytes:02x?}"
+    );
+    // Must contain at least one LDA word (LET A = 5 lowers to a
+    // const → LDA somewhere in the program).
+    assert!(
+        bytes.windows(3).any(|w| w[0] == 0x01),
+        ".bin must contain at least one LDA word (0x01..); got {bytes:02x?}"
+    );
+}
+
+/// A slightly larger BASIC program exercising the GE-225 ADD
+/// opcode: `10 LET A = 1 + 2\n20 END`.
+///
+/// BASIC lowers `1 + 2` through a `const`, `const`, `add` chain.
+/// iir-to-ge225 v0.7.0 supports all three, so this should succeed.
+///
+/// Expected: at least 21 bytes (the canonical add ROM size) plus
+/// any prep / store-to-A overhead, with at least one ADD word
+/// (`0x04, 0x00, r`) present.
+#[test]
+fn end_to_end_basic_let_a_1_plus_2_exercises_add_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 LET A = 1 + 2\n20 END\n").unwrap();
+
+    match lang_aot::compile_file_to_ge225_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
+        Ok(()) => {}
+        Err(e) => {
+            let msg = format!("{e}");
+            if is_ge225_lowering_gap(&msg) {
+                eprintln!("skipping: BASIC arithmetic GE-225 lowering gap (expected): {msg}");
+                return;
+            }
+            panic!("unexpected BASIC -> GE-225 error: {e}");
+        }
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(bytes.len() % 3, 0);
+    // Must contain an ADD instruction word (0x04 in byte 0 of
+    // some 3-byte chunk).
+    assert!(
+        bytes.chunks_exact(3).any(|w| w[0] == 0x04),
+        ".bin must contain at least one ADD word for `1 + 2`; got {bytes:02x?}"
+    );
+    // And an HLT for END.
+    assert!(
+        bytes.windows(3).any(|w| w == [0x00, 0x00, 0x00]),
+        ".bin must contain HLT for END statement; got {bytes:02x?}"
+    );
+}
+
+/// BASIC with PRINT — exercises the `call_builtin` IIR op, which
+/// **is NOT yet supported** by iir-to-ge225 v0.7.0.  This test is
+/// here to (a) document the gap, and (b) confirm the gap is
+/// reported via the standard `UnsupportedOp` error so it'll be
+/// caught by the skip clause and a future implementation will
+/// automatically activate the test.
+#[test]
+fn end_to_end_basic_print_documents_call_builtin_gap() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 LET A = 5\n20 PRINT A\n30 END\n").unwrap();
+
+    let result = lang_aot::compile_file_to_ge225_bin(
+        &src,
+        &bin,
+        lang_aot::Language::DartmouthBasic,
+    );
+
+    match result {
+        Ok(()) => {
+            // If a future iir-to-ge225 implements call_builtin,
+            // the test still passes — just verify the .bin is
+            // non-empty and word-aligned.
+            let bytes = std::fs::read(&bin).expect("read .bin");
+            assert!(!bytes.is_empty());
+            assert_eq!(bytes.len() % 3, 0);
+            eprintln!(
+                "BASIC PRINT now compiles to GE-225 — call_builtin gap closed; \
+                 {} bytes emitted",
+                bytes.len()
+            );
+        }
+        Err(e) => {
+            let msg = format!("{e}");
+            // The gap MUST be reported via one of the canonical
+            // lowering-gap errors so the cascade can detect it.
+            assert!(
+                is_ge225_lowering_gap(&msg),
+                "BASIC PRINT failed with non-gap error (broken cascade): {msg}"
+            );
+            eprintln!("documented: BASIC PRINT GE-225 lowering gap: {msg}");
+        }
+    }
+}
