@@ -1619,6 +1619,7 @@ pub struct BrowserForm {
     pub validation_controls: Vec<BrowserFormValidationControl>,
     pub buttons: Vec<BrowserFormButton>,
     pub text_entries: Vec<BrowserFormTextEntry>,
+    pub choice_controls: Vec<BrowserFormChoiceControl>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1772,6 +1773,29 @@ pub struct BrowserFormTextEntry {
     pub will_validate: bool,
     pub validation_attributes: Vec<String>,
     pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormChoiceControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub checked: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub group_required: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub group_name: Option<String>,
+    pub group_checked_ids: Vec<String>,
+    pub group_checked_values: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12839,6 +12863,7 @@ fn browser_form(
         novalidate,
     );
     let text_entries = browser_form_text_entries(&controls);
+    let choice_controls = browser_form_choice_controls(&controls, element.attribute("id"));
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12884,6 +12909,7 @@ fn browser_form(
         validation_controls,
         buttons,
         text_entries,
+        choice_controls,
         controls,
         submitters,
     }
@@ -13399,6 +13425,95 @@ fn is_browser_form_text_entry(control: &BrowserFormControl) -> bool {
         control.control_type.as_str(),
         "text" | "search" | "url" | "tel" | "email" | "password" | "number" | "textarea"
     )
+}
+
+fn browser_form_choice_controls(
+    controls: &[BrowserFormControl],
+    form_id: Option<&str>,
+) -> Vec<BrowserFormChoiceControl> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_choice_control(control))
+        .map(|control| BrowserFormChoiceControl {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            value: control.value.clone(),
+            checked: control.checked,
+            disabled: control.disabled,
+            required: control.required,
+            group_required: browser_choice_group_required(controls, control, form_id),
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+            group_name: control.name.clone(),
+            group_checked_ids: browser_choice_group_checked_ids(controls, control, form_id),
+            group_checked_values: browser_choice_group_checked_values(controls, control, form_id),
+        })
+        .collect()
+}
+
+fn is_browser_form_choice_control(control: &BrowserFormControl) -> bool {
+    matches!(control.control_type.as_str(), "checkbox" | "radio")
+}
+
+fn browser_choice_group_required(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> bool {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id))
+        .any(|control| control.required)
+}
+
+fn browser_choice_group_checked_ids(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> Vec<String> {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id) && control.checked)
+        .filter_map(|control| control.id.clone())
+        .collect()
+}
+
+fn browser_choice_group_checked_values(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> Vec<String> {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id) && control.checked)
+        .filter_map(|control| control.value.clone())
+        .collect()
+}
+
+fn browser_choice_group_peer(
+    control: &BrowserFormControl,
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> bool {
+    target.name.is_some()
+        && control.control_type == target.control_type
+        && control.name == target.name
+        && browser_choice_group_form_owner(control, form_id)
+            == browser_choice_group_form_owner(target, form_id)
+}
+
+fn browser_choice_group_form_owner<'a>(
+    control: &'a BrowserFormControl,
+    form_id: Option<&'a str>,
+) -> Option<&'a str> {
+    control.form_owner.as_deref().or(form_id)
 }
 
 fn collect_form_controls_for_form_into(
