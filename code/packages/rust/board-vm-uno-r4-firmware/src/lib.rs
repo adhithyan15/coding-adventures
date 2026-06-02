@@ -121,6 +121,22 @@ pub enum FirmwareSmokeErrorKind {
     ArtifactRequiredCapabilitiesMismatch,
 }
 
+impl FirmwareSmokeErrorKind {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Module => "module",
+            Self::Validate => "validate",
+            Self::Runtime => "runtime",
+            Self::RequiredCapabilities => "required_capabilities",
+            Self::UnsupportedProgramFormat => "unsupported_program_format",
+            Self::InvalidBootPolicy => "invalid_boot_policy",
+            Self::ArtifactMetadataMismatch => "artifact_metadata_mismatch",
+            Self::ArtifactCrcMismatch => "artifact_crc_mismatch",
+            Self::ArtifactRequiredCapabilitiesMismatch => "artifact_required_capabilities_mismatch",
+        }
+    }
+}
+
 impl FirmwareSmokeError {
     pub const fn kind(self) -> FirmwareSmokeErrorKind {
         match self {
@@ -186,6 +202,17 @@ pub enum EjectedBootDiagnosticStatus {
     RuntimeFailed,
 }
 
+impl EjectedBootDiagnosticStatus {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Ran => "ran",
+            Self::SkippedStoreOnly => "skipped_store_only",
+            Self::ValidationFailed => "validation_failed",
+            Self::RuntimeFailed => "runtime_failed",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct EjectedBootDiagnosticSummary {
     pub outcome: EjectedBootDiagnosticOutcome,
@@ -233,8 +260,16 @@ impl EjectedBootDiagnosticSummary {
         }
     }
 
+    pub fn status_label(self) -> &'static str {
+        self.status().as_str()
+    }
+
     pub fn error_kind(self) -> Option<FirmwareSmokeErrorKind> {
         self.error.map(FirmwareSmokeError::kind)
+    }
+
+    pub fn error_label(self) -> Option<&'static str> {
+        self.error_kind().map(FirmwareSmokeErrorKind::as_str)
     }
 }
 
@@ -816,6 +851,37 @@ mod tests {
     }
 
     #[test]
+    fn firmware_smoke_error_kind_labels_are_stable() {
+        assert_eq!(FirmwareSmokeErrorKind::Module.as_str(), "module");
+        assert_eq!(FirmwareSmokeErrorKind::Validate.as_str(), "validate");
+        assert_eq!(FirmwareSmokeErrorKind::Runtime.as_str(), "runtime");
+        assert_eq!(
+            FirmwareSmokeErrorKind::RequiredCapabilities.as_str(),
+            "required_capabilities"
+        );
+        assert_eq!(
+            FirmwareSmokeErrorKind::UnsupportedProgramFormat.as_str(),
+            "unsupported_program_format"
+        );
+        assert_eq!(
+            FirmwareSmokeErrorKind::InvalidBootPolicy.as_str(),
+            "invalid_boot_policy"
+        );
+        assert_eq!(
+            FirmwareSmokeErrorKind::ArtifactMetadataMismatch.as_str(),
+            "artifact_metadata_mismatch"
+        );
+        assert_eq!(
+            FirmwareSmokeErrorKind::ArtifactCrcMismatch.as_str(),
+            "artifact_crc_mismatch"
+        );
+        assert_eq!(
+            FirmwareSmokeErrorKind::ArtifactRequiredCapabilitiesMismatch.as_str(),
+            "artifact_required_capabilities_mismatch"
+        );
+    }
+
+    #[test]
     fn rejects_validated_ejected_boot_plan_without_required_capability() {
         let error =
             validate_ejected_boot_plan(EjectedFirmwareProgram::blink(), CapabilitySet::empty(), 16)
@@ -1110,6 +1176,23 @@ mod tests {
     }
 
     #[test]
+    fn ejected_boot_diagnostic_status_labels_are_stable() {
+        assert_eq!(EjectedBootDiagnosticStatus::Ran.as_str(), "ran");
+        assert_eq!(
+            EjectedBootDiagnosticStatus::SkippedStoreOnly.as_str(),
+            "skipped_store_only"
+        );
+        assert_eq!(
+            EjectedBootDiagnosticStatus::ValidationFailed.as_str(),
+            "validation_failed"
+        );
+        assert_eq!(
+            EjectedBootDiagnosticStatus::RuntimeFailed.as_str(),
+            "runtime_failed"
+        );
+    }
+
+    #[test]
     fn ejected_boot_diagnostic_summary_surfaces_completed_run() {
         let hal = FakeHal::new();
         let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
@@ -1127,7 +1210,9 @@ mod tests {
         assert!(summary.ran());
         assert!(!summary.skipped_store_only());
         assert_eq!(summary.status(), EjectedBootDiagnosticStatus::Ran);
+        assert_eq!(summary.status_label(), "ran");
         assert_eq!(summary.error_kind(), None);
+        assert_eq!(summary.error_label(), None);
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1166,7 +1251,9 @@ mod tests {
             summary.status(),
             EjectedBootDiagnosticStatus::SkippedStoreOnly
         );
+        assert_eq!(summary.status_label(), "skipped_store_only");
         assert_eq!(summary.error_kind(), None);
+        assert_eq!(summary.error_label(), None);
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1232,7 +1319,9 @@ mod tests {
             summary.status(),
             EjectedBootDiagnosticStatus::ValidationFailed
         );
+        assert_eq!(summary.status_label(), "validation_failed");
         assert_eq!(summary.error_kind(), Some(FirmwareSmokeErrorKind::Validate));
+        assert_eq!(summary.error_label(), Some("validate"));
         assert_eq!(
             summary,
             EjectedBootDiagnosticSummary {
@@ -1302,7 +1391,9 @@ mod tests {
         assert!(!summary.ran());
         assert!(!summary.skipped_store_only());
         assert_eq!(summary.status(), EjectedBootDiagnosticStatus::RuntimeFailed);
+        assert_eq!(summary.status_label(), "runtime_failed");
         assert_eq!(summary.error_kind(), Some(FirmwareSmokeErrorKind::Runtime));
+        assert_eq!(summary.error_label(), Some("runtime"));
         assert_eq!(summary.outcome, EjectedBootDiagnosticOutcome::Failed);
         assert_eq!(summary.program, EjectedFirmwareProgram::blink().summary());
         assert_eq!(
