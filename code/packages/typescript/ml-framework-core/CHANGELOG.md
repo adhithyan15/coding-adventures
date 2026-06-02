@@ -2,6 +2,91 @@
 
 ## Unreleased
 
+### Added — v1.0.0: complete TypeScript ML framework on the Rust matrix-cpu engine
+
+PR #5 of 5 (FINAL) in the JS/TS pilot.  v1.0.0 marks the completion of
+the multi-PR plan: a PyTorch-shaped TypeScript ML framework with all 15
+ops (forward + backward), autograd engine, end-to-end MLP training, and
+a benchmark script for performance characterization.
+
+#### What v1.0.0 means
+
+The complete stack works:
+
+```ts
+import { Tensor } from "@coding-adventures/ml-framework-core";
+
+// Build a model
+let w1 = new Tensor([[0.5, -0.3]]); w1.requiresGrad = true;
+let w2 = new Tensor([[0.4], [0.7]]); w2.requiresGrad = true;
+
+// Train (loss drops 75%+ in 30 SGD steps on the test suite's data)
+for (let step = 0; step < 30; step++) {
+  const pred = x.matmul(w1).relu().matmul(w2);
+  const loss = pred.sub(target).mul(pred.sub(target)).mean();
+  loss.backward();
+  w1 = sgdStep(w1, 0.01);
+  w2 = sgdStep(w2, 0.01);
+}
+```
+
+All math is pure TypeScript for tensors under 10k cells.  At 10k+ cells
+the ops auto-dispatch through `@coding-adventures/matrix-rust-napi` to
+the Rust matrix-cpu executor (SIMD-accelerated f32).  No Rust toolchain
+is required to use the package at small/medium sizes.
+
+#### New in v1.0.0
+
+- **`scripts/benchmark.ts`** — performance characterization.  Runs
+  forward + backward on a 2-layer MLP at batch sizes 100, 1000, 5000,
+  10_000, 50_000 and prints a markdown table of median timings.
+  Gracefully handles the case where matrix-rust-napi isn't built
+  (skips Rust-only rows with a clear "Rust needed" label).  Run via
+  `npm run benchmark`.
+
+- **Package.json polish**:
+  - Tightened description to highlight v1.0.0 scope (15 ops, autograd,
+    auto-dispatch, end-to-end training verified)
+  - Added `tsx` as a devDependency for the benchmark script
+  - Added `"benchmark"` npm script
+
+- **README polish**: Quick-start section with the end-to-end MLP
+  example at the top; Benchmark section with example output table;
+  Test coverage section; "Future work" table.
+
+#### Layered architecture (now complete)
+
+```
+@coding-adventures/ml-framework-core (THIS PACKAGE, v1.0.0)
+  Tensor + autograd + 15 differentiable ops (forward + backward)
+  ↓ dispatch large tensors through ↓
+@coding-adventures/matrix-rust-napi (v0.4.0)
+  TypeScript wrapper for the Rust N-API addon
+  ↓
+matrix-rust-napi (Rust cdylib, v0.3.0)
+  Exposes runGraphOnCpu via N-API
+  ↓
+node-bridge (Rust workspace crate, v0.1.0)
+  Zero-dep N-API wrapper
+  ↓
+matrix-ir-json → matrix-ir → matrix-runtime → matrix-cpu
+```
+
+#### Test coverage (unchanged from v0.4.0 — all still passing)
+
+- `tests/tensor.test.ts`             61 tests
+- `tests/autograd.test.ts`           18 tests
+- `tests/ops.test.ts`                67 tests
+- `tests/end-to-end-training.test.ts` 2 tests
+- Total: 148 tests, 0 failures
+
+#### What's next (for the project, not the package)
+
+The user will pick the next language pilot — Lua, Go, or Swift.  The
+architecture pattern established by both the Ruby pilot (8 PRs) and
+this JS/TS pilot (5 PRs because the bottom three layers already
+existed) transfers directly.
+
 ### Added — v0.4.0: backward dispatch + end-to-end MLP training test
 
 PR #4 of 5 in the JS/TS pilot.  Adds `backward(outputGrad)` to all 15
