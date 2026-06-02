@@ -484,10 +484,10 @@ def solve_dc_with_aids(engine, max_attempts=4):
 - Verilog-A model support.
 - Mixed-signal coupling with `hardware-vm.md` for AMS simulation. A first
   SPICE-side Rust helper surface converts binary digital event timelines into
-  finite-edge PWL voltage sources and samples transient probes back into
-  thresholded digital events, with stable tab-separated single-stream and
-  named multi-signal event-stream text output; scheduler-level `hardware-vm`
-  integration remains future work.
+  finite-edge PWL voltage sources and samples one or more transient probes back
+  into thresholded named digital event streams, with stable tab-separated
+  single-stream and named multi-signal event-stream text output;
+  scheduler-level `hardware-vm` integration remains future work.
 - Multi-corner parallel sweep (one process per PVT corner).
 - Behavioral modeling sources (B-element).
 - Noise analysis (.noise).
