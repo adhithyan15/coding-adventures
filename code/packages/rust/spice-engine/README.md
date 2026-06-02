@@ -16,6 +16,7 @@ The initial slices implement:
   and uniform distributions, including named corner sweeps.
 - AC noise analysis with resistor thermal-noise contributions, input-referred
   PSD, and named corner sweeps.
+- AC frequency sweeps, including order-preserving parallel named corner sweeps.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
   impedance estimates, including named corner sweeps.
 - AC small-signal frequency sweeps for linear RC/RL circuits and explicit AC

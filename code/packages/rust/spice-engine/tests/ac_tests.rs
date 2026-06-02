@@ -1,5 +1,5 @@
 use spice_engine::{
-    ac_sweep, ac_sweep_corners, format_ac_table, format_corner_ac_table,
+    ac_sweep, ac_sweep_corners, ac_sweep_corners_parallel, format_ac_table, format_corner_ac_table,
     format_corner_s_parameter_table, format_s_parameter_table, s_parameters, s_parameters_corners,
     Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource,
     Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
@@ -242,6 +242,79 @@ fn ac_sweep_corners_runs_frequency_sweeps_per_corner() {
         result.points[1].points[0].voltage("out").unwrap().abs(),
         1.0 / 1.25_f64.sqrt(),
     );
+}
+
+#[test]
+fn ac_sweep_corners_parallel_matches_ordered_sequential_results() {
+    let resistance = 1_000.0;
+    let capacitance = 1.0e-6;
+    let corner = 1.0 / (2.0 * std::f64::consts::PI * resistance * capacitance);
+
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "V1", "in", "0", 0.0, 1.0, 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "in", "out", resistance,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "C1",
+        "out",
+        "0",
+        capacitance,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", Vec::new()),
+        CornerSpec::new(
+            "r-fast",
+            vec![CornerOverride::new("R1", "resistance", 500.0)],
+        ),
+        CornerSpec::new(
+            "c-large",
+            vec![CornerOverride::new("C1", "capacitance", 2.0e-6)],
+        ),
+    ];
+
+    let sequential = ac_sweep_corners(&circuit, corner, corner, 10, &corners).unwrap();
+    let parallel = ac_sweep_corners_parallel(&circuit, corner, corner, 10, &corners).unwrap();
+
+    assert_eq!(parallel.points.len(), sequential.points.len());
+    for (parallel_corner, sequential_corner) in parallel.points.iter().zip(sequential.points.iter())
+    {
+        assert_eq!(parallel_corner.corner_name, sequential_corner.corner_name);
+        assert_eq!(parallel_corner.points.len(), sequential_corner.points.len());
+        for (parallel_point, sequential_point) in parallel_corner
+            .points
+            .iter()
+            .zip(sequential_corner.points.iter())
+        {
+            assert_close(parallel_point.frequency_hz, sequential_point.frequency_hz);
+            let parallel_vout = parallel_point.voltage("out").unwrap();
+            let sequential_vout = sequential_point.voltage("out").unwrap();
+            assert_close(parallel_vout.real, sequential_vout.real);
+            assert_close(parallel_vout.imag, sequential_vout.imag);
+            let parallel_i_v1 = parallel_point.branch_current("V1").unwrap();
+            let sequential_i_v1 = sequential_point.branch_current("V1").unwrap();
+            assert_close(parallel_i_v1.real, sequential_i_v1.real);
+            assert_close(parallel_i_v1.imag, sequential_i_v1.imag);
+        }
+    }
+    assert_eq!(
+        format_corner_ac_table(&parallel, &["V(out)", "I(V1)"]).unwrap(),
+        "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\nnominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\nnominal\t0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\nr-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\nr-fast\t0\t1.591549e+02\tI(V1)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\nc-large\t0\t1.591549e+02\tV(out)\t2.000000e-01\t-4.000000e-01\t4.472136e-01\t-6.343495e+01\nc-large\t0\t1.591549e+02\tI(V1)\t-8.000000e-04\t-4.000000e-04\t8.944272e-04\t-1.534349e+02\n"
+    );
+}
+
+#[test]
+fn ac_sweep_corners_parallel_rejects_invalid_sweep_before_workers() {
+    let circuit = Circuit::new();
+    let corners = [CornerSpec::new("nominal", Vec::new())];
+
+    assert!(matches!(
+        ac_sweep_corners_parallel(&circuit, 0.0, 1_000.0, 10, &corners),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "ac_sweep" && reason.contains("positive")
+    ));
 }
 
 #[test]
