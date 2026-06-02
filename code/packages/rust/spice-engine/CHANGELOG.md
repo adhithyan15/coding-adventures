@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `transient_adaptive_with_digital_event_streams`,
+  `transient_adaptive_with_digital_event_streams_corners`, and adaptive
+  digital event stream table formatters for SPICE-side mixed-signal bridge
+  snapshots that carry method, rejected-step, and convergence metadata.
 - Add `transient_with_digital_event_streams_corners` and
   `format_corner_digital_event_stream_table` for stable named-corner
   mixed-signal transient bridge output stream snapshots.
