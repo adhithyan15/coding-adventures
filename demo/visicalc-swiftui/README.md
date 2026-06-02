@@ -31,12 +31,28 @@ and writes `Sources/VisiCalc/Generated/FormulaBar.swift`.
 
 ## How to run the app
 
+### macOS
+
 ```bash
 swift run                 # macOS terminal target
-open Package.swift        # open in Xcode for iOS Simulator
 ```
 
-Requires Swift 5.9+ / Xcode 15+. Install via App Store on macOS.
+### iOS Simulator
+
+```bash
+xcodebuild -scheme VisiCalc \
+  -destination 'generic/platform=iOS Simulator' \
+  build
+```
+
+Or open `Package.swift` in Xcode and pick an iOS simulator from
+the run-destination menu.  Both `VisiCalcApp.swift` and the
+generated `FormulaBar.swift` are cross-platform — `AppKit` /
+`.onExitCommand` are guarded by `#if os(macOS)` so the same
+source ships to macOS, iOS, iPadOS, tvOS, and watchOS.
+
+Requires Swift 5.9+ / Xcode 15+.  iOS Simulator runtime is
+optional but recommended.  Install via App Store on macOS.
 
 ## Known emitter glitch
 
