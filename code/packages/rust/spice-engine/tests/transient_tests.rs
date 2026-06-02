@@ -13,16 +13,17 @@ use spice_engine::{
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
     pss_with_tolerance, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
-    transient_adaptive_corners, transient_corners, transient_with_method, AdaptiveTransientOptions,
-    AdaptiveTransientResult, Capacitor, Cccs, Ccvs, Circuit, CornerDistortionPoint,
-    CornerDistortionResult, CornerOverride, CornerSpec, CurrentSource, DigitalEvent,
-    DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds, DistortionHarmonic,
-    DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult,
-    FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
-    PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult,
-    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
-    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
-    TransientPoint, TransmissionLine, VoltageSource, Waveform,
+    transient_adaptive_corners, transient_corners, transient_with_digital_event_streams,
+    transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
+    Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
+    CurrentSource, DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState,
+    DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
+    FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
+    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology,
+    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2105,6 +2106,51 @@ fn named_digital_event_streams_build_pwl_voltage_sources() {
     assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
     assert_close(points[0].voltage("enable").unwrap(), 1.8);
     assert_close(points.last().unwrap().voltage("enable").unwrap(), 0.0);
+}
+
+#[test]
+fn transient_bridge_runs_digital_input_and_samples_output_stream() {
+    let input_streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(1.25e-9, DigitalState::Low),
+        ],
+    )];
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rout", "din", "out", 1_000.0,
+    )));
+    circuit.add(Element::Capacitor(Capacitor::new(
+        "Cout", "out", "0", 0.1e-12,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 10_000.0,
+    )));
+
+    let result = transient_with_digital_event_streams(
+        &circuit,
+        &input_streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+        0.25e-9,
+        1.5e-9,
+        &[("dout", "V(out)")],
+        DigitalThresholds::cmos_1v8(),
+    )
+    .unwrap();
+
+    assert_eq!(result.output_streams.len(), 1);
+    assert_eq!(result.output_streams[0].signal_name, "dout");
+    assert_eq!(
+        format_digital_event_stream_table(&result.output_streams).unwrap(),
+        "Signal\tIndex\tTime\tState\ndout\t0\t2.500000e-10\tlow\ndout\t1\t7.500000e-10\thigh\ndout\t2\t1.500000e-09\tlow\n"
+    );
+    assert!(result
+        .points
+        .iter()
+        .any(|point| point.voltage("out").unwrap() > 1.2));
 }
 
 #[test]

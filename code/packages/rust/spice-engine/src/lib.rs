@@ -504,6 +504,12 @@ impl DigitalEventStream {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DigitalTransientBridgeResult {
+    pub points: Vec<TransientPoint>,
+    pub output_streams: Vec<DigitalEventStream>,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct DigitalLogicLevels {
     pub low_voltage: f64,
@@ -728,6 +734,29 @@ pub fn digital_event_streams_to_voltage_sources(
         )?);
     }
     Ok(sources)
+}
+
+pub fn transient_with_digital_event_streams(
+    circuit: &Circuit,
+    input_streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+    time_step: f64,
+    stop_time: f64,
+    output_probes: &[(&str, &str)],
+    thresholds: DigitalThresholds,
+) -> Result<DigitalTransientBridgeResult, SpiceError> {
+    let mut bridged = circuit.clone();
+    for source in digital_event_streams_to_voltage_sources(input_streams, negative, levels)? {
+        bridged.add(Element::VoltageSource(source));
+    }
+    let points = transient(&bridged, time_step, stop_time)?;
+    let output_streams =
+        sample_transient_probes_as_digital_event_streams(&points, output_probes, thresholds)?;
+    Ok(DigitalTransientBridgeResult {
+        points,
+        output_streams,
+    })
 }
 
 pub fn sample_transient_probe_as_digital_events(
