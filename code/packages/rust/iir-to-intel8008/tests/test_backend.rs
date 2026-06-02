@@ -6,7 +6,7 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel8008::{
     lower_iir_to_intel8008, validate_for_intel8008,
-    IIRIntel8008Config, IIRIntel8008Error, HLT, JMP, MVI_A,
+    IIRIntel8008Config, IIRIntel8008Error, HLT, JFZ, JMP, JTZ, MVI_A,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -732,6 +732,146 @@ fn label_emits_no_bytes() {
     let labeled = lower_iir_to_intel8008(&module_with(f_labeled), &cfg).expect("labeled");
     assert_eq!(bare, labeled,
         "a `label` op must not emit any bytes; bare={bare:02x?} labeled={labeled:02x?}");
+}
+
+// ===========================================================================
+// 11. A2++.5.5 fourth slice — boolean conditional jumps (jmp_if_true/false)
+// ===========================================================================
+//
+// The 8008 has no "branch on register" — every conditional jump
+// reads ONE of the four CPU flags (carry/zero/sign/parity) from the
+// last arithmetic/logical op.  To branch on a boolean register's
+// value we provoke the zero flag via `ANA A` (the 8008's "TEST A"
+// idiom), then JFZ ("jump if Z clear" → cond was non-zero / true) or
+// JTZ ("jump if Z set" → cond was zero / false).
+//
+// Lowering shape:
+//
+//   [optional]  MOV A, cond_reg     ; skipped when cond_reg == A
+//               ANA A    (0xA7)     ; sets Z from A's value
+//               JFZ/JTZ target      ; 3-byte conditional jump
+//
+// Opcode constants pinned in their own tests below to guard against
+// any future copy-paste regression in the family-01 jump table.
+
+#[test]
+fn jfz_constant_pinned_to_0x48() {
+    // JFZ = 01 001 000 (ccc=001 zero, T=0 clear)
+    assert_eq!(JFZ, 0x48,
+        "JFZ (jump if zero clear) should be 0x48; got 0x{:02x}", JFZ);
+}
+
+#[test]
+fn jtz_constant_pinned_to_0x4c() {
+    // JTZ = 01 001 100 (ccc=001 zero, T=1 set)
+    assert_eq!(JTZ, 0x4C,
+        "JTZ (jump if zero set) should be 0x4C; got 0x{:02x}", JTZ);
+}
+
+#[test]
+fn jmp_if_true_emits_ana_a_then_jfz_with_backpatched_target() {
+    // const cond=1; jmp_if_true cond, end; const x=0; label end; ret_void
+    //
+    // cond → A (first const).  No staging MOV needed.
+    //
+    //   00,01: MVI A, 1       (3E 01)
+    //   02:    ANA A          (A7) — set Z from A=1 → Z=0
+    //   03:    JFZ <fwd>      (48 ?? ??)
+    //   06,07: MVI B, 0       (06 00)  unreachable
+    //   <-- label "end" at offset 8 -->
+    //   08:    HLT
+    let f = IIRFunction::new("if_true", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("cond".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(0)], "u8"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x01,    // 00 01    cond=1 → A
+        0xA7,           // 02       ANA A (TEST A) — sets Z=0
+        JFZ,  0x08, 0x00, // 03 04 05  JFZ 0x0008
+        0x06, 0x00,     // 06 07    MVI B, 0 (unreachable)
+        // label "end" lands at offset 8
+        HLT,            // 08
+    ], "jmp_if_true expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn jmp_if_false_emits_ana_a_then_jtz_with_backpatched_target() {
+    // const cond=0; jmp_if_false cond, end; const x=99; label end; ret_void
+    let f = IIRFunction::new("if_false", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(0)], "bool"),
+        IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var("cond".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(99)], "u8"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x00,    // 00 01    cond=0 → A
+        0xA7,           // 02       ANA A — Z=1
+        JTZ,  0x08, 0x00, // 03 04 05  JTZ 0x0008
+        0x06, 0x63,     // 06 07    MVI B, 99 (unreachable)
+        HLT,            // 08
+    ], "jmp_if_false expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn jmp_if_true_with_cond_not_in_a_emits_staging_mov() {
+    // const v=1 → A; const cond=0 → B; jmp_if_true cond, end; ret_void
+    //
+    // cond is in B, not A → need MOV A, B before ANA A.
+    //
+    //   00,01: MVI A, 1   (v) → A
+    //   02,03: MVI B, 0   (cond) → B
+    //   04:    MOV A, B   (stage cond into A)        = 0x78
+    //   05:    ANA A      = 0xA7
+    //   06:    JFZ end    = 0x48 ?? ??
+    //   <-- label end at offset 9 -->
+    //   09:    HLT
+    let f = IIRFunction::new("if_b", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "u8"),
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(0)], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("cond".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x01,    // 00 01    v=1 → A
+        0x06,  0x00,    // 02 03    cond=0 → B
+        0x78,           // 04       MOV A, B (stage cond)
+        0xA7,           // 05       ANA A
+        JFZ,  0x09, 0x00, // 06 07 08  JFZ 0x0009
+        HLT,            // 09
+    ], "jmp_if_true with staging MOV expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn jmp_if_true_to_undefined_label_is_rejected() {
+    let f = IIRFunction::new("dangling_cond", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("cond".into()), Operand::Var("nowhere".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect_err("jmp_if_true to nonexistent label should fail");
+    match err {
+        IIRIntel8008Error::UndefinedLabel { function, label } => {
+            assert_eq!(function, "dangling_cond");
+            assert_eq!(label, "nowhere");
+        }
+        other => panic!("expected UndefinedLabel, got: {other:?}"),
+    }
 }
 
 // Note on the high-byte split + AddressOutOfRange coverage gap:
