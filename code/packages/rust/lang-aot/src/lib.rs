@@ -136,6 +136,12 @@ pub enum LangAotError {
     /// already includes the failing function name and the unsupported
     /// op/type/operand).
     RiscvBackendError(String),
+    /// The Intel 8008 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-intel8008`
+    /// (which already includes the failing function name and the
+    /// unsupported op/type/operand).
+    Intel8008BackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -149,6 +155,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
+            LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
         }
     }
 }
@@ -308,6 +315,71 @@ pub fn compile_file_to_riscv32_bin(
     for w in &words {
         bytes.extend_from_slice(&w.to_le_bytes());
     }
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 8008 machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 8-bit Intel
+/// 8008 opcode bytes.  Downstream consumers:
+///
+/// * [`intel8008-simulator`](../intel8008-simulator) — load + execute
+///   in-process via `Simulator::run`.
+/// * An external 8008 emulator that consumes raw byte streams.
+/// * A 1702 EPROM burner — Oct's intended deployment path.  The 8008
+///   is Oct's native target ISA.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-agnostic.
+///
+/// # Wire format
+///
+/// Intel 8008 instructions are 1, 2, or 3 bytes each, in the order
+/// the silicon's instruction pointer walks them.  No endianness
+/// conversion — each byte is written exactly as `iir-to-intel8008`
+/// emits it.  Multi-byte instructions (MVI, JMP, CAL, conditional
+/// branches) lay out as `<opcode> <low_byte> [<high_byte>]` per the
+/// 8008 spec (the address bus is 14 bits wide, so the high byte's
+/// top 2 bits are zero).
+///
+/// # Why no host gating?
+///
+/// The 8008 is a historical ISA with no modern host equivalent — we
+/// never produce a "native" binary the host can execute.  The
+/// downstream consumer is always an emulator (in-tree
+/// `intel8008-simulator` or external), an EPROM burner, or actual
+/// 8008 silicon.  All host OSes can write a flat byte file, so the
+/// pipeline is universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Intel8008BackendError` — the IIR contained an op or type the
+///   Intel 8008 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.oct --emit=intel8008 -o foo.bin
+/// # Then load foo.bin into the simulator:
+/// intel8008-simulator foo.bin
+/// ```
+pub fn compile_file_to_intel8008_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_intel8008::IIRIntel8008Config::new(stem);
+    let bytes = iir_to_intel8008::lower_iir_to_intel8008(&module, &cfg)
+        .map_err(|e| LangAotError::Intel8008BackendError(format!("{e}")))?;
+
     std::fs::write(out, &bytes)?;
     Ok(())
 }

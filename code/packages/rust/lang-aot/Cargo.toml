@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.7.0 (A1+++): adds `--emit=riscv32` flag (aliases `rv32`, `bin`) that routes source → IIR → RV32I machine code (.bin) via iir-to-riscv, cross-platform.  Downstream consumers: riscv-simulator, qemu-riscv32, flash loaders."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.8.0 (A2+++): adds `--emit=intel8008` flag (aliases `i8008`, `8008`) that routes source → IIR → Intel 8008 machine code (.bin) via iir-to-intel8008, cross-platform.  Downstream consumers: the in-tree intel8008-simulator, a 1702 EPROM burner, or any 8008 emulator that consumes raw byte streams.  Previous v0.7.0 (A1+++) adds `--emit=riscv32` for RV32I."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -15,6 +15,7 @@ interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
 iir-to-riscv          = { path = "../iir-to-riscv" }
+iir-to-intel8008      = { path = "../iir-to-intel8008" }
 
 [[bin]]
 name = "lang-aot"

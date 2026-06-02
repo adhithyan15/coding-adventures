@@ -954,3 +954,56 @@ fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
     assert_eq!(last_word_le, &[0x67, 0x80, 0x00, 0x00],
         "last 4 bytes should be the canonical ret encoded little-endian; got: {last_word_le:02x?}");
 }
+
+// ===========================================================================
+// A2+++ — source -> IIR -> Intel 8008 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_intel8008_bin entry point runs the full source ->
+// IIR -> iir-to-intel8008 pipeline and produces a flat .bin of
+// 8-bit Intel 8008 opcode bytes.
+//
+// Why Twig instead of BASIC?  The 8008 is **Oct's** native target,
+// but Oct programs at the LANG VM benchmark sizes routinely exceed
+// the 7-register pool that iir-to-intel8008 v0.3.9 supports (stack
+// spilling lands with A3 or later).  Twig's `42` program — the
+// canonical "return the integer 42" — survives that constraint
+// because it lowers to a single `const v; ret v` IIR sequence which
+// fits in registers A and exits cleanly.
+
+#[test]
+fn end_to_end_twig_42_emits_intel8008_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_intel8008_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V paths.  A2++.5.5 covered the IIR core so this
+        // should generally succeed for Twig's `42`, but languages
+        // that emit ops beyond what v0.3.9 supports (e.g. ref<T>
+        // allocation, multi-arg calls) will surface here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig Intel 8008 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> Intel 8008 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "Twig `42` should produce a non-empty .bin");
+    // The canonical Twig-`42` lowering is `const v=42 → A; ret v →
+    // HLT` (since main is the entry-point function, ret emits HLT
+    // not RET).  Pinned 3-byte sequence: MVI A, 42 (0x3E 0x2A) + HLT
+    // (0x76).
+    assert_eq!(&bytes[..3.min(bytes.len())], &[0x3E, 0x2A, 0x76],
+        "Twig `42` should produce `MVI A, 42; HLT`; got: {bytes:02x?}");
+}

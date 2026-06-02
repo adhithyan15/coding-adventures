@@ -40,13 +40,15 @@ fn main() -> ExitCode {
         None => { eprintln!("lang-aot: missing input file"); print_help(); return ExitCode::from(2); }
     };
     // Default output extension depends on emit mode:
-    //   * Native      → strip extension (foo.bas → foo)
-    //   * LlvmIr      → .ll  (foo.bas → foo.ll),  matching `llc` input convention
-    //   * Riscv32Bin  → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
+    //   * Native       → strip extension (foo.bas → foo)
+    //   * LlvmIr       → .ll  (foo.bas → foo.ll),  matching `llc` input convention
+    //   * Riscv32Bin   → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
+    //   * Intel8008Bin → .bin (foo.oct → foo.bin), shares the `.bin` convention with RV32I
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
-        EmitMode::Native     => input.with_extension(""),
-        EmitMode::LlvmIr     => input.with_extension("ll"),
-        EmitMode::Riscv32Bin => input.with_extension("bin"),
+        EmitMode::Native       => input.with_extension(""),
+        EmitMode::LlvmIr       => input.with_extension("ll"),
+        EmitMode::Riscv32Bin   => input.with_extension("bin"),
+        EmitMode::Intel8008Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -81,6 +83,12 @@ enum EmitMode {
     /// Cross-platform (no host gating).  Downstream consumers: the
     /// in-tree `riscv-simulator`, `qemu-riscv32`, or a flash loader.
     Riscv32Bin,
+    /// Flat `.bin` of 8-bit Intel 8008 opcode bytes via
+    /// `iir-to-intel8008`.  Cross-platform.  Downstream consumers:
+    /// the in-tree `intel8008-simulator`, an external 8008 emulator,
+    /// or a 1702 EPROM burner.  Oct's native target — its IIR is
+    /// designed to round-trip through 8008 silicon.
+    Intel8008Bin,
 }
 
 struct CliArgs {
@@ -156,9 +164,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "native"                      => Ok(EmitMode::Native),
         "llvm-ir" | "llvm" | "ll"     => Ok(EmitMode::LlvmIr),
         "riscv32" | "rv32" | "bin"    => Ok(EmitMode::Riscv32Bin),
+        "intel8008" | "i8008" | "8008" => Ok(EmitMode::Intel8008Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32"
+             native | llvm-ir | riscv32 | intel8008"
         )),
     }
 }
@@ -190,6 +199,11 @@ Options:
                                               → flat .bin of little-endian RV32I words
                                                 via iir-to-riscv; cross-platform; load
                                                 into riscv-simulator or qemu-riscv32
+                             intel8008 | i8008 | 8008
+                                              → flat .bin of 8-bit Intel 8008 opcodes
+                                                via iir-to-intel8008; cross-platform;
+                                                load into intel8008-simulator or burn
+                                                to a 1702 EPROM (Oct's native target)
   -h, --help               Show this help.\
 ");
 }
@@ -211,6 +225,14 @@ fn dispatch(
     // encoded words as little-endian bytes.  No linker, no host gating.
     if emit == EmitMode::Riscv32Bin {
         return lang_aot::compile_file_to_riscv32_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 8008 .bin emission is also cross-platform — just write the
+    // encoded 8-bit opcodes byte-for-byte.  No linker, no endianness
+    // conversion (the 8008 has no concept of word endianness — every
+    // instruction is a byte sequence).  Oct's native target.
+    if emit == EmitMode::Intel8008Bin {
+        return lang_aot::compile_file_to_intel8008_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]
