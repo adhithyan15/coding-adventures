@@ -3,6 +3,85 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.6] — 2026-06-02 (A2++.5.5 fifth slice — `cmp` equality with flag-to-bool capture)
+
+### Added — boolean equality comparison
+
+Wires IIR's `cmp dest, a, b` (which produces a boolean `dest = (a == b) ? 1 : 0`)
+to the 8008's `CMP` instruction + an inline flag-to-bool capture
+sequence.  CMP (family `10 111 sss` = `0xB8 | sss`) computes `A - r`,
+sets `Z = 1 iff A == r`, and DISCARDS the difference — so without
+a capture sequence the comparison result would be invisible to
+the rest of the program.
+
+#### Lowering shape
+
+```text
+[optional]  MOV A, a_reg               ; stage left source if not in A
+            CMP b_reg     (0xB8|sss)   ; sets Z
+            MVI dest, 0                ; default false (2 bytes)
+            JFZ <fallthrough>          ; if Z=0 (a != b), skip overwrite
+            MVI dest, 1                ; Z=1 path (a == b) → true
+            <-- fallthrough -->
+```
+
+Total: 8 bytes when `a` is already in A, 9 bytes with the staging MOV.
+
+#### Why an inline forward-JFZ instead of the two-pass backpatcher?
+
+The JFZ's target is always a fixed +4-byte forward offset from the
+JFZ opcode itself.  We can compute it at emit time (`target =
+bytes.len() + 4`) and write the address bytes directly — no need
+to push a `(slot, label)` tuple into `pending_jmps` and resolve
+later.  Benefits:
+
+1. **No synthetic label pollution.**  The user-visible `labels`
+   map stays clean — no `__cmp_skip_0` / `__cmp_skip_1` names
+   leaking through.
+2. **No dependency on the two-pass machinery.**  The capture
+   sequence is fully self-contained and could move into a helper
+   function later without disturbing the backpatcher's invariants.
+3. **Smaller error surface.**  No risk of a synthetic label
+   accidentally colliding with a user label.
+
+The `AddressOutOfRange` check still runs (the inline computed
+target could in principle exceed 14 bits in a hypothetical very
+large function — not reachable today with the 7-register cap, but
+the guard is cheap and consistent with `jmp`'s).
+
+#### New opcode constant (internal)
+
+* `const ALU_CMP: u8 = 0b111;` — the `ooo` selector for `CMP r`
+  (`encode_alu(ALU_CMP, sss) = 0xB8 | sss`).  Internal; no public
+  `CMP` constant exposed because CMP's byte varies with `sss` —
+  callers should compute via `encode_alu` if they need to.
+
+#### Tests added (42 total, was 38)
+
+* `cmp_equal_pins_full_capture_byte_stream` — pinned 14-byte
+  sequence including `B8 0E 00 48 0C 00 0E 01` (the CMP + capture).
+* `cmp_with_lhs_not_in_a_emits_staging_mov` — exercises the
+  optional `MOV A, B` staging path; pins `CMP C = 0xB9`.
+* `cmp_with_same_register_emits_cmp_a_then_capture` — `cmp r v v`
+  case; pins `CMP A = 0xBF`.
+* `cmp_followed_by_jmp_if_true_composes_correctly` — cross-slice
+  composition test: cmp + v0.3.5's `jmp_if_true` produce the
+  expected interleaved byte stream.
+
+### What is NOT in v0.3.6 (deferred to v0.3.7 / v0.3.8 / A2+++)
+
+* Less-than / greater-than / less-than-or-equal / etc — need the
+  sign + carry flags from CMP, and pair with the other 6
+  conditional-jump opcodes for the capture machinery.  Wired in
+  v0.3.7.
+* The remaining 6 conditional-jump opcodes: `JFC` (`0x40`),
+  `JTC` (`0x44`), `JFS` (`0x50`), `JTS` (`0x54`), `JFP` (`0x58`),
+  `JTP` (`0x5C`).  Land alongside lt/gt/etc.
+* Real `RET` (`0x07`) via `CAL` (`0x7E`, NOT `0x46` which is CFZ)
+  + per-function internal return-stack discipline — v0.3.8.
+* `lang-aot --target=intel8008` wiring + module-level CALL
+  backpatching — A2+++.
+
 ## [0.3.5] — 2026-06-02 (A2++.5.5 fourth slice — boolean conditional jumps `jmp_if_true`/`jmp_if_false`)
 
 ### Added — boolean-conditional control flow
