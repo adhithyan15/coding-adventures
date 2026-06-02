@@ -134,6 +134,28 @@ pub struct EjectedBootRunSummary {
     pub open_handles: Option<u8>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedBootFailure {
+    pub program: EjectedFirmwareProgramSummary,
+    pub error: FirmwareSmokeError,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EjectedBootDiagnostic {
+    Completed(EjectedBootRunSummary),
+    Failed(EjectedBootFailure),
+}
+
+impl EjectedBootDiagnostic {
+    pub fn completed(self) -> bool {
+        matches!(self, Self::Completed(_))
+    }
+
+    pub fn failed(self) -> bool {
+        matches!(self, Self::Failed(_))
+    }
+}
+
 impl EjectedBootRun {
     pub fn ran(self) -> bool {
         self.report.is_some()
@@ -286,6 +308,24 @@ where
         boot_plan: validated.boot_plan,
         report,
     })
+}
+
+pub fn diagnose_ejected_boot_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
+    runtime: &mut Runtime<H, MAX_STACK, MAX_HANDLES>,
+    program: EjectedFirmwareProgram<'_>,
+    instruction_budget: u32,
+) -> EjectedBootDiagnostic
+where
+    H: BoardHal,
+{
+    let program_summary = program.summary();
+    match run_ejected_boot_program_checked_once(runtime, program, instruction_budget) {
+        Ok(boot_run) => EjectedBootDiagnostic::Completed(boot_run.summary()),
+        Err(error) => EjectedBootDiagnostic::Failed(EjectedBootFailure {
+            program: program_summary,
+            error,
+        }),
+    }
 }
 
 pub fn run_ejected_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
@@ -838,6 +878,59 @@ mod tests {
             }
         );
         assert_eq!(boot_run.report, None);
+        assert!(runtime.hal().events.is_empty());
+    }
+
+    #[test]
+    fn ejected_boot_diagnostic_summarizes_completed_run() {
+        let hal = FakeHal::new();
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+
+        let diagnostic = diagnose_ejected_boot_program_once(
+            &mut runtime,
+            EjectedFirmwareProgram::blink(),
+            EJECTED_INSTRUCTION_BUDGET,
+        );
+
+        assert!(diagnostic.completed());
+        assert!(!diagnostic.failed());
+        assert_eq!(
+            diagnostic,
+            EjectedBootDiagnostic::Completed(EjectedBootRunSummary {
+                boot_plan: EjectedBootPlan {
+                    action: EjectedBootAction::Run,
+                    summary: EjectedFirmwareProgram::blink().summary(),
+                },
+                run_status: Some(RunStatus::BudgetExceeded),
+                instructions_executed: Some(EJECTED_INSTRUCTION_BUDGET),
+                open_handles: Some(1),
+            })
+        );
+        assert!(!runtime.hal().events.is_empty());
+    }
+
+    #[test]
+    fn ejected_boot_diagnostic_keeps_program_summary_on_failure() {
+        let hal = FakeHal::with_capabilities(CapabilitySet::empty());
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+
+        let diagnostic = diagnose_ejected_boot_program_once(
+            &mut runtime,
+            EjectedFirmwareProgram::blink(),
+            EJECTED_INSTRUCTION_BUDGET,
+        );
+
+        assert!(!diagnostic.completed());
+        assert!(diagnostic.failed());
+        assert_eq!(
+            diagnostic,
+            EjectedBootDiagnostic::Failed(EjectedBootFailure {
+                program: EjectedFirmwareProgram::blink().summary(),
+                error: FirmwareSmokeError::Validate(ValidateError::UnsupportedCapability(
+                    CAP_GPIO_OPEN
+                )),
+            })
+        );
         assert!(runtime.hal().events.is_empty());
     }
 
