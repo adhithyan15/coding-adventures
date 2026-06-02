@@ -376,7 +376,7 @@ pub fn from_pipeline(
 
     // 6. The layout tree.
     writeln!(out).unwrap();
-    out.push_str(&emit_qml_tree(&layout.root, 1)?);
+    out.push_str(&emit_qml_tree(&layout.root, 1, &interface.emits)?);
 
     // 7. Close the root `Item`.
     writeln!(out, "}}").unwrap();
@@ -452,7 +452,7 @@ fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError>
 /// The `depth` argument is the *block depth from the root Item* — so the
 /// outermost layout element starts at depth 1 (one level inside the root
 /// wrapper).
-fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     // The UI29 *host* primitives (`HostInput`, `HostButton`) need
     // attribute lowering that depends on the moslayout props — slot refs
     // for `value`, emit refs for `onCommit`, etc. — none of which the
@@ -460,9 +460,9 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     // own emitter functions, mirroring the React backend's
     // `emit_input_jsx` carve-out for `Input`.
     match node.tag.as_str() {
-        "HostInput" => return emit_host_input_qml(node, depth),
-        "HostButton" => return emit_host_button_qml(node, depth),
-        "HostDialog" => return emit_host_dialog_qml(node, depth),
+        "HostInput" => return emit_host_input_qml(node, depth, emits),
+        "HostButton" => return emit_host_button_qml(node, depth, emits),
+        "HostDialog" => return emit_host_dialog_qml(node, depth, emits),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
         // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
@@ -470,8 +470,8 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         // keyboard semantics (Space toggles, arrow keys navigate radio
         // groups when wrapped in ButtonGroup) that composing from
         // QtQuick basics couldn't replicate.
-        "HostCheckbox" => return emit_host_checkbox_qml(node, depth),
-        "HostRadio" => return emit_host_radio_qml(node, depth),
+        "HostCheckbox" => return emit_host_checkbox_qml(node, depth, emits),
+        "HostRadio" => return emit_host_radio_qml(node, depth, emits),
 
         // UI29-4 kernel — `HostLink` lowers to a rich-text `Text`
         // with `onLinkActivated` (Qt has no first-class hyperlink
@@ -480,21 +480,27 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         // `HostTooltip` lowers to the `ToolTip.text` attached
         // property on any child. `HostNumberInput` lowers to
         // QtQuick.Controls 2 `SpinBox` (built-in ± stepper).
-        "HostLink" => return emit_host_link_qml(node, depth),
-        "HostTooltip" => return emit_host_tooltip_qml(node, depth),
-        "HostNumberInput" => return emit_host_number_input_qml(node, depth),
+        "HostLink" => return emit_host_link_qml(node, depth, emits),
+        "HostTooltip" => return emit_host_tooltip_qml(node, depth, emits),
+        "HostNumberInput" => return emit_host_number_input_qml(node, depth, emits),
 
-        "HostTable" => return emit_host_table_qml(node, depth),
+        // UI26 §6.2 — `Grid` userland spreadsheet primitive.  Lowers
+        // to a `ColumnLayout` containing one `RowLayout` header plus
+        // one `Repeater`-driven `RowLayout` per body row.  See
+        // [`emit_grid_qml`].
+        "Grid" => return emit_grid_qml(node, depth, emits),
+
+        "HostTable" => return emit_host_table_qml(node, depth, emits),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
         // `Item` delegate that re-exports `modelData` / `index` under the
         // author's chosen names.
-        "For" => return emit_for_qml(node, depth),
+        "For" => return emit_for_qml(node, depth, emits),
         // UI29 §3.2 — `If` meta-primitive. When `If` appears as a *root*
         // node (no preceding sibling to pair with `Else`), it is emitted
         // as a single-Loader conditional with no else branch. The
         // `If`+`Else` sibling pairing happens in `emit_qml_children`
         // when walking a parent's children list.
-        "If" => return emit_if_qml(node, None, depth),
+        "If" => return emit_if_qml(node, None, depth, emits),
         // UI29 §3.2 — a top-level `Else` (no preceding `If`) has no
         // semantic home. Emit a self-documenting QML comment rather
         // than erroring. Defensive: the grammar should prevent this,
@@ -582,7 +588,7 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     // Children are walked through `emit_qml_children` rather than a
     // bare `for` so that `If`+`Else` sibling pairs are recognised
     // (UI29 §3.2).
-    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack, emits)?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -606,6 +612,7 @@ fn emit_qml_children(
     children: &[LayoutNode],
     depth: usize,
     is_stack: bool,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -621,9 +628,9 @@ fn emit_qml_children(
             if else_sibling.is_some() {
                 i += 1; // consume the Else along with the If
             }
-            emit_if_qml(child, else_sibling, depth)?
+            emit_if_qml(child, else_sibling, depth, emits)?
         } else {
-            emit_qml_tree(child, depth)?
+            emit_qml_tree(child, depth, emits)?
         };
 
         if is_stack {
@@ -856,6 +863,48 @@ fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
     }
 }
 
+/// Pick the QML argument list for invoking the named signal.
+///
+/// QML signals are arity-strict: passing the wrong number of args
+/// is a runtime error at the call site, not a silent ignore.  When
+/// the .mil declares `emit onFormulaChange ( value : text )`, the
+/// QML signal is declared `signal formulaChange(string value)` and
+/// must be invoked as `formulaChange(text)`.  When the .mil declares
+/// `emit onCommit ;` (no payload), the QML signal is `signal commit()`
+/// and must be invoked as `commit()`.
+///
+/// Returns `""` for zero-arity signals, `"text"` for any signal with
+/// one or more declared params (the conventional payload for
+/// `HostInput`-style sources — the contents of the text field).
+///
+/// If the signal name isn't found in `emits` (defensive — should not
+/// happen for well-formed input), falls back to `""` so QML at least
+/// won't error on extra args.
+fn pick_signal_arg(emit_name: &str, emits: &[EmitDecl]) -> &'static str {
+    pick_signal_arg_with(emit_name, emits, "text")
+}
+
+/// Generic variant: pick the QML invocation argument list, supplying
+/// a custom payload token to use when the signal declares ≥1 params.
+///
+/// Used by emitters where the natural payload is something other
+/// than `text` — e.g. `checked` for `Checkbox.toggled(bool)`, or
+/// `value` for a custom numeric control.  Returns `""` for the
+/// parameterless case so a zero-arity signal is invoked with no
+/// args (the bug that prompted this helper in the first place).
+fn pick_signal_arg_with(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    payload_token: &'static str,
+) -> &'static str {
+    let arity = emits
+        .iter()
+        .find(|e| e.name == emit_name)
+        .map(|e| e.params.len())
+        .unwrap_or(0);
+    if arity == 0 { "" } else { payload_token }
+}
+
 /// Lower a `HostInput` node to a QML `TextInput { ... }` block.
 ///
 /// ## Property handling
@@ -870,14 +919,30 @@ fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
 /// |                         | placeholder attribute — the QML idiom is a sibling `Text`   |
 /// |                         | element shown when `text.length === 0`, but that requires   |
 /// |                         | a richer node-emission path; deferred to a follow-up PR.    |
-/// | `onChange: emit: onE`   | `onTextChanged: e()`                                        |
-/// | `onCommit: emit: onE`   | `onAccepted: e(text)` — fires on Enter                      |
-/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`      |
+/// | `onChange: emit: onE`   | `onTextChanged: e(<arg>)`  — `arg` is `text` when the signal      |
+/// |                         | declares one parameter, empty when it declares zero (see          |
+/// |                         | `pick_signal_arg`).                                               |
+/// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule            |
+/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(<arg>); event.accepted = true }`       |
+///
+/// ## Signal arity matters
+///
+/// QML enforces signal arity strictly — invoking a parameterless
+/// `signal commit()` with `commit(text)` errors with
+/// "too many arguments", and a `signal formulaChange(string value)`
+/// invoked as `formulaChange()` errors with "Insufficient arguments".
+/// The emitter therefore checks the interface's `EmitDecl` for the
+/// referenced signal and inserts `text` only when the signal has
+/// exactly one declared parameter (the conventional shape — a single
+/// payload value: the new text).  Zero-param signals are invoked with
+/// no args; multi-param signals are also invoked with `text` for the
+/// first slot (callers can wire the rest), which is the v0.1.0
+/// compromise — full multi-arg lowering is a follow-up.
 ///
 /// The Enter / Escape mapping mirrors UI25 §10 (the React backend
 /// merges both into a single `onKeyDown` handler; QML has dedicated
 /// signal handlers for both, so we use them directly).
-fn emit_host_input_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -903,27 +968,30 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
         .unwrap();
     }
 
-    // onTextChanged: e()
+    // onTextChanged: e(<arg>)
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner_pad}onTextChanged: {camel}()").unwrap();
+        let arg = pick_signal_arg(emit_name, emits);
+        writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
 
-    // onAccepted: e(text)
+    // onAccepted: e(<arg>)
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner_pad}onAccepted: {camel}(text)").unwrap();
+        let arg = pick_signal_arg(emit_name, emits);
+        writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
     }
 
-    // Keys.onEscapePressed: { e(); event.accepted = true }
+    // Keys.onEscapePressed: { e(<arg>); event.accepted = true }
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arg = pick_signal_arg(emit_name, emits);
         writeln!(
             out,
-            "{inner_pad}Keys.onEscapePressed: {{ {camel}(); event.accepted = true }}"
+            "{inner_pad}Keys.onEscapePressed: {{ {camel}({arg}); event.accepted = true }}"
         )
         .unwrap();
     }
@@ -947,7 +1015,7 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
 /// | `disabled: slot: x`     | `enabled: !x`                             |
 /// | `disabled: true/false`  | `enabled: !true` / `enabled: !false`      |
 /// | `onTap: emit: onE`      | `onClicked: e()`                          |
-fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_button_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -963,10 +1031,26 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    // onClicked: e()
+    // onClicked: e(<arg>) — buttons fire QML's `clicked()` signal
+    // which carries no payload.  If the author declared `emit onTap
+    // ;` (parameterless) we emit `e()`; if they declared a payload
+    // (rare but allowed) we still emit `e()` because the button has
+    // nothing to pass — surface the gap as a comment so the
+    // mismatch is visible to the author.  `pick_signal_arg` returns
+    // `""` for arity-0 signals which is what we want; for arity-≥1
+    // it returns `"text"`, but a button has no `text` in scope, so
+    // we explicitly take the empty-arg path here.
     if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits.iter().find(|e| e.name == *emit_name)
+            .map(|e| e.params.len()).unwrap_or(0);
+        if arity > 0 {
+            writeln!(
+                out,
+                "{inner_pad}// NOTE: signal '{emit_name}' declares {arity} param(s) but Qt's Button.clicked() has none; invoking parameterless"
+            ).unwrap();
+        }
         writeln!(out, "{inner_pad}onClicked: {camel}()").unwrap();
     }
 
@@ -1013,7 +1097,7 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
 /// machinery we don't want for a primitive). When a `title:` prop is
 /// bound, we synthesise a bold `Text` element as the first child of
 /// `contentItem`, before the author's children.
-fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let content_pad = "    ".repeat(depth + 2);
@@ -1086,7 +1170,7 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
     // nested meta-primitives (If/Else/For) get the same treatment they
     // get anywhere else in the tree. `is_stack: false` — a dialog
     // body is a normal column, not a Z-stack.
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, emits)?);
 
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -1118,7 +1202,7 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
 /// `toggled(bool checked)` signal. We forward the `checked` parameter
 /// into the Mosaic emit call so the host sees the new state, matching
 /// the kernel-canonical `onToggle(checked: bool)` payload.
-fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1159,12 +1243,17 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize) -> Result<String, Pip
         .unwrap();
     }
 
-    // onToggled: x(checked) — Qt fires `toggled(bool checked)` whenever
-    // the user flips the checkbox.
+    // onToggled: x(<arg>) — Qt fires `toggled(bool checked)` whenever
+    // the user flips the checkbox.  Respect the signal's declared
+    // arity: a parameterless `emit onToggle ;` gets invoked as
+    // `x()`; a `emit onToggle ( value : bool )` (or any arity ≥ 1)
+    // gets `x(checked)` since `checked` is the natural payload Qt
+    // makes available in the signal-handler scope.
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner_pad}onToggled: {camel}(checked)").unwrap();
+        let arg = pick_signal_arg_with(emit_name, emits, "checked");
+        writeln!(out, "{inner_pad}onToggled: {camel}({arg})").unwrap();
     }
 
     writeln!(out, "{pad}}}").unwrap();
@@ -1202,7 +1291,7 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize) -> Result<String, Pip
 /// reserved for UI29-2.1's `RadioGroup` userland component; v1
 /// preserves the `group:` prop as a `// group: ...` comment, identical
 /// to the SwiftUI backend's choice, so the metadata stays visible.
-fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_radio_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1265,12 +1354,22 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
     }
 
     // onCheckedChanged: positive-transition-gated dispatch.
+    // Respect signal arity: a parameterless `emit onSelect ;` gets
+    // invoked as `x()`; a ≥1-arity signal gets the value payload
+    // computed above (`value_for_dispatch`).
     if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits.iter().find(|e| e.name == *emit_name)
+            .map(|e| e.params.len()).unwrap_or(0);
+        let call_args = if arity == 0 {
+            String::new()
+        } else {
+            value_for_dispatch.clone()
+        };
         writeln!(
             out,
-            "{inner_pad}onCheckedChanged: if (checked) {camel}({value_for_dispatch})"
+            "{inner_pad}onCheckedChanged: if (checked) {camel}({call_args})"
         )
         .unwrap();
     }
@@ -1303,7 +1402,7 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
 /// | `target: new-tab`   | `onLinkActivated: Qt.openUrlExternally(link)` (always external — Qt has no in-window tab concept; new-tab and same map to the same external-browser call) |
 /// | `external: false`   | `onLinkActivated: x()` — dispatches the emit instead of opening, letting the host route in-app |
 /// | `onActivate: emit`  | dispatched on link activation                             |
-fn emit_host_link_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_link_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1350,18 +1449,23 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipelin
 
     let handler_body: String = match (external_false, on_activate) {
         (true, Some(emit)) => {
-            // Pure in-app routing — dispatch only.
+            // Pure in-app routing — dispatch only.  Respect signal
+            // arity: arity-0 → `e()`; arity ≥1 → `e(link)` (Qt's
+            // onLinkActivated handler scope exposes the activated
+            // URL as `link`).
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel)
                 .map_err(PipelineEmitError::UnsafeEmitName)?;
-            format!("{camel}()")
+            let arg = pick_signal_arg_with(emit, emits, "link");
+            format!("{camel}({arg})")
         }
         (false, Some(emit)) => {
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel)
                 .map_err(PipelineEmitError::UnsafeEmitName)?;
+            let arg = pick_signal_arg_with(emit, emits, "link");
             // Dispatch AND open externally.
-            format!("{{ {camel}(); Qt.openUrlExternally(link); }}")
+            format!("{{ {camel}({arg}); Qt.openUrlExternally(link); }}")
         }
         (_, None) => "Qt.openUrlExternally(link)".to_string(),
     };
@@ -1388,7 +1492,7 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipelin
 ///
 /// `HoverHandler` (QtQuick 2.12+) gives the hover state without
 /// needing a `MouseArea` (which would intercept clicks on the child).
-fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1403,7 +1507,7 @@ fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipe
 
     // Walk children (the wrapped element) through the standard children
     // walker so nested kernel primitives lower normally.
-    out.push_str(&emit_qml_children(&node.children, depth + 1, false)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 1, false, emits)?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -1432,6 +1536,7 @@ fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipe
 fn emit_host_number_input_qml(
     node: &LayoutNode,
     depth: usize,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
@@ -1464,11 +1569,14 @@ fn emit_host_number_input_qml(
         writeln!(out, "{inner}{line}").unwrap();
     }
 
-    // onChange -> onValueModified.
+    // onChange -> onValueModified.  Respect signal arity: arity-0 →
+    // `e()`; arity ≥1 → `e(value)` (Qt's SpinBox.value is the
+    // natural payload to forward).
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner}onValueModified: {camel}(value)").unwrap();
+        let arg = pick_signal_arg_with(emit_name, emits, "value");
+        writeln!(out, "{inner}onValueModified: {camel}({arg})").unwrap();
     }
 
     writeln!(out, "{pad}}}").unwrap();
@@ -1604,6 +1712,198 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// |---|---|
 /// | `HostTableHead`     | RowLayout(s); descendant `Text` nodes get `font.bold: true`  |
 /// | `HostTableBody`     | RowLayout(s) per `Row` child                                 |
+/// Lower the `Grid` userland primitive (UI26 §6.2 v2 shape) to QML.
+///
+/// The Grid carries enough slots to act as a self-contained
+/// spreadsheet view; this emitter mirrors the React/SwiftUI Grid
+/// lowering at the Qt level so VisiCalc and similar apps can be
+/// generated end-to-end against `mosaic-compile --backend qt`.
+///
+/// ## Slot / emit mapping
+///
+/// | Mosaic prop      | QML usage                                          |
+/// |------------------|----------------------------------------------------|
+/// | `headers`        | Required.  `Repeater { model: <slot> }` header row.|
+/// | `rows`           | Required.  `Repeater { model: <slot> }` body rows. |
+/// | `column-widths`  | Accepted but not yet propagated (v0.2.0).          |
+/// | `selected-row`   | Optional.  Pairs with `selected-col` for highlight.|
+/// | `selected-col`   | Optional.                                          |
+/// | `onNavigate`     | Optional emit.  Each body cell's `MouseArea` fires |
+/// |                  | the signal with `(rowIdx, colIdx)`.                |
+///
+/// ## Shape
+///
+/// ```qml
+/// ColumnLayout {
+///     spacing: 0
+///     RowLayout {                                  // header row
+///         spacing: 0
+///         Repeater {
+///             model: headers
+///             Rectangle {
+///                 Layout.preferredWidth: 96
+///                 Layout.preferredHeight: 24
+///                 color: "#2D2D30"
+///                 border.color: "#3F3F46"
+///                 Text { anchors.centerIn: parent; text: modelData; color: "#9D9D9D" }
+///             }
+///         }
+///     }
+///     Repeater {                                   // body rows
+///         model: rows
+///         RowLayout {
+///             property int rowIdx: index
+///             spacing: 0
+///             Repeater {
+///                 model: modelData
+///                 Rectangle {
+///                     property int colIdx: index
+///                     property bool isSelected: rowIdx === selectedRow && colIdx === selectedCol
+///                     Layout.preferredWidth: 96
+///                     Layout.preferredHeight: 22
+///                     color: isSelected ? "#264F78" : "#1E1E1E"
+///                     border.color: isSelected ? "#007ACC" : "#3F3F46"
+///                     Text { anchors.right: parent.right; anchors.rightMargin: 4
+///                            text: modelData; color: "#CCCCCC" }
+///                     MouseArea {
+///                         anchors.fill: parent
+///                         onClicked: navigate(rowIdx, colIdx)
+///                     }
+///                 }
+///             }
+///         }
+///     }
+/// }
+/// ```
+///
+/// ## Deliberate v0.1.0 simplifications
+///
+/// - Cell width hardcoded to 96px; the `column-widths` slot is
+///   accepted but the per-column override isn't yet plumbed.
+/// - No inline edit cell — the host renders an external editor
+///   (FormulaBar) and pushes state via the `edit-*` slots.
+/// - Selection palette is hardcoded (excel-blue); the `.msl`
+///   `state selected` lowering lands in a follow-up.
+/// - `onNavigate` arity is respected: parameterless signal →
+///   `navigate()`; ≥1-arity signal → `navigate(rowIdx, colIdx)`.
+fn emit_grid_qml(
+    node: &LayoutNode,
+    depth: usize,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let inner2 = "    ".repeat(depth + 2);
+    let inner3 = "    ".repeat(depth + 3);
+    let inner4 = "    ".repeat(depth + 4);
+    let inner5 = "    ".repeat(depth + 5);
+
+    let headers_slot = find_slot_ref_prop(node, "headers").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'headers'".to_string())
+    })?;
+    let rows_slot = find_slot_ref_prop(node, "rows").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'rows'".to_string())
+    })?;
+    let headers_var = to_camel_case_first_lower(headers_slot);
+    let rows_var = to_camel_case_first_lower(rows_slot);
+    validate_safe_identifier(&headers_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+    validate_safe_identifier(&rows_var).map_err(PipelineEmitError::UnsafeSlotName)?;
+
+    let selected_row_var = find_slot_ref_prop(node, "selected-row")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    let selected_col_var = find_slot_ref_prop(node, "selected-col")
+        .map(to_camel_case_first_lower)
+        .filter(|s| !s.is_empty());
+    if let Some(v) = selected_row_var.as_deref() {
+        validate_safe_identifier(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+    if let Some(v) = selected_col_var.as_deref() {
+        validate_safe_identifier(v).map_err(PipelineEmitError::UnsafeSlotName)?;
+    }
+    let selected_expr = match (&selected_row_var, &selected_col_var) {
+        (Some(r), Some(c)) => format!("rowIdx === {r} && colIdx === {c}"),
+        _ => "false".to_string(),
+    };
+
+    let on_navigate_call: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onNavigate") {
+        let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits.iter().find(|e| e.name == *emit_name).map(|e| e.params.len()).unwrap_or(0);
+        Some(if arity == 0 {
+            format!("{camel}()")
+        } else {
+            format!("{camel}(rowIdx, colIdx)")
+        })
+    } else {
+        None
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}ColumnLayout {{").unwrap();
+    writeln!(out, "{inner}spacing: 0").unwrap();
+
+    // Header row.
+    writeln!(out, "{inner}RowLayout {{").unwrap();
+    writeln!(out, "{inner2}spacing: 0").unwrap();
+    writeln!(out, "{inner2}Repeater {{").unwrap();
+    writeln!(out, "{inner3}model: {headers_var}").unwrap();
+    writeln!(out, "{inner3}Rectangle {{").unwrap();
+    writeln!(out, "{inner4}Layout.preferredWidth: 96").unwrap();
+    writeln!(out, "{inner4}Layout.preferredHeight: 24").unwrap();
+    writeln!(out, "{inner4}color: \"#2D2D30\"").unwrap();
+    writeln!(out, "{inner4}border.color: \"#3F3F46\"").unwrap();
+    writeln!(out, "{inner4}border.width: 1").unwrap();
+    writeln!(out, "{inner4}Text {{").unwrap();
+    writeln!(out, "{inner5}anchors.centerIn: parent").unwrap();
+    writeln!(out, "{inner5}text: modelData").unwrap();
+    writeln!(out, "{inner5}color: \"#9D9D9D\"").unwrap();
+    writeln!(out, "{inner5}font.family: \"monospace\"").unwrap();
+    writeln!(out, "{inner4}}}").unwrap();
+    writeln!(out, "{inner3}}}").unwrap();
+    writeln!(out, "{inner2}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+
+    // Body rows.
+    writeln!(out, "{inner}Repeater {{").unwrap();
+    writeln!(out, "{inner2}model: {rows_var}").unwrap();
+    writeln!(out, "{inner2}RowLayout {{").unwrap();
+    writeln!(out, "{inner3}property int rowIdx: index").unwrap();
+    writeln!(out, "{inner3}spacing: 0").unwrap();
+    writeln!(out, "{inner3}Repeater {{").unwrap();
+    writeln!(out, "{inner4}model: modelData").unwrap();
+    writeln!(out, "{inner4}Rectangle {{").unwrap();
+    writeln!(out, "{inner5}property int colIdx: index").unwrap();
+    writeln!(out, "{inner5}property bool isSelected: {selected_expr}").unwrap();
+    writeln!(out, "{inner5}Layout.preferredWidth: 96").unwrap();
+    writeln!(out, "{inner5}Layout.preferredHeight: 22").unwrap();
+    writeln!(out, "{inner5}color: isSelected ? \"#264F78\" : \"#1E1E1E\"").unwrap();
+    writeln!(out, "{inner5}border.color: isSelected ? \"#007ACC\" : \"#3F3F46\"").unwrap();
+    writeln!(out, "{inner5}border.width: 1").unwrap();
+    writeln!(out, "{inner5}Text {{").unwrap();
+    let inner6 = "    ".repeat(depth + 6);
+    writeln!(out, "{inner6}anchors.right: parent.right").unwrap();
+    writeln!(out, "{inner6}anchors.rightMargin: 4").unwrap();
+    writeln!(out, "{inner6}anchors.verticalCenter: parent.verticalCenter").unwrap();
+    writeln!(out, "{inner6}text: modelData").unwrap();
+    writeln!(out, "{inner6}color: isSelected ? \"white\" : \"#CCCCCC\"").unwrap();
+    writeln!(out, "{inner6}font.family: \"monospace\"").unwrap();
+    writeln!(out, "{inner5}}}").unwrap();
+    if let Some(call) = on_navigate_call {
+        writeln!(out, "{inner5}MouseArea {{").unwrap();
+        writeln!(out, "{inner6}anchors.fill: parent").unwrap();
+        writeln!(out, "{inner6}onClicked: {call}").unwrap();
+        writeln!(out, "{inner5}}}").unwrap();
+    }
+    writeln!(out, "{inner4}}}").unwrap();
+    writeln!(out, "{inner3}}}").unwrap();
+    writeln!(out, "{inner2}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
 /// | `HostTableFoot`     | RowLayout(s) preceded by a divider Rectangle                 |
 /// | `HostTableColGroup` | Ignored — no QML analog. Emitted as a `// ColGroup …` comment |
 /// | (any other child)   | Walked normally (so a stray `Text` inside `HostTable` works) |
@@ -1611,7 +1911,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// `part_name` on the `HostTable` itself is *currently* not consumed —
 /// styling integration for table parts is a follow-up. Tests assert
 /// that its presence does not break emission.
-fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1675,7 +1975,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
     for child in &node.children {
         match child.tag.as_str() {
             "HostTableHead" => {
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true, emits)?;
                 // Divider after the head: a 1px Rectangle.
                 writeln!(out, "{inner_pad}Rectangle {{").unwrap();
                 writeln!(out, "{inner_pad}    Layout.fillWidth: true").unwrap();
@@ -1684,7 +1984,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
                 writeln!(out, "{inner_pad}}}").unwrap();
             }
             "HostTableBody" => {
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, emits)?;
             }
             "HostTableFoot" => {
                 // Foot is preceded by a divider so it visually separates
@@ -1694,7 +1994,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
                 writeln!(out, "{inner_pad}    height: 1").unwrap();
                 writeln!(out, "{inner_pad}    color: \"#888\"").unwrap();
                 writeln!(out, "{inner_pad}}}").unwrap();
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, emits)?;
             }
             "HostTableColGroup" => {
                 // No QML analog. Emit a self-documenting comment so the
@@ -1705,7 +2005,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
                 // Anything else inside `HostTable` is walked as a normal
                 // layout child. This preserves the door for future
                 // additions (a `For` row, a stray `Text` caption, etc.).
-                out.push_str(&emit_qml_tree(child, depth + 1)?);
+                out.push_str(&emit_qml_tree(child, depth + 1, emits)?);
             }
         }
     }
@@ -1731,6 +2031,7 @@ fn emit_table_section_rows(
     section: &LayoutNode,
     depth: usize,
     bold: bool,
+    emits: &[EmitDecl],
 ) -> Result<(), PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let cell_pad = "    ".repeat(depth + 1);
@@ -1740,7 +2041,7 @@ fn emit_table_section_rows(
             // Non-Row child inside a section — walk it normally and let
             // the general emitter handle it. The grammar should prevent
             // this in real input, but be permissive on the output side.
-            out.push_str(&emit_qml_tree(row, depth)?);
+            out.push_str(&emit_qml_tree(row, depth, emits)?);
             continue;
         }
 
@@ -1759,7 +2060,7 @@ fn emit_table_section_rows(
                 // Non-Text cell: recurse through the general walker. Bold
                 // doesn't propagate here — only `Text` cells get the
                 // header treatment in this first cut.
-                out.push_str(&emit_qml_tree(cell, depth + 1)?);
+                out.push_str(&emit_qml_tree(cell, depth + 1, emits)?);
             }
         }
         writeln!(out, "{pad}}}").unwrap();
@@ -1818,7 +2119,7 @@ fn emit_table_section_rows(
 /// declarations lower `list<T>` to QML `var`, which is exactly that.
 /// We therefore make no attempt to specialise the delegate's
 /// `property var <as>` to a typed property — `var` is the right shape.
-fn emit_for_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_for_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let delegate_pad = "    ".repeat(depth + 1);
     let prop_pad = "    ".repeat(depth + 2);
@@ -1844,7 +2145,7 @@ fn emit_for_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitE
     // Children of the `For` go inside the delegate Item. We use the
     // shared children walker so nested `If`/`Else` and `For` inside the
     // loop body work without special-casing.
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, emits)?);
 
     writeln!(out, "{delegate_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -1894,6 +2195,7 @@ fn emit_if_qml(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     depth: usize,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
@@ -1907,7 +2209,7 @@ fn emit_if_qml(
     writeln!(out, "{pad}Loader {{").unwrap();
     writeln!(out, "{inner_pad}active: {cond_expr}").unwrap();
     writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-    out.push_str(&emit_branch_body(&if_node.children, depth + 2)?);
+    out.push_str(&emit_branch_body(&if_node.children, depth + 2, emits)?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
 
@@ -1916,7 +2218,7 @@ fn emit_if_qml(
         writeln!(out, "{pad}Loader {{").unwrap();
         writeln!(out, "{inner_pad}active: {neg_cond}").unwrap();
         writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-        out.push_str(&emit_branch_body(&else_n.children, depth + 2)?);
+        out.push_str(&emit_branch_body(&else_n.children, depth + 2, emits)?);
         writeln!(out, "{inner_pad}}}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
     }
@@ -1940,15 +2242,16 @@ fn emit_if_qml(
 fn emit_branch_body(
     children: &[LayoutNode],
     depth: usize,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match children.len() {
         0 => Ok(format!("{pad}Item {{ }}\n")),
-        1 => emit_qml_tree(&children[0], depth),
+        1 => emit_qml_tree(&children[0], depth, emits),
         _ => {
             let mut out = String::new();
             writeln!(out, "{pad}Item {{").unwrap();
-            out.push_str(&emit_qml_children(children, depth + 1, false)?);
+            out.push_str(&emit_qml_children(children, depth + 1, false, emits)?);
             writeln!(out, "{pad}}}").unwrap();
             Ok(out)
         }
@@ -2989,15 +3292,17 @@ mod tests {
         assert!(result.output.contains("readOnly: locked"), "missing readOnly binding in:\n{}", result.output);
     }
 
-    // -------- Test 20: HostInput with onCommit emits onAccepted --------
+    // -------- Test 20a: HostInput onCommit (parameterless signal) --------
 
-    /// `onCommit: emit: onSubmit` lowers to `onAccepted: submit(text)`
-    /// — QML's `TextInput.onAccepted` fires on Enter, matching the
-    /// UI25 §10 semantics of `onCommit`. The signal call passes the
-    /// current `text` value (Qt's `TextInput.text` is in scope inside
-    /// the signal handler).
+    /// `onCommit: emit: onSubmit` where `onSubmit` is declared
+    /// parameterless lowers to `onAccepted: submit()` — QML signals
+    /// are arity-strict, so a parameterless signal must be invoked
+    /// with no args.  This is the shape used by the VisiCalc
+    /// `FormulaBar`'s `onCommit ;` declaration; the prior version
+    /// of the emitter unconditionally passed `(text)` and produced
+    /// "too many arguments" at runtime.
     #[test]
-    fn host_input_on_commit_emits_on_accepted() {
+    fn host_input_on_commit_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onSubmit", vec![])]);
         let l = LayoutDef {
             component_name: "X".to_string(),
@@ -3013,10 +3318,223 @@ mod tests {
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            result.output.contains("onAccepted: submit(text)"),
-            "missing onAccepted signal call in:\n{}",
+            result.output.contains("onAccepted: submit()"),
+            "missing parameterless onAccepted in:\n{}",
             result.output
         );
+        assert!(
+            !result.output.contains("onAccepted: submit(text)"),
+            "should NOT pass text to a zero-arity signal:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 20b: HostInput onCommit (one-param signal) --------
+
+    /// When the signal declares one parameter
+    /// (e.g. `emit onSubmit ( value : text )`), the codegen passes
+    /// `text` — QML's `TextInput.text` is in scope inside the
+    /// signal handler.  Mirrors the React backend's
+    /// `(e) => emit({value: e.target.value})` pattern.
+    #[test]
+    fn host_input_on_commit_one_param_passes_text() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onSubmit",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onCommit".to_string(),
+                    value: LayoutPropValue::EmitRef("onSubmit".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("onAccepted: submit(text)"),
+            "missing onAccepted: submit(text) in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 20c: HostInput onChange (one-param signal) --------
+
+    /// Matches the VisiCalc `FormulaBar` shape:
+    /// `emit onFormulaChange ( value : text ) ;` plus
+    /// `HostInput { onChange: emit: onFormulaChange }`.  Must lower
+    /// to `onTextChanged: formulaChange(text)` — invoking with no
+    /// args would error "Insufficient arguments" at runtime.
+    #[test]
+    fn host_input_on_change_one_param_passes_text() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onFormulaChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onFormulaChange".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("onTextChanged: formulaChange(text)"),
+            "missing onTextChanged: formulaChange(text) in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Tests 20d–20g: extend signal-arity respect to other host emitters --------
+
+    /// HostButton's `onTap` carries no payload by Qt convention
+    /// (`Button.clicked()` has no parameters).  Authors who declare
+    /// a parameterless `emit onTap ;` get `onClicked: x()` — verify
+    /// no extra args slip in.
+    #[test]
+    fn host_button_on_tap_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onTap", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onTap".to_string(),
+                    value: LayoutPropValue::EmitRef("onTap".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onClicked: tap()"));
+        assert!(!r.output.contains("onClicked: tap(text)"));
+    }
+
+    /// HostCheckbox's `onToggle` invocation must follow the
+    /// signal's declared arity.  Parameterless → `onToggled: x()`.
+    #[test]
+    fn host_checkbox_on_toggle_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onToggle", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onToggle".to_string(),
+                    value: LayoutPropValue::EmitRef("onToggle".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("onToggled: toggle()"),
+            "missing onToggled: toggle() in:\n{}",
+            r.output
+        );
+        assert!(!r.output.contains("onToggled: toggle(checked)"));
+    }
+
+    /// HostCheckbox with a one-param signal still emits the
+    /// `checked` payload (the QML signal-handler scope's natural
+    /// boolean).
+    #[test]
+    fn host_checkbox_on_toggle_one_param_passes_checked() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onToggle",
+                vec![param("value", EmitPayloadType::Bool)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onToggle".to_string(),
+                    value: LayoutPropValue::EmitRef("onToggle".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onToggled: toggle(checked)"));
+    }
+
+    /// HostRadio with a parameterless `onSelect` must NOT pass the
+    /// value payload (which is the natural Qt fallback).
+    #[test]
+    fn host_radio_on_select_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onSelect", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostRadio".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::String("vanilla".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onSelect".to_string(),
+                        value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output
+                .contains("onCheckedChanged: if (checked) select()"),
+            "missing parameterless onCheckedChanged dispatch in:\n{}",
+            r.output
+        );
+    }
+
+    /// HostNumberInput's `onChange` must respect arity too.
+    #[test]
+    fn host_number_input_on_change_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onChange", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostNumberInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onChange".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onValueModified: change()"));
+        assert!(!r.output.contains("onValueModified: change(value)"));
     }
 
     // -------- Test 21: HostInput with onCancel emits Keys.onEscapePressed --------
@@ -3743,6 +4261,98 @@ mod tests {
             matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t == "FlibbertyJibbet"),
             "expected UnknownPrimitive(FlibbertyJibbet), got {err:?}"
         );
+    }
+
+    // =====================================================================
+    // Grid primitive — VisiCalc-shape, exercised by the cross-backend demos.
+    // =====================================================================
+
+    #[test]
+    fn grid_with_headers_and_rows_emits_column_of_rowlayouts() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                SlotDecl {
+                    name: "column-headers".into(),
+                    r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                    required: true,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "viewport-rows".into(),
+                    r#type: SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    required: true,
+                    default: None,
+                },
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "VisiCalc".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp { name: "headers".into(), value: LayoutPropValue::SlotRef("column-headers".into()) },
+                    LayoutProp { name: "rows".into(), value: LayoutPropValue::SlotRef("viewport-rows".into()) },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(out.contains("ColumnLayout {"), "missing ColumnLayout in:\n{out}");
+        assert!(out.contains("Repeater {"), "missing Repeater in:\n{out}");
+        assert!(out.contains("model: columnHeaders"), "missing header model binding in:\n{out}");
+        assert!(out.contains("model: viewportRows"), "missing row model binding in:\n{out}");
+        assert!(out.contains("Layout.preferredWidth: 96"), "missing cell width in:\n{out}");
+    }
+
+    #[test]
+    fn grid_with_selection_and_on_navigate_emits_mouse_area_dispatch() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                SlotDecl {
+                    name: "column-headers".into(),
+                    r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                    required: true,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "viewport-rows".into(),
+                    r#type: SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    required: true,
+                    default: None,
+                },
+                SlotDecl { name: "selected-row".into(), r#type: SlotType::Number, required: true, default: None },
+                SlotDecl { name: "selected-col".into(), r#type: SlotType::Number, required: true, default: None },
+            ],
+            vec![emit_decl("onNavigate", vec![
+                EmitParam { name: "row".into(), r#type: EmitPayloadType::Number },
+                EmitParam { name: "col".into(), r#type: EmitPayloadType::Number },
+            ])],
+        );
+        let l = LayoutDef {
+            component_name: "VisiCalc".to_string(),
+            root: LayoutNode {
+                tag: "Grid".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp { name: "headers".into(), value: LayoutPropValue::SlotRef("column-headers".into()) },
+                    LayoutProp { name: "rows".into(), value: LayoutPropValue::SlotRef("viewport-rows".into()) },
+                    LayoutProp { name: "selected-row".into(), value: LayoutPropValue::SlotRef("selected-row".into()) },
+                    LayoutProp { name: "selected-col".into(), value: LayoutPropValue::SlotRef("selected-col".into()) },
+                    LayoutProp { name: "onNavigate".into(), value: LayoutPropValue::EmitRef("onNavigate".into()) },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(out.contains("rowIdx === selectedRow && colIdx === selectedCol"));
+        assert!(out.contains("\"#264F78\""));
+        assert!(out.contains("onClicked: navigate(rowIdx, colIdx)"));
     }
 
     // =====================================================================

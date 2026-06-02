@@ -483,7 +483,7 @@ fn emit_widget_class(
     writeln!(out, "  @override").unwrap();
     writeln!(out, "  Widget build(BuildContext context) {{").unwrap();
     writeln!(out, "    return").unwrap();
-    let tree = emit_widget_tree(layout_root, 6, part_styles)?;
+    let tree = emit_widget_tree(layout_root, 6, part_styles, component)?;
     out.push_str(&tree);
     // Trim trailing newline before adding the closing `;`.
     if out.ends_with('\n') {
@@ -508,30 +508,37 @@ fn emit_widget_tree(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
     // --- Routing: kernel primitives with custom lowerings ---
     if node.tag == "HostInput" {
-        return emit_host_input(node, indent, part_styles);
+        return emit_host_input(node, indent, part_styles, component);
     }
     if node.tag == "HostButton" {
-        return emit_host_button(node, indent, part_styles);
+        return emit_host_button(node, indent, part_styles, component);
     }
     if node.tag == "HostCheckbox" {
-        return emit_host_checkbox(node, indent, part_styles);
+        return emit_host_checkbox(node, indent, part_styles, component);
     }
     if node.tag == "HostRadio" {
-        return emit_host_radio(node, indent, part_styles);
+        return emit_host_radio(node, indent, part_styles, component);
     }
     if node.tag == "HostScroll" {
-        return emit_host_scroll(node, indent, part_styles);
+        return emit_host_scroll(node, indent, part_styles, component);
     }
     if node.tag == "HostDialog" {
-        return emit_host_dialog(node, indent, part_styles);
+        return emit_host_dialog(node, indent, part_styles, component);
     }
     if node.tag == "HostTable" {
-        return emit_host_table(node, indent, part_styles);
+        return emit_host_table(node, indent, part_styles, component);
+    }
+    // UI26 §6.2 — Grid userland primitive.  See [`emit_grid_flutter`]
+    // for the slot/emit mapping; produces a Column-of-Rows layout
+    // via List `.map(...)` calls.
+    if node.tag == "Grid" {
+        return emit_grid_flutter(node, indent, component);
     }
     // UI29-4 kernel — three new primitives. `HostLink` lowers to an
     // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
@@ -541,13 +548,13 @@ fn emit_widget_tree(
     // `TextField` configured with `TextInputType.number` so mobile
     // devices show the numeric keypad.
     if node.tag == "HostLink" {
-        return emit_host_link(node, indent);
+        return emit_host_link(node, indent, component);
     }
     if node.tag == "HostTooltip" {
-        return emit_host_tooltip(node, indent, part_styles);
+        return emit_host_tooltip(node, indent, part_styles, component);
     }
     if node.tag == "HostNumberInput" {
-        return emit_host_number_input(node, indent);
+        return emit_host_number_input(node, indent, component);
     }
     if node.tag == "Text" {
         return Ok(emit_text(node, indent));
@@ -604,7 +611,7 @@ fn emit_widget_tree(
         ));
     }
     if let Some(widget) = container {
-        return emit_container(node, widget, indent, part_styles);
+        return emit_container(node, widget, indent, part_styles, component);
     }
 
     // --- Routing: meta-primitives ---
@@ -632,11 +639,11 @@ fn emit_widget_tree(
     // (`emit_container_paired_children`) handles the multi-child case
     // where `If`/`Else` siblings need to combine.
     match node.tag.as_str() {
-        "For" => return emit_for_dart(node, indent, part_styles),
+        "For" => return emit_for_dart(node, indent, part_styles, component),
         // Standalone If — no Else paired. The container walker fuses
         // sibling pairs, so this branch fires only when If is the lone
         // child or the parent didn't pair-walk.
-        "If" => return emit_if_dart(node, None, indent, part_styles),
+        "If" => return emit_if_dart(node, None, indent, part_styles, component),
         "Else" => {
             return Ok(format!(
                 "{pad}/* orphan Else — analyzer should have rejected this */ const SizedBox.shrink()\n"
@@ -689,6 +696,7 @@ fn emit_container(
     widget: &str,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
@@ -717,7 +725,7 @@ fn emit_container(
         if node.children.len() == 1 {
             // Single child — emit a `child:` arg + trailing style args
             // (style_args already starts with a comma).
-            let child_src = emit_widget_tree(&node.children[0], indent + 2, part_styles)?;
+            let child_src = emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?;
             let child_src = child_src.trim_end_matches('\n');
             return Ok(format!(
                 "{pad}Container(\n{inner_pad}child: {child_src}{style_args}\n{pad})\n",
@@ -725,14 +733,14 @@ fn emit_container(
             ));
         }
         // Multiple children — wrap in Column inside the Container.
-        let children = emit_paired_children(&node.children, indent + 4, part_styles)?;
+        let children = emit_paired_children(&node.children, indent + 4, part_styles, component)?;
         return Ok(format!(
             "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
         ));
     }
 
     // Row / Column / Stack — direct Flutter widgets with a children list.
-    let children = emit_paired_children(&node.children, indent + 4, part_styles)?;
+    let children = emit_paired_children(&node.children, indent + 4, part_styles, component)?;
 
     if children.is_empty() {
         return Ok(format!("{pad}const {widget}(children: [])\n"));
@@ -761,6 +769,7 @@ fn emit_paired_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -769,7 +778,7 @@ fn emit_paired_children(
         if child.tag == "If" {
             // Peek for `Else` immediately after; pair if present.
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            let if_src = emit_if_dart(child, else_node, indent, part_styles)?;
+            let if_src = emit_if_dart(child, else_node, indent, part_styles, component)?;
             let trimmed = if_src.trim_end_matches('\n');
             out.push_str(trimmed);
             out.push_str(",\n");
@@ -778,7 +787,7 @@ fn emit_paired_children(
         }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let sub = emit_widget_tree(child, indent, part_styles)?;
+        let sub = emit_widget_tree(child, indent, part_styles, component)?;
         let sub = sub.trim_end_matches('\n');
         out.push_str(sub);
         out.push_str(",\n");
@@ -811,10 +820,10 @@ fn emit_paired_children(
 /// `Expr` (passed through verbatim — author-controlled). A defensive
 /// fall-back to `<dynamic>[]` keeps the file type-checking when the
 /// validator somehow allowed a bad shape.
-fn emit_for_dart(
-    node: &LayoutNode,
+fn emit_for_dart(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -851,13 +860,13 @@ fn emit_for_dart(
     let body = if node.children.is_empty() {
         format!("{}const SizedBox.shrink()", " ".repeat(body_pad))
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], body_pad, part_styles)?
+        emit_widget_tree(&node.children[0], body_pad, part_styles, component)?
             .trim_end_matches('\n')
             .to_string()
     } else {
         // Multiple children — wrap in a Column so the map closure
         // returns a single Widget.
-        let inner = emit_paired_children(&node.children, body_pad + 4, part_styles)?;
+        let inner = emit_paired_children(&node.children, body_pad + 4, part_styles, component)?;
         format!(
             "{}Column(children: [\n{}{}])",
             " ".repeat(body_pad),
@@ -914,11 +923,11 @@ fn emit_for_dart(
 ///
 /// Empty branches collapse to `const SizedBox.shrink()` so the
 /// ternary always returns a concrete Widget.
-fn emit_if_dart(
-    if_node: &LayoutNode,
+fn emit_if_dart(if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -935,9 +944,9 @@ fn emit_if_dart(
     };
 
     let body_pad = indent + 2;
-    let then_branch = render_branch(&if_node.children, body_pad, part_styles)?;
+    let then_branch = render_branch(&if_node.children, body_pad, part_styles, component)?;
     let else_branch = match else_node {
-        Some(en) => render_branch(&en.children, body_pad, part_styles)?,
+        Some(en) => render_branch(&en.children, body_pad, part_styles, component)?,
         None => "const SizedBox.shrink()".to_string(),
     };
 
@@ -959,15 +968,16 @@ fn render_branch(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     if children.is_empty() {
         return Ok("const SizedBox.shrink()".to_string());
     }
     if children.len() == 1 {
-        let s = emit_widget_tree(&children[0], indent, part_styles)?;
+        let s = emit_widget_tree(&children[0], indent, part_styles, component)?;
         return Ok(s.trim_end_matches('\n').trim_start().to_string());
     }
-    let inner = emit_paired_children(children, indent + 2, part_styles)?;
+    let inner = emit_paired_children(children, indent + 2, part_styles, component)?;
     Ok(format!(
         "Column(children: [\n{}{}])",
         inner,
@@ -1124,6 +1134,7 @@ fn emit_host_input(
     node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     // UI28-1 / U29-D1 — accept Expr in `value:` so
@@ -1164,14 +1175,32 @@ fn emit_host_input(
         .unwrap();
     }
 
-    // onChange — wraps the new value in the dispatch call.
+    // onChange — wraps the new value in a dispatched event.
+    //
+    // The dispatched event subclass is named `<Component>Event<Case>`
+    // — matching the sealed-class hierarchy `emit_widget_class`
+    // generates at the top of the file (see also the
+    // `dispatch: void Function(<Component>Event)` field).  Both
+    // pieces — the component name and the case — are in scope here,
+    // so we produce a real call.  v0.1.0 of the emitter wrote a
+    // literal `/* TODO: ... */` placeholder in the dispatch argument
+    // position, which broke compilation of every generated widget
+    // that wired an onChange handler.
+    //
+    // Single named field `value: String` matches the .mil
+    // declaration `emit on<Case> ( value : text )` used by VisiCalc's
+    // FormulaBar.  Components whose `onChange` carries a different
+    // payload shape will need to extend this codegen — for now any
+    // alternate shape would produce a Dart compile error rather than
+    // a silent TODO that ships at runtime.
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        // Note: the closure assumes the event subclass takes a single
-        // `value: String` field. Components whose `onChange` carries
-        // a different shape will need to update their .mil to match.
-        writeln!(out, "{pad}  onChanged: (value) => dispatch(/* TODO: {case}(value: value) */),").unwrap();
+        writeln!(
+            out,
+            "{pad}  onChanged: (value) => dispatch({component}Event{case}(value: value)),"
+        )
+        .unwrap();
     }
     writeln!(out, "{pad})").unwrap();
     Ok(out)
@@ -1179,10 +1208,10 @@ fn emit_host_input(
 
 /// `HostButton` → `ElevatedButton`. Label can be a string literal,
 /// a slot ref, or empty; `disabled` toggles via `onPressed: null`.
-fn emit_host_button(
-    node: &LayoutNode,
+fn emit_host_button(node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let label_expr: String = if let Some(s) = find_string_prop(node, "label") {
@@ -1195,31 +1224,27 @@ fn emit_host_button(
         "Text(\"\")".to_string()
     };
 
-    // onPressed callback. If `onTap` is bound dispatch; otherwise
-    // pass an empty callback so the button still renders enabled.
-    // `disabled: true` (compile-time keyword) overrides with `null`.
+    // onPressed callback.  `disabled: true` (compile-time keyword)
+    // overrides with `null`.  Otherwise dispatch the bound onTap
+    // event — now that `component` is threaded down (after the
+    // FormulaBar fix), we can finally produce a real
+    // `dispatch(<Component>Event<Case>())` call.  Buttons have no
+    // inherent payload, so we always dispatch the parameterless
+    // form; a future PR will look up the .mil's emit arity and
+    // dispatch a constructed payload if one was declared.
     let disabled_is_true = matches!(find_keyword_prop(node, "disabled"), Some("true"));
     let on_pressed_expr: String = if disabled_is_true {
         "null".to_string()
     } else if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        format!("() => dispatch({}Event{}())", "" /*component unknown here*/, case)
+        format!("() => dispatch({component}Event{case}())")
     } else {
         "() {}".to_string()
     };
 
-    // We don't have the component name in scope here; instead emit a
-    // `/* TODO: wire dispatch */` placeholder for the dispatch arm.
-    // The follow-up "thread component name down" PR will tighten this.
-    let on_pressed_for_output = if on_pressed_expr.contains("Event") {
-        "() {} /* TODO: dispatch */".to_string()
-    } else {
-        on_pressed_expr
-    };
-
     Ok(format!(
-        "{pad}ElevatedButton(onPressed: {on_pressed_for_output}, child: {label_expr})\n"
+        "{pad}ElevatedButton(onPressed: {on_pressed_expr}, child: {label_expr})\n"
     ))
 }
 
@@ -1227,10 +1252,10 @@ fn emit_host_button(
 /// slot is accepted but ignored (Flutter `Checkbox` has a
 /// `tristate: true` mode, but the visual is a dash — close enough for
 /// a follow-up).
-fn emit_host_checkbox(
-    node: &LayoutNode,
+fn emit_host_checkbox(node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let checked_expr: String = if let Some(slot) = find_slot_ref_prop(node, "checked") {
@@ -1252,8 +1277,21 @@ fn emit_host_checkbox(
         None
     };
 
+    // onToggle dispatch wiring.  Mirrors the HostInput onChange
+    // pattern: look up the `onToggle` emit ref, derive
+    // `<Component>Event<Case>(value: v)` where `v` is Flutter's
+    // Checkbox's new-bool payload.  If no `onToggle` binding is
+    // present, the callback is a no-op so the Checkbox still
+    // renders interactive.
+    let on_changed_body: String = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        format!("dispatch({component}Event{case}(value: v ?? false))")
+    } else {
+        "/* no onToggle bound */".to_string()
+    };
     let body = format!(
-        "Checkbox(value: {checked_expr}, onChanged: (v) {{ /* TODO: dispatch onToggle */ }})"
+        "Checkbox(value: {checked_expr}, onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
@@ -1265,10 +1303,10 @@ fn emit_host_checkbox(
 /// `HostRadio` → `Radio<String>`. Group coordination via `groupValue`
 /// matches HTML's shared-`name` pattern; the host owns the
 /// currently-selected value.
-fn emit_host_radio(
-    node: &LayoutNode,
+fn emit_host_radio(node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let value_expr: String = if let Some(s) = find_string_prop(node, "value") {
@@ -1309,8 +1347,18 @@ fn emit_host_radio(
         None
     };
 
+    // onSelect dispatch wiring.  Flutter's `Radio.onChanged(T?)`
+    // fires with the newly-selected value; we forward it as the
+    // `value` field of the dispatched event.
+    let on_changed_body: String = if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        format!("dispatch({component}Event{case}(value: v ?? \"\"))")
+    } else {
+        "/* no onSelect bound */".to_string()
+    };
     let body = format!(
-        "Radio<String>(value: {value_expr}, groupValue: {group_value_expr}, onChanged: (v) {{ /* TODO: dispatch onSelect */ }})"
+        "Radio<String>(value: {value_expr}, groupValue: {group_value_expr}, onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
@@ -1323,17 +1371,17 @@ fn emit_host_radio(
 /// the children in a `Column`. The legacy Mosaic spec keeps
 /// `HostScroll` direction-agnostic; Flutter's default is vertical
 /// scroll which matches the most common use case.
-fn emit_host_scroll(
-    node: &LayoutNode,
+fn emit_host_scroll(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
         return Ok(format!("{pad}const SingleChildScrollView()\n"));
     }
     if node.children.len() == 1 {
-        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles)?;
+        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?;
         let child = child.trim_end_matches('\n');
         return Ok(format!(
             "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
@@ -1342,7 +1390,7 @@ fn emit_host_scroll(
     // Multi-child path. Use the paired walker so an `If`/`Else`
     // sibling pair (Cell-style conditionals inside a scroll viewport)
     // is consumed correctly.
-    let children = emit_paired_children(&node.children, indent + 6, part_styles)?;
+    let children = emit_paired_children(&node.children, indent + 6, part_styles, component)?;
     Ok(format!(
         "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
     ))
@@ -1353,10 +1401,10 @@ fn emit_host_scroll(
 /// anchor-shaped `SizedBox.shrink()` carrying the dialog logic; full
 /// fidelity (modal vs non-modal, dismiss-on-backdrop, title, onClose
 /// dispatch) is a follow-up PR.
-fn emit_host_dialog(
-    _node: &LayoutNode,
+fn emit_host_dialog(_node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     Ok(format!(
@@ -1384,14 +1432,139 @@ fn emit_host_dialog(
 /// | unknown keyword        | (no wrap — drops silently per the allow-list security gate)        |
 ///
 /// The allow-list (`ltr` / `rtl` / `auto`) is the security gate: an
+/// Lower the `Grid` userland primitive (UI26 §6.2 v2 shape) to Flutter.
+///
+/// Mirrors the React, SwiftUI, Qt, and Compose Grid lowerings.
+///
+/// ## Slot / emit mapping
+///
+/// | Mosaic prop      | Flutter usage                                       |
+/// |------------------|-----------------------------------------------------|
+/// | `headers`        | Required.  `List<String>` header row.               |
+/// | `rows`           | Required.  `List<List<String>>` body rows.          |
+/// | `column-widths`  | Accepted; per-column override deferred to v0.2.0.   |
+/// | `selected-row`   | Optional.  Pairs with `selected-col` for tint.      |
+/// | `selected-col`   | Optional.                                           |
+/// | `onNavigate`     | Optional emit.  Each cell's `GestureDetector`       |
+/// |                  | dispatches it.                                      |
+///
+/// ## Shape
+///
+/// ```dart
+/// Column(children: [
+///   Row(children: [
+///     for (final h in headers)
+///       Container(width: 96, height: 24, child: Text(h)),
+///   ]),
+///   for (int r = 0; r < rows.length; r++)
+///     Row(children: [
+///       for (int c = 0; c < rows[r].length; c++)
+///         GestureDetector(
+///           onTap: () => dispatch(<C>EventNavigate(row: r, col: c)),
+///           child: Container(
+///             width: 96, height: 22,
+///             color: (r == selectedRow && c == selectedCol)
+///                   ? const Color(0xFF264F78) : const Color(0xFF1E1E1E),
+///             child: Text(rows[r][c]),
+///           ),
+///         ),
+///     ]),
+/// ])
+/// ```
+fn emit_grid_flutter(
+    node: &LayoutNode,
+    indent: usize,
+    component: &str,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 2);
+    let inner2 = " ".repeat(indent + 4);
+    let inner3 = " ".repeat(indent + 6);
+    let inner4 = " ".repeat(indent + 8);
+
+    let headers_slot = find_slot_ref_prop(node, "headers").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'headers'".to_string())
+    })?;
+    let rows_slot = find_slot_ref_prop(node, "rows").ok_or_else(|| {
+        PipelineEmitError::UnsafeSlotName("Grid missing required prop 'rows'".to_string())
+    })?;
+    let headers_var = to_camel_case_first_lower(headers_slot);
+    let rows_var = to_camel_case_first_lower(rows_slot);
+    validate_slot_or_field_name(&headers_var)?;
+    validate_slot_or_field_name(&rows_var)?;
+
+    let selected_row_var = find_slot_ref_prop(node, "selected-row").map(to_camel_case_first_lower);
+    let selected_col_var = find_slot_ref_prop(node, "selected-col").map(to_camel_case_first_lower);
+    if let Some(v) = selected_row_var.as_deref() {
+        validate_slot_or_field_name(v)?;
+    }
+    if let Some(v) = selected_col_var.as_deref() {
+        validate_slot_or_field_name(v)?;
+    }
+    let selected_expr = match (&selected_row_var, &selected_col_var) {
+        (Some(r), Some(c)) => format!("r == {r} && c == {c}"),
+        _ => "false".to_string(),
+    };
+
+    let on_navigate_call: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onNavigate") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        Some(format!(
+            "dispatch({component}Event{case}(row: r, col: c))"
+        ))
+    } else {
+        None
+    };
+
+    let cell_gesture_open = if on_navigate_call.is_some() {
+        format!("{inner3}GestureDetector(\n{inner4}onTap: () => {},\n{inner4}child: ", on_navigate_call.unwrap())
+    } else {
+        format!("{inner3}")
+    };
+    let cell_gesture_close = if on_navigate_call_was_set(node) { format!("\n{inner3})") } else { String::new() };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Column(children: [").unwrap();
+
+    // Header row.
+    writeln!(out, "{inner}Row(children: [").unwrap();
+    writeln!(out, "{inner2}for (final h in {headers_var})").unwrap();
+    writeln!(out, "{inner3}Container(width: 96, height: 24, color: const Color(0xFF2D2D30), child: Text(h)),").unwrap();
+    writeln!(out, "{inner}]),").unwrap();
+
+    // Body rows.
+    writeln!(out, "{inner}for (int r = 0; r < {rows_var}.length; r++)").unwrap();
+    writeln!(out, "{inner2}Row(children: [").unwrap();
+    writeln!(out, "{inner3}for (int c = 0; c < {rows_var}[r].length; c++)").unwrap();
+    writeln!(out, "{cell_gesture_open}Container(").unwrap();
+    let body_pad = " ".repeat(indent + 10);
+    writeln!(out, "{body_pad}width: 96,").unwrap();
+    writeln!(out, "{body_pad}height: 22,").unwrap();
+    writeln!(
+        out,
+        "{body_pad}color: ({selected_expr}) ? const Color(0xFF264F78) : const Color(0xFF1E1E1E),"
+    )
+    .unwrap();
+    writeln!(out, "{body_pad}child: Text({rows_var}[r][c]),").unwrap();
+    writeln!(out, "{inner3}){cell_gesture_close},").unwrap();
+    writeln!(out, "{inner2}]),").unwrap();
+
+    writeln!(out, "{pad}])").unwrap();
+    Ok(out)
+}
+
+fn on_navigate_call_was_set(node: &LayoutNode) -> bool {
+    find_emit_ref_prop(node, "onNavigate").is_some()
+}
+
 /// attacker-controlled keyword can't sneak a `child: pwn()` payload
 /// into the generated source because it never reaches the format
 /// string. Slot refs go through `is_safe_dart_identifier` so they
 /// can't either.
-fn emit_host_table(
-    node: &LayoutNode,
+fn emit_host_table(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1425,7 +1598,7 @@ fn emit_host_table(
     let body_inner = if node.children.is_empty() {
         format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
     } else {
-        emit_paired_children(&node.children, indent + 4, part_styles)?
+        emit_paired_children(&node.children, indent + 4, part_styles, component)?
     };
     let table_body = format!(
         "Column(\n{p}children: [\n{body}{p}],\n{pad})",
@@ -1520,7 +1693,7 @@ fn emit_host_table(
 /// list before being interpolated into comments, so a malicious
 /// keyword like `false*/dispatch(evil())/*` can't terminate the
 /// `/* ... */` block-comment early.
-fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_link(node: &LayoutNode, indent: usize, component: &str) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
     // href — slot ref takes priority over literal (slot refs are
@@ -1578,12 +1751,15 @@ fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
     // `host_link_with_comment_terminator_in_href_is_neutralised`.
     let href_in_comment = href_expr.replace("*/", "*\\u002f");
 
-    // onActivate dispatch (optional). Same `(value: href)` shape as
-    // SwiftUI/Qt — the host receives the resolved href in the event.
+    // onActivate dispatch (optional).  Real call now that
+    // `component` is threaded down: the host receives the resolved
+    // href in the dispatched event.  Sealed-class hierarchy at the
+    // top of the generated file already declares the
+    // `<Component>Event<Case>({required String href})` constructor.
     let on_activate_call: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onActivate") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        Some(format!("/* TODO: dispatch {case}(href: {href_in_comment}) */"))
+        Some(format!("dispatch({component}Event{case}(href: {href_expr}))"))
     } else {
         None
     };
@@ -1627,10 +1803,10 @@ fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
 /// into the `"..."` literal. Slot-ref form passes a validated
 /// identifier; no interpolation through unvalidated input is
 /// possible.
-fn emit_host_tooltip(
-    node: &LayoutNode,
+fn emit_host_tooltip(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
@@ -1651,12 +1827,12 @@ fn emit_host_tooltip(
     let child_src: String = if node.children.is_empty() {
         format!("{inner_pad}const SizedBox.shrink()\n")
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], indent + 2, part_styles)?
+        emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?
     } else {
         // Multiple children — wrap in Column. Shouldn't happen for a
         // spec-conformant HostTooltip but we handle it defensively
         // (and through the paired walker so `If`/`Else` still fuses).
-        let children = emit_paired_children(&node.children, indent + 6, part_styles)?;
+        let children = emit_paired_children(&node.children, indent + 6, part_styles, component)?;
         format!(
             "{inner_pad}Column(\n{inner_pad}  children: [\n{children}{inner_pad}  ],\n{inner_pad})\n"
         )
@@ -1685,9 +1861,9 @@ fn emit_host_tooltip(
 /// `onChanged` (per-keystroke), because spec §3.3 explicitly
 /// rejects per-keystroke dispatch for numeric fields ("12 while
 /// typing 12.5 isn't a meaningful value").
-fn emit_host_number_input(
-    node: &LayoutNode,
+fn emit_host_number_input(node: &LayoutNode,
     indent: usize,
+    component: &str,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1715,11 +1891,17 @@ fn emit_host_number_input(
     let disabled = matches!(find_keyword_prop(node, "disabled"), Some("true"));
 
     // onChange dispatch — fires on commit (Enter/blur), not keystroke.
+    // Real dispatch — `<Component>Event<Case>(value: parsed)` where
+    // `parsed` is `double.tryParse(v) ?? 0` so the host always
+    // receives a number even if the user typed gibberish.  The
+    // sealed-class hierarchy that emit_widget_class generates
+    // already declares the value-carrying constructor; this is the
+    // call-site that the old TODO blocked.
     let on_submitted_arg: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
         Some(format!(
-            "onSubmitted: (v) {{ /* TODO: dispatch {case}(value: double.tryParse(v) ?? 0) */ }}"
+            "onSubmitted: (v) {{ dispatch({component}Event{case}(value: double.tryParse(v) ?? 0)); }}"
         ))
     } else {
         None
@@ -2087,7 +2269,7 @@ fn _layout_prop_kindcheck(_: LayoutProp) {}
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mosmodel_compiler::EmitParam;
+    use mosmodel_compiler::{EmitParam, ListInnerType};
 
     fn empty_style(name: &str) -> StyleDef {
         StyleDef {
@@ -2376,6 +2558,125 @@ mod tests {
         assert!(out.contains("hintText: \"Type a formula\""));
     }
 
+    /// Regression: `HostInput { onChange: emit: onFormulaChange }`
+    /// must lower to a real `dispatch(...)` call, not a literal
+    /// `/* TODO: ... */` placeholder.  The dispatched event subclass
+    /// is named `<Component>Event<Case>` to match the sealed-class
+    /// hierarchy emitted at the top of the Dart file.  v0.1.0 of the
+    /// emitter shipped the TODO directly in the output, breaking the
+    /// VisiCalc Flutter demo at compile time.
+    #[test]
+    fn host_input_on_change_emits_real_dispatch_call() {
+        let m = component(
+            "FormulaBar",
+            vec![slot("formula", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "FormulaBar",
+            node_with(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("formula".into()),
+                    },
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onFormulaChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("FormulaBar")).unwrap();
+        let out = &r.output;
+        assert!(
+            out.contains("onChanged: (value) => dispatch(FormulaBarEventFormulaChange(value: value))"),
+            "expected real dispatch call in:\n{out}"
+        );
+        assert!(
+            !out.contains("/* TODO"),
+            "regenerated output should not contain TODO placeholders:\n{out}"
+        );
+    }
+
+    // ----- Grid primitive -----------------------------------------------
+
+    #[test]
+    fn grid_with_headers_and_rows_emits_column_of_rows() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "VisiCalc",
+            node_with(
+                "Grid",
+                vec![
+                    LayoutProp { name: "headers".into(), value: LayoutPropValue::SlotRef("column-headers".into()) },
+                    LayoutProp { name: "rows".into(), value: LayoutPropValue::SlotRef("viewport-rows".into()) },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(out.contains("Column(children: ["), "missing Column root in:\n{out}");
+        assert!(out.contains("for (final h in columnHeaders)"), "missing headers loop in:\n{out}");
+        assert!(out.contains("for (int r = 0; r < viewportRows.length"), "missing body row loop in:\n{out}");
+        assert!(out.contains("for (int c = 0; c < viewportRows[r].length"), "missing body cell loop in:\n{out}");
+    }
+
+    #[test]
+    fn grid_with_on_navigate_emit_dispatches_per_cell() {
+        let m = component(
+            "VisiCalc",
+            vec![
+                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+            ],
+            vec![emit(
+                "onNavigate",
+                vec![
+                    EmitParam { name: "row".into(), r#type: EmitPayloadType::Number },
+                    EmitParam { name: "col".into(), r#type: EmitPayloadType::Number },
+                ],
+            )],
+        );
+        let l = layout(
+            "VisiCalc",
+            node_with(
+                "Grid",
+                vec![
+                    LayoutProp { name: "headers".into(), value: LayoutPropValue::SlotRef("column-headers".into()) },
+                    LayoutProp { name: "rows".into(), value: LayoutPropValue::SlotRef("viewport-rows".into()) },
+                    LayoutProp { name: "onNavigate".into(), value: LayoutPropValue::EmitRef("onNavigate".into()) },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("VisiCalc")).unwrap();
+        let out = r.output;
+        assert!(
+            out.contains("dispatch(VisiCalcEventNavigate(row: r, col: c))"),
+            "expected real dispatch call, got:\n{out}"
+        );
+        assert!(out.contains("GestureDetector"), "expected per-cell GestureDetector in:\n{out}");
+    }
+
     // ----- HostCheckbox + HostRadio scaffolds --------------------------
 
     #[test]
@@ -2625,9 +2926,12 @@ mod tests {
     }
 
     /// UI29-4 Flutter test 3 — `HostLink` with onActivate emits a
-    /// dispatch TODO inside the onTap closure.
+    /// real dispatch call inside the onTap closure.  v0.1.0 of this
+    /// emitter shipped a `/* TODO: ... */` placeholder; the
+    /// flutter-emit-other-hosts cycle replaces it with the real
+    /// `<Component>Event<Case>(href: ...)` call.
     #[test]
-    fn host_link_with_on_activate_emits_dispatch_todo() {
+    fn host_link_with_on_activate_emits_real_dispatch() {
         let m = component(
             "X",
             vec![],
@@ -2655,8 +2959,14 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("/* TODO: dispatch LinkActivated"),
-            "expected dispatch LinkActivated TODO, got:\n{}",
+            r.output.contains("dispatch(XEventLinkActivated(href:"),
+            "expected real dispatch call, got:\n{}",
+            r.output
+        );
+        // And no leftover TODO at the dispatch site.
+        assert!(
+            !r.output.contains("/* TODO: dispatch LinkActivated"),
+            "expected no TODO placeholder, got:\n{}",
             r.output
         );
     }
@@ -2934,9 +3244,16 @@ mod tests {
             out.contains("onSubmitted: (v) {"),
             "expected `onSubmitted:` (commit semantics), got:\n{out}"
         );
+        // After flutter-emit-other-hosts: the dispatch is real, not
+        // a TODO.  The event subclass is `<Component>Event<Case>`
+        // with the parsed `value` payload.
         assert!(
-            out.contains("dispatch ValueChange"),
-            "expected dispatch comment naming ValueChange event, got:\n{out}"
+            out.contains("dispatch(XEventValueChange(value: double.tryParse(v) ?? 0))"),
+            "expected real dispatch call, got:\n{out}"
+        );
+        assert!(
+            !out.contains("/* TODO: dispatch ValueChange"),
+            "expected no TODO placeholder, got:\n{out}"
         );
     }
 

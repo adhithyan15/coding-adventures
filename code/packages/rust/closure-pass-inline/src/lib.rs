@@ -91,6 +91,7 @@
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::{analyze, BindingId, BindingKind};
 
 /// `Pass::depends_on` value. Kept as a `const` so future tests
 /// and dependent crates can refer to it without retyping the
@@ -154,19 +155,108 @@ impl Pass for InlinePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // v1: no FunctionDeclaration / CallExpression /
-        // Identifier nodes in the AST yet, so there's nothing to
-        // inline. Pass through unchanged. The real call-graph
-        // walk + per-call substitution slots in here once
-        // javascript-ast grows the variants.
+        // CLOC13.B wiring: consume the shared `ScopeAnalysis` from
+        // `closure-scope-analyzer` to identify *inline candidates*
+        // — function/class-shaped bindings that are called from
+        // exactly one site, where substituting the body in place
+        // saves the call overhead and lets downstream constant-fold
+        // see the now-concrete arguments.
+        //
+        // The algorithm (mark phase; substitute deferred):
+        //
+        //   1. Per-binding use-count derived from
+        //      `analysis.references`. The single-use property is
+        //      the gate that makes inlining cheap (clone once vs.
+        //      duplicating the body N times).
+        //   2. Candidate scan. A binding is an inline candidate
+        //      when ALL of:
+        //        a. kind == Function OR kind == Class — these are
+        //           the body-shaped kinds inlining substitutes
+        //           into call/new sites. (`Var`/`Let`/`Const`
+        //           bindings of *function expressions* lower to
+        //           Function once the analyzer grows expression
+        //           tracking; until then they're tracked as
+        //           Const/Let and CLOC13.D handles their alias
+        //           form.) `Param` is excluded — params aren't
+        //           callable bodies. `#[non_exhaustive]` future
+        //           variants are conservatively skipped (same
+        //           default as treeshake / collapse-properties).
+        //        b. uses == 1. Multi-use inlining is a budget
+        //           decision (size threshold × call-site count);
+        //           the single-use case is the unambiguous win
+        //           and the cheapest substitution to land first.
+        //   3. Substitute — deferred to CLOC13.B.1 because cleanly
+        //      replacing a CallExpression with the callee's body
+        //      requires both the AST to grow CallExpression /
+        //      FunctionDeclaration variants AND the analyzer to
+        //      surface a binding → defining-node backreference.
+        //
+        // **Critical (lesson from CLOC13.E security review):**
+        // `changed` is hard-pinned to `false` until step 3 lands.
+        // Reporting `changed = true` while returning an unchanged
+        // program would cause the scheduler under
+        // `IterationPolicy::FixedPoint` to re-run forever — each
+        // iteration would find the same candidates, claim a
+        // change, return the same program, repeat. Documented in
+        // both the code and the CHANGELOG so the next contributor
+        // doesn't reintroduce the bug.
+        //
+        // **Why this is safe with the v0.1.0 analyzer body.** The
+        // current `analyze` returns empty bindings + references,
+        // so the candidate scan finds zero call targets, the
+        // candidates vec is empty, `nodes_touched` is small, and
+        // the program passes through unchanged. The wiring
+        // becomes *effective* (real candidate-finding) the moment
+        // CLOC13.0 lands the analyzer body — no churn here.
+
+        let analysis = analyze(ctx.program);
+
+        // Step 1: use-count per binding.
+        let mut use_count: Vec<usize> = vec![0; analysis.bindings.len()];
+        for reference in &analysis.references {
+            if let Some(BindingId(idx)) = reference.binding {
+                if let Some(slot) = use_count.get_mut(idx as usize) {
+                    *slot += 1;
+                }
+            }
+        }
+
+        // Step 2: single-use function/class scan.
+        let mut inline_candidates: Vec<BindingId> = Vec::new();
+        for (idx, binding) in analysis.bindings.iter().enumerate() {
+            let id = BindingId(idx as u32);
+            let uses = use_count.get(idx).copied().unwrap_or(0);
+            if uses != 1 {
+                continue; // multi-use is a budget decision deferred to a later PR
+            }
+            // `#[non_exhaustive]` on BindingKind: conservative
+            // wildcard, future variants skipped.
+            match binding.kind {
+                BindingKind::Function | BindingKind::Class => {
+                    inline_candidates.push(id);
+                }
+                // Var/Let/Const/Param: not function-body bindings;
+                // var/let/const-of-function-expr lowering waits
+                // for analyzer expression tracking.
+                _ => {}
+            }
+        }
+
+        // Step 3 deferred — keep `changed = false`.
+        let _inline_candidates = inline_candidates;
+
         Ok(PassOutput {
             program: ctx.program.clone(),
             contributions: Vec::new(),
             changed: false,
             diagnostics: Vec::new(),
             stats: PassStats {
-                // Visited the program root; no calls inlined.
-                nodes_touched: 1,
+                // Visited the program root + every binding +
+                // every reference. Real cost numbers for the
+                // scheduler.
+                nodes_touched: (1
+                    + analysis.bindings.len()
+                    + analysis.references.len()) as u32,
             },
         })
     }

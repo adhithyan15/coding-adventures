@@ -139,3 +139,155 @@ follow-up work without churning the public API.
 - `analysis_round_trips_via_serde` — wire format stability.
 
 Coverage > 95%.
+
+## CLOC13.0 — minimal analyzer body (v0.2.0, PR #4787)
+
+The first body activation.  Walks `program.body` and surfaces
+*top-level* declarations as `Binding`s in `ScopeId::GLOBAL`.  The
+public `analyze` signature is unchanged; consumers don't recompile
+against a new API.
+
+What's covered:
+
+- **`VariableDeclaration`** (`var`/`let`/`const`).  One `Binding`
+  per `VariableDeclarator`, with the `VarKind → BindingKind`
+  mapping (`Var → Var`, `Let → Let`, `Const → Const`).  Multi-
+  declarator forms (`const a = 1, b = 2;`) emit one binding each.
+- **`FunctionDeclaration`**.  One `Binding` with
+  `kind = Function` carrying the function name.
+- All bindings land in `ScopeId::GLOBAL`.
+- `declared_at` is populated from the AST's `Identifier.cv` when
+  CV tracing is on.
+
+Deferred to CLOC13.0.1+ (tracked inline in `fn analyze`):
+
+1. **Function-body scopes** — a `FunctionDeclaration` should
+   create a `ScopeKind::Function` child scope holding its
+   `FunctionParam`s + nested decls.  Today only the function's
+   name binding is emitted in `GLOBAL`.
+2. **Block scopes** — `let`/`const` inside a `BlockStatement`
+   should land in a `ScopeKind::Block` child of the enclosing
+   scope.  Today nested blocks are ignored.
+3. **Var hoisting** — a `var x` inside a block must bind in the
+   enclosing *function* scope, not the block.  Pattern: pre-walk
+   the function body to collect `var` declarations, emit them
+   against the function scope, then walk normally.
+4. **References** — the biggest remaining gap.  Identifier use
+   sites should produce `Reference`s.  Today `references` is
+   empty.  `remove-unused-vars` and `inline` both gate on
+   `uses == 0` / `uses == 1`, so zero references reads as
+   "every binding is unused".  CLOC13.0.1's primary job.
+5. **Catch-clause scope** (not in Phase 1 AST yet).
+6. **Strict-mode binding semantics** (function-in-block scope).
+
+### Failsafe for forward compatibility
+
+The body uses an irrefutable
+`let BindingTarget::Identifier(id) = ...;` pattern.  Phase 1
+ships only that `BindingTarget` variant, so the destructure is
+total today.  When Phase 3 adds destructuring patterns
+(`ArrayPattern`, `ObjectPattern`), this becomes a compile error
+— exactly the right failsafe.  No silent miscompilation.
+
+## CLOC13.0.1 — references + nested scopes (queued)
+
+The follow-up that closes the biggest gap.  Walks
+`Statement::ExpressionStatement` and `FunctionDeclaration.body` to
+emit `Reference`s for bare `Identifier` expressions.  Concurrently
+introduces nested scopes (Function + Block) so the parent-chain
+walk does real work.
+
+### Test the body left behind
+
+The CLOC13.0 PR pinned two contracts that CLOC13.0.1 will need
+to update:
+
+- `statement_items_are_skipped_for_now` — will fail when 13.0.1
+  starts walking statements.  Update to assert references emerge
+  from statement walks.
+- `references_are_empty_in_cloc13_0` — same; the test's purpose
+  was to make the deferred-References contract fail loudly the
+  moment 13.0.1 starts collecting refs.
+
+These were intentionally written to fail.  They're the
+breadcrumb trail back to this section.
+
+## CLOC13.{A,B,C,D,E}.1 — per-pass apply steps
+
+Each of the five Phase-1 optimisation passes ships in two parts:
+
+1. **Body PR (CLOC13.{A..E})** — wires the pass to consume
+   `ScopeAnalysis`, identifies candidates, hard-pins
+   `changed = false`.  All 5 merged: #4766, #4773, #4775, #4777,
+   #4778.
+2. **Apply-step PR (CLOC13.{A..E}.1)** — lifts the hard-pin,
+   actually mutates the program, sets `changed` based on
+   genuine mutation count.
+
+The split exists to keep review surface small and to let the 5
+body PRs land in parallel against a frozen API without
+introducing FixedPoint infinite-loop hazards.
+
+### Apply-step pattern (codified by CLOC13.E.1, PR #4790)
+
+```
+1. Restrict the candidate set to scope == ScopeId::GLOBAL
+   (the only scope CLOC13.0 populates).
+2. Collect the surviving candidate names into a
+   HashSet<String>.
+3. Walk program.body. For each item:
+   - Declaration::VariableDeclaration: partition declarators by
+     name ∈ dead_names.
+     * all dead → drop item.
+     * mixed → emit a new VariableDeclaration with surviving
+       declarators only, preserving `kind` + `cv`.
+     * all live → push original verbatim.
+   - Declaration::FunctionDeclaration: pass-specific (remove-
+     unused-vars passes through; treeshake drops by name).
+   - ProgramItem::Statement: passthrough until CLOC13.0.1
+     ships statement walks.
+4. changed = mutation_count > 0.
+```
+
+### Why the apply step is safe under `FixedPoint`
+
+Each iteration reduces the binding set strictly.  Removed
+declarations produce no new bindings, so next iteration's
+eligibility scan finds fewer dead entries.  Fixed point reaches
+in at most one additional iteration after the first non-empty
+mutation — bindings can only stop being dead by gaining a
+reference, which a removal never adds.
+
+The pattern works because removals are *monotonic*.  A pass that
+*rewrites* bindings (e.g., CLOC13.A.1 rename) needs a different
+convergence argument — see that PR's CHANGELOG when it lands.
+
+### Cross-PR coupling: apply-step ships before activator
+
+Each apply-step PR (CLOC13.{A..E}.1) is observably-identity
+when `analysis.bindings` / `analysis.references` are still
+empty.  Under the v0.1.0 / pre-CLOC13.0 scope-analyzer:
+
+- candidate set = ∅ → mutation count = 0 → `changed = false`,
+  passthrough on every item.
+- Identical observable behavior to the body PR's v0.2.0 state.
+
+Apply-step PRs can ship *before* CLOC13.0 lands without
+behaviour regressions.  They light up the moment the analyzer's
+body lands and starts populating bindings — no follow-up
+rebase needed.
+
+## Stage delivery — PR map
+
+| Stage      | PR    | Status |
+|------------|-------|--------|
+| Unblocker (scaffold + frozen API) | #4763 | merged |
+| CLOC13.E (remove-unused-vars body)  | #4766 | merged |
+| CLOC13.D (collapse-properties body) | #4773 | merged |
+| CLOC13.C (treeshake body)          | #4775 | merged |
+| CLOC13.A (rename body)             | #4777 | merged |
+| CLOC13.B (inline body)             | #4778 | merged |
+| CLOC13.0 (minimal analyzer body)   | #4787 | open   |
+| CLOC13.E.1 (remove-unused-vars apply) | #4790 | open   |
+| CLOC13.0.1 (references + nested scopes) | queued | |
+| CLOC13.{C,A,B,D}.1 (apply steps)   | queued | |

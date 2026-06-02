@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/matrix_rust_ruby",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "matrix_rust_ruby_native shared library (workspace Rust cdylib)",
+      "justification": "The gem's lib code require's the matrix_rust_ruby_native .{so,bundle,dll} (built from the workspace Rust crate at code/packages/rust/matrix-rust-ruby-native/) to get MatrixRustRuby.run_graph_on_cpu. That native ext itself delegates to c-bridge's pure-Rust envelope runner."
+    },
+    {
+      "category": "process",
+      "action": "spawn",
+      "target": "cargo build -p matrix-rust-ruby-native --release",
+      "justification": "extconf.rb and the Rakefile compile task shell out to `cargo` to build the workspace Rust crate. The cargo command is constructed from hardcoded literals + RbConfig-discovered values (host_os, host_cpu); no user input is interpolated into the argv."
+    }
+  ],
+  "justification": "Pure-Ruby gem on top of a Rust native extension. No network, no filesystem reads outside the gem's own directories, no user-controlled command execution. The single FFI surface is one Ruby method (MatrixRustRuby.run_graph_on_cpu) that takes a JSON envelope String and returns a JSON envelope String."
+}

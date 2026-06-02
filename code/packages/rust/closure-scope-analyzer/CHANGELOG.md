@@ -2,6 +2,122 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-02
+
+### Added — CLOC13.0.1 references collection
+
+Adds **Phase 2** to `analyze`: a walker that emits a `Reference` for every `Identifier` use site in `program.body`. This closes the biggest gap from CLOC13.0 — until now `references` was always empty, which meant every binding read as "unused" to consumer passes that gate on `uses == 0` / `uses == 1` (`remove-unused-vars`, `inline`).
+
+What's covered (v0.3.0):
+
+- **Top-level `ExpressionStatement`** — recurses into the expression tree.
+- **Top-level `IfStatement` / `WhileStatement` / `ForStatement` / `ReturnStatement` / `LabeledStatement` / `ThrowStatement`** — walks all subexpressions.
+- **`VariableDeclaration` initializers** — `let y = x;` emits a reference for `x`.
+- **`FunctionDeclaration.body`** — walks the function body recursively. (Today the body still lives in GLOBAL; nested function/block scopes land in CLOC13.0.2.)
+- **Inside expressions:**
+  - `Identifier` → emit Reference.
+  - `BinaryExpression` / `LogicalExpression` → walk left + right.
+  - `UnaryExpression` → walk argument.
+  - `AssignmentExpression` → LHS Identifier emits a Reference (assignment is both read + write of the binding); MemberExpression target walks the object (and computed property). RHS walks.
+  - `ConditionalExpression` → walk test, consequent, alternate.
+  - `CallExpression` → walk callee + each argument.
+  - `MemberExpression` → walk object always; walk property ONLY if `computed`.
+  - `ArrayExpression` → walk each non-elided element.
+  - `ObjectExpression` → for each `Property`, walk the value; walk the key only if `computed`.
+  - Literal variants (Numeric/String/Boolean/Null/Undefined/BigInt) → no children, skipped.
+
+Resolution: a single `HashMap<String, BindingId>` is built from the bindings table once, then every emitted Reference's `binding` field is filled via `names.get(&id.name).copied()`. `None` means the identifier is a free global (`console`, `window`, etc.) — consumers like `treeshake` and `remove-unused-vars` already treat unresolved references as "definitely used externally" per the existing contract.
+
+### What's NOT walked (intentional)
+
+- The `id` of a `VariableDeclarator` (binding declaration, not a reference).
+- The `id` of a `FunctionDeclaration` (same).
+- `FunctionParam` (declarations).
+- Non-computed `MemberExpression.property` (static property name).
+- Non-computed `Property.key` in `ObjectExpression` (static key name).
+- The `label` of a `LabeledStatement` (label declaration).
+- `BreakStatement.label` / `ContinueStatement.label` (label-reference, not a binding lookup — handled by labels, not the scope analyzer).
+
+### Deferred to CLOC13.0.2
+
+- **Nested scopes** — `FunctionDeclaration.body` should create a `ScopeKind::Function` child scope; `BlockStatement` (when it contains `let` / `const`) should create a `ScopeKind::Block` child scope. Today every reference's `from_scope` is `ScopeId::GLOBAL`. (Resolution still works because all bindings are in GLOBAL too.)
+- **Var hoisting** — moot today since there are no nested scopes to hoist out of.
+- **Function param bindings** — params should land as `BindingKind::Param` in the function scope.
+- **Catch-clause scope** (not in Phase 1 AST yet).
+- **Strict-mode binding semantics**.
+
+### Activates `remove-unused-vars` + `inline`
+
+`remove-unused-vars` (CLOC13.E body + CLOC13.E.1 apply step) gates removals on `uses == 0`. Before this PR, every binding had zero uses (because references was empty), so the apply step would have dropped ALL top-level `var`/`let`/`const` bindings — including ones that ARE referenced. The CLOC13.0.1 reference walker prevents that: bindings with actual reads will now be correctly retained.
+
+Same activation for `inline` (CLOC13.B): it gates on `uses == 1`. Before this PR, single-use detection was impossible (every binding read as 0 uses). After, single-use `Function` / `Class` bindings become real inline candidates.
+
+`collapse-properties` (CLOC13.D) and `treeshake` (CLOC13.C) also benefit but their apply steps haven't shipped yet (queued as CLOC13.D.1 / CLOC13.C.1).
+
+### Test surface (11 new; 24 total, was 13)
+
+Walker tests:
+- `bare_identifier_in_expression_statement_emits_reference`
+- `reference_resolves_to_top_level_binding`
+- `unresolved_reference_to_free_global`
+- `binary_expression_collects_both_sides`
+- `call_expression_collects_callee_and_arguments`
+- `member_expression_collects_object_only_when_not_computed`
+- `member_expression_computed_form_collects_property`
+- `variable_declaration_init_walks_for_references`
+- `function_body_walks_for_references`
+- `if_statement_walks_test_and_branches`
+- `literals_in_expression_statements_emit_no_references`
+
+The two CLOC13.0 "breadcrumb" tests (`statement_items_are_skipped_for_now`, `references_are_empty_in_cloc13_0`) still pass because their fixtures have no Identifier expressions — they now pin the *no-references-when-no-identifier-expressions* contract, which is the more durable form of the original promise. Comment in `references_are_empty_in_cloc13_0` was updated to reflect this.
+
+### Bumped 0.2.0 → 0.3.0
+
+`analyze` signature unchanged.
+
+## [0.2.0] - 2026-06-02
+
+### Added — CLOC13.0 minimal analyzer body
+
+Replaces the v0.1.0 identity-style empty `analyze` with a real walk of `program.body` that surfaces **top-level declarations**:
+
+- `VariableDeclaration` (`var` / `let` / `const`) — one `Binding` per `VariableDeclarator`, with `VarKind → BindingKind` mapping (`Var → Var`, `Let → Let`, `Const → Const`). Multi-declarator forms (`const a = 1, b = 2;`) emit one binding each.
+- `FunctionDeclaration` — one `Binding` with `kind = Function` carrying the function name.
+- All bindings land in `ScopeId::GLOBAL`. The global scope's `bindings` list mirrors the global table.
+- `declared_at` is populated from the AST's `Identifier.cv` when CV tracing is on (otherwise stays `None`).
+- `BindingTarget::Identifier` is the only Phase 1 variant; the match is total today. When Phase 3 adds destructuring patterns, they'll need their own arms.
+
+### Activates 5 consumer passes simultaneously
+
+This PR is the wire-then-activate completion. The five pass bodies (CLOC13.A..E, PRs #4766, #4773, #4775, #4777, #4778) all consume `bindings` via the analyzer's public surface. They went from "candidate scan finds zero" to "candidate scan finds real top-level decls" with **zero PR-side churn** — no rebases, no API changes.
+
+`changed = false` is still hard-pinned in every consumer pass. Lighting up real bindings only makes the candidate scans non-empty; the apply step (CLOC13.{A,B,C,D,E}.1) is a per-pass follow-up.
+
+### Deferred to CLOC13.0.1 (tracked inline in `fn analyze`)
+
+1. **Function body scopes.** A `FunctionDeclaration` should create a `ScopeKind::Function` child scope holding params + nested decls. Today we only emit the function's name binding in `GLOBAL`.
+2. **Block scopes.** `let`/`const` inside a `BlockStatement` should land in a `ScopeKind::Block` child scope. Today nested blocks are ignored.
+3. **Var hoisting.** A `var x` inside a block must bind in the enclosing *function* scope. Pre-walk pattern documented inline.
+4. **`References`.** Identifier use sites should produce `Reference`s. Today the references vec is empty. This is the biggest remaining gap — `remove-unused-vars` and `inline` both gate on `uses == 0` / `uses == 1`, so zero references reads as "every binding is unused".
+5. **Catch-clause scope** (not in Phase 1 AST yet).
+6. **Strict-mode binding semantics** (function-in-block scope).
+
+### Tests added (7 new; 13 total, was 6)
+
+- `top_level_let_surfaces_as_binding_in_global` — end-to-end pin of the binding shape.
+- `top_level_var_let_const_map_to_three_kinds` — `VarKind → BindingKind` mapping.
+- `top_level_function_declaration_surfaces` — function-name binding shape.
+- `multi_declarator_emits_one_binding_per_declarator` — `const a = 1, b = 2;` form.
+- `binding_ids_are_dense_and_monotonic` — `BindingId(0), (1), (2)` contract.
+- `statement_items_are_skipped_for_now` — pin the deferred-Statement-walk contract; will fail when CLOC13.0.1 starts collecting references.
+- `references_are_empty_in_cloc13_0` — pin the deferred-References contract.
+
+All 6 v0.1.0 tests still pass unchanged.
+
+### Bumped 0.1.0 → 0.2.0
+
+Signature of `analyze` is unchanged; the v0.1.0 contract holds. Consumers don't need to recompile against a new API.
+
 ## [0.1.0] - 2026-06-01
 
 ### Added — CLOC13 unblocker: scaffold + stable API surface

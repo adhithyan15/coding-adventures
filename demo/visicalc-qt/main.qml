@@ -22,7 +22,13 @@ import QtQuick.Layouts 1.15
 // excludes any directory named build/.
 import "qml"
 
+// `id: root` gives the children a stable handle for property and
+// function references like `root.sampleRows` and `root.cellAddress()`.
+// Without this id the references would resolve as undefined (QML's
+// type lookup finds the `Window` *type* but there is no implicit
+// `window` identifier — that was the v0.1.0 bug).
 Window {
+    id: root
     width: 720
     height: 520
     visible: true
@@ -70,13 +76,13 @@ Window {
             id: formulaBar
             Layout.fillWidth: true
             Layout.topMargin: 8
-            cellAddress: window.cellAddress()
-            formula: window.formulaText
+            cellAddress: root.cellAddress()
+            formula: root.formulaText
             readOnly: false
 
-            onFormulaChange: (value) => window.formulaText = value
+            onFormulaChange: (value) => root.formulaText = value
             onCommit: { /* no-op for v1; keeps the formula text as-is */ }
-            onCancel: { window.formulaText = window.sampleRows[window.selectedRow][window.selectedCol] }
+            onCancel: { root.formulaText = root.sampleRows[root.selectedRow][root.selectedCol] }
         }
 
         // Grid — HAND-WRITTEN placeholder (mosaic-emit-qt's pipeline
@@ -121,7 +127,7 @@ Window {
 
                 // Data rows. We loop 5×5 with nested Repeaters.
                 Repeater {
-                    model: window.sampleRows.length
+                    model: root.sampleRows.length
                     RowLayout {
                         property int rowIdx: index
                         Layout.fillWidth: true
@@ -146,12 +152,12 @@ Window {
 
                         // Data cells for this row.
                         Repeater {
-                            model: window.sampleRows[rowIdx]
+                            model: root.sampleRows[rowIdx]
                             Rectangle {
                                 property int colIdx: index
                                 property bool isSelected:
-                                    rowIdx === window.selectedRow &&
-                                    colIdx === window.selectedCol
+                                    rowIdx === root.selectedRow &&
+                                    colIdx === root.selectedCol
                                 Layout.preferredWidth: 96
                                 Layout.preferredHeight: 22
                                 color: isSelected ? "#264F78" : (rowIdx % 2 === 0 ? "#1E1E1E" : "#252526")
@@ -169,9 +175,9 @@ Window {
                                 MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        window.selectedRow = rowIdx;
-                                        window.selectedCol = colIdx;
-                                        window.formulaText = window.sampleRows[rowIdx][colIdx];
+                                        root.selectedRow = rowIdx;
+                                        root.selectedCol = colIdx;
+                                        root.formulaText = root.sampleRows[rowIdx][colIdx];
                                     }
                                 }
                             }
