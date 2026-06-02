@@ -62,8 +62,8 @@ IIRModule
 | v0.3.4 (A2++.5.5 third slice) | `label` (zero-byte position marker) + unconditional `jmp` (**`0x7C`**, NOT `0x44`) with per-function two-pass backpatching | **merged** |
 | v0.3.5 (A2++.5.5 fourth slice) | Boolean conditional jumps `jmp_if_true` (`ANA A` + `JFZ` `0x48`) and `jmp_if_false` (`ANA A` + `JTZ` `0x4C`) | **merged** |
 | v0.3.6 (A2++.5.5 fifth slice) | `cmp` equality with inline flag-to-bool capture | **merged** |
-| **v0.3.7 (A2++.5.5 sixth slice — this PR)** | `cmp_ne`/`cmp_lt`/`cmp_gt` via shared `emit_cmp_capture` helper; introduces `JFC = 0x40`; `cmp_gt` cleverly reuses `cmp_lt` via operand swap | this PR |
-| v0.3.8 (A2++.5.5 seventh slice) | `cmp_lte`/`cmp_gte` + remaining 5 conditional-flag opcodes (`JTC` `0x44`, `JFS` `0x50`, `JTS` `0x54`, `JFP` `0x58`, `JTP` `0x5C`) | future |
+| v0.3.7 (A2++.5.5 sixth slice) | `cmp_ne`/`cmp_lt`/`cmp_gt` via shared `emit_cmp_capture` helper; introduces `JFC = 0x40`; `cmp_gt` cleverly reuses `cmp_lt` via operand swap | **merged** |
+| **v0.3.8 (A2++.5.5 seventh slice — this PR)** | `cmp_gte`/`cmp_lte` via `JTC = 0x44` (complement of `JFC`); pins remaining 4 cond-jump constants `JFS`/`JTS`/`JFP`/`JTP` (forward-compat for signed/parity lowerings) | this PR |
 | v0.3.9 (A2++.5.5 eighth slice) | Real `RET` (`0x07`) via `CAL` (**`0x7E`**, NOT `0x46` — `0x46` is `CFZ`) + per-function internal return-stack discipline | future |
 | v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring + module-level CALL backpatching | future |
 

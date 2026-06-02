@@ -3,6 +3,98 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.8] — 2026-06-02 (A2++.5.5 seventh slice — `cmp_gte`/`cmp_lte` + remaining 5 cond-jump opcode constants)
+
+### Added — closed-end ordering comparisons
+
+Extends v0.3.7's six-way `emit_cmp_capture` dispatch with the two
+final boolean comparisons:
+
+| IIR op | Skip-jump opcode | Operand swap? | Skip-condition |
+|--------|------------------|---------------|----------------|
+| `cmp_gte dest, a, b` | **`JTC` (`0x44`)** | no | carry SET (a < b) |
+| `cmp_lte dest, a, b` | `JTC` | **yes** | carry SET after swap (b < a) |
+
+#### Why the OR-composition approach in the prompt was unnecessary
+
+The prompt suggested composing `cmp_lt + cmp` and OR-ing the results.
+That's correct semantically but requires:
+- Two CMP + capture sequences (16 bytes vs 7)
+- Two booleans staged into different registers
+- An `ORA` to combine
+- Final result staging
+
+The simpler observation: `a >= b ⇔ NOT (a < b) ⇔ carry CLEAR after CMP b`.
+So we can use the SAME 7-byte single-skip capture pattern, just with
+the inverse polarity jump: `JTC` (skip when carry SET) instead of
+`JFC` (skip when carry CLEAR).
+
+`cmp_lte a, b ⇔ cmp_gte b, a` plugs in via the same operand-swap
+trick v0.3.7 used for `cmp_gt`.  Two new IIR ops, ZERO new helper
+code — the dispatch table just grows two entries.
+
+#### Now all six boolean comparisons share one code path
+
+```rust
+let (skip_op, swap) = match instr.op.as_str() {
+    "cmp"     => (JFZ, false),
+    "cmp_ne"  => (JTZ, false),
+    "cmp_lt"  => (JFC, false),
+    "cmp_gt"  => (JFC, true),
+    "cmp_gte" => (JTC, false),  // NEW
+    "cmp_lte" => (JTC, true),   // NEW
+    _ => unreachable!("outer arm restricts to these 6"),
+};
+let (left, right) = if swap { (b_reg, a_reg) } else { (a_reg, b_reg) };
+emit_cmp_capture(&mut bytes, left, right, dest_reg, skip_op, &f.name)?;
+```
+
+The (skip-jump, swap) tuple cleanly tabulates all six comparisons.
+
+#### New opcode constants (5 of them — `JTC` actually wired)
+
+* `pub const JTC: u8 = 0x44;` — jump if carry SET.  **Used by
+  `cmp_gte` and `cmp_lte`** lowerings.  Bit pattern `01 000 100`:
+  carry flag, T-bit set (complement of `JFC`).  Confusion alert:
+  `0x44` is NOT the unconditional `JMP` (which is `0x7C`) and NOT
+  any of the call opcodes (`CFC` is at `0x42`).
+* `pub const JFS: u8 = 0x50;` — jump if sign clear.  Pinned for
+  future signed-integer ordering lowerings.
+* `pub const JTS: u8 = 0x54;` — jump if sign set.
+* `pub const JFP: u8 = 0x58;` — jump if parity clear (odd).
+* `pub const JTP: u8 = 0x5C;` — jump if parity set (even).
+
+The four `JFS`/`JTS`/`JFP`/`JTP` constants aren't yet consumed by
+any lowering — they exist so the public surface matches the
+encoding cheat-sheet in `code/specs/iir-to-intel8008.md` and so
+signed/parity-based extensions in future slices can reach for them
+without rediscovering the bit patterns.
+
+#### Tests added (53 total, was 46)
+
+* `jtc_constant_pinned_to_0x44` — guards JTC against the
+  `JMP ↔ JTC` confusion.
+* `jfs_constant_pinned_to_0x50` / `jts_constant_pinned_to_0x54` /
+  `jfp_constant_pinned_to_0x58` / `jtp_constant_pinned_to_0x5c` —
+  one-liner regression guards for the four unwired-but-public
+  constants.
+* `cmp_gte_pins_full_capture_byte_stream` —
+  `B8 0E 00 44 0C 00 0E 01` (the JTC-driven capture).
+* `cmp_lte_swaps_operands_then_uses_jtc` — pins the
+  `MOV A, B; CMP A` (`78 BF`) prefix that distinguishes lte from
+  gte by exactly two bytes (same shape as v0.3.7's
+  `cmp_gt_swaps_operands_then_uses_jfc`).
+
+### What is NOT in v0.3.8 (deferred to v0.3.9 / A2+++)
+
+* Real `RET` (`0x07`) via `CAL` (**`0x7E`**, NOT `0x46` which is
+  `CFZ`) + per-function internal return-stack discipline.  Lands
+  in v0.3.9.
+* Wiring `JFS`/`JTS`/`JFP`/`JTP` into actual lowerings (waiting on
+  signed-integer or parity-based IIR ops to materialise upstream).
+* `lang-aot --target=intel8008` wiring + module-level CALL
+  backpatching — A2+++.
+
 ## [0.3.7] — 2026-06-02 (A2++.5.5 sixth slice — `cmp_ne`/`cmp_lt`/`cmp_gt` via shared capture helper)
 
 ### Added — inequality + ordering comparisons

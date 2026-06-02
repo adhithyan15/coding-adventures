@@ -6,7 +6,8 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel8008::{
     lower_iir_to_intel8008, validate_for_intel8008,
-    IIRIntel8008Config, IIRIntel8008Error, HLT, JFC, JFZ, JMP, JTZ, MVI_A,
+    IIRIntel8008Config, IIRIntel8008Error,
+    HLT, JFC, JFP, JFS, JFZ, JMP, JTC, JTP, JTS, JTZ, MVI_A,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -1206,6 +1207,133 @@ fn cmp_gt_swaps_operands_then_uses_jfc() {
         0x79,           // 0D      MOV A, C
         HLT,            // 0E
     ], "cmp_gt expected; got: {bytes:02x?}");
+}
+
+// ===========================================================================
+// 14. A2++.5.5 seventh slice — cmp_gte / cmp_lte + remaining 5 cond-jump opcodes
+// ===========================================================================
+//
+// `cmp_gte a, b` (a >= b) ⇔ NOT (a < b) ⇔ "carry clear after CMP b".
+// In the shared `emit_cmp_capture` skeleton the "skip" jump fires when
+// the boolean would be false — i.e. when carry is SET (a < b).  That's
+// `JTC` (jump if flag-carry set, 0x44).
+//
+// `cmp_lte a, b` (a <= b) ⇔ (b >= a) — same skeleton as cmp_gte
+// with operands swapped before staging.  Mirrors how v0.3.7 expressed
+// `cmp_gt` as a swap of `cmp_lt`.
+//
+// Pinning every byte of the byte stream guards against silent skip-
+// opcode drift between cmp_lt/cmp_gt/cmp_gte/cmp_lte.
+
+#[test]
+fn jtc_constant_pinned_to_0x44() {
+    // JTC = 01 000 100 (ccc=000 carry, T=1 set)
+    assert_eq!(JTC, 0x44,
+        "JTC (jump if carry set) should be 0x44; got 0x{:02x}", JTC);
+}
+
+#[test]
+fn jfs_constant_pinned_to_0x50() {
+    // JFS = 01 010 000 (ccc=010 sign, T=0 clear)
+    assert_eq!(JFS, 0x50);
+}
+
+#[test]
+fn jts_constant_pinned_to_0x54() {
+    // JTS = 01 010 100 (ccc=010 sign, T=1 set)
+    assert_eq!(JTS, 0x54);
+}
+
+#[test]
+fn jfp_constant_pinned_to_0x58() {
+    // JFP = 01 011 000 (ccc=011 parity, T=0 clear)
+    assert_eq!(JFP, 0x58);
+}
+
+#[test]
+fn jtp_constant_pinned_to_0x5c() {
+    // JTP = 01 011 100 (ccc=011 parity, T=1 set)
+    assert_eq!(JTP, 0x5C);
+}
+
+#[test]
+fn cmp_gte_pins_full_capture_byte_stream() {
+    // const v=10; const w=20; cmp_gte r v w; ret r
+    //
+    // 10 >= 20 is false → CMP B sets carry (since A < B).  JTC fires,
+    // skipping the "set true" path; dest stays 0.
+    //
+    //   00 01  MVI A, 10
+    //   02 03  MVI B, 20
+    //   04     CMP B
+    //   05 06  MVI C, 0
+    //   07     JTC          (skip if carry set / a < b)
+    //   08 09  target 0x000C
+    //   0A 0B  MVI C, 1
+    //   0C     MOV A, C (ret r)
+    //   0D     HLT
+    let f = IIRFunction::new("gte", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("cmp_gte", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // 00 01  MVI A, 10
+        0x06,  0x14,    // 02 03  MVI B, 20
+        0xB8,           // 04     CMP B
+        0x0E,  0x00,    // 05 06  MVI C, 0
+        JTC,           // 07     JTC (skip if carry set)
+        0x0C,  0x00,    // 08 09  target 0x000C
+        0x0E,  0x01,    // 0A 0B  MVI C, 1
+        0x79,           // 0C     MOV A, C
+        HLT,            // 0D
+    ], "cmp_gte expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn cmp_lte_swaps_operands_then_uses_jtc() {
+    // const v=10; const w=20; cmp_lte r v w; ret r
+    //
+    // cmp_lte a, b → cmp_gte b, a — swap operands then identical
+    // skeleton.  After swap: left=w (in B), right=v (in A).
+    //
+    // Staging MOV A, B (0x78), CMP A (0xBF, since right=v=A).
+    //
+    //   00 01  MVI A, 10
+    //   02 03  MVI B, 20
+    //   04     MOV A, B    (stage w into A — swapped left)
+    //   05     CMP A       (right=A after swap)
+    //   06 07  MVI C, 0
+    //   08     JTC
+    //   09 0A  target 0x0D
+    //   0B 0C  MVI C, 1
+    //   0D     MOV A, C
+    //   0E     HLT
+    let f = IIRFunction::new("lte", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("cmp_lte", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // 00 01   MVI A, 10
+        0x06,  0x14,    // 02 03   MVI B, 20
+        0x78,           // 04      MOV A, B (stage swapped left=B)
+        0xBF,           // 05      CMP A    (right=A after swap)
+        0x0E,  0x00,    // 06 07   MVI C, 0
+        JTC,           // 08      JTC
+        0x0D,  0x00,    // 09 0A   target 0x000D
+        0x0E,  0x01,    // 0B 0C   MVI C, 1
+        0x79,           // 0D      MOV A, C
+        HLT,            // 0E
+    ], "cmp_lte expected; got: {bytes:02x?}");
 }
 
 // Note on the high-byte split + AddressOutOfRange coverage gap:
