@@ -17,6 +17,7 @@
 
 require_relative "ml_framework_core/version"
 require_relative "ml_framework_core/tensor"
+require_relative "ml_framework_core/autograd"
 
 # Short alias for callers who don't want to type the full namespace.
 # Mirrors PyTorch's `import torch as t` convention.
