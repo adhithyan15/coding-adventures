@@ -2,6 +2,105 @@
 
 ## Unreleased
 
+### Added — v1.4.0: LayerNorm + BatchNorm + Dropout + ModelMode (Phase A.4)
+
+PR #4 of 7 in **Phase A** — the "normalize and regularize" trifecta
+every transformer (and every CNN) uses, plus the train/eval mode
+toggle they need to behave differently at inference time.
+
+#### What works now
+
+```ts
+import {
+  Tensor, setMode, getMode,
+  LayerNormOp, BatchNormOp, DropoutOp,
+} from "@coding-adventures/ml-framework-core";
+
+// LayerNorm — normalizes across the LAST dim.  γ, β are learnable [D].
+const x = new Tensor([...], { shape: [batch, seq, dModel] });
+const gamma = new Tensor(new Array(dModel).fill(1));
+const beta = new Tensor(new Array(dModel).fill(0));
+const xn = x.layerNorm(gamma, beta);                  // shape preserved; rows have mean 0 / var 1
+
+// BatchNorm — normalizes across the BATCH dim (axis 0).
+const runningMean = Tensor.zeros(features);            // mutated in place in train mode
+const runningVar = new Tensor(new Array(features).fill(1));
+const yn = x.batchNorm(gamma, beta, runningMean, runningVar, 0.1 /* momentum */);
+
+// Dropout — random masking + 1/(1-p) scaling in train mode; identity in eval.
+const yd = x.dropout(0.5);
+
+// Global mode toggle controls Dropout + BatchNorm behavior.
+setMode("eval");
+const predictions = model.forward(testInput);          // dropout is now passthrough, BN uses running stats
+setMode("train");
+```
+
+#### Implementation notes
+
+- **`ModelMode`** (`src/mode.ts`): a single module-scoped variable
+  (`"train"` or `"eval"`), default `"train"`.  PyTorch handles this
+  per-Module via `.train()` / `.eval()`; we don't have a Module
+  abstraction yet (Phase A.6 adds Linear/Sequential), so v1.4 ships
+  a global.  Trade-off documented in `mode.ts` — adequate for
+  full-network train/eval cycles, awkward if you need partial mode.
+  A future PR can lift to per-Module without breaking the global API.
+- **`LayerNormOp`**: forward computes mean/var/inv-std per "row" (all
+  but the last dim flattened), then `y = γ * x̂ + β` where γ/β are
+  shape `[D]`.  Variance is biased (population) to match PyTorch
+  default.  Backward implements the full chain-rule formula
+  `dL/dx_i = (1/(σ*D)) * (D * dx̂_i - Σ dx̂ - x̂_i * Σ dx̂*x̂)`
+  where `dx̂ = dy * γ`.  γ/β gradients accumulate across all
+  leading dims.
+- **`BatchNormOp`**: forward branches on `getMode()`.  Train mode
+  computes per-feature batch mean/var AND mutates the provided
+  `runningMean` / `runningVar` tensors in place (PyTorch convention —
+  these are non-differentiable buffers, not parameters).  Eval mode
+  uses the running stats and does NOT update them.  Backward in
+  train uses the same per-feature formula as LayerNorm but over the
+  batch axis; backward in eval treats μ/σ as constants
+  (`dy/dx = γ * inv-std`).  Returns `null` for the running-stats
+  parents in both modes since they're non-differentiable.  v1.4
+  supports general N-D input but the typical use is 2-D `(N, C)`;
+  per-channel 4-D BN for Conv-style nets lands with the Conv work
+  in Phase A.5.
+- **`DropoutOp`**: train mode draws a Bernoulli mask via `Math.random()`
+  and applies inverted-dropout scaling (surviving cells multiplied by
+  `1/(1-p)`).  Eval mode + `p=0` are both pure passthrough.
+  `Math.random()` is fine here — dropout's correctness is statistical,
+  not cryptographic; using a CSPRNG would be slower with no model-
+  quality benefit.  No seed control yet (training is non-reproducible
+  run-to-run); `setSeed()` is a candidate for a future PR.
+
+#### Tests
+
+- 18 new vitest cases (`tests/norm-dropout.test.ts`):
+  - 3 ModelMode (default, round-trip, garbage rejection)
+  - 4 LayerNorm forward (shape preservation, normalized stats, full
+    `γ*x̂+β` formula, shape validation)
+  - 2 LayerNorm backward (shape of all three grads, β-grad is the
+    batch-sum)
+  - 1 BatchNorm train-mode running-stats update
+  - 1 BatchNorm eval-mode running-stats UNTOUCHED
+  - 1 BatchNorm backward (shape of x/γ/β grads)
+  - 3 Dropout train (mean preserved on large N, exact scaled values,
+    statistical CI)
+  - 3 Dropout eval / p=0 / p validation
+  - 1 fluent-chain test
+- Total **224 tests pass** (was 206 in v1.3).
+- `tsc --noEmit` clean.
+
+#### What this unlocks
+
+LayerNorm + Dropout are everywhere in transformers — between every
+sub-layer.  BatchNorm is the standard for CNNs (Phase A.5 builds on
+this).  With ModelMode in place, the same model can train and
+evaluate with the correct semantics in each mode.  This is the
+last piece before the framework can express full layer stacks
+naturally; A.6 adds the `Linear` / `Sequential` abstractions that
+make `Sequential([...])` style model construction possible, and
+A.7 lands safetensors so we can finally LOAD pretrained weights.
+
 ### Added — v1.3.0: EmbeddingOp lookup-table (Phase A.3)
 
 PR #3 of 7 in **Phase A**.  Adds the embedding-layer op — the one

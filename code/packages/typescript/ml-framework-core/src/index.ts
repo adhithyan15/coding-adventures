@@ -57,6 +57,9 @@ export {
   SumOp,
   MeanOp,
   EmbeddingOp,
+  LayerNormOp,
+  BatchNormOp,
+  DropoutOp,
   BroadcastOp,
   DISPATCH_THRESHOLD,
   packF32Hex,
@@ -67,3 +70,5 @@ export {
   unbroadcastDataTo,
 } from "./ops.js";
 export { VERSION } from "./version.js";
+export { getMode, setMode } from "./mode.js";
+export type { Mode } from "./mode.js";

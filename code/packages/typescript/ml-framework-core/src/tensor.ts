@@ -60,6 +60,9 @@ import {
   SumOp,
   MeanOp,
   EmbeddingOp,
+  LayerNormOp,
+  BatchNormOp,
+  DropoutOp,
 } from "./ops.js";
 
 export type Dtype = "f32";
@@ -488,6 +491,38 @@ export class Tensor {
    */
   embedding(indices: Tensor): Tensor {
     return EmbeddingOp.apply(this, indices);
+  }
+
+  /**
+   * LayerNorm over the last dim.  `gamma` / `beta` are learnable
+   * parameters of shape `[D]` where `D = this.shape[-1]`.
+   */
+  layerNorm(gamma: Tensor, beta: Tensor, eps?: number): Tensor {
+    return LayerNormOp.apply(this, gamma, beta, eps);
+  }
+
+  /**
+   * BatchNorm over the batch dim (axis 0).  In train mode, computes
+   * batch statistics and updates `runningMean` / `runningVar` in-place;
+   * in eval mode, uses the frozen running stats.  See `setMode`.
+   */
+  batchNorm(
+    gamma: Tensor,
+    beta: Tensor,
+    runningMean: Tensor,
+    runningVar: Tensor,
+    momentum?: number,
+    eps?: number,
+  ): Tensor {
+    return BatchNormOp.apply(this, gamma, beta, runningMean, runningVar, momentum, eps);
+  }
+
+  /**
+   * Dropout with inverted scaling.  Active in train mode; identity in
+   * eval mode.  See `setMode`.
+   */
+  dropout(p?: number): Tensor {
+    return DropoutOp.apply(this, p);
   }
 
   relu(): Tensor {
