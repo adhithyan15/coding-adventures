@@ -3,6 +3,70 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.1] — 2026-06-02 (A2++.5 first slice — `add`/`sub` on the accumulator)
+
+### Added — accumulator-target ALU
+
+Extends v0.3.0 with two ALU ops in family `10 ooo sss`.  The 8008's
+ALU is *always* accumulator-anchored: left source AND destination are
+`A`; only the right source comes from `sss`.
+
+| IIR op | Intel 8008 lowering |
+|--------|---------------------|
+| `add dest, a, b` | (optional `MOV A, a_reg`) + `ADD b_reg` (`0x80 \| sss`) + (optional `MOV dest_reg, A`) |
+| `sub dest, a, b` | (optional `MOV A, a_reg`) + `SUB b_reg` (`0x90 \| sss`) + (optional `MOV dest_reg, A`) |
+
+#### Code-gen shape
+
+```text
+if a_reg != A:   MOV A, a_reg
+                 ADD/SUB b_reg          ; result lands in A
+if dest_reg != A: MOV dest_reg, A
+```
+
+The first const allocated to `A` and the next-allocated `dest_reg` ≠
+`A` mean the typical sequence for `r = v + w` (where `v` was the first
+const) is:
+
+```
+ADD b_reg
+MOV C, A
+```
+
+i.e. two bytes of arithmetic plus the staging move.
+
+#### Self-add idiom
+
+`add r v v` where `v` is already in `A` lowers to `ADD A` (`0x87`,
+family `10 000 111`) — the 8008 happily uses `A` as the right source.
+No leading `MOV A, A` is emitted.
+
+#### New encoder helper + opcode constants
+
+* `fn encode_alu(ooo: u8, sss: u8) -> u8` — `0x80 | (ooo << 3) | sss`.
+* `const ALU_ADD: u8 = 0b000;`
+* `const ALU_SUB: u8 = 0b010;`
+
+#### Tests added (20 total, was 17)
+
+* `add_two_consts_returns_their_sum_via_accumulator` — pinned 8-byte
+  sequence ending in `0x80 0x4F 0x79 0x76`.
+* `sub_two_consts_emits_sub_b_after_mov` — same shape with `0x90`.
+* `add_when_lhs_is_already_in_a_skips_the_staging_mov` — pinned
+  `ADD A = 0x87` for the self-add case.
+
+The pre-existing `unsupported_op_is_rejected_with_function_name` test
+flipped from probing `add` (now supported) to `safepoint` (still
+outside the whitelist).
+
+### What is NOT in v0.3.1 (deferred to A2++.5.5 / A2+++)
+
+* `cmp`, `and`, `or`, `xor`, `adc`, `sbb` — same family, different
+  `ooo` codes.
+* Real `RET` (`0x07`) via `CALL` + the internal return stack.
+* Conditional + unconditional jumps with 14-bit address backpatching.
+* `lang-aot --target=intel8008` wiring — A2+++.
+
 ## [0.3.0] — 2026-06-02 (A2++ — multi-register `const` + `mov` + ret-value staging)
 
 ### Added — linear register allocator over A/B/C/D/E/H/L

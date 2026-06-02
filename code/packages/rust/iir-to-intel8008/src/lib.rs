@@ -151,6 +151,23 @@ fn encode_mov(ddd: u8, sss: u8) -> u8 {
     0x40 | (ddd << 3) | sss
 }
 
+/// Encode an accumulator-target ALU opcode in family `10 ooo sss`.
+///
+/// The 3-bit `ooo` selects the operation (`000` = ADD, `010` = SUB,
+/// `111` = CMP, etc.).  The 3-bit `sss` selects the right-hand source
+/// register — the left-hand source AND destination are always the
+/// accumulator `A`, which is the 8008's defining accumulator-based ISA
+/// shape.
+fn encode_alu(ooo: u8, sss: u8) -> u8 {
+    debug_assert!(ooo <= 7, "ooo out of 3-bit range: {ooo}");
+    debug_assert!(sss <= 7, "sss out of 3-bit range: {sss}");
+    0x80 | (ooo << 3) | sss
+}
+
+/// ALU operation codes (`ooo` field in `10 ooo sss`).
+const ALU_ADD: u8 = 0b000; // ADD r
+const ALU_SUB: u8 = 0b010; // SUB r
+
 // ===========================================================================
 // IIRIntel8008Config
 // ===========================================================================
@@ -270,7 +287,12 @@ pub fn validate_for_intel8008(_module: &IIRModule) -> Vec<String> {
 /// `REGISTER_POOL`.  `mov` lowers to `MOV ddd, sss`.  `ret` moves the
 /// value into `A` (if not already there) and emits `HLT`; `ret_void`
 /// just emits `HLT`.  Anything else is `UnsupportedOp`.
-const SUPPORTED_OPS: &[&str] = &["const", "mov", "ret", "ret_void"];
+const SUPPORTED_OPS: &[&str] = &[
+    // A2 / A2+ / A2++
+    "const", "mov", "ret", "ret_void",
+    // A2++.5 — accumulator ALU
+    "add", "sub",
+];
 
 pub fn lower_iir_to_intel8008(
     module: &IIRModule,
@@ -359,6 +381,49 @@ pub fn lower_iir_to_intel8008(
                 // ── ret_void: just HLT ──────────────────────────────────
                 "ret_void" => {
                     bytes.push(HLT);
+                }
+
+                // ── add dest, a, b → MOV A,a; ADD b_reg; MOV dest,A ─────
+                //
+                // The 8008's accumulator-based ALU forces all binary ops
+                // through `A`.  If `a` already lives there, the leading
+                // `MOV A, a_reg` is skipped.  Likewise, if the
+                // newly-allocated `dest_reg` IS A, the trailing
+                // `MOV dest_reg, A` is skipped — common when this is the
+                // first arithmetic op in the function and the allocator
+                // hands out A.
+                //
+                // sub: identical shape, just family-`10 010 sss`.
+                "add" | "sub" => {
+                    let dest = require_dest(instr, &instr.op, &f.name)?;
+                    let a_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} srcs[0] must be Var", instr.op),
+                        }),
+                    };
+                    let b_name = match instr.srcs.get(1) {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} srcs[1] must be Var", instr.op),
+                        }),
+                    };
+                    let a_reg = lookup_register(&env, &a_name, &f.name)?;
+                    let b_reg = lookup_register(&env, &b_name, &f.name)?;
+                    // Stage a into A if it isn't already there.
+                    if a_reg != REG_A {
+                        bytes.push(encode_mov(REG_A, a_reg));
+                    }
+                    // Execute the ALU op (result lands in A).
+                    let ooo = if instr.op == "add" { ALU_ADD } else { ALU_SUB };
+                    bytes.push(encode_alu(ooo, b_reg));
+                    // Capture the result into dest_reg unless dest_reg is A.
+                    let dest_reg = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    if dest_reg != REG_A {
+                        bytes.push(encode_mov(dest_reg, REG_A));
+                    }
                 }
 
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
