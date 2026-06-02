@@ -64,8 +64,9 @@ IIRModule
 | v0.3.6 (A2++.5.5 fifth slice) | `cmp` equality with inline flag-to-bool capture | **merged** |
 | v0.3.7 (A2++.5.5 sixth slice) | `cmp_ne`/`cmp_lt`/`cmp_gt` via shared `emit_cmp_capture` helper; introduces `JFC = 0x40`; `cmp_gt` cleverly reuses `cmp_lt` via operand swap | **merged** |
 | v0.3.8 (A2++.5.5 seventh slice) | `cmp_gte`/`cmp_lte` via `JTC = 0x44` (complement of `JFC`); pins remaining 4 cond-jump constants | **merged** |
-| **v0.3.9 (A2++.5.5 EIGHTH AND FINAL SLICE — this PR)** | Real `RET` (`0x07`) + `CAL` (**`0x7E`** — NOT `0x46`/CFZ) + module-level call-site backpatching + entry-point HLT-vs-RET discipline + `call dest, fn_name` IIR op (zero-arg, return-via-A) | this PR |
-| v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring + argument passing for calls + cross-module CALL backpatching | future |
+| v0.3.9 (A2++.5.5 EIGHTH AND FINAL SLICE) | Real `RET` (`0x07`) + `CAL` (**`0x7E`** — NOT `0x46`/CFZ) + module-level call-site backpatching + entry-point HLT-vs-RET discipline + `call dest, fn_name` IIR op (zero-arg, return-via-A) | **merged** |
+| **A2+++ (this PR, in `lang-aot` v0.7.0 → v0.8.0)** | `lang-aot --emit=intel8008` (aliases `i8008`, `8008`) routes source → IIR → Intel 8008 `.bin` via `iir-to-intel8008`; cross-platform; no host gating; no version bump for this crate | this PR |
+| v0.4.0 (A2++++) | Argument passing for `call` (per-call register-allocation contract) + cross-module CALL backpatching | future |
 
 ## Encoding cheat-sheet for the jump/call family
 
