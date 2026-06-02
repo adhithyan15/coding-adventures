@@ -51,6 +51,11 @@
 
 import { Tensor } from "./tensor.js";
 import { Function } from "./autograd.js";
+import {
+  broadcastShapes,
+  broadcastDataTo,
+  unbroadcastDataTo,
+} from "./broadcasting.js";
 
 // ===========================================================================
 // Module-level helpers: hex packing, threshold, envelope dispatcher.
@@ -250,19 +255,36 @@ function binaryElementwise(
   b: Tensor,
   tsOp: (x: number, y: number) => number,
 ): Tensor {
-  if (!shapesEqual(a.shape, b.shape)) {
-    throw new RangeError(
-      `shape mismatch for ${kind}: [${a.shape.join(", ")}] vs [${b.shape.join(", ")}]`,
-    );
+  // Broadcast first.  If shapes already match this is a near-free copy.
+  // For shape-mismatched inputs we materialize broadcasted views in
+  // pure TS; the dispatched Rust path then sees same-shape inputs.
+  //
+  // Materializing the broadcast (vs. a strided view) costs memory but
+  // keeps the matrix-cpu wire format unchanged — matrix-cpu doesn't
+  // understand broadcasted views.
+  const outShape = broadcastShapes(a.shape, b.shape);
+  const aB =
+    a.shape.length === outShape.length && shapesEqual(a.shape, outShape)
+      ? a
+      : new Tensor(Array.from(broadcastDataTo(a.data, a.shape, outShape)), {
+          shape: outShape.slice(),
+        });
+  const bB =
+    b.shape.length === outShape.length && shapesEqual(b.shape, outShape)
+      ? b
+      : new Tensor(Array.from(broadcastDataTo(b.data, b.shape, outShape)), {
+          shape: outShape.slice(),
+        });
+
+  const numel = aB.numel;
+  if (numel >= DISPATCH_THRESHOLD) {
+    const envelope = binaryElementwiseEnvelope(kind, aB, bB);
+    const out = runEnvelope(envelope, numel);
+    return new Tensor(Array.from(out), { shape: outShape.slice() });
   }
-  if (a.numel >= DISPATCH_THRESHOLD) {
-    const envelope = binaryElementwiseEnvelope(kind, a, b);
-    const out = runEnvelope(envelope, a.numel);
-    return new Tensor(Array.from(out), { shape: a.shape.slice() });
-  }
-  const out = new Array(a.numel);
-  for (let i = 0; i < a.numel; i++) out[i] = tsOp(a.data[i]!, b.data[i]!);
-  return new Tensor(out, { shape: a.shape.slice() });
+  const out = new Array(numel);
+  for (let i = 0; i < numel; i++) out[i] = tsOp(aB.data[i]!, bB.data[i]!);
+  return new Tensor(out, { shape: outShape.slice() });
 }
 
 function unaryElementwise(
@@ -281,6 +303,45 @@ function unaryElementwise(
 }
 
 // ===========================================================================
+// BroadcastOp — explicit broadcasting as a first-class autograd op
+// ===========================================================================
+//
+// Most callers don't need this — the binary ops broadcast internally.
+// But for ML code that wants to express "promote this (out_dim,) bias
+// vector to (batch, out_dim) once" rather than relying on implicit
+// broadcasting in every downstream op, `BroadcastOp.apply(t, newShape)`
+// makes that intent explicit.
+//
+// forward: broadcast `data` from `t.shape` to `newShape`.
+// backward: sum the incoming gradient back from `newShape` to `t.shape`
+//           — that's `unbroadcastDataTo`.
+
+export class BroadcastOp extends Function {
+  forward(...inputs: unknown[]): Tensor {
+    const t = inputs[0] as Tensor;
+    const newShape = inputs[1] as number[];
+    this.savedForBackward.inputShape = t.shape.slice();
+    this.savedForBackward.outShape = newShape.slice();
+    const out = broadcastDataTo(t.data, t.shape, newShape);
+    return new Tensor(Array.from(out), { shape: newShape.slice() });
+  }
+  backward(grad: Tensor): (Tensor | null)[] {
+    const inputShape = this.savedForBackward.inputShape as number[];
+    // Only one Tensor parent (newShape is a number[], filtered out by
+    // Function.apply since it isn't a Tensor); return a 1-element Array.
+    return [
+      tensorFromBuf(
+        unbroadcastDataTo(grad.data, grad.shape, inputShape),
+        inputShape,
+      ),
+    ];
+  }
+}
+
+// Re-export the pure helpers so power users can call them directly.
+export { broadcastShapes, broadcastDataTo, unbroadcastDataTo };
+
+// ===========================================================================
 // The 15 differentiable ops — forward + backward.
 //
 // Backward formulas mirror Python autograd.py / Ruby PR #7 exactly.  All
@@ -292,31 +353,59 @@ function unaryElementwise(
 
 // ────────── Binary elementwise: Add / Sub / Mul / Div ──────────
 
+// ─── Broadcast-aware helpers for backward ────────────────────────────────
+//
+// With broadcasting, the forward output has the broadcast shape `C`
+// while parent inputs have shapes `A` and `B` (where A, B broadcast to C).
+// Backward receives `grad` of shape `C` and must return gradients of
+// shapes `A` and `B` — which means summing along the axes that got
+// stretched by broadcasting.  `unbroadcastDataTo` handles exactly that.
+
+/** Wrap a Float32Array into a Tensor with the given shape. */
+function tensorFromBuf(buf: Float32Array, shape: readonly number[]): Tensor {
+  return new Tensor(Array.from(buf), { shape: shape.slice() });
+}
+
 export class AddOp extends Function {
   forward(...inputs: unknown[]): Tensor {
-    return binaryElementwise("Add", inputs[0] as Tensor, inputs[1] as Tensor, (x, y) => x + y);
+    const a = inputs[0] as Tensor;
+    const b = inputs[1] as Tensor;
+    // Save parent shapes so backward can unbroadcast back to them.
+    this.savedForBackward.aShape = a.shape.slice();
+    this.savedForBackward.bShape = b.shape.slice();
+    return binaryElementwise("Add", a, b, (x, y) => x + y);
   }
-  // d/dx (x + y) = 1, d/dy (x + y) = 1.  Pass-through to both parents.
-  // Build fresh Tensors so each parent gets its own copy.
+  // d/dx (x + y) = 1, d/dy (x + y) = 1.  Gradient passes through, then
+  // unbroadcast to each parent's original shape.
   backward(grad: Tensor): (Tensor | null)[] {
-    const g = Array.from(grad.data);
+    const aShape = this.savedForBackward.aShape as number[];
+    const bShape = this.savedForBackward.bShape as number[];
     return [
-      new Tensor(g.slice(), { shape: grad.shape.slice() }),
-      new Tensor(g.slice(), { shape: grad.shape.slice() }),
+      tensorFromBuf(unbroadcastDataTo(grad.data, grad.shape, aShape), aShape),
+      tensorFromBuf(unbroadcastDataTo(grad.data, grad.shape, bShape), bShape),
     ];
   }
 }
 
 export class SubOp extends Function {
   forward(...inputs: unknown[]): Tensor {
-    return binaryElementwise("Sub", inputs[0] as Tensor, inputs[1] as Tensor, (x, y) => x - y);
+    const a = inputs[0] as Tensor;
+    const b = inputs[1] as Tensor;
+    this.savedForBackward.aShape = a.shape.slice();
+    this.savedForBackward.bShape = b.shape.slice();
+    return binaryElementwise("Sub", a, b, (x, y) => x - y);
   }
-  // d/dx (x - y) = 1, d/dy (x - y) = -1.
+  // d/dx (x - y) = 1, d/dy (x - y) = -1.  Unbroadcast after applying sign.
   backward(grad: Tensor): (Tensor | null)[] {
-    const g = Array.from(grad.data);
+    const aShape = this.savedForBackward.aShape as number[];
+    const bShape = this.savedForBackward.bShape as number[];
+    // Negate first (on the broadcast shape), then unbroadcast.  Order
+    // doesn't matter for negation but conceptually mirrors the chain rule.
+    const negGrad = new Float32Array(grad.data.length);
+    for (let i = 0; i < grad.data.length; i++) negGrad[i] = -grad.data[i]!;
     return [
-      new Tensor(g.slice(), { shape: grad.shape.slice() }),
-      new Tensor(g.map((v) => -v), { shape: grad.shape.slice() }),
+      tensorFromBuf(unbroadcastDataTo(grad.data, grad.shape, aShape), aShape),
+      tensorFromBuf(unbroadcastDataTo(negGrad, grad.shape, bShape), bShape),
     ];
   }
 }
@@ -325,24 +414,38 @@ export class MulOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
     const b = inputs[1] as Tensor;
-    this.savedForBackward.a = a;
-    this.savedForBackward.b = b;
+    // Save the BROADCASTED versions of a and b so backward's chain-rule
+    // multiply works on the same shape as `grad` (which has the
+    // broadcast output shape).  We can't naively save the originals
+    // because their shapes may differ from grad.shape.
+    const outShape = broadcastShapes(a.shape, b.shape);
+    const aB = broadcastDataTo(a.data, a.shape, outShape);
+    const bB = broadcastDataTo(b.data, b.shape, outShape);
+    this.savedForBackward.aB = aB;
+    this.savedForBackward.bB = bB;
+    this.savedForBackward.aShape = a.shape.slice();
+    this.savedForBackward.bShape = b.shape.slice();
+    this.savedForBackward.outShape = outShape;
     return binaryElementwise("Mul", a, b, (x, y) => x * y);
   }
-  // d/dx (x*y) = y, d/dy (x*y) = x.  Element-wise chain rule.
+  // d/dx (x*y) = y, d/dy (x*y) = x.  Element-wise on the broadcast shape,
+  // then unbroadcast to each parent's original shape.
   backward(grad: Tensor): (Tensor | null)[] {
-    const a = this.savedForBackward.a as Tensor;
-    const b = this.savedForBackward.b as Tensor;
-    const gData = grad.data;
-    const outA = new Array(a.numel);
-    const outB = new Array(b.numel);
-    for (let i = 0; i < a.numel; i++) {
-      outA[i] = gData[i]! * b.data[i]!;
-      outB[i] = gData[i]! * a.data[i]!;
+    const aB = this.savedForBackward.aB as Float32Array;
+    const bB = this.savedForBackward.bB as Float32Array;
+    const aShape = this.savedForBackward.aShape as number[];
+    const bShape = this.savedForBackward.bShape as number[];
+    const outShape = this.savedForBackward.outShape as number[];
+    const numel = aB.length;
+    const gradABig = new Float32Array(numel);
+    const gradBBig = new Float32Array(numel);
+    for (let i = 0; i < numel; i++) {
+      gradABig[i] = grad.data[i]! * bB[i]!;
+      gradBBig[i] = grad.data[i]! * aB[i]!;
     }
     return [
-      new Tensor(outA, { shape: a.shape.slice() }),
-      new Tensor(outB, { shape: b.shape.slice() }),
+      tensorFromBuf(unbroadcastDataTo(gradABig, outShape, aShape), aShape),
+      tensorFromBuf(unbroadcastDataTo(gradBBig, outShape, bShape), bShape),
     ];
   }
 }
@@ -351,25 +454,35 @@ export class DivOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
     const b = inputs[1] as Tensor;
-    this.savedForBackward.a = a;
-    this.savedForBackward.b = b;
+    const outShape = broadcastShapes(a.shape, b.shape);
+    const aB = broadcastDataTo(a.data, a.shape, outShape);
+    const bB = broadcastDataTo(b.data, b.shape, outShape);
+    this.savedForBackward.aB = aB;
+    this.savedForBackward.bB = bB;
+    this.savedForBackward.aShape = a.shape.slice();
+    this.savedForBackward.bShape = b.shape.slice();
+    this.savedForBackward.outShape = outShape;
     return binaryElementwise("Div", a, b, (x, y) => x / y);
   }
-  // d/dx (x/y) = 1/y, d/dy (x/y) = -x/y².  Standard quotient rule.
+  // d/dx (x/y) = 1/y, d/dy (x/y) = -x/y².  Quotient rule on broadcast
+  // shape, then unbroadcast.
   backward(grad: Tensor): (Tensor | null)[] {
-    const a = this.savedForBackward.a as Tensor;
-    const b = this.savedForBackward.b as Tensor;
-    const gData = grad.data;
-    const outA = new Array(a.numel);
-    const outB = new Array(b.numel);
-    for (let i = 0; i < a.numel; i++) {
-      const bv = b.data[i]!;
-      outA[i] = gData[i]! / bv;
-      outB[i] = -gData[i]! * a.data[i]! / (bv * bv);
+    const aB = this.savedForBackward.aB as Float32Array;
+    const bB = this.savedForBackward.bB as Float32Array;
+    const aShape = this.savedForBackward.aShape as number[];
+    const bShape = this.savedForBackward.bShape as number[];
+    const outShape = this.savedForBackward.outShape as number[];
+    const numel = aB.length;
+    const gradABig = new Float32Array(numel);
+    const gradBBig = new Float32Array(numel);
+    for (let i = 0; i < numel; i++) {
+      const bv = bB[i]!;
+      gradABig[i] = grad.data[i]! / bv;
+      gradBBig[i] = -grad.data[i]! * aB[i]! / (bv * bv);
     }
     return [
-      new Tensor(outA, { shape: a.shape.slice() }),
-      new Tensor(outB, { shape: b.shape.slice() }),
+      tensorFromBuf(unbroadcastDataTo(gradABig, outShape, aShape), aShape),
+      tensorFromBuf(unbroadcastDataTo(gradBBig, outShape, bShape), bShape),
     ];
   }
 }

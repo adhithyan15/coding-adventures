@@ -56,9 +56,13 @@ export {
   SoftmaxOp,
   SumOp,
   MeanOp,
+  BroadcastOp,
   DISPATCH_THRESHOLD,
   packF32Hex,
   unpackF32Hex,
   runEnvelope,
+  broadcastShapes,
+  broadcastDataTo,
+  unbroadcastDataTo,
 } from "./ops.js";
 export { VERSION } from "./version.js";

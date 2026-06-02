@@ -2,6 +2,111 @@
 
 ## Unreleased
 
+### Added — v1.1.0: NumPy-style broadcasting (Phase A.1)
+
+PR #1 of 7 in **Phase A** — broadening the op vocabulary toward
+realistic models.  v1.0 only accepted same-shape inputs to binary ops;
+v1.1 brings NumPy/PyTorch-style broadcasting.
+
+#### What works now
+
+```ts
+// Bias + (batch, features) — previously had to materialize bias as
+// (batch, features) yourself; now broadcasts automatically.
+const bias = new Tensor([0.1, 0.2, 0.3]);          // (3,)
+const x = new Tensor([[1, 2, 3], [4, 5, 6]]);     // (2, 3)
+const y = x.add(bias);                              // → (2, 3)
+
+// Outer product: (3, 1) * (1, 4) → (3, 4)
+const a = new Tensor([[1], [2], [3]]);
+const b = new Tensor([[10, 20, 30, 40]]);
+const c = a.mul(b);                                 // (3, 4)
+
+// Gradient flow is correct: gradients are unbroadcast back to the
+// ORIGINAL input shapes (stretched dims are summed out).
+bias.requiresGrad = true;
+y.backward();
+console.log(bias.grad!.shape);                      // → [3], NOT [2, 3]
+```
+
+#### New module: `src/broadcasting.ts`
+
+Three pure helpers (no Tensor allocation cost):
+
+- `broadcastShapes(a, b)` — pure shape math; returns the broadcast
+  shape or throws RangeError on incompatibility.  Follows NumPy rules:
+  right-align, pad shorter with 1s on the left, each dim must be equal
+  or one must be 1.
+- `broadcastDataTo(data, fromShape, toShape)` — materializes a fresh
+  Float32Array in `toShape` layout by stretching size-1 dims.  Used by
+  binary ops to align inputs before elementwise math.
+- `unbroadcastDataTo(data, fromShape, toShape)` — inverse for backward:
+  sums the gradient along stretched dims.  Used by binary op backward.
+
+#### Updated ops (Add / Sub / Mul / Div)
+
+- `forward()` now calls `broadcastShapes` and broadcasts inputs to the
+  common output shape via `broadcastDataTo` before doing elementwise
+  math.  Same-shape fast path is preserved (no extra alloc when
+  shapes already match).
+- `backward()` saves the broadcast and original shapes; gradients are
+  unbroadcast back to each parent's original shape using
+  `unbroadcastDataTo`.
+
+  Critical insight: when broadcasting stretches a size-1 dim to size N
+  in the forward output, the corresponding backward must SUM that dim's
+  gradient back into a single cell.  Concretely: `bias (3,)` added to
+  `x (B, 3)` → `bias.grad` is the column sums of the (B, 3) gradient,
+  shape `(3,)` — not the (B, 3) gradient itself.
+
+#### New op: `BroadcastOp`
+
+Explicit broadcasting as an autograd Function.  Most callers don't
+need this — binary ops broadcast implicitly — but for code that wants
+to express "promote this bias once" rather than relying on every
+downstream op:
+
+```ts
+import { BroadcastOp } from "@coding-adventures/ml-framework-core";
+
+const expanded = BroadcastOp.apply(bias, [batch, features]);
+// expanded.shape === [batch, features]
+// On backward, gradient sums back to bias's original shape.
+```
+
+#### Tests added (31 vitest cases, 179 total)
+
+- `broadcastShapes` (8): identical shapes, scalar broadcast, (3,) +
+  (2, 3), (5, 1, 3) + (2, 3), (1, 4) + (3, 4), outer-product layout,
+  incompatibility detection, zero-sized dims
+- `broadcastDataTo` (6): identity copy, row replication, column
+  replication, outer-product materialization, incompatible target
+- `unbroadcastDataTo` (5): identity, sum along axis 0, sum along axis
+  1, row-sum to single column, 3-D leading-axis sum
+- Binary ops with broadcasting (5): Add/Sub/Mul/Div with various
+  broadcast patterns, incompatibility errors
+- Binary op backward unbroadcasts (3): bias-gradient column-sum,
+  outer-product backward gradients, sign correctness for Sub
+- `BroadcastOp` (4): forward broadcast, backward gradient summing,
+  explicit seed grad, chaining through binary ops
+
+Existing 148 tests continue to pass — no regressions.
+
+Total: 179 tests, 0 failures.
+
+#### What's next in Phase A
+
+- **A.2** — N-D batched MatMul + Transpose for rank ≥ 3 (foundation
+  for attention)
+- **A.3** — `Embedding` op (lookup table, the first transformer op)
+- **A.4** — `LayerNorm` + `BatchNorm` + `Dropout`
+- **A.5** — `Conv2D` + `MaxPool2D` via im2col
+- **A.6** — Adam optimizer + `Linear` / `Sequential` layer abstractions
+- **A.7** — safetensors read/write (first Hugging Face interop)
+
+After A.7: load a tiny transformer checkpoint from HF Hub, run
+inference on it, fine-tune it, save the result — all in TypeScript.
+
 ### Added — v1.0.0: complete TypeScript ML framework on the Rust matrix-cpu engine
 
 PR #5 of 5 (FINAL) in the JS/TS pilot.  v1.0.0 marks the completion of
