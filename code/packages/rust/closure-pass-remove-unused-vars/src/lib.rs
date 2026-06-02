@@ -622,9 +622,9 @@ mod tests {
     // -----------------------------------------------------------------
 
     use coding_adventures_javascript_ast::{
-        BindingTarget, Declaration, Expression, FunctionDeclaration, Identifier,
-        NumericLiteral, ProgramItem, BlockStatement, VarKind, VariableDeclaration,
-        VariableDeclarator,
+        BindingTarget, BlockStatement, Declaration, Expression, ExpressionStatement,
+        FunctionDeclaration, Identifier, NumericLiteral, ProgramItem, Statement, VarKind,
+        VariableDeclaration, VariableDeclarator,
     };
 
     fn ident(name: &str) -> Identifier {
@@ -690,20 +690,31 @@ mod tests {
     }
 
     #[test]
-    fn apply_step_passthrough_keeps_used_let_under_empty_analysis() {
-        // `let x;` at the top level.  Today the analyzer returns
-        // empty bindings, so `dead_names` is empty, so `x` is kept.
-        // After #4787 merges, the analyzer surfaces `x` but it's
-        // not referenced either → `x` would become dead.  This
-        // test passes today (no-op path) and will FAIL after the
-        // analyzer activation lands — exactly the right signal for
-        // the follow-up PR to introduce a referenced-`x` fixture
-        // (e.g., via an ExpressionStatement reading `x`) to keep
-        // assertion semantics stable.
-        let prog = program_with(vec![var_decl(VarKind::Let, &[("x", None)])]);
+    fn apply_step_passthrough_keeps_used_let() {
+        // `let x; x;` — the `x;` ExpressionStatement is the use
+        // that keeps `x` live. Now that CLOC13.0.1 (PR #4787's
+        // follow-up) is on this branch, the analyzer surfaces
+        // both the `x` binding and the `x` reference, the
+        // use-count for `x` is 1, so the apply step skips it.
+        //
+        // Pre-CLOC13.0.1 this test fixture was just `let x;` with
+        // no use; that fixture would FAIL today because the
+        // analyzer correctly identifies `x` as dead (zero refs).
+        // The use-the-binding fix preserves the original
+        // "no removal" assertion.
+        let stmt_x = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+            },
+        ));
+        let prog = program_with(vec![var_decl(VarKind::Let, &[("x", None)]), stmt_x]);
         let out = run_pass(prog.clone());
-        assert!(!out.changed, "no analyzer bindings → no removals");
-        assert_eq!(out.program.body.len(), 1);
+        assert!(!out.changed, "x is referenced → no removal");
+        assert_eq!(out.program.body.len(), 2);
     }
 
     #[test]
@@ -747,35 +758,77 @@ mod tests {
     }
 
     #[test]
-    fn apply_step_preserves_multi_declarator_when_no_dead_names() {
-        // `const a = 1, b = 2;` — multi-declarator form.  Today
-        // (no analyzer bindings) both stay.  After CLOC13.0
-        // lands, the analyzer would surface both — and if neither
-        // is referenced, both get dropped together via the
-        // "every declarator dead → drop whole item" path.  When
-        // one is referenced and one isn't, the split path fires.
-        // Pinning the no-op behavior now; behavior tests for
-        // the split path follow in the CLOC13.0.1 wave.
-        let prog = program_with(vec![var_decl(
-            VarKind::Const,
-            &[("a", Some(1.0)), ("b", Some(2.0))],
-        )]);
+    fn apply_step_preserves_multi_declarator_when_all_referenced() {
+        // `const a = 1, b = 2; a; b;` — multi-declarator form
+        // where BOTH declarators are referenced. Now that the
+        // analyzer collects references (CLOC13.0.1), both
+        // bindings have use_count = 1 and the apply step's
+        // passthrough path keeps the whole VariableDeclaration
+        // verbatim.
+        let stmt_a = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::Identifier(Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                }),
+            },
+        ));
+        let stmt_b = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::Identifier(Identifier {
+                    cv: None,
+                    name: "b".to_string(),
+                }),
+            },
+        ));
+        let prog = program_with(vec![
+            var_decl(VarKind::Const, &[("a", Some(1.0)), ("b", Some(2.0))]),
+            stmt_a,
+            stmt_b,
+        ]);
         let out = run_pass(prog.clone());
         assert!(!out.changed);
         assert_eq!(out.program.body, prog.body);
     }
 
     #[test]
-    fn apply_step_changed_is_false_when_program_unchanged() {
+    fn apply_step_changed_is_false_when_all_used() {
         // Pin the invariant: `changed` is true iff at least one
-        // declarator was removed.  Under empty analysis, no
-        // removals → `changed = false`.  This is the same
-        // discipline as the v0.2.0 hard-pin, just now derived
-        // from real state rather than asserted.
+        // declarator was removed. With every binding referenced
+        // (via top-level ExpressionStatements naming each), the
+        // apply step's eligibility scan finds zero dead, no
+        // removal happens, and `changed == false`.
+        //
+        // `f` is a Function-kind binding; it's filtered out at
+        // step 2 regardless (functions are treeshake's job).
+        // We still need to reference `x` and `k` to keep them
+        // alive under the now-active analyzer.
+        let stmt_x = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+            },
+        ));
+        let stmt_k = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::Identifier(Identifier {
+                    cv: None,
+                    name: "k".to_string(),
+                }),
+            },
+        ));
         let prog = program_with(vec![
             var_decl(VarKind::Let, &[("x", None)]),
             fn_decl("f"),
             var_decl(VarKind::Const, &[("k", Some(7.0))]),
+            stmt_x,
+            stmt_k,
         ]);
         let out = run_pass(prog.clone());
         assert!(!out.changed);
