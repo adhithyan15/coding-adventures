@@ -44,11 +44,13 @@ fn main() -> ExitCode {
     //   * LlvmIr       → .ll  (foo.bas → foo.ll),  matching `llc` input convention
     //   * Riscv32Bin   → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
     //   * Intel8008Bin → .bin (foo.oct → foo.bin), shares the `.bin` convention with RV32I
+    //   * Armv7Bin     → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
         EmitMode::Riscv32Bin   => input.with_extension("bin"),
         EmitMode::Intel8008Bin => input.with_extension("bin"),
+        EmitMode::Armv7Bin     => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -89,6 +91,13 @@ enum EmitMode {
     /// or a 1702 EPROM burner.  Oct's native target — its IIR is
     /// designed to round-trip through 8008 silicon.
     Intel8008Bin,
+    /// Flat `.bin` of little-endian 32-bit ARMv7-A (A32) instruction
+    /// words via `iir-to-armv7`.  Cross-platform.  Downstream
+    /// consumers: the in-tree `arm-simulator`, `qemu-arm`,
+    /// `objcopy` + a phone-class Linux linker, or a Cortex-A7/A8/A9-
+    /// era SoC flash loader.  Phone-class target — billions of
+    /// deployed silicon units.
+    Armv7Bin,
 }
 
 struct CliArgs {
@@ -165,9 +174,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "llvm-ir" | "llvm" | "ll"     => Ok(EmitMode::LlvmIr),
         "riscv32" | "rv32" | "bin"    => Ok(EmitMode::Riscv32Bin),
         "intel8008" | "i8008" | "8008" => Ok(EmitMode::Intel8008Bin),
+        "armv7" | "arm" | "arm32" => Ok(EmitMode::Armv7Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008"
+             native | llvm-ir | riscv32 | intel8008 | armv7"
         )),
     }
 }
@@ -204,6 +214,13 @@ Options:
                                                 via iir-to-intel8008; cross-platform;
                                                 load into intel8008-simulator or burn
                                                 to a 1702 EPROM (Oct's native target)
+                             armv7 | arm | arm32
+                                              → flat .bin of little-endian 32-bit
+                                                ARMv7-A instruction words via
+                                                iir-to-armv7; cross-platform; load
+                                                into arm-simulator, qemu-arm, or
+                                                objcopy + a phone-class Linux linker
+                                                (Cortex-A7/A8/A9-era SoCs)
   -h, --help               Show this help.\
 ");
 }
@@ -233,6 +250,16 @@ fn dispatch(
     // instruction is a byte sequence).  Oct's native target.
     if emit == EmitMode::Intel8008Bin {
         return lang_aot::compile_file_to_intel8008_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // ARMv7 .bin emission is also cross-platform — flatten each
+    // 32-bit A32 word to little-endian bytes (ARM's default endian
+    // on every modern Linux/Android/qemu setup).  No linker, no
+    // host gating (an ARM Cortex-A class CPU isn't a common dev
+    // host; downstream is always arm-simulator, qemu-arm, or a
+    // phone-class Linux board).
+    if emit == EmitMode::Armv7Bin {
+        return lang_aot::compile_file_to_armv7_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

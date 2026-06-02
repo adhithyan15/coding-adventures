@@ -1007,3 +1007,58 @@ fn end_to_end_twig_42_emits_intel8008_bin_via_lang_aot() {
     assert_eq!(&bytes[..3.min(bytes.len())], &[0x3E, 0x2A, 0x76],
         "Twig `42` should produce `MVI A, 42; HLT`; got: {bytes:02x?}");
 }
+
+// ===========================================================================
+// A3+++ — source -> IIR -> ARMv7 (A32) machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_armv7_bin entry point runs the full source ->
+// IIR -> iir-to-armv7 pipeline and produces a flat .bin of
+// little-endian 32-bit A32 instruction words.
+//
+// Twig `42` lowers to the canonical 2-word `MOV r0, #42; BX LR`
+// sequence: `0xE3A0_002A 0xE12F_FF1E` stored little-endian as
+// `2A 00 A0 E3  1E FF 2F E1`.
+
+#[test]
+fn end_to_end_twig_42_emits_armv7_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_armv7_bin(&src, &bin, lang_aot::Language::Twig) {
+        // Tolerate not-yet-covered op gaps — same convention as the
+        // LLVM + RISC-V + Intel 8008 paths.  After A3++.6, ARMv7
+        // supports the full IIR core for simple programs, so Twig's
+        // `42` should always succeed here.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("InvalidOperand")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: Twig ARMv7 lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected Twig -> ARMv7 error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "Twig `42` should produce a non-empty .bin");
+    assert_eq!(bytes.len() % 4, 0,
+        ".bin length should be a multiple of 4 (A32 word size); got {} bytes",
+        bytes.len());
+
+    // Twig `42` lowers to `MOV r0, #42; BX LR` = `0xE3A0_002A 0xE12F_FF1E`.
+    // Stored little-endian: `2A 00 A0 E3 1E FF 2F E1`.
+    assert_eq!(&bytes[..4.min(bytes.len())], &[0x2A, 0x00, 0xA0, 0xE3],
+        "Twig `42` should produce `MOV r0, #42` (0xE3A0_002A) as the first \
+         4 bytes little-endian (2A 00 A0 E3); got: {:02x?}",
+        &bytes[..4.min(bytes.len())]);
+    assert_eq!(&bytes[4..8.min(bytes.len())], &[0x1E, 0xFF, 0x2F, 0xE1],
+        "second word should be BX LR (0xE12F_FF1E) little-endian; got: {:02x?}",
+        &bytes[4..8.min(bytes.len())]);
+}

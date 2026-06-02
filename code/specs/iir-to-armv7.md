@@ -76,7 +76,8 @@ IIRModule
 | v0.4.3 (A3++.5.5 third slice) | `cmp` equality with flag-to-bool capture via `MOVEQ` (`0x03A0_0000`) | **merged** |
 | v0.4.4 (A3++.5.5 fourth slice) | Full comparison family `cmp_ne`/`cmp_lt`/`cmp_gt`/`cmp_gte`/`cmp_lte` via condition prefixes | **merged** |
 | v0.4.5 (A3++.5.5 fifth slice) | Control flow: `label` + `jmp` + `jmp_if_true`/`jmp_if_false` via Bcond + two-pass backpatching | **merged** |
-| **v0.4.6 (A3++.6 — this PR)** | Real `call` via `BL` (branch with link, `0xEB00_0000` — NOT `0xEA00_0000` which is B) + module-level call-backpatching (analogous to the 8008's v0.3.9).  ARMv7 backend now feature-complete for AOT. | this PR |
+| v0.4.6 (A3++.6) | Real `call` via `BL` + module-level call-backpatching.  ARMv7 backend feature-complete for AOT. | **merged** |
+| **A3+++ (this PR, in `lang-aot` v0.8.0 → v0.9.0)** | `lang-aot --emit=armv7` (aliases `arm`, `arm32`) routes source → IIR → ARMv7 (A32) `.bin` via `iir-to-armv7`; flattens `Vec<u32>` to little-endian bytes; cross-platform; no host gating; no version bump for the iir-to-armv7 crate itself | this PR |
 | v0.3.x (A3++.5.5) | Comparisons + conditional branches via the cond-field on every A32 instruction (a stronger version of the 8008's flag-based jumps) | future |
 | v0.3.x (A3++.6) | Function calls via `bl` with PC-relative offsets + stack spilling | future |
 | v0.4.0 (A3+++) | `lang-aot --emit=armv7` wiring | future |
