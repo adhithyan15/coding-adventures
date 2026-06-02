@@ -63,9 +63,9 @@ IIRModule
 | v0.3.5 (A2++.5.5 fourth slice) | Boolean conditional jumps `jmp_if_true` (`ANA A` + `JFZ` `0x48`) and `jmp_if_false` (`ANA A` + `JTZ` `0x4C`) | **merged** |
 | v0.3.6 (A2++.5.5 fifth slice) | `cmp` equality with inline flag-to-bool capture | **merged** |
 | v0.3.7 (A2++.5.5 sixth slice) | `cmp_ne`/`cmp_lt`/`cmp_gt` via shared `emit_cmp_capture` helper; introduces `JFC = 0x40`; `cmp_gt` cleverly reuses `cmp_lt` via operand swap | **merged** |
-| **v0.3.8 (A2++.5.5 seventh slice — this PR)** | `cmp_gte`/`cmp_lte` via `JTC = 0x44` (complement of `JFC`); pins remaining 4 cond-jump constants `JFS`/`JTS`/`JFP`/`JTP` (forward-compat for signed/parity lowerings) | this PR |
-| v0.3.9 (A2++.5.5 eighth slice) | Real `RET` (`0x07`) via `CAL` (**`0x7E`**, NOT `0x46` — `0x46` is `CFZ`) + per-function internal return-stack discipline | future |
-| v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring + module-level CALL backpatching | future |
+| v0.3.8 (A2++.5.5 seventh slice) | `cmp_gte`/`cmp_lte` via `JTC = 0x44` (complement of `JFC`); pins remaining 4 cond-jump constants | **merged** |
+| **v0.3.9 (A2++.5.5 EIGHTH AND FINAL SLICE — this PR)** | Real `RET` (`0x07`) + `CAL` (**`0x7E`** — NOT `0x46`/CFZ) + module-level call-site backpatching + entry-point HLT-vs-RET discipline + `call dest, fn_name` IIR op (zero-arg, return-via-A) | this PR |
+| v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring + argument passing for calls + cross-module CALL backpatching | future |
 
 ## Encoding cheat-sheet for the jump/call family
 

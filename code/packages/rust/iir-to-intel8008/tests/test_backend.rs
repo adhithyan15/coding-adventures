@@ -7,7 +7,7 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel8008::{
     lower_iir_to_intel8008, validate_for_intel8008,
     IIRIntel8008Config, IIRIntel8008Error,
-    HLT, JFC, JFP, JFS, JFZ, JMP, JTC, JTP, JTS, JTZ, MVI_A,
+    CAL, HLT, JFC, JFP, JFS, JFZ, JMP, JTC, JTP, JTS, JTZ, MVI_A, RET,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -1334,6 +1334,183 @@ fn cmp_lte_swaps_operands_then_uses_jtc() {
         0x79,           // 0D      MOV A, C
         HLT,            // 0E
     ], "cmp_lte expected; got: {bytes:02x?}");
+}
+
+// ===========================================================================
+// 15. A2++.5.5 eighth slice — real RET + CAL + module-level call backpatching
+// ===========================================================================
+//
+// `RET` (0x07) — single-byte unconditional return; pops the 8008's
+// internal 7-deep return-address stack and jumps there.
+//
+// `CAL` (0x7E) — 3-byte unconditional call; pushes the address of the
+// next instruction onto the stack, then jumps to the target.  NOT
+// `0x46` (which is CFZ, conditional call-if-zero-clear).
+//
+// Lowering changes:
+//   - `ret <v>` / `ret_void` now emit `RET` (0x07) for non-entry-point
+//     functions; `HLT` is still emitted for the module's entry-point
+//     function (calling `RET` there would underflow the empty return
+//     stack and pop a garbage address).
+//   - New `call dest, fn_name` op emits `CAL + low + high` (3 bytes),
+//     captures the return value from A into dest_reg.  Module-level
+//     `pending_calls` resolves the 14-bit address after all functions
+//     have been laid out.
+
+fn multi_fn_module(entry: &str, functions: Vec<IIRFunction>) -> IIRModule {
+    IIRModule {
+        name: "test".into(),
+        functions,
+        entry_point: Some(entry.into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
+
+#[test]
+fn ret_constant_pinned_to_0x07() {
+    assert_eq!(RET, 0x07,
+        "RET (unconditional return) should be 0x07; got 0x{:02x}", RET);
+}
+
+#[test]
+fn cal_constant_pinned_to_0x7e() {
+    // CAL = 01 111 110 — NOT 0x46 (which is CFZ).
+    assert_eq!(CAL, 0x7E,
+        "CAL (unconditional call) should be 0x7E; got 0x{:02x}", CAL);
+}
+
+#[test]
+fn non_entry_function_ret_emits_real_ret_not_hlt() {
+    // Module with `main` as the entry point and `helper` as a callee.
+    // Even though we don't call helper from main yet, its trailing
+    // `ret <v>` should emit RET (0x07), not HLT.
+    let main_fn = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let helper = IIRFunction::new("helper", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(
+        &multi_fn_module("main", vec![main_fn, helper]),
+        &IIRIntel8008Config::default(),
+    ).expect("lowering");
+    // Layout:
+    //   00:  HLT          (main's ret_void — main IS entry, so HLT)
+    //   01,02: MVI A, 42  (helper's const v)
+    //   03:  RET          (helper's ret v — v already in A; helper is NOT entry)
+    assert_eq!(bytes, vec![
+        HLT,            // 00  main ret_void (entry → HLT)
+        MVI_A, 0x2A,    // 01 02  helper: MVI A, 42
+        RET,            // 03  helper ret v (non-entry → RET)
+    ], "non-entry helper should emit RET; got: {bytes:02x?}");
+}
+
+#[test]
+fn entry_function_ret_still_emits_hlt() {
+    // Sanity regression: when a function IS the entry point, ret
+    // continues to emit HLT (RET would underflow the empty stack).
+    // This is the SAME shape as the v0.2.0 const_42 test — we're just
+    // confirming v0.3.9's lowering didn't break it.
+    let f = IIRFunction::new("answer", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![MVI_A, 0x2A, HLT],
+        "entry function ret should still emit HLT; got: {bytes:02x?}");
+}
+
+#[test]
+fn call_emits_cal_with_backpatched_target_address() {
+    // Two functions: `main` (entry) calls `helper`.  `helper` lives at
+    // a known offset within the module byte stream.
+    //
+    // main: call r, helper; ret_void
+    //   00:  CAL <helper_addr>   (7E ?? ??)
+    //   03:  HLT                  (ret_void in entry → HLT)
+    //
+    // helper: const v=7; ret v
+    //   04, 05: MVI A, 7   (3E 07)
+    //   06: RET             (07)
+    //
+    // After backpatching:
+    //   bytes[1..3] = (0x04, 0x00)
+    let main_fn = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("call", Some("r".into()),
+            vec![Operand::Var("helper".into())], "u8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let helper = IIRFunction::new("helper", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(
+        &multi_fn_module("main", vec![main_fn, helper]),
+        &IIRIntel8008Config::default(),
+    ).expect("lowering");
+    assert_eq!(bytes, vec![
+        CAL,   0x04, 0x00,   // 00 01 02  CAL helper (at 0x04)
+        // r is allocated in main.  It's the first const-or-call, so it
+        // goes into register A.  dest_reg == A so no capture MOV.
+        HLT,                  // 03  main ret_void (entry → HLT)
+        MVI_A, 0x07,          // 04 05  helper: MVI A, 7
+        RET,                  // 06  helper: ret v (non-entry → RET)
+    ], "call + RET expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn call_to_undefined_function_is_rejected() {
+    let main_fn = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("call", None, vec![Operand::Var("ghost".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel8008(
+        &multi_fn_module("main", vec![main_fn]),
+        &IIRIntel8008Config::default(),
+    ).expect_err("call to undefined function should fail");
+    match err {
+        IIRIntel8008Error::UndefinedFunction { caller, callee } => {
+            assert_eq!(caller, "main");
+            assert_eq!(callee, "ghost");
+        }
+        other => panic!("expected UndefinedFunction, got: {other:?}"),
+    }
+}
+
+#[test]
+fn call_with_no_dest_discards_return_value() {
+    // Void-call shape: no register allocated for the return value.
+    //   main: call helper; ret_void
+    //   00:  CAL <helper_addr>
+    //   03:  HLT
+    //   04: helper body
+    let main_fn = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("call", None, vec![Operand::Var("helper".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let helper = IIRFunction::new("helper", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(
+        &multi_fn_module("main", vec![main_fn, helper]),
+        &IIRIntel8008Config::default(),
+    ).expect("lowering");
+    assert_eq!(bytes, vec![
+        CAL,   0x04, 0x00,   // 00 01 02  CAL helper
+        HLT,                  // 03  main ret_void
+        RET,                  // 04  helper ret_void (non-entry → RET)
+    ], "void call expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn errors_for_undefined_function_display_without_panic() {
+    let _ = format!("{}", IIRIntel8008Error::UndefinedFunction {
+        caller: "main".into(), callee: "ghost".into(),
+    });
 }
 
 // Note on the high-byte split + AddressOutOfRange coverage gap:

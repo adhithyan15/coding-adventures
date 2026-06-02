@@ -176,6 +176,35 @@ pub const JFZ: u8 = 0x48;
 /// result, so `JTZ` is the "jump if false" half.
 pub const JTZ: u8 = 0x4C;
 
+/// Intel 8008 unconditional `RET` opcode — `0x07`.  Pops the
+/// top of the CPU's internal 7-deep return-address stack and jumps
+/// there.  Single-byte instruction.
+///
+/// Bit pattern: `00 000 111`.  Lives in the immediate-byte family
+/// (`00 xxx 110/111`) but with the low 3 bits = `111` instead of
+/// `110` — distinct from `MVI rrr, n` which has the trailing `110`.
+///
+/// CAREFUL: `0x07` is NOT to be confused with `RFC` (return if flag-
+/// carry clear, `0x03`) or its conditional siblings.  This is the
+/// unconditional variant — always returns.
+pub const RET: u8 = 0x07;
+
+/// Intel 8008 unconditional `CAL addr` first byte — `0x7E`.  Pushes
+/// the address of the NEXT instruction (= PC + 3, the byte after the
+/// 3-byte CAL) onto the CPU's internal return-address stack, then
+/// jumps to `addr`.  Three-byte instruction (CAL + low byte + high byte).
+///
+/// Bit pattern: `01 111 110`.
+///
+/// CRITICAL: `CAL` is `0x7E`, NOT `0x46`.  `0x46` is `CFZ` (call if
+/// flag-zero clear) — a *conditional* call that the silicon will
+/// silently take or skip based on whatever zero-flag state happened
+/// to be live.  The same family of confusion as `JMP ↔ JFC` flagged
+/// in v0.3.4 and `JTC ↔ JMP` flagged in v0.3.8.  Pin to `0x7E` so
+/// the simulator's disassembler correctly reports "CAL" and the
+/// silicon executes the call unconditionally.
+pub const CAL: u8 = 0x7E;
+
 /// Intel 8008 unconditional `JMP addr` first byte — `0x7C`.  Followed
 /// by two address bytes (low byte then high byte) — the 8008 has a
 /// 14-bit address space so only the bottom 6 bits of the high byte are
@@ -328,6 +357,11 @@ pub enum IIRIntel8008Error {
     /// programs are tens to hundreds of bytes so this is a guard
     /// against runaway expansion, not a real workload concern.
     AddressOutOfRange { function: String, address: usize },
+    /// A `call` referenced a function name that wasn't defined
+    /// anywhere in the module.  Cross-module calls aren't yet
+    /// supported — that lands with `lang-aot --target=intel8008` in
+    /// A2+++.
+    UndefinedFunction { caller: String, callee: String },
 }
 
 impl fmt::Display for IIRIntel8008Error {
@@ -356,6 +390,9 @@ impl fmt::Display for IIRIntel8008Error {
             }
             Self::AddressOutOfRange { function, address } => {
                 write!(f, "function {function:?} grew to address 0x{address:04x}, exceeding the 8008's 14-bit (16384-byte) address space")
+            }
+            Self::UndefinedFunction { caller, callee } => {
+                write!(f, "undefined function {callee:?} called from {caller:?}")
             }
         }
     }
@@ -427,6 +464,13 @@ const SUPPORTED_OPS: &[&str] = &[
     // with `cmp_lte` reusing `cmp_gte` via the same operand-swap
     // trick that v0.3.7 used for `cmp_gt`.
     "cmp_gte", "cmp_lte",
+    // A2++.5.5 eighth slice — real function calls + returns via the
+    // 8008's internal 7-deep return-address stack.  `call dest, fn`
+    // emits CAL + 14-bit address + captures the return value from A
+    // into dest_reg.  `ret`/`ret_void` switch from HLT to RET for
+    // non-entry-point functions (entry-point keeps HLT — calling RET
+    // there would pop a garbage address from an empty stack).
+    "call",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -444,8 +488,30 @@ pub fn lower_iir_to_intel8008(
         return Ok(vec![HLT]);
     }
 
+    // ── Module-level call-site resolution state (v0.3.9) ────────────────
+    //
+    // Each function's start byte offset is recorded as we walk
+    // `module.functions` in source order.  When a `call <fn_name>` is
+    // emitted, we record (slot, fn_name) into `pending_calls`; after
+    // every function has been emitted, a final pass backpatches each
+    // pending CAL with the 14-bit absolute address of its target.
+    //
+    // This mirrors `iir-to-riscv`'s A1++.5.5 module-level jal
+    // resolution: cross-function references are the simplest motivation
+    // for separating local-jump backpatching (per-function) from
+    // call-site resolution (module-level).
+    let mut function_addrs: HashMap<String, usize> = HashMap::new();
+    let mut pending_calls: Vec<(usize, String, String /* caller */)> = Vec::new();
+    // Entry-point name (if any) drives the HLT-vs-RET decision in `ret`/
+    // `ret_void` lowering — the entry-point can't safely return via RET
+    // (it would pop a garbage address from an empty return stack).
+    let entry_point = module.entry_point.as_deref();
+
     let mut bytes = Vec::new();
     for f in &module.functions {
+        // Record this function's start address before emitting its body.
+        function_addrs.insert(f.name.clone(), bytes.len());
+        let is_entry = Some(f.name.as_str()) == entry_point;
         // ── Per-function allocator state ──────────────────────────────
         //
         // IIR var name → its assigned 3-bit register index.  Sequentially
@@ -524,11 +590,14 @@ pub fn lower_iir_to_intel8008(
                     }
                 }
 
-                // ── ret <var>: stage value in A, then HLT ───────────────
+                // ── ret <var>: stage value in A, then RET (or HLT for entry) ─
                 //
-                // If `var`'s register is already A, the MOV is omitted.
-                // Real RET via CALL/stack lands in A2++.5 — until then,
-                // HLT is the universal stopping primitive.
+                // The 8008's return-value calling convention puts the
+                // value in `A`.  We stage `var` into A (eliding the
+                // MOV if already there) and then:
+                //   - emit `HLT` for the module's entry-point function
+                //     (RET would underflow the empty return stack).
+                //   - emit `RET` (`0x07`) for any other function.
                 "ret" => {
                     let src_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -541,12 +610,12 @@ pub fn lower_iir_to_intel8008(
                     if sss != REG_A {
                         bytes.push(encode_mov(REG_A, sss));
                     }
-                    bytes.push(HLT);
+                    bytes.push(if is_entry { HLT } else { RET });
                 }
 
-                // ── ret_void: just HLT ──────────────────────────────────
+                // ── ret_void: HLT for the entry-point, RET otherwise ────
                 "ret_void" => {
-                    bytes.push(HLT);
+                    bytes.push(if is_entry { HLT } else { RET });
                 }
 
                 // ── add / adc / sub / sbb / and / or / xor → MOV A,a; OP b_reg; MOV dest,A
@@ -762,6 +831,46 @@ pub fn lower_iir_to_intel8008(
                     pending_jmps.push((slot, target));
                 }
 
+                // ── call dest, "<fn_name>" → CAL + capture A into dest ──
+                //
+                // Operand layout: srcs = [Var(fn_name)], optional dest.
+                //
+                // Pass 1: emit `0x7E 0x00 0x00` and record
+                // (slot, fn_name, caller) into the module-level
+                // `pending_calls` for the final backpatching pass.
+                //
+                // Argument passing isn't yet supported — calls in v0.3.9
+                // are zero-arg, single-return-value (via A).  Mirrors
+                // iir-to-riscv's A1++.5.5 staging where args came in a
+                // later A1++.5.5.5.
+                //
+                // CRITICAL: CAL is `0x7E`, NOT `0x46`.  `0x46` is `CFZ`
+                // (call if flag-zero clear) — a conditional call.  Same
+                // family of confusion as `JMP ↔ JFC`.
+                "call" => {
+                    let fn_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "call requires srcs[0] = Operand::Var(fn_name)".into(),
+                        }),
+                    };
+                    bytes.push(CAL);
+                    let slot = bytes.len();
+                    bytes.push(0); // low-address placeholder
+                    bytes.push(0); // high-address placeholder
+                    pending_calls.push((slot, fn_name, f.name.clone()));
+                    // If the IIR site binds a dest, capture the return
+                    // value from A into dest_reg.  A bare `call` without
+                    // a dest discards the return value (a "void call").
+                    if let Some(dest) = instr.dest.as_deref() {
+                        let dest_reg = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                        if dest_reg != REG_A {
+                            bytes.push(encode_mov(dest_reg, REG_A));
+                        }
+                    }
+                }
+
                 // ── jmp_if_true / jmp_if_false ─────────────────────────
                 //
                 // Operand layout: srcs = [Var(cond), Var(target_label)].
@@ -862,6 +971,28 @@ pub fn lower_iir_to_intel8008(
             bytes[slot]     = (target & 0xFF) as u8;
             bytes[slot + 1] = ((target >> 8) & 0x3F) as u8;
         }
+    }
+
+    // ── Module-level call-backpatching pass (v0.3.9) ──────────────
+    //
+    // All functions have been emitted, so `function_addrs` has every
+    // valid call target.  Walk `pending_calls` and write the 14-bit
+    // absolute address of each callee into the placeholder slots.
+    for (slot, callee, caller) in &pending_calls {
+        let target = *function_addrs.get(callee).ok_or_else(|| {
+            IIRIntel8008Error::UndefinedFunction {
+                caller: caller.clone(),
+                callee: callee.clone(),
+            }
+        })?;
+        if target >= 1 << 14 {
+            return Err(IIRIntel8008Error::AddressOutOfRange {
+                function: caller.clone(),
+                address: target,
+            });
+        }
+        bytes[*slot]     = (target & 0xFF) as u8;
+        bytes[*slot + 1] = ((target >> 8) & 0x3F) as u8;
     }
 
     if bytes.is_empty() {
