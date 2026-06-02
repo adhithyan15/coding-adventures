@@ -86,7 +86,7 @@ use coding_adventures_javascript_ast::{
     Declaration, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
-    ReturnStatement, Statement, StringLiteral, UnaryExpression, UnaryOperator,
+    ReturnStatement, Statement, StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral,
     VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -860,8 +860,31 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 _ => None,
             }
         }
-        // Skipped: BitNot (int32 coercion), Void (need undefined),
-        // Delete (side effects).
+        UnaryOperator::Void => {
+            // `void <pure-literal>` → `undefined`. CLOC12 gap-002.
+            //
+            // The general rule `void <expr> → undefined` is only sound
+            // when `<expr>` has no observable side effects — otherwise
+            // we'd silently drop the side effects.  For now we
+            // conservatively fold only when the argument is a
+            // primitive literal (or another folded literal we
+            // already produced).  Identifiers, calls, member-access
+            // are deliberately NOT folded — `void f()` must still
+            // call `f`.
+            //
+            // The canonical case `void 0` (a Closure-Compiler-style
+            // synonym for `undefined`) is now resolved.
+            match &arg {
+                Expression::NumericLiteral(_)
+                | Expression::StringLiteral(_)
+                | Expression::BooleanLiteral(_)
+                | Expression::NullLiteral(_)
+                | Expression::BigIntLiteral(_)
+                | Expression::UndefinedLiteral(_) => Some(FoldedLiteral::Undefined),
+                _ => None,
+            }
+        }
+        // Skipped: BitNot (int32 coercion), Delete (side effects).
         _ => None,
     };
 
@@ -944,6 +967,10 @@ enum FoldedLiteral {
     String(String),
     Boolean(bool),
     Null,
+    /// `undefined`. Produced by:
+    /// - `void <any-expression-without-side-effects>` fold (CLOC12.20 / gap-002).
+    /// - Future: identifier-reference to `undefined` in scopes that don't shadow it.
+    Undefined,
 }
 
 fn stamp_literal_cv(v: FoldedLiteral, cv: Option<String>) -> Expression {
@@ -959,6 +986,7 @@ fn stamp_literal_cv(v: FoldedLiteral, cv: Option<String>) -> Expression {
         }
         FoldedLiteral::Boolean(b) => Expression::BooleanLiteral(BooleanLiteral { cv, value: b }),
         FoldedLiteral::Null => Expression::NullLiteral(NullLiteral { cv }),
+        FoldedLiteral::Undefined => Expression::UndefinedLiteral(UndefinedLiteral { cv }),
     }
 }
 
@@ -980,6 +1008,7 @@ fn literal_label(v: &FoldedLiteral) -> String {
         FoldedLiteral::String(s) => format!("\"{}\"", s),
         FoldedLiteral::Boolean(b) => if *b { "true" } else { "false" }.to_string(),
         FoldedLiteral::Null => "null".to_string(),
+        FoldedLiteral::Undefined => "undefined".to_string(),
     }
 }
 
