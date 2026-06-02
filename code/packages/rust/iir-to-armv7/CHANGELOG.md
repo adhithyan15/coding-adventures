@@ -3,6 +3,75 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-06-02 (A3++ — linear register allocator + `mov` + ret-value staging)
+
+### Added — linear register allocator over r0..r12
+
+Extends v0.2.0's accumulator-only `const` to a real allocator that
+hands out the 13 ARMv7 general-purpose registers in order:
+`r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12`.  `r0` comes
+first so the trivial `const v; ret v` case stays at the 2-word shape
+(`MOV r0, #imm; BX LR`) without an extra `MOV r0, X` round-trip.
+
+`r13` (`sp`), `r14` (`lr`), and `r15` (`pc`) are NOT in the pool —
+touching them as locals would break the calling convention's stack
+discipline, the return address, or the instruction pointer.
+
+| IIR op | A32 lowering |
+|--------|--------------|
+| `const dest, Int(n)` | `MOV rrr, #n` (`MOV_IMM_R0_BASE | (rrr << 12) | n`) |
+| `mov dest, src` | `MOV Rd, Rm` (`MOV_REG_BASE | (Rd << 12) | Rm`) |
+| `ret <var>` | stage `var` into `r0` via `MOV r0, var_reg` if needed, then `BX LR` |
+| `ret_void` | `BX LR` |
+
+### New constants
+
+* `pub const MOV_REG_BASE: u32 = 0xE1A0_0000;` — `MOV r0, r0` base
+  encoding for the register-to-register form.  OR in `(Rd << 12) |
+  Rm` for arbitrary register pairs.
+
+CAREFUL: bit-25 distinguishes this from `MOV_IMM_R0_BASE` (which is
+`0xE3A0_0000`).  Data-processing-immediate has bit-25 set; register-
+form doesn't.
+
+### New encoder helper
+
+* `encode_mov_reg(rd: u8, rm: u8) -> u32` — emits `MOV Rd, Rm` with
+  `debug_assert!`s on both 4-bit register selectors.
+
+### New error variants
+
+* `IIRArmv7Error::UndefinedVariable` — `mov` or `ret` referenced a
+  name that was never bound.
+* `IIRArmv7Error::OutOfRegisters` — 14th local exhausted the 13-
+  register pool.  Stack spilling lands in A3++.5 or later.
+
+### Tests added (21 total, was 14)
+
+* `mov_reg_base_pinned_to_0xe1a00000` — guards the new constant.
+* `two_consts_use_r0_then_r1_then_mov_r0_r1_before_bx_lr` — pinned
+  exact 4-word sequence including `MOV r1, #2 = 0xE3A0_1002` (the
+  `1` in the `Rd` nibble) and `MOV r0, r1 = 0xE1A0_0001`.
+* `ret_of_first_const_omits_the_redundant_mov` — regression for
+  the v0.2.0 2-word trivial-case shape (r0-first allocator preserves
+  it).
+* `mov_lowers_to_canonical_mov_rd_rm` — `MOV r1, r0 = 0xE1A0_1000`
+  and `MOV r0, r1 = 0xE1A0_0001` shown side-by-side.
+* `allocator_exhaustion_yields_out_of_registers` — 14 consts → fails
+  on `v13` with `OutOfRegisters`.
+* `undefined_variable_in_mov_is_rejected`.
+* `errors_for_new_variants_display_without_panic`.
+
+### What is NOT in v0.3.0 (deferred to A3++.5 and beyond)
+
+* Arithmetic (`add`/`sub`/`mul`) and the data-processing-register
+  family those expand into.
+* Function calls via `bl` with PC-relative offsets.
+* Comparisons + conditional branches via the `cond` field every
+  A32 instruction carries.
+* Wider immediates via `movw`/`movt` (the ARMv7 16-bit-imm pair).
+* `lang-aot --emit=armv7` wiring — A3+++.
+
 ## [0.2.0] — 2026-06-02 (A3+ — `const` → `MOV r0, #imm8`; `ret`/`ret_void` → `BX LR`)
 
 ### Added — first real instruction lowering

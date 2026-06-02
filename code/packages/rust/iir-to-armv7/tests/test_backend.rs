@@ -6,7 +6,7 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
-    IIRArmv7Config, IIRArmv7Error, BKPT, BX_LR, MOV_IMM_R0_BASE,
+    IIRArmv7Config, IIRArmv7Error, BKPT, BX_LR, MOV_IMM_R0_BASE, MOV_REG_BASE,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -227,4 +227,132 @@ fn unsupported_op_is_rejected_with_function_name() {
         }
         other => panic!("expected UnsupportedOp, got: {other:?}"),
     }
+}
+
+// ===========================================================================
+// 6. A3++ (v0.3.0) — multi-register allocator + `mov` + ret-value staging
+// ===========================================================================
+//
+// `const` rounds out a register from REGISTER_POOL.  r0 is handed out
+// first so the trivial `const v; ret v` case keeps its 2-word shape
+// (no redundant MOV r0, X round-trip).  Subsequent consts spill into
+// r1, r2, ..., r12 in order.
+
+#[test]
+fn mov_reg_base_pinned_to_0xe1a00000() {
+    // MOV r0, r0 (no shift, S=0) = 0xE1A00000.  Subsequent tests OR
+    // in (Rd << 12) | Rm to form the full instruction.
+    assert_eq!(MOV_REG_BASE, 0xE1A0_0000,
+        "MOV Rd, Rm base should be 0xE1A00000; got 0x{:08x}", MOV_REG_BASE);
+}
+
+#[test]
+fn two_consts_use_r0_then_r1_then_mov_r0_r1_before_bx_lr() {
+    // const v=1; const w=2; ret w
+    //   MOV r0, #1   = 0xE3A0_0001
+    //   MOV r1, #2   = 0xE3A0_1002   (Rd=1)
+    //   MOV r0, r1   = 0xE1A0_0001   ← stage w into r0
+    //   BX LR        = 0xE12F_FF1E
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(2)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("w".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0001,    // MOV r0, #1   (v)
+        0xE3A0_1002,    // MOV r1, #2   (w)  — Rd=1 → bits 15..12 = 0001
+        0xE1A0_0001,    // MOV r0, r1   (stage w into r0)
+        BX_LR,
+    ], "expected 4-word sequence; got: {words:08x?}");
+}
+
+#[test]
+fn ret_of_first_const_omits_the_redundant_mov() {
+    // Regression for the v0.2.0 pinned 2-word shape: when the value
+    // being returned is already in r0, no `MOV r0, X` is emitted.
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![0xE3A0_002A, BX_LR],
+        "r0-first allocator should keep the trivial case at 2 words; got: {words:08x?}");
+}
+
+#[test]
+fn mov_lowers_to_canonical_mov_rd_rm() {
+    // const v=7; mov w=v; ret w
+    // v is in r0 (first allocated). w is in r1 (next pool slot).
+    //   MOV r0, #7   = 0xE3A0_0007
+    //   MOV r1, r0   = 0xE1A0_1000   (Rd=1, Rm=0)
+    //   MOV r0, r1   = 0xE1A0_0001   ← stage w back into r0 for ret
+    //   BX LR
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("mov",   Some("w".into()), vec![Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("w".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0007,    // MOV r0, #7
+        0xE1A0_1000,    // MOV r1, r0   (Rd=1, Rm=0 → bits 15..12 = 0001, bits 3..0 = 0000)
+        0xE1A0_0001,    // MOV r0, r1   (Rd=0, Rm=1)
+        BX_LR,
+    ], "expected MOV r0,#7 + MOV r1,r0 + MOV r0,r1 + BX LR; got: {words:08x?}");
+}
+
+#[test]
+fn allocator_exhaustion_yields_out_of_registers() {
+    // 13 consts fill the pool [r0..r12]; the 14th triggers OutOfRegisters.
+    let mut body = Vec::new();
+    for i in 0..14 {
+        body.push(IIRInstr::new(
+            "const",
+            Some(format!("v{i}")),
+            vec![Operand::Int((i % 256) as i64)],
+            "u8",
+        ));
+    }
+    body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+    let f = IIRFunction::new("greedy", vec![], "void", body);
+    let err = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect_err("14 consts should exhaust the 13-register pool");
+    match err {
+        IIRArmv7Error::OutOfRegisters { function, name } => {
+            assert_eq!(function, "greedy");
+            assert_eq!(name, "v13", "should fail on the 14th local");
+        }
+        other => panic!("expected OutOfRegisters, got: {other:?}"),
+    }
+}
+
+#[test]
+fn undefined_variable_in_mov_is_rejected() {
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("mov", Some("w".into()),
+            vec![Operand::Var("ghost".into())], "u8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect_err("mov from undefined var should fail");
+    match err {
+        IIRArmv7Error::UndefinedVariable { name, .. } => {
+            assert_eq!(name, "ghost");
+        }
+        other => panic!("expected UndefinedVariable, got: {other:?}"),
+    }
+}
+
+#[test]
+fn errors_for_new_variants_display_without_panic() {
+    let _ = format!("{}", IIRArmv7Error::UndefinedVariable {
+        function: "f".into(), name: "ghost".into(),
+    });
+    let _ = format!("{}", IIRArmv7Error::OutOfRegisters {
+        function: "greedy".into(), name: "v13".into(),
+    });
 }
