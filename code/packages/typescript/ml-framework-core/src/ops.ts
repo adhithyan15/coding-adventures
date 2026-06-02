@@ -1473,3 +1473,413 @@ export class DropoutOp extends Function {
     return [new Tensor(Array.from(out), { shape: xShape })];
   }
 }
+
+// ────────── Conv2D / MaxPool2D via im2col (Phase A.5) ──────────
+//
+// The classic im2col formulation: re-express a 2-D convolution as a
+// big matrix multiply.  Forward unrolls each receptive-field patch
+// into a row of a (N*outH*outW, C*kH*kW) matrix, then matmul with
+// the weight tensor reshaped to (C*kH*kW, outC) yields the conv
+// output in matrix form, which we reshape back to (N, outC, outH, outW).
+//
+// Backward is two matmuls (dL/dW and dL/dX in matrix form) plus a
+// col2im — the inverse of im2col that ACCUMULATES (since multiple
+// output patches share input cells when the receptive fields overlap
+// or when stride < kernel).
+
+/** Output spatial dim formula: floor((in + 2*pad - kernel)/stride) + 1. */
+function conv2dOutDim(inDim: number, kernel: number, stride: number, padding: number): number {
+  return Math.floor((inDim + 2 * padding - kernel) / stride) + 1;
+}
+
+/**
+ * im2col: unfold (N, C, H, W) into (N*outH*outW, C*kH*kW).
+ *
+ * Each output row corresponds to one (n, oh, ow) position; columns
+ * are the cells of the receptive field in C-major, then ki, then kj
+ * order.  Cells outside the padded input become 0 (zero-padding
+ * convention; matches PyTorch's default for nn.Conv2d).
+ */
+function im2col(
+  x: Float32Array,
+  N: number, C: number, H: number, W: number,
+  kH: number, kW: number,
+  sH: number, sW: number,
+  pH: number, pW: number,
+  outH: number, outW: number,
+): Float32Array {
+  const cols = C * kH * kW;
+  const rows = N * outH * outW;
+  const out = new Float32Array(rows * cols);
+  for (let n = 0; n < N; n++) {
+    for (let oh = 0; oh < outH; oh++) {
+      for (let ow = 0; ow < outW; ow++) {
+        const rowIdx = (n * outH + oh) * outW + ow;
+        const rowOff = rowIdx * cols;
+        for (let c = 0; c < C; c++) {
+          for (let ki = 0; ki < kH; ki++) {
+            const ih = oh * sH - pH + ki;
+            for (let kj = 0; kj < kW; kj++) {
+              const iw = ow * sW - pW + kj;
+              const colIdx = (c * kH + ki) * kW + kj;
+              if (ih >= 0 && ih < H && iw >= 0 && iw < W) {
+                out[rowOff + colIdx] = x[((n * C + c) * H + ih) * W + iw]!;
+              }
+              // else: 0 (Float32Array is zero-init)
+            }
+          }
+        }
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * col2im: scatter-accumulate inverse of im2col.
+ *
+ * Given a (N*outH*outW, C*kH*kW) matrix, write each cell back to its
+ * source position in (N, C, H, W).  Multiple output patches that
+ * touched the same input cell accumulate via += — this is what makes
+ * the conv backward gradient flow correct.  Padded positions are
+ * silently dropped (no input cell exists there to receive a grad).
+ */
+function col2im(
+  cols: Float32Array,
+  N: number, C: number, H: number, W: number,
+  kH: number, kW: number,
+  sH: number, sW: number,
+  pH: number, pW: number,
+  outH: number, outW: number,
+): Float32Array {
+  const nCols = C * kH * kW;
+  const out = new Float32Array(N * C * H * W);
+  for (let n = 0; n < N; n++) {
+    for (let oh = 0; oh < outH; oh++) {
+      for (let ow = 0; ow < outW; ow++) {
+        const rowIdx = (n * outH + oh) * outW + ow;
+        const rowOff = rowIdx * nCols;
+        for (let c = 0; c < C; c++) {
+          for (let ki = 0; ki < kH; ki++) {
+            const ih = oh * sH - pH + ki;
+            for (let kj = 0; kj < kW; kj++) {
+              const iw = ow * sW - pW + kj;
+              if (ih >= 0 && ih < H && iw >= 0 && iw < W) {
+                const colIdx = (c * kH + ki) * kW + kj;
+                out[((n * C + c) * H + ih) * W + iw]! += cols[rowOff + colIdx]!;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return out;
+}
+
+/** Naive (m × k) @ (k × n) on raw buffers — used internally by Conv2D. */
+function matmulBuf(
+  a: ArrayLike<number>, b: ArrayLike<number>,
+  m: number, k: number, n: number,
+): Float32Array {
+  const out = new Float32Array(m * n);
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      let acc = 0;
+      for (let kk = 0; kk < k; kk++) acc += a[i * k + kk]! * b[kk * n + j]!;
+      out[i * n + j] = acc;
+    }
+  }
+  return out;
+}
+
+/** Transpose a flat row-major (rows × cols) matrix.  Used internally. */
+function transposeBuf(data: ArrayLike<number>, rows: number, cols: number): Float32Array {
+  const out = new Float32Array(rows * cols);
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) out[c * rows + r] = data[r * cols + c]!;
+  }
+  return out;
+}
+
+/**
+ * Conv2D — 2-D convolution via im2col + matmul.
+ *
+ * Input  x:      (N, C, H, W)
+ * Weight w:      (outC, C, kH, kW)
+ * Bias b:        (outC,) or null
+ * Output:        (N, outC, outH, outW)
+ *
+ * Forward steps:
+ *   1. X = im2col(x)            → (N*outH*outW, C*kH*kW)
+ *   2. Wm = w reshaped flat     → (outC, C*kH*kW)
+ *   3. Y_NHWC_flat = X @ Wm.T   → (N*outH*outW, outC)
+ *   4. Reshape to (N, outH, outW, outC), permute (0, 3, 1, 2) →
+ *      (N, outC, outH, outW)
+ *   5. Add bias broadcast along axis 1 if present.
+ *
+ * Backward steps (with grad of shape (N, outC, outH, outW)):
+ *   1. Permute grad (0, 2, 3, 1) → (N, outH, outW, outC); flatten leading
+ *      → grad_flat of shape (N*outH*outW, outC).
+ *   2. dL/dWm = X.T @ grad_flat         → (C*kH*kW, outC)
+ *      dL/dw  = (dL/dWm).T reshaped     → (outC, C, kH, kW)
+ *   3. dL/dX = grad_flat @ Wm           → (N*outH*outW, C*kH*kW)
+ *      dL/dx = col2im(dL/dX)            → (N, C, H, W)
+ *   4. dL/db = sum grad over (N, outH, outW) axes → (outC,)
+ *
+ * Stride and padding default to 1 and 0 respectively (PyTorch default).
+ */
+export class Conv2DOp extends Function {
+  static readonly DEFAULT_STRIDE = 1;
+  static readonly DEFAULT_PADDING = 0;
+
+  forward(...inputs: unknown[]): Tensor {
+    const x = inputs[0] as Tensor;
+    const w = inputs[1] as Tensor;
+    const bRaw = inputs[2] as Tensor | null | undefined;
+    const stride = (inputs[3] as number | undefined) ?? Conv2DOp.DEFAULT_STRIDE;
+    const padding = (inputs[4] as number | undefined) ?? Conv2DOp.DEFAULT_PADDING;
+
+    if (x.ndim !== 4) {
+      throw new RangeError(`Conv2D x must be (N, C, H, W); got shape [${x.shape.join(", ")}]`);
+    }
+    if (w.ndim !== 4) {
+      throw new RangeError(`Conv2D weight must be (outC, inC, kH, kW); got [${w.shape.join(", ")}]`);
+    }
+    const [N, C, H, W] = x.shape as [number, number, number, number];
+    const [outC, wC, kH, kW] = w.shape as [number, number, number, number];
+    if (wC !== C) {
+      throw new RangeError(`Conv2D in-channels mismatch: weight says ${wC}, x has ${C}`);
+    }
+    if (stride < 1) throw new RangeError(`Conv2D stride must be ≥ 1, got ${stride}`);
+    if (padding < 0) throw new RangeError(`Conv2D padding must be ≥ 0, got ${padding}`);
+
+    const outH = conv2dOutDim(H, kH, stride, padding);
+    const outW = conv2dOutDim(W, kW, stride, padding);
+    if (outH < 1 || outW < 1) {
+      throw new RangeError(
+        `Conv2D output spatial dim would be < 1 (outH=${outH}, outW=${outW}); ` +
+          `kernel ${kH}x${kW} too large for input ${H}x${W} with stride ${stride}, padding ${padding}`,
+      );
+    }
+
+    const b = bRaw ?? null;
+    if (b !== null) {
+      if (b.ndim !== 1 || b.shape[0] !== outC) {
+        throw new RangeError(
+          `Conv2D bias must be 1-D with shape [${outC}]; got [${b.shape.join(", ")}]`,
+        );
+      }
+    }
+
+    // 1. im2col
+    const X = im2col(x.data, N, C, H, W, kH, kW, stride, stride, padding, padding, outH, outW);
+    const cols = C * kH * kW;
+
+    // 2. Weight reshape (outC, C*kH*kW) — same memory layout, just a view shape.
+    //    We need Wm.T = (C*kH*kW, outC) for the matmul X @ Wm.T.
+    const WmT = transposeBuf(w.data, outC, cols);
+
+    // 3. Y_flat = X @ Wm.T : shape (N*outH*outW, outC)
+    const rows = N * outH * outW;
+    const yFlat = matmulBuf(X, WmT, rows, cols, outC);
+
+    // 4. Reshape (N, outH, outW, outC) → permute (0, 3, 1, 2) → (N, outC, outH, outW)
+    const outData = new Float32Array(N * outC * outH * outW);
+    for (let n = 0; n < N; n++) {
+      for (let oc = 0; oc < outC; oc++) {
+        for (let oh = 0; oh < outH; oh++) {
+          for (let ow = 0; ow < outW; ow++) {
+            const srcIdx = ((n * outH + oh) * outW + ow) * outC + oc;
+            const dstIdx = ((n * outC + oc) * outH + oh) * outW + ow;
+            outData[dstIdx] = yFlat[srcIdx]!;
+          }
+        }
+      }
+    }
+
+    // 5. Add bias broadcast along axis 1.
+    if (b !== null) {
+      for (let n = 0; n < N; n++) {
+        for (let oc = 0; oc < outC; oc++) {
+          const bv = b.data[oc]!;
+          const baseIdx = (n * outC + oc) * outH * outW;
+          for (let i = 0; i < outH * outW; i++) outData[baseIdx + i]! += bv;
+        }
+      }
+    }
+
+    this.savedForBackward.X = X;
+    this.savedForBackward.wData = new Float32Array(w.data);
+    this.savedForBackward.xShape = x.shape.slice();
+    this.savedForBackward.wShape = w.shape.slice();
+    this.savedForBackward.hasBias = b !== null;
+    this.savedForBackward.N = N; this.savedForBackward.C = C;
+    this.savedForBackward.H = H; this.savedForBackward.W = W;
+    this.savedForBackward.outC = outC; this.savedForBackward.outH = outH; this.savedForBackward.outW = outW;
+    this.savedForBackward.kH = kH; this.savedForBackward.kW = kW;
+    this.savedForBackward.stride = stride; this.savedForBackward.padding = padding;
+
+    return new Tensor(Array.from(outData), { shape: [N, outC, outH, outW] });
+  }
+
+  backward(grad: Tensor): (Tensor | null)[] {
+    const X = this.savedForBackward.X as Float32Array;
+    const wData = this.savedForBackward.wData as Float32Array;
+    const xShape = this.savedForBackward.xShape as number[];
+    const wShape = this.savedForBackward.wShape as number[];
+    const hasBias = this.savedForBackward.hasBias as boolean;
+    const N = this.savedForBackward.N as number;
+    const C = this.savedForBackward.C as number;
+    const H = this.savedForBackward.H as number;
+    const W = this.savedForBackward.W as number;
+    const outC = this.savedForBackward.outC as number;
+    const outH = this.savedForBackward.outH as number;
+    const outW = this.savedForBackward.outW as number;
+    const kH = this.savedForBackward.kH as number;
+    const kW = this.savedForBackward.kW as number;
+    const stride = this.savedForBackward.stride as number;
+    const padding = this.savedForBackward.padding as number;
+    const cols = C * kH * kW;
+    const rows = N * outH * outW;
+
+    // 1. Permute grad (N, outC, outH, outW) → (N, outH, outW, outC) flat.
+    const gradFlat = new Float32Array(rows * outC);
+    for (let n = 0; n < N; n++) {
+      for (let oc = 0; oc < outC; oc++) {
+        for (let oh = 0; oh < outH; oh++) {
+          for (let ow = 0; ow < outW; ow++) {
+            const srcIdx = ((n * outC + oc) * outH + oh) * outW + ow;
+            const dstIdx = ((n * outH + oh) * outW + ow) * outC + oc;
+            gradFlat[dstIdx] = grad.data[srcIdx]!;
+          }
+        }
+      }
+    }
+
+    // 2. dL/dWm = X.T @ gradFlat : shape (C*kH*kW, outC)
+    //    Then dL/dW = (dL/dWm).T reshaped to (outC, C, kH, kW)
+    const Xt = transposeBuf(X, rows, cols);
+    const dWm = matmulBuf(Xt, gradFlat, cols, rows, outC); // (cols, outC)
+    const dW = transposeBuf(dWm, cols, outC); // (outC, cols) — same flat as (outC, C, kH, kW)
+
+    // 3. dL/dX = gradFlat @ Wm : shape (N*outH*outW, C*kH*kW)
+    //    Wm has shape (outC, C*kH*kW) which is just wData reshaped.
+    const dX = matmulBuf(gradFlat, wData, rows, outC, cols);
+    const dxData = col2im(dX, N, C, H, W, kH, kW, stride, stride, padding, padding, outH, outW);
+
+    // 4. dL/db = sum grad over (N, outH, outW) axes → (outC,)
+    let dB: Tensor | null = null;
+    if (hasBias) {
+      const dBData = new Float32Array(outC);
+      for (let n = 0; n < N; n++) {
+        for (let oc = 0; oc < outC; oc++) {
+          let s = 0;
+          for (let oh = 0; oh < outH; oh++) {
+            for (let ow = 0; ow < outW; ow++) {
+              s += grad.data[((n * outC + oc) * outH + oh) * outW + ow]!;
+            }
+          }
+          dBData[oc]! += s;
+        }
+      }
+      dB = new Tensor(Array.from(dBData), { shape: [outC] });
+    }
+
+    const grads: (Tensor | null)[] = [
+      new Tensor(Array.from(dxData), { shape: xShape }),
+      new Tensor(Array.from(dW), { shape: wShape }),
+    ];
+    if (hasBias) grads.push(dB);
+    return grads;
+  }
+}
+
+/**
+ * MaxPool2D — sliding-window max over (kH, kW) with the given stride.
+ *
+ * Input  x:  (N, C, H, W)
+ * Output:    (N, C, outH, outW) where outH/outW use the conv2dOutDim
+ *            formula with padding=0.
+ *
+ * Forward saves the flat input index of the argmax for each output
+ * cell (one int per output cell).  Backward routes the upstream
+ * gradient back to those exact positions; everything else in dx is
+ * zero.  Repeated argmax indices (possible with overlapping windows
+ * if stride < kernel) ACCUMULATE via +=.
+ *
+ * No padding in v1.5 — it's rare for max-pool anyway.  Default
+ * stride equals kH (so non-overlapping windows by default — the
+ * standard "downsample by k" use).
+ */
+export class MaxPool2DOp extends Function {
+  forward(...inputs: unknown[]): Tensor {
+    const x = inputs[0] as Tensor;
+    const kH = inputs[1] as number;
+    const kW = inputs[2] as number;
+    const strideArg = inputs[3] as number | undefined;
+    const sH = strideArg ?? kH;
+    const sW = strideArg ?? kW;
+
+    if (x.ndim !== 4) {
+      throw new RangeError(`MaxPool2D x must be (N, C, H, W); got shape [${x.shape.join(", ")}]`);
+    }
+    const [N, C, H, W] = x.shape as [number, number, number, number];
+    if (kH < 1 || kW < 1) throw new RangeError(`MaxPool2D kernel must be ≥ 1`);
+    if (sH < 1 || sW < 1) throw new RangeError(`MaxPool2D stride must be ≥ 1`);
+
+    const outH = conv2dOutDim(H, kH, sH, 0);
+    const outW = conv2dOutDim(W, kW, sW, 0);
+    if (outH < 1 || outW < 1) {
+      throw new RangeError(`MaxPool2D kernel ${kH}x${kW} too large for input ${H}x${W}`);
+    }
+
+    const out = new Float32Array(N * C * outH * outW);
+    const argmax = new Int32Array(N * C * outH * outW); // flat index into x
+
+    for (let n = 0; n < N; n++) {
+      for (let c = 0; c < C; c++) {
+        for (let oh = 0; oh < outH; oh++) {
+          for (let ow = 0; ow < outW; ow++) {
+            let best = -Infinity;
+            let bestIdx = 0;
+            for (let ki = 0; ki < kH; ki++) {
+              const ih = oh * sH + ki;
+              for (let kj = 0; kj < kW; kj++) {
+                const iw = ow * sW + kj;
+                const flat = ((n * C + c) * H + ih) * W + iw;
+                const v = x.data[flat]!;
+                if (v > best) {
+                  best = v;
+                  bestIdx = flat;
+                }
+              }
+            }
+            const outIdx = ((n * C + c) * outH + oh) * outW + ow;
+            out[outIdx] = best;
+            argmax[outIdx] = bestIdx;
+          }
+        }
+      }
+    }
+
+    this.savedForBackward.argmax = argmax;
+    this.savedForBackward.xShape = x.shape.slice();
+    this.savedForBackward.xNumel = x.numel;
+
+    return new Tensor(Array.from(out), { shape: [N, C, outH, outW] });
+  }
+
+  backward(grad: Tensor): (Tensor | null)[] {
+    const argmax = this.savedForBackward.argmax as Int32Array;
+    const xShape = this.savedForBackward.xShape as number[];
+    const xNumel = this.savedForBackward.xNumel as number;
+    const dx = new Float32Array(xNumel);
+    for (let i = 0; i < argmax.length; i++) {
+      // += so overlapping windows that elected the same input cell as
+      // argmax accumulate (rare but correct).
+      dx[argmax[i]!]! += grad.data[i]!;
+    }
+    return [new Tensor(Array.from(dx), { shape: xShape })];
+  }
+}

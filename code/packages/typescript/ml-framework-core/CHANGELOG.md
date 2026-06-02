@@ -2,6 +2,88 @@
 
 ## Unreleased
 
+### Added — v1.5.0: Conv2D + MaxPool2D via im2col (Phase A.5)
+
+PR #5 of 7 in **Phase A** — adds the two operations that make CNN
+architectures expressible (everything from LeNet to ResNet's conv
+stages).  Both ops use the classic im2col formulation so the heavy
+math is just matmul + scatter-add, reusing the existing primitives.
+
+#### What works now
+
+```ts
+import { Tensor } from "@coding-adventures/ml-framework-core";
+
+// Classic CNN block: 3×3 conv → ReLU → 2×2 max-pool.
+const x = new Tensor([...], { shape: [batch, 3, 28, 28] });  // MNIST-shaped
+const weight = new Tensor([...], { shape: [16, 3, 3, 3] });   // 16 output channels
+const bias = new Tensor(new Array(16).fill(0));
+const conv = x.conv2d(weight, bias, /*stride*/ 1, /*padding*/ 1);  // → (batch, 16, 28, 28)
+const pooled = conv.relu().maxPool2d(2, 2);                         // → (batch, 16, 14, 14)
+```
+
+#### Implementation notes
+
+- **`Conv2DOp`** (`src/ops.ts`): the classic im2col formulation —
+  unfold each receptive-field patch into a row of a `(N*outH*outW,
+  C*kH*kW)` matrix, then matmul with the weight reshaped to
+  `(C*kH*kW, outC)`.  Output reshaped + permuted to `(N, outC,
+  outH, outW)`.  Backward is two more matmuls (one for `dL/dW`, one
+  for `dL/dX`) plus a `col2im` that scatter-adds — multiple output
+  patches that touched the same input cell accumulate their grad
+  contributions, which is what makes backward correct for
+  overlapping receptive fields.
+- **Output shape formula**: `outH = floor((H + 2*pad - kH)/stride) + 1`
+  (PyTorch convention).  Padding=1 with a 3×3 kernel and stride=1
+  preserves the spatial size — the "same" padding trick everyone
+  uses.
+- **Bias**: optional; when present, adds a per-output-channel scalar
+  broadcast over the spatial dims.  Backward sums grad over
+  `(N, outH, outW)` per channel.
+- **`MaxPool2DOp`**: sliding-window max with a saved-argmax
+  approach.  Forward records the flat input index of the argmax
+  for each output cell; backward routes the upstream grad to those
+  exact positions and zeroes everything else.  Overlapping windows
+  (stride < kernel) that share an argmax ACCUMULATE via `+=` — rare
+  but correct.  Default stride equals kernel (the standard
+  "downsample by k" non-overlapping case).
+- **No padding for max-pool** in v1.5 — it's rare for max-pool
+  anyway.  Add if needed.
+- The internal `im2col` / `col2im` / `matmulBuf` / `transposeBuf`
+  helpers are pure-TS on `Float32Array` and stay private to
+  `ops.ts`.  Reusing the existing `MatMulOp` would mean wrapping
+  each intermediate in a `Tensor` and triggering autograd-build —
+  unnecessary overhead inside the conv kernel.
+
+#### Tests
+
+- 18 new vitest cases (`tests/conv-pool.test.ts`):
+  - 5 Conv2D forward (output shape across stride/padding configs,
+    1×1 identity, hand-computed 3×3, bias broadcasting, kernel-too-big
+    rejection, in-channel-mismatch rejection)
+  - 3 Conv2D backward (shape of all 3 grads, bias-grad accumulation,
+    **finite-difference vs analytical** for both `dx` and `dw` on a
+    tiny case — the strongest correctness test)
+  - 5 MaxPool2D forward (non-overlapping shape, overlapping shape,
+    hand-computed argmax on a 4×4 image)
+  - 3 MaxPool2D backward (grad routes to argmax only,
+    overlapping-windows accumulation)
+  - 2 fluent-method parity
+- Total **242 tests pass** (was 224 in v1.4).
+- `tsc --noEmit` clean.
+
+#### What this unlocks
+
+CNNs.  With v1.5 the framework can express any feed-forward CNN
+architecture — LeNet, AlexNet, VGG, ResNet's conv-bn-relu stacks.
+Combined with v1.4's BatchNorm and Dropout, you have everything you
+need to train an image classifier.
+
+Phase A.6 adds optimizers (SGD + Adam) and the `Linear` /
+`Sequential` abstractions so you can stop writing manual training
+loops.  A.7 adds safetensors so you can load any HF checkpoint —
+first cross-framework interop.
+
 ### Added — v1.4.0: LayerNorm + BatchNorm + Dropout + ModelMode (Phase A.4)
 
 PR #4 of 7 in **Phase A** — the "normalize and regularize" trifecta

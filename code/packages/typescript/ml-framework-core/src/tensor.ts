@@ -63,6 +63,8 @@ import {
   LayerNormOp,
   BatchNormOp,
   DropoutOp,
+  Conv2DOp,
+  MaxPool2DOp,
 } from "./ops.js";
 
 export type Dtype = "f32";
@@ -523,6 +525,22 @@ export class Tensor {
    */
   dropout(p?: number): Tensor {
     return DropoutOp.apply(this, p);
+  }
+
+  /**
+   * 2-D convolution.  `this` is the input `(N, C, H, W)`; `weight` is
+   * `(outC, C, kH, kW)`; `bias` (optional) is `(outC,)`.  See `Conv2DOp`.
+   */
+  conv2d(weight: Tensor, bias?: Tensor | null, stride?: number, padding?: number): Tensor {
+    return Conv2DOp.apply(this, weight, bias ?? null, stride, padding);
+  }
+
+  /**
+   * 2-D max pooling.  `this` is `(N, C, H, W)`; window is `(kH, kW)`;
+   * stride defaults to `kH` (non-overlapping).  See `MaxPool2DOp`.
+   */
+  maxPool2d(kH: number, kW: number, stride?: number): Tensor {
+    return MaxPool2DOp.apply(this, kH, kW, stride);
   }
 
   relu(): Tensor {
