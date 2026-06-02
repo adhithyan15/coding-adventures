@@ -58,10 +58,34 @@ IIRModule
 | v0.3.0 (A2++) | Linear register allocator over A/B/C/D/E/H/L + multi-register `const` + `mov` + ret-value staging | **merged** |
 | v0.3.1 (A2++.5 first slice) | `add`/`sub` ALU on the accumulator (family `10 ooo sss`) | **merged** |
 | v0.3.2 (A2++.5.5 first slice) | bitwise ALU `and`/`or`/`xor` on the accumulator (same family, `ooo` ∈ {`100`, `110`, `101`}) | **merged** |
-| **v0.3.3 (A2++.5.5 second slice — this PR)** | carry/borrow-chained ALU `adc`/`sbb` (same family, `ooo` ∈ {`001`, `011`}) | this PR |
-| v0.3.4 (A2++.5.5 third slice) | `cmp` (`ooo = 0b111`) + conditional jumps with 14-bit address backpatching — paired because `cmp` produces flag state that's only useful as a branch input | future |
-| v0.3.5 (A2++.5.5 fourth slice) | Real `RET` (`0x07`) via `CALL` (`0x46` + 14-bit address) + per-function internal return-stack discipline | future |
+| v0.3.3 (A2++.5.5 second slice) | carry/borrow-chained ALU `adc`/`sbb` (same family, `ooo` ∈ {`001`, `011`}) | **merged** |
+| **v0.3.4 (A2++.5.5 third slice — this PR)** | `label` (zero-byte position marker) + unconditional `jmp` (**`0x7C`**, NOT `0x44`) with per-function two-pass backpatching of the 14-bit absolute target | this PR |
+| v0.3.5 (A2++.5.5 fourth slice) | Conditional jumps (`jmp_if_true`/`jmp_if_false` over the four 8008 flags) + `cmp` (`ooo = 0b111`) paired with flag-to-bool capture | future |
+| v0.3.6 (A2++.5.5 fifth slice) | Real `RET` (`0x07`) via `CALL` (**`0x7E`**, NOT `0x46` — `0x46` is CFZ) + per-function internal return-stack discipline | future |
 | v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring + module-level CALL backpatching | future |
+
+## Encoding cheat-sheet for the jump/call family
+
+The 8008's group-01 instruction family packs MOV, HLT, jumps, and
+calls into the same opcode space; disambiguation is via `ddd` (bits
+5-3).  Easy mistakes:
+
+| Mnemonic | Bits | Hex | What it does |
+|----------|------|-----|--------------|
+| `JFC addr` | `01 000 100` | `0x40`* / `0x44`† | Jump if Flag Carry clear (conditional) |
+| `JFZ addr` | `01 001 100` | `0x48` / `0x4C` | Jump if Flag Zero clear (conditional) |
+| `JFS addr` | `01 010 100` | `0x50` / `0x54` | Jump if Flag Sign clear (conditional) |
+| `JFP addr` | `01 011 100` | `0x58` / `0x5C` | Jump if Flag Parity clear (conditional) |
+| `JMP addr` | `01 111 100` | **`0x7C`** | Unconditional jump (this is what `jmp` lowers to) |
+| `CAL addr` | `01 111 110` | **`0x7E`** | Unconditional call (deferred to v0.3.6) |
+| `RET` | `00 000 111` | `0x07` | Unconditional return (deferred to v0.3.6) |
+
+\* The T=0 variant (sss=000) jumps when the flag is clear.<br>
+† The T=1 variant (sss=100) jumps when the flag is set (JTC/JTZ/JTS/JTP).
+
+These are the silicon's actual encodings — pinning them here so
+future slices don't repeat the `0x44 ↔ 0x7C` confusion that nearly
+shipped in v0.3.4.
 
 ## Public surface (v0.1.0)
 

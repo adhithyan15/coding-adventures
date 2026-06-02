@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-intel8008"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2021"
-description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.3 (A2++.5.5 second slice): adds the carry/borrow-chained accumulator ALU ops `adc` (ACA, 10 001 sss = 0x88|sss) and `sbb` (SCA, 10 011 sss = 0x98|sss), enabling multi-byte arithmetic idioms.  `cmp` deferred to v0.3.4 because its IIR semantics (boolean dest) don't match the 8008's flag-only CMP — needs a paired flag-capture sequence wired with the branch ops.  Real RET via CALL/stack still pending (v0.3.5)."
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.4 (A2++.5.5 third slice): adds `label` (zero-byte position marker) and unconditional `jmp` (0x7C + 14-bit absolute target) with per-function two-pass backpatching.  CRITICAL: JMP unconditional is 0x7C, NOT 0x44 (which is JFC, the conditional jump-if-flag-carry-clear).  Conditional jumps + `cmp` (with flag-to-bool capture) defer to v0.3.5; real RET/CALL/stack discipline defers to v0.3.6."
 
 [lib]
 name = "iir_to_intel8008"

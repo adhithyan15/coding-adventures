@@ -6,7 +6,7 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel8008::{
     lower_iir_to_intel8008, validate_for_intel8008,
-    IIRIntel8008Config, IIRIntel8008Error, HLT, MVI_A,
+    IIRIntel8008Config, IIRIntel8008Error, HLT, JMP, MVI_A,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -106,6 +106,13 @@ fn errors_display_without_panic() {
     });
     let _ = format!("{}", IIRIntel8008Error::InvalidOperand {
         function: "f".into(), detail: "bad".into(),
+    });
+    // v0.3.4 — new branch-related variants
+    let _ = format!("{}", IIRIntel8008Error::UndefinedLabel {
+        function: "f".into(), label: "ghost".into(),
+    });
+    let _ = format!("{}", IIRIntel8008Error::AddressOutOfRange {
+        function: "f".into(), address: 0x4000,
     });
 }
 
@@ -599,3 +606,145 @@ fn adc_when_lhs_is_already_in_a_skips_the_staging_mov() {
         HLT,
     ], "self-ADC expected; got: {bytes:02x?}");
 }
+
+// ===========================================================================
+// 10. A2++.5.5 third slice — labels + unconditional jump (`jmp` + backpatching)
+// ===========================================================================
+//
+// The 8008's JMP is a 3-byte absolute-address instruction in family
+// `01 ddd 100`:
+//
+//   JMP unconditional = 01 111 100 = 0x7C    ← what we emit
+//   JFC (carry-clear) = 01 000 100 = 0x40    ← what `0x44` would imply
+//                                              if we got it wrong; pin
+//                                              `JMP` to `0x7C` so the
+//                                              simulator round-trips
+//                                              as unconditional.
+//
+// Two-pass per-function lowering: pass 1 emits each `jmp` as
+// `0x7C 0x00 0x00` and records (slot, target_label).  Pass 2 looks up
+// each pending jmp's target in the per-function `labels` table and
+// backpatches the two address bytes (low then high; the 8008 is
+// little-endian for jump targets and uses 14 bits total — top 2 bits
+// of the high byte are zero/ignored).
+
+#[test]
+fn jmp_constant_pinned_to_0x7c() {
+    // Smoke: the exported JMP constant is the unconditional opcode,
+    // NOT the JFC (0x44) conditional one.  Regression for the easy
+    // mistake of reading the bit pattern `01 000 100` and assuming
+    // `ddd=000` means "unconditional" — it actually means JFC.
+    assert_eq!(JMP, 0x7C,
+        "JMP unconditional should be 0x7C (01 111 100), not 0x44");
+}
+
+#[test]
+fn jmp_to_forward_label_backpatches_target_address() {
+    // const v=42; jmp end; const w=99; label end; ret v
+    //
+    // Pass 1 emits:
+    //   00: MVI A, 0x2A         (3E 2A)
+    //   02: JMP <forward>       (7C ?? ??)
+    //   05: MVI B, 0x63         (06 63)
+    //   07: <label "end" here>
+    //   07: HLT                  (ret of v, v is in A so MOV elided)
+    //
+    // Pass 2: label "end" was recorded at offset 7 (= 0x0007).
+    // The JMP slot is at offset 3 (low) / 4 (high), so they become
+    // 0x07 and 0x00.
+    let f = IIRFunction::new("fwd", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x2A)], "u8"),
+        IIRInstr::new("jmp",   None,             vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x63)], "u8"),
+        IIRInstr::new("label", None,             vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x2A,    // 00 01   MVI A, 0x2A
+        JMP,   0x07, 0x00, // 02 03 04   JMP 0x0007
+        0x06,  0x63,    // 05 06   MVI B, 0x63 (unreachable after the jmp)
+        // <-- label "end" lands at offset 7 -->
+        HLT,            // 07      ret v (v is already in A — no MOV)
+    ], "forward jmp expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn jmp_to_backward_label_backpatches_target_address() {
+    // label loop; const v=1; jmp loop; ret_void
+    //
+    // Pass 1:
+    //   00: <label "loop" here>
+    //   00: MVI A, 0x01         (3E 01)
+    //   02: JMP <backward>      (7C ?? ??)
+    //   05: HLT
+    //
+    // Pass 2: "loop" recorded at offset 0.  JMP target = 0x0000.
+    let f = IIRFunction::new("backward", vec![], "void", vec![
+        IIRInstr::new("label", None,             vec![Operand::Var("loop".into())], "void"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x01)], "u8"),
+        IIRInstr::new("jmp",   None,             vec![Operand::Var("loop".into())], "void"),
+        IIRInstr::new("ret_void", None,          vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x01,    // 00 01   MVI A, 1
+        JMP,   0x00, 0x00, // 02 03 04   JMP 0x0000 (back to top)
+        HLT,            // 05      ret_void (unreachable, but emitted)
+    ], "backward jmp expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn jmp_to_undefined_label_is_rejected() {
+    let f = IIRFunction::new("dangling", vec![], "void", vec![
+        IIRInstr::new("jmp", None, vec![Operand::Var("nowhere".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect_err("jmp to nonexistent label should fail");
+    match err {
+        IIRIntel8008Error::UndefinedLabel { function, label } => {
+            assert_eq!(function, "dangling");
+            assert_eq!(label, "nowhere");
+        }
+        other => panic!("expected UndefinedLabel, got: {other:?}"),
+    }
+}
+
+#[test]
+fn label_emits_no_bytes() {
+    // A bare label alone should not emit any bytes — verify by
+    // comparing a const-only function with and without a leading
+    // label: both must produce the same byte stream.
+    let f_bare = IIRFunction::new("bare", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let f_labeled = IIRFunction::new("labeled", vec![], "u8", vec![
+        IIRInstr::new("label", None,             vec![Operand::Var("entry".into())], "void"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let cfg = IIRIntel8008Config::default();
+    let bare    = lower_iir_to_intel8008(&module_with(f_bare),    &cfg).expect("bare");
+    let labeled = lower_iir_to_intel8008(&module_with(f_labeled), &cfg).expect("labeled");
+    assert_eq!(bare, labeled,
+        "a `label` op must not emit any bytes; bare={bare:02x?} labeled={labeled:02x?}");
+}
+
+// Note on the high-byte split + AddressOutOfRange coverage gap:
+//
+// In v0.3.4 the allocator caps each function at ~25 emitted bytes
+// before exhausting the 7-register pool (the test
+// `allocator_exhaustion_yields_out_of_registers` pins this).  That's
+// nowhere near the 256-byte boundary where the JMP target high byte
+// would become nonzero, let alone the 16384-byte ceiling that would
+// trigger `AddressOutOfRange`.
+//
+// The `AddressOutOfRange` error variant exists for forward
+// compatibility with the stack-spilled future slices that can emit
+// arbitrarily large functions.  The high-byte split itself is plain
+// `(target >> 8) & 0x3F` arithmetic which the two range-tested cases
+// above (`0x0007` and `0x0000`) exercise with their low-byte branches.
