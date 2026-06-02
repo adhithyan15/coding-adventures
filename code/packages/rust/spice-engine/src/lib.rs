@@ -6313,25 +6313,7 @@ pub fn ac_sweep(
     stop_hz: f64,
     points_per_decade: usize,
 ) -> Result<Vec<AcPoint>, SpiceError> {
-    if !start_hz.is_finite() || !stop_hz.is_finite() || start_hz <= 0.0 || stop_hz <= 0.0 {
-        return Err(SpiceError::InvalidElement {
-            name: "ac_sweep".to_string(),
-            reason: "frequency bounds must be finite and positive".to_string(),
-        });
-    }
-    if stop_hz < start_hz {
-        return Err(SpiceError::InvalidElement {
-            name: "ac_sweep".to_string(),
-            reason: "stop frequency must be greater than or equal to start frequency".to_string(),
-        });
-    }
-    if points_per_decade == 0 {
-        return Err(SpiceError::InvalidElement {
-            name: "ac_sweep".to_string(),
-            reason: "points per decade must be positive".to_string(),
-        });
-    }
-
+    validate_ac_sweep(start_hz, stop_hz, points_per_decade)?;
     validate_reactive_elements(circuit)?;
 
     let mut points = Vec::new();
@@ -6350,6 +6332,32 @@ pub fn ac_sweep(
     Ok(points)
 }
 
+fn validate_ac_sweep(
+    start_hz: f64,
+    stop_hz: f64,
+    points_per_decade: usize,
+) -> Result<(), SpiceError> {
+    if !start_hz.is_finite() || !stop_hz.is_finite() || start_hz <= 0.0 || stop_hz <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "frequency bounds must be finite and positive".to_string(),
+        });
+    }
+    if stop_hz < start_hz {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "stop frequency must be greater than or equal to start frequency".to_string(),
+        });
+    }
+    if points_per_decade == 0 {
+        return Err(SpiceError::InvalidElement {
+            name: "ac_sweep".to_string(),
+            reason: "points per decade must be positive".to_string(),
+        });
+    }
+    Ok(())
+}
+
 pub fn ac_sweep_corners(
     circuit: &Circuit,
     start_hz: f64,
@@ -6365,6 +6373,45 @@ pub fn ac_sweep_corners(
             points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
         });
     }
+    Ok(CornerAcSweepResult { points })
+}
+
+pub fn ac_sweep_corners_parallel(
+    circuit: &Circuit,
+    start_hz: f64,
+    stop_hz: f64,
+    points_per_decade: usize,
+    corners: &[CornerSpec],
+) -> Result<CornerAcSweepResult, SpiceError> {
+    validate_ac_sweep(start_hz, stop_hz, points_per_decade)?;
+
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                scope.spawn(move || -> Result<CornerAcSweepPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerAcSweepPoint {
+                        corner_name: corner.name,
+                        points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "ac_sweep_corners_parallel".to_string(),
+                reason: "parallel AC corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
     Ok(CornerAcSweepResult { points })
 }
 

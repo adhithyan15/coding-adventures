@@ -403,6 +403,9 @@ Status:
 - `.DC` source-sweep named-corner runs can now be evaluated with an
   order-preserving parallel helper in the live Rust SPICE package, preserving
   source value traces and selected-probe table compatibility.
+- `.AC` frequency-sweep named-corner runs can now be evaluated with an
+  order-preserving parallel helper in the live Rust SPICE package, preserving
+  frequency traces and selected complex-probe table compatibility.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
