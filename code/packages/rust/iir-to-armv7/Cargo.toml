@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-armv7"
-version = "0.4.3"
+version = "0.4.4"
 edition = "2021"
-description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.3 (A3++.5.5 third slice): adds `cmp` (CMP opcode 1010 = 0xE150_0000, no Rd output — only sets flags) with a flag-to-bool capture sequence using `MOVEQ` (0x03A0_0000 = MOV imm under the EQ condition prefix).  ARMv7's 4-bit `cond` field on every instruction makes this elegantly 4 words with no address backpatching, vs the 8008's 8-byte JFZ-skip-MVI dance.  Equality only — less-than/greater-than need MOVCC/MOVGT etc. and land alongside conditional branches in future slices."
+description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.4 (A3++.5.5 fourth slice): completes the boolean comparison family with `cmp_ne` (NE = 0x13A0..), `cmp_lt` (CC = 0x33A0..), `cmp_gt` (HI = 0x83A0..), `cmp_gte` (CS = 0x23A0..), `cmp_lte` (LS = 0x93A0..).  All six comparisons share the CMP + MOV + MOV<cond> capture skeleton; only the trailing MOV's condition prefix nibble changes.  ARMv7's HI condition handles unsigned > natively — no operand-swap trick like 8008/RV32I.  A new `encode_mov_imm_cond(base, rd, imm8)` helper avoids cluttering the API with 6 nearly-identical encoders."
 
 [lib]
 name = "iir_to_armv7"

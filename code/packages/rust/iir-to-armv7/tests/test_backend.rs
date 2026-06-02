@@ -8,7 +8,9 @@ use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
     IIRArmv7Config, IIRArmv7Error,
     ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, CMP_REG_BASE,
-    EOR_REG_BASE, MOV_IMM_EQ_BASE, MOV_IMM_R0_BASE, MOV_REG_BASE,
+    EOR_REG_BASE,
+    MOV_IMM_CC_BASE, MOV_IMM_CS_BASE, MOV_IMM_EQ_BASE, MOV_IMM_HI_BASE,
+    MOV_IMM_LS_BASE, MOV_IMM_NE_BASE, MOV_IMM_R0_BASE, MOV_REG_BASE,
     ORR_REG_BASE, SBC_REG_BASE, SUB_REG_BASE,
 };
 
@@ -741,6 +743,114 @@ fn cmp_with_same_register_emits_cmp_a_a_then_capture() {
         0x03A0_1001,    // MOVEQ r1, #1
         BX_LR,
     ], "self-cmp expected; got: {words:08x?}");
+}
+
+// ===========================================================================
+// 11. A3++.5.5 fourth slice — cmp_ne / cmp_lt / cmp_gt / cmp_gte / cmp_lte
+// ===========================================================================
+//
+// Same CMP + MOV + MOV<cond> capture skeleton as v0.4.3's `cmp` —
+// only the trailing MOV's condition prefix changes.  The (op →
+// condition) mapping is:
+//
+//   cmp_ne  → NE (0x13A0..)
+//   cmp_lt  → CC (0x33A0..)
+//   cmp_gt  → HI (0x83A0..)
+//   cmp_gte → CS (0x23A0..)
+//   cmp_lte → LS (0x93A0..)
+//
+// The byte streams below pin each variant against the canonical
+// "v=10, w=20" template.  Allocator: v→r0, w→r1, r→r2.  CMP r0, r1
+// = 0xE150_0001 (Rn=0, Rm=1).
+//
+//   00:  MOV r0, #10               (0xE3A0_000A)
+//   01:  MOV r1, #20               (0xE3A0_1014)
+//   02:  CMP r0, r1                (0xE150_0001)
+//   03:  MOV r2, #0                (0xE3A0_2000)
+//   04:  MOV<cond> r2, #1          (<cond_base> | 0x2001)
+//   05:  MOV r0, r2                (0xE1A0_0002)
+//   06:  BX LR
+
+#[test]
+fn mov_imm_ne_base_pinned_to_0x13a00000() {
+    assert_eq!(MOV_IMM_NE_BASE, 0x13A0_0000,
+        "MOVNE Rd, #imm base should be 0x13A00000; got 0x{:08x}", MOV_IMM_NE_BASE);
+}
+
+#[test]
+fn mov_imm_cc_base_pinned_to_0x33a00000() {
+    assert_eq!(MOV_IMM_CC_BASE, 0x33A0_0000);
+}
+
+#[test]
+fn mov_imm_cs_base_pinned_to_0x23a00000() {
+    assert_eq!(MOV_IMM_CS_BASE, 0x23A0_0000);
+}
+
+#[test]
+fn mov_imm_hi_base_pinned_to_0x83a00000() {
+    assert_eq!(MOV_IMM_HI_BASE, 0x83A0_0000);
+}
+
+#[test]
+fn mov_imm_ls_base_pinned_to_0x93a00000() {
+    assert_eq!(MOV_IMM_LS_BASE, 0x93A0_0000);
+}
+
+/// Shared helper used by the five comparison-variant tests below.
+/// Builds the canonical "const v=10; const w=20; OP r v w; ret r"
+/// IIR sequence, runs lowering, and asserts the 7-word output
+/// matches the standard CMP-capture template with the given
+/// condition-MOV word at index 4.
+fn assert_cmp_variant(op: &str, expected_cond_mov: u32) {
+    let f = IIRFunction::new(op, vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new(op, Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_000A,           // MOV r0, #10
+        0xE3A0_1014,           // MOV r1, #20
+        0xE150_0001,           // CMP r0, r1
+        0xE3A0_2000,           // MOV r2, #0
+        expected_cond_mov,     // MOV<cond> r2, #1
+        0xE1A0_0002,           // MOV r0, r2 (stage r)
+        BX_LR,
+    ], "{op} expected; got: {words:08x?}");
+}
+
+#[test]
+fn cmp_ne_uses_movne_for_set_true() {
+    // MOVNE r2, #1 = 0x13A0_0000 | (2<<12) | 1 = 0x13A0_2001
+    assert_cmp_variant("cmp_ne", 0x13A0_2001);
+}
+
+#[test]
+fn cmp_lt_uses_movcc_for_set_true() {
+    // MOVCC r2, #1 = 0x33A0_0000 | (2<<12) | 1 = 0x33A0_2001
+    assert_cmp_variant("cmp_lt", 0x33A0_2001);
+}
+
+#[test]
+fn cmp_gt_uses_movhi_for_set_true() {
+    // MOVHI r2, #1 = 0x83A0_0000 | (2<<12) | 1 = 0x83A0_2001
+    assert_cmp_variant("cmp_gt", 0x83A0_2001);
+}
+
+#[test]
+fn cmp_gte_uses_movcs_for_set_true() {
+    // MOVCS r2, #1 = 0x23A0_0000 | (2<<12) | 1 = 0x23A0_2001
+    assert_cmp_variant("cmp_gte", 0x23A0_2001);
+}
+
+#[test]
+fn cmp_lte_uses_movls_for_set_true() {
+    // MOVLS r2, #1 = 0x93A0_0000 | (2<<12) | 1 = 0x93A0_2001
+    assert_cmp_variant("cmp_lte", 0x93A0_2001);
 }
 
 #[test]

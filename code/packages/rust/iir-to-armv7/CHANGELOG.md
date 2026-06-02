@@ -3,6 +3,89 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.4] — 2026-06-02 (A3++.5.5 fourth slice — `cmp_ne`/`cmp_lt`/`cmp_gt`/`cmp_gte`/`cmp_lte` via condition prefixes)
+
+### Added — full boolean comparison family
+
+Completes the boolean-comparison surface with the remaining 5
+variants.  All share v0.4.3's CMP + MOV + MOV<cond> capture
+skeleton — only the trailing MOV's 4-bit condition prefix changes:
+
+| IIR op   | Condition | MOV-cond base | Skip-true unless         |
+|----------|-----------|---------------|--------------------------|
+| `cmp`    | `EQ`      | `0x03A0_0000` | Z=1 (equal)              |
+| `cmp_ne` | `NE`      | `0x13A0_0000` | Z=0 (not equal)          |
+| `cmp_lt` | `CC`      | `0x33A0_0000` | C=0 (unsigned <)         |
+| `cmp_gt` | `HI`      | `0x83A0_0000` | C=1 ∧ Z=0 (unsigned >)   |
+| `cmp_gte`| `CS`      | `0x23A0_0000` | C=1 (unsigned >=)        |
+| `cmp_lte`| `LS`      | `0x93A0_0000` | C=0 ∨ Z=1 (unsigned <=)  |
+
+The condition prefix sits in bits 31..28 of every A32 instruction;
+each new MOV<cond> base is just `(cond << 28) | 0x03A0_0000`.
+
+#### Why ARMv7's HI condition is special
+
+ARMv7 ships a dedicated condition for "unsigned greater than" (HI),
+so `cmp_gt` doesn't need the operand-swap trick the 8008 and RV32I
+backends use (`cmp_gt a, b ⇔ cmp_lt b, a`).  Same number of
+instructions emitted, but conceptually cleaner.
+
+#### Unified 6-way match arm
+
+The v0.4.3 `"cmp"` arm widens to `"cmp" | "cmp_ne" | "cmp_lt" |
+"cmp_gt" | "cmp_gte" | "cmp_lte"` with an inner match on op-name →
+condition-MOV base.  The encode_mov_imm_cond helper takes the base
+and emits the cond-prefixed word:
+
+```rust
+let cond_mov_base = match instr.op.as_str() {
+    "cmp"     => MOV_IMM_EQ_BASE,
+    "cmp_ne"  => MOV_IMM_NE_BASE,
+    "cmp_lt"  => MOV_IMM_CC_BASE,
+    "cmp_gt"  => MOV_IMM_HI_BASE,
+    "cmp_gte" => MOV_IMM_CS_BASE,
+    "cmp_lte" => MOV_IMM_LS_BASE,
+    _ => unreachable!(),
+};
+words.push(encode_cmp_reg(rn, rm));
+words.push(encode_mov_imm(rd, 0));
+words.push(encode_mov_imm_cond(cond_mov_base, rd, 1));
+```
+
+#### New constants (5 of them)
+
+* `pub const MOV_IMM_NE_BASE: u32 = 0x13A0_0000;`
+* `pub const MOV_IMM_CC_BASE: u32 = 0x33A0_0000;`
+* `pub const MOV_IMM_CS_BASE: u32 = 0x23A0_0000;`
+* `pub const MOV_IMM_HI_BASE: u32 = 0x83A0_0000;`
+* `pub const MOV_IMM_LS_BASE: u32 = 0x93A0_0000;`
+
+#### New generic encoder helper
+
+* `encode_mov_imm_cond(cond_base: u32, rd: u8, imm8: u8) -> u32` —
+  ORs in `(rd << 12) | imm8` over any cond-MOV base.  Avoids 6
+  nearly-identical named helpers; the v0.4.3 `encode_mov_imm_eq`
+  is kept as a named convenience but now delegates conceptually
+  to this generic shape.
+
+#### Tests added (51 total, was 41)
+
+* 5 constant-pinning tests guarding each new condition-MOV base.
+* 5 lowering tests using a shared `assert_cmp_variant` helper that
+  pins the full 7-word output for each variant against the
+  canonical `v=10, w=20, r=v OP w; ret r` template — only the
+  expected MOV<cond> word at index 4 changes per test.
+
+### What is NOT in v0.4.4 (deferred to v0.4.5 / A3++.6 / A3+++)
+
+* Conditional branches (`Bcond`) — `B` opcode with a non-AL cond
+  prefix.  Same condition-field mechanism, different instruction
+  family.
+* Signed comparisons (`cmp_slt`/`cmp_sgt` via LT/GT conditions
+  which read the V overflow flag together with N sign flag).
+* Function calls via `bl` + stack spilling.
+* `lang-aot --emit=armv7` wiring — A3+++ (v0.5.0).
+
 ## [0.4.3] — 2026-06-02 (A3++.5.5 third slice — `cmp` equality via the EQ condition prefix)
 
 ### Added — boolean equality with conditional MOV capture
