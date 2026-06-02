@@ -96,6 +96,11 @@
             "buttons": [
               { "control_type": "submit", "name": "go", "accessible_name": "Search", "submitter": true, "action": "/search", "method": "post", "enctype": "multipart/form-data", "target": "results", "effective_target": "results", "text": "Search" }
             ],
+            "text_entries": [
+              { "control_type": "text", "name": "q", "value": "rust html", "text": "", "disabled": false, "will_validate": true },
+              { "control_type": "text", "name": "disabled", "value": "no", "text": "", "disabled": true, "validation_barred_reason": "disabled" },
+              { "control_type": "textarea", "name": "notes", "value": "Line one Line two", "text": "Line one Line two", "disabled": false, "will_validate": true }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
@@ -253,6 +258,12 @@
             "buttons": [
               { "id": "go", "control_type": "submit", "accessible_name": "Run search", "submitter": true, "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "effective_target": "results", "novalidate": true, "text": "Go" },
               { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "submitter": true, "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "effective_target": "_search", "novalidate": true, "text": "", "src": "buttons/search.png", "resolved_src": "https://example.test/search/buttons/search.png", "alt": "Search image", "width": "32", "height": "16" }
+            ],
+            "text_entries": [
+              { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "value": null, "text": "", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"] },
+              { "id": "count", "control_type": "number", "name": "count", "labels": ["Count"], "accessible_name": "Count", "value": "2", "text": "", "min": "1", "max": "10", "step": "0.5", "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "min", "max", "step"] },
+              { "id": "notes", "control_type": "textarea", "name": "notes", "labels": ["NotesKeep me"], "accessible_name": "NotesKeep me", "placeholder": "Details", "value": "Keep me", "text": "Keep me", "autocapitalize": "sentences", "enterkeyhint": "done", "dirname": "notes.dir", "spellcheck": "true", "autocorrect": "on", "maxlength": "500", "rows": "4", "cols": "40", "wrap": "hard", "disabled": false, "readonly": true, "validation_attributes": ["readonly", "maxlength"], "validation_barred_reason": "readonly" },
+              { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "accessible_name": "Outside", "placeholder": "Outside", "value": null, "text": "", "disabled": false, "will_validate": true }
             ],
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "successful": true, "submission_values": [""], "autofocus": true, "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"], "checked": false, "text": "", "options": [] },

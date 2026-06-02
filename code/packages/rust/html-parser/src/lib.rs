@@ -1618,6 +1618,7 @@ pub struct BrowserForm {
     pub successful_controls: Vec<BrowserFormSuccessfulControl>,
     pub validation_controls: Vec<BrowserFormValidationControl>,
     pub buttons: Vec<BrowserFormButton>,
+    pub text_entries: Vec<BrowserFormTextEntry>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1731,6 +1732,46 @@ pub struct BrowserFormButton {
     pub alt: Option<String>,
     pub width: Option<String>,
     pub height: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormTextEntry {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub placeholder: Option<String>,
+    pub value: Option<String>,
+    pub text: String,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
+    pub list: Option<String>,
+    pub datalist_options: Vec<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12797,6 +12838,7 @@ fn browser_form(
         base_target,
         novalidate,
     );
+    let text_entries = browser_form_text_entries(&controls);
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12841,6 +12883,7 @@ fn browser_form(
         successful_controls,
         validation_controls,
         buttons,
+        text_entries,
         controls,
         submitters,
     }
@@ -13304,6 +13347,58 @@ fn is_browser_form_button(control: &BrowserFormControl) -> bool {
 
 fn is_browser_form_submitter(control: &BrowserFormControl) -> bool {
     !control.disabled && matches!(control.control_type.as_str(), "submit" | "image")
+}
+
+fn browser_form_text_entries(controls: &[BrowserFormControl]) -> Vec<BrowserFormTextEntry> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_text_entry(control))
+        .map(|control| BrowserFormTextEntry {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accessible_description: control.accessible_description.clone(),
+            placeholder: control.placeholder.clone(),
+            value: control.value.clone(),
+            text: control.text.clone(),
+            autocomplete: control.autocomplete.clone(),
+            autocomplete_tokens: control.autocomplete_tokens.clone(),
+            autocapitalize: control.autocapitalize.clone(),
+            enterkeyhint: control.enterkeyhint.clone(),
+            dirname: control.dirname.clone(),
+            spellcheck: control.spellcheck.clone(),
+            autocorrect: control.autocorrect.clone(),
+            inputmode: control.inputmode.clone(),
+            pattern: control.pattern.clone(),
+            min: control.min.clone(),
+            max: control.max.clone(),
+            step: control.step.clone(),
+            minlength: control.minlength.clone(),
+            maxlength: control.maxlength.clone(),
+            size: control.size.clone(),
+            rows: control.rows.clone(),
+            cols: control.cols.clone(),
+            wrap: control.wrap.clone(),
+            list: control.list.clone(),
+            datalist_options: control.datalist_options.clone(),
+            disabled: control.disabled,
+            required: control.required,
+            readonly: control.readonly,
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn is_browser_form_text_entry(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "text" | "search" | "url" | "tel" | "email" | "password" | "number" | "textarea"
+    )
 }
 
 fn collect_form_controls_for_form_into(
