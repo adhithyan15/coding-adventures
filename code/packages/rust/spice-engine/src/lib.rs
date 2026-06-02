@@ -468,6 +468,250 @@ impl PwlWaveform {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum DigitalState {
+    Low,
+    High,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DigitalEvent {
+    pub time_seconds: f64,
+    pub state: DigitalState,
+}
+
+impl DigitalEvent {
+    pub fn new(time_seconds: f64, state: DigitalState) -> Self {
+        Self {
+            time_seconds,
+            state,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DigitalLogicLevels {
+    pub low_voltage: f64,
+    pub high_voltage: f64,
+    pub transition_seconds: f64,
+}
+
+impl DigitalLogicLevels {
+    pub fn new(low_voltage: f64, high_voltage: f64, transition_seconds: f64) -> Self {
+        Self {
+            low_voltage,
+            high_voltage,
+            transition_seconds,
+        }
+    }
+
+    pub fn cmos_1v8(transition_seconds: f64) -> Self {
+        Self::new(0.0, 1.8, transition_seconds)
+    }
+
+    pub fn voltage_for(self, state: DigitalState) -> f64 {
+        match state {
+            DigitalState::Low => self.low_voltage,
+            DigitalState::High => self.high_voltage,
+        }
+    }
+
+    fn validate(self) -> Result<(), String> {
+        if !self.low_voltage.is_finite()
+            || !self.high_voltage.is_finite()
+            || !self.transition_seconds.is_finite()
+        {
+            return Err("digital logic levels must be finite".to_string());
+        }
+        if self.high_voltage <= self.low_voltage {
+            return Err("digital high voltage must be greater than low voltage".to_string());
+        }
+        if self.transition_seconds <= 0.0 {
+            return Err("digital transition time must be finite and positive".to_string());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct DigitalThresholds {
+    pub low_max_voltage: f64,
+    pub high_min_voltage: f64,
+}
+
+impl DigitalThresholds {
+    pub fn new(low_max_voltage: f64, high_min_voltage: f64) -> Self {
+        Self {
+            low_max_voltage,
+            high_min_voltage,
+        }
+    }
+
+    pub fn cmos_1v8() -> Self {
+        Self::new(0.6, 1.2)
+    }
+
+    pub fn classify(self, voltage: f64) -> Option<DigitalState> {
+        if voltage <= self.low_max_voltage {
+            Some(DigitalState::Low)
+        } else if voltage >= self.high_min_voltage {
+            Some(DigitalState::High)
+        } else {
+            None
+        }
+    }
+
+    fn validate(self) -> Result<(), String> {
+        if !self.low_max_voltage.is_finite() || !self.high_min_voltage.is_finite() {
+            return Err("digital thresholds must be finite".to_string());
+        }
+        if self.high_min_voltage <= self.low_max_voltage {
+            return Err("digital high threshold must be greater than low threshold".to_string());
+        }
+        Ok(())
+    }
+}
+
+pub fn digital_events_to_pwl_waveform(
+    events: &[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> Result<PwlWaveform, SpiceError> {
+    levels
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason,
+        })?;
+    if events.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason: "at least one digital event is required".to_string(),
+        });
+    }
+
+    let mut previous_time = f64::NEG_INFINITY;
+    for event in events {
+        if !event.time_seconds.is_finite() || event.time_seconds < 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital event times must be finite and non-negative".to_string(),
+            });
+        }
+        if event.time_seconds <= previous_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital event times must be strictly increasing".to_string(),
+            });
+        }
+        previous_time = event.time_seconds;
+    }
+
+    let mut points = Vec::new();
+    let mut current_state = events[0].state;
+    points.push((events[0].time_seconds, levels.voltage_for(current_state)));
+
+    for event in events.iter().skip(1) {
+        if event.state == current_state {
+            continue;
+        }
+        let start_time = event.time_seconds;
+        let end_time = start_time + levels.transition_seconds;
+        let last_time = points
+            .last()
+            .map(|point| point.0)
+            .unwrap_or(f64::NEG_INFINITY);
+        if start_time <= last_time {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_events".to_string(),
+                reason: "digital transition overlaps the previous transition".to_string(),
+            });
+        }
+        points.push((start_time, levels.voltage_for(current_state)));
+        points.push((end_time, levels.voltage_for(event.state)));
+        current_state = event.state;
+    }
+
+    if points.len() == 1 {
+        points.push((
+            points[0].0 + levels.transition_seconds,
+            levels.voltage_for(current_state),
+        ));
+    }
+
+    let waveform = PwlWaveform::new(points);
+    waveform
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason,
+        })?;
+    Ok(waveform)
+}
+
+pub fn digital_events_to_voltage_source(
+    name: impl Into<String>,
+    positive: impl Into<String>,
+    negative: impl Into<String>,
+    events: &[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> Result<VoltageSource, SpiceError> {
+    let initial_voltage = events
+        .first()
+        .map(|event| levels.voltage_for(event.state))
+        .ok_or_else(|| SpiceError::InvalidElement {
+            name: "digital_events".to_string(),
+            reason: "at least one digital event is required".to_string(),
+        })?;
+    let waveform = digital_events_to_pwl_waveform(events, levels)?;
+    Ok(VoltageSource::with_waveform(
+        name,
+        positive,
+        negative,
+        initial_voltage,
+        Waveform::Pwl(waveform),
+    ))
+}
+
+pub fn sample_transient_probe_as_digital_events(
+    points: &[TransientPoint],
+    probe: &str,
+    thresholds: DigitalThresholds,
+) -> Result<Vec<DigitalEvent>, SpiceError> {
+    thresholds
+        .validate()
+        .map_err(|reason| SpiceError::InvalidElement {
+            name: "digital_thresholds".to_string(),
+            reason,
+        })?;
+
+    let mut events = Vec::new();
+    let mut previous_state = None;
+    let mut previous_time = f64::NEG_INFINITY;
+    for point in points {
+        if !point.time.is_finite() || point.time < 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: "transient_points".to_string(),
+                reason: "transient sample times must be finite and non-negative".to_string(),
+            });
+        }
+        if point.time <= previous_time {
+            return Err(SpiceError::InvalidElement {
+                name: "transient_points".to_string(),
+                reason: "transient sample times must be strictly increasing".to_string(),
+            });
+        }
+        previous_time = point.time;
+
+        if let Some(state) = thresholds.classify(probe_value(point, probe)?) {
+            if previous_state != Some(state) {
+                events.push(DigitalEvent::new(point.time, state));
+                previous_state = Some(state);
+            }
+        }
+    }
+    Ok(events)
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct SinWaveform {
     pub offset: f64,

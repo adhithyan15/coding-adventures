@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add binary mixed-signal boundary helpers that convert digital event timelines
+  into finite-edge PWL voltage sources and threshold transient probes back into
+  digital events.
 - Add `dc_temperature_sweep_corners` and
   `format_corner_temperature_dc_table` for stable tab-separated named-corner
   DC operating-point snapshots across explicit `.temp`-style analysis
