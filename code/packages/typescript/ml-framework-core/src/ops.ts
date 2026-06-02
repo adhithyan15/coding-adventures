@@ -56,6 +56,7 @@ import {
   broadcastDataTo,
   unbroadcastDataTo,
 } from "./broadcasting.js";
+import { getMode } from "./mode.js";
 
 // ===========================================================================
 // Module-level helpers: hex packing, threshold, envelope dispatcher.
@@ -1089,5 +1090,386 @@ export class EmbeddingOp extends Function {
       new Tensor(Array.from(gradWeight), { shape: weightShape }),
       null,
     ];
+  }
+}
+
+// ────────── LayerNorm / BatchNorm / Dropout (Phase A.4) ──────────
+//
+// The "normalize and regularize" trifecta every transformer uses.
+
+/**
+ * LayerNorm — normalize across the LAST dimension, then scale + shift.
+ *
+ * For each "row" of D values along the last axis:
+ *   μ = mean(x), σ² = mean((x - μ)²),  x̂ = (x - μ) / √(σ² + ε)
+ *   y = γ * x̂ + β
+ *
+ * γ (gamma) and β (beta) are learnable parameters of shape [D].
+ * Standard PyTorch `nn.LayerNorm(D)` behavior.
+ *
+ * The variance is the biased (population) estimator — `mean(x²) - μ²` —
+ * matching PyTorch's default.
+ *
+ * ## Backward (derivation)
+ *
+ * Let dy = grad w.r.t. y, and write dx̂_i = dy_i * γ_i.  Then for each
+ * row of D values:
+ *
+ *   dL/dβ_i = Σ over batch of dy_i
+ *   dL/dγ_i = Σ over batch of dy_i * x̂_i
+ *   dL/dx_i = (1/(σ * D)) * (D * dx̂_i - Σ_j dx̂_j - x̂_i * Σ_j dx̂_j * x̂_j)
+ *
+ * Derived by chain rule through μ and σ.  Same formula as PyTorch and
+ * every reference implementation.
+ */
+export class LayerNormOp extends Function {
+  static readonly DEFAULT_EPS = 1e-5;
+
+  forward(...inputs: unknown[]): Tensor {
+    const x = inputs[0] as Tensor;
+    const gamma = inputs[1] as Tensor;
+    const beta = inputs[2] as Tensor;
+    const eps = (inputs[3] as number | undefined) ?? LayerNormOp.DEFAULT_EPS;
+
+    if (x.ndim < 1) {
+      throw new RangeError("LayerNorm requires x with ndim ≥ 1");
+    }
+    const D = x.shape[x.shape.length - 1]!;
+    if (gamma.ndim !== 1 || gamma.shape[0] !== D) {
+      throw new RangeError(
+        `LayerNorm gamma must be 1-D with shape [${D}]; got [${gamma.shape.join(", ")}]`,
+      );
+    }
+    if (beta.ndim !== 1 || beta.shape[0] !== D) {
+      throw new RangeError(
+        `LayerNorm beta must be 1-D with shape [${D}]; got [${beta.shape.join(", ")}]`,
+      );
+    }
+
+    const N = x.numel / D; // number of "rows" to normalize
+    const out = new Float32Array(x.numel);
+    const xhat = new Float32Array(x.numel);
+    const mean = new Float32Array(N);
+    const invStd = new Float32Array(N); // 1 / √(σ² + ε)
+
+    for (let r = 0; r < N; r++) {
+      const off = r * D;
+      // mean
+      let mu = 0;
+      for (let i = 0; i < D; i++) mu += x.data[off + i]!;
+      mu /= D;
+      mean[r] = mu;
+      // variance (biased)
+      let sq = 0;
+      for (let i = 0; i < D; i++) {
+        const d = x.data[off + i]! - mu;
+        sq += d * d;
+      }
+      const variance = sq / D;
+      const inv = 1 / Math.sqrt(variance + eps);
+      invStd[r] = inv;
+      // normalize + affine
+      for (let i = 0; i < D; i++) {
+        const xh = (x.data[off + i]! - mu) * inv;
+        xhat[off + i] = xh;
+        out[off + i] = xh * gamma.data[i]! + beta.data[i]!;
+      }
+    }
+
+    this.savedForBackward.xShape = x.shape.slice();
+    this.savedForBackward.gammaData = new Float32Array(gamma.data);
+    this.savedForBackward.D = D;
+    this.savedForBackward.N = N;
+    this.savedForBackward.xhat = xhat;
+    this.savedForBackward.invStd = invStd;
+
+    return new Tensor(Array.from(out), { shape: x.shape.slice() });
+  }
+
+  backward(grad: Tensor): (Tensor | null)[] {
+    const xShape = this.savedForBackward.xShape as number[];
+    const gammaData = this.savedForBackward.gammaData as Float32Array;
+    const D = this.savedForBackward.D as number;
+    const N = this.savedForBackward.N as number;
+    const xhat = this.savedForBackward.xhat as Float32Array;
+    const invStd = this.savedForBackward.invStd as Float32Array;
+
+    const dx = new Float32Array(N * D);
+    const dGamma = new Float32Array(D); // accumulated across all rows
+    const dBeta = new Float32Array(D);
+
+    for (let r = 0; r < N; r++) {
+      const off = r * D;
+      const inv = invStd[r]!;
+      // Compute dx̂_i = dy_i * γ_i  and the two row-sums needed for dx.
+      let sumDxhat = 0;
+      let sumDxhatXhat = 0;
+      const dxhatRow = new Float32Array(D);
+      for (let i = 0; i < D; i++) {
+        const dyi = grad.data[off + i]!;
+        const xhi = xhat[off + i]!;
+        const dxh = dyi * gammaData[i]!;
+        dxhatRow[i] = dxh;
+        sumDxhat += dxh;
+        sumDxhatXhat += dxh * xhi;
+        // Accumulate gradient w.r.t. γ and β across all rows.
+        dGamma[i]! += dyi * xhi;
+        dBeta[i]! += dyi;
+      }
+      // dL/dx_i = (1/(σ*D)) * (D * dx̂_i - Σ dx̂ - x̂_i * Σ dx̂*x̂)
+      const scale = inv / D;
+      for (let i = 0; i < D; i++) {
+        dx[off + i] = scale * (D * dxhatRow[i]! - sumDxhat - xhat[off + i]! * sumDxhatXhat);
+      }
+    }
+
+    return [
+      new Tensor(Array.from(dx), { shape: xShape }),
+      new Tensor(Array.from(dGamma), { shape: [D] }),
+      new Tensor(Array.from(dBeta), { shape: [D] }),
+    ];
+  }
+}
+
+/**
+ * BatchNorm — normalize across the BATCH dimension (axis 0).
+ *
+ * For each column-position c (everything-except-axis-0):
+ *   μ_c = mean over batch of x[:, c],   σ²_c = mean over batch of (x[:, c] - μ_c)²
+ *   x̂[:, c] = (x[:, c] - μ_c) / √(σ²_c + ε)
+ *   y[:, c] = γ_c * x̂[:, c] + β_c
+ *
+ * Train mode uses the current batch's μ/σ² AND updates the running
+ * statistics in-place:
+ *   runningMean := (1 - momentum) * runningMean + momentum * batchMean
+ *   runningVar  := (1 - momentum) * runningVar  + momentum * batchVar
+ *
+ * Eval mode uses runningMean / runningVar instead, no update.
+ *
+ * γ, β, runningMean, runningVar all have shape [C] where C is the
+ * product of all-dims-except-batch.  For typical (N, C) input C is
+ * just the feature count.  In v1.4 we support general input but
+ * the typical use is 2-D.
+ *
+ * Backward (train mode only) uses the same derivative form as
+ * LayerNorm, just over the batch axis instead of the last axis.
+ * Running stats are non-differentiable buffers → no gradient flows
+ * through them.
+ */
+export class BatchNormOp extends Function {
+  static readonly DEFAULT_EPS = 1e-5;
+  static readonly DEFAULT_MOMENTUM = 0.1;
+
+  forward(...inputs: unknown[]): Tensor {
+    const x = inputs[0] as Tensor;
+    const gamma = inputs[1] as Tensor;
+    const beta = inputs[2] as Tensor;
+    const runningMean = inputs[3] as Tensor;
+    const runningVar = inputs[4] as Tensor;
+    const momentum = (inputs[5] as number | undefined) ?? BatchNormOp.DEFAULT_MOMENTUM;
+    const eps = (inputs[6] as number | undefined) ?? BatchNormOp.DEFAULT_EPS;
+
+    if (x.ndim < 2) {
+      throw new RangeError(`BatchNorm requires x with ndim ≥ 2 (batch + features); got ndim ${x.ndim}`);
+    }
+    const N = x.shape[0]!;
+    const C = x.numel / N; // product of all-but-first dims
+    if (gamma.numel !== C || beta.numel !== C || runningMean.numel !== C || runningVar.numel !== C) {
+      throw new RangeError(
+        `BatchNorm gamma/beta/runningMean/runningVar must all have ${C} cells ` +
+          `(matching non-batch dims of x with shape [${x.shape.join(", ")}])`,
+      );
+    }
+
+    const mode = getMode();
+    const out = new Float32Array(x.numel);
+    const xhat = new Float32Array(x.numel);
+    const useMean = new Float32Array(C);
+    const useVar = new Float32Array(C);
+
+    if (mode === "train") {
+      // Compute per-feature batch mean + variance.
+      for (let c = 0; c < C; c++) {
+        let s = 0;
+        for (let n = 0; n < N; n++) s += x.data[n * C + c]!;
+        useMean[c] = s / N;
+      }
+      for (let c = 0; c < C; c++) {
+        let sq = 0;
+        for (let n = 0; n < N; n++) {
+          const d = x.data[n * C + c]! - useMean[c]!;
+          sq += d * d;
+        }
+        useVar[c] = sq / N;
+      }
+      // Update running stats in-place (PyTorch convention; non-differentiable).
+      for (let c = 0; c < C; c++) {
+        runningMean.data[c] = (1 - momentum) * runningMean.data[c]! + momentum * useMean[c]!;
+        runningVar.data[c] = (1 - momentum) * runningVar.data[c]! + momentum * useVar[c]!;
+      }
+    } else {
+      // Eval mode — use frozen running stats.
+      for (let c = 0; c < C; c++) {
+        useMean[c] = runningMean.data[c]!;
+        useVar[c] = runningVar.data[c]!;
+      }
+    }
+
+    const invStd = new Float32Array(C);
+    for (let c = 0; c < C; c++) invStd[c] = 1 / Math.sqrt(useVar[c]! + eps);
+
+    for (let n = 0; n < N; n++) {
+      for (let c = 0; c < C; c++) {
+        const xh = (x.data[n * C + c]! - useMean[c]!) * invStd[c]!;
+        xhat[n * C + c] = xh;
+        out[n * C + c] = xh * gamma.data[c]! + beta.data[c]!;
+      }
+    }
+
+    this.savedForBackward.xShape = x.shape.slice();
+    this.savedForBackward.gammaData = new Float32Array(gamma.data);
+    this.savedForBackward.xhat = xhat;
+    this.savedForBackward.invStd = invStd;
+    this.savedForBackward.N = N;
+    this.savedForBackward.C = C;
+    this.savedForBackward.mode = mode;
+
+    return new Tensor(Array.from(out), { shape: x.shape.slice() });
+  }
+
+  backward(grad: Tensor): (Tensor | null)[] {
+    const xShape = this.savedForBackward.xShape as number[];
+    const gammaData = this.savedForBackward.gammaData as Float32Array;
+    const xhat = this.savedForBackward.xhat as Float32Array;
+    const invStd = this.savedForBackward.invStd as Float32Array;
+    const N = this.savedForBackward.N as number;
+    const C = this.savedForBackward.C as number;
+    const mode = this.savedForBackward.mode as "train" | "eval";
+
+    const dx = new Float32Array(N * C);
+    const dGamma = new Float32Array(C);
+    const dBeta = new Float32Array(C);
+
+    if (mode === "eval") {
+      // In eval, useMean/useVar were CONSTANTS (running stats are
+      // non-differentiable buffers), so x̂ = (x - const) / const'.
+      // dy/dx = γ / σ̂ per feature column.
+      // dy/dγ = x̂  (accumulated across batch)
+      // dy/dβ = 1  (accumulated across batch)
+      for (let n = 0; n < N; n++) {
+        for (let c = 0; c < C; c++) {
+          const dy = grad.data[n * C + c]!;
+          dx[n * C + c] = dy * gammaData[c]! * invStd[c]!;
+          dGamma[c]! += dy * xhat[n * C + c]!;
+          dBeta[c]! += dy;
+        }
+      }
+    } else {
+      // Train: same form as LayerNorm but over the batch axis (N) per
+      // feature column (C).
+      for (let c = 0; c < C; c++) {
+        const inv = invStd[c]!;
+        let sumDxhat = 0;
+        let sumDxhatXhat = 0;
+        const dxhatCol = new Float32Array(N);
+        for (let n = 0; n < N; n++) {
+          const dy = grad.data[n * C + c]!;
+          const xh = xhat[n * C + c]!;
+          const dxh = dy * gammaData[c]!;
+          dxhatCol[n] = dxh;
+          sumDxhat += dxh;
+          sumDxhatXhat += dxh * xh;
+          dGamma[c]! += dy * xh;
+          dBeta[c]! += dy;
+        }
+        const scale = inv / N;
+        for (let n = 0; n < N; n++) {
+          dx[n * C + c] = scale * (N * dxhatCol[n]! - sumDxhat - xhat[n * C + c]! * sumDxhatXhat);
+        }
+      }
+    }
+
+    // Parents: x, gamma, beta, runningMean, runningVar.
+    // Running stats receive no gradient.
+    const gammaShape = (this.parents[1] as Tensor).shape.slice();
+    const betaShape = (this.parents[2] as Tensor).shape.slice();
+    return [
+      new Tensor(Array.from(dx), { shape: xShape }),
+      new Tensor(Array.from(dGamma), { shape: gammaShape }),
+      new Tensor(Array.from(dBeta), { shape: betaShape }),
+      null,
+      null,
+    ];
+  }
+}
+
+/**
+ * Dropout — randomly zero activations with probability `p` during
+ * training; passthrough during eval.
+ *
+ * Inverted dropout: surviving cells are scaled by 1/(1-p) so the
+ * expected magnitude stays constant.  This means inference doesn't
+ * need any scaling — the same network with `setMode("eval")` just
+ * lets activations through unchanged.
+ *
+ * ## Why Math.random() is fine
+ *
+ * Dropout is a regularization heuristic — the network learns to be
+ * robust to which units are dropped, NOT to any specific random
+ * sequence.  A cryptographically secure RNG would be slower with no
+ * benefit to model quality.  We document this choice rather than
+ * pull in a crypto dep.
+ *
+ * Determinism note: there's no seed control here.  Run-to-run training
+ * is non-reproducible.  A future PR can add `setSeed()` if needed.
+ */
+export class DropoutOp extends Function {
+  static readonly DEFAULT_P = 0.5;
+
+  forward(...inputs: unknown[]): Tensor {
+    const x = inputs[0] as Tensor;
+    const p = (inputs[1] as number | undefined) ?? DropoutOp.DEFAULT_P;
+    if (p < 0 || p >= 1) {
+      throw new RangeError(`Dropout p must satisfy 0 ≤ p < 1, got ${p}`);
+    }
+
+    const mode = getMode();
+    if (mode === "eval" || p === 0) {
+      // Passthrough (still produces a new Tensor so identity differs;
+      // backward becomes pure passthrough).
+      this.savedForBackward.passthrough = true;
+      this.savedForBackward.xShape = x.shape.slice();
+      return new Tensor(Array.from(x.data), { shape: x.shape.slice() });
+    }
+
+    const scale = 1 / (1 - p);
+    const mask = new Float32Array(x.numel); // 0 or `scale`
+    const out = new Float32Array(x.numel);
+    for (let i = 0; i < x.numel; i++) {
+      // Math.random() returns [0, 1).  Keep with prob (1 - p).
+      const keep = Math.random() >= p ? 1 : 0;
+      const m = keep * scale;
+      mask[i] = m;
+      out[i] = x.data[i]! * m;
+    }
+
+    this.savedForBackward.passthrough = false;
+    this.savedForBackward.mask = mask;
+    this.savedForBackward.xShape = x.shape.slice();
+
+    return new Tensor(Array.from(out), { shape: x.shape.slice() });
+  }
+
+  backward(grad: Tensor): (Tensor | null)[] {
+    const xShape = this.savedForBackward.xShape as number[];
+    if (this.savedForBackward.passthrough) {
+      return [new Tensor(Array.from(grad.data), { shape: xShape })];
+    }
+    const mask = this.savedForBackward.mask as Float32Array;
+    const out = new Float32Array(grad.numel);
+    for (let i = 0; i < grad.numel; i++) {
+      out[i] = grad.data[i]! * mask[i]!;
+    }
+    return [new Tensor(Array.from(out), { shape: xShape })];
   }
 }
