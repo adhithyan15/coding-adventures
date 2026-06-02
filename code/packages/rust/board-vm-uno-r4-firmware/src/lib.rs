@@ -159,9 +159,20 @@ pub fn validate_ejected_program(
     capabilities: CapabilitySet,
     board_max_stack: u8,
 ) -> Result<(), FirmwareSmokeError> {
+    validate_ejected_boot_plan(program, capabilities, board_max_stack).map(|_| ())
+}
+
+pub fn validate_ejected_boot_plan(
+    program: EjectedFirmwareProgram<'_>,
+    capabilities: CapabilitySet,
+    board_max_stack: u8,
+) -> Result<EjectedBootPlan, FirmwareSmokeError> {
     let module = parse_checked_ejected_program(program)?;
     validate(&module, capabilities, board_max_stack)?;
-    Ok(())
+    Ok(EjectedBootPlan {
+        action: boot_action_for_policy(program.boot_policy)?,
+        summary: program.summary(),
+    })
 }
 
 pub fn validate_ejected_blink_program(board_max_stack: u8) -> Result<(), FirmwareSmokeError> {
@@ -490,6 +501,44 @@ mod tests {
                 action: EjectedBootAction::Run,
                 summary: EjectedFirmwareProgram::blink().summary(),
             }
+        );
+    }
+
+    #[test]
+    fn validated_ejected_blink_boot_plan_checks_board_contract() {
+        assert_eq!(
+            validate_ejected_boot_plan(
+                EjectedFirmwareProgram::blink(),
+                CapabilitySet::blink_mvp(),
+                16
+            )
+            .unwrap(),
+            EjectedBootPlan {
+                action: EjectedBootAction::Run,
+                summary: EjectedFirmwareProgram::blink().summary(),
+            }
+        );
+    }
+
+    #[test]
+    fn rejects_validated_ejected_boot_plan_without_required_capability() {
+        assert_eq!(
+            validate_ejected_boot_plan(EjectedFirmwareProgram::blink(), CapabilitySet::empty(), 16)
+                .unwrap_err(),
+            FirmwareSmokeError::Validate(ValidateError::UnsupportedCapability(CAP_GPIO_OPEN))
+        );
+    }
+
+    #[test]
+    fn rejects_validated_ejected_boot_plan_when_board_stack_is_too_small() {
+        assert_eq!(
+            validate_ejected_boot_plan(
+                EjectedFirmwareProgram::blink(),
+                CapabilitySet::blink_mvp(),
+                3
+            )
+            .unwrap_err(),
+            FirmwareSmokeError::Validate(ValidateError::DeclaredStackTooLarge)
         );
     }
 
