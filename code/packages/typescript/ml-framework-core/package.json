@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/ml-framework-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Idiomatic TypeScript Tensor + autograd on top of the Rust matrix-cpu engine.  v0.1.0 ships the Tensor layer (factories, shape ops, named element-wise methods); autograd + 15 op dispatch + end-to-end MLP land in PRs #2–#5.",
   "type": "module",
   "main": "src/index.ts",

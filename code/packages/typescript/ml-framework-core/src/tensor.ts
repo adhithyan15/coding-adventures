@@ -42,6 +42,8 @@
  *   `.add()` family below are pure-Ruby fallback math without autograd.
  */
 
+import { backwardImpl } from "./autograd.js";
+
 export type Dtype = "f32";
 
 export type Shape = readonly number[];
@@ -132,6 +134,33 @@ export class Tensor {
 
   /** Element dtype.  Always "f32" in v0.1. */
   public readonly dtype: Dtype;
+
+  /**
+   * Whether ops that consume this tensor should build an autograd graph.
+   * Mutable (PyTorch convention): set via `t.requiresGrad = true` on
+   * leaf tensors that should track gradients.
+   */
+  public requiresGrad: boolean = false;
+
+  /**
+   * Accumulated gradient after `backward()` runs.  `null` until then.
+   * For non-leaf tensors, this stays `null` — only leaves with
+   * `requiresGrad = true` accumulate here.
+   */
+  public grad: Tensor | null = null;
+
+  /**
+   * The `Function` instance that produced this tensor.  `null` for
+   * leaves (tensors constructed directly, not via `Function.apply`).
+   * Typed as `unknown` to break the tensor.ts ↔ autograd.ts cycle —
+   * the actual type is `Function` from autograd.ts.  Callers should
+   * cast.  (We use a thin getter elsewhere when we really need the
+   * concrete type.)
+   *
+   * The walker in `autograd.ts` is the only place this is read.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public gradFn: any = null;
 
   /**
    * Construct a Tensor from either a flat array (with explicit shape) or a
@@ -359,6 +388,36 @@ export class Tensor {
     return new Tensor(Array.from(out), { shape: this.shape.slice() });
   }
 
+  /**
+   * Kick off reverse-mode autodiff from this tensor.  Mutates the public
+   * `.grad` slot of every leaf that participated in producing this tensor.
+   *
+   * `grad` defaults to `ones_like(this)` (PyTorch convention; strictly
+   * only correct for scalar outputs, but we accept any shape).  Repeated
+   * `backward()` calls accumulate into `.grad` — caller is expected to
+   * zero between training steps.
+   *
+   * Lives here as a thin one-line delegate to `backwardImpl` in
+   * autograd.ts.  The split keeps tensor.ts focused on storage.
+   */
+  backward(grad?: Tensor): void {
+    // Lazy import to break the tensor.ts ↔ autograd.ts module cycle.
+    // The import resolves on first call; subsequent calls hit the
+    // module cache.  Note: top-level `import { backwardImpl }` would
+    // work in TS too, but a lazy require keeps the cycle disciplined.
+    //
+    // We use dynamic-import-style require via createRequire because the
+    // package is ESM (`"type": "module"`) — but actually a static
+    // ESM import works fine here because `Tensor` is only USED (not
+    // structurally referenced) inside backwardImpl.  Static import:
+    /* eslint-disable @typescript-eslint/no-var-requires */
+    // Note: Tested both static and lazy import; static is fine because
+    // the cycle is shaped (autograd imports Tensor → tensor imports
+    // backwardImpl) and resolved before either runs.
+    // eslint-enable
+    backwardImpl(this, grad);
+  }
+
   private binaryOp(other: Tensor | number, fn: (a: number, b: number) => number): Tensor {
     if (other instanceof Tensor) {
       if (!shapesEqual(this.shape, other.shape)) {
@@ -466,6 +525,16 @@ export class Tensor {
   /** Sugar for `new Tensor(nested)`. */
   static fromArray(nested: unknown): Tensor {
     return new Tensor(nested);
+  }
+
+  /** Ones tensor with the same shape as `other`. */
+  static onesLike(other: Tensor): Tensor {
+    return Tensor.ones(...other.shape.slice());
+  }
+
+  /** Zeros tensor with the same shape as `other`. */
+  static zerosLike(other: Tensor): Tensor {
+    return Tensor.zeros(...other.shape.slice());
   }
 
   /**

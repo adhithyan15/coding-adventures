@@ -39,4 +39,5 @@
 
 export { Tensor, inferShape, flattenToFloat32 } from "./tensor.js";
 export type { Dtype, Shape, TensorOptions } from "./tensor.js";
+export { Function, Identity, backwardImpl } from "./autograd.js";
 export { VERSION } from "./version.js";
