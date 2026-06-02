@@ -281,6 +281,54 @@ pub(crate) fn encode_sub_reg(rd: u8, rn: u8, rm: u8) -> u32 {
     SUB_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
 }
 
+/// ARMv7-A `AND Rd, Rn, Rm` (bitwise AND) base — `0xE000_0000`.
+///
+/// Same shape as `ADD_REG_BASE` but with opcode `0000` (AND).  In
+/// IIR terms this is the lowering target for the `and` op.
+pub const AND_REG_BASE: u32 = 0xE000_0000;
+
+/// ARMv7-A `ORR Rd, Rn, Rm` (bitwise OR — "OR Register") base —
+/// `0xE180_0000`.
+///
+/// Same shape as `ADD_REG_BASE` but with opcode `1100` (ORR).  In
+/// IIR terms this is the lowering target for the `or` op.  ARM
+/// spells it "ORR" rather than "OR" to free up the `OR` mnemonic
+/// for variants like `ORRS` (set flags) and `ORR.W` (Thumb-2 wide).
+pub const ORR_REG_BASE: u32 = 0xE180_0000;
+
+/// ARMv7-A `EOR Rd, Rn, Rm` (bitwise XOR — "Exclusive OR") base —
+/// `0xE020_0000`.
+///
+/// Same shape as `ADD_REG_BASE` but with opcode `0001` (EOR).  In
+/// IIR terms this is the lowering target for the `xor` op.  ARM's
+/// "EOR" is an unusually old-school mnemonic — most modern ISAs
+/// spell this `XOR`.  The bit pattern is the same either way.
+pub const EOR_REG_BASE: u32 = 0xE020_0000;
+
+/// Encode an ARMv7-A `AND Rd, Rn, Rm` instruction.
+pub(crate) fn encode_and_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    AND_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
+/// Encode an ARMv7-A `ORR Rd, Rn, Rm` instruction.
+pub(crate) fn encode_orr_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    ORR_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
+/// Encode an ARMv7-A `EOR Rd, Rn, Rm` instruction.
+pub(crate) fn encode_eor_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    EOR_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
 // ===========================================================================
 // IIRArmv7Config
 // ===========================================================================
@@ -415,6 +463,9 @@ const SUPPORTED_OPS: &[&str] = &[
     "const", "mov", "ret", "ret_void",
     // A3++.5 — data-processing-register ALU
     "add", "sub",
+    // A3++.5.5 first slice — bitwise data-processing-register ALU
+    // (and = AND opcode 0000, or = ORR opcode 1100, xor = EOR opcode 0001)
+    "and", "or", "xor",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -528,16 +579,23 @@ pub fn lower_iir_to_armv7(
                     words.push(BX_LR);
                 }
 
-                // ── add / sub → ADD/SUB Rd, Rn, Rm ─────────────────────
+                // ── add / sub / and / or / xor → DP-register family ─────
                 //
-                // Unlike the 8008's accumulator-anchored `ADD r` (which
-                // forces `A = A + r` and needs MOV wrappers to use
-                // non-accumulator operands), ARMv7's data-processing-
-                // register family takes 3 register selectors in a
-                // single instruction: `Rd = Rn op Rm`.  No staging
-                // MOVs.  This is the same shape as RISC-V's `add rd,
+                // All five data-processing-register ops share an
+                // identical shape, differing only in the 4-bit
+                // `opcode` field (bits 24..21):
+                //
+                //   ADD = 0100   AND = 0000
+                //   SUB = 0010   ORR = 1100
+                //                EOR = 0001
+                //
+                // Unlike the 8008's accumulator-anchored ALU (which
+                // needs MOV wrappers for non-accumulator operands),
+                // ARMv7's DP-register family takes 3 register
+                // selectors in a single instruction: `Rd = Rn op Rm`.
+                // No staging MOVs.  Same shape as RISC-V's `add rd,
                 // rs1, rs2`.
-                "add" | "sub" => {
+                "add" | "sub" | "and" | "or" | "xor" => {
                     let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -556,10 +614,13 @@ pub fn lower_iir_to_armv7(
                     let rn = lookup_register(&env, &a_name, &f.name)?;
                     let rm = lookup_register(&env, &b_name, &f.name)?;
                     let rd = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
-                    let word = if instr.op == "add" {
-                        encode_add_reg(rd, rn, rm)
-                    } else {
-                        encode_sub_reg(rd, rn, rm)
+                    let word = match instr.op.as_str() {
+                        "add" => encode_add_reg(rd, rn, rm),
+                        "sub" => encode_sub_reg(rd, rn, rm),
+                        "and" => encode_and_reg(rd, rn, rm),
+                        "or"  => encode_orr_reg(rd, rn, rm),
+                        "xor" => encode_eor_reg(rd, rn, rm),
+                        _ => unreachable!("outer arm restricts to these 5"),
                     };
                     words.push(word);
                 }

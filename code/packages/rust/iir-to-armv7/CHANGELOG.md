@@ -3,6 +3,74 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.1] — 2026-06-02 (A3++.5.5 first slice — bitwise `and`/`or`/`xor` on the DP-register family)
+
+### Added — bitwise DP-register ALU
+
+Extends v0.4.0 with three more accumulator-target — wait, NOT
+accumulator-target.  ARMv7's DP-register family is true 3-register
+(`Rd = Rn op Rm`), so unlike the 8008's bitwise ANA/ORA/XRA which
+needed accumulator wrappers, ARMv7's AND/ORR/EOR slot in
+identically to ADD/SUB.
+
+| IIR op | ARM mnemonic | Opcode | First word base |
+|--------|--------------|--------|-----------------|
+| `and dest, a, b` | `AND Rd, Rn, Rm` | `0000` | `0xE000_0000` |
+| `or  dest, a, b` | `ORR Rd, Rn, Rm` | `1100` | `0xE180_0000` |
+| `xor dest, a, b` | `EOR Rd, Rn, Rm` | `0001` | `0xE020_0000` |
+
+ARM uses the older mnemonics **ORR** (OR Register) and **EOR**
+(Exclusive OR) rather than the universal `OR`/`XOR`.  We pin both
+in the constant names so the bytes round-trip correctly through the
+`arm-simulator` disassembler, but the IIR-facing op names keep the
+universal `or`/`xor` spellings (matching iir-to-intel8008 and
+iir-to-riscv).
+
+### Unified DP-register match arm
+
+The `add | sub` arm from v0.4.0 widens to `add | sub | and | or |
+xor` with a 5-way inner match on op-name → encoder.  All five share
+the same operand-extraction/register-allocation/word-push skeleton;
+only the encoder function differs.
+
+### New constants
+
+* `pub const AND_REG_BASE: u32 = 0xE000_0000;`
+* `pub const ORR_REG_BASE: u32 = 0xE180_0000;`
+* `pub const EOR_REG_BASE: u32 = 0xE020_0000;`
+
+### New encoder helpers
+
+* `encode_and_reg(rd, rn, rm) -> u32`
+* `encode_orr_reg(rd, rn, rm) -> u32`
+* `encode_eor_reg(rd, rn, rm) -> u32`
+
+All `debug_assert!` their three 4-bit register selectors.
+
+### Tests added (33 total, was 27)
+
+* `and_reg_base_pinned_to_0xe0000000` / `orr_reg_base_pinned_to_0xe1800000`
+  / `eor_reg_base_pinned_to_0xe0200000`.
+* `and_three_consts_emits_single_and_instruction` — pinned 5-word
+  sequence with `AND r2, r0, r1 = 0xE000_2001`.
+* `or_three_consts_emits_single_orr_instruction` — `ORR r2, r0, r1 =
+  0xE180_2001`.
+* `xor_three_consts_emits_single_eor_instruction` — `EOR r2, r0, r1 =
+  0xE020_2001`.
+
+### What is NOT in v0.4.1 (deferred to v0.4.2 / A3++.6 / A3+++)
+
+* Carry-chained arithmetic (`adc`/`sbc` on the same DP family with
+  opcodes `0101`/`0110`).
+* Comparisons (`cmp` = `1010`, `cmn` = `1011`) — set flags only,
+  need a paired flag-to-bool capture sequence to produce an IIR
+  boolean.
+* Conditional branches via the `cond` field every A32 instruction
+  carries.
+* Function calls via `bl` with PC-relative offsets.
+* Stack spilling once the 13-register pool exhausts.
+* `lang-aot --emit=armv7` wiring — A3+++ (v0.5.0).
+
 ## [0.4.0] — 2026-06-02 (A3++.5 — `add`/`sub` on the data-processing-register family)
 
 ### Added — 3-register ALU
