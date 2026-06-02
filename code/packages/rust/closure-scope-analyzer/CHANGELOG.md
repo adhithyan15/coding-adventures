@@ -2,6 +2,64 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-02
+
+### Added — CLOC13.0.2 nested scopes (Function-body + Block)
+
+Replaces the v0.3.0 flat-global walker with a **recursive scope-tree** builder. Until this PR every binding and reference lived in `ScopeId::GLOBAL`. Now Function bodies create child Function scopes, BlockStatements create child Block scopes, `var` declarations correctly hoist to the enclosing function, and reference resolution walks the parent chain.
+
+Architecture:
+
+- **`WalkCtx`** — copy-state threaded through the walker. Holds `current` (where new `let`/`const` go + where refs emit `from_scope`) and `enclosing_function` (where `var` declarations hoist).
+- **`PendingReference`** — references are collected during the walk but resolved AFTER the walk finishes via `analysis.resolve(name, from_scope)`. Two-phase deferral because `resolve()` reads from `analysis.scopes` / `analysis.bindings` which the walk mutates.
+
+Scope rules:
+
+| Construct                              | Binding scope                  |
+|----------------------------------------|--------------------------------|
+| Top-level `var`/`let`/`const`          | GLOBAL                         |
+| Top-level `function f`                 | GLOBAL (kind=Function)         |
+| `function f` params                    | f's Function scope (kind=Param)|
+| Inside `function f`: `var` (any depth) | f's Function scope (hoisted)   |
+| Inside any scope: `let`/`const`        | immediate enclosing scope      |
+| Nested `function g`                    | name in enclosing; body new Function scope |
+| Free-standing `{ … }` block            | new ScopeKind::Block           |
+
+A `FunctionDeclaration.body` is a `BlockStatement`, but per ECMAScript spec it's the function's own scope — NOT a fresh Block child. The walker recognizes this and walks the body's statements directly under the new Function scope.
+
+### Resolution walks parent chain
+
+Reference resolution uses the existing `ScopeAnalysis::resolve()`. With nested scopes now populated, a reference inside `f` to `x` looks first in `f`'s scope, then `f`'s parent (GLOBAL), then returns `None` for free globals.
+
+### Deferred to CLOC13.0.3+
+
+- Catch-clause scope (AST variant not in Phase 1 yet).
+- Strict-mode semantics (function-in-block scoping differs).
+- TDZ enforcement (analyzer reports declarations + references in source order).
+- `with (…)` statement.
+
+### Tests (9 new; 33 total, was 24)
+
+- `function_declaration_creates_child_function_scope`
+- `function_params_become_param_bindings_in_function_scope`
+- `param_reference_resolves_inside_function`
+- `cross_scope_resolution_finds_outer_binding` (parent-chain walk through Function → GLOBAL)
+- `block_statement_creates_block_scope`
+- `var_in_block_hoists_to_enclosing_function` (the key hoisting test)
+- `let_in_block_stays_in_block_scope` (opposite of var hoisting)
+- `nested_function_creates_nested_function_scope`
+- `empty_program_still_returns_global_scope_only` (regression)
+
+The existing `function_body_walks_for_references` test was updated: previously asserted `from_scope == GLOBAL` (correct under v0.3.0); now asserts `from_scope == ScopeId(1)` (the function's own scope).
+
+### No consumer-pass regressions
+
+All 5 consumer pass suites still green after this PR: rename 9, inline 9, treeshake 15, collapse-properties 8, remove-unused-vars 15 = 56 tests. Consumer apply steps still filter by `binding.scope == GLOBAL`, so non-GLOBAL bindings are correctly NOT removed/treeshaken/etc. by name accident.
+
+### Bumped 0.3.0 → 0.4.0
+
+`analyze` signature unchanged. Serde representation unchanged (`ScopeKind` and `BindingKind` were already `#[non_exhaustive]`).
+
 ## [0.3.0] - 2026-06-02
 
 ### Added — CLOC13.0.1 references collection

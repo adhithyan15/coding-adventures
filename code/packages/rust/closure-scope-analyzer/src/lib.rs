@@ -65,12 +65,11 @@
 //! CV tracing is off (the common production case), these stay `None`
 //! and the per-node memory is just a word.
 
-use std::collections::HashMap;
-
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, CvId, Declaration, Expression, ForInit,
-    Program, ProgramItem, Property, PropertyKey, Statement, VarKind,
+    FunctionDeclaration, FunctionParam, Program, ProgramItem, Property, PropertyKey, Statement,
+    VarKind, VariableDeclaration,
 };
 use serde::{Deserialize, Serialize};
 
@@ -329,42 +328,83 @@ impl ScopeAnalysis {
 ///
 /// The signature still matches the v0.1.0 contract; consumers
 /// don't need to recompile against a new API.
+/// A pending reference whose binding hasn't been resolved yet.
+/// During the walk we know the name and from-scope but can't call
+/// `analysis.resolve()` (which reads from `analysis.scopes` /
+/// `analysis.bindings`) because we're still mutating them. We
+/// collect pending references during the walk, then resolve them
+/// all at the end.
+struct PendingReference {
+    name: String,
+    from_scope: ScopeId,
+    cv: Option<CvId>,
+}
+
+/// Walker state threaded through the recursive walk.
+///
+/// - `current`: the scope identifiers inside this lexical region
+///   resolve from. Updated when we enter a Function or Block.
+/// - `enclosing_function`: the nearest Function-kind ancestor (or
+///   `GLOBAL` if we're at the top level / inside a top-level
+///   block). `var` declarations hoist here.
+#[derive(Copy, Clone)]
+struct WalkCtx {
+    current: ScopeId,
+    enclosing_function: ScopeId,
+}
+
 pub fn analyze(program: &Program) -> ScopeAnalysis {
-    // CLOC13.0.1 algorithm — two phases over program.body.
+    // CLOC13.0.2 algorithm — single recursive walk over the AST
+    // building scopes + bindings, with deferred reference
+    // resolution.
     //
-    //   Phase 1: collect Bindings (top-level VariableDeclaration +
-    //            FunctionDeclaration). Same as CLOC13.0.
-    //   Phase 2: walk all initializers, function bodies, and
-    //            top-level ExpressionStatements/IfStatements/
-    //            etc., emitting a Reference for every Identifier
-    //            expression encountered. Resolution: walk the
-    //            scope's binding table looking up by name. Until
-    //            CLOC13.0.2 introduces nested scopes, every
-    //            reference's `from_scope` is GLOBAL.
+    // ## Scope rules
     //
-    // Things NOT walked for references:
-    //   - The `id` field of a VariableDeclarator (that's the
-    //     binding declaration, not a reference).
-    //   - The `id` of a FunctionDeclaration (same).
-    //   - Function params (Phase 3 destructuring will need this;
-    //     today params are Identifiers but unused until nested
-    //     scopes land).
-    //   - Non-computed MemberExpression `property` field (that's
-    //     a property name, not a binding reference).
-    //   - Non-computed Property `key` in ObjectExpression
-    //     (property name, not a reference).
+    // - `var x`: binding hoists to the enclosing function scope
+    //   (`WalkCtx.enclosing_function`). Visible from the start of
+    //   that function (TDZ-free).
+    // - `let x` / `const x`: binding lives in the *current* scope
+    //   (`WalkCtx.current`). Block-scoped; TDZ until declaration
+    //   (analyzer doesn't model TDZ — declaration order in the
+    //   AST is enough for downstream passes).
+    // - `function f` declaration: the *name* binding hoists to
+    //   the enclosing scope (`WalkCtx.current`) as kind=Function.
+    //   The function body gets a NEW Function scope as a child;
+    //   that scope holds Param bindings + the function's own
+    //   var/let/const/function declarations.
+    // - `class C` declaration: name binding in `current` as
+    //   kind=Class. Not in the AST yet (CLOC09 Phase 1.x).
+    // - `BlockStatement` (other than a function body): creates a
+    //   new Block scope as a child of `current`. `let`/`const`
+    //   inside land there; `var` still hoists out to
+    //   `enclosing_function`.
     //
-    // Deferred to CLOC13.0.2:
-    //   - Nested scopes (Function-body scopes, Block scopes).
-    //     Today all bindings + references land in GLOBAL.
-    //   - Var hoisting (no nested scopes yet, so this is moot).
-    //   - Reference resolution across nested scopes (when 0.2
-    //     introduces them).
+    // ## What's NOT walked for references
     //
-    // Plain code beats a visitor-pattern here for the same
-    // reasons as 13.0: the AST is shallow, the binding-vs-use
-    // distinction is local, and a visitor would obscure which
-    // sub-nodes get walked for references vs. which don't.
+    // - Binding declaration sites (VariableDeclarator.id,
+    //   FunctionDeclaration.id, FunctionParam).
+    // - Non-computed MemberExpression `property` (a property
+    //   name, not a binding lookup).
+    // - Non-computed ObjectExpression `Property.key` (same).
+    // - LabeledStatement.label / Break/Continue.label (label
+    //   reference, not a binding lookup).
+    //
+    // ## Two-phase implementation
+    //
+    // We can't call `analysis.resolve()` mid-walk because that
+    // reads from `analysis.scopes`/`analysis.bindings` which
+    // we're still mutating. So:
+    //
+    //   Phase 1: walk recursively, push Bindings to
+    //   `analysis.bindings` AND collect `PendingReference`s in
+    //   a tmp Vec.
+    //   Phase 2: for each pending ref, call
+    //   `analysis.resolve(name, from_scope)` to get the binding,
+    //   then push a final `Reference` to `analysis.references`.
+    //
+    // Resolution walks the parent chain, which is exactly what
+    // we want for nested-scope lookups across function/block
+    // boundaries.
 
     let mut analysis = ScopeAnalysis {
         scopes: vec![Scope {
@@ -376,242 +416,255 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         references: Vec::new(),
     };
 
-    // -- Phase 1: collect bindings -----------------------------------
+    let mut pending: Vec<PendingReference> = Vec::new();
 
+    let ctx = WalkCtx {
+        current: ScopeId::GLOBAL,
+        enclosing_function: ScopeId::GLOBAL,
+    };
+
+    // Walk every top-level item.
     for item in &program.body {
-        let decl = match item {
-            ProgramItem::Declaration(d) => d,
-            ProgramItem::Statement(_) => continue,
-        };
-
-        match decl {
-            Declaration::VariableDeclaration(var_decl) => {
-                // Map VarKind → BindingKind.  `var` is function-
-                // scoped per ECMAScript; `let`/`const` are block-
-                // scoped.  Since we're only emitting top-level
-                // bindings in CLOC13.0, all three land in GLOBAL.
-                // The function- vs block- distinction starts to
-                // matter when CLOC13.0.1 introduces nested
-                // scopes and var-hoisting.
-                let kind = match var_decl.kind {
-                    VarKind::Var => BindingKind::Var,
-                    VarKind::Let => BindingKind::Let,
-                    VarKind::Const => BindingKind::Const,
-                };
-
-                for declarator in &var_decl.declarations {
-                    // Phase 1 only ships `BindingTarget::Identifier`.
-                    // The match is exhaustive today; when CLOC09
-                    // Phase 3 adds destructuring patterns
-                    // (`ArrayPattern`, `ObjectPattern`), they'll
-                    // need their own arms here that recursively
-                    // collect every bound identifier.
-                    let BindingTarget::Identifier(id) = &declarator.id;
-
-                    let binding_id = BindingId(analysis.bindings.len() as u32);
-                    analysis.bindings.push(Binding {
-                        name: id.name.clone(),
-                        kind,
-                        scope: ScopeId::GLOBAL,
-                        declared_at: id.cv.clone(),
-                    });
-                    analysis.scopes[ScopeId::GLOBAL.0 as usize]
-                        .bindings
-                        .push(binding_id);
-                }
-            }
-            Declaration::FunctionDeclaration(fn_decl) => {
-                // Emit the function name as a Function-kind binding
-                // in the GLOBAL scope. CLOC13.0.2 will also create
-                // a child Function scope holding params + nested
-                // decls; in CLOC13.0.x we just surface the name so
-                // treeshake / inline can see it.
-                let binding_id = BindingId(analysis.bindings.len() as u32);
-                analysis.bindings.push(Binding {
-                    name: fn_decl.id.name.clone(),
-                    kind: BindingKind::Function,
-                    scope: ScopeId::GLOBAL,
-                    declared_at: fn_decl.id.cv.clone(),
-                });
-                analysis.scopes[ScopeId::GLOBAL.0 as usize]
-                    .bindings
-                    .push(binding_id);
-            }
-        }
+        walk_program_item(item, ctx, &mut analysis, &mut pending);
     }
 
-    // -- Phase 2: collect references --------------------------------
-    //
-    // Build a name → BindingId lookup once. Until nested scopes
-    // land (CLOC13.0.2), all bindings live in GLOBAL and the map
-    // is just `name → binding`. The walk uses `from_scope =
-    // GLOBAL` for every reference.
-    //
-    // For programs with shadowed names (currently impossible in
-    // GLOBAL — same name at top level is a syntax error in strict
-    // mode and a re-bind in sloppy mode), the *last* binding
-    // wins via HashMap::insert. This will be revisited under
-    // CLOC13.0.2 when nested scopes can shadow.
-
-    let mut name_to_binding: HashMap<String, BindingId> =
-        HashMap::with_capacity(analysis.bindings.len());
-    for (idx, binding) in analysis.bindings.iter().enumerate() {
-        name_to_binding.insert(binding.name.clone(), BindingId(idx as u32));
-    }
-
-    for item in &program.body {
-        match item {
-            ProgramItem::Statement(stmt) => {
-                walk_statement(stmt, &name_to_binding, &mut analysis.references);
-            }
-            ProgramItem::Declaration(decl) => match decl {
-                Declaration::VariableDeclaration(var_decl) => {
-                    for declarator in &var_decl.declarations {
-                        if let Some(init) = &declarator.init {
-                            walk_expression(init, &name_to_binding, &mut analysis.references);
-                        }
-                    }
-                }
-                Declaration::FunctionDeclaration(fn_decl) => {
-                    walk_block(&fn_decl.body, &name_to_binding, &mut analysis.references);
-                }
-            },
-        }
+    // Phase 2: resolve all pending references.
+    for p in pending {
+        let binding = analysis.resolve(&p.name, p.from_scope);
+        analysis.references.push(Reference {
+            name: p.name,
+            from_scope: p.from_scope,
+            binding,
+            cv: p.cv,
+        });
     }
 
     analysis
 }
 
-// =====================================================================
-// Reference walkers — Phase 2 of `analyze`.
-//
-// One function per AST node kind that can contain references. Plain
-// dispatch by enum variant; no visitor trait. Sub-nodes that *don't*
-// produce references (e.g., literal nodes, identifier-as-binding-
-// declaration) are intentionally not visited.
-//
-// Until CLOC13.0.2 introduces nested scopes, every emitted Reference
-// has `from_scope = ScopeId::GLOBAL`.
-// =====================================================================
+/// Emit a binding into the given scope and update both the
+/// flat `analysis.bindings` table and the per-scope binding list.
+fn emit_binding(
+    name: String,
+    kind: BindingKind,
+    scope: ScopeId,
+    declared_at: Option<CvId>,
+    analysis: &mut ScopeAnalysis,
+) -> BindingId {
+    let id = BindingId(analysis.bindings.len() as u32);
+    analysis.bindings.push(Binding {
+        name,
+        kind,
+        scope,
+        declared_at,
+    });
+    analysis.scopes[scope.0 as usize].bindings.push(id);
+    id
+}
+
+/// Allocate a new scope as a child of `parent`. Returns its id.
+fn emit_scope(kind: ScopeKind, parent: ScopeId, analysis: &mut ScopeAnalysis) -> ScopeId {
+    let id = ScopeId(analysis.scopes.len() as u32);
+    analysis.scopes.push(Scope {
+        kind,
+        parent: Some(parent),
+        bindings: Vec::new(),
+    });
+    id
+}
+
+fn walk_program_item(
+    item: &ProgramItem,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    match item {
+        ProgramItem::Statement(stmt) => walk_statement(stmt, ctx, analysis, pending),
+        ProgramItem::Declaration(decl) => walk_declaration(decl, ctx, analysis, pending),
+    }
+}
+
+fn walk_declaration(
+    decl: &Declaration,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    match decl {
+        Declaration::VariableDeclaration(vd) => walk_variable_declaration(vd, ctx, analysis, pending),
+        Declaration::FunctionDeclaration(fd) => walk_function_declaration(fd, ctx, analysis, pending),
+    }
+}
+
+fn walk_variable_declaration(
+    vd: &VariableDeclaration,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    // `var` hoists; `let`/`const` stay in the current scope.
+    let (binding_kind, target_scope) = match vd.kind {
+        VarKind::Var => (BindingKind::Var, ctx.enclosing_function),
+        VarKind::Let => (BindingKind::Let, ctx.current),
+        VarKind::Const => (BindingKind::Const, ctx.current),
+    };
+
+    for declarator in &vd.declarations {
+        let BindingTarget::Identifier(id) = &declarator.id;
+        emit_binding(id.name.clone(), binding_kind, target_scope, id.cv.clone(), analysis);
+        if let Some(init) = &declarator.init {
+            walk_expression(init, ctx, analysis, pending);
+        }
+    }
+}
+
+fn walk_function_declaration(
+    fd: &FunctionDeclaration,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    // Function name hoists to the enclosing scope as a
+    // Function-kind binding. The body gets its own Function
+    // scope.
+    emit_binding(
+        fd.id.name.clone(),
+        BindingKind::Function,
+        ctx.current,
+        fd.id.cv.clone(),
+        analysis,
+    );
+
+    let function_scope = emit_scope(ScopeKind::Function, ctx.current, analysis);
+
+    // Params become Param-kind bindings in the function scope.
+    for param in &fd.params {
+        let FunctionParam::Identifier(id) = param;
+        emit_binding(
+            id.name.clone(),
+            BindingKind::Param,
+            function_scope,
+            id.cv.clone(),
+            analysis,
+        );
+    }
+
+    // Walk the body inside the new function scope. The body is a
+    // BlockStatement, but per spec it's the function's own scope
+    // — NOT a fresh Block child. So we walk the body's
+    // statements directly rather than calling walk_block_statement
+    // (which would create another Block scope).
+    let inner_ctx = WalkCtx {
+        current: function_scope,
+        enclosing_function: function_scope,
+    };
+    for stmt in &fd.body.body {
+        walk_statement(stmt, inner_ctx, analysis, pending);
+    }
+}
+
+fn walk_block_statement(
+    block: &BlockStatement,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    // A free-standing BlockStatement (not a function body) gets
+    // its own Block scope. `let`/`const` land here; `var`
+    // continues to hoist out via WalkCtx.enclosing_function.
+    let block_scope = emit_scope(ScopeKind::Block, ctx.current, analysis);
+    let inner_ctx = WalkCtx {
+        current: block_scope,
+        enclosing_function: ctx.enclosing_function,
+    };
+    for stmt in &block.body {
+        walk_statement(stmt, inner_ctx, analysis, pending);
+    }
+}
 
 fn walk_statement(
     stmt: &Statement,
-    names: &HashMap<String, BindingId>,
-    out: &mut Vec<Reference>,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
 ) {
     match stmt {
-        Statement::Tagged(tagged) => walk_tagged_statement(tagged, names, out),
-        Statement::Declaration(decl) => match decl {
-            // Nested declarations don't produce bindings yet (the
-            // CLOC13.0 algorithm only surfaces top-level decls);
-            // but their initializers and function bodies still
-            // contain references that need collecting.
-            Declaration::VariableDeclaration(vd) => {
-                for declarator in &vd.declarations {
-                    if let Some(init) = &declarator.init {
-                        walk_expression(init, names, out);
-                    }
-                }
-            }
-            Declaration::FunctionDeclaration(fd) => {
-                walk_block(&fd.body, names, out);
-            }
-        },
+        Statement::Tagged(t) => walk_tagged_statement(t, ctx, analysis, pending),
+        Statement::Declaration(d) => walk_declaration(d, ctx, analysis, pending),
     }
 }
 
 fn walk_tagged_statement(
     stmt: &TaggedStatement,
-    names: &HashMap<String, BindingId>,
-    out: &mut Vec<Reference>,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
 ) {
     match stmt {
         TaggedStatement::ExpressionStatement(es) => {
-            walk_expression(&es.expression, names, out);
+            walk_expression(&es.expression, ctx, analysis, pending);
         }
-        TaggedStatement::BlockStatement(b) => walk_block(b, names, out),
+        TaggedStatement::BlockStatement(b) => walk_block_statement(b, ctx, analysis, pending),
         TaggedStatement::IfStatement(is) => {
-            walk_expression(&is.test, names, out);
-            walk_statement(&is.consequent, names, out);
+            walk_expression(&is.test, ctx, analysis, pending);
+            walk_statement(&is.consequent, ctx, analysis, pending);
             if let Some(alt) = &is.alternate {
-                walk_statement(alt, names, out);
+                walk_statement(alt, ctx, analysis, pending);
             }
         }
         TaggedStatement::WhileStatement(ws) => {
-            walk_expression(&ws.test, names, out);
-            walk_statement(&ws.body, names, out);
+            walk_expression(&ws.test, ctx, analysis, pending);
+            walk_statement(&ws.body, ctx, analysis, pending);
         }
         TaggedStatement::ForStatement(fs) => {
             if let Some(init) = &fs.init {
                 match init {
                     ForInit::VariableDeclaration(vd) => {
-                        // The `for (let i = 0; ...)` form. The
-                        // binding declaration's `id` is NOT a
-                        // reference; the `init` expression IS.
-                        for declarator in &vd.declarations {
-                            if let Some(e) = &declarator.init {
-                                walk_expression(e, names, out);
-                            }
-                        }
+                        walk_variable_declaration(vd, ctx, analysis, pending);
                     }
-                    ForInit::Expression(e) => walk_expression(&e, names, out),
+                    ForInit::Expression(e) => walk_expression(e, ctx, analysis, pending),
                 }
             }
             if let Some(test) = &fs.test {
-                walk_expression(test, names, out);
+                walk_expression(test, ctx, analysis, pending);
             }
             if let Some(update) = &fs.update {
-                walk_expression(update, names, out);
+                walk_expression(update, ctx, analysis, pending);
             }
-            walk_statement(&fs.body, names, out);
+            walk_statement(&fs.body, ctx, analysis, pending);
         }
         TaggedStatement::ReturnStatement(rs) => {
             if let Some(arg) = &rs.argument {
-                walk_expression(arg, names, out);
+                walk_expression(arg, ctx, analysis, pending);
             }
         }
         TaggedStatement::LabeledStatement(ls) => {
-            // The label itself is NOT a reference (it's a label
-            // declaration). The body is.
-            walk_statement(&ls.body, names, out);
+            walk_statement(&ls.body, ctx, analysis, pending);
         }
         TaggedStatement::ThrowStatement(ts) => {
-            walk_expression(&ts.argument, names, out);
+            walk_expression(&ts.argument, ctx, analysis, pending);
         }
-        // Leaves with no expression children.
         TaggedStatement::BreakStatement(_) => {}
         TaggedStatement::ContinueStatement(_) => {}
         TaggedStatement::EmptyStatement(_) => {}
     }
 }
 
-fn walk_block(
-    block: &BlockStatement,
-    names: &HashMap<String, BindingId>,
-    out: &mut Vec<Reference>,
-) {
-    for stmt in &block.body {
-        walk_statement(stmt, names, out);
-    }
-}
-
 fn walk_expression(
     expr: &Expression,
-    names: &HashMap<String, BindingId>,
-    out: &mut Vec<Reference>,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
 ) {
     match expr {
         Expression::Identifier(id) => {
-            // The reference. Resolve by name; `None` means the
-            // identifier is a free global (e.g., `console`).
-            out.push(Reference {
+            pending.push(PendingReference {
                 name: id.name.clone(),
-                from_scope: ScopeId::GLOBAL,
-                binding: names.get(&id.name).copied(),
+                from_scope: ctx.current,
                 cv: id.cv.clone(),
             });
         }
-        // Leaves with no Identifier children.
         Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
         | Expression::BooleanLiteral(_)
@@ -619,68 +672,55 @@ fn walk_expression(
         | Expression::BigIntLiteral(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
-            walk_expression(&be.left, names, out);
-            walk_expression(&be.right, names, out);
+            walk_expression(&be.left, ctx, analysis, pending);
+            walk_expression(&be.right, ctx, analysis, pending);
         }
         Expression::LogicalExpression(le) => {
-            walk_expression(&le.left, names, out);
-            walk_expression(&le.right, names, out);
+            walk_expression(&le.left, ctx, analysis, pending);
+            walk_expression(&le.right, ctx, analysis, pending);
         }
         Expression::UnaryExpression(ue) => {
-            walk_expression(&ue.argument, names, out);
+            walk_expression(&ue.argument, ctx, analysis, pending);
         }
         Expression::AssignmentExpression(ae) => {
-            // The LHS target is itself a reference: `x = 1`
-            // both reads `x`'s binding (to assign into it) and
-            // writes through it. For compound ops (`x += 1`)
-            // the read is data-dependent too. Either way, the
-            // name appears in the program and consumer passes
-            // (e.g., `rename`) need to know about it.
             match &ae.left {
                 AssignmentTarget::Identifier(id) => {
-                    out.push(Reference {
+                    pending.push(PendingReference {
                         name: id.name.clone(),
-                        from_scope: ScopeId::GLOBAL,
-                        binding: names.get(&id.name).copied(),
+                        from_scope: ctx.current,
                         cv: id.cv.clone(),
                     });
                 }
                 AssignmentTarget::MemberExpression(me) => {
-                    walk_member_expression_inner(
-                        &me.object,
-                        &me.property,
-                        me.computed,
-                        names,
-                        out,
-                    );
+                    walk_member_expression_inner(&me.object, &me.property, me.computed, ctx, analysis, pending);
                 }
             }
-            walk_expression(&ae.right, names, out);
+            walk_expression(&ae.right, ctx, analysis, pending);
         }
         Expression::ConditionalExpression(ce) => {
-            walk_expression(&ce.test, names, out);
-            walk_expression(&ce.consequent, names, out);
-            walk_expression(&ce.alternate, names, out);
+            walk_expression(&ce.test, ctx, analysis, pending);
+            walk_expression(&ce.consequent, ctx, analysis, pending);
+            walk_expression(&ce.alternate, ctx, analysis, pending);
         }
         Expression::CallExpression(ce) => {
-            walk_expression(&ce.callee, names, out);
+            walk_expression(&ce.callee, ctx, analysis, pending);
             for arg in &ce.arguments {
-                walk_expression(arg, names, out);
+                walk_expression(arg, ctx, analysis, pending);
             }
         }
         Expression::MemberExpression(me) => {
-            walk_member_expression_inner(&me.object, &me.property, me.computed, names, out);
+            walk_member_expression_inner(&me.object, &me.property, me.computed, ctx, analysis, pending);
         }
         Expression::ArrayExpression(ae) => {
             for el in &ae.elements {
                 if let Some(e) = el {
-                    walk_expression(e, names, out);
+                    walk_expression(e, ctx, analysis, pending);
                 }
             }
         }
         Expression::ObjectExpression(oe) => {
             for prop in &oe.properties {
-                walk_property(prop, names, out);
+                walk_property(prop, ctx, analysis, pending);
             }
         }
     }
@@ -690,47 +730,38 @@ fn walk_member_expression_inner(
     object: &Expression,
     property: &Expression,
     computed: bool,
-    names: &HashMap<String, BindingId>,
-    out: &mut Vec<Reference>,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
 ) {
-    // The object IS a reference (`obj.prop` reads `obj`).
-    walk_expression(object, names, out);
-    // The property is a reference ONLY if computed (`obj[name]`).
-    // For the non-computed form (`obj.prop`), `prop` is a static
-    // property name in the object's namespace, not a binding name
-    // resolvable through lexical scope.
+    walk_expression(object, ctx, analysis, pending);
     if computed {
-        walk_expression(property, names, out);
+        walk_expression(property, ctx, analysis, pending);
     }
 }
 
 fn walk_property(
     prop: &Property,
-    names: &HashMap<String, BindingId>,
-    out: &mut Vec<Reference>,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
 ) {
-    // The key is a reference only if computed (`{ [n]: v }`).
     if prop.computed {
         match &prop.key {
             PropertyKey::Identifier(id) => {
-                out.push(Reference {
+                pending.push(PendingReference {
                     name: id.name.clone(),
-                    from_scope: ScopeId::GLOBAL,
-                    binding: names.get(&id.name).copied(),
+                    from_scope: ctx.current,
                     cv: id.cv.clone(),
                 });
             }
             PropertyKey::StringLiteral(_) | PropertyKey::NumericLiteral(_) => {}
-            PropertyKey::Expression(e) => walk_expression(e, names, out),
+            PropertyKey::Expression(e) => walk_expression(e, ctx, analysis, pending),
         }
     }
-    // The value is always walked.
-    walk_expression(&prop.value, names, out);
+    walk_expression(&prop.value, ctx, analysis, pending);
 }
 
-// ---------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------
 
 #[cfg(test)]
 mod tests {
@@ -1168,9 +1199,14 @@ mod tests {
     fn function_body_walks_for_references() {
         // `function f() { x; }` — `x` in the body produces a
         // reference. The function name `f` is a binding only,
-        // not a reference. (Today, function bodies still live in
-        // GLOBAL until CLOC13.0.2 introduces function scopes;
-        // the from_scope reflects that.)
+        // not a reference.
+        //
+        // CLOC13.0.2 update: the function body now lives in a
+        // child Function scope (`ScopeId(1)`), not GLOBAL. The
+        // reference's `from_scope` reflects this. The `x` is a
+        // free global from inside the function — `analysis.resolve`
+        // walks the parent chain (Function → GLOBAL) and finds
+        // no binding, so `binding` is None.
         let body = BlockStatement {
             cv: None,
             body: vec![Statement::expression_statement(ExpressionStatement {
@@ -1191,9 +1227,13 @@ mod tests {
         let analysis = analyze(&prog);
         assert_eq!(analysis.bindings.len(), 1);
         assert_eq!(analysis.bindings[0].name, "f");
+        assert_eq!(analysis.bindings[0].scope, ScopeId::GLOBAL);
         assert_eq!(analysis.references.len(), 1);
         assert_eq!(analysis.references[0].name, "x");
-        assert_eq!(analysis.references[0].from_scope, ScopeId::GLOBAL);
+        // The Function scope is scopes[1] (GLOBAL is scopes[0]).
+        assert_eq!(analysis.references[0].from_scope, ScopeId(1));
+        // `x` not bound anywhere → free global.
+        assert!(analysis.references[0].binding.is_none());
     }
 
     #[test]
@@ -1256,5 +1296,239 @@ mod tests {
         let json = serde_json::to_string(&analysis).expect("serialize");
         let back: ScopeAnalysis = serde_json::from_str(&json).expect("deserialize");
         assert_eq!(analysis, back);
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC13.0.2 — nested scope tests.
+    //
+    // These exercise the recursive scope-tree machinery: Function
+    // bodies create Function scopes; BlockStatements create Block
+    // scopes; var hoists to enclosing function; reference resolution
+    // walks the parent chain.
+    // ---------------------------------------------------------------
+
+    fn fn_decl_with_body(name: &str, params: &[&str], body: Vec<Statement>) -> ProgramItem {
+        ProgramItem::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: ident(name),
+            params: params
+                .iter()
+                .map(|n| FunctionParam::Identifier(ident(n)))
+                .collect(),
+            body: BlockStatement { cv: None, body },
+            generator: false,
+            is_async: false,
+        }))
+    }
+
+    #[test]
+    fn function_declaration_creates_child_function_scope() {
+        // `function f() {}` — emits a Function scope (id 1) as
+        // a child of GLOBAL. The function name `f` is in GLOBAL.
+        let prog = program_with(vec![fn_decl("f")]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.scopes.len(), 2);
+        assert_eq!(analysis.scopes[1].kind, ScopeKind::Function);
+        assert_eq!(analysis.scopes[1].parent, Some(ScopeId::GLOBAL));
+        assert_eq!(analysis.bindings[0].name, "f");
+        assert_eq!(analysis.bindings[0].scope, ScopeId::GLOBAL);
+    }
+
+    #[test]
+    fn function_params_become_param_bindings_in_function_scope() {
+        // `function f(a, b) {}` — `a` and `b` are Param-kind
+        // bindings inside f's Function scope, not GLOBAL.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a", "b"], vec![])]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.scopes.len(), 2);
+        // 3 bindings: f (Function in GLOBAL), a (Param in f), b (Param in f)
+        assert_eq!(analysis.bindings.len(), 3);
+        assert_eq!(analysis.bindings[0].name, "f");
+        assert_eq!(analysis.bindings[1].name, "a");
+        assert_eq!(analysis.bindings[1].kind, BindingKind::Param);
+        assert_eq!(analysis.bindings[1].scope, ScopeId(1));
+        assert_eq!(analysis.bindings[2].name, "b");
+        assert_eq!(analysis.bindings[2].kind, BindingKind::Param);
+        assert_eq!(analysis.bindings[2].scope, ScopeId(1));
+    }
+
+    #[test]
+    fn param_reference_resolves_inside_function() {
+        // `function f(a) { a; }` — the `a` reference inside the body
+        // resolves to the param binding via parent-chain lookup.
+        let body = vec![Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: id_expr("a"),
+        })];
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], body)]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].name, "a");
+        assert_eq!(analysis.references[0].from_scope, ScopeId(1));
+        assert_eq!(analysis.references[0].binding, Some(BindingId(1)));
+    }
+
+    #[test]
+    fn cross_scope_resolution_finds_outer_binding() {
+        // `let x; function f() { x; }` — `x` inside f resolves
+        // through the parent chain to the GLOBAL binding.
+        let body = vec![Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: id_expr("x"),
+        })];
+        let prog = program_with(vec![
+            var_decl(VarKind::Let, &["x"]),
+            fn_decl_with_body("f", &[], body),
+        ]);
+        let analysis = analyze(&prog);
+        // bindings: [x (Let in GLOBAL), f (Function in GLOBAL)]
+        assert_eq!(analysis.bindings[0].name, "x");
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].name, "x");
+        assert_eq!(analysis.references[0].from_scope, ScopeId(1)); // f's Function scope
+        assert_eq!(analysis.references[0].binding, Some(BindingId(0)));
+    }
+
+    #[test]
+    fn block_statement_creates_block_scope() {
+        // `{ let y; }` at the top level — a free-standing
+        // BlockStatement creates a Block child of GLOBAL.
+        let block = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![Statement::Declaration(Declaration::VariableDeclaration(
+                VariableDeclaration {
+                    cv: None,
+                    kind: VarKind::Let,
+                    declarations: vec![VariableDeclarator {
+                        cv: None,
+                        id: BindingTarget::Identifier(ident("y")),
+                        init: None,
+                    }],
+                },
+            ))],
+        });
+        let prog = program_with(vec![ProgramItem::Statement(block)]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.scopes.len(), 2);
+        assert_eq!(analysis.scopes[1].kind, ScopeKind::Block);
+        assert_eq!(analysis.scopes[1].parent, Some(ScopeId::GLOBAL));
+        // `y` lives in the Block scope, not GLOBAL.
+        assert_eq!(analysis.bindings.len(), 1);
+        assert_eq!(analysis.bindings[0].name, "y");
+        assert_eq!(analysis.bindings[0].scope, ScopeId(1));
+    }
+
+    #[test]
+    fn var_in_block_hoists_to_enclosing_function() {
+        // `function f() { { var x; } }` — `var x` inside a
+        // nested block hoists OUT to f's Function scope, NOT the
+        // inner Block. This is the key hoisting test.
+        let inner_var = Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: None,
+                kind: VarKind::Var,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(ident("x")),
+                    init: None,
+                }],
+            },
+        ));
+        let inner_block = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![inner_var],
+        });
+        let prog = program_with(vec![fn_decl_with_body("f", &[], vec![inner_block])]);
+        let analysis = analyze(&prog);
+        // scopes: [GLOBAL, Function f, Block (inside f)]
+        assert_eq!(analysis.scopes.len(), 3);
+        assert_eq!(analysis.scopes[1].kind, ScopeKind::Function);
+        assert_eq!(analysis.scopes[2].kind, ScopeKind::Block);
+        assert_eq!(analysis.scopes[2].parent, Some(ScopeId(1)));
+        // bindings: [f (Function in GLOBAL), x (Var in f-scope, NOT block-scope)]
+        let x_binding = analysis
+            .bindings
+            .iter()
+            .find(|b| b.name == "x")
+            .expect("x binding");
+        assert_eq!(x_binding.kind, BindingKind::Var);
+        assert_eq!(x_binding.scope, ScopeId(1)); // f's Function scope, not the Block
+    }
+
+    #[test]
+    fn let_in_block_stays_in_block_scope() {
+        // `function f() { { let y; } }` — `let y` stays in the
+        // Block scope (no hoisting), the opposite of `var x`.
+        let inner_let = Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: None,
+                kind: VarKind::Let,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(ident("y")),
+                    init: None,
+                }],
+            },
+        ));
+        let inner_block = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![inner_let],
+        });
+        let prog = program_with(vec![fn_decl_with_body("f", &[], vec![inner_block])]);
+        let analysis = analyze(&prog);
+        let y_binding = analysis
+            .bindings
+            .iter()
+            .find(|b| b.name == "y")
+            .expect("y binding");
+        assert_eq!(y_binding.kind, BindingKind::Let);
+        assert_eq!(y_binding.scope, ScopeId(2)); // the Block scope
+    }
+
+    #[test]
+    fn nested_function_creates_nested_function_scope() {
+        // `function outer() { function inner() {} }` — nested
+        // Function-in-Function. Both get their own Function
+        // scopes; inner's parent is outer's, outer's parent is
+        // GLOBAL.
+        let inner_decl = Statement::Declaration(Declaration::FunctionDeclaration(
+            FunctionDeclaration {
+                cv: None,
+                id: ident("inner"),
+                params: Vec::new(),
+                body: BlockStatement {
+                    cv: None,
+                    body: Vec::new(),
+                },
+                generator: false,
+                is_async: false,
+            },
+        ));
+        let prog = program_with(vec![fn_decl_with_body("outer", &[], vec![inner_decl])]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.scopes.len(), 3);
+        assert_eq!(analysis.scopes[1].kind, ScopeKind::Function);
+        assert_eq!(analysis.scopes[1].parent, Some(ScopeId::GLOBAL));
+        assert_eq!(analysis.scopes[2].kind, ScopeKind::Function);
+        assert_eq!(analysis.scopes[2].parent, Some(ScopeId(1)));
+        // `inner` name binding lives in outer's Function scope.
+        let inner_binding = analysis
+            .bindings
+            .iter()
+            .find(|b| b.name == "inner")
+            .expect("inner binding");
+        assert_eq!(inner_binding.kind, BindingKind::Function);
+        assert_eq!(inner_binding.scope, ScopeId(1));
+    }
+
+    #[test]
+    fn empty_program_still_returns_global_scope_only() {
+        // Identity check: the regression test from earlier still
+        // passes — no items means no new scopes.
+        let prog = empty_program();
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.scopes.len(), 1);
+        assert!(analysis.bindings.is_empty());
+        assert!(analysis.references.is_empty());
     }
 }
