@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-closure-pass-remove-unused-vars` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-02
+
+### Added (CLOC13.E.1 — the apply step, `changed` unpinned)
+
+This PR is the **first apply step** lifting the `changed = false` hard-pin from any of the five CLOC13.x pass bodies. Walks `ctx.program.body` and actually removes dead bindings:
+
+- **Build dead-name set.** Restricts `dead_bindings` (the candidate vec from step 2) to bindings with `scope == ScopeId::GLOBAL`, then collects their names into a `HashSet<String>`. Without a binding → declarator backreference (the analyzer hasn't grown one yet), we match by name + scope. Scope restriction keeps this correct under future analyzer extensions that surface nested bindings — only top-level names are ever acted on here.
+- **Walk + rewrite.** Build a new `body` vec rather than `Vec::retain_mut` so the split case is straightforward:
+  - `Declaration::VariableDeclaration`: partition declarators into kept vs. dropped by name.
+    - All dead → drop the whole item.
+    - All live → push original item verbatim.
+    - Mixed → emit a new `VariableDeclaration` with surviving declarators, preserving the original's `kind` and `cv`.
+  - `Declaration::FunctionDeclaration`: passthrough. `Function`-kind bindings are filtered out at step 2; function-declaration removal is the treeshake pass's job.
+  - `ProgramItem::Statement`: passthrough. Statement walking lands in CLOC13.0.1 alongside references.
+- **Output.** `changed = removed_count > 0`. Genuinely-mutated program is `Cow`-style returned via `ctx.program.clone()` + body replacement.
+
+### Hard-pin lifted; safety preserved
+
+`changed` is now derived from `removed_count`. This is safe because we genuinely mutate when we report it: zero removals → `changed = false` (identical to v0.2.0 behavior), at-least-one removal → `changed = true` (and the program is *actually* different).
+
+**Why it stays safe under `IterationPolicy::FixedPoint`.** Each iteration reduces the binding set strictly. A removed `VariableDeclaration` produces no new bindings, so the next iteration's eligibility scan finds fewer dead entries. Fixed point reaches in at most one additional iteration after the first non-empty removal — bindings can only stop being dead by gaining a reference, which a removal never adds.
+
+### Cross-PR interaction with CLOC13.0 (#4787)
+
+Today (`#4787` not yet merged) the scope-analyzer still returns empty bindings. So `dead_names` is empty, the body walk runs the passthrough path on every item, `removed_count == 0`, and `changed == false`. Observable behavior is identical to v0.2.0.
+
+Once `#4787` lands, the analyzer surfaces real top-level bindings, and any without a reference become eligible for removal. The apply step starts firing the moment the analyzer's body lands and `bindings`/`references` go non-empty. No follow-up rebase needed.
+
+### Tests added (5 new; 15 total, was 10)
+
+- `apply_step_passthrough_keeps_used_let_under_empty_analysis` — pins the no-op path; will fail after `#4787` lands without a referenced-`x` fixture, which is the right signal for the follow-up PR.
+- `apply_step_keeps_function_declaration` — `Function`-kind bindings are never eligible (treeshake's job).
+- `apply_step_passes_statements_through_untouched` — pins the deferred-Statement-walk contract.
+- `apply_step_preserves_multi_declarator_when_no_dead_names` — multi-declarator passthrough.
+- `apply_step_changed_is_false_when_program_unchanged` — `changed` invariant under empty-analysis.
+
+All 10 v0.2.0 tests still pass unchanged.
+
+### Bumped 0.2.0 → 0.3.0
+
+API of `run` is unchanged (still `Pass::run`). Behavior under empty analysis is unchanged. The version bump signals that the pass *will* mutate the program under non-empty analysis.
+
 ## [0.2.0] - 2026-06-01
 
 ### Added — CLOC13.E: wire pass to consume `closure-scope-analyzer`
