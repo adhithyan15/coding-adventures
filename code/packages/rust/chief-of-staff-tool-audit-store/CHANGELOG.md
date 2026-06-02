@@ -25,6 +25,8 @@ All notable changes to this package will be documented in this file.
   and routing flags for compact host-log queues.
 - Flattened host-run escalation dashboard lane queue action-rollup deep route
   keys and route digests for compact host-log route integrity checks.
+- Flattened host-run escalation dashboard lane queue action-rollup route-digest
+  queue action-route rollups for deeper host-log route audit grouping.
 - JSON encoding/decoding for payload-free `ToolAuditRecord` rows.
 - Query and inventory helpers over persisted audit records.
 - Deterministic checkpoint pages for incremental audit replay.
