@@ -376,7 +376,7 @@ pub fn from_pipeline(
 
     // 6. The layout tree.
     writeln!(out).unwrap();
-    out.push_str(&emit_qml_tree(&layout.root, 1)?);
+    out.push_str(&emit_qml_tree(&layout.root, 1, &interface.emits)?);
 
     // 7. Close the root `Item`.
     writeln!(out, "}}").unwrap();
@@ -452,7 +452,7 @@ fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError>
 /// The `depth` argument is the *block depth from the root Item* — so the
 /// outermost layout element starts at depth 1 (one level inside the root
 /// wrapper).
-fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     // The UI29 *host* primitives (`HostInput`, `HostButton`) need
     // attribute lowering that depends on the moslayout props — slot refs
     // for `value`, emit refs for `onCommit`, etc. — none of which the
@@ -460,9 +460,9 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     // own emitter functions, mirroring the React backend's
     // `emit_input_jsx` carve-out for `Input`.
     match node.tag.as_str() {
-        "HostInput" => return emit_host_input_qml(node, depth),
-        "HostButton" => return emit_host_button_qml(node, depth),
-        "HostDialog" => return emit_host_dialog_qml(node, depth),
+        "HostInput" => return emit_host_input_qml(node, depth, emits),
+        "HostButton" => return emit_host_button_qml(node, depth, emits),
+        "HostDialog" => return emit_host_dialog_qml(node, depth, emits),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
         // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
@@ -470,8 +470,8 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         // keyboard semantics (Space toggles, arrow keys navigate radio
         // groups when wrapped in ButtonGroup) that composing from
         // QtQuick basics couldn't replicate.
-        "HostCheckbox" => return emit_host_checkbox_qml(node, depth),
-        "HostRadio" => return emit_host_radio_qml(node, depth),
+        "HostCheckbox" => return emit_host_checkbox_qml(node, depth, emits),
+        "HostRadio" => return emit_host_radio_qml(node, depth, emits),
 
         // UI29-4 kernel — `HostLink` lowers to a rich-text `Text`
         // with `onLinkActivated` (Qt has no first-class hyperlink
@@ -480,21 +480,21 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
         // `HostTooltip` lowers to the `ToolTip.text` attached
         // property on any child. `HostNumberInput` lowers to
         // QtQuick.Controls 2 `SpinBox` (built-in ± stepper).
-        "HostLink" => return emit_host_link_qml(node, depth),
-        "HostTooltip" => return emit_host_tooltip_qml(node, depth),
-        "HostNumberInput" => return emit_host_number_input_qml(node, depth),
+        "HostLink" => return emit_host_link_qml(node, depth, emits),
+        "HostTooltip" => return emit_host_tooltip_qml(node, depth, emits),
+        "HostNumberInput" => return emit_host_number_input_qml(node, depth, emits),
 
-        "HostTable" => return emit_host_table_qml(node, depth),
+        "HostTable" => return emit_host_table_qml(node, depth, emits),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
         // `Item` delegate that re-exports `modelData` / `index` under the
         // author's chosen names.
-        "For" => return emit_for_qml(node, depth),
+        "For" => return emit_for_qml(node, depth, emits),
         // UI29 §3.2 — `If` meta-primitive. When `If` appears as a *root*
         // node (no preceding sibling to pair with `Else`), it is emitted
         // as a single-Loader conditional with no else branch. The
         // `If`+`Else` sibling pairing happens in `emit_qml_children`
         // when walking a parent's children list.
-        "If" => return emit_if_qml(node, None, depth),
+        "If" => return emit_if_qml(node, None, depth, emits),
         // UI29 §3.2 — a top-level `Else` (no preceding `If`) has no
         // semantic home. Emit a self-documenting QML comment rather
         // than erroring. Defensive: the grammar should prevent this,
@@ -582,7 +582,7 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmit
     // Children are walked through `emit_qml_children` rather than a
     // bare `for` so that `If`+`Else` sibling pairs are recognised
     // (UI29 §3.2).
-    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack, emits)?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -606,6 +606,7 @@ fn emit_qml_children(
     children: &[LayoutNode],
     depth: usize,
     is_stack: bool,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -621,9 +622,9 @@ fn emit_qml_children(
             if else_sibling.is_some() {
                 i += 1; // consume the Else along with the If
             }
-            emit_if_qml(child, else_sibling, depth)?
+            emit_if_qml(child, else_sibling, depth, emits)?
         } else {
-            emit_qml_tree(child, depth)?
+            emit_qml_tree(child, depth, emits)?
         };
 
         if is_stack {
@@ -856,6 +857,32 @@ fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
     }
 }
 
+/// Pick the QML argument list for invoking the named signal.
+///
+/// QML signals are arity-strict: passing the wrong number of args
+/// is a runtime error at the call site, not a silent ignore.  When
+/// the .mil declares `emit onFormulaChange ( value : text )`, the
+/// QML signal is declared `signal formulaChange(string value)` and
+/// must be invoked as `formulaChange(text)`.  When the .mil declares
+/// `emit onCommit ;` (no payload), the QML signal is `signal commit()`
+/// and must be invoked as `commit()`.
+///
+/// Returns `""` for zero-arity signals, `"text"` for any signal with
+/// one or more declared params (the conventional payload for
+/// `HostInput`-style sources — the contents of the text field).
+///
+/// If the signal name isn't found in `emits` (defensive — should not
+/// happen for well-formed input), falls back to `""` so QML at least
+/// won't error on extra args.
+fn pick_signal_arg(emit_name: &str, emits: &[EmitDecl]) -> &'static str {
+    let arity = emits
+        .iter()
+        .find(|e| e.name == emit_name)
+        .map(|e| e.params.len())
+        .unwrap_or(0);
+    if arity == 0 { "" } else { "text" }
+}
+
 /// Lower a `HostInput` node to a QML `TextInput { ... }` block.
 ///
 /// ## Property handling
@@ -870,14 +897,30 @@ fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
 /// |                         | placeholder attribute — the QML idiom is a sibling `Text`   |
 /// |                         | element shown when `text.length === 0`, but that requires   |
 /// |                         | a richer node-emission path; deferred to a follow-up PR.    |
-/// | `onChange: emit: onE`   | `onTextChanged: e()`                                        |
-/// | `onCommit: emit: onE`   | `onAccepted: e(text)` — fires on Enter                      |
-/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`      |
+/// | `onChange: emit: onE`   | `onTextChanged: e(<arg>)`  — `arg` is `text` when the signal      |
+/// |                         | declares one parameter, empty when it declares zero (see          |
+/// |                         | `pick_signal_arg`).                                               |
+/// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule            |
+/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(<arg>); event.accepted = true }`       |
+///
+/// ## Signal arity matters
+///
+/// QML enforces signal arity strictly — invoking a parameterless
+/// `signal commit()` with `commit(text)` errors with
+/// "too many arguments", and a `signal formulaChange(string value)`
+/// invoked as `formulaChange()` errors with "Insufficient arguments".
+/// The emitter therefore checks the interface's `EmitDecl` for the
+/// referenced signal and inserts `text` only when the signal has
+/// exactly one declared parameter (the conventional shape — a single
+/// payload value: the new text).  Zero-param signals are invoked with
+/// no args; multi-param signals are also invoked with `text` for the
+/// first slot (callers can wire the rest), which is the v0.1.0
+/// compromise — full multi-arg lowering is a follow-up.
 ///
 /// The Enter / Escape mapping mirrors UI25 §10 (the React backend
 /// merges both into a single `onKeyDown` handler; QML has dedicated
 /// signal handlers for both, so we use them directly).
-fn emit_host_input_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -903,27 +946,30 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
         .unwrap();
     }
 
-    // onTextChanged: e()
+    // onTextChanged: e(<arg>)
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner_pad}onTextChanged: {camel}()").unwrap();
+        let arg = pick_signal_arg(emit_name, emits);
+        writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
 
-    // onAccepted: e(text)
+    // onAccepted: e(<arg>)
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner_pad}onAccepted: {camel}(text)").unwrap();
+        let arg = pick_signal_arg(emit_name, emits);
+        writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
     }
 
-    // Keys.onEscapePressed: { e(); event.accepted = true }
+    // Keys.onEscapePressed: { e(<arg>); event.accepted = true }
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arg = pick_signal_arg(emit_name, emits);
         writeln!(
             out,
-            "{inner_pad}Keys.onEscapePressed: {{ {camel}(); event.accepted = true }}"
+            "{inner_pad}Keys.onEscapePressed: {{ {camel}({arg}); event.accepted = true }}"
         )
         .unwrap();
     }
@@ -947,7 +993,7 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
 /// | `disabled: slot: x`     | `enabled: !x`                             |
 /// | `disabled: true/false`  | `enabled: !true` / `enabled: !false`      |
 /// | `onTap: emit: onE`      | `onClicked: e()`                          |
-fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_button_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1013,7 +1059,7 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
 /// machinery we don't want for a primitive). When a `title:` prop is
 /// bound, we synthesise a bold `Text` element as the first child of
 /// `contentItem`, before the author's children.
-fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let content_pad = "    ".repeat(depth + 2);
@@ -1086,7 +1132,7 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
     // nested meta-primitives (If/Else/For) get the same treatment they
     // get anywhere else in the tree. `is_stack: false` — a dialog
     // body is a normal column, not a Z-stack.
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, emits)?);
 
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -1118,7 +1164,7 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipel
 /// `toggled(bool checked)` signal. We forward the `checked` parameter
 /// into the Mosaic emit call so the host sees the new state, matching
 /// the kernel-canonical `onToggle(checked: bool)` payload.
-fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1202,7 +1248,7 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize) -> Result<String, Pip
 /// reserved for UI29-2.1's `RadioGroup` userland component; v1
 /// preserves the `group:` prop as a `// group: ...` comment, identical
 /// to the SwiftUI backend's choice, so the metadata stays visible.
-fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_radio_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1303,7 +1349,7 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
 /// | `target: new-tab`   | `onLinkActivated: Qt.openUrlExternally(link)` (always external — Qt has no in-window tab concept; new-tab and same map to the same external-browser call) |
 /// | `external: false`   | `onLinkActivated: x()` — dispatches the emit instead of opening, letting the host route in-app |
 /// | `onActivate: emit`  | dispatched on link activation                             |
-fn emit_host_link_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_link_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1388,7 +1434,7 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipelin
 ///
 /// `HoverHandler` (QtQuick 2.12+) gives the hover state without
 /// needing a `MouseArea` (which would intercept clicks on the child).
-fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1403,7 +1449,7 @@ fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipe
 
     // Walk children (the wrapped element) through the standard children
     // walker so nested kernel primitives lower normally.
-    out.push_str(&emit_qml_children(&node.children, depth + 1, false)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 1, false, emits)?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -1432,6 +1478,7 @@ fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipe
 fn emit_host_number_input_qml(
     node: &LayoutNode,
     depth: usize,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
@@ -1611,7 +1658,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// `part_name` on the `HostTable` itself is *currently* not consumed —
 /// styling integration for table parts is a follow-up. Tests assert
 /// that its presence does not break emission.
-fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1675,7 +1722,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
     for child in &node.children {
         match child.tag.as_str() {
             "HostTableHead" => {
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true, emits)?;
                 // Divider after the head: a 1px Rectangle.
                 writeln!(out, "{inner_pad}Rectangle {{").unwrap();
                 writeln!(out, "{inner_pad}    Layout.fillWidth: true").unwrap();
@@ -1684,7 +1731,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
                 writeln!(out, "{inner_pad}}}").unwrap();
             }
             "HostTableBody" => {
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, emits)?;
             }
             "HostTableFoot" => {
                 // Foot is preceded by a divider so it visually separates
@@ -1694,7 +1741,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
                 writeln!(out, "{inner_pad}    height: 1").unwrap();
                 writeln!(out, "{inner_pad}    color: \"#888\"").unwrap();
                 writeln!(out, "{inner_pad}}}").unwrap();
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, emits)?;
             }
             "HostTableColGroup" => {
                 // No QML analog. Emit a self-documenting comment so the
@@ -1705,7 +1752,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize) -> Result<String, Pipeli
                 // Anything else inside `HostTable` is walked as a normal
                 // layout child. This preserves the door for future
                 // additions (a `For` row, a stray `Text` caption, etc.).
-                out.push_str(&emit_qml_tree(child, depth + 1)?);
+                out.push_str(&emit_qml_tree(child, depth + 1, emits)?);
             }
         }
     }
@@ -1731,6 +1778,7 @@ fn emit_table_section_rows(
     section: &LayoutNode,
     depth: usize,
     bold: bool,
+    emits: &[EmitDecl],
 ) -> Result<(), PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let cell_pad = "    ".repeat(depth + 1);
@@ -1740,7 +1788,7 @@ fn emit_table_section_rows(
             // Non-Row child inside a section — walk it normally and let
             // the general emitter handle it. The grammar should prevent
             // this in real input, but be permissive on the output side.
-            out.push_str(&emit_qml_tree(row, depth)?);
+            out.push_str(&emit_qml_tree(row, depth, emits)?);
             continue;
         }
 
@@ -1759,7 +1807,7 @@ fn emit_table_section_rows(
                 // Non-Text cell: recurse through the general walker. Bold
                 // doesn't propagate here — only `Text` cells get the
                 // header treatment in this first cut.
-                out.push_str(&emit_qml_tree(cell, depth + 1)?);
+                out.push_str(&emit_qml_tree(cell, depth + 1, emits)?);
             }
         }
         writeln!(out, "{pad}}}").unwrap();
@@ -1818,7 +1866,7 @@ fn emit_table_section_rows(
 /// declarations lower `list<T>` to QML `var`, which is exactly that.
 /// We therefore make no attempt to specialise the delegate's
 /// `property var <as>` to a typed property — `var` is the right shape.
-fn emit_for_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_for_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let delegate_pad = "    ".repeat(depth + 1);
     let prop_pad = "    ".repeat(depth + 2);
@@ -1844,7 +1892,7 @@ fn emit_for_qml(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitE
     // Children of the `For` go inside the delegate Item. We use the
     // shared children walker so nested `If`/`Else` and `For` inside the
     // loop body work without special-casing.
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, emits)?);
 
     writeln!(out, "{delegate_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -1894,6 +1942,7 @@ fn emit_if_qml(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     depth: usize,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
@@ -1907,7 +1956,7 @@ fn emit_if_qml(
     writeln!(out, "{pad}Loader {{").unwrap();
     writeln!(out, "{inner_pad}active: {cond_expr}").unwrap();
     writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-    out.push_str(&emit_branch_body(&if_node.children, depth + 2)?);
+    out.push_str(&emit_branch_body(&if_node.children, depth + 2, emits)?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
 
@@ -1916,7 +1965,7 @@ fn emit_if_qml(
         writeln!(out, "{pad}Loader {{").unwrap();
         writeln!(out, "{inner_pad}active: {neg_cond}").unwrap();
         writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-        out.push_str(&emit_branch_body(&else_n.children, depth + 2)?);
+        out.push_str(&emit_branch_body(&else_n.children, depth + 2, emits)?);
         writeln!(out, "{inner_pad}}}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
     }
@@ -1940,15 +1989,16 @@ fn emit_if_qml(
 fn emit_branch_body(
     children: &[LayoutNode],
     depth: usize,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match children.len() {
         0 => Ok(format!("{pad}Item {{ }}\n")),
-        1 => emit_qml_tree(&children[0], depth),
+        1 => emit_qml_tree(&children[0], depth, emits),
         _ => {
             let mut out = String::new();
             writeln!(out, "{pad}Item {{").unwrap();
-            out.push_str(&emit_qml_children(children, depth + 1, false)?);
+            out.push_str(&emit_qml_children(children, depth + 1, false, emits)?);
             writeln!(out, "{pad}}}").unwrap();
             Ok(out)
         }
@@ -2989,15 +3039,17 @@ mod tests {
         assert!(result.output.contains("readOnly: locked"), "missing readOnly binding in:\n{}", result.output);
     }
 
-    // -------- Test 20: HostInput with onCommit emits onAccepted --------
+    // -------- Test 20a: HostInput onCommit (parameterless signal) --------
 
-    /// `onCommit: emit: onSubmit` lowers to `onAccepted: submit(text)`
-    /// — QML's `TextInput.onAccepted` fires on Enter, matching the
-    /// UI25 §10 semantics of `onCommit`. The signal call passes the
-    /// current `text` value (Qt's `TextInput.text` is in scope inside
-    /// the signal handler).
+    /// `onCommit: emit: onSubmit` where `onSubmit` is declared
+    /// parameterless lowers to `onAccepted: submit()` — QML signals
+    /// are arity-strict, so a parameterless signal must be invoked
+    /// with no args.  This is the shape used by the VisiCalc
+    /// `FormulaBar`'s `onCommit ;` declaration; the prior version
+    /// of the emitter unconditionally passed `(text)` and produced
+    /// "too many arguments" at runtime.
     #[test]
-    fn host_input_on_commit_emits_on_accepted() {
+    fn host_input_on_commit_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onSubmit", vec![])]);
         let l = LayoutDef {
             component_name: "X".to_string(),
@@ -3013,8 +3065,87 @@ mod tests {
         };
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
+            result.output.contains("onAccepted: submit()"),
+            "missing parameterless onAccepted in:\n{}",
+            result.output
+        );
+        assert!(
+            !result.output.contains("onAccepted: submit(text)"),
+            "should NOT pass text to a zero-arity signal:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 20b: HostInput onCommit (one-param signal) --------
+
+    /// When the signal declares one parameter
+    /// (e.g. `emit onSubmit ( value : text )`), the codegen passes
+    /// `text` — QML's `TextInput.text` is in scope inside the
+    /// signal handler.  Mirrors the React backend's
+    /// `(e) => emit({value: e.target.value})` pattern.
+    #[test]
+    fn host_input_on_commit_one_param_passes_text() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onSubmit",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onCommit".to_string(),
+                    value: LayoutPropValue::EmitRef("onSubmit".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
             result.output.contains("onAccepted: submit(text)"),
-            "missing onAccepted signal call in:\n{}",
+            "missing onAccepted: submit(text) in:\n{}",
+            result.output
+        );
+    }
+
+    // -------- Test 20c: HostInput onChange (one-param signal) --------
+
+    /// Matches the VisiCalc `FormulaBar` shape:
+    /// `emit onFormulaChange ( value : text ) ;` plus
+    /// `HostInput { onChange: emit: onFormulaChange }`.  Must lower
+    /// to `onTextChanged: formulaChange(text)` — invoking with no
+    /// args would error "Insufficient arguments" at runtime.
+    #[test]
+    fn host_input_on_change_one_param_passes_text() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onFormulaChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onFormulaChange".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("onTextChanged: formulaChange(text)"),
+            "missing onTextChanged: formulaChange(text) in:\n{}",
             result.output
         );
     }
