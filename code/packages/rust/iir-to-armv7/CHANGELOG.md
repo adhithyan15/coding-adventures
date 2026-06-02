@@ -3,6 +3,66 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] — 2026-06-02 (A3++.5 — `add`/`sub` on the data-processing-register family)
+
+### Added — 3-register ALU
+
+Extends v0.3.0 with two ALU ops on the data-processing-register
+encoding family.  Unlike the 8008's `ADD r` (accumulator-anchored —
+`A = A + r`), ARMv7's `ADD Rd, Rn, Rm` is a true 3-register
+operation: `Rd = Rn + Rm` in a single instruction with no staging
+MOVs.  Same shape as RV32I's `add rd, rs1, rs2`.
+
+| IIR op | A32 lowering |
+|--------|--------------|
+| `add dest, a, b` | `ADD Rd, Rn, Rm` (`0xE080_0000 \| (Rn << 16) \| (Rd << 12) \| Rm`) |
+| `sub dest, a, b` | `SUB Rd, Rn, Rm` (`0xE040_0000 \| ...`) |
+
+### New constants
+
+* `pub const ADD_REG_BASE: u32 = 0xE080_0000;` — `ADD r0, r0, r0`
+  base (cond=AL, opcode=0100, S=0, no shift).
+* `pub const SUB_REG_BASE: u32 = 0xE040_0000;` — same shape, opcode
+  `0010` (SUB).
+
+The opcode field (bits 24..21) is the only differing nibble between
+ADD and SUB.  Both fit inside the 7-bit `cond | 000 | opcode | S`
+prefix.
+
+### New encoder helpers
+
+* `encode_add_reg(rd: u8, rn: u8, rm: u8) -> u32`
+* `encode_sub_reg(rd: u8, rn: u8, rm: u8) -> u32`
+
+Both `debug_assert!` their three 4-bit register selectors.
+
+### Tests added (27 total, was 21)
+
+* `add_reg_base_pinned_to_0xe0800000` / `sub_reg_base_pinned_to_0xe0400000`.
+* `add_three_consts_emits_single_instruction_no_staging` — pinned
+  5-word sequence `0xE3A0_0003 0xE3A0_1004 0xE080_2001 0xE1A0_0002
+  0xE12F_FF1E` (MOV r0,#3 / MOV r1,#4 / ADD r2,r0,r1 / MOV r0,r2 /
+  BX LR).
+* `sub_three_consts_emits_sub_instruction_with_correct_opcode_field`
+  — same shape, `SUB r2, r0, r1 = 0xE040_2001`.
+* `add_with_same_register_uses_it_as_both_rn_and_rm` — `add r v v`
+  case: `ADD r1, r0, r0 = 0xE080_1000`.
+* `add_then_ret_into_non_r0_register_emits_staging_mov` — regression
+  that the v0.3.0 ret-staging logic still fires for ALU dest
+  registers.
+
+### What is NOT in v0.4.0 (deferred to A3++.5.5 / A3++.6 / A3+++)
+
+* Bitwise ops `and`/`or`/`xor` (opcodes `0000`, `1100`, `0001` in
+  the same data-processing-register family) — straightforward
+  extension once the test patterns are in place.
+* Wider arithmetic (`mul`/`mla` on the multiply family).
+* Comparisons + conditional branches via the cond-field every A32
+  instruction carries.
+* Function calls via `bl` with PC-relative offsets + stack
+  spilling.
+* `lang-aot --emit=armv7` wiring — A3+++ (v0.5.0).
+
 ## [0.3.0] — 2026-06-02 (A3++ — linear register allocator + `mov` + ret-value staging)
 
 ### Added — linear register allocator over r0..r12

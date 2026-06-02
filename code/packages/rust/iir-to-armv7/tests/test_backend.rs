@@ -6,7 +6,8 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
-    IIRArmv7Config, IIRArmv7Error, BKPT, BX_LR, MOV_IMM_R0_BASE, MOV_REG_BASE,
+    IIRArmv7Config, IIRArmv7Error,
+    ADD_REG_BASE, BKPT, BX_LR, MOV_IMM_R0_BASE, MOV_REG_BASE, SUB_REG_BASE,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -355,4 +356,138 @@ fn errors_for_new_variants_display_without_panic() {
     let _ = format!("{}", IIRArmv7Error::OutOfRegisters {
         function: "greedy".into(), name: "v13".into(),
     });
+}
+
+// ===========================================================================
+// 7. A3++.5 (v0.4.0) — data-processing-register ALU (ADD, SUB)
+// ===========================================================================
+//
+// Unlike the 8008's `ADD r` (accumulator-anchored — `A = A + r`),
+// ARMv7's `ADD Rd, Rn, Rm` is a 3-register operation: any pair of
+// source registers can produce any destination register in a single
+// instruction.  No staging MOVs.  Same shape as RV32I's `add rd, rs1,
+// rs2`.
+
+#[test]
+fn add_reg_base_pinned_to_0xe0800000() {
+    // ADD r0, r0, r0 (no shift, S=0) = 0xE0800000.
+    assert_eq!(ADD_REG_BASE, 0xE080_0000,
+        "ADD Rd, Rn, Rm base should be 0xE0800000; got 0x{:08x}", ADD_REG_BASE);
+}
+
+#[test]
+fn sub_reg_base_pinned_to_0xe0400000() {
+    // SUB r0, r0, r0 (no shift, S=0) = 0xE0400000.
+    assert_eq!(SUB_REG_BASE, 0xE040_0000,
+        "SUB Rd, Rn, Rm base should be 0xE0400000; got 0x{:08x}", SUB_REG_BASE);
+}
+
+#[test]
+fn add_three_consts_emits_single_instruction_no_staging() {
+    // const v=3; const w=4; add r v w; ret r
+    //
+    // Allocator: v→r0, w→r1, r→r2.
+    //   MOV r0, #3       = 0xE3A0_0003
+    //   MOV r1, #4       = 0xE3A0_1004
+    //   ADD r2, r0, r1   = 0xE080_0000 | (0<<16) | (2<<12) | 1
+    //                     = 0xE080_2001    ← Rn=0, Rd=2, Rm=1
+    //   MOV r0, r2       = 0xE1A0_0002    ← stage r into r0 for ret
+    //   BX LR            = 0xE12F_FF1E
+    let f = IIRFunction::new("add3plus4", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(3)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(4)], "u8"),
+        IIRInstr::new("add", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0003,    // MOV r0, #3
+        0xE3A0_1004,    // MOV r1, #4
+        0xE080_2001,    // ADD r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "add 3+4 expected; got: {words:08x?}");
+}
+
+#[test]
+fn sub_three_consts_emits_sub_instruction_with_correct_opcode_field() {
+    // const v=10; const w=4; sub r v w; ret r
+    //   SUB r2, r0, r1 = 0xE040_0000 | (0<<16) | (2<<12) | 1 = 0xE040_2001
+    let f = IIRFunction::new("ten_minus_four", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(4)], "u8"),
+        IIRInstr::new("sub", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_000A,    // MOV r0, #10
+        0xE3A0_1004,    // MOV r1, #4
+        0xE040_2001,    // SUB r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "sub 10-4 expected; got: {words:08x?}");
+}
+
+/// `add r v v` — same register used as both Rn and Rm.  The 8008
+/// equivalent (`add r v v` where v is already in A) skips the
+/// leading staging MOV; ARMv7 simply uses the same register for
+/// both source slots in the single ADD instruction.
+#[test]
+fn add_with_same_register_uses_it_as_both_rn_and_rm() {
+    // const v=5; add r v v; ret r
+    //
+    // Allocator: v→r0, r→r1.
+    //   MOV r0, #5       = 0xE3A0_0005
+    //   ADD r1, r0, r0   = 0xE080_0000 | (0<<16) | (1<<12) | 0 = 0xE080_1000
+    //   MOV r0, r1       = 0xE1A0_0001
+    //   BX LR
+    let f = IIRFunction::new("double", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("add", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0005,    // MOV r0, #5
+        0xE080_1000,    // ADD r1, r0, r0
+        0xE1A0_0001,    // MOV r0, r1
+        BX_LR,
+    ], "self-add expected; got: {words:08x?}");
+}
+
+/// If the destination register matches the AAPCS return register r0,
+/// the `ret r` stage-MOV is elided (just like the v0.2.0
+/// `ret_of_first_const_omits_the_redundant_mov` regression).
+///
+/// We engineer this by burning r0 with the first const, then
+/// re-using r0... but actually under the linear allocator the dest
+/// will be the *next* slot, not r0.  To pin "dest_reg is r0" via
+/// this slice we'd need register coalescing.  For now this test is
+/// a placeholder that confirms the simple case works.
+#[test]
+fn add_then_ret_into_non_r0_register_emits_staging_mov() {
+    // Regression for: the v0.3.0 ret-staging logic still fires for
+    // ALU dest registers.
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(2)], "u8"),
+        IIRInstr::new("add", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    // 5 words: 2 MVI + 1 ADD + 1 stage MOV + BX LR.
+    assert_eq!(words.len(), 5);
+    // The 4th word (index 3) is the stage MOV r0, r2 = 0xE1A0_0002.
+    assert_eq!(words[3], 0xE1A0_0002,
+        "expected stage MOV r0, r2 at index 3; got 0x{:08x}", words[3]);
+    assert_eq!(words[4], BX_LR);
 }
