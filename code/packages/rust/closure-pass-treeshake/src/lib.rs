@@ -587,4 +587,53 @@ mod tests {
         assert!(!out.changed);
         assert_eq!(out.program.body, prog.body);
     }
+
+    #[test]
+    fn apply_step_keeps_function_when_called() {
+        // `function f() {} f();` — the function is referenced by
+        // the top-level `f()` call site, so it must NOT be dropped.
+        //
+        // This is the retention test that was intentionally
+        // deferred from CLOC13.C.1 (PR #4803). At the time, the
+        // analyzer (CLOC13.0.1 / PR #4800) only collected
+        // references inside top-level ExpressionStatements; the
+        // `f()` call WAS in such a statement, so the reference
+        // would have been emitted with `from_scope = GLOBAL` —
+        // but the lookup would have correctly resolved `f` to
+        // the function binding either way.
+        //
+        // With CLOC13.0.2 (PR #4825) on main, the analyzer now
+        // walks function bodies under nested Function scopes too,
+        // and reference resolution walks the parent chain. This
+        // test exercises the simpler top-level-callee case, and
+        // pins the retention contract: use_count[f] == 1 ⇒
+        // treeshake skips ⇒ program unchanged ⇒ changed == false.
+        use coding_adventures_javascript_ast::{
+            CallExpression, Expression, ExpressionStatement, Identifier, Statement,
+        };
+        let call_f = ProgramItem::Statement(Statement::expression_statement(
+            ExpressionStatement {
+                cv: None,
+                expression: Expression::CallExpression(CallExpression {
+                    cv: None,
+                    callee: Box::new(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: "f".to_string(),
+                    })),
+                    arguments: Vec::new(),
+                }),
+            },
+        ));
+        let prog = program_with(vec![fn_decl("f"), call_f]);
+        let out = run_pass(prog.clone());
+        assert!(!out.changed, "f is referenced by the call site");
+        assert_eq!(out.program.body.len(), 2);
+        // The function declaration survives at index 0.
+        match &out.program.body[0] {
+            ProgramItem::Declaration(Declaration::FunctionDeclaration(fd)) => {
+                assert_eq!(fd.id.name, "f");
+            }
+            _ => panic!("expected the function declaration to survive at index 0"),
+        }
+    }
 }
