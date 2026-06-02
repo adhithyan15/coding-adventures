@@ -485,6 +485,24 @@ fn level_children_noun(l: DecompLevel) -> &'static str {
     }
 }
 
+/// ADJ34 — fallback kind synthesized when the model returns
+/// `nodes: []` for a parent. Mirrors the leftmost (most-generic)
+/// allowed kind at each level:
+///   Doc → Sentence : default to `Sentence` covering the full text
+///   Sentence → Phrase : default to `Phrase`
+///   Phrase → Claim : default to `Fact` (matches the CLAIM_PROMPT's
+///                     own "if unsure, prefer is_fact: true" guidance)
+///   Fact → TypedComponent : default to `Entity` (a named-thing
+///                     catch-all when no typed-component is identifiable)
+fn fallback_kind_for_level(l: DecompLevel) -> NodeKind {
+    match l {
+        DecompLevel::DocumentToSentence => NodeKind::Sentence,
+        DecompLevel::SentenceToPhrase => NodeKind::Phrase,
+        DecompLevel::PhraseToClaim => NodeKind::Fact,
+        DecompLevel::FactToTypedComponent => NodeKind::Entity,
+    }
+}
+
 fn allowed_kinds_for_level(l: DecompLevel) -> &'static [NodeKind] {
     match l {
         DecompLevel::DocumentToSentence => &[NodeKind::Sentence, NodeKind::Discarded][..],
@@ -727,6 +745,47 @@ fn splice_children(
         cursor = abs_end_in_parent;
         accepted_children.push((node.id.clone(), node.kind));
         ir.nodes.push(node);
+    }
+    // ADJ34 — NoChildrenAtLevel deterministic fallback. When the
+    // model returns `nodes: []` (or returns children that all fail
+    // to match parent bytes), `accepted_children` is empty and the
+    // coverage check would fire `NoChildrenAtLevel`. ADJ33's bench
+    // showed this is 55% of all residual gaps at the foundation
+    // bench. Path B from ADJ33: synthesize a single fallback child
+    // covering the full parent text with `term: {atom: "unknown"}`,
+    // and record the synthesis in the node's metadata so the audit
+    // trail is honest about which nodes were model-derived vs.
+    // framework defaults.
+    if accepted_children.is_empty() && !parent_bytes.is_empty() {
+        let fallback_kind = fallback_kind_for_level(level);
+        let fb_id = id_state.next_node_id(id_prefix);
+        let mut fb = IRNode {
+            id: fb_id.clone(),
+            kind: fallback_kind,
+            term: atom("unknown"),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![Span::new(
+                ir.document_id.clone(),
+                parent_start_in_doc,
+                parent_end_in_doc,
+            )],
+            confidence: 0.5, // explicitly low — this is a framework default, not a model claim
+            discard_reason: None,
+            metadata: HashMap::new(),
+        };
+        fb.metadata.insert(
+            "adj.synthesized".to_string(),
+            "no_children_fallback".to_string(),
+        );
+        fb.metadata.insert(
+            "adj.synthesized_at_level".to_string(),
+            format!("{:?}", level),
+        );
+        let fb_corr = correlation_id_for_node(&fb.id);
+        set_node_correlation_id(&mut fb, fb_corr);
+        accepted_children.push((fb.id.clone(), fb.kind));
+        ir.nodes.push(fb);
     }
     for (child_id, _kind) in accepted_children {
         let edge_id = id_state.next_edge_id();
