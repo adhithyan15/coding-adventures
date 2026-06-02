@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `transient_with_digital_event_streams` for a SPICE-side mixed-signal
+  transient bridge from named digital input streams to sampled output streams.
 - Add `digital_event_streams_to_voltage_sources` for converting named
   mixed-signal event streams into finite-edge PWL voltage sources.
 - Add `sample_transient_probes_as_digital_event_streams` for collecting
