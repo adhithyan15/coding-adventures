@@ -1615,6 +1615,7 @@ pub struct BrowserForm {
     pub datalists: Vec<BrowserFormDatalist>,
     pub selects: Vec<BrowserFormSelect>,
     pub outputs: Vec<BrowserFormOutput>,
+    pub measurements: Vec<BrowserFormMeasurement>,
     pub successful_controls: Vec<BrowserFormSuccessfulControl>,
     pub validation_controls: Vec<BrowserFormValidationControl>,
     pub buttons: Vec<BrowserFormButton>,
@@ -1697,6 +1698,23 @@ pub struct BrowserFormOutput {
     pub disabled: bool,
     pub will_validate: bool,
     pub validation_barred_reason: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormMeasurement {
+    pub id: Option<String>,
+    pub measurement_type: String,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub value: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
+    pub indeterminate: bool,
     pub text: String,
 }
 
@@ -11498,6 +11516,10 @@ fn is_browser_form_control_element(name: &str) -> bool {
     matches!(name, "button" | "input" | "output" | "select" | "textarea")
 }
 
+fn is_browser_form_measurement_element(name: &str) -> bool {
+    matches!(name, "meter" | "progress")
+}
+
 fn is_browser_labelable_element(name: &str) -> bool {
     matches!(
         name,
@@ -12825,6 +12847,74 @@ fn collect_form_fieldsets_for_form(
     fieldsets
 }
 
+fn collect_form_measurements_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> Vec<BrowserFormMeasurement> {
+    let mut measurements = Vec::new();
+    collect_form_measurements_for_form_into(
+        body_root,
+        &mut measurements,
+        labels,
+        id_texts,
+        target_form as *const Element,
+        None,
+        None,
+    );
+    measurements
+}
+
+fn collect_form_measurements_for_form_into(
+    nodes: &[Node],
+    measurements: &mut Vec<BrowserFormMeasurement>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_form: *const Element,
+    current_form: Option<*const Element>,
+    current_label_text: Option<&str>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+        let element_label_text = (element.name == "label")
+            .then(|| visible_text_for_nodes(&element.children))
+            .filter(|text| !text.is_empty());
+        let child_label_text = element_label_text.as_deref().or(current_label_text);
+
+        if is_browser_form_measurement_element(&element.name)
+            && current_form.is_some_and(|form| form == target_form)
+        {
+            measurements.push(browser_form_measurement(
+                element,
+                labels,
+                id_texts,
+                current_label_text,
+            ));
+        }
+
+        for child in &element.children {
+            collect_form_measurements_for_form_into(
+                std::slice::from_ref(child),
+                measurements,
+                labels,
+                id_texts,
+                target_form,
+                element_form,
+                child_label_text,
+            );
+        }
+    }
+}
+
 fn collect_form_fieldsets_for_form_into(
     nodes: &[Node],
     fieldsets: &mut Vec<BrowserFormFieldset>,
@@ -12925,6 +13015,7 @@ fn browser_form(
     let datalists = browser_form_datalists(body_root, &controls);
     let selects = browser_form_selects(&controls);
     let outputs = browser_form_outputs(&controls);
+    let measurements = collect_form_measurements_for_form(body_root, element, labels, id_texts);
     let successful_controls = browser_form_successful_controls(&controls);
     let validation_controls = browser_form_validation_controls(&controls);
     let buttons = browser_form_buttons(
@@ -12992,6 +13083,7 @@ fn browser_form(
         datalists,
         selects,
         outputs,
+        measurements,
         successful_controls,
         validation_controls,
         buttons,
@@ -13357,6 +13449,31 @@ fn browser_output_for_controls<'a>(
                 .find(|control| control.id.as_deref() == Some(token.as_str()))
         })
         .collect()
+}
+
+fn browser_form_measurement(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    current_label_text: Option<&str>,
+) -> BrowserFormMeasurement {
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let value = browser_content_value(element);
+    BrowserFormMeasurement {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        measurement_type: element.name.clone(),
+        accessible_name: browser_accessible_name(element, &element.name, &control_labels, id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        labels: control_labels,
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        low: browser_meter_low(element),
+        high: browser_meter_high(element),
+        optimum: browser_meter_optimum(element),
+        indeterminate: element.name == "progress" && value.is_none(),
+        value,
+        text: visible_text_for_nodes(&element.children),
+    }
 }
 
 fn browser_form_selects(controls: &[BrowserFormControl]) -> Vec<BrowserFormSelect> {
@@ -15786,6 +15903,67 @@ mod tests {
             vec!["rust", "html", "Browser APIs"]
         );
         assert!(form.controls[2].datalist_options.is_empty());
+    }
+
+    #[test]
+    fn browser_form_measurement_descriptor_metadata_tracks_meter_progress_ranges_and_labels() {
+        let document = parse_html(
+            "<form id=telemetry>\
+             <label for=disk>Disk</label>\
+             <meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7 aria-describedby=disk-help>72%</meter>\
+             <p id=disk-help>Capacity used</p>\
+             <label for=upload>Upload</label>\
+             <progress id=upload value=30 max=100>30%</progress>\
+             <progress id=sync max=1 aria-label=Sync>Loading</progress>\
+             <input name=token value=ok>\
+             </form>\
+             <meter id=outside value=1>Outside</meter>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.id.as_deref(), Some("telemetry"));
+        assert_eq!(form.controls.len(), 1);
+        assert_eq!(form.controls[0].control_type, "text");
+
+        assert_eq!(form.measurements.len(), 3);
+        let disk = &form.measurements[0];
+        assert_eq!(disk.id.as_deref(), Some("disk"));
+        assert_eq!(disk.measurement_type, "meter");
+        assert_eq!(disk.labels, vec!["Disk"]);
+        assert_eq!(disk.accessible_name.as_deref(), Some("Disk"));
+        assert_eq!(
+            disk.accessible_description.as_deref(),
+            Some("Capacity used")
+        );
+        assert_eq!(disk.value.as_deref(), Some("0.72"));
+        assert_eq!(disk.min.as_deref(), Some("0"));
+        assert_eq!(disk.max.as_deref(), Some("1"));
+        assert_eq!(disk.low.as_deref(), Some("0.25"));
+        assert_eq!(disk.high.as_deref(), Some("0.9"));
+        assert_eq!(disk.optimum.as_deref(), Some("0.7"));
+        assert!(!disk.indeterminate);
+        assert_eq!(disk.text, "72%");
+
+        let upload = &form.measurements[1];
+        assert_eq!(upload.id.as_deref(), Some("upload"));
+        assert_eq!(upload.measurement_type, "progress");
+        assert_eq!(upload.labels, vec!["Upload"]);
+        assert_eq!(upload.accessible_name.as_deref(), Some("Upload"));
+        assert_eq!(upload.value.as_deref(), Some("30"));
+        assert_eq!(upload.max.as_deref(), Some("100"));
+        assert!(!upload.indeterminate);
+        assert_eq!(upload.text, "30%");
+
+        let sync = &form.measurements[2];
+        assert_eq!(sync.id.as_deref(), Some("sync"));
+        assert_eq!(sync.measurement_type, "progress");
+        assert_eq!(sync.accessible_name.as_deref(), Some("Sync"));
+        assert_eq!(sync.value, None);
+        assert_eq!(sync.max.as_deref(), Some("1"));
+        assert!(sync.indeterminate);
+        assert_eq!(sync.text, "Loading");
     }
 
     #[test]

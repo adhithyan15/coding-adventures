@@ -3,8 +3,8 @@ use coding_adventures_html_parser::{
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
     BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormOutput, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormOutput,
+    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
     BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
@@ -728,6 +728,8 @@ struct ExpectedForm {
     #[serde(default)]
     outputs: Vec<ExpectedFormOutput>,
     #[serde(default)]
+    measurements: Vec<ExpectedFormMeasurement>,
+    #[serde(default)]
     successful_controls: Vec<ExpectedFormSuccessfulControl>,
     #[serde(default)]
     validation_controls: Vec<ExpectedFormValidationControl>,
@@ -861,6 +863,34 @@ struct ExpectedFormOutput {
     will_validate: bool,
     #[serde(default)]
     validation_barred_reason: Option<String>,
+    text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormMeasurement {
+    #[serde(default)]
+    id: Option<String>,
+    measurement_type: String,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    low: Option<String>,
+    #[serde(default)]
+    high: Option<String>,
+    #[serde(default)]
+    optimum: Option<String>,
+    #[serde(default)]
+    indeterminate: bool,
     text: String,
 }
 
@@ -3052,6 +3082,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormOutput::into_browser_form_output)
                 .collect(),
+            measurements: self
+                .measurements
+                .into_iter()
+                .map(ExpectedFormMeasurement::into_browser_form_measurement)
+                .collect(),
             successful_controls: self
                 .successful_controls
                 .into_iter()
@@ -3176,6 +3211,26 @@ impl ExpectedFormOutput {
             disabled: self.disabled,
             will_validate: self.will_validate,
             validation_barred_reason: self.validation_barred_reason,
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormMeasurement {
+    fn into_browser_form_measurement(self) -> BrowserFormMeasurement {
+        BrowserFormMeasurement {
+            id: self.id,
+            measurement_type: self.measurement_type,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            value: self.value,
+            min: self.min,
+            max: self.max,
+            low: self.low,
+            high: self.high,
+            optimum: self.optimum,
+            indeterminate: self.indeterminate,
             text: self.text,
         }
     }
