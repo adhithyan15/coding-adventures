@@ -104,6 +104,9 @@
             "choice_controls": [
               { "control_type": "checkbox", "name": "in_stock", "value": "yes", "checked": true, "disabled": false, "successful": true, "submission_values": ["yes"], "will_validate": true, "group_name": "in_stock", "group_checked_values": ["yes"] }
             ],
+            "hidden_controls": [
+              { "name": "page", "value": "1", "disabled": false, "successful": true, "submission_values": ["1"], "validation_barred_reason": "input-type-hidden" }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
