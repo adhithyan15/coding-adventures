@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `DigitalEventStream` and `format_digital_event_stream_table` for stable
+  tab-separated named mixed-signal digital event stream snapshots.
 - Add `format_digital_event_table` for stable tab-separated mixed-signal
   digital event stream snapshots.
 - Add binary mixed-signal boundary helpers that convert digital event timelines

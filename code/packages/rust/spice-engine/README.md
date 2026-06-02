@@ -29,7 +29,7 @@ The initial slices implement:
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
 - Mixed-signal boundary helpers that map binary digital event timelines to
   finite-edge PWL voltage sources and sample transient probes back into
-  thresholded digital events.
+  thresholded digital events, including named event stream table output.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,
@@ -37,7 +37,7 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents,
-  sampled digital event streams,
+  sampled digital event streams and named digital event streams,
   DC operating-point temperature sweeps, cornered DC operating-point
   temperature sweeps, transient samples, adaptive transient samples, cornered
   transient samples, cornered adaptive transient samples, AC phasors, cornered DC
