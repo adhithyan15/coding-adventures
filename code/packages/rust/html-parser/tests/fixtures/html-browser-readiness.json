@@ -84,6 +84,15 @@
               { "control_type": "select", "name": "section", "submission_values": ["manuals"] },
               { "control_type": "textarea", "name": "notes", "submission_values": ["Line one Line two"] }
             ],
+            "validation_controls": [
+              { "control_type": "text", "name": "q", "will_validate": true },
+              { "control_type": "hidden", "name": "page", "validation_barred_reason": "input-type-hidden" },
+              { "control_type": "checkbox", "name": "in_stock", "will_validate": true },
+              { "control_type": "text", "name": "disabled", "validation_barred_reason": "disabled" },
+              { "control_type": "select", "name": "section", "will_validate": true },
+              { "control_type": "textarea", "name": "notes", "will_validate": true },
+              { "control_type": "submit", "name": "go", "will_validate": true }
+            ],
             "controls": [
               { "control_type": "text", "name": "q", "value": "rust html", "successful": true, "submission_values": ["rust html"], "disabled": false, "will_validate": true, "checked": false, "text": "", "options": [] },
               { "control_type": "hidden", "name": "page", "value": "1", "successful": true, "submission_values": ["1"], "disabled": false, "validation_barred_reason": "input-type-hidden", "checked": false, "text": "", "options": [] },
@@ -225,6 +234,18 @@
               { "id": "kind", "control_type": "select", "name": "kind", "submission_values": ["books"] },
               { "id": "upload", "control_type": "file", "name": "upload", "submission_values": [] },
               { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "submission_values": [""] }
+            ],
+            "validation_controls": [
+              { "id": "q", "control_type": "text", "name": "q", "will_validate": true, "required": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"] },
+              { "id": "count", "control_type": "number", "name": "count", "will_validate": true, "required": true, "validation_attributes": ["required", "min", "max", "step"] },
+              { "id": "notes", "control_type": "textarea", "name": "notes", "validation_attributes": ["readonly", "maxlength"], "validation_barred_reason": "readonly" },
+              { "id": "fast", "control_type": "checkbox", "name": "fast", "validation_barred_reason": "disabled" },
+              { "id": "kind", "control_type": "select", "name": "kind", "will_validate": true },
+              { "id": "upload", "control_type": "file", "name": "upload", "will_validate": true },
+              { "id": "go", "control_type": "submit", "will_validate": true },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "validation_barred_reason": "input-type-image" },
+              { "id": "total", "control_type": "output", "name": "total", "validation_barred_reason": "output" },
+              { "id": "external", "control_type": "text", "name": "outside", "form_owner": "search", "will_validate": true }
             ],
             "controls": [
               { "id": "q", "control_type": "text", "name": "q", "labels": ["Query"], "accessible_name": "Query", "accessible_description": "Query", "placeholder": "Search terms", "autocomplete": "section-primary shipping search", "autocomplete_tokens": ["section-primary", "shipping", "search"], "autocapitalize": "words", "enterkeyhint": "search", "dirname": "q.dir", "spellcheck": "false", "autocorrect": "off", "inputmode": "search", "pattern": "[A-Za-z ]+", "minlength": "2", "maxlength": "80", "size": "40", "list": "query-suggestions", "datalist_options": ["Rust", "HTML", "Browser APIs"], "value": null, "successful": true, "submission_values": [""], "autofocus": true, "disabled": false, "required": true, "will_validate": true, "validation_attributes": ["required", "pattern", "minlength", "maxlength"], "checked": false, "text": "", "options": [] },

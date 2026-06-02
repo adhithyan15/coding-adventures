@@ -655,6 +655,7 @@ members = [
     "iir-to-wasm",
     "iir-to-llvm",
     "iir-to-riscv",
+    "iir-to-intel8008",
     "aot-debug",
     "twig-to-beam",
     "twig-to-wasm",

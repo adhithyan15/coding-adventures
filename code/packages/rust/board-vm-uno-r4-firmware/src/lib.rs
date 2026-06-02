@@ -114,6 +114,12 @@ pub enum EjectedBootAction {
     Run,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedBootPlan {
+    pub action: EjectedBootAction,
+    pub summary: EjectedFirmwareProgramSummary,
+}
+
 impl From<ModuleError> for FirmwareSmokeError {
     fn from(value: ModuleError) -> Self {
         Self::Module(value)
@@ -169,8 +175,17 @@ pub fn validate_ejected_blink_program(board_max_stack: u8) -> Result<(), Firmwar
 pub fn ejected_boot_action(
     program: EjectedFirmwareProgram<'_>,
 ) -> Result<EjectedBootAction, FirmwareSmokeError> {
+    Ok(ejected_boot_plan(program)?.action)
+}
+
+pub fn ejected_boot_plan(
+    program: EjectedFirmwareProgram<'_>,
+) -> Result<EjectedBootPlan, FirmwareSmokeError> {
     parse_checked_ejected_program(program)?;
-    boot_action_for_policy(program.boot_policy)
+    Ok(EjectedBootPlan {
+        action: boot_action_for_policy(program.boot_policy)?,
+        summary: program.summary(),
+    })
 }
 
 pub fn run_ejected_boot_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
@@ -464,6 +479,28 @@ mod tests {
         assert_eq!(
             ejected_boot_action(EjectedFirmwareProgram::blink()).unwrap(),
             EjectedBootAction::Run
+        );
+    }
+
+    #[test]
+    fn ejected_blink_boot_plan_surfaces_checked_summary_and_action() {
+        assert_eq!(
+            ejected_boot_plan(EjectedFirmwareProgram::blink()).unwrap(),
+            EjectedBootPlan {
+                action: EjectedBootAction::Run,
+                summary: EjectedFirmwareProgram::blink().summary(),
+            }
+        );
+    }
+
+    #[test]
+    fn rejects_ejected_boot_plan_for_crc_mismatch() {
+        let mut program = EjectedFirmwareProgram::blink();
+        program.module_crc32 ^= 1;
+
+        assert_eq!(
+            ejected_boot_plan(program).unwrap_err(),
+            FirmwareSmokeError::ArtifactCrcMismatch
         );
     }
 

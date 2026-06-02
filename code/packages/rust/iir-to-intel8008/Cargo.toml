@@ -1,0 +1,20 @@
+[package]
+name = "iir-to-intel8008"
+version = "0.3.0"
+edition = "2021"
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.0 (A2++): adds a linear register allocator over A/B/C/D/E/H/L, multi-register `const` → MVI rrr,n, `mov dest,src` → MOV ddd,sss (family 01 ddd sss), and ret-value staging into A.  ALU + real RET via CALL/stack land in A2++.5."
+
+[lib]
+name = "iir_to_intel8008"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+# Pulled in for the simulator's symbolic mnemonic comments / opcode
+# constants — we mirror its naming so downstream consumers can decode
+# our output by feeding it back into the simulator.
+coding-adventures-intel8008-simulator = { path = "../intel8008-simulator" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"

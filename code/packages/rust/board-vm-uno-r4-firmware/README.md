@@ -60,6 +60,11 @@ generated constants. Host-side tests compare that firmware summary against the
 target-independent `board-vm-eject` artifact summary, so the board-specific view
 cannot drift from the Rust-owned eject contract.
 
+The ejected boot-plan helper validates the embedded artifact and returns the
+checked summary together with the board startup action, so firmware entrypoints
+do not need to interpret raw boot-policy constants separately from artifact
+metadata validation.
+
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.
 
