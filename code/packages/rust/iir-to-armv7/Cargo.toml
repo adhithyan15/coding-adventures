@@ -1,0 +1,16 @@
+[package]
+name = "iir-to-armv7"
+version = "0.1.0"
+edition = "2021"
+description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.1.0 (A3): crate skeleton that lowers any module to a single `BKPT #0xFFFF` (0xE12FFF7F) — the canonical halt sentinel that every ARM debugger and emulator recognises.  Real lowering (mov/add/sub/bl/cmp) lands in A3+ through A3++.  ARMv7 is the third architecture backend in the LANG VM matrix, sitting alongside RV32I (A1, clean 32-bit RISC) and Intel 8008 (A2, irregular 8-bit accumulator CISC).  ARMv7 occupies the unique middle ground of being a 32-bit RISC with condition-code prefixes on every instruction + a barrel-shifted second operand."
+
+[lib]
+name = "iir_to_armv7"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"
