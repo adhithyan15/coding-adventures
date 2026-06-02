@@ -40,11 +40,13 @@ fn main() -> ExitCode {
         None => { eprintln!("lang-aot: missing input file"); print_help(); return ExitCode::from(2); }
     };
     // Default output extension depends on emit mode:
-    //   * Native → strip extension (foo.bas → foo)
-    //   * LlvmIr → .ll (foo.bas → foo.ll), matching downstream tooling
+    //   * Native      → strip extension (foo.bas → foo)
+    //   * LlvmIr      → .ll  (foo.bas → foo.ll),  matching `llc` input convention
+    //   * Riscv32Bin  → .bin (foo.bas → foo.bin), the conventional flat ELF-less name
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
-        EmitMode::Native => input.with_extension(""),
-        EmitMode::LlvmIr => input.with_extension("ll"),
+        EmitMode::Native     => input.with_extension(""),
+        EmitMode::LlvmIr     => input.with_extension("ll"),
+        EmitMode::Riscv32Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -75,6 +77,10 @@ fn main() -> ExitCode {
 enum EmitMode {
     Native,
     LlvmIr,
+    /// Flat `.bin` of little-endian 32-bit RV32I words via `iir-to-riscv`.
+    /// Cross-platform (no host gating).  Downstream consumers: the
+    /// in-tree `riscv-simulator`, `qemu-riscv32`, or a flash loader.
+    Riscv32Bin,
 }
 
 struct CliArgs {
@@ -119,20 +125,12 @@ fn parse_args(args: &[String]) -> Result<CliArgs, String> {
             // `native` is included for explicitness even though it's the
             // default.
             s if s.starts_with("--emit=") => {
-                emit = match &s["--emit=".len()..] {
-                    "native" => EmitMode::Native,
-                    "llvm-ir" | "llvm" | "ll" => EmitMode::LlvmIr,
-                    other => return Err(format!("unknown --emit value {other:?}; expected `native` or `llvm-ir`")),
-                };
+                emit = parse_emit_value(&s["--emit=".len()..])?;
             }
             "--emit" => {
                 i += 1;
                 let v = args.get(i).ok_or_else(|| "--emit requires a value".to_string())?;
-                emit = match v.as_str() {
-                    "native" => EmitMode::Native,
-                    "llvm-ir" | "llvm" | "ll" => EmitMode::LlvmIr,
-                    other => return Err(format!("unknown --emit value {other:?}; expected `native` or `llvm-ir`")),
-                };
+                emit = parse_emit_value(v)?;
             }
             s if s.starts_with('-') => {
                 return Err(format!("unknown flag {s:?}"));
@@ -147,6 +145,22 @@ fn parse_args(args: &[String]) -> Result<CliArgs, String> {
         i += 1;
     }
     Ok(CliArgs { input, output, language, emit, help })
+}
+
+/// Parse the `<MODE>` argument of `--emit=<MODE>`.
+///
+/// Accepts a couple of friendly aliases per mode so users don't need to
+/// remember the canonical spelling.
+fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
+    match v {
+        "native"                      => Ok(EmitMode::Native),
+        "llvm-ir" | "llvm" | "ll"     => Ok(EmitMode::LlvmIr),
+        "riscv32" | "rv32" | "bin"    => Ok(EmitMode::Riscv32Bin),
+        other => Err(format!(
+            "unknown --emit value {other:?}; expected one of: \
+             native | llvm-ir | riscv32"
+        )),
+    }
 }
 
 fn print_help() {
@@ -167,10 +181,15 @@ Options:
   -o, --output <PATH>      Output path. Default: input without extension
                            (native) or with .ll extension (--emit=llvm-ir).
   -l, --lang <LANG>        Override language detection (twig, nib, bf, basic, oct).
-      --emit=<MODE>        What to emit. `native` (default) → host executable;
-                           `llvm-ir` (alias `llvm`, `ll`) → textual LLVM IR (.ll)
-                           via iir-to-llvm, cross-platform.  Downstream `opt`/`llc`
-                           are the caller's responsibility.
+      --emit=<MODE>        What to emit:
+                             native           → host executable (default)
+                             llvm-ir | llvm | ll
+                                              → textual LLVM IR (.ll) via iir-to-llvm;
+                                                cross-platform; pipe to `llc` downstream
+                             riscv32 | rv32 | bin
+                                              → flat .bin of little-endian RV32I words
+                                                via iir-to-riscv; cross-platform; load
+                                                into riscv-simulator or qemu-riscv32
   -h, --help               Show this help.\
 ");
 }
@@ -186,6 +205,12 @@ fn dispatch(
     // doesn't depend on the linker or platform binary format.
     if emit == EmitMode::LlvmIr {
         return lang_aot::compile_file_to_llvm_ir(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // RV32I .bin emission is also cross-platform — just write the
+    // encoded words as little-endian bytes.  No linker, no host gating.
+    if emit == EmitMode::Riscv32Bin {
+        return lang_aot::compile_file_to_riscv32_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

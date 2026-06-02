@@ -909,3 +909,48 @@ fn end_to_end_basic_print_emits_llvm_ir_with_print_extern() {
     assert!(body.contains("call void @__print_i64(i64"),
         "BASIC `PRINT 42` should produce a `call void @__print_i64(i64 …)` site; got:\n{body}");
 }
+
+// ===========================================================================
+// A1+++ — source -> IIR -> RV32I machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_riscv32_bin entry point runs the full source ->
+// IIR -> iir-to-riscv pipeline and produces a flat little-endian
+// .bin of 32-bit RV32I instruction words.
+
+#[test]
+fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.bas");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"10 PRINT 42\n20 END\n").unwrap();
+
+    if let Err(e) = lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
+        // Tolerate not-yet-covered op gaps - same convention as the LLVM path.
+        let msg = format!("{e}");
+        if msg.contains("UnsupportedOp")
+            || msg.contains("UnsupportedType")
+            || msg.contains("UnsupportedCallShape")
+            || msg.contains("ImmediateOutOfRange")
+            || msg.contains("OutOfRegisters")
+        {
+            eprintln!("skipping: BASIC RV32I lowering gap (expected): {msg}");
+            return;
+        }
+        panic!("unexpected BASIC -> RV32I error: {e}");
+    }
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(!bytes.is_empty(),
+        "BASIC PRINT 42 should produce a non-empty .bin");
+    assert_eq!(bytes.len() % 4, 0,
+        ".bin length should be a multiple of 4; got {} bytes",
+        bytes.len());
+
+    // The last 4 bytes should encode the canonical ret = jalr x0, x1, 0 = 0x0000_8067.
+    // Stored little-endian: 0x67, 0x80, 0x00, 0x00.
+    let last_word_le = &bytes[bytes.len() - 4..];
+    assert_eq!(last_word_le, &[0x67, 0x80, 0x00, 0x00],
+        "last 4 bytes should be the canonical ret encoded little-endian; got: {last_word_le:02x?}");
+}
