@@ -1,0 +1,16 @@
+[package]
+name = "iir-to-intel4004"
+version = "0.1.0"
+edition = "2021"
+description = "IIR → Intel 4004 machine code backend — lowers IIRModule to a Vec<u8> of encoded 4-bit-data, 8-bit-instruction Intel 4004 opcodes.  v0.1.0 (A4): crate skeleton that lowers any module to a single `JUN 0x000` (0x40 0x00) infinite-loop halt sentinel — the canonical 4004-ROM halt idiom (the chip has no formal HLT instruction).  Real lowering (LDM/ADD/SUB/conditional jumps) lands in A4+ through A4++.  The 4004 (1971) is the world's first commercial microprocessor — the most constrained target in the LANG VM architecture-backend lane, primarily a Brainfuck fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A4."
+
+[lib]
+name = "iir_to_intel4004"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"
