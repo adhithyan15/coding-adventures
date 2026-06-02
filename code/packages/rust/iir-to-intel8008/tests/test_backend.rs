@@ -401,3 +401,114 @@ fn add_when_lhs_is_already_in_a_skips_the_staging_mov() {
         HLT,
     ], "double-of-A expected; got: {bytes:02x?}");
 }
+
+// ===========================================================================
+// 8. A2++.5.5 — bitwise accumulator-target ALU (AND, OR, XOR)
+// ===========================================================================
+//
+// Identical accumulator-anchored shape to add/sub.  Only the 3-bit `ooo`
+// selector changes:
+//
+//   AND = 0b100 → ANA r   first byte = 0xA0 | sss
+//   XOR = 0b101 → XRA r   first byte = 0xA8 | sss
+//   OR  = 0b110 → ORA r   first byte = 0xB0 | sss
+//
+// For each op below, the IIR sequence is `const v; const w; OP r v w; ret r`,
+// the allocator places v→A, w→B, r→C, and the emitted byte stream
+// follows the canonical:
+//
+//   MVI A, v_imm
+//   MVI B, w_imm
+//   OP  B            ← the only byte that varies between the three tests
+//   MOV C, A
+//   MOV A, C         (stage r into A for ret)
+//   HLT
+
+#[test]
+fn and_two_consts_emits_ana_b_after_mov() {
+    // ANA B = 10 100 000 = 0xA0
+    let f = IIRFunction::new("and_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x0F)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x33)], "u8"),
+        IIRInstr::new("and", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0F,    // MVI A, 0x0F
+        0x06,  0x33,    // MVI B, 0x33
+        0xA0,           // ANA B   (10 100 000)
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C
+        HLT,
+    ], "and 0x0F & 0x33 expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn or_two_consts_emits_ora_b_after_mov() {
+    // ORA B = 10 110 000 = 0xB0
+    let f = IIRFunction::new("or_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x0F)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0xF0)], "u8"),
+        IIRInstr::new("or", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0F,    // MVI A, 0x0F
+        0x06,  0xF0,    // MVI B, 0xF0
+        0xB0,           // ORA B   (10 110 000)
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C
+        HLT,
+    ], "or 0x0F | 0xF0 expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn xor_two_consts_emits_xra_b_after_mov() {
+    // XRA B = 10 101 000 = 0xA8
+    let f = IIRFunction::new("xor_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0xFF)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x55)], "u8"),
+        IIRInstr::new("xor", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0xFF,    // MVI A, 0xFF
+        0x06,  0x55,    // MVI B, 0x55
+        0xA8,           // XRA B   (10 101 000)
+        0x4F,           // MOV C, A
+        0x79,           // MOV A, C
+        HLT,
+    ], "xor 0xFF ^ 0x55 expected; got: {bytes:02x?}");
+}
+
+/// Sanity that the self-op skip-staging optimisation generalises to the
+/// bitwise ops too: `and r v v` with v→A produces `ANA A` (0xA7), no
+/// leading `MOV A, A`.
+#[test]
+fn and_when_lhs_is_already_in_a_skips_the_staging_mov() {
+    // ANA A = 10 100 111 = 0xA7
+    let f = IIRFunction::new("self_and", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0xAA)], "u8"),
+        IIRInstr::new("and", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0xAA,    // MVI A, 0xAA
+        0xA7,           // ANA A   (10 100 111 — sss=A=7)
+        0x47,           // MOV B, A
+        0x78,           // MOV A, B
+        HLT,
+    ], "self-AND expected; got: {bytes:02x?}");
+}

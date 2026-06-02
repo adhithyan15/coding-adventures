@@ -56,8 +56,9 @@ IIRModule
 | v0.1.0 (A2) | crate skeleton: any module → single `HLT` (`0x76`) | **merged** |
 | v0.2.0 (A2+) | `const` → `MVI A, n` + `ret`/`ret_void` → `HLT` (accumulator-only first slice) | **merged** |
 | v0.3.0 (A2++) | Linear register allocator over A/B/C/D/E/H/L + multi-register `const` + `mov` + ret-value staging | **merged** |
-| **v0.3.1 (A2++.5 first slice — this PR)** | `add`/`sub` ALU on the accumulator (family `10 ooo sss`) | this PR |
-| v0.3.2 (A2++.5.5) | rest of ALU (`cmp`, `and`, `or`, `xor`, `adc`, `sbb`) + real `RET` (`0x07`) via `CALL` + internal return stack | future |
+| v0.3.1 (A2++.5 first slice) | `add`/`sub` ALU on the accumulator (family `10 ooo sss`) | **merged** |
+| **v0.3.2 (A2++.5.5 first slice — this PR)** | bitwise ALU `and`/`or`/`xor` on the accumulator (same family, `ooo` ∈ {`100`, `110`, `101`}) | this PR |
+| v0.3.3 (A2++.5.5 second slice) | rest of ALU (`cmp`, `adc`, `sbb` — carry-flag-bearing ops) + real `RET` (`0x07`) via `CALL` + internal return stack | future |
 | v0.4.0 (A2+++) | Conditional + unconditional jumps with 14-bit address backpatching + `lang-aot --target=intel8008` | future |
 
 ## Public surface (v0.1.0)

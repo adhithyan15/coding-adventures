@@ -3,6 +3,79 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.2] — 2026-06-02 (A2++.5.5 first slice — bitwise ALU `and`/`or`/`xor`)
+
+### Added — bitwise accumulator-target ALU
+
+Extends v0.3.1 with three more accumulator-anchored ALU ops in family
+`10 ooo sss`.  Identical lowering shape to add/sub — only the `ooo`
+field changes:
+
+| IIR op | Intel 8008 mnemonic | `ooo` | First byte |
+|--------|---------------------|-------|------------|
+| `and dest, a, b` | `ANA b_reg` | `100` | `0xA0 \| sss` |
+| `xor dest, a, b` | `XRA b_reg` | `101` | `0xA8 \| sss` |
+| `or  dest, a, b` | `ORA b_reg` | `110` | `0xB0 \| sss` |
+
+The full sequence remains:
+
+```text
+if a_reg != A:    MOV A, a_reg
+                  ANA/ORA/XRA b_reg     ; result lands in A
+if dest_reg != A: MOV dest_reg, A
+```
+
+#### Code-gen shape (worked example)
+
+`r = v & w` with v→A, w→B, r→C lowers to:
+
+```
+MVI A, v_imm
+MVI B, w_imm
+ANA B            ; 0xA0
+MOV C, A         ; 0x4F
+```
+
+i.e. one byte of bitwise op plus the staging move (same as `add`/`sub`).
+
+#### Self-op idiom
+
+`and r v v` where `v` is already in `A` lowers to `ANA A` (`0xA7`,
+family `10 100 111`) — same as the self-add shape: no leading
+`MOV A, A`.
+
+#### New opcode constants
+
+* `const ALU_AND: u8 = 0b100;`
+* `const ALU_XOR: u8 = 0b101;`
+* `const ALU_OR:  u8 = 0b110;`
+
+The `encode_alu(ooo, sss)` helper from v0.3.1 carries them all — no
+new encoder code, just a wider dispatch in the lowering match arm.
+
+#### Tests added (24 total, was 20)
+
+* `and_two_consts_emits_ana_b_after_mov` — pinned full sequence with
+  `0xA0` (ANA B).
+* `or_two_consts_emits_ora_b_after_mov` — `0xB0` (ORA B).
+* `xor_two_consts_emits_xra_b_after_mov` — `0xA8` (XRA B).
+* `and_when_lhs_is_already_in_a_skips_the_staging_mov` — `0xA7`
+  (ANA A) for the self-AND idiom, generalising the self-add test.
+
+The `unsupported_op_is_rejected_with_function_name` test still probes
+`safepoint`, which remains outside the whitelist.
+
+### What is NOT in v0.3.2 (deferred to v0.3.3 / A2+++)
+
+* `cmp`, `adc`, `sbb` — same family, different `ooo` codes
+  (`cmp = 0b111`, `adc = 0b001`, `sbb = 0b011`).  `cmp` needs flag
+  observation wiring; `adc`/`sbb` need the carry flag plumbed from a
+  prior arithmetic op.  All three land together once the carry-flag
+  story is settled.
+* Real `RET` (`0x07`) via `CALL` + the internal return stack.
+* Conditional + unconditional jumps with 14-bit address backpatching.
+* `lang-aot --target=intel8008` wiring — A2+++.
+
 ## [0.3.1] — 2026-06-02 (A2++.5 first slice — `add`/`sub` on the accumulator)
 
 ### Added — accumulator-target ALU
