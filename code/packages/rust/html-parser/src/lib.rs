@@ -13010,12 +13010,17 @@ fn browser_form(
     let novalidate = element.attribute("novalidate").is_some();
     let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
     let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
-    let form_labels =
-        collect_form_labels_for_form(body_root, element, element.attribute("id"), &controls);
+    let measurements = collect_form_measurements_for_form(body_root, element, labels, id_texts);
+    let form_labels = collect_form_labels_for_form(
+        body_root,
+        element,
+        element.attribute("id"),
+        &controls,
+        &measurements,
+    );
     let datalists = browser_form_datalists(body_root, &controls);
     let selects = browser_form_selects(&controls);
     let outputs = browser_form_outputs(&controls);
-    let measurements = collect_form_measurements_for_form(body_root, element, labels, id_texts);
     let successful_controls = browser_form_successful_controls(&controls);
     let validation_controls = browser_form_validation_controls(&controls);
     let buttons = browser_form_buttons(
@@ -13102,6 +13107,7 @@ fn collect_form_labels_for_form(
     target_form: &Element,
     target_form_id: Option<&str>,
     controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
 ) -> Vec<BrowserFormLabel> {
     let mut labels = Vec::new();
     collect_form_labels_for_form_into(
@@ -13111,6 +13117,7 @@ fn collect_form_labels_for_form(
         target_form_id,
         None,
         controls,
+        measurements,
     );
     labels
 }
@@ -13122,6 +13129,7 @@ fn collect_form_labels_for_form_into(
     target_form_id: Option<&str>,
     current_form: Option<*const Element>,
     controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
 ) {
     for node in nodes {
         let Node::Element(element) = node else {
@@ -13135,9 +13143,14 @@ fn collect_form_labels_for_form_into(
         };
 
         if element.name == "label" {
-            if let Some(label) =
-                browser_form_label(element, target_form, target_form_id, element_form, controls)
-            {
+            if let Some(label) = browser_form_label(
+                element,
+                target_form,
+                target_form_id,
+                element_form,
+                controls,
+                measurements,
+            ) {
                 labels.push(label);
             }
         }
@@ -13149,6 +13162,7 @@ fn collect_form_labels_for_form_into(
             target_form_id,
             element_form,
             controls,
+            measurements,
         );
     }
 }
@@ -13159,6 +13173,7 @@ fn browser_form_label(
     target_form_id: Option<&str>,
     current_form: Option<*const Element>,
     controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
 ) -> Option<BrowserFormLabel> {
     let text = visible_text_for_nodes(&element.children);
     if text.is_empty() {
@@ -13166,16 +13181,30 @@ fn browser_form_label(
     }
 
     if let Some(for_control) = element.attribute("for") {
-        let control = controls
+        if let Some(control) = controls
             .iter()
-            .find(|control| control.id.as_deref() == Some(for_control))?;
+            .find(|control| control.id.as_deref() == Some(for_control))
+        {
+            return Some(BrowserFormLabel {
+                id: element.attribute("id").map(ToOwned::to_owned),
+                for_control: Some(for_control.to_string()),
+                text,
+                control_id: control.id.clone(),
+                control_name: control.name.clone(),
+                control_type: Some(control.control_type.clone()),
+                association: "explicit".to_string(),
+            });
+        }
+        let measurement = measurements
+            .iter()
+            .find(|measurement| measurement.id.as_deref() == Some(for_control))?;
         return Some(BrowserFormLabel {
             id: element.attribute("id").map(ToOwned::to_owned),
             for_control: Some(for_control.to_string()),
             text,
-            control_id: control.id.clone(),
-            control_name: control.name.clone(),
-            control_type: Some(control.control_type.clone()),
+            control_id: measurement.id.clone(),
+            control_name: None,
+            control_type: Some(measurement.measurement_type.clone()),
             association: "explicit".to_string(),
         });
     }
@@ -13189,7 +13218,7 @@ fn browser_form_label(
     ) {
         return None;
     }
-    let control_type = browser_content_control_type(control_element);
+    let control_type = browser_labelable_element_type(control_element);
     Some(BrowserFormLabel {
         id: element.attribute("id").map(ToOwned::to_owned),
         for_control: None,
@@ -13198,6 +13227,12 @@ fn browser_form_label(
         control_name: control_element.attribute("name").map(ToOwned::to_owned),
         control_type,
         association: "implicit".to_string(),
+    })
+}
+
+fn browser_labelable_element_type(element: &Element) -> Option<String> {
+    browser_content_control_type(element).or_else(|| {
+        is_browser_form_measurement_element(&element.name).then(|| element.name.clone())
     })
 }
 
@@ -15964,6 +15999,36 @@ mod tests {
         assert_eq!(sync.max.as_deref(), Some("1"));
         assert!(sync.indeterminate);
         assert_eq!(sync.text, "Loading");
+    }
+
+    #[test]
+    fn browser_form_label_descriptor_metadata_tracks_measurement_associations() {
+        let document = parse_html(
+            "<form id=telemetry>\
+             <label for=disk>Disk</label>\
+             <meter id=disk value=0.72>72%</meter>\
+             <label>Sync<progress id=sync max=1>Loading</progress></label>\
+             <input name=token value=ok>\
+             </form>\
+             <label for=outside>Outside</label><meter id=outside value=1>Outside</meter>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.labels.len(), 2);
+        assert_eq!(form.labels[0].for_control.as_deref(), Some("disk"));
+        assert_eq!(form.labels[0].text, "Disk");
+        assert_eq!(form.labels[0].control_id.as_deref(), Some("disk"));
+        assert_eq!(form.labels[0].control_name, None);
+        assert_eq!(form.labels[0].control_type.as_deref(), Some("meter"));
+        assert_eq!(form.labels[0].association, "explicit");
+        assert_eq!(form.labels[1].for_control, None);
+        assert_eq!(form.labels[1].text, "SyncLoading");
+        assert_eq!(form.labels[1].control_id.as_deref(), Some("sync"));
+        assert_eq!(form.labels[1].control_name, None);
+        assert_eq!(form.labels[1].control_type.as_deref(), Some("progress"));
+        assert_eq!(form.labels[1].association, "implicit");
     }
 
     #[test]

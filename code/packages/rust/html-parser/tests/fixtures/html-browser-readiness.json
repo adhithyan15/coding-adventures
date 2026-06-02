@@ -829,6 +829,10 @@
             "method": "get",
             "enctype": null,
             "target": null,
+            "labels": [
+              { "for_control": "disk", "text": "Disk", "control_id": "disk", "control_type": "meter", "association": "explicit" },
+              { "for_control": "upload", "text": "Upload", "control_id": "upload", "control_type": "progress", "association": "explicit" }
+            ],
             "measurements": [
               { "id": "disk", "measurement_type": "meter", "labels": ["Disk"], "accessible_name": "Disk", "accessible_description": "Capacity used", "value": "0.72", "min": "0", "max": "1", "low": "0.25", "high": "0.9", "optimum": "0.7", "text": "72%" },
               { "id": "upload", "measurement_type": "progress", "labels": ["Upload"], "accessible_name": "Upload", "value": "30", "max": "100", "text": "30%" },
