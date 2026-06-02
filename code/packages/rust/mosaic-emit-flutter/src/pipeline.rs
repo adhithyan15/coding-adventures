@@ -1218,31 +1218,27 @@ fn emit_host_button(node: &LayoutNode,
         "Text(\"\")".to_string()
     };
 
-    // onPressed callback. If `onTap` is bound dispatch; otherwise
-    // pass an empty callback so the button still renders enabled.
-    // `disabled: true` (compile-time keyword) overrides with `null`.
+    // onPressed callback.  `disabled: true` (compile-time keyword)
+    // overrides with `null`.  Otherwise dispatch the bound onTap
+    // event — now that `component` is threaded down (after the
+    // FormulaBar fix), we can finally produce a real
+    // `dispatch(<Component>Event<Case>())` call.  Buttons have no
+    // inherent payload, so we always dispatch the parameterless
+    // form; a future PR will look up the .mil's emit arity and
+    // dispatch a constructed payload if one was declared.
     let disabled_is_true = matches!(find_keyword_prop(node, "disabled"), Some("true"));
     let on_pressed_expr: String = if disabled_is_true {
         "null".to_string()
     } else if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        format!("() => dispatch({}Event{}())", "" /*component unknown here*/, case)
+        format!("() => dispatch({component}Event{case}())")
     } else {
         "() {}".to_string()
     };
 
-    // We don't have the component name in scope here; instead emit a
-    // `/* TODO: wire dispatch */` placeholder for the dispatch arm.
-    // The follow-up "thread component name down" PR will tighten this.
-    let on_pressed_for_output = if on_pressed_expr.contains("Event") {
-        "() {} /* TODO: dispatch */".to_string()
-    } else {
-        on_pressed_expr
-    };
-
     Ok(format!(
-        "{pad}ElevatedButton(onPressed: {on_pressed_for_output}, child: {label_expr})\n"
+        "{pad}ElevatedButton(onPressed: {on_pressed_expr}, child: {label_expr})\n"
     ))
 }
 
@@ -1275,8 +1271,21 @@ fn emit_host_checkbox(node: &LayoutNode,
         None
     };
 
+    // onToggle dispatch wiring.  Mirrors the HostInput onChange
+    // pattern: look up the `onToggle` emit ref, derive
+    // `<Component>Event<Case>(value: v)` where `v` is Flutter's
+    // Checkbox's new-bool payload.  If no `onToggle` binding is
+    // present, the callback is a no-op so the Checkbox still
+    // renders interactive.
+    let on_changed_body: String = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        format!("dispatch({component}Event{case}(value: v ?? false))")
+    } else {
+        "/* no onToggle bound */".to_string()
+    };
     let body = format!(
-        "Checkbox(value: {checked_expr}, onChanged: (v) {{ /* TODO: dispatch onToggle */ }})"
+        "Checkbox(value: {checked_expr}, onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
@@ -1332,8 +1341,18 @@ fn emit_host_radio(node: &LayoutNode,
         None
     };
 
+    // onSelect dispatch wiring.  Flutter's `Radio.onChanged(T?)`
+    // fires with the newly-selected value; we forward it as the
+    // `value` field of the dispatched event.
+    let on_changed_body: String = if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        format!("dispatch({component}Event{case}(value: v ?? \"\"))")
+    } else {
+        "/* no onSelect bound */".to_string()
+    };
     let body = format!(
-        "Radio<String>(value: {value_expr}, groupValue: {group_value_expr}, onChanged: (v) {{ /* TODO: dispatch onSelect */ }})"
+        "Radio<String>(value: {value_expr}, groupValue: {group_value_expr}, onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
@@ -1601,12 +1620,15 @@ fn emit_host_link(node: &LayoutNode, indent: usize, component: &str) -> Result<S
     // `host_link_with_comment_terminator_in_href_is_neutralised`.
     let href_in_comment = href_expr.replace("*/", "*\\u002f");
 
-    // onActivate dispatch (optional). Same `(value: href)` shape as
-    // SwiftUI/Qt — the host receives the resolved href in the event.
+    // onActivate dispatch (optional).  Real call now that
+    // `component` is threaded down: the host receives the resolved
+    // href in the dispatched event.  Sealed-class hierarchy at the
+    // top of the generated file already declares the
+    // `<Component>Event<Case>({required String href})` constructor.
     let on_activate_call: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onActivate") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        Some(format!("/* TODO: dispatch {case}(href: {href_in_comment}) */"))
+        Some(format!("dispatch({component}Event{case}(href: {href_expr}))"))
     } else {
         None
     };
@@ -1738,11 +1760,17 @@ fn emit_host_number_input(node: &LayoutNode,
     let disabled = matches!(find_keyword_prop(node, "disabled"), Some("true"));
 
     // onChange dispatch — fires on commit (Enter/blur), not keystroke.
+    // Real dispatch — `<Component>Event<Case>(value: parsed)` where
+    // `parsed` is `double.tryParse(v) ?? 0` so the host always
+    // receives a number even if the user typed gibberish.  The
+    // sealed-class hierarchy that emit_widget_class generates
+    // already declares the value-carrying constructor; this is the
+    // call-site that the old TODO blocked.
     let on_submitted_arg: Option<String> = if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
         Some(format!(
-            "onSubmitted: (v) {{ /* TODO: dispatch {case}(value: double.tryParse(v) ?? 0) */ }}"
+            "onSubmitted: (v) {{ dispatch({component}Event{case}(value: double.tryParse(v) ?? 0)); }}"
         ))
     } else {
         None
@@ -2691,9 +2719,12 @@ mod tests {
     }
 
     /// UI29-4 Flutter test 3 — `HostLink` with onActivate emits a
-    /// dispatch TODO inside the onTap closure.
+    /// real dispatch call inside the onTap closure.  v0.1.0 of this
+    /// emitter shipped a `/* TODO: ... */` placeholder; the
+    /// flutter-emit-other-hosts cycle replaces it with the real
+    /// `<Component>Event<Case>(href: ...)` call.
     #[test]
-    fn host_link_with_on_activate_emits_dispatch_todo() {
+    fn host_link_with_on_activate_emits_real_dispatch() {
         let m = component(
             "X",
             vec![],
@@ -2721,8 +2752,14 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("/* TODO: dispatch LinkActivated"),
-            "expected dispatch LinkActivated TODO, got:\n{}",
+            r.output.contains("dispatch(XEventLinkActivated(href:"),
+            "expected real dispatch call, got:\n{}",
+            r.output
+        );
+        // And no leftover TODO at the dispatch site.
+        assert!(
+            !r.output.contains("/* TODO: dispatch LinkActivated"),
+            "expected no TODO placeholder, got:\n{}",
             r.output
         );
     }
@@ -3000,9 +3037,16 @@ mod tests {
             out.contains("onSubmitted: (v) {"),
             "expected `onSubmitted:` (commit semantics), got:\n{out}"
         );
+        // After flutter-emit-other-hosts: the dispatch is real, not
+        // a TODO.  The event subclass is `<Component>Event<Case>`
+        // with the parsed `value` payload.
         assert!(
-            out.contains("dispatch ValueChange"),
-            "expected dispatch comment naming ValueChange event, got:\n{out}"
+            out.contains("dispatch(XEventValueChange(value: double.tryParse(v) ?? 0))"),
+            "expected real dispatch call, got:\n{out}"
+        );
+        assert!(
+            !out.contains("/* TODO: dispatch ValueChange"),
+            "expected no TODO placeholder, got:\n{out}"
         );
     }
 
