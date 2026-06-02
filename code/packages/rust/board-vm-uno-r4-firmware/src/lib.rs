@@ -5,7 +5,7 @@ use board_vm_ir::{
     RequiredCapabilitiesError, ValidateError, MODULE_VERSION,
 };
 use board_vm_protocol::{ProgramFormat, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
-use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
+use board_vm_runtime::{BoardHal, RunReport, RunStatus, Runtime, RuntimeError};
 
 pub mod arduino_usb_link;
 pub mod ejected_blink;
@@ -124,6 +124,38 @@ pub struct EjectedBootPlan {
 pub struct EjectedBootRun {
     pub boot_plan: EjectedBootPlan,
     pub report: Option<RunReport>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedBootRunSummary {
+    pub boot_plan: EjectedBootPlan,
+    pub run_status: Option<RunStatus>,
+    pub instructions_executed: Option<u32>,
+    pub open_handles: Option<u8>,
+}
+
+impl EjectedBootRun {
+    pub fn ran(self) -> bool {
+        self.report.is_some()
+    }
+
+    pub fn summary(self) -> EjectedBootRunSummary {
+        let (run_status, instructions_executed, open_handles) = match self.report {
+            Some(report) => (
+                Some(report.status),
+                Some(report.instructions_executed),
+                Some(report.open_handles),
+            ),
+            None => (None, None, None),
+        };
+
+        EjectedBootRunSummary {
+            boot_plan: self.boot_plan,
+            run_status,
+            instructions_executed,
+            open_handles,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -734,7 +766,20 @@ mod tests {
                 summary: EjectedFirmwareProgram::blink().summary(),
             }
         );
+        assert!(boot_run.ran());
         let report = boot_run.report.unwrap();
+        assert_eq!(
+            boot_run.summary(),
+            EjectedBootRunSummary {
+                boot_plan: EjectedBootPlan {
+                    action: EjectedBootAction::Run,
+                    summary: EjectedFirmwareProgram::blink().summary(),
+                },
+                run_status: Some(report.status),
+                instructions_executed: Some(report.instructions_executed),
+                open_handles: Some(report.open_handles),
+            }
+        );
         assert_eq!(report.status, RunStatus::BudgetExceeded);
         assert_eq!(report.open_handles, 1);
         assert_eq!(
@@ -777,6 +822,19 @@ mod tests {
             EjectedBootPlan {
                 action: EjectedBootAction::StoreOnly,
                 summary: program.summary(),
+            }
+        );
+        assert!(!boot_run.ran());
+        assert_eq!(
+            boot_run.summary(),
+            EjectedBootRunSummary {
+                boot_plan: EjectedBootPlan {
+                    action: EjectedBootAction::StoreOnly,
+                    summary: program.summary(),
+                },
+                run_status: None,
+                instructions_executed: None,
+                open_handles: None,
             }
         );
         assert_eq!(boot_run.report, None);
