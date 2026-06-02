@@ -435,6 +435,50 @@ pub(crate) fn encode_mov_imm_eq(rd: u8, imm8: u8) -> u32 {
     MOV_IMM_EQ_BASE | ((rd as u32) << 12) | (imm8 as u32)
 }
 
+/// ARMv7-A `MOVNE Rd, #imm8` base — `0x13A0_0000`.  Cond = NE
+/// (`0001`) — execute only if Z flag is CLEAR.  Used by `cmp_ne`.
+pub const MOV_IMM_NE_BASE: u32 = 0x13A0_0000;
+
+/// ARMv7-A `MOVCC Rd, #imm8` base — `0x33A0_0000`.  Cond = CC
+/// (`0011`) — execute only if Carry flag is CLEAR.  After CMP this
+/// fires when `A < r` (unsigned compare).  Used by `cmp_lt`.
+pub const MOV_IMM_CC_BASE: u32 = 0x33A0_0000;
+
+/// ARMv7-A `MOVCS Rd, #imm8` base — `0x23A0_0000`.  Cond = CS
+/// (`0010`) — execute only if Carry flag is SET.  After CMP this
+/// fires when `A >= r` (unsigned compare).  Used by `cmp_gte`.
+pub const MOV_IMM_CS_BASE: u32 = 0x23A0_0000;
+
+/// ARMv7-A `MOVHI Rd, #imm8` base — `0x83A0_0000`.  Cond = HI
+/// (`1000`) — execute only if Carry SET AND Zero CLEAR.  After CMP
+/// this fires when `A > r` (unsigned compare).  Used by `cmp_gt`.
+///
+/// Note: ARMv7's HI condition does the right thing for unsigned
+/// "greater than" without the operand-swap trick the 8008 and RV32I
+/// backends had to use.
+pub const MOV_IMM_HI_BASE: u32 = 0x83A0_0000;
+
+/// ARMv7-A `MOVLS Rd, #imm8` base — `0x93A0_0000`.  Cond = LS
+/// (`1001`) — execute only if Carry CLEAR OR Zero SET.  After CMP
+/// this fires when `A <= r` (unsigned compare).  Used by `cmp_lte`.
+pub const MOV_IMM_LS_BASE: u32 = 0x93A0_0000;
+
+/// Encode an ARMv7-A `MOV<cond> Rd, #imm8` instruction with an
+/// arbitrary condition prefix.
+///
+/// `cond_base` must be one of `MOV_IMM_{EQ,NE,CC,CS,HI,LS}_BASE`
+/// (or a future addition).  The function ORs in the destination
+/// register (bits 15..12) and the 8-bit immediate (bits 7..0).
+///
+/// This generic helper avoids cluttering the public surface with
+/// six nearly-identical `encode_mov_imm_{eq,ne,cc,cs,hi,ls}` fns.
+/// `encode_mov_imm_eq` is kept as a named convenience for v0.4.3's
+/// equality lowering which existed before this generalisation.
+pub(crate) fn encode_mov_imm_cond(cond_base: u32, rd: u8, imm8: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    cond_base | ((rd as u32) << 12) | (imm8 as u32)
+}
+
 // ===========================================================================
 // IIRArmv7Config
 // ===========================================================================
@@ -578,6 +622,9 @@ const SUPPORTED_OPS: &[&str] = &[
     // A3++.5.5 third slice — equality comparison with flag-to-bool
     // capture via the EQ condition prefix on every A32 instruction.
     "cmp",
+    // A3++.5.5 fourth slice — remaining 5 comparison ops using
+    // distinct condition prefixes on the trailing MOV.
+    "cmp_ne", "cmp_lt", "cmp_gt", "cmp_gte", "cmp_lte",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -691,52 +738,63 @@ pub fn lower_iir_to_armv7(
                     words.push(BX_LR);
                 }
 
-                // ── cmp dest, a, b → CMP + MOV/MOVEQ capture ───────────
+                // ── cmp / cmp_ne / cmp_lt / cmp_gt / cmp_gte / cmp_lte ─
                 //
-                // IIR `cmp dest, a, b` produces a boolean (`dest =
-                // (a == b) ? 1 : 0`).  ARMv7's CMP sets Z/C/N/V from
-                // `Rn - Rm` and discards the difference.
+                // All six boolean comparisons share the same shape:
                 //
-                // ARMv7's KEY architectural feature — the 4-bit `cond`
-                // field at bits 31..28 of every A32 instruction —
-                // makes the flag-to-bool capture remarkably clean:
+                //   CMP    rn, rm           ; sets Z/C/N/V flags
+                //   MOV    dest, #0         ; default false (cond=AL)
+                //   MOV<C> dest, #1         ; flip to true under cond <C>
                 //
-                //   CMP   rn, rm                ; sets Z if rn == rm
-                //   MOV   dest, #0              ; default false (cond=AL)
-                //   MOVEQ dest, #1              ; if Z=1, overwrite to true
+                // The (operation → condition prefix) mapping:
                 //
-                // 4 words total.  Compare with the 8008 backend's
-                // 8-byte CMP + MVI dest, 0 + JFZ + 2-byte address + MVI
-                // dest, 1 sequence (with the JFZ target backpatched
-                // inline) — ARMv7 needs no backpatching at all.
+                //   cmp     → EQ (0x03A0..)  : Z=1 (equal)
+                //   cmp_ne  → NE (0x13A0..)  : Z=0
+                //   cmp_lt  → CC (0x33A0..)  : C=0 (unsigned A < r)
+                //   cmp_gt  → HI (0x83A0..)  : C=1 & Z=0
+                //   cmp_gte → CS (0x23A0..)  : C=1
+                //   cmp_lte → LS (0x93A0..)  : C=0 | Z=1
                 //
-                // Only equality (`a == b`) lands in this slice.
-                // Less-than (which would use MOVCC — MOV under the CC
-                // condition for "carry clear") and greater-than land
-                // in future slices alongside the S-suffix ALU
-                // variants that need to produce the right flags.
-                "cmp" => {
-                    let dest = require_dest(instr, "cmp", &f.name)?;
+                // The four-bit `cond` field at bits 31..28 of every
+                // A32 instruction is the only thing that varies
+                // between the six lowerings — same CMP+MOV+MOV
+                // skeleton, the trailing MOV's top nibble selects
+                // the comparison.
+                //
+                // ARMv7's HI condition does the right thing for
+                // unsigned "greater than" natively — no operand-swap
+                // trick like the 8008 and RV32I backends needed.
+                "cmp" | "cmp_ne" | "cmp_lt" | "cmp_gt" | "cmp_gte" | "cmp_lte" => {
+                    let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
                         _ => return Err(IIRArmv7Error::InvalidOperand {
                             function: f.name.clone(),
-                            detail: "cmp srcs[0] must be Var".into(),
+                            detail: format!("{} srcs[0] must be Var", instr.op),
                         }),
                     };
                     let b_name = match instr.srcs.get(1) {
                         Some(Operand::Var(s)) => s.clone(),
                         _ => return Err(IIRArmv7Error::InvalidOperand {
                             function: f.name.clone(),
-                            detail: "cmp srcs[1] must be Var".into(),
+                            detail: format!("{} srcs[1] must be Var", instr.op),
                         }),
                     };
                     let rn = lookup_register(&env, &a_name, &f.name)?;
                     let rm = lookup_register(&env, &b_name, &f.name)?;
                     let rd = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    let cond_mov_base = match instr.op.as_str() {
+                        "cmp"     => MOV_IMM_EQ_BASE,
+                        "cmp_ne"  => MOV_IMM_NE_BASE,
+                        "cmp_lt"  => MOV_IMM_CC_BASE,
+                        "cmp_gt"  => MOV_IMM_HI_BASE,
+                        "cmp_gte" => MOV_IMM_CS_BASE,
+                        "cmp_lte" => MOV_IMM_LS_BASE,
+                        _ => unreachable!("outer arm restricts to these 6"),
+                    };
                     words.push(encode_cmp_reg(rn, rm));
                     words.push(encode_mov_imm(rd, 0));
-                    words.push(encode_mov_imm_eq(rd, 1));
+                    words.push(encode_mov_imm_cond(cond_mov_base, rd, 1));
                 }
 
                 // ── add/sub/and/or/xor/adc/sbb → DP-register family ─────

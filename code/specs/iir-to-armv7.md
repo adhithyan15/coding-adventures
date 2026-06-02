@@ -73,7 +73,8 @@ IIRModule
 | v0.4.0 (A3++.5) | `add`/`sub` on the data-processing-register family — 3-register `Rd = Rn op Rm` | **merged** |
 | v0.4.1 (A3++.5.5 first slice) | Bitwise DP-register ops `and` (AND `0xE000_0000`), `or` (ORR `0xE180_0000`), `xor` (EOR `0xE020_0000`) | **merged** |
 | v0.4.2 (A3++.5.5 second slice) | Carry-chained DP-register ops `adc` (`0xE0A0_0000`) and `sbb` (`0xE0C0_0000`) | **merged** |
-| **v0.4.3 (A3++.5.5 third slice — this PR)** | `cmp` equality (`CMP_REG_BASE = 0xE150_0000`) with flag-to-bool capture via `MOVEQ` (`MOV_IMM_EQ_BASE = 0x03A0_0000`) — uses ARMv7's 4-bit `cond` field on every instruction.  No address backpatching needed (vs the 8008's 8-byte JFZ-skip-MVI sequence). | this PR |
+| v0.4.3 (A3++.5.5 third slice) | `cmp` equality with flag-to-bool capture via `MOVEQ` (`0x03A0_0000`) | **merged** |
+| **v0.4.4 (A3++.5.5 fourth slice — this PR)** | Full comparison family: `cmp_ne` (NE `0x13A0..`), `cmp_lt` (CC `0x33A0..`), `cmp_gt` (HI `0x83A0..` — handles unsigned > natively), `cmp_gte` (CS `0x23A0..`), `cmp_lte` (LS `0x93A0..`).  Shared `encode_mov_imm_cond(base, rd, imm8)` helper covers all six. | this PR |
 | v0.3.x (A3++.5.5) | Comparisons + conditional branches via the cond-field on every A32 instruction (a stronger version of the 8008's flag-based jumps) | future |
 | v0.3.x (A3++.6) | Function calls via `bl` with PC-relative offsets + stack spilling | future |
 | v0.4.0 (A3+++) | `lang-aot --emit=armv7` wiring | future |
