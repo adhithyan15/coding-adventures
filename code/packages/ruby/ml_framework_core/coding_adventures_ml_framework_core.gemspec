@@ -20,11 +20,13 @@ Gem::Specification.new do |spec|
   spec.name          = "coding_adventures_ml_framework_core"
   spec.version       = CodingAdventures::MLFrameworkCore::VERSION
   spec.authors       = ["Adhithya Rajasekaran"]
-  spec.summary       = "Idiomatic Ruby Tensor and autograd on top of the Rust matrix-cpu engine"
-  spec.description   = "Pure-Ruby Tensor class with factories (zeros/ones/eye/arange/randn/...), " \
-                       "shape ops (reshape/transpose/flatten/squeeze/unsqueeze), and operator " \
-                       "overloads (+/-/*///**/-). v0.1 is pure Ruby. Future versions dispatch " \
-                       "large ops through matrix_rust_ruby to the Rust matrix-cpu engine."
+  spec.summary       = "Complete PyTorch-shaped Ruby ML framework on the Rust matrix-cpu engine"
+  spec.description   = "Tensor + autograd + 15 differentiable ops (Add/Sub/Mul/Div/Neg/Abs/Pow/" \
+                       "MatMul/ReLU/Sigmoid/Tanh/GELU/Softmax/Sum/Mean) with full forward and " \
+                       "backward. Small tensors use a pure-Ruby fast path; tensors of 10k+ cells " \
+                       "auto-dispatch through the matrix_rust_ruby gem to the Rust matrix-cpu " \
+                       "executor for SIMD-accelerated f32 math. End-to-end MLP training verified " \
+                       "by the test suite; see scripts/benchmark.rb for performance characterization."
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
@@ -38,6 +40,9 @@ Gem::Specification.new do |spec|
 
   spec.metadata = {
     "source_code_uri" => "https://github.com/adhithyan15/coding-adventures",
+    "homepage_uri"    => "https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/ruby/ml_framework_core",
+    "changelog_uri"   => "https://github.com/adhithyan15/coding-adventures/blob/main/code/packages/ruby/ml_framework_core/CHANGELOG.md",
+    "bug_tracker_uri" => "https://github.com/adhithyan15/coding-adventures/issues",
     "rubygems_mfa_required" => "true"
   }
 

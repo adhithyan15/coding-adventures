@@ -2,6 +2,88 @@
 
 ## Unreleased
 
+### Added — v1.0.0: complete Ruby ML framework on the Rust matrix-cpu engine
+
+PR #8 of 8 (FINAL) in the Ruby pilot.  v1.0.0 marks the completion of
+the multi-PR plan: a PyTorch-shaped Ruby ML framework with all 15 ops
+(forward + backward), autograd engine, end-to-end MLP training, and a
+benchmark script for performance characterization.
+
+#### What v1.0.0 means
+
+The complete stack works:
+
+```ruby
+require "coding_adventures/ml_framework_core"
+T = CodingAdventures::MLFrameworkCore::Tensor
+
+# Build a model
+w1 = T.new([[0.5, -0.3]]); w1.requires_grad = true
+w2 = T.new([[0.4], [0.7]]); w2.requires_grad = true
+
+# Train (loss drops 91% in 30 SGD steps on the test suite's synthetic data)
+30.times do
+  pred = x.matmul(w1).relu.matmul(w2)
+  loss = ((pred - target) * (pred - target)).mean
+  loss.backward
+  w1 = sgd_step(w1, lr: 0.01)
+  w2 = sgd_step(w2, lr: 0.01)
+end
+```
+
+All math is pure Ruby for tensors under 10k cells.  At 10k+ cells the
+ops auto-dispatch through the matrix_rust_ruby gem to the Rust
+matrix-cpu executor (SIMD-accelerated f32).  No Rust toolchain is
+required to use the gem at small/medium sizes.
+
+#### New in v1.0.0
+
+- **`scripts/benchmark.rb`** — performance characterization.  Runs
+  forward + backward on a 2-layer MLP at batch sizes 100, 1000, 5000,
+  10_000, 50_000 and prints a markdown table of median timings.
+  Gracefully handles the case where matrix_rust_ruby isn't built
+  (skips Rust-only rows with a clear "Rust needed" label).
+
+- **Gemspec polish**:
+  - Tightened description to highlight what's in the box (15 ops, autograd, dispatch)
+  - Added `homepage_uri`, `changelog_uri`, `bug_tracker_uri` to metadata
+
+- **README polish**: Quick-start section with the end-to-end MLP
+  example moved to the top; benchmark section with example output.
+
+#### Layered architecture (now complete)
+
+```
+ml_framework_core (THIS GEM, v1.0.0)
+  Tensor + autograd + 15 differentiable ops (forward + backward)
+  ↓ dispatch large tensors through ↓
+matrix_rust_ruby gem (v0.1)
+  Ruby wrapper around matrix_rust_ruby_native
+  ↓
+matrix_rust_ruby_native (Rust cdylib, v0.1)
+  Defines MatrixRustRuby.run_graph_on_cpu
+  ↓
+c-bridge (Rust workspace crate, v0.1)
+  Pure-Rust run_graph_on_cpu_via_json_envelope
+  ↓
+matrix-ir-json → matrix-ir → matrix-runtime → matrix-cpu
+```
+
+#### Test coverage (unchanged from v0.4.0 — all still passing)
+
+- `test/tensor_test.rb`            63 runs, 94 assertions
+- `test/autograd_test.rb`          18 runs, 31 assertions
+- `test/ops_test.rb`               65 runs, 122 assertions
+- `test/end_to_end_training_test`  2 runs, 4 assertions
+- Total: 148 tests, 251 assertions, 0 failures
+
+#### What's next (for the project, not the gem)
+
+The user will pick the next language pilot — Lua, JS/TS, Go, or Swift.
+The architecture pattern established by the Ruby pilot transfers
+directly: per-language Rust cdylib bridge → per-language low-level
+binding → per-language idiomatic ml_framework_core.
+
 ### Added — v0.4.0: backward dispatch + end-to-end MLP training test
 
 PR #7 of 8 in the Ruby pilot.  Adds `backward(output_grad)` to all 15
