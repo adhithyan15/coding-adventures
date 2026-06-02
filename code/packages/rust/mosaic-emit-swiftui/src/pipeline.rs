@@ -924,10 +924,29 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     }
 
     // `.onExitCommand { dispatch(.e) }` — macOS Escape-key handler.
+    //
+    // `.onExitCommand` is a macOS-only modifier (it observes the
+    // Escape key via the AppKit responder chain).  Emitting it
+    // unconditionally breaks iOS / iPadOS / tvOS / watchOS builds
+    // with "value of type ... has no member 'onExitCommand'".  We
+    // wrap it in a `#if os(macOS)` compile-time guard so the same
+    // generated file targets the whole Apple platform fleet.
+    //
+    // To keep the rest of the chain readable, we close the current
+    // chain line, emit the guarded modifier on its own block, and
+    // open a no-op continuation if any further chained modifiers
+    // get added in the future.  Today `onCancel` is the last
+    // modifier we emit, so the trailing newline pattern just
+    // closes the expression.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_emit_name(&case_name)?;
-        line.push_str(&format!(".onExitCommand {{ dispatch(.{case_name}) }}"));
+        line.push('\n');
+        line.push_str(&format!("{pad}    #if os(macOS)\n"));
+        line.push_str(&format!(
+            "{pad}    .onExitCommand {{ dispatch(.{case_name}) }}\n"
+        ));
+        line.push_str(&format!("{pad}    #endif"));
     }
 
     line.push('\n');
@@ -2939,6 +2958,66 @@ mod tests {
         assert!(
             out.contains(".onSubmit { dispatch(.commit) }"),
             "expected void-form .onSubmit dispatch, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 18b — onCancel emits `.onExitCommand` guarded by
+    // `#if os(macOS)`.
+    //
+    // `.onExitCommand` is macOS-only.  Emitting it unconditionally
+    // broke iOS builds with "value of type ... has no member
+    // 'onExitCommand'".  Now wrapped in a `#if os(macOS)` compile-time
+    // guard so the same generated file targets the whole Apple
+    // platform fleet — macOS, iOS, iPadOS, tvOS, watchOS.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_input_on_cancel_wraps_on_exit_command_in_os_macos_guard() {
+        let layout = layout_with(
+            "F",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_slot_ref("value", "value"),
+                        prop_emit_ref("onCancel", "onCancel"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "F",
+                vec![slot("value", SlotType::Text, true)],
+                vec![emit("onCancel", vec![])],
+            ),
+            &layout,
+            &empty_style("F"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("#if os(macOS)"),
+            "expected #if os(macOS) guard around .onExitCommand, got:\n{out}"
+        );
+        assert!(
+            out.contains(".onExitCommand { dispatch(.cancel) }"),
+            "expected .onExitCommand dispatch inside the guard, got:\n{out}"
+        );
+        assert!(
+            out.contains("#endif"),
+            "expected #endif closing the guard, got:\n{out}"
+        );
+        // Regression: the guard must actually wrap onExitCommand,
+        // not be elsewhere in the file.
+        let if_pos = out.find("#if os(macOS)").unwrap();
+        let cmd_pos = out.find(".onExitCommand").unwrap();
+        let endif_pos = out.find("#endif").unwrap();
+        assert!(
+            if_pos < cmd_pos && cmd_pos < endif_pos,
+            "expected #if/.onExitCommand/#endif in order:\n{out}"
         );
     }
 
