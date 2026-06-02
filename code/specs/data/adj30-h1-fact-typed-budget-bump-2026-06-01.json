@@ -1,0 +1,171 @@
+{
+  "harness_version": "adj25-pr6-v1",
+  "endpoint": "http://127.0.0.1:11434",
+  "binary": "code/packages/rust/target/release/adj_pr6_bench",
+  "models": [
+    "qwen2.5:0.5b",
+    "qwen2.5:1.5b",
+    "qwen2.5:3b"
+  ],
+  "declarations": [
+    "matches",
+    "lighter-disposable"
+  ],
+  "cells": [
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 75.07745149999391,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 74.797207541
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 56.8479491249891,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 56.844295833
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 16.763598082994577,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 16.75974075
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 37.43774462497095,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(5 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (5 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 37.434234916
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 69.10315858299145,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 69.099247583
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 120.80975795898121,
+      "raw_output": {
+        "error": {
+          "kind": "unparseable_at_FactToTypedComponent",
+          "message": "hierarchical-decompose unparseable response at FactToTypedComponent for parent \"F1\""
+        },
+        "model": "qwen2.5:3b",
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 120.806041291
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    }
+  ],
+  "summary": {
+    "totals": {
+      "cells_run": 6,
+      "ir_produced": 0,
+      "fully_passing": 0,
+      "correlation_complete": 0,
+      "correlation_total": 0
+    },
+    "by_model": {
+      "qwen2.5:0.5b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 112.51519612496486
+      },
+      "qwen2.5:1.5b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 125.95110770798055
+      },
+      "qwen2.5:3b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 137.57335604197579
+      }
+    },
+    "by_level": {
+      "DocumentToSentence": {
+        "passed": 0,
+        "total": 0
+      },
+      "SentenceToPhrase": {
+        "passed": 0,
+        "total": 0
+      },
+      "PhraseToClaim": {
+        "passed": 0,
+        "total": 0
+      },
+      "FactToTypedComponent": {
+        "passed": 0,
+        "total": 0
+      }
+    }
+  }
+}
