@@ -1,6 +1,6 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
-**Status:** v0.4.0 — accumulator arithmetic ADD/SUB (A5+++)
+**Status:** v0.5.0 — branch family BR/BNZ/BZ + label backpatching (A5+++++)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
 
@@ -89,8 +89,10 @@ IIRModule
 | v0.1.0 (A5) | crate skeleton: any module → single `HLT` (`0x00000`, packed `[0x00, 0x00, 0x00]`) | **merged** |
 | v0.2.0 (A5+) | `const dest, Int(n)` → `LDA n` + `ret`/`ret_void` → HLT.  Single-ACC liveness model. | **merged** |
 | v0.3.0 (A5++) | ACC-first GP register allocator over ACC + r0..r15 (17-slot pool) + `STA r` (0x2, XCH semantics) + `LD r` (0x3) + `mov dest, src` lowering | **merged** |
-| **v0.4.0 (A5+++ — this PR)** | Accumulator-based arithmetic: `add` and `sub` IIR ops → `ADD r` (0x4) and `SUB r` (0x5) opcodes preceded by `LD r_lhs` staging | this PR |
-| v0.5.0 (A5++++) | Branch family (`BR`, `BMI`, `BNZ`) + `lang-aot --emit=ge225` wiring + Dartmouth BASIC end-to-end | future |
+| v0.4.0 (A5+++) | Accumulator-based arithmetic: `add` and `sub` IIR ops → `ADD r` (0x4) and `SUB r` (0x5) opcodes preceded by `LD r_lhs` staging | **merged** |
+| (A5++++ in lang-aot v0.11.0) | `lang-aot --emit=ge225` wiring (aliases `ge-225`, `225`) | **merged** |
+| **v0.5.0 (A5+++++ — this PR)** | Branch family `BR` (0x6), `BNZ` (0x7), `BZ` (0x8) + per-function label backpatching for `label`, `jmp`, `jmp_if_true`, `jmp_if_false` IIR ops | this PR |
+| v0.6.0 (A5++++++) | `JSR` (call subroutine) + `RTS` (return) + `BMI` (branch if minus) — true call/return discipline | future |
 | v0.4.0 (A5+++) | `lang-aot --emit=ge225` wiring + BASIC end-to-end | future |
 
 ## Public surface (v0.1.0)
@@ -120,6 +122,9 @@ pub const STA_OPCODE_NIBBLE: u8 = 0x2;  // v0.3.0 — XCH semantics
 pub const LD_OPCODE_NIBBLE:  u8 = 0x3;  // v0.3.0 — pure copy
 pub const ADD_OPCODE_NIBBLE: u8 = 0x4;  // v0.4.0 — ACC ← ACC + r
 pub const SUB_OPCODE_NIBBLE: u8 = 0x5;  // v0.4.0 — ACC ← ACC - r
+pub const BR_OPCODE_NIBBLE:  u8 = 0x6;  // v0.5.0 — unconditional branch
+pub const BNZ_OPCODE_NIBBLE: u8 = 0x7;  // v0.5.0 — branch if ACC ≠ 0
+pub const BZ_OPCODE_NIBBLE:  u8 = 0x8;  // v0.5.0 — branch if ACC = 0
 ```
 
 ## Word format
@@ -130,19 +135,20 @@ byte 1: IIII IIII   (high 8 bits of the 16-bit immediate)
 byte 2: IIII IIII   (low  8 bits of the 16-bit immediate)
 ```
 
-Opcodes assigned through v0.4.0: `0x0` (HLT), `0x1` (LDA),
-`0x2` (STA — XCH semantics), `0x3` (LD), `0x4` (ADD), `0x5` (SUB).
-Future slices take `0x6..0xF`.
+Opcodes assigned through v0.5.0: `0x0` (HLT), `0x1` (LDA),
+`0x2` (STA — XCH semantics), `0x3` (LD), `0x4` (ADD), `0x5` (SUB),
+`0x6` (BR), `0x7` (BNZ), `0x8` (BZ).  Future slices take `0x9..0xF`
+for `BMI`, `JSR`, `RTS`, etc.
 
-## Non-goals (v0.4.0)
+## Non-goals (v0.5.0)
 
-* No conditional branches (`BR`, `BMI`, `BNZ`) — A5++++.
-* No call/return discipline (`JSR`) — A5++++.
+* No `BMI` (branch if minus) — A5++++++.
+* No call/return discipline (`JSR` / `RTS`) — A5++++++.
 * No memory spilling beyond the 17-slot ACC + r0..r15 pool — future.
-* No `lang-aot --emit=ge225` wiring — A5++++.
 * No external assembler / linker integration.
 * No peephole optimisation: `add c, c, x` always emits the
   `LD r_c` even when `c` is already in ACC.
+* No cross-function branches — labels are per-function.
 
 ## Tests (v0.2.0 — 21 unit + 1 doctest)
 

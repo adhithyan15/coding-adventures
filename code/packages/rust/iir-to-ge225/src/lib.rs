@@ -1,4 +1,4 @@
-//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.4.0, A5+++).
+//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.5.0, A5+++++).
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
@@ -88,8 +88,12 @@
 //! | `0x3` | `LD r`  | load ACC with the value of `r` (copy)  | `[0x03, 0x00, r]` |
 //! | `0x4` | `ADD r` | `ACC ← ACC + r` (r unchanged)          | `[0x04, 0x00, r]` |
 //! | `0x5` | `SUB r` | `ACC ← ACC - r` (r unchanged)          | `[0x05, 0x00, r]` |
+//! | `0x6` | `BR a`  | unconditional branch to byte addr `a`  | `[0x06, hi, lo]` |
+//! | `0x7` | `BNZ a` | branch if ACC ≠ 0                      | `[0x07, hi, lo]` |
+//! | `0x8` | `BZ a`  | branch if ACC = 0                      | `[0x08, hi, lo]` |
 //!
-//! Future slices take `0x6..0xF` for `BR`/`BMI`/`BNZ`/`JSR`/etc.
+//! Future slices take `0x9..0xF` for `BMI` (branch if minus),
+//! `JSR` (jump subroutine), `RET` (return from subroutine), etc.
 //!
 //! ## Quick start
 //!
@@ -159,6 +163,34 @@ pub const ADD_OPCODE_NIBBLE: u8 = 0x4;
 /// `[0x05, 0x00, r]`.
 pub const SUB_OPCODE_NIBBLE: u8 = 0x5;
 
+/// GE-225 `BR` opcode nibble — `0x6`.  Unconditional branch to a
+/// 16-bit byte address.  Word layout: `[0x06, hi, lo]` where
+/// `(hi, lo)` is the destination byte offset within the program.
+///
+/// Why a byte address (not a word address)?  The IIR records label
+/// positions as `bytes.len()` at the time of the `label` op, and
+/// every word is 3 bytes — so byte addresses are a faithful
+/// representation of the program counter on this skeleton's GE-225.
+/// A real GE-225 used word addresses; mapping byte ↔ word is a
+/// 1-to-1 division-by-3 the downstream simulator can do.
+pub const BR_OPCODE_NIBBLE: u8 = 0x6;
+
+/// GE-225 `BNZ` opcode nibble — `0x7`.  Branch if the accumulator
+/// is non-zero.  Word layout: `[0x07, hi, lo]`.
+///
+/// Lowers `jmp_if_true cond, target` — the IIR cond is a boolean
+/// living in some register / ACC; we stage it into ACC via `LD r`
+/// (or skip the load if it's already the ACC owner) and then emit
+/// `BNZ target`.
+pub const BNZ_OPCODE_NIBBLE: u8 = 0x7;
+
+/// GE-225 `BZ` opcode nibble — `0x8`.  Branch if the accumulator
+/// is zero.  Word layout: `[0x08, hi, lo]`.
+///
+/// Lowers `jmp_if_false cond, target` — same staging pattern as
+/// `BNZ`, opposite polarity.
+pub const BZ_OPCODE_NIBBLE: u8 = 0x8;
+
 /// Sentinel `env` value meaning "this var currently lives in the
 /// accumulator (ACC)", distinct from real register indices `0..=15`.
 const ACC_MARKER: u8 = 16;
@@ -167,8 +199,12 @@ const ACC_MARKER: u8 = 16;
 /// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
 const GP_REGISTER_COUNT: usize = 16;
 
-/// Supported instruction opcodes in v0.4.0 (A5+++).
-const SUPPORTED_OPS: &[&str] = &["const", "mov", "add", "sub", "ret", "ret_void"];
+/// Supported instruction opcodes in v0.5.0 (A5+++++).
+const SUPPORTED_OPS: &[&str] = &[
+    "const", "mov", "add", "sub",
+    "label", "jmp", "jmp_if_true", "jmp_if_false",
+    "ret", "ret_void",
+];
 
 // ===========================================================================
 // IIRGe225Config
@@ -221,6 +257,20 @@ pub enum IIRGe225Error {
     /// register pool (ACC + r0..r15) can hold.  Memory spilling
     /// lands in a future increment.
     OutOfRegisters { function: String, name: String },
+    /// A `jmp` / `jmp_if_true` / `jmp_if_false` referenced a label
+    /// name that wasn't defined by a `label` op anywhere in the
+    /// same function.  Cross-function jumps aren't supported —
+    /// labels are per-function in v0.5.0.
+    UndefinedLabel { function: String, label: String },
+    /// A branch target's resolved byte offset exceeds the 16-bit
+    /// address space the `BR` / `BNZ` / `BZ` instruction word can
+    /// encode (65 536 bytes / ~21 845 instruction words).  Programs
+    /// that large would need a wider address-field encoding.
+    BranchTargetOutOfRange {
+        function: String,
+        label: String,
+        offset: usize,
+    },
 }
 
 impl fmt::Display for IIRGe225Error {
@@ -250,6 +300,23 @@ impl fmt::Display for IIRGe225Error {
                     "out of GE-225 registers (ACC + r0..r15 = 17 slots) \
                      while binding {name:?} in function {function:?}; \
                      memory spilling not yet supported"
+                )
+            }
+            Self::UndefinedLabel { function, label } => {
+                write!(
+                    f,
+                    "undefined label {label:?} referenced by branch in function {function:?}"
+                )
+            }
+            Self::BranchTargetOutOfRange {
+                function,
+                label,
+                offset,
+            } => {
+                write!(
+                    f,
+                    "branch target {label:?} at byte offset {offset} in function \
+                     {function:?} exceeds the 16-bit address field (max 65535)"
                 )
             }
         }
@@ -314,6 +381,30 @@ pub fn lower_iir_to_ge225(
         let mut env: HashMap<String, u8> = HashMap::new();
         let mut next_reg: usize = 0;
         let mut acc_owner: Option<String> = None;
+
+        // ── Per-function label-resolution state (v0.5.0) ──────────────
+        //
+        // The GE-225 has no PC-relative addressing in this skeleton —
+        // every branch carries a 16-bit absolute byte address.  Forward
+        // branches must be backpatched: when a `jmp X` is emitted before
+        // `label X` appears, we record `(slot_high_byte_offset, X)` in
+        // `pending_branches`.  After the function body is emitted, we
+        // look up each target in `labels` and write the address into the
+        // slot's two bytes (big-endian: byte at slot = hi, byte at slot+1
+        // = lo).
+        //
+        // CRITICAL: byte offsets are scoped to the FULL `bytes` Vec, not
+        // to the current function — that's because branches encode the
+        // absolute byte address, and the function is emitted into the
+        // same continuous byte stream.  But labels are per-function:
+        // referencing a label in another function is rejected as
+        // `UndefinedLabel`.
+        //
+        // A duplicate `label` definition overwrites the prior position
+        // (last-one-wins) — same convention as iir-to-intel8008.
+        let mut labels: HashMap<String, usize> = HashMap::new();
+        let mut pending_branches: Vec<(usize, String)> = Vec::new();
+        let function_start = bytes.len();
 
         for instr in &f.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
@@ -483,6 +574,115 @@ pub fn lower_iir_to_ge225(
                     acc_owner = Some(dest.to_string());
                 }
 
+                // ── label "<name>": record current byte offset ─────────
+                //
+                // Zero bytes emitted.  `label` is purely a marker so
+                // subsequent backpatching can resolve a forward branch
+                // to a concrete 16-bit address.  A duplicate name
+                // overwrites the prior position (last-one-wins).
+                "label" => {
+                    let name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => {
+                            return Err(IIRGe225Error::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: "label requires srcs[0] = Operand::Var(name)".into(),
+                            })
+                        }
+                    };
+                    labels.insert(name, bytes.len());
+                }
+
+                // ── jmp "<name>": unconditional 3-byte branch (BR addr)
+                //
+                // Pass 1: emit `0x06 0x00 0x00` and record (slot, name)
+                // in pending_branches where slot is the byte offset of
+                // the high-address byte (slot+0 = hi, slot+1 = lo).
+                //
+                // Branches do not modify ACC — `acc_owner` stays valid
+                // across the branch instruction itself (though the
+                // dynamic ACC contents at the target may differ).
+                "jmp" => {
+                    let target = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => {
+                            return Err(IIRGe225Error::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: "jmp requires srcs[0] = Operand::Var(label)".into(),
+                            })
+                        }
+                    };
+                    bytes.push(BR_OPCODE_NIBBLE);
+                    let slot = bytes.len();
+                    bytes.push(0); // high-address placeholder
+                    bytes.push(0); // low-address placeholder
+                    pending_branches.push((slot, target));
+                }
+
+                // ── jmp_if_true cond, "<label>" → (LD r_cond)? + BNZ addr
+                // ── jmp_if_false cond, "<label>" → (LD r_cond)? + BZ addr
+                //
+                // Operand layout: srcs = [Var(cond_var), Var(target_label)].
+                //
+                // Stage cond into ACC (skip LD when cond is already the
+                // ACC owner), then emit the conditional branch with a
+                // 16-bit placeholder for backpatching.  Branches don't
+                // clobber ACC, so the cond's value is still readable
+                // after the branch — but acc_owner-as-cond-name remains
+                // valid only if no eviction happened.
+                "jmp_if_true" | "jmp_if_false" => {
+                    let cond_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => {
+                            return Err(IIRGe225Error::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: format!(
+                                    "{} requires srcs[0] = Operand::Var(cond)",
+                                    instr.op
+                                ),
+                            })
+                        }
+                    };
+                    let target = match instr.srcs.get(1) {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => {
+                            return Err(IIRGe225Error::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: format!(
+                                    "{} requires srcs[1] = Operand::Var(label)",
+                                    instr.op
+                                ),
+                            })
+                        }
+                    };
+                    // Stage cond into ACC.
+                    let cond_loc = *env.get(&cond_name).ok_or_else(|| {
+                        IIRGe225Error::UndefinedVariable {
+                            function: f.name.clone(),
+                            name: cond_name.clone(),
+                        }
+                    })?;
+                    if cond_loc != ACC_MARKER {
+                        bytes.extend_from_slice(&encode_ld(cond_loc));
+                        // ACC now holds cond's value but cond's
+                        // canonical home is still its register; do not
+                        // change acc_owner — set it to None so later
+                        // const can evict cleanly without trying to
+                        // double-evict cond.
+                        acc_owner = None;
+                    }
+                    let opcode_nibble = if instr.op == "jmp_if_true" {
+                        BNZ_OPCODE_NIBBLE
+                    } else {
+                        BZ_OPCODE_NIBBLE
+                    };
+                    bytes.push(opcode_nibble);
+                    let slot = bytes.len();
+                    bytes.push(0); // high-address placeholder
+                    bytes.push(0); // low-address placeholder
+                    pending_branches.push((slot, target));
+                }
+
                 // ── ret <var>: (LD r_var)? + HLT ──────────────────────
                 //
                 // If var is already the ACC owner, no LD is needed —
@@ -512,6 +712,41 @@ pub fn lower_iir_to_ge225(
 
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
             }
+        }
+
+        // ── Per-function backpatching pass ───────────────────────────
+        //
+        // Now that every `label` op in this function has been seen
+        // and recorded in `labels`, resolve every pending forward /
+        // backward branch by writing the target's 16-bit absolute
+        // byte offset into its 2-byte slot.  Errors raised here are
+        // reported with the function name + label name so the user
+        // can locate the offending IR site.
+        //
+        // The `function_start` value is captured but not currently
+        // used for the address calculation — branches encode absolute
+        // byte offsets within the entire emitted byte stream, so the
+        // label position recorded earlier is already correct.  We
+        // keep `function_start` as a hook for a future change that
+        // wants per-function relative offsets.
+        let _ = function_start;
+        for (slot, target) in pending_branches {
+            let offset = *labels.get(&target).ok_or_else(|| {
+                IIRGe225Error::UndefinedLabel {
+                    function: f.name.clone(),
+                    label: target.clone(),
+                }
+            })?;
+            if offset > u16::MAX as usize {
+                return Err(IIRGe225Error::BranchTargetOutOfRange {
+                    function: f.name.clone(),
+                    label: target,
+                    offset,
+                });
+            }
+            let offset_u16 = offset as u16;
+            bytes[slot] = ((offset_u16 >> 8) & 0xFF) as u8;
+            bytes[slot + 1] = (offset_u16 & 0xFF) as u8;
         }
     }
 

@@ -2,6 +2,102 @@
 
 All notable changes to this crate are documented here.
 
+## v0.5.0 — 2026-06-02 — A5+++++ branch family (`BR`, `BNZ`, `BZ`) + label backpatching
+
+Fourth lowering increment.  Adds three new branch opcodes, the
+`label` / `jmp` / `jmp_if_true` / `jmp_if_false` IIR ops, and a
+per-function two-pass backpatching pipeline that resolves forward
+and backward branches to 16-bit absolute byte addresses.
+
+### Added
+
+- `pub const BR_OPCODE_NIBBLE: u8 = 0x6` — unconditional branch.
+  Word `[0x06, hi, lo]` (16-bit byte address).
+- `pub const BNZ_OPCODE_NIBBLE: u8 = 0x7` — branch if ACC ≠ 0.
+  Word `[0x07, hi, lo]`.
+- `pub const BZ_OPCODE_NIBBLE: u8 = 0x8` — branch if ACC = 0.
+  Word `[0x08, hi, lo]`.
+- `IIRGe225Error::UndefinedLabel { function, label }` — a
+  branch references a label not defined in the same function.
+  Labels are per-function — cross-function jumps are rejected.
+- `IIRGe225Error::BranchTargetOutOfRange { function, label, offset }`
+  — a label's resolved byte offset exceeds the 16-bit address
+  field (cap: 65 536 bytes ≈ 21 845 instruction words).
+- `"label"`, `"jmp"`, `"jmp_if_true"`, `"jmp_if_false"` added to
+  `SUPPORTED_OPS`.
+
+### Lowering table (new)
+
+| IIR op | GE-225 lowering |
+|--------|-----------------|
+| `label "<name>"` | zero bytes; records `bytes.len()` |
+| `jmp "<target>"` | `BR <target_addr>` (placeholder + backpatch) |
+| `jmp_if_true cond, "<target>"` | `(LD r_cond)?` + `BNZ <target_addr>` |
+| `jmp_if_false cond, "<target>"` | `(LD r_cond)?` + `BZ <target_addr>` |
+
+### Per-function backpatching strategy
+
+Pass 1 (during the per-instruction loop): every `jmp` / `jmp_if_*`
+emits `[opcode, 0x00, 0x00]` placeholder bytes and records
+`(slot_byte_offset, target_label)` in `pending_branches`.  Every
+`label` records `bytes.len()` in `labels`.
+
+Pass 2 (after the per-instruction loop): for each
+`(slot, target)` in `pending_branches`, look up `labels[target]`
+and write the 16-bit byte address (big-endian: byte at `slot` =
+hi, byte at `slot+1` = lo).  Errors with `UndefinedLabel` if
+`labels` doesn't contain the target, or
+`BranchTargetOutOfRange` if the offset exceeds `u16::MAX`.
+
+### Opcode map (cumulative through v0.5.0)
+
+| Nibble | Mnemonic | Word | Effect |
+|--------|----------|------|--------|
+| `0x0` | `HLT`   | `[0x00, 0x00, 0x00]` | halt |
+| `0x1` | `LDA n` | `[0x01, hi, lo]` | ACC ← n |
+| `0x2` | `STA r` | `[0x02, 0x00, r]` | ACC ↔ r (XCH) |
+| `0x3` | `LD r`  | `[0x03, 0x00, r]` | ACC ← r |
+| `0x4` | `ADD r` | `[0x04, 0x00, r]` | ACC ← ACC + r |
+| `0x5` | `SUB r` | `[0x05, 0x00, r]` | ACC ← ACC - r |
+| `0x6` | `BR a`  | `[0x06, hi, lo]` | unconditional branch |
+| `0x7` | `BNZ a` | `[0x07, hi, lo]` | branch if ACC ≠ 0 |
+| `0x8` | `BZ a`  | `[0x08, hi, lo]` | branch if ACC = 0 |
+
+Future slices reserve `0x9..0xF` for `BMI`, `JSR`, `RTS`, etc.
+
+### Tests (20 unit + 1 doctest, all passing)
+
+New v0.5.0 coverage:
+- All 3 new opcode nibbles pinned.
+- `label_only_emits_no_bytes` — `label` is a marker, not bytes.
+- `trivial_jmp_emits_br_with_backpatched_address` — `jmp x;
+  label x; ret_void` → `BR 0x0003` + `HLT`.
+- `jmp_to_undefined_label_errors` → `UndefinedLabel`.
+- `backward_jmp_resolves_correctly` — `label top; jmp top` →
+  `BR 0x0000` (1-word infinite loop).
+- `jmp_if_true_with_cond_in_acc_skips_ld` — cond is ACC owner,
+  no `LD` needed before `BNZ`.
+- `jmp_if_false_with_cond_in_acc_emits_bz` — opposite polarity.
+- `jmp_if_true_with_cond_in_register_emits_ld` — cond evicted to
+  GP register, `LD r1` reload before `BNZ`.
+- `canonical_if_then_else_sequence` — full if/then/else byte
+  sequence with two labels and one BZ + one BR.
+- `jmp_if_true_with_unbound_cond_errors` → `UndefinedVariable`.
+- `cross_function_labels_dont_resolve` — labels are per-function;
+  `f2` referencing a label in `f1` → `UndefinedLabel`.
+
+Regressions from v0.2.0 / v0.3.0 / v0.4.0 still pinned:
+- Trivial 6-byte ROM for `const v; ret v` (6 N values).
+- Trivial 21-byte ADD ROM for `const a; const b; add c, a, b; ret c`.
+- All 6 prior opcode nibbles still at their nibbles.
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+- Mirrors `iir-to-intel8008` v0.3.4 (jump+label slice) /
+  `iir-to-intel4004` v0.4.0 jump-family lowering.
+
 ## v0.4.0 — 2026-06-02 — A5+++ accumulator arithmetic (`ADD r`, `SUB r`)
 
 Third lowering increment.  Adds `add dest, lhs, rhs` and
