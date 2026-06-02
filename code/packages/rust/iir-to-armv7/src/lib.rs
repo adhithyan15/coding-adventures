@@ -83,7 +83,7 @@
 //!       • objcopy + linker for an ELF on a phone-class Linux board
 //! ```
 
-use interpreter_ir::IIRModule;
+use interpreter_ir::{IIRModule, Operand};
 use std::fmt;
 
 // ===========================================================================
@@ -126,6 +126,68 @@ use std::fmt;
 /// `arm-simulator`'s decoder flags it as `bkpt` and stops single-
 /// stepping.
 pub const BKPT: u32 = 0xE12F_FF7F;
+
+/// ARMv7-A `BX LR` opcode — `0xE12FFF1E`.  Branches to the address in
+/// the link register (`r14`), exchanging instruction sets (which on
+/// pure A32 code is a no-op — A32 → A32).  Semantically: "return from
+/// this function" per the AAPCS calling convention.
+///
+/// Bit layout (cond=AL):
+///
+/// ```text
+/// 31..28  cond  = 0xE = 1110            (always — unconditional)
+/// 27..20        = 0001 0010 = 0x12      (BX opcode family)
+/// 19.. 8        = 1111 1111 1111 = 0xFFF
+///  7.. 4        = 0001 = 0x1            (BX opcode family)
+///  3.. 0  Rm    = 1110 = 0xE            (Rm = lr = r14)
+/// ```
+///
+/// Concatenated: `1110 0001 0010 1111_1111_1111 0001 1110` =
+/// `0xE12FFF1E`.
+///
+/// CAREFUL: BX is `0xE12FFF1E`, NOT `0xE12FFF7F` (which is BKPT —
+/// the bit-7 difference distinguishes "branch & exchange" from
+/// "breakpoint").  Both share the same `12F_FF` family bits.
+pub const BX_LR: u32 = 0xE12F_FF1E;
+
+/// ARMv7-A `MOV Rd, #imm8` (data-processing immediate) base
+/// encoding for `Rd = r0` — `0xE3A0_0000`.  OR in the 8-bit immediate
+/// (bits 7..0) and the destination register (bits 15..12) to form the
+/// full instruction word.
+///
+/// Bit layout (cond=AL, S=0, Rn=0):
+///
+/// ```text
+/// 31..28  cond     = 0xE = 1110           (always — unconditional)
+/// 27..25           = 001                   (data-processing immediate)
+/// 24..21  opcode   = 1101                 (MOV)
+/// 20      S        = 0                     (don't set flags)
+/// 19..16  Rn       = 0000                  (unused for MOV)
+/// 15..12  Rd       = (in this base, 0)    (target register)
+/// 11.. 8  rotate   = 0000                  (no rotation on the imm)
+///  7.. 0  imm8     = (in this base, 0)    (the 8-bit value)
+/// ```
+///
+/// Concatenated for `MOV r0, #0`: `1110 0011 1010 0000 0000 0000 0000 0000`
+/// = `0xE3A00000`.
+///
+/// For `MOV r0, #N`: OR in `N` (8 bits).
+/// For `MOV Rd, #N`: OR in `(Rd << 12) | N`.
+pub const MOV_IMM_R0_BASE: u32 = 0xE3A0_0000;
+
+/// Encode an `ARMv7-A `MOV Rd, #imm8`` instruction.
+///
+/// `rd` must be in `[0, 15]` (4-bit ARM register selector).  `imm8`
+/// is the immediate value, range `[0, 255]`.
+///
+/// Wider immediates (9-32 bits) require either a rotate (the 12-bit
+/// immediate field encodes 8 value bits + 4 rotation bits, allowing
+/// any rotated 8-bit value) or a `movw`/`movt` pair (ARMv7+).  Those
+/// land in A3++ — v0.2.0's `const` only supports 8-bit values.
+pub(crate) fn encode_mov_imm(rd: u8, imm8: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    MOV_IMM_R0_BASE | ((rd as u32) << 12) | (imm8 as u32)
+}
 
 // ===========================================================================
 // IIRArmv7Config
@@ -220,12 +282,45 @@ pub fn validate_for_armv7(_module: &IIRModule) -> Vec<String> {
 // lower_iir_to_armv7
 // ===========================================================================
 
+/// Register `r0` — the AAPCS first-argument / return-value register.
+/// Every `const` in v0.2.0 (A3+) lowers to `mov r0, #imm` because
+/// we don't yet have a multi-register allocator (A3++).
+const REG_R0: u8 = 0;
+
+/// Supported instruction opcodes in v0.2.0 (A3+).
+///
+/// * `const dest, Int(n)` lowers to `mov r0, #n` (every value goes
+///   into `r0` in this slice).
+/// * `ret <var>` and `ret_void` both lower to `bx lr` (the AAPCS
+///   return convention — the value is already in `r0` by
+///   construction).
+const SUPPORTED_OPS: &[&str] = &[
+    "const", "ret", "ret_void",
+];
+
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
 ///
-/// **v0.1.0 scope**: emits a single `BKPT #0xFFFF` regardless of the
-/// input.  This is the smallest "valid A32 program" we can produce —
-/// enough to load into the simulator, step once, and confirm the
-/// breakpoint exception fires.  Real lowering arrives in v0.2.0+ (A3+).
+/// **v0.2.0 scope** (A3+ — first real lowering):
+///
+/// | IIR op | A32 lowering |
+/// |--------|--------------|
+/// | `const dest, Int(n)` (8-bit imm) | `mov r0, #n` (`0xE3A0_00NN`) |
+/// | `ret <var>` (int) | `bx lr` (`0xE12FFF1E`) — `var` is already in `r0` |
+/// | `ret_void` | `bx lr` |
+///
+/// ### Accumulator-only first slice
+///
+/// Every `const` allocates to `r0` — the AAPCS return-value register.
+/// A real linear allocator over `r0..r12` (and the v0.3.x ARM
+/// equivalent of v0.3.0's RISC-V move) arrives in A3++.
+///
+/// ### Empty-module contract
+///
+/// Preserves v0.1.0's behaviour for the trivial "`fn main() {}`" case:
+/// any module with no functions emits a single `BKPT #0xFFFF` so the
+/// in-tree `arm-simulator` halts deterministically.  Once at least
+/// one function is lowered, the BKPT is replaced by the function's
+/// real instruction stream.
 pub fn lower_iir_to_armv7(
     module: &IIRModule,
     _cfg: &IIRArmv7Config,
@@ -234,5 +329,112 @@ pub fn lower_iir_to_armv7(
     if !errors.is_empty() {
         return Err(IIRArmv7Error::ValidationFailed(errors));
     }
-    Ok(vec![BKPT])
+
+    // Trivial empty-module contract — preserves v0.1.0 callable behaviour
+    // for the canonical "fn main() {}" minimal case.
+    if module.functions.is_empty() {
+        return Ok(vec![BKPT]);
+    }
+
+    let mut words = Vec::new();
+    for f in &module.functions {
+        for instr in &f.instructions {
+            if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
+                return Err(IIRArmv7Error::UnsupportedOp {
+                    function: f.name.clone(),
+                    op: instr.op.clone(),
+                });
+            }
+            match instr.op.as_str() {
+                // ── const dest, Int(n) → MOV R0, #n ─────────────────
+                //
+                // The accumulator-only first slice: every const goes
+                // into r0.  Multi-register allocation lands in A3++.
+                "const" => {
+                    let _dest = require_dest(instr, "const", &f.name)?;
+                    let imm8 = encode_immediate_byte(instr.srcs.first(), &f.name)?;
+                    words.push(encode_mov_imm(REG_R0, imm8));
+                }
+
+                // ── ret <var> → BX LR ──────────────────────────────
+                //
+                // The value is already in r0 (every const lowers
+                // there in v0.2.0).  Per AAPCS, returning a value
+                // means leaving it in r0 and branching to lr.  No
+                // staging MOV needed in this slice.
+                "ret" => {
+                    // Validate that srcs[0] is a Var — front-end bugs
+                    // surface as `InvalidOperand` rather than producing
+                    // surprising silence.
+                    match instr.srcs.first() {
+                        Some(Operand::Var(_)) => {}
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "ret srcs[0] must be Var".into(),
+                        }),
+                    };
+                    words.push(BX_LR);
+                }
+
+                // ── ret_void → BX LR ───────────────────────────────
+                "ret_void" => {
+                    words.push(BX_LR);
+                }
+
+                _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
+            }
+        }
+    }
+
+    // Defensive — if a function had no instructions at all, fall back
+    // to BKPT so the output is still a valid halting program.
+    if words.is_empty() {
+        words.push(BKPT);
+    }
+
+    Ok(words)
+}
+
+// ---------------------------------------------------------------------------
+// Per-instruction helpers
+// ---------------------------------------------------------------------------
+
+fn require_dest<'a>(
+    instr: &'a interpreter_ir::IIRInstr,
+    op: &str,
+    fn_name: &str,
+) -> Result<&'a str, IIRArmv7Error> {
+    instr.dest.as_deref().ok_or_else(|| IIRArmv7Error::InvalidOperand {
+        function: fn_name.to_string(),
+        detail: format!("{op} requires a dest"),
+    })
+}
+
+fn encode_immediate_byte(
+    op: Option<&Operand>,
+    fn_name: &str,
+) -> Result<u8, IIRArmv7Error> {
+    let n = match op {
+        Some(Operand::Int(n)) => *n,
+        Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
+        _ => return Err(IIRArmv7Error::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: "const srcs[0] must be Int or Bool".into(),
+        }),
+    };
+    if (0..=255).contains(&n) {
+        Ok(n as u8)
+    } else if (-128..0).contains(&n) {
+        Ok((n as i8) as u8)
+    } else {
+        Err(IIRArmv7Error::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "const {n} exceeds 8-bit byte range ([-128, 255]); A32's \
+                 12-bit MOV immediate field supports rotated 8-bit values \
+                 — wider raw immediates need a `movw`/`movt` pair, which \
+                 lands in A3++"
+            ),
+        })
+    }
 }

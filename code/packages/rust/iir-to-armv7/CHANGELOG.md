@@ -3,6 +3,95 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-06-02 (A3+ — `const` → `MOV r0, #imm8`; `ret`/`ret_void` → `BX LR`)
+
+### Added — first real instruction lowering
+
+Extends v0.1.0's BKPT-only skeleton with three IIR ops:
+
+| IIR op | A32 lowering |
+|--------|--------------|
+| `const dest, Int(n)` (8-bit imm) | `mov r0, #n` (`0xE3A0_00NN`) |
+| `ret <var>` (int) | `bx lr` (`0xE12FFF1E`) — `var` is already in `r0` |
+| `ret_void` | `bx lr` |
+
+The accumulator-only first slice: every `const` goes into `r0`.
+Multi-register allocation (`r1..r12`) and a real linear allocator
+land in A3++ alongside arithmetic.
+
+#### Why `BX LR` for both `ret` and `ret_void`?
+
+In the ARM AAPCS calling convention, `r0` (a.k.a. `a1`) is the
+return-value register.  Since every `const` already lands in `r0`,
+`ret <var>` doesn't need any staging MOV — the value is in the
+right place by construction.  `ret_void` simply doesn't care about
+the value, so the same `bx lr` works.
+
+(Compared to the 8008 backend's v0.2.0 which used `HLT` for `ret`
+as a temporary stand-in until v0.3.9 wired up real `RET`, ARMv7's
+`bx lr` is a proper return from the start.)
+
+#### Why `BX LR` over `MOV PC, LR`?
+
+`MOV PC, LR` would work on pure A32 cores but doesn't switch
+instruction sets when the lr's low bit signals "return to Thumb
+mode".  `BX LR` reads the low bit, switches mode accordingly, and
+branches — the canonical AAPCS return.  On a pure A32 module
+emitted by this crate, the low bit will always be 0 so both
+behave identically, but emitting `BX LR` keeps the output
+interop-correct with any caller that mixes A32 and Thumb code.
+
+#### New constants in the public surface
+
+* `pub const BX_LR: u32 = 0xE12FFF1E;` — branch-to-link-register
+  (AAPCS return).
+* `pub const MOV_IMM_R0_BASE: u32 = 0xE3A0_0000;` — `mov r0, #0`
+  base; OR in the 8-bit immediate to form `MOV r0, #N`.
+
+CAREFUL: `BX_LR = 0xE12FFF1E` vs `BKPT = 0xE12FFF7F` — bit-7
+differs.  Both share the same `12F_FF` family bits, so the bit-7
+nibble difference is the canonical confusion point.
+
+#### Immediate byte range
+
+`const` accepts integers in `[-128, 255]`:
+* `[0, 255]` cast straight to `u8`.
+* `[-128, -1]` reinterpreted as two's-complement (`-1 → 0xFF`).
+* Anything outside → `InvalidOperand` with a message naming the
+  8-bit limit and pointing forward to `movw`/`movt` (the ARMv7+
+  wide-immediate idiom that lands in A3++).
+
+#### New internal helper
+
+* `encode_mov_imm(rd: u8, imm8: u8) -> u32` — encodes the full
+  `MOV Rd, #imm8` word.  `debug_assert!`s on the 4-bit `rd` range.
+
+#### Tests added (14 total, was 7)
+
+* `bx_lr_constant_pinned_to_e12fff1e` — guards against the
+  `BKPT ↔ BX_LR` (bit-7) confusion.
+* `mov_imm_r0_base_pinned_to_0xe3a00000`.
+* `const_42_then_ret_lowers_to_mov_r0_42_then_bx_lr` — pinned
+  exact 2-word sequence `0xE3A0002A 0xE12FFF1E`.
+* `const_negative_uses_twos_complement_byte` (`-1 → 0xFF`).
+* `const_out_of_byte_range_is_rejected` (1000 overflows).
+* `ret_void_alone_emits_just_bx_lr`.
+* `unsupported_op_is_rejected_with_function_name` — `safepoint`
+  rejected with function name preserved in the error.
+
+### What is NOT in v0.2.0 (deferred to A3++ and beyond)
+
+* Multi-register allocator over `r1..r12` + `mov rd, rs` register-
+  to-register lowering.
+* Arithmetic (`add`/`sub`/`mul`).
+* Wider immediates via `movw`/`movt` (ARMv7's 16-bit-imm pair) or
+  rotated 8-bit values (the A32 12-bit-imm field's full power).
+* Function calls via `bl` and PC-relative offsets.
+* Comparisons + conditional branches via the `cond` field every
+  A32 instruction carries (a stronger version of the 8008's
+  flag-based jumps).
+* `lang-aot --emit=armv7` wiring — A3+++.
+
 ## [0.1.0] — 2026-06-02 (A3 — crate skeleton)
 
 ### Added — `BKPT`-only emission
