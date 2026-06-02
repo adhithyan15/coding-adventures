@@ -227,6 +227,60 @@ pub(crate) fn encode_mov_reg(rd: u8, rm: u8) -> u32 {
     MOV_REG_BASE | ((rd as u32) << 12) | (rm as u32)
 }
 
+/// ARMv7-A `ADD Rd, Rn, Rm` (data-processing register) base encoding —
+/// `0xE080_0000`.  OR in `(Rn << 16) | (Rd << 12) | Rm` to form the
+/// full instruction word.
+///
+/// Bit layout (cond=AL, S=0, no shift):
+///
+/// ```text
+/// 31..28  cond      = 0xE = 1110          (always — unconditional)
+/// 27..25            = 000                  (data-processing register)
+/// 24..21  opcode    = 0100                 (ADD)
+/// 20      S         = 0                    (don't set flags)
+/// 19..16  Rn        = (in this base, 0)   (first source register)
+/// 15..12  Rd        = (in this base, 0)   (destination register)
+/// 11.. 7  shift_imm = 00000                (no shift on Rm)
+///  6.. 5  type      = 00                   (LSL — but shift_imm=0 means no shift)
+///  4                = 0                    (immediate shift, not register)
+///  3.. 0  Rm        = (in this base, 0)   (second source register)
+/// ```
+///
+/// For `ADD r0, r0, r0`: `1110 0000 1000 0000 0000 0000 0000 0000` =
+/// `0xE0800000`.  For `ADD Rd, Rn, Rm`: OR in
+/// `(Rn << 16) | (Rd << 12) | Rm`.
+///
+/// Unlike the 8008's `ADD r` (which forces A = A + r — accumulator-
+/// anchored), ARMv7's `ADD` is a 3-register operation: `Rd = Rn + Rm`.
+/// No staging MOVs needed.
+pub const ADD_REG_BASE: u32 = 0xE080_0000;
+
+/// ARMv7-A `SUB Rd, Rn, Rm` (data-processing register) base encoding —
+/// `0xE040_0000`.  Same shape as `ADD_REG_BASE` but with opcode
+/// `0010` (SUB) instead of `0100` (ADD).  OR in
+/// `(Rn << 16) | (Rd << 12) | Rm` for arbitrary operand triples.
+///
+/// `Rd = Rn - Rm`.  Same 3-register no-staging shape as ADD.
+pub const SUB_REG_BASE: u32 = 0xE040_0000;
+
+/// Encode an ARMv7-A `ADD Rd, Rn, Rm` instruction.
+///
+/// All three register selectors must be in `[0, 15]`.
+pub(crate) fn encode_add_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    ADD_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
+/// Encode an ARMv7-A `SUB Rd, Rn, Rm` instruction.
+pub(crate) fn encode_sub_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    SUB_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
 // ===========================================================================
 // IIRArmv7Config
 // ===========================================================================
@@ -357,7 +411,10 @@ const REGISTER_POOL: [u8; 13] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 /// * `ret <var>` stages the value into `r0` (if not already there) and
 ///   emits `BX LR`.  `ret_void` just emits `BX LR`.
 const SUPPORTED_OPS: &[&str] = &[
+    // A3 / A3+ / A3++
     "const", "mov", "ret", "ret_void",
+    // A3++.5 — data-processing-register ALU
+    "add", "sub",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -469,6 +526,42 @@ pub fn lower_iir_to_armv7(
                 // ── ret_void → BX LR ───────────────────────────────
                 "ret_void" => {
                     words.push(BX_LR);
+                }
+
+                // ── add / sub → ADD/SUB Rd, Rn, Rm ─────────────────────
+                //
+                // Unlike the 8008's accumulator-anchored `ADD r` (which
+                // forces `A = A + r` and needs MOV wrappers to use
+                // non-accumulator operands), ARMv7's data-processing-
+                // register family takes 3 register selectors in a
+                // single instruction: `Rd = Rn op Rm`.  No staging
+                // MOVs.  This is the same shape as RISC-V's `add rd,
+                // rs1, rs2`.
+                "add" | "sub" => {
+                    let dest = require_dest(instr, &instr.op, &f.name)?;
+                    let a_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} srcs[0] must be Var", instr.op),
+                        }),
+                    };
+                    let b_name = match instr.srcs.get(1) {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} srcs[1] must be Var", instr.op),
+                        }),
+                    };
+                    let rn = lookup_register(&env, &a_name, &f.name)?;
+                    let rm = lookup_register(&env, &b_name, &f.name)?;
+                    let rd = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    let word = if instr.op == "add" {
+                        encode_add_reg(rd, rn, rm)
+                    } else {
+                        encode_sub_reg(rd, rn, rm)
+                    };
+                    words.push(word);
                 }
 
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),

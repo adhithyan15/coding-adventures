@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-armv7"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.3.0 (A3++): linear register allocator over r0..r12 + multi-register `const` + `mov` (register-to-register, 0xE1A0_0000 base) + ret-value staging.  r0 comes first in the pool to keep the trivial `const v; ret v` case at the 2-word v0.2.0 shape (MOV r0, #imm + BX LR — no redundant staging MOV).  r13 (sp), r14 (lr), and r15 (pc) are NOT in the pool — touching them would break the calling convention.  Stack spilling + arithmetic land in A3++.5."
+description = "IIR → ARMv7 (A32) machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit ARMv7-A instructions.  v0.4.0 (A3++.5): adds `add` (ADD Rd, Rn, Rm = 0xE080_0000 | Rn<<16 | Rd<<12 | Rm) and `sub` (0xE040_0000 base) on the data-processing-register family.  Unlike the 8008's accumulator-anchored ALU which needed two MOV wrappers, ARMv7's 3-register ADD/SUB produces `Rd = Rn op Rm` in a single instruction — same shape as RV32I.  Bitwise ops (and/or/xor) + cond branches defer to v0.4.x; lang-aot wiring stays at A3+++ (v0.5.0)."
 
 [lib]
 name = "iir_to_armv7"
