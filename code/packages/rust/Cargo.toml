@@ -387,6 +387,7 @@ members = [
     "mosaic-analyzer",
     "mosaic-driver",
     "mosaic-compile",
+    "mosaic-emit-compose",
     "mosaic-emit-flutter",
     "mosaic-emit-html",
     "mosaic-emit-paint",

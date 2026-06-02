@@ -24,6 +24,7 @@ mosaic-emit-xaml = { path = "../mosaic-emit-xaml" }
 mosaic-emit-swiftui = { path = "../mosaic-emit-swiftui" }
 mosaic-emit-qt = { path = "../mosaic-emit-qt" }
 mosaic-emit-flutter = { path = "../mosaic-emit-flutter" }
+mosaic-emit-compose = { path = "../mosaic-emit-compose" }
 mosaic-package-manifest = { path = "../mosaic-package-manifest" }
 mosmodel-compiler = { path = "../mosmodel-compiler" }
 moslayout-compiler = { path = "../moslayout-compiler" }
