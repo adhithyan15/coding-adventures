@@ -166,10 +166,18 @@ fn encode_alu(ooo: u8, sss: u8) -> u8 {
 
 /// ALU operation codes (`ooo` field in `10 ooo sss`).
 const ALU_ADD: u8 = 0b000; // ADD r
+const ALU_ADC: u8 = 0b001; // ACA r (add with carry-in)
 const ALU_SUB: u8 = 0b010; // SUB r
+const ALU_SBB: u8 = 0b011; // SCA r (sub with borrow-in)
 const ALU_AND: u8 = 0b100; // ANA r (logical AND)
 const ALU_XOR: u8 = 0b101; // XRA r (logical XOR)
 const ALU_OR:  u8 = 0b110; // ORA r (logical OR)
+// ALU_CMP = 0b111 lives in the v0.3.4 slice — `cmp` produces a
+// boolean dest at the IIR level but the 8008 CMP only sets flags
+// (discards the difference), so the lowering needs an extra
+// flag-to-register capture sequence (typically a conditional load
+// or a paired conditional jump).  That's wired alongside the
+// branch ops, not here.
 
 // ===========================================================================
 // IIRIntel8008Config
@@ -297,6 +305,8 @@ const SUPPORTED_OPS: &[&str] = &[
     "add", "sub",
     // A2++.5.5 — bitwise accumulator ALU
     "and", "or", "xor",
+    // A2++.5.5 second slice — carry/borrow chained ALU
+    "adc", "sbb",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -388,20 +398,34 @@ pub fn lower_iir_to_intel8008(
                     bytes.push(HLT);
                 }
 
-                // ── add / sub / and / or / xor → MOV A,a; OP b_reg; MOV dest,A
+                // ── add / adc / sub / sbb / and / or / xor → MOV A,a; OP b_reg; MOV dest,A
                 //
-                // All five accumulator-target ALU ops share an identical
+                // All seven accumulator-target ALU ops share an identical
                 // shape, differing only in the 3-bit `ooo` selector:
                 //
                 //   ADD = 0b000   AND = 0b100
-                //   SUB = 0b010   XOR = 0b101
-                //                 OR  = 0b110
+                //   ADC = 0b001   XOR = 0b101
+                //   SUB = 0b010   OR  = 0b110
+                //   SBB = 0b011
+                //
+                // `cmp` (ooo = 0b111) is intentionally NOT here — it sets
+                // flags without producing a register result, so its
+                // lowering needs an extra capture sequence and lands with
+                // the branch ops in v0.3.4.
                 //
                 // The 8008's ALU is *always* accumulator-anchored: left
                 // source AND destination are A; only the right source is
                 // a variable register.  Optional MOVs at the ends collapse
                 // when a_reg or dest_reg already coincide with A.
-                "add" | "sub" | "and" | "or" | "xor" => {
+                //
+                // ADC / SBB read the carry flag bit set by a PRIOR ALU op
+                // — they don't change shape here, but front-ends should
+                // ensure no carry-clobbering op runs between the
+                // producer (e.g. an ADD that overflowed) and the
+                // consumer.  This crate doesn't reorder instructions; it
+                // emits them in source order, so the contract is the
+                // front-end's to uphold.
+                "add" | "adc" | "sub" | "sbb" | "and" | "or" | "xor" => {
                     let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -430,11 +454,13 @@ pub fn lower_iir_to_intel8008(
                     // strings.
                     let ooo = match instr.op.as_str() {
                         "add" => ALU_ADD,
+                        "adc" => ALU_ADC,
                         "sub" => ALU_SUB,
+                        "sbb" => ALU_SBB,
                         "and" => ALU_AND,
                         "or"  => ALU_OR,
                         "xor" => ALU_XOR,
-                        _ => unreachable!("outer arm restricts to these 5"),
+                        _ => unreachable!("outer arm restricts to these 7"),
                     };
                     bytes.push(encode_alu(ooo, b_reg));
                     // Capture the result into dest_reg unless dest_reg is A.
