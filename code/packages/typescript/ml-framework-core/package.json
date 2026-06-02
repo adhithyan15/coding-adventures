@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/ml-framework-core",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Complete PyTorch-shaped TypeScript ML framework on the Rust matrix-cpu engine.  Tensor + autograd + 15 differentiable ops (Add/Sub/Mul/Div/Neg/Abs/Pow/MatMul/ReLU/Sigmoid/Tanh/GELU/Softmax/Sum/Mean) with full forward and backward.  Small tensors use a pure-TypeScript fast path; tensors of 10k+ cells auto-dispatch through @coding-adventures/matrix-rust-napi to the Rust matrix-cpu executor for SIMD-accelerated f32 math.  End-to-end MLP training verified by the test suite.",
   "type": "module",
   "main": "src/index.ts",

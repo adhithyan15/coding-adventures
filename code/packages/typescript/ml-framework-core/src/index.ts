@@ -56,6 +56,7 @@ export {
   SoftmaxOp,
   SumOp,
   MeanOp,
+  EmbeddingOp,
   BroadcastOp,
   DISPATCH_THRESHOLD,
   packF32Hex,
