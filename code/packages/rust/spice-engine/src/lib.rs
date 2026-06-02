@@ -687,6 +687,49 @@ pub fn digital_events_to_voltage_source(
     ))
 }
 
+pub fn digital_event_streams_to_voltage_sources(
+    streams: &[DigitalEventStream],
+    negative: impl AsRef<str>,
+    levels: DigitalLogicLevels,
+) -> Result<Vec<VoltageSource>, SpiceError> {
+    let negative = negative.as_ref().trim();
+    if negative.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_streams".to_string(),
+            reason: "digital event stream negative node must not be empty".to_string(),
+        });
+    }
+
+    let mut sources = Vec::new();
+    for stream in streams {
+        let signal_name = stream.signal_name.trim();
+        if signal_name.is_empty() {
+            return Err(SpiceError::InvalidElement {
+                name: "digital_event_stream".to_string(),
+                reason: "digital event stream signal name must not be empty".to_string(),
+            });
+        }
+        if sources
+            .iter()
+            .any(|source: &VoltageSource| source.positive == signal_name)
+        {
+            return Err(SpiceError::InvalidElement {
+                name: signal_name.to_string(),
+                reason: "digital event stream signal names must be unique".to_string(),
+            });
+        }
+
+        sources.push(digital_events_to_voltage_source(
+            format!("V{signal_name}"),
+            signal_name.to_string(),
+            negative.to_string(),
+            &stream.events,
+            levels,
+        )?);
+    }
+    Ok(sources)
+}
+
 pub fn sample_transient_probe_as_digital_events(
     points: &[TransientPoint],
     probe: &str,

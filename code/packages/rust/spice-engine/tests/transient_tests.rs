@@ -1,6 +1,7 @@
 use spice_engine::{
-    dc_op, distortion_from_fourier, distortion_from_transient, distortion_from_transient_corners,
-    estimate_period, format_adaptive_transient_table, format_corner_adaptive_transient_table,
+    dc_op, digital_event_streams_to_voltage_sources, distortion_from_fourier,
+    distortion_from_transient, distortion_from_transient_corners, estimate_period,
+    format_adaptive_transient_table, format_corner_adaptive_transient_table,
     format_corner_distortion_table, format_corner_fourier_table, format_corner_pole_zero_table,
     format_corner_pss_table, format_corner_transient_table, format_dc_table,
     format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
@@ -2052,6 +2053,58 @@ fn digital_events_build_finite_edge_pwl_voltage_source() {
     assert_close(points[0].voltage("din").unwrap(), 0.0);
     assert_close(points[2].voltage("din").unwrap(), 1.8);
     assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
+}
+
+#[test]
+fn named_digital_event_streams_build_pwl_voltage_sources() {
+    let streams = [
+        DigitalEventStream::new(
+            "din",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.25e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::High),
+                DigitalEvent::new(1.0e-9, DigitalState::Low),
+            ],
+        ),
+    ];
+    let sources = digital_event_streams_to_voltage_sources(
+        &streams,
+        "0",
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+
+    assert_eq!(sources.len(), 2);
+    assert_eq!(sources[0].name, "Vdin");
+    assert_eq!(sources[0].positive, "din");
+    assert_eq!(sources[1].name, "Venable");
+    assert_eq!(sources[1].positive, "enable");
+
+    let mut circuit = Circuit::new();
+    for source in sources {
+        circuit.add(Element::VoltageSource(source));
+    }
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rdin", "din", "0", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Renable", "enable", "0", 1_000.0,
+    )));
+
+    let points = transient(&circuit, 0.25e-9, 1.5e-9).unwrap();
+
+    assert_close(points[0].voltage("din").unwrap(), 0.0);
+    assert_close(points[2].voltage("din").unwrap(), 1.8);
+    assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
+    assert_close(points[0].voltage("enable").unwrap(), 1.8);
+    assert_close(points.last().unwrap().voltage("enable").unwrap(), 0.0);
 }
 
 #[test]
