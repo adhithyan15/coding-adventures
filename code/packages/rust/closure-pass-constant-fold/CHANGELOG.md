@@ -2,6 +2,52 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-02
+
+### Added — CLOC12.20: gap-002 `void <pure-literal>` → `undefined` fold
+
+Closes `gap-002` from the CLOC12 gap tracker. `UnaryExpression { operator: Void, argument: <primitive-literal> }` now folds to `UndefinedLiteral`. The canonical case `void 0` (a Closure-Compiler-style synonym for `undefined`) is now resolved.
+
+What's folded:
+
+- `void <NumericLiteral>` → `undefined`
+- `void <StringLiteral>` → `undefined`
+- `void <BooleanLiteral>` → `undefined`
+- `void <NullLiteral>` → `undefined`
+- `void <BigIntLiteral>` → `undefined`
+- `void <UndefinedLiteral>` → `undefined` (idempotent)
+
+What's deliberately NOT folded:
+
+- `void <Identifier>` — the identifier could refer to a function/getter with side effects.
+- `void <CallExpression>` — same, the call has observable side effects.
+- `void <MemberExpression>` — property accesses can trigger getters / proxies.
+- `void <BinaryExpression>` / etc. — recurses through fold; if the inner folds to a primitive literal, the void rule fires on the next iteration.
+
+Soundness: the general rule `void <expr> → undefined` only holds when `<expr>` has no observable side effects. By restricting to primitive literals, we have a strict subset that's *always* sound. Closes the test surface for `testUndefinedComparison2` from the upstream Closure test suite.
+
+### Implementation
+
+- `FoldedLiteral` enum: new `Undefined` variant. Stamp + label helpers updated to handle it.
+- `fn fold_unary` `UnaryOperator::Void` arm: matches the 6 primitive-literal variants, returns `Some(FoldedLiteral::Undefined)`; everything else falls through to `None`.
+- `use coding_adventures_javascript_ast::UndefinedLiteral` added to the imports.
+
+### Tests
+
+- `tests/upstream/peephole_fold_constants_test.rs::test_undefined_comparison_2`: un-ignored. 4 assertions (`void 0`, `void 1`, `void "x"`, `void undefined`).
+
+Before this PR:
+- Total upstream tests: 14, passing: 10, ignored: 4 (gap-001, gap-002, gap-003, gap-004).
+
+After:
+- Total upstream tests: 14, passing: 11, ignored: 3 (gap-001, gap-003, gap-004).
+
+The pending gaps (gap-003 cross-type null comparison, gap-004 abstract-equality / abstract-comparison) are independent of this PR — they need the abstract-equality algorithm implemented, which is a separate body of work.
+
+### Bumped 0.7.1 → 0.8.0
+
+`fold` API and CV-stamping semantics unchanged. Version bump reflects the new fold rule (closes one observable upstream test parity gap).
+
 ## [0.7.1] - 2026-06-01
 
 ### Added — CLOC12.16: typeof `UndefinedLiteral` folds to `"undefined"`

@@ -7,14 +7,16 @@ The initial slices implement:
 - DC operating-point analysis for linear circuits using modified nodal analysis
   (MNA).
 - DC operating-point sweeps across explicit analysis temperatures, including
-  named corner sweeps.
-- DC source sweeps over independent voltage and current sources.
+  named corner sweeps and order-preserving parallel named corner DC sweeps.
+- DC source sweeps over independent voltage and current sources, including
+  order-preserving parallel named corner source sweeps.
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters, including named corner sweeps.
 - Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian
   and uniform distributions, including named corner sweeps.
 - AC noise analysis with resistor thermal-noise contributions, input-referred
   PSD, and named corner sweeps.
+- AC frequency sweeps, including order-preserving parallel named corner sweeps.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
   impedance estimates, including named corner sweeps.
 - AC small-signal frequency sweeps for linear RC/RL circuits and explicit AC
@@ -27,6 +29,12 @@ The initial slices implement:
 - Periodic steady-state analysis for periodic source circuits, including named
   corner sweeps.
 - Time-varying transient source waveforms: PWL, SIN, PULSE, and EXP.
+- Mixed-signal boundary helpers that map binary digital event timelines and
+  named event streams to finite-edge PWL voltage sources, run SPICE-side
+  fixed-step and adaptive digital-input transient bridge fixtures, and sample
+  transient probes back into thresholded digital events, including multi-probe
+  named event streams and named-corner digital-input bridge runs with event
+  stream table output plus bridge breakpoint schedules.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,
@@ -34,6 +42,9 @@ The initial slices implement:
 - Constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
   including named corner sweeps.
 - Stable text output tables for selected node voltages, branch currents,
+  sampled digital event streams and named multi-probe digital event streams,
+  mixed-signal bridge breakpoint schedules, cornered and adaptive mixed-signal
+  bridge output streams,
   DC operating-point temperature sweeps, cornered DC operating-point
   temperature sweeps, transient samples, adaptive transient samples, cornered
   transient samples, cornered adaptive transient samples, AC phasors, cornered DC

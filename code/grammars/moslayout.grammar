@@ -56,7 +56,9 @@ layout_def = KEYWORD NAME LBRACE { node } RBRACE ;
 # Layout nodes
 # ============================================================================
 # Every node has:
-#   - a type name (NAME — may be Column, Row, Box, Grid, Text, Image, Spacer)
+#   - a type name — either an unqualified NAME (kernel primitive or same-file
+#     local component reference) or a qualified `pkg::P::C` reference (UI34
+#     §2) naming component `C` exported by package `P`.
 #   - an optional part name in [ … ] (for mosstyle styling)
 #   - optional structural properties in ( … ) (direction, align, slot bindings)
 #   - optional children in { … } (container nodes only; leaves omit this)
@@ -66,8 +68,22 @@ layout_def = KEYWORD NAME LBRACE { node } RBRACE ;
 #   - Text / Image nodes require a slot binding prop; they have no children
 #   - Column / Row / Box nodes are containers (props are direction, align, etc.)
 #   - Spacer has no children and only optional grow prop
+#
+# LL(1) note: `node` decides between the unqualified and qualified branches
+# in `qualified_name` by looking at one token — `KEYWORD(pkg)` selects the
+# qualified branch; any other `NAME` selects the unqualified branch.
 
-node = NAME [ part_name ] [ LPAREN prop_list RPAREN ] [ LBRACE { node } RBRACE ] ;
+node           = qualified_name [ part_name ]
+                                [ LPAREN prop_list RPAREN ]
+                                [ LBRACE { node } RBRACE ] ;
+
+# UI34 §3.2 — a node's type name is either a bare NAME (the legacy form)
+# or a fully-qualified `pkg::P::C` reference.  The two NAMEs in the
+# qualified branch are validated by the compiler, not the grammar: the
+# package name must be kebab-case (matching `mosaic-package-manifest`'s
+# `package.name` shape) and the component name must be PascalCase.
+qualified_name = NAME
+               | KEYWORD DOUBLE_COLON NAME DOUBLE_COLON NAME ;
 
 # ============================================================================
 # Part name

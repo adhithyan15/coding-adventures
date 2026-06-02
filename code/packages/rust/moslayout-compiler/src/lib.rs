@@ -219,7 +219,27 @@ pub struct LayoutDef {
 /// ```
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LayoutNode {
-    /// Element type name, e.g. `Column`, `Grid`, `Text`.
+    /// Element type name.
+    ///
+    /// Two forms (UI34):
+    ///
+    /// * **Unqualified** — a single PascalCase component or kernel
+    ///   primitive name: `"Column"`, `"Grid"`, `"HostTable"`.  This
+    ///   is the legacy form used by every pre-UI34 `.mll` file.
+    /// * **Qualified** — the canonical UI34 cross-package reference:
+    ///   `"pkg::mosaic-pkg-grid::Grid"`.  The string is the
+    ///   author-written source syntax verbatim, so the AST round-
+    ///   trips to the same `.mll` text.
+    ///
+    /// Callers that care about the structure should prefer the
+    /// helper methods [`LayoutNode::package_ref`] and
+    /// [`LayoutNode::component`] over splitting the string by hand.
+    ///
+    /// **Resolver invariant.**  After the `mosaic-compile`
+    /// package-resolver has run (UI34 §5), no `tag` may start with
+    /// `pkg::` — every qualified reference must have been
+    /// substituted with the resolved sub-tree.  Each backend emitter
+    /// asserts this with a `debug_assert!` in its entry point.
     pub tag: String,
     /// Optional part name for mosstyle targeting, e.g. `root`, `cell-grid`.
     pub part_name: Option<String>,
@@ -227,6 +247,68 @@ pub struct LayoutNode {
     pub props: Vec<LayoutProp>,
     /// Child nodes (containers only; leaf nodes like `Grid` have no children).
     pub children: Vec<LayoutNode>,
+}
+
+impl LayoutNode {
+    /// UI34 — return `Some((package_name, component_name))` when
+    /// `tag` is a qualified `pkg::P::C` reference; `None`
+    /// otherwise.
+    ///
+    /// ```
+    /// # use moslayout_compiler::LayoutNode;
+    /// let q = LayoutNode {
+    ///     tag: "pkg::mosaic-pkg-grid::Grid".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(q.package_ref(), Some(("mosaic-pkg-grid", "Grid")));
+    ///
+    /// let p = LayoutNode {
+    ///     tag: "HostTable".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(p.package_ref(), None);
+    /// ```
+    pub fn package_ref(&self) -> Option<(&str, &str)> {
+        let rest = self.tag.strip_prefix("pkg::")?;
+        let (pkg, comp) = rest.split_once("::")?;
+        // Defensive: a well-formed qualified tag has exactly
+        // `pkg::P::C`.  If the parser ever emits a malformed shape
+        // (extra `::`) we return `None` rather than guessing — the
+        // validator will surface a clean error.
+        if pkg.is_empty() || comp.is_empty() || comp.contains("::") {
+            return None;
+        }
+        Some((pkg, comp))
+    }
+
+    /// The component name portion of `tag` — strips the
+    /// `pkg::P::` prefix when present, otherwise returns `tag`
+    /// unchanged.
+    ///
+    /// Use this in emitter switch statements where the package is
+    /// irrelevant (e.g. counting node depth) but care must be
+    /// taken to compare the bare component name.
+    ///
+    /// ```
+    /// # use moslayout_compiler::LayoutNode;
+    /// let q = LayoutNode {
+    ///     tag: "pkg::mosaic-pkg-grid::Grid".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(q.component(), "Grid");
+    ///
+    /// let p = LayoutNode {
+    ///     tag: "HostTable".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(p.component(), "HostTable");
+    /// ```
+    pub fn component(&self) -> &str {
+        match self.package_ref() {
+            Some((_, comp)) => comp,
+            None => &self.tag,
+        }
+    }
 }
 
 /// A structural property on a layout node.
@@ -995,20 +1077,34 @@ fn extract_child_nodes(layout_def: &GrammarASTNode) -> Result<Vec<LayoutNode>, C
 
 /// Analyze a `node` AST node into a `LayoutNode`.
 ///
-/// Grammar: `node = NAME [ part_name ] [ LPAREN prop_list RPAREN ] [ LBRACE { node } RBRACE ]`
+/// Grammar (UI34): `node = qualified_name [ part_name ] [ LPAREN prop_list RPAREN ] [ LBRACE { node } RBRACE ]`
 ///
-/// The children of a `node` ASTNode may contain (in order):
-/// - Token(NAME)                         — the primitive tag
-/// - ASTNode("part_name")               — optional
-/// - Token(LPAREN), ASTNode("prop_list"), Token(RPAREN) — optional
-/// - Token(LBRACE), ASTNode("node")*, Token(RBRACE)    — optional
+/// where `qualified_name = NAME | KEYWORD(pkg) DOUBLE_COLON NAME DOUBLE_COLON NAME`.
+///
+/// The children of a `node` ASTNode contain (in order):
+/// - ASTNode("qualified_name")            — the type-name reference (always present)
+/// - ASTNode("part_name")                 — optional
+/// - Token(LPAREN), ASTNode("prop_list"), Token(RPAREN)  — optional
+/// - Token(LBRACE), ASTNode("node")*, Token(RBRACE)      — optional
 fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
     let children = &node_ast.children;
     let mut idx = 0;
 
     // ── TAG ──────────────────────────────────────────────────────────────────
-    // First child must be the NAME token for the primitive tag.
+    // First child must be the `qualified_name` AST node (UI34).  It either
+    // wraps a single NAME token (legacy form) or a five-token sequence
+    // `KEYWORD(pkg) :: NAME :: NAME` (qualified form).  We encode the
+    // qualified form into the tag string verbatim (`"pkg::P::C"`); see the
+    // doc-comment on [`LayoutNode::tag`].
     let tag = match children.get(idx) {
+        Some(ASTNodeOrToken::Node(n)) if n.rule_name == "qualified_name" => {
+            idx += 1;
+            extract_qualified_name(n)?
+        }
+        // Fallback for the (currently impossible) case where the grammar
+        // hands us a bare NAME token at the head of `node`.  Treating it
+        // as an unqualified tag keeps the analyzer robust to grammar
+        // evolution without silently producing the wrong AST.
         Some(ASTNodeOrToken::Token(t)) if t.type_ == TokenType::Name => {
             idx += 1;
             t.value.clone()
@@ -1016,7 +1112,10 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
         _ => {
             return Err(CompileError {
                 kind: ErrorKind::InternalError,
-                message: format!("Expected NAME token at start of node, got {:?}", children.get(0)),
+                message: format!(
+                    "Expected qualified_name AST node at start of node, got {:?}",
+                    children.get(0)
+                ),
             });
         }
     };
@@ -1089,6 +1188,65 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
         part_name,
         props,
         children: child_nodes,
+    })
+}
+
+/// Extract a node's type-name from a `qualified_name` AST node (UI34).
+///
+/// Grammar:
+///     qualified_name = NAME
+///                    | KEYWORD(pkg) DOUBLE_COLON NAME DOUBLE_COLON NAME
+///
+/// Unqualified form returns the single NAME verbatim (`"Grid"`).  Qualified
+/// form returns the canonical source-syntax string (`"pkg::P::C"`) — see
+/// the doc-comment on [`LayoutNode::tag`] for the rationale.  Storing the
+/// reference encoded into the existing `tag` field keeps the ≈ 350 in-repo
+/// `LayoutNode { … }` literal constructions in emitter test code compiling
+/// unchanged (UI34 §4.1).
+fn extract_qualified_name(qn_ast: &GrammarASTNode) -> Result<String, CompileError> {
+    // Walk the children.  We accept either:
+    //   • A single NAME token → unqualified.
+    //   • A KEYWORD(pkg) followed by `::`, NAME, `::`, NAME → qualified.
+    // Anything else is an InternalError because the grammar should never
+    // produce a `qualified_name` of a different shape.
+    let children = &qn_ast.children;
+
+    // Unqualified shape — single NAME token.
+    if children.len() == 1 {
+        if let Some(ASTNodeOrToken::Token(t)) = children.get(0) {
+            if t.type_ == TokenType::Name {
+                return Ok(t.value.clone());
+            }
+        }
+    }
+
+    // Qualified shape — `pkg :: P :: C` is exactly five tokens.
+    if children.len() == 5 {
+        // We don't need to inspect each token's `type_` exhaustively
+        // (the grammar already constrained the shape).  Pull the raw
+        // string values and re-glue them with `::`.
+        let parts: Vec<&str> = children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+                _ => None,
+            })
+            .collect();
+        if parts.len() == 5 && parts[1] == "::" && parts[3] == "::" {
+            // The result string is `pkg::P::C` — the verbatim source
+            // syntax the author wrote.  Storing the canonical form
+            // means a future round-trip emitter can reconstitute the
+            // original `.mll` text without consulting any side table.
+            return Ok(format!("{}::{}::{}", parts[0], parts[2], parts[4]));
+        }
+    }
+
+    Err(CompileError {
+        kind: ErrorKind::InternalError,
+        message: format!(
+            "Could not extract qualified_name (got {} children)",
+            children.len()
+        ),
     })
 }
 
@@ -2780,5 +2938,117 @@ mod tests {
             n.tag == "For" || n.children.iter().any(contains_for)
         }
         assert!(contains_for(&result.def.root));
+    }
+
+    // ── UI34 — pkg::P::C qualified references ─────────────────────────────
+
+    /// `pkg::package-name::Component` parses and the analyzer stores it
+    /// verbatim in the child node's `tag` field.
+    #[test]
+    fn ui34_qualified_tag_round_trips_into_tag_field() {
+        let src = r#"
+            layout Demo {
+                Box [ root ] {
+                    pkg::mosaic-pkg-grid::Grid { }
+                }
+            }
+        "#;
+        let def = parse_and_analyze(src);
+        let child = &def.root.children[0];
+        assert_eq!(child.tag, "pkg::mosaic-pkg-grid::Grid");
+        assert_eq!(
+            child.package_ref(),
+            Some(("mosaic-pkg-grid", "Grid")),
+            "package_ref() must split the canonical pkg::P::C form"
+        );
+        assert_eq!(child.component(), "Grid");
+    }
+
+    /// Unqualified tags don't accidentally look like qualified ones.
+    #[test]
+    fn ui34_unqualified_tag_has_no_package_ref() {
+        let src = "layout Demo { Box [ root ] { HostTable { } } }";
+        let def = parse_and_analyze(src);
+        let child = &def.root.children[0];
+        assert_eq!(child.tag, "HostTable");
+        assert_eq!(child.package_ref(), None);
+        assert_eq!(child.component(), "HostTable");
+    }
+
+    /// Qualified tag at the layout root works too — Grid.desktop.mll
+    /// in the VisiCalc demo will use this exact shape once UI34 lands.
+    #[test]
+    fn ui34_qualified_root_node_with_props() {
+        let src = r#"
+            layout Grid {
+                pkg::mosaic-pkg-grid::Grid (
+                    viewport-rows:  slot: viewport-rows ,
+                    column-headers: slot: column-headers ,
+                    onNavigate:     emit: onNavigate
+                )
+            }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(def.root.tag, "pkg::mosaic-pkg-grid::Grid");
+        let pkg = def.root.package_ref().expect("must be qualified");
+        assert_eq!(pkg.0, "mosaic-pkg-grid");
+        assert_eq!(pkg.1, "Grid");
+        // Props pass through unchanged.
+        assert_eq!(def.root.props.len(), 3);
+        assert_eq!(def.root.props[0].name, "viewport-rows");
+    }
+
+    /// `package_ref()` is robust to malformed tags — it returns `None`
+    /// rather than panicking or guessing.
+    #[test]
+    fn ui34_package_ref_rejects_malformed_tags() {
+        // Missing component segment.
+        let n = LayoutNode {
+            tag: "pkg::mosaic-pkg-grid".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert_eq!(n.package_ref(), None);
+
+        // Empty package.
+        let n = LayoutNode {
+            tag: "pkg::::Grid".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert_eq!(n.package_ref(), None);
+
+        // Three segments after `pkg::` — the `Some` arm requires exactly
+        // two — extra `::` rejected to keep round-trip exact.
+        let n = LayoutNode {
+            tag: "pkg::a::b::c".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert_eq!(n.package_ref(), None);
+    }
+
+    /// A qualified tag can be a child of another qualified tag —
+    /// `mosaic-pkg-grid`'s Grid composes Cell, both qualified inside
+    /// the package's own layout files.
+    #[test]
+    fn ui34_qualified_tags_nest() {
+        let src = r#"
+            layout Demo {
+                pkg::mosaic-pkg-grid::Grid {
+                    pkg::mosaic-pkg-grid::Cell ( slot: value )
+                }
+            }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(def.root.tag, "pkg::mosaic-pkg-grid::Grid");
+        assert_eq!(def.root.children.len(), 1);
+        assert_eq!(
+            def.root.children[0].tag,
+            "pkg::mosaic-pkg-grid::Cell"
+        );
     }
 }

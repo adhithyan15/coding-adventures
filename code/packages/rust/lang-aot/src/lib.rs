@@ -136,6 +136,31 @@ pub enum LangAotError {
     /// already includes the failing function name and the unsupported
     /// op/type/operand).
     RiscvBackendError(String),
+    /// The Intel 8008 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-intel8008`
+    /// (which already includes the failing function name and the
+    /// unsupported op/type/operand).
+    Intel8008BackendError(String),
+    /// The ARMv7 (A32) backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-armv7` (which
+    /// already includes the failing function name and the
+    /// unsupported op/type/operand).
+    Armv7BackendError(String),
+    /// The Intel 4004 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-intel4004`
+    /// (which already includes the failing function name and the
+    /// unsupported op/type/operand).
+    Intel4004BackendError(String),
+    /// The GE-225 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-ge225` (which
+    /// already includes the failing function name and the
+    /// unsupported op/type/operand).  The GE-225 (1959) was the
+    /// mainframe where Dartmouth BASIC was designed in 1964.
+    Ge225BackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -149,6 +174,10 @@ impl fmt::Display for LangAotError {
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
+            LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
+            LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
+            LangAotError::Intel4004BackendError(m) => write!(f, "intel4004: {m}"),
+            LangAotError::Ge225BackendError(m) => write!(f, "ge225: {m}"),
         }
     }
 }
@@ -308,6 +337,274 @@ pub fn compile_file_to_riscv32_bin(
     for w in &words {
         bytes.extend_from_slice(&w.to_le_bytes());
     }
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 8008 machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 8-bit Intel
+/// 8008 opcode bytes.  Downstream consumers:
+///
+/// * [`intel8008-simulator`](../intel8008-simulator) — load + execute
+///   in-process via `Simulator::run`.
+/// * An external 8008 emulator that consumes raw byte streams.
+/// * A 1702 EPROM burner — Oct's intended deployment path.  The 8008
+///   is Oct's native target ISA.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-agnostic.
+///
+/// # Wire format
+///
+/// Intel 8008 instructions are 1, 2, or 3 bytes each, in the order
+/// the silicon's instruction pointer walks them.  No endianness
+/// conversion — each byte is written exactly as `iir-to-intel8008`
+/// emits it.  Multi-byte instructions (MVI, JMP, CAL, conditional
+/// branches) lay out as `<opcode> <low_byte> [<high_byte>]` per the
+/// 8008 spec (the address bus is 14 bits wide, so the high byte's
+/// top 2 bits are zero).
+///
+/// # Why no host gating?
+///
+/// The 8008 is a historical ISA with no modern host equivalent — we
+/// never produce a "native" binary the host can execute.  The
+/// downstream consumer is always an emulator (in-tree
+/// `intel8008-simulator` or external), an EPROM burner, or actual
+/// 8008 silicon.  All host OSes can write a flat byte file, so the
+/// pipeline is universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Intel8008BackendError` — the IIR contained an op or type the
+///   Intel 8008 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.oct --emit=intel8008 -o foo.bin
+/// # Then load foo.bin into the simulator:
+/// intel8008-simulator foo.bin
+/// ```
+pub fn compile_file_to_intel8008_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_intel8008::IIRIntel8008Config::new(stem);
+    let bytes = iir_to_intel8008::lower_iir_to_intel8008(&module, &cfg)
+        .map_err(|e| LangAotError::Intel8008BackendError(format!("{e}")))?;
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → ARMv7 (A32) machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 32-bit
+/// ARMv7-A instruction words encoded as little-endian bytes.
+/// Downstream consumers:
+///
+/// * [`arm-simulator`](../arm-simulator) — load + execute in-process.
+/// * `qemu-arm` — `qemu-arm -kernel out.bin`.
+/// * `objcopy` + a phone-class Linux linker for an ELF executable on
+///   a Cortex-A7/A8/A9-era SoC.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Wire format
+///
+/// Each emitted A32 word is written as **little-endian** bytes.
+/// ARMv7 is configurable-endian but defaults to little-endian on
+/// every modern Linux / Android distribution, on QEMU, and on the
+/// in-tree `arm-simulator`.  `Vec<u32>::iter().flat_map(u32::to_le_bytes)`
+/// is the canonical Rust expression of that encoding.
+///
+/// # Why no host gating?
+///
+/// ARMv7 host execution would require an ARM Cortex-A class CPU.
+/// Most LANG VM developers don't have one as their dev host, so we
+/// never produce a "native" binary the host can execute — the
+/// downstream consumer is always a simulator (in-tree
+/// `arm-simulator`, `qemu-arm`), a phone-class Linux board, or a
+/// flash loader.  All host OSes can write a flat byte file, so the
+/// pipeline is universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Armv7BackendError` — the IIR contained an op or type the ARMv7
+///   backend does not yet handle (the message names the function and
+///   op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=armv7 -o foo.bin
+/// # Then load foo.bin into the simulator or QEMU:
+/// qemu-arm -kernel foo.bin
+/// ```
+pub fn compile_file_to_armv7_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_armv7::IIRArmv7Config::new(stem);
+    let words = iir_to_armv7::lower_iir_to_armv7(&module, &cfg)
+        .map_err(|e| LangAotError::Armv7BackendError(format!("{e}")))?;
+
+    // Flatten Vec<u32> → Vec<u8> via little-endian ARMv7 word encoding.
+    let mut bytes = Vec::with_capacity(words.len() * 4);
+    for w in &words {
+        bytes.extend_from_slice(&w.to_le_bytes());
+    }
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 4004 machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 1- or
+/// 2-byte Intel 4004 opcodes.  Downstream consumers:
+///
+/// * Any 4004 simulator (in-tree, MAME, custom emulator).
+/// * The in-tree `intel-4004-assembler` for round-trip
+///   disassembly.
+/// * An EPROM burner for a 4004 dev board (the 4004 was paired
+///   with 1702 EPROMs).
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Wire format
+///
+/// 4004 instructions are 1 or 2 bytes each, in the order the
+/// silicon's program counter walks them.  No endianness conversion
+/// needed — every byte is written exactly as `iir-to-intel4004`
+/// emits it.  This is the same byte-aligned format as
+/// `iir-to-intel8008`'s output.
+///
+/// # Why no host gating?
+///
+/// The 4004 is a 1971-era 4-bit microprocessor with no modern
+/// host equivalent.  Downstream is always a simulator, an
+/// assembler round-trip tool, or an EPROM burner.  All host OSes
+/// can write a flat byte file, so the pipeline is universally
+/// available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Intel4004BackendError` — the IIR contained an op or type the
+///   Intel 4004 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=intel4004 -o foo.bin
+/// # Then disassemble or load into a simulator
+/// ```
+pub fn compile_file_to_intel4004_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_intel4004::IIRIntel4004Config::new(stem);
+    let bytes = iir_to_intel4004::lower_iir_to_intel4004(&module, &cfg)
+        .map_err(|e| LangAotError::Intel4004BackendError(format!("{e}")))?;
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → GE-225 machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 20-bit
+/// GE-225 instruction words, each packed as 3 bytes (24 bits) big-
+/// endian with the top 4 bits of byte 0 zero.  Downstream consumers:
+///
+/// * Any GE-225 simulator (historical software, the in-tree
+///   `ge225-simulator` once it lands).
+/// * A custom disassembler / decoder that reads 3 bytes per word
+///   and masks off the top 4 bits.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Wire format
+///
+/// GE-225 instructions are 20 bits each; `iir-to-ge225` packs them
+/// as 3 bytes per word, big-endian, with the top 4 bits of byte 0
+/// always zero (since 20 bits < 24 bits in 3 bytes).  This file
+/// writes those bytes in order — no endianness conversion at the
+/// file-format layer because we already chose big-endian inside the
+/// word.
+///
+/// # Why no host gating?
+///
+/// The GE-225 is a 1959-era mainframe with no modern host equivalent.
+/// Downstream is always a simulator or a custom decoder.  All host
+/// OSes can write a flat byte file, so the pipeline is universally
+/// available — same rationale as `compile_file_to_intel4004_bin`.
+///
+/// # Why is this Dartmouth BASIC's birthplace?
+///
+/// The GE-225 at Dartmouth College ran the very first BASIC program
+/// in 1964.  Kemeny and Kurtz designed the language to fit this
+/// machine's accumulator-anchored ISA and 20-bit word size — BASIC's
+/// 16-bit integer defaults and single-letter variable names still
+/// bear the imprint.  Compiling BASIC source through this pipeline
+/// round-trips the language to the silicon it was designed for.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Ge225BackendError` — the IIR contained an op or type the
+///   GE-225 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.bas --emit=ge225 -o foo.bin
+/// # Then load into a GE-225 simulator or decode 3 bytes at a time
+/// ```
+pub fn compile_file_to_ge225_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_ge225::IIRGe225Config::new(stem);
+    let bytes = iir_to_ge225::lower_iir_to_ge225(&module, &cfg)
+        .map_err(|e| LangAotError::Ge225BackendError(format!("{e}")))?;
+
     std::fs::write(out, &bytes)?;
     Ok(())
 }

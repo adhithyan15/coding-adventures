@@ -264,9 +264,13 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
         limit ->
           {limit_n, offset_n} = extract_limit(limit)
 
-          projected_rows
-          |> Enum.drop(offset_n)
-          |> Enum.take(limit_n)
+          dropped = Enum.drop(projected_rows, offset_n)
+
+          # SQLite treats a negative LIMIT as "no limit" — return every
+          # remaining row.  Enum.take/2 would otherwise interpret a
+          # negative count as "take from the end", which is not what SQL
+          # means here.
+          if limit_n < 0, do: dropped, else: Enum.take(dropped, limit_n)
       end
 
     %Result{columns: columns, rows: projected_rows}
@@ -400,7 +404,8 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
   #
   # The parser wraps column refs and function calls in many transparent layers:
   #   select_item > expr > or_expr > and_expr > not_expr > comparison >
-  #   additive > multiplicative > unary > primary > column_ref / function_call
+  #   collated > bitwise > additive > multiplicative > unary > primary >
+  #   column_ref / function_call
   #
   # We unwrap single-child transparent nodes until we reach something meaningful.
   defp default_column_name(%ASTNode{rule_name: "column_ref", children: children}) do
@@ -419,7 +424,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
   defp default_column_name(%Token{value: v}), do: v
 
   # Transparent wrapper rules — drill down through single-child nodes.
-  @transparent_rules ~w(expr or_expr and_expr not_expr comparison additive multiplicative unary primary select_item)
+  @transparent_rules ~w(expr or_expr and_expr not_expr comparison collated bitwise additive multiplicative unary primary select_item)
 
   defp default_column_name(%ASTNode{rule_name: rule, children: [single]})
        when rule in @transparent_rules do
@@ -663,21 +668,46 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
     Enum.find(children, &match?(%ASTNode{}, &1))
   end
 
-  # Extract LIMIT and OFFSET values.
-  # Grammar: limit_clause = "LIMIT" NUMBER [ "OFFSET" NUMBER ]
+  # Extract LIMIT and OFFSET values, returning `{limit, offset}`.
+  #
+  # Grammar: limit_clause  = "LIMIT" signed_number
+  #                          [ "OFFSET" signed_number | "," signed_number ] ;
+  #          signed_number = [ "-" ] NUMBER ;
+  #
+  # The count/offset are `signed_number` *nodes* (not bare NUMBER tokens),
+  # so we strip the LIMIT/OFFSET keyword tokens and interpret what remains.
   defp extract_limit(%ASTNode{rule_name: "limit_clause", children: children}) do
-    numbers =
-      Enum.filter(children, fn
-        %Token{type: "NUMBER"} -> true
+    operands =
+      Enum.reject(children, fn
+        %Token{value: "LIMIT"} -> true
+        %Token{value: "OFFSET"} -> true
         _ -> false
       end)
 
-    case numbers do
-      [%Token{value: n}] ->
-        {String.to_integer(n), 0}
+    case operands do
+      # `LIMIT count`
+      [count] ->
+        {signed_number_value(count), 0}
 
-      [%Token{value: n}, %Token{value: offset}] ->
-        {String.to_integer(n), String.to_integer(offset)}
+      # SQLite shorthand `LIMIT offset, count` — note the reversed order:
+      # the value before the comma is the OFFSET, the value after is the
+      # row count.
+      [offset, %Token{type: "COMMA"}, count] ->
+        {signed_number_value(count), signed_number_value(offset)}
+
+      # `LIMIT count OFFSET offset`
+      [count, offset] ->
+        {signed_number_value(count), signed_number_value(offset)}
     end
   end
+
+  # Reduce a `signed_number` node (or a bare NUMBER token) to an integer.
+  defp signed_number_value(%ASTNode{rule_name: "signed_number", children: children}) do
+    case children do
+      [%Token{value: n}] -> String.to_integer(n)
+      [%Token{value: "-"}, %Token{value: n}] -> -String.to_integer(n)
+    end
+  end
+
+  defp signed_number_value(%Token{value: n}), do: String.to_integer(n)
 end

@@ -68,6 +68,8 @@ module CodingAdventures
           eval_not(node, row_ctx)
         when "comparison"
           eval_comparison(node, row_ctx)
+        when "bitwise"
+          eval_bitwise(node, row_ctx)
         when "additive"
           eval_additive(node, row_ctx)
         when "multiplicative"
@@ -290,6 +292,77 @@ module CodingAdventures
       # ----------------------------------------------------------------
       # Arithmetic
       # ----------------------------------------------------------------
+
+      # bitwise = additive { ( "&" | "|" | "<<" | ">>" ) additive }
+      #
+      # SQLite's bitwise layer sits just below the comparison operators. It is
+      # a flat left-associative chain like the arithmetic rules. NULL on either
+      # side propagates (the result is NULL).
+      #
+      # SQLite performs bitwise math on *signed 64-bit* integers, so we mirror
+      # that: operands are truncated to integers and reduced mod 2**64. Bounding
+      # the result to 64 bits is also what keeps `<<` safe — a shift count is
+      # capped at 64 before the shift runs, so a tiny query like `1 << 1e9`
+      # cannot allocate an enormous Bignum.
+      MASK64 = (1 << 64) - 1
+      SIGN64 = 1 << 63
+
+      def self.eval_bitwise(node, row_ctx)
+        result = eval_expr(node.children[0], row_ctx)
+        i = 1
+        while i < node.children.size
+          op_token = node.children[i]
+          i += 1
+          right = eval_expr(node.children[i], row_ctx)
+          i += 1
+          next result = nil if result.nil? || right.nil?
+          op = op_token.is_a?(Token) ? op_token.value : op_token.to_s
+          a = result.to_i
+          b = right.to_i
+          result =
+            case op
+            when "&"  then to_i64((a & MASK64) & (b & MASK64))
+            when "|"  then to_i64((a & MASK64) | (b & MASK64))
+            when "<<" then sql_shift(a, b, left: true)
+            when ">>" then sql_shift(a, b, left: false)
+            else result
+            end
+        end
+        result
+      end
+
+      # Reinterpret an integer as a signed 64-bit value (two's complement).
+      def self.to_i64(value)
+        value &= MASK64
+        value >= SIGN64 ? value - (1 << 64) : value
+      end
+
+      # SQLite's shift semantics on signed 64-bit integers (see VDBE
+      # OP_ShiftLeft/OP_ShiftRight): a negative shift count reverses direction;
+      # a magnitude of 64 or more collapses to 0 (or -1 for an arithmetic right
+      # shift of a negative value); a right shift sign-extends.
+      def self.sql_shift(value, shift, left:)
+        value = to_i64(value)
+        return value if shift.zero?
+
+        if shift.negative?
+          shift = shift > -64 ? -shift : 64
+          left = !left
+        end
+
+        if shift >= 64
+          return (value >= 0 || left) ? 0 : -1
+        end
+
+        bits = value & MASK64
+        if left
+          bits = (bits << shift) & MASK64
+        else
+          bits >>= shift
+          bits |= (MASK64 << (64 - shift)) & MASK64 if value.negative?
+        end
+        to_i64(bits)
+      end
 
       def self.eval_additive(node, row_ctx)
         result = eval_expr(node.children[0], row_ctx)

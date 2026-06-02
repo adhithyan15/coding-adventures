@@ -482,7 +482,15 @@ def solve_dc_with_aids(engine, max_attempts=4):
 
 - KLU bindings for production-quality sparse solver.
 - Verilog-A model support.
-- Mixed-signal coupling with `hardware-vm.md` for AMS simulation.
+- Mixed-signal coupling with `hardware-vm.md` for AMS simulation. A first
+  SPICE-side Rust helper surface converts binary digital event timelines and
+  named digital event streams into finite-edge PWL voltage sources, runs
+  direct, adaptive, and named-corner digital-input transient bridge fixtures,
+  and samples one or more transient probes back into thresholded named digital
+  event streams, with stable tab-separated bridge breakpoint schedules,
+  single-stream, named multi-signal, fixed-step, adaptive, and cornered bridge
+  event-stream text output; scheduler-level `hardware-vm` integration remains
+  future work.
 - Multi-corner parallel sweep (one process per PVT corner).
 - Behavioral modeling sources (B-element).
 - Noise analysis (.noise).

@@ -746,10 +746,45 @@ def check_browser_expected_lists(
         require_optional_object_list(form_path, form, "outputs", errors)
         for output_index, output in enumerate(object_list_items(form, "outputs")):
             output_path = f"{form_path}.outputs[{output_index}]"
-            for field in ("id", "name", "form_owner", "value"):
+            for field in (
+                "id",
+                "name",
+                "form_owner",
+                "accessible_name",
+                "accessible_description",
+                "value",
+                "validation_barred_reason",
+            ):
                 require_optional_nullable_string(output_path, output, field, errors)
+            require_optional_string_list(output_path, output, "labels", errors)
             require_optional_string_list(output_path, output, "for_tokens", errors)
+            require_optional_string_list(output_path, output, "for_control_ids", errors)
+            require_optional_string_list(output_path, output, "for_control_names", errors)
+            require_optional_string_list(output_path, output, "for_control_types", errors)
+            for field in ("disabled", "will_validate"):
+                require_optional_boolean(output_path, output, field, errors)
             require_string(output_path, output, "text", errors)
+        require_optional_object_list(form_path, form, "measurements", errors)
+        for measurement_index, measurement in enumerate(
+            object_list_items(form, "measurements")
+        ):
+            measurement_path = f"{form_path}.measurements[{measurement_index}]"
+            require_optional_nullable_string(measurement_path, measurement, "id", errors)
+            require_string(measurement_path, measurement, "measurement_type", errors)
+            for field in (
+                "accessible_name",
+                "accessible_description",
+                "value",
+                "min",
+                "max",
+                "low",
+                "high",
+                "optimum",
+            ):
+                require_optional_nullable_string(measurement_path, measurement, field, errors)
+            require_optional_string_list(measurement_path, measurement, "labels", errors)
+            require_optional_boolean(measurement_path, measurement, "indeterminate", errors)
+            require_string(measurement_path, measurement, "text", errors)
         require_optional_object_list(form_path, form, "successful_controls", errors)
         for successful_index, control in enumerate(
             object_list_items(form, "successful_controls")
@@ -762,6 +797,124 @@ def check_browser_expected_lists(
             require_optional_string_list(
                 successful_path, control, "submission_values", errors
             )
+        require_optional_object_list(form_path, form, "validation_controls", errors)
+        for validation_index, control in enumerate(
+            object_list_items(form, "validation_controls")
+        ):
+            validation_path = f"{form_path}.validation_controls[{validation_index}]"
+            require_optional_nullable_string(validation_path, control, "id", errors)
+            require_string(validation_path, control, "control_type", errors)
+            require_optional_nullable_string(validation_path, control, "name", errors)
+            require_optional_nullable_string(validation_path, control, "form_owner", errors)
+            require_optional_boolean(validation_path, control, "will_validate", errors)
+            require_optional_boolean(validation_path, control, "required", errors)
+            require_optional_string_list(
+                validation_path, control, "validation_attributes", errors
+            )
+            require_optional_nullable_string(
+                validation_path, control, "validation_barred_reason", errors
+            )
+        require_optional_object_list(form_path, form, "buttons", errors)
+        for button_index, button in enumerate(object_list_items(form, "buttons")):
+            button_path = f"{form_path}.buttons[{button_index}]"
+            require_optional_nullable_string(button_path, button, "id", errors)
+            require_string(button_path, button, "control_type", errors)
+            for field in (
+                "name",
+                "form_owner",
+                "accessible_name",
+                "action",
+                "resolved_action",
+                "enctype",
+                "target",
+                "effective_target",
+                "value",
+                "src",
+                "resolved_src",
+                "alt",
+                "width",
+                "height",
+            ):
+                require_optional_nullable_string(button_path, button, field, errors)
+            for field in ("disabled", "autofocus", "submitter", "novalidate"):
+                require_optional_boolean(button_path, button, field, errors)
+            require_string(button_path, button, "method", errors)
+            require_string(button_path, button, "text", errors)
+        require_optional_object_list(form_path, form, "text_entries", errors)
+        for entry_index, entry in enumerate(object_list_items(form, "text_entries")):
+            entry_path = f"{form_path}.text_entries[{entry_index}]"
+            require_optional_nullable_string(entry_path, entry, "id", errors)
+            require_string(entry_path, entry, "control_type", errors)
+            for field in (
+                "name",
+                "form_owner",
+                "accessible_name",
+                "accessible_description",
+                "placeholder",
+                "value",
+                "autocomplete",
+                "autocapitalize",
+                "enterkeyhint",
+                "dirname",
+                "spellcheck",
+                "autocorrect",
+                "inputmode",
+                "pattern",
+                "min",
+                "max",
+                "step",
+                "minlength",
+                "maxlength",
+                "size",
+                "rows",
+                "cols",
+                "wrap",
+                "list",
+                "validation_barred_reason",
+            ):
+                require_optional_nullable_string(entry_path, entry, field, errors)
+            require_optional_string_list(entry_path, entry, "labels", errors)
+            require_optional_string_list(entry_path, entry, "autocomplete_tokens", errors)
+            require_optional_string_list(entry_path, entry, "datalist_options", errors)
+            for field in ("disabled", "required", "readonly", "will_validate"):
+                require_optional_boolean(entry_path, entry, field, errors)
+            require_optional_string_list(
+                entry_path, entry, "validation_attributes", errors
+            )
+            require_string(entry_path, entry, "text", errors)
+        require_optional_object_list(form_path, form, "image_controls", errors)
+        for image_index, image in enumerate(object_list_items(form, "image_controls")):
+            image_path = f"{form_path}.image_controls[{image_index}]"
+            for field in (
+                "id",
+                "name",
+                "form_owner",
+                "accessible_name",
+                "src",
+                "resolved_src",
+                "alt",
+                "width",
+                "height",
+                "action",
+                "resolved_action",
+                "enctype",
+                "target",
+                "effective_target",
+                "value",
+                "validation_barred_reason",
+            ):
+                require_optional_nullable_string(image_path, image, field, errors)
+            require_optional_string_list(image_path, image, "labels", errors)
+            require_optional_string_list(image_path, image, "coordinate_names", errors)
+            for field in (
+                "disabled",
+                "autofocus",
+                "submitter",
+                "novalidate",
+                "will_validate",
+            ):
+                require_optional_boolean(image_path, image, field, errors)
+            require_string(image_path, image, "method", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):

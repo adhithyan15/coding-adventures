@@ -53,10 +53,43 @@ IIRModule
 
 | Version | Scope | Status |
 |---------|-------|--------|
-| **v0.1.0 (A2 — this PR)** | crate skeleton: any module → single `HLT` (`0x76`) | this PR |
-| v0.2.0 (A2+) | MVI (immediate load) + MOV (register-register) + arithmetic on the accumulator | future |
-| v0.3.0 (A2++) | Conditional + unconditional jumps, calls, stack frame; 14-bit address backpatching | future |
-| v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring | future |
+| v0.1.0 (A2) | crate skeleton: any module → single `HLT` (`0x76`) | **merged** |
+| v0.2.0 (A2+) | `const` → `MVI A, n` + `ret`/`ret_void` → `HLT` (accumulator-only first slice) | **merged** |
+| v0.3.0 (A2++) | Linear register allocator over A/B/C/D/E/H/L + multi-register `const` + `mov` + ret-value staging | **merged** |
+| v0.3.1 (A2++.5 first slice) | `add`/`sub` ALU on the accumulator (family `10 ooo sss`) | **merged** |
+| v0.3.2 (A2++.5.5 first slice) | bitwise ALU `and`/`or`/`xor` on the accumulator (same family, `ooo` ∈ {`100`, `110`, `101`}) | **merged** |
+| v0.3.3 (A2++.5.5 second slice) | carry/borrow-chained ALU `adc`/`sbb` (same family, `ooo` ∈ {`001`, `011`}) | **merged** |
+| v0.3.4 (A2++.5.5 third slice) | `label` (zero-byte position marker) + unconditional `jmp` (**`0x7C`**, NOT `0x44`) with per-function two-pass backpatching | **merged** |
+| v0.3.5 (A2++.5.5 fourth slice) | Boolean conditional jumps `jmp_if_true` (`ANA A` + `JFZ` `0x48`) and `jmp_if_false` (`ANA A` + `JTZ` `0x4C`) | **merged** |
+| v0.3.6 (A2++.5.5 fifth slice) | `cmp` equality with inline flag-to-bool capture | **merged** |
+| v0.3.7 (A2++.5.5 sixth slice) | `cmp_ne`/`cmp_lt`/`cmp_gt` via shared `emit_cmp_capture` helper; introduces `JFC = 0x40`; `cmp_gt` cleverly reuses `cmp_lt` via operand swap | **merged** |
+| v0.3.8 (A2++.5.5 seventh slice) | `cmp_gte`/`cmp_lte` via `JTC = 0x44` (complement of `JFC`); pins remaining 4 cond-jump constants | **merged** |
+| v0.3.9 (A2++.5.5 EIGHTH AND FINAL SLICE) | Real `RET` (`0x07`) + `CAL` (**`0x7E`** — NOT `0x46`/CFZ) + module-level call-site backpatching + entry-point HLT-vs-RET discipline + `call dest, fn_name` IIR op (zero-arg, return-via-A) | **merged** |
+| **A2+++ (this PR, in `lang-aot` v0.7.0 → v0.8.0)** | `lang-aot --emit=intel8008` (aliases `i8008`, `8008`) routes source → IIR → Intel 8008 `.bin` via `iir-to-intel8008`; cross-platform; no host gating; no version bump for this crate | this PR |
+| v0.4.0 (A2++++) | Argument passing for `call` (per-call register-allocation contract) + cross-module CALL backpatching | future |
+
+## Encoding cheat-sheet for the jump/call family
+
+The 8008's group-01 instruction family packs MOV, HLT, jumps, and
+calls into the same opcode space; disambiguation is via `ddd` (bits
+5-3).  Easy mistakes:
+
+| Mnemonic | Bits | Hex | What it does |
+|----------|------|-----|--------------|
+| `JFC addr` | `01 000 100` | `0x40`* / `0x44`† | Jump if Flag Carry clear (conditional) |
+| `JFZ addr` | `01 001 100` | `0x48` / `0x4C` | Jump if Flag Zero clear (conditional) |
+| `JFS addr` | `01 010 100` | `0x50` / `0x54` | Jump if Flag Sign clear (conditional) |
+| `JFP addr` | `01 011 100` | `0x58` / `0x5C` | Jump if Flag Parity clear (conditional) |
+| `JMP addr` | `01 111 100` | **`0x7C`** | Unconditional jump (this is what `jmp` lowers to) |
+| `CAL addr` | `01 111 110` | **`0x7E`** | Unconditional call (deferred to v0.3.6) |
+| `RET` | `00 000 111` | `0x07` | Unconditional return (deferred to v0.3.6) |
+
+\* The T=0 variant (sss=000) jumps when the flag is clear.<br>
+† The T=1 variant (sss=100) jumps when the flag is set (JTC/JTZ/JTS/JTP).
+
+These are the silicon's actual encodings — pinning them here so
+future slices don't repeat the `0x44 ↔ 0x7C` confusion that nearly
+shipped in v0.3.4.
 
 ## Public surface (v0.1.0)
 

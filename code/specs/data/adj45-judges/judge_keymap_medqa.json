@@ -1,0 +1,902 @@
+[
+  {
+    "q_idx": 0,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 4,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 5,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 6,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 7,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 8,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 9,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 10,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 11,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 12,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 13,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 14,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 15,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 16,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 17,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 18,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 19,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 20,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 21,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 22,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 23,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 24,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 25,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 26,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 27,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 28,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 29,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 30,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 31,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 32,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 33,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 34,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 35,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 36,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 37,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 38,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 39,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 40,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 41,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 42,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 43,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 44,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 45,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 46,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 47,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 48,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 49,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 50,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 51,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 52,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 53,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 54,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 55,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 56,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 57,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 58,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 59,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 60,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 61,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 62,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 63,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 64,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 65,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 66,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 67,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 68,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 69,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 70,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 71,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 72,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 73,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 74,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 75,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 76,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 77,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 78,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 79,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 80,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 81,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 82,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 83,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 84,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 85,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 86,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 87,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 88,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 89,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 90,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 91,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 92,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 93,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 94,
+    "canonical_letter": "C",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 95,
+    "canonical_letter": "D",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 96,
+    "canonical_letter": "A",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 97,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 98,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 99,
+    "canonical_letter": "B",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  }
+]
