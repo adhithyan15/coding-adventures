@@ -296,8 +296,19 @@ export class Tensor {
   }
 
   /**
-   * Transpose.  2-D only in v0.1 (higher-rank perm transpose needs generic
-   * strided index math; deferred to a later PR when there's actual demand).
+   * Transpose.  Generic N-D perm transpose.
+   *
+   * - `t.transpose()` with no args: only valid for 2-D, swaps the two dims.
+   * - `t.transpose(p0, p1, ...)`: reorders dims so `out.shape[i] = in.shape[perm[i]]`.
+   *
+   * Matches NumPy's `np.transpose(a, axes=...)` semantics.  Used by
+   * higher-rank ML code (e.g. swapping (batch, seq, features) ↔
+   * (batch, features, seq) for attention-style ops).
+   *
+   * For rank ≥ 3 we walk the output index space and, for each output
+   * coordinate, compute the matching input coordinate via the inverse
+   * permutation: if `outCoord[i] = inCoord[perm[i]]`, then
+   * `inCoord[perm[i]] = outCoord[i]`.  Pure strided index math, O(numel).
    */
   transpose(...perm: number[]): Tensor {
     if (perm.length === 0) {
@@ -319,18 +330,66 @@ export class Tensor {
       }
     }
 
-    if (this.ndim !== 2) {
-      throw new Error(`transpose on rank-${this.ndim} tensors not yet implemented (v0.1: 2-D only)`);
+    // 2-D fast path — same code as v1.0, here so 2-D doesn't pay the
+    // generic per-index loop overhead.
+    if (this.ndim === 2) {
+      const [rows, cols] = this.shape as [number, number];
+      const out = new Float32Array(rows * cols);
+      // perm could be [0,1] (identity) or [1,0] (swap).
+      if (perm[0] === 0 && perm[1] === 1) {
+        out.set(this.data);
+        return new Tensor(Array.from(out), { shape: [rows, cols] });
+      }
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          out[c * rows + r] = this.data[r * cols + c]!;
+        }
+      }
+      return new Tensor(Array.from(out), { shape: [cols, rows] });
     }
 
-    const [rows, cols] = this.shape as [number, number];
-    const out = new Float32Array(rows * cols);
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        out[c * rows + r] = this.data[r * cols + c]!;
+    // ── Generic N-D path ──
+    const ndim = this.ndim;
+    const inShape = this.shape;
+    const outShape = perm.map((p) => inShape[p]!);
+
+    // Row-major strides: stride[i] = product of shape[i+1..].
+    const inStrides = new Array<number>(ndim);
+    const outStrides = new Array<number>(ndim);
+    {
+      let s = 1;
+      for (let i = ndim - 1; i >= 0; i--) {
+        inStrides[i] = s;
+        s *= inShape[i]!;
+      }
+      s = 1;
+      for (let i = ndim - 1; i >= 0; i--) {
+        outStrides[i] = s;
+        s *= outShape[i]!;
       }
     }
-    return new Tensor(Array.from(out), { shape: [cols, rows] });
+
+    const numel = this.numel;
+    const out = new Float32Array(numel);
+    const outCoords = new Array<number>(ndim).fill(0);
+    const inCoords = new Array<number>(ndim).fill(0);
+
+    for (let outIdx = 0; outIdx < numel; outIdx++) {
+      // Decompose outIdx into outCoords (row-major).
+      let rem = outIdx;
+      for (let i = 0; i < ndim; i++) {
+        outCoords[i] = Math.floor(rem / outStrides[i]!);
+        rem -= outCoords[i]! * outStrides[i]!;
+      }
+      // Map: out axis i corresponds to in axis perm[i].
+      for (let i = 0; i < ndim; i++) {
+        inCoords[perm[i]!] = outCoords[i]!;
+      }
+      let srcIdx = 0;
+      for (let i = 0; i < ndim; i++) srcIdx += inCoords[i]! * inStrides[i]!;
+      out[outIdx] = this.data[srcIdx]!;
+    }
+    return new Tensor(Array.from(out), { shape: outShape });
   }
 
   /** Drop size-1 dimensions.  With no axis, drops all of them. */

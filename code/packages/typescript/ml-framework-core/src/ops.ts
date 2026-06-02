@@ -563,58 +563,196 @@ export class PowOp extends Function {
   }
 }
 
-// ────────── MatMul (2-D only) ──────────
+// ────────── MatMul — N-D batched ──────────
+//
+// Supported shapes (rank ≥ 2 on both sides):
+//   * 2-D × 2-D                                           (M, K) @ (K, N) → (M, N)
+//   * batched same rank                       (B…, M, K) @ (B…, K, N) → (B…, M, N)
+//   * broadcast right operand                 (B…, M, K) @       (K, N) → (B…, M, N)
+//   * broadcast left operand                        (M, K) @ (B…, K, N) → (B…, M, N)
+//   * batch-dim broadcasting                  (B1, 1, M, K) @ (1, B2, K, N) → (B1, B2, M, N)
+//
+// Algorithm: split each input into a "batch portion" (all dims except
+// the last two) and a "matrix portion" (the trailing two).  Broadcast
+// the batch portions to a common shape via the existing broadcasting
+// machinery, then loop a single 2-D matmul per batch index.  The
+// matrix dims themselves are NEVER broadcast — that's not what batched
+// matmul means.
+//
+// Backward uses the same per-slice 2-D formulas (dL/dA_slice = grad_slice @
+// B_slice^T, dL/dB_slice = A_slice^T @ grad_slice), then unbroadcasts the
+// batch dims back to each parent's original shape so gradients flow to
+// shared/broadcast operands correctly.
+//
+// Rust dispatch is intentionally limited to the pure 2-D case for now —
+// matrix-cpu's MatMul kernel is 2-D, and pumping a thousand small matmuls
+// through the JSON/FFI roundtrip would be slower than the TS loop.  A
+// future PR can lift batched matmul to Rust by adding a BatchMatMul op
+// to matrix-ir, but for v1.2 the per-slice TS path is correct + fast
+// enough at the parameter sizes ML training uses.
 
 export class MatMulOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
     const b = inputs[1] as Tensor;
-    if (a.ndim !== 2 || b.ndim !== 2) {
-      throw new RangeError(`matmul requires 2-D tensors, got ndim ${a.ndim} and ${b.ndim}`);
+    if (a.ndim < 2 || b.ndim < 2) {
+      throw new RangeError(
+        `matmul requires rank ≥ 2 on both inputs, got ndim ${a.ndim} and ${b.ndim}`,
+      );
     }
-    const [m, k1] = a.shape as [number, number];
-    const [k2, n] = b.shape as [number, number];
+    const aMat = a.shape.slice(-2) as [number, number];
+    const bMat = b.shape.slice(-2) as [number, number];
+    const [m, k1] = aMat;
+    const [k2, n] = bMat;
     if (k1 !== k2) {
-      throw new RangeError(`matmul shape mismatch: [${a.shape.join(", ")}] @ [${b.shape.join(", ")}]`);
+      throw new RangeError(
+        `matmul inner-dim mismatch: [${a.shape.join(", ")}] @ [${b.shape.join(", ")}] ` +
+          `(trailing dims must match: ${k1} vs ${k2})`,
+      );
     }
 
-    this.savedForBackward.a = a;
-    this.savedForBackward.b = b;
+    // Pure 2-D fast path — keeps the Rust dispatch and the v1.0 codepath
+    // bit-identical when both operands are exactly 2-D.
+    if (a.ndim === 2 && b.ndim === 2) {
+      this.savedForBackward.a = a;
+      this.savedForBackward.b = b;
+      this.savedForBackward.batchShape = [] as number[];
+      this.savedForBackward.aShape = a.shape.slice();
+      this.savedForBackward.bShape = b.shape.slice();
+      this.savedForBackward.batched = false;
 
-    if (a.numel >= DISPATCH_THRESHOLD || b.numel >= DISPATCH_THRESHOLD) {
-      const envelope = matmulEnvelope(a, b);
-      const out = runEnvelope(envelope, m * n);
-      return new Tensor(Array.from(out), { shape: [m, n] });
+      if (a.numel >= DISPATCH_THRESHOLD || b.numel >= DISPATCH_THRESHOLD) {
+        const envelope = matmulEnvelope(a, b);
+        const out = runEnvelope(envelope, m * n);
+        return new Tensor(Array.from(out), { shape: [m, n] });
+      }
+
+      return new Tensor(MatMulOp._matmulNaive(a.data, b.data, m, k1, n), {
+        shape: [m, n],
+      });
     }
 
-    return new Tensor(MatMulOp._matmulNaive(a.data, b.data, m, k1, n), { shape: [m, n] });
+    // ── N-D batched path ──
+    //
+    // Broadcast the batch dims (everything except the trailing two) to
+    // a common shape.  Then concatenate that with the per-side matrix
+    // dims to form the broadcast shape used by the per-batch loop.
+    const aBatch = a.shape.slice(0, -2);
+    const bBatch = b.shape.slice(0, -2);
+    const outBatch = broadcastShapes(aBatch, bBatch);
+    const batchSize = outBatch.reduce((acc, d) => acc * d, 1);
+
+    const aFullShape = [...outBatch, m, k1];
+    const bFullShape = [...outBatch, k1, n];
+
+    // Materialize the broadcasted batch portion.  Matching shapes are
+    // a near-free copy in `broadcastDataTo` (its fast path also handles
+    // the no-stretch case).
+    const aBuf = broadcastDataTo(a.data, a.shape, aFullShape);
+    const bBuf = broadcastDataTo(b.data, b.shape, bFullShape);
+
+    const outShape = [...outBatch, m, n];
+    const out = new Float32Array(batchSize * m * n);
+    const aStride = m * k1;
+    const bStride = k1 * n;
+    const oStride = m * n;
+    for (let batch = 0; batch < batchSize; batch++) {
+      const aSlice = aBuf.subarray(batch * aStride, (batch + 1) * aStride);
+      const bSlice = bBuf.subarray(batch * bStride, (batch + 1) * bStride);
+      const cSlice = MatMulOp._matmulNaive(aSlice, bSlice, m, k1, n);
+      for (let i = 0; i < oStride; i++) out[batch * oStride + i] = cSlice[i]!;
+    }
+
+    // Save broadcasted buffers — backward needs them at the broadcast
+    // shape to compute per-slice grads, then unbroadcasts back to the
+    // original parent shapes.
+    this.savedForBackward.aBuf = aBuf;
+    this.savedForBackward.bBuf = bBuf;
+    this.savedForBackward.aShape = a.shape.slice();
+    this.savedForBackward.bShape = b.shape.slice();
+    this.savedForBackward.aFullShape = aFullShape;
+    this.savedForBackward.bFullShape = bFullShape;
+    this.savedForBackward.outBatch = outBatch;
+    this.savedForBackward.m = m;
+    this.savedForBackward.k = k1;
+    this.savedForBackward.n = n;
+    this.savedForBackward.batched = true;
+
+    return new Tensor(Array.from(out), { shape: outShape });
   }
 
-  // Backward for C = A @ B (2-D):
-  //   dL/dA = grad @ B^T
-  //   dL/dB = A^T @ grad
-  // Use internal helpers (not MatMulOp.apply) so backward stays a leaf
-  // math operation — no extra autograd subgraph.
+  // Backward for C = A @ B:
+  //   dL/dA = grad @ B^T           (per batch slice)
+  //   dL/dB = A^T @ grad           (per batch slice)
+  //
+  // 2-D: identical to v1.0.  N-D batched: loop over batch slices,
+  // accumulate into broadcast-shaped grads, then unbroadcast back to
+  // each parent's original shape (so a broadcast operand receives a
+  // properly summed gradient).
   backward(grad: Tensor): (Tensor | null)[] {
-    const a = this.savedForBackward.a as Tensor;
-    const b = this.savedForBackward.b as Tensor;
-    const [m, k] = a.shape as [number, number];
-    const [, n] = b.shape as [number, number];
+    if (!this.savedForBackward.batched) {
+      const a = this.savedForBackward.a as Tensor;
+      const b = this.savedForBackward.b as Tensor;
+      const [m, k] = a.shape as [number, number];
+      const [, n] = b.shape as [number, number];
 
-    const bT = MatMulOp._transpose2D(b.data, k, n);             // (n, k)
-    const gradAData = MatMulOp._matmulNaive(grad.data, bT, m, n, k);  // (m, k)
+      const bT = MatMulOp._transpose2D(b.data, k, n);                  // (n, k)
+      const gradAData = MatMulOp._matmulNaive(grad.data, bT, m, n, k); // (m, k)
+      const aT = MatMulOp._transpose2D(a.data, m, k);                  // (k, m)
+      const gradBData = MatMulOp._matmulNaive(aT, grad.data, k, m, n); // (k, n)
 
-    const aT = MatMulOp._transpose2D(a.data, m, k);             // (k, m)
-    const gradBData = MatMulOp._matmulNaive(aT, grad.data, k, m, n);  // (k, n)
+      return [
+        new Tensor(gradAData, { shape: [m, k] }),
+        new Tensor(gradBData, { shape: [k, n] }),
+      ];
+    }
+
+    const aBuf = this.savedForBackward.aBuf as Float32Array;
+    const bBuf = this.savedForBackward.bBuf as Float32Array;
+    const aShape = this.savedForBackward.aShape as number[];
+    const bShape = this.savedForBackward.bShape as number[];
+    const aFullShape = this.savedForBackward.aFullShape as number[];
+    const bFullShape = this.savedForBackward.bFullShape as number[];
+    const outBatch = this.savedForBackward.outBatch as number[];
+    const m = this.savedForBackward.m as number;
+    const k = this.savedForBackward.k as number;
+    const n = this.savedForBackward.n as number;
+    const batchSize = outBatch.reduce((acc, d) => acc * d, 1);
+
+    const gradABig = new Float32Array(batchSize * m * k);
+    const gradBBig = new Float32Array(batchSize * k * n);
+    const aStride = m * k;
+    const bStride = k * n;
+    const gStride = m * n;
+
+    for (let batch = 0; batch < batchSize; batch++) {
+      const aSlice = aBuf.subarray(batch * aStride, (batch + 1) * aStride);
+      const bSlice = bBuf.subarray(batch * bStride, (batch + 1) * bStride);
+      const gSlice = grad.data.subarray(batch * gStride, (batch + 1) * gStride);
+
+      const bT = MatMulOp._transpose2D(bSlice, k, n);                 // (n, k)
+      const gA = MatMulOp._matmulNaive(gSlice, bT, m, n, k);          // (m, k)
+      for (let i = 0; i < aStride; i++) gradABig[batch * aStride + i] = gA[i]!;
+
+      const aT = MatMulOp._transpose2D(aSlice, m, k);                 // (k, m)
+      const gB = MatMulOp._matmulNaive(aT, gSlice, k, m, n);          // (k, n)
+      for (let i = 0; i < bStride; i++) gradBBig[batch * bStride + i] = gB[i]!;
+    }
 
     return [
-      new Tensor(gradAData, { shape: [m, k] }),
-      new Tensor(gradBData, { shape: [k, n] }),
+      tensorFromBuf(unbroadcastDataTo(gradABig, aFullShape, aShape), aShape),
+      tensorFromBuf(unbroadcastDataTo(gradBBig, bFullShape, bShape), bShape),
     ];
   }
 
   /** O(m*k*n) naive matmul on raw Float32Array data. */
-  static _matmulNaive(aData: ArrayLike<number>, bData: ArrayLike<number>, m: number, k: number, n: number): number[] {
+  static _matmulNaive(
+    aData: ArrayLike<number>,
+    bData: ArrayLike<number>,
+    m: number,
+    k: number,
+    n: number,
+  ): number[] {
     const out = new Array(m * n).fill(0);
     for (let i = 0; i < m; i++) {
       for (let j = 0; j < n; j++) {

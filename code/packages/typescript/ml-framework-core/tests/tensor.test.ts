@@ -202,9 +202,51 @@ describe("Tensor — shape ops", () => {
     expect(() => t.transpose(0, 1, 2)).toThrow(RangeError);
   });
 
-  it("transpose on higher-rank tensors is not yet implemented", () => {
-    const t = Tensor.zeros(2, 2, 2);
-    expect(() => t.transpose(2, 1, 0)).toThrow();
+  it("transpose 3-D reverses all dims", () => {
+    // shape (2, 3, 4) with values 0..23 → perm (2, 1, 0) gives shape (4, 3, 2)
+    const data = Array.from({ length: 24 }, (_, i) => i);
+    const t = new Tensor(data, { shape: [2, 3, 4] });
+    const u = t.transpose(2, 1, 0);
+    expect(u.shape).toEqual([4, 3, 2]);
+    // out[i, j, k] = in[k, j, i].  Spot-check a few:
+    //   out[0, 0, 0] = in[0, 0, 0] = 0
+    //   out[3, 2, 1] = in[1, 2, 3] = 1*12 + 2*4 + 3 = 23
+    //   out[1, 0, 1] = in[1, 0, 1] = 1*12 + 0*4 + 1 = 13
+    const flat = u.toArray();
+    // out stride is (3*2, 2, 1) = (6, 2, 1)
+    expect(flat[0 * 6 + 0 * 2 + 0]).toBe(0);
+    expect(flat[3 * 6 + 2 * 2 + 1]).toBe(23);
+    expect(flat[1 * 6 + 0 * 2 + 1]).toBe(13);
+  });
+
+  it("transpose 3-D with arbitrary perm", () => {
+    // (2, 3, 4) → perm (1, 2, 0) gives (3, 4, 2): out[a, b, c] = in[c, a, b]
+    const data = Array.from({ length: 24 }, (_, i) => i);
+    const t = new Tensor(data, { shape: [2, 3, 4] });
+    const u = t.transpose(1, 2, 0);
+    expect(u.shape).toEqual([3, 4, 2]);
+    // out stride (4*2, 2, 1) = (8, 2, 1); in stride (3*4, 4, 1) = (12, 4, 1)
+    const flat = u.toArray();
+    // out[2, 3, 1] = in[1, 2, 3] = 12 + 8 + 3 = 23 → at out index 2*8+3*2+1 = 23
+    expect(flat[2 * 8 + 3 * 2 + 1]).toBe(23);
+    // out[0, 0, 1] = in[1, 0, 0] = 12 → at out index 1
+    expect(flat[1]).toBe(12);
+  });
+
+  it("transpose 4-D round-trip with inverse perm is the identity", () => {
+    const data = Array.from({ length: 2 * 3 * 4 * 5 }, (_, i) => i);
+    const t = new Tensor(data, { shape: [2, 3, 4, 5] });
+    // perm (2, 0, 3, 1); inverse satisfies inv[perm[i]] = i → inv = (1, 3, 0, 2)
+    const u = t.transpose(2, 0, 3, 1);
+    expect(u.shape).toEqual([4, 2, 5, 3]);
+    const back = u.transpose(1, 3, 0, 2);
+    expect(back.shape).toEqual([2, 3, 4, 5]);
+    expect(back.toArray()).toEqual(t.toArray());
+  });
+
+  it("transpose with identity perm is the identity", () => {
+    const t = new Tensor(Array.from({ length: 24 }, (_, i) => i), { shape: [2, 3, 4] });
+    expect(t.transpose(0, 1, 2).toArray()).toEqual(t.toArray());
   });
 
   it("squeeze with no arg drops all size-1 dims", () => {
