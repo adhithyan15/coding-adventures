@@ -25,7 +25,7 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.4.0 (A5+++ accumulator arithmetic)
+## Status — v0.5.0 (A5+++++ branch family + label backpatching)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
@@ -33,11 +33,16 @@ pipeline:
 | `mov dest, src` | `(STA r_evict_src)?` + `LD r_src` + `STA r_dest` |
 | `add dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `ADD r_rhs` |
 | `sub dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `SUB r_rhs` |
+| `label "<name>"` | zero bytes — records position for backpatching |
+| `jmp "<target>"` | `BR <target_addr>` |
+| `jmp_if_true cond, "<target>"` | `(LD r_cond)?` + `BNZ <target_addr>` |
+| `jmp_if_false cond, "<target>"` | `(LD r_cond)?` + `BZ <target_addr>` |
 | `ret <var>` | `(LD r_var)?` + `HLT` |
 | `ret_void` | `HLT` |
 
 17-slot pool (ACC + r0..r15).  Trivial-case 6-byte ROM for
-`const v; ret v` preserved from v0.2.0.
+`const v; ret v` preserved from v0.2.0.  Forward / backward
+branches resolve via per-function two-pass backpatching.
 
 ### Cumulative opcode map
 
@@ -49,8 +54,11 @@ pipeline:
 | `0x3` | `LD r`  | `[0x03, 0x00, r]` | ACC ← r |
 | `0x4` | `ADD r` | `[0x04, 0x00, r]` | ACC ← ACC + r |
 | `0x5` | `SUB r` | `[0x05, 0x00, r]` | ACC ← ACC - r |
+| `0x6` | `BR a`  | `[0x06, hi, lo]` | unconditional branch |
+| `0x7` | `BNZ a` | `[0x07, hi, lo]` | branch if ACC ≠ 0 |
+| `0x8` | `BZ a`  | `[0x08, hi, lo]` | branch if ACC = 0 |
 
-Branches and call/return follow in A5++++.
+Call/return (`JSR` / `RTS`) and `BMI` follow in A5++++++.
 
 ## Quick start
 

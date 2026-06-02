@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-ge225"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
-description = "IIR → GE-225 machine code backend.  v0.4.0 (A5+++): adds accumulator-anchored arithmetic — `add dest, lhs, rhs` and `sub dest, lhs, rhs` IIR ops lower to `ADD r` (opcode 0x4) and `SUB r` (opcode 0x5) emitted after an `LD r_lhs` that stages lhs into ACC.  Binary-op lowering is 2 instruction words (LD + ADD/SUB) preceded by up to 3 STA evictions to ensure both operands sit in real GP registers.  Builds on v0.3.0's 17-slot ACC + r0..r15 allocator.  Mirrors iir-to-intel4004 v0.4.0 (A4++++).  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
+description = "IIR → GE-225 machine code backend.  v0.5.0 (A5+++++): adds the branch family — `BR addr` (opcode 0x6) unconditional, `BNZ addr` (0x7) branch-if-non-zero, `BZ addr` (0x8) branch-if-zero — plus per-function two-pass backpatching for the IIR `label`, `jmp`, `jmp_if_true`, and `jmp_if_false` ops.  Forward and backward branches resolve to absolute 16-bit byte addresses; the address-field encoding caps program size at 65536 bytes (~21845 instruction words).  Builds on v0.4.0's arithmetic.  Mirrors iir-to-intel8008 v0.3.4 / iir-to-intel4004 v0.4.0 jump-family slice.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
 
 [lib]
 name = "iir_to_ge225"
