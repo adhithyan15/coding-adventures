@@ -152,39 +152,61 @@ component name second.
 
 ## 4. AST changes
 
-### 4.1 `LayoutNode`
+### 4.1 `LayoutNode` — encoded-tag form
 
-The `tag: String` field stays in place for backwards compatibility;
-when present, it holds the unqualified component name (`"Grid"`).
-
-A new sibling field carries the qualifying package:
+`LayoutNode` is **unchanged**.  Qualified references are stored
+inside the existing `tag: String` field, encoded with the same
+`pkg::P::C` shape the source language uses:
 
 ```rust
 pub struct LayoutNode {
+    /// Either an unqualified component name (`"Grid"`, `"HostTable"`)
+    /// or a qualified reference (`"pkg::mosaic-pkg-grid::Grid"`).
     pub tag: String,
-    /// `Some(package_name)` when the source used `pkg::P::tag`.
-    /// `None` for unqualified references (kernel primitive or
-    /// same-file local component).
-    pub package: Option<String>,
     pub part_name: Option<String>,
     pub props: Vec<LayoutProp>,
     pub children: Vec<LayoutNode>,
 }
 ```
 
-Equivalently the two fields could collapse into a tagged enum
-(`Tag::Local(String)` / `Tag::Package { package, component }`); the
-struct form is preferred because:
+Two small helper methods expose the structure without forcing
+callers to split the string:
 
-- It preserves the JSON wire format that downstream tooling
-  (`mosaic-driver`, language-server, debugger) already consumes.
-- It keeps the unqualified-tag fast path zero-cost.
-- It exposes `package` as a single optional field — the cardinality
-  that matters for emitters and the resolver.
+```rust
+impl LayoutNode {
+    /// `Some((package, component))` for qualified tags.
+    /// `None` for unqualified references.
+    pub fn package_ref(&self) -> Option<(&str, &str)>;
+    /// The unqualified component name — strips the `pkg::P::`
+    /// prefix when present.
+    pub fn component(&self) -> &str;
+}
+```
+
+This is a deliberate revision of the earlier draft that proposed a
+new `package: Option<String>` struct field.  The encoded-tag form
+wins on:
+
+- **Source compatibility.**  ≈ 350 in-repo `LayoutNode { … }` literal
+  constructions in test code keep compiling unchanged.  A new struct
+  field would require touching every one of them.
+- **Wire compatibility.**  The serde JSON shape that downstream
+  tooling (`mosaic-driver`, language-server, debugger) consumes is
+  byte-identical for every existing layout.
+- **Zero cost when unused.**  The unqualified path stays a single
+  string comparison; `package_ref()` returns `None` after one
+  `starts_with("pkg::")` check.
+- **Round-trip is exact.**  Re-emitting the AST yields the same
+  source text the author wrote.
+
+The struct-field form (the earlier draft) is preserved as a
+follow-up amendment if downstream tooling ever wants cheap
+field-projected access to the package name.
 
 ### 4.2 `analyze()` and `validate()`
 
-`analyze()` populates `package` from the parsed `qualified_name`.
+`analyze()` writes the qualified reference into `tag` using the
+canonical `pkg::P::C` form.  Unqualified nodes are unchanged.
 `validate()` gains two new checks:
 
 - **PK1** — qualified tag's package name must be kebab-case
@@ -292,7 +314,8 @@ the resolver hands them a `LayoutNode` tree:
   subtree.
 - Every remaining `tag` is either a kernel primitive (UI29) or a
   same-file local component (UI14 §6 — unchanged path).
-- Every `LayoutNode.package` is `None`.
+- No `tag` starts with `pkg::` after resolution
+  (`debug_assert!(!node.tag.starts_with("pkg::"))`).
 
 A diagnostic-only check (`debug_assert!`) in each emitter's entry
 point can confirm this invariant during development; release builds
