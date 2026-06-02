@@ -1,0 +1,902 @@
+[
+  {
+    "q_idx": 0,
+    "canonical_answer": "Michio Sugeno",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 43,
+    "canonical_answer": "June 24th, 1896.",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 86,
+    "canonical_answer": "William J. Page and Shailaja Shivprasad ",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 129,
+    "canonical_answer": "Esonica Veira",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 172,
+    "canonical_answer": "Mita died suddenly on 31 May 2010, after collapsing outside the studios of M\u0101ori Television.",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 215,
+    "canonical_answer": "18 May 1926",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 258,
+    "canonical_answer": "Mark A. Nook",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 301,
+    "canonical_answer": "2003",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 344,
+    "canonical_answer": "April 2022",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 387,
+    "canonical_answer": "1964",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 430,
+    "canonical_answer": "1948.",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 473,
+    "canonical_answer": "5.0.4",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 516,
+    "canonical_answer": "23-27",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 559,
+    "canonical_answer": "1.2.3",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 602,
+    "canonical_answer": "11 June 2005",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 645,
+    "canonical_answer": "two sons and three daughters.",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 688,
+    "canonical_answer": "President Obama ",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 731,
+    "canonical_answer": "Chief Justice Rajasthan High Court",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 774,
+    "canonical_answer": " Andr\u00e9 Baruch, Howard Claney, and Roger Krupp.",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 817,
+    "canonical_answer": "Dr. Abdul Kalam",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 860,
+    "canonical_answer": " Harinder Pal Sandhu",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 903,
+    "canonical_answer": " 6 September 2011",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 946,
+    "canonical_answer": "Michael Pick",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 989,
+    "canonical_answer": "17 July 1972 - 5 April 1977",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1032,
+    "canonical_answer": "Bar-Ilan University",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1075,
+    "canonical_answer": "chief justice of the Manipur High Court",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1118,
+    "canonical_answer": " Hugo H. Schaefer Award",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1161,
+    "canonical_answer": "29  December 1777",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1204,
+    "canonical_answer": "Dave Garroway ",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 1247,
+    "canonical_answer": "4,563",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1290,
+    "canonical_answer": "Lady Annabel Birley",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1333,
+    "canonical_answer": "Breng Valley",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 1376,
+    "canonical_answer": "1852",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 1419,
+    "canonical_answer": "Miriam Kastner",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 1462,
+    "canonical_answer": "1908",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 1505,
+    "canonical_answer": "First",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1548,
+    "canonical_answer": "Fisk University",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 1591,
+    "canonical_answer": "July",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1634,
+    "canonical_answer": "November 30, 1976",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1677,
+    "canonical_answer": "Willam",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1720,
+    "canonical_answer": "8 January 1994",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1763,
+    "canonical_answer": "Fun Boy Three",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1806,
+    "canonical_answer": "Florencia de la V",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1849,
+    "canonical_answer": "77",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 1892,
+    "canonical_answer": "Wavertree Technology Park",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1935,
+    "canonical_answer": "1983",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 1978,
+    "canonical_answer": "Abolition",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2021,
+    "canonical_answer": "Santa Barbara, California",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2064,
+    "canonical_answer": "26",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2107,
+    "canonical_answer": "Colin Montgomerie",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2150,
+    "canonical_answer": "2021",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2193,
+    "canonical_answer": "Karl Kazimirovich Kostsyushko-Valyuzhinich",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2236,
+    "canonical_answer": "July 31, 2023.",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2279,
+    "canonical_answer": "May 12, 2009",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2322,
+    "canonical_answer": "Sir Henry Cheere",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2365,
+    "canonical_answer": "Stratigraphy of the Hamilton Group of New York",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2408,
+    "canonical_answer": "Toba Tek Singh",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2451,
+    "canonical_answer": "12,486.40",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2494,
+    "canonical_answer": "25th, July 2022",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2537,
+    "canonical_answer": "John Lawrence LeConte",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2580,
+    "canonical_answer": "April 2008",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2623,
+    "canonical_answer": "Carlos Adolfo Altgelt and Hans Altgelt",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2666,
+    "canonical_answer": "John Strahan French",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2709,
+    "canonical_answer": "Gabriel Oddone",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 2752,
+    "canonical_answer": "Brooklyn",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 2795,
+    "canonical_answer": "November 24, 2021",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2838,
+    "canonical_answer": "German and French",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2881,
+    "canonical_answer": "10.6",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2924,
+    "canonical_answer": "January 2023",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 2967,
+    "canonical_answer": "21 January 1973",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3010,
+    "canonical_answer": "Syracuse University",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3053,
+    "canonical_answer": "1972",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3096,
+    "canonical_answer": "Dr Mushtaq Ahmad",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3139,
+    "canonical_answer": "May 2005",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3182,
+    "canonical_answer": "February 16, 1983",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3225,
+    "canonical_answer": "Our World",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3268,
+    "canonical_answer": "June 2022",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3311,
+    "canonical_answer": "Evanston, Illinois",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3354,
+    "canonical_answer": "MACHINE GIRL VS MACHINE GIRL",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3397,
+    "canonical_answer": "\"Baker Street\" by Gerry Rafferty",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3440,
+    "canonical_answer": "1961",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3483,
+    "canonical_answer": "1989.",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3526,
+    "canonical_answer": "Interstate 694",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3569,
+    "canonical_answer": "10.1515/zfs-2021-2040",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style2",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3612,
+    "canonical_answer": "Paul Benedict Cullen",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3655,
+    "canonical_answer": "Patna University",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3698,
+    "canonical_answer": "5",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3741,
+    "canonical_answer": "2014",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 3784,
+    "canonical_answer": "The Nike Cortez",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3827,
+    "canonical_answer": " 24,303.04",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3870,
+    "canonical_answer": "20 feet.",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 3913,
+    "canonical_answer": "6",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3956,
+    "canonical_answer": " TAK-994",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style1",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 3999,
+    "canonical_answer": "Gerischer",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 4042,
+    "canonical_answer": "Javits ",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 4085,
+    "canonical_answer": "\tSwash-plate piston engine",
+    "label_to_style": {
+      "A": "style1",
+      "B": "style3",
+      "C": "style2"
+    }
+  },
+  {
+    "q_idx": 4128,
+    "canonical_answer": "1986 to 1990",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style1",
+      "C": "style3"
+    }
+  },
+  {
+    "q_idx": 4171,
+    "canonical_answer": "January 6, 2005",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 4214,
+    "canonical_answer": "April 18, 1907",
+    "label_to_style": {
+      "A": "style3",
+      "B": "style2",
+      "C": "style1"
+    }
+  },
+  {
+    "q_idx": 4257,
+    "canonical_answer": "September 1993.",
+    "label_to_style": {
+      "A": "style2",
+      "B": "style3",
+      "C": "style1"
+    }
+  }
+]
