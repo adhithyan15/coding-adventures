@@ -874,6 +874,198 @@ fn jmp_if_true_to_undefined_label_is_rejected() {
     }
 }
 
+// ===========================================================================
+// 12. A2++.5.5 fifth slice — `cmp` (equality) with flag-to-bool capture
+// ===========================================================================
+//
+// `cmp dest, a, b` in IIR produces a boolean (`dest = (a == b) ? 1 : 0`).
+// The 8008's `CMP` instruction (family `10 111 sss`, first byte
+// `0xB8 | sss`) computes `A - r`, sets the zero flag (`Z = 1 iff A == r`),
+// and DISCARDS the difference.  So lowering needs a flag-to-register
+// capture sequence:
+//
+//   [optional]  MOV A, a_reg
+//               CMP b_reg                ; sets Z
+//               MVI dest_reg, 0          ; default false
+//               JFZ <fallthrough>        ; if Z=0 (a != b), skip
+//               MVI dest_reg, 1          ; Z=1 (a == b) → set true
+//               <fallthrough>
+//
+// The JFZ's target is the byte position immediately past
+// `MVI dest_reg, 1` — a fixed +4-byte forward offset from the JFZ
+// itself.  Computed inline (NOT via `pending_jmps`) so the capture
+// stays self-contained and doesn't pollute the user-visible label
+// namespace with synthetic names.
+
+#[test]
+fn cmp_equal_pins_full_capture_byte_stream() {
+    // const v=5; const w=5; cmp r v w; ret r
+    //
+    // Allocator: v→A(7), w→B(0), r→C(1).
+    //
+    //   00 01  MVI A, 5
+    //   02 03  MVI B, 5
+    //   04     CMP B           (0xB8)
+    //   05 06  MVI C, 0        (0x0E 0x00) — default false
+    //   07     JFZ <0x000C>    (0x48 0x0C 0x00)
+    //   08 09  ...address bytes...
+    //   0A 0B  MVI C, 1        (0x0E 0x01) — Z=1 → set true
+    //   0C     MOV A, C        (0x79) — ret r stages r into A
+    //   0D     HLT             (0x76)
+    let f = IIRFunction::new("eq", vec![], "bool", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("cmp",   Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("r".into())], "bool"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x05,    // 00 01   MVI A, 5
+        0x06,  0x05,    // 02 03   MVI B, 5
+        0xB8,           // 04      CMP B (10 111 000)
+        0x0E,  0x00,    // 05 06   MVI C, 0 (default false)
+        JFZ,           // 07      JFZ (0x48)
+        0x0C,  0x00,    // 08 09   target = 0x000C (fallthrough byte)
+        0x0E,  0x01,    // 0A 0B   MVI C, 1 (Z=1 path)
+        0x79,           // 0C      MOV A, C (stage r for ret)
+        HLT,            // 0D
+    ], "cmp full capture expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn cmp_with_lhs_not_in_a_emits_staging_mov() {
+    // const v=10 → A; const w=20 → B; const x=20 → C;
+    // cmp r w x; ret_void
+    //
+    // a (w) is in B, not A → need MOV A, B (0x78) before CMP.
+    // b is x in C.
+    //
+    //   00 01  MVI A, 10        (3E 0A)
+    //   02 03  MVI B, 20        (06 14)
+    //   04 05  MVI C, 20        (0E 14)
+    //   06     MOV A, B         (78)         — stage w
+    //   07     CMP C            (B9 = 10 111 001 — sss=C=1)
+    //   08 09  MVI D, 0         (16 00)
+    //   0A     JFZ <0x000F>     (48)
+    //   0B 0C  ...              (0F 00)
+    //   0D 0E  MVI D, 1         (16 01)
+    //   0F     HLT
+    let f = IIRFunction::new("cmp_b_c", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(10)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(20)], "u8"),
+        IIRInstr::new("cmp",   Some("r".into()),
+            vec![Operand::Var("w".into()), Operand::Var("x".into())], "bool"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x0A,    // 00 01   MVI A, 10
+        0x06,  0x14,    // 02 03   MVI B, 20
+        0x0E,  0x14,    // 04 05   MVI C, 20
+        0x78,           // 06      MOV A, B  (stage w into A)
+        0xB9,           // 07      CMP C     (10 111 001 — sss=C=1)
+        0x16,  0x00,    // 08 09   MVI D, 0  (D = 2; (2<<3)|0x06 = 0x16)
+        JFZ,           // 0A      JFZ
+        0x0F,  0x00,    // 0B 0C   target = 0x000F (fallthrough)
+        0x16,  0x01,    // 0D 0E   MVI D, 1
+        HLT,            // 0F
+    ], "cmp with staging MOV expected; got: {bytes:02x?}");
+}
+
+/// `cmp r v v` — comparing a value with itself.  Trivially Z=1, so
+/// the runtime always takes the "set true" branch.  Lowering shape
+/// is identical to the standard case — the optimisation of
+/// constant-folding this to `MVI dest, 1` is upstream's job.
+#[test]
+fn cmp_with_same_register_emits_cmp_a_then_capture() {
+    // const v=42; cmp r v v; ret_void
+    //
+    // Both operands are A.  No staging MOV.  CMP A = 0xBF.
+    //
+    //   00 01  MVI A, 42
+    //   02     CMP A       (BF = 10 111 111)
+    //   03 04  MVI B, 0
+    //   05     JFZ <0x000A>
+    //   06 07  ...
+    //   08 09  MVI B, 1
+    //   0A     HLT
+    let f = IIRFunction::new("self_cmp", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("cmp",   Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("v".into())], "bool"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x2A,    // 00 01   MVI A, 42
+        0xBF,           // 02      CMP A (10 111 111 — sss=A=7)
+        0x06,  0x00,    // 03 04   MVI B, 0  (B = 0; (0<<3)|0x06 = 0x06)
+        JFZ,           // 05      JFZ
+        0x0A,  0x00,    // 06 07   target = 0x000A
+        0x06,  0x01,    // 08 09   MVI B, 1
+        HLT,            // 0A
+    ], "self-cmp expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn cmp_followed_by_jmp_if_true_composes_correctly() {
+    // const v=3; const w=3; cmp eq v w; jmp_if_true eq, end; ret_void
+    //
+    // This test verifies the v0.3.5 jmp_if_true sequence runs cleanly
+    // after a cmp — the `cmp` capture leaves the Z flag in whatever
+    // state the trailing `MVI dest, 1` left it (Z flag is affected by
+    // most ops but not by `MVI`), so `jmp_if_true` correctly re-tests
+    // via its own `ANA A`.  This is the "happy path" cross-slice
+    // composition test.
+    //
+    // Allocator: v→A, w→B, eq→C.
+    //
+    //   00 01  MVI A, 3
+    //   02 03  MVI B, 3
+    //   04     CMP B    (0xB8)
+    //   05 06  MVI C, 0
+    //   07     JFZ <0x000C>
+    //   08 09  ...
+    //   0A 0B  MVI C, 1
+    //   0C     MOV A, C       (eq is in C, jmp_if_true stages into A)  = 0x79
+    //   0D     ANA A          (TEST)                                   = 0xA7
+    //   0E     JFZ <end>      (0x48)
+    //   0F 10  ...end addr...
+    //   <-- label "end" at offset 0x11 -->
+    //   11     HLT
+    let f = IIRFunction::new("cmp_then_branch", vec![], "void", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(3)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(3)], "u8"),
+        IIRInstr::new("cmp",   Some("eq".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("eq".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x03,    // 00 01   MVI A, 3
+        0x06,  0x03,    // 02 03   MVI B, 3
+        0xB8,           // 04      CMP B
+        0x0E,  0x00,    // 05 06   MVI C, 0
+        JFZ,           // 07      JFZ
+        0x0C,  0x00,    // 08 09   target 0x000C
+        0x0E,  0x01,    // 0A 0B   MVI C, 1
+        0x79,           // 0C      MOV A, C (stage eq into A for jmp_if_true)
+        0xA7,           // 0D      ANA A (TEST A — sets Z from eq's value)
+        JFZ,           // 0E      JFZ end
+        0x11,  0x00,    // 0F 10   end at offset 0x11
+        HLT,            // 11
+    ], "cmp + jmp_if_true compose expected; got: {bytes:02x?}");
+}
+
 // Note on the high-byte split + AddressOutOfRange coverage gap:
 //
 // In v0.3.4 the allocator caps each function at ~25 emitted bytes

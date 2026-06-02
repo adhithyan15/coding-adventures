@@ -207,12 +207,9 @@ const ALU_SBB: u8 = 0b011; // SCA r (sub with borrow-in)
 const ALU_AND: u8 = 0b100; // ANA r (logical AND)
 const ALU_XOR: u8 = 0b101; // XRA r (logical XOR)
 const ALU_OR:  u8 = 0b110; // ORA r (logical OR)
-// ALU_CMP = 0b111 lives in the v0.3.4 slice — `cmp` produces a
-// boolean dest at the IIR level but the 8008 CMP only sets flags
-// (discards the difference), so the lowering needs an extra
-// flag-to-register capture sequence (typically a conditional load
-// or a paired conditional jump).  That's wired alongside the
-// branch ops, not here.
+const ALU_CMP: u8 = 0b111; // CMP r — A - r, sets flags, DISCARDS result.
+                           // Z=1 iff A == r.  Wired in v0.3.6 with a
+                           // flag-to-bool capture sequence using JFZ.
 
 // ===========================================================================
 // IIRIntel8008Config
@@ -360,9 +357,11 @@ const SUPPORTED_OPS: &[&str] = &[
     // A2++.5.5 third slice — labels + unconditional jump.
     "label", "jmp",
     // A2++.5.5 fourth slice — boolean-conditional jumps (just the
-    // zero-flag pair JFZ/JTZ; the remaining 6 flag opcodes and
-    // `cmp` defer to v0.3.6).
+    // zero-flag pair JFZ/JTZ; the remaining 6 flag opcodes defer to
+    // v0.3.7).
     "jmp_if_true", "jmp_if_false",
+    // A2++.5.5 fifth slice — equality comparison with flag-to-bool capture.
+    "cmp",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -567,6 +566,89 @@ pub fn lower_iir_to_intel8008(
                 // a front-end bug we could catch with a validator pass,
                 // but for v0.3.4 the latest definition wins (mirrors
                 // iir-to-riscv's v0.3.1 semantics).
+                // ── cmp dest, a, b → boolean equality test ────────────
+                //
+                // IIR-level `cmp dest, a, b` produces a boolean
+                // (`dest = (a == b) ? 1 : 0`).  The 8008's CMP
+                // (family `10 111 sss` = `0xB8 | sss`) computes
+                // `A - r`, sets the zero flag (`Z = 1 iff A == r`),
+                // and *discards* the difference.  So we need a
+                // flag-to-register capture sequence after CMP.
+                //
+                // Lowering shape (8 bytes when a is already in A,
+                // 9 when it isn't):
+                //
+                //   [optional]  MOV A, a_reg           ; stage a
+                //   CMP b_reg     (0xB8 | b_reg)       ; sets Z
+                //   MVI dest, 0                        ; default false
+                //   JFZ <fallthrough>                  ; Z=0 (a != b) → skip overwrite
+                //   MVI dest, 1                        ; Z=1 (a == b) → set true
+                //   <-- fallthrough lives here -->
+                //
+                // The JFZ's target is computed inline (NOT via the
+                // two-pass `pending_jmps` mechanism) because:
+                //   - The target is always a fixed +4-byte forward
+                //     offset from the JFZ instruction itself, so it
+                //     can be resolved at emit time.
+                //   - This keeps the capture sequence fully
+                //     self-contained — no synthetic label names
+                //     leaking into the user-visible `labels` map.
+                //
+                // Note: only EQUALITY (`a == b`) is supported in
+                // v0.3.6.  Less-than / greater-than need the sign +
+                // carry flags and land with the other 6 conditional
+                // jump opcodes in v0.3.7.
+                "cmp" => {
+                    let dest = require_dest(instr, "cmp", &f.name)?;
+                    let a_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "cmp srcs[0] must be Var".into(),
+                        }),
+                    };
+                    let b_name = match instr.srcs.get(1) {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "cmp srcs[1] must be Var".into(),
+                        }),
+                    };
+                    let a_reg = lookup_register(&env, &a_name, &f.name)?;
+                    let b_reg = lookup_register(&env, &b_name, &f.name)?;
+                    // Stage a into A if needed.
+                    if a_reg != REG_A {
+                        bytes.push(encode_mov(REG_A, a_reg));
+                    }
+                    // CMP b_reg — sets Z=1 iff A == b_reg.
+                    bytes.push(encode_alu(ALU_CMP, b_reg));
+                    // Allocate dest_reg and emit the flag-to-bool capture.
+                    let dest_reg = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    // MVI dest_reg, 0 — default (false).
+                    bytes.push(encode_mvi(dest_reg));
+                    bytes.push(0);
+                    // JFZ <fallthrough> — if Z clear (a != b), skip the
+                    // "set true" path so dest stays 0.
+                    bytes.push(JFZ);
+                    // Compute target: after the JFZ opcode is pushed,
+                    // bytes.len() points at the low-address slot.  We
+                    // need to skip past 2 address bytes + 2 bytes for
+                    // `MVI dest_reg, 1` to land at the byte AFTER the
+                    // capture sequence.  Target = bytes.len() + 4.
+                    let target = bytes.len() + 4;
+                    if target >= 1 << 14 {
+                        return Err(IIRIntel8008Error::AddressOutOfRange {
+                            function: f.name.clone(),
+                            address: target,
+                        });
+                    }
+                    bytes.push((target & 0xFF) as u8);
+                    bytes.push(((target >> 8) & 0x3F) as u8);
+                    // MVI dest_reg, 1 — set true (executed only when Z=1).
+                    bytes.push(encode_mvi(dest_reg));
+                    bytes.push(1);
+                }
+
                 "label" => {
                     let name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),

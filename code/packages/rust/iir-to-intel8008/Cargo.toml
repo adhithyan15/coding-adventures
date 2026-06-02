@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-intel8008"
-version = "0.3.5"
+version = "0.3.6"
 edition = "2021"
-description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.5 (A2++.5.5 fourth slice): adds boolean conditional branches `jmp_if_true` (ANA A + JFZ 0x48) and `jmp_if_false` (ANA A + JTZ 0x4C).  The 8008's TEST-A idiom (`ANA A` = `0xA7`) provokes the zero flag from the cond register so the family-01 zero-flag branch can fire.  `cmp` and the remaining 6 conditional-flag opcodes (JFC/JTC/JFS/JTS/JFP/JTP) defer to v0.3.6; real RET/CALL/stack defers to v0.3.7."
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.6 (A2++.5.5 fifth slice): adds `cmp` (equality test) using the 8008's CMP (family `10 111 sss` = `0xB8|sss`, sets Z=1 iff A==r and DISCARDS the difference) with an inline flag-to-bool capture sequence (MVI dest,0; JFZ +4; MVI dest,1).  The capture's forward JFZ is computed inline (NOT via the two-pass backpatcher) so the sequence stays self-contained.  Less-than/greater-than (which need sign + carry flags) and the remaining 6 conditional-jump opcodes defer to v0.3.7; real RET/CAL/stack defers to v0.3.8."
 
 [lib]
 name = "iir_to_intel8008"
