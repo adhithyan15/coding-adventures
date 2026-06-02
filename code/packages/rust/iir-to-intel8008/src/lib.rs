@@ -78,11 +78,11 @@
 //!       • burn to a 1702 EPROM (Oct's intended deployment path)
 //! ```
 
-use interpreter_ir::IIRModule;
+use interpreter_ir::{IIRModule, Operand};
 use std::fmt;
 
 // ===========================================================================
-// Intel 8008 opcode constants used by v0.1.0
+// Intel 8008 opcode constants
 // ===========================================================================
 //
 // The 8008's instruction encoding is irregular by modern standards: the
@@ -92,13 +92,17 @@ use std::fmt;
 // register-register MOV family but encodes "MOV M,M" — semantically a
 // self-move on the memory-pointer pseudo-register — which the silicon
 // implements as a halt.
-//
-// Bit pattern of HLT: `01 110 110` = `0x76`.  The simulator's
-// `Simulator::halted()` accessor flips true after this byte is
-// executed.
 
 /// Intel 8008 `HLT` opcode — `0x76`.  Halts the CPU.
 pub const HLT: u8 = 0x76;
+
+/// Intel 8008 `MVI A, imm8` first byte — `0x3E`.  Loads the next byte
+/// into the accumulator register.
+///
+/// Bit pattern: `00 111 110` (immediate-load family `00 rrr 110`, where
+/// `rrr = 111 = A`).  Two-byte instruction: this opcode plus the literal
+/// immediate byte.
+pub const MVI_A: u8 = 0x3E;
 
 // ===========================================================================
 // IIRIntel8008Config
@@ -200,6 +204,13 @@ pub fn validate_for_intel8008(_module: &IIRModule) -> Vec<String> {
 /// enough to load into the simulator, step once, and confirm
 /// [`Simulator::halted`] returns `true`.  Real lowering arrives in
 /// v0.2.0+ (A2+).
+/// Supported instruction opcodes in v0.2.0 (A2+).
+///
+/// `const` lowers to `MVI A, n` (3E + immediate byte).  `ret`/`ret_void`
+/// lowers to `HLT` — proper RET via CALL/stack lands in A2++.  Anything
+/// else is `UnsupportedOp`.
+const SUPPORTED_OPS: &[&str] = &["const", "ret", "ret_void"];
+
 pub fn lower_iir_to_intel8008(
     module: &IIRModule,
     _cfg: &IIRIntel8008Config,
@@ -208,9 +219,79 @@ pub fn lower_iir_to_intel8008(
     if !errors.is_empty() {
         return Err(IIRIntel8008Error::ValidationFailed(errors));
     }
-    // Single emitted byte: HLT.  Wrapped through the named constant so a
-    // future revision of the simulator's opcode table that changes the
-    // halt encoding flows through automatically — we'd update `HLT` once
-    // and every backend re-emits the right byte.
-    Ok(vec![HLT])
+
+    // Trivial empty-module contract — preserves v0.1.0 callable behaviour
+    // for the canonical "fn main() {}" minimal case.
+    if module.functions.is_empty() {
+        return Ok(vec![HLT]);
+    }
+
+    let mut bytes = Vec::new();
+    for f in &module.functions {
+        for instr in &f.instructions {
+            if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
+                return Err(IIRIntel8008Error::UnsupportedOp {
+                    function: f.name.clone(),
+                    op: instr.op.clone(),
+                });
+            }
+            match instr.op.as_str() {
+                // ── const: lower to MVI A, n ─────────────────────────────
+                //
+                // v0.2.0 treats every `const` as a load into the
+                // accumulator.  Multi-register allocation (B/C/D/E/H/L)
+                // lands in A2++ alongside MOV.  For values outside the
+                // 8-bit unsigned range (0..255) we return InvalidOperand —
+                // the 8008 has no wide-immediate idiom comparable to
+                // RV32's `lui`.
+                "const" => {
+                    let n = match instr.srcs.first() {
+                        Some(Operand::Int(n)) => *n,
+                        Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "const srcs[0] must be Int or Bool".into(),
+                        }),
+                    };
+                    // Accept i8 ([-128,127]) interpreted as two's-complement
+                    // u8 OR u8 ([0,255]) — both fit in the immediate byte.
+                    let byte: u8 = if (0..=255).contains(&n) {
+                        n as u8
+                    } else if (-128..0).contains(&n) {
+                        (n as i8) as u8 // two's-complement reinterpretation
+                    } else {
+                        return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!(
+                                "const {n} exceeds 8-bit byte range \
+                                 ([-128, 255]); 8008 has no wide-immediate \
+                                 idiom — split into multiple MVIs in A2++"
+                            ),
+                        });
+                    };
+                    bytes.push(MVI_A);
+                    bytes.push(byte);
+                }
+                // ── ret / ret_void: lower to HLT for now ─────────────────
+                //
+                // Intel 8008's real RET (`0x3F`) requires the CPU to have
+                // a non-empty internal return stack — that means proper
+                // CALL semantics, which arrive in A2++.  Until then, HLT
+                // gives the simulator a clean stop point.
+                "ret" | "ret_void" => {
+                    bytes.push(HLT);
+                }
+                _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
+            }
+        }
+    }
+
+    // If the module had functions but no instructions emitted anything
+    // (empty bodies), still produce HLT so the .bin is non-empty and the
+    // simulator has a stopping point.
+    if bytes.is_empty() {
+        bytes.push(HLT);
+    }
+
+    Ok(bytes)
 }

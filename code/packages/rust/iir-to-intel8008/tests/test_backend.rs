@@ -3,11 +3,23 @@
 //! Smoke-level — confirms the validator stub, the emitter shape, and
 //! the exact encoded `HLT` byte (`0x76`).
 
-use interpreter_ir::IIRModule;
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel8008::{
     lower_iir_to_intel8008, validate_for_intel8008,
-    IIRIntel8008Config, IIRIntel8008Error, HLT,
+    IIRIntel8008Config, IIRIntel8008Error, HLT, MVI_A,
 };
+
+fn module_with(f: IIRFunction) -> IIRModule {
+    let entry = f.name.clone();
+    IIRModule {
+        name: "test".into(),
+        functions: vec![f],
+        entry_point: Some(entry),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -95,4 +107,92 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRIntel8008Error::InvalidOperand {
         function: "f".into(), detail: "bad".into(),
     });
+}
+
+// ===========================================================================
+// 5. A2+ — `const` lowers to `MVI A, n` (0x3E + immediate byte)
+// ===========================================================================
+//
+// The accumulator-only first slice: every `const` goes into A; multi-
+// register allocation (B/C/D/E/H/L) lands in A2++.  `ret`/`ret_void`
+// emits `HLT` until A2++ wires up the 8008's CALL/RET stack.
+
+#[test]
+fn const_42_then_ret_lowers_to_mvi_a_42_then_hlt() {
+    let f = IIRFunction::new("answer", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![MVI_A, 42, HLT],
+        "expected MVI A,42 (0x3E 0x2A) + HLT (0x76); got: {bytes:02x?}");
+}
+
+#[test]
+fn mvi_a_constant_pinned_to_0x3e() {
+    // Sanity: the MVI_A constant matches the canonical Intel 8008
+    // documented encoding (0x3E).
+    assert_eq!(MVI_A, 0x3E,
+        "MVI A immediate-load opcode should be 0x3E (bit pattern 00 111 110)");
+}
+
+#[test]
+fn const_negative_uses_twos_complement_byte() {
+    // -1 → 0xFF via two's-complement reinterpretation.
+    let f = IIRFunction::new("f", vec![], "i8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(-1)], "i8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![MVI_A, 0xFF, HLT],
+        "expected MVI A,0xFF + HLT for `const -1`; got: {bytes:02x?}");
+}
+
+#[test]
+fn const_out_of_byte_range_is_rejected() {
+    let f = IIRFunction::new("f", vec![], "i16", vec![
+        // 1000 fits in i16 but not in a single 8008 immediate byte.
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1000)], "i16"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect_err("1000 should overflow the 8-bit immediate");
+    match err {
+        IIRIntel8008Error::InvalidOperand { detail, .. } => {
+            assert!(detail.contains("8-bit"),
+                "expected message naming the 8-bit limit; got: {detail}");
+        }
+        other => panic!("expected InvalidOperand, got: {other:?}"),
+    }
+}
+
+#[test]
+fn ret_void_alone_emits_just_hlt() {
+    let f = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![HLT],
+        "ret_void-only function should emit just HLT; got: {bytes:02x?}");
+}
+
+#[test]
+fn unsupported_op_is_rejected_with_function_name() {
+    let f = IIRFunction::new("boom", vec![], "void", vec![
+        IIRInstr::new("add", Some("v".into()),
+            vec![Operand::Int(1), Operand::Int(2)], "u8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect_err("`add` should be UnsupportedOp in A2+");
+    match err {
+        IIRIntel8008Error::UnsupportedOp { function, op } => {
+            assert_eq!(function, "boom");
+            assert_eq!(op, "add");
+        }
+        other => panic!("expected UnsupportedOp, got: {other:?}"),
+    }
 }
