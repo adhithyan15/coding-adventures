@@ -59,6 +59,7 @@ import {
   SoftmaxOp,
   SumOp,
   MeanOp,
+  EmbeddingOp,
 } from "./ops.js";
 
 export type Dtype = "f32";
@@ -474,6 +475,19 @@ export class Tensor {
 
   matmul(other: Tensor): Tensor {
     return MatMulOp.apply(this, other);
+  }
+
+  /**
+   * Embedding lookup.  `this` is the weight matrix (vocab_size, embedding_dim);
+   * `indices` is a Tensor of integer-valued cells (any shape) giving rows to
+   * fetch.  Output shape: `[...indices.shape, embedding_dim]`.
+   *
+   * Convention matches `torch.nn.functional.embedding(input, weight)` but
+   * with self-as-weight for fluent chaining: `weight.embedding(tokenIds)`.
+   * Gradients flow into `this` via scatter-add (repeated indices sum).
+   */
+  embedding(indices: Tensor): Tensor {
+    return EmbeddingOp.apply(this, indices);
   }
 
   relu(): Tensor {

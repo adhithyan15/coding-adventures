@@ -2,6 +2,81 @@
 
 ## Unreleased
 
+### Added — v1.3.0: EmbeddingOp lookup-table (Phase A.3)
+
+PR #3 of 7 in **Phase A**.  Adds the embedding-layer op — the one
+op that gates almost every NLP model.  Without it, you can't take
+discrete token IDs as input; with it, the road to attention layers
+(and from there, transformer architectures) is open.
+
+#### What works now
+
+```ts
+// Vocab of 10k tokens, each embedded into a 128-D vector.
+const weight = Tensor.zeros(10000, 128);   // learnable lookup table
+weight.requiresGrad = true;
+
+// A batch of 4 sequences, each 32 tokens long.
+const tokens = new Tensor([...], { shape: [4, 32] });   // integer values in [0, 10000)
+
+// Look up each token's embedding.  Output shape: [4, 32, 128].
+const x = weight.embedding(tokens);
+
+// During training: gradients flow back into `weight` via SCATTER-ADD.
+// Repeated tokens (the common case in real text) accumulate correctly.
+loss.backward();
+console.log(weight.grad!.shape);   // → [10000, 128]
+```
+
+#### Implementation notes
+
+- **`EmbeddingOp`** (`src/ops.ts`): standard forward — for each flat
+  index `i` in `indices`, copy `weight[indices[i], :]` into `out[i, :]`.
+  Output shape = `[...indices.shape, embedding_dim]`.  Indices values
+  are `Math.trunc`'d at lookup time and validated against `[0,
+  vocab_size)` — out-of-range throws a clear `RangeError`.
+- **Scatter-add backward** is THE correctness property of an embedding
+  layer.  When the same vocab index appears multiple times in the
+  input (which is the case for nearly every real sentence — common
+  words repeat), the gradient at that weight row must be the SUM of
+  the per-occurrence grad slices.  A naive "set weight[idx, :] = grad
+  slice" silently drops all but the last occurrence's contribution
+  and trains to garbage.  We use `+=` (accumulate into a zero-init
+  buffer) to do this correctly.  The test suite has an explicit
+  "REPEATED indices accumulate" test that fails loud if you ever
+  break this.
+- **Indices are a Tensor, not a `number[]`** — consistency with the
+  rest of the framework and makes `indices.shape` the prefix of the
+  output shape without a separate parameter.  Cells are f32 (only
+  dtype we support) but get truncated to int at lookup time.
+- **Indices receive no gradient** — `backward` returns `null` for the
+  indices parent.  Even if the user erroneously sets
+  `indices.requiresGrad = true`, the autograd walker handles the
+  `null` gracefully without crashing.
+- **`Tensor.embedding(indices)`** convenience method: `weight.embedding(tokens)`
+  reads naturally and matches the PyTorch `F.embedding(tokens, weight)`
+  signature (with self-as-weight for fluent chaining).
+
+#### Tests
+
+- 12 new vitest cases (`tests/embedding.test.ts`):
+  - 3 forward-shape cases (1-D indices, 2-D indices, scalar indices)
+  - 2 backward correctness (shape + the killer "repeated indices" sum)
+  - 1 backward with explicit non-ones gradient
+  - 1 indices-grad-is-null
+  - 4 validation cases (non-2-D weight, negative idx, idx ≥ vocab, boundary OK)
+  - 1 fluent-method parity
+- **206 tests pass.**  Up from 194 in v1.2.
+
+#### What this unlocks
+
+Embedding is the last big op needed before attention.  With `matmul`
+batched (v1.2), `softmax` (v1.0), and `embedding` (v1.3), the core
+operations for an attention layer are all in place.  Phase A.4 adds
+LayerNorm + BatchNorm + Dropout (the "normalize and regularize"
+trifecta every transformer uses); A.7 wires up safetensors so we
+can load any HF checkpoint's weights.
+
 ### Added — v1.2.0: N-D batched MatMul + higher-rank Transpose (Phase A.2)
 
 PR #2 of 7 in **Phase A** — v1.0 had a 2-D-only `MatMul` and a

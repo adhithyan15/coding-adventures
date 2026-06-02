@@ -968,3 +968,126 @@ export class MeanOp extends Function {
     return [new Tensor(new Array(numel).fill(g), { shape: inputShape.slice() })];
   }
 }
+
+// ────────── Embedding — lookup table (Phase A.3) ──────────
+//
+// Standard NN embedding layer.  Given a learnable weight matrix of shape
+// (vocab_size, embedding_dim) and an integer-valued indices tensor of
+// arbitrary shape `S`, looks up each index's row and produces an output
+// of shape `[...S, embedding_dim]`.
+//
+// ## Why indices are a Tensor (of integers) and not number[]
+//
+// Two reasons:
+//   1. Consistency — everything else in the framework is a Tensor.  An
+//      embedding lookup naturally chains: tokens → embedding → linear → ...
+//   2. Shape: `indices.shape` IS the prefix of the output shape.  Carrying
+//      shape on the Tensor saves a separate `indicesShape` argument.
+//
+// Indices values are still cast to int at lookup time (we use Math.trunc
+// on each f32 cell).  This matches PyTorch's de-facto "you pass a Long
+// tensor" convention but works within our f32-only storage model.
+//
+// ## Backward = scatter-add
+//
+// This is the MOST IMPORTANT correctness property of an embedding layer.
+// When the same vocabulary index appears multiple times in `indices`
+// (which is the common case — most sentences have repeated tokens), the
+// gradient at that weight row is the SUM of grad slices from every
+// occurrence.  A naive "set weight[idx, :] = grad slice" would drop all
+// but the last occurrence's contribution.  We use += (accumulate) into
+// the grad-weight buffer to avoid that bug.
+//
+// Indices receive no gradient (they're not differentiable; return null).
+//
+// ## What this unlocks
+//
+// Any NLP model that takes token IDs as input — i.e. essentially every
+// transformer ever published.  v1.3 with Embedding is the last big op
+// missing before we can start expressing attention layers (matmul + softmax
+// + embedding all in place).
+
+export class EmbeddingOp extends Function {
+  forward(...inputs: unknown[]): Tensor {
+    const weight = inputs[0] as Tensor;
+    const indices = inputs[1] as Tensor;
+
+    if (weight.ndim !== 2) {
+      throw new RangeError(
+        `embedding weight must be 2-D (vocab_size, embedding_dim); got shape [${weight.shape.join(", ")}]`,
+      );
+    }
+    const [vocabSize, embDim] = weight.shape as [number, number];
+
+    // Materialize a Int32Array view of the indices so range-checks and
+    // lookups are integer-clean.  We use Math.trunc to convert (round
+    // toward zero), then validate range.
+    const numIndices = indices.numel;
+    const idx = new Int32Array(numIndices);
+    for (let i = 0; i < numIndices; i++) {
+      const v = Math.trunc(indices.data[i]!);
+      if (v < 0 || v >= vocabSize) {
+        throw new RangeError(
+          `embedding index ${indices.data[i]} at position ${i} out of range ` +
+            `[0, ${vocabSize}); embedding weight has ${vocabSize} rows`,
+        );
+      }
+      idx[i] = v;
+    }
+
+    // Output shape: indices.shape ++ [embedding_dim].  Special case:
+    // scalar indices (shape []) yields shape [embedding_dim].
+    const outShape = [...indices.shape, embDim];
+    const out = new Float32Array(numIndices * embDim);
+    for (let i = 0; i < numIndices; i++) {
+      const row = idx[i]!;
+      const srcStart = row * embDim;
+      const dstStart = i * embDim;
+      for (let d = 0; d < embDim; d++) {
+        out[dstStart + d] = weight.data[srcStart + d]!;
+      }
+    }
+
+    this.savedForBackward.weightShape = weight.shape.slice();
+    this.savedForBackward.indicesShape = indices.shape.slice();
+    this.savedForBackward.idx = idx;
+    this.savedForBackward.vocabSize = vocabSize;
+    this.savedForBackward.embDim = embDim;
+
+    return new Tensor(Array.from(out), { shape: outShape });
+  }
+
+  // Backward = scatter-add into a zeros-initialized grad-weight.
+  //
+  // grad shape: [...indices.shape, embedding_dim]
+  // → flatten the leading dims to numIndices and treat as
+  //   (numIndices, embedding_dim).
+  // For each i in 0..numIndices:
+  //   gradWeight[idx[i], :] += grad[i, :]
+  //
+  // The += (not =) is the scatter-add — repeated indices accumulate.
+  //
+  // Indices receive null (not differentiable).
+  backward(grad: Tensor): (Tensor | null)[] {
+    const idx = this.savedForBackward.idx as Int32Array;
+    const vocabSize = this.savedForBackward.vocabSize as number;
+    const embDim = this.savedForBackward.embDim as number;
+    const weightShape = this.savedForBackward.weightShape as number[];
+    const numIndices = idx.length;
+
+    const gradWeight = new Float32Array(vocabSize * embDim); // zero-init
+    for (let i = 0; i < numIndices; i++) {
+      const row = idx[i]!;
+      const srcStart = i * embDim;
+      const dstStart = row * embDim;
+      for (let d = 0; d < embDim; d++) {
+        gradWeight[dstStart + d]! += grad.data[srcStart + d]!;
+      }
+    }
+
+    return [
+      new Tensor(Array.from(gradWeight), { shape: weightShape }),
+      null,
+    ];
+  }
+}
