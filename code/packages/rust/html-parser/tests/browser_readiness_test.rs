@@ -2,13 +2,13 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormLabel, BrowserFormOutput,
-    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormLabel,
+    BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl,
+    BrowserFormTextEntry, BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint,
+    BrowserImage, BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia,
+    BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint,
+    BrowserScript, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -736,6 +736,8 @@ struct ExpectedForm {
     text_entries: Vec<ExpectedFormTextEntry>,
     #[serde(default)]
     choice_controls: Vec<ExpectedFormChoiceControl>,
+    #[serde(default)]
+    file_controls: Vec<ExpectedFormFileControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -979,6 +981,41 @@ struct ExpectedFormChoiceControl {
     group_checked_ids: Vec<String>,
     #[serde(default)]
     group_checked_values: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormFileControl {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accept: Option<String>,
+    #[serde(default)]
+    accept_tokens: Vec<String>,
+    #[serde(default)]
+    capture: Option<String>,
+    #[serde(default)]
+    multiple: bool,
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1819,6 +1856,66 @@ fn browser_form_choice_descriptor_metadata_tracks_checkbox_radio_state_and_group
     assert_eq!(external.group_name.as_deref(), Some("plan"));
     assert_eq!(external.group_checked_ids, vec!["plan-basic"]);
     assert_eq!(external.group_checked_values, vec!["basic"]);
+}
+
+#[test]
+fn browser_form_file_descriptor_metadata_tracks_upload_controls_and_hints() {
+    let document = parse_browser_document(
+        "<form id=uploads enctype=multipart/form-data>\
+         <label for=avatar>Avatar</label>\
+         <input id=avatar type=file name=avatar accept=\"image/png, image/jpeg, .webp\" capture=user multiple required>\
+         <label>Attachment<input id=attachment type=file name=attachment disabled></label>\
+         </form>\
+         <input id=external type=file form=uploads name=outside accept=\"application/pdf\">",
+    )
+    .expect("form file descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("uploads form should be summarized");
+    let ids: Vec<&str> = form
+        .file_controls
+        .iter()
+        .filter_map(|file| file.id.as_deref())
+        .collect();
+    assert_eq!(ids, vec!["avatar", "attachment", "external"]);
+
+    let avatar = &form.file_controls[0];
+    assert_eq!(avatar.name.as_deref(), Some("avatar"));
+    assert_eq!(avatar.labels, vec!["Avatar"]);
+    assert_eq!(avatar.accessible_name.as_deref(), Some("Avatar"));
+    assert_eq!(
+        avatar.accept.as_deref(),
+        Some("image/png, image/jpeg, .webp")
+    );
+    assert_eq!(
+        avatar.accept_tokens,
+        vec!["image/png", "image/jpeg", ".webp"]
+    );
+    assert_eq!(avatar.capture.as_deref(), Some("user"));
+    assert!(avatar.multiple);
+    assert!(avatar.required);
+    assert!(avatar.successful);
+    assert!(avatar.submission_values.is_empty());
+    assert!(avatar.will_validate);
+    assert_eq!(avatar.validation_attributes, vec!["required"]);
+
+    let attachment = &form.file_controls[1];
+    assert_eq!(attachment.labels, vec!["Attachment"]);
+    assert!(attachment.disabled);
+    assert!(!attachment.successful);
+    assert!(!attachment.will_validate);
+    assert_eq!(
+        attachment.validation_barred_reason.as_deref(),
+        Some("disabled")
+    );
+
+    let external = &form.file_controls[2];
+    assert_eq!(external.form_owner.as_deref(), Some("uploads"));
+    assert_eq!(external.accept.as_deref(), Some("application/pdf"));
+    assert_eq!(external.accept_tokens, vec!["application/pdf"]);
+    assert!(external.successful);
 }
 
 #[test]
@@ -2754,6 +2851,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormChoiceControl::into_browser_form_choice_control)
                 .collect(),
+            file_controls: self
+                .file_controls
+                .into_iter()
+                .map(ExpectedFormFileControl::into_browser_form_file_control)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -2950,6 +3052,29 @@ impl ExpectedFormChoiceControl {
             group_name: self.group_name,
             group_checked_ids: self.group_checked_ids,
             group_checked_values: self.group_checked_values,
+        }
+    }
+}
+
+impl ExpectedFormFileControl {
+    fn into_browser_form_file_control(self) -> BrowserFormFileControl {
+        BrowserFormFileControl {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            accept: self.accept,
+            accept_tokens: self.accept_tokens,
+            capture: self.capture,
+            multiple: self.multiple,
+            disabled: self.disabled,
+            required: self.required,
+            successful: self.successful,
+            submission_values: self.submission_values,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
         }
     }
 }
