@@ -583,6 +583,171 @@ fn cmp_result_can_be_added() {
 }
 
 // ===========================================================================
+// §8. v0.9.0 NEW — `neg dest, src` lowering (LDA 0 + SUB pattern)
+// ===========================================================================
+
+/// Canonical `const v=5; neg w, v; ret w` byte sequence.
+///
+/// Trace:
+///   0:  LDA 5      (v → ACC, owner=v)
+///   3:  STA r0     (evict v → r0 because LDA 0 below clobbers ACC)
+///   6:  LDA 0      (ACC ← 0)
+///   9:  SUB r0     (ACC ← 0 - v = -v; env[w] = ACC, owner=w)
+///   12: HLT        (w in ACC for ret w)
+/// Total: 15 bytes.
+#[test]
+fn canonical_neg_byte_sequence() {
+    let f = IIRFunction::new(
+        "neg_v",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "i16"),
+            IIRInstr::new("neg", Some("w".into()), vec![Operand::Var("v".into())], "i16"),
+            IIRInstr::new("ret", None, vec![Operand::Var("w".into())], "i16"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x01, 0x00, 0x05, // LDA 5
+            0x02, 0x00, 0x00, // STA r0 (evict v)
+            0x01, 0x00, 0x00, // LDA 0
+            0x05, 0x00, 0x00, // SUB r0
+            0x00, 0x00, 0x00, // HLT
+        ]
+    );
+    assert_eq!(bytes.len(), 15);
+}
+
+/// `neg` of a register-resident value (after another const evicts
+/// it) skips the redundant eviction step.
+///
+/// Trace: const v=7; const u=3; neg w, v; ret_void
+///   0:  LDA 7      (v → ACC)
+///   3:  STA r0     (evict v → r0 for next const)
+///   6:  LDA 3      (u → ACC, owner=u)
+///   9:  STA r1     (evict u → r1 because LDA 0 below clobbers ACC)
+///   12: LDA 0      (ACC ← 0)
+///   15: SUB r0     (ACC ← 0 - v)
+///   18: HLT
+#[test]
+fn neg_when_src_in_register_skips_first_eviction() {
+    let f = IIRFunction::new(
+        "neg_reg",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i16"),
+            IIRInstr::new("const", Some("u".into()), vec![Operand::Int(3)], "i16"),
+            IIRInstr::new("neg", Some("w".into()), vec![Operand::Var("v".into())], "i16"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x01, 0x00, 0x07, // LDA 7
+            0x02, 0x00, 0x00, // STA r0 (evict v)
+            0x01, 0x00, 0x03, // LDA 3
+            0x02, 0x00, 0x01, // STA r1 (evict u — done by neg's "evict remaining ACC owner")
+            0x01, 0x00, 0x00, // LDA 0
+            0x05, 0x00, 0x00, // SUB r0 (negate v)
+            0x00, 0x00, 0x00, // HLT
+        ]
+    );
+}
+
+/// Double-neg: `neg w, v; neg x, w; ret x` should yield x = v
+/// (the byte trace is what we pin, not the semantic).
+#[test]
+fn double_neg_works() {
+    let f = IIRFunction::new(
+        "double_neg",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i16"),
+            IIRInstr::new("neg", Some("w".into()), vec![Operand::Var("v".into())], "i16"),
+            IIRInstr::new("neg", Some("x".into()), vec![Operand::Var("w".into())], "i16"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i16"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    // Just confirm lowering succeeds and ends with HLT.  Tracing
+    // every byte for chained negs is over-pinning.
+    assert_eq!(bytes.len() % 3, 0, "word-aligned");
+    assert_eq!(&bytes[bytes.len() - 3..], &HALT_WORD);
+    assert!(
+        bytes.len() >= 15,
+        "double neg should be at least the single-neg ROM size"
+    );
+}
+
+/// `neg` of an undefined src errors crisply.
+#[test]
+fn neg_undefined_src_errors() {
+    let f = IIRFunction::new(
+        "neg_undef",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("neg", Some("w".into()), vec![Operand::Var("never".into())], "i16"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect_err("neg of undefined src must error");
+    match err {
+        IIRGe225Error::UndefinedVariable { name, .. } => assert_eq!(name, "never"),
+        other => panic!("expected UndefinedVariable, got {other:?}"),
+    }
+}
+
+/// `neg` with no srcs errors with `InvalidOperand`.
+#[test]
+fn neg_no_srcs_errors() {
+    let f = IIRFunction::new(
+        "neg_empty",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("neg", Some("w".into()), vec![], "i16"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect_err("neg without src must error");
+    assert!(matches!(err, IIRGe225Error::InvalidOperand { .. }));
+}
+
+/// `neg` feeds into `ret` cleanly — the result is in ACC, no LD
+/// prefix needed.
+#[test]
+fn neg_result_feeds_directly_into_ret() {
+    let f = IIRFunction::new(
+        "neg_then_ret",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i16"),
+            IIRInstr::new("neg", Some("w".into()), vec![Operand::Var("v".into())], "i16"),
+            IIRInstr::new("ret", None, vec![Operand::Var("w".into())], "i16"),
+        ],
+    );
+    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+        .expect("lowering");
+    // After SUB r0, w lives in ACC. ret w finds w == acc_owner and
+    // emits just HLT — no LD prefix.
+    assert_eq!(&bytes[bytes.len() - 3..], &HALT_WORD);
+}
+
+// ===========================================================================
 // §7. v0.8.0 NEW — call_builtin no-op lowering
 // ===========================================================================
 

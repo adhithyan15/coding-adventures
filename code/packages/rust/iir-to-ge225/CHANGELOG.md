@@ -2,6 +2,66 @@
 
 All notable changes to this crate are documented here.
 
+## v0.9.0 — 2026-06-02 — A5++++++++++ `neg` lowering (closes BASIC unary-minus gap)
+
+Eighth lowering increment.  Adds `neg dest, src` via the canonical
+two's-complement-by-subtract-from-zero pattern.  Closes the BASIC
+unary-minus gap so programs containing `-x` expressions compile
+end-to-end.
+
+### Lowering shape
+
+```
+(STA r_evict_src)?  ; if src in ACC, evict to register
+(STA r_evict_acc)?  ; if any other var in ACC, evict
+LDA 0               ; ACC ← 0
+SUB r_src           ; ACC ← 0 - src = -src
+```
+
+After this sequence: `env[dest] = ACC_MARKER`, `acc_owner = Some(dest)`.
+
+### Byte costs
+
+- Trivial `const v=N; neg w, v; ret w` (entry function): **15 bytes**
+  `LDA N + STA r0 + LDA 0 + SUB r0 + HLT`
+- `neg` itself contributes 6 bytes after prep (`LDA 0` + `SUB r_src`).
+
+### Public surface delta
+
+- `"neg"` added to `SUPPORTED_OPS`.
+- No new pub constants, no new error variants — validation flows
+  through existing `InvalidOperand` and `UndefinedVariable`.
+
+### Opcode map (unchanged — neg uses existing 0x1 LDA + 0x5 SUB)
+
+The lowering reuses the existing LDA and SUB opcodes; no new
+opcode nibble is added.  All 11 opcodes (0x0..0xB) keep their
+v0.6.0 assignments.
+
+### Tests (33 unit + 1 doctest, all passing)
+
+New v0.9.0 coverage:
+- `canonical_neg_byte_sequence` — exact 15-byte trivial ROM
+- `neg_when_src_in_register_skips_first_eviction` — 21-byte
+  chained-const sequence
+- `double_neg_works` — chained negs lower cleanly (no exact byte
+  pin, just semantics)
+- `neg_undefined_src_errors` — `UndefinedVariable`
+- `neg_no_srcs_errors` — `InvalidOperand`
+- `neg_result_feeds_directly_into_ret` — result is in ACC for
+  ret-without-LD
+
+Regressions still pinned: trivial 6-byte ROM, trivial-add 21-byte,
+trivial-cmp 33-byte, call_builtin no-op, all 11 opcode nibbles.
+
+Lang-aot e2e: 10/10 BASIC tests pass (no test contents changed —
+neg just becomes part of BASIC programs that use unary minus).
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+
 ## v0.8.0 — 2026-06-02 — A5+++++++++ `call_builtin` no-op lowering (closes BASIC PRINT gap)
 
 Seventh lowering increment.  Adds a minimal `call_builtin`

@@ -1,4 +1,4 @@
-//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.8.0, A5+++++++++).
+//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.9.0, A5++++++++++).
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
@@ -247,9 +247,9 @@ const ACC_MARKER: u8 = 16;
 /// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
 const GP_REGISTER_COUNT: usize = 16;
 
-/// Supported instruction opcodes in v0.8.0 (A5+++++++++).
+/// Supported instruction opcodes in v0.9.0 (A5++++++++++).
 const SUPPORTED_OPS: &[&str] = &[
-    "const", "mov", "add", "sub",
+    "const", "mov", "add", "sub", "neg",
     "cmp_lt", "cmp_eq", "cmp_ne", "cmp_le", "cmp_gt", "cmp_ge",
     "label", "jmp", "jmp_if_true", "jmp_if_false",
     "call", "call_builtin",
@@ -678,6 +678,70 @@ pub fn lower_iir_to_ge225(
                         _ => unreachable!(),
                     };
                     bytes.extend_from_slice(&arith);
+                    env.insert(dest.to_string(), ACC_MARKER);
+                    acc_owner = Some(dest.to_string());
+                }
+
+                // ── neg dest, src → (evict)? + LDA 0 + SUB r_src ──────
+                //
+                // Two's-complement negation via subtract-from-zero:
+                //
+                //   ACC = 0;            (LDA 0)
+                //   ACC = ACC - src;    (SUB r_src)
+                //   → ACC = -src
+                //
+                // Steps:
+                //   1. If src lives in ACC, evict it (so SUB has a
+                //      stable register source).
+                //   2. Evict any remaining ACC owner so LDA 0 doesn't
+                //      clobber a live value.
+                //   3. LD A 0 + SUB r_src.
+                //   4. env[dest] = ACC_MARKER; acc_owner = Some(dest).
+                //
+                // The 16-bit immediate `0` in LDA 0 is just
+                // `[0x01, 0x00, 0x00]`.  The trivial-case ROM is
+                // `LDA n; STA r0; LDA 0; SUB r0; HLT` = 15 bytes,
+                // pinned by tests.
+                "neg" => {
+                    let dest = require_dest(instr, "neg", &f.name)?;
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => {
+                            return Err(IIRGe225Error::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: "neg requires srcs[0] = Operand::Var(src)".into(),
+                            })
+                        }
+                    };
+                    if !env.contains_key(&src_name) {
+                        return Err(IIRGe225Error::UndefinedVariable {
+                            function: f.name.clone(),
+                            name: src_name,
+                        });
+                    }
+                    // If src is in ACC, evict to a register first.
+                    if matches!(env.get(&src_name), Some(&ACC_MARKER)) {
+                        evict_acc(
+                            &mut bytes,
+                            &mut env,
+                            &mut acc_owner,
+                            &mut next_reg,
+                            &f.name,
+                        )?;
+                    }
+                    // Evict any remaining ACC owner (LDA 0 will clobber it).
+                    evict_acc(
+                        &mut bytes,
+                        &mut env,
+                        &mut acc_owner,
+                        &mut next_reg,
+                        &f.name,
+                    )?;
+                    let r_src = lookup_register(&env, &src_name, &f.name)?;
+                    debug_assert!(r_src <= 15);
+                    // LDA 0 then SUB r_src.
+                    bytes.extend_from_slice(&encode_lda(0));
+                    bytes.extend_from_slice(&encode_sub(r_src));
                     env.insert(dest.to_string(), ACC_MARKER);
                     acc_owner = Some(dest.to_string());
                 }
