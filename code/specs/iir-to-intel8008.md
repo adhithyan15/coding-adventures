@@ -54,8 +54,9 @@ IIRModule
 | Version | Scope | Status |
 |---------|-------|--------|
 | v0.1.0 (A2) | crate skeleton: any module → single `HLT` (`0x76`) | **merged** |
-| **v0.2.0 (A2+ — this PR)** | `const` → `MVI A, n` + `ret`/`ret_void` → `HLT` (accumulator-only first slice) | this PR |
-| v0.3.0 (A2++) | Multi-register allocation (B/C/D/E/H/L) + `MOV r1, r2` + ALU on the accumulator + real `RET` via `CALL`/stack | future |
+| v0.2.0 (A2+) | `const` → `MVI A, n` + `ret`/`ret_void` → `HLT` (accumulator-only first slice) | **merged** |
+| **v0.3.0 (A2++ — this PR)** | Linear register allocator over A/B/C/D/E/H/L + multi-register `const` + `mov` + ret-value staging | this PR |
+| v0.3.1 (A2++.5) | ALU on the accumulator (`ADD`/`SUB`/`CMP`/etc.) + real `RET` (`0x3F`) via `CALL` + internal return stack | future |
 | v0.4.0 (A2+++) | Conditional + unconditional jumps with 14-bit address backpatching + `lang-aot --target=intel8008` | future |
 
 ## Public surface (v0.1.0)

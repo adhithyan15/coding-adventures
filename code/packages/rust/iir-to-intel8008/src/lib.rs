@@ -79,6 +79,7 @@
 //! ```
 
 use interpreter_ir::{IIRModule, Operand};
+use std::collections::HashMap;
 use std::fmt;
 
 // ===========================================================================
@@ -103,6 +104,52 @@ pub const HLT: u8 = 0x76;
 /// `rrr = 111 = A`).  Two-byte instruction: this opcode plus the literal
 /// immediate byte.
 pub const MVI_A: u8 = 0x3E;
+
+// ===========================================================================
+// Intel 8008 register encoding
+// ===========================================================================
+//
+// The 8008's 3-bit register field uses these codes:
+//
+//   A = 7   (111)  accumulator
+//   B = 0   (000)
+//   C = 1   (001)
+//   D = 2   (010)
+//   E = 3   (011)
+//   H = 4   (100)
+//   L = 5   (101)
+//   M = 6   (110)  memory pseudo-register (not allocated to)
+//
+// MVI rrr, n   = 00 rrr 110             = `(rrr << 3) | 0x06`  + imm byte
+// MOV ddd, sss = 01 ddd sss             = `(ddd << 3) | sss | 0x40`
+//
+// The MVI/MOV opcode generators below assert their inputs fit in 3 bits
+// — anything outside [0, 7] would corrupt the surrounding bit-fields.
+
+/// Linear-allocator pool ordered to keep the trivial `const v; ret v`
+/// case at one MVI byte: A is handed out first, so `ret v` finds the
+/// value already in A and skips the redundant `MOV A, X` round-trip.
+const REGISTER_POOL: [u8; 7] = [7, 0, 1, 2, 3, 4, 5]; // A, B, C, D, E, H, L
+
+/// The accumulator register (`A = 0b111 = 7`).  `ret <var>` moves the
+/// return value into A before halting; `ret_void` doesn't touch it.
+const REG_A: u8 = 7;
+
+/// Encode an `MVI rrr, imm8` first byte.
+///
+/// `rrr` must be in `[0, 7]` (any of the 7 GP registers + the M
+/// pseudo-register; in practice we only ever pass GP-register indices).
+fn encode_mvi(rrr: u8) -> u8 {
+    debug_assert!(rrr <= 7, "register index out of 3-bit range: {rrr}");
+    (rrr << 3) | 0x06
+}
+
+/// Encode a `MOV ddd, sss` opcode (single byte, family `01 ddd sss`).
+fn encode_mov(ddd: u8, sss: u8) -> u8 {
+    debug_assert!(ddd <= 7, "ddd out of 3-bit range: {ddd}");
+    debug_assert!(sss <= 7, "sss out of 3-bit range: {sss}");
+    0x40 | (ddd << 3) | sss
+}
 
 // ===========================================================================
 // IIRIntel8008Config
@@ -152,6 +199,13 @@ pub enum IIRIntel8008Error {
     UnsupportedType { function: String, type_hint: String },
     /// An operand has an unexpected shape.
     InvalidOperand { function: String, detail: String },
+    /// A variable name was used (via `mov` or `ret`) before it was bound
+    /// by `const` or `mov`.
+    UndefinedVariable { function: String, name: String },
+    /// The function tried to bind more locals than the 8008's 7
+    /// general-purpose registers (A/B/C/D/E/H/L) can hold.  Stack
+    /// spilling lands in a future increment (A2++.5 or later).
+    OutOfRegisters { function: String, name: String },
 }
 
 impl fmt::Display for IIRIntel8008Error {
@@ -168,6 +222,12 @@ impl fmt::Display for IIRIntel8008Error {
             }
             Self::InvalidOperand { function, detail } => {
                 write!(f, "invalid operand in function {function:?}: {detail}")
+            }
+            Self::UndefinedVariable { function, name } => {
+                write!(f, "undefined variable {name:?} in function {function:?}")
+            }
+            Self::OutOfRegisters { function, name } => {
+                write!(f, "out of 8008 registers (A/B/C/D/E/H/L) while binding {name:?} in function {function:?}; stack spilling not yet supported")
             }
         }
     }
@@ -204,12 +264,13 @@ pub fn validate_for_intel8008(_module: &IIRModule) -> Vec<String> {
 /// enough to load into the simulator, step once, and confirm
 /// [`Simulator::halted`] returns `true`.  Real lowering arrives in
 /// v0.2.0+ (A2+).
-/// Supported instruction opcodes in v0.2.0 (A2+).
+/// Supported instruction opcodes in v0.3.0 (A2++).
 ///
-/// `const` lowers to `MVI A, n` (3E + immediate byte).  `ret`/`ret_void`
-/// lowers to `HLT` — proper RET via CALL/stack lands in A2++.  Anything
-/// else is `UnsupportedOp`.
-const SUPPORTED_OPS: &[&str] = &["const", "ret", "ret_void"];
+/// `const` lowers to `MVI rrr, n` with `rrr` allocated from the
+/// `REGISTER_POOL`.  `mov` lowers to `MOV ddd, sss`.  `ret` moves the
+/// value into `A` (if not already there) and emits `HLT`; `ret_void`
+/// just emits `HLT`.  Anything else is `UnsupportedOp`.
+const SUPPORTED_OPS: &[&str] = &["const", "mov", "ret", "ret_void"];
 
 pub fn lower_iir_to_intel8008(
     module: &IIRModule,
@@ -228,6 +289,15 @@ pub fn lower_iir_to_intel8008(
 
     let mut bytes = Vec::new();
     for f in &module.functions {
+        // ── Per-function allocator state ──────────────────────────────
+        //
+        // IIR var name → its assigned 3-bit register index.  Sequentially
+        // hands out registers from REGISTER_POOL starting with A — this
+        // keeps the trivial `const v; ret v` case at the same 3-byte
+        // shape as v0.2.0 (no redundant `MOV A, X` round-trip).
+        let mut env: HashMap<String, u8> = HashMap::new();
+        let mut next_reg: usize = 0;
+
         for instr in &f.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
                 return Err(IIRIntel8008Error::UnsupportedOp {
@@ -236,62 +306,141 @@ pub fn lower_iir_to_intel8008(
                 });
             }
             match instr.op.as_str() {
-                // ── const: lower to MVI A, n ─────────────────────────────
-                //
-                // v0.2.0 treats every `const` as a load into the
-                // accumulator.  Multi-register allocation (B/C/D/E/H/L)
-                // lands in A2++ alongside MOV.  For values outside the
-                // 8-bit unsigned range (0..255) we return InvalidOperand —
-                // the 8008 has no wide-immediate idiom comparable to
-                // RV32's `lui`.
+                // ── const dest, Int(n) → MVI dest_reg, n ────────────────
                 "const" => {
-                    let n = match instr.srcs.first() {
-                        Some(Operand::Int(n)) => *n,
-                        Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
-                        _ => return Err(IIRIntel8008Error::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: "const srcs[0] must be Int or Bool".into(),
-                        }),
-                    };
-                    // Accept i8 ([-128,127]) interpreted as two's-complement
-                    // u8 OR u8 ([0,255]) — both fit in the immediate byte.
-                    let byte: u8 = if (0..=255).contains(&n) {
-                        n as u8
-                    } else if (-128..0).contains(&n) {
-                        (n as i8) as u8 // two's-complement reinterpretation
-                    } else {
-                        return Err(IIRIntel8008Error::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: format!(
-                                "const {n} exceeds 8-bit byte range \
-                                 ([-128, 255]); 8008 has no wide-immediate \
-                                 idiom — split into multiple MVIs in A2++"
-                            ),
-                        });
-                    };
-                    bytes.push(MVI_A);
+                    let dest = require_dest(instr, "const", &f.name)?;
+                    let byte = encode_immediate_byte(instr.srcs.first(), &f.name)?;
+                    let rrr = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    bytes.push(encode_mvi(rrr));
                     bytes.push(byte);
                 }
-                // ── ret / ret_void: lower to HLT for now ─────────────────
+
+                // ── mov dest, src → MOV ddd, sss ────────────────────────
                 //
-                // Intel 8008's real RET (`0x3F`) requires the CPU to have
-                // a non-empty internal return stack — that means proper
-                // CALL semantics, which arrive in A2++.  Until then, HLT
-                // gives the simulator a clean stop point.
-                "ret" | "ret_void" => {
+                // If the source and dest happen to be the same register
+                // (unlikely under SSA but possible if upstream re-binds a
+                // name), we emit no byte — the move is a no-op.
+                "mov" => {
+                    let dest = require_dest(instr, "mov", &f.name)?;
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "mov srcs[0] must be Var".into(),
+                        }),
+                    };
+                    let sss = lookup_register(&env, &src_name, &f.name)?;
+                    let ddd = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                    if ddd != sss {
+                        bytes.push(encode_mov(ddd, sss));
+                    }
+                }
+
+                // ── ret <var>: stage value in A, then HLT ───────────────
+                //
+                // If `var`'s register is already A, the MOV is omitted.
+                // Real RET via CALL/stack lands in A2++.5 — until then,
+                // HLT is the universal stopping primitive.
+                "ret" => {
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "ret srcs[0] must be Var".into(),
+                        }),
+                    };
+                    let sss = lookup_register(&env, &src_name, &f.name)?;
+                    if sss != REG_A {
+                        bytes.push(encode_mov(REG_A, sss));
+                    }
                     bytes.push(HLT);
                 }
+
+                // ── ret_void: just HLT ──────────────────────────────────
+                "ret_void" => {
+                    bytes.push(HLT);
+                }
+
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
             }
         }
     }
 
-    // If the module had functions but no instructions emitted anything
-    // (empty bodies), still produce HLT so the .bin is non-empty and the
-    // simulator has a stopping point.
     if bytes.is_empty() {
         bytes.push(HLT);
     }
 
     Ok(bytes)
+}
+
+// ---------------------------------------------------------------------------
+// Per-instruction helpers
+// ---------------------------------------------------------------------------
+
+fn require_dest<'a>(
+    instr: &'a interpreter_ir::IIRInstr,
+    op: &str,
+    fn_name: &str,
+) -> Result<&'a str, IIRIntel8008Error> {
+    instr.dest.as_deref().ok_or_else(|| IIRIntel8008Error::InvalidOperand {
+        function: fn_name.to_string(),
+        detail: format!("{op} requires a dest"),
+    })
+}
+
+fn encode_immediate_byte(
+    op: Option<&Operand>,
+    fn_name: &str,
+) -> Result<u8, IIRIntel8008Error> {
+    let n = match op {
+        Some(Operand::Int(n)) => *n,
+        Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
+        _ => return Err(IIRIntel8008Error::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: "const srcs[0] must be Int or Bool".into(),
+        }),
+    };
+    if (0..=255).contains(&n) {
+        Ok(n as u8)
+    } else if (-128..0).contains(&n) {
+        Ok((n as i8) as u8)
+    } else {
+        Err(IIRIntel8008Error::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "const {n} exceeds 8-bit byte range ([-128, 255]); 8008 \
+                 has no wide-immediate idiom — split into multiple MVIs \
+                 in A2++"
+            ),
+        })
+    }
+}
+
+fn alloc_register(
+    next_reg: &mut usize,
+    dest: &str,
+    env: &mut HashMap<String, u8>,
+    fn_name: &str,
+) -> Result<u8, IIRIntel8008Error> {
+    if *next_reg >= REGISTER_POOL.len() {
+        return Err(IIRIntel8008Error::OutOfRegisters {
+            function: fn_name.to_string(),
+            name: dest.to_string(),
+        });
+    }
+    let rrr = REGISTER_POOL[*next_reg];
+    *next_reg += 1;
+    env.insert(dest.to_string(), rrr);
+    Ok(rrr)
+}
+
+fn lookup_register(
+    env: &HashMap<String, u8>,
+    name: &str,
+    fn_name: &str,
+) -> Result<u8, IIRIntel8008Error> {
+    env.get(name).copied().ok_or_else(|| IIRIntel8008Error::UndefinedVariable {
+        function: fn_name.to_string(),
+        name: name.to_string(),
+    })
 }

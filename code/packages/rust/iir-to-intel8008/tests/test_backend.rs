@@ -187,12 +187,123 @@ fn unsupported_op_is_rejected_with_function_name() {
         IIRInstr::new("ret_void", None, vec![], "void"),
     ]);
     let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
-        .expect_err("`add` should be UnsupportedOp in A2+");
+        .expect_err("`add` should be UnsupportedOp in A2++");
     match err {
         IIRIntel8008Error::UnsupportedOp { function, op } => {
             assert_eq!(function, "boom");
             assert_eq!(op, "add");
         }
         other => panic!("expected UnsupportedOp, got: {other:?}"),
+    }
+}
+
+// ===========================================================================
+// 6. A2++ — multi-register allocator (A → B → C → D → E → H → L)
+// ===========================================================================
+//
+// `const` rounds out a register from REGISTER_POOL.  A is handed out
+// first so the trivial `const v; ret v` case keeps its 3-byte shape
+// (no redundant MOV A, X round-trip).  Subsequent consts spill into
+// B, C, D, E, H, L in order.
+
+#[test]
+fn two_consts_use_a_then_b_then_mov_a_b_before_hlt() {
+    // const v=1; const w=2; ret w
+    //   MVI A, 1   (0x3E 0x01)
+    //   MVI B, 2   (0x06 0x02)
+    //   MOV A, B   (01 111 000 = 0x78)  ← stage w into A
+    //   HLT        (0x76)
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(2)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("w".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x01,    // const v → A
+        0x06,  0x02,    // const w → B (MVI B = 0x06)
+        0x78,           // MOV A, B (01 111 000 — stage w into A for ret)
+        HLT,
+    ], "expected MVI A,1 + MVI B,2 + MOV A,B + HLT; got: {bytes:02x?}");
+}
+
+#[test]
+fn ret_of_first_const_omits_the_redundant_mov() {
+    // Regression for the A2+ pinned 3-byte shape: when the value being
+    // returned is already in A, no `MOV A, X` is emitted.
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![MVI_A, 0x2A, HLT],
+        "A-first allocator should keep the trivial case at 3 bytes; got: {bytes:02x?}");
+}
+
+#[test]
+fn mov_lowers_to_canonical_mov_ddd_sss() {
+    // const v=7; mov w=v; ret w
+    // v is in A (allocated first). w is in B (next pool slot).
+    //   MVI A, 7    0x3E 0x07
+    //   MOV B, A    01 000 111 = 0x47
+    //   MOV A, B    0x78  ← stage w back into A for ret
+    //   HLT         0x76
+    let f = IIRFunction::new("f", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("mov",   Some("w".into()), vec![Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("w".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        MVI_A, 0x07,    // const v=7 → A
+        0x47,           // MOV B, A (01 000 111)
+        0x78,           // MOV A, B (01 111 000) — stage w into A for ret
+        HLT,
+    ], "expected MVI A,7 + MOV B,A + MOV A,B + HLT; got: {bytes:02x?}");
+}
+
+#[test]
+fn allocator_exhaustion_yields_out_of_registers() {
+    // 7 const + 1 const → exhausts the 7-slot pool [A,B,C,D,E,H,L].
+    let mut body = Vec::new();
+    for i in 0..8 {
+        body.push(IIRInstr::new(
+            "const",
+            Some(format!("v{i}")),
+            vec![Operand::Int(i as i64)],
+            "u8",
+        ));
+    }
+    body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+    let f = IIRFunction::new("greedy", vec![], "void", body);
+
+    let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect_err("8 consts should exhaust the 7-register pool");
+    match err {
+        IIRIntel8008Error::OutOfRegisters { function, name } => {
+            assert_eq!(function, "greedy");
+            assert_eq!(name, "v7", "should fail on the 8th local");
+        }
+        other => panic!("expected OutOfRegisters, got: {other:?}"),
+    }
+}
+
+#[test]
+fn undefined_variable_in_mov_is_rejected() {
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("mov", Some("w".into()),
+            vec![Operand::Var("ghost".into())], "u8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel8008(&module_with(f), &IIRIntel8008Config::default())
+        .expect_err("mov from undefined var should fail");
+    match err {
+        IIRIntel8008Error::UndefinedVariable { name, .. } => {
+            assert_eq!(name, "ghost");
+        }
+        other => panic!("expected UndefinedVariable, got: {other:?}"),
     }
 }
