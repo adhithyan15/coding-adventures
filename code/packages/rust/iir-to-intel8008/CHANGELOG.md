@@ -3,6 +3,94 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.4] — 2026-06-02 (A2++.5.5 third slice — `label` + unconditional `jmp` + two-pass backpatching)
+
+### Added — control flow primitive (unconditional jump)
+
+Wires the first control-flow lowering on the 8008.  Adds two IIR ops:
+
+| IIR op | Intel 8008 lowering |
+|--------|---------------------|
+| `label "<name>"` | zero bytes; records `(name → current_byte_offset)` in a per-function label table |
+| `jmp "<name>"` | `0x7C` + low address byte + high address byte (3 bytes total) |
+
+#### Why the encoding matters
+
+`JMP unconditional = 0x7C` (bit pattern `01 111 100`), NOT `0x44`.
+
+`0x44` is `JFC` (jump if flag-carry clear) — a **conditional** jump.
+The 8008's group-01 instruction family disambiguates by `ddd` (bits
+5-3): `ddd = 111` is the unconditional variant; `ddd ≤ 011` selects
+one of the four flag-tested conditional jumps.  Emitting `0x44`
+instead of `0x7C` would compile to a jump that silently takes or
+skips based on whichever carry-flag state the silicon happened to
+have at that moment — a debugging nightmare.
+
+This nightmare was caught during implementation by cross-checking
+against the in-tree `intel8008-simulator`, which is the
+crate's authoritative round-trip target.  The new
+`jmp_constant_pinned_to_0x7c` test guards the constant against any
+future copy-paste regression.
+
+#### Two-pass backpatching
+
+The 8008 has no PC-relative addressing — every `jmp` carries a full
+14-bit absolute target.  Pass 1 emits each `jmp` as `0x7C 0x00 0x00`,
+recording the placeholder's byte offset and the target label name.
+Pass 2 walks the table, resolves each label to its byte offset, and
+backpatches the two address bytes:
+
+```
+bytes[slot]     = (target & 0xFF) as u8;       // low byte
+bytes[slot + 1] = ((target >> 8) & 0x3F) as u8; // high byte (6 bits)
+```
+
+The top 2 bits of the high byte are written as zero — the 8008's
+address bus is 14 bits wide, so the silicon ignores them.  Emitting
+clean zeros means downstream disassemblers reproduce the same
+`JMP addr` regardless of how they sign-extend.
+
+Labels are scoped per-function.  Cross-function jumps (which would
+also need module-level resolution like `iir-to-riscv`'s A1++.5.5)
+aren't supported in v0.3.4.
+
+#### New constants + error variants
+
+* `pub const JMP: u8 = 0x7C;` (exposed for round-trip tests downstream)
+* `IIRIntel8008Error::UndefinedLabel { function, label }`
+* `IIRIntel8008Error::AddressOutOfRange { function, address }` —
+  forward-compatibility guard for the 14-bit (16384-byte) address
+  space; not yet triggerable in v0.3.4 because the 7-register
+  allocator caps each function at ~25 bytes.
+
+#### Tests added (32 total, was 27)
+
+* `jmp_constant_pinned_to_0x7c` — guards `JMP` against the easy
+  `0x44 ↔ 0x7C` confusion.
+* `jmp_to_forward_label_backpatches_target_address` — full pinned
+  byte stream including `7C 07 00` for a label at offset 7.
+* `jmp_to_backward_label_backpatches_target_address` — `7C 00 00`
+  for a loop back to offset 0.
+* `jmp_to_undefined_label_is_rejected` — pins the `UndefinedLabel`
+  error variant and message contents.
+* `label_emits_no_bytes` — differential test: a function with vs.
+  without a leading `label` must emit identical byte streams.
+
+`errors_display_without_panic` extended to cover the two new
+variants.
+
+### What is NOT in v0.3.4 (deferred to v0.3.5 / v0.3.6 / A2+++)
+
+* Conditional jumps (`jmp_if_true` / `jmp_if_false`) — 8 opcodes
+  (JFC/JFZ/JFS/JFP and their T-bit complements JTC/JTZ/JTS/JTP),
+  same 3-byte shape but driven by the four 8008 condition flags.
+* `cmp` — needs the conditional-jump infrastructure above to
+  capture the 8008's flag-only CMP result into a register dest.
+* Real `RET` (`0x07`) via `CALL` (`0x7E`, not `0x46`!) + the
+  per-function internal return stack.
+* `lang-aot --target=intel8008` wiring + module-level CALL
+  backpatching — A2+++.
+
 ## [0.3.3] — 2026-06-02 (A2++.5.5 second slice — carry/borrow ALU `adc`/`sbb`)
 
 ### Added — carry-chained accumulator-target ALU

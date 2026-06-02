@@ -105,6 +105,23 @@ pub const HLT: u8 = 0x76;
 /// immediate byte.
 pub const MVI_A: u8 = 0x3E;
 
+/// Intel 8008 unconditional `JMP addr` first byte — `0x7C`.  Followed
+/// by two address bytes (low byte then high byte) — the 8008 has a
+/// 14-bit address space so only the bottom 6 bits of the high byte are
+/// significant (top 2 bits ignored by the silicon).
+///
+/// Bit pattern: `01 111 100`.  In the group-01 family the disambiguation
+/// is via `ddd` (bits 5-3): `ddd = 111` is the unconditional variant;
+/// `ddd ≤ 011` selects one of the four conditional jump opcodes (JFC,
+/// JFZ, JFS, JFP at `ddd = 000…011`; JTC, JTZ, JTS, JTP at the matching
+/// `01 ccc 100` with T-bit set in `sss`).  Three-byte instruction total.
+///
+/// CAREFUL: it is NOT `0x44` — `0x44` is JFC (jump if flag-carry clear),
+/// a *conditional* jump that the silicon will silently take in unexpected
+/// states.  Pin to `0x7C` so the simulator's disassembler correctly
+/// reports "JMP" and the silicon takes the branch unconditionally.
+pub const JMP: u8 = 0x7C;
+
 // ===========================================================================
 // Intel 8008 register encoding
 // ===========================================================================
@@ -234,6 +251,15 @@ pub enum IIRIntel8008Error {
     /// general-purpose registers (A/B/C/D/E/H/L) can hold.  Stack
     /// spilling lands in a future increment (A2++.5 or later).
     OutOfRegisters { function: String, name: String },
+    /// A `jmp` referenced a label name that wasn't defined by a
+    /// `label` op anywhere in the same function.  Cross-function
+    /// jumps aren't supported — labels are per-function in v0.3.4.
+    UndefinedLabel { function: String, label: String },
+    /// A function emitted more than the 8008's 14-bit address space
+    /// (16384 bytes) — `jmp` targets cannot be encoded.  Practical
+    /// programs are tens to hundreds of bytes so this is a guard
+    /// against runaway expansion, not a real workload concern.
+    AddressOutOfRange { function: String, address: usize },
 }
 
 impl fmt::Display for IIRIntel8008Error {
@@ -256,6 +282,12 @@ impl fmt::Display for IIRIntel8008Error {
             }
             Self::OutOfRegisters { function, name } => {
                 write!(f, "out of 8008 registers (A/B/C/D/E/H/L) while binding {name:?} in function {function:?}; stack spilling not yet supported")
+            }
+            Self::UndefinedLabel { function, label } => {
+                write!(f, "undefined label {label:?} referenced by jmp in function {function:?}")
+            }
+            Self::AddressOutOfRange { function, address } => {
+                write!(f, "function {function:?} grew to address 0x{address:04x}, exceeding the 8008's 14-bit (16384-byte) address space")
             }
         }
     }
@@ -307,6 +339,10 @@ const SUPPORTED_OPS: &[&str] = &[
     "and", "or", "xor",
     // A2++.5.5 second slice — carry/borrow chained ALU
     "adc", "sbb",
+    // A2++.5.5 third slice — labels + unconditional jump (`cmp` and
+    // conditional jumps deferred to v0.3.5; they need flag-to-bool
+    // capture).
+    "label", "jmp",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -334,6 +370,37 @@ pub fn lower_iir_to_intel8008(
         // shape as v0.2.0 (no redundant `MOV A, X` round-trip).
         let mut env: HashMap<String, u8> = HashMap::new();
         let mut next_reg: usize = 0;
+
+        // ── Per-function label-resolution state (v0.3.4) ──────────────
+        //
+        // The 8008 has no PC-relative addressing — every `jmp` carries
+        // a full 14-bit absolute target.  We emit jumps in pass 1 with
+        // placeholder zero bytes at the address slots, recording
+        // `(slot_byte_offset, target_label)` in `pending_jmps`.  After
+        // the function's instruction list is walked, pass 2 looks up
+        // each pending jmp's label in `labels` and backpatches the two
+        // address bytes (low then high; only the bottom 6 bits of the
+        // high byte are significant — the 8008's address bus is 14
+        // bits wide).
+        //
+        // A `jmp` to a label defined LATER in the function (forward
+        // jump) is the whole point of the two-pass approach — pass 1
+        // can't know the address yet.
+        //
+        // Labels are scoped per-function.  A `jmp` to a label that
+        // isn't defined in the same function surfaces as
+        // `UndefinedLabel`; cross-function jumps (which would also
+        // need module-level call-site resolution like A1++.5.5)
+        // aren't supported in v0.3.4.
+        //
+        // Byte offsets here are *relative to the start of the module*
+        // (not the start of the function), because that's the actual
+        // physical address each instruction will reside at when the
+        // module's `Vec<u8>` is loaded at address 0 in the 8008's
+        // memory map.  For now we assume modules load at address 0;
+        // wider relocation lands with the AOT wiring in A2+++.
+        let mut labels: HashMap<String, usize> = HashMap::new();
+        let mut pending_jmps: Vec<(usize, String)> = Vec::new();
 
         for instr in &f.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
@@ -470,8 +537,85 @@ pub fn lower_iir_to_intel8008(
                     }
                 }
 
+                // ── label "<name>": record the current byte offset ──────
+                //
+                // Zero bytes emitted.  `label` is purely a marker so a
+                // subsequent (or preceding, via pass-2 backpatching)
+                // `jmp` can resolve to a concrete 14-bit address.
+                //
+                // A duplicate label name overwrites the prior position —
+                // a front-end bug we could catch with a validator pass,
+                // but for v0.3.4 the latest definition wins (mirrors
+                // iir-to-riscv's v0.3.1 semantics).
+                "label" => {
+                    let name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "label requires srcs[0] = Operand::Var(name)".into(),
+                        }),
+                    };
+                    labels.insert(name, bytes.len());
+                }
+
+                // ── jmp "<name>": unconditional 3-byte jump (`JMP addr`)
+                //
+                // Pass 1: emit `0x7C` followed by two zero bytes as
+                // placeholders for the 14-bit absolute target.  Record
+                // the offset of the low-address byte so pass 2 can
+                // backpatch in `(addr & 0xFF, (addr >> 8) & 0x3F)`.
+                //
+                // CRITICAL: `JMP` is `0x7C`, NOT `0x44`.  `0x44` is JFC
+                // (jump if flag-carry clear) — a *conditional* jump.
+                // In the 8008's group-01 family the unconditional
+                // variant has `ddd = 111`, encoded as `01 111 100`.
+                "jmp" => {
+                    let target = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "jmp requires srcs[0] = Operand::Var(target_label)".into(),
+                        }),
+                    };
+                    bytes.push(JMP);
+                    let slot = bytes.len();
+                    bytes.push(0); // low-address placeholder
+                    bytes.push(0); // high-address placeholder
+                    pending_jmps.push((slot, target));
+                }
+
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
             }
+        }
+
+        // ── Pass 2: backpatch pending jmps ────────────────────────────
+        //
+        // Each pending entry is `(low_byte_slot, label_name)`.  Look up
+        // the label's recorded byte position, range-check against the
+        // 14-bit address space (16384 bytes), then write the low byte
+        // and the bottom 6 bits of the high byte at `slot` and
+        // `slot + 1` respectively.
+        //
+        // The top 2 bits of the high address byte are written as zero —
+        // the 8008's address bus is 14 bits wide, so the silicon
+        // ignores them, but emitting clean zeros makes the byte stream
+        // unambiguously disassemble back to the same `JMP addr` even
+        // when downstream tools sign-extend or print all 8 bits.
+        for (slot, label) in pending_jmps {
+            let target = *labels.get(&label).ok_or_else(|| {
+                IIRIntel8008Error::UndefinedLabel {
+                    function: f.name.clone(),
+                    label: label.clone(),
+                }
+            })?;
+            if target >= 1 << 14 {
+                return Err(IIRIntel8008Error::AddressOutOfRange {
+                    function: f.name.clone(),
+                    address: target,
+                });
+            }
+            bytes[slot]     = (target & 0xFF) as u8;
+            bytes[slot + 1] = ((target >> 8) & 0x3F) as u8;
         }
     }
 
