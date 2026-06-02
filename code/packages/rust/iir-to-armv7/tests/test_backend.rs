@@ -7,7 +7,8 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
     IIRArmv7Config, IIRArmv7Error,
-    ADD_REG_BASE, BKPT, BX_LR, MOV_IMM_R0_BASE, MOV_REG_BASE, SUB_REG_BASE,
+    ADD_REG_BASE, AND_REG_BASE, BKPT, BX_LR, EOR_REG_BASE,
+    MOV_IMM_R0_BASE, MOV_REG_BASE, ORR_REG_BASE, SUB_REG_BASE,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -471,6 +472,111 @@ fn add_with_same_register_uses_it_as_both_rn_and_rm() {
 /// will be the *next* slot, not r0.  To pin "dest_reg is r0" via
 /// this slice we'd need register coalescing.  For now this test is
 /// a placeholder that confirms the simple case works.
+// ===========================================================================
+// 8. A3++.5.5 first slice — bitwise data-processing-register ALU
+// ===========================================================================
+//
+// Identical 3-register shape to add/sub.  Only the 4-bit opcode
+// field (bits 24..21) changes:
+//
+//   AND = 0000 → 0xE000_0000 base
+//   ORR = 1100 → 0xE180_0000 base   (ARM's "OR Register" mnemonic)
+//   EOR = 0001 → 0xE020_0000 base   (ARM's "Exclusive OR" mnemonic)
+//
+// For each op below, the IIR sequence is `const v; const w; OP r v w; ret r`,
+// the allocator places v→r0, w→r1, r→r2, and the emitted word stream
+// follows the canonical:
+//
+//   MVI r0, v_imm
+//   MVI r1, w_imm
+//   OP  r2, r0, r1             ← the only word that varies between the three tests
+//   MOV r0, r2                 ← stage r into r0 for ret
+//   BX LR
+
+#[test]
+fn and_reg_base_pinned_to_0xe0000000() {
+    assert_eq!(AND_REG_BASE, 0xE000_0000,
+        "AND Rd, Rn, Rm base should be 0xE0000000; got 0x{:08x}", AND_REG_BASE);
+}
+
+#[test]
+fn orr_reg_base_pinned_to_0xe1800000() {
+    assert_eq!(ORR_REG_BASE, 0xE180_0000,
+        "ORR Rd, Rn, Rm base should be 0xE1800000; got 0x{:08x}", ORR_REG_BASE);
+}
+
+#[test]
+fn eor_reg_base_pinned_to_0xe0200000() {
+    assert_eq!(EOR_REG_BASE, 0xE020_0000,
+        "EOR Rd, Rn, Rm base should be 0xE0200000; got 0x{:08x}", EOR_REG_BASE);
+}
+
+#[test]
+fn and_three_consts_emits_single_and_instruction() {
+    // const v=0x0F; const w=0x33; and r v w; ret r
+    //   AND r2, r0, r1 = 0xE000_0000 | (0<<16) | (2<<12) | 1 = 0xE000_2001
+    let f = IIRFunction::new("and_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x0F)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x33)], "u8"),
+        IIRInstr::new("and", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_000F,    // MOV r0, #0x0F
+        0xE3A0_1033,    // MOV r1, #0x33
+        0xE000_2001,    // AND r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "and 0x0F & 0x33 expected; got: {words:08x?}");
+}
+
+#[test]
+fn or_three_consts_emits_single_orr_instruction() {
+    // const v=0x0F; const w=0xF0; or r v w; ret r
+    //   ORR r2, r0, r1 = 0xE180_0000 | (0<<16) | (2<<12) | 1 = 0xE180_2001
+    let f = IIRFunction::new("or_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0x0F)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0xF0)], "u8"),
+        IIRInstr::new("or", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_000F,    // MOV r0, #0x0F
+        0xE3A0_10F0,    // MOV r1, #0xF0
+        0xE180_2001,    // ORR r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "or 0x0F | 0xF0 expected; got: {words:08x?}");
+}
+
+#[test]
+fn xor_three_consts_emits_single_eor_instruction() {
+    // const v=0xFF; const w=0x55; xor r v w; ret r
+    //   EOR r2, r0, r1 = 0xE020_0000 | (0<<16) | (2<<12) | 1 = 0xE020_2001
+    let f = IIRFunction::new("xor_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0xFF)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(0x55)], "u8"),
+        IIRInstr::new("xor", Some("r".into()),
+            vec![Operand::Var("v".into()), Operand::Var("w".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_00FF,    // MOV r0, #0xFF
+        0xE3A0_1055,    // MOV r1, #0x55
+        0xE020_2001,    // EOR r2, r0, r1
+        0xE1A0_0002,    // MOV r0, r2
+        BX_LR,
+    ], "xor 0xFF ^ 0x55 expected; got: {words:08x?}");
+}
+
 #[test]
 fn add_then_ret_into_non_r0_register_emits_staging_mov() {
     // Regression for: the v0.3.0 ret-staging logic still fires for
