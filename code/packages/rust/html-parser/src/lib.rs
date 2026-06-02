@@ -1686,8 +1686,17 @@ pub struct BrowserFormOutput {
     pub id: Option<String>,
     pub name: Option<String>,
     pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
     pub for_tokens: Vec<String>,
+    pub for_control_ids: Vec<String>,
+    pub for_control_names: Vec<String>,
+    pub for_control_types: Vec<String>,
     pub value: Option<String>,
+    pub disabled: bool,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
     pub text: String,
 }
 
@@ -13289,9 +13298,63 @@ fn browser_form_outputs(controls: &[BrowserFormControl]) -> Vec<BrowserFormOutpu
             id: control.id.clone(),
             name: control.name.clone(),
             form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accessible_description: control.accessible_description.clone(),
             for_tokens: control.output_for.clone(),
+            for_control_ids: browser_output_for_control_ids(controls, control),
+            for_control_names: browser_output_for_control_names(controls, control),
+            for_control_types: browser_output_for_control_types(controls, control),
             value: control.value.clone(),
+            disabled: control.disabled,
+            will_validate: control.will_validate,
+            validation_barred_reason: control.validation_barred_reason.clone(),
             text: control.text.clone(),
+        })
+        .collect()
+}
+
+fn browser_output_for_control_ids(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .filter_map(|control| control.id.clone())
+        .collect()
+}
+
+fn browser_output_for_control_names(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .filter_map(|control| control.name.clone())
+        .collect()
+}
+
+fn browser_output_for_control_types(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .map(|control| control.control_type.clone())
+        .collect()
+}
+
+fn browser_output_for_controls<'a>(
+    controls: &'a [BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<&'a BrowserFormControl> {
+    output
+        .output_for
+        .iter()
+        .filter_map(|token| {
+            controls
+                .iter()
+                .find(|control| control.id.as_deref() == Some(token.as_str()))
         })
         .collect()
 }

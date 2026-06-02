@@ -746,9 +746,23 @@ def check_browser_expected_lists(
         require_optional_object_list(form_path, form, "outputs", errors)
         for output_index, output in enumerate(object_list_items(form, "outputs")):
             output_path = f"{form_path}.outputs[{output_index}]"
-            for field in ("id", "name", "form_owner", "value"):
+            for field in (
+                "id",
+                "name",
+                "form_owner",
+                "accessible_name",
+                "accessible_description",
+                "value",
+                "validation_barred_reason",
+            ):
                 require_optional_nullable_string(output_path, output, field, errors)
+            require_optional_string_list(output_path, output, "labels", errors)
             require_optional_string_list(output_path, output, "for_tokens", errors)
+            require_optional_string_list(output_path, output, "for_control_ids", errors)
+            require_optional_string_list(output_path, output, "for_control_names", errors)
+            require_optional_string_list(output_path, output, "for_control_types", errors)
+            for field in ("disabled", "will_validate"):
+                require_optional_boolean(output_path, output, field, errors)
             require_string(output_path, output, "text", errors)
         require_optional_object_list(form_path, form, "successful_controls", errors)
         for successful_index, control in enumerate(
