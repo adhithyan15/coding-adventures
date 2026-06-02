@@ -1,12 +1,12 @@
 use spice_engine::{
-    circuit_at_temperature, dc_corners, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
-    dc_temperature_sweep, dc_temperature_sweep_corners, format_corner_dc_sweep_table,
-    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
-    format_temperature_dc_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride,
-    CornerSpec, CornerTemperatureDcResult, CurrentSource, DcConvergenceAid, DcOpOptions, Diode,
-    Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
-    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs,
-    Vcvs, VoltageSource, Waveform, XInstance,
+    circuit_at_temperature, dc_corners, dc_corners_parallel, dc_op, dc_op_with_options, dc_sweep,
+    dc_sweep_corners, dc_temperature_sweep, dc_temperature_sweep_corners,
+    format_corner_dc_sweep_table, format_corner_dc_table, format_corner_temperature_dc_table,
+    format_dc_sweep_table, format_temperature_dc_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
+    Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
+    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError, SubcircuitDefinition,
+    SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1130,6 +1130,81 @@ fn dc_corners_runs_named_parameter_overrides() {
     assert_close(result.points[1].result.voltage("out").unwrap(), 10.0 / 3.0);
     assert_close(result.points[2].result.voltage("out").unwrap(), 6.0);
     assert_close(result.points[3].result.voltage("out").unwrap(), -5.0);
+}
+
+#[test]
+fn dc_corners_parallel_matches_ordered_sequential_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", Vec::new()),
+        CornerSpec::new(
+            "rbot-fast",
+            vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+        ),
+        CornerSpec::new(
+            "vin-high",
+            vec![CornerOverride::new("Vin", "voltage", 12.0)],
+        ),
+        CornerSpec::new(
+            "vin-inverted",
+            vec![CornerOverride::new("Vin", "voltage", -10.0)],
+        ),
+    ];
+
+    let sequential = dc_corners(&circuit, &corners, DcOpOptions::default()).unwrap();
+    let parallel = dc_corners_parallel(&circuit, &corners, DcOpOptions::default()).unwrap();
+
+    assert_eq!(parallel.points.len(), sequential.points.len());
+    for (parallel_point, sequential_point) in parallel.points.iter().zip(sequential.points.iter()) {
+        assert_eq!(parallel_point.corner_name, sequential_point.corner_name);
+        assert_close(
+            parallel_point.result.voltage("out").unwrap(),
+            sequential_point.result.voltage("out").unwrap(),
+        );
+        assert_close(
+            parallel_point.result.branch_current("Vin").unwrap(),
+            sequential_point.result.branch_current("Vin").unwrap(),
+        );
+    }
+    assert_eq!(
+        format_corner_dc_table(&parallel, &["V(out)", "I(Vin)"]).unwrap(),
+        "Corner\tIndex\tV(out)\tI(Vin)\nnominal\t0\t5.000000e+00\t-5.000000e-03\nrbot-fast\t0\t3.333333e+00\t-6.666667e-03\nvin-high\t0\t6.000000e+00\t-6.000000e-03\nvin-inverted\t0\t-5.000000e+00\t5.000000e-03\n"
+    );
+}
+
+#[test]
+fn dc_corners_parallel_reports_corner_override_errors() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", Vec::new()),
+        CornerSpec::new(
+            "missing",
+            vec![CornerOverride::new("Rmissing", "resistance", 500.0)],
+        ),
+    ];
+
+    assert!(matches!(
+        dc_corners_parallel(&circuit, &corners, DcOpOptions::default()),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "dc_corners"
+    ));
 }
 
 #[test]

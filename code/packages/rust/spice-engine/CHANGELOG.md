@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `dc_corners_parallel` for order-preserving parallel Rust DC
+  operating-point evaluation across named PVT corners.
 - Add `digital_event_streams_to_bridge_schedule` and
   `format_digital_bridge_schedule_table` for stable SPICE-side mixed-signal
   bridge breakpoint schedules over digital event starts and finite-edge
