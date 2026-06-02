@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+- `Message.ToBytes` overflow precheck split into two non-negative
+  subtractions so codeql `go/allocation-size-overflow` can prove no wrap.
+  Behaviour identical — both forms panic on the same inputs.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added
