@@ -7,7 +7,7 @@ The initial slices implement:
 - DC operating-point analysis for linear circuits using modified nodal analysis
   (MNA).
 - DC operating-point sweeps across explicit analysis temperatures, including
-  named corner sweeps.
+  named corner sweeps and order-preserving parallel named corner DC sweeps.
 - DC source sweeps over independent voltage and current sources.
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters, including named corner sweeps.

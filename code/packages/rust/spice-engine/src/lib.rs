@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
+use std::thread;
 
 const PIVOT_EPSILON: f64 = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD: usize = 30;
@@ -5533,6 +5534,41 @@ pub fn dc_corners(
             result: dc_op_with_options(&corner_circuit, options)?,
         });
     }
+    Ok(CornerSweepResult { points })
+}
+
+pub fn dc_corners_parallel(
+    circuit: &Circuit,
+    corners: &[CornerSpec],
+    options: DcOpOptions,
+) -> Result<CornerSweepResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                scope.spawn(move || -> Result<CornerPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerPoint {
+                        corner_name: corner.name,
+                        result: dc_op_with_options(&corner_circuit, options)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "dc_corners_parallel".to_string(),
+                reason: "parallel DC corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
     Ok(CornerSweepResult { points })
 }
 

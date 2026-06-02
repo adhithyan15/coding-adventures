@@ -397,6 +397,9 @@ Status:
   stable tab-separated text tables in the live Rust SPICE package, covering
   ordered digital event starts, finite-edge transition endpoints, and the
   resulting stop time for scheduler-facing SPICE bridge snapshots.
+- DC operating-point named-corner sweeps can now be evaluated with an
+  order-preserving parallel helper in the live Rust SPICE package, giving the
+  multi-corner orchestration roadmap its first parallel execution foothold.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
