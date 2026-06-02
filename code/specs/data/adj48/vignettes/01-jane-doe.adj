@@ -1,0 +1,24 @@
+% Vignette 1 — the ADJ36 Jane Doe case, ported.
+%
+% 62yo M presenting to ED with 2 hours of pressure-like chest discomfort,
+% mild diaphoresis. No clear precipitator. PMH: HTN, smoker. Vitals
+% normal. ECG: no acute ST changes.
+%
+% Expected behaviour: posterior in the 25-30% range; uncertainty
+% report for the precipitator; at typical decision threshold of 30%
+% (admit vs discharge), kickback should fire.
+
+observe demographic(age_over_55)
+observe pmh(hypertension)
+observe pmh(smoker)
+observe symptom_quality(pressure_like)
+observe associated_symptom(diaphoresis)
+observe vital_signs(within_normal_limits)
+observe denied(ecg_acute_st_changes)
+
+uncertain { precipitator(exertional),
+            precipitator(rest),
+            precipitator(positional) } for acs
+  source "patient did not specify precipitator"
+
+? acs

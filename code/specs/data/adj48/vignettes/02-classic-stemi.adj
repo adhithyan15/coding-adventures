@@ -1,0 +1,22 @@
+% Vignette 2 — classic STEMI presentation.
+%
+% 68yo M with pressure-like chest pain radiating to both arms,
+% diaphoresis, dyspnea, onset during exertion. PMH: HTN, diabetes,
+% smoker, prior MI. ECG: new ST elevation in V2-V4.
+%
+% Expected behaviour: posterior approaches 1.0 well above any
+% reasonable threshold; no kickback; no uncertainty.
+
+observe demographic(age_over_55)
+observe pmh(hypertension)
+observe pmh(diabetes)
+observe pmh(smoker)
+observe pmh(prior_mi)
+observe symptom_quality(pressure_like)
+observe symptom_quality(radiates_both_arms)
+observe associated_symptom(diaphoresis)
+observe associated_symptom(dyspnea)
+observe precipitator(exertional)
+observe ecg(new_st_elevation)
+
+? acs
