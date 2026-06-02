@@ -76,7 +76,10 @@ use std::collections::HashMap;
 use std::fmt;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use riscv_simulator::encoding::{encode_add, encode_addi, encode_jalr, encode_sub};
+use riscv_simulator::encoding::{
+    encode_add, encode_addi, encode_ecall, encode_jalr, encode_lui,
+    encode_slt, encode_sltiu, encode_sltu, encode_sub, encode_xor, encode_xori,
+};
 
 // ===========================================================================
 // Register layout
@@ -193,8 +196,37 @@ fn is_supported_type(t: &str) -> bool {
 // ===========================================================================
 
 const SUPPORTED_OPS: &[&str] = &[
+    // A1+
     "const", "mov", "ret", "ret_void", "add", "sub",
+    // A1++ — comparisons (both naked and cmp_-prefixed per G1)
+    "eq", "ne", "lt", "le", "gt", "ge",
+    "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
+    // A1++ — host call
+    "call_builtin",
 ];
+
+/// Syscall number used by the RV32I `ecall` for `call_builtin print_i64`.
+///
+/// The convention: the host (a future riscv-simulator launcher) decodes
+/// `a7 == 1` as "print signed 64-bit integer in a0/a1 to stdout".  We
+/// pick this value because:
+///
+/// * `1` is the canonical Linux RV32 `__NR_write` index, easy to
+///   remember.  We're not implementing actual `write(fd, buf, len)`;
+///   we're piggybacking on the same convention slot so a future
+///   real-syscall pass can fold this into a true `write`.
+/// * Other backends pick their own sentinel: wasm uses
+///   `env.__print_i64` (a host import), JVM uses
+///   `env/BasicRuntime.println(J)V`, CLR uses
+///   `env.BasicRuntime::PrintI64(int64)`, LLVM uses
+///   `@__print_i64` extern.  The RV32I sentinel completes the parity.
+///
+/// Today we only emit `a0` (the low 32 bits).  64-bit pair handling
+/// is deferred to A1++.5 alongside i64 arithmetic.
+const ECALL_PRINT_I64_NUM: i32 = 1;
+
+/// Builtins the RV32I backend knows how to lower via `ecall`.
+const SUPPORTED_BUILTINS: &[&str] = &["print_i64"];
 
 // ===========================================================================
 // validate_for_riscv
@@ -346,11 +378,15 @@ fn lower_instr(
     match instr.op.as_str() {
         // ── const dest, Int(n) ──────────────────────────────────────────
         //
-        // Lower to `addi rd, x0, imm12`.  This is the canonical
-        // small-constant lowering on RISC-V: `x0` is hardwired to zero,
-        // so `addi rd, x0, n` computes `n`.  For values outside the
-        // 12-bit signed range we'd need `lui + addi`; v0.2.0 returns
-        // ImmediateOutOfRange instead and defers that to A1++.
+        // Three lowering paths by literal width:
+        //
+        //   * `n` fits in i12 ([-2048, 2047]) — single `addi rd, x0, n`.
+        //   * `n` fits in i32 — `lui rd, upper20 + carry; addi rd, rd, lower12`.
+        //     The lower-12-bit field is sign-extended by `addi`, so when the
+        //     low bit is set we increment `upper20` to compensate.  This is
+        //     the standard RISC-V wide-immediate idiom.
+        //   * `n` outside i32 — `ImmediateOutOfRange`.  64-bit literals
+        //     need a register-pair shuffle and arrive in A1++.5.
         "const" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRRiscvError::InvalidOperand {
                 function: state.fn_name.into(),
@@ -364,14 +400,14 @@ fn lower_instr(
                     detail: "const srcs[0] must be Int or Bool".into(),
                 }),
             };
-            if !(-2048..=2047).contains(&n) {
+            if !((i32::MIN as i64)..=(i32::MAX as i64)).contains(&n) {
                 return Err(IIRRiscvError::ImmediateOutOfRange {
                     function: state.fn_name.into(),
                     value: n,
                 });
             }
             let rd = state.alloc_temp(dest)?;
-            out.push(encode_addi(rd, X0_ZERO, n as i32));
+            emit_const_i32(rd, n as i32, out);
             Ok(())
         }
 
@@ -456,9 +492,184 @@ fn lower_instr(
             Ok(())
         }
 
+        // ── eq/ne/lt/le/gt/ge (and cmp_-prefixed variants per G1) ───────
+        //
+        // Each produces an i32 0/1 result in `dest` — same convention as
+        // the wasm and LLVM backends.  Sign comes from the IIR type_hint
+        // (u*-prefixed types use `sltu`; i*-prefixed types use `slt`).
+        //
+        // Output uses dest both as src and dst for the xor/xori synth
+        // patterns so no extra temp is needed — matters because A1++
+        // hasn't shipped stack spilling yet, so the temp pool is still
+        // 7 deep.
+        "eq" | "ne" | "lt" | "le" | "gt" | "ge"
+        | "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+            let bare = instr.op.strip_prefix("cmp_").unwrap_or(instr.op.as_str());
+            lower_cmp(bare, instr, state, out)
+        }
+
+        // ── call_builtin "<name>" — host call via ecall ─────────────────
+        //
+        // Layout: srcs = [Var("<builtin>"), Var(val)], dest = None.
+        // For `print_i64`: load the syscall number ECALL_PRINT_I64_NUM
+        // into a7, ensure the value is in a0, then `ecall`.
+        "call_builtin" => lower_call_builtin(instr, state, out),
+
         other => Err(IIRRiscvError::UnsupportedOp {
             function: state.fn_name.into(),
             op: other.into(),
         }),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// A1++ helpers — wide consts, comparisons, ecall
+// ---------------------------------------------------------------------------
+
+fn is_unsigned_type_hint(t: &str) -> bool {
+    t.starts_with('u')
+}
+
+/// Materialize an i32 constant into `rd` using the smallest RV32I sequence.
+///
+/// * If `n` fits in i12 (`[-2048, 2047]`) we emit a single
+///   `addi rd, x0, n`.
+/// * Otherwise we emit the canonical `lui + addi` wide-immediate idiom:
+///   ```text
+///   lui  rd, upper20_with_carry
+///   addi rd, rd, lower12_signed
+///   ```
+///   The lower-12-bit slot is sign-extended by `addi`, so when it is
+///   negative we add 1 to the upper 20 bits to compensate.  This is the
+///   exact sequence GNU and LLVM assemblers emit for `li rd, imm32`.
+fn emit_const_i32(rd: u32, n: i32, out: &mut Vec<u32>) {
+    if (-2048..=2047).contains(&n) {
+        out.push(encode_addi(rd, X0_ZERO, n));
+        return;
+    }
+    // Compute lower12 (signed) and upper20 with carry.
+    let lower = n & 0xFFF;
+    let lower_signed: i32 = if lower & 0x800 != 0 { lower - 0x1000 } else { lower };
+    // Adjust upper: if lower was negative (sign-extended) we add 1.
+    // Wrapping_add handles the (rare) lui imm wraparound at i32::MAX boundary.
+    let upper: u32 = ((n.wrapping_sub(lower_signed)) as u32) >> 12;
+    out.push(encode_lui(rd, upper & 0xFFFFF));
+    if lower_signed != 0 {
+        out.push(encode_addi(rd, rd, lower_signed));
+    }
+}
+
+fn lower_cmp(
+    bare: &str,
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut Vec<u32>,
+) -> Result<(), IIRRiscvError> {
+    let dest = instr.dest.as_deref().ok_or_else(|| IIRRiscvError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: format!("{bare} requires a dest"),
+    })?;
+    let a = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRRiscvError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("{bare} srcs[0] must be Var"),
+        }),
+    };
+    let b = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRRiscvError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("{bare} srcs[1] must be Var"),
+        }),
+    };
+    let rs1 = state.lookup(&a)?;
+    let rs2 = state.lookup(&b)?;
+    let rd  = state.alloc_temp(dest)?;
+    let is_u = is_unsigned_type_hint(&instr.type_hint);
+
+    // Comparison idioms — all produce i32 0/1 in `rd`.  Sign comes from
+    // the operand type hint (u* → unsigned variant of slt).  We reuse
+    // `rd` as both src and dst for the xor/xori synth patterns so no
+    // extra temp is needed (matters until A1++ ships stack spilling).
+    match bare {
+        "lt" => {
+            // a < b
+            out.push(if is_u { encode_sltu(rd, rs1, rs2) } else { encode_slt(rd, rs1, rs2) });
+        }
+        "gt" => {
+            // a > b   ⇔   b < a
+            out.push(if is_u { encode_sltu(rd, rs2, rs1) } else { encode_slt(rd, rs2, rs1) });
+        }
+        "le" => {
+            // a <= b  ⇔   !(b < a)
+            out.push(if is_u { encode_sltu(rd, rs2, rs1) } else { encode_slt(rd, rs2, rs1) });
+            out.push(encode_xori(rd, rd, 1));
+        }
+        "ge" => {
+            // a >= b  ⇔   !(a < b)
+            out.push(if is_u { encode_sltu(rd, rs1, rs2) } else { encode_slt(rd, rs1, rs2) });
+            out.push(encode_xori(rd, rd, 1));
+        }
+        "eq" => {
+            // a == b  ⇔   sltiu(a ^ b, 1)
+            out.push(encode_xor(rd, rs1, rs2));
+            out.push(encode_sltiu(rd, rd, 1));
+        }
+        "ne" => {
+            // a != b  ⇔   sltu(x0, a ^ b)
+            out.push(encode_xor(rd, rs1, rs2));
+            out.push(encode_sltu(rd, X0_ZERO, rd));
+        }
+        _ => unreachable!("lower_cmp called with non-cmp op {bare}"),
+    }
+    Ok(())
+}
+
+fn lower_call_builtin(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut Vec<u32>,
+) -> Result<(), IIRRiscvError> {
+    let name = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.clone(),
+        _ => return Err(IIRRiscvError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "call_builtin requires srcs[0] = Operand::Var(builtin_name)".into(),
+        }),
+    };
+    if !SUPPORTED_BUILTINS.contains(&name.as_str()) {
+        return Err(IIRRiscvError::UnsupportedOp {
+            function: state.fn_name.into(),
+            op: format!("call_builtin {name:?}: not in RV32I backend whitelist"),
+        });
+    }
+    match name.as_str() {
+        "print_i64" => {
+            // Sequence:
+            //   addi a0, val_reg, 0     ; ensure value is in a0 (skip if already)
+            //   addi a7, x0, ECALL_PRINT_I64_NUM
+            //   ecall
+            //
+            // `a7` is the RV32 syscall-number register by convention; we
+            // pick `1` (Linux __NR_write slot) as the print_i64 sentinel.
+            // A future real-syscall pass can fold this into write(2).
+            let val_name = match instr.srcs.get(1) {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(IIRRiscvError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val)".into(),
+                }),
+            };
+            let val_reg = state.lookup(&val_name)?;
+            if val_reg != ARG_REGISTERS[0] {
+                out.push(encode_addi(ARG_REGISTERS[0], val_reg, 0));
+            }
+            // a7 is x17 = ARG_REGISTERS[7].
+            out.push(encode_addi(ARG_REGISTERS[7], X0_ZERO, ECALL_PRINT_I64_NUM));
+            out.push(encode_ecall());
+            Ok(())
+        }
+        _ => unreachable!("SUPPORTED_BUILTINS guard above prevents this"),
     }
 }
