@@ -847,6 +847,39 @@ def check_browser_expected_lists(
                 entry_path, entry, "validation_attributes", errors
             )
             require_string(entry_path, entry, "text", errors)
+        require_optional_object_list(form_path, form, "image_controls", errors)
+        for image_index, image in enumerate(object_list_items(form, "image_controls")):
+            image_path = f"{form_path}.image_controls[{image_index}]"
+            for field in (
+                "id",
+                "name",
+                "form_owner",
+                "accessible_name",
+                "src",
+                "resolved_src",
+                "alt",
+                "width",
+                "height",
+                "action",
+                "resolved_action",
+                "enctype",
+                "target",
+                "effective_target",
+                "value",
+                "validation_barred_reason",
+            ):
+                require_optional_nullable_string(image_path, image, field, errors)
+            require_optional_string_list(image_path, image, "labels", errors)
+            require_optional_string_list(image_path, image, "coordinate_names", errors)
+            for field in (
+                "disabled",
+                "autofocus",
+                "submitter",
+                "novalidate",
+                "will_validate",
+            ):
+                require_optional_boolean(image_path, image, field, errors)
+            require_string(image_path, image, "method", errors)
         require_object_list(form_path, form, "controls", errors)
         require_optional_object_list(form_path, form, "submitters", errors)
         for control_index, control in enumerate(object_list_items(form, "controls")):

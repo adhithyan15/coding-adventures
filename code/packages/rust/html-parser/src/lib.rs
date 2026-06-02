@@ -1622,6 +1622,7 @@ pub struct BrowserForm {
     pub choice_controls: Vec<BrowserFormChoiceControl>,
     pub file_controls: Vec<BrowserFormFileControl>,
     pub hidden_controls: Vec<BrowserFormHiddenControl>,
+    pub image_controls: Vec<BrowserFormImageControl>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1831,6 +1832,34 @@ pub struct BrowserFormHiddenControl {
     pub disabled: bool,
     pub successful: bool,
     pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormImageControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub disabled: bool,
+    pub autofocus: bool,
+    pub submitter: bool,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+    pub coordinate_names: Vec<String>,
     pub will_validate: bool,
     pub validation_barred_reason: Option<String>,
 }
@@ -12903,6 +12932,16 @@ fn browser_form(
     let choice_controls = browser_form_choice_controls(&controls, element.attribute("id"));
     let file_controls = browser_form_file_controls(&controls);
     let hidden_controls = browser_form_hidden_controls(&controls);
+    let image_controls = browser_form_image_controls(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12951,6 +12990,7 @@ fn browser_form(
         choice_controls,
         file_controls,
         hidden_controls,
+        image_controls,
         controls,
         submitters,
     }
@@ -13600,6 +13640,100 @@ fn browser_form_hidden_controls(controls: &[BrowserFormControl]) -> Vec<BrowserF
             validation_barred_reason: control.validation_barred_reason.clone(),
         })
         .collect()
+}
+
+fn browser_form_image_controls(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormImageControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "image")
+        .map(|control| {
+            let submitter = is_browser_form_submitter(control);
+            BrowserFormImageControl {
+                id: control.id.clone(),
+                name: control.name.clone(),
+                form_owner: control.form_owner.clone(),
+                labels: control.labels.clone(),
+                accessible_name: control
+                    .accessible_name
+                    .clone()
+                    .or_else(|| control.alt.clone()),
+                src: control.src.clone(),
+                resolved_src: control.resolved_src.clone(),
+                alt: control.alt.clone(),
+                width: control.width.clone(),
+                height: control.height.clone(),
+                disabled: control.disabled,
+                autofocus: control.autofocus,
+                submitter,
+                action: if submitter {
+                    control
+                        .form_action
+                        .clone()
+                        .or_else(|| action.map(ToOwned::to_owned))
+                } else {
+                    control.form_action.clone()
+                },
+                resolved_action: if submitter {
+                    control
+                        .resolved_form_action
+                        .clone()
+                        .or_else(|| resolved_action.map(ToOwned::to_owned))
+                } else {
+                    control.resolved_form_action.clone()
+                },
+                method: control
+                    .form_method
+                    .clone()
+                    .unwrap_or_else(|| method.to_string()),
+                enctype: if submitter {
+                    control
+                        .form_enctype
+                        .clone()
+                        .or_else(|| enctype.map(ToOwned::to_owned))
+                } else {
+                    control.form_enctype.clone()
+                },
+                target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                effective_target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                        .or_else(|| base_target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                novalidate: submitter && (novalidate || control.form_novalidate),
+                value: control.value.clone(),
+                coordinate_names: browser_image_submitter_coordinate_names(control.name.as_deref()),
+                will_validate: control.will_validate,
+                validation_barred_reason: control.validation_barred_reason.clone(),
+            }
+        })
+        .collect()
+}
+
+fn browser_image_submitter_coordinate_names(name: Option<&str>) -> Vec<String> {
+    match name.filter(|name| !name.is_empty()) {
+        Some(name) => vec![format!("{name}.x"), format!("{name}.y")],
+        None => vec!["x".to_string(), "y".to_string()],
+    }
 }
 
 fn collect_form_controls_for_form_into(
@@ -15439,6 +15573,68 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_form_image_descriptor_metadata_tracks_submitter_coordinates_and_assets() {
+        let document = parse_html(
+            "<base href=\"https://example.test/search/index.html\" target=_top>\
+             <form id=search action=find.html method=post novalidate>\
+             <input id=imageGo type=image name=spot src=buttons/search.png \
+             alt=\"Search image\" width=32 height=16 formaction=run.html \
+             formmethod=get formenctype=multipart/form-data formtarget=results \
+             formnovalidate autofocus>\
+             <input id=plainImage type=image alt=Plain disabled></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.image_controls.len(), 2);
+
+        let image = &form.image_controls[0];
+        assert_eq!(image.id.as_deref(), Some("imageGo"));
+        assert_eq!(image.name.as_deref(), Some("spot"));
+        assert_eq!(image.accessible_name.as_deref(), Some("Search image"));
+        assert_eq!(image.src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            image.resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(image.alt.as_deref(), Some("Search image"));
+        assert_eq!(image.width.as_deref(), Some("32"));
+        assert_eq!(image.height.as_deref(), Some("16"));
+        assert!(!image.disabled);
+        assert!(image.autofocus);
+        assert!(image.submitter);
+        assert_eq!(image.action.as_deref(), Some("run.html"));
+        assert_eq!(
+            image.resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(image.method, "get");
+        assert_eq!(image.enctype.as_deref(), Some("multipart/form-data"));
+        assert_eq!(image.target.as_deref(), Some("results"));
+        assert_eq!(image.effective_target.as_deref(), Some("results"));
+        assert!(image.novalidate);
+        assert_eq!(image.coordinate_names, vec!["spot.x", "spot.y"]);
+        assert!(!image.will_validate);
+        assert_eq!(
+            image.validation_barred_reason.as_deref(),
+            Some("input-type-image")
+        );
+
+        let plain = &form.image_controls[1];
+        assert_eq!(plain.id.as_deref(), Some("plainImage"));
+        assert_eq!(plain.name, None);
+        assert_eq!(plain.accessible_name.as_deref(), Some("Plain"));
+        assert!(plain.disabled);
+        assert!(!plain.submitter);
+        assert_eq!(plain.coordinate_names, vec!["x", "y"]);
+        assert_eq!(plain.method, "post");
+        assert_eq!(plain.action, None);
+        assert_eq!(plain.effective_target, None);
+        assert!(!plain.novalidate);
     }
 
     #[test]

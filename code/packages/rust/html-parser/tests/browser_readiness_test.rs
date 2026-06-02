@@ -3,13 +3,13 @@ use coding_adventures_html_parser::{
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
     BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormLabel, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormOutput, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -741,6 +741,8 @@ struct ExpectedForm {
     file_controls: Vec<ExpectedFormFileControl>,
     #[serde(default)]
     hidden_controls: Vec<ExpectedFormHiddenControl>,
+    #[serde(default)]
+    image_controls: Vec<ExpectedFormImageControl>,
     controls: Vec<ExpectedFormControl>,
     #[serde(default)]
     submitters: Vec<ExpectedFormSubmitter>,
@@ -1040,6 +1042,56 @@ struct ExpectedFormHiddenControl {
     successful: bool,
     #[serde(default)]
     submission_values: Vec<String>,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormImageControl {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    disabled: bool,
+    #[serde(default)]
+    autofocus: bool,
+    #[serde(default)]
+    submitter: bool,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    coordinate_names: Vec<String>,
     #[serde(default)]
     will_validate: bool,
     #[serde(default)]
@@ -2953,6 +3005,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormHiddenControl::into_browser_form_hidden_control)
                 .collect(),
+            image_controls: self
+                .image_controls
+                .into_iter()
+                .map(ExpectedFormImageControl::into_browser_form_image_control)
+                .collect(),
             controls: self
                 .controls
                 .into_iter()
@@ -3188,6 +3245,37 @@ impl ExpectedFormHiddenControl {
             disabled: self.disabled,
             successful: self.successful,
             submission_values: self.submission_values,
+            will_validate: self.will_validate,
+            validation_barred_reason: self.validation_barred_reason,
+        }
+    }
+}
+
+impl ExpectedFormImageControl {
+    fn into_browser_form_image_control(self) -> BrowserFormImageControl {
+        BrowserFormImageControl {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            labels: self.labels,
+            accessible_name: self.accessible_name,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            alt: self.alt,
+            width: self.width,
+            height: self.height,
+            disabled: self.disabled,
+            autofocus: self.autofocus,
+            submitter: self.submitter,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            effective_target: self.effective_target,
+            novalidate: self.novalidate,
+            value: self.value,
+            coordinate_names: self.coordinate_names,
             will_validate: self.will_validate,
             validation_barred_reason: self.validation_barred_reason,
         }
