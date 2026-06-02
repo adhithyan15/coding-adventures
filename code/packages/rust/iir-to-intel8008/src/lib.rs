@@ -105,6 +105,24 @@ pub const HLT: u8 = 0x76;
 /// immediate byte.
 pub const MVI_A: u8 = 0x3E;
 
+/// Intel 8008 conditional `JFZ addr` (jump if flag-zero clear) first
+/// byte — `0x48`.  Three-byte instruction (`JFZ` + low addr + high addr).
+///
+/// Bit pattern: `01 001 000` (jump family `01 ccc T 00`, where
+/// `ccc = 001 = zero flag` and `T = 0 = jump if flag is *clear*`).
+/// "Flag clear" for the zero flag means the last arithmetic/logical
+/// op produced a NON-zero result.  So `JFZ` is the "jump if true"
+/// half of a boolean test.
+pub const JFZ: u8 = 0x48;
+
+/// Intel 8008 conditional `JTZ addr` (jump if flag-zero set) first
+/// byte — `0x4C`.  Three-byte instruction.
+///
+/// Bit pattern: `01 001 100` (`ccc = 001 = zero`, `T = 1 = jump if
+/// flag is *set*`).  "Flag set" means the last op produced a zero
+/// result, so `JTZ` is the "jump if false" half.
+pub const JTZ: u8 = 0x4C;
+
 /// Intel 8008 unconditional `JMP addr` first byte — `0x7C`.  Followed
 /// by two address bytes (low byte then high byte) — the 8008 has a
 /// 14-bit address space so only the bottom 6 bits of the high byte are
@@ -339,10 +357,12 @@ const SUPPORTED_OPS: &[&str] = &[
     "and", "or", "xor",
     // A2++.5.5 second slice — carry/borrow chained ALU
     "adc", "sbb",
-    // A2++.5.5 third slice — labels + unconditional jump (`cmp` and
-    // conditional jumps deferred to v0.3.5; they need flag-to-bool
-    // capture).
+    // A2++.5.5 third slice — labels + unconditional jump.
     "label", "jmp",
+    // A2++.5.5 fourth slice — boolean-conditional jumps (just the
+    // zero-flag pair JFZ/JTZ; the remaining 6 flag opcodes and
+    // `cmp` defer to v0.3.6).
+    "jmp_if_true", "jmp_if_false",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -578,6 +598,73 @@ pub fn lower_iir_to_intel8008(
                         }),
                     };
                     bytes.push(JMP);
+                    let slot = bytes.len();
+                    bytes.push(0); // low-address placeholder
+                    bytes.push(0); // high-address placeholder
+                    pending_jmps.push((slot, target));
+                }
+
+                // ── jmp_if_true / jmp_if_false ─────────────────────────
+                //
+                // Operand layout: srcs = [Var(cond), Var(target_label)].
+                //
+                // The 8008 has no "branch on register" — every
+                // conditional branch reads ONE of the four CPU flags
+                // (carry, zero, sign, parity) set by the LAST
+                // arithmetic/logical op.  To branch on a boolean
+                // register's value we have to provoke a flag from it:
+                //
+                //   MOV A, cond_reg   ; load cond into A (skipped if
+                //                     ; cond already in A — MOV is
+                //                     ; flag-non-affecting on 8008)
+                //   ANA A             ; A := A & A (no change), sets
+                //                     ; Z flag from A's value
+                //   JFZ target        ; if Z==0 (A was non-zero, i.e.
+                //                     ; cond was true)  → jump
+                //   JTZ target        ; if Z==1 (A was zero, i.e.
+                //                     ; cond was false) → jump
+                //
+                // ANA A (`0xA7`) is the canonical 8008 "TEST A"
+                // idiom — same role as `test eax, eax` on x86.
+                //
+                // The MOV is elided when cond_reg is already A,
+                // which is common when this branch immediately
+                // follows the cond's producer (e.g. an `add` that
+                // landed in A).
+                //
+                // Choice of JFZ for "true" / JTZ for "false":
+                //   Z=1 iff A==0 iff cond is the boolean "false".
+                //   So we jump-if-false on JTZ ("zero flag SET")
+                //   and jump-if-true  on JFZ ("zero flag CLEAR").
+                "jmp_if_true" | "jmp_if_false" => {
+                    let cond_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} requires srcs[0] = Operand::Var(cond)", instr.op),
+                        }),
+                    };
+                    let target = match instr.srcs.get(1) {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel8008Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("{} requires srcs[1] = Operand::Var(target_label)", instr.op),
+                        }),
+                    };
+                    let cond_reg = lookup_register(&env, &cond_name, &f.name)?;
+                    // Stage cond into A if not already there.
+                    if cond_reg != REG_A {
+                        bytes.push(encode_mov(REG_A, cond_reg));
+                    }
+                    // ANA A — sets Z flag from A's current value (TEST idiom).
+                    bytes.push(encode_alu(ALU_AND, REG_A));
+                    // The branch opcode encodes the polarity.
+                    let branch_opcode = if instr.op == "jmp_if_true" {
+                        JFZ // jump if Z clear (cond was non-zero / true)
+                    } else {
+                        JTZ // jump if Z set (cond was zero / false)
+                    };
+                    bytes.push(branch_opcode);
                     let slot = bytes.len();
                     bytes.push(0); // low-address placeholder
                     bytes.push(0); // high-address placeholder

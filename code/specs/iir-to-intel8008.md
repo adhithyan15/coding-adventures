@@ -59,9 +59,10 @@ IIRModule
 | v0.3.1 (A2++.5 first slice) | `add`/`sub` ALU on the accumulator (family `10 ooo sss`) | **merged** |
 | v0.3.2 (A2++.5.5 first slice) | bitwise ALU `and`/`or`/`xor` on the accumulator (same family, `ooo` ∈ {`100`, `110`, `101`}) | **merged** |
 | v0.3.3 (A2++.5.5 second slice) | carry/borrow-chained ALU `adc`/`sbb` (same family, `ooo` ∈ {`001`, `011`}) | **merged** |
-| **v0.3.4 (A2++.5.5 third slice — this PR)** | `label` (zero-byte position marker) + unconditional `jmp` (**`0x7C`**, NOT `0x44`) with per-function two-pass backpatching of the 14-bit absolute target | this PR |
-| v0.3.5 (A2++.5.5 fourth slice) | Conditional jumps (`jmp_if_true`/`jmp_if_false` over the four 8008 flags) + `cmp` (`ooo = 0b111`) paired with flag-to-bool capture | future |
-| v0.3.6 (A2++.5.5 fifth slice) | Real `RET` (`0x07`) via `CALL` (**`0x7E`**, NOT `0x46` — `0x46` is CFZ) + per-function internal return-stack discipline | future |
+| v0.3.4 (A2++.5.5 third slice) | `label` (zero-byte position marker) + unconditional `jmp` (**`0x7C`**, NOT `0x44`) with per-function two-pass backpatching | **merged** |
+| **v0.3.5 (A2++.5.5 fourth slice — this PR)** | Boolean conditional jumps `jmp_if_true` (`ANA A` + `JFZ` `0x48`) and `jmp_if_false` (`ANA A` + `JTZ` `0x4C`); the 8008's TEST-A idiom provokes the zero flag from a boolean cond register | this PR |
+| v0.3.6 (A2++.5.5 fifth slice) | `cmp` (`CMP` = `0xB8\|sss`, `ooo = 0b111`) with flag-to-bool capture, plus the remaining 6 conditional-flag opcodes (JFC/JTC/JFS/JTS/JFP/JTP) once cmp's machinery is wired | future |
+| v0.3.7 (A2++.5.5 sixth slice) | Real `RET` (`0x07`) via `CAL` (**`0x7E`**, NOT `0x46` — `0x46` is `CFZ`) + per-function internal return-stack discipline | future |
 | v0.4.0 (A2+++) | `lang-aot --target=intel8008` wiring + module-level CALL backpatching | future |
 
 ## Encoding cheat-sheet for the jump/call family

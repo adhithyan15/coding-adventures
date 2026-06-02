@@ -3,6 +3,82 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.5] — 2026-06-02 (A2++.5.5 fourth slice — boolean conditional jumps `jmp_if_true`/`jmp_if_false`)
+
+### Added — boolean-conditional control flow
+
+Wires the next control-flow primitive: IIR's boolean branches lower
+to a TEST-A + zero-flag-jump pair on the 8008.  The 8008 has no
+"branch on register" — every conditional jump reads ONE of the four
+CPU flags from the last arithmetic/logical op.  Boolean cond
+variables hold 0 or non-zero, so we provoke the zero flag via
+`ANA A` (the 8008's "TEST A" idiom — same role as `test eax, eax`
+on x86).
+
+| IIR op | 8008 lowering shape |
+|--------|---------------------|
+| `jmp_if_true  cond, L` | (optional `MOV A, cond_reg`) + `ANA A` (`0xA7`) + `JFZ L` (`0x48`) + low/high addr |
+| `jmp_if_false cond, L` | (optional `MOV A, cond_reg`) + `ANA A` (`0xA7`) + `JTZ L` (`0x4C`) + low/high addr |
+
+#### Why JFZ for "true" / JTZ for "false"?
+
+The 8008's zero flag is SET when the last op produced 0.  So:
+- `cond_var == 0` (false) → `ANA A` produces 0 → Z=1
+- `cond_var != 0` (true)  → `ANA A` produces non-zero → Z=0
+
+The mnemonic names mirror this:
+- `JFZ` = Jump if Flag Zero is Clear (Z=0) → branch when cond was true
+- `JTZ` = Jump if Flag Zero is seT  (Z=1) → branch when cond was false
+
+#### Why we even need `ANA A` (TEST A)
+
+`MOV A, cond_reg` does NOT set flags on the 8008 — MOV is
+flag-non-affecting.  Without the `ANA A` flag-setter between the
+load and the conditional jump, JFZ/JTZ would consume STALE flags
+from whatever ALU op last ran.
+
+The `ANA A` is unconditional — emitted even when `cond_reg` is
+already A (in which case the MOV is elided but `ANA A` still runs).
+
+#### New constants
+
+* `pub const JFZ: u8 = 0x48;` — jump if zero flag clear
+* `pub const JTZ: u8 = 0x4C;` — jump if zero flag set
+
+Both pinned in their own tests.  Bit patterns spelled out so the
+v0.3.6 slice (which adds the other 6 flag opcodes) doesn't get the
+nibbling wrong.
+
+#### Tests added (38 total, was 32)
+
+* `jfz_constant_pinned_to_0x48`
+* `jtz_constant_pinned_to_0x4c`
+* `jmp_if_true_emits_ana_a_then_jfz_with_backpatched_target` — full
+  pinned byte stream including `A7 48 08 00`.
+* `jmp_if_false_emits_ana_a_then_jtz_with_backpatched_target` —
+  `A7 4C 08 00`.
+* `jmp_if_true_with_cond_not_in_a_emits_staging_mov` — exercises
+  the optional `MOV A, B` (`0x78`) staging path.
+* `jmp_if_true_to_undefined_label_is_rejected` — confirms the
+  existing `UndefinedLabel` error path reaches these new ops via
+  the same two-pass backpatcher.
+
+### What is NOT in v0.3.5 (deferred to v0.3.6 / v0.3.7 / A2+++)
+
+* `cmp` — the 8008's CMP (`ooo = 0b111`) sets flags and discards
+  the difference; lowering needs a flag-to-bool capture sequence
+  using a conditional jump over an `MVI dest, 0/1` pair.  Paired
+  with the other flag-jump opcodes in v0.3.6 so the same
+  capture machinery is reused.
+* The other 6 conditional-jump opcodes: `JFC` (`0x40`), `JTC`
+  (`0x44`), `JFS` (`0x50`), `JTS` (`0x54`), `JFP` (`0x58`),
+  `JTP` (`0x5C`).  Useful once `cmp` and the carry-flag-producing
+  ALU sequences need them.
+* Real `RET` (`0x07`) via `CAL` (`0x7E` — NOT `0x46` which is
+  CFZ) + the internal return stack.  Lands in v0.3.7.
+* `lang-aot --target=intel8008` wiring + module-level CALL
+  backpatching — A2+++.
+
 ## [0.3.4] — 2026-06-02 (A2++.5.5 third slice — `label` + unconditional `jmp` + two-pass backpatching)
 
 ### Added — control flow primitive (unconditional jump)
