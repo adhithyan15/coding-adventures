@@ -1,4 +1,4 @@
-//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.5.0, A5+++++).
+//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.6.0, A5++++++).
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
@@ -91,9 +91,12 @@
 //! | `0x6` | `BR a`  | unconditional branch to byte addr `a`  | `[0x06, hi, lo]` |
 //! | `0x7` | `BNZ a` | branch if ACC ≠ 0                      | `[0x07, hi, lo]` |
 //! | `0x8` | `BZ a`  | branch if ACC = 0                      | `[0x08, hi, lo]` |
+//! | `0x9` | `JSR a` | push PC+3, branch to `a`               | `[0x09, hi, lo]` |
+//! | `0xA` | `RTS`   | pop, branch to popped address          | `[0x0A, 0x00, 0x00]` |
+//! | `0xB` | `BMI a` | branch if ACC sign bit set (negative)  | `[0x0B, hi, lo]` |
 //!
-//! Future slices take `0x9..0xF` for `BMI` (branch if minus),
-//! `JSR` (jump subroutine), `RET` (return from subroutine), etc.
+//! `BMI` is reserved — no IIR op currently lowers to it.  Future
+//! slices take `0xC..0xF`.
 //!
 //! ## Quick start
 //!
@@ -191,6 +194,50 @@ pub const BNZ_OPCODE_NIBBLE: u8 = 0x7;
 /// `BNZ`, opposite polarity.
 pub const BZ_OPCODE_NIBBLE: u8 = 0x8;
 
+/// GE-225 `JSR` opcode nibble — `0x9`.  Jump SubRoutine: push the
+/// return address (PC+3 — the byte address of the instruction
+/// after this JSR) onto the internal call stack, then branch to
+/// the 16-bit byte address.  Word layout: `[0x09, hi, lo]`.
+///
+/// Lowers `call dest, fn_name` — the callee's entry-point byte
+/// address is backpatched in a module-level pass after every
+/// function has been emitted (so forward-references work).
+///
+/// On this skeleton's GE-225 the call stack is implicit (depth not
+/// specified); the simulator decides.  Mirrors the iir-to-intel8008
+/// v0.3.9 module-level call-backpatching pattern.
+pub const JSR_OPCODE_NIBBLE: u8 = 0x9;
+
+/// GE-225 `RTS` opcode nibble — `0xA`.  Return from SubRoutine:
+/// pop the top return address from the internal call stack and
+/// branch to it.  Word layout: `[0x0A, 0x00, 0x00]` (the address
+/// field is unused — RTS reads its target from the stack, not the
+/// instruction word).
+///
+/// Lowers `ret <var>` and `ret_void` in **non-entry** functions.
+/// In the module's entry function (as named by
+/// `IIRModule::entry_point`) both ret variants still emit `HLT`,
+/// preserving the v0.2.0+ "program halts at the end of main"
+/// contract — a stack-popped RTS into garbage is undefined on every
+/// simulator we care about.
+pub const RTS_OPCODE_NIBBLE: u8 = 0xA;
+
+/// GE-225 `BMI` opcode nibble — `0xB`.  Branch if ACC's sign bit
+/// is set (i.e. ACC is negative under signed interpretation).
+/// Word layout: `[0x0B, hi, lo]`.
+///
+/// **Reserved in v0.6.0** — no IIR op currently lowers to BMI.
+/// A future increment may add a `jmp_if_neg` IIR op (driven from
+/// `cmp_lt` lowerings in the frontends) that emits `BMI`.  Pinned
+/// here so the opcode map stays stable and downstream simulators
+/// can pre-implement the decoder.
+pub const BMI_OPCODE_NIBBLE: u8 = 0xB;
+
+/// Canonical `RTS` 3-byte word (= `[0x0A, 0x00, 0x00]`).  Pinned
+/// for symmetry with `HALT_WORD` — every backend emits a fixed-shape
+/// terminator and exposes it as a public constant.
+pub const RTS_WORD: [u8; 3] = [RTS_OPCODE_NIBBLE, 0x00, 0x00];
+
 /// Sentinel `env` value meaning "this var currently lives in the
 /// accumulator (ACC)", distinct from real register indices `0..=15`.
 const ACC_MARKER: u8 = 16;
@@ -199,10 +246,11 @@ const ACC_MARKER: u8 = 16;
 /// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
 const GP_REGISTER_COUNT: usize = 16;
 
-/// Supported instruction opcodes in v0.5.0 (A5+++++).
+/// Supported instruction opcodes in v0.6.0 (A5++++++).
 const SUPPORTED_OPS: &[&str] = &[
     "const", "mov", "add", "sub",
     "label", "jmp", "jmp_if_true", "jmp_if_false",
+    "call",
     "ret", "ret_void",
 ];
 
@@ -271,6 +319,17 @@ pub enum IIRGe225Error {
         label: String,
         offset: usize,
     },
+    /// A `call` referenced a function name that wasn't defined
+    /// anywhere in the module.  Reported at module-level backpatch
+    /// time so all functions have been seen.
+    UndefinedFunction { caller: String, callee: String },
+    /// A call target's resolved entry byte offset exceeds the
+    /// 16-bit address field of the `JSR` instruction word.
+    CallTargetOutOfRange {
+        caller: String,
+        callee: String,
+        offset: usize,
+    },
 }
 
 impl fmt::Display for IIRGe225Error {
@@ -319,6 +378,23 @@ impl fmt::Display for IIRGe225Error {
                      {function:?} exceeds the 16-bit address field (max 65535)"
                 )
             }
+            Self::UndefinedFunction { caller, callee } => {
+                write!(
+                    f,
+                    "undefined function {callee:?} referenced by call in function {caller:?}"
+                )
+            }
+            Self::CallTargetOutOfRange {
+                caller,
+                callee,
+                offset,
+            } => {
+                write!(
+                    f,
+                    "call target {callee:?} entry at byte offset {offset} in function \
+                     {caller:?} exceeds the 16-bit address field (max 65535)"
+                )
+            }
         }
     }
 }
@@ -361,7 +437,37 @@ pub fn lower_iir_to_ge225(
     }
 
     let mut bytes = Vec::new();
+
+    // ── Module-level call-backpatching state (v0.6.0, A5++++++) ──
+    //
+    // The GE-225 has no PC-relative `JSR` — every call carries an
+    // absolute 16-bit byte address of the callee's entry word.  To
+    // make forward-references possible, we emit `JSR <hi=0><lo=0>`
+    // placeholders into `bytes` and record
+    // `(slot_byte_offset, callee_name, caller_name)` in
+    // `pending_calls`.  After every function has been emitted (so
+    // every callee's entry address is known), we walk
+    // `pending_calls` and write the resolved 16-bit address into
+    // each slot's two bytes.  Mirrors the iir-to-intel8008 v0.3.9
+    // call-backpatching pattern.
+    let mut function_addrs: HashMap<String, usize> = HashMap::new();
+    let mut pending_calls: Vec<(usize, String, String)> = Vec::new();
+
+    // ── Entry-function discriminator ────────────────────────────
+    //
+    // `ret` / `ret_void` in the entry function emit `HLT` (so the
+    // program halts cleanly when main returns).  Every other
+    // function emits `RTS` (return from subroutine).  When
+    // `entry_point` is `None` we conservatively make all rets
+    // emit `RTS` — the IR author chose to omit an entry, so they
+    // own the consequences.
+    let entry_name = module.entry_point.as_deref();
+
     for f in &module.functions {
+        // Record this function's entry byte offset for module-level
+        // call-backpatching.
+        function_addrs.insert(f.name.clone(), bytes.len());
+        let is_entry_fn = entry_name == Some(f.name.as_str());
         // ── Per-function ACC-first allocator state ───────────────────
         //
         // env: HashMap<String, u8>
@@ -683,11 +789,70 @@ pub fn lower_iir_to_ge225(
                     pending_branches.push((slot, target));
                 }
 
-                // ── ret <var>: (LD r_var)? + HLT ──────────────────────
+                // ── call (dest = )? fn_name → (evict ACC)? + JSR <addr>
+                //
+                // Operand layout: srcs = [Var(fn_name)], optional dest.
+                //
+                // Pass 1: evict any ACC owner (JSR's callee may clobber
+                // ACC).  Emit `JSR 0x0000` placeholder bytes and record
+                // (slot, callee, caller) in `pending_calls`.  After
+                // every function has been emitted, the module-level
+                // backpatching pass writes the callee's entry address
+                // into the slot.
+                //
+                // After JSR returns, ACC holds the callee's return
+                // value (by convention).  If the IIR site binds a
+                // dest, claim ACC for dest.  Otherwise discard the
+                // return value (acc_owner = None).
+                //
+                // Arguments aren't yet supported — calls in v0.6.0 are
+                // zero-arg, single-return-value (via ACC).  Mirrors
+                // iir-to-intel8008 v0.3.9's call-staging shape.
+                "call" => {
+                    let callee = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => {
+                            return Err(IIRGe225Error::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: "call requires srcs[0] = Operand::Var(fn_name)".into(),
+                            })
+                        }
+                    };
+                    // Evict any current ACC owner before JSR (the
+                    // callee will clobber ACC).
+                    evict_acc(
+                        &mut bytes,
+                        &mut env,
+                        &mut acc_owner,
+                        &mut next_reg,
+                        &f.name,
+                    )?;
+                    bytes.push(JSR_OPCODE_NIBBLE);
+                    let slot = bytes.len();
+                    bytes.push(0); // high-address placeholder
+                    bytes.push(0); // low-address placeholder
+                    pending_calls.push((slot, callee, f.name.clone()));
+                    // If the IIR site binds a dest, the callee's
+                    // return value (in ACC) becomes dest's home.
+                    if let Some(dest) = instr.dest.as_deref() {
+                        env.insert(dest.to_string(), ACC_MARKER);
+                        acc_owner = Some(dest.to_string());
+                    } else {
+                        // Discarded return value — leave ACC unowned.
+                        acc_owner = None;
+                    }
+                }
+
+                // ── ret <var>: (LD r_var)? + HLT-or-RTS ───────────────
                 //
                 // If var is already the ACC owner, no LD is needed —
                 // ACC already holds its value.  Otherwise emit
-                // `LD r_var` to stage it into ACC, then HLT.
+                // `LD r_var` to stage it into ACC.  Then:
+                //
+                //   * If this is the module's entry function: emit HLT
+                //     (program halts cleanly when main returns).
+                //   * Else: emit RTS (return from subroutine — pops the
+                //     return address pushed by the corresponding JSR).
                 "ret" => {
                     let src_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -702,12 +867,20 @@ pub fn lower_iir_to_ge225(
                     if src_reg != ACC_MARKER {
                         bytes.extend_from_slice(&encode_ld(src_reg));
                     }
-                    bytes.extend_from_slice(&HALT_WORD);
+                    if is_entry_fn {
+                        bytes.extend_from_slice(&HALT_WORD);
+                    } else {
+                        bytes.extend_from_slice(&RTS_WORD);
+                    }
                 }
 
-                // ── ret_void: HLT ─────────────────────────────────────
+                // ── ret_void: HLT (entry) or RTS (else) ───────────────
                 "ret_void" => {
-                    bytes.extend_from_slice(&HALT_WORD);
+                    if is_entry_fn {
+                        bytes.extend_from_slice(&HALT_WORD);
+                    } else {
+                        bytes.extend_from_slice(&RTS_WORD);
+                    }
                 }
 
                 _ => unreachable!("SUPPORTED_OPS guard above prevents this"),
@@ -748,6 +921,35 @@ pub fn lower_iir_to_ge225(
             bytes[slot] = ((offset_u16 >> 8) & 0xFF) as u8;
             bytes[slot + 1] = (offset_u16 & 0xFF) as u8;
         }
+    }
+
+    // ── Module-level call backpatching ───────────────────────────
+    //
+    // Every function has now been emitted into `bytes`, so every
+    // callee's entry byte address is recorded in `function_addrs`.
+    // Walk the per-caller `pending_calls` queue and write each
+    // resolved 16-bit byte address into the JSR slot.
+    //
+    // Errors flow up with both the caller and callee names so the
+    // user can locate the offending IR site without parsing the
+    // module twice.
+    for (slot, callee, caller) in pending_calls {
+        let offset = *function_addrs.get(&callee).ok_or_else(|| {
+            IIRGe225Error::UndefinedFunction {
+                caller: caller.clone(),
+                callee: callee.clone(),
+            }
+        })?;
+        if offset > u16::MAX as usize {
+            return Err(IIRGe225Error::CallTargetOutOfRange {
+                caller,
+                callee,
+                offset,
+            });
+        }
+        let offset_u16 = offset as u16;
+        bytes[slot] = ((offset_u16 >> 8) & 0xFF) as u8;
+        bytes[slot + 1] = (offset_u16 & 0xFF) as u8;
     }
 
     // Defensive — if every function was empty, fall back to

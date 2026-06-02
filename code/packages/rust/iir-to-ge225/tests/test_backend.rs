@@ -1,22 +1,23 @@
-// Tests for iir-to-ge225 v0.5.0 (A5+++++ — branch family + labels).
+// Tests for iir-to-ge225 v0.6.0 (A5++++++ — call/return JSR/RTS + BMI).
 //
-// Mirrors iir-to-intel8008 v0.3.4 (jump+label slice) in spirit,
-// adapted for GE-225's 20-bit-word / 3-bytes-per-word packing.
+// Mirrors iir-to-intel8008 v0.3.9 (module-level call backpatching)
+// in spirit, adapted for GE-225's 20-bit-word / 3-bytes-per-word
+// packing.
 //
 // Coverage:
 //   §1 — validator stub
-//   §2 — opcode constant pinning (incl. new BR/BNZ/BZ)
+//   §2 — opcode constant pinning (incl. new JSR/RTS/BMI + RTS_WORD)
 //   §3 — Config defaults
-//   §4 — Error Display (8 variants now)
-//   §5 — v0.2.0 / v0.3.0 / v0.4.0 regressions
-//   §6 — v0.5.0 NEW: label / jmp / jmp_if_true / jmp_if_false +
-//        per-function backpatching
+//   §4 — Error Display (10 variants now)
+//   §5 — v0.2.0 / v0.3.0 / v0.4.0 / v0.5.0 regressions
+//   §6 — v0.6.0 NEW: call / RTS / entry-vs-non-entry HLT discrimination
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_ge225::{
     lower_iir_to_ge225, validate_for_ge225, IIRGe225Config, IIRGe225Error, ADD_OPCODE_NIBBLE,
-    BNZ_OPCODE_NIBBLE, BR_OPCODE_NIBBLE, BZ_OPCODE_NIBBLE, HALT_WORD, LDA_OPCODE_NIBBLE,
-    LD_OPCODE_NIBBLE, STA_OPCODE_NIBBLE, SUB_OPCODE_NIBBLE,
+    BMI_OPCODE_NIBBLE, BNZ_OPCODE_NIBBLE, BR_OPCODE_NIBBLE, BZ_OPCODE_NIBBLE, HALT_WORD,
+    JSR_OPCODE_NIBBLE, LDA_OPCODE_NIBBLE, LD_OPCODE_NIBBLE, RTS_OPCODE_NIBBLE, RTS_WORD,
+    STA_OPCODE_NIBBLE, SUB_OPCODE_NIBBLE,
 };
 
 // ---------------------------------------------------------------------------
@@ -46,6 +47,20 @@ fn module_with(f: IIRFunction) -> IIRModule {
     }
 }
 
+/// Build a module from multiple functions; first function's name is
+/// the entry point unless explicitly overridden.
+fn module_with_many(fs: Vec<IIRFunction>, entry: Option<&str>) -> IIRModule {
+    let entry = entry.map(|s| s.to_string()).or_else(|| fs.first().map(|f| f.name.clone()));
+    IIRModule {
+        name: "test".into(),
+        functions: fs,
+        entry_point: entry,
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
+
 // ===========================================================================
 // §1. Validator stub
 // ===========================================================================
@@ -65,7 +80,12 @@ fn halt_word_constant_pinned_to_zeros() {
 }
 
 #[test]
-fn opcode_nibbles_pinned() {
+fn rts_word_constant_pinned() {
+    assert_eq!(RTS_WORD, [0x0A, 0x00, 0x00]);
+}
+
+#[test]
+fn opcode_nibbles_pinned_through_v0_6_0() {
     assert_eq!(LDA_OPCODE_NIBBLE, 0x1);
     assert_eq!(STA_OPCODE_NIBBLE, 0x2);
     assert_eq!(LD_OPCODE_NIBBLE, 0x3);
@@ -74,6 +94,9 @@ fn opcode_nibbles_pinned() {
     assert_eq!(BR_OPCODE_NIBBLE, 0x6);
     assert_eq!(BNZ_OPCODE_NIBBLE, 0x7);
     assert_eq!(BZ_OPCODE_NIBBLE, 0x8);
+    assert_eq!(JSR_OPCODE_NIBBLE, 0x9);
+    assert_eq!(RTS_OPCODE_NIBBLE, 0xA);
+    assert_eq!(BMI_OPCODE_NIBBLE, 0xB);
 }
 
 // ===========================================================================
@@ -127,6 +150,15 @@ fn errors_display_without_panic() {
             label: "way_off".into(),
             offset: 100_000,
         },
+        IIRGe225Error::UndefinedFunction {
+            caller: "main".into(),
+            callee: "missing".into(),
+        },
+        IIRGe225Error::CallTargetOutOfRange {
+            caller: "main".into(),
+            callee: "tail".into(),
+            offset: 100_000,
+        },
     ];
     for err in errs {
         assert!(!format!("{err}").is_empty());
@@ -134,19 +166,22 @@ fn errors_display_without_panic() {
 }
 
 // ===========================================================================
-// §5. Regressions from v0.2.0 / v0.3.0 / v0.4.0
+// §5. Regressions from v0.2.0 / v0.3.0 / v0.4.0 / v0.5.0
 // ===========================================================================
 
 #[test]
-fn empty_module_still_emits_the_canonical_halt_word() {
+fn empty_module_still_emits_halt() {
     let bytes = lower_iir_to_ge225(&empty_module(), &IIRGe225Config::default())
         .expect("lowering");
     assert_eq!(bytes, vec![0x00, 0x00, 0x00]);
 }
 
 #[test]
-fn trivial_rom_is_still_six_bytes() {
-    for &n in &[0i64, 5, 42, -1, 32767, -32768] {
+fn trivial_rom_in_entry_function_still_six_bytes() {
+    // Single-function module with entry=Some("trivial") — ret in
+    // the entry function should still emit HLT, preserving the
+    // canonical 6-byte trivial-case ROM from v0.2.0.
+    for &n in &[0i64, 5, -1, 32767] {
         let f = IIRFunction::new(
             "trivial",
             vec![],
@@ -158,13 +193,16 @@ fn trivial_rom_is_still_six_bytes() {
         );
         let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
             .expect("lowering");
-        assert_eq!(bytes.len(), 6, "trivial ROM for n={n} should be 6 bytes");
+        assert_eq!(bytes.len(), 6, "entry-function trivial ROM stays 6 bytes for n={n}");
+        // Last 3 bytes must be HLT (not RTS).
+        assert_eq!(&bytes[3..], &HALT_WORD,
+            "entry function ret must emit HLT, not RTS, for n={n}");
     }
 }
 
 #[test]
 fn trivial_add_still_works() {
-    // const a=3; const b=4; add c, a, b; ret c — unchanged from v0.4.0.
+    // const a=3; const b=4; add c, a, b; ret c — 21 bytes unchanged.
     let f = IIRFunction::new(
         "trivial_add",
         vec![],
@@ -183,38 +221,12 @@ fn trivial_add_still_works() {
     );
     let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
         .expect("lowering");
-    assert_eq!(bytes.len(), 21, "trivial-add ROM unchanged at 21 bytes");
+    assert_eq!(bytes.len(), 21);
 }
 
-// ===========================================================================
-// §6. v0.5.0 NEW — label / jmp / jmp_if_true / jmp_if_false
-// ===========================================================================
-
-/// `label start; ret_void` — labels emit zero bytes; just HLT.
 #[test]
-fn label_only_emits_no_bytes() {
-    let f = IIRFunction::new(
-        "label_only",
-        vec![],
-        "void",
-        vec![
-            IIRInstr::new("label", None, vec![Operand::Var("start".into())], "void"),
-            IIRInstr::new("ret_void", None, vec![], "void"),
-        ],
-    );
-    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
-        .expect("lowering");
-    assert_eq!(bytes, vec![0x00, 0x00, 0x00]);
-}
-
-/// `jmp x; label x; ret_void` — the `BR` placeholder is backpatched
-/// to address 3 (just past the BR itself).
-///
-/// Bytes:
-///   0: 0x06 0x00 0x03    BR 3  (backpatched: target at byte 3)
-///   3: 0x00 0x00 0x00    HLT (label x lands here, no bytes emitted)
-#[test]
-fn trivial_jmp_emits_br_with_backpatched_address() {
+fn trivial_branch_still_works() {
+    // jmp x; label x; ret_void — same 6-byte sequence as v0.5.0.
     let f = IIRFunction::new(
         "trivial_jmp",
         vec![],
@@ -230,324 +242,352 @@ fn trivial_jmp_emits_br_with_backpatched_address() {
     assert_eq!(
         bytes,
         vec![
-            0x06, 0x00, 0x03, // BR 0x0003 (label x)
-            0x00, 0x00, 0x00, // HLT
+            0x06, 0x00, 0x03, // BR 3
+            0x00, 0x00, 0x00, // HLT (entry function)
         ]
     );
 }
 
-/// `jmp undefined` errors with `UndefinedLabel`.
-#[test]
-fn jmp_to_undefined_label_errors() {
-    let f = IIRFunction::new(
-        "jmp_undef",
-        vec![],
-        "void",
-        vec![
-            IIRInstr::new("jmp", None, vec![Operand::Var("nowhere".into())], "void"),
-            IIRInstr::new("ret_void", None, vec![], "void"),
-        ],
-    );
-    let err = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
-        .expect_err("jmp to undefined label must error");
-    match err {
-        IIRGe225Error::UndefinedLabel { label, .. } => assert_eq!(label, "nowhere"),
-        other => panic!("expected UndefinedLabel, got {other:?}"),
-    }
-}
+// ===========================================================================
+// §6. v0.6.0 NEW — call / RTS / entry-vs-non-entry HLT discrimination
+// ===========================================================================
 
-/// Backward jump (label before jmp) — labels[loop] = 0, jmp loop
-/// at offset 0 emits BR 0x0000.  Infinite loop, but the byte
-/// sequence is correct.
-#[test]
-fn backward_jmp_resolves_correctly() {
-    let f = IIRFunction::new(
-        "loop_forever",
-        vec![],
-        "void",
-        vec![
-            IIRInstr::new("label", None, vec![Operand::Var("top".into())], "void"),
-            IIRInstr::new("jmp", None, vec![Operand::Var("top".into())], "void"),
-        ],
-    );
-    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
-        .expect("lowering");
-    assert_eq!(
-        bytes,
-        vec![
-            0x06, 0x00, 0x00, // BR 0x0000 (backward jump to top of function)
-        ]
-    );
-}
-
-/// `const cond=1; jmp_if_true cond, skip; const x=99; label skip;
-/// ret_void` — exercises BNZ with a forward-backpatched address.
+/// In a NON-entry function, `ret_void` must emit `RTS`, not `HLT`.
 ///
-/// Trace:
-///   0: LDA 1                  cond → ACC, owner=cond
-///   3: BNZ <skip>             (cond is ACC owner, no LD)
-///   6: STA r0                 evict cond → r0 for next const
-///   9: LDA 99                 99 → ACC, owner=x
-///   12: HLT                   label skip lands here
+/// Module: { fn main { ret_void }, fn helper { ret_void } } with
+/// entry=main.
 ///
-/// Backpatching: skip = 12 → BNZ slot at bytes 4..6 gets `0x00 0x0C`.
+/// Bytes:
+///   0: main's ret_void → HLT [0x00, 0x00, 0x00]
+///   3: helper's ret_void → RTS [0x0A, 0x00, 0x00]
 #[test]
-fn jmp_if_true_with_cond_in_acc_skips_ld() {
-    let f = IIRFunction::new(
-        "if_then",
+fn non_entry_ret_void_emits_rts_not_halt() {
+    let main = IIRFunction::new(
+        "main",
         vec![],
         "void",
-        vec![
-            IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "bool"),
-            IIRInstr::new(
-                "jmp_if_true",
-                None,
-                vec![Operand::Var("cond".into()), Operand::Var("skip".into())],
-                "void",
-            ),
-            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(99)], "i16"),
-            IIRInstr::new("label", None, vec![Operand::Var("skip".into())], "void"),
-            IIRInstr::new("ret_void", None, vec![], "void"),
-        ],
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
     );
-    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+    let helper = IIRFunction::new(
+        "helper",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let module = module_with_many(vec![main, helper], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
         .expect("lowering");
     assert_eq!(
         bytes,
         vec![
-            0x01, 0x00, 0x01, // LDA 1   (cond=1 → ACC)
-            0x07, 0x00, 0x0C, // BNZ 12  (skip)
-            0x02, 0x00, 0x00, // STA r0  (evict cond before next LDA)
-            0x01, 0x00, 0x63, // LDA 99  (x=99 → ACC)
-            0x00, 0x00, 0x00, // HLT     (label skip)
+            0x00, 0x00, 0x00, // main: HLT (entry)
+            0x0A, 0x00, 0x00, // helper: RTS (non-entry)
         ]
     );
 }
 
-/// `jmp_if_false` mirror — uses BZ instead of BNZ.
-#[test]
-fn jmp_if_false_with_cond_in_acc_emits_bz() {
-    let f = IIRFunction::new(
-        "if_false",
-        vec![],
-        "void",
-        vec![
-            IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(0)], "bool"),
-            IIRInstr::new(
-                "jmp_if_false",
-                None,
-                vec![Operand::Var("cond".into()), Operand::Var("skip".into())],
-                "void",
-            ),
-            IIRInstr::new("label", None, vec![Operand::Var("skip".into())], "void"),
-            IIRInstr::new("ret_void", None, vec![], "void"),
-        ],
-    );
-    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
-        .expect("lowering");
-    assert_eq!(
-        bytes,
-        vec![
-            0x01, 0x00, 0x00, // LDA 0   (cond=0 → ACC)
-            0x08, 0x00, 0x06, // BZ 6    (skip — label is 6 bytes in)
-            0x00, 0x00, 0x00, // HLT
-        ]
-    );
-}
-
-/// `jmp_if_true` where cond was evicted to a register first — must
-/// emit an LD before the BNZ.
+/// In a non-entry function, `ret <var>` must stage var into ACC and
+/// emit `RTS`, not `HLT`.
 ///
-///   const x=42;     (x → ACC)
-///   const cond=1;   (evict x → r0, cond → ACC)
-///   const y=7;      (evict cond → r1, y → ACC)
-///   jmp_if_true cond, skip   -- cond is in r1, must LD r1
-///   label skip
-///   ret_void
+/// Module: { fn main { ret_void }, fn helper { const v=7; ret v } }
+/// with entry=main.
+///
+/// helper's `ret v` (v is ACC owner) → just RTS (no LD needed).
 #[test]
-fn jmp_if_true_with_cond_in_register_emits_ld() {
-    let f = IIRFunction::new(
-        "evicted_cond",
+fn non_entry_ret_with_var_emits_rts() {
+    let main = IIRFunction::new(
+        "main",
         vec![],
         "void",
-        vec![
-            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(42)], "i16"),
-            IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "bool"),
-            IIRInstr::new("const", Some("y".into()), vec![Operand::Int(7)], "i16"),
-            IIRInstr::new(
-                "jmp_if_true",
-                None,
-                vec![Operand::Var("cond".into()), Operand::Var("skip".into())],
-                "void",
-            ),
-            IIRInstr::new("label", None, vec![Operand::Var("skip".into())], "void"),
-            IIRInstr::new("ret_void", None, vec![], "void"),
-        ],
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
     );
-    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
-        .expect("lowering");
-    // Trace:
-    //   0: LDA 42       (x → ACC, owner=x)
-    //   3: STA r0       (evict x → r0 for next const)
-    //   6: LDA 1        (cond → ACC, owner=cond)
-    //   9: STA r1       (evict cond → r1 for next const)
-    //   12: LDA 7       (y → ACC, owner=y)
-    //   15: LD r1       (load cond into ACC for BNZ)
-    //   18: BNZ <skip>  (backpatched to 21)
-    //   21: HLT         (label skip lands here)
-    assert_eq!(
-        bytes,
-        vec![
-            0x01, 0x00, 0x2A, // LDA 42
-            0x02, 0x00, 0x00, // STA r0 (evict x)
-            0x01, 0x00, 0x01, // LDA 1
-            0x02, 0x00, 0x01, // STA r1 (evict cond)
-            0x01, 0x00, 0x07, // LDA 7
-            0x03, 0x00, 0x01, // LD r1  (reload cond for BNZ)
-            0x07, 0x00, 0x15, // BNZ 21 (skip)
-            0x00, 0x00, 0x00, // HLT
-        ]
-    );
-}
-
-/// The canonical "if-then-else" lowering:
-///   const c = 1
-///   jmp_if_false c, else_label
-///   const a = 10            (then branch)
-///   jmp end_label
-///   label else_label
-///   const a = 20            (else branch)
-///   label end_label
-///   ret_void
-#[test]
-fn canonical_if_then_else_sequence() {
-    let f = IIRFunction::new(
-        "if_then_else",
+    let helper = IIRFunction::new(
+        "helper",
         vec![],
         "i16",
         vec![
-            IIRInstr::new("const", Some("c".into()), vec![Operand::Int(1)], "bool"),
-            IIRInstr::new(
-                "jmp_if_false",
-                None,
-                vec![Operand::Var("c".into()), Operand::Var("else_label".into())],
-                "void",
-            ),
-            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(10)], "i16"),
-            IIRInstr::new("jmp", None, vec![Operand::Var("end_label".into())], "void"),
-            IIRInstr::new("label", None, vec![Operand::Var("else_label".into())], "void"),
-            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(20)], "i16"),
-            IIRInstr::new("label", None, vec![Operand::Var("end_label".into())], "void"),
-            IIRInstr::new("ret_void", None, vec![], "void"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i16"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i16"),
         ],
     );
-    let bytes = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
+    let module = module_with_many(vec![main, helper], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
         .expect("lowering");
-    // Trace:
-    //   0:  LDA 1               (c → ACC, owner=c)
-    //   3:  BZ <else_label>     (cond in ACC, no LD)
-    //   6:  STA r0               (evict c)
-    //   9:  LDA 10               (a=10 → ACC)
-    //   12: BR <end_label>
-    //   15: <else_label>: STA r1 (evict a)  -- wait, a was already
-    //       evicted on the then-branch... but env still says a
-    //       points to ACC since the second `const a` will re-overwrite.
-    //
-    // Actually after the then-branch:
-    //   - a is ACC owner (env[a] = ACC_MARKER)
-    //   - r0=c, r1 unused
-    //   - At label else_label: next const a=20 needs to evict ACC owner
-    //     (currently a). So STA r1, then LDA 20 (a → ACC).
-    //
-    //   15: STA r1               (evict a from then branch → r1)
-    //   18: LDA 20               (a=20 → ACC)
-    //   21: HLT                   (label end_label lands here, ret_void)
-    //
-    // Backpatched: else_label at byte 15, end_label at byte 21.
     assert_eq!(
         bytes,
         vec![
-            0x01, 0x00, 0x01, // LDA 1
-            0x08, 0x00, 0x0F, // BZ 15 (else_label)
-            0x02, 0x00, 0x00, // STA r0 (evict c)
-            0x01, 0x00, 0x0A, // LDA 10 (a → ACC)
-            0x06, 0x00, 0x15, // BR 21 (end_label)
-            0x02, 0x00, 0x01, // STA r1 (evict a from then branch)
-            0x01, 0x00, 0x14, // LDA 20 (a → ACC, else branch)
-            0x00, 0x00, 0x00, // HLT (end_label)
+            0x00, 0x00, 0x00, // main: HLT
+            0x01, 0x00, 0x07, // helper: LDA 7
+            0x0A, 0x00, 0x00, // helper: RTS
         ]
     );
 }
 
-/// `jmp_if_true` with cond referencing an unbound var errors with
-/// `UndefinedVariable`.
+/// `call helper` from main with backpatched address.
+///
+/// Module: { fn main { call helper; ret_void }, fn helper { ret_void } }
+/// with entry=main.
+///
+/// Bytes:
+///   0: main: JSR <helper>     [0x09, hi=0x00, lo=0x06]
+///   3: main: HLT               [0x00, 0x00, 0x00]
+///   6: helper: RTS             [0x0A, 0x00, 0x00]
+///
+/// helper's entry is at byte 6, so JSR slot bytes 1..3 get 0x00 0x06.
 #[test]
-fn jmp_if_true_with_unbound_cond_errors() {
-    let f = IIRFunction::new(
-        "unbound_cond",
+fn trivial_call_no_return_emits_jsr_then_helper_rts() {
+    let main = IIRFunction::new(
+        "main",
         vec![],
         "void",
         vec![
-            IIRInstr::new(
-                "jmp_if_true",
-                None,
-                vec![Operand::Var("never_bound".into()), Operand::Var("skip".into())],
-                "void",
-            ),
-            IIRInstr::new("label", None, vec![Operand::Var("skip".into())], "void"),
+            IIRInstr::new("call", None, vec![Operand::Var("helper".into())], "void"),
             IIRInstr::new("ret_void", None, vec![], "void"),
         ],
     );
-    let err = lower_iir_to_ge225(&module_with(f), &IIRGe225Config::default())
-        .expect_err("jmp_if_true with unbound cond must error");
+    let helper = IIRFunction::new(
+        "helper",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let module = module_with_many(vec![main, helper], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x09, 0x00, 0x06, // main: JSR 6  (helper's entry)
+            0x00, 0x00, 0x00, // main: HLT
+            0x0A, 0x00, 0x00, // helper: RTS
+        ]
+    );
+}
+
+/// `call dest = helper` captures the callee's return value (in ACC)
+/// into dest.  Then `ret dest` finds dest as the current ACC owner
+/// and emits just HLT (no LD needed).
+///
+/// Module: { fn main { call x = helper; ret x }, fn helper {
+/// const v=42; ret v } } with entry=main.
+///
+/// main bytes:
+///   0: JSR <helper>            [0x09, hi=0x00, lo=0x06]
+///   3: HLT (entry, ACC has x)  [0x00, 0x00, 0x00]
+/// helper bytes:
+///   6: LDA 42                   [0x01, 0x00, 0x2A]
+///   9: RTS                      [0x0A, 0x00, 0x00]
+#[test]
+fn call_with_return_captures_value() {
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("call", Some("x".into()), vec![Operand::Var("helper".into())], "i16"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i16"),
+        ],
+    );
+    let helper = IIRFunction::new(
+        "helper",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i16"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i16"),
+        ],
+    );
+    let module = module_with_many(vec![main, helper], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x09, 0x00, 0x06, // main: JSR 6 (helper)
+            0x00, 0x00, 0x00, // main: HLT (x is ACC owner from JSR's return)
+            0x01, 0x00, 0x2A, // helper: LDA 42
+            0x0A, 0x00, 0x00, // helper: RTS
+        ]
+    );
+}
+
+/// `call` to a function that doesn't exist anywhere in the module
+/// errors with `UndefinedFunction`.
+#[test]
+fn call_to_undefined_function_errors() {
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("call", None, vec![Operand::Var("does_not_exist".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let module = module_with_many(vec![main], Some("main"));
+    let err = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect_err("call to undefined function must error");
     match err {
-        IIRGe225Error::UndefinedVariable { name, .. } => assert_eq!(name, "never_bound"),
-        other => panic!("expected UndefinedVariable, got {other:?}"),
+        IIRGe225Error::UndefinedFunction { caller, callee } => {
+            assert_eq!(caller, "main");
+            assert_eq!(callee, "does_not_exist");
+        }
+        other => panic!("expected UndefinedFunction, got {other:?}"),
     }
 }
 
-/// Labels are per-function — referencing a label defined in
-/// another function errors with `UndefinedLabel`.
+/// Multiple calls in sequence all backpatch to their correct
+/// addresses.  Module ordering: main, a, b.  main calls a then b.
 #[test]
-fn cross_function_labels_dont_resolve() {
-    let f1 = IIRFunction::new(
-        "f1",
+fn multiple_calls_resolve_independently() {
+    let main = IIRFunction::new(
+        "main",
         vec![],
         "void",
         vec![
-            IIRInstr::new("label", None, vec![Operand::Var("shared".into())], "void"),
+            IIRInstr::new("call", None, vec![Operand::Var("a".into())], "void"),
+            IIRInstr::new("call", None, vec![Operand::Var("b".into())], "void"),
             IIRInstr::new("ret_void", None, vec![], "void"),
         ],
     );
-    let f2 = IIRFunction::new(
-        "f2",
+    let a = IIRFunction::new(
+        "a",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let b = IIRFunction::new(
+        "b",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let module = module_with_many(vec![main, a, b], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect("lowering");
+    // Layout:
+    //   0:  main: JSR a (placeholder)
+    //   3:  main: JSR b (placeholder)
+    //   6:  main: HLT
+    //   9:  a: RTS
+    //   12: b: RTS
+    // Backpatched: a at 9, b at 12.
+    assert_eq!(
+        bytes,
+        vec![
+            0x09, 0x00, 0x09, // main: JSR 9 (a)
+            0x09, 0x00, 0x0C, // main: JSR 12 (b)
+            0x00, 0x00, 0x00, // main: HLT
+            0x0A, 0x00, 0x00, // a: RTS
+            0x0A, 0x00, 0x00, // b: RTS
+        ]
+    );
+}
+
+/// Forward `call` — callee defined LATER in the module than the
+/// caller — works because backpatching happens after all functions
+/// are emitted.
+#[test]
+fn forward_call_resolves_via_backpatching() {
+    let main = IIRFunction::new(
+        "main",
         vec![],
         "void",
         vec![
-            IIRInstr::new("jmp", None, vec![Operand::Var("shared".into())], "void"),
+            IIRInstr::new("call", None, vec![Operand::Var("later".into())], "void"),
             IIRInstr::new("ret_void", None, vec![], "void"),
         ],
+    );
+    let later = IIRFunction::new(
+        "later",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let module = module_with_many(vec![main, later], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(bytes[0], 0x09, "JSR opcode at byte 0");
+    assert_eq!(bytes[1], 0x00, "JSR hi byte");
+    assert_eq!(bytes[2], 0x06, "JSR lo byte → later at offset 6");
+    assert_eq!(&bytes[3..6], &HALT_WORD);
+    assert_eq!(&bytes[6..9], &RTS_WORD);
+}
+
+/// `call` evicts a live ACC owner first — the callee will clobber
+/// ACC, so any prior value must be saved.
+///
+/// Module: { fn main { const x=5; call helper; ret x }, fn helper { ret_void } }
+///
+/// main bytes:
+///   0: LDA 5                  (x → ACC, owner=x)
+///   3: STA r0                 (evict x → r0 before JSR)
+///   6: JSR <helper>           (placeholder, backpatched to helper)
+///   9: LD r0                  (reload x for ret)
+///   12: HLT                    (entry → HLT)
+/// helper:
+///   15: RTS
+///
+/// Backpatched: JSR at byte 7-8 holds (hi, lo) of helper offset 15.
+#[test]
+fn call_evicts_live_acc_owner_before_jsr() {
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i16",
+        vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(5)], "i16"),
+            IIRInstr::new("call", None, vec![Operand::Var("helper".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i16"),
+        ],
+    );
+    let helper = IIRFunction::new(
+        "helper",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+    );
+    let module = module_with_many(vec![main, helper], Some("main"));
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(
+        bytes,
+        vec![
+            0x01, 0x00, 0x05, // LDA 5
+            0x02, 0x00, 0x00, // STA r0 (evict x before JSR)
+            0x09, 0x00, 0x0F, // JSR 15 (helper)
+            0x03, 0x00, 0x00, // LD r0 (reload x for ret)
+            0x00, 0x00, 0x00, // HLT (entry function)
+            0x0A, 0x00, 0x00, // helper: RTS
+        ]
+    );
+}
+
+/// When entry_point is `None`, ALL functions emit RTS for ret (no
+/// HLT).  Conservative: the IR author opted out of an entry, so
+/// no function gets the program-halt treatment.
+#[test]
+fn no_entry_point_means_all_functions_use_rts() {
+    let only_fn = IIRFunction::new(
+        "lone",
+        vec![],
+        "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")],
     );
     let module = IIRModule {
-        name: "two".into(),
-        functions: vec![f1, f2],
-        entry_point: Some("f1".into()),
+        name: "test".into(),
+        functions: vec![only_fn],
+        entry_point: None,
         language: "test".into(),
         exports: vec![],
         imports: vec![],
     };
-    let err = lower_iir_to_ge225(&module, &IIRGe225Config::default())
-        .expect_err("cross-function label reference must error");
-    match err {
-        IIRGe225Error::UndefinedLabel { function, label } => {
-            assert_eq!(function, "f2");
-            assert_eq!(label, "shared");
-        }
-        other => panic!("expected UndefinedLabel, got {other:?}"),
-    }
+    let bytes = lower_iir_to_ge225(&module, &IIRGe225Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![0x0A, 0x00, 0x00]);
 }
 
-/// Unsupported op (e.g., `mul`) still errors with `UnsupportedOp`.
+/// `mul` (still unsupported in v0.6.0) errors with `UnsupportedOp`.
 #[test]
 fn mul_still_unsupported() {
     let f = IIRFunction::new(

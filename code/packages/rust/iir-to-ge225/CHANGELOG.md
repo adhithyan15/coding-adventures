@@ -2,6 +2,124 @@
 
 All notable changes to this crate are documented here.
 
+## v0.6.0 — 2026-06-02 — A5++++++ call/return (`JSR`, `RTS`) + `BMI` reserved
+
+Fifth lowering increment.  Adds the call/return discipline: the
+new `JSR` opcode pushes a return address and branches, `RTS` pops
+and branches back.  `call` IIR ops resolve to JSR via module-level
+backpatching (after every function has been emitted).  Reserves
+the `BMI` opcode for future signed-comparison branches.
+
+### Added
+
+- `pub const JSR_OPCODE_NIBBLE: u8 = 0x9` — Jump SubRoutine.  Word
+  `[0x09, hi, lo]` (16-bit callee entry byte address).  Pushes the
+  return address (PC+3) onto the internal call stack, then branches.
+- `pub const RTS_OPCODE_NIBBLE: u8 = 0xA` — Return from SubRoutine.
+  Word `[0x0A, 0x00, 0x00]` (address field unused — target is
+  popped from the call stack).
+- `pub const RTS_WORD: [u8; 3] = [0x0A, 0x00, 0x00]` — canonical
+  RTS 3-byte word, pinned for symmetry with `HALT_WORD`.
+- `pub const BMI_OPCODE_NIBBLE: u8 = 0xB` — branch if minus.
+  **Reserved**: no IIR op currently lowers to BMI.  A future
+  `jmp_if_neg` IIR op (driven by `cmp_lt` lowerings) will emit it.
+- `IIRGe225Error::UndefinedFunction { caller, callee }` — a `call`
+  references a function name not defined in the module.
+- `IIRGe225Error::CallTargetOutOfRange { caller, callee, offset }`
+  — a callee's entry byte offset exceeds the 16-bit JSR address
+  field.
+- `"call"` added to `SUPPORTED_OPS`.
+
+### Lowering changes
+
+| IIR op | GE-225 lowering |
+|--------|-----------------|
+| `call (dest =)? fn_name` | (evict ACC owner)? + `JSR <callee_addr>` + (claim ACC for dest)? |
+| `ret <var>` in **entry** function | `(LD r_var)?` + `HLT` |
+| `ret <var>` in non-entry function | `(LD r_var)?` + `RTS` |
+| `ret_void` in **entry** function | `HLT` |
+| `ret_void` in non-entry function | `RTS` |
+
+Entry function = the one named by `IIRModule::entry_point`.  When
+`entry_point` is `None`, ALL functions emit RTS (no function gets
+HLT) — conservative: the IR author opted out of an entry, so they
+own the consequences.
+
+### Module-level call backpatching
+
+Pass 1 (per-instruction loop, in every function): each `call`
+evicts any current ACC owner, emits `[0x09, 0x00, 0x00]`
+placeholder bytes, and pushes
+`(slot_byte_offset, callee_name, caller_name)` into module-level
+`pending_calls`.  Every function's entry byte offset is recorded
+in `function_addrs` at the start of its emission.
+
+Pass 2 (after every function has been emitted): for each
+`(slot, callee, caller)` in `pending_calls`, look up
+`function_addrs[callee]` and write the 16-bit byte address.
+Errors with `UndefinedFunction` if the callee isn't in the
+module, or `CallTargetOutOfRange` if the offset exceeds
+`u16::MAX`.
+
+### Opcode map (cumulative through v0.6.0)
+
+| Nibble | Mnemonic | Word | Effect |
+|--------|----------|------|--------|
+| `0x0` | `HLT`   | `[0x00, 0x00, 0x00]` | halt |
+| `0x1` | `LDA n` | `[0x01, hi, lo]` | ACC ← n |
+| `0x2` | `STA r` | `[0x02, 0x00, r]` | ACC ↔ r (XCH) |
+| `0x3` | `LD r`  | `[0x03, 0x00, r]` | ACC ← r |
+| `0x4` | `ADD r` | `[0x04, 0x00, r]` | ACC ← ACC + r |
+| `0x5` | `SUB r` | `[0x05, 0x00, r]` | ACC ← ACC - r |
+| `0x6` | `BR a`  | `[0x06, hi, lo]` | unconditional branch |
+| `0x7` | `BNZ a` | `[0x07, hi, lo]` | branch if ACC ≠ 0 |
+| `0x8` | `BZ a`  | `[0x08, hi, lo]` | branch if ACC = 0 |
+| `0x9` | `JSR a` | `[0x09, hi, lo]` | push PC+3, branch to `a` |
+| `0xA` | `RTS`   | `[0x0A, 0x00, 0x00]` | pop, branch to popped address |
+| `0xB` | `BMI a` | `[0x0B, hi, lo]` | branch if ACC sign bit set (reserved) |
+
+Future slices reserve `0xC..0xF` for arithmetic extensions (MUL,
+DIV) or wider-immediate variants.
+
+### Tests (21 unit + 1 doctest, all passing)
+
+New v0.6.0 coverage:
+- All 11 opcode nibbles pinned.
+- `RTS_WORD` constant pinned to `[0x0A, 0x00, 0x00]`.
+- `non_entry_ret_void_emits_rts_not_halt` — non-entry function ret
+  uses RTS.
+- `non_entry_ret_with_var_emits_rts` — ret-with-value in non-entry
+  function: LDA + RTS.
+- `trivial_call_no_return_emits_jsr_then_helper_rts` — main calls
+  helper; backpatched `JSR 6`.
+- `call_with_return_captures_value` — JSR returns into ACC, dest
+  claims it for ret-without-LD.
+- `call_to_undefined_function_errors` — `UndefinedFunction`.
+- `multiple_calls_resolve_independently` — two JSRs backpatch
+  to two distinct callee addresses.
+- `forward_call_resolves_via_backpatching` — callee defined
+  AFTER caller works (the whole point of module-level pass 2).
+- `call_evicts_live_acc_owner_before_jsr` — STA r0 inserted
+  before JSR; LD r0 after JSR restores caller's value.
+- `no_entry_point_means_all_functions_use_rts` — entry=None.
+
+Regressions still pinned:
+- `trivial_rom_in_entry_function_still_six_bytes` — entry ret
+  still HLT (6 N values).
+- `trivial_add_still_works` — 21-byte ADD ROM unchanged.
+- `trivial_branch_still_works` — BR + HLT unchanged.
+- `mul_still_unsupported` — `UnsupportedOp { op: "mul" }`.
+
+Lang-aot e2e smoke tests still pass (4 GE-225 paths unchanged —
+Twig sets `entry_point = Some("main")` so all existing tests get
+HLT as before).
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+- Mirrors `iir-to-intel8008` v0.3.9 module-level call-backpatching.
+
 ## v0.5.0 — 2026-06-02 — A5+++++ branch family (`BR`, `BNZ`, `BZ`) + label backpatching
 
 Fourth lowering increment.  Adds three new branch opcodes, the
