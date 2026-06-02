@@ -1,6 +1,6 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
-**Status:** v0.1.0 — skeleton (A5)
+**Status:** v0.2.0 — first real lowering (A5+)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
 
@@ -86,9 +86,9 @@ IIRModule
 
 | Version | Scope | Status |
 |---------|-------|--------|
-| **v0.1.0 (A5 — this PR)** | crate skeleton: any module → single `HLT` (`0x00000`, packed `[0x00, 0x00, 0x00]`) | this PR |
-| v0.2.0 (A5+) | `const dest, Int(n)` → `LDA n` (load accumulator immediate, 16-bit n) + `ret`/`ret_void` → HLT | future |
-| v0.3.0 (A5++) | Accumulator-based arithmetic (`ADD`, `SUB`) + branch family (`BR`, `BMI`, `BNZ`) | future |
+| v0.1.0 (A5) | crate skeleton: any module → single `HLT` (`0x00000`, packed `[0x00, 0x00, 0x00]`) | **merged** |
+| **v0.2.0 (A5+ — this PR)** | `const dest, Int(n)` → `LDA n` (load accumulator immediate, 16-bit signed/unsigned) + `ret`/`ret_void` → HLT.  Single-ACC liveness model; multi-register allocation deferred. | this PR |
+| v0.3.0 (A5++) | ACC-first GP register allocator + `mov` + accumulator-based arithmetic (`ADD`, `SUB`) + branch family (`BR`, `BMI`, `BNZ`) | future |
 | v0.4.0 (A5+++) | `lang-aot --emit=ge225` wiring + BASIC end-to-end | future |
 
 ## Public surface (v0.1.0)
@@ -113,22 +113,47 @@ pub fn lower_iir_to_ge225(
 ) -> Result<Vec<u8>, IIRGe225Error>;
 
 pub const HALT_WORD: [u8; 3] = [0x00, 0x00, 0x00];
+pub const LDA_OPCODE_NIBBLE: u8 = 0x1;  // v0.2.0
 ```
 
-## Non-goals (v0.1.0)
+## Word format
 
-* No instruction lowering — deferred to A5+.
+```
+byte 0: 0000 OOOO   (top 4 bits zero + 4-bit opcode nibble)
+byte 1: IIII IIII   (high 8 bits of the 16-bit immediate)
+byte 2: IIII IIII   (low  8 bits of the 16-bit immediate)
+```
+
+Opcodes assigned so far: `0x0` (HLT), `0x1` (LDA).  Future slices
+take `0x2..0xF`.
+
+## Non-goals (v0.2.0)
+
+* No multi-register allocation — deferred to A5++ (mirrors the
+  iir-to-intel4004 v0.2.0 → v0.3.0 jump).
+* No arithmetic (`ADD`, `SUB`) — A5++.
+* No conditional branches — A5++.
 * No `lang-aot --emit=ge225` wiring — deferred to A5+++.
 * No external assembler / linker integration.
-* No 4-bit-per-word truncation in middle words (we always pack
-  3 bytes per word in v0.1.0).
 
-## Tests (v0.1.0)
+## Tests (v0.2.0 — 21 unit + 1 doctest)
 
 * `validate_returns_empty_for_empty_module` — stub validator behaves.
-* `lower_emits_exactly_three_bytes` — output shape (one 20-bit word).
-* `lower_emits_the_canonical_halt_word` — exact `[0x00, 0x00, 0x00]`.
-* `halt_word_constant_pinned_to_zeros` — guards the constant.
-* `default_config_has_nonempty_module_name` — config invariant.
-* `new_sets_module_name` — builder contract.
-* `errors_display_without_panic` — error formatting smoke.
+* `empty_module_still_emits_the_canonical_halt_word` — v0.1.0 contract preserved.
+* `halt_word_constant_pinned_to_zeros` — `HALT_WORD` constant.
+* `lda_opcode_nibble_pinned_to_0x1` — `LDA_OPCODE_NIBBLE` constant.
+* `default_config_has_nonempty_module_name` / `new_sets_module_name` — config invariants.
+* `errors_display_without_panic` — Display covers all 5 error variants.
+* `const_5_then_ret_lowers_to_lda_5_then_halt` — canonical 6-byte ROM.
+* `const_0_then_ret_emits_lda_zero` — LDA 0 byte 0 visibly has opcode nibble.
+* `const_max_positive_16bit_emits_correct_bytes` — n=32767 packed correctly.
+* `const_min_negative_16bit_emits_correct_bytes` — n=-32768 → 0x8000.
+* `const_negative_one_uses_twos_complement` — n=-1 → 0xFFFF.
+* `const_bool_true_emits_lda_one` / `const_bool_false_emits_lda_zero`.
+* `const_out_of_range_errors` — 65536 → `InvalidOperand`.
+* `ret_void_only_emits_just_halt` — 3-byte HLT.
+* `trivial_rom_is_six_bytes` — 6-byte invariant across 8 N values.
+* `multiple_consts_then_ret_of_current_acc_works` — `LDA; LDA; HLT` = 9 bytes.
+* `ret_of_stale_acc_owner_errors_in_v0_2_0` — `UndefinedVariable`.
+* `ret_of_completely_undefined_variable_errors` — `UndefinedVariable`.
+* `unsupported_op_errors_with_op_name` — `mov` → `UnsupportedOp`.
