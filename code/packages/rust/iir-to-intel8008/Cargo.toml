@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-intel8008"
-version = "0.3.6"
+version = "0.3.7"
 edition = "2021"
-description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.6 (A2++.5.5 fifth slice): adds `cmp` (equality test) using the 8008's CMP (family `10 111 sss` = `0xB8|sss`, sets Z=1 iff A==r and DISCARDS the difference) with an inline flag-to-bool capture sequence (MVI dest,0; JFZ +4; MVI dest,1).  The capture's forward JFZ is computed inline (NOT via the two-pass backpatcher) so the sequence stays self-contained.  Less-than/greater-than (which need sign + carry flags) and the remaining 6 conditional-jump opcodes defer to v0.3.7; real RET/CAL/stack defers to v0.3.8."
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.7 (A2++.5.5 sixth slice): adds `cmp_ne` (inequality, uses JTZ), `cmp_lt` (less-than, uses new JFC = 0x40 to observe the carry flag set by CMP when A<r), and `cmp_gt` (greater-than, implemented as cmp_lt with operands swapped — clever single-instruction-family reuse).  All four boolean comparisons (cmp/cmp_ne/cmp_lt/cmp_gt) share a unified `emit_cmp_capture` helper.  cmp_lte/cmp_gte + remaining 5 cond-jump opcodes (JTC/JFS/JTS/JFP/JTP) defer to v0.3.8; real RET/CAL/stack to v0.3.9."
 
 [lib]
 name = "iir_to_intel8008"

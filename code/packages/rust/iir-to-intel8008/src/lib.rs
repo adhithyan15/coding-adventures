@@ -105,6 +105,17 @@ pub const HLT: u8 = 0x76;
 /// immediate byte.
 pub const MVI_A: u8 = 0x3E;
 
+/// Intel 8008 conditional `JFC addr` (jump if flag-carry clear) first
+/// byte — `0x40`.  Three-byte instruction (`JFC` + low + high).
+///
+/// Bit pattern: `01 000 000` (jump family `01 ccc T 00`, where
+/// `ccc = 000 = carry flag` and `T = 0 = jump if flag clear`).
+/// After a `CMP r` (which computes `A - r`), carry is SET iff
+/// `A < r` (i.e. a borrow happened).  So `JFC` is the "skip if
+/// `A >= r`" half — used by the `cmp_lt` capture to default-out of
+/// the "set-true" path.
+pub const JFC: u8 = 0x40;
+
 /// Intel 8008 conditional `JFZ addr` (jump if flag-zero clear) first
 /// byte — `0x48`.  Three-byte instruction (`JFZ` + low addr + high addr).
 ///
@@ -362,6 +373,12 @@ const SUPPORTED_OPS: &[&str] = &[
     "jmp_if_true", "jmp_if_false",
     // A2++.5.5 fifth slice — equality comparison with flag-to-bool capture.
     "cmp",
+    // A2++.5.5 sixth slice — inequality + ordering comparisons.  All
+    // share the same "CMP + capture sequence" skeleton as `cmp`,
+    // differing only in (a) which conditional jump opcode skips the
+    // "set true" path, and (b) whether the operands are swapped
+    // before staging.
+    "cmp_ne", "cmp_lt", "cmp_gt",
 ];
 
 pub fn lower_iir_to_intel8008(
@@ -598,55 +615,60 @@ pub fn lower_iir_to_intel8008(
                 // v0.3.6.  Less-than / greater-than need the sign +
                 // carry flags and land with the other 6 conditional
                 // jump opcodes in v0.3.7.
-                "cmp" => {
-                    let dest = require_dest(instr, "cmp", &f.name)?;
+                // ── cmp / cmp_ne / cmp_lt / cmp_gt ──────────────────────
+                //
+                // All four boolean comparisons share the same CMP +
+                // flag-to-bool capture skeleton.  They differ only in
+                // two parameters:
+                //
+                //   1. Whether to swap operands before staging.
+                //      `cmp_gt a, b` is just `cmp_lt b, a` — both
+                //      compute "carry set after CMP" → `a < b` (for
+                //      cmp_lt, after staging a; for cmp_gt, after
+                //      staging b so the CMP becomes `b - a` and
+                //      carry-set means `b < a` ⇔ `a > b`).
+                //
+                //   2. Which conditional jump opcode SKIPS the
+                //      "set-true" overwrite:
+                //        cmp     → JFZ (skip when Z clear / a != b)
+                //        cmp_ne  → JTZ (skip when Z set   / a == b)
+                //        cmp_lt  → JFC (skip when C clear / a >= b)
+                //        cmp_gt  → JFC (skip when C clear / b >= a)
+                //
+                // Both axes feed a single helper below so any future
+                // tweak to the capture shape (e.g. shrinking via a
+                // different idiom) only needs one site change.
+                "cmp" | "cmp_ne" | "cmp_lt" | "cmp_gt" => {
+                    let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
                         _ => return Err(IIRIntel8008Error::InvalidOperand {
                             function: f.name.clone(),
-                            detail: "cmp srcs[0] must be Var".into(),
+                            detail: format!("{} srcs[0] must be Var", instr.op),
                         }),
                     };
                     let b_name = match instr.srcs.get(1) {
                         Some(Operand::Var(s)) => s.clone(),
                         _ => return Err(IIRIntel8008Error::InvalidOperand {
                             function: f.name.clone(),
-                            detail: "cmp srcs[1] must be Var".into(),
+                            detail: format!("{} srcs[1] must be Var", instr.op),
                         }),
                     };
                     let a_reg = lookup_register(&env, &a_name, &f.name)?;
                     let b_reg = lookup_register(&env, &b_name, &f.name)?;
-                    // Stage a into A if needed.
-                    if a_reg != REG_A {
-                        bytes.push(encode_mov(REG_A, a_reg));
-                    }
-                    // CMP b_reg — sets Z=1 iff A == b_reg.
-                    bytes.push(encode_alu(ALU_CMP, b_reg));
-                    // Allocate dest_reg and emit the flag-to-bool capture.
+                    // Decide skip-jump opcode AND whether to swap.
+                    let (skip_op, swap) = match instr.op.as_str() {
+                        "cmp"    => (JFZ, false),
+                        "cmp_ne" => (JTZ, false),
+                        "cmp_lt" => (JFC, false),
+                        "cmp_gt" => (JFC, true),
+                        _ => unreachable!("outer arm restricts to these 4"),
+                    };
+                    let (left, right) = if swap { (b_reg, a_reg) } else { (a_reg, b_reg) };
+                    // Allocate dest_reg up front so the helper can
+                    // emit MVI dest, {0,1} sequences.
                     let dest_reg = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
-                    // MVI dest_reg, 0 — default (false).
-                    bytes.push(encode_mvi(dest_reg));
-                    bytes.push(0);
-                    // JFZ <fallthrough> — if Z clear (a != b), skip the
-                    // "set true" path so dest stays 0.
-                    bytes.push(JFZ);
-                    // Compute target: after the JFZ opcode is pushed,
-                    // bytes.len() points at the low-address slot.  We
-                    // need to skip past 2 address bytes + 2 bytes for
-                    // `MVI dest_reg, 1` to land at the byte AFTER the
-                    // capture sequence.  Target = bytes.len() + 4.
-                    let target = bytes.len() + 4;
-                    if target >= 1 << 14 {
-                        return Err(IIRIntel8008Error::AddressOutOfRange {
-                            function: f.name.clone(),
-                            address: target,
-                        });
-                    }
-                    bytes.push((target & 0xFF) as u8);
-                    bytes.push(((target >> 8) & 0x3F) as u8);
-                    // MVI dest_reg, 1 — set true (executed only when Z=1).
-                    bytes.push(encode_mvi(dest_reg));
-                    bytes.push(1);
+                    emit_cmp_capture(&mut bytes, left, right, dest_reg, skip_op, &f.name)?;
                 }
 
                 "label" => {
@@ -865,4 +887,63 @@ fn lookup_register(
         function: fn_name.to_string(),
         name: name.to_string(),
     })
+}
+
+/// Emit the shared CMP + flag-to-bool capture sequence used by
+/// `cmp` / `cmp_ne` / `cmp_lt` / `cmp_gt`.
+///
+/// Stages `left_reg` into `A` if needed (MOV is flag-non-affecting on
+/// 8008, so the flag the CMP sets afterwards isn't polluted), runs
+/// `CMP right_reg` to populate Z and C, then emits the 7-byte capture:
+///
+/// ```text
+/// MVI dest_reg, 0
+/// <skip_op> <fallthrough>     ; 3-byte conditional jump
+/// MVI dest_reg, 1
+/// <fallthrough>
+/// ```
+///
+/// `skip_op` is the conditional jump that should be TAKEN when the
+/// comparison result is the BOOLEAN `false`.  For equality (`cmp`)
+/// that's `JFZ` (Z clear = not equal).  For ordering (`cmp_lt`/
+/// `cmp_gt`) that's `JFC` (carry clear = not less).  For inequality
+/// (`cmp_ne`) that's `JTZ` (Z set = equal).
+///
+/// The forward target is computed inline (`bytes.len() + 4`) — the
+/// same self-contained approach used by v0.3.6's `cmp` so no
+/// synthetic labels leak into the user-visible namespace.  The
+/// 14-bit `AddressOutOfRange` guard still runs.
+fn emit_cmp_capture(
+    bytes: &mut Vec<u8>,
+    left_reg: u8,
+    right_reg: u8,
+    dest_reg: u8,
+    skip_op: u8,
+    fn_name: &str,
+) -> Result<(), IIRIntel8008Error> {
+    // Stage left into A.
+    if left_reg != REG_A {
+        bytes.push(encode_mov(REG_A, left_reg));
+    }
+    // CMP right_reg — sets Z and C flags.
+    bytes.push(encode_alu(ALU_CMP, right_reg));
+    // Capture: default to false.
+    bytes.push(encode_mvi(dest_reg));
+    bytes.push(0);
+    // Conditional skip jump (its semantics determine which 8008 flag
+    // we observe and which polarity makes the boolean false).
+    bytes.push(skip_op);
+    let target = bytes.len() + 4;
+    if target >= 1 << 14 {
+        return Err(IIRIntel8008Error::AddressOutOfRange {
+            function: fn_name.to_string(),
+            address: target,
+        });
+    }
+    bytes.push((target & 0xFF) as u8);
+    bytes.push(((target >> 8) & 0x3F) as u8);
+    // Set true (executed only when the skip jump WASN'T taken).
+    bytes.push(encode_mvi(dest_reg));
+    bytes.push(1);
+    Ok(())
 }
