@@ -710,42 +710,74 @@ fn leaf_function_still_omits_prologue() {
         "leaf function should be one-word; got {words:#x?}");
 }
 
+// ===========================================================================
+// 17. A1++.5.5.5 — call args + non-void return
+// ===========================================================================
+//
+// Two-phase move-through-temp avoids swap-clobbering when an arg's
+// source register coincides with another arg's target a-register.
+// Phase 1 reads all sources into disjoint scratch temps; Phase 2 writes
+// from temps to a0..a{n-1}.
+
 #[test]
-fn call_with_args_is_rejected_as_unsupported_shape() {
-    // 1 arg → UnsupportedCallShape (first slice only handles 0 args).
+fn call_with_one_const_arg_emits_arg_setup() {
+    use riscv_simulator::encoding::{encode_addi, encode_jal};
+    // square(x: i32) -> i32 { ret x }     ; trivial
+    // f() void { v = const 5; call _ = square(v); ret_void }
     let callee = IIRFunction::new(
-        "g",
+        "square",
         vec![("x".into(), "i32".into())],
-        "void",
-        vec![IIRInstr::new("ret_void", None, vec![], "void")],
+        "i32",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i32")],
     );
     let caller = IIRFunction::new("f", vec![], "void", vec![
-        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "i32"),
         IIRInstr::new("call", None,
-            vec![Operand::Var("g".into()), Operand::Var("v".into())], "void"),
+            vec![Operand::Var("square".into()), Operand::Var("v".into())], "void"),
         IIRInstr::new("ret_void", None, vec![], "void"),
     ]);
     let module = IIRModule {
         name: "test".into(),
         functions: vec![callee, caller],
-        entry_point: None,
+        entry_point: Some("f".into()),
         language: "test".into(),
         exports: vec![],
         imports: vec![],
     };
-    let err = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
-        .expect_err("1-arg call should be UnsupportedCallShape");
-    match err {
-        IIRRiscvError::UnsupportedCallShape { detail, .. } => {
-            assert!(detail.contains("0-arg") && detail.contains("got 1"),
-                "expected message naming 0-arg restriction; got: {detail}");
-        }
-        other => panic!("expected UnsupportedCallShape, got: {other:?}"),
-    }
+    let words = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
+        .expect("lowering should succeed");
+    // square emits: addi a0, a0, 0 ?  No — `ret x` where x is a0, so we
+    //   skip the mv and emit just one ret word.
+    // square layout:
+    //   [0] jalr x0, x1, 0
+    // caller layout:
+    //   [1] addi sp, sp, -16     ; prologue
+    //   [2] sw   ra, 12(sp)
+    //   [3] addi t0, x0, 5       ; const v = 5 → t0
+    //   [4] addi t1, t0, 0       ; phase 1: arg0 → scratch t1
+    //   [5] addi a0, t1, 0       ; phase 2: t1 → a0
+    //   [6] jal  ra, +offset     ; call square (will be patched)
+    //   [7] lw   ra, 12(sp)
+    //   [8] addi sp, sp, 16
+    //   [9] jalr x0, x1, 0
+    assert_eq!(words[0], CANONICAL_RET, "square should be one ret word");
+    // The two-phase moves should both be present:
+    assert_eq!(words[4], encode_addi(T1, T0, 0),
+        "phase 1: addi t1, t0, 0 (scratch copy); got 0x{:08x}", words[4]);
+    assert_eq!(words[5], encode_addi(A0, T1, 0),
+        "phase 2: addi a0, t1, 0; got 0x{:08x}", words[5]);
+    // The jal targets square at byte 0 from caller byte (6*4) - 1*4 prologue = 24.
+    // Caller starts at byte 4 (after square's 1 word). Jal site is the 7th word
+    // in `words` (index 6), i.e. byte 24. Target byte = 0. Offset = -24.
+    assert_eq!(words[6], encode_jal(/*ra*/ 1, -24),
+        "jal ra, -24 (call square at byte 0 from call site at byte 24); got 0x{:08x}", words[6]);
 }
 
 #[test]
-fn call_with_non_void_return_is_rejected_as_unsupported_shape() {
+fn call_with_non_void_return_binds_dest_from_a0() {
+    use riscv_simulator::encoding::encode_addi;
+    // g() -> i32 { ret_void  } — bogus body, just need a stub
+    // f() void { call r = g(); ret_void }
     let callee = IIRFunction::new("g", vec![], "i32",
         vec![IIRInstr::new("ret_void", None, vec![], "void")]);
     let caller = IIRFunction::new("f", vec![], "void", vec![
@@ -756,19 +788,96 @@ fn call_with_non_void_return_is_rejected_as_unsupported_shape() {
     let module = IIRModule {
         name: "test".into(),
         functions: vec![callee, caller],
+        entry_point: Some("f".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let words = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
+        .expect("lowering should succeed");
+    // Layout:
+    //   [0] g: jalr x0, x1, 0
+    //   [1] f: addi sp, sp, -16
+    //   [2] f: sw   ra, 12(sp)
+    //   [3] f: jal  ra, -12               ; call site
+    //   [4] f: addi t0, a0, 0             ; bind r ← a0
+    //   [5] f: lw   ra, 12(sp)
+    //   [6] f: addi sp, sp, 16
+    //   [7] f: jalr x0, x1, 0
+    assert_eq!(words[4], encode_addi(T0, A0, 0),
+        "expected addi t0, a0, 0 binding return value to r; got 0x{:08x}", words[4]);
+}
+
+#[test]
+fn call_too_many_args_is_rejected_as_unsupported_shape() {
+    // 9 args > 8 (a0..a7) → UnsupportedCallShape.
+    let params: Vec<(String, String)> = (0..8)
+        .map(|i| (format!("p{i}"), "i32".into())).collect();
+    let callee = IIRFunction::new("g", params, "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+    // Caller has 9 args — exceeds a0..a7.  Validator caps callee at 8
+    // params, but the call instr itself may pass more srcs.
+    let mut call_srcs = vec![Operand::Var("g".into())];
+    for _ in 0..9 {
+        // Each arg references a fresh local; we'll only define a few since
+        // the lower will hit the > 8 check before lookup.
+        call_srcs.push(Operand::Int(0));
+    }
+    let caller = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("call", None, call_srcs, "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![callee, caller],
         entry_point: None,
         language: "test".into(),
         exports: vec![],
         imports: vec![],
     };
     let err = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
-        .expect_err("non-void return call should be UnsupportedCallShape");
+        .expect_err("9-arg call should be UnsupportedCallShape");
     match err {
         IIRRiscvError::UnsupportedCallShape { detail, .. } => {
-            assert!(detail.contains("void-return"),
-                "expected message naming void-return restriction; got: {detail}");
+            assert!(detail.contains("9 args") || detail.contains("up to"),
+                "expected message naming arg-count restriction; got: {detail}");
         }
         other => panic!("expected UnsupportedCallShape, got: {other:?}"),
+    }
+}
+
+#[test]
+fn call_with_too_many_scratch_temps_needed_is_rejected() {
+    // Pool has 7 temps. Caller pre-allocates 5 locals (t0..t4), leaving
+    // 2 scratch slots; call with 3 args → OutOfRegisters.
+    let callee_params: Vec<(String, String)> = (0..3)
+        .map(|i| (format!("p{i}"), "i32".into())).collect();
+    let callee = IIRFunction::new("g", callee_params, "void",
+        vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+    let mut caller_body = Vec::new();
+    for i in 0..5 {
+        caller_body.push(IIRInstr::new("const", Some(format!("v{i}")),
+            vec![Operand::Int(i as i64)], "i32"));
+    }
+    caller_body.push(IIRInstr::new("call", None, vec![
+        Operand::Var("g".into()),
+        Operand::Var("v0".into()), Operand::Var("v1".into()), Operand::Var("v2".into()),
+    ], "void"));
+    caller_body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+    let caller = IIRFunction::new("f", vec![], "void", caller_body);
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![callee, caller],
+        entry_point: None,
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let err = lower_iir_to_riscv(&module, &IIRRiscvConfig::default())
+        .expect_err("scratch-overflow should be OutOfRegisters");
+    match err {
+        IIRRiscvError::OutOfRegisters { .. } => {}
+        other => panic!("expected OutOfRegisters, got: {other:?}"),
     }
 }
 

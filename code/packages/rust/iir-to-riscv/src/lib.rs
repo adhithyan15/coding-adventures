@@ -984,14 +984,38 @@ fn lower_call_builtin(
 
 /// Lower a `call dest, callee(args...)`.
 ///
-/// v0.3.2 first slice supports only the smallest meaningful shape:
-/// 0 args and void return.  Anything else returns `UnsupportedCallShape`
-/// with a descriptive message.  Argument passing + return values land
-/// in A1++.5.5.5.
-///
 /// Layout:
 ///   `srcs = [Var(callee_name), arg1, arg2, ...]`
 ///   `dest = None` (void) or `Some(name)` (non-void return)
+///
+/// ## Two-phase argument move
+///
+/// Naive sequential `mv a0, x; mv a1, y` corrupts arguments when `x`
+/// lives in `a1` (it gets overwritten by the first move before the
+/// second move can read it).  We avoid this with a two-phase scheme:
+///
+///   Phase 1: copy each arg source into a fresh scratch temp.
+///   Phase 2: copy each scratch temp into the corresponding `a_i`.
+///
+/// Phase 1's sources are read into disjoint temp slots BEFORE any
+/// `a*` register is written, so phase 2's reads (from the temps) are
+/// safe regardless of source/target overlap.
+///
+/// Scratch temps come from the existing `TEMP_REGISTERS` pool starting
+/// at `state.next_temp`.  They're **transient** — not added to
+/// `state.env`, no permanent reservation.  If
+/// `next_temp + arg_count > pool.len()`, we error with
+/// `OutOfRegisters`.  A real stack-spilling allocator (A1++.6) will
+/// relax this.
+///
+/// ## Return value
+///
+/// After the patched `jal`, the callee's return value lives in `a0`
+/// per the RV32I calling convention.  When `dest` is `Some`, we
+/// allocate a fresh temp and `addi dest_reg, a0, 0` to bind it.  The
+/// `mv` is skipped when `dest_reg == a0` (rare but possible if `dest`
+/// happens to allocate to `a0` — currently it never does because
+/// dest goes through `alloc_temp` which only hands out `TEMP_REGISTERS`).
 fn lower_call(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -1004,29 +1028,86 @@ fn lower_call(
             detail: "call requires srcs[0] = Operand::Var(callee_name)".into(),
         }),
     };
-    let arg_count = instr.srcs.len().saturating_sub(1);
-    if arg_count != 0 {
+    let args = &instr.srcs[1..];
+    if args.len() > ARG_REGISTERS.len() {
         return Err(IIRRiscvError::UnsupportedCallShape {
             function: state.fn_name.into(),
             callee,
-            detail: format!("v0.3.2 first slice supports only 0-arg calls; got {arg_count} args (args land in A1++.5.5.5)"),
+            detail: format!(
+                "call has {} args; RV32I caller convention supports up to {} in a0..a7 (stack arg passing lands in A1++.6)",
+                args.len(),
+                ARG_REGISTERS.len()
+            ),
         });
     }
-    if instr.dest.is_some() {
-        return Err(IIRRiscvError::UnsupportedCallShape {
+    // Check temp pool has room for `args.len()` transient scratch slots.
+    if state.next_temp + args.len() > TEMP_REGISTERS.len() {
+        return Err(IIRRiscvError::OutOfRegisters {
             function: state.fn_name.into(),
-            callee,
-            detail: "v0.3.2 first slice supports only void-return calls; remove the dest (return values land in A1++.5.5.5)".into(),
+            name: format!(
+                "call to {callee:?}: need {} scratch temp slots, only {} available",
+                args.len(),
+                TEMP_REGISTERS.len() - state.next_temp
+            ),
         });
     }
 
-    // Record patch site and emit placeholder.  Module-level pass will
-    // overwrite with the real `jal ra, +offset` once it knows the
-    // callee's start byte.
+    // ── Phase 1: copy each arg source into a transient scratch temp ──
+    let mut scratch_temps = Vec::with_capacity(args.len());
+    for (i, arg) in args.iter().enumerate() {
+        let temp_reg = TEMP_REGISTERS[state.next_temp + i];
+        match arg {
+            Operand::Var(name) => {
+                let src_reg = state.lookup(name)?;
+                if src_reg != temp_reg {
+                    out.push(encode_addi(temp_reg, src_reg, 0));
+                }
+            }
+            Operand::Int(n) => {
+                // Materialize literal into temp via the const idiom.
+                let n32: i32 = i32::try_from(*n).map_err(|_| {
+                    IIRRiscvError::ImmediateOutOfRange {
+                        function: state.fn_name.into(),
+                        value: *n,
+                    }
+                })?;
+                emit_const_i32(temp_reg, n32, out);
+            }
+            Operand::Bool(b) => {
+                out.push(encode_addi(temp_reg, X0_ZERO, if *b { 1 } else { 0 }));
+            }
+            other => {
+                return Err(IIRRiscvError::InvalidOperand {
+                    function: state.fn_name.into(),
+                    detail: format!("call arg must be Var/Int/Bool; got {other:?}"),
+                });
+            }
+        }
+        scratch_temps.push(temp_reg);
+    }
+
+    // ── Phase 2: copy each scratch temp into a0..a{n-1} ──────────────
+    for (i, &temp_reg) in scratch_temps.iter().enumerate() {
+        let a_reg = ARG_REGISTERS[i];
+        if temp_reg != a_reg {
+            out.push(encode_addi(a_reg, temp_reg, 0));
+        }
+    }
+
+    // ── jal placeholder, resolved at module level ────────────────────
     state.call_sites.push(CallSite {
         word_idx_in_fn: out.len(),
         callee,
     });
-    out.push(0); // placeholder
+    out.push(0);
+
+    // ── Bind return value to dest, if any ────────────────────────────
+    if let Some(dest_name) = &instr.dest {
+        let dest_reg = state.alloc_temp(dest_name)?;
+        if dest_reg != ARG_REGISTERS[0] {
+            out.push(encode_addi(dest_reg, ARG_REGISTERS[0], 0));
+        }
+    }
+
     Ok(())
 }
