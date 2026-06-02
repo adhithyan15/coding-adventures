@@ -72,6 +72,7 @@
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::{analyze, BindingId};
 
 /// `Pass::depends_on` value. Empty in v1 — see crate-level docs
 /// for why. Kept as a `const` so future tests/crates can refer to
@@ -128,19 +129,74 @@ impl Pass for RenamePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // v1: no Identifier / VariableDeclarator / Function*
-        // nodes in the AST yet, so there's nothing to rename. Pass
-        // through unchanged. The real two-pass walk (collect →
-        // substitute) slots in here once javascript-ast grows the
-        // variants.
+        // CLOC13.A wiring: consume the shared `ScopeAnalysis` from
+        // `closure-scope-analyzer` to identify *rename candidates*
+        // — every binding the analyzer surfaces. Rename's job is
+        // global (every non-external binding gets a shorter name),
+        // so the candidate set is *all* bindings minus the
+        // externally-visible ones. v0.2.0 collects the full set
+        // without filtering — the externals filter waits for the
+        // type-sidecar to grow an `external` attribute (CLOC04 left
+        // it open).
+        //
+        // The algorithm (collect phase; substitute deferred):
+        //
+        //   1. Walk `analysis.bindings`. Every binding is a
+        //      candidate. (`#[non_exhaustive]` BindingKind: future
+        //      variants are admitted by default — they all need
+        //      renaming. This is the *opposite* default from
+        //      treeshake/collapse, which conservatively *skip*
+        //      unknown kinds. Rename is conservative-toward-
+        //      compression rather than conservative-toward-skip.)
+        //   2. Track candidates in a Vec<BindingId> for the
+        //      observability path.
+        //   3. Substitute — deferred to CLOC13.A.1 because cleanly
+        //      rewriting Identifier nodes needs the AST to grow
+        //      Identifier / VariableDeclarator variants AND the
+        //      analyzer to surface a binding → uses backreference.
+        //
+        // **Critical (lesson from CLOC13.E security review):**
+        // `changed` is hard-pinned to `false` until step 3 lands.
+        // Even though this pass's `iteration_policy` is OneShot
+        // (so the FixedPoint infinite-loop concern doesn't apply),
+        // the discipline of "don't lie to the scheduler about
+        // mutation" is the same. Pipeline consumers may key off
+        // `changed` for cache invalidation or to skip downstream
+        // serialization; reporting `true` without mutation would
+        // force unnecessary work. Documented in both the source
+        // and the CHANGELOG.
+        //
+        // **Why this is safe with the v0.1.0 analyzer body.** The
+        // current `analyze` returns empty bindings + references,
+        // so the candidate scan finds zero names, the candidates
+        // vec is empty, `nodes_touched` is small, and the program
+        // passes through unchanged. The wiring becomes *effective*
+        // (real candidate-finding) the moment CLOC13.0 lands the
+        // analyzer body — no churn here.
+
+        let analysis = analyze(ctx.program);
+
+        // Steps 1 + 2: every binding is a rename candidate.
+        let mut rename_candidates: Vec<BindingId> = Vec::new();
+        for (idx, _binding) in analysis.bindings.iter().enumerate() {
+            rename_candidates.push(BindingId(idx as u32));
+        }
+
+        // Step 3 deferred — keep `changed = false`.
+        let _rename_candidates = rename_candidates;
+
         Ok(PassOutput {
             program: ctx.program.clone(),
             contributions: Vec::new(),
             changed: false,
             diagnostics: Vec::new(),
             stats: PassStats {
-                // Visited the program root; no identifiers renamed.
-                nodes_touched: 1,
+                // Visited the program root + every binding +
+                // every reference. Real cost numbers for the
+                // scheduler.
+                nodes_touched: (1
+                    + analysis.bindings.len()
+                    + analysis.references.len()) as u32,
             },
         })
     }
