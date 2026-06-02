@@ -2,6 +2,95 @@
 
 ## Unreleased
 
+### Added — v0.4.0: backward dispatch + end-to-end MLP training test
+
+PR #4 of 5 in the JS/TS pilot.  Adds `backward(outputGrad)` to all 15
+Function subclasses from v0.3.0, plus an end-to-end test that trains a
+2-layer MLP and asserts loss decreases.  The full PyTorch-shaped
+forward+backward+SGD loop now works in pure TypeScript.
+
+#### Backward formulas (mirroring Ruby PR #7 + Python `autograd.py`)
+
+| Op       | Saves in forward    | Backward formula                                  |
+|----------|---------------------|---------------------------------------------------|
+| Add      | (nothing)           | `[g, g]`                                          |
+| Sub      | (nothing)           | `[g, -g]`                                         |
+| Mul      | inputs a, b         | `[g * b, g * a]`                                  |
+| Div      | inputs a, b         | `[g / b, -g * a / b²]`                            |
+| Neg      | (nothing)           | `[-g]`                                            |
+| Abs      | input a             | `[g * sign(a)]`  (sign(0) = 0)                    |
+| Pow      | input a, scalar e   | `[g * e * a^(e-1)]`  (e gets no grad)             |
+| MatMul   | inputs A, B         | `[g @ B^T, A^T @ g]`                              |
+| ReLU     | input a             | `[g * (a > 0 ? 1 : 0)]`                           |
+| Sigmoid  | output y            | `[g * y * (1 - y)]`                               |
+| Tanh     | output y            | `[g * (1 - y²)]`                                  |
+| GELU     | input a             | `[g * (0.5*(1+tanh_v) + 0.5*x*sech²*d_inner)]`    |
+| Softmax  | output y            | `[y * (g - Σ(g*y))]` per-row over last axis       |
+| Sum      | input shape         | `[broadcast(g[0], shape)]`                        |
+| Mean     | input shape, numel  | `[broadcast(g[0] / numel, shape)]`                |
+
+All backward implementations are pure TypeScript for v0.4.0.  Routing
+through Rust (mirroring v0.3.0's forward dispatch) would require new
+envelope shapes per backward op — deferred to a follow-up.  The pure-TS
+versions are correct and fast enough for parameter-shaped tensors.
+
+#### MatMul backward uses internal static helpers
+
+`MatMulOp._matmulNaive` and `_transpose2D` are pure functions that
+operate on raw `ArrayLike<number>` data.  Backward uses them directly
+(not `MatMulOp.apply(...)`) so the backward computation stays a leaf
+math operation — no extra autograd subgraph.
+
+#### End-to-end MLP test
+
+New file `tests/end-to-end-training.test.ts` runs a real training loop:
+
+```ts
+let w1 = new Tensor([[0.5, -0.3]]); w1.requiresGrad = true;
+let w2 = new Tensor([[0.4], [0.7]]); w2.requiresGrad = true;
+
+for (let step = 0; step < 30; step++) {
+  const pred = x.matmul(w1).relu().matmul(w2);
+  const diff = pred.sub(target);
+  const loss = diff.mul(diff).mean();
+  loss.backward();
+  w1 = sgdStep(w1, 0.01);
+  w2 = sgdStep(w2, 0.01);
+}
+expect(finalLoss).toBeLessThan(initialLoss * 0.25);  // 75%+ drop
+```
+
+Synthetic dataset (4 samples, regress `y = 2x + 3`) — converges
+substantially in 30 SGD steps.  Mostly-monotonic check allows up to
+⌊steps/3⌋ noisy up-steps (SGD is noisy).
+
+Companion test: 1-layer linear regression converges `w` from 0.5 to
+≈2.0 in 20 steps.
+
+#### Tests added (19 new vitest cases)
+
+- `BackwardCorrectness` (17 tests in tests/ops.test.ts):
+  - One test per op for analytical cases: Add, Sub, Mul, Div, Neg,
+    Abs, Pow, MatMul, ReLU, Sigmoid, Tanh, Softmax (uniform → zero),
+    Sum, Mean
+  - Numerical-gradient checking via finite differences for the
+    transcendentals (GELU at x=1, Softmax at x=[1,2,3] with seed
+    grad [1,0,0])
+  - Chained-op backward: x → Mul → Add → Sum → backward; assert x.grad
+    propagates through the chain
+- `EndToEndTraining` (2 tests in new file): MLP loss drops 75%+; 1-layer
+  linear regression converges
+
+All existing tests still pass — no regressions.
+
+Total: 148 tests, 0 failures.
+
+#### What's next
+
+- PR #5: benchmark script + v1.0.0 polish.  Bumps to v1.0.0 —
+  complete TS ML framework on top of the Rust matrix-cpu engine via
+  matrix-rust-napi.
+
 ### Added — v0.3.0: forward op dispatch (15 Function subclasses)
 
 PR #3 of 5 in the JS/TS pilot.  Adds the 15 differentiable operations on
