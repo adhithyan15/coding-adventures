@@ -67,8 +67,8 @@ IIRModule
 
 | Version | Scope | Status |
 |---------|-------|--------|
-| **v0.1.0 (A3 — this PR)** | crate skeleton: any module → single `BKPT #0xFFFF` (`0xE12FFF7F`) | this PR |
-| v0.2.0 (A3+) | `const` → `mov rd, #imm8` + `ret`/`ret_void` → `bx lr` | future |
+| v0.1.0 (A3) | crate skeleton: any module → single `BKPT #0xFFFF` (`0xE12FFF7F`) | **merged** |
+| **v0.2.0 (A3+ — this PR)** | `const` → `MOV r0, #imm8` (accumulator-only) + `ret`/`ret_void` → `BX LR` (AAPCS return) | this PR |
 | v0.3.0 (A3++) | Linear register allocator over `r0..r12` + arithmetic (add/sub) + function calls via `bl` with PC-relative offsets | future |
 | v0.3.x (A3++.5.5) | Comparisons + conditional branches via the cond-field on every A32 instruction (a stronger version of the 8008's flag-based jumps) | future |
 | v0.4.0 (A3+++) | `lang-aot --emit=armv7` wiring | future |

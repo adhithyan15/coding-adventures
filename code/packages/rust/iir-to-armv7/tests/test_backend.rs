@@ -3,11 +3,23 @@
 //! Smoke-level — confirms the validator stub, the emitter shape, and
 //! the exact encoded `BKPT #0xFFFF` word (`0xE12FFF7F`).
 
-use interpreter_ir::IIRModule;
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
-    IIRArmv7Config, IIRArmv7Error, BKPT,
+    IIRArmv7Config, IIRArmv7Error, BKPT, BX_LR, MOV_IMM_R0_BASE,
 };
+
+fn module_with(f: IIRFunction) -> IIRModule {
+    let entry = f.name.clone();
+    IIRModule {
+        name: "test".into(),
+        functions: vec![f],
+        entry_point: Some(entry),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -114,4 +126,105 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRArmv7Error::InvalidOperand {
         function: "f".into(), detail: "bad".into(),
     });
+}
+
+// ===========================================================================
+// 5. A3+ (v0.2.0) — `const` lowers to `MOV r0, #imm8`; `ret` → `BX LR`
+// ===========================================================================
+//
+// The accumulator-only first slice: every `const` goes into `r0`;
+// multi-register allocation (r1..r12) lands in A3++.  `ret`/`ret_void`
+// both lower to `bx lr` — the AAPCS return convention.  No staging
+// MOV needed since the value is already in r0 by construction.
+
+#[test]
+fn bx_lr_constant_pinned_to_e12fff1e() {
+    // BX LR = 0xE12FFF1E.  Bit-7 distinguishes this from BKPT (which
+    // is 0xE12FFF7F) — both share the same 12F_FF family bits, so
+    // the bit-7 nibble difference is the canonical confusion point.
+    assert_eq!(BX_LR, 0xE12F_FF1E,
+        "BX LR should be 0xE12FFF1E (cond=AL, Rm=lr=14); got 0x{:08x}", BX_LR);
+}
+
+#[test]
+fn mov_imm_r0_base_pinned_to_0xe3a00000() {
+    // MOV r0, #0 (no rotation, S=0) = 0xE3A00000.  Subsequent tests
+    // OR in (Rd << 12) | imm8 to form the full instruction.
+    assert_eq!(MOV_IMM_R0_BASE, 0xE3A0_0000,
+        "MOV r0, #0 base should be 0xE3A00000; got 0x{:08x}", MOV_IMM_R0_BASE);
+}
+
+#[test]
+fn const_42_then_ret_lowers_to_mov_r0_42_then_bx_lr() {
+    // const v=42 → r0; ret v → bx lr (v is in r0)
+    //
+    //   00:  MOV r0, #42   = 0xE3A0_002A
+    //   04:  BX LR          = 0xE12F_FF1E
+    let f = IIRFunction::new("answer", vec![], "i32", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i32"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "i32"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![0xE3A0_002A, 0xE12F_FF1E],
+        "expected MOV r0, #42 (0xE3A0_002A) + BX LR (0xE12F_FF1E); got: {words:08x?}");
+}
+
+#[test]
+fn const_negative_uses_twos_complement_byte() {
+    // -1 → 0xFF via two's-complement reinterpretation, then MOV r0, #0xFF.
+    let f = IIRFunction::new("f", vec![], "i8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(-1)], "i8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![0xE3A0_00FF, BX_LR],
+        "expected MOV r0, #0xFF + BX LR for `const -1`; got: {words:08x?}");
+}
+
+#[test]
+fn const_out_of_byte_range_is_rejected() {
+    let f = IIRFunction::new("f", vec![], "i16", vec![
+        // 1000 fits in i16 but exceeds the 8-bit MOV immediate.
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1000)], "i16"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect_err("1000 should overflow the 8-bit immediate");
+    match err {
+        IIRArmv7Error::InvalidOperand { detail, .. } => {
+            assert!(detail.contains("8-bit"),
+                "expected message naming the 8-bit limit; got: {detail}");
+        }
+        other => panic!("expected InvalidOperand, got: {other:?}"),
+    }
+}
+
+#[test]
+fn ret_void_alone_emits_just_bx_lr() {
+    let f = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect("lowering");
+    assert_eq!(words, vec![BX_LR],
+        "ret_void-only function should emit just BX LR; got: {words:08x?}");
+}
+
+#[test]
+fn unsupported_op_is_rejected_with_function_name() {
+    let f = IIRFunction::new("boom", vec![], "void", vec![
+        IIRInstr::new("safepoint", None, vec![], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_armv7(&module_with(f), &IIRArmv7Config::default())
+        .expect_err("`safepoint` should be UnsupportedOp");
+    match err {
+        IIRArmv7Error::UnsupportedOp { function, op } => {
+            assert_eq!(function, "boom");
+            assert_eq!(op, "safepoint");
+        }
+        other => panic!("expected UnsupportedOp, got: {other:?}"),
+    }
 }
