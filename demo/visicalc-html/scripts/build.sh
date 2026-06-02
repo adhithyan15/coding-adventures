@@ -42,12 +42,22 @@ SRC="$REPO_ROOT/demo/visicalc/mosaic"
 OUT_DIR="$DEMO_DIR/build"
 mkdir -p "$OUT_DIR"
 
-echo "Compiling FormulaBar (HTML)..."
+echo "Compiling FormulaBar (HTML, desktop variant)..."
 "$MOSAIC_COMPILE" --backend html \
   --interface "$SRC/FormulaBar.mil" \
-  --layout    "$SRC/FormulaBar.desktop.mll" \
+  --layout    "$SRC"   --variant desktop \
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.html"
+
+# UI30 multi-variant proof: same .mil + .msl, different .mll —
+# layout pivots from Row (desktop) to Column (touch) without any
+# host-code change.  See FormulaBar.touch.mll's header comment.
+echo "Compiling FormulaBar (HTML, touch variant)..."
+"$MOSAIC_COMPILE" --backend html \
+  --interface "$SRC/FormulaBar.mil" \
+  --layout    "$SRC"   --variant touch \
+  --style     "$SRC/FormulaBar.dark.msl" \
+  -o "$OUT_DIR/FormulaBar.touch.html"
 
 # TODO(VC2-html-grid): wire Grid once the HTML pipeline emitter
 # supports the `Grid` built-in primitive. Until then, the index.html
