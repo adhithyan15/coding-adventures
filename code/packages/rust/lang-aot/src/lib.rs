@@ -130,6 +130,12 @@ pub enum LangAotError {
     /// Carries the human-readable string from `iir-to-llvm` (which already
     /// includes the failing function name and the unsupported op/type).
     LlvmBackendError(String),
+    /// The RV32I backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `iir-to-riscv` (which
+    /// already includes the failing function name and the unsupported
+    /// op/type/operand).
+    RiscvBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -142,6 +148,7 @@ impl fmt::Display for LangAotError {
             LangAotError::AotError(e) => write!(f, "{e}"),
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
+            LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
         }
     }
 }
@@ -254,6 +261,54 @@ pub fn compile_file_to_llvm_ir(
         .map_err(|e| LangAotError::LlvmBackendError(format!("{e}")))?;
 
     std::fs::write(out, ll)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → RV32I machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link or
+/// run any toolchain — it just writes a flat `.bin` of little-endian
+/// 32-bit RV32I instruction words.  Downstream consumers:
+///
+/// * [`riscv-simulator`](../riscv-simulator) — load + execute in-process.
+/// * `qemu-riscv32` — `qemu-riscv32 -kernel out.bin`.
+/// * A physical flash loader on a SiFive / ESP32-C3 / etc. board.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-agnostic.
+///
+/// # Wire format
+///
+/// Each emitted word is written as **little-endian** bytes per the RISC-V
+/// spec (Volume I §1.4): bit `[7:0]` of the word goes to the lowest-
+/// address byte.  `Vec<u32>::iter().flat_map(u32::to_le_bytes)` is the
+/// canonical Rust expression of that encoding.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `RiscvBackendError` — the IIR contained an op or type the RV32I
+///   backend does not yet handle (the message names the function and
+///   op).
+/// * `Io` — failed to read the input or write the output.
+pub fn compile_file_to_riscv32_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    let cfg = iir_to_riscv::IIRRiscvConfig::new(stem);
+    let words = iir_to_riscv::lower_iir_to_riscv(&module, &cfg)
+        .map_err(|e| LangAotError::RiscvBackendError(format!("{e}")))?;
+
+    // Flatten Vec<u32> → Vec<u8> via little-endian RISC-V word encoding.
+    let mut bytes = Vec::with_capacity(words.len() * 4);
+    for w in &words {
+        bytes.extend_from_slice(&w.to_le_bytes());
+    }
+    std::fs::write(out, &bytes)?;
     Ok(())
 }
 

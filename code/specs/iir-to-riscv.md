@@ -58,7 +58,7 @@ IIRModule
 | v0.3.2 (A1++.5.5 first slice) | cross-function `call` (0-arg, void only) + module-level resolution + per-fn prologue/epilogue | **merged** |
 | **v0.3.3 (A1++.5.5.5 — this PR)** | call arguments (up to 8, two-phase mv-through-temp) + non-void return values | this PR |
 | v0.4.0 (A1++.6) | stack-spilling register allocator + i64 register pairs + stack arg passing for > 8 args | future |
-| v0.5.0 (A1+++) | `lang-aot --target=riscv32` wiring | future |
+| **lang-aot v0.7.0 (A1+++ — this PR)** | `--emit=riscv32` flag + `compile_file_to_riscv32_bin` API + e2e smoke | this PR |
 | (later) | RV32M (mul/div), RV32A (atomics), RV32F (floats), DWARF emission via aot-debug | future |
 
 ## Public surface (v0.1.0)
