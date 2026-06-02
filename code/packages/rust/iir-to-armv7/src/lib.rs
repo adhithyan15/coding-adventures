@@ -329,6 +329,41 @@ pub(crate) fn encode_eor_reg(rd: u8, rn: u8, rm: u8) -> u32 {
     EOR_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
 }
 
+/// ARMv7-A `ADC Rd, Rn, Rm` (add with carry-in) base — `0xE0A0_0000`.
+///
+/// Same shape as `ADD_REG_BASE` but with opcode `0101` (ADC).  The
+/// carry-in comes from the C flag set by a PRIOR flag-affecting ALU
+/// op (`ADDS`, `SUBS`, `ADCS`, etc.).  This crate emits the non-S
+/// (no-flag-update) form by default — front-ends that need the
+/// carry chain must arrange for the producer to use the S-suffix
+/// variant.  The S-form constants land alongside `cmp` in v0.4.3.
+pub const ADC_REG_BASE: u32 = 0xE0A0_0000;
+
+/// ARMv7-A `SBC Rd, Rn, Rm` (subtract with borrow-in) base —
+/// `0xE0C0_0000`.
+///
+/// Same shape as `ADD_REG_BASE` but with opcode `0110` (SBC).  Like
+/// ADC, the borrow-in (inverted carry) comes from a prior flag-
+/// affecting op.  IIR maps `sbb` → `SBC` mirroring the
+/// iir-to-intel8008 and iir-to-riscv naming conventions.
+pub const SBC_REG_BASE: u32 = 0xE0C0_0000;
+
+/// Encode an ARMv7-A `ADC Rd, Rn, Rm` instruction.
+pub(crate) fn encode_adc_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    ADC_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
+/// Encode an ARMv7-A `SBC Rd, Rn, Rm` instruction.
+pub(crate) fn encode_sbc_reg(rd: u8, rn: u8, rm: u8) -> u32 {
+    debug_assert!(rd <= 15, "rd out of 4-bit range: {rd}");
+    debug_assert!(rn <= 15, "rn out of 4-bit range: {rn}");
+    debug_assert!(rm <= 15, "rm out of 4-bit range: {rm}");
+    SBC_REG_BASE | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
+}
+
 // ===========================================================================
 // IIRArmv7Config
 // ===========================================================================
@@ -466,6 +501,9 @@ const SUPPORTED_OPS: &[&str] = &[
     // A3++.5.5 first slice — bitwise data-processing-register ALU
     // (and = AND opcode 0000, or = ORR opcode 1100, xor = EOR opcode 0001)
     "and", "or", "xor",
+    // A3++.5.5 second slice — carry-chained DP-register ALU
+    // (adc = ADC opcode 0101, sbb = SBC opcode 0110)
+    "adc", "sbb",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -579,15 +617,16 @@ pub fn lower_iir_to_armv7(
                     words.push(BX_LR);
                 }
 
-                // ── add / sub / and / or / xor → DP-register family ─────
+                // ── add/sub/and/or/xor/adc/sbb → DP-register family ─────
                 //
-                // All five data-processing-register ops share an
+                // All seven data-processing-register ALU ops share an
                 // identical shape, differing only in the 4-bit
                 // `opcode` field (bits 24..21):
                 //
                 //   ADD = 0100   AND = 0000
                 //   SUB = 0010   ORR = 1100
-                //                EOR = 0001
+                //   ADC = 0101   EOR = 0001
+                //   SBC = 0110
                 //
                 // Unlike the 8008's accumulator-anchored ALU (which
                 // needs MOV wrappers for non-accumulator operands),
@@ -595,7 +634,13 @@ pub fn lower_iir_to_armv7(
                 // selectors in a single instruction: `Rd = Rn op Rm`.
                 // No staging MOVs.  Same shape as RISC-V's `add rd,
                 // rs1, rs2`.
-                "add" | "sub" | "and" | "or" | "xor" => {
+                //
+                // ADC/SBC consume the C flag set by a PRIOR flag-
+                // affecting ALU op.  This crate emits the non-S
+                // (no-flag-update) form by default — front-ends
+                // arrange for the producer to use the S-suffix
+                // variant so the carry survives.
+                "add" | "sub" | "and" | "or" | "xor" | "adc" | "sbb" => {
                     let dest = require_dest(instr, &instr.op, &f.name)?;
                     let a_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -620,7 +665,9 @@ pub fn lower_iir_to_armv7(
                         "and" => encode_and_reg(rd, rn, rm),
                         "or"  => encode_orr_reg(rd, rn, rm),
                         "xor" => encode_eor_reg(rd, rn, rm),
-                        _ => unreachable!("outer arm restricts to these 5"),
+                        "adc" => encode_adc_reg(rd, rn, rm),
+                        "sbb" => encode_sbc_reg(rd, rn, rm),
+                        _ => unreachable!("outer arm restricts to these 7"),
                     };
                     words.push(word);
                 }

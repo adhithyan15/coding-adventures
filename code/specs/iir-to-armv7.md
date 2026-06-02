@@ -71,7 +71,8 @@ IIRModule
 | v0.2.0 (A3+) | `const` → `MOV r0, #imm8` (accumulator-only) + `ret`/`ret_void` → `BX LR` (AAPCS return) | **merged** |
 | v0.3.0 (A3++) | Linear register allocator over `r0..r12` + multi-register `const` + `mov` + ret-value staging | **merged** |
 | v0.4.0 (A3++.5) | `add`/`sub` on the data-processing-register family — 3-register `Rd = Rn op Rm` | **merged** |
-| **v0.4.1 (A3++.5.5 first slice — this PR)** | Bitwise DP-register ops `and` (AND `0xE000_0000`), `or` (ORR `0xE180_0000`), `xor` (EOR `0xE020_0000`).  ARM uses ORR/EOR mnemonics rather than OR/XOR; the IIR-facing ops keep the universal spellings. | this PR |
+| v0.4.1 (A3++.5.5 first slice) | Bitwise DP-register ops `and` (AND `0xE000_0000`), `or` (ORR `0xE180_0000`), `xor` (EOR `0xE020_0000`) | **merged** |
+| **v0.4.2 (A3++.5.5 second slice — this PR)** | Carry-chained DP-register ops `adc` (ADC `0xE0A0_0000`) and `sbb` (SBC `0xE0C0_0000`).  Non-S form by default; S-suffix flag-setting variants pair with `cmp` in v0.4.3. | this PR |
 | v0.3.x (A3++.5.5) | Comparisons + conditional branches via the cond-field on every A32 instruction (a stronger version of the 8008's flag-based jumps) | future |
 | v0.3.x (A3++.6) | Function calls via `bl` with PC-relative offsets + stack spilling | future |
 | v0.4.0 (A3+++) | `lang-aot --emit=armv7` wiring | future |
