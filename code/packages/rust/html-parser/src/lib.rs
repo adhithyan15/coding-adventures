@@ -1616,6 +1616,7 @@ pub struct BrowserForm {
     pub selects: Vec<BrowserFormSelect>,
     pub outputs: Vec<BrowserFormOutput>,
     pub successful_controls: Vec<BrowserFormSuccessfulControl>,
+    pub validation_controls: Vec<BrowserFormValidationControl>,
     pub controls: Vec<BrowserFormControl>,
     pub submitters: Vec<BrowserFormSubmitter>,
 }
@@ -1691,6 +1692,18 @@ pub struct BrowserFormSuccessfulControl {
     pub name: String,
     pub form_owner: Option<String>,
     pub submission_values: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormValidationControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub will_validate: bool,
+    pub required: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12746,6 +12759,7 @@ fn browser_form(
     let selects = browser_form_selects(&controls);
     let outputs = browser_form_outputs(&controls);
     let successful_controls = browser_form_successful_controls(&controls);
+    let validation_controls = browser_form_validation_controls(&controls);
     let submitters = browser_form_submitters(
         &controls,
         action.as_deref(),
@@ -12788,6 +12802,7 @@ fn browser_form(
         selects,
         outputs,
         successful_controls,
+        validation_controls,
         controls,
         submitters,
     }
@@ -13129,6 +13144,30 @@ fn browser_form_successful_controls(
                 form_owner: control.form_owner.clone(),
                 submission_values: control.submission_values.clone(),
             })
+        })
+        .collect()
+}
+
+fn browser_form_validation_controls(
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormValidationControl> {
+    controls
+        .iter()
+        .filter(|control| {
+            control.will_validate
+                || control.required
+                || !control.validation_attributes.is_empty()
+                || control.validation_barred_reason.is_some()
+        })
+        .map(|control| BrowserFormValidationControl {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            will_validate: control.will_validate,
+            required: control.required,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
         })
         .collect()
 }
