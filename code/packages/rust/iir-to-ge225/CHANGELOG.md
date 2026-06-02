@@ -2,6 +2,109 @@
 
 All notable changes to this crate are documented here.
 
+## v0.7.0 — 2026-06-02 — A5+++++++ comparison ops (`cmp_lt/eq/ne/le/gt/ge`)
+
+Sixth lowering increment.  Adds six new IIR ops that materialise a
+0/1 boolean in ACC via the canonical SUB-then-test pattern.
+Finally activates the `BMI` opcode (reserved in v0.6.0) for
+`cmp_lt` and `cmp_le`.  `cmp_gt` and `cmp_ge` reuse the lt/le emit
+paths via operand swap.  Mirrors `iir-to-intel4004` v0.5.0 /
+`iir-to-armv7` v0.4.x cmp slices.
+
+### Added
+
+- `"cmp_lt"`, `"cmp_eq"`, `"cmp_ne"`, `"cmp_le"`, `"cmp_gt"`,
+  `"cmp_ge"` added to `SUPPORTED_OPS`.
+
+### Lowering table
+
+| IIR op | GE-225 emit shape (after operand-eviction prep) |
+|--------|--------------------------------------------------|
+| `cmp_lt c, a, b` | `LD r_a; SUB r_b; BMI true; LDA 0; BR end; LDA 1; end:` |
+| `cmp_gt c, a, b` | identical to `cmp_lt c, b, a` (operand swap) |
+| `cmp_eq c, a, b` | `LD r_a; SUB r_b; BZ true; LDA 0; BR end; LDA 1; end:` |
+| `cmp_ne c, a, b` | `LD r_a; SUB r_b; BNZ true; LDA 0; BR end; LDA 1; end:` |
+| `cmp_le c, a, b` | `LD r_a; SUB r_b; BMI true; BZ true; LDA 0; BR end; LDA 1; end:` |
+| `cmp_ge c, a, b` | identical to `cmp_le c, b, a` (operand swap) |
+
+After the SUB instruction sets ACC's sign / zero state, one or two
+conditional branches skip to a `LDA 1` "true" arm; the fallthrough
+emits `LDA 0` then `BR end`.  Result is the dest `c` taking over
+ACC as the new owner.
+
+### Byte costs (after const-prep eviction)
+
+- Single-test cmps (`cmp_lt`, `cmp_gt`, `cmp_eq`, `cmp_ne`):
+  21 bytes (LD + SUB + BMI/BZ/BNZ + LDA 0 + BR + LDA 1).
+- Double-test cmps (`cmp_le`, `cmp_ge`):
+  24 bytes (LD + SUB + BMI + BZ + LDA 0 + BR + LDA 1).
+
+### Why operand swap for `gt` / `ge`?
+
+`a > b` ⇔ `b < a`, and `a ≥ b` ⇔ `b ≤ a`.  Swapping the operands
+before the LD/SUB sequence reuses the `cmp_lt` / `cmp_le` emit
+path verbatim.  This trick is documented in the iir-to-intel8008
+and iir-to-armv7 backends; we adopt it here for symmetry and to
+avoid a 2x increase in cmp-emit code.
+
+### Opcode map (unchanged — BMI activated, no new opcodes)
+
+| Nibble | Mnemonic | Word | Status in v0.7.0 |
+|--------|----------|------|--------------------|
+| `0xB` | `BMI a` | `[0x0B, hi, lo]` | **now actively used** by `cmp_lt`/`cmp_gt`/`cmp_le`/`cmp_ge` |
+
+All other opcodes (`0x0..0xA`) unchanged from v0.6.0.
+
+### Canonical `cmp_lt c, a, b; ret c` byte trace pinned
+
+```
+const a=2; const b=5; cmp_lt c, a, b; ret c (entry function)
+0:  LDA 2      [0x01, 0x00, 0x02]
+3:  STA r0     [0x02, 0x00, 0x00]
+6:  LDA 5      [0x01, 0x00, 0x05]
+9:  STA r1     [0x02, 0x00, 0x01]
+12: LD r0      [0x03, 0x00, 0x00]
+15: SUB r1     [0x05, 0x00, 0x01]
+18: BMI 27     [0x0B, 0x00, 0x1B]   ← cmp_lt's true branch
+21: LDA 0      [0x01, 0x00, 0x00]   ← false branch
+24: BR 30      [0x06, 0x00, 0x1E]
+27: LDA 1      [0x01, 0x00, 0x01]   ← true branch (BMI target)
+30: HLT        [0x00, 0x00, 0x00]   ← end (c already in ACC)
+Total: 33 bytes
+```
+
+### Tests (22 unit + 1 doctest, all passing)
+
+New v0.7.0 coverage:
+- `canonical_cmp_lt_byte_sequence` — exact 33-byte sequence above.
+- `cmp_eq_emits_bz_pattern` — BZ at offset 18 instead of BMI.
+- `cmp_ne_emits_bnz_pattern` — BNZ at offset 18.
+- `canonical_cmp_le_byte_sequence` — double-test exact 36-byte
+  sequence with BMI + BZ pointing at the same true target.
+- `cmp_gt_uses_operand_swap` — `LD r1; SUB r0` after a/b are
+  evicted to r0/r1.
+- `cmp_ge_uses_operand_swap_and_double_test` — swap + BMI + BZ.
+- `cmp_with_lhs_in_acc_evicts_then_runs_normally` — eviction prep.
+- `cmp_undefined_lhs_errors` / `cmp_eq_undefined_rhs_errors`.
+- `cmp_result_feeds_directly_into_jmp_if_true` — `c` is ACC owner
+  after cmp_lt, so `jmp_if_true c, skip` skips the LD prefix.
+- `cmp_result_can_be_added` — chained arithmetic works (the cmp
+  output is a real value living in ACC).
+
+Regressions still pinned:
+- All 11 opcode nibbles.
+- `trivial_rom_still_six_bytes`, `trivial_add_still_works`.
+- `mul_still_unsupported`.
+
+Lang-aot e2e smoke tests still pass (4 GE-225 paths unchanged —
+Twig doesn't emit cmp ops in its trivial smoke programs).
+
+### Reference
+
+- Spec: `code/specs/iir-to-ge225.md`
+- Plan: `code/specs/MULTILANG-ARCHITECTURE-BACKENDS.md` §A5
+- Mirrors `iir-to-intel4004` v0.5.0 / `iir-to-armv7` v0.4.x cmp slice.
+
 ## v0.6.0 — 2026-06-02 — A5++++++ call/return (`JSR`, `RTS`) + `BMI` reserved
 
 Fifth lowering increment.  Adds the call/return discipline: the

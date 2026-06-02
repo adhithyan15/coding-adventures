@@ -1,6 +1,6 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
-**Status:** v0.6.0 — call/return JSR/RTS + BMI reserved (A5++++++)
+**Status:** v0.7.0 — comparison ops cmp_{lt,eq,ne,le,gt,ge}, BMI now active (A5+++++++)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
 
@@ -92,8 +92,9 @@ IIRModule
 | v0.4.0 (A5+++) | Accumulator-based arithmetic: `add` and `sub` IIR ops → `ADD r` (0x4) and `SUB r` (0x5) opcodes preceded by `LD r_lhs` staging | **merged** |
 | (A5++++ in lang-aot v0.11.0) | `lang-aot --emit=ge225` wiring (aliases `ge-225`, `225`) | **merged** |
 | v0.5.0 (A5+++++) | Branch family `BR` (0x6), `BNZ` (0x7), `BZ` (0x8) + per-function label backpatching for `label`, `jmp`, `jmp_if_true`, `jmp_if_false` IIR ops | **merged** |
-| **v0.6.0 (A5++++++ — this PR)** | Call/return discipline: `JSR` (0x9), `RTS` (0xA) + module-level `call` backpatching; `BMI` (0xB) reserved; non-entry-fn ret emits RTS instead of HLT | this PR |
-| v0.7.0 (A5+++++++) | BASIC end-to-end with arithmetic + branches + calls, plus future BMI driver | future |
+| v0.6.0 (A5++++++) | Call/return discipline: `JSR` (0x9), `RTS` (0xA) + module-level `call` backpatching; `BMI` (0xB) reserved; non-entry-fn ret emits RTS instead of HLT | **merged** |
+| **v0.7.0 (A5+++++++ — this PR)** | Six comparison ops `cmp_lt`/`cmp_eq`/`cmp_ne`/`cmp_le`/`cmp_gt`/`cmp_ge` via SUB-then-test boolean materialization.  Activates `BMI` (0xB) for the lt/le/gt/ge family.  Operand-swap pattern handles gt/ge with no new code | this PR |
+| v0.8.0 (A5++++++++) | BASIC end-to-end with full ALU + cmp + branches + calls | future |
 | v0.4.0 (A5+++) | `lang-aot --emit=ge225` wiring + BASIC end-to-end | future |
 
 ## Public surface (v0.1.0)
@@ -145,17 +146,16 @@ Opcodes assigned through v0.6.0: `0x0` (HLT), `0x1` (LDA),
 `0x6` (BR), `0x7` (BNZ), `0x8` (BZ), `0x9` (JSR), `0xA` (RTS),
 `0xB` (BMI — reserved).  Future slices take `0xC..0xF`.
 
-## Non-goals (v0.6.0)
+## Non-goals (v0.7.0)
 
-* No IIR op currently lowers to `BMI` — the opcode is reserved
-  for a future `jmp_if_neg` driver (planned for v0.7.0+).
-* No call arguments — calls are zero-arg, single-return-value
-  (via ACC) in v0.6.0.  Argument-passing arrives in a future slice.
+* No call arguments — calls are still zero-arg, single-return-value
+  (via ACC).  Argument-passing arrives in a future slice.
 * No memory spilling beyond the 17-slot ACC + r0..r15 pool — future.
 * No external assembler / linker integration.
 * No peephole optimisation: `add c, c, x` always emits the
-  `LD r_c` even when `c` is already in ACC.
+  `LD r_c` even when `c` is already in ACC.  Same for cmp's LD.
 * No cross-function branches — labels are per-function.
+* No `mul` / `div` / shift opcodes — future ISA extensions.
 
 ## Tests (v0.2.0 — 21 unit + 1 doctest)
 

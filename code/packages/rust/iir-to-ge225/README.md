@@ -25,7 +25,7 @@ pipeline:
 | iir-to-intel4004 (A4) | 4-bit | 1971 | Brainfuck |
 | **iir-to-ge225 (A5)** | **20-bit** | **1959** | **Dartmouth BASIC** |
 
-## Status — v0.6.0 (A5++++++ call/return + BMI reserved)
+## Status — v0.7.0 (A5+++++++ comparison ops — BMI now active)
 
 | IIR op | GE-225 lowering |
 |--------|-----------------|
@@ -33,6 +33,12 @@ pipeline:
 | `mov dest, src` | `(STA r_evict_src)?` + `LD r_src` + `STA r_dest` |
 | `add dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `ADD r_rhs` |
 | `sub dest, lhs, rhs` | (evict ACC pieces)? + `LD r_lhs` + `SUB r_rhs` |
+| `cmp_lt dest, a, b` | LD/SUB + `BMI true` + LDA 0 + BR end + LDA 1 |
+| `cmp_eq dest, a, b` | LD/SUB + `BZ true` + LDA 0 + BR end + LDA 1 |
+| `cmp_ne dest, a, b` | LD/SUB + `BNZ true` + LDA 0 + BR end + LDA 1 |
+| `cmp_le dest, a, b` | LD/SUB + `BMI true` + `BZ true` + LDA 0 + BR end + LDA 1 |
+| `cmp_gt dest, a, b` | same as `cmp_lt b, a` (operand swap) |
+| `cmp_ge dest, a, b` | same as `cmp_le b, a` (operand swap) |
 | `label "<name>"` | zero bytes — records position |
 | `jmp "<target>"` | `BR <target_addr>` |
 | `jmp_if_true cond, "<target>"` | `(LD r_cond)?` + `BNZ <target_addr>` |
@@ -68,10 +74,9 @@ functions emit `RTS` (return from subroutine).
 | `0x8` | `BZ a`  | `[0x08, hi, lo]` | branch if ACC = 0 |
 | `0x9` | `JSR a` | `[0x09, hi, lo]` | push PC+3, branch to `a` |
 | `0xA` | `RTS`   | `[0x0A, 0x00, 0x00]` | pop, branch to popped address |
-| `0xB` | `BMI a` | `[0x0B, hi, lo]` | branch if ACC sign bit set (**reserved**) |
+| `0xB` | `BMI a` | `[0x0B, hi, lo]` | branch if ACC sign bit set (**active** — used by `cmp_lt`/`cmp_le`/`cmp_gt`/`cmp_ge`) |
 
-`BMI` reserved for future signed-comparison lowering.  `0xC..0xF`
-reserved for future ISA extensions.
+`0xC..0xF` reserved for future ISA extensions.
 
 ## Quick start
 

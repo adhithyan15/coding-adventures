@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-ge225"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
-description = "IIR → GE-225 machine code backend.  v0.6.0 (A5++++++): adds the call/return family — `JSR addr` (opcode 0x9) pushes the return address and branches, `RTS` (0xA) pops and branches back — plus module-level backpatching of `call dest, fn_name` to the callee's entry byte address.  In non-entry functions `ret`/`ret_void` now emit RTS instead of HLT; the entry function (identified by `IIRModule::entry_point`) keeps HLT.  Reserves `BMI` (0xB) opcode for future signed-branch lowering.  Mirrors iir-to-intel8008 v0.3.9 module-level call-backpatching pattern.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
+description = "IIR → GE-225 machine code backend.  v0.7.0 (A5+++++++): adds the comparison family — six IIR ops (`cmp_lt`, `cmp_eq`, `cmp_ne`, `cmp_le`, `cmp_gt`, `cmp_ge`) lower to a SUB-then-test pattern that materialises a 0/1 boolean in ACC.  Finally activates the `BMI` opcode (0xB, reserved in v0.6.0) for `cmp_lt` and `cmp_le`.  `cmp_gt` and `cmp_ge` reuse the lt/le emit paths via operand swap.  Mirrors iir-to-intel4004 v0.5.0 / iir-to-armv7 v0.4.x cmp slice.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Primarily a BASIC fit per MULTILANG-ARCHITECTURE-BACKENDS.md §A5."
 
 [lib]
 name = "iir_to_ge225"

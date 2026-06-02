@@ -1,4 +1,4 @@
-//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.6.0, A5++++++).
+//! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.7.0, A5+++++++).
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
@@ -95,8 +95,8 @@
 //! | `0xA` | `RTS`   | pop, branch to popped address          | `[0x0A, 0x00, 0x00]` |
 //! | `0xB` | `BMI a` | branch if ACC sign bit set (negative)  | `[0x0B, hi, lo]` |
 //!
-//! `BMI` is reserved — no IIR op currently lowers to it.  Future
-//! slices take `0xC..0xF`.
+//! As of v0.7.0, `BMI` is **active** — `cmp_lt` and `cmp_le` lower
+//! through it.  Future slices take `0xC..0xF`.
 //!
 //! ## Quick start
 //!
@@ -226,11 +226,12 @@ pub const RTS_OPCODE_NIBBLE: u8 = 0xA;
 /// is set (i.e. ACC is negative under signed interpretation).
 /// Word layout: `[0x0B, hi, lo]`.
 ///
-/// **Reserved in v0.6.0** — no IIR op currently lowers to BMI.
-/// A future increment may add a `jmp_if_neg` IIR op (driven from
-/// `cmp_lt` lowerings in the frontends) that emits `BMI`.  Pinned
-/// here so the opcode map stays stable and downstream simulators
-/// can pre-implement the decoder.
+/// **Active as of v0.7.0** — used internally by the `cmp_lt` /
+/// `cmp_gt` / `cmp_le` / `cmp_ge` IIR-op lowerings to test the
+/// sign bit of `lhs - rhs` (the result of an immediately preceding
+/// SUB instruction).  No IIR op surfaces a direct `jmp_if_neg`
+/// shape yet — that's a future addition for languages with
+/// explicit signed-branch semantics.
 pub const BMI_OPCODE_NIBBLE: u8 = 0xB;
 
 /// Canonical `RTS` 3-byte word (= `[0x0A, 0x00, 0x00]`).  Pinned
@@ -246,9 +247,10 @@ const ACC_MARKER: u8 = 16;
 /// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
 const GP_REGISTER_COUNT: usize = 16;
 
-/// Supported instruction opcodes in v0.6.0 (A5++++++).
+/// Supported instruction opcodes in v0.7.0 (A5+++++++).
 const SUPPORTED_OPS: &[&str] = &[
     "const", "mov", "add", "sub",
+    "cmp_lt", "cmp_eq", "cmp_ne", "cmp_le", "cmp_gt", "cmp_ge",
     "label", "jmp", "jmp_if_true", "jmp_if_false",
     "call",
     "ret", "ret_void",
@@ -676,6 +678,137 @@ pub fn lower_iir_to_ge225(
                         _ => unreachable!(),
                     };
                     bytes.extend_from_slice(&arith);
+                    env.insert(dest.to_string(), ACC_MARKER);
+                    acc_owner = Some(dest.to_string());
+                }
+
+                // ── cmp_{lt,eq,ne,le,gt,ge} dest, a, b ─────────────────
+                //
+                // ACC-based boolean materialisation pattern:
+                //
+                //   LD r_lhs                        ; ACC = lhs
+                //   SUB r_rhs                       ; ACC = lhs - rhs (sign/zero set)
+                //   <test1> <true_target>           ; conditional skip-to-true
+                //   <test2> <true_target>           ; (only for le/ge — second branch)
+                //   LDA 0                           ; false branch: dest = 0
+                //   BR <end_target>
+                //   <true_target>: LDA 1            ; true branch: dest = 1
+                //   <end_target>:                   ; dest lives in ACC
+                //
+                // Mapping IIR op → test opcodes:
+                //   cmp_lt: BMI            (a - b < 0  ⇔  a < b)
+                //   cmp_gt: BMI, swap      (a > b  ⇔  b < a)
+                //   cmp_eq: BZ             (a - b == 0)
+                //   cmp_ne: BNZ            (a - b ≠ 0)
+                //   cmp_le: BMI || BZ      (a ≤ b  ⇔  a < b ∨ a == b)
+                //   cmp_ge: BMI || BZ, swap (a ≥ b  ⇔  b ≤ a)
+                //
+                // Single-test ops (lt/gt/eq/ne) emit 18 bytes after
+                // the LD+SUB stage; double-test ops (le/ge) emit
+                // 21 bytes.  The trivial-case `cmp_lt c, a, b; ret c`
+                // shape is documented in the spec.
+                "cmp_lt" | "cmp_eq" | "cmp_ne" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+                    let dest = require_dest(instr, instr.op.as_str(), &f.name)?;
+                    let (lhs_orig, rhs_orig) = parse_binop_srcs(instr, &f.name)?;
+                    // For cmp_gt and cmp_ge, swap operands so we can
+                    // reuse the cmp_lt / cmp_le emit path verbatim.
+                    let (lhs_name, rhs_name) = match instr.op.as_str() {
+                        "cmp_gt" | "cmp_ge" => (rhs_orig, lhs_orig),
+                        _ => (lhs_orig, rhs_orig),
+                    };
+                    // The post-SUB tests: which conditional branches
+                    // jump to the "true" arm.
+                    let test_opcodes: &[u8] = match instr.op.as_str() {
+                        "cmp_lt" | "cmp_gt" => &[BMI_OPCODE_NIBBLE],
+                        "cmp_eq" => &[BZ_OPCODE_NIBBLE],
+                        "cmp_ne" => &[BNZ_OPCODE_NIBBLE],
+                        "cmp_le" | "cmp_ge" => &[BMI_OPCODE_NIBBLE, BZ_OPCODE_NIBBLE],
+                        _ => unreachable!(),
+                    };
+                    // Bind-check both operands up front for crisp errors.
+                    if !env.contains_key(&lhs_name) {
+                        return Err(IIRGe225Error::UndefinedVariable {
+                            function: f.name.clone(),
+                            name: lhs_name,
+                        });
+                    }
+                    if !env.contains_key(&rhs_name) {
+                        return Err(IIRGe225Error::UndefinedVariable {
+                            function: f.name.clone(),
+                            name: rhs_name,
+                        });
+                    }
+                    // Same eviction strategy as add/sub: ensure both
+                    // operands are in real GP registers, ACC is free.
+                    if matches!(env.get(&lhs_name), Some(&ACC_MARKER)) {
+                        evict_acc(
+                            &mut bytes,
+                            &mut env,
+                            &mut acc_owner,
+                            &mut next_reg,
+                            &f.name,
+                        )?;
+                    }
+                    if matches!(env.get(&rhs_name), Some(&ACC_MARKER)) {
+                        evict_acc(
+                            &mut bytes,
+                            &mut env,
+                            &mut acc_owner,
+                            &mut next_reg,
+                            &f.name,
+                        )?;
+                    }
+                    evict_acc(
+                        &mut bytes,
+                        &mut env,
+                        &mut acc_owner,
+                        &mut next_reg,
+                        &f.name,
+                    )?;
+                    let r_lhs = lookup_register(&env, &lhs_name, &f.name)?;
+                    let r_rhs = lookup_register(&env, &rhs_name, &f.name)?;
+                    debug_assert!(r_lhs <= 15 && r_rhs <= 15);
+                    bytes.extend_from_slice(&encode_ld(r_lhs));
+                    bytes.extend_from_slice(&encode_sub(r_rhs));
+
+                    // Now ACC holds the signed difference.  Emit the
+                    // boolean-materialisation suffix.  Compute the
+                    // jump targets from the current byte offset:
+                    //
+                    //   n_tests = test_opcodes.len()   (1 or 2)
+                    //   suffix layout (each instr = 3 bytes):
+                    //     +0..3*n:        test_1, ..., test_n  → true_target
+                    //     +3*n..3*n+3:    LDA 0
+                    //     +3*n+3..3*n+6:  BR end_target
+                    //     +3*n+6..3*n+9:  LDA 1  (true_target lands here)
+                    //     +3*n+9:         end (no bytes; just an address)
+                    let anchor = bytes.len();
+                    let n_tests = test_opcodes.len();
+                    let true_target = anchor + 3 * n_tests + 6;
+                    let end_target = anchor + 3 * n_tests + 9;
+                    if end_target > u16::MAX as usize {
+                        return Err(IIRGe225Error::BranchTargetOutOfRange {
+                            function: f.name.clone(),
+                            label: format!("{}-internal-end", instr.op),
+                            offset: end_target,
+                        });
+                    }
+                    let true_target_u16 = true_target as u16;
+                    let end_target_u16 = end_target as u16;
+                    // Emit each conditional test pointing at true_target.
+                    for &opcode in test_opcodes {
+                        bytes.push(opcode);
+                        bytes.push(((true_target_u16 >> 8) & 0xFF) as u8);
+                        bytes.push((true_target_u16 & 0xFF) as u8);
+                    }
+                    // False branch: LDA 0; BR end.
+                    bytes.extend_from_slice(&encode_lda(0));
+                    bytes.push(BR_OPCODE_NIBBLE);
+                    bytes.push(((end_target_u16 >> 8) & 0xFF) as u8);
+                    bytes.push((end_target_u16 & 0xFF) as u8);
+                    // True branch: LDA 1.
+                    bytes.extend_from_slice(&encode_lda(1));
+                    // dest takes over ACC.
                     env.insert(dest.to_string(), ACC_MARKER);
                     acc_owner = Some(dest.to_string());
                 }
