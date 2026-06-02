@@ -3,6 +3,77 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-06-02 (A4++ — ACC-first allocator + `mov` + ret-value staging)
+
+### Added — ACC-first linear allocator over r0..r15
+
+Extends v0.2.0's accumulator-only `const` to a real allocator over
+the 4004's 16 4-bit general-purpose registers (`r0..r15`).  The
+allocator pool is conceptually `[ACC, r0, r1, ..., r15]` — ACC
+comes first so the trivial `const v; ret v` case stays at the
+3-byte shape `LDM v; JUN 0x000` (no XCH/LD round-trip).
+
+When a second `const` arrives, the previous ACC owner is evicted
+to its next-free GP register via `XCH r` before `LDM` clobbers
+ACC with the new value.  Mirrors iir-to-intel8008 v0.3.0 (A2++)'s
+A-first pool ordering and trivial-case preservation pattern.
+
+| IIR op | 4004 lowering |
+|--------|---------------|
+| `const dest, Int(n)` (1st) | `LDM n` (`dest` owns ACC) |
+| `const dest, Int(n)` (Nth) | (`XCH r_prev` to evict prev ACC owner) + `LDM n` |
+| `mov dest, src` | (`XCH r_src` if src in ACC) + `LD r_src` + `XCH r_dest` |
+| `ret <var>` | (`LD r_var` if var not in ACC) + `JUN 0x000` |
+| `ret_void` | `JUN 0x000` |
+
+### Why ACC-first?
+
+The 4004 has no `ST r` (store accumulator to register) — `XCH r`
+(Exchange ACC with r) is the only way to materialise an ACC value
+into a register.  Every `XCH` after `LDM` costs 1 byte; every
+`LD` to re-stage costs another 1 byte.  Keeping the first var in
+ACC saves 2 bytes for the trivial case.
+
+### New constants
+
+* `pub const LD_OPCODE: u8 = 0xA0;` — `LD r` (load register to
+  accumulator, single-byte `1010 rrrr`).
+* `pub const XCH_OPCODE: u8 = 0xB0;` — `XCH r` (exchange
+  accumulator with register, single-byte `1011 rrrr`).
+
+### New error variants
+
+* `IIRIntel4004Error::UndefinedVariable` — `mov` or `ret`
+  referenced a name that was never bound.
+* `IIRIntel4004Error::OutOfRegisters` — 18th local exhausted the
+  17-slot pool (ACC + r0..r15).  Stack spilling via the 4004's
+  data-RAM (`SRC`/`WRM`/`RDM` family) lands in a future increment.
+
+### Tests added (25 total, was 16)
+
+* `ld_opcode_pinned_to_0xa0` / `xch_opcode_pinned_to_0xb0`.
+* `ret_of_first_const_omits_xch_and_ld` — regression for v0.2.0's
+  3-byte trivial-case shape (ACC-first allocator preserves it).
+* `two_consts_use_acc_then_xch_to_r0_for_eviction` — pinned 5-byte
+  `LDM 5; XCH r0; LDM 7; JUN 0x000`.
+* `ret_of_evicted_var_emits_ld_before_jun` — pinned 6-byte
+  sequence for `const v; const w; ret v` showing the `LD r0`
+  re-staging.
+* `mov_lowers_to_ld_then_xch` — pinned `LDM 3; XCH r0; LD r0;
+  XCH r1; LD r1; JUN 0x000`.
+* `allocator_exhaustion_yields_out_of_registers` — 18 consts →
+  fails on v16's eviction with `OutOfRegisters`.
+* `undefined_variable_in_mov_is_rejected`.
+* `errors_for_new_variants_display_without_panic`.
+
+### What is NOT in v0.3.0 (deferred to v0.4.0+)
+
+* Arithmetic via the accumulator (`ADD`, `SUB`, `IAC`, `DAC`).
+* Real `RET` via `BBL` + the 4004's 3-deep internal call stack.
+* Conditional jumps via `JCN` (Jump on Condition).
+* `lang-aot --emit=intel4004` wiring — A4+++.
+* Stack spilling once the 17-slot pool exhausts.
+
 ## [0.2.0] — 2026-06-02 (A4+ — `const` → `LDM n`; `ret`/`ret_void` → `JUN 0x000`)
 
 ### Added — first real instruction lowering

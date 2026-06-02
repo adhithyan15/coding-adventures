@@ -71,6 +71,7 @@
 //! ```
 
 use interpreter_ir::{IIRModule, Operand};
+use std::collections::HashMap;
 use std::fmt;
 
 // ===========================================================================
@@ -80,6 +81,31 @@ use std::fmt;
 // The 4004 has no formal HLT.  The canonical "halt" idiom is `JUN
 // 0x000` — an unconditional jump back to ROM address 0, which
 // (when itself at address 0) loops forever, simulating halt.
+
+/// Intel 4004 `LD r` opcode high nibble — `0xA0`.  Loads register
+/// `r` (bottom nibble) into the accumulator.
+///
+/// Bit pattern: `1010 rrrr`.  Single-byte instruction — OR in the
+/// 4-bit register selector (0..=15) to form the full opcode byte.
+///
+/// Example: `LD r3 = 0xA3 = 0b1010_0011`.
+///
+/// Does NOT modify the source register `r` — it's a copy, not a swap.
+pub const LD_OPCODE: u8 = 0xA0;
+
+/// Intel 4004 `XCH r` opcode high nibble — `0xB0`.  Exchanges the
+/// accumulator with register `r`.
+///
+/// Bit pattern: `1011 rrrr`.  Single-byte instruction.  After
+/// execution, `ACC` holds what was in `r`, and `r` holds what was
+/// in `ACC`.
+///
+/// XCH is the only way on the 4004 to STORE the accumulator into
+/// a register — there's no `ST r` instruction.  The exchange
+/// destroys the previous contents of the destination register,
+/// which is fine for fresh allocation but means we must be careful
+/// not to overwrite a still-live value.
+pub const XCH_OPCODE: u8 = 0xB0;
 
 /// Intel 4004 `LDM n` opcode high nibble — `0xD0`.  Loads the 4-bit
 /// immediate `n` (low nibble) into the accumulator.
@@ -184,6 +210,14 @@ pub enum IIRIntel4004Error {
     UnsupportedType { function: String, type_hint: String },
     /// An operand has an unexpected shape.
     InvalidOperand { function: String, detail: String },
+    /// A variable name was used (via `mov` or `ret`) before it was
+    /// bound by `const` or `mov`.
+    UndefinedVariable { function: String, name: String },
+    /// The function tried to bind more locals than the 4004's 16
+    /// 4-bit general-purpose registers can hold.  Stack spilling
+    /// via the 4004's data-RAM (`SRC`/`WRM`/`RDM` family) lands in
+    /// a future increment.
+    OutOfRegisters { function: String, name: String },
 }
 
 impl fmt::Display for IIRIntel4004Error {
@@ -200,6 +234,12 @@ impl fmt::Display for IIRIntel4004Error {
             }
             Self::InvalidOperand { function, detail } => {
                 write!(f, "invalid operand in function {function:?}: {detail}")
+            }
+            Self::UndefinedVariable { function, name } => {
+                write!(f, "undefined variable {name:?} in function {function:?}")
+            }
+            Self::OutOfRegisters { function, name } => {
+                write!(f, "out of 4004 registers (r0..r15) while binding {name:?} in function {function:?}; data-RAM spilling not yet supported")
             }
         }
     }
@@ -230,15 +270,23 @@ pub fn validate_for_intel4004(_module: &IIRModule) -> Vec<String> {
 // lower_iir_to_intel4004
 // ===========================================================================
 
-/// Supported instruction opcodes in v0.2.0 (A4+).
+/// Sentinel `env` value meaning "this var currently lives in the
+/// accumulator (ACC)", not in any of the 16 GP registers.  Distinct
+/// from the 4-bit register indices `0..=15`.
+const ACC_MARKER: u8 = 16;
+
+/// Supported instruction opcodes in v0.3.0 (A4++).
 ///
-/// * `const dest, Int(n)` lowers to `LDM n` (every value goes
-///   into the accumulator in this accumulator-only first slice).
-/// * `ret <var>` and `ret_void` both lower to `JUN 0x000` (the
-///   halt sentinel — real `RET` via `BBL` + the 4004's 3-deep
-///   internal call stack lands in A4++).
+/// * `const dest, Int(n)` lowers to `LDM n` with `dest` taking
+///   over the accumulator (evicting the previous ACC owner to a
+///   real register via XCH if needed).
+/// * `mov dest, src` lowers to `LD src_reg; XCH dest_reg` —
+///   copies src's value into dest's freshly-allocated register.
+/// * `ret <var>` stages var into ACC (eliding LD when var is
+///   already there) and emits the JUN 0x000 halt sentinel.
+/// * `ret_void` just emits the halt sentinel.
 const SUPPORTED_OPS: &[&str] = &[
-    "const", "ret", "ret_void",
+    "const", "mov", "ret", "ret_void",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u8>` of Intel 4004 opcode bytes.
@@ -295,6 +343,33 @@ pub fn lower_iir_to_intel4004(
 
     let mut bytes = Vec::new();
     for f in &module.functions {
+        // ── Per-function allocator state ──────────────────────────────
+        //
+        // The 4004's ALU is accumulator-anchored: every value flows
+        // through the 4-bit ACC.  We maintain three pieces of state:
+        //
+        //   env: HashMap<String, u8>
+        //     var name → physical location.  Values in `0..=15` are
+        //     register indices for the 16 GP registers; `ACC_MARKER`
+        //     (= 16) means "currently lives in ACC".
+        //
+        //   next_reg: usize
+        //     Next free GP register index.  Bumps from 0 upward as
+        //     we spill names from ACC into r0, r1, ...
+        //
+        //   acc_owner: Option<String>
+        //     Which var (if any) currently owns ACC.  When a new const
+        //     or LD-based op arrives that needs to clobber ACC, we
+        //     first evict the current owner via XCH.
+        //
+        // The ACC-first model preserves v0.2.0's 3-byte shape for
+        // `const v; ret v` (LDM v; JUN 0x000 — no XCH/LD needed when
+        // v is the sole var).  Mirrors iir-to-intel8008 v0.3.0's
+        // A-first pool ordering.
+        let mut env: HashMap<String, u8> = HashMap::new();
+        let mut next_reg: usize = 0;
+        let mut acc_owner: Option<String> = None;
+
         for instr in &f.instructions {
             if !SUPPORTED_OPS.contains(&instr.op.as_str()) {
                 return Err(IIRIntel4004Error::UnsupportedOp {
@@ -303,36 +378,75 @@ pub fn lower_iir_to_intel4004(
                 });
             }
             match instr.op.as_str() {
-                // ── const dest, Int(n) → LDM n ─────────────────────────
+                // ── const dest, Int(n) → (XCH r_evict)? + LDM n ────────
                 //
-                // The 4004's accumulator is 4 bits wide.  Values in
-                // [0, 15] cast straight to the LDM low nibble.
-                // [-8, -1] reinterpreted via two's-complement
-                // (`-1 → 0xF`).  Anything outside surfaces as
-                // `InvalidOperand`.
+                // If ACC is currently owned by a different var, we
+                // evict that var to its next-free real register via XCH
+                // BEFORE the LDM (which would otherwise clobber ACC).
+                // Then LDM n loads the new value into ACC, and dest
+                // becomes the new ACC owner.
                 "const" => {
-                    let _dest = require_dest(instr, "const", &f.name)?;
+                    let dest = require_dest(instr, "const", &f.name)?;
                     let n = encode_immediate_nibble(instr.srcs.first(), &f.name)?;
+                    evict_acc(&mut bytes, &mut env, &mut acc_owner, &mut next_reg, &f.name)?;
                     bytes.push(LDM_OPCODE | n);
+                    env.insert(dest.to_string(), ACC_MARKER);
+                    acc_owner = Some(dest.to_string());
                 }
 
-                // ── ret <var>: JUN 0x000 ───────────────────────────────
+                // ── mov dest, src → LD src_reg; XCH dest_reg ───────────
                 //
-                // The value is already in the accumulator (every const
-                // lowers there in v0.2.0).  Real `RET` via `BBL` + the
-                // 4004's 3-deep return stack lands in A4++.  Until then,
-                // JUN-self is the universal stopping primitive.
+                // `mov` copies src's value into a freshly-allocated
+                // dest register.  Lowering shape:
+                //
+                //   [optional] if src is in ACC: evict src to a real
+                //     register first (so LD/XCH below have a stable
+                //     source).
+                //   LD r_src             ; ACC ← src's value
+                //   alloc r_dest
+                //   XCH r_dest           ; r_dest = src's value,
+                //                        ; ACC = old r_dest (junk)
+                "mov" => {
+                    let dest = require_dest(instr, "mov", &f.name)?;
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRIntel4004Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "mov srcs[0] must be Var".into(),
+                        }),
+                    };
+                    // If src lives in ACC, evict so the LD below has
+                    // a stable register source.
+                    if matches!(env.get(&src_name), Some(&ACC_MARKER)) {
+                        evict_acc(&mut bytes, &mut env, &mut acc_owner, &mut next_reg, &f.name)?;
+                    }
+                    let src_reg = lookup_register(&env, &src_name, &f.name)?;
+                    debug_assert!(src_reg <= 15, "src_reg should be a real GP register after eviction");
+                    bytes.push(LD_OPCODE | src_reg);
+                    let r_dest = alloc_register(&mut next_reg, dest, &f.name)?;
+                    bytes.push(XCH_OPCODE | r_dest);
+                    env.insert(dest.to_string(), r_dest);
+                    // After XCH, ACC holds the (junk) old r_dest contents.
+                    acc_owner = None;
+                }
+
+                // ── ret <var>: stage var into ACC, then JUN 0x000 ──────
+                //
+                // If var is already the ACC owner, no LD is needed —
+                // ACC already holds its value.  Otherwise emit
+                // `LD r_var` to stage it.
                 "ret" => {
-                    // Validate that srcs[0] is a Var — front-end bugs
-                    // surface as `InvalidOperand` rather than producing
-                    // surprising silence.
-                    match instr.srcs.first() {
-                        Some(Operand::Var(_)) => {}
+                    let src_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
                         _ => return Err(IIRIntel4004Error::InvalidOperand {
                             function: f.name.clone(),
                             detail: "ret srcs[0] must be Var".into(),
                         }),
                     };
+                    let src_reg = lookup_register(&env, &src_name, &f.name)?;
+                    if src_reg != ACC_MARKER {
+                        bytes.push(LD_OPCODE | src_reg);
+                    }
                     bytes.extend_from_slice(&HALT_LOOP);
                 }
 
@@ -368,6 +482,63 @@ fn require_dest<'a>(
     instr.dest.as_deref().ok_or_else(|| IIRIntel4004Error::InvalidOperand {
         function: fn_name.to_string(),
         detail: format!("{op} requires a dest"),
+    })
+}
+
+/// Evict the current ACC owner (if any) to its next-free GP register
+/// via `XCH r_evict`.  Updates the `env` mapping and clears
+/// `acc_owner`.  No-op when ACC is unowned.
+///
+/// Returns `OutOfRegisters` if all 16 GP registers are already
+/// allocated.
+fn evict_acc(
+    bytes: &mut Vec<u8>,
+    env: &mut HashMap<String, u8>,
+    acc_owner: &mut Option<String>,
+    next_reg: &mut usize,
+    fn_name: &str,
+) -> Result<(), IIRIntel4004Error> {
+    if let Some(name) = acc_owner.take() {
+        if *next_reg >= 16 {
+            return Err(IIRIntel4004Error::OutOfRegisters {
+                function: fn_name.to_string(),
+                name,
+            });
+        }
+        let r = *next_reg as u8;
+        *next_reg += 1;
+        bytes.push(XCH_OPCODE | r);
+        env.insert(name, r);
+    }
+    Ok(())
+}
+
+/// Allocate a fresh GP register for `dest`.  Returns the 4-bit
+/// register index, or `OutOfRegisters` if all 16 are taken.
+fn alloc_register(
+    next_reg: &mut usize,
+    dest: &str,
+    fn_name: &str,
+) -> Result<u8, IIRIntel4004Error> {
+    if *next_reg >= 16 {
+        return Err(IIRIntel4004Error::OutOfRegisters {
+            function: fn_name.to_string(),
+            name: dest.to_string(),
+        });
+    }
+    let r = *next_reg as u8;
+    *next_reg += 1;
+    Ok(r)
+}
+
+fn lookup_register(
+    env: &HashMap<String, u8>,
+    name: &str,
+    fn_name: &str,
+) -> Result<u8, IIRIntel4004Error> {
+    env.get(name).copied().ok_or_else(|| IIRIntel4004Error::UndefinedVariable {
+        function: fn_name.to_string(),
+        name: name.to_string(),
     })
 }
 

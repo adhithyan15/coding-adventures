@@ -6,7 +6,8 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_intel4004::{
     lower_iir_to_intel4004, validate_for_intel4004,
-    IIRIntel4004Config, IIRIntel4004Error, HALT_LOOP, LDM_OPCODE,
+    IIRIntel4004Config, IIRIntel4004Error,
+    HALT_LOOP, LDM_OPCODE, LD_OPCODE, XCH_OPCODE,
 };
 
 fn module_with(f: IIRFunction) -> IIRModule {
@@ -254,4 +255,172 @@ fn unsupported_op_is_rejected_with_function_name() {
         }
         other => panic!("expected UnsupportedOp, got: {other:?}"),
     }
+}
+
+// ===========================================================================
+// 6. A4++ (v0.3.0) — ACC-first allocator + `mov` + ret-value staging
+// ===========================================================================
+//
+// The 4004's ALU is accumulator-anchored.  The ACC-first allocator
+// keeps the first var in the accumulator, only spilling to r0..r15
+// on contention.  This preserves v0.2.0's 3-byte shape for the
+// trivial `const v; ret v` case.
+
+#[test]
+fn ld_opcode_pinned_to_0xa0() {
+    assert_eq!(LD_OPCODE, 0xA0,
+        "LD r opcode high nibble should be 0xA0 (1010_0000)");
+}
+
+#[test]
+fn xch_opcode_pinned_to_0xb0() {
+    assert_eq!(XCH_OPCODE, 0xB0,
+        "XCH r opcode high nibble should be 0xB0 (1011_0000)");
+}
+
+#[test]
+fn ret_of_first_const_omits_xch_and_ld() {
+    // Regression for v0.2.0's 3-byte shape: when v is the sole var,
+    // it stays in ACC and ret v needs no staging LD.
+    let f = IIRFunction::new("trivial", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel4004(&module_with(f), &IIRIntel4004Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![0xD7, 0x40, 0x00],
+        "ACC-first allocator should keep the trivial case at 3 bytes; got: {bytes:02x?}");
+}
+
+#[test]
+fn two_consts_use_acc_then_xch_to_r0_for_eviction() {
+    // const v=5; const w=7; ret w
+    //   LDM 5    = 0xD5     (v → ACC)
+    //   XCH r0   = 0xB0     (evict v to r0; ACC ← junk)
+    //   LDM 7    = 0xD7     (w → ACC)
+    //   JUN 0x000           (w is in ACC, no LD before JUN)
+    let f = IIRFunction::new("two", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("w".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel4004(&module_with(f), &IIRIntel4004Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        0xD5,           // LDM 5 (v → ACC)
+        0xB0,           // XCH r0 (evict v to r0)
+        0xD7,           // LDM 7 (w → ACC)
+        0x40, 0x00,     // JUN 0x000 (w already in ACC)
+    ], "expected LDM 5 + XCH r0 + LDM 7 + JUN; got: {bytes:02x?}");
+}
+
+#[test]
+fn ret_of_evicted_var_emits_ld_before_jun() {
+    // const v=5; const w=7; ret v
+    // v gets evicted to r0 when w arrives.  Then ret v needs LD r0.
+    let f = IIRFunction::new("ret_v", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("const", Some("w".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel4004(&module_with(f), &IIRIntel4004Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        0xD5,           // LDM 5 (v → ACC)
+        0xB0,           // XCH r0 (evict v to r0)
+        0xD7,           // LDM 7 (w → ACC)
+        0xA0,           // LD r0 (stage v back into ACC for ret)
+        0x40, 0x00,     // JUN 0x000
+    ], "expected LDM 5 + XCH r0 + LDM 7 + LD r0 + JUN; got: {bytes:02x?}");
+}
+
+#[test]
+fn mov_lowers_to_ld_then_xch() {
+    // const v=3; mov w=v; ret w
+    //
+    // v → ACC.  mov w=v: v is in ACC, evict v to r0 first (LDM
+    // already happened, just need XCH); then LD r0 stages src
+    // value into ACC; XCH r1 puts it into r1 (= w).  After: w in
+    // r1, ACC has junk.
+    //
+    // For ret w: LD r1.
+    //
+    //   LDM 3    = 0xD3   (v → ACC)
+    //   XCH r0   = 0xB0   (evict v from ACC to r0)
+    //   LD  r0   = 0xA0   (ACC ← v's value)
+    //   XCH r1   = 0xB1   (r1 = v's value = w; ACC = junk)
+    //   LD  r1   = 0xA1   (ACC ← w's value for ret)
+    //   JUN 0x000
+    let f = IIRFunction::new("mov_fn", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(3)], "u8"),
+        IIRInstr::new("mov",   Some("w".into()), vec![Operand::Var("v".into())], "u8"),
+        IIRInstr::new("ret",   None,             vec![Operand::Var("w".into())], "u8"),
+    ]);
+    let bytes = lower_iir_to_intel4004(&module_with(f), &IIRIntel4004Config::default())
+        .expect("lowering");
+    assert_eq!(bytes, vec![
+        0xD3,           // LDM 3
+        0xB0,           // XCH r0 (evict v from ACC)
+        0xA0,           // LD r0  (stage v's value back to ACC for mov)
+        0xB1,           // XCH r1 (w = v's value)
+        0xA1,           // LD r1  (stage w into ACC for ret)
+        0x40, 0x00,     // JUN 0x000
+    ], "mov expected; got: {bytes:02x?}");
+}
+
+#[test]
+fn allocator_exhaustion_yields_out_of_registers() {
+    // Capacity: 1 var in ACC + 16 vars in r0..r15 = 17 total.  The
+    // 18th const tries to evict v16 (currently in ACC) to a real
+    // register, but next_reg is already at 16 — OutOfRegisters fires
+    // on v16's eviction.
+    let mut body = Vec::new();
+    for i in 0..18 {
+        body.push(IIRInstr::new(
+            "const",
+            Some(format!("v{i}")),
+            vec![Operand::Int((i % 16) as i64)],
+            "u8",
+        ));
+    }
+    body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+    let f = IIRFunction::new("greedy", vec![], "void", body);
+    let err = lower_iir_to_intel4004(&module_with(f), &IIRIntel4004Config::default())
+        .expect_err("18 consts should exhaust the 17-slot pool (ACC + 16 GP)");
+    match err {
+        IIRIntel4004Error::OutOfRegisters { function, name } => {
+            assert_eq!(function, "greedy");
+            // v16 currently lives in ACC; the 18th const (v17) tries
+            // to evict it and runs out of GP registers.
+            assert_eq!(name, "v16");
+        }
+        other => panic!("expected OutOfRegisters, got: {other:?}"),
+    }
+}
+
+#[test]
+fn undefined_variable_in_mov_is_rejected() {
+    let f = IIRFunction::new("f", vec![], "void", vec![
+        IIRInstr::new("mov", Some("w".into()),
+            vec![Operand::Var("ghost".into())], "u8"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_intel4004(&module_with(f), &IIRIntel4004Config::default())
+        .expect_err("mov from undefined var should fail");
+    match err {
+        IIRIntel4004Error::UndefinedVariable { name, .. } => {
+            assert_eq!(name, "ghost");
+        }
+        other => panic!("expected UndefinedVariable, got: {other:?}"),
+    }
+}
+
+#[test]
+fn errors_for_new_variants_display_without_panic() {
+    let _ = format!("{}", IIRIntel4004Error::UndefinedVariable {
+        function: "f".into(), name: "ghost".into(),
+    });
+    let _ = format!("{}", IIRIntel4004Error::OutOfRegisters {
+        function: "greedy".into(), name: "v15".into(),
+    });
 }
