@@ -65,8 +65,12 @@
 //! CV tracing is off (the common production case), these stay `None`
 //! and the per-node memory is just a word.
 
+use std::collections::HashMap;
+
+use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
-    BindingTarget, CvId, Declaration, Program, ProgramItem, VarKind,
+    AssignmentTarget, BindingTarget, BlockStatement, CvId, Declaration, Expression, ForInit,
+    Program, ProgramItem, Property, PropertyKey, Statement, VarKind,
 };
 use serde::{Deserialize, Serialize};
 
@@ -326,12 +330,42 @@ impl ScopeAnalysis {
 /// The signature still matches the v0.1.0 contract; consumers
 /// don't need to recompile against a new API.
 pub fn analyze(program: &Program) -> ScopeAnalysis {
-    // CLOC13.0 algorithm — one walk of the top-level program body.
+    // CLOC13.0.1 algorithm — two phases over program.body.
     //
-    // Plain code beats a visitor-pattern here: the AST is shallow
-    // (1 program → N items, each a Declaration or a Statement),
-    // and we only care about Declarations in this PR.  A future
-    // pass-internal walker can grow into a proper visitor.
+    //   Phase 1: collect Bindings (top-level VariableDeclaration +
+    //            FunctionDeclaration). Same as CLOC13.0.
+    //   Phase 2: walk all initializers, function bodies, and
+    //            top-level ExpressionStatements/IfStatements/
+    //            etc., emitting a Reference for every Identifier
+    //            expression encountered. Resolution: walk the
+    //            scope's binding table looking up by name. Until
+    //            CLOC13.0.2 introduces nested scopes, every
+    //            reference's `from_scope` is GLOBAL.
+    //
+    // Things NOT walked for references:
+    //   - The `id` field of a VariableDeclarator (that's the
+    //     binding declaration, not a reference).
+    //   - The `id` of a FunctionDeclaration (same).
+    //   - Function params (Phase 3 destructuring will need this;
+    //     today params are Identifiers but unused until nested
+    //     scopes land).
+    //   - Non-computed MemberExpression `property` field (that's
+    //     a property name, not a binding reference).
+    //   - Non-computed Property `key` in ObjectExpression
+    //     (property name, not a reference).
+    //
+    // Deferred to CLOC13.0.2:
+    //   - Nested scopes (Function-body scopes, Block scopes).
+    //     Today all bindings + references land in GLOBAL.
+    //   - Var hoisting (no nested scopes yet, so this is moot).
+    //   - Reference resolution across nested scopes (when 0.2
+    //     introduces them).
+    //
+    // Plain code beats a visitor-pattern here for the same
+    // reasons as 13.0: the AST is shallow, the binding-vs-use
+    // distinction is local, and a visitor would obscure which
+    // sub-nodes get walked for references vs. which don't.
+
     let mut analysis = ScopeAnalysis {
         scopes: vec![Scope {
             kind: ScopeKind::Global,
@@ -342,10 +376,9 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         references: Vec::new(),
     };
 
+    // -- Phase 1: collect bindings -----------------------------------
+
     for item in &program.body {
-        // Only Declarations at the top level produce bindings in
-        // this PR.  Statement items are walked in CLOC13.0.1 when
-        // we add the reference-collection pass.
         let decl = match item {
             ProgramItem::Declaration(d) => d,
             ProgramItem::Statement(_) => continue,
@@ -389,10 +422,10 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
             }
             Declaration::FunctionDeclaration(fn_decl) => {
                 // Emit the function name as a Function-kind binding
-                // in the GLOBAL scope.  CLOC13.0.1 will also
-                // create a child Function scope holding params +
-                // nested decls; in CLOC13.0 we just surface the
-                // name so treeshake / inline can see it.
+                // in the GLOBAL scope. CLOC13.0.2 will also create
+                // a child Function scope holding params + nested
+                // decls; in CLOC13.0.x we just surface the name so
+                // treeshake / inline can see it.
                 let binding_id = BindingId(analysis.bindings.len() as u32);
                 analysis.bindings.push(Binding {
                     name: fn_decl.id.name.clone(),
@@ -407,7 +440,292 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         }
     }
 
+    // -- Phase 2: collect references --------------------------------
+    //
+    // Build a name → BindingId lookup once. Until nested scopes
+    // land (CLOC13.0.2), all bindings live in GLOBAL and the map
+    // is just `name → binding`. The walk uses `from_scope =
+    // GLOBAL` for every reference.
+    //
+    // For programs with shadowed names (currently impossible in
+    // GLOBAL — same name at top level is a syntax error in strict
+    // mode and a re-bind in sloppy mode), the *last* binding
+    // wins via HashMap::insert. This will be revisited under
+    // CLOC13.0.2 when nested scopes can shadow.
+
+    let mut name_to_binding: HashMap<String, BindingId> =
+        HashMap::with_capacity(analysis.bindings.len());
+    for (idx, binding) in analysis.bindings.iter().enumerate() {
+        name_to_binding.insert(binding.name.clone(), BindingId(idx as u32));
+    }
+
+    for item in &program.body {
+        match item {
+            ProgramItem::Statement(stmt) => {
+                walk_statement(stmt, &name_to_binding, &mut analysis.references);
+            }
+            ProgramItem::Declaration(decl) => match decl {
+                Declaration::VariableDeclaration(var_decl) => {
+                    for declarator in &var_decl.declarations {
+                        if let Some(init) = &declarator.init {
+                            walk_expression(init, &name_to_binding, &mut analysis.references);
+                        }
+                    }
+                }
+                Declaration::FunctionDeclaration(fn_decl) => {
+                    walk_block(&fn_decl.body, &name_to_binding, &mut analysis.references);
+                }
+            },
+        }
+    }
+
     analysis
+}
+
+// =====================================================================
+// Reference walkers — Phase 2 of `analyze`.
+//
+// One function per AST node kind that can contain references. Plain
+// dispatch by enum variant; no visitor trait. Sub-nodes that *don't*
+// produce references (e.g., literal nodes, identifier-as-binding-
+// declaration) are intentionally not visited.
+//
+// Until CLOC13.0.2 introduces nested scopes, every emitted Reference
+// has `from_scope = ScopeId::GLOBAL`.
+// =====================================================================
+
+fn walk_statement(
+    stmt: &Statement,
+    names: &HashMap<String, BindingId>,
+    out: &mut Vec<Reference>,
+) {
+    match stmt {
+        Statement::Tagged(tagged) => walk_tagged_statement(tagged, names, out),
+        Statement::Declaration(decl) => match decl {
+            // Nested declarations don't produce bindings yet (the
+            // CLOC13.0 algorithm only surfaces top-level decls);
+            // but their initializers and function bodies still
+            // contain references that need collecting.
+            Declaration::VariableDeclaration(vd) => {
+                for declarator in &vd.declarations {
+                    if let Some(init) = &declarator.init {
+                        walk_expression(init, names, out);
+                    }
+                }
+            }
+            Declaration::FunctionDeclaration(fd) => {
+                walk_block(&fd.body, names, out);
+            }
+        },
+    }
+}
+
+fn walk_tagged_statement(
+    stmt: &TaggedStatement,
+    names: &HashMap<String, BindingId>,
+    out: &mut Vec<Reference>,
+) {
+    match stmt {
+        TaggedStatement::ExpressionStatement(es) => {
+            walk_expression(&es.expression, names, out);
+        }
+        TaggedStatement::BlockStatement(b) => walk_block(b, names, out),
+        TaggedStatement::IfStatement(is) => {
+            walk_expression(&is.test, names, out);
+            walk_statement(&is.consequent, names, out);
+            if let Some(alt) = &is.alternate {
+                walk_statement(alt, names, out);
+            }
+        }
+        TaggedStatement::WhileStatement(ws) => {
+            walk_expression(&ws.test, names, out);
+            walk_statement(&ws.body, names, out);
+        }
+        TaggedStatement::ForStatement(fs) => {
+            if let Some(init) = &fs.init {
+                match init {
+                    ForInit::VariableDeclaration(vd) => {
+                        // The `for (let i = 0; ...)` form. The
+                        // binding declaration's `id` is NOT a
+                        // reference; the `init` expression IS.
+                        for declarator in &vd.declarations {
+                            if let Some(e) = &declarator.init {
+                                walk_expression(e, names, out);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => walk_expression(&e, names, out),
+                }
+            }
+            if let Some(test) = &fs.test {
+                walk_expression(test, names, out);
+            }
+            if let Some(update) = &fs.update {
+                walk_expression(update, names, out);
+            }
+            walk_statement(&fs.body, names, out);
+        }
+        TaggedStatement::ReturnStatement(rs) => {
+            if let Some(arg) = &rs.argument {
+                walk_expression(arg, names, out);
+            }
+        }
+        TaggedStatement::LabeledStatement(ls) => {
+            // The label itself is NOT a reference (it's a label
+            // declaration). The body is.
+            walk_statement(&ls.body, names, out);
+        }
+        TaggedStatement::ThrowStatement(ts) => {
+            walk_expression(&ts.argument, names, out);
+        }
+        // Leaves with no expression children.
+        TaggedStatement::BreakStatement(_) => {}
+        TaggedStatement::ContinueStatement(_) => {}
+        TaggedStatement::EmptyStatement(_) => {}
+    }
+}
+
+fn walk_block(
+    block: &BlockStatement,
+    names: &HashMap<String, BindingId>,
+    out: &mut Vec<Reference>,
+) {
+    for stmt in &block.body {
+        walk_statement(stmt, names, out);
+    }
+}
+
+fn walk_expression(
+    expr: &Expression,
+    names: &HashMap<String, BindingId>,
+    out: &mut Vec<Reference>,
+) {
+    match expr {
+        Expression::Identifier(id) => {
+            // The reference. Resolve by name; `None` means the
+            // identifier is a free global (e.g., `console`).
+            out.push(Reference {
+                name: id.name.clone(),
+                from_scope: ScopeId::GLOBAL,
+                binding: names.get(&id.name).copied(),
+                cv: id.cv.clone(),
+            });
+        }
+        // Leaves with no Identifier children.
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => {}
+        Expression::BinaryExpression(be) => {
+            walk_expression(&be.left, names, out);
+            walk_expression(&be.right, names, out);
+        }
+        Expression::LogicalExpression(le) => {
+            walk_expression(&le.left, names, out);
+            walk_expression(&le.right, names, out);
+        }
+        Expression::UnaryExpression(ue) => {
+            walk_expression(&ue.argument, names, out);
+        }
+        Expression::AssignmentExpression(ae) => {
+            // The LHS target is itself a reference: `x = 1`
+            // both reads `x`'s binding (to assign into it) and
+            // writes through it. For compound ops (`x += 1`)
+            // the read is data-dependent too. Either way, the
+            // name appears in the program and consumer passes
+            // (e.g., `rename`) need to know about it.
+            match &ae.left {
+                AssignmentTarget::Identifier(id) => {
+                    out.push(Reference {
+                        name: id.name.clone(),
+                        from_scope: ScopeId::GLOBAL,
+                        binding: names.get(&id.name).copied(),
+                        cv: id.cv.clone(),
+                    });
+                }
+                AssignmentTarget::MemberExpression(me) => {
+                    walk_member_expression_inner(
+                        &me.object,
+                        &me.property,
+                        me.computed,
+                        names,
+                        out,
+                    );
+                }
+            }
+            walk_expression(&ae.right, names, out);
+        }
+        Expression::ConditionalExpression(ce) => {
+            walk_expression(&ce.test, names, out);
+            walk_expression(&ce.consequent, names, out);
+            walk_expression(&ce.alternate, names, out);
+        }
+        Expression::CallExpression(ce) => {
+            walk_expression(&ce.callee, names, out);
+            for arg in &ce.arguments {
+                walk_expression(arg, names, out);
+            }
+        }
+        Expression::MemberExpression(me) => {
+            walk_member_expression_inner(&me.object, &me.property, me.computed, names, out);
+        }
+        Expression::ArrayExpression(ae) => {
+            for el in &ae.elements {
+                if let Some(e) = el {
+                    walk_expression(e, names, out);
+                }
+            }
+        }
+        Expression::ObjectExpression(oe) => {
+            for prop in &oe.properties {
+                walk_property(prop, names, out);
+            }
+        }
+    }
+}
+
+fn walk_member_expression_inner(
+    object: &Expression,
+    property: &Expression,
+    computed: bool,
+    names: &HashMap<String, BindingId>,
+    out: &mut Vec<Reference>,
+) {
+    // The object IS a reference (`obj.prop` reads `obj`).
+    walk_expression(object, names, out);
+    // The property is a reference ONLY if computed (`obj[name]`).
+    // For the non-computed form (`obj.prop`), `prop` is a static
+    // property name in the object's namespace, not a binding name
+    // resolvable through lexical scope.
+    if computed {
+        walk_expression(property, names, out);
+    }
+}
+
+fn walk_property(
+    prop: &Property,
+    names: &HashMap<String, BindingId>,
+    out: &mut Vec<Reference>,
+) {
+    // The key is a reference only if computed (`{ [n]: v }`).
+    if prop.computed {
+        match &prop.key {
+            PropertyKey::Identifier(id) => {
+                out.push(Reference {
+                    name: id.name.clone(),
+                    from_scope: ScopeId::GLOBAL,
+                    binding: names.get(&id.name).copied(),
+                    cv: id.cv.clone(),
+                });
+            }
+            PropertyKey::StringLiteral(_) | PropertyKey::NumericLiteral(_) => {}
+            PropertyKey::Expression(e) => walk_expression(e, names, out),
+        }
+    }
+    // The value is always walked.
+    walk_expression(&prop.value, names, out);
 }
 
 // ---------------------------------------------------------------------
@@ -668,12 +986,248 @@ mod tests {
 
     #[test]
     fn references_are_empty_in_cloc13_0() {
-        // Pin the deferred-to-CLOC13.0.1 contract.  Once references
-        // start being collected, this test will fail loudly — which is
-        // the right signal: it forces the contributor to update every
-        // consumer pass's expectation that references == empty under
-        // analyzer v0.2.0.
+        // Pinned by CLOC13.0; survives unchanged under CLOC13.0.1.
+        // The fixture has no Identifier expressions — only a
+        // `let x;` declarator with no init — so even with the
+        // CLOC13.0.1 reference walker, zero references emerge.
+        // The test now pins the *no-references-when-no-identifier-
+        // expressions* contract, which is the more durable form
+        // of the original CLOC13.0 promise.
         let prog = program_with(vec![var_decl(VarKind::Let, &["x"])]);
+        let analysis = analyze(&prog);
+        assert!(analysis.references.is_empty());
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC13.0.1 body tests — reference collection.
+    //
+    // These exercise the Phase-2 walker. Bindings come from Phase 1
+    // (= CLOC13.0); references come from Phase 2 (= CLOC13.0.1).
+    // ---------------------------------------------------------------
+
+    use coding_adventures_javascript_ast::{
+        BinaryExpression, BinaryOperator, CallExpression, ExpressionStatement,
+        IfStatement, MemberExpression, NumericLiteral, Statement,
+    };
+
+    fn id_expr(name: &str) -> Expression {
+        Expression::Identifier(ident(name))
+    }
+
+    fn num_expr(v: f64) -> Expression {
+        Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: v,
+            raw: v.to_string(),
+        })
+    }
+
+    fn expr_stmt(expr: Expression) -> ProgramItem {
+        ProgramItem::Statement(Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: expr,
+        }))
+    }
+
+    #[test]
+    fn bare_identifier_in_expression_statement_emits_reference() {
+        // `x;` at the top level — a bare identifier read.
+        let prog = program_with(vec![expr_stmt(id_expr("x"))]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].name, "x");
+        assert_eq!(analysis.references[0].from_scope, ScopeId::GLOBAL);
+        // No binding for `x` → unresolved (free global).
+        assert!(analysis.references[0].binding.is_none());
+    }
+
+    #[test]
+    fn reference_resolves_to_top_level_binding() {
+        // `let x; x;` — the reference must resolve to the binding.
+        let prog = program_with(vec![
+            var_decl(VarKind::Let, &["x"]),
+            expr_stmt(id_expr("x")),
+        ]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.bindings.len(), 1);
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].binding, Some(BindingId(0)));
+    }
+
+    #[test]
+    fn unresolved_reference_to_free_global() {
+        // `console;` — `console` has no binding in this program,
+        // so the reference is unresolved (binding == None). This
+        // is how downstream passes detect free globals.
+        let prog = program_with(vec![expr_stmt(id_expr("console"))]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.references.len(), 1);
+        assert!(analysis.references[0].binding.is_none());
+    }
+
+    #[test]
+    fn binary_expression_collects_both_sides() {
+        // `x + y;` — both `x` and `y` produce references.
+        let prog = program_with(vec![expr_stmt(Expression::BinaryExpression(
+            BinaryExpression {
+                cv: None,
+                operator: BinaryOperator::Add,
+                left: Box::new(id_expr("x")),
+                right: Box::new(id_expr("y")),
+            },
+        ))]);
+        let analysis = analyze(&prog);
+        let names: Vec<_> = analysis
+            .references
+            .iter()
+            .map(|r| r.name.clone())
+            .collect();
+        assert_eq!(names, vec!["x".to_string(), "y".to_string()]);
+    }
+
+    #[test]
+    fn call_expression_collects_callee_and_arguments() {
+        // `f(x, y);` — callee + args all produce references.
+        let prog = program_with(vec![expr_stmt(Expression::CallExpression(
+            CallExpression {
+                cv: None,
+                callee: Box::new(id_expr("f")),
+                arguments: vec![id_expr("x"), id_expr("y")],
+            },
+        ))]);
+        let analysis = analyze(&prog);
+        let names: Vec<_> = analysis
+            .references
+            .iter()
+            .map(|r| r.name.clone())
+            .collect();
+        assert_eq!(names, vec!["f", "x", "y"]);
+    }
+
+    #[test]
+    fn member_expression_collects_object_only_when_not_computed() {
+        // `obj.prop;` — `obj` is a reference; `prop` is a property
+        // *name*, NOT a binding lookup.
+        let prog = program_with(vec![expr_stmt(Expression::MemberExpression(
+            MemberExpression {
+                cv: None,
+                object: Box::new(id_expr("obj")),
+                property: Box::new(id_expr("prop")),
+                computed: false,
+            },
+        ))]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].name, "obj");
+    }
+
+    #[test]
+    fn member_expression_computed_form_collects_property() {
+        // `obj[name];` — `name` IS a reference (computed access).
+        let prog = program_with(vec![expr_stmt(Expression::MemberExpression(
+            MemberExpression {
+                cv: None,
+                object: Box::new(id_expr("obj")),
+                property: Box::new(id_expr("name")),
+                computed: true,
+            },
+        ))]);
+        let analysis = analyze(&prog);
+        let names: Vec<_> = analysis
+            .references
+            .iter()
+            .map(|r| r.name.clone())
+            .collect();
+        assert_eq!(names, vec!["obj", "name"]);
+    }
+
+    #[test]
+    fn variable_declaration_init_walks_for_references() {
+        // `let y = x;` — `x` in the init produces a reference.
+        // The binding `y` is NOT a reference (declaration site).
+        let init = id_expr("x");
+        let prog = program_with(vec![ProgramItem::Declaration(
+            Declaration::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind: VarKind::Let,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(ident("y")),
+                    init: Some(init),
+                }],
+            }),
+        )]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.bindings.len(), 1);
+        assert_eq!(analysis.bindings[0].name, "y");
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].name, "x");
+    }
+
+    #[test]
+    fn function_body_walks_for_references() {
+        // `function f() { x; }` — `x` in the body produces a
+        // reference. The function name `f` is a binding only,
+        // not a reference. (Today, function bodies still live in
+        // GLOBAL until CLOC13.0.2 introduces function scopes;
+        // the from_scope reflects that.)
+        let body = BlockStatement {
+            cv: None,
+            body: vec![Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: id_expr("x"),
+            })],
+        };
+        let prog = program_with(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(FunctionDeclaration {
+                cv: None,
+                id: ident("f"),
+                params: Vec::new(),
+                body,
+                generator: false,
+                is_async: false,
+            }),
+        )]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.bindings.len(), 1);
+        assert_eq!(analysis.bindings[0].name, "f");
+        assert_eq!(analysis.references.len(), 1);
+        assert_eq!(analysis.references[0].name, "x");
+        assert_eq!(analysis.references[0].from_scope, ScopeId::GLOBAL);
+    }
+
+    #[test]
+    fn if_statement_walks_test_and_branches() {
+        // `if (cond) a; else b;` — `cond`, `a`, `b` all produce
+        // references.
+        let if_stmt = ProgramItem::Statement(Statement::if_statement(IfStatement {
+            cv: None,
+            test: id_expr("cond"),
+            consequent: Box::new(Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: id_expr("a"),
+            })),
+            alternate: Some(Box::new(Statement::expression_statement(
+                ExpressionStatement {
+                    cv: None,
+                    expression: id_expr("b"),
+                },
+            ))),
+        }));
+        let prog = program_with(vec![if_stmt]);
+        let analysis = analyze(&prog);
+        let names: Vec<_> = analysis
+            .references
+            .iter()
+            .map(|r| r.name.clone())
+            .collect();
+        assert_eq!(names, vec!["cond", "a", "b"]);
+    }
+
+    #[test]
+    fn literals_in_expression_statements_emit_no_references() {
+        // `1; 2;` — pure literal statements. No references.
+        let prog = program_with(vec![expr_stmt(num_expr(1.0)), expr_stmt(num_expr(2.0))]);
         let analysis = analyze(&prog);
         assert!(analysis.references.is_empty());
     }
