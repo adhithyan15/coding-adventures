@@ -875,12 +875,28 @@ fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
 /// happen for well-formed input), falls back to `""` so QML at least
 /// won't error on extra args.
 fn pick_signal_arg(emit_name: &str, emits: &[EmitDecl]) -> &'static str {
+    pick_signal_arg_with(emit_name, emits, "text")
+}
+
+/// Generic variant: pick the QML invocation argument list, supplying
+/// a custom payload token to use when the signal declares ≥1 params.
+///
+/// Used by emitters where the natural payload is something other
+/// than `text` — e.g. `checked` for `Checkbox.toggled(bool)`, or
+/// `value` for a custom numeric control.  Returns `""` for the
+/// parameterless case so a zero-arity signal is invoked with no
+/// args (the bug that prompted this helper in the first place).
+fn pick_signal_arg_with(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    payload_token: &'static str,
+) -> &'static str {
     let arity = emits
         .iter()
         .find(|e| e.name == emit_name)
         .map(|e| e.params.len())
         .unwrap_or(0);
-    if arity == 0 { "" } else { "text" }
+    if arity == 0 { "" } else { payload_token }
 }
 
 /// Lower a `HostInput` node to a QML `TextInput { ... }` block.
@@ -1009,10 +1025,26 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> 
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    // onClicked: e()
+    // onClicked: e(<arg>) — buttons fire QML's `clicked()` signal
+    // which carries no payload.  If the author declared `emit onTap
+    // ;` (parameterless) we emit `e()`; if they declared a payload
+    // (rare but allowed) we still emit `e()` because the button has
+    // nothing to pass — surface the gap as a comment so the
+    // mismatch is visible to the author.  `pick_signal_arg` returns
+    // `""` for arity-0 signals which is what we want; for arity-≥1
+    // it returns `"text"`, but a button has no `text` in scope, so
+    // we explicitly take the empty-arg path here.
     if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits.iter().find(|e| e.name == *emit_name)
+            .map(|e| e.params.len()).unwrap_or(0);
+        if arity > 0 {
+            writeln!(
+                out,
+                "{inner_pad}// NOTE: signal '{emit_name}' declares {arity} param(s) but Qt's Button.clicked() has none; invoking parameterless"
+            ).unwrap();
+        }
         writeln!(out, "{inner_pad}onClicked: {camel}()").unwrap();
     }
 
@@ -1205,12 +1237,17 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -
         .unwrap();
     }
 
-    // onToggled: x(checked) — Qt fires `toggled(bool checked)` whenever
-    // the user flips the checkbox.
+    // onToggled: x(<arg>) — Qt fires `toggled(bool checked)` whenever
+    // the user flips the checkbox.  Respect the signal's declared
+    // arity: a parameterless `emit onToggle ;` gets invoked as
+    // `x()`; a `emit onToggle ( value : bool )` (or any arity ≥ 1)
+    // gets `x(checked)` since `checked` is the natural payload Qt
+    // makes available in the signal-handler scope.
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner_pad}onToggled: {camel}(checked)").unwrap();
+        let arg = pick_signal_arg_with(emit_name, emits, "checked");
+        writeln!(out, "{inner_pad}onToggled: {camel}({arg})").unwrap();
     }
 
     writeln!(out, "{pad}}}").unwrap();
@@ -1311,12 +1348,22 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
     }
 
     // onCheckedChanged: positive-transition-gated dispatch.
+    // Respect signal arity: a parameterless `emit onSelect ;` gets
+    // invoked as `x()`; a ≥1-arity signal gets the value payload
+    // computed above (`value_for_dispatch`).
     if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits.iter().find(|e| e.name == *emit_name)
+            .map(|e| e.params.len()).unwrap_or(0);
+        let call_args = if arity == 0 {
+            String::new()
+        } else {
+            value_for_dispatch.clone()
+        };
         writeln!(
             out,
-            "{inner_pad}onCheckedChanged: if (checked) {camel}({value_for_dispatch})"
+            "{inner_pad}onCheckedChanged: if (checked) {camel}({call_args})"
         )
         .unwrap();
     }
@@ -1396,18 +1443,23 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Re
 
     let handler_body: String = match (external_false, on_activate) {
         (true, Some(emit)) => {
-            // Pure in-app routing — dispatch only.
+            // Pure in-app routing — dispatch only.  Respect signal
+            // arity: arity-0 → `e()`; arity ≥1 → `e(link)` (Qt's
+            // onLinkActivated handler scope exposes the activated
+            // URL as `link`).
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel)
                 .map_err(PipelineEmitError::UnsafeEmitName)?;
-            format!("{camel}()")
+            let arg = pick_signal_arg_with(emit, emits, "link");
+            format!("{camel}({arg})")
         }
         (false, Some(emit)) => {
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel)
                 .map_err(PipelineEmitError::UnsafeEmitName)?;
+            let arg = pick_signal_arg_with(emit, emits, "link");
             // Dispatch AND open externally.
-            format!("{{ {camel}(); Qt.openUrlExternally(link); }}")
+            format!("{{ {camel}({arg}); Qt.openUrlExternally(link); }}")
         }
         (_, None) => "Qt.openUrlExternally(link)".to_string(),
     };
@@ -1511,11 +1563,14 @@ fn emit_host_number_input_qml(
         writeln!(out, "{inner}{line}").unwrap();
     }
 
-    // onChange -> onValueModified.
+    // onChange -> onValueModified.  Respect signal arity: arity-0 →
+    // `e()`; arity ≥1 → `e(value)` (Qt's SpinBox.value is the
+    // natural payload to forward).
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        writeln!(out, "{inner}onValueModified: {camel}(value)").unwrap();
+        let arg = pick_signal_arg_with(emit_name, emits, "value");
+        writeln!(out, "{inner}onValueModified: {camel}({arg})").unwrap();
     }
 
     writeln!(out, "{pad}}}").unwrap();
@@ -3148,6 +3203,140 @@ mod tests {
             "missing onTextChanged: formulaChange(text) in:\n{}",
             result.output
         );
+    }
+
+    // -------- Tests 20d–20g: extend signal-arity respect to other host emitters --------
+
+    /// HostButton's `onTap` carries no payload by Qt convention
+    /// (`Button.clicked()` has no parameters).  Authors who declare
+    /// a parameterless `emit onTap ;` get `onClicked: x()` — verify
+    /// no extra args slip in.
+    #[test]
+    fn host_button_on_tap_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onTap", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onTap".to_string(),
+                    value: LayoutPropValue::EmitRef("onTap".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onClicked: tap()"));
+        assert!(!r.output.contains("onClicked: tap(text)"));
+    }
+
+    /// HostCheckbox's `onToggle` invocation must follow the
+    /// signal's declared arity.  Parameterless → `onToggled: x()`.
+    #[test]
+    fn host_checkbox_on_toggle_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onToggle", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onToggle".to_string(),
+                    value: LayoutPropValue::EmitRef("onToggle".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains("onToggled: toggle()"),
+            "missing onToggled: toggle() in:\n{}",
+            r.output
+        );
+        assert!(!r.output.contains("onToggled: toggle(checked)"));
+    }
+
+    /// HostCheckbox with a one-param signal still emits the
+    /// `checked` payload (the QML signal-handler scope's natural
+    /// boolean).
+    #[test]
+    fn host_checkbox_on_toggle_one_param_passes_checked() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit_decl(
+                "onToggle",
+                vec![param("value", EmitPayloadType::Bool)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostCheckbox".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onToggle".to_string(),
+                    value: LayoutPropValue::EmitRef("onToggle".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onToggled: toggle(checked)"));
+    }
+
+    /// HostRadio with a parameterless `onSelect` must NOT pass the
+    /// value payload (which is the natural Qt fallback).
+    #[test]
+    fn host_radio_on_select_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onSelect", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostRadio".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::String("vanilla".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onSelect".to_string(),
+                        value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output
+                .contains("onCheckedChanged: if (checked) select()"),
+            "missing parameterless onCheckedChanged dispatch in:\n{}",
+            r.output
+        );
+    }
+
+    /// HostNumberInput's `onChange` must respect arity too.
+    #[test]
+    fn host_number_input_on_change_parameterless_emits_no_args() {
+        let m = component("X", vec![], vec![emit_decl("onChange", vec![])]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostNumberInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onChange".to_string(),
+                    value: LayoutPropValue::EmitRef("onChange".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(r.output.contains("onValueModified: change()"));
+        assert!(!r.output.contains("onValueModified: change(value)"));
     }
 
     // -------- Test 21: HostInput with onCancel emits Keys.onEscapePressed --------
