@@ -2,6 +2,84 @@
 
 ## Unreleased
 
+### Added — v1.2.0: N-D batched MatMul + higher-rank Transpose (Phase A.2)
+
+PR #2 of 7 in **Phase A** — v1.0 had a 2-D-only `MatMul` and a
+2-D-only `transpose`; ML code with batches (attention, batched matmul
+in MLPs over sequences, etc.) couldn't express what it needed without
+manually reshaping.  v1.2 fixes both.
+
+#### What works now
+
+```ts
+// Batched matmul: (B, M, K) @ (B, K, N) → (B, M, N)
+const a = Tensor.zeros(8, 3, 4);      // 8 batches of (3, 4)
+const b = Tensor.zeros(8, 4, 5);      // 8 batches of (4, 5)
+a.matmul(b).shape;                    // → [8, 3, 5]
+
+// Broadcast right operand: (B, M, K) @ (K, N) → (B, M, N)
+const w = Tensor.zeros(4, 5);         // shared weight matrix
+a.matmul(w).shape;                    // → [8, 3, 5]; gradient on `w` sums across batch
+
+// Multi-batch broadcasting: (B1, 1, M, K) @ (1, B2, K, N) → (B1, B2, M, N)
+const x = Tensor.zeros(2, 1, 3, 4);
+const y = Tensor.zeros(1, 5, 4, 6);
+x.matmul(y).shape;                    // → [2, 5, 3, 6]
+
+// N-D transpose with arbitrary perm
+const t = Tensor.zeros(2, 3, 4, 5);
+t.transpose(2, 0, 3, 1).shape;        // → [4, 2, 5, 3]
+```
+
+#### Implementation notes
+
+- **`MatMulOp`** (`src/ops.ts`): the 2-D fast path is unchanged
+  (identical bytes/numerical output as v1.0; the Rust dispatch path
+  still triggers at `numel ≥ 10_000`).  For rank ≥ 3 on either input,
+  the op splits each tensor into a "batch portion" (all dims except
+  the trailing two) and a "matrix portion".  Batch portions broadcast
+  via the existing `broadcastShapes`/`broadcastDataTo` helpers from
+  Phase A.1; the matrix portion stays untouched (broadcasting matrix
+  dims is not what batched matmul means).  Then a per-slice 2-D matmul
+  loop reuses the existing `_matmulNaive` helper.
+- **Backward** for batched matmul applies the same per-slice formulas
+  (`dL/dA_slice = grad_slice @ B_slice^T`, `dL/dB_slice = A_slice^T @
+  grad_slice`), then `unbroadcastDataTo` flows gradients back to each
+  parent's original shape — so a shared/broadcast operand (e.g. a
+  per-layer weight matrix used across a batch) receives a properly
+  summed gradient.
+- **`Tensor.transpose`** (`src/tensor.ts`): 2-D fast path preserved.
+  For rank ≥ 3, generic strided index math: walk every output flat
+  index, decompose into output coordinates, map to input coordinates
+  via the inverse permutation, look up the source value.  O(numel).
+  Pure TS — no Rust dispatch yet (matrix-cpu would need a generic
+  Transpose op; deferred).
+- Rust dispatch is intentionally limited to the original 2-D MatMul
+  path for now.  A future PR can add a `BatchMatMul` op to matrix-ir
+  and lift the per-slice loop into Rust SIMD — for now, the TS path
+  is correct and fast at the parameter sizes ML training uses.
+
+#### Tests
+
+- 15 new vitest cases (`tests/batched-matmul.test.ts` + extended
+  transpose coverage in `tests/tensor.test.ts`).
+- Covers all five supported batched-matmul shape patterns, shape
+  validation (rank < 2 rejected, inner-dim mismatch rejected,
+  incompatible batch dims rejected), backward gradient correctness
+  for the broadcast cases, plus N-D transpose forward + roundtrip.
+- The existing v1.0 2-D matmul + 2-D transpose tests still pass
+  bit-identically.
+- **194 tests pass.**  Up from 179 in v1.1.
+
+#### Why this matters for the bigger picture
+
+Batched matmul + N-D transpose are the two ops you need before
+implementing anything attention-shaped (Q, K, V tensors are
+typically rank-3 or rank-4; computing `Q @ K^T` for attention
+requires both batched matmul and a higher-rank transpose).  This PR
+clears the runway for Phase A.3 (Embedding) and the eventual
+transformer architectures.
+
 ### Added — v1.1.0: NumPy-style broadcasting (Phase A.1)
 
 PR #1 of 7 in **Phase A** — broadening the op vocabulary toward

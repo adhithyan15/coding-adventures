@@ -109,8 +109,10 @@ describe("ForwardSmall — every op pure-TS path", () => {
     expect(out.shape).toEqual([2, 2]);
     expect(out.toArray()).toEqual([19, 22, 43, 50]);
   });
-  it("MatMul rejects non-2-D", () => {
+  it("MatMul rejects rank < 2 on either input", () => {
     expect(() => MatMulOp.apply(new Tensor([1, 2, 3]), new Tensor([[1, 2], [3, 4]])))
+      .toThrow(RangeError);
+    expect(() => MatMulOp.apply(new Tensor([[1, 2], [3, 4]]), new Tensor([1, 2])))
       .toThrow(RangeError);
   });
   it("MatMul rejects inner-dim mismatch", () => {
