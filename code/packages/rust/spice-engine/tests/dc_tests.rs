@@ -1,12 +1,13 @@
 use spice_engine::{
     circuit_at_temperature, dc_corners, dc_corners_parallel, dc_op, dc_op_with_options, dc_sweep,
-    dc_sweep_corners, dc_temperature_sweep, dc_temperature_sweep_corners,
-    format_corner_dc_sweep_table, format_corner_dc_table, format_corner_temperature_dc_table,
-    format_dc_sweep_table, format_temperature_dc_table, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
-    Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
-    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError, SubcircuitDefinition,
-    SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource, Waveform, XInstance,
+    dc_sweep_corners, dc_sweep_corners_parallel, dc_temperature_sweep,
+    dc_temperature_sweep_corners, format_corner_dc_sweep_table, format_corner_dc_table,
+    format_corner_temperature_dc_table, format_dc_sweep_table, format_temperature_dc_table,
+    BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
+    CornerTemperatureDcResult, CurrentSource, DcConvergenceAid, DcOpOptions, Diode, Element,
+    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
+    SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs,
+    VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1299,6 +1300,73 @@ fn dc_sweep_corners_runs_source_sweeps_per_corner() {
         result.points[1].points[2].result.voltage("out").unwrap(),
         10.0 / 3.0,
     );
+}
+
+#[test]
+fn dc_sweep_corners_parallel_matches_ordered_sequential_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", Vec::new()),
+        CornerSpec::new(
+            "rbot-fast",
+            vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+        ),
+        CornerSpec::new(
+            "rtop-slow",
+            vec![CornerOverride::new("Rtop", "resistance", 2_000.0)],
+        ),
+    ];
+
+    let sequential = dc_sweep_corners(&circuit, "Vin", 0.0, 10.0, 5.0, &corners).unwrap();
+    let parallel = dc_sweep_corners_parallel(&circuit, "Vin", 0.0, 10.0, 5.0, &corners).unwrap();
+
+    assert_eq!(parallel.source_name, sequential.source_name);
+    assert_eq!(parallel.points.len(), sequential.points.len());
+    for (parallel_corner, sequential_corner) in parallel.points.iter().zip(sequential.points.iter())
+    {
+        assert_eq!(parallel_corner.corner_name, sequential_corner.corner_name);
+        assert_eq!(parallel_corner.points.len(), sequential_corner.points.len());
+        for (parallel_point, sequential_point) in parallel_corner
+            .points
+            .iter()
+            .zip(sequential_corner.points.iter())
+        {
+            assert_close(parallel_point.value, sequential_point.value);
+            assert_close(
+                parallel_point.result.voltage("out").unwrap(),
+                sequential_point.result.voltage("out").unwrap(),
+            );
+            assert_close(
+                parallel_point.result.branch_current("Vin").unwrap(),
+                sequential_point.result.branch_current("Vin").unwrap(),
+            );
+        }
+    }
+    assert_eq!(
+        format_corner_dc_sweep_table(&parallel, &["V(out)", "I(Vin)"]).unwrap(),
+        "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\nnominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\nnominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\nnominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\nrbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\nrbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\nrbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\nrtop-slow\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\nrtop-slow\t1\tVin\t5.000000e+00\t1.666667e+00\t-1.666667e-03\nrtop-slow\t2\tVin\t1.000000e+01\t3.333333e+00\t-3.333333e-03\n"
+    );
+}
+
+#[test]
+fn dc_sweep_corners_parallel_rejects_invalid_sweep_before_workers() {
+    let circuit = Circuit::new();
+    let corners = [CornerSpec::new("nominal", Vec::new())];
+
+    assert!(matches!(
+        dc_sweep_corners_parallel(&circuit, "Vin", 0.0, 10.0, 0.0, &corners),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "Vin" && reason.contains("non-zero step")
+    ));
 }
 
 #[test]
