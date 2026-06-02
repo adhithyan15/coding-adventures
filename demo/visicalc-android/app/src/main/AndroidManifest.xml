@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml — declares the single MainActivity that hosts
+  the Compose VisiCalc surface.  No special permissions; the demo
+  doesn't touch network, storage, camera, or sensors.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:label="VisiCalc"
+        android:theme="@style/Theme.VisiCalc">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="VisiCalc">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
