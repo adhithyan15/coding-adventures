@@ -5,11 +5,11 @@ use spice_engine::{
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_digital_event_stream_table,
-    format_digital_event_table, format_distortion_table, format_fourier_table,
-    format_pole_zero_table, format_pss_table, format_transient_table, fourier, fourier_corners,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    format_corner_transient_table, format_dc_table, format_digital_bridge_schedule_table,
+    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
+    format_fourier_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, fourier_corners, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
+    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
@@ -20,11 +20,11 @@ use spice_engine::{
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
     Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
-    CurrentSource, DigitalEvent, DigitalEventStream, DigitalLogicLevels, DigitalState,
-    DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult, Element, ExpWaveform,
-    FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet, JfetPolarity,
-    MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult, PoleZeroTopology,
-    PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
+    CurrentSource, DigitalBridgeSchedule, DigitalEvent, DigitalEventStream, DigitalLogicLevels,
+    DigitalState, DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult,
+    Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet,
+    JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
+    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
     PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
     PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
     TransmissionLine, VoltageSource, Waveform,
@@ -2110,6 +2110,80 @@ fn named_digital_event_streams_build_pwl_voltage_sources() {
     assert_close(points.last().unwrap().voltage("din").unwrap(), 0.0);
     assert_close(points[0].voltage("enable").unwrap(), 1.8);
     assert_close(points.last().unwrap().voltage("enable").unwrap(), 0.0);
+}
+
+#[test]
+fn digital_bridge_schedule_collects_unique_event_and_transition_breakpoints() {
+    let streams = [
+        DigitalEventStream::new(
+            "clk",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.25e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.25e-9, DigitalState::Low),
+                DigitalEvent::new(0.75e-9, DigitalState::High),
+            ],
+        ),
+    ];
+
+    let schedule = spice_engine::digital_event_streams_to_bridge_schedule(
+        &streams,
+        DigitalLogicLevels::cmos_1v8(0.25e-9),
+    )
+    .unwrap();
+
+    assert_close(schedule.stop_time, 1.5e-9);
+    assert_eq!(schedule.breakpoints.len(), 7);
+    assert_close(schedule.breakpoints[0], 0.0);
+    assert_close(schedule.breakpoints[1], 0.25e-9);
+    assert_close(schedule.breakpoints[2], 0.5e-9);
+    assert_close(schedule.breakpoints[3], 0.75e-9);
+    assert_close(schedule.breakpoints[4], 1.0e-9);
+    assert_close(schedule.breakpoints[5], 1.25e-9);
+    assert_close(schedule.breakpoints[6], 1.5e-9);
+    assert_eq!(
+        format_digital_bridge_schedule_table(&schedule).unwrap(),
+        "Index\tTime\tStopTime\n0\t0.000000e+00\t1.500000e-09\n1\t2.500000e-10\t1.500000e-09\n2\t5.000000e-10\t1.500000e-09\n3\t7.500000e-10\t1.500000e-09\n4\t1.000000e-09\t1.500000e-09\n5\t1.250000e-09\t1.500000e-09\n6\t1.500000e-09\t1.500000e-09\n"
+    );
+}
+
+#[test]
+fn digital_bridge_schedule_rejects_overlapping_transitions() {
+    let streams = [DigitalEventStream::new(
+        "din",
+        vec![
+            DigitalEvent::new(0.0, DigitalState::Low),
+            DigitalEvent::new(0.5e-9, DigitalState::High),
+            DigitalEvent::new(0.6e-9, DigitalState::Low),
+        ],
+    )];
+
+    assert!(matches!(
+        spice_engine::digital_event_streams_to_bridge_schedule(
+            &streams,
+            DigitalLogicLevels::cmos_1v8(0.25e-9),
+        ),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "digital_events"
+    ));
+}
+
+#[test]
+fn digital_bridge_schedule_table_rejects_unsorted_breakpoints() {
+    let schedule = DigitalBridgeSchedule {
+        stop_time: 1.0e-9,
+        breakpoints: vec![0.5e-9, 0.25e-9],
+    };
+
+    assert!(matches!(
+        format_digital_bridge_schedule_table(&schedule),
+        Err(SpiceError::InvalidElement { name, .. }) if name == "digital_bridge_schedule"
+    ));
 }
 
 #[test]
