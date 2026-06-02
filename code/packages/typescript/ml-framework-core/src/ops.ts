@@ -281,14 +281,13 @@ function unaryElementwise(
 }
 
 // ===========================================================================
-// Stub for not-yet-implemented backward — every Op below uses this.
-// ===========================================================================
-function notImplementedBackward(): never {
-  throw new Error("backward not implemented; lands in PR #4");
-}
-
-// ===========================================================================
-// The 15 differentiable ops.
+// The 15 differentiable ops — forward + backward.
+//
+// Backward formulas mirror Python autograd.py / Ruby PR #7 exactly.  All
+// done in pure TS for v0.4.0 (the formulas are mostly element-wise muls
+// + reductions; routing through Rust would require new envelope shapes
+// per backward op — deferred to a follow-up).  Pure-TS is correct and
+// fast enough for the parameter-shaped tensors that typify training.
 // ===========================================================================
 
 // ────────── Binary elementwise: Add / Sub / Mul / Div ──────────
@@ -297,28 +296,82 @@ export class AddOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     return binaryElementwise("Add", inputs[0] as Tensor, inputs[1] as Tensor, (x, y) => x + y);
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx (x + y) = 1, d/dy (x + y) = 1.  Pass-through to both parents.
+  // Build fresh Tensors so each parent gets its own copy.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const g = Array.from(grad.data);
+    return [
+      new Tensor(g.slice(), { shape: grad.shape.slice() }),
+      new Tensor(g.slice(), { shape: grad.shape.slice() }),
+    ];
+  }
 }
 
 export class SubOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     return binaryElementwise("Sub", inputs[0] as Tensor, inputs[1] as Tensor, (x, y) => x - y);
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx (x - y) = 1, d/dy (x - y) = -1.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const g = Array.from(grad.data);
+    return [
+      new Tensor(g.slice(), { shape: grad.shape.slice() }),
+      new Tensor(g.map((v) => -v), { shape: grad.shape.slice() }),
+    ];
+  }
 }
 
 export class MulOp extends Function {
   forward(...inputs: unknown[]): Tensor {
-    return binaryElementwise("Mul", inputs[0] as Tensor, inputs[1] as Tensor, (x, y) => x * y);
+    const a = inputs[0] as Tensor;
+    const b = inputs[1] as Tensor;
+    this.savedForBackward.a = a;
+    this.savedForBackward.b = b;
+    return binaryElementwise("Mul", a, b, (x, y) => x * y);
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx (x*y) = y, d/dy (x*y) = x.  Element-wise chain rule.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const b = this.savedForBackward.b as Tensor;
+    const gData = grad.data;
+    const outA = new Array(a.numel);
+    const outB = new Array(b.numel);
+    for (let i = 0; i < a.numel; i++) {
+      outA[i] = gData[i]! * b.data[i]!;
+      outB[i] = gData[i]! * a.data[i]!;
+    }
+    return [
+      new Tensor(outA, { shape: a.shape.slice() }),
+      new Tensor(outB, { shape: b.shape.slice() }),
+    ];
+  }
 }
 
 export class DivOp extends Function {
   forward(...inputs: unknown[]): Tensor {
-    return binaryElementwise("Div", inputs[0] as Tensor, inputs[1] as Tensor, (x, y) => x / y);
+    const a = inputs[0] as Tensor;
+    const b = inputs[1] as Tensor;
+    this.savedForBackward.a = a;
+    this.savedForBackward.b = b;
+    return binaryElementwise("Div", a, b, (x, y) => x / y);
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx (x/y) = 1/y, d/dy (x/y) = -x/y².  Standard quotient rule.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const b = this.savedForBackward.b as Tensor;
+    const gData = grad.data;
+    const outA = new Array(a.numel);
+    const outB = new Array(b.numel);
+    for (let i = 0; i < a.numel; i++) {
+      const bv = b.data[i]!;
+      outA[i] = gData[i]! / bv;
+      outB[i] = -gData[i]! * a.data[i]! / (bv * bv);
+    }
+    return [
+      new Tensor(outA, { shape: a.shape.slice() }),
+      new Tensor(outB, { shape: b.shape.slice() }),
+    ];
+  }
 }
 
 // ────────── Unary elementwise: Neg / Abs / Tanh ──────────
@@ -327,34 +380,74 @@ export class NegOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     return unaryElementwise("Neg", inputs[0] as Tensor, (v) => -v);
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx (-x) = -1.
+  backward(grad: Tensor): (Tensor | null)[] {
+    return [new Tensor(Array.from(grad.data).map((v) => -v), { shape: grad.shape.slice() })];
+  }
 }
 
 export class AbsOp extends Function {
   forward(...inputs: unknown[]): Tensor {
-    return unaryElementwise("Abs", inputs[0] as Tensor, (v) => Math.abs(v));
+    const a = inputs[0] as Tensor;
+    this.savedForBackward.a = a;
+    return unaryElementwise("Abs", a, (v) => Math.abs(v));
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx |x| = sign(x).  Convention: sign(0) = 0 (PyTorch).
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const out = new Array(a.numel);
+    for (let i = 0; i < a.numel; i++) {
+      const av = a.data[i]!;
+      out[i] = av > 0 ? grad.data[i]! : av < 0 ? -grad.data[i]! : 0;
+    }
+    return [new Tensor(out, { shape: a.shape.slice() })];
+  }
 }
 
 export class TanhOp extends Function {
   forward(...inputs: unknown[]): Tensor {
-    return unaryElementwise("Tanh", inputs[0] as Tensor, (v) => Math.tanh(v));
+    // Save the OUTPUT (not the input) — tanh backward is 1 - tanh²(x)
+    // which is cheaper to compute as 1 - y² from the already-computed
+    // forward output.
+    const out = unaryElementwise("Tanh", inputs[0] as Tensor, (v) => Math.tanh(v));
+    this.savedForBackward.output = out;
+    return out;
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx tanh(x) = 1 - tanh²(x) = 1 - y².
+  backward(grad: Tensor): (Tensor | null)[] {
+    const y = this.savedForBackward.output as Tensor;
+    const out = new Array(y.numel);
+    for (let i = 0; i < y.numel; i++) {
+      const yv = y.data[i]!;
+      out[i] = grad.data[i]! * (1 - yv * yv);
+    }
+    return [new Tensor(out, { shape: y.shape.slice() })];
+  }
 }
 
-// ────────── Pow: scalar exponent, pure TS for v0.3.0 ──────────
+// ────────── Pow: scalar exponent ──────────
 
 export class PowOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
     const exponent = inputs[1] as number;
+    this.savedForBackward.a = a;
+    this.savedForBackward.exponent = exponent;
     const out = new Array(a.numel);
     for (let i = 0; i < a.numel; i++) out[i] = Math.pow(a.data[i]!, exponent);
     return new Tensor(out, { shape: a.shape.slice() });
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx x^e = e * x^(e-1).  Only one Tensor parent (exponent is a Numeric,
+  // filtered out by Function.apply); return a 1-element Array to match.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const e = this.savedForBackward.exponent as number;
+    const out = new Array(a.numel);
+    for (let i = 0; i < a.numel; i++) {
+      out[i] = grad.data[i]! * e * Math.pow(a.data[i]!, e - 1);
+    }
+    return [new Tensor(out, { shape: a.shape.slice() })];
+  }
 }
 
 // ────────── MatMul (2-D only) ──────────
@@ -372,38 +465,87 @@ export class MatMulOp extends Function {
       throw new RangeError(`matmul shape mismatch: [${a.shape.join(", ")}] @ [${b.shape.join(", ")}]`);
     }
 
+    this.savedForBackward.a = a;
+    this.savedForBackward.b = b;
+
     if (a.numel >= DISPATCH_THRESHOLD || b.numel >= DISPATCH_THRESHOLD) {
       const envelope = matmulEnvelope(a, b);
       const out = runEnvelope(envelope, m * n);
       return new Tensor(Array.from(out), { shape: [m, n] });
     }
 
-    // Pure-TS triple-loop matmul.  O(m*k*n).
+    return new Tensor(MatMulOp._matmulNaive(a.data, b.data, m, k1, n), { shape: [m, n] });
+  }
+
+  // Backward for C = A @ B (2-D):
+  //   dL/dA = grad @ B^T
+  //   dL/dB = A^T @ grad
+  // Use internal helpers (not MatMulOp.apply) so backward stays a leaf
+  // math operation — no extra autograd subgraph.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const b = this.savedForBackward.b as Tensor;
+    const [m, k] = a.shape as [number, number];
+    const [, n] = b.shape as [number, number];
+
+    const bT = MatMulOp._transpose2D(b.data, k, n);             // (n, k)
+    const gradAData = MatMulOp._matmulNaive(grad.data, bT, m, n, k);  // (m, k)
+
+    const aT = MatMulOp._transpose2D(a.data, m, k);             // (k, m)
+    const gradBData = MatMulOp._matmulNaive(aT, grad.data, k, m, n);  // (k, n)
+
+    return [
+      new Tensor(gradAData, { shape: [m, k] }),
+      new Tensor(gradBData, { shape: [k, n] }),
+    ];
+  }
+
+  /** O(m*k*n) naive matmul on raw Float32Array data. */
+  static _matmulNaive(aData: ArrayLike<number>, bData: ArrayLike<number>, m: number, k: number, n: number): number[] {
     const out = new Array(m * n).fill(0);
     for (let i = 0; i < m; i++) {
       for (let j = 0; j < n; j++) {
         let acc = 0;
-        for (let kk = 0; kk < k1; kk++) {
-          acc += a.data[i * k1 + kk]! * b.data[kk * n + j]!;
+        for (let kk = 0; kk < k; kk++) {
+          acc += aData[i * k + kk]! * bData[kk * n + j]!;
         }
         out[i * n + j] = acc;
       }
     }
-    return new Tensor(out, { shape: [m, n] });
+    return out;
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+
+  /** Transpose a flat (rows × cols) row-major matrix.  Returns a new Array. */
+  static _transpose2D(data: ArrayLike<number>, rows: number, cols: number): number[] {
+    const out = new Array(rows * cols);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        out[c * rows + r] = data[r * cols + c]!;
+      }
+    }
+    return out;
+  }
 }
 
-// ────────── ReLU / Sigmoid / GELU / Softmax — pure TS for v0.3.0 ──────────
+// ────────── ReLU / Sigmoid / GELU / Softmax — pure TS ──────────
 
 export class ReLUOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
+    this.savedForBackward.a = a;
     const out = new Array(a.numel);
     for (let i = 0; i < a.numel; i++) out[i] = a.data[i]! > 0 ? a.data[i]! : 0;
     return new Tensor(out, { shape: a.shape.slice() });
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx ReLU(x) = 1 if x > 0 else 0.  x == 0 → 0 (PyTorch).
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const out = new Array(a.numel);
+    for (let i = 0; i < a.numel; i++) {
+      out[i] = a.data[i]! > 0 ? grad.data[i]! : 0;
+    }
+    return [new Tensor(out, { shape: a.shape.slice() })];
+  }
 }
 
 export class SigmoidOp extends Function {
@@ -411,9 +553,21 @@ export class SigmoidOp extends Function {
     const a = inputs[0] as Tensor;
     const out = new Array(a.numel);
     for (let i = 0; i < a.numel; i++) out[i] = 1 / (1 + Math.exp(-a.data[i]!));
-    return new Tensor(out, { shape: a.shape.slice() });
+    const result = new Tensor(out, { shape: a.shape.slice() });
+    // Save the OUTPUT y — sigmoid backward is y * (1 - y).
+    this.savedForBackward.output = result;
+    return result;
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx σ(x) = σ(x) * (1 - σ(x)) = y * (1 - y).
+  backward(grad: Tensor): (Tensor | null)[] {
+    const y = this.savedForBackward.output as Tensor;
+    const out = new Array(y.numel);
+    for (let i = 0; i < y.numel; i++) {
+      const yv = y.data[i]!;
+      out[i] = grad.data[i]! * yv * (1 - yv);
+    }
+    return [new Tensor(out, { shape: y.shape.slice() })];
+  }
 }
 
 export class GELUOp extends Function {
@@ -424,6 +578,7 @@ export class GELUOp extends Function {
 
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
+    this.savedForBackward.a = a;
     const c = GELUOp.SQRT_2_OVER_PI;
     const k = GELUOp.COEFF;
     const out = new Array(a.numel);
@@ -433,7 +588,27 @@ export class GELUOp extends Function {
     }
     return new Tensor(out, { shape: a.shape.slice() });
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // GELU backward (tanh-approximation form):
+  //   inner   = √(2/π) * (x + 0.044715 * x³)
+  //   tanh_v  = tanh(inner)
+  //   sech²   = 1 - tanh_v²
+  //   d_inner = √(2/π) * (1 + 3 * 0.044715 * x²)
+  //   dy/dx   = 0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner
+  backward(grad: Tensor): (Tensor | null)[] {
+    const a = this.savedForBackward.a as Tensor;
+    const c = GELUOp.SQRT_2_OVER_PI;
+    const k = GELUOp.COEFF;
+    const out = new Array(a.numel);
+    for (let i = 0; i < a.numel; i++) {
+      const x = a.data[i]!;
+      const inner = c * (x + k * x * x * x);
+      const tanhV = Math.tanh(inner);
+      const sech2 = 1 - tanhV * tanhV;
+      const dInner = c * (1 + 3 * k * x * x);
+      out[i] = grad.data[i]! * (0.5 * (1 + tanhV) + 0.5 * x * sech2 * dInner);
+    }
+    return [new Tensor(out, { shape: a.shape.slice() })];
+  }
 }
 
 export class SoftmaxOp extends Function {
@@ -464,9 +639,34 @@ export class SoftmaxOp extends Function {
         out[rowStart + k] = tmp[k] / sum;
       }
     }
-    return new Tensor(out, { shape: a.shape.slice() });
+    const result = new Tensor(out, { shape: a.shape.slice() });
+    this.savedForBackward.output = result;
+    this.savedForBackward.lastAxisSize = lastAxisSize;
+    return result;
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+
+  // Softmax backward (per-row over the last axis):
+  //   dL/dx_i = y_i * (g_i - Σ_j (g_j * y_j))
+  // The dot product is per-row; each row is independent.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const y = this.savedForBackward.output as Tensor;
+    const lastAxisSize = this.savedForBackward.lastAxisSize as number;
+    const numel = y.numel;
+    const outer = numel / lastAxisSize;
+    const out = new Array(numel);
+    for (let o = 0; o < outer; o++) {
+      const rowStart = o * lastAxisSize;
+      let dot = 0;
+      for (let k = 0; k < lastAxisSize; k++) {
+        dot += grad.data[rowStart + k]! * y.data[rowStart + k]!;
+      }
+      for (let k = 0; k < lastAxisSize; k++) {
+        const idx = rowStart + k;
+        out[idx] = y.data[idx]! * (grad.data[idx]! - dot);
+      }
+    }
+    return [new Tensor(out, { shape: y.shape.slice() })];
+  }
 }
 
 // ────────── Reductions: Sum / Mean (reduce-all) ──────────
@@ -474,6 +674,7 @@ export class SoftmaxOp extends Function {
 export class SumOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
+    this.savedForBackward.inputShape = a.shape.slice();
     if (a.numel >= DISPATCH_THRESHOLD) {
       const envelope = reduceAllEnvelope("ReduceSum", a);
       const out = runEnvelope(envelope, 1);
@@ -483,12 +684,21 @@ export class SumOp extends Function {
     for (let i = 0; i < a.numel; i++) sum += a.data[i]!;
     return new Tensor([sum], { shape: [1] });
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx_i (Σ x_j) = 1.  Broadcast the scalar gradient (shape [1]) to
+  // a full tensor of the input shape.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const inputShape = this.savedForBackward.inputShape as number[];
+    const g = grad.data[0]!;
+    const numel = inputShape.length === 0 ? 1 : inputShape.reduce((a, b) => a * b, 1);
+    return [new Tensor(new Array(numel).fill(g), { shape: inputShape.slice() })];
+  }
 }
 
 export class MeanOp extends Function {
   forward(...inputs: unknown[]): Tensor {
     const a = inputs[0] as Tensor;
+    this.savedForBackward.inputShape = a.shape.slice();
+    this.savedForBackward.numel = a.numel;
     if (a.numel >= DISPATCH_THRESHOLD) {
       const envelope = reduceAllEnvelope("ReduceMean", a);
       const out = runEnvelope(envelope, 1);
@@ -498,5 +708,12 @@ export class MeanOp extends Function {
     for (let i = 0; i < a.numel; i++) sum += a.data[i]!;
     return new Tensor([sum / a.numel], { shape: [1] });
   }
-  backward(): (Tensor | null)[] { return notImplementedBackward(); }
+  // d/dx_i ((1/N) Σ x_j) = 1/N.  Broadcast g/N to the input shape.
+  backward(grad: Tensor): (Tensor | null)[] {
+    const inputShape = this.savedForBackward.inputShape as number[];
+    const n = this.savedForBackward.numel as number;
+    const g = grad.data[0]! / n;
+    const numel = inputShape.length === 0 ? 1 : inputShape.reduce((a, b) => a * b, 1);
+    return [new Tensor(new Array(numel).fill(g), { shape: inputShape.slice() })];
+  }
 }

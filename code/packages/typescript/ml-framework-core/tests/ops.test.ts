@@ -172,12 +172,12 @@ describe("ForwardSmall — every op pure-TS path", () => {
     expect(out.toArray()).toEqual([2.5]);
   });
 
-  // Backward not implemented yet (PR #4)
-  it("backward throws 'not implemented' for now", () => {
-    const x = new Tensor([1]);
-    x.requiresGrad = true;
+  // Sanity check: backward now works end-to-end (PR #4 added it).
+  it("backward through a simple Add chain works", () => {
+    const x = new Tensor([1]); x.requiresGrad = true;
     const y = AddOp.apply(x, new Tensor([2]));
-    expect(() => y.backward()).toThrow(/not implemented/);
+    y.backward();
+    expect(x.grad!.toArray()).toEqual([1]);
   });
 });
 
@@ -290,6 +290,166 @@ describe("TensorMethods — sugar that dispatches to the Op classes", () => {
 
   it("unsupported operand throws TypeError", () => {
     expect(() => new Tensor([1]).add("oops" as never)).toThrow(TypeError);
+  });
+});
+
+describe("BackwardCorrectness — analytical gradient formulas", () => {
+  // Each test follows the Ruby PR #7 pattern: build a leaf with
+  // requiresGrad, run forward, seed backward, assert x.grad matches the
+  // analytical formula for that op.
+
+  it("Add backward writes ones to both parents", () => {
+    const a = new Tensor([1, 2, 3]); a.requiresGrad = true;
+    const b = new Tensor([10, 20, 30]); b.requiresGrad = true;
+    AddOp.apply(a, b).backward();
+    expect(a.grad!.toArray()).toEqual([1, 1, 1]);
+    expect(b.grad!.toArray()).toEqual([1, 1, 1]);
+  });
+
+  it("Sub backward gives +1 to a, -1 to b", () => {
+    const a = new Tensor([5, 5]); a.requiresGrad = true;
+    const b = new Tensor([1, 1]); b.requiresGrad = true;
+    SubOp.apply(a, b).backward();
+    expect(a.grad!.toArray()).toEqual([1, 1]);
+    expect(b.grad!.toArray()).toEqual([-1, -1]);
+  });
+
+  it("Mul backward gives b to a and a to b", () => {
+    const a = new Tensor([2, 3]); a.requiresGrad = true;
+    const b = new Tensor([4, 5]); b.requiresGrad = true;
+    MulOp.apply(a, b).backward();
+    expect(a.grad!.toArray()).toEqual([4, 5]);
+    expect(b.grad!.toArray()).toEqual([2, 3]);
+  });
+
+  it("Div backward: 1/b and -a/b²", () => {
+    const a = new Tensor([10, 20]); a.requiresGrad = true;
+    const b = new Tensor([2, 4]); b.requiresGrad = true;
+    DivOp.apply(a, b).backward();
+    expect(a.grad!.toArray()).toEqual([0.5, 0.25]);
+    expect(b.grad!.toArray()).toEqual([-2.5, -1.25]);
+  });
+
+  it("Neg backward flips signs of the gradient", () => {
+    const a = new Tensor([1, -2]); a.requiresGrad = true;
+    NegOp.apply(a).backward();
+    expect(a.grad!.toArray()).toEqual([-1, -1]);
+  });
+
+  it("Abs backward: sign(x), with sign(0) = 0", () => {
+    const a = new Tensor([-2, 0, 3]); a.requiresGrad = true;
+    AbsOp.apply(a).backward();
+    expect(a.grad!.toArray()).toEqual([-1, 0, 1]);
+  });
+
+  it("Pow backward: e * x^(e-1)", () => {
+    const a = new Tensor([2, 3]); a.requiresGrad = true;
+    PowOp.apply(a, 3).backward();
+    // d(x^3)/dx = 3x²; at x=2 → 12; at x=3 → 27.
+    expect(a.grad!.toArray()).toEqual([12, 27]);
+  });
+
+  it("MatMul backward: dL/dA = g @ B^T, dL/dB = A^T @ g", () => {
+    // A: (2, 3), B: (3, 2), C: (2, 2), seed grad = ones(2, 2).
+    const a = new Tensor([[1, 2, 3], [4, 5, 6]]); a.requiresGrad = true;
+    const b = new Tensor([[7, 8], [9, 10], [11, 12]]); b.requiresGrad = true;
+    MatMulOp.apply(a, b).backward();
+    expect(a.grad!.shape).toEqual([2, 3]);
+    expect(b.grad!.shape).toEqual([3, 2]);
+    // Spot-check: dL/dA[0,0] = sum_j (1 * B[0,j]) = 7+8 = 15
+    expect(a.grad!.toArray()[0]).toBe(15);
+    // dL/dB[0,0] = sum_i (A[i,0] * 1) = 1+4 = 5
+    expect(b.grad!.toArray()[0]).toBe(5);
+  });
+
+  it("ReLU backward: g if a>0 else 0", () => {
+    const a = new Tensor([-1, 0, 2, -3, 4]); a.requiresGrad = true;
+    ReLUOp.apply(a).backward();
+    expect(a.grad!.toArray()).toEqual([0, 0, 1, 0, 1]);
+  });
+
+  it("Sigmoid backward at 0: σ'(0) = 0.5 * 0.5 = 0.25", () => {
+    const a = new Tensor([0]); a.requiresGrad = true;
+    SigmoidOp.apply(a).backward();
+    expect(a.grad!.toArray()[0]).toBeCloseTo(0.25, 12);
+  });
+
+  it("Tanh backward at 0: tanh'(0) = 1 - 0² = 1", () => {
+    const a = new Tensor([0]); a.requiresGrad = true;
+    TanhOp.apply(a).backward();
+    expect(a.grad!.toArray()[0]).toBeCloseTo(1, 12);
+  });
+
+  it("GELU backward at 0: 0.5 * (1 + tanh(0)) + 0 = 0.5", () => {
+    const a = new Tensor([0]); a.requiresGrad = true;
+    GELUOp.apply(a).backward();
+    expect(a.grad!.toArray()[0]).toBeCloseTo(0.5, 6);
+  });
+
+  it("GELU backward matches finite differences at x=1", () => {
+    // Spot-check the analytical formula against a finite-difference estimate.
+    const eps = 1e-4;
+    const hi = GELUOp.apply(new Tensor([1 + eps])).toArray()[0]!;
+    const lo = GELUOp.apply(new Tensor([1 - eps])).toArray()[0]!;
+    const finiteDiff = (hi - lo) / (2 * eps);
+
+    const a = new Tensor([1]); a.requiresGrad = true;
+    GELUOp.apply(a).backward();
+    expect(a.grad!.toArray()[0]).toBeCloseTo(finiteDiff, 3);
+  });
+
+  it("Softmax backward at uniform input cancels to zero", () => {
+    // Uniform input → uniform output → backward with grad=ones cancels
+    // (each row's dot product equals each individual product).
+    const a = new Tensor([1, 1, 1]); a.requiresGrad = true;
+    SoftmaxOp.apply(a).backward();
+    for (const v of a.grad!.toArray()) {
+      // f32 round-tripping (Float32Array storage) introduces ~1e-8 noise
+      // even on values that are algebraically zero — 6 digits is safe.
+      expect(v).toBeCloseTo(0, 6);
+    }
+  });
+
+  it("Softmax backward matches finite differences", () => {
+    const eps = 1e-4;
+    const seed = new Tensor([1, 0, 0]);
+    // Compute ∂y_0/∂x_i via finite differences
+    const grads_fd = [0, 1, 2].map((i) => {
+      const shiftHi = [1, 2, 3]; shiftHi[i] += eps;
+      const shiftLo = [1, 2, 3]; shiftLo[i] -= eps;
+      const yHi = SoftmaxOp.apply(new Tensor(shiftHi)).toArray()[0]!;
+      const yLo = SoftmaxOp.apply(new Tensor(shiftLo)).toArray()[0]!;
+      return (yHi - yLo) / (2 * eps);
+    });
+    const x = new Tensor([1, 2, 3]); x.requiresGrad = true;
+    SoftmaxOp.apply(x).backward(seed);
+    for (let i = 0; i < 3; i++) {
+      expect(x.grad!.toArray()[i]).toBeCloseTo(grads_fd[i]!, 3);
+    }
+  });
+
+  it("Sum backward broadcasts the scalar grad to input shape", () => {
+    const a = new Tensor([1, 2, 3, 4]); a.requiresGrad = true;
+    SumOp.apply(a).backward();
+    expect(a.grad!.toArray()).toEqual([1, 1, 1, 1]);
+  });
+
+  it("Mean backward distributes 1/N evenly", () => {
+    const a = new Tensor([1, 2, 3, 4]); a.requiresGrad = true;
+    MeanOp.apply(a).backward();
+    for (const v of a.grad!.toArray()) {
+      expect(v).toBeCloseTo(0.25, 12);
+    }
+  });
+
+  it("Chained op backward: x → x*2 → +1 → sum, gradient = 2", () => {
+    const x = new Tensor([1, 2, 3]); x.requiresGrad = true;
+    const two = new Tensor([2, 2, 2]);
+    const one = new Tensor([1, 1, 1]);
+    const y = MulOp.apply(x, two);
+    const z = AddOp.apply(y, one);
+    SumOp.apply(z).backward();
+    expect(x.grad!.toArray()).toEqual([2, 2, 2]);
   });
 });
 
