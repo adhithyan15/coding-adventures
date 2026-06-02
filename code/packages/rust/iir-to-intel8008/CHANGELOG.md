@@ -3,6 +3,139 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.9] — 2026-06-02 (A2++.5.5 EIGHTH AND FINAL SLICE — real `RET` + `CAL` + module-level call backpatching)
+
+### Added — real function calls and returns
+
+The final A2++.5.5 slice.  Wires the 8008's 7-deep internal
+return-address stack into IIR's calling convention:
+
+| IIR op | 8008 lowering |
+|--------|---------------|
+| `call dest, "fn"` | `CAL` (`0x7E`) + 14-bit `fn` address + (optional `MOV dest_reg, A` to capture return value) |
+| `ret <v>` in **non-entry** function | (optional `MOV A, v_reg`) + `RET` (`0x07`) |
+| `ret_void` in **non-entry** function | `RET` (`0x07`) |
+| `ret <v>` in **entry-point** function | (optional `MOV A, v_reg`) + `HLT` (unchanged from v0.2.0) |
+| `ret_void` in **entry-point** function | `HLT` (unchanged) |
+
+#### Why HLT stays for entry-point functions
+
+The 8008's `RET` pops the top of the internal 7-deep return-address
+stack and jumps there.  Calling `RET` from the entry-point function
+(which was never `CAL`-ed) would underflow the empty stack and pop
+a garbage address — undefined behaviour on most simulators, a hard
+halt or wild jump on real silicon.
+
+`HLT` is the correct "terminate execution" primitive for the program
+entry point.  Non-entry functions correctly use `RET` to return to
+their caller's saved address.
+
+#### Module-level call backpatching
+
+The 8008 has no PC-relative call — every `CAL` carries a full 14-bit
+absolute target.  Cross-function calls require module-level resolution
+because the callee's address depends on its position in the global
+byte stream, which isn't known until all preceding functions have been
+emitted.
+
+New module-level state in `lower_iir_to_intel8008`:
+
+* `function_addrs: HashMap<String, usize>` — records each function's
+  start byte offset as we walk `module.functions` in source order.
+* `pending_calls: Vec<(usize, String, String)>` — `(slot, callee_name,
+  caller_name)`.  Each `call` emission records a triple; the final
+  backpatching pass walks them all and writes the 14-bit address of
+  each callee into its placeholder slot.
+
+This mirrors `iir-to-riscv`'s A1++.5.5 module-level `jal` resolution
+— cross-function references are the natural separation between
+local-jump backpatching (per-function via `pending_jmps`, v0.3.4)
+and call-site resolution (module-level, v0.3.9).
+
+#### Calling convention
+
+`call dest, "fn"` lowers to:
+
+```text
+CAL <fn_addr>                       ; 3 bytes (0x7E + low + high)
+[optional]  MOV dest_reg, A         ; capture return value if dest != A
+```
+
+The 8008's return-value convention puts the result in `A`.  If the
+IIR `call` has no `dest`, the return value is discarded (void call).
+
+Argument passing is NOT yet supported — calls are zero-arg.  This
+mirrors `iir-to-riscv`'s A1++.5.5 / A1++.5.5.5 split where arg
+passing arrived in a follow-up slice.  For the 8008, arg passing
+would need a per-call register-allocation contract (which registers
+the callee preserves) and will likely fold into the lang-aot wiring
+in A2+++.
+
+#### New constants
+
+* `pub const RET: u8 = 0x07;` — unconditional return (bit pattern
+  `00 000 111`).  Confusion alert: `0x03` is `RFC` (return-if-flag-
+  carry-clear), a conditional return.  `0x07` is the unconditional.
+* `pub const CAL: u8 = 0x7E;` — unconditional call (bit pattern
+  `01 111 110`).  **CRITICAL**: `0x46` is `CFZ` (call-if-flag-zero-
+  clear, conditional).  Same family of confusion as `JMP ↔ JFC`
+  flagged in v0.3.4 — pinning `0x7E` so the simulator's disassembler
+  reports "CAL" and the silicon calls unconditionally.
+
+#### New error variant
+
+* `IIRIntel8008Error::UndefinedFunction { caller, callee }` — `call`
+  referenced a name not present in `module.functions`.  Cross-module
+  calls (which would need external symbol resolution) defer to
+  `lang-aot` in A2+++.
+
+#### Tests added (61 total, was 53)
+
+* `ret_constant_pinned_to_0x07` / `cal_constant_pinned_to_0x7e`.
+* `non_entry_function_ret_emits_real_ret_not_hlt` — pins the
+  two-function module shape where `main` emits HLT but `helper`
+  emits RET.
+* `entry_function_ret_still_emits_hlt` — regression for the existing
+  3-byte single-function `const v; ret v` shape; v0.3.9 must NOT
+  break it.
+* `call_emits_cal_with_backpatched_target_address` — pins the full
+  byte stream `7E 04 00 76 3E 07 07` for `main → helper` two-function
+  module.
+* `call_to_undefined_function_is_rejected` — verifies the
+  `UndefinedFunction` error path.
+* `call_with_no_dest_discards_return_value` — void-call shape.
+* `errors_for_undefined_function_display_without_panic`.
+
+A new test helper `multi_fn_module(entry, functions)` was added to
+build modules with multiple functions and an explicit entry point.
+
+### What is NOT in v0.3.9 (deferred to v0.4.0 / A2+++)
+
+* **Argument passing** — calls in v0.3.9 are zero-arg.  Arg passing
+  needs a per-call register-allocation contract (which registers the
+  callee preserves) and folds naturally into the AOT wiring.
+* **Cross-module calls** — `call` to a function defined in a
+  different module needs external symbol resolution.  Same.
+* **`lang-aot --target=intel8008`** — the front-end CLI integration
+  for choosing the 8008 backend.  This wraps `lower_iir_to_intel8008`
+  with module-loading, linker-style relocation, and emits a `.bin`
+  artifact suitable for the `intel8008-simulator` or an external
+  emulator.  A2+++.
+
+### A2++.5.5 complete
+
+After eight slices, the 8008 backend now supports:
+
+* All arithmetic + bitwise ops (`add`/`sub`/`adc`/`sbb`/`and`/`or`/`xor`)
+* Comparison family (`cmp`/`cmp_ne`/`cmp_lt`/`cmp_gt`/`cmp_gte`/`cmp_lte`)
+* Control flow (`label`/`jmp`/`jmp_if_true`/`jmp_if_false`)
+* Function calls and returns (`call`/`ret`/`ret_void`)
+
+Roughly 60 IIR opcodes mapped to ~25 distinct 8008 instruction
+families, all pinned to byte-exact test sequences and cross-checked
+against the in-tree `intel8008-simulator`'s decoder for round-trip
+fidelity.  The crate is now feature-complete for AOT wiring.
+
 ## [0.3.8] — 2026-06-02 (A2++.5.5 seventh slice — `cmp_gte`/`cmp_lte` + remaining 5 cond-jump opcode constants)
 
 ### Added — closed-end ordering comparisons
