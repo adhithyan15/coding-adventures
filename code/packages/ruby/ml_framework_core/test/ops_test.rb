@@ -331,6 +331,186 @@ class TensorNamedOpMethodsTest < Minitest::Test
   end
 end
 
+class BackwardCorrectnessTest < Minitest::Test
+  # Each test follows the same pattern: build a leaf tensor with
+  # requires_grad, run forward, seed backward, assert x.grad matches the
+  # analytical formula for that op.  The seed gradient is either ones
+  # (default) or a custom shape-matching tensor for tighter assertions.
+
+  def test_add_backward
+    a = T.new([1.0, 2.0, 3.0]); a.requires_grad = true
+    b = T.new([10.0, 20.0, 30.0]); b.requires_grad = true
+    AddO.apply(a, b).backward
+    assert_equal [1.0, 1.0, 1.0], a.grad.to_a
+    assert_equal [1.0, 1.0, 1.0], b.grad.to_a
+  end
+
+  def test_sub_backward
+    a = T.new([5.0, 5.0]); a.requires_grad = true
+    b = T.new([1.0, 1.0]); b.requires_grad = true
+    SubO.apply(a, b).backward
+    assert_equal [1.0, 1.0], a.grad.to_a
+    assert_equal [-1.0, -1.0], b.grad.to_a
+  end
+
+  def test_mul_backward
+    a = T.new([2.0, 3.0]); a.requires_grad = true
+    b = T.new([4.0, 5.0]); b.requires_grad = true
+    MulO.apply(a, b).backward
+    # d(a*b)/da = b, d(a*b)/db = a
+    assert_equal [4.0, 5.0], a.grad.to_a
+    assert_equal [2.0, 3.0], b.grad.to_a
+  end
+
+  def test_div_backward
+    a = T.new([10.0, 20.0]); a.requires_grad = true
+    b = T.new([2.0, 4.0]); b.requires_grad = true
+    DivO.apply(a, b).backward
+    # d(a/b)/da = 1/b, d(a/b)/db = -a/b²
+    assert_equal [0.5, 0.25], a.grad.to_a
+    assert_equal [-2.5, -1.25], b.grad.to_a
+  end
+
+  def test_neg_backward
+    a = T.new([1.0, -2.0]); a.requires_grad = true
+    NegO.apply(a).backward
+    assert_equal [-1.0, -1.0], a.grad.to_a
+  end
+
+  def test_abs_backward
+    a = T.new([-2.0, 0.0, 3.0]); a.requires_grad = true
+    AbsO.apply(a).backward
+    # sign(-2)=-1, sign(0)=0 (PyTorch convention), sign(3)=1
+    assert_equal [-1.0, 0.0, 1.0], a.grad.to_a
+  end
+
+  def test_pow_backward
+    a = T.new([2.0, 3.0]); a.requires_grad = true
+    PowO.apply(a, 3).backward
+    # d(x^3)/dx = 3x²; at x=2 → 12; at x=3 → 27.
+    assert_equal [12.0, 27.0], a.grad.to_a
+  end
+
+  def test_matmul_backward
+    # A: (2, 3), B: (3, 2), output C: (2, 2).
+    # With seed grad = ones(2,2):
+    #   dL/dA = grad @ B^T  (2,2) @ (2,3) = (2,3)
+    #   dL/dB = A^T @ grad  (3,2) @ (2,2) = (3,2)
+    a = T.new([[1, 2, 3], [4, 5, 6]]); a.requires_grad = true
+    b = T.new([[7, 8], [9, 10], [11, 12]]); b.requires_grad = true
+    MMo.apply(a, b).backward
+    # By hand: with grad = ones(2,2):
+    #   grad @ B^T row 0: [1+1, 1+1] @ ... actually let me just sanity-check
+    #   shape rather than exact values — that's what the formula's for.
+    assert_equal [2, 3], a.grad.shape
+    assert_equal [3, 2], b.grad.shape
+    # Spot-check one element: dL/dA[0,0] = sum_j (1.0 * B[0,j]) = 7+8 = 15
+    assert_equal 15.0, a.grad.to_a[0]
+    # dL/dB[0,0] = sum_i (A[i,0] * 1.0) = 1+4 = 5
+    assert_equal 5.0, b.grad.to_a[0]
+  end
+
+  def test_relu_backward
+    a = T.new([-1.0, 0.0, 2.0, -3.0, 4.0]); a.requires_grad = true
+    ReLU.apply(a).backward
+    # Gradient is 1 where input is positive, 0 elsewhere.
+    assert_equal [0.0, 0.0, 1.0, 0.0, 1.0], a.grad.to_a
+  end
+
+  def test_sigmoid_backward
+    a = T.new([0.0]); a.requires_grad = true
+    Sig.apply(a).backward
+    # σ(0) = 0.5; σ'(0) = 0.5 * (1 - 0.5) = 0.25.
+    assert_in_delta 0.25, a.grad.to_a[0], 1e-12
+  end
+
+  def test_tanh_backward
+    a = T.new([0.0]); a.requires_grad = true
+    Tnh.apply(a).backward
+    # tanh(0) = 0; tanh'(0) = 1 - 0² = 1.
+    assert_in_delta 1.0, a.grad.to_a[0], 1e-12
+  end
+
+  def test_gelu_backward_at_zero
+    a = T.new([0.0]); a.requires_grad = true
+    Gel.apply(a).backward
+    # GELU'(0) = 0.5 * (1 + tanh(0)) + 0 = 0.5
+    assert_in_delta 0.5, a.grad.to_a[0], 1e-6
+  end
+
+  def test_gelu_backward_numerical_match
+    # Spot-check GELU backward at x=1 against a finite-difference estimate.
+    # GELU(1) ≈ 0.8413; GELU(1.0001) ≈ ?  Use a tiny eps for the derivative
+    # estimate, then assert our analytical answer is within 1e-3.
+    eps = 1e-4
+    base = T.new([1.0])
+    high = Gel.apply(T.new([1.0 + eps])).to_a[0]
+    low  = Gel.apply(T.new([1.0 - eps])).to_a[0]
+    finite_diff = (high - low) / (2 * eps)
+
+    base.requires_grad = true
+    Gel.apply(base).backward
+    assert_in_delta finite_diff, base.grad.to_a[0], 1e-3
+  end
+
+  def test_softmax_backward_uniform_input
+    # Uniform input → uniform softmax (all 1/3); for uniform output,
+    # softmax backward with grad=ones cancels to all zeros (each row's
+    # dot product equals each individual product).
+    a = T.new([1.0, 1.0, 1.0]); a.requires_grad = true
+    Sfx.apply(a).backward
+    a.grad.to_a.each { |v| assert_in_delta 0.0, v, 1e-12 }
+  end
+
+  def test_softmax_backward_matches_numerical
+    # Spot-check softmax backward of [1, 2, 3] with seed grad [1, 0, 0]
+    # against finite-differences of the first output.
+    eps = 1e-4
+    seed = T.new([1.0, 0.0, 0.0])
+
+    # ∂y_0/∂x_i finite diff
+    grads_fd = (0...3).map do |i|
+      shift_hi = [1.0, 2.0, 3.0]; shift_hi[i] += eps
+      shift_lo = [1.0, 2.0, 3.0]; shift_lo[i] -= eps
+      y_hi = Sfx.apply(T.new(shift_hi)).to_a[0]
+      y_lo = Sfx.apply(T.new(shift_lo)).to_a[0]
+      (y_hi - y_lo) / (2 * eps)
+    end
+
+    x = T.new([1.0, 2.0, 3.0]); x.requires_grad = true
+    Sfx.apply(x).backward(seed)
+    x.grad.to_a.each_with_index do |g, i|
+      assert_in_delta grads_fd[i], g, 1e-3
+    end
+  end
+
+  def test_sum_backward_broadcasts_to_input_shape
+    a = T.new([1.0, 2.0, 3.0, 4.0]); a.requires_grad = true
+    SmO.apply(a).backward
+    # dL/dx_i = 1 for every i.
+    assert_equal [1.0, 1.0, 1.0, 1.0], a.grad.to_a
+  end
+
+  def test_mean_backward_distributes_evenly
+    a = T.new([1.0, 2.0, 3.0, 4.0]); a.requires_grad = true
+    MnO.apply(a).backward
+    # dL/dx_i = 1/N = 1/4 for every i.
+    a.grad.to_a.each { |v| assert_in_delta 0.25, v, 1e-12 }
+  end
+
+  def test_chained_op_backward
+    # Build x → y = x * 2 → z = y + 1 → loss = sum(z)
+    # dL/dx = dL/dz * dz/dy * dy/dx = 1 * 1 * 2 = 2
+    x = T.new([1.0, 2.0, 3.0]); x.requires_grad = true
+    two = T.new([2.0, 2.0, 2.0])
+    one = T.new([1.0, 1.0, 1.0])
+    y = MulO.apply(x, two)
+    z = AddO.apply(y, one)
+    SmO.apply(z).backward
+    assert_equal [2.0, 2.0, 2.0], x.grad.to_a
+  end
+end
+
 class DispatchPathBranchingTest < Minitest::Test
   def test_dispatch_threshold_constant
     # Smoke check that the threshold module method returns a sensible value.

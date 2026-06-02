@@ -192,11 +192,18 @@ module CodingAdventures
       def self.apply(*inputs)
         fn = new
 
-        # Stash the parent inputs so backward() can distribute grads to
-        # them in the same order.  Note: we save the actual Tensor
-        # objects; identity (object_id) matters for shared-parameter
-        # scenarios like `x + x` where the same Tensor appears twice.
-        fn.parents = inputs.dup
+        # Stash the parent TENSORS so backward() can distribute grads
+        # back to them.  Non-Tensor args (e.g. Pow's scalar exponent)
+        # are dropped here — they don't participate in autograd and
+        # `build_topo` in Tensor#backward would crash trying to read
+        # `grad_fn` on a non-Tensor.  Subclasses that need a non-Tensor
+        # arg can stash it in @saved_for_backward.
+        #
+        # Note: we save the actual Tensor objects; object identity
+        # matters for shared-parameter scenarios like `Add(x, x)`
+        # where the same Tensor appears twice — backward needs to
+        # accumulate both gradient contributions into the same `.grad`.
+        fn.parents = inputs.select { |i| i.is_a?(Tensor) }
 
         output = fn.forward(*inputs)
 

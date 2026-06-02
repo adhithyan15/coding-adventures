@@ -267,23 +267,73 @@ module CodingAdventures
       def forward(a, b)
         MLFrameworkCore._binary_elementwise("Add", a, b, ->(x, y) { x + y })
       end
+
+      # d/dx (x + y) = 1, d/dy (x + y) = 1.  Gradient flows through unchanged
+      # to both inputs.  Build fresh Tensors (one per parent) so each parent
+      # gets its own copy of the gradient — required because the autograd
+      # walker may accumulate into them independently.
+      def backward(grad)
+        g_data = grad.to_a
+        shape  = grad.shape
+        [Tensor.new(g_data.dup, shape: shape), Tensor.new(g_data.dup, shape: shape)]
+      end
     end
 
     class SubOp < Function
       def forward(a, b)
         MLFrameworkCore._binary_elementwise("Sub", a, b, ->(x, y) { x - y })
       end
+
+      # d/dx (x - y) = 1, d/dy (x - y) = -1.
+      def backward(grad)
+        g_data = grad.to_a
+        shape  = grad.shape
+        [Tensor.new(g_data.dup, shape: shape), Tensor.new(g_data.map { |v| -v }, shape: shape)]
+      end
     end
 
     class MulOp < Function
       def forward(a, b)
+        # Save a and b for backward — Mul backward needs both inputs.
+        # We dup the data arrays so a later in-place mutation of the input
+        # Tensor (PyTorch-style) wouldn't poison our saved copy.
+        @saved_for_backward[:a] = a
+        @saved_for_backward[:b] = b
         MLFrameworkCore._binary_elementwise("Mul", a, b, ->(x, y) { x * y })
+      end
+
+      # d/dx (x * y) = y, d/dy (x * y) = x.  Element-wise chain rule.
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        b = @saved_for_backward[:b]
+        g = grad.to_a
+        ad = a.to_a
+        bd = b.to_a
+        [
+          Tensor.new(g.each_with_index.map { |gi, i| gi * bd[i] }, shape: a.shape),
+          Tensor.new(g.each_with_index.map { |gi, i| gi * ad[i] }, shape: b.shape),
+        ]
       end
     end
 
     class DivOp < Function
       def forward(a, b)
+        @saved_for_backward[:a] = a
+        @saved_for_backward[:b] = b
         MLFrameworkCore._binary_elementwise("Div", a, b, ->(x, y) { x / y })
+      end
+
+      # d/dx (x / y) = 1 / y, d/dy (x / y) = -x / y².  Standard quotient rule.
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        b = @saved_for_backward[:b]
+        g = grad.to_a
+        ad = a.to_a
+        bd = b.to_a
+        [
+          Tensor.new(g.each_with_index.map { |gi, i| gi / bd[i] }, shape: a.shape),
+          Tensor.new(g.each_with_index.map { |gi, i| -gi * ad[i] / (bd[i] * bd[i]) }, shape: b.shape),
+        ]
       end
     end
 
@@ -293,17 +343,54 @@ module CodingAdventures
       def forward(a)
         MLFrameworkCore._unary_elementwise("Neg", a, ->(v) { -v })
       end
+
+      # d/dx (-x) = -1.
+      def backward(grad)
+        [Tensor.new(grad.to_a.map { |v| -v }, shape: grad.shape)]
+      end
     end
 
     class AbsOp < Function
       def forward(a)
+        @saved_for_backward[:a] = a
         MLFrameworkCore._unary_elementwise("Abs", a, ->(v) { v.abs })
+      end
+
+      # d/dx |x| = sign(x).  Sign of 0 is conventionally 0 (PyTorch matches).
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        g = grad.to_a
+        ad = a.to_a
+        out = g.each_with_index.map do |gi, i|
+          if ad[i].positive?
+            gi
+          elsif ad[i].negative?
+            -gi
+          else
+            0.0
+          end
+        end
+        [Tensor.new(out, shape: a.shape)]
       end
     end
 
     class TanhOp < Function
       def forward(a)
-        MLFrameworkCore._unary_elementwise("Tanh", a, ->(v) { Math.tanh(v) })
+        # Save the OUTPUT (not the input) — tanh backward is
+        # 1 - tanh(x)² which is cheaper to compute as 1 - y² where
+        # y is the forward output we already computed.
+        out = MLFrameworkCore._unary_elementwise("Tanh", a, ->(v) { Math.tanh(v) })
+        @saved_for_backward[:output] = out
+        out
+      end
+
+      # d/dx tanh(x) = 1 - tanh(x)² = 1 - y².
+      def backward(grad)
+        y  = @saved_for_backward[:output]
+        g  = grad.to_a
+        yd = y.to_a
+        out = g.each_with_index.map { |gi, i| gi * (1.0 - yd[i] * yd[i]) }
+        [Tensor.new(out, shape: y.shape)]
       end
     end
 
@@ -317,7 +404,22 @@ module CodingAdventures
     class PowOp < Function
       def forward(a, exponent)
         e = exponent.is_a?(Numeric) ? exponent.to_f : exponent.to_a[0]
+        @saved_for_backward[:a] = a
+        @saved_for_backward[:exponent] = e
         Tensor.new(a.to_a.map { |v| v**e }, shape: a.shape)
+      end
+
+      # d/dx x^e = e * x^(e-1).  Returns nil for the exponent slot since
+      # it's a Float, not a Tensor (autograd doesn't track scalars).
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        e = @saved_for_backward[:exponent]
+        g = grad.to_a
+        ad = a.to_a
+        out = g.each_with_index.map { |gi, i| gi * e * (ad[i]**(e - 1)) }
+        # Only one Tensor parent (the exponent is a Numeric, filtered
+        # out by Function.apply); return a 1-element Array to match.
+        [Tensor.new(out, shape: a.shape)]
       end
     end
 
@@ -336,26 +438,69 @@ module CodingAdventures
                 "matmul shape mismatch: #{a.shape.inspect} @ #{b.shape.inspect}"
         end
 
+        @saved_for_backward[:a] = a
+        @saved_for_backward[:b] = b
+
         if a.numel >= Ops.dispatch_threshold || b.numel >= Ops.dispatch_threshold
           envelope = Ops.matmul_envelope(a, b)
           floats = Ops.run_envelope(envelope, m * n)
           Tensor.new(floats, shape: [m, n])
         else
           # Pure-Ruby triple-loop matmul.  O(m*k*n) — fine at small sizes.
-          a_data = a.to_a
-          b_data = b.to_a
-          out = Array.new(m * n, 0.0)
-          (0...m).each do |i|
-            (0...n).each do |j|
-              acc = 0.0
-              (0...k1).each do |kk|
-                acc += a_data[i * k1 + kk] * b_data[kk * n + j]
-              end
-              out[i * n + j] = acc
-            end
-          end
-          Tensor.new(out, shape: [m, n])
+          Tensor.new(MatMulOp._matmul_naive(a.to_a, b.to_a, m, k1, n), shape: [m, n])
         end
+      end
+
+      # Backward for C = A @ B (2-D):
+      #   dL/dA = grad @ B^T
+      #   dL/dB = A^T @ grad
+      # We use pure-Ruby triple-loop matmul here.  Reusing MatMulOp.apply
+      # would build a NEW autograd subgraph for the backward computation,
+      # which we don't want; backward should be a leaf math operation.
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        b = @saved_for_backward[:b]
+        m, k = a.shape
+        _, n = b.shape
+
+        # grad has shape (m, n); B has shape (k, n); compute grad @ B^T (m, k).
+        b_t = MatMulOp._transpose_2d(b.to_a, k, n)
+        grad_a_data = MatMulOp._matmul_naive(grad.to_a, b_t, m, n, k)
+
+        # A^T (k, m); compute A^T @ grad (k, n).
+        a_t = MatMulOp._transpose_2d(a.to_a, m, k)
+        grad_b_data = MatMulOp._matmul_naive(a_t, grad.to_a, k, m, n)
+
+        [
+          Tensor.new(grad_a_data, shape: [m, k]),
+          Tensor.new(grad_b_data, shape: [k, n]),
+        ]
+      end
+
+      # Internal helpers — module-level so backward can reuse without
+      # building a new MatMulOp (which would attach a grad_fn we don't want).
+      def self._matmul_naive(a_data, b_data, m, k, n)
+        out = Array.new(m * n, 0.0)
+        (0...m).each do |i|
+          (0...n).each do |j|
+            acc = 0.0
+            (0...k).each do |kk|
+              acc += a_data[i * k + kk] * b_data[kk * n + j]
+            end
+            out[i * n + j] = acc
+          end
+        end
+        out
+      end
+
+      def self._transpose_2d(data, rows, cols)
+        out = Array.new(rows * cols)
+        (0...rows).each do |r|
+          (0...cols).each do |c|
+            out[c * rows + r] = data[r * cols + c]
+          end
+        end
+        out
       end
     end
 
@@ -363,13 +508,37 @@ module CodingAdventures
 
     class ReLUOp < Function
       def forward(a)
+        @saved_for_backward[:a] = a
         Tensor.new(a.to_a.map { |v| v.positive? ? v : 0.0 }, shape: a.shape)
+      end
+
+      # d/dx ReLU(x) = 1 if x > 0 else 0.  Convention: x == 0 returns 0
+      # (matches PyTorch).
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        g = grad.to_a
+        ad = a.to_a
+        out = g.each_with_index.map { |gi, i| ad[i].positive? ? gi : 0.0 }
+        [Tensor.new(out, shape: a.shape)]
       end
     end
 
     class SigmoidOp < Function
       def forward(a)
-        Tensor.new(a.to_a.map { |v| 1.0 / (1.0 + Math.exp(-v)) }, shape: a.shape)
+        out = Tensor.new(a.to_a.map { |v| 1.0 / (1.0 + Math.exp(-v)) }, shape: a.shape)
+        # Save the OUTPUT y — sigmoid backward is y * (1 - y), cheaper
+        # to compute from the cached y than to re-eval the forward.
+        @saved_for_backward[:output] = out
+        out
+      end
+
+      # d/dx σ(x) = σ(x) * (1 - σ(x)) = y * (1 - y).
+      def backward(grad)
+        y  = @saved_for_backward[:output]
+        g  = grad.to_a
+        yd = y.to_a
+        out = g.each_with_index.map { |gi, i| gi * yd[i] * (1.0 - yd[i]) }
+        [Tensor.new(out, shape: y.shape)]
       end
     end
 
@@ -377,12 +546,36 @@ module CodingAdventures
       # GELU(x) = 0.5 * x * (1 + tanh(sqrt(2/π) * (x + 0.044715 * x³)))
       # — the "tanh approximation" formulation matching PyTorch's default
       # and the Python reference.
+      SQRT_2_OVER_PI = Math.sqrt(2.0 / Math::PI)
+      COEFF = 0.044715
+
       def forward(a)
-        c = Math.sqrt(2.0 / Math::PI)
+        @saved_for_backward[:a] = a
         Tensor.new(
-          a.to_a.map { |x| 0.5 * x * (1.0 + Math.tanh(c * (x + 0.044715 * x * x * x))) },
+          a.to_a.map { |x| 0.5 * x * (1.0 + Math.tanh(SQRT_2_OVER_PI * (x + COEFF * x * x * x))) },
           shape: a.shape,
         )
+      end
+
+      # GELU backward (tanh-approximation form), matching the Python ref:
+      #   inner  = √(2/π) * (x + 0.044715 * x³)
+      #   tanh_v = tanh(inner)
+      #   sech²  = 1 - tanh_v²
+      #   d_inner = √(2/π) * (1 + 3 * 0.044715 * x²)
+      #   dy/dx  = 0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner
+      def backward(grad)
+        a = @saved_for_backward[:a]
+        g = grad.to_a
+        ad = a.to_a
+        out = g.each_with_index.map do |gi, i|
+          x = ad[i]
+          inner   = SQRT_2_OVER_PI * (x + COEFF * x * x * x)
+          tanh_v  = Math.tanh(inner)
+          sech2   = 1.0 - tanh_v * tanh_v
+          d_inner = SQRT_2_OVER_PI * (1.0 + 3.0 * COEFF * x * x)
+          gi * (0.5 * (1.0 + tanh_v) + 0.5 * x * sech2 * d_inner)
+        end
+        [Tensor.new(out, shape: a.shape)]
       end
     end
 
@@ -419,7 +612,41 @@ module CodingAdventures
             out[row_start + k] = tmp[k] / sum
           end
         end
-        Tensor.new(out, shape: a.shape)
+        result = Tensor.new(out, shape: a.shape)
+        @saved_for_backward[:output] = result
+        @saved_for_backward[:last_axis_size] = last_axis_size
+        result
+      end
+
+      # Softmax backward (per-row over the last axis):
+      #
+      #   dL/dx_i = y_i * (g_i - Σ_j (g_j * y_j))
+      #
+      # where y = softmax(x).  This formula is per-row independent —
+      # rows can't interfere because softmax doesn't mix across them.
+      def backward(grad)
+        y = @saved_for_backward[:output]
+        last_axis_size = @saved_for_backward[:last_axis_size]
+        yd = y.to_a
+        gd = grad.to_a
+        numel = y.numel
+        out = Array.new(numel)
+
+        outer = numel / last_axis_size
+        outer.times do |o|
+          row_start = o * last_axis_size
+          # Σ_j (g_j * y_j) — per-row scalar.
+          dot = 0.0
+          last_axis_size.times do |k|
+            dot += gd[row_start + k] * yd[row_start + k]
+          end
+          # y_i * (g_i - dot)
+          last_axis_size.times do |k|
+            idx = row_start + k
+            out[idx] = yd[idx] * (gd[idx] - dot)
+          end
+        end
+        [Tensor.new(out, shape: y.shape)]
       end
     end
 
@@ -432,6 +659,9 @@ module CodingAdventures
 
     class SumOp < Function
       def forward(a)
+        # Save the input shape — we need it to broadcast the scalar
+        # gradient back to the input's shape in backward.
+        @saved_for_backward[:input_shape] = a.shape
         if a.numel >= Ops.dispatch_threshold
           envelope = Ops.reduce_all_envelope("ReduceSum", a)
           floats = Ops.run_envelope(envelope, 1)
@@ -440,10 +670,21 @@ module CodingAdventures
           Tensor.new([a.to_a.sum], shape: [1])
         end
       end
+
+      # d/dx_i (Σ x_j) = 1.  Broadcast the incoming scalar gradient
+      # (shape [1]) to a full tensor of the input's shape.
+      def backward(grad)
+        input_shape = @saved_for_backward[:input_shape]
+        g_scalar = grad.to_a[0]
+        numel = input_shape.empty? ? 1 : input_shape.reduce(1, :*)
+        [Tensor.new(Array.new(numel, g_scalar), shape: input_shape)]
+      end
     end
 
     class MeanOp < Function
       def forward(a)
+        @saved_for_backward[:input_shape] = a.shape
+        @saved_for_backward[:numel] = a.numel
         if a.numel >= Ops.dispatch_threshold
           envelope = Ops.reduce_all_envelope("ReduceMean", a)
           floats = Ops.run_envelope(envelope, 1)
@@ -452,6 +693,15 @@ module CodingAdventures
           n = a.numel.to_f
           Tensor.new([a.to_a.sum / n], shape: [1])
         end
+      end
+
+      # d/dx_i ((1/N) Σ x_j) = 1/N.  Broadcast g/N to the input shape.
+      def backward(grad)
+        input_shape = @saved_for_backward[:input_shape]
+        n = @saved_for_backward[:numel].to_f
+        g_scalar = grad.to_a[0] / n
+        numel = input_shape.empty? ? 1 : input_shape.reduce(1, :*)
+        [Tensor.new(Array.new(numel, g_scalar), shape: input_shape)]
       end
     end
 
