@@ -479,6 +479,28 @@ pub(crate) fn encode_mov_imm_cond(cond_base: u32, rd: u8, imm8: u8) -> u32 {
     cond_base | ((rd as u32) << 12) | (imm8 as u32)
 }
 
+/// ARMv7-A `BL addr` (branch with link) base — `0xEB00_0000`.
+///
+/// Same shape as `B_BASE` (`0xEA00_0000`) but with bit 24 SET.  The
+/// silicon writes `PC + 4` (the return address) into LR (`r14`)
+/// before branching, so a subsequent `BX LR` in the callee returns
+/// to the next instruction in the caller.
+///
+/// Bit layout (cond=AL):
+///
+/// ```text
+/// 31..28  cond  = 0xE = 1110            (always — unconditional)
+/// 27..25        = 101                    (branch family)
+/// 24    = 1                              (BL; B = 0)
+/// 23.. 0  imm24 = (signed PC-relative offset in WORDS)
+/// ```
+///
+/// CAREFUL: `BL` is `0xEB00_0000`, NOT `0xEA00_0000`.  The bit-24
+/// difference distinguishes "branch with link" (function call) from
+/// "branch" (goto).  Same family of nibble-off-by-one hazard as the
+/// 8008's `JMP ↔ JFC` and `CAL ↔ CFZ` confusions.
+pub const BL_BASE: u32 = 0xEB00_0000;
+
 /// ARMv7-A `B addr` (unconditional branch) base — `0xEA00_0000`.
 ///
 /// Bit layout (cond=AL):
@@ -617,6 +639,9 @@ pub enum IIRArmv7Error {
     /// immediate (range ±32 MiB, more than enough for any practical
     /// function).
     BranchOutOfRange { function: String, target: usize, current: usize },
+    /// A `call` referenced a function name not defined anywhere in
+    /// the module.  Cross-module calls aren't yet supported.
+    UndefinedFunction { caller: String, callee: String },
 }
 
 impl fmt::Display for IIRArmv7Error {
@@ -645,6 +670,9 @@ impl fmt::Display for IIRArmv7Error {
             }
             Self::BranchOutOfRange { function, target, current } => {
                 write!(f, "branch in function {function:?} from word offset {current} to word offset {target} doesn't fit in ARM's signed 24-bit imm")
+            }
+            Self::UndefinedFunction { caller, callee } => {
+                write!(f, "undefined function {callee:?} called from {caller:?}")
             }
         }
     }
@@ -716,6 +744,12 @@ const SUPPORTED_OPS: &[&str] = &[
     // A3++.5.5 fifth slice — labels + branches.  Two-pass per-function
     // backpatching for PC-relative offsets.
     "label", "jmp", "jmp_if_true", "jmp_if_false",
+    // A3++.6 — function calls via BL with module-level backpatching.
+    // `ret` already emits BX LR from v0.3.0 — that handles both
+    // function returns (via the LR saved by BL) and module-entry
+    // returns to the OS (BX LR on a fresh entry returns to whatever
+    // address LR was passed in with).
+    "call",
 ];
 
 /// Lower an [`IIRModule`] to a `Vec<u32>` of ARMv7 (A32) opcode words.
@@ -756,8 +790,24 @@ pub fn lower_iir_to_armv7(
         return Ok(vec![BKPT]);
     }
 
+    // ── Module-level call-site resolution state (v0.4.6) ────────────────
+    //
+    // Each function's start word index is recorded as we walk
+    // `module.functions` in source order.  When a `call <fn_name>` is
+    // emitted, we record (slot, fn_name, caller) into `pending_calls`;
+    // after every function has been emitted, a final pass backpatches
+    // each pending BL with the PC-relative offset of its target.
+    //
+    // Mirrors the 8008's v0.3.9 module-level call resolution; ARMv7's
+    // BL just uses a 24-bit signed word offset like B/Bcond, instead
+    // of the 8008's 14-bit absolute address.
+    let mut function_addrs: HashMap<String, usize> = HashMap::new();
+    let mut pending_calls: Vec<(usize, String, String /* caller */)> = Vec::new();
+
     let mut words = Vec::new();
     for f in &module.functions {
+        // Record this function's start word index before emitting its body.
+        function_addrs.insert(f.name.clone(), words.len());
         // ── Per-function allocator state ──────────────────────────────
         //
         // IIR var name → its assigned 4-bit register index.  Sequentially
@@ -986,6 +1036,46 @@ pub fn lower_iir_to_armv7(
                     words.push(0); // placeholder — pass 2 overwrites
                 }
 
+                // ── call dest, "<fn_name>" → BL + capture r0 into dest ─
+                //
+                // Operand layout: srcs = [Var(fn_name)], optional dest.
+                //
+                // Pass 1: emit `BL 0` (placeholder offset) and record
+                // (slot, fn_name, caller) into the module-level
+                // `pending_calls` for the final backpatching pass.
+                //
+                // ARMv7's BL has bit 24 set vs B's bit 24 clear — the
+                // same `0xEA00_0000 vs 0xEB00_0000` confusion to avoid
+                // as the 8008's `JMP 0x7C vs CAL 0x7E` family-bit
+                // hazard.
+                //
+                // Argument passing isn't yet supported — calls in
+                // v0.4.6 are zero-arg.  Mirrors the 8008's v0.3.9
+                // staging where args came in a future slice.  For
+                // ARMv7 the AAPCS argument-register convention
+                // (r0..r3) would dictate the lowering shape.
+                "call" => {
+                    let fn_name = match instr.srcs.first() {
+                        Some(Operand::Var(s)) => s.clone(),
+                        _ => return Err(IIRArmv7Error::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: "call requires srcs[0] = Operand::Var(fn_name)".into(),
+                        }),
+                    };
+                    pending_calls.push((words.len(), fn_name, f.name.clone()));
+                    words.push(0); // placeholder — pass 2 overwrites
+                    // If the IIR site binds a dest, capture the return
+                    // value from r0 into dest_reg.  A bare `call`
+                    // without a dest discards the return value (void
+                    // call).
+                    if let Some(dest) = instr.dest.as_deref() {
+                        let dest_reg = alloc_register(&mut next_reg, dest, &mut env, &f.name)?;
+                        if dest_reg != REG_R0 {
+                            words.push(encode_mov_reg(dest_reg, REG_R0));
+                        }
+                    }
+                }
+
                 // ── jmp_if_true / jmp_if_false ─────────────────────────
                 //
                 // ARMv7 has no "branch on register"; we provoke the Z
@@ -1056,6 +1146,32 @@ pub fn lower_iir_to_armv7(
             }
             words[*slot] = encode_branch(*cond_base, imm24);
         }
+    }
+
+    // ── Module-level call-backpatching pass (v0.4.6) ──────────────
+    //
+    // All functions have been emitted, so `function_addrs` has every
+    // valid call target.  Walk `pending_calls` and write the
+    // BL-encoded word at each placeholder slot.
+    //
+    // BL uses the same PC-relative offset shape as B (with the +8
+    // prefetch quirk): imm24 = target_word - slot - 2.
+    for (slot, callee, caller) in &pending_calls {
+        let target = *function_addrs.get(callee).ok_or_else(|| {
+            IIRArmv7Error::UndefinedFunction {
+                caller: caller.clone(),
+                callee: callee.clone(),
+            }
+        })?;
+        let imm24: i32 = (target as i32) - (*slot as i32) - 2;
+        if !(-(1 << 23)..(1 << 23)).contains(&imm24) {
+            return Err(IIRArmv7Error::BranchOutOfRange {
+                function: caller.clone(),
+                target,
+                current: *slot,
+            });
+        }
+        words[*slot] = encode_branch(BL_BASE, imm24);
     }
 
     // Defensive — if a function had no instructions at all, fall back

@@ -8,11 +8,22 @@ use iir_to_armv7::{
     lower_iir_to_armv7, validate_for_armv7,
     IIRArmv7Config, IIRArmv7Error,
     ADC_REG_BASE, ADD_REG_BASE, AND_REG_BASE, B_BASE, B_EQ_BASE, B_NE_BASE,
-    BKPT, BX_LR, CMP_IMM_ZERO_BASE, CMP_REG_BASE, EOR_REG_BASE,
+    BKPT, BL_BASE, BX_LR, CMP_IMM_ZERO_BASE, CMP_REG_BASE, EOR_REG_BASE,
     MOV_IMM_CC_BASE, MOV_IMM_CS_BASE, MOV_IMM_EQ_BASE, MOV_IMM_HI_BASE,
     MOV_IMM_LS_BASE, MOV_IMM_NE_BASE, MOV_IMM_R0_BASE, MOV_REG_BASE,
     ORR_REG_BASE, SBC_REG_BASE, SUB_REG_BASE,
 };
+
+fn multi_fn_module(entry: &str, functions: Vec<IIRFunction>) -> IIRModule {
+    IIRModule {
+        name: "test".into(),
+        functions,
+        entry_point: Some(entry.into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
 
 fn module_with(f: IIRFunction) -> IIRModule {
     let entry = f.name.clone();
@@ -1028,6 +1039,148 @@ fn errors_for_branch_variants_display_without_panic() {
     });
     let _ = format!("{}", IIRArmv7Error::BranchOutOfRange {
         function: "huge".into(), target: 10_000_000, current: 0,
+    });
+}
+
+// ===========================================================================
+// 13. A3++.6 — real `call` via BL with module-level backpatching
+// ===========================================================================
+//
+// BL (branch with link) has bit 24 SET vs B's bit 24 CLEAR — the
+// same family-bit difference as the 8008's JMP ↔ CAL (0x7C ↔ 0x7E).
+// The silicon writes PC+4 into LR before branching, so a subsequent
+// BX LR in the callee returns to the next instruction.
+//
+// Module-level resolution mirrors the 8008's v0.3.9: function_addrs
+// records each function's start word index; pending_calls records
+// (slot, callee, caller); the post-loop pass walks pending_calls,
+// resolves callees, range-checks, and OR-encodes the BL word.
+
+#[test]
+fn bl_base_pinned_to_0xeb000000() {
+    // BL = B with bit 24 set.  B_BASE = 0xEA00_0000 → BL_BASE =
+    // 0xEB00_0000.
+    assert_eq!(BL_BASE, 0xEB00_0000,
+        "BL (cond=AL) base should be 0xEB000000; got 0x{:08x}", BL_BASE);
+}
+
+#[test]
+fn call_emits_bl_with_backpatched_pc_relative_offset() {
+    // Two functions: `main` (entry) calls `helper`.
+    //
+    // Layout (word indices):
+    //   main:
+    //     0: BL helper        (placeholder; backpatched in pass 2)
+    //     1: BX LR
+    //   helper:
+    //     2: MOV r0, #7
+    //     3: BX LR
+    //
+    // After backpatching, the BL at slot 0 targets helper at word 2.
+    // imm24 = 2 - 0 - 2 = 0. So BL = 0xEB00_0000 | 0 = 0xEB00_0000.
+    //
+    // r is bound by the `call dest, helper` IIR op; the allocator
+    // picks r0 for it (first local in main).  Since dest_reg == r0,
+    // no capture MOV is emitted.
+    let main_fn = IIRFunction::new("main", vec![], "u8", vec![
+        IIRInstr::new("call", Some("r".into()),
+            vec![Operand::Var("helper".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let helper = IIRFunction::new("helper", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(
+        &multi_fn_module("main", vec![main_fn, helper]),
+        &IIRArmv7Config::default(),
+    ).expect("lowering");
+    assert_eq!(words, vec![
+        BL_BASE | 0,    // 0:  BL helper (imm24 = 0)
+        BX_LR,          // 1:  BX LR  (ret r — r is in r0 from the call's dest_reg)
+        0xE3A0_0007,    // 2:  MOV r0, #7   (helper: const v)
+        BX_LR,          // 3:  BX LR  (helper: ret v)
+    ], "call + BX LR expected; got: {words:08x?}");
+}
+
+#[test]
+fn call_with_helper_before_main_emits_negative_offset() {
+    // helper is defined FIRST, then main calls it (backward call).
+    //
+    //   helper:
+    //     0: MOV r0, #5
+    //     1: BX LR
+    //   main:
+    //     2: BL helper        (imm24 = 0 - 2 - 2 = -4)
+    //     3: BX LR
+    //
+    // imm24 = -4 = 0xFFFFFC in 24-bit two's-complement.  BL word =
+    // 0xEB00_0000 | 0xFFFFFC = 0xEBFFFFFC.
+    let helper = IIRFunction::new("helper", vec![], "u8", vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(5)], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u8"),
+    ]);
+    let main_fn = IIRFunction::new("main", vec![], "u8", vec![
+        IIRInstr::new("call", Some("r".into()),
+            vec![Operand::Var("helper".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u8"),
+    ]);
+    let words = lower_iir_to_armv7(
+        &multi_fn_module("main", vec![helper, main_fn]),
+        &IIRArmv7Config::default(),
+    ).expect("lowering");
+    assert_eq!(words, vec![
+        0xE3A0_0005,    // 0:  MOV r0, #5  (helper: const v)
+        BX_LR,          // 1:  BX LR       (helper: ret v)
+        0xEBFF_FFFC,    // 2:  BL helper   (imm24 = -4)
+        BX_LR,          // 3:  BX LR       (main: ret r)
+    ], "backward call expected; got: {words:08x?}");
+}
+
+#[test]
+fn call_to_undefined_function_is_rejected() {
+    let main_fn = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("call", None, vec![Operand::Var("ghost".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let err = lower_iir_to_armv7(
+        &multi_fn_module("main", vec![main_fn]),
+        &IIRArmv7Config::default(),
+    ).expect_err("call to undefined function should fail");
+    match err {
+        IIRArmv7Error::UndefinedFunction { caller, callee } => {
+            assert_eq!(caller, "main");
+            assert_eq!(callee, "ghost");
+        }
+        other => panic!("expected UndefinedFunction, got: {other:?}"),
+    }
+}
+
+#[test]
+fn call_with_no_dest_discards_return_value() {
+    // Void-call shape: no register allocated for the return value.
+    let main_fn = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("call", None, vec![Operand::Var("helper".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let helper = IIRFunction::new("helper", vec![], "void", vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let words = lower_iir_to_armv7(
+        &multi_fn_module("main", vec![main_fn, helper]),
+        &IIRArmv7Config::default(),
+    ).expect("lowering");
+    assert_eq!(words, vec![
+        BL_BASE | 0,    // 0:  BL helper (imm24 = 0, helper at word 2)
+        BX_LR,          // 1:  BX LR (main ret_void)
+        BX_LR,          // 2:  BX LR (helper ret_void)
+    ], "void call expected; got: {words:08x?}");
+}
+
+#[test]
+fn errors_for_undefined_function_display_without_panic() {
+    let _ = format!("{}", IIRArmv7Error::UndefinedFunction {
+        caller: "main".into(), callee: "ghost".into(),
     });
 }
 
