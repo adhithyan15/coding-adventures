@@ -5,7 +5,7 @@
 # A .mll file answers: how are primitives arranged, and how do they wire to
 # the mosmodel interface?
 #
-# Three keywords: `layout`, `slot`, `emit`.
+# Four keywords: `layout`, `slot`, `emit`, `pkg`.
 # Everything else — primitive names (Column, Row, Grid, …), property names
 # (direction, align, grow, …), and value keywords (row, true, false, …) —
 # is a NAME token validated semantically by the compiler.
@@ -40,7 +40,7 @@ NUMBER = /[0-9]+(\.[0-9]+)?/
 # ============================================================================
 # Keywords
 # ============================================================================
-# Only three structural keywords.  Primitive names (Column, Grid, …) and
+# Only four structural keywords.  Primitive names (Column, Grid, …) and
 # property value keywords (row, true, false, …) are not listed here because
 # they would conflict with user-chosen component/slot names at the token level.
 # The compiler validates them semantically instead.
@@ -49,6 +49,12 @@ keywords:
   layout
   slot
   emit
+  # UI34 §3.1 — `pkg` is the marker keyword for cross-package component
+  # references: `pkg::package-name::ComponentName`.  Promoted to keyword
+  # so the parser can pick the `qualified_name` branch with one-token
+  # look-ahead.  The in-repo `.mll`/`.mil`/`.msl` corpus audit confirms
+  # `pkg` is unused as a slot/part/prop name today.
+  pkg
 
 # ============================================================================
 # Identifiers
@@ -74,6 +80,10 @@ LPAREN   = "("
 RPAREN   = ")"
 LBRACKET = "["
 RBRACKET = "]"
+# DOUBLE_COLON listed BEFORE COLON so the maximal-munch lexer matches `::`
+# as one token, not two `:` (UI34 §3.1).  The same maximal-munch discipline
+# is used for `==`/`<=`/`>=`/`&&`/`||` further down this file.
+DOUBLE_COLON = "::"
 COLON    = ":"
 COMMA    = ","
 
