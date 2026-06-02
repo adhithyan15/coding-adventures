@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-06-02
+
+### Added
+
+- `lr_aggregate` module: full implementation of
+  [`LP19e`](../../../specs/LP19e-likelihood-ratio-aggregation.md)
+  likelihood-ratio Bayesian aggregation. Three new clause types
+  (`PriorClause`, `ContributionClause`, `JointContributionClause`)
+  plus three new id types, an `lr_aggregate(query, kb)` function,
+  numerically stable `sigmoid` / `logit` helpers, an
+  `LRAggregateResult` carrying the proof DAG and posterior, and an
+  `LrAggregateWarning` enum surfacing the LP19e §"Edge cases"
+  (no prior declared, no contributions active, degenerate LR=1.0
+  contribution).
+- `SearchMode::LRAggregate` variant + `SearchResult::LRAggregateResult`
+  variant. `AutoDetect` now routes to `LRAggregate` first whenever
+  `kb.participates_in_lr_aggregation(query)` is true, then falls
+  back to the LP19 short-circuit between `FindFirst` and
+  `EnumerateAll`.
+- `KnowledgeBase` extensions: `add_prior`, `add_contribution`,
+  `add_joint_contribution`, `prior_for`, `contributions_for`,
+  `joint_contributions_for`, `participates_in_lr_aggregation`,
+  `observed_evidence`. The new storage is flat `Vec`s rather than
+  `HashMap<Term, _>` because `Term` does not implement
+  `Hash + Eq`; linear scan is fine at current scale and switching
+  to an indexed map later is purely additive.
+- `DerivationOrigin` grows three additive variants: `FromPrior`,
+  `FromContribution`, `FromJointContribution`. Each carries the
+  log-odds delta inline so an audit reader can reconstruct running
+  log-odds from the proof's `steps` without consulting the KB.
+- `Proof` grows two additive fields: `posterior_logit:
+  Option<f64>` and `posterior_probability: Option<f64>`. `Some(_)`
+  on LR-aggregation proofs, `None` on SLD / WMC proofs.
+- 7 integration tests in `tests/test_lr_aggregation.rs` covering
+  the ADJ36 ACS chest-pain scenario end-to-end (reproduces 28.1%
+  posterior), `AutoDetect` routing, missing-prior warning, joint
+  contributions, evidence Fact id threading into the proof DAG,
+  compound-term equality on the linear-scan lookup, and conflicting
+  priors rejection.
+- 9 inline unit tests in `lr_aggregate.rs` covering numeric
+  stability, round-trip through `logit`/`sigmoid`, constructor
+  panics on out-of-range inputs, the prior-only case, single and
+  joint contributions, unobserved evidence skipped, and
+  `KbError::ConflictingPriors`.
+
+Total tests: 52 (was 36 in 0.2.0).
+
+### Scope notes
+
+This slice dissolves the engine-layer half of ADJ46's awkwardness
+catalogue at items A1 (LR magnitudes), A3 (Bayesian prior), A6 (WMC
+discarded; we now compute the right posterior), and starts on A2
+(provenance — id types are now distinct so the audit trail can name
+the clause kind, though source-citation fields on clauses themselves
+are still ADJ47 follow-up work).
+
+What 0.3.0 does NOT yet ship: counterfactual queries (A8),
+source-disagreement aggregation (A9), uncertainty markers (A5),
+kickback variant (A7), or a surface syntax (A10) — all are language-
+layer and live in ADJ47.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added

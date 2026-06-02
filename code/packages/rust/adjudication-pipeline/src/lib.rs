@@ -696,9 +696,13 @@ pub fn run_with_gateway<F: Fn() -> String>(
             rule_count: 0,
             fact_ids: Vec::new(),
             rule_ids: Vec::new(),
-            all_certain: answers
-                .iter()
-                .all(|a| !matches!(a.result, logic_engine::SearchResult::EnumerateAllResult { .. })),
+            all_certain: answers.iter().all(|a| {
+                !matches!(
+                    a.result,
+                    logic_engine::SearchResult::EnumerateAllResult { .. }
+                        | logic_engine::SearchResult::LRAggregateResult { .. }
+                )
+            }),
         },
         proof_dag: serde_json::Value::Null,
         formula: None,
@@ -931,6 +935,7 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
         logic_engine::SearchMode::FindFirst => SearchMode::FindFirst,
         logic_engine::SearchMode::EnumerateAll => SearchMode::EnumerateAll,
         logic_engine::SearchMode::AutoDetect => SearchMode::AutoDetect,
+        logic_engine::SearchMode::LRAggregate => SearchMode::LRAggregate,
     };
     trail.engine_artifacts = Some(EngineArtifacts {
         engine_version: "logic-engine 0.x".to_string(),
@@ -940,9 +945,13 @@ pub fn run_with_rulebooks<F: Fn() -> String>(
             rule_count: provenance_table.rule_provenance.len(),
             fact_ids: Vec::new(),
             rule_ids: Vec::new(),
-            all_certain: answers
-                .iter()
-                .all(|a| !matches!(a.result, logic_engine::SearchResult::EnumerateAllResult { .. })),
+            all_certain: answers.iter().all(|a| {
+                !matches!(
+                    a.result,
+                    logic_engine::SearchResult::EnumerateAllResult { .. }
+                        | logic_engine::SearchResult::LRAggregateResult { .. }
+                )
+            }),
         },
         proof_dag: serde_json::Value::Null,
         formula: None,
@@ -2705,23 +2714,33 @@ mod tests {
         let mk_bindings = |v_name: &str, t: logic_core::Term| -> Substitution {
             Substitution::empty().extend(var(v_name).id, t)
         };
+        // LP19e (logic-engine 0.3.0) added two `Option<f64>` fields to
+        // `Proof`: `posterior_logit` and `posterior_probability`.
+        // SLD-resolution / WMC proofs leave them as `None`. These
+        // test fixtures are SLD-shape, so `None` is the right value.
         let proof_a = logic_engine::Proof {
             bindings: mk_bindings("Status", atom("x")),
             steps: vec![],
             via_facts: vec![FactId(100)],
             via_rules: vec![RuleId(200)],
+            posterior_logit: None,
+            posterior_probability: None,
         };
         let proof_b = logic_engine::Proof {
             bindings: mk_bindings("Status", atom("x")),
             steps: vec![],
             via_facts: vec![FactId(101)],
             via_rules: vec![RuleId(201)],
+            posterior_logit: None,
+            posterior_probability: None,
         };
         let proof_c = logic_engine::Proof {
             bindings: mk_bindings("Status", atom("y")),
             steps: vec![],
             via_facts: vec![FactId(102)],
             via_rules: vec![RuleId(202)],
+            posterior_logit: None,
+            posterior_probability: None,
         };
         let dag = logic_engine::ProofDAG {
             root_query: compound("classify", vec![atom("z"), Term::Var(var("Status"))]),

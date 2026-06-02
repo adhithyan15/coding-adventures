@@ -13,15 +13,66 @@
 
 use logic_core::{Substitution, Term};
 
-use crate::{FactId, RuleId};
+use crate::{
+    ContributionClauseId, FactId, JointContributionClauseId, PriorClauseId, RuleId,
+};
 
 /// Why a particular step succeeded.
+///
+/// The first two variants — [`FromFact`](Self::FromFact) and
+/// [`FromRule`](Self::FromRule) — describe SLD-resolution-style steps
+/// produced by [`crate::enumerate_all`].
+///
+/// The remaining three — [`FromPrior`](Self::FromPrior),
+/// [`FromContribution`](Self::FromContribution), and
+/// [`FromJointContribution`](Self::FromJointContribution) — describe
+/// likelihood-ratio aggregation steps produced by
+/// [`crate::lr_aggregate`] (LP19e). They are *additive*: the
+/// pre-existing two variants continue to mean exactly what they
+/// always have. The LR variants carry the *running log-odds delta*
+/// the step contributed, so an audit reader can reconstruct the
+/// posterior arithmetic by walking the proof in evaluation order.
 #[derive(Debug, Clone, PartialEq)]
 pub enum DerivationOrigin {
     /// The step was satisfied by a Fact.
     FromFact(FactId),
     /// The step was satisfied by a Rule (head unification + body proof).
     FromRule(RuleId),
+    /// The step is the "seed" of an LR aggregation — the prior on the
+    /// conclusion. Per LP19e there is at most one such step per
+    /// aggregation proof, and it appears first.
+    FromPrior {
+        clause_id: PriorClauseId,
+        /// log(p / (1 - p)) for the prior probability p. Carried
+        /// inline so the audit reader doesn't have to consult the KB
+        /// to reconstruct running log-odds.
+        prior_logit: f64,
+    },
+    /// The step applied a single-source LR contribution to the
+    /// running log-odds.
+    FromContribution {
+        clause_id: ContributionClauseId,
+        /// FactIds for every Fact that satisfied the evidence term.
+        /// Empty if the evidence was satisfied by a Rule head — the
+        /// engine does not currently expose Rule provenance for
+        /// LR-aggregation evidence; v0.2 will route Rule-derived
+        /// evidence through this field too.
+        evidence_fact_ids: Vec<FactId>,
+        /// log(LR) for this contribution. Inline for the same audit
+        /// reason as `prior_logit`.
+        logit_delta: f64,
+    },
+    /// The step applied a joint-evidence interaction term — synergy
+    /// (positive delta) or explaining-away (negative delta) beyond
+    /// the product of atomic LRs.
+    FromJointContribution {
+        clause_id: JointContributionClauseId,
+        /// Union of FactIds satisfying every evidence term in the
+        /// joint set.
+        evidence_fact_ids: Vec<FactId>,
+        /// log(joint LR). Inline.
+        joint_logit_delta: f64,
+    },
 }
 
 /// A single step inside a proof.
@@ -49,6 +100,19 @@ pub struct Proof {
     pub steps: Vec<ProofStep>,
     pub via_facts: Vec<FactId>,
     pub via_rules: Vec<RuleId>,
+    /// The running log-odds *after* applying every LR step in
+    /// `steps`. `Some(x)` after an LR aggregation; `None` after
+    /// `FindFirst`, `EnumerateAll`, or `AutoDetect → WMC`.
+    ///
+    /// These two fields are additive per LP19e §"Proof DAG
+    /// integration": they let an LR-aware reader recover the
+    /// posterior arithmetic from a single Proof, but they do not
+    /// disturb the SLD-resolution / WMC paths that never set them.
+    pub posterior_logit: Option<f64>,
+    /// `sigmoid(posterior_logit)` — the posterior probability of the
+    /// root query. Redundant with `posterior_logit` but materialised
+    /// so callers don't all reinvent the sigmoid.
+    pub posterior_probability: Option<f64>,
 }
 
 /// Collection of all proofs of a query against a knowledge base.
@@ -100,10 +164,21 @@ impl ProofDAG {
 pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
     let mut facts: Vec<FactId> = Vec::new();
     let mut rules: Vec<RuleId> = Vec::new();
-    for s in steps {
-        match s.origin {
-            DerivationOrigin::FromFact(f) => facts.push(f),
-            DerivationOrigin::FromRule(r) => rules.push(r),
+    for s in &steps[..] {
+        match &s.origin {
+            DerivationOrigin::FromFact(f) => facts.push(*f),
+            DerivationOrigin::FromRule(r) => rules.push(*r),
+            // The LR-aggregation variants carry their evidence Fact
+            // ids inline so that the via_facts list of an
+            // LR-aggregated Proof can be reconstructed from the
+            // steps. (Rules don't contribute to LR proofs.)
+            DerivationOrigin::FromPrior { .. } => {}
+            DerivationOrigin::FromContribution {
+                evidence_fact_ids, ..
+            } => facts.extend(evidence_fact_ids.iter().copied()),
+            DerivationOrigin::FromJointContribution {
+                evidence_fact_ids, ..
+            } => facts.extend(evidence_fact_ids.iter().copied()),
         }
     }
     facts.sort();
