@@ -3,6 +3,39 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 0b: full blind A/B on experiment-2
+
+Ran all four arms on the experiment-2 case (known ground truth: PMBCL).
+Framework arm = `adj52` runner over the ADJ51 rulebook; plain-Claude
+control + blind judge run as real subagents. Artifacts in
+`validation/experiment2-{plain-claude,framework-arm,judge}.json` and
+`validation/experiment2-blind-ab.md`.
+
+**Result: blind judge picked the framework (narrow).** Both arms got the
+load-bearing decisions right (malignancy not infection, Actinomyces
+colonizer, biopsy). Plain Claude *led* with myeloid leukemia — falling
+for the paraneoplastic leukemoid trap; the framework avoided the wrong
+specific commitment, which won it the edge.
+
+**Two findings (the point of running it):**
+
+1. **Methodology bug — the judge must receive the AUDIT TRAIL, not a
+   prose summary.** The framework arm was rendered as prose that *claimed*
+   citations without showing them; the judge correctly flagged "false
+   rigor … can't be traced" and docked the framework on *defensibility* —
+   its single biggest advantage. The orchestrator must feed the judge the
+   runner's actual fired-clauses-with-citations
+   (`05-run-output.txt`-style), or the experiment measures the framework
+   with its defining feature amputated.
+2. **Real calibration issue — the engine over-collapses to ~100%.** A
+   ~100%/~99.9% posterior on a case that took weeks + a biopsy to resolve
+   is overconfident. LR-aggregation produces extreme posteriors; the
+   framework should carry residual uncertainty (an `uncertain`/kickback
+   signal) here rather than collapse to certainty. Direct tie-in to the
+   "uncertainty at the core" goal.
+
+Both findings are now the top of the next-batch work list.
+
 ## 2026-06-03 — Batch 0: harness foundation + ingester validation
 
 **Shipped & verified**

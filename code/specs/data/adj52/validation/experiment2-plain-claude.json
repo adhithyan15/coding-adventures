@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "what": "Plain-Claude control arm: a subagent given the sanitised ADJ51 experiment-2 prose with no framework, no IR, no rulebook. Run 2026-06-03.",
+    "arm": "plain_claude (was OUTPUT A to the blind judge)"
+  },
+  "answers": [
+    {
+      "question": "What is the most likely diagnosis?",
+      "answer": "A hematologic/myeloproliferative malignancy with leukemic infiltration and a mediastinal mass — most consistent with chronic myeloid leukemia (CML) or an acute leukemia with myeloid features; mediastinal/lung masses likely leukemic tissue infiltration (myeloid sarcoma/chloroma), with aggressive lymphoma in the differential. Actinomyces most likely a colonizer, not the primary disease.",
+      "confidence": "Moderate (high that this is a hematologic malignancy rather than infection; moderate as to the exact entity — CML vs AML/myeloid sarcoma vs lymphoma)"
+    },
+    {
+      "question": "What is the recommended next action?",
+      "answer": "Urgent hematologic-oncologic workup: peripheral smear, bone marrow aspirate/biopsy with flow cytometry, cytogenetics, BCR-ABL1; tissue diagnosis of the mass via CT-guided or EBUS biopsy and pleural fluid cytology/flow. De-escalate antibiotics.",
+      "confidence": "High"
+    }
+  ],
+  "reasoning": "Myeloproliferative/leukemoid blood profile plus mediastinal/lung mass, lymphadenopathy, pleural effusion and B symptoms favor hematologic malignancy with tissue infiltration; repeated antibiotic failure argues Actinomyces is incidental. Decisive next step is tissue/marrow diagnosis and heme-onc consult.",
+  "_assessment": "Got the load-bearing decisions right (malignancy not infection, Actinomyces colonizer, biopsy) but LED with myeloid leukemia — falling for the paraneoplastic leukemoid reaction the ground truth flags as the trap. True diagnosis PMBCL (lymphoma) was only 'in the differential.'"
+}
