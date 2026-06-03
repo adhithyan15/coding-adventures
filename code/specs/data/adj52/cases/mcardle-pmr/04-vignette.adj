@@ -1,0 +1,59 @@
+% ADJ52 mcardle-pmr — patient observations + queries (deriver output,
+% with 6 numeric/unit term-args normalized to qualitative atoms so they
+% satisfy the adj-lang IDENT grammar: age(64_years)->age(over_50);
+% crp_peak(103_mg_per_L)->crp_peak(elevated); esr(45_mm_per_hr)->esr(elevated);
+% creatine_kinase_initial(811_IU_per_L)->creatine_kinase_initial(elevated);
+% creatine_kinase_later_peak(3473_IU_per_L)->creatine_kinase_later_peak(markedly_elevated);
+% prednisolone_dose(30_mg_daily)->prednisolone_dose(moderate)).
+
+observe age(over_50)
+observe sex(male)
+observe presenting_complaint(severe_acute_onset_myalgia)
+observe myalgia_distribution(hips_and_shoulders)
+observe comorbidity(type_2_diabetes)
+observe diabetes_diagnosis_timing(three_months_before_presentation)
+observe myalgia_character(proximal)
+observe associated_symptom(stiffness)
+observe symptom_gradient(upper_limbs_greater_than_lower_limbs)
+observe pain_disturbs_sleep(true)
+observe diurnal_variation(absent)
+observe systemic_examination(normal)
+observe neurological_deficit(absent)
+observe examination_finding(nonspecific_myalgia_and_arthralgia)
+observe crp_peak(elevated)
+observe crp_status(elevated)
+observe esr(elevated)
+observe creatine_kinase_initial(elevated)
+observe creatine_kinase_later_peak(markedly_elevated)
+observe ck_rise_trigger(strenuous_activity)
+observe antinuclear_antibody(negative)
+observe extractable_nuclear_antigen(negative)
+observe myositis_autoantibody_panel(negative)
+observe immunoglobulins(normal)
+observe renal_function(normal)
+observe vitamin_d(normal)
+observe mri_spine(normal)
+observe upper_limb_muscle_mri_finding(nonspecific_atrophy_without_edema)
+observe upper_limb_muscle_mri_diagnostic_yield(no_diagnostic_findings)
+observe treatment(prednisolone)
+observe prednisolone_dose(moderate)
+observe prednisolone_duration(five_days)
+observe treatment_response(significant_improvement)
+observe subsequent_regimen(tapering)
+observe history_on_questioning(episodic_short_lived_myalgia)
+observe episodic_myalgia_chronicity(longstanding_and_baseline_normal_for_patient)
+observe exertional_symptom(muscle_spasms_when_walking_long_distances)
+observe childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint)
+
+% q1 — unifying diagnosis
+? diagnosis(mcardle_disease_gsd_v)
+? diagnosis(polymyalgia_rheumatica)
+? diagnosis(coexisting_pmr_and_metabolic_myopathy)
+? diagnosis(seronegative_inflammatory_myopathy)
+? diagnosis(other_metabolic_myopathy_lipid_storage)
+? diagnosis(diabetic_amyotrophy)
+
+% q5 — confirmatory investigation (recommended next step)
+? next_step(pygm_molecular_genetic_testing)
+? next_step(nonischemic_forearm_exercise_test)
+? next_step(muscle_biopsy_myophosphorylase_stain)

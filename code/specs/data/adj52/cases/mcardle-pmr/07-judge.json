@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "what": "Blind judge verdict on the McArdle/PMR case. The judge received both outputs anonymised (A/B) plus the ground truth, and the framework arm was presented WITH its real audit trail (fired clauses + citations + posteriors) — the fix from the experiment-2 run.",
+    "keymap_held_by_orchestrator": { "A": "framework", "B": "plain_claude" },
+    "run_date": "2026-06-03"
+  },
+  "output_a": {
+    "correctness": "Correct. Top diagnosis late-onset McArdle (GSD V); notes markedly elevated CK incompatible with PMR; recommends PYGM testing / forearm test / biopsy over chronic steroids. Matches ground truth on diagnosis, the misdiagnosis-as-PMR framing, and disposition.",
+    "hallucination": "Largely defensible qualitatively; but the Bayesian weights and posteriors are fabricated-precise (100.0%, +1.79) and not derivable from cited sources, and ranking coexisting-PMR-metabolic 99.5% with PMR 97.5% just below McArdle 100% is internally incoherent for a ranked posterior. Source families correctly attributed.",
+    "calibration": "Mixed — flags the open confirmatory-test uncertainty and orders next steps sensibly, but the 100.0% posterior is overconfident pre-confirmation; multi-decimal probabilities convey false precision.",
+    "defensibility": "Qualitatively traceable to named guideline/source families, but the exact numeric weights/posteriors are not reconstructable."
+  },
+  "output_b": {
+    "correctness": "Correct. McArdle (GSD V) most likely, anchored on lifelong exertional intolerance + the CK rise; correct disposition (forearm test, biopsy, PYGM, rhabdo counseling, steroids inadequate).",
+    "hallucination": "None material; forearm-test physiology accurate; second-wind genuine; T2DM-as-incidental reasonable.",
+    "calibration": "Well calibrated — 'Moderate' on the specific diagnosis vs 'Moderate-to-high' on the disposition, appropriately separating the two pre-confirmation.",
+    "defensibility": "Highly defensible — every claim mechanistically traceable and checkable without unverifiable numbers."
+  },
+  "winner": "B",
+  "rationale": "Both reach the correct diagnosis (McArdle/GSD V), reject PMR on the markedly elevated CK, identify lifelong exertional intolerance as the key clue, and recommend confirmatory metabolic/genetic workup over steroids. Deciding factors: calibration, hallucination, defensibility. B expresses appropriately graded confidence and every claim is verifiable. A reaches the same conclusion but wraps it in pseudo-quantitative posteriors (100.0% on McArdle; an internally incoherent ranking with coexisting 99.5% and PMR 97.5% just below) and fabricated-precision weights not reconstructable from its sources — conveying false precision and overconfidence. A's citations are a plus, but the unverifiable numeric apparatus and overconfident 100% weaken calibration/defensibility relative to B."
+}

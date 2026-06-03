@@ -3,6 +3,45 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 0c: novel case end-to-end (McArdle mimicking PMR)
+
+First fully-novel case run through the WHOLE pipeline (ingest → derive →
+compile → counterfactuals → plain-Claude → blind judge). Source PMC11724029;
+ground truth late-onset McArdle disease (GSD V), initially misdiagnosed as
+polymyalgia rheumatica. Artifacts in `cases/mcardle-pmr/`.
+
+**Result.** The framework reached the CORRECT answer: diagnosis(mcardle) 100%
+(top), correctly rejected inflammatory (3.4%) and diabetic (0.5%), penalized
+PMR via the CK (−1.61), and recommended PYGM genetic testing (83.3%) — the
+correct disposition. Plain Claude *also* got it right (Moderate confidence).
+The **blind judge preferred plain Claude**, even with the framework's full
+audit trail provided.
+
+**Findings (consistent with Batch 0b, confounder now removed):**
+
+1. **Over-saturated, internally-incoherent posteriors — CONFIRMED.** McArdle
+   100%, coexisting 99.5%, PMR 97.5% all near-certain at once. The LR engine
+   scores each query as an independent binary, so candidates never compete and
+   don't form a coherent differential; reads as false precision. **#1 blocker
+   to beating a strong base model.** Fix: normalize across mutually-exclusive
+   candidates (softmax-style differential summing to ~1) + temper extremes.
+   Serves the "uncertainty at the core" goal.
+2. **Inert VOI markers.** Deriver declared `uncertain { test(...) }` but wrote
+   no `contributes` FROM the test results → VOI range 0.0; the confirmatory
+   test can't move the posterior. The panel correctly surfaced the gap. Fix:
+   deriver must emit `contributes` from test-result terms to the conclusion.
+3. **Term normalization needed.** Deriver emitted numeric/unit args
+   (`age(64_years)`, `creatine_kinase_later_peak(3473_IU_per_L)`) that violate
+   the adj-lang IDENT grammar; 6 normalized by hand. Fix: automated
+   normalization, or instruct the deriver to emit grammar-valid atoms.
+4. **Process: a leaked case name in the Agent `description` contaminated the
+   first ingester run** (it referenced "McArdle"). Discarded + re-ran clean;
+   recorded in `lessons.md`. Every subagent-facing field must be scrubbed.
+
+**Net:** pipeline works end-to-end and gets novel cases right, but to BEAT a
+strong base model it must add calibration + a coherent differential, not just
+citations.
+
 ## 2026-06-03 — Batch 0b: full blind A/B on experiment-2
 
 Ran all four arms on the experiment-2 case (known ground truth: PMBCL).

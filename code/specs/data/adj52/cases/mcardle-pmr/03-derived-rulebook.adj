@@ -1,0 +1,223 @@
+% ============================================================================
+% ADJ52 mcardle-pmr derived rulebook (deriver subagent output).
+% Differential built from the IR alone (no answer given). Recurses into
+% subcategories. Every clause carries a % rationale + source + trust.
+%
+% NOTE: 6 numeric/unit term-args were normalized to qualitative atoms so they
+% satisfy the adj-lang IDENT grammar (identifiers cannot start with a digit or
+% contain uppercase). Mapping: age(64_years)->age(over_50);
+% esr(45_mm_per_hr)->esr(elevated);
+% creatine_kinase_initial(811_IU_per_L)->creatine_kinase_initial(elevated);
+% creatine_kinase_later_peak(3473_IU_per_L)->creatine_kinase_later_peak(markedly_elevated);
+% prednisolone_dose(30_mg_daily)->prednisolone_dose(moderate). The raw deriver
+% output (with the numeric/unit terms) is the artifact this was derived from.
+% This focused rulebook keeps the q1 (diagnosis differential) + q5 (next step)
+% conclusions; the deriver's auxiliary explains/relationship/implication
+% conclusions are omitted here for a focused run.
+% ============================================================================
+
+% ===== PRIORS (base rates for a 64yo male with proximal myalgia) =====
+
+% rationale: PMR is common >50 with proximal girdle pain + raised acute-phase reactants.
+prior 0.30 for diagnosis(polymyalgia_rheumatica)
+  source "AFP 2013;88(10):676; EULAR/ACR 2012 + BSR/BHPR PMR criteria" trust authoritative
+
+% rationale: McArdle (GSD V) rare overall but the most common muscle glycogenolysis defect.
+prior 0.05 for diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (GSD V); StatPearls NBK560785" trust authoritative
+
+% rationale: lipid-storage/FAO myopathies are a sibling subcategory with a distinct trigger profile.
+prior 0.03 for diagnosis(other_metabolic_myopathy_lipid_storage)
+  source "The Rheumatologist, Tips for Diagnosing Metabolic Myopathies" trust authoritative
+
+% rationale: inflammatory myopathy (poly/dermatomyositis) stays on the differential for high CK.
+prior 0.08 for diagnosis(seronegative_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies" trust authoritative
+
+% rationale: diabetic amyotrophy plausible given T2DM 3 months prior; low prior.
+prior 0.04 for diagnosis(diabetic_amyotrophy)
+  source "MSD Manual, proximal diabetic neuropathy/amyotrophy" trust authoritative
+
+% rationale: only the two-process hypothesis accounts for BOTH raised CRP/ESR AND exertional CK.
+prior 0.10 for diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "Reumatologia Clinica S2173574316000356; GeneReviews NBK1344" trust empirical
+
+% ===== POLYMYALGIA RHEUMATICA =====
+
+% rationale: age >=50 is a mandatory PMR entry criterion.
+contributes 2.5 from age(over_50) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria (age>=50 required)" trust authoritative
+
+% rationale: bilateral shoulder + hip girdle pain is the cardinal PMR distribution.
+contributes 4.0 from myalgia_distribution(hips_and_shoulders) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria; AFP 2013;88(10):676" trust authoritative
+
+% rationale: proximal pain (over weakness) is typical of PMR.
+contributes 2.0 from myalgia_character(proximal) to diagnosis(polymyalgia_rheumatica)
+  source "MSD Manual, Polymyalgia Rheumatica" trust authoritative
+
+% rationale: stiffness (morning stiffness >45 min) is a core PMR criterion.
+contributes 2.5 from associated_symptom(stiffness) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria; CCJM 2020;87(9):549" trust authoritative
+
+% rationale: raised CRP/ESR are required laboratory support for PMR.
+contributes 3.5 from crp_status(elevated) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria; AFP 2013;88(10):676" trust authoritative
+contributes 1.8 from esr(elevated) to diagnosis(polymyalgia_rheumatica)
+  source "BSR/BHPR PMR guideline; AFP 2013;88(10):676" trust authoritative
+
+% rationale: normal exam / no neuro deficit is consistent with PMR.
+contributes 1.3 from neurological_deficit(absent) to diagnosis(polymyalgia_rheumatica)
+  source "MSD Manual, Polymyalgia Rheumatica" trust authoritative
+
+% rationale: CK is characteristically NORMAL in PMR; a markedly elevated CK argues strongly AGAINST.
+contributes 0.20 from creatine_kinase_later_peak(markedly_elevated) to diagnosis(polymyalgia_rheumatica)
+  source "AFP 2013;88(10):676; MSD Manual (muscle enzymes normal in PMR)" trust authoritative
+contributes 0.45 from creatine_kinase_initial(elevated) to diagnosis(polymyalgia_rheumatica)
+  source "AFP 2013;88(10):676 (muscle enzymes normal in PMR)" trust authoritative
+
+% rationale: synergy — girdle pain + raised acute-phase reactants together is the PMR gestalt.
+interacts 2.5 when myalgia_distribution(hips_and_shoulders) and crp_status(elevated) for diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria (conjunctive scoring)" trust authoritative
+
+% ===== McARDLE DISEASE (GSD V) =====
+
+% rationale: childhood exertional intolerance (carried off track after a short sprint) is textbook GSD V.
+contributes 6.0 from childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) to diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (onset first decade; exercise intolerance, cramps); StatPearls NBK560785" trust authoritative
+
+% rationale: painful cramps within minutes of exercise subsiding with rest are highly suggestive of McArdle.
+contributes 5.0 from exertional_symptom(muscle_spasms_when_walking_long_distances) to diagnosis(mcardle_disease_gsd_v)
+  source "Patient.info Doctor, McArdle's Disease GSD V" trust authoritative
+
+% rationale: longstanding short-lived exertional myalgia fits the chronic exercise-intolerance phenotype.
+contributes 3.0 from history_on_questioning(episodic_short_lived_myalgia) to diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (recurrent exercise-induced myalgia, often overlooked)" trust authoritative
+contributes 2.0 from episodic_myalgia_chronicity(longstanding_and_baseline_normal_for_patient) to diagnosis(mcardle_disease_gsd_v)
+  source "Reumatologia Clinica S2173574316000356 (long diagnostic delay; symptoms normalized by patient)" trust empirical
+
+% rationale: persistently elevated resting CK without weakness is a key GSD V clue mimicking inflammatory disease.
+contributes 3.0 from creatine_kinase_initial(elevated) to diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (baseline CK frequently >1000 IU/L)" trust authoritative
+
+% rationale: exertion-provoked CK surge / rhabdomyolysis is the dynamic hallmark of GSD V.
+contributes 6.0 from ck_rise_trigger(strenuous_activity) to diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (exercise-induced rhabdomyolysis); JKMS 2014;29(7):1021" trust authoritative
+contributes 4.0 from creatine_kinase_later_peak(markedly_elevated) to diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (markedly raised exercise-triggered CK in GSD V)" trust authoritative
+
+% rationale: negative myositis serology fits a non-autoimmune metabolic myopathy.
+contributes 1.5 from myositis_autoantibody_panel(negative) to diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (GSD V is a non-autoimmune enzyme deficiency)" trust authoritative
+
+% rationale: muscle MRI atrophy WITHOUT edema argues against active inflammation, compatible with chronic metabolic myopathy.
+contributes 1.5 from upper_limb_muscle_mri_finding(nonspecific_atrophy_without_edema) to diagnosis(mcardle_disease_gsd_v)
+  source "Reumatologia Clinica S2173574316000356 (imaging non-diagnostic; no edema argues against myositis)" trust empirical
+
+% rationale: KEY SYNERGY — lifelong exertional intolerance + exertional CK surge together is near-diagnostic for GSD V.
+interacts 4.0 when childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) and ck_rise_trigger(strenuous_activity) for diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 + Patient.info GSD V" trust authoritative
+
+% rationale: SYNERGY — exertional cramps + exertional CK rise is the cramp+rhabdo dyad of glycogenolytic block.
+interacts 3.0 when exertional_symptom(muscle_spasms_when_walking_long_distances) and ck_rise_trigger(strenuous_activity) for diagnosis(mcardle_disease_gsd_v)
+  source "Patient.info Doctor, McArdle's Disease GSD V" trust authoritative
+
+% ===== OTHER METABOLIC MYOPATHY — LIPID/FAO (sibling subcategory) =====
+
+% rationale: lifelong exertional intolerance is shared across metabolic myopathies (less specific here).
+contributes 2.5 from childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) to diagnosis(other_metabolic_myopathy_lipid_storage)
+  source "The Rheumatologist, metabolic myopathy tips" trust authoritative
+
+% rationale: exertion-provoked CK rise also occurs in fatty-acid-oxidation disorders.
+contributes 2.5 from ck_rise_trigger(strenuous_activity) to diagnosis(other_metabolic_myopathy_lipid_storage)
+  source "The Rheumatologist, metabolic myopathy tips" trust authoritative
+
+% rationale: brief/anaerobic trigger (sprint) favors a glycogenolytic block over lipid/FAO (sustained/fasting) -> mild AGAINST.
+contributes 0.7 from exertional_symptom(muscle_spasms_when_walking_long_distances) to diagnosis(other_metabolic_myopathy_lipid_storage)
+  source "The Rheumatologist (lipid disorders provoked by prolonged/fasting exertion)" trust authoritative
+
+% ===== SERONEGATIVE INFLAMMATORY MYOPATHY (myositis spectrum) =====
+
+% rationale: proximal upper>lower symptoms with high CK can occur in inflammatory myopathy.
+contributes 2.0 from symptom_gradient(upper_limbs_greater_than_lower_limbs) to diagnosis(seronegative_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies" trust authoritative
+contributes 2.5 from creatine_kinase_later_peak(markedly_elevated) to diagnosis(seronegative_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (markedly elevated CK typical of active myositis)" trust authoritative
+
+% rationale: fully negative myositis-specific antibody panel lowers (not excludes) inflammatory myopathy -> encodes u4.
+contributes 0.40 from myositis_autoantibody_panel(negative) to diagnosis(seronegative_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (negative panel lowers but does not exclude)" trust authoritative
+
+% rationale: muscle MRI without edema argues against active myositis.
+contributes 0.40 from upper_limb_muscle_mri_finding(nonspecific_atrophy_without_edema) to diagnosis(seronegative_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (active myositis shows edema on MRI)" trust authoritative
+
+% rationale: myalgia without objective weakness is atypical for inflammatory myopathy -> AGAINST.
+contributes 0.5 from examination_finding(nonspecific_myalgia_and_arthralgia) to diagnosis(seronegative_inflammatory_myopathy)
+  source "The Rheumatologist, Diagnosis: Myopathy (myalgia without weakness atypical)" trust authoritative
+
+% ===== DIABETIC AMYOTROPHY (T2DM-linked alternative) =====
+
+% rationale: recent T2DM provides temporal context for a diabetes-related muscle process.
+contributes 1.5 from diabetes_diagnosis_timing(three_months_before_presentation) to diagnosis(diabetic_amyotrophy)
+  source "MSD Manual, proximal diabetic neuropathy/amyotrophy" trust authoritative
+
+% rationale: diabetic amyotrophy usually has weakness/neuro signs; their absence argues AGAINST.
+contributes 0.4 from neurological_deficit(absent) to diagnosis(diabetic_amyotrophy)
+  source "MSD Manual (amyotrophy presents with proximal weakness/wasting)" trust authoritative
+
+% rationale: cannot explain childhood exertional intolerance predating diabetes by decades -> strong AGAINST.
+contributes 0.2 from childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) to diagnosis(diabetic_amyotrophy)
+  source "MSD Manual (diabetic complications postdate diabetes onset)" trust inferred
+
+% ===== COEXISTING PMR + METABOLIC MYOPATHY (two-hit unifying hypothesis) =====
+
+% rationale: acute girdle distribution + raised acute-phase reactants supply the PMR component.
+contributes 3.0 from myalgia_distribution(hips_and_shoulders) to diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "EULAR/ACR 2012 PMR criteria; AFP 2013;88(10):676" trust authoritative
+contributes 2.5 from crp_status(elevated) to diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "EULAR/ACR 2012 PMR criteria (raised CRP/ESR)" trust authoritative
+
+% rationale: lifelong exertional features + exertional CK rise supply the metabolic component PMR cannot explain.
+contributes 3.5 from childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) to diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "Reumatologia Clinica S2173574316000356 (metabolic myopathy unmasked during rheumatologic evaluation)" trust empirical
+contributes 3.5 from ck_rise_trigger(strenuous_activity) to diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "GeneReviews NBK1344 (exertional CK rise is metabolic, not inflammatory)" trust authoritative
+
+% rationale: KEY SYNERGY — raised CRP AND markedly raised exertional CK together implies two processes (PMR has normal CK; metabolic lacks raised CRP). Encodes u1.
+interacts 5.0 when crp_status(elevated) and ck_rise_trigger(strenuous_activity) for diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "AFP 2013;88(10):676 (PMR normal CK) + GeneReviews NBK1344 (metabolic exertional CK)" trust empirical
+interacts 4.0 when myalgia_distribution(hips_and_shoulders) and childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) for diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  source "Reumatologia Clinica S2173574316000356" trust empirical
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: PYGM molecular genetic testing is the confirmatory gold standard for McArdle.
+prior 0.20 for next_step(pygm_molecular_genetic_testing)
+  source "GeneReviews NBK1344 (biallelic PYGM variants = confirmatory gold standard)" trust authoritative
+contributes 5.0 from ck_rise_trigger(strenuous_activity) to next_step(pygm_molecular_genetic_testing)
+  source "GeneReviews NBK1344 (exertional rhabdomyolysis phenotype)" trust authoritative
+contributes 4.0 from childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) to next_step(pygm_molecular_genetic_testing)
+  source "GeneReviews NBK1344 (lifelong exercise intolerance)" trust authoritative
+
+% rationale: non-ischemic forearm exercise test (flat lactate, high ammonia) is the classic functional screen.
+prior 0.15 for next_step(nonischemic_forearm_exercise_test)
+  source "GeneReviews NBK1344; StatPearls NBK560785 (non-ischemic forearm test)" trust authoritative
+contributes 4.0 from exertional_symptom(muscle_spasms_when_walking_long_distances) to next_step(nonischemic_forearm_exercise_test)
+  source "Patient.info GSD V (forearm exercise test for glycogenolytic block)" trust authoritative
+
+% rationale: muscle biopsy with myophosphorylase stain confirms GSD V when genetics inconclusive.
+prior 0.10 for next_step(muscle_biopsy_myophosphorylase_stain)
+  source "GeneReviews NBK1344 (myophosphorylase assay / PAS glycogen on biopsy)" trust authoritative
+contributes 2.5 from creatine_kinase_initial(elevated) to next_step(muscle_biopsy_myophosphorylase_stain)
+  source "Reumatologia Clinica S2173574316000356 (biopsy confirms McArdle in CK-elevated cases)" trust empirical
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u1: metabolic vs inflammatory pending the confirmatory metabolic workup.
+uncertain { test(pygm_biallelic_pathogenic), test(pygm_no_variant), test(forearm_flat_lactate_high_ammonia), test(forearm_normal_lactate_rise) } for diagnosis(mcardle_disease_gsd_v)
+  source "GeneReviews NBK1344 (PYGM testing and forearm test resolve the question)"
+
+% u4: inflammatory myopathy not formally excluded until tissue/imaging settles it.
+uncertain { test(muscle_biopsy_inflammatory_infiltrate), test(muscle_biopsy_no_inflammation_glycogen_excess) } for diagnosis(seronegative_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (biopsy adjudicates)"
