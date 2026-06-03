@@ -1618,21 +1618,22 @@ impl Lowerer {
     /// | literal `1`    | `scrutinee == 1`                               | `[]`                    |
     /// | literal `nil`  | `scrutinee == nil`                             | `[]`                    |
     /// | binding `x`    | `BoolLit(true)`                                | `[LetBinding(x, scrut)]`|
-    /// | array `[…]`    | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                  |
-    /// | hash `{…}`     | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                  |
+    /// | array `[…]`    | structural (`SeqLen`/`SeqIndex` + `&&`)        | per-element bindings    |
+    /// | hash `{…}`     | structural (`MapGet` + `&&`, see `lower_hash_pattern`) | per-key bindings |
     ///
     /// ## v0 deferred limitations
     ///
-    /// - Array / hash patterns lower as a `__pattern_match__` marker
-    ///   builtin carrying the verbatim raw text of the pattern.  No
-    ///   structural decomposition or sub-bindings are emitted yet —
-    ///   downstream emitters can re-derive the pattern from the raw
-    ///   text.  Same marker-builtin pattern as Phase 6v rescue/ensure,
-    ///   Phase 6y `__interp__`, and Phase 7a `backtick`.
+    /// - Array patterns with non-lowerable elements (hash sub-patterns)
+    ///   fall back to a `__pattern_match__` marker builtin carrying the
+    ///   verbatim raw text of the pattern — downstream emitters can
+    ///   re-derive the pattern from the raw text.  Same marker-builtin
+    ///   pattern as Phase 6v rescue/ensure, Phase 6y `__interp__`, and
+    ///   Phase 7a `backtick`.
     /// - Pin operators (`^x`), find patterns (`[…, *, …]`), and class
     ///   patterns (`SomeClass(x)`) are not yet parsed.
-    /// - Hash pattern's shorthand `{name:}` doesn't bind `name` at SIR
-    ///   level (deferred along with structural decomposition).
+    /// - Hash patterns can't enforce key *presence* (SIR has no map
+    ///   has-key primitive); see `lower_hash_pattern` for the precise v0
+    ///   semantics.
     fn lower_in_clause_pattern(
         &mut self,
         pattern_node: &GrammarASTNode,
@@ -1710,9 +1711,14 @@ impl Lowerer {
                 }
             }
             "hash_pattern" => {
-                // v0 marker (unchanged): hash patterns keep the
-                // `__pattern_match__` marker pending a future phase.
-                Ok(self.pattern_match_marker(inner, scrutinee, span))
+                // Phase FC — hash patterns now lower to a real structural
+                // match keyed by symbol (`MapGet`), mirroring the array
+                // path.  Every pair's sub-pattern is fed back through
+                // `lower_in_clause_pattern` (against `target[:key]`), so
+                // literal / binding / nested array / nested hash
+                // sub-patterns all compose; the `{name:}` shorthand binds
+                // `name = target[:name]`.
+                self.lower_hash_pattern(inner, scrutinee, span)
             }
             other => Err(RubyLowerError {
                 message: format!("unknown pattern kind `{}` in in_clause", other),
@@ -1780,6 +1786,12 @@ impl Lowerer {
                 Some(elem) => match elem.rule_name.as_str() {
                     "literal_pattern" | "binding_pattern" => true,
                     "array_pattern" => self.array_pattern_is_lowerable(elem),
+                    // Hash sub-patterns now lower structurally too (a
+                    // hash pattern is always lowerable — non-lowerable
+                    // leaves inside it marker themselves), so an array
+                    // containing one no longer forces a whole-pattern
+                    // marker fallback.
+                    "hash_pattern" => true,
                     _ => false,
                 },
                 None => false,
@@ -1911,6 +1923,21 @@ impl Lowerer {
                     };
                     prefix.extend(sub_prefix);
                 }
+                "hash_pattern" => {
+                    // Phase FC — a hash sub-pattern at array element `i`
+                    // matches `target[i]` against the hash pattern (keyed
+                    // by symbol via `MapGet`).  Same AND-after-length-check
+                    // discipline as the nested-array case.
+                    let (sub_cond, sub_prefix) =
+                        self.lower_hash_pattern(elem_inner, &index, span.clone())?;
+                    self.features_used.insert(Feature::ShortCircuit);
+                    cond = Expr::LogicalAnd {
+                        lhs: Box::new(cond),
+                        rhs: Box::new(sub_cond),
+                        span: span.clone(),
+                    };
+                    prefix.extend(sub_prefix);
+                }
                 other => {
                     return Err(RubyLowerError {
                         message: format!(
@@ -1919,6 +1946,125 @@ impl Lowerer {
                         ),
                         line: elem_inner.start_line.unwrap_or(0),
                         column: elem_inner.start_column.unwrap_or(0),
+                    });
+                }
+            }
+        }
+        Ok((cond, prefix))
+    }
+
+    /// Phase FC — lower a `hash_pattern` node into a real structural
+    /// match of `target`, keyed by symbol.  The hash analogue of
+    /// [`lower_array_pattern`].
+    ///
+    /// `in {name: "ann", age: a}` against `s` produces:
+    ///
+    /// ```text
+    /// cond   = ((true && (s[:name] == "ann")) && true)
+    /// prefix = [ let a = s[:age] ]
+    /// ```
+    ///
+    /// Each `hash_pattern_pair` `key: <subpat>` builds a `MapGet(target,
+    /// :key)` sub-scrutinee and feeds it back through
+    /// [`lower_in_clause_pattern`], so literal, binding, nested array, and
+    /// nested hash sub-patterns all compose recursively (no separate
+    /// lowerability guard is needed — a non-lowerable nested array simply
+    /// markers itself).  The Ruby 3.1 shorthand `{key:}` (no sub-pattern)
+    /// binds `key = target[:key]` — fixing the prior "shorthand doesn't
+    /// bind" limitation.
+    ///
+    /// ## v0 limitation
+    ///
+    /// Ruby hash patterns additionally require each listed key to be
+    /// *present* in the scrutinee.  SIR has no map has-key primitive, so
+    /// presence is only enforced indirectly: a `key: <literal>` pair
+    /// contributes a `target[:key] == literal` check (which fails for a
+    /// missing key in every target language whose missing-key value isn't
+    /// that literal), while a pure binding/shorthand pair contributes no
+    /// guard.  A hash pattern consisting solely of bindings therefore
+    /// matches on shape alone.  Requests `Feature::Maps` (for `MapGet`),
+    /// `Feature::Symbols` (for the symbol keys), and — when any pair adds
+    /// a condition — `Feature::ShortCircuit` (for the `&&` chain).
+    fn lower_hash_pattern(
+        &mut self,
+        hash_inner: &GrammarASTNode,
+        target: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        self.features_used.insert(Feature::Maps);
+        let pairs: Vec<&GrammarASTNode> = hash_inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "hash_pattern_pair" => Some(n),
+                _ => None,
+            })
+            .collect();
+
+        // Base condition is trivially true; each pair ANDs in its check
+        // (literal pairs) or contributes only a binding (binding pairs),
+        // exactly mirroring how `binding_pattern` is "trivially true".
+        let mut cond = Expr::BoolLit {
+            value: true,
+            span: span.clone(),
+        };
+        let mut prefix: Vec<Stmt> = Vec::new();
+
+        for pair in pairs {
+            // The key is the leading NAME token; the symbol `:key` is the
+            // map key (matching how hash *literals* key their entries —
+            // `a:` is sugar for `:a =>`, see `lower_hash_entry`).
+            let key_tok = pair
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                    _ => None,
+                })
+                .ok_or_else(|| RubyLowerError {
+                    message: "hash_pattern_pair missing key Name token".to_string(),
+                    line: pair.start_line.unwrap_or(0),
+                    column: pair.start_column.unwrap_or(0),
+                })?;
+            let key_name = key_tok.value.clone();
+            let key_span = self.span_of_token(key_tok);
+            self.features_used.insert(Feature::Symbols);
+            // `target[:key]` — reused as the sub-scrutinee / binding value.
+            let value = Expr::MapGet {
+                map: Box::new(target.clone()),
+                key: Box::new(Expr::SymLit {
+                    name: key_name.clone(),
+                    span: key_span.clone(),
+                }),
+                span: span.clone(),
+            };
+
+            // Optional sub-pattern: `key: <pattern>`.  Absent ⇒ shorthand.
+            let subpat = pair.children.iter().find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                _ => None,
+            });
+            match subpat {
+                Some(p) => {
+                    // Recurse: match `target[:key]` against the sub-pattern.
+                    let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &value)?;
+                    self.features_used.insert(Feature::ShortCircuit);
+                    cond = Expr::LogicalAnd {
+                        lhs: Box::new(cond),
+                        rhs: Box::new(sub_cond),
+                        span: span.clone(),
+                    };
+                    prefix.extend(sub_prefix);
+                }
+                None => {
+                    // Shorthand `{key:}` — bind `key = target[:key]`
+                    // (runs in the match body only).
+                    self.declared_locals.insert(key_name.clone());
+                    prefix.push(Stmt::LetBinding {
+                        name: key_name,
+                        sir_type: None,
+                        value,
+                        span: key_span,
                     });
                 }
             }
