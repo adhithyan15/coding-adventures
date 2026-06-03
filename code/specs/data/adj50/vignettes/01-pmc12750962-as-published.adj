@@ -1,0 +1,38 @@
+% Vignette 1 — the case as the ADJ48 rulebook can see it.
+%
+% Source: Patel R, et al. "Complete Proximal Right Coronary Artery
+% Occlusion in a Patient With Normal Initial Acute Coronary Syndrome
+% (ACS) Workup: The Diagnostic Value of Clinical Judgment and Risk
+% Stratification." PMC12750962, 2025.
+%
+% 47-year-old male, exertional substernal chest pain progressively
+% worsening over months (acute worsening past 2 weeks), associated
+% with shortness of breath and chest tightness. Denied diaphoresis,
+% nausea, vomiting, fever. Vitals normal (HR 62, BP 124/82, RR 16,
+% SpO2 96% RA). ECG: sinus bradycardia, no acute ST/T changes.
+% Serial high-sensitivity troponin: 5.9 and 6.3 ng/L (both well
+% below 78.5 reference) — i.e. undetectable on serial measurement.
+%
+% PMH: hyperlipidemia, GERD, anxiety, former tobacco smoker
+% (6 pack-years in his 20s — NOT current). Six months prior:
+% normal stress test + echo, but coronary artery calcium score
+% (CACS) > 200. On atorvastatin 20 mg.
+%
+% TRUE DIAGNOSIS at catheterization: 100% occlusion of the proximal
+% right coronary artery (pRCA) with organized thrombus and
+% left-to-right collaterals. Successfully stented.
+%
+% This vignette uses ONLY terms the as-shipped ADJ48 rulebook
+% recognizes, to fairly test what the published rulebook would
+% produce on this case. Inputs that the rulebook has no rule for
+% (hyperlipidemia, former smoker, CACS, progressive worsening) are
+% omitted here and discussed in the ADJ50 spec as missing rules.
+
+observe symptom_quality(pressure_like)
+observe associated_symptom(dyspnea)
+observe precipitator(exertional)
+observe vital_signs(within_normal_limits)
+observe denied(ecg_acute_st_changes)
+observe biomarker(troponin_undetectable_serial)
+
+? acs
