@@ -73,7 +73,7 @@ arches are mechanical applications (1 phase each).
 Each phase = 1 PR + babysitter cron + auto-merge + next-phase
 kickoff.  Same cadence as the A5 cascade.
 
-## What about `Backend::run`?
+## What about `Backend::run` — and JIT in general?
 
 For the real native backends (`aarch64`, `x86_64`), `Backend::run`
 actually executes the binary in-process via the JIT loader.  The
@@ -81,15 +81,40 @@ historical-arch targets have no in-process executor — we emit
 bytes for downstream simulators (or, in the GE-225 case, just for
 posterity).
 
-These crates satisfy `Backend::run` by **panicking** with a clear
-"{arch} backend is emit-only; load `{bytes}` into a {arch} simulator
-to execute" message.  The function exists to satisfy the trait so
-the encoders/backends can be registered with `jit-core`, but
-nobody should call it.
+**JIT support for the historical arches is explicitly best-effort,
+and "no working JIT" is an acceptable outcome for any individual
+arch.**  The migration's primary goal is correct **AOT** lowering
+through `aot-core` + the `Backend` trait; the JIT side is a free
+side benefit that we take *if it's cheap*.
 
-A future increment could add an in-process simulator for one of
-these arches (e.g. `ge225-simulator` already exists in the
-workspace), at which point `run` would forward to it.
+Concretely, each `{arch}-backend` crate satisfies the `Backend`
+trait as follows:
+
+- `name()` — returns `"{arch}"`.
+- `compile()` / `compile_function()` — does the real work,
+  returns `Some(bytes)` for supported CIR ops, `None` otherwise
+  (which AOT treats as a per-function compile failure and JIT
+  treats as "stay on interpreter tier").
+- `run()` — **panics** with `"{arch} backend is emit-only; load
+  bytes into a {arch} simulator to execute"`.  The function exists
+  to satisfy the trait so the backend can plug into the same
+  registry as `aarch64-backend` / `x86_64-backend`, but no caller
+  should reach it.
+
+If a future increment wants real JIT execution for one of these
+arches, it can:
+
+1. Wire `Backend::run` to forward to an in-tree simulator —
+   `ge225-simulator`, `intel4004-simulator`, `intel8008-simulator`,
+   `arm-simulator`, and `riscv-simulator` all already exist in
+   the workspace.
+2. Or skip `jit-core` registration entirely for that arch and just
+   keep it on the AOT path.
+
+Either is fine.  **Don't gate the migration on getting JIT working
+for all five historical arches** — the architectural correctness
+win is the AOT-side move from IIR to CIR, which is delivered as
+soon as the AOT path is wired.
 
 ## What about `Backend::compile` returning `None`?
 
