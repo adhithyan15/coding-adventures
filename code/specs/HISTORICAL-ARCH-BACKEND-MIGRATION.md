@@ -1,0 +1,156 @@
+# Historical-arch backend migration — `iir-to-*` → `*-encoder` + `*-backend`
+
+**Status:** Phase 1 in progress.
+**Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) (which produced the A1–A5 lanes this migration corrects).
+
+## The architectural mistake the A1–A5 cascades made
+
+The A1–A5 architecture-backend lane (`iir-to-riscv`, `iir-to-intel8008`,
+`iir-to-armv7`, `iir-to-intel4004`, `iir-to-ge225`) shipped 5 crates
+that all sit at the **wrong layer** in the compiler stack.
+
+They consume **IIR** (interpreter-IR — dynamically typed, with ops
+like `add a b` whose argument types are unknown until inference) and
+emit machine code directly.  This sounds plausible but skips two
+architectural amenities that the existing `aarch64-backend` and
+`x86_64-backend` crates already provide:
+
+1. **Type monomorphization.**  The proper input to a real-arch
+   backend is **CIR** (compiler-IR), which is the typed,
+   specialised form of IIR.  CIR ops carry their type suffix:
+   `add_i64`, `cmp_lt_u32`, `neg_i16`.  No backend should have to
+   redo type inference.
+2. **The `jit_core::backend::Backend` trait.**  A single trait
+   contract — `fn compile(&self, ir: &[CIRInstr]) -> Option<Vec<u8>>`
+   — plugs a backend into **both** `aot-core` (for AOT executables)
+   **and** `jit-core` (for in-process execution).  My `iir-to-*`
+   crates were invisible to JIT and needed hand-rolled wiring into
+   `lang-aot`.
+
+## The correct pattern (already in use for x86_64 and AArch64)
+
+```text
+IIR (interpreter-IR, dynamic-typed: "add a b")
+  │
+  ▼  aot_core::infer::infer_types
+  ▼  aot_core::specialise::aot_specialise
+  │
+CIR (compiler-IR, monomorphised: "add_i64 a b")
+  │
+  ▼  Backend::compile(&[CIRInstr]) → Option<Vec<u8>>
+  │
+  ├──→ aot_core::link → AOT executable bytes      (twig-aot, lang-aot)
+  └──→ jit_core::GenericCirJit → JIT execution    (BasicCirJit, OctCirJit, …)
+```
+
+Two crates per arch:
+
+- **`{arch}-encoder`** — pure encoding tables and `encode_*`
+  helpers.  No IR knowledge.  Mirror of `aarch64-encoder` /
+  `x86_64-encoder`.
+- **`{arch}-backend`** — implements `Backend`.  Lowers CIR
+  to bytes using the encoder.  Mirror of `aarch64-backend` /
+  `x86_64-backend`.
+
+The old `iir-to-{arch}` crate retires (becomes a `#[deprecated]`
+shim that forwards to the new backend, then eventually disappears).
+
+## Phase plan
+
+GE-225 establishes the pattern (3 careful phases); the other 4
+arches are mechanical applications (1 phase each).
+
+| Phase | Scope | Output |
+|-------|-------|--------|
+| **1** | `ge225-encoder` carve-out | New crate with constants + `encode_*`.  `iir-to-ge225` re-exports from it so there's one source of truth. |
+| **2** | `ge225-backend` skeleton + ops | New crate implementing `Backend`.  Covers the same op set `iir-to-ge225` v0.9.0 did, via CIR. |
+| **3** | `ge225-backend` wiring + `iir-to-ge225` deprecation | `lang-aot --emit=ge225` routes through `aot_core::link` + `ge225-backend`.  `jit-core` can register it.  `iir-to-ge225` becomes a thin `#[deprecated]` shim. |
+| **4** | Intel 4004 migration | `intel4004-encoder` + `intel4004-backend` + wiring + deprecate `iir-to-intel4004`. |
+| **5** | ARMv7 migration | `armv7-encoder` + `armv7-backend` + wiring + deprecate `iir-to-armv7`. |
+| **6** | Intel 8008 migration | `intel8008-encoder` + `intel8008-backend` + wiring + deprecate `iir-to-intel8008`. |
+| **7** | RV32I migration | `riscv-encoder` + `riscv-backend` + wiring + deprecate `iir-to-riscv`. |
+
+Each phase = 1 PR + babysitter cron + auto-merge + next-phase
+kickoff.  Same cadence as the A5 cascade.
+
+## What about `Backend::run` — and JIT in general?
+
+For the real native backends (`aarch64`, `x86_64`), `Backend::run`
+actually executes the binary in-process via the JIT loader.  The
+historical-arch targets have no in-process executor — we emit
+bytes for downstream simulators (or, in the GE-225 case, just for
+posterity).
+
+**JIT support for the historical arches is explicitly best-effort,
+and "no working JIT" is an acceptable outcome for any individual
+arch.**  The migration's primary goal is correct **AOT** lowering
+through `aot-core` + the `Backend` trait; the JIT side is a free
+side benefit that we take *if it's cheap*.
+
+Concretely, each `{arch}-backend` crate satisfies the `Backend`
+trait as follows:
+
+- `name()` — returns `"{arch}"`.
+- `compile()` / `compile_function()` — does the real work,
+  returns `Some(bytes)` for supported CIR ops, `None` otherwise
+  (which AOT treats as a per-function compile failure and JIT
+  treats as "stay on interpreter tier").
+- `run()` — **panics** with `"{arch} backend is emit-only; load
+  bytes into a {arch} simulator to execute"`.  The function exists
+  to satisfy the trait so the backend can plug into the same
+  registry as `aarch64-backend` / `x86_64-backend`, but no caller
+  should reach it.
+
+If a future increment wants real JIT execution for one of these
+arches, it can:
+
+1. Wire `Backend::run` to forward to an in-tree simulator —
+   `ge225-simulator`, `intel4004-simulator`, `intel8008-simulator`,
+   `arm-simulator`, and `riscv-simulator` all already exist in
+   the workspace.
+2. Or skip `jit-core` registration entirely for that arch and just
+   keep it on the AOT path.
+
+Either is fine.  **Don't gate the migration on getting JIT working
+for all five historical arches** — the architectural correctness
+win is the AOT-side move from IIR to CIR, which is delivered as
+soon as the AOT path is wired.
+
+## What about `Backend::compile` returning `None`?
+
+Per the trait docs, `None` means "compilation failed; fall back to
+interpreter".  For historical-arch backends:
+
+- **AOT path**: a `None` causes `aot_core` to report a compile
+  failure for that function (same as any backend).  The
+  user-visible behaviour is identical to today's "UnsupportedOp"
+  error from `iir-to-{arch}`.
+- **JIT path**: the function stays on the interpreter tier — same
+  graceful fallback every other backend gets.
+
+Far cleaner than the bespoke `IIR{Arch}Error::UnsupportedOp`
+variants my `iir-to-*` crates invented.
+
+## Migration order rationale
+
+GE-225 goes first because the bytes are fresh in my head and the
+trivial-case ROM sizes are still pinned in my recent commits.
+Intel 4004 second because its allocator pattern mirrors GE-225's
+17-slot pool.  Then ARMv7 (most complex of the historical lane),
+Intel 8008 (Oct's native — touched by many call sites), and RV32I
+last (largest, and the original mistake from A1+ that started this
+whole pattern).
+
+## Non-goals
+
+- No new functional coverage — every migration preserves the byte
+  sequences the IIR-level crate emitted.  Existing trivial-ROM
+  byte traces stay pinned (just via CIR inputs now).
+- No in-process simulator implementations.
+- No changes to `aarch64-backend` / `x86_64-backend` — they're
+  already correct.
+- No changes to `iir-to-llvm` / `iir-to-wasm` / `iir-to-jvm` /
+  `iir-to-clr` / `iir-to-beam` — those targets stay typed at the
+  IR level (LLVM IR, WASM, JVM bytecode, CIL, BEAM) and are
+  correctly hooked at IIR.  Only the **real native bytes** path
+  needs to move to CIR.

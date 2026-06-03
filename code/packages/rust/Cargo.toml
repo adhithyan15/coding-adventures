@@ -660,6 +660,7 @@ members = [
     "iir-to-armv7",
     "iir-to-intel4004",
     "iir-to-ge225",
+    "ge225-encoder",
     "aot-debug",
     "twig-to-beam",
     "twig-to-wasm",
