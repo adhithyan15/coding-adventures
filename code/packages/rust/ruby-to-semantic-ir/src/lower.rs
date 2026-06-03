@@ -1720,12 +1720,160 @@ impl Lowerer {
                 // `name = target[:name]`.
                 self.lower_hash_pattern(inner, scrutinee, span)
             }
+            "pin_pattern" => {
+                // Phase FC — `^x` matches iff the scrutinee equals the
+                // value of the already-bound local `x`.  Lowers to
+                // `scrutinee == x` (an equality `BuiltinCall` over a
+                // `VarRef`), with no new binding.  The pinned name is read
+                // as a `Scope::Local` (the validator verifies it was
+                // bound earlier in scope).
+                // The lexer classifies the leading `^` as a `Name` token
+                // (value "^"), so skip it and take the pinned identifier.
+                let name_tok = inner
+                    .children
+                    .iter()
+                    .find_map(|c| match c {
+                        ASTNodeOrToken::Token(t)
+                            if matches!(t.type_, TokenType::Name) && t.value != "^" =>
+                        {
+                            Some(t)
+                        }
+                        _ => None,
+                    })
+                    .ok_or_else(|| RubyLowerError {
+                        message: "pin_pattern missing Name token".to_string(),
+                        line: inner.start_line.unwrap_or(0),
+                        column: inner.start_column.unwrap_or(0),
+                    })?;
+                let var = Expr::VarRef {
+                    name: name_tok.value.clone(),
+                    scope: Scope::Local,
+                    span: self.span_of_token(name_tok),
+                };
+                Ok((
+                    Expr::BuiltinCall {
+                        name: "==".to_string(),
+                        args: vec![scrutinee.clone(), var],
+                        effects: EffectSet::PURE,
+                        span,
+                    },
+                    Vec::new(),
+                ))
+            }
+            "class_pattern" => Ok(self.lower_class_pattern(inner, scrutinee, span)?),
             other => Err(RubyLowerError {
                 message: format!("unknown pattern kind `{}` in in_clause", other),
                 line: inner.start_line.unwrap_or(0),
                 column: inner.start_column.unwrap_or(0),
             }),
         }
+    }
+
+    /// Phase FC — lower a `class_pattern` (`Foo(p, …)`) against `target`.
+    ///
+    /// Produces `is_a?(target, "Foo") && <positional deconstruction>`:
+    ///
+    /// - A class check `BuiltinCall("is_a?", [target, StrLit("Foo")])`.
+    ///   The class is surfaced as a `StrLit` of its name (not a `Const`
+    ///   `VarRef`) so no constant declaration is required and no
+    ///   `Constants` feature is pulled in — the name round-trips for a
+    ///   Ruby emitter, same convention as `alias`/`undef`.
+    /// - When the pattern lists positional sub-patterns `Foo(a, b)`, they
+    ///   match the target's deconstructed elements: a `len(target) == N`
+    ///   check plus a recursive match of each inner pattern against
+    ///   `target[i]` (reusing `lower_in_clause_pattern` via `SeqIndex`),
+    ///   all ANDed after the `is_a?` guard.
+    ///
+    /// v0 simplification: Ruby calls `#deconstruct` to obtain the array;
+    /// here we index `target` directly (assuming it is array-like), the
+    /// same modelling `lower_array_pattern` uses.  Requests
+    /// `Feature::Strings` (the class-name literal) and, when there are
+    /// positional sub-patterns, `Feature::Sequences` + `Feature::ShortCircuit`.
+    fn lower_class_pattern(
+        &mut self,
+        class_inner: &GrammarASTNode,
+        target: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        let class_tok = class_inner
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "class_pattern missing class Name token".to_string(),
+                line: class_inner.start_line.unwrap_or(0),
+                column: class_inner.start_column.unwrap_or(0),
+            })?;
+        self.features_used.insert(Feature::Strings);
+        let mut cond = Expr::BuiltinCall {
+            name: "is_a?".to_string(),
+            args: vec![
+                target.clone(),
+                Expr::StrLit {
+                    value: class_tok.value.clone(),
+                    span: self.span_of_token(class_tok),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let mut prefix: Vec<Stmt> = Vec::new();
+
+        // Positional sub-patterns (the `pattern` children).
+        let inners: Vec<&GrammarASTNode> = class_inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                _ => None,
+            })
+            .collect();
+        if !inners.is_empty() {
+            self.features_used.insert(Feature::Sequences);
+            self.features_used.insert(Feature::ShortCircuit);
+            // `len(target) == N`.
+            let len_check = Expr::BuiltinCall {
+                name: "==".to_string(),
+                args: vec![
+                    Expr::SeqLen {
+                        seq: Box::new(target.clone()),
+                        span: span.clone(),
+                    },
+                    Expr::IntLit {
+                        value: inners.len() as i64,
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            cond = Expr::LogicalAnd {
+                lhs: Box::new(cond),
+                rhs: Box::new(len_check),
+                span: span.clone(),
+            };
+            for (i, p) in inners.iter().enumerate() {
+                let index = Expr::SeqIndex {
+                    seq: Box::new(target.clone()),
+                    index: Box::new(Expr::IntLit {
+                        value: i as i64,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                };
+                let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &index)?;
+                cond = Expr::LogicalAnd {
+                    lhs: Box::new(cond),
+                    rhs: Box::new(sub_cond),
+                    span: span.clone(),
+                };
+                prefix.extend(sub_prefix);
+            }
+        }
+        Ok((cond, prefix))
     }
 
     /// Phase 13a (FC) — the v0 `__pattern_match__` marker for patterns

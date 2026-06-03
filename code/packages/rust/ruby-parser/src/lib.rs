@@ -4165,6 +4165,54 @@ mod tests {
     // -----------------------------------------------------------------------
 
     #[test]
+    fn test_parse_pin_pattern() {
+        // Phase FC — `in ^x` parses as a `pin_pattern` carrying the
+        // pinned name `x`.
+        let ast = parse_ruby("case y\nin ^x\n  puts(1)\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        let inc = find_descendant(cs, "in_clause").expect("in_clause");
+        let pat = find_descendant(inc, "pattern").expect("pattern");
+        assert!(
+            find_descendant(pat, "pin_pattern").is_some(),
+            "expected pin_pattern for `in ^x`"
+        );
+        assert!(tree_has_token_value(pat, "x"), "expected pinned name `x`");
+    }
+
+    #[test]
+    fn test_parse_class_pattern() {
+        // Phase FC — `in Foo(a)` parses as a `class_pattern` with the
+        // class name and an inner positional pattern.
+        let ast = parse_ruby("case y\nin Foo(a)\n  puts(1)\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        let inc = find_descendant(cs, "in_clause").expect("in_clause");
+        let pat = find_descendant(inc, "pattern").expect("pattern");
+        let cp = find_descendant(pat, "class_pattern").expect("expected class_pattern");
+        assert!(tree_has_token_value(cp, "Foo"), "expected class name `Foo`");
+        assert!(tree_has_token_value(cp, "a"), "expected inner operand `a`");
+    }
+
+    #[test]
+    fn test_parse_bare_constant_is_binding_not_class_pattern() {
+        // A bare constant `Foo` (no parens) must still parse as a
+        // `binding_pattern`, not a `class_pattern` — confirming the
+        // `NAME LPAREN` requirement and that class_pattern doesn't
+        // shadow the bare-NAME form.
+        let ast = parse_ruby("case y\nin Foo\n  puts(1)\nend");
+        let cs = find_descendant(&ast, "case_statement").expect("case_statement");
+        let inc = find_descendant(cs, "in_clause").expect("in_clause");
+        let pat = find_descendant(inc, "pattern").expect("pattern");
+        assert!(
+            find_descendant(pat, "class_pattern").is_none(),
+            "bare `Foo` must not parse as class_pattern"
+        );
+        assert!(
+            find_descendant(pat, "binding_pattern").is_some(),
+            "bare `Foo` should parse as binding_pattern"
+        );
+    }
+
+    #[test]
     fn test_parse_case_in_with_literal_pattern() {
         // `case x; in 1; puts("one"); end` — literal-pattern clause.
         let ast = parse_ruby("case x\nin 1\n  puts(\"one\")\nend");
