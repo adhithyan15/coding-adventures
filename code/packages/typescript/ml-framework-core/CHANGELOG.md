@@ -2,6 +2,111 @@
 
 ## Unreleased
 
+### Added — v1.6.0: Adam optimizer + Linear / Sequential / Module (Phase A.6)
+
+PR #6 of 7 in **Phase A** — turns the framework from "a bag of ops"
+into something you can call `Sequential(...).forward(x)` on, then
+hand the parameters to an optimizer.  Last step before HF interop
+in A.7.
+
+#### What works now
+
+```ts
+import { Tensor, Sequential, Linear, Fn, Adam } from "@coding-adventures/ml-framework-core";
+
+// Build a 3-layer MLP: 784 → 256 → 64 → 10
+const model = new Sequential(
+  new Linear(784, 256),
+  new Fn(x => x.relu()),
+  new Linear(256, 64),
+  new Fn(x => x.relu()),
+  new Linear(64, 10),
+);
+
+const opt = new Adam(model.parameters(), 1e-3);
+
+// Standard training loop.
+for (const [xBatch, yTrue] of dataset) {
+  const logits = model.forward(xBatch);
+  const loss = computeLoss(logits, yTrue);
+  opt.zeroGrad();
+  loss.backward();
+  opt.step();
+}
+```
+
+#### Implementation notes
+
+- **`src/optim.ts`** — `Optimizer` abstract base + `SGD` + `Adam`.
+  Optimizers hold references to the parameter Tensors and mutate
+  `param.data` in place during `step()` (PyTorch convention — TS's
+  `readonly` on the `data` field prevents buffer reassignment but
+  allows element writes, which is exactly what we want).  `zeroGrad`
+  sets `param.grad = null` (matches the framework's existing
+  "allocate-on-first-contribution / accumulate-via-add" semantics
+  in `backwardImpl`).
+- **`Adam`** maintains per-parameter `m` (first-moment) and `v`
+  (second-moment) `Float32Array` buffers and a step counter `t`.
+  Bias-corrected via `m̂ = m / (1 - β1^t)` and `v̂ = v / (1 - β2^t)` —
+  verified by an explicit test that the magnitude of the first
+  step is `≈ lr` (NOT `lr*(1-β1)` which would be the uncorrected
+  naive form).  Defaults match PyTorch: `lr=1e-3, betas=(0.9,
+  0.999), eps=1e-8`.
+- **`src/nn.ts`** — `Module` abstract base + `Linear` + `Sequential`
+  + `Fn` (function-wrapper for dropping activations into a
+  `Sequential`).  Each Module exposes `parameters(): Tensor[]`
+  (used by optimizers) and `forward(x): Tensor`.
+- **`Linear` weight orientation: `(inFeatures, outFeatures)`**, NOT
+  PyTorch's `(outFeatures, inFeatures)`.  Reason: our
+  `Tensor.transpose()` is currently a non-autograd shape op
+  (gradients don't flow back through it), so doing `x @ W.T` would
+  silently drop the gradient on `W`.  Keeping weight in `(in, out)`
+  means forward is a clean `x.matmul(weight)` with no transpose
+  needed.  When a future PR adds a proper `TransposeOp` we can
+  optionally flip the convention to match PyTorch state-dicts
+  exactly.  Documented in `nn.ts`.
+- **Xavier-uniform init** for Linear weights: `U(-L, L)` with
+  `L = √(6 / (in + out))`.  Matches PyTorch's default and keeps
+  activations roughly unit-variance through a stack of layers,
+  which is critical for training stability.  Bias zero-init.
+- **`Sequential`** stores its layers and applies them in declaration
+  order; `parameters()` concatenates child params in the same
+  order.  Composes with itself recursively (a Sequential can
+  contain other Sequentials).
+- **`Fn`** wraps any `(Tensor) → Tensor` function as a Module with
+  no parameters.  Lets you stick `x.relu()` / `x.sigmoid()` /
+  custom math inline in a `Sequential` without authoring a full
+  Module class.
+
+#### Tests
+
+- 21 new vitest cases (`tests/nn-optim.test.ts`):
+  - 2 Optimizer base (empty-params rejected, zeroGrad behavior)
+  - 3 SGD (quadratic step, null-grad skip, hyperparam validation)
+  - 4 Adam (bias correction at t=1 yields ≈ lr-magnitude update,
+    step counter, hyperparam validation, full quadratic convergence)
+  - 6 Linear (shape, parameters() with/without bias, forward
+    shape, grad flow back to weight + bias, validation)
+  - 3 Sequential (chained forward, parameters() concatenation,
+    **end-to-end MLP training** — verifies loss drops at least 2×
+    over 30 epochs on a tiny regression problem)
+  - 2 Fn (no params, identity-ish forward)
+  - 1 Optimizer-base polymorphism check
+- Total **263 tests pass** (was 242 in v1.5).
+- `tsc --noEmit` clean.
+
+#### What this unlocks
+
+`Sequential(...).forward(...)` + `Adam(...).step()` IS the standard
+deep-learning training loop.  Everything from a 2-layer MNIST MLP
+to a multi-block CNN can now be expressed as a single `new
+Sequential(...)` call and trained without manually wiring layers.
+
+Phase A.7 (next + last in Phase A) adds safetensors save/load —
+the first cross-framework interop.  After A.7 you can load any
+Hugging Face checkpoint's weights into a `Sequential` model
+defined in this framework.
+
 ### Added — v1.5.0: Conv2D + MaxPool2D via im2col (Phase A.5)
 
 PR #5 of 7 in **Phase A** — adds the two operations that make CNN
