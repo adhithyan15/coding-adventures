@@ -74,3 +74,5 @@ export {
 export { VERSION } from "./version.js";
 export { getMode, setMode } from "./mode.js";
 export type { Mode } from "./mode.js";
+export { Optimizer, SGD, Adam } from "./optim.js";
+export { Module, Linear, Sequential, Fn } from "./nn.js";
