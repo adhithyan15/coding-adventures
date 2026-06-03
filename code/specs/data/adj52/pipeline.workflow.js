@@ -14,9 +14,9 @@ export const meta = {
 // self-contained. These are published "masquerade" cases the model has likely
 // seen — the Prepare stage perturbs them so neither arm can recall the text.
 const DEFAULT_URLS = [
-  'https://pmc.ncbi.nlm.nih.gov/articles/PMC11724029/', // McArdle disease mimicking polymyalgia rheumatica
-  'https://pmc.ncbi.nlm.nih.gov/articles/PMC12003113/', // Zenker diverticulum masquerading as a thyroid nodule
-  'https://pmc.ncbi.nlm.nih.gov/articles/PMC9097753/',  // Hansen's disease masquerading as rheumatoid arthritis
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC11724029/',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC12003113/',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC9097753/',
 ]
 const urls = (args && args.case_urls && args.case_urls.length) ? args.case_urls : DEFAULT_URLS
 if (!urls.length) { log('no case_urls'); return { error: 'no case_urls' } }
@@ -25,9 +25,8 @@ log(`pipeline over ${urls.length} case url(s)`)
 // ---- Schemas (force structured output; no parsing) ----
 const PREPARE_SCHEMA = {
   type: 'object',
-  required: ['id', 'ground_truth', 'prose', 'perturbations', 'diagnosis_unchanged'],
+  required: ['ground_truth', 'prose', 'perturbations', 'diagnosis_unchanged'],
   properties: {
-    id: { type: 'string', description: 'short kebab-case slug for this case' },
     ground_truth: { type: 'string', description: 'final confirmed diagnosis + how confirmed + correct disposition; NOT shown to blind agents' },
     prose: { type: 'string', description: 'PERTURBED, sanitised case prose (no diagnosis named, all incidental surface details changed)' },
     perturbations: { type: 'array', items: { type: 'string' }, description: 'list of the diagnosis-irrelevant changes made' },
@@ -126,8 +125,8 @@ ${b}`
 // ---- Pipeline: each case flows through all stages independently ----
 const results = await pipeline(
   urls,
-  (url) => agent(preparePrompt(url), { phase: 'Prepare', agentType: 'general-purpose', schema: PREPARE_SCHEMA })
-    .then((p) => ({ url, ...p })),
+  (url, _orig, idx) => agent(preparePrompt(url), { phase: 'Prepare', label: `prepare:case-${idx + 1}`, agentType: 'general-purpose', schema: PREPARE_SCHEMA })
+    .then((p) => ({ url, id: `case-${idx + 1}`, ground_truth: p.ground_truth, prose: p.prose, perturbations: p.perturbations, diagnosis_unchanged: p.diagnosis_unchanged })),
   (o) => agent(ingestPrompt(o.prose), { phase: 'Ingest', label: `ingest:${o.id}`, agentType: 'general-purpose', schema: IR_SCHEMA })
     .then((ir) => ({ ...o, ir })),
   (o) => agent(deriveRunPrompt(o.id, JSON.stringify(o.ir)), { phase: 'DeriveRun', label: `derive:${o.id}`, agentType: 'general-purpose', schema: FW_SCHEMA })
