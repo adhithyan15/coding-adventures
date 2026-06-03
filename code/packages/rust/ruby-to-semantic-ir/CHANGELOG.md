@@ -2,6 +2,33 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.89.0] - 2026-06-03
+
+### Added (FC — array splat pattern lowering)
+
+- **One-splat** `in [a, *rest, b]` now lowers structurally via the new
+  `lower_array_pattern_one_splat`: a relaxed `len(target) >= fixed_count`
+  check (vs the exact `==` of the no-splat path), front-anchored fixed
+  elements indexed from the head (`target[i]`), back-anchored fixed
+  elements indexed from the tail (`target[len - k]`), and — for a named
+  splat — the middle slice bound via a `__seq_slice__(target, pre, len -
+  post)` marker `BuiltinCall` (SIR has no first-class sequence slice). A
+  bare `*` binds nothing. Each fixed element recurses through
+  `lower_in_clause_pattern`, so literal / binding / nested sub-patterns
+  compose. Requests `Feature::Sequences` + `Feature::ShortCircuit`.
+- **Find** patterns (two splats, `[*, x, *]`) remain a documented v0
+  limitation and fall back to the `__pattern_match__` marker — a
+  contiguous-window search can't be expressed inline in the current IR.
+
+New `array_pattern_splat_count` helper dispatches: 0 splats → existing
+`lower_array_pattern`; 1 splat → `lower_array_pattern_one_splat`; ≥2 →
+marker.
+
+New tests: `case_in_array_one_splat_lowers_structurally`,
+`case_in_array_one_splat_validates`,
+`case_in_array_anonymous_splat_binds_nothing`,
+`case_in_array_find_pattern_falls_back_to_marker`.
+
 ## [0.88.0] - 2026-06-03
 
 ### Added (FC — pin `^x` and class `Foo(x)` pattern lowering)

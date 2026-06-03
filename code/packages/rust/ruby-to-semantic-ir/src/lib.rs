@@ -6149,6 +6149,99 @@ b = "y"
     }
 
     #[test]
+    fn case_in_array_one_splat_lowers_structurally() {
+        // Phase FC — `in [a, *rest, b]` desugars to a relaxed length check
+        // (`len(x) >= 2`) plus front/back element bindings and a middle
+        // slice bind via `__seq_slice__`.  No `__pattern_match__` marker.
+        let m = lower("x = 1\ncase x\nin [a, *rest, b]\n  puts(a)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let (cond, then_branch) = match if_expr {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            !printed.contains("__pattern_match__"),
+            "expected no marker in one-splat cond, got {}",
+            printed
+        );
+        // Relaxed length check `len(x) >= 2` lives at the root of the AND chain.
+        assert!(
+            printed.contains("\">=\""),
+            "expected a `>=` length check, got {}",
+            printed
+        );
+        // Body binds front `a = x[0]`, back `b = x[len-1]`, and the middle
+        // slice `rest = __seq_slice__(x, 1, len-1)`.
+        let names: Vec<&str> = then_branch
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::LetBinding { name, .. } => Some(name.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert!(names.contains(&"a"), "expected front binding a, got {:?}", names);
+        assert!(names.contains(&"b"), "expected back binding b, got {:?}", names);
+        assert!(names.contains(&"rest"), "expected splat binding rest, got {:?}", names);
+        let has_slice = then_branch.stmts.iter().any(|s| matches!(s,
+            Stmt::LetBinding { name, value, .. }
+                if name == "rest"
+                && matches!(value, Expr::BuiltinCall { name, .. } if name == "__seq_slice__")));
+        assert!(has_slice, "expected `rest = __seq_slice__(..)` binding");
+    }
+
+    #[test]
+    fn case_in_array_one_splat_validates() {
+        // Phase FC — the desugared one-splat pattern produces well-formed
+        // SIR: the module validates end-to-end.
+        let m = lower("x = 1\ncase x\nin [a, *rest, b]\n  puts(a)\nend\n");
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "expected one-splat pattern module to validate: {:?}",
+            semantic_ir::validate(&m)
+        );
+    }
+
+    #[test]
+    fn case_in_array_anonymous_splat_binds_nothing() {
+        // Phase FC — a bare `*` (anonymous splat) binds no slice name; only
+        // the fixed front element `a` is bound, and the cond is `len(x) >= 1`.
+        let m = lower("x = 1\ncase x\nin [a, *]\n  puts(a)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let then_branch = match if_expr {
+            Expr::If { then_branch, .. } => then_branch,
+            other => panic!("expected If, got {:?}", other),
+        };
+        let has_slice = then_branch.stmts.iter().any(|s| matches!(s,
+            Stmt::LetBinding { value, .. }
+                if matches!(value, Expr::BuiltinCall { name, .. } if name == "__seq_slice__")));
+        assert!(!has_slice, "anonymous splat must not bind a slice");
+    }
+
+    #[test]
+    fn case_in_array_find_pattern_falls_back_to_marker() {
+        // Phase FC — a two-splat *find* pattern `[*, x, *]` is not yet a
+        // first-class desugaring; it falls back to the `__pattern_match__`
+        // marker (documented v0 limitation), which still validates.
+        let m = lower("x = 1\ncase x\nin [*, 1, *]\n  \"h\"\nend\n");
+        let b = main_body(&m);
+        let cond = match extract_case_if(b) {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            printed.contains("__pattern_match__"),
+            "expected find pattern to fall back to marker, got {}",
+            printed
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "marker module must validate");
+    }
+
+    #[test]
     fn case_in_array_pattern_binds_name_elements() {
         // Phase 13a (FC) — `in [a, b]` matches any 2-element sequence and
         // binds `a = x[0]`, `b = x[1]` as prefix LetBindings in the body.

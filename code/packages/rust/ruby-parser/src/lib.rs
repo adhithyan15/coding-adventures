@@ -4254,6 +4254,42 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_array_pattern_with_named_splat() {
+        // Phase FC — `in [a, *rest, b]` parses with a `splat_pattern`
+        // carrying the rest name, plus the fixed elements.
+        let ast = parse_ruby("case y\nin [a, *rest, b]\n  puts(1)\nend");
+        let pat = find_descendant(&ast, "array_pattern").expect("array_pattern");
+        assert!(
+            find_descendant(pat, "splat_pattern").is_some(),
+            "expected splat_pattern in `[a, *rest, b]`"
+        );
+        for tok in ["a", "rest", "b"] {
+            assert!(tree_has_token_value(pat, tok), "expected `{tok}` in pattern");
+        }
+    }
+
+    #[test]
+    fn test_parse_array_find_pattern_two_splats() {
+        // `in [*, x, *]` (find pattern) parses with two splat_patterns.
+        let ast = parse_ruby("case y\nin [*, x, *]\n  puts(1)\nend");
+        let pat = find_descendant(&ast, "array_pattern").expect("array_pattern");
+        let splats = count_descendants(pat, "splat_pattern");
+        assert_eq!(splats, 2, "expected two splat_patterns in find pattern");
+        assert!(tree_has_token_value(pat, "x"), "expected the `x` element");
+    }
+
+    #[test]
+    fn test_parse_array_anonymous_splat() {
+        // `in [10, *]` — a trailing anonymous splat parses.
+        let ast = parse_ruby("case y\nin [10, *]\n  puts(1)\nend");
+        let pat = find_descendant(&ast, "array_pattern").expect("array_pattern");
+        assert!(
+            find_descendant(pat, "splat_pattern").is_some(),
+            "expected splat_pattern for trailing `*`"
+        );
+    }
+
+    #[test]
     fn test_parse_case_in_with_hash_pattern() {
         // `case x; in {name: y}; puts(y); end` — hash pattern.
         let ast = parse_ruby("case x\nin {name: y}\n  puts(y)\nend");
