@@ -128,124 +128,34 @@ use std::collections::HashMap;
 use std::fmt;
 
 // ===========================================================================
-// GE-225 opcode constants
+// GE-225 opcode constants — re-exported from `ge225-encoder`
 // ===========================================================================
+//
+// Phase 1 of the historical-arch backend migration (see
+// `code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md`) carved these
+// out of this crate into `ge225-encoder`, which is now the single
+// source of truth.  This crate re-exports them so its public API
+// is unchanged — `iir_to_ge225::HALT_WORD` still works for any
+// existing caller — but every downstream consumer is encouraged
+// to depend on `ge225-encoder` directly.
 
-/// Canonical "halt" sentinel for the GE-225 — three bytes:
-/// `[0x00, 0x00, 0x00]` (= the all-zeros 20-bit `HLT` word, packed
-/// big-endian with the top 4 bits of byte 0 zero).
-pub const HALT_WORD: [u8; 3] = [0x00, 0x00, 0x00];
-
-/// GE-225 `LDA` opcode nibble — `0x1`.  Load accumulator with a
-/// 16-bit immediate.  Word layout: `[0x01, hi, lo]`.
-pub const LDA_OPCODE_NIBBLE: u8 = 0x1;
-
-/// GE-225 `STA` opcode nibble — `0x2`.  In this skeleton, `STA r`
-/// exchanges ACC with register `r` (XCH semantics — see module
-/// docs for the historical caveat).  Word layout: `[0x02, 0x00, r]`
-/// where `r` occupies the low 4 bits of byte 2.
-pub const STA_OPCODE_NIBBLE: u8 = 0x2;
-
-/// GE-225 `LD` opcode nibble — `0x3`.  Load ACC with the contents
-/// of register `r` (copy — `r` unchanged).  Word layout:
-/// `[0x03, 0x00, r]`.
-pub const LD_OPCODE_NIBBLE: u8 = 0x3;
-
-/// GE-225 `ADD` opcode nibble — `0x4`.  Accumulator-anchored add:
-/// `ACC ← ACC + r`.  `r` is unchanged.  Word layout:
-/// `[0x04, 0x00, r]`.
-///
-/// The 20-bit ACC absorbs signed addition; overflow / carry
-/// reporting via condition flags is documented in A5+++ (this
-/// release) but not yet observable from the IR — A5++++ will surface
-/// flags via `BMI` / `BNZ` branches.
-pub const ADD_OPCODE_NIBBLE: u8 = 0x4;
-
-/// GE-225 `SUB` opcode nibble — `0x5`.  Accumulator-anchored
-/// subtract: `ACC ← ACC - r`.  `r` is unchanged.  Word layout:
-/// `[0x05, 0x00, r]`.
-pub const SUB_OPCODE_NIBBLE: u8 = 0x5;
-
-/// GE-225 `BR` opcode nibble — `0x6`.  Unconditional branch to a
-/// 16-bit byte address.  Word layout: `[0x06, hi, lo]` where
-/// `(hi, lo)` is the destination byte offset within the program.
-///
-/// Why a byte address (not a word address)?  The IIR records label
-/// positions as `bytes.len()` at the time of the `label` op, and
-/// every word is 3 bytes — so byte addresses are a faithful
-/// representation of the program counter on this skeleton's GE-225.
-/// A real GE-225 used word addresses; mapping byte ↔ word is a
-/// 1-to-1 division-by-3 the downstream simulator can do.
-pub const BR_OPCODE_NIBBLE: u8 = 0x6;
-
-/// GE-225 `BNZ` opcode nibble — `0x7`.  Branch if the accumulator
-/// is non-zero.  Word layout: `[0x07, hi, lo]`.
-///
-/// Lowers `jmp_if_true cond, target` — the IIR cond is a boolean
-/// living in some register / ACC; we stage it into ACC via `LD r`
-/// (or skip the load if it's already the ACC owner) and then emit
-/// `BNZ target`.
-pub const BNZ_OPCODE_NIBBLE: u8 = 0x7;
-
-/// GE-225 `BZ` opcode nibble — `0x8`.  Branch if the accumulator
-/// is zero.  Word layout: `[0x08, hi, lo]`.
-///
-/// Lowers `jmp_if_false cond, target` — same staging pattern as
-/// `BNZ`, opposite polarity.
-pub const BZ_OPCODE_NIBBLE: u8 = 0x8;
-
-/// GE-225 `JSR` opcode nibble — `0x9`.  Jump SubRoutine: push the
-/// return address (PC+3 — the byte address of the instruction
-/// after this JSR) onto the internal call stack, then branch to
-/// the 16-bit byte address.  Word layout: `[0x09, hi, lo]`.
-///
-/// Lowers `call dest, fn_name` — the callee's entry-point byte
-/// address is backpatched in a module-level pass after every
-/// function has been emitted (so forward-references work).
-///
-/// On this skeleton's GE-225 the call stack is implicit (depth not
-/// specified); the simulator decides.  Mirrors the iir-to-intel8008
-/// v0.3.9 module-level call-backpatching pattern.
-pub const JSR_OPCODE_NIBBLE: u8 = 0x9;
-
-/// GE-225 `RTS` opcode nibble — `0xA`.  Return from SubRoutine:
-/// pop the top return address from the internal call stack and
-/// branch to it.  Word layout: `[0x0A, 0x00, 0x00]` (the address
-/// field is unused — RTS reads its target from the stack, not the
-/// instruction word).
-///
-/// Lowers `ret <var>` and `ret_void` in **non-entry** functions.
-/// In the module's entry function (as named by
-/// `IIRModule::entry_point`) both ret variants still emit `HLT`,
-/// preserving the v0.2.0+ "program halts at the end of main"
-/// contract — a stack-popped RTS into garbage is undefined on every
-/// simulator we care about.
-pub const RTS_OPCODE_NIBBLE: u8 = 0xA;
-
-/// GE-225 `BMI` opcode nibble — `0xB`.  Branch if ACC's sign bit
-/// is set (i.e. ACC is negative under signed interpretation).
-/// Word layout: `[0x0B, hi, lo]`.
-///
-/// **Active as of v0.7.0** — used internally by the `cmp_lt` /
-/// `cmp_gt` / `cmp_le` / `cmp_ge` IIR-op lowerings to test the
-/// sign bit of `lhs - rhs` (the result of an immediately preceding
-/// SUB instruction).  No IIR op surfaces a direct `jmp_if_neg`
-/// shape yet — that's a future addition for languages with
-/// explicit signed-branch semantics.
-pub const BMI_OPCODE_NIBBLE: u8 = 0xB;
-
-/// Canonical `RTS` 3-byte word (= `[0x0A, 0x00, 0x00]`).  Pinned
-/// for symmetry with `HALT_WORD` — every backend emits a fixed-shape
-/// terminator and exposes it as a public constant.
-pub const RTS_WORD: [u8; 3] = [RTS_OPCODE_NIBBLE, 0x00, 0x00];
+pub use ge225_encoder::{
+    ADD_OPCODE_NIBBLE, BMI_OPCODE_NIBBLE, BNZ_OPCODE_NIBBLE, BR_OPCODE_NIBBLE, BZ_OPCODE_NIBBLE,
+    HALT_WORD, JSR_OPCODE_NIBBLE, LDA_OPCODE_NIBBLE, LD_OPCODE_NIBBLE, RTS_OPCODE_NIBBLE, RTS_WORD,
+    STA_OPCODE_NIBBLE, SUB_OPCODE_NIBBLE,
+};
+// Bring the `encode_*` helpers into scope under their bare names
+// (we still use them throughout the lowering pass below).
+use ge225_encoder::{encode_add, encode_ld, encode_lda, encode_sta, encode_sub};
 
 /// Sentinel `env` value meaning "this var currently lives in the
 /// accumulator (ACC)", distinct from real register indices `0..=15`.
 const ACC_MARKER: u8 = 16;
 
-/// Number of GP registers.  Combined with ACC this gives a 17-slot
-/// pool — identical to the iir-to-intel4004 v0.3.0 capacity.
-const GP_REGISTER_COUNT: usize = 16;
+/// Number of GP registers.  Re-exported from `ge225-encoder` for
+/// the lowering pass below; kept as a local `const` (not a `pub use`)
+/// so changing this requires touching the encoder.
+const GP_REGISTER_COUNT: usize = ge225_encoder::GP_REGISTER_COUNT;
 
 /// Supported instruction opcodes in v0.9.0 (A5++++++++++).
 const SUPPORTED_OPS: &[&str] = &[
@@ -1301,38 +1211,12 @@ fn lookup_register(
 // ---------------------------------------------------------------------------
 // Word-encoding helpers
 // ---------------------------------------------------------------------------
-
-/// Encode an `LDA n` 20-bit word as 3 bytes, big-endian.
-fn encode_lda(imm16: u16) -> [u8; 3] {
-    [
-        LDA_OPCODE_NIBBLE,
-        ((imm16 >> 8) & 0xFF) as u8,
-        (imm16 & 0xFF) as u8,
-    ]
-}
-
-/// Encode an `STA r` 20-bit word as 3 bytes.  The register index `r`
-/// is masked to 4 bits and placed in the low 4 bits of byte 2.
-fn encode_sta(r: u8) -> [u8; 3] {
-    [STA_OPCODE_NIBBLE, 0x00, r & 0x0F]
-}
-
-/// Encode an `LD r` 20-bit word as 3 bytes.
-fn encode_ld(r: u8) -> [u8; 3] {
-    [LD_OPCODE_NIBBLE, 0x00, r & 0x0F]
-}
-
-/// Encode an `ADD r` 20-bit word as 3 bytes.  After execution:
-/// `ACC ← ACC + r` (r unchanged).
-fn encode_add(r: u8) -> [u8; 3] {
-    [ADD_OPCODE_NIBBLE, 0x00, r & 0x0F]
-}
-
-/// Encode a `SUB r` 20-bit word as 3 bytes.  After execution:
-/// `ACC ← ACC - r` (r unchanged).
-fn encode_sub(r: u8) -> [u8; 3] {
-    [SUB_OPCODE_NIBBLE, 0x00, r & 0x0F]
-}
+//
+// As of Phase 1 of the historical-arch backend migration, the
+// per-opcode `encode_*` helpers live in `ge225-encoder` and are
+// `use`d at the top of this file.  This crate still owns the
+// `IR-aware` encoders (e.g. `encode_immediate_16` which range-
+// checks an `Operand::Int`) — those continue to live below.
 
 /// Parse `(Var(lhs), Var(rhs))` out of a binary-op `IIRInstr.srcs`.
 /// Returns `InvalidOperand` if the shape doesn't match.

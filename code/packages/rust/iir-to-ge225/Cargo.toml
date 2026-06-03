@@ -10,6 +10,7 @@ path = "src/lib.rs"
 
 [dependencies]
 interpreter-ir = { path = "../interpreter-ir" }
+ge225-encoder = { path = "../ge225-encoder" }
 
 [[test]]
 name = "test_backend"
