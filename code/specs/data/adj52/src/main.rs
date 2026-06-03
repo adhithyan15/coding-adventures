@@ -44,10 +44,24 @@ fn main() {
     let manifest_dir =
         PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set"));
 
-    let subdir =
-        std::env::var("ADJ52_DIR").unwrap_or_else(|_| "fixtures/uncertainty-demo".to_string());
-    let rulebook_path = manifest_dir.join(&subdir).join("03-derived-rulebook.adj");
-    let vignette_path = manifest_dir.join(&subdir).join("04-vignette.adj");
+    // Rulebook / program separation. A rulebook (accumulating, reusable across
+    // cases) and a program (one case's observations + queries) can be supplied
+    // independently via ADJ52_RULEBOOK + ADJ52_PROGRAM, so programs swap in and
+    // out against an accumulating rulebook. Both may be absolute or relative to
+    // the crate manifest dir. Falls back to the single-case ADJ52_DIR layout
+    // (03-derived-rulebook.adj + 04-vignette.adj) when the pair is not set.
+    let (rulebook_path, vignette_path) =
+        match (std::env::var("ADJ52_RULEBOOK"), std::env::var("ADJ52_PROGRAM")) {
+            (Ok(rb), Ok(pg)) => (manifest_dir.join(rb), manifest_dir.join(pg)),
+            _ => {
+                let subdir = std::env::var("ADJ52_DIR")
+                    .unwrap_or_else(|_| "fixtures/uncertainty-demo".to_string());
+                (
+                    manifest_dir.join(&subdir).join("03-derived-rulebook.adj"),
+                    manifest_dir.join(&subdir).join("04-vignette.adj"),
+                )
+            }
+        };
 
     let rulebook = fs::read_to_string(&rulebook_path)
         .unwrap_or_else(|e| panic!("reading rulebook {}: {e}", rulebook_path.display()));
