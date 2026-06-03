@@ -424,6 +424,27 @@ mod tests {
     // -----------------------------------------------------------------
 
     #[test]
+    fn program_with_end_marker_lowers_only_the_code() {
+        // Phase FC — a trailing `__END__` data section is stripped by the
+        // lexer, so the program lowers cleanly from just the code above it
+        // (the data is neither parsed nor lowered).
+        let m = lower("x = 1\nputs(x)\n__END__\nthis is data, not ruby code!\n");
+        let b = main_body(&m);
+        // The `x = 1` binding is present and the data produced no stmts
+        // beyond the code (puts is the trailing value).
+        assert!(
+            b.stmts.iter().any(|s| matches!(s, Stmt::LetBinding { name, .. } if name == "x")),
+            "expected `x = 1` from the code section"
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected a program with a trailing __END__: {:?}",
+            result
+        );
+    }
+
+    #[test]
     fn while_lowers_to_stmt_while() {
         let m = lower("x = 0\nwhile x\n  y = 1\nend\n");
         let main = main_body(&m);

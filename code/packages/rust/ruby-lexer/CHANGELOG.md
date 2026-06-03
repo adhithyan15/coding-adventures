@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.25.0] - 2026-06-03
+
+### Added (FC — `__END__` program terminator)
+
+`__END__` alone on a line (column 0) now ends tokenization: everything
+after it is Ruby's `DATA` section, not code, so it is no longer
+mis-lexed. The `push` scan loop checks, at each line start, whether the
+upcoming line is exactly `__END__` (via the new `is_end_marker` helper)
+and stops feeding the engine; `finish()` still flushes the EOF token.
+
+Scope: this halts tokenization only. `DATA` itself stays an ordinary
+constant read (no synthesized file handle) — a deliberate follow-up.
+Indented or mid-line `__END__` is unaffected (lexes as a normal Name),
+matching Ruby's column-0 requirement.
+
+New tests: `end_marker_halts_token_stream`,
+`end_marker_at_eof_without_trailing_newline`,
+`end_marker_requires_column_zero`, `end_marker_not_triggered_mid_line`.
+
 ## [0.24.0] - 2026-05-26
 
 ### Added (Phase 8a-2 (FC) — `>>` and `>>=` token fusion)

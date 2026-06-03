@@ -2,6 +2,19 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.86.0] - 2026-06-03
+
+### Added (FC — `__END__` end-to-end coverage; tests only)
+
+Coverage test that a program with a trailing `__END__` data section
+lowers cleanly from just the code above it (the lexer strips the data
+section — see `coding-adventures-ruby-lexer` 0.25.0).  No lowerer code
+change: `program_with_end_marker_lowers_only_the_code` pins the
+behaviour and round-trips the SIR validator.
+
+(0.85.0 is the concurrent hash-pattern PR; this entry is 0.86.0 to avoid
+a version collision.)
+
 ## [0.84.0] - 2026-06-01
 
 ### Added (Phase 26b (FC) — `refine Class do … end` refinement body)

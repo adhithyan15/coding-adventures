@@ -237,6 +237,17 @@ impl RubyLexer {
         let chars: Vec<char> = source.chars().collect();
         let mut i = 0;
         while i < chars.len() {
+            // Phase FC — `__END__` alone on a line (column 0) terminates
+            // the program: everything after it is the `DATA` section, not
+            // Ruby code.  When we're at a line start and the upcoming line
+            // is exactly `__END__`, stop feeding the engine so no tokens
+            // are produced for the trailing data.  (`finish()` still
+            // flushes the EOF token.)  The line-start guard means we only
+            // trigger during normal lexing — heredoc bodies are consumed
+            // inside `capture_heredoc_bodies`, which bypasses this loop.
+            if (i == 0 || chars[i - 1] == '\n') && Self::is_end_marker(&chars, i) {
+                break;
+            }
             let ch = chars[i];
             // Phase 6p companion — `/=` compound-assignment guard.
             // If we're about to feed a `/` whose immediate follower is
@@ -255,6 +266,24 @@ impl RubyLexer {
             }
         }
         Ok(())
+    }
+
+    /// Phase FC — true iff `chars[i..]` is exactly the program-terminator
+    /// line `__END__` (assumed to start at column 0 by the caller),
+    /// followed by end-of-input, `\n`, or `\r`.  Ruby treats such a line
+    /// as the end of the source; the remainder is the `DATA` section.
+    ///
+    /// Scope: this only halts tokenization.  `DATA` itself stays an
+    /// ordinary constant read (no synthesized file handle) — a deliberate
+    /// follow-up if a real data stream is ever needed.  A line like
+    /// `__END__foo` (trailing non-newline) is *not* a marker, matching
+    /// Ruby, which requires `__END__` alone on the line.
+    fn is_end_marker(chars: &[char], i: usize) -> bool {
+        const MARK: [char; 7] = ['_', '_', 'E', 'N', 'D', '_', '_'];
+        if i + MARK.len() > chars.len() || chars[i..i + MARK.len()] != MARK {
+            return false;
+        }
+        matches!(chars.get(i + MARK.len()), None | Some('\n') | Some('\r'))
     }
 
     /// Phase 3c body slurp.  Called after the `\n` that ends the
@@ -2257,6 +2286,62 @@ mod tests {
                 (TokenType::Name, "foo"),
                 (TokenType::Newline, "\n"),
             ]
+        );
+    }
+
+    #[test]
+    fn end_marker_halts_token_stream() {
+        // Phase FC — `__END__` on its own line ends the program; the
+        // trailing data section must NOT be tokenized as code.
+        let toks = tokenize_ruby("foo\n__END__\nthis is data, not code!\n");
+        let vals: Vec<&str> = toks.iter().map(|t| t.value.as_str()).collect();
+        assert!(vals.contains(&"foo"), "expected the code before __END__");
+        // None of the data-section words leak into the token stream, and
+        // the `__END__` marker itself is consumed (not emitted).
+        for leaked in ["__END__", "this", "data", "code", "not"] {
+            assert!(
+                !vals.contains(&leaked),
+                "data-section token `{leaked}` leaked into the stream: {vals:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn end_marker_at_eof_without_trailing_newline() {
+        // `__END__` as the final line with no trailing newline still
+        // terminates cleanly (only the preceding code is tokenized).
+        let toks = tokenize_ruby("x = 1\n__END__");
+        let vals: Vec<&str> = toks.iter().map(|t| t.value.as_str()).collect();
+        assert!(vals.contains(&"x") && vals.contains(&"1"));
+        assert!(!vals.contains(&"__END__"), "marker should be consumed");
+    }
+
+    #[test]
+    fn end_marker_requires_column_zero() {
+        // An indented `  __END__` is NOT the terminator (Ruby requires
+        // column 0); it lexes as an ordinary Name and the following line
+        // is still tokenized as code.
+        let toks = tokenize_ruby("  __END__\nfoo\n");
+        let vals: Vec<&str> = toks.iter().map(|t| t.value.as_str()).collect();
+        assert!(
+            vals.contains(&"__END__"),
+            "indented __END__ should lex as a normal Name: {vals:?}"
+        );
+        assert!(
+            vals.contains(&"foo"),
+            "code after an indented (non-marker) __END__ must survive: {vals:?}"
+        );
+    }
+
+    #[test]
+    fn end_marker_not_triggered_mid_line() {
+        // `__END__` not at line start (here as an assignment RHS) is an
+        // ordinary Name, not the terminator.
+        let toks = tokenize_ruby("y = __END__\n");
+        let vals: Vec<&str> = toks.iter().map(|t| t.value.as_str()).collect();
+        assert!(
+            vals.contains(&"y") && vals.contains(&"__END__"),
+            "mid-line __END__ must be a normal Name: {vals:?}"
         );
     }
 
