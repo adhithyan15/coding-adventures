@@ -1,0 +1,108 @@
+% Vignette generated from 02-ingestion.json by build_vignette.py
+% Each observe line corresponds to one entry in observations[].
+% raw_value metadata is held by the framework but not surfaced here.
+
+% raw_value(o1) = '26-year-old'
+observe age(young_adult)
+% raw_value(o2) = 'African American'
+observe race_ethnicity(african_american)
+% raw_value(o3) = 'female'
+observe sex(female)
+% raw_value(o4) = 'asthma history'
+observe past_medical_history(asthma)
+% raw_value(o5) = 'Emergency Department'
+observe encounter_setting(emergency_department)
+% raw_value(o6) = 'productive cough'
+observe symptom(productive_cough)
+% raw_value(o7) = 'blood-tinged sputum'
+observe symptom(hemoptysis)
+% raw_value(o8) = 'shortness of breath'
+observe symptom(dyspnea)
+% raw_value(o9) = 'new-onset facial swelling'
+observe symptom(facial_swelling_new_onset)
+% raw_value(o10) = 'Neck CT showed prevertebral soft tissue swelling'
+observe imaging_neck_ct(prevertebral_soft_tissue_swelling)
+% raw_value(o11) = 'Augmentin and azithromycin'
+observe initial_antibiotic_therapy(augmentin_azithromycin)
+% raw_value(o12) = 'discharged'
+observe initial_disposition(discharged)
+% raw_value(o13) = 'Two days later'
+observe interval_since_initial(two_days)
+% raw_value(o14) = 'persistent neck and facial swelling'
+observe symptom_course(persistent_neck_facial_swelling)
+% raw_value(o15) = 'primary care provider'
+observe referral_source(primary_care_provider)
+% raw_value(o16) = 'dental services'
+observe referral_destination(dental_services)
+% raw_value(o17) = 'tooth extraction was performed'
+observe intervention(tooth_extraction)
+% raw_value(o18) = 'Swelling persisted'
+observe response_to_intervention(no_improvement)
+% raw_value(o19) = 'Three weeks after initial symptoms'
+observe interval_since_initial(three_weeks)
+% raw_value(o20) = 'continued facial swelling'
+observe symptom(persistent_facial_swelling)
+% raw_value(o21) = 'worsening cough with blood-tinged sputum'
+observe symptom_progression(worsening_hemoptysis)
+% raw_value(o22) = 'new-onset night sweats'
+observe symptom(night_sweats)
+% raw_value(o23) = 'denied fever'
+observe denies(fever)
+% raw_value(o24) = 'sick contacts'
+observe denies(sick_contacts)
+% raw_value(o25) = 'travel'
+observe denies(recent_travel)
+% raw_value(o26) = 'known tuberculosis exposure'
+observe denies(tuberculosis_exposure)
+% raw_value(o27) = 'weight loss that she attributed to intentional efforts'
+observe symptom(weight_loss_self_attributed_intentional)
+% raw_value(o28) = 'no smoking, alcohol, or intravenous drug use history'
+observe substance_use_history(none)
+% raw_value(o29) = 'dentist confirmed no active dental infection'
+observe dental_infection(absent)
+% raw_value(o30) = 'white blood cell count 44,000 per microliter'
+observe white_blood_cell_count(markedly_elevated)
+% raw_value(o31) = 'absolute neutrophilia'
+observe differential(neutrophilia)
+% raw_value(o32) = 'myelocyte precursors'
+observe differential(left_shift_myelocyte_precursors)
+% raw_value(o33) = 'monocytosis'
+observe differential(monocytosis)
+% raw_value(o34) = 'hemoglobin 9.1 grams per deciliter'
+observe hemoglobin(moderately_low)
+% raw_value(o35) = 'platelet count 585,000 per microliter'
+observe platelet_count(elevated)
+% raw_value(o36) = 'Urinalysis was negative'
+observe urinalysis(negative)
+% raw_value(o37) = 'right upper lobe mass'
+observe imaging_chest_ct(right_upper_lobe_mass)
+% raw_value(o38) = 'mediastinal involvement'
+observe imaging_chest_ct(mediastinal_involvement)
+% raw_value(o39) = 'regional lymphadenopathy'
+observe imaging_chest_ct(regional_lymphadenopathy)
+% raw_value(o40) = 'right-sided pleural effusion'
+observe imaging_chest_ct(right_pleural_effusion)
+% raw_value(o41) = 'She was admitted'
+observe disposition(admitted)
+% raw_value(o42) = 'white blood cell count rose to 55,000 per microliter'
+observe white_blood_cell_count_trend(rising_markedly_elevated)
+% raw_value(o43) = 'ceftriaxone'
+observe inpatient_antibiotic(ceftriaxone)
+% raw_value(o44) = 'piperacillin-tazobactam'
+observe inpatient_antibiotic(piperacillin_tazobactam)
+% raw_value(o45) = 'vancomycin'
+observe inpatient_antibiotic(vancomycin)
+% raw_value(o46) = 'Sputum culture grew Actinomyces'
+observe sputum_culture(actinomyces)
+% raw_value(o47) = 'Symptoms did not improve'
+observe response_to_inpatient_antibiotics(no_improvement)
+
+% Queries extracted by ingester:
+? diagnosis(underlying_pulmonary_pathology)
+? diagnosis(pulmonary_malignancy)
+? diagnosis(pulmonary_actinomycosis)
+? next_diagnostic_step(biopsy_or_advanced_workup)
+
+% Sub-queries the deriver introduced via re-decomposition:
+? diagnosis(pulmonary_tuberculosis)
+? diagnosis(hematologic_malignancy_myeloid)

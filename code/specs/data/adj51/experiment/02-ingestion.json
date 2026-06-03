@@ -1,0 +1,1526 @@
+{
+  "observations": [
+    {
+      "id": "o1",
+      "term": "age(middle_aged_adult)",
+      "raw_value": "47-year-old",
+      "source_span": [
+        10,
+        21
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o2",
+      "term": "sex(male)",
+      "raw_value": "male",
+      "source_span": [
+        22,
+        26
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o3",
+      "term": "past_medical_history(hyperlipidemia)",
+      "raw_value": "hyperlipidemia",
+      "source_span": [
+        58,
+        72
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o4",
+      "term": "past_medical_history(gerd)",
+      "raw_value": "gastroesophageal reflux disease",
+      "source_span": [
+        80,
+        111
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o5",
+      "term": "past_medical_history(anxiety)",
+      "raw_value": "anxiety",
+      "source_span": [
+        120,
+        127
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o6",
+      "term": "smoking_status(former)",
+      "raw_value": "former tobacco smoker",
+      "source_span": [
+        132,
+        153
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o7",
+      "term": "pack_years(low)",
+      "raw_value": "six pack-years",
+      "source_span": [
+        164,
+        178
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o8",
+      "term": "smoking_period(twenties)",
+      "raw_value": "in his 20s",
+      "source_span": [
+        179,
+        189
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o9",
+      "term": "family_history_cardiac_arrest(absent)",
+      "raw_value": "no familial history of cardiac arrest",
+      "source_span": [
+        195,
+        232
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o10",
+      "term": "encounter_setting(emergency_department)",
+      "raw_value": "presenting to the ED",
+      "source_span": [
+        240,
+        260
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o11",
+      "term": "facility_type(secondary_community_center)",
+      "raw_value": "secondary community based center",
+      "source_span": [
+        266,
+        298
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o12",
+      "term": "chest_pain(exertional_substernal_intermittent)",
+      "raw_value": "intermittent exertional substernal chest pain",
+      "source_span": [
+        314,
+        359
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o13",
+      "term": "symptom_duration(months)",
+      "raw_value": "for the last few months",
+      "source_span": [
+        360,
+        383
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o14",
+      "term": "symptom_progression(worsening)",
+      "raw_value": "progressively worsening in frequency and intensity",
+      "source_span": [
+        398,
+        448
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o15",
+      "term": "recent_worsening_window(two_weeks)",
+      "raw_value": "in the last two weeks",
+      "source_span": [
+        461,
+        482
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o16",
+      "term": "exertional_tolerance(severely_limited)",
+      "raw_value": "not able to walk to his car without stopping",
+      "source_span": [
+        515,
+        559
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o17",
+      "term": "associated_symptom(dyspnea_on_exertion)",
+      "raw_value": "shortness of breath",
+      "source_span": [
+        582,
+        601
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o18",
+      "term": "associated_symptom(chest_tightness)",
+      "raw_value": "chest tightness",
+      "source_span": [
+        606,
+        621
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o19",
+      "term": "symptom_relief(rest)",
+      "raw_value": "Symptoms would resolve with rest",
+      "source_span": [
+        623,
+        655
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o20",
+      "term": "denies_associated_symptoms(fever_chills_nausea_vomiting_diaphoresis_leg_swelling_recent_travel)",
+      "raw_value": "denied any fever, chills, nausea, vomiting, diaphoresis, leg swelling, or recent travel",
+      "source_span": [
+        669,
+        756
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o21",
+      "term": "review_of_systems(otherwise_unremarkable)",
+      "raw_value": "Review of systems was otherwise unremarkable",
+      "source_span": [
+        758,
+        802
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o22",
+      "term": "prior_cardiology_evaluation(six_months_prior)",
+      "raw_value": "About six months prior",
+      "source_span": [
+        804,
+        826
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o23",
+      "term": "prior_specialist_seen(cardiologist)",
+      "raw_value": "seen a cardiologist",
+      "source_span": [
+        854,
+        873
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o24",
+      "term": "prior_workup(cardiac_stress_test)",
+      "raw_value": "cardiac stress test",
+      "source_span": [
+        913,
+        932
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o25",
+      "term": "prior_workup(echocardiogram)",
+      "raw_value": "echocardiogram",
+      "source_span": [
+        937,
+        951
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o26",
+      "term": "prior_workup_result(normal)",
+      "raw_value": "came back normal",
+      "source_span": [
+        971,
+        987
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o27",
+      "term": "coronary_artery_calcium_score(elevated)",
+      "raw_value": "elevated coronary artery calcium score",
+      "source_span": [
+        1000,
+        1038
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o28",
+      "term": "coronary_artery_calcium_score_value(above_200)",
+      "raw_value": "greater than 200",
+      "source_span": [
+        1055,
+        1071
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o29",
+      "term": "medication(atorvastatin_moderate_intensity)",
+      "raw_value": "atorvastatin 20 mg",
+      "source_span": [
+        1092,
+        1110
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o30",
+      "term": "medication(clonazepam)",
+      "raw_value": "clonazepam",
+      "source_span": [
+        1150,
+        1160
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o31",
+      "term": "medication(citalopram)",
+      "raw_value": "citalopram",
+      "source_span": [
+        1162,
+        1172
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o32",
+      "term": "medication(pantoprazole)",
+      "raw_value": "pantoprazole",
+      "source_span": [
+        1178,
+        1190
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o33",
+      "term": "medication_regimen(as_needed)",
+      "raw_value": "taken as needed",
+      "source_span": [
+        1197,
+        1212
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o34",
+      "term": "vital_signs(within_normal_limits)",
+      "raw_value": "vital signs were within normal limits",
+      "source_span": [
+        1258,
+        1295
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o35",
+      "term": "temperature(afebrile)",
+      "raw_value": "temperature 98.0 F",
+      "source_span": [
+        1297,
+        1315
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o36",
+      "term": "heart_rate(low_normal)",
+      "raw_value": "heart rate 62 bpm",
+      "source_span": [
+        1317,
+        1334
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o37",
+      "term": "blood_pressure(normal)",
+      "raw_value": "blood pressure 124/82 mmHg",
+      "source_span": [
+        1336,
+        1362
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o38",
+      "term": "respiratory_rate(normal)",
+      "raw_value": "respiratory rate 16 breaths per minute",
+      "source_span": [
+        1364,
+        1402
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o39",
+      "term": "oxygen_saturation(normal)",
+      "raw_value": "oxygen saturation 96%",
+      "source_span": [
+        1408,
+        1429
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o40",
+      "term": "supplemental_oxygen(none)",
+      "raw_value": "on room air",
+      "source_span": [
+        1430,
+        1441
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o41",
+      "term": "weight(normal_to_overweight)",
+      "raw_value": "weight was 184.9 lbs",
+      "source_span": [
+        1457,
+        1477
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o42",
+      "term": "height(six_feet)",
+      "raw_value": "height was 6 ft",
+      "source_span": [
+        1482,
+        1497
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o43",
+      "term": "physical_examination(unremarkable)",
+      "raw_value": "no abnormalities upon physical examination",
+      "source_span": [
+        1510,
+        1552
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o44",
+      "term": "cardiac_exam(regular_rate_and_rhythm)",
+      "raw_value": "regular rate and rhythm",
+      "source_span": [
+        1564,
+        1587
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o45",
+      "term": "cardiac_exam(normal_s1_s2)",
+      "raw_value": "normal S1 and S2 heart sounds",
+      "source_span": [
+        1593,
+        1622
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o46",
+      "term": "pulmonary_exam(clear_to_auscultation_bilaterally)",
+      "raw_value": "lungs were clear to auscultation bilaterally",
+      "source_span": [
+        1644,
+        1688
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o47",
+      "term": "comprehensive_metabolic_panel(unremarkable)",
+      "raw_value": "Comprehensive metabolic panel was unremarkable",
+      "source_span": [
+        1710,
+        1756
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o48",
+      "term": "hemoglobin_hematocrit(mildly_decreased)",
+      "raw_value": "slightly decreased hemoglobin and hematocrit",
+      "source_span": [
+        1818,
+        1862
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o49",
+      "term": "hemoglobin_value(mildly_low)",
+      "raw_value": "12.8 g/dL",
+      "source_span": [
+        1866,
+        1875
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o50",
+      "term": "hematocrit_value(mildly_low)",
+      "raw_value": "36.7%",
+      "source_span": [
+        1880,
+        1885
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o51",
+      "term": "coagulation_studies(unremarkable)",
+      "raw_value": "Coagulation studies revealed no abnormalities",
+      "source_span": [
+        1934,
+        1979
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o52",
+      "term": "cardiac_biomarkers(within_normal_limits)",
+      "raw_value": "Cardiac biomarkers were within normal limits",
+      "source_span": [
+        1981,
+        2025
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o53",
+      "term": "creatine_kinase_mb(below_threshold)",
+      "raw_value": "creatine kinase-MB was less than 1.0 ng/mL",
+      "source_span": [
+        2041,
+        2083
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o54",
+      "term": "high_sensitivity_troponin_i_first(normal)",
+      "raw_value": "first high-sensitivity troponin I measurement was 5.9 ng/L",
+      "source_span": [
+        2089,
+        2147
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o55",
+      "term": "high_sensitivity_troponin_i_second(normal)",
+      "raw_value": "second measurement was 6.3 ng/L",
+      "source_span": [
+        2176,
+        2207
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o56",
+      "term": "chest_xray(negative_for_pneumothorax_opacities_free_air)",
+      "raw_value": "Chest X-ray was negative for pneumothorax, opacities, or free air",
+      "source_span": [
+        2209,
+        2274
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o57",
+      "term": "electrocardiogram(sinus_bradycardia)",
+      "raw_value": "Electrocardiogram revealed sinus bradycardia",
+      "source_span": [
+        2276,
+        2320
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o58",
+      "term": "electrocardiogram(no_acute_st_t_changes)",
+      "raw_value": "no acute ST/T wave abnormalities",
+      "source_span": [
+        2326,
+        2358
+      ],
+      "confidence": 0.95
+    }
+  ],
+  "queries": [
+    {
+      "id": "q1",
+      "term": "diagnosis(acute_coronary_syndrome)",
+      "source_span": null,
+      "note": "Implied by ED chest-pain case-presentation genre: adjudicate whether presentation meets ACS criteria (NSTEMI/unstable angina) given symptoms, biomarkers, ECG."
+    },
+    {
+      "id": "q2",
+      "term": "diagnosis(stable_angina)",
+      "source_span": null,
+      "note": "Implied differential: chronic exertional substernal chest pain relieved by rest with elevated CACS and progressively worsening pattern raises stable vs unstable angina question."
+    },
+    {
+      "id": "q3",
+      "term": "disposition(admit_for_further_cardiac_workup)",
+      "source_span": null,
+      "note": "Implied by ED case presentation: should the patient be admitted and undergo coronary angiography or further ischemic workup despite negative initial biomarkers/ECG?"
+    }
+  ],
+  "byte_dispositions": [
+    {
+      "range": [
+        0,
+        10
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: 'This is a '"
+    },
+    {
+      "range": [
+        10,
+        21
+      ],
+      "disposition": "extracted",
+      "observation_id": "o1"
+    },
+    {
+      "range": [
+        21,
+        22
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        22,
+        26
+      ],
+      "disposition": "extracted",
+      "observation_id": "o2"
+    },
+    {
+      "range": [
+        26,
+        58
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' with a past medical history of '"
+    },
+    {
+      "range": [
+        58,
+        72
+      ],
+      "disposition": "extracted",
+      "observation_id": "o3"
+    },
+    {
+      "range": [
+        72,
+        80
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' (HLD), '"
+    },
+    {
+      "range": [
+        80,
+        111
+      ],
+      "disposition": "extracted",
+      "observation_id": "o4"
+    },
+    {
+      "range": [
+        111,
+        120
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' (GERD), '"
+    },
+    {
+      "range": [
+        120,
+        127
+      ],
+      "disposition": "extracted",
+      "observation_id": "o5"
+    },
+    {
+      "range": [
+        127,
+        132
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        132,
+        153
+      ],
+      "disposition": "extracted",
+      "observation_id": "o6"
+    },
+    {
+      "range": [
+        153,
+        164
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' of around '"
+    },
+    {
+      "range": [
+        164,
+        178
+      ],
+      "disposition": "extracted",
+      "observation_id": "o7"
+    },
+    {
+      "range": [
+        178,
+        179
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        179,
+        189
+      ],
+      "disposition": "extracted",
+      "observation_id": "o8"
+    },
+    {
+      "range": [
+        189,
+        195
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and '"
+    },
+    {
+      "range": [
+        195,
+        232
+      ],
+      "disposition": "extracted",
+      "observation_id": "o9"
+    },
+    {
+      "range": [
+        232,
+        240
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' who is '"
+    },
+    {
+      "range": [
+        240,
+        260
+      ],
+      "disposition": "extracted",
+      "observation_id": "o10"
+    },
+    {
+      "range": [
+        260,
+        266
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' of a '"
+    },
+    {
+      "range": [
+        266,
+        298
+      ],
+      "disposition": "extracted",
+      "observation_id": "o11"
+    },
+    {
+      "range": [
+        298,
+        314
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' complaining of '"
+    },
+    {
+      "range": [
+        314,
+        359
+      ],
+      "disposition": "extracted",
+      "observation_id": "o12"
+    },
+    {
+      "range": [
+        359,
+        360
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        360,
+        383
+      ],
+      "disposition": "extracted",
+      "observation_id": "o13"
+    },
+    {
+      "range": [
+        383,
+        398
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' that has been '"
+    },
+    {
+      "range": [
+        398,
+        448
+      ],
+      "disposition": "extracted",
+      "observation_id": "o14"
+    },
+    {
+      "range": [
+        448,
+        461
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', especially '"
+    },
+    {
+      "range": [
+        461,
+        482
+      ],
+      "disposition": "extracted",
+      "observation_id": "o15"
+    },
+    {
+      "range": [
+        482,
+        515
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. The patient stated that he was '"
+    },
+    {
+      "range": [
+        515,
+        559
+      ],
+      "disposition": "extracted",
+      "observation_id": "o16"
+    },
+    {
+      "range": [
+        559,
+        582
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' multiple times due to '"
+    },
+    {
+      "range": [
+        582,
+        601
+      ],
+      "disposition": "extracted",
+      "observation_id": "o17"
+    },
+    {
+      "range": [
+        601,
+        606
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        606,
+        621
+      ],
+      "disposition": "extracted",
+      "observation_id": "o18"
+    },
+    {
+      "range": [
+        621,
+        623
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        623,
+        655
+      ],
+      "disposition": "extracted",
+      "observation_id": "o19"
+    },
+    {
+      "range": [
+        655,
+        669
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. The patient '"
+    },
+    {
+      "range": [
+        669,
+        756
+      ],
+      "disposition": "extracted",
+      "observation_id": "o20"
+    },
+    {
+      "range": [
+        756,
+        758
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        758,
+        802
+      ],
+      "disposition": "extracted",
+      "observation_id": "o21"
+    },
+    {
+      "range": [
+        802,
+        804
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        804,
+        826
+      ],
+      "disposition": "extracted",
+      "observation_id": "o22"
+    },
+    {
+      "range": [
+        826,
+        854
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', the patient stated he had '"
+    },
+    {
+      "range": [
+        854,
+        873
+      ],
+      "disposition": "extracted",
+      "observation_id": "o23"
+    },
+    {
+      "range": [
+        873,
+        913
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' for a routine check-up. At the time, a '"
+    },
+    {
+      "range": [
+        913,
+        932
+      ],
+      "disposition": "extracted",
+      "observation_id": "o24"
+    },
+    {
+      "range": [
+        932,
+        937
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        937,
+        951
+      ],
+      "disposition": "extracted",
+      "observation_id": "o25"
+    },
+    {
+      "range": [
+        951,
+        971
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' were performed and '"
+    },
+    {
+      "range": [
+        971,
+        987
+      ],
+      "disposition": "extracted",
+      "observation_id": "o26"
+    },
+    {
+      "range": [
+        987,
+        1000
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', but had an '"
+    },
+    {
+      "range": [
+        1000,
+        1038
+      ],
+      "disposition": "extracted",
+      "observation_id": "o27"
+    },
+    {
+      "range": [
+        1038,
+        1055
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' (CACS) that was '"
+    },
+    {
+      "range": [
+        1055,
+        1071
+      ],
+      "disposition": "extracted",
+      "observation_id": "o28"
+    },
+    {
+      "range": [
+        1071,
+        1092
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and was prescribed '"
+    },
+    {
+      "range": [
+        1092,
+        1110
+      ],
+      "disposition": "extracted",
+      "observation_id": "o29"
+    },
+    {
+      "range": [
+        1110,
+        1150
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. His other home medications, including '"
+    },
+    {
+      "range": [
+        1150,
+        1160
+      ],
+      "disposition": "extracted",
+      "observation_id": "o30"
+    },
+    {
+      "range": [
+        1160,
+        1162
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1162,
+        1172
+      ],
+      "disposition": "extracted",
+      "observation_id": "o31"
+    },
+    {
+      "range": [
+        1172,
+        1178
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and '"
+    },
+    {
+      "range": [
+        1178,
+        1190
+      ],
+      "disposition": "extracted",
+      "observation_id": "o32"
+    },
+    {
+      "range": [
+        1190,
+        1197
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', were '"
+    },
+    {
+      "range": [
+        1197,
+        1212
+      ],
+      "disposition": "extracted",
+      "observation_id": "o33"
+    },
+    {
+      "range": [
+        1212,
+        1258
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: \".\\n\\nUpon presentation in the ED, the patient's \""
+    },
+    {
+      "range": [
+        1258,
+        1295
+      ],
+      "disposition": "extracted",
+      "observation_id": "o34"
+    },
+    {
+      "range": [
+        1295,
+        1297
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1297,
+        1315
+      ],
+      "disposition": "extracted",
+      "observation_id": "o35"
+    },
+    {
+      "range": [
+        1315,
+        1317
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1317,
+        1334
+      ],
+      "disposition": "extracted",
+      "observation_id": "o36"
+    },
+    {
+      "range": [
+        1334,
+        1336
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1336,
+        1362
+      ],
+      "disposition": "extracted",
+      "observation_id": "o37"
+    },
+    {
+      "range": [
+        1362,
+        1364
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1364,
+        1402
+      ],
+      "disposition": "extracted",
+      "observation_id": "o38"
+    },
+    {
+      "range": [
+        1402,
+        1408
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and '"
+    },
+    {
+      "range": [
+        1408,
+        1429
+      ],
+      "disposition": "extracted",
+      "observation_id": "o39"
+    },
+    {
+      "range": [
+        1429,
+        1430
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1430,
+        1441
+      ],
+      "disposition": "extracted",
+      "observation_id": "o40"
+    },
+    {
+      "range": [
+        1441,
+        1457
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: \". The patient's \""
+    },
+    {
+      "range": [
+        1457,
+        1477
+      ],
+      "disposition": "extracted",
+      "observation_id": "o41"
+    },
+    {
+      "range": [
+        1477,
+        1482
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        1482,
+        1497
+      ],
+      "disposition": "extracted",
+      "observation_id": "o42"
+    },
+    {
+      "range": [
+        1497,
+        1510
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. There were '"
+    },
+    {
+      "range": [
+        1510,
+        1552
+      ],
+      "disposition": "extracted",
+      "observation_id": "o43"
+    },
+    {
+      "range": [
+        1552,
+        1564
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', including '"
+    },
+    {
+      "range": [
+        1564,
+        1587
+      ],
+      "disposition": "extracted",
+      "observation_id": "o44"
+    },
+    {
+      "range": [
+        1587,
+        1593
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' with '"
+    },
+    {
+      "range": [
+        1593,
+        1622
+      ],
+      "disposition": "extracted",
+      "observation_id": "o45"
+    },
+    {
+      "range": [
+        1622,
+        1644
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' on cardiac exam, and '"
+    },
+    {
+      "range": [
+        1644,
+        1688
+      ],
+      "disposition": "extracted",
+      "observation_id": "o46"
+    },
+    {
+      "range": [
+        1688,
+        1710
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' on respiratory exam. '"
+    },
+    {
+      "range": [
+        1710,
+        1756
+      ],
+      "disposition": "extracted",
+      "observation_id": "o47"
+    },
+    {
+      "range": [
+        1756,
+        1818
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. Complete blood count with automated differential revealed a '"
+    },
+    {
+      "range": [
+        1818,
+        1862
+      ],
+      "disposition": "extracted",
+      "observation_id": "o48"
+    },
+    {
+      "range": [
+        1862,
+        1866
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' at '"
+    },
+    {
+      "range": [
+        1866,
+        1875
+      ],
+      "disposition": "extracted",
+      "observation_id": "o49"
+    },
+    {
+      "range": [
+        1875,
+        1880
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        1880,
+        1885
+      ],
+      "disposition": "extracted",
+      "observation_id": "o50"
+    },
+    {
+      "range": [
+        1885,
+        1934
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', respectively, but were otherwise unremarkable. '"
+    },
+    {
+      "range": [
+        1934,
+        1979
+      ],
+      "disposition": "extracted",
+      "observation_id": "o51"
+    },
+    {
+      "range": [
+        1979,
+        1981
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1981,
+        2025
+      ],
+      "disposition": "extracted",
+      "observation_id": "o52"
+    },
+    {
+      "range": [
+        2025,
+        2041
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. Specifically, '"
+    },
+    {
+      "range": [
+        2041,
+        2083
+      ],
+      "disposition": "extracted",
+      "observation_id": "o53"
+    },
+    {
+      "range": [
+        2083,
+        2089
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. The '"
+    },
+    {
+      "range": [
+        2089,
+        2147
+      ],
+      "disposition": "extracted",
+      "observation_id": "o54"
+    },
+    {
+      "range": [
+        2147,
+        2176
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and three hours later, the '"
+    },
+    {
+      "range": [
+        2176,
+        2207
+      ],
+      "disposition": "extracted",
+      "observation_id": "o55"
+    },
+    {
+      "range": [
+        2207,
+        2209
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        2209,
+        2274
+      ],
+      "disposition": "extracted",
+      "observation_id": "o56"
+    },
+    {
+      "range": [
+        2274,
+        2276
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        2276,
+        2320
+      ],
+      "disposition": "extracted",
+      "observation_id": "o57"
+    },
+    {
+      "range": [
+        2320,
+        2326
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' with '"
+    },
+    {
+      "range": [
+        2326,
+        2358
+      ],
+      "disposition": "extracted",
+      "observation_id": "o58"
+    },
+    {
+      "range": [
+        2358,
+        2360
+      ],
+      "disposition": "below_extraction_threshold"
+    }
+  ]
+}

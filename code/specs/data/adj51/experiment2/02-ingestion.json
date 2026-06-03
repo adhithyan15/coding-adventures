@@ -1,0 +1,1241 @@
+{
+  "observations": [
+    {
+      "id": "o1",
+      "term": "age(young_adult)",
+      "raw_value": "26-year-old",
+      "source_span": [
+        2,
+        13
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o2",
+      "term": "race_ethnicity(african_american)",
+      "raw_value": "African American",
+      "source_span": [
+        14,
+        30
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o3",
+      "term": "sex(female)",
+      "raw_value": "female",
+      "source_span": [
+        31,
+        37
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o4",
+      "term": "past_medical_history(asthma)",
+      "raw_value": "asthma history",
+      "source_span": [
+        43,
+        57
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o5",
+      "term": "encounter_setting(emergency_department)",
+      "raw_value": "Emergency Department",
+      "source_span": [
+        75,
+        95
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o6",
+      "term": "symptom(productive_cough)",
+      "raw_value": "productive cough",
+      "source_span": [
+        103,
+        119
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o7",
+      "term": "symptom(hemoptysis)",
+      "raw_value": "blood-tinged sputum",
+      "source_span": [
+        130,
+        149
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o8",
+      "term": "symptom(dyspnea)",
+      "raw_value": "shortness of breath",
+      "source_span": [
+        151,
+        170
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o9",
+      "term": "symptom(facial_swelling_new_onset)",
+      "raw_value": "new-onset facial swelling",
+      "source_span": [
+        176,
+        201
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o10",
+      "term": "imaging_neck_ct(prevertebral_soft_tissue_swelling)",
+      "raw_value": "Neck CT showed prevertebral soft tissue swelling",
+      "source_span": [
+        203,
+        251
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o11",
+      "term": "initial_antibiotic_therapy(augmentin_azithromycin)",
+      "raw_value": "Augmentin and azithromycin",
+      "source_span": [
+        272,
+        298
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o12",
+      "term": "initial_disposition(discharged)",
+      "raw_value": "discharged",
+      "source_span": [
+        303,
+        313
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o13",
+      "term": "interval_since_initial(two_days)",
+      "raw_value": "Two days later",
+      "source_span": [
+        316,
+        330
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o14",
+      "term": "symptom_course(persistent_neck_facial_swelling)",
+      "raw_value": "persistent neck and facial swelling",
+      "source_span": [
+        332,
+        367
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o15",
+      "term": "referral_source(primary_care_provider)",
+      "raw_value": "primary care provider",
+      "source_span": [
+        376,
+        397
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o16",
+      "term": "referral_destination(dental_services)",
+      "raw_value": "dental services",
+      "source_span": [
+        414,
+        429
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o17",
+      "term": "intervention(tooth_extraction)",
+      "raw_value": "tooth extraction was performed",
+      "source_span": [
+        439,
+        469
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o18",
+      "term": "response_to_intervention(no_improvement)",
+      "raw_value": "Swelling persisted",
+      "source_span": [
+        471,
+        489
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o19",
+      "term": "interval_since_initial(three_weeks)",
+      "raw_value": "Three weeks after initial symptoms",
+      "source_span": [
+        491,
+        525
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o20",
+      "term": "symptom(persistent_facial_swelling)",
+      "raw_value": "continued facial swelling",
+      "source_span": [
+        572,
+        597
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o21",
+      "term": "symptom_progression(worsening_hemoptysis)",
+      "raw_value": "worsening cough with blood-tinged sputum",
+      "source_span": [
+        599,
+        639
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o22",
+      "term": "symptom(night_sweats)",
+      "raw_value": "new-onset night sweats",
+      "source_span": [
+        645,
+        667
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o23",
+      "term": "denies(fever)",
+      "raw_value": "denied fever",
+      "source_span": [
+        673,
+        685
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o24",
+      "term": "denies(sick_contacts)",
+      "raw_value": "sick contacts",
+      "source_span": [
+        687,
+        700
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o25",
+      "term": "denies(recent_travel)",
+      "raw_value": "travel",
+      "source_span": [
+        702,
+        708
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o26",
+      "term": "denies(tuberculosis_exposure)",
+      "raw_value": "known tuberculosis exposure",
+      "source_span": [
+        713,
+        740
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o27",
+      "term": "symptom(weight_loss_self_attributed_intentional)",
+      "raw_value": "weight loss that she attributed to intentional efforts",
+      "source_span": [
+        755,
+        809
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o28",
+      "term": "substance_use_history(none)",
+      "raw_value": "no smoking, alcohol, or intravenous drug use history",
+      "source_span": [
+        821,
+        873
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o29",
+      "term": "dental_infection(absent)",
+      "raw_value": "dentist confirmed no active dental infection",
+      "source_span": [
+        879,
+        923
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o30",
+      "term": "white_blood_cell_count(markedly_elevated)",
+      "raw_value": "white blood cell count 44,000 per microliter",
+      "source_span": [
+        947,
+        991
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o31",
+      "term": "differential(neutrophilia)",
+      "raw_value": "absolute neutrophilia",
+      "source_span": [
+        998,
+        1019
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o32",
+      "term": "differential(left_shift_myelocyte_precursors)",
+      "raw_value": "myelocyte precursors",
+      "source_span": [
+        1021,
+        1041
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o33",
+      "term": "differential(monocytosis)",
+      "raw_value": "monocytosis",
+      "source_span": [
+        1047,
+        1058
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o34",
+      "term": "hemoglobin(moderately_low)",
+      "raw_value": "hemoglobin 9.1 grams per deciliter",
+      "source_span": [
+        1060,
+        1094
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o35",
+      "term": "platelet_count(elevated)",
+      "raw_value": "platelet count 585,000 per microliter",
+      "source_span": [
+        1096,
+        1133
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o36",
+      "term": "urinalysis(negative)",
+      "raw_value": "Urinalysis was negative",
+      "source_span": [
+        1135,
+        1158
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o37",
+      "term": "imaging_chest_ct(right_upper_lobe_mass)",
+      "raw_value": "right upper lobe mass",
+      "source_span": [
+        1178,
+        1199
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o38",
+      "term": "imaging_chest_ct(mediastinal_involvement)",
+      "raw_value": "mediastinal involvement",
+      "source_span": [
+        1201,
+        1224
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o39",
+      "term": "imaging_chest_ct(regional_lymphadenopathy)",
+      "raw_value": "regional lymphadenopathy",
+      "source_span": [
+        1226,
+        1250
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o40",
+      "term": "imaging_chest_ct(right_pleural_effusion)",
+      "raw_value": "right-sided pleural effusion",
+      "source_span": [
+        1258,
+        1286
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o41",
+      "term": "disposition(admitted)",
+      "raw_value": "She was admitted",
+      "source_span": [
+        1288,
+        1304
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o42",
+      "term": "white_blood_cell_count_trend(rising_markedly_elevated)",
+      "raw_value": "white blood cell count rose to 55,000 per microliter",
+      "source_span": [
+        1325,
+        1377
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o43",
+      "term": "inpatient_antibiotic(ceftriaxone)",
+      "raw_value": "ceftriaxone",
+      "source_span": [
+        1393,
+        1404
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o44",
+      "term": "inpatient_antibiotic(piperacillin_tazobactam)",
+      "raw_value": "piperacillin-tazobactam",
+      "source_span": [
+        1411,
+        1434
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o45",
+      "term": "inpatient_antibiotic(vancomycin)",
+      "raw_value": "vancomycin",
+      "source_span": [
+        1439,
+        1449
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o46",
+      "term": "sputum_culture(actinomyces)",
+      "raw_value": "Sputum culture grew Actinomyces",
+      "source_span": [
+        1451,
+        1482
+      ],
+      "confidence": 0.95
+    },
+    {
+      "id": "o47",
+      "term": "response_to_inpatient_antibiotics(no_improvement)",
+      "raw_value": "Symptoms did not improve",
+      "source_span": [
+        1484,
+        1508
+      ],
+      "confidence": 0.95
+    }
+  ],
+  "queries": [
+    {
+      "id": "q1",
+      "term": "diagnosis(underlying_pulmonary_pathology)",
+      "source_span": null,
+      "note": "Implied by complex case presentation: what is the underlying diagnosis explaining the right upper lobe mass, mediastinal involvement, lymphadenopathy, leukemoid reaction (WBC 44,000 rising to 55,000 with left shift / myelocytes / monocytosis), constitutional symptoms (night sweats, weight loss), and failure of antibacterial therapy? Differential includes lung malignancy (e.g. pulmonary adenocarcinoma or squamous cell carcinoma) versus chronic infection (TB, fungal, pulmonary actinomycosis) versus hematologic malignancy with paraneoplastic leukocytosis."
+    },
+    {
+      "id": "q2",
+      "term": "diagnosis(pulmonary_malignancy)",
+      "source_span": null,
+      "note": "Specific differential to adjudicate: does the lung mass + mediastinal involvement + lymphadenopathy + pleural effusion + constitutional symptoms + leukemoid reaction support a primary lung neoplasm?"
+    },
+    {
+      "id": "q3",
+      "term": "diagnosis(pulmonary_actinomycosis)",
+      "source_span": null,
+      "note": "Sputum culture grew Actinomyces, raising the question of whether the case is actually pulmonary actinomycosis (which can mimic lung cancer radiographically) vs. Actinomyces as colonizer/secondary finding in a malignant process."
+    },
+    {
+      "id": "q4",
+      "term": "next_diagnostic_step(biopsy_or_advanced_workup)",
+      "source_span": null,
+      "note": "Implied by inpatient admission with failed empirical antibiotics and a concerning lung mass: should the next step be tissue biopsy (bronchoscopy / CT-guided / mediastinoscopy) and/or hematology evaluation for the leukemoid reaction?"
+    }
+  ],
+  "byte_dispositions": [
+    {
+      "range": [
+        0,
+        2
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: 'A '"
+    },
+    {
+      "range": [
+        2,
+        13
+      ],
+      "disposition": "extracted",
+      "observation_id": "o1"
+    },
+    {
+      "range": [
+        13,
+        14
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        14,
+        30
+      ],
+      "disposition": "extracted",
+      "observation_id": "o2"
+    },
+    {
+      "range": [
+        30,
+        31
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        31,
+        37
+      ],
+      "disposition": "extracted",
+      "observation_id": "o3"
+    },
+    {
+      "range": [
+        37,
+        43
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' with '"
+    },
+    {
+      "range": [
+        43,
+        57
+      ],
+      "disposition": "extracted",
+      "observation_id": "o4"
+    },
+    {
+      "range": [
+        57,
+        75
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' presented to the '"
+    },
+    {
+      "range": [
+        75,
+        95
+      ],
+      "disposition": "extracted",
+      "observation_id": "o5"
+    },
+    {
+      "range": [
+        95,
+        103
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' with a '"
+    },
+    {
+      "range": [
+        103,
+        119
+      ],
+      "disposition": "extracted",
+      "observation_id": "o6"
+    },
+    {
+      "range": [
+        119,
+        130
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' featuring '"
+    },
+    {
+      "range": [
+        130,
+        149
+      ],
+      "disposition": "extracted",
+      "observation_id": "o7"
+    },
+    {
+      "range": [
+        149,
+        151
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        151,
+        170
+      ],
+      "disposition": "extracted",
+      "observation_id": "o8"
+    },
+    {
+      "range": [
+        170,
+        176
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and '"
+    },
+    {
+      "range": [
+        176,
+        201
+      ],
+      "disposition": "extracted",
+      "observation_id": "o9"
+    },
+    {
+      "range": [
+        201,
+        203
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        203,
+        251
+      ],
+      "disposition": "extracted",
+      "observation_id": "o10"
+    },
+    {
+      "range": [
+        251,
+        272
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. She was started on '"
+    },
+    {
+      "range": [
+        272,
+        298
+      ],
+      "disposition": "extracted",
+      "observation_id": "o11"
+    },
+    {
+      "range": [
+        298,
+        303
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        303,
+        313
+      ],
+      "disposition": "extracted",
+      "observation_id": "o12"
+    },
+    {
+      "range": [
+        313,
+        316
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        316,
+        330
+      ],
+      "disposition": "extracted",
+      "observation_id": "o13"
+    },
+    {
+      "range": [
+        330,
+        332
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        332,
+        367
+      ],
+      "disposition": "extracted",
+      "observation_id": "o14"
+    },
+    {
+      "range": [
+        367,
+        376
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' led her '"
+    },
+    {
+      "range": [
+        376,
+        397
+      ],
+      "disposition": "extracted",
+      "observation_id": "o15"
+    },
+    {
+      "range": [
+        397,
+        414
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' to refer her to '"
+    },
+    {
+      "range": [
+        414,
+        429
+      ],
+      "disposition": "extracted",
+      "observation_id": "o16"
+    },
+    {
+      "range": [
+        429,
+        439
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', where a '"
+    },
+    {
+      "range": [
+        439,
+        469
+      ],
+      "disposition": "extracted",
+      "observation_id": "o17"
+    },
+    {
+      "range": [
+        469,
+        471
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        471,
+        489
+      ],
+      "disposition": "extracted",
+      "observation_id": "o18"
+    },
+    {
+      "range": [
+        489,
+        491
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        491,
+        525
+      ],
+      "disposition": "extracted",
+      "observation_id": "o19"
+    },
+    {
+      "range": [
+        525,
+        572
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' she returned to the Emergency Department with '"
+    },
+    {
+      "range": [
+        572,
+        597
+      ],
+      "disposition": "extracted",
+      "observation_id": "o20"
+    },
+    {
+      "range": [
+        597,
+        599
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        599,
+        639
+      ],
+      "disposition": "extracted",
+      "observation_id": "o21"
+    },
+    {
+      "range": [
+        639,
+        645
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and '"
+    },
+    {
+      "range": [
+        645,
+        667
+      ],
+      "disposition": "extracted",
+      "observation_id": "o22"
+    },
+    {
+      "range": [
+        667,
+        673
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. She '"
+    },
+    {
+      "range": [
+        673,
+        685
+      ],
+      "disposition": "extracted",
+      "observation_id": "o23"
+    },
+    {
+      "range": [
+        685,
+        687
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        687,
+        700
+      ],
+      "disposition": "extracted",
+      "observation_id": "o24"
+    },
+    {
+      "range": [
+        700,
+        702
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        702,
+        708
+      ],
+      "disposition": "extracted",
+      "observation_id": "o25"
+    },
+    {
+      "range": [
+        708,
+        713
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', or '"
+    },
+    {
+      "range": [
+        713,
+        740
+      ],
+      "disposition": "extracted",
+      "observation_id": "o26"
+    },
+    {
+      "range": [
+        740,
+        755
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. She reported '"
+    },
+    {
+      "range": [
+        755,
+        809
+      ],
+      "disposition": "extracted",
+      "observation_id": "o27"
+    },
+    {
+      "range": [
+        809,
+        821
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. There was '"
+    },
+    {
+      "range": [
+        821,
+        873
+      ],
+      "disposition": "extracted",
+      "observation_id": "o28"
+    },
+    {
+      "range": [
+        873,
+        879
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. Her '"
+    },
+    {
+      "range": [
+        879,
+        923
+      ],
+      "disposition": "extracted",
+      "observation_id": "o29"
+    },
+    {
+      "range": [
+        923,
+        947
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '.\\n\\nLaboratory findings: '"
+    },
+    {
+      "range": [
+        947,
+        991
+      ],
+      "disposition": "extracted",
+      "observation_id": "o30"
+    },
+    {
+      "range": [
+        991,
+        998
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', with '"
+    },
+    {
+      "range": [
+        998,
+        1019
+      ],
+      "disposition": "extracted",
+      "observation_id": "o31"
+    },
+    {
+      "range": [
+        1019,
+        1021
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1021,
+        1041
+      ],
+      "disposition": "extracted",
+      "observation_id": "o32"
+    },
+    {
+      "range": [
+        1041,
+        1047
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and '"
+    },
+    {
+      "range": [
+        1047,
+        1058
+      ],
+      "disposition": "extracted",
+      "observation_id": "o33"
+    },
+    {
+      "range": [
+        1058,
+        1060
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1060,
+        1094
+      ],
+      "disposition": "extracted",
+      "observation_id": "o34"
+    },
+    {
+      "range": [
+        1094,
+        1096
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1096,
+        1133
+      ],
+      "disposition": "extracted",
+      "observation_id": "o35"
+    },
+    {
+      "range": [
+        1133,
+        1135
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1135,
+        1158
+      ],
+      "disposition": "extracted",
+      "observation_id": "o36"
+    },
+    {
+      "range": [
+        1158,
+        1178
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. Chest CT showed a '"
+    },
+    {
+      "range": [
+        1178,
+        1199
+      ],
+      "disposition": "extracted",
+      "observation_id": "o37"
+    },
+    {
+      "range": [
+        1199,
+        1201
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1201,
+        1224
+      ],
+      "disposition": "extracted",
+      "observation_id": "o38"
+    },
+    {
+      "range": [
+        1224,
+        1226
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1226,
+        1250
+      ],
+      "disposition": "extracted",
+      "observation_id": "o39"
+    },
+    {
+      "range": [
+        1250,
+        1258
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', and a '"
+    },
+    {
+      "range": [
+        1258,
+        1286
+      ],
+      "disposition": "extracted",
+      "observation_id": "o40"
+    },
+    {
+      "range": [
+        1286,
+        1288
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1288,
+        1304
+      ],
+      "disposition": "extracted",
+      "observation_id": "o41"
+    },
+    {
+      "range": [
+        1304,
+        1325
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '.\\n\\nDuring admission, '"
+    },
+    {
+      "range": [
+        1325,
+        1377
+      ],
+      "disposition": "extracted",
+      "observation_id": "o42"
+    },
+    {
+      "range": [
+        1377,
+        1393
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: '. She was given '"
+    },
+    {
+      "range": [
+        1393,
+        1404
+      ],
+      "disposition": "extracted",
+      "observation_id": "o43"
+    },
+    {
+      "range": [
+        1404,
+        1411
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ', then '"
+    },
+    {
+      "range": [
+        1411,
+        1434
+      ],
+      "disposition": "extracted",
+      "observation_id": "o44"
+    },
+    {
+      "range": [
+        1434,
+        1439
+      ],
+      "disposition": "discarded_as_non_factual",
+      "reason": "connective/narrative prose: ' and '"
+    },
+    {
+      "range": [
+        1439,
+        1449
+      ],
+      "disposition": "extracted",
+      "observation_id": "o45"
+    },
+    {
+      "range": [
+        1449,
+        1451
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1451,
+        1482
+      ],
+      "disposition": "extracted",
+      "observation_id": "o46"
+    },
+    {
+      "range": [
+        1482,
+        1484
+      ],
+      "disposition": "below_extraction_threshold"
+    },
+    {
+      "range": [
+        1484,
+        1508
+      ],
+      "disposition": "extracted",
+      "observation_id": "o47"
+    },
+    {
+      "range": [
+        1508,
+        1510
+      ],
+      "disposition": "below_extraction_threshold"
+    }
+  ]
+}
