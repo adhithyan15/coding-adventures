@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-06-02
+
+### Added
+
+- `provenance` module: `Provenance { source, locator, trust_tier }`
+  + `TrustTier { Consensus, Authoritative, Empirical, Inferred,
+  Unattributed }`. Designed so the common case is a one-liner —
+  `Provenance::cited("AHA 2021 §3.2")` — while still carrying enough
+  structure that an audit reader can sort or filter across clauses
+  by trust tier.
+- `PriorClause`, `ContributionClause`, `JointContributionClause`
+  each grow a `provenance: Provenance` field plus a
+  builder-style `.with_provenance(...)` method. Default is
+  `Provenance::unattributed()` so existing pre-ADJ47-B code
+  continues to construct clauses without any source-of-truth
+  ambiguity.
+- 5 new inline unit tests in `provenance.rs` covering trust-tier
+  ordering, locator builder-style threading, and the default.
+- 2 new integration tests in `tests/test_lr_aggregation.rs`:
+  `provenance_is_recoverable_from_kb_after_aggregation` (the
+  contract: clauses carry citations and the audit reader recovers
+  them via the clause id from the proof DAG, no side-table) and
+  `unattributed_provenance_is_the_default` (legacy compatibility).
+
+Total tests: 59 (was 52 in 0.3.0).
+
+### ADJ46 awkwardness items dissolved by 0.4.0
+
+- **A2** (provenance is not a clause field) — fully addressed.
+  Clauses now carry citations; the proof DAG references them by
+  clause id; no side-table required.
+
+### Scope notes
+
+What 0.4.0 still does NOT ship: A4 (joint as syntactically
+distinct from atomic in the *surface* syntax — semantically the
+engine already distinguishes them), A5 (uncertainty markers), A7
+(kickback search variant), A8 (counterfactuals), A9 (source-
+disagreement aggregation, though `Provenance` is the prerequisite
+data structure), A10 (surface syntax) — all language-layer.
+
 ## [0.3.0] - 2026-06-02
 
 ### Added

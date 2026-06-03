@@ -35,6 +35,7 @@
 pub mod enumerate;
 pub mod lr_aggregate;
 pub mod proof_dag;
+pub mod provenance;
 pub mod wmc;
 
 use std::collections::HashMap;
@@ -47,6 +48,7 @@ pub use lr_aggregate::{
     LRAggregateResult, LrAggregateWarning, PriorClause,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
+pub use provenance::{Provenance, TrustTier};
 pub use wmc::weighted_model_count;
 
 // ---------------------------------------------------------------------------

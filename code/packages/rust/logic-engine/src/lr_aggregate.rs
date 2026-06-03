@@ -38,6 +38,7 @@ use logic_core::{Substitution, Term};
 
 use crate::{
     ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase, PriorClauseId,
+    Provenance,
 };
 use crate::proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 
@@ -65,13 +66,18 @@ pub struct PriorClause {
     pub id: PriorClauseId,
     pub conclusion: Term,
     pub prior_logit: f64,
+    /// LP19e + ADJ47-B: citation for this prior. Default is
+    /// [`Provenance::unattributed`] when constructed via
+    /// `PriorClause::new` / `from_probability`; use
+    /// [`PriorClause::with_provenance`] to attach a citation.
+    pub provenance: Provenance,
 }
 
 impl PriorClause {
-    /// Construct a prior with an explicit log-odds value. The `id` is
-    /// a sentinel `PriorClauseId(u64::MAX)` that
-    /// [`KnowledgeBase::add_prior`] overwrites on insert. This mirrors
-    /// the `Fact::certain` / `Rule::certain` pattern in
+    /// Construct a prior with an explicit log-odds value, no
+    /// provenance. The `id` is a sentinel `PriorClauseId(u64::MAX)`
+    /// that [`KnowledgeBase::add_prior`] overwrites on insert. This
+    /// mirrors the `Fact::certain` / `Rule::certain` pattern in
     /// [`crate::lib`] so that all clause types behave identically at
     /// construction time.
     pub fn new(conclusion: Term, prior_logit: f64) -> Self {
@@ -79,6 +85,7 @@ impl PriorClause {
             id: PriorClauseId(u64::MAX),
             conclusion,
             prior_logit,
+            provenance: Provenance::unattributed(),
         }
     }
 
@@ -92,6 +99,21 @@ impl PriorClause {
             "PriorClause::from_probability requires p ∈ (0.0, 1.0); got {p}"
         );
         Self::new(conclusion, (p / (1.0 - p)).ln())
+    }
+
+    /// Builder-style: attach a citation. Returns a new value with
+    /// `provenance` set, leaving the original unchanged.
+    ///
+    /// Idiomatic usage:
+    /// ```ignore
+    /// kb.add_prior(
+    ///     PriorClause::from_probability(atom("acs"), 0.10)
+    ///         .with_provenance(Provenance::cited("Pope JH et al., NEJM 1995;342(16):1163-70"))
+    /// )?;
+    /// ```
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
     }
 }
 
@@ -109,16 +131,20 @@ pub struct ContributionClause {
     pub conclusion: Term,
     pub evidence_term: Term,
     pub logit_delta: f64,
+    /// LP19e + ADJ47-B: citation for this contribution.
+    pub provenance: Provenance,
 }
 
 impl ContributionClause {
-    /// Construct a contribution with an explicit log(LR) value.
+    /// Construct a contribution with an explicit log(LR) value and
+    /// unattributed provenance.
     pub fn new(conclusion: Term, evidence_term: Term, logit_delta: f64) -> Self {
         Self {
             id: ContributionClauseId(u64::MAX),
             conclusion,
             evidence_term,
             logit_delta,
+            provenance: Provenance::unattributed(),
         }
     }
 
@@ -131,6 +157,12 @@ impl ContributionClause {
             "ContributionClause::from_lr requires lr > 0.0; got {lr}"
         );
         Self::new(conclusion, evidence_term, lr.ln())
+    }
+
+    /// Builder-style: attach a citation.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
     }
 }
 
@@ -148,16 +180,20 @@ pub struct JointContributionClause {
     pub conclusion: Term,
     pub evidence_set: Vec<Term>,
     pub joint_logit_delta: f64,
+    /// LP19e + ADJ47-B: citation for this joint contribution.
+    pub provenance: Provenance,
 }
 
 impl JointContributionClause {
-    /// Construct a joint contribution with explicit log(joint LR).
+    /// Construct a joint contribution with explicit log(joint LR)
+    /// and unattributed provenance.
     pub fn new(conclusion: Term, evidence_set: Vec<Term>, joint_logit_delta: f64) -> Self {
         Self {
             id: JointContributionClauseId(u64::MAX),
             conclusion,
             evidence_set,
             joint_logit_delta,
+            provenance: Provenance::unattributed(),
         }
     }
 
@@ -169,6 +205,12 @@ impl JointContributionClause {
             "JointContributionClause::from_lr requires joint_lr > 0.0; got {joint_lr}"
         );
         Self::new(conclusion, evidence_set, joint_lr.ln())
+    }
+
+    /// Builder-style: attach a citation.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
     }
 }
 
