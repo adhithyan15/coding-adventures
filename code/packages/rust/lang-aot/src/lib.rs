@@ -463,15 +463,26 @@ pub fn compile_file_to_armv7_bin(
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
 
-    let cfg = iir_to_armv7::IIRArmv7Config::new(stem);
-    let words = iir_to_armv7::lower_iir_to_armv7(&module, &cfg)
-        .map_err(|e| LangAotError::Armv7BackendError(format!("{e}")))?;
-
-    // Flatten Vec<u32> → Vec<u8> via little-endian ARMv7 word encoding.
-    let mut bytes = Vec::with_capacity(words.len() * 4);
-    for w in &words {
-        bytes.extend_from_slice(&w.to_le_bytes());
+    // Phase 5 of the historical-arch backend migration: route
+    // through `aot_core` + `armv7-backend` (which itself returns
+    // little-endian-flattened bytes), same pattern as Phases 3+4
+    // for GE-225 and Intel 4004.
+    let _ = stem;
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = armv7_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Armv7BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
     }
+
     std::fs::write(out, &bytes)?;
     Ok(())
 }

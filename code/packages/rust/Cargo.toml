@@ -661,6 +661,8 @@ members = [
     "iir-to-intel4004",
     "intel4004-encoder",
     "intel4004-backend",
+    "armv7-encoder",
+    "armv7-backend",
     "iir-to-ge225",
     "ge225-encoder",
     "ge225-backend",

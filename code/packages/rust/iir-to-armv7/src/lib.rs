@@ -1,4 +1,26 @@
-//! # iir-to-armv7 — IIR → ARMv7 (A32) machine code backend (v0.1.0 skeleton).
+//! # iir-to-armv7 — IIR → ARMv7 (A32) machine code backend (v0.5.0).
+//!
+//! ## ⚠ DEPRECATED — use `armv7-backend` instead
+//!
+//! As of Phase 5 of the historical-arch backend migration
+//! ([`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md)),
+//! this crate is deprecated.  Use:
+//!
+//! - **`armv7-encoder`** — pure encoding tables.
+//! - **`armv7-backend`** — implements `jit_core::backend::Backend`
+//!   over monomorphised CIR.
+//!
+//! `lang-aot --emit=armv7` routes through the new pair as of
+//! Phase 5; existing public API of this crate continues to work
+//! for backward compatibility but emits deprecation warnings.
+//!
+//! Note: `armv7-backend` v0.1.0 is a **minimal-viable** port (just
+//! `const_*` + `ret_*`).  Programs that need the full op set
+//! (add/sub/and/or/xor/adc/sbb/cmp/branches/calls) currently
+//! fall through to `Backend::compile` returning `None`.  Future
+//! increments to `armv7-backend` can port more.
+//!
+//! ## Original module docs (still applicable to the lowering algorithm)
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u32>` of encoded
 //! 32-bit ARMv7-A (A32) instructions, suitable to drop into the
@@ -51,6 +73,7 @@
 //! ## Quick start
 //!
 //! ```
+//! #![allow(deprecated)]
 //! use interpreter_ir::IIRModule;
 //! use iir_to_armv7::{validate_for_armv7, lower_iir_to_armv7, IIRArmv7Config};
 //!
@@ -775,6 +798,10 @@ const SUPPORTED_OPS: &[&str] = &[
 /// in-tree `arm-simulator` halts deterministically.  Once at least
 /// one function is lowered, the BKPT is replaced by the function's
 /// real instruction stream.
+#[deprecated(
+    since = "0.5.0",
+    note = "use `armv7_backend::compile` over CIR — see code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md"
+)]
 pub fn lower_iir_to_armv7(
     module: &IIRModule,
     _cfg: &IIRArmv7Config,
