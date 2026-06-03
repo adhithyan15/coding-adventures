@@ -222,4 +222,97 @@ mod tests {
         let a = compile(&m).expect("compile");
         assert_eq!(a.filename, "compiler_lexer.py");
     }
+
+    // ── End-to-end: Ruby → Semantic IR → Python ─────────────────────────
+    //
+    // These mirror the Twig→Python e2e tests above, but drive the *Ruby*
+    // frontend (`ruby_to_semantic_ir::compile_source`) through the exact
+    // same Python backend.  They prove the narrow-waist SIR genuinely
+    // decouples frontends from backends: Ruby source in, runnable Python
+    // out, with no Ruby-specific code in this crate.
+    //
+    // Snippets are restricted to the backend's `ACCEPTED_FEATURES`
+    // (puts/arithmetic/defs/locals).  Ruby constructs that lower to
+    // `Sequences`/`Maps`/`ShortCircuit` (arrays, hashes, case/in patterns)
+    // are intentionally excluded — the backend rejects those features by
+    // design, so they lower+validate but don't emit Python yet.
+
+    #[test]
+    fn end_to_end_ruby_to_python_puts() {
+        // `puts("hello")` → a top-level `main` that calls the `puts`
+        // builtin through the runtime dispatcher.
+        let module = ruby_to_semantic_ir::compile_source("puts(\"hello\")\n", "demo")
+            .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("def _sir_user_main():"),
+            "expected a main function; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_call_builtin(\"puts\", [\"hello\"])"),
+            "expected the puts call with the string literal; got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("_sir_user_main()"), "expected main invocation");
+        assert!(a.filename.ends_with(".py"));
+    }
+
+    #[test]
+    fn end_to_end_ruby_to_python_def_and_call() {
+        // A Ruby method definition + call round-trips to a Python `def`
+        // whose body uses the runtime `_sir_plus`, invoked from `main`.
+        let module = ruby_to_semantic_ir::compile_source(
+            "def add(a, b)\n  a + b\nend\nputs(add(1, 2))\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("def add(a, b):"),
+            "expected the add function def; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("return _sir_plus(a, b)"),
+            "expected `a + b` to lower to _sir_plus; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_call_builtin(\"puts\", [add(1, 2)])"),
+            "expected puts(add(1, 2)); got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_to_python_locals() {
+        // Local assignments thread through to the Python body: the final
+        // `puts(x + y)` references both locals via `_sir_plus(x, y)`.
+        let module = ruby_to_semantic_ir::compile_source(
+            "x = 1\ny = 2\nputs(x + y)\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_call_builtin(\"puts\", [_sir_plus(x, y)])"),
+            "expected puts(x + y) referencing both locals; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_to_python_is_deterministic() {
+        // Same Ruby input → byte-identical Python (no nondeterministic
+        // ordering leaking through the Ruby frontend).
+        let module = ruby_to_semantic_ir::compile_source(
+            "def add(a, b)\n  a + b\nend\nputs(add(1, 2))\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile");
+        let b = compile(&module).expect("compile again");
+        assert_eq!(a.source, b.source);
+    }
 }

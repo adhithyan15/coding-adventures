@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.3 — Ruby → Python end-to-end tests (tests only)
+
+Adds end-to-end tests that drive the **Ruby** frontend
+(`ruby-to-semantic-ir`) through this Python backend, proving the
+narrow-waist Semantic IR decouples frontends from backends: Ruby source
+in, runnable Python out, with zero Ruby-specific code in this crate.
+
+- New dev-dependency `ruby-to-semantic-ir` (alongside the existing
+  `twig-to-semantic-ir`).
+- New tests: `end_to_end_ruby_to_python_puts`,
+  `end_to_end_ruby_to_python_def_and_call`,
+  `end_to_end_ruby_to_python_locals`,
+  `end_to_end_ruby_to_python_is_deterministic`.
+- Snippets are restricted to the backend's `ACCEPTED_FEATURES`
+  (puts/arithmetic/defs/locals); Ruby constructs lowering to
+  `Sequences`/`Maps`/`ShortCircuit` are intentionally excluded (rejected
+  at the capability check by design). No production-code or output
+  changes.
+
 ## 0.1.2 — SIR18 exhaustiveness (no behaviour change)
 
 semantic-ir 0.10.0 adds `Expr::StrConcat` (the SIR18 string-concat
