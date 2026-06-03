@@ -1,5 +1,10 @@
 //! Integration tests for `iir-to-armv7` v0.1.0 (A3 skeleton).
 //!
+//! Note: this crate is deprecated as of v0.5.0 (Phase 5 of the
+//! historical-arch backend migration).  Tests still exercise the
+//! deprecated API as a regression invariant.
+#![allow(deprecated)]
+//!
 //! Smoke-level — confirms the validator stub, the emitter shape, and
 //! the exact encoded `BKPT #0xFFFF` word (`0xE12FFF7F`).
 

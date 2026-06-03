@@ -1,5 +1,14 @@
 # iir-to-armv7
 
+> ⚠ **DEPRECATED as of v0.5.0**.  Use [`armv7-backend`](../armv7-backend)
+> instead.  Migration plan:
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+>
+> Note: `armv7-backend` v0.1.0 is a **minimal-viable** port — only
+> `const_*` + `ret_*` are covered.  The full op set
+> (add/sub/cmp/branches/calls) that this crate had can be ported
+> to `armv7-backend` in future increments.
+
 **IIR → ARMv7 (A32) machine code backend.**
 
 Lowers an `IIRModule` from the [interpreter-ir](../interpreter-ir/)
