@@ -3,6 +3,34 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 4: 100-case hands-off run (the scaled descent data point)
+
+Workflow `wuja6iixk`: **100/100 completed, 0 skipped, 0 compile failures**; 500
+agents, 17.7M tokens, ~60 min. Each seed self-found + perturbed its own case.
+Full writeup + cross-tabs: `runs/run-3-100case.md`; data: `run-3-100case-summary.json`.
+
+**Result:** framework correct **62**, plain correct **61** (parity); blind-judge
+wins framework **39** / plain **60** / tie 1.
+
+**The cross-tabs are the finding:**
+- Correctness is essentially tied and symmetric (both 54; only-fw 8; only-plain 7;
+  neither 31). The framework is NOT a worse diagnostician than frontier Claude.
+- **28 of plain's 60 wins are cases the framework ALSO got right but lost on
+  calibration/defensibility** (saturated posteriors + pseudo-precise logits +
+  unverifiable citations). That is the entire competitive gap.
+- The framework's genuine niche — won AND correct where plain was wrong — is **8/100**
+  (real but small; should grow as the base model weakens, per the descent).
+- **Saturation persists: 51/100 top posteriors >= 0.99, median 0.9907.** The
+  `mechanism` construct was available but the deriver didn't lean on it enough to
+  temper the headline — availability != use.
+
+**Takeaways:** (1) the machinery scales hands-off; (2) correctness parity with
+frontier is established; (3) the only thing between co-equal and ahead is
+CALIBRATION — the most fixable place to lose; the addressable pool is the 28
+right-but-overconfident losses. Next: make the deriver actually route correlated
+findings through mechanisms, and cap/hold the posterior so it never reads ~99%
+while a confirmatory `uncertain` marker is open.
+
 ## 2026-06-03 — Batch 3: first-principles redesign (ADJ53) — latent mechanism
 
 Reverted the softmax patch (it normalized already-inflated scores — a symptom

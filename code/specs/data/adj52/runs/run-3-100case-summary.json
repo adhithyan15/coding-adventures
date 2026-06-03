@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "case-1",
+    "domain": "adrenal_mass_with_catecholamine_cardiac_syndrome",
+    "fw_top": "diagnosis(pheochromocytoma_catecholamine_cardiac_syndrome) @ 0.9967",
+    "fw_next_step": "next_step(plasma_or_urinary_fractionated_metanephrines) \u2014 first-line biochemical confirmation of a catecholamine-secreti",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-2",
+    "domain": "cardiology_inflammatory_infiltrative_cardiomyopathy",
+    "fw_top": "diagnosis(cardiac_sarcoidosis) @ 0.9965",
+    "fw_next_step": "next_step(fdg_pet_guided_endomyocardial_biopsy) \u2014 image-guided endomyocardial biopsy targeting the FDG-avid inferoseptal",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-3",
+    "domain": "cardiology_intracardiac_mass_with_pericardial_effusion",
+    "fw_top": "diagnosis(primary_cardiac_angiosarcoma) (in a near-tie with diagnosis(tuberculous_cardiac_disease)); pivotal unknown is mass histology @ 0.8161",
+    "fw_next_step": "next_step(surgical_excision_or_biopsy_for_histology) \u2014 P=0.809 \u2014 obtain tissue for definitive histology/microbiology to ",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-4",
+    "domain": "catecholamine_excess_hypertensive_crisis_reversible_cardiomyopathy",
+    "fw_top": "diagnosis(pheochromocytoma_paraganglioma) @ 0.9956",
+    "fw_next_step": "next_step(measure_plasma_free_metanephrines) \u2014 plasma-free (or 24h urinary fractionated) metanephrines as the first-line",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-5",
+    "domain": "cardiology_paroxysmal_catecholamine_syndrome_differential",
+    "fw_top": "diagnosis(pheochromocytoma_paraganglioma) @ 0.9836",
+    "fw_next_step": "next_step(measure_plasma_free_metanephrines) \u2014 plasma free metanephrines / urinary fractionated metanephrines (LC-MS/MS,",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-6",
+    "domain": "pulmonology_diffuse_cystic_lung_disease",
+    "fw_top": "diagnosis(diffuse_cystic_pulmonary_adenocarcinoma) @ 0.9966",
+    "fw_next_step": "EBUS-TBNA of the FDG-avid hilar/mediastinal lymph nodes for tissue diagnosis and staging (next_step posterior 0.878), pr",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-7",
+    "domain": "pulmonary_pleural_effusion",
+    "fw_top": "diagnosis(pleuropulmonary_paragonimiasis) @ 0.9874",
+    "fw_next_step": "next_step(paragonimus_serology_elisa) \u2014 Paragonimus antibody/ELISA (>95% sensitive), the highest-posterior confirmatory ",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-8",
+    "domain": "pulmonology_diffuse_parenchymal_lung_disease",
+    "fw_top": "diagnosis(pulmonary_alveolar_proteinosis) @ 0.9937",
+    "fw_next_step": "next_step(bronchoalveolar_lavage_with_pas_stain) \u2014 BAL returning opaque/milky PAS-positive lipoproteinaceous fluid is di",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-9",
+    "domain": "pulmonology_nonresolving_pneumonia",
+    "fw_top": "diagnosis(organizing_pneumonia) @ 0.9448",
+    "fw_next_step": "Proceed with the planned bronchoscopy: transbronchial lung biopsy of the affected segment plus BAL, with histology and s",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-10",
+    "domain": "pulmonology_non_resolving_pneumonia",
+    "fw_top": "diagnosis(hydrocarbon_chemical_pneumonitis_lipoid) @ 0.9993",
+    "fw_next_step": "next_step(bronchoalveolar_lavage_and_transbronchial_biopsy) \u2014 confirm exogenous lipoid pneumonia by demonstrating lipid-",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-11",
+    "domain": "hereditary_glomerular_podocytopathy",
+    "fw_top": "diagnosis(lmx1b_associated_nephropathy) @ 0.9639",
+    "fw_next_step": "next_step(lmx1b_and_podocyte_gene_panel_sequencing) \u2014 molecular genetic testing of LMX1B and a hereditary-FSGS/podocyte ",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-12",
+    "domain": "nephrology_glomerular_vs_infectious_loin_pain_hematuria_aki",
+    "fw_top": "diagnosis(iga_nephropathy) @ 0.9817",
+    "fw_next_step": "next_step(kidney_biopsy) \u2014 posterior 0.931; tissue diagnosis (immunofluorescence) is the gold standard to confirm IgA ne",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-13",
+    "domain": "acquired_hemolytic_anemia_with_aki_and_venous_thrombosis",
+    "fw_top": "diagnosis(paroxysmal_nocturnal_hemoglobinuria) @ 0.9904",
+    "fw_next_step": "next_step(flaer_granulocyte_flow_cytometry) \u2014 high-sensitivity FLAER-based flow cytometry on GRANULOCYTES (P=0.938), whi",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-14",
+    "domain": "nephrology_crystalline_tubulopathy",
+    "fw_top": "diagnosis(calcium_oxalate_nephropathy) @ 0.9803",
+    "fw_next_step": "next_step(biopsy_crystal_typing_mtm_or_spectroscopy) \u2014 definitive crystal typing on the biopsy tissue (Michel-transport-",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-15",
+    "domain": "nephrology_hereditary_metabolic_ckd_with_multisystem_findings",
+    "fw_top": "diagnosis(fabry_disease) @ 0.9897",
+    "fw_next_step": "next_step(alpha_galactosidase_a_enzyme_assay) \u2014 plasma/leukocyte alpha-galactosidase A activity assay, the definitive no",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-16",
+    "domain": "endocrinology_adrenal_cortical_disorders",
+    "fw_top": "diagnosis(primary_adrenal_insufficiency) @ 0.9994",
+    "fw_next_step": "next_step(morning_cortisol_with_plasma_acth) \u2014 early-morning serum cortisol drawn with a paired plasma ACTH; a low corti",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-17",
+    "domain": "adult_hypoglycemia",
+    "fw_top": "diagnosis(insulinoma) @ 0.9491",
+    "fw_next_step": "Measure a plasma/urine oral-hypoglycemic-agent (sulfonylurea/glinide) screen on the critical (hypoglycemic) sample to ex",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-18",
+    "domain": "endocrinology_jaundice_hypercalcaemia_thyrotoxicosis",
+    "fw_top": "unifying_diagnosis(thyrotoxicosis) @ 0.9696",
+    "fw_next_step": "thyroid_radioiodine_uptake_scan (RAIU / Tc-99m pertechnetate thyroid scan) \u2014 definitive in this TRAb-negative thyrotoxic",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-19",
+    "domain": "hypoglycemia_differential_diagnosis",
+    "fw_top": "diagnosis(insulinoma) @ 0.9741",
+    "fw_next_step": "next_step(pancreatic_localization_eus) \u2014 contrast-enhanced endoscopic ultrasound to localize a pancreatic insulinoma (po",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-20",
+    "domain": "endocrinology_adrenal_disorders",
+    "fw_top": "diagnosis(primary_adrenal_insufficiency) @ 0.9977",
+    "fw_next_step": "next_step(acth_cosyntropin_stimulation_test_with_plasma_acth) \u2014 ACTH (cosyntropin/Synacthen) stimulation test with a pai",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-21",
+    "domain": "infectious_disease_zoonotic_fuo",
+    "fw_top": "diagnosis(q_fever_coxiella_burnetii) @ 0.9863",
+    "fw_next_step": "Coxiella burnetii phase II IgG/IgM serology by IFA (with a paired convalescent sample for a fourfold rise) plus whole-bl",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-22",
+    "domain": "systemic_inflammation_diagnostic_odyssey",
+    "fw_top": "diagnosis(subacute_infective_endocarditis) @ 0.9959",
+    "fw_next_step": "next_step(blood_cultures_and_echocardiography) \u2014 multiple sets of blood cultures plus echocardiography (the paired corne",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-23",
+    "domain": "infectious_disease_granulomatous_zoonosis",
+    "fw_top": "diagnosis(brucellosis) @ 0.9975",
+    "fw_next_step": "next_step(brucella_serology_and_prolonged_blood_marrow_culture) \u2014 Brucella serum agglutination titre (diagnostic at >=1:",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-24",
+    "domain": "infectious_disease_cardiology_blood_culture_negative_endocarditis",
+    "fw_top": "diagnosis(coxiella_burnetii_q_fever_endocarditis) @ 0.9942",
+    "fw_next_step": "next_step(targeted_fastidious_serology_coxiella_bartonella_brucella_plus_valve_pcr) \u2014 send Coxiella burnetii phase I/II ",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-25",
+    "domain": "infectious_disease_cardiology_febrile_inflammatory_pseudovasculitis",
+    "fw_top": "diagnosis(subacute_infective_endocarditis) @ 0.9855",
+    "fw_next_step": "next_step(echocardiography_plus_blood_cultures_for_endocarditis) \u2014 transthoracic then transoesophageal echocardiography ",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-26",
+    "domain": "hematology_chronic_cyanosis_with_erythrocytosis",
+    "fw_top": "diagnosis(recessive_congenital_methemoglobinemia_cyb5r_deficiency) @ 0.9797",
+    "fw_next_step": "next_step(co_oximetry_to_measure_methemoglobin_fraction) \u2014 multi-wavelength co-oximetry on the blood gas to directly spe",
+    "winner": "tie",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-27",
+    "domain": "hematology_chronic_cyanosis_saturation_gap",
+    "fw_top": "diagnosis(recessive_congenital_methemoglobinemia_cyb5r_deficiency) @ 0.9948",
+    "fw_next_step": "next_step(co_oximetry_to_measure_methemoglobin_fraction) \u2014 posterior 0.813; confirm by directly quantifying the methemog",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-28",
+    "domain": "marrow_replacing_small_round_blue_cell_population",
+    "fw_top": "diagnosis(metastatic_neuroblastoma) @ 0.9918",
+    "fw_next_step": "next_step(immunophenotyping_neural_lymphoid_panel) \u2014 immunohistochemistry / immunophenotyping on the already-available m",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-29",
+    "domain": "cutaneous_hematolymphoid_infiltration",
+    "fw_top": "diagnosis(histologic_transformation_to_aggressive_lymphoma_with_cutaneous_involvement) @ 0.9427",
+    "fw_next_step": "next_step(skin_biopsy_with_immunophenotyping_and_clonality) \u2014 biopsy the refractory plaque with immunophenotyping and B-",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-30",
+    "domain": "gastrointestinal_luminal_malignancy_and_metastatic_deposits",
+    "fw_top": "diagnosis(metastatic_malignant_melanoma) @ 0.9861",
+    "fw_next_step": "next_step(immunohistochemistry_lineage_panel_on_biopsy) \u2014 S100/SOX10/HMB-45/Melan-A vs cytokeratin/EMA vs CD45/CD20 vs C",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-31",
+    "domain": "thoracic_neuroendocrine_tumor",
+    "fw_top": "diagnosis(atypical_carcinoid) @ 0.9306",
+    "fw_next_step": "Refer for surgical resection at the tertiary centre with full proliferation-index pathology (Ki-67 + mitotic count) on t",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-32",
+    "domain": "polymyalgic_syndrome_in_older_adult",
+    "fw_top": "diagnosis(metastatic_bone_carcinoma_pmr_mimic) @ 0.968",
+    "fw_next_step": "next_step(serum_psa_and_skeletal_imaging_for_malignancy) \u2014 serum PSA plus skeletal imaging (bone scan / cross-sectional ",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-33",
+    "domain": "esophageal_subepithelial_tumor",
+    "fw_top": "diagnosis(submucosal_growing_esophageal_carcinoma) @ 0.927",
+    "fw_next_step": "next_step(eus_guided_fna_biopsy_before_resection) \u2014 obtain EUS-guided FNA / fine-needle biopsy with cytology + immunohis",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-34",
+    "domain": "urologic_oncology_prostatic_mass",
+    "fw_top": "diagnosis(prostatic_stromal_sarcoma) @ 0.9794",
+    "fw_next_step": "next_step(core_biopsy_histopathology_with_immunohistochemistry) \u2014 definitive tissue typing (IHC) on the transrectal core",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-35",
+    "domain": "pulmonology_refractory_cavitary_pulmonary_mass",
+    "fw_top": "unifying_diagnosis(primary_pulmonary_lymphoma) @ 0.96",
+    "fw_next_step": "next_step(image_guided_core_needle_biopsy_of_mass) \u2014 CT-guided core-needle biopsy of the lung mass (or the new splenic l",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-36",
+    "domain": "systemic_inflammatory_illness_mimicking_rheumatologic_disease",
+    "fw_top": "diagnosis(subacute_infective_endocarditis) @ 0.9809",
+    "fw_next_step": "next_step(blood_cultures_and_echocardiography_duke_criteria) \u2014 obtain three sets of blood cultures and echocardiography ",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-37",
+    "domain": "metabolic_myopathy",
+    "fw_top": "diagnosis(mcardle_disease_gsd_v) @ 0.9923",
+    "fw_next_step": "next_step(non_ischaemic_forearm_exercise_test) \u2014 posterior 0.815; flat/absent venous lactate rise with an exaggerated am",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-38",
+    "domain": "peripheral_neurocutaneous_disease_differential",
+    "fw_top": "diagnosis(hansen_disease_leprosy) @ 0.9785",
+    "fw_next_step": "next_step(slit_skin_smear_and_fite_faraco_biopsy) \u2014 slit-skin smear plus skin/thickened-nerve biopsy from an active lesi",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-39",
+    "domain": "systemic_vasculitis_differential",
+    "fw_top": "diagnosis(polyarteritis_nodosa) @ 0.9865",
+    "fw_next_step": "next_step(combined_nerve_and_muscle_biopsy) \u2014 combined superficial peroneal nerve + peroneus brevis muscle biopsy (highe",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-40",
+    "domain": "proximal_myalgia_with_elevated_ck_metabolic_vs_inflammatory",
+    "fw_top": "diagnosis(mcardle_disease_gsd_v) @ 0.9978",
+    "fw_next_step": "next_step(pygm_molecular_genetic_testing) \u2014 PYGM molecular genetic testing (P=0.738), the gold-standard confirmatory tes",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-41",
+    "domain": "autoimmune_paraneoplastic_stiff_person_spectrum",
+    "fw_top": "diagnosis(paraneoplastic_perm_glycine_receptor_thymoma) \u2014 paraneoplastic Progressive Encephalomyelitis with Rigidity and Myoclonus (PERM), glycine-receptor-antibody phenotype, driven by recurrent thymoma @ 0.9957",
+    "fw_next_step": "Treat the recurrent thymoma (resect/oncologic treatment) and start immunotherapy (P=0.833); in parallel, formally confir",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-42",
+    "domain": "adult_recurrent_stroke_like_episodes_small_vessel_differential",
+    "fw_top": "diagnosis(neuronal_intranuclear_inclusion_disease) @ 0.991",
+    "fw_next_step": "next_step(skin_biopsy_for_intranuclear_inclusions) \u2014 skin biopsy with electron microscopy for non-membranous intranuclea",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "incorrect",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-43",
+    "domain": "longitudinally_extensive_myelopathy_steroid_refractory",
+    "fw_top": "diagnosis(primary_intramedullary_spinal_cord_lymphoma) @ 0.9435",
+    "fw_next_step": "next_step(spinal_cord_biopsy) \u2014 obtain tissue (after/alongside whole-body PET-CT staging and vascular exclusion); ideall",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-44",
+    "domain": "progressive_adult_multidomain_encephalopathy_with_refractory_epilepsy",
+    "fw_top": "unifying_diagnosis(mitochondrial_encephalopathy_polg_spectrum) @ 0.9439",
+    "fw_next_step": "Mitochondrial genetic testing (POLG sequencing + mtDNA point mutations A3243G/A8344G + deletions), P = 0.818; meanwhile ",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-45",
+    "domain": "chronic_basal_meningoencephalitis_with_cns_arteritis",
+    "fw_top": "diagnosis(neurobrucellosis) @ 0.9999",
+    "fw_next_step": "Order targeted Brucella testing \u2014 serum and CSF agglutination / Rose Bengal and anti-Brucella antibody titer (plus Bruce",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-46",
+    "domain": "chronic_malabsorptive_diarrhea_with_infiltrative_multisystem_disease",
+    "fw_top": "diagnosis(systemic_al_light_chain_amyloidosis) @ 0.9974",
+    "fw_next_step": "next_step(serum_urine_immunofixation_and_free_light_chains) \u2014 serum + urine immunofixation and serum free light-chain ra",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-47",
+    "domain": "gastroenterology_colitis",
+    "fw_top": "diagnosis(intestinal_amebiasis) @ 0.9692",
+    "fw_next_step": "next_step(exclude_amebiasis_and_strongyloides_before_immunosuppression) \u2014 obtain E. histolytica stool antigen / serology",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-48",
+    "domain": "chronic_diarrhea",
+    "fw_top": "diagnosis(small_bowel_crohn_disease) @ 0.7309",
+    "fw_next_step": "next_step(upper_endoscopy_duodenal_biopsy_celiac_serology_and_small_bowel_imaging)",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-49",
+    "domain": "gi_lipid_laden_macrophage_infiltration",
+    "fw_top": "diagnosis(whipple_disease) @ 0.8748",
+    "fw_next_step": "next_step(pas_diastase_with_reflex_afb_and_tropheryma_pcr) \u2014 PAS with diastase on the existing duodenal/colonic biopsies",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "incorrect",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-50",
+    "domain": "esophageal_dysphagia_lesion_workup",
+    "fw_top": "diagnosis(esophageal_adenocarcinoma) @ 0.9804",
+    "fw_next_step": "Await biopsy histopathology to confirm carcinoma and tumor type; in parallel proceed to locoregional staging with EUS (T",
+    "winner": "A",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-51",
+    "domain": "chronic_cutaneous_ulcer_neutrophilic_vs_deep_fungal_infection",
+    "fw_top": "diagnosis(cutaneous_histoplasmosis) @ 0.9953",
+    "fw_next_step": "next_step(fungal_culture_and_histoplasma_antigen) \u2014 send tissue for fungal culture (already done on the second biopsy) p",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-52",
+    "domain": "chronic_cutaneous_ulcer_implantation_mycosis",
+    "fw_top": "diagnosis(sporotrichosis) @ 0.9989",
+    "fw_next_step": "Send/await fungal CULTURE and speciation of the fresh tissue on Sabouraud dextrose agar with thermal-dimorphism / molecu",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-53",
+    "domain": "cutaneous_ulcer_pyoderma_gangrenosum_mimic_diagnostic_reasoning",
+    "fw_top": "revised_diagnosis(cutaneous_sporotrichosis) @ 0.8915",
+    "fw_next_step": "Repeat tissue sampling with fragments sent for FUNGAL, MYCOBACTERIAL and BACTERIAL culture plus special stains (GMS/Fite",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-54",
+    "domain": "cutaneous_facial_nodule_with_steroid_unresponsive_eruption",
+    "fw_top": "diagnosis(cutaneous_angiosarcoma) @ 0.9853",
+    "fw_next_step": "next_step(biopsy_both_lesions_with_immunohistochemistry) \u2014 incisional/excisional biopsy of the forehead nodule PLUS scou",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-55",
+    "domain": "acute_neutrophilic_dermatosis_in_hematologic_malignancy",
+    "fw_top": "diagnosis(sweet_syndrome) @ 0.9984",
+    "fw_next_step": "next_step(skin_biopsy_histopathology) \u2014 lesional skin biopsy for histopathology (expect dense dermal neutrophilic infilt",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-56",
+    "domain": "pyrexia_of_unknown_origin_with_cholestatic_hepatosplenic_lymphadenopathy",
+    "fw_top": "diagnosis(hepatic_sarcoidosis) @ 0.9758",
+    "fw_next_step": "next_step(liver_or_lymph_node_biopsy_for_granuloma) \u2014 biopsy of the liver or an accessible gallium-avid node seeking non",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-57",
+    "domain": "chronic_cholestatic_granulomatous_liver_disease",
+    "fw_top": "diagnosis(hepatic_sarcoidosis) @ 0.9721",
+    "fw_next_step": "next_step(skin_punch_biopsy_of_plaque_for_noncaseating_granuloma) \u2014 punch-biopsy the new extensor-surface plaque (P=0.86",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-58",
+    "domain": "pyrexia_of_unknown_origin_with_cholestatic_hepatitis",
+    "fw_top": "diagnosis(polyarteritis_nodosa) @ 0.9761",
+    "fw_next_step": "next_step(liver_biopsy_histology_with_afb_stain_and_immunohistochemistry) \u2014 P=0.921. The percutaneous liver biopsy alrea",
+    "winner": "A",
+    "framework_correct": "incorrect",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-59",
+    "domain": "hepatomegaly_with_transaminase_elevation_in_diabetes",
+    "fw_top": "diagnosis(glycogenic_hepatopathy) @ 0.9956",
+    "fw_next_step": "next_step(liver_biopsy_with_pas_diastase) \u2014 percutaneous liver biopsy with PAS / PAS-diastase staining to confirm PAS-po",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-60",
+    "domain": "infiltrative_liver_disease_isolated_cholestatic_pattern",
+    "fw_top": "diagnosis(hepatic_al_amyloidosis) @ 0.9952",
+    "fw_next_step": "Tissue biopsy (liver, or surrogate fat-pad/bone-marrow) with Congo-red staining for apple-green birefringence and reflex",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-61",
+    "domain": "inherited_susceptibility_to_disseminated_mycobacterial_disease",
+    "fw_top": "diagnosis(msmd_il12rb1_deficiency) @ 0.9964",
+    "fw_next_step": "next_step(genetic_immunologic_msmd_workup_with_mycobacterial_culture) \u2014 flow cytometry for IL-12Rbeta1 / IFN-gammaR1 sur",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-62",
+    "domain": "antibody_deficiency_vs_plasma_cell_dyscrasia",
+    "fw_top": "diagnosis(multiple_myeloma_igg_with_immunoparesis) @ 0.997",
+    "fw_next_step": "next_step(spep_immunofixation_and_serum_free_light_chains) \u2014 serum protein electrophoresis + immunofixation + serum free",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-63",
+    "domain": "fever_of_unknown_origin_systemic_inflammatory_workup",
+    "fw_top": "diagnosis(adult_onset_still_disease) @ 0.9751",
+    "fw_next_step": "next_step(apply_yamaguchi_and_trial_corticosteroids) \u2014 apply the Yamaguchi criteria now that infection/malignancy are ex",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-64",
+    "domain": "inherited_microthrombocytopenia_with_immunodeficiency",
+    "fw_top": "diagnosis(wiskott_aldrich_syndrome) @ 0.9894",
+    "fw_next_step": "next_step(was_gene_sequencing_and_wasp_flow_cytometry) \u2014 WASp flow cytometry plus WAS-gene sequencing with an actinopath",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-65",
+    "domain": "inherited_bone_marrow_failure_immunodeficiency",
+    "fw_top": "diagnosis(gata2_deficiency) @ 0.9996",
+    "fw_next_step": "next_step(gata2_gene_sequencing) \u2014 GATA2 gene sequencing (P=0.90), the definitive confirmatory test; supportive DCML imm",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-66",
+    "domain": "biliary_disease_with_mechanical_bowel_obstruction",
+    "fw_top": "diagnosis(gallstone_ileus) @ 0.9933",
+    "fw_next_step": "next_step(ct_abdomen_pelvis_for_obstruction_and_rigler_triad) \u2014 CT abdomen/pelvis to look for the Rigler triad (ectopic ",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-67",
+    "domain": "intracranial_arteriopathy_with_multifocal_stroke_in_young_adult",
+    "fw_top": "diagnosis(primary_angiitis_cns) @ 0.989",
+    "fw_next_step": "next_step(vessel_wall_mri_and_lumbar_puncture) \u2014 high-resolution vessel-wall MRI (concentric wall enhancement = vasculit",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-68",
+    "domain": "acute_aortic_syndrome_emergency_cardiovascular",
+    "fw_top": "diagnosis(aortic_dissection_with_pericardial_tamponade) @ 0.9998",
+    "fw_next_step": "next_step(bedside_cardiac_echo_for_effusion_tamponade_and_aortic_root) \u2014 immediate focused bedside cardiac POCUS to dete",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-69",
+    "domain": "acute_infectious_diarrheal_illness_with_severe_systemic_response",
+    "fw_top": "diagnosis(severe_fulminant_cdiff_colitis) @ 0.9801",
+    "fw_next_step": "Repeat/confirm with a SENSITIVE C. difficile NAAT plus a stool enteric-pathogen panel/culture (the toxin EIA is insensit",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-70",
+    "domain": "acute_mi_pattern_with_normal_coronaries",
+    "fw_top": "unifying_diagnosis(post_streptococcal_nonrheumatic_myocarditis) @ 0.9949",
+    "fw_next_step": "Cardiac MRI with late gadolinium enhancement + T2 mapping (Lake Louise / AHA MINOCA Class IB) to confirm myocarditis (su",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-71",
+    "domain": "otogenic_skull_base_with_multiple_cranial_neuropathies",
+    "fw_top": "unifying_diagnosis(skull_base_osteomyelitis_from_necrotizing_otitis_externa) @ 0.9974",
+    "fw_next_step": "next_step(skull_base_ct_and_mri_to_localise_and_map_cranial_nerves) \u2014 high-resolution CT (cortical/trabecular bone destr",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-72",
+    "domain": "pituitary_and_hypothalamic_pituitary_axis_dysfunction",
+    "fw_top": "unifying_diagnosis(secondary_central_hypopituitarism_with_adrenal_crisis) @ 0.9966",
+    "fw_next_step": "next_step(empirical_iv_hydrocortisone_then_confirm_axis) \u2014 give immediate stress-dose IV hydrocortisone for the suspecte",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-73",
+    "domain": "elderly_systemic_inflammatory_syndrome_with_glomerular_renal_disease",
+    "fw_top": "unifying_diagnosis(polymyalgia_rheumatica_with_associated_nephrotic_syndrome) @ 0.9744",
+    "fw_next_step": "Empirical low-dose glucocorticoid (e.g. prednisolone ~10 mg/day) trial as a diagnostic-and-therapeutic step under a clin",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-74",
+    "domain": "autoimmune_limbic_encephalitis",
+    "fw_top": "diagnosis(anti_lgi1_limbic_encephalitis) @ 0.9965",
+    "fw_next_step": "Send serum AND CSF LGI1 (VGKC-complex) antibodies \u2014 the first-line confirmatory test (posterior 0.939). Faciobrachial dy",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-75",
+    "domain": "multifocal_lytic_bone_disease_workup",
+    "fw_top": "unifying_diagnosis(skeletal_metastases_from_occult_primary_carcinoma) @ 0.8927",
+    "fw_next_step": "next_step(biopsy_histopathology_with_immunohistochemistry) \u2014 obtain histopathology with immunohistochemistry / tissue-of",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-76",
+    "domain": "intraluminal_venous_mass",
+    "fw_top": "diagnosis(venous_leiomyosarcoma) @ 0.9989",
+    "fw_next_step": "next_step(biopsy_venous_lesion_with_smooth_muscle_immunohistochemistry) \u2014 image-guided biopsy of the femoral-vein lesion",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-77",
+    "domain": "intraluminal_venous_mass",
+    "fw_top": "diagnosis(venous_leiomyosarcoma) @ 0.9967",
+    "fw_next_step": "next_step(image_guided_biopsy_histopathology_immunohistochemistry) \u2014 image-guided biopsy with histopathology and IHC (sm",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-78",
+    "domain": "eosinophilia_associated_digital_ischemia",
+    "fw_top": "unifying_diagnosis(idiopathic_hypereosinophilic_syndrome_with_eosinophilic_vasculopathy) @ 0.9976",
+    "fw_next_step": "Skin + subcutaneous edge biopsy histology (eosinophilic small-vessel infiltration/thrombosis without granuloma vs granul",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-79",
+    "domain": "venous_then_arterial_thromboembolism_single_limb",
+    "fw_top": "cause(paradoxical_embolism) @ 0.9928",
+    "fw_next_step": "next_step(echocardiography_with_agitated_saline_bubble_study) \u2014 transthoracic echo with agitated-saline bubble study (TE",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-80",
+    "domain": "non_inflammatory_visceral_arteriopathy_differential",
+    "fw_top": "unifying_diagnosis(segmental_arterial_mediolysis) @ 0.9948",
+    "fw_next_step": "Exclude active vasculitis (negative serologies / persistently normal inflammatory markers) and obtain interval follow-up",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-81",
+    "domain": "deep_neck_space_collection_workup",
+    "fw_top": "diagnosis(tuberculous_retropharyngeal_cold_abscess) @ 0.9228",
+    "fw_next_step": "next_step(drainage_with_microbiology_tb_culture_and_histology) \u2014 at incision & drainage, send the aspirate/wall for aero",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-82",
+    "domain": "systemic_inflammatory_fever_arthritis_rash_syndrome",
+    "fw_top": "diagnosis(adult_onset_still_disease) @ 0.9974",
+    "fw_next_step": "next_step(excisional_lymph_node_biopsy) \u2014 posterior 0.774; excise the new firm/fixed/painless left cervical node to excl",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-83",
+    "domain": "systemic_autoinflammatory_febrile_polyarthritis_with_hyperferritinemia",
+    "fw_top": "diagnosis(adult_onset_stills_disease) @ 0.9926",
+    "fw_next_step": "Excisional lymph-node biopsy of the new fixed left cervical node to exclude lymphoma before escalating immunosuppression",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-84",
+    "domain": "destructive_upper_aerodigestive_lesion_vasculitis_vs_infection_vs_neoplasm",
+    "fw_top": "diagnosis(aggressive_lymphoproliferative_neoplasm) @ 0.9965",
+    "fw_next_step": "Send the arm-muscle (and ideally a repeat deep laryngeal) tissue for a lineage immunohistochemistry panel with EBER in-s",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-85",
+    "domain": "otology_neurotology_temporal_bone_mass",
+    "fw_top": "diagnosis(temporal_bone_meningioma) @ 0.9751",
+    "fw_next_step": "Histopathology / immunohistochemistry of the debulked specimen \u2014 EMA/vimentin/PR-positive, S100/CD34-negative meningothe",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-86",
+    "domain": "febrile_renal_mass_in_immunocompromised_host",
+    "fw_top": "diagnosis(renal_or_extranodal_lymphoma) @ 0.9939",
+    "fw_next_step": "Repeat image-guided core biopsy targeted to the FDG-avid viable peripheral rim (avoiding the necrotic centre), with tiss",
+    "winner": "A",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-87",
+    "domain": "chronic_lower_urinary_tract_symptoms_with_suspicious_bladder_cytology",
+    "fw_top": "diagnosis(bladder_carcinoma_in_situ) @ 0.9749",
+    "fw_next_step": "next_step(deeper_transurethral_resection_pathology_with_xpert_mtb_rif) \u2014 send the deeper transurethral resection/electro",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-88",
+    "domain": "prostate_psa_evaluation",
+    "fw_top": "diagnosis(prostate_cancer_progression) @ 0.9471",
+    "fw_next_step": "Obtain pre-biopsy/staging multiparametric MRI (PI-RADS/PRECISE) to localise disease, assess extracapsular extension and ",
+    "winner": "A",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-89",
+    "domain": "bladder_wall_lesion_with_uti_tumor_mimic",
+    "fw_top": "diagnosis(malakoplakia) @ 0.9805",
+    "fw_next_step": "Histopathology of the resected bladder segment with special stains (von Kossa, PAS, Prussian blue) looking for von Hanse",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-90",
+    "domain": "catecholamine_secreting_tumor_secondary_hypertension",
+    "fw_top": "diagnosis(bladder_paraganglioma) @ 0.9986",
+    "fw_next_step": "Preoperative alpha-adrenergic blockade (10-14 days) then surgical resection; confirm/localise with MIBG or DOTATATE func",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-91",
+    "domain": "autoinflammatory_cold_urticarial_fever_syndrome",
+    "fw_top": "diagnosis(muckle_wells_caps_variant) @ 0.9353",
+    "fw_next_step": "next_step(workup_crp_saa_spep_immunofixation_audiogram_nlrp3_testing) \u2014 confirm autoinflammation (CRP/SAA), characterize",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-92",
+    "domain": "clinical_anaphylaxis_with_elevated_baseline_tryptase",
+    "fw_top": "diagnosis(systemic_mastocytosis) @ 0.9992",
+    "fw_next_step": "High-sensitivity KIT D816V mutation analysis on marrow/peripheral blood plus CD25/CD2/CD30 aberrant-marker immunophenoty",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-93",
+    "domain": "recurrent_angioedema_complement_c1_inhibitor_differential",
+    "fw_top": "diagnosis(acquired_c1_inhibitor_deficiency) @ 0.9981",
+    "fw_next_step": "next_step(screen_for_b_cell_lymphoproliferative_disorder) \u2014 P=0.885; screen for an underlying B-cell lymphoproliferative",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-94",
+    "domain": "mast_cell_activation_and_clonal_mast_cell_disease",
+    "fw_top": "diagnosis(indolent_systemic_mastocytosis) @ 0.9973",
+    "fw_next_step": "next_step(bone_marrow_biopsy_with_kit_d816v_and_cd25) \u2014 bone marrow biopsy with KIT D816V testing and CD25/CD2 immunophe",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-95",
+    "domain": "hereditary_autoinflammatory_periodic_fever_with_urticarial_rash",
+    "fw_top": "diagnosis(muckle_wells_syndrome) @ 0.9988",
+    "fw_next_step": "Targeted NLRP3 gene sequencing to confirm the cryopyrin-associated periodic syndrome (Muckle-Wells), with a diagnostic-t",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-96",
+    "domain": "adult_onset_hypogammaglobulinemia_granulomatous_multisystem_disease",
+    "fw_top": "diagnosis(common_variable_immunodeficiency) @ 0.9993",
+    "fw_next_step": "Confirm CVID (impaired specific-antibody/vaccine response; secondary causes already clinically excluded) and START immun",
+    "winner": "A",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-97",
+    "domain": "steroid_refractory_inflammatory_rheumatic_syndrome",
+    "fw_top": "diagnosis(multiple_myeloma) @ 0.9877",
+    "fw_next_step": "next_step(serum_and_urine_protein_electrophoresis_with_free_light_chains) \u2014 serum/urine protein electrophoresis with imm",
+    "winner": "B",
+    "framework_correct": "incorrect",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-98",
+    "domain": "unexplained_multisystem_illness_hypoxemia_imaging_mismatch_cytopenias",
+    "fw_top": "diagnosis(intravascular_large_b_cell_lymphoma) @ 0.9951",
+    "fw_next_step": "next_step(random_skin_biopsy) \u2014 multiple deep random punch/incisional biopsies of normal-appearing skin (thigh/abdomen/a",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-99",
+    "domain": "heavy_metal_toxic_exposure_vs_acute_porphyria",
+    "fw_top": "diagnosis(lead_poisoning) @ 0.9982",
+    "fw_next_step": "Obtain a venous blood lead level (next_step posterior 0.98) \u2014 the definitive confirmatory test that resolves the lead-vs",
+    "winner": "B",
+    "framework_correct": "correct",
+    "plain_correct": "correct",
+    "diagnosis_unchanged": true
+  },
+  {
+    "id": "case-100",
+    "domain": "metabolic_myopathy_exercise_intolerance_workup",
+    "fw_top": "diagnosis(mcardle_disease_gsd_v) @ 0.9803",
+    "fw_next_step": "next_step(forearm_exercise_test_lactate_ammonia) \u2014 a non-ischaemic/ischaemic forearm exercise test (looking for a flat/b",
+    "winner": "B",
+    "framework_correct": "partial",
+    "plain_correct": "partial",
+    "diagnosis_unchanged": true
+  }
+]
