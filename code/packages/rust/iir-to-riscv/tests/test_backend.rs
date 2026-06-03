@@ -1,5 +1,10 @@
 //! Integration tests for `iir-to-riscv`.
 //!
+//! Note: this crate is deprecated as of v0.4.0 (Phase 7 of the
+//! historical-arch backend migration, the FINAL lane).  Tests still
+//! exercise the deprecated API as a regression invariant.
+#![allow(deprecated)]
+//!
 //! Test groups (grow with each release):
 //!
 //! 1. Validator behaviour

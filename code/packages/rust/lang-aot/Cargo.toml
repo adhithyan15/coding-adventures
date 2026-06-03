@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.11.0 (A5++++): adds `--emit=ge225` flag (aliases `ge-225`, `225`) that routes source → IIR → GE-225 machine code (.bin) via iir-to-ge225, cross-platform.  The GE-225 (1959) was the mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz — primarily a BASIC fit.  Previous targets: v0.10.0 (A4+++ intel4004), v0.9.0 (A3+++ armv7), v0.8.0 (A2+++ intel8008), v0.7.0 (A1+++ riscv32)."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.12.0 (Migration Phase 7, FINAL lane): routes `--emit=riscv32` through aot_core::infer + aot_core::specialise + riscv_backend::compile (Backend trait over CIR) instead of iir_to_riscv (now deprecated).  This closes the historical-arch backend migration — every arch backend now consumes typed CIR via the Backend trait.  Previous: v0.11.0 (Phase 6 intel8008 migration), v0.10.0 (A4+++ intel4004), v0.9.0 (A3+++ armv7)."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -14,7 +14,8 @@ oct-iir-compiler     = { path = "../oct-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
-iir-to-riscv          = { path = "../iir-to-riscv" }
+riscv-backend         = { path = "../riscv-backend" }
+riscv-encoder         = { path = "../riscv-encoder" }
 intel8008-backend     = { path = "../intel8008-backend" }
 intel8008-encoder     = { path = "../intel8008-encoder" }
 armv7-backend         = { path = "../armv7-backend" }

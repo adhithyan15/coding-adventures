@@ -1,4 +1,17 @@
-//! # iir-to-riscv — IIR → RV32I machine code backend.
+//! # iir-to-riscv — IIR → RV32I machine code backend (v0.4.0).
+//!
+//! ## ⚠ DEPRECATED — use `riscv-backend` instead
+//!
+//! As of Phase 7 of the historical-arch backend migration (the
+//! FINAL lane — the architectural-correctness migration is now
+//! complete), this crate is deprecated.  Use `riscv-encoder`
+//! for byte encoding and `riscv-backend` for CIR lowering via
+//! the `Backend` trait.  `riscv-backend` v0.1.0 is a minimal-
+//! viable port (just `const_*` + `ret_*`); the rich coverage
+//! this crate had (arith / cmp / branches / calls / ecall
+//! print_i64) can be ported in future increments.
+//!
+//! ## Original module docs (still applicable)
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u32>` of encoded
 //! 32-bit RISC-V instructions, suitable to drop into the in-tree
@@ -42,9 +55,10 @@
 //! - Deterministic test surface (`assert!(words[0] == 0x...)`).
 //! - No GNU-vs-LLVM assembler syntax coupling.
 //!
-//! ## Quick start
+//! ## Quick start (deprecated path)
 //!
 //! ```
+//! #![allow(deprecated)]
 //! use interpreter_ir::{IIRModule, IIRFunction, IIRInstr, Operand};
 //! use iir_to_riscv::{lower_iir_to_riscv, IIRRiscvConfig};
 //!
@@ -334,6 +348,13 @@ pub fn validate_for_riscv(module: &IIRModule) -> Vec<String> {
 /// Each function is independent — no cross-function calls in v0.2.0 (that
 /// requires real PC-relative `jal` + symbol resolution, which lands in
 /// A1++).
+#[deprecated(
+    since = "0.4.0",
+    note = "Phase 7 of the historical-arch backend migration replaced this \
+            entry point.  Use `riscv-backend::compile` (Backend trait over \
+            CIR) plus `aot_core::infer` + `aot_core::specialise` instead.  \
+            See code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
+)]
 pub fn lower_iir_to_riscv(
     module: &IIRModule,
     _cfg: &IIRRiscvConfig,
