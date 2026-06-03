@@ -304,10 +304,15 @@ fn format_term(t: &Term) -> String {
     }
 }
 
+/// Truncate to at most `n` characters, char-boundary-safe. Slicing a
+/// `str` by byte offset panics if the cut lands inside a multibyte
+/// UTF-8 sequence — and rulebook source / citations are arbitrary
+/// UTF-8 (accents, em-dashes, CJK). Counting by `chars()` avoids that
+/// entirely.
 fn truncate(s: &str, n: usize) -> String {
-    if s.len() <= n {
-        s.to_string()
-    } else {
-        format!("{}...", &s[..n.saturating_sub(3)])
+    if s.chars().count() <= n {
+        return s.to_string();
     }
+    let truncated: String = s.chars().take(n.saturating_sub(3)).collect();
+    format!("{truncated}...")
 }
