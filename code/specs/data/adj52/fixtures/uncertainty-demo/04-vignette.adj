@@ -1,0 +1,6 @@
+% ADJ52 counterfactual-panel demo vignette. Two findings observed; the
+% biopsy is deliberately NOT observed so it remains an open uncertainty
+% the runner's panel can reason about.
+observe imaging(mediastinal_mass)
+observe response(no_improvement_on_antibiotics)
+? diagnosis(malignancy)

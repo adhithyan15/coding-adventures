@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "what": "Plain-Claude control arm on the McArdle/PMR case prose (no framework). Was OUTPUT B to the blind judge.",
+    "run_date": "2026-06-03"
+  },
+  "answers": [
+    {
+      "question": "What is the most likely diagnosis?",
+      "answer": "An underlying metabolic myopathy — most likely a glycogenolytic glycogen storage disorder such as McArdle disease (myophosphorylase deficiency, GSD V), unmasked on / coexisting with a polymyalgia-rheumatica-like inflammatory presentation. Lifelong exertional myalgia/cramps, childhood exercise intolerance (carried off the track after a short sprint; possible second-wind), and the disproportionate CK rise to 3473 after exertion point away from PMR alone toward metabolic myopathy.",
+      "confidence": "Moderate"
+    },
+    {
+      "question": "What is the recommended next action?",
+      "answer": "Pursue metabolic myopathy work-up rather than escalating immunosuppression: non-ischaemic forearm exercise test (flat lactate with rising ammonia suggests a glycogenolytic defect), confirmatory muscle biopsy (myophosphorylase histochemistry) and/or PYGM genetic testing; counsel on rhabdomyolysis risk; steroids alone are inadequate.",
+      "confidence": "Moderate-to-high that metabolic workup is the right next step; Moderate that McArdle specifically is the cause"
+    }
+  ],
+  "reasoning": "Opens looking like PMR (age>50, proximal girdle myalgia/stiffness, high CRP/ESR, steroid response), but PMR does not raise CK; CK 811 rising to 3473 after exertion indicates true myofibre injury. Lifelong exertional cramps + childhood inability to complete a short sprint is the textbook glycogenolytic metabolic-myopathy picture (McArdle/GSD V, PYGM). Negative myositis serology and absence of MRI edema argue against inflammatory myositis. Recent T2DM likely incidental. Next step is metabolic/genetic, not immunological.",
+  "_assessment": "Correct diagnosis and disposition, at appropriately graded (Moderate) confidence. Did NOT fall for the PMR trap."
+}

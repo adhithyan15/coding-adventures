@@ -1,0 +1,15 @@
+[package]
+name = "adj52-experiment"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ52 experiment runner — extends the ADJ51 runner with a first-class counterfactual / value-of-information / kickback panel surfaced from the LR-aggregation engine."
+publish = false
+
+[dependencies]
+adj-lang = { path = "../../../packages/rust/adj-lang" }
+logic-core = { path = "../../../packages/rust/logic-core" }
+logic-engine = { path = "../../../packages/rust/logic-engine" }
+
+[[bin]]
+name = "adj52"
+path = "src/main.rs"
