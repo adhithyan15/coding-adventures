@@ -1,0 +1,14 @@
+[package]
+name = "intel4004-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 4004 backend for jit-core / aot-core.  Lowers a `Vec<CIRInstr>` into Intel 4004 machine code via `intel4004-encoder`.  Plugs into both `aot-core` (AOT byte emission) and `jit-core` (via the shared Backend trait) — emit-only target (no in-process simulator; bytes go to a downstream Intel 4004 simulator / EPROM burner).  The Intel 4004 (1971) is the world's first commercial microprocessor.  See code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
+
+[lib]
+name = "intel4004_backend"
+path = "src/lib.rs"
+
+[dependencies]
+intel4004-encoder = { path = "../intel4004-encoder" }
+jit-core          = { path = "../jit-core" }
+vm-core           = { path = "../vm-core" }

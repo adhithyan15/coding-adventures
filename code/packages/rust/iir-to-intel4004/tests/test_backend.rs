@@ -1,5 +1,11 @@
 //! Integration tests for `iir-to-intel4004` v0.1.0 (A4 skeleton).
 //!
+//! Note: this crate is deprecated as of v0.4.0 (Phase 4 of the
+//! historical-arch backend migration).  Tests still exercise the
+//! deprecated API as a regression invariant — `#![allow(deprecated)]`
+//! suppresses the build warnings.
+#![allow(deprecated)]
+//!
 //! Smoke-level — confirms the validator stub, the emitter shape,
 //! and the exact encoded `JUN 0x000` byte pair (`0x40 0x00`).
 

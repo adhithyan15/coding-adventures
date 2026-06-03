@@ -1,5 +1,15 @@
 # iir-to-intel4004
 
+> ⚠ **DEPRECATED as of v0.4.0**.  Use [`intel4004-backend`](../intel4004-backend)
+> instead — it implements `jit_core::backend::Backend` over CIR.
+> Migration plan:
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+>
+> The crate still compiles and all existing callers continue to
+> work (each `pub fn` is marked `#[deprecated]` with a pointer to
+> the replacement).  `lang-aot --emit=intel4004` already routes
+> through `intel4004-backend` as of Phase 4.
+
 **IIR → Intel 4004 machine code backend.**
 
 Lowers an `IIRModule` from the [interpreter-ir](../interpreter-ir/)

@@ -530,9 +530,28 @@ pub fn compile_file_to_intel4004_bin(
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
 
-    let cfg = iir_to_intel4004::IIRIntel4004Config::new(stem);
-    let bytes = iir_to_intel4004::lower_iir_to_intel4004(&module, &cfg)
-        .map_err(|e| LangAotError::Intel4004BackendError(format!("{e}")))?;
+    // Phase 4 of the historical-arch backend migration: route
+    // through `aot_core` + `intel4004-backend` instead of the
+    // legacy `iir_to_intel4004::lower_iir_to_intel4004`.  Same
+    // pipeline as `compile_file_to_ge225_bin` (Phase 3).
+    let _ = stem;
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = intel4004_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Intel4004BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&intel4004_encoder::HALT_LOOP);
+    }
 
     std::fs::write(out, &bytes)?;
     Ok(())
