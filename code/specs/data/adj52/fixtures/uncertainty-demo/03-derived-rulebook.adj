@@ -1,0 +1,36 @@
+% ADJ52 counterfactual-panel demo rulebook (illustrative, not clinical
+% advice). A deliberately tiny rulebook with ONE decision-relevant
+% uncertainty — a not-yet-performed biopsy — so the runner's
+% value-of-information panel has something to surface.
+
+% Prior: base rate of malignancy in this presentation.
+prior 0.30 for diagnosis(malignancy)
+  source "ADJ52 demo fixture — illustrative base rate"
+  trust inferred
+
+% A mediastinal mass on imaging strongly raises malignancy.
+contributes 4.0 from imaging(mediastinal_mass) to diagnosis(malignancy)
+  source "ADJ52 demo fixture — imaging likelihood ratio"
+  trust inferred
+
+% No improvement on broad-spectrum antibiotics argues against infection,
+% i.e. raises malignancy.
+contributes 2.5 from response(no_improvement_on_antibiotics) to diagnosis(malignancy)
+  source "ADJ52 demo fixture — treatment-response likelihood ratio"
+  trust inferred
+
+% The biopsy is the decision-relevant uncertainty: it has not been
+% performed yet. Each possible result carries its own likelihood ratio.
+% A malignant-cell result is near-dispositive; a benign result nearly
+% rules malignancy out. The `uncertain { … }` marker below tells the
+% engine the domain is unresolved so it emits a VOI report.
+contributes 50.0 from biopsy(malignant_cells) to diagnosis(malignancy)
+  source "ADJ52 demo fixture — biopsy malignant is near-dispositive"
+  trust inferred
+contributes 0.02 from biopsy(benign) to diagnosis(malignancy)
+  source "ADJ52 demo fixture — biopsy benign nearly rules out"
+  trust inferred
+
+% Mark the biopsy as an open uncertainty over its candidate results.
+uncertain { biopsy(malignant_cells), biopsy(benign) } for diagnosis(malignancy)
+  source "ADJ52 demo fixture — biopsy not yet performed"
