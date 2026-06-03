@@ -2,6 +2,27 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.88.0] - 2026-06-03
+
+### Added (FC — pin `^x` and class `Foo(x)` pattern lowering)
+
+- **Pin** `in ^x` lowers to `scrutinee == x` (an equality `BuiltinCall`
+  over a `Scope::Local` `VarRef`), no binding. The leading `^` lexes as a
+  `Name` token (value "^"), so the lowerer skips it to find the pinned
+  identifier.
+- **Class** `in Foo(p, …)` lowers via new `lower_class_pattern` to
+  `is_a?(scrutinee, "Foo") && <positional deconstruction>`: the class is
+  a `StrLit` of its name (no `Const` decl / `Constants` feature needed),
+  and positional sub-patterns match `scrutinee[i]` (a `len == N` check
+  plus recursion through `lower_in_clause_pattern` via `SeqIndex`). v0
+  simplification: indexes the scrutinee directly rather than calling
+  `#deconstruct`. Requests `Feature::Strings` (+ `Sequences` /
+  `ShortCircuit` when positional sub-patterns are present).
+
+New tests: `case_in_pin_pattern_lowers_to_equality_with_local`,
+`case_in_class_pattern_lowers_to_is_a_check`,
+`case_in_pin_and_class_patterns_validate_e2e`.
+
 ## [0.87.0] - 2026-06-03
 
 ### Added (FC — `case/in` hash-pattern structural lowering)
@@ -35,7 +56,6 @@ New tests: `case_in_hash_pattern_binding_emits_mapget_letbinding`,
 `case_in_array_with_hash_element_lowers_structurally` (replaces the prior
 marker-fallback test). Full lexer+parser+lowerer suites green (338
 lowerer tests).
-
 ## [0.86.0] - 2026-06-03
 
 ### Added (FC — `__END__` end-to-end coverage; tests only)

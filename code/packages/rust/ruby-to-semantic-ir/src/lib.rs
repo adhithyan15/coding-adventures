@@ -6034,6 +6034,76 @@ b = "y"
     }
 
     #[test]
+    fn case_in_pin_pattern_lowers_to_equality_with_local() {
+        // Phase FC — `in ^expected` lowers to `scrutinee == expected`
+        // (equality BuiltinCall over a VarRef to the pinned local), no
+        // binding prefix.
+        let m = lower("expected = 1\nv = 2\ncase v\nin ^expected\n  puts(1)\nend\n");
+        let b = main_body(&m);
+        // stmts: [let expected, let v, case]; the case is the last stmt.
+        let if_expr = match b.stmts.last() {
+            Some(Stmt::ExprStmt { expr, .. }) => expr,
+            other => panic!("expected trailing case ExprStmt, got {:?}", other),
+        };
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "==");
+                assert!(
+                    matches!(&args[1], Expr::VarRef { name, .. } if name == "expected"),
+                    "expected RHS VarRef(expected), got {:?}",
+                    args[1]
+                );
+            }
+            other => panic!("expected ==-BuiltinCall cond, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_class_pattern_lowers_to_is_a_check() {
+        // Phase FC — `in Integer(n)` lowers to
+        // `is_a?(x, "Integer") && len(x)==1 && …` with `n = x[0]` bound.
+        let m = lower("x = 1\ncase x\nin Integer(n)\n  puts(n)\nend\n");
+        let b = main_body(&m);
+        let (cond, then_branch) = match extract_case_if(b) {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            printed.contains("is_a?") && printed.contains("Integer"),
+            "expected an is_a?(_, \"Integer\") check, got {}",
+            printed
+        );
+        // `n = x[0]` binding present in the body.
+        let has_n = then_branch.stmts.iter().any(|s| {
+            matches!(s, Stmt::LetBinding { name, value, .. }
+                if name == "n" && matches!(value, Expr::SeqIndex { .. }))
+        });
+        assert!(has_n, "expected `let n = x[0]` binding in body");
+    }
+
+    #[test]
+    fn case_in_pin_and_class_patterns_validate_e2e() {
+        // End-to-end: both new pattern forms round-trip the SIR validator.
+        let pin = lower("e = 1\nv = 2\ncase v\nin ^e\n  puts(1)\nend\n");
+        assert!(
+            semantic_ir::validate(&pin).is_ok(),
+            "validator rejected pin-pattern module: {:?}",
+            semantic_ir::validate(&pin)
+        );
+        let class = lower("x = 1\ncase x\nin Integer(n)\n  puts(n)\nend\n");
+        assert!(
+            semantic_ir::validate(&class).is_ok(),
+            "validator rejected class-pattern module: {:?}",
+            semantic_ir::validate(&class)
+        );
+    }
+
+    #[test]
     fn case_in_literal_array_pattern_lowers_to_structural_match() {
         // Phase 13a (FC) — `case x; in [1, 2]; "pair"; end` — a
         // fixed-arity all-literal array pattern lowers structurally to
