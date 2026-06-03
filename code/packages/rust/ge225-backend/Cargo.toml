@@ -1,0 +1,14 @@
+[package]
+name = "ge225-backend"
+version = "0.1.0"
+edition = "2021"
+description = "GE-225 backend for jit-core / aot-core.  Lowers a `Vec<CIRInstr>` into 20-bit GE-225 machine code via `ge225-encoder`.  Plugs into both `aot-core` (AOT byte emission) and `jit-core` (via the shared `Backend` trait) — same shape as `aarch64-backend` / `x86_64-backend`, just for an emit-only historical-arch target (the 1959 General Electric mainframe where Dartmouth BASIC was designed in 1964).  `Backend::run` panics with an 'emit-only' message; execution happens in a downstream simulator.  See code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
+
+[lib]
+name = "ge225_backend"
+path = "src/lib.rs"
+
+[dependencies]
+ge225-encoder = { path = "../ge225-encoder" }
+jit-core      = { path = "../jit-core" }
+vm-core       = { path = "../vm-core" }

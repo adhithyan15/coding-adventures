@@ -661,6 +661,7 @@ members = [
     "iir-to-intel4004",
     "iir-to-ge225",
     "ge225-encoder",
+    "ge225-backend",
     "aot-debug",
     "twig-to-beam",
     "twig-to-wasm",
