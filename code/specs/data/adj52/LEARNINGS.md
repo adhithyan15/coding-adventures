@@ -3,6 +3,33 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 1: first FULLY HANDS-OFF run (3 perturbed cases)
+
+`pipeline.workflow.js` ran 3 published "masquerade" cases end-to-end with no
+human in the loop (15 agents). Each case diagnosis-invariantly perturbed to
+defeat training recall. Full writeup: `runs/run-1-perturbed-3case.md`.
+
+**Scorecard:** framework won 1/3, plain Claude 2/3, tie 0. Framework correct
+2/3 (1 partial); plain correct 2/3 (1 partial). **0 compile failures.**
+**Perturbation preserved the diagnosis in 3/3** (recall defeated; both arms
+reasoned). The automation works: perturb→ingest→derive→run→judge→aggregate,
+hands-off, no extraction.
+
+**Findings (now consistent across 5 cases total):**
+1. **Calibration is THE blocker.** Saturated/incoherent posteriors (multiple
+   hypotheses ~100%; case-3 had paucibacillary 50.9% AND multibacillary 100% —
+   not a coherent distribution) lose to plain Claude's graded confidence EVEN
+   WHEN the framework is correct (cost it case-1 and case-3). #1 fix: a coherent
+   NORMALIZED differential (compete the mutually-exclusive diagnosis queries,
+   softmax their log-odds, temper extremes) — not more citations.
+2. **Framework wins where the base model fails** (case-2: plain hallucinated a
+   fish-bone foreign body; framework got the pharyngo-oesophageal diverticulum
+   family). That is the regime where it earns its keep.
+3. **Disposition gap:** the framework answered diagnosis + next test but omitted
+   treatment/management the judge rewarded (stop methotrexate, G6PD, etc.). Add
+   disposition/management queries.
+4. Leak fixes held: opaque case ids, no diagnosis in any agent-visible field.
+
 ## 2026-06-03 — Batch 0c: novel case end-to-end (McArdle mimicking PMR)
 
 First fully-novel case run through the WHOLE pipeline (ingest → derive →
