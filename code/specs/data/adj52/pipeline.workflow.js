@@ -1,6 +1,6 @@
 export const meta = {
   name: 'adj52-case-pipeline',
-  description: 'Hands-off adjudication pipeline over published clinical cases: fetch + diagnosis-invariant PERTURB (defeat training-data recall) -> domain-blind ingest -> recursive byte-provenanced rulebook derive + engine run -> plain-Claude control -> blind judge -> aggregate. No human in the loop; read the aggregate, not each case.',
+  description: 'Hands-off adjudication pipeline over published clinical cases: fetch + diagnosis-invariant PERTURB (defeat training-data recall) -> domain-blind ingest -> recursive byte-provenanced rulebook derive into an ACCUMULATING domain rulebook store + engine run on a swappable per-case program -> plain-Claude control -> blind judge -> aggregate. No human in the loop; read the aggregate, not each case.',
   phases: [
     { title: 'Prepare' },
     { title: 'Ingest' },
@@ -46,8 +46,10 @@ const IR_SCHEMA = {
 }
 const FW_SCHEMA = {
   type: 'object',
-  required: ['compiled_ok', 'top_conclusion', 'top_posterior', 'recommended_next_step', 'framework_answer_text'],
+  required: ['domain_key', 'rules_added', 'compiled_ok', 'top_conclusion', 'top_posterior', 'recommended_next_step', 'framework_answer_text'],
   properties: {
+    domain_key: { type: 'string', description: 'canonical lowercase_snake clinical-AREA key for the accumulating rulebook (the area, NOT the diagnosis)' },
+    rules_added: { type: 'number', description: 'number of NEW clauses this case added to the accumulating rulebook' },
     compiled_ok: { type: 'boolean' },
     top_conclusion: { type: 'string' },
     top_posterior: { type: 'number' },
@@ -91,16 +93,19 @@ Return inferred_domain, facts [{id,term,source_span}], uncertainties [{id,about,
 ${prose}
 === END ===`
 
-const deriveRunPrompt = (id, irJson) => `You build a rulebook for a deterministic Bayesian logic engine and then RUN it. You are given an ingested IR (no answer). Do all steps with your tools:
+const RB_DIR = 'C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/rulebooks'
+const CASE_DIR = 'C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/cases'
+const deriveRunPrompt = (id, irJson) => `You maintain an ACCUMULATING rulebook for a deterministic Bayesian logic engine and RUN one case against it. You are given an ingested IR (no answer). Use your tools for every step.
 
-1. From the IR alone, decide the candidate differential. Use WebSearch/WebFetch for REAL citations. Recurse into subcategories where evidence profiles differ; do not flatten.
-2. Write an adj-lang rulebook. CRITICAL grammar rule: every identifier (atom and compound functor/arg) must match /[a-z_][a-z0-9_]*/ — lowercase only, NO uppercase, and it must NOT start with a digit. Encode magnitudes QUALITATIVELY (e.g. creatine_kinase(markedly_elevated), age(over_50)) — never numbers/units inside terms. Every clause is preceded by a "% rationale:" line and annotated with source "<real citation>" and trust <consensus|authoritative|empirical|inferred|unattributed>. contributes/interacts magnitudes are multiplicative likelihood ratios (>1 raises, <1 lowers). Mark decision-relevant unresolved items as uncertain { ... } for <conclusion>, AND write contributes clauses FROM each candidate test-result term so resolving it actually moves the posterior.
-3. Write two files with the Write tool (ABSOLUTE paths required):
-   - C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/cases/${id}/03-derived-rulebook.adj  (the clauses)
-   - C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/cases/${id}/04-vignette.adj  (observe <term> lines for THIS patient using the SAME vocabulary, then ? <conclusion> query lines for each candidate + the next step)
-4. Run via the Bash tool (exact command): ADJ52_DIR=cases/${id} cargo run --quiet --manifest-path "C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/Cargo.toml"
-   If the output contains "COMPILE ERROR", fix the offending terms (usually an identifier with uppercase or a leading digit) and re-run until it compiles.
-5. Return: compiled_ok, top_conclusion + top_posterior (the highest-posterior diagnosis), recommended_next_step (highest next_step query), engine_output_excerpt (the per-query posteriors), and framework_answer_text — a neutral rendering for a blind judge containing the RANKED posteriors, the KEY fired clauses WITH their citations (especially any discriminator that fired negative against a tempting wrong answer), the recommended next step, and any open uncertainties.
+1. Choose a canonical domain key: a stable lowercase_snake_case name for the CLINICAL AREA this case belongs to (e.g. proximal_myopathy_workup, anterior_neck_mass_workup) — the AREA, never a specific diagnosis.
+2. Read the existing rulebook if present (Read tool): ${RB_DIR}/<domain_key>.adj . If it does not exist, start fresh.
+3. Decide the candidate differential from the IR. Use WebSearch/WebFetch for REAL citations. Recurse into subcategories. Then ADD ONLY THE RULES THE EXISTING RULEBOOK IS MISSING (new conclusions / new evidence edges); KEEP every existing clause unchanged. Add a rule ONLY because a citable source supports it — NEVER because it would make this case come out a particular way (anti-overfit).
+4. adj-lang grammar: every identifier matches /[a-z_][a-z0-9_]*/ (lowercase, NO uppercase, NO leading digit); encode magnitudes QUALITATIVELY (creatine_kinase(markedly_elevated), age(over_50)). Every clause preceded by "% rationale:" and annotated source "<citation>" + trust <consensus|authoritative|empirical|inferred|unattributed>. contributes/interacts are multiplicative LRs (>1 raises, <1 lowers). Mark decision-relevant unresolved items as uncertain { ... } for <conclusion> AND write contributes clauses FROM each candidate test-result term so resolving it moves the posterior.
+5. Write the GROWN rulebook back (Write tool, absolute): ${RB_DIR}/<domain_key>.adj  (RULES ONLY — no observe/query lines).
+6. Write this case's PROGRAM, separate and swappable (Write tool, absolute): ${CASE_DIR}/${id}/program.adj — containing ONLY observe <term> lines for THIS patient (same vocabulary as the rulebook) and ? <conclusion> query lines for each candidate + the next step. NO rules in the program.
+7. Run via the Bash tool (exact): ADJ52_RULEBOOK=rulebooks/<domain_key>.adj ADJ52_PROGRAM=cases/${id}/program.adj cargo run --quiet --manifest-path "C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/Cargo.toml"
+   If the output contains "COMPILE ERROR", fix the offending term (usually an identifier with uppercase or a leading digit) and re-run until it compiles.
+8. Return: domain_key, rules_added (count you added this case), compiled_ok, top_conclusion + top_posterior, recommended_next_step, engine_output_excerpt (per-query posteriors), and framework_answer_text — a neutral judge-facing rendering with the RANKED posteriors, the KEY fired clauses WITH citations (especially any discriminator that fired negative against a tempting wrong answer), the recommended next step, and any open uncertainties.
 
 IR:
 ${irJson}`
@@ -123,6 +128,12 @@ ${a}
 ${b}`
 
 // ---- Pipeline: each case flows through all stages independently ----
+// Accumulation note: cases sharing a domain_key grow the SAME rulebook file.
+// pipeline() runs cases concurrently, so genuine same-domain accumulation must
+// be run SEQUENTIALLY (or with a lock) to avoid read-modify-write races on the
+// shared rulebook. The default cases here are different clinical areas (so they
+// seed separate rulebooks and don't race); a same-domain accumulation run
+// should pass a single-area url list and be processed sequentially.
 const results = await pipeline(
   urls,
   (url, _orig, idx) => agent(preparePrompt(url), { phase: 'Prepare', label: `prepare:case-${idx + 1}`, agentType: 'general-purpose', schema: PREPARE_SCHEMA })
@@ -144,6 +155,8 @@ const results = await pipeline(
         id: o.id,
         diagnosis_unchanged: o.diagnosis_unchanged,
         perturbations: o.perturbations,
+        fw_domain: o.fw.domain_key,
+        fw_rules_added: o.fw.rules_added,
         fw_compiled: o.fw.compiled_ok,
         fw_top: `${o.fw.top_conclusion} @ ${o.fw.top_posterior}`,
         fw_next_step: o.fw.recommended_next_step,
