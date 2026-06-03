@@ -133,11 +133,12 @@ impl<'a> Parser<'a> {
             TokenKind::KwContributes => self.parse_contributes(),
             TokenKind::KwInteracts => self.parse_interacts(),
             TokenKind::KwObserve => self.parse_observe(),
+            TokenKind::KwUncertain => self.parse_uncertain(),
             TokenKind::Question => self.parse_query(),
             other => {
                 let t = self.peek();
                 Err(ParseError::Expected {
-                    expected: "statement keyword (prior, contributes, interacts, observe, ?)"
+                    expected: "statement keyword (prior, contributes, interacts, observe, uncertain, ?)"
                         .into(),
                     found: format!("{other:?}"),
                     line: t.line,
@@ -211,6 +212,25 @@ impl<'a> Parser<'a> {
         self.expect(|k| matches!(k, TokenKind::Question), "`?`")?;
         let conclusion = self.parse_term()?;
         Ok(Statement::Query { conclusion })
+    }
+
+    fn parse_uncertain(&mut self) -> Result<Statement, ParseError> {
+        self.expect(|k| matches!(k, TokenKind::KwUncertain), "`uncertain`")?;
+        self.expect(|k| matches!(k, TokenKind::LBrace), "`{`")?;
+        let mut domain = vec![self.parse_term()?];
+        while matches!(self.peek().kind, TokenKind::Comma) {
+            self.advance();
+            domain.push(self.parse_term()?);
+        }
+        self.expect(|k| matches!(k, TokenKind::RBrace), "`}`")?;
+        self.expect(|k| matches!(k, TokenKind::KwFor), "`for`")?;
+        let conclusion = self.parse_term()?;
+        let annotations = self.parse_annotations()?;
+        Ok(Statement::Uncertain {
+            domain,
+            conclusion,
+            annotations,
+        })
     }
 
     fn parse_number(&mut self) -> Result<f64, ParseError> {
@@ -484,6 +504,36 @@ mod tests {
         let p = parse_src(src).unwrap();
         // 1 prior + 6 contributes + 1 interacts + 6 observes + 1 query = 15
         assert_eq!(p.statements.len(), 15);
+    }
+
+    #[test]
+    fn parses_uncertain_with_domain_set() {
+        let src = "uncertain { precipitator(exertional), precipitator(rest), precipitator(positional) } for acs";
+        let p = parse_src(src).unwrap();
+        match &p.statements[0] {
+            Statement::Uncertain {
+                domain, conclusion, ..
+            } => {
+                assert_eq!(domain.len(), 3);
+                assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
+            }
+            other => panic!("expected Uncertain, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn parses_uncertain_with_source_annotation() {
+        let src = r#"
+            uncertain { a, b } for c
+              source "patient declined to answer"
+        "#;
+        let p = parse_src(src).unwrap();
+        match &p.statements[0] {
+            Statement::Uncertain { annotations, .. } => {
+                assert_eq!(annotations.len(), 1);
+            }
+            other => panic!("expected Uncertain, got {other:?}"),
+        }
     }
 
     #[test]

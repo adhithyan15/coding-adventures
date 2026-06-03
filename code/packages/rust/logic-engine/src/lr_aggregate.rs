@@ -38,7 +38,7 @@ use logic_core::{Substitution, Term};
 
 use crate::{
     ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase, PriorClauseId,
-    Provenance,
+    Provenance, UncertaintyMarkerId,
 };
 use crate::proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 
@@ -215,6 +215,79 @@ impl JointContributionClause {
 }
 
 // ---------------------------------------------------------------------------
+// Uncertainty markers — ADJ47-D, addresses ADJ46 awkwardness A5
+// ---------------------------------------------------------------------------
+
+/// An explicit "we don't know which value of X applies here" annotation.
+///
+/// Dissolves ADJ46 awkwardness item **A5**. When a patient case
+/// says "no clear precipitator," the IR pipeline lowers it to an
+/// `UncertaintyMarker` whose `domain` is the candidate precipitator
+/// terms. The aggregator detects markers whose domain is entirely
+/// unobserved and emits an [`UncertaintyReport`] in the result, so
+/// the framework's user-facing output can say "if you can determine
+/// the precipitator, the posterior could shift by up to X."
+///
+/// This is the engine-layer enabler of VOI (ADJ18). The full VOI
+/// computation lives in [`LRAggregateResult::uncertainties`], which
+/// the user-facing layer can rank, render, or act on.
+#[derive(Debug, Clone, PartialEq)]
+pub struct UncertaintyMarker {
+    pub id: UncertaintyMarkerId,
+    pub conclusion: Term,
+    /// Candidate evidence terms. Treated as mutually exclusive in
+    /// v0.1: the aggregator computes the maximum log-odds swing
+    /// across the domain, not the expected posterior under a prior
+    /// over the domain. Richer treatment is a follow-up.
+    pub domain: Vec<Term>,
+    pub provenance: Provenance,
+}
+
+impl UncertaintyMarker {
+    pub fn new(conclusion: Term, domain: Vec<Term>) -> Self {
+        Self {
+            id: UncertaintyMarkerId(u64::MAX),
+            conclusion,
+            domain,
+            provenance: Provenance::unattributed(),
+        }
+    }
+
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
+    }
+}
+
+/// A user-facing report on an active uncertainty in the
+/// LR-aggregation result.
+///
+/// Active means: the marker's domain has zero observed evidence
+/// terms in the KB, so the aggregator skipped every related
+/// contribution. The report tells the audit reader what each domain
+/// value would have contributed if observed, plus the VOI summary
+/// — the log-odds range that resolving the uncertainty could
+/// produce.
+#[derive(Debug, Clone, PartialEq)]
+pub struct UncertaintyReport {
+    pub marker_id: UncertaintyMarkerId,
+    pub conclusion: Term,
+    pub domain: Vec<Term>,
+    /// One entry per domain term, in `domain` order. The f64 is the
+    /// log(LR) that would be added to the running log-odds if that
+    /// particular value were observed. `0.0` when no
+    /// [`ContributionClause`] names the (conclusion, value) pair —
+    /// i.e. the rulebook covers the uncertainty marker but not the
+    /// individual value, which is a modeller signal worth surfacing.
+    pub if_observed_logit_delta: Vec<f64>,
+    /// `max(if_observed_logit_delta) - min(if_observed_logit_delta)`.
+    /// The simple v0.1 VOI proxy: "knowing this value could swing
+    /// the running log-odds by up to this much." Higher is more
+    /// informative.
+    pub voi_logit_range: f64,
+}
+
+// ---------------------------------------------------------------------------
 // KB-construction error type
 // ---------------------------------------------------------------------------
 
@@ -274,6 +347,227 @@ pub struct LRAggregateResult {
     /// branch — e.g. "no prior declared," "no contributions active,"
     /// "a contribution with LR=1.0 was silently a no-op."
     pub warnings: Vec<LrAggregateWarning>,
+    /// Active uncertainty reports. One entry per
+    /// [`UncertaintyMarker`] on the query whose domain has zero
+    /// observed evidence — exactly the markers worth showing the
+    /// user as "if you can determine this, the answer would shift."
+    pub uncertainties: Vec<UncertaintyReport>,
+}
+
+// ---------------------------------------------------------------------------
+// Kickback — ADJ47-E, addresses ADJ46 awkwardness A7
+// ---------------------------------------------------------------------------
+
+/// Summary of why and how the framework would recommend the user
+/// resolve some uncertainty before committing to the posterior.
+///
+/// Surfaces only when the *plausible posterior range* induced by the
+/// current uncertainties straddles a decision threshold. Built so
+/// the user-facing layer (an EMR widget, a brief-review tool, a
+/// deal-room dashboard) can render "the system isn't confident; here
+/// are the things to resolve" without having to recompute the band
+/// itself.
+#[derive(Debug, Clone, PartialEq)]
+pub struct KickbackReport {
+    pub posterior: f64,
+    pub posterior_logit: f64,
+    /// Worst-case posterior assuming every uncertainty resolves
+    /// in the direction that *lowers* the conclusion's probability.
+    pub posterior_lo: f64,
+    /// Best-case posterior assuming every uncertainty resolves
+    /// in the direction that *raises* the conclusion's probability.
+    pub posterior_hi: f64,
+    /// The decision threshold the band straddles.
+    pub decision_threshold: f64,
+    /// Recommend the user resolve these markers, ranked by
+    /// individual VOI (largest range first).
+    pub recommended_resolutions: Vec<UncertaintyMarkerId>,
+}
+
+// ---------------------------------------------------------------------------
+// Source disagreement — ADJ47-E, addresses ADJ46 awkwardness A9
+// ---------------------------------------------------------------------------
+
+/// A flag that two or more `ContributionClause`s with the same
+/// `(conclusion, evidence_term)` have substantially different
+/// `logit_delta` values — i.e. the rulebook's sources disagree
+/// about the LR for this piece of evidence.
+///
+/// Useful for the audit layer to surface "AHA 2021 says LR=2.5 for
+/// this finding; ESC 2023 says LR=4.0 — your posterior is sensitive
+/// to which authority you trust" without the user having to mine
+/// the rulebook by hand.
+#[derive(Debug, Clone, PartialEq)]
+pub struct SourceDisagreementReport {
+    pub conclusion: Term,
+    pub evidence_term: Term,
+    /// Per-source records in clause-insertion order.
+    pub source_logit_deltas: Vec<SourceLogitDelta>,
+    /// `max(deltas) - min(deltas)`. Larger means the sources
+    /// disagree more.
+    pub disagreement_logit_range: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SourceLogitDelta {
+    pub clause_id: ContributionClauseId,
+    pub logit_delta: f64,
+    pub provenance: Provenance,
+}
+
+impl LRAggregateResult {
+    /// Suggest a kickback to the user if the posterior, accounting
+    /// for active [`UncertaintyReport`]s, could end up on either side
+    /// of `decision_threshold`.
+    ///
+    /// Returns `None` when:
+    /// - no uncertainties are active (posterior is robust by
+    ///   construction), or
+    /// - the worst-case and best-case posterior both lie on the
+    ///   *same* side of `decision_threshold` (the answer doesn't
+    ///   depend on resolving any uncertainty).
+    ///
+    /// Returns `Some(KickbackReport)` when the band straddles the
+    /// threshold — that's when the framework's recommended action
+    /// is to escalate rather than commit.
+    pub fn suggest_kickback(&self, decision_threshold: f64) -> Option<KickbackReport> {
+        if self.uncertainties.is_empty() {
+            return None;
+        }
+        // Sum of "if-observed" worst-case and best-case shifts the
+        // current log-odds would receive from resolving every
+        // uncertainty simultaneously. This is a *bounding* analysis
+        // (each marker independently optimized) — it does not assume
+        // the resolutions are jointly achievable, so the band is a
+        // conservative outer envelope on the true plausible posterior.
+        let mut lo_shift = 0.0;
+        let mut hi_shift = 0.0;
+        for u in &self.uncertainties {
+            if u.if_observed_logit_delta.is_empty() {
+                continue;
+            }
+            let mn = u
+                .if_observed_logit_delta
+                .iter()
+                .copied()
+                .fold(f64::INFINITY, f64::min);
+            let mx = u
+                .if_observed_logit_delta
+                .iter()
+                .copied()
+                .fold(f64::NEG_INFINITY, f64::max);
+            lo_shift += mn;
+            hi_shift += mx;
+        }
+        let posterior_lo = sigmoid(self.posterior_logit + lo_shift);
+        let posterior_hi = sigmoid(self.posterior_logit + hi_shift);
+        if posterior_lo <= decision_threshold && decision_threshold <= posterior_hi {
+            // Rank markers by their individual VOI (largest first).
+            let mut ranked: Vec<&UncertaintyReport> = self.uncertainties.iter().collect();
+            ranked.sort_by(|a, b| {
+                b.voi_logit_range
+                    .partial_cmp(&a.voi_logit_range)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            });
+            Some(KickbackReport {
+                posterior: self.posterior,
+                posterior_logit: self.posterior_logit,
+                posterior_lo,
+                posterior_hi,
+                decision_threshold,
+                recommended_resolutions: ranked.into_iter().map(|u| u.marker_id).collect(),
+            })
+        } else {
+            None
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Counterfactual — ADJ47-E, addresses ADJ46 awkwardness A8
+// ---------------------------------------------------------------------------
+
+/// Rerun [`lr_aggregate`] on a copy of `kb` with `assumed_facts`
+/// added as Certain Facts. Used to answer "what would the posterior
+/// be if X were true?" without disturbing the caller's KB.
+///
+/// The implementation clones the KB, inserts each assumed fact, and
+/// reruns aggregation. Linear in KB size + assumed_facts.len(); fine
+/// at current scale, and the clone semantics is the right contract
+/// — the caller's KB is unchanged.
+pub fn counterfactual(
+    query: &Term,
+    kb: &KnowledgeBase,
+    assumed_facts: &[Term],
+) -> LRAggregateResult {
+    let mut perturbed = kb.clone();
+    for fact in assumed_facts {
+        perturbed.add_fact(crate::Fact::certain(fact.clone()));
+    }
+    lr_aggregate(query, &perturbed)
+}
+
+/// Walk a KB's contributions for `conclusion`, group by
+/// `evidence_term`, and report every group whose members have a
+/// non-zero spread in `logit_delta`. Threshold parameter is the
+/// minimum spread (in absolute log-odds) to surface; the default
+/// in `kb_source_disagreements` is `1e-9` — i.e. any non-trivial
+/// floating-point difference.
+pub fn source_disagreements_with_threshold(
+    kb: &KnowledgeBase,
+    conclusion: &Term,
+    min_spread: f64,
+) -> Vec<SourceDisagreementReport> {
+    let contributions = kb.contributions_for(conclusion);
+    // Group by evidence_term (linear scan, small per-conclusion lists).
+    let mut groups: Vec<(Term, Vec<SourceLogitDelta>)> = Vec::new();
+    for c in &contributions {
+        let entry = groups.iter_mut().find(|(t, _)| t == &c.evidence_term);
+        let record = SourceLogitDelta {
+            clause_id: c.id,
+            logit_delta: c.logit_delta,
+            provenance: c.provenance.clone(),
+        };
+        match entry {
+            Some((_, list)) => list.push(record),
+            None => groups.push((c.evidence_term.clone(), vec![record])),
+        }
+    }
+    let mut out = Vec::new();
+    for (evidence_term, deltas) in groups {
+        if deltas.len() < 2 {
+            continue;
+        }
+        let max = deltas
+            .iter()
+            .map(|d| d.logit_delta)
+            .fold(f64::NEG_INFINITY, f64::max);
+        let min = deltas
+            .iter()
+            .map(|d| d.logit_delta)
+            .fold(f64::INFINITY, f64::min);
+        let range = max - min;
+        if range > min_spread {
+            out.push(SourceDisagreementReport {
+                conclusion: conclusion.clone(),
+                evidence_term,
+                source_logit_deltas: deltas,
+                disagreement_logit_range: range,
+            });
+        }
+    }
+    out
+}
+
+/// Convenience wrapper over [`source_disagreements_with_threshold`]
+/// with `min_spread = 1e-9`. Surfaces every group of two or more
+/// `ContributionClause`s on the same `(conclusion, evidence)` whose
+/// `logit_delta`s are not bit-for-bit equal.
+pub fn source_disagreements(
+    kb: &KnowledgeBase,
+    conclusion: &Term,
+) -> Vec<SourceDisagreementReport> {
+    source_disagreements_with_threshold(kb, conclusion, 1e-9)
 }
 
 /// Conditions worth surfacing to the audit trail without hard-failing
@@ -401,7 +695,52 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
         });
     }
 
-    // Step 4: package the proof.
+    // Step 4: uncertainty reports — for every marker on `query`
+    // whose domain has zero observed evidence, build a report
+    // listing what each domain value would contribute.
+    let mut uncertainties: Vec<UncertaintyReport> = Vec::new();
+    for marker in kb.uncertainty_markers_for(query) {
+        let any_observed = marker
+            .domain
+            .iter()
+            .any(|ev| kb.observed_evidence(ev).is_some());
+        if any_observed {
+            // The marker is "resolved" — one of its domain values
+            // was observed; the aggregator already counted that
+            // contribution above, so no report.
+            continue;
+        }
+        let deltas: Vec<f64> = marker
+            .domain
+            .iter()
+            .map(|ev| {
+                // Find the ContributionClause(s) for (query, ev) and
+                // sum their logit_delta; 0.0 if no clause names this
+                // pair.
+                kb.contributions_for(query)
+                    .iter()
+                    .filter(|c| &c.evidence_term == ev)
+                    .map(|c| c.logit_delta)
+                    .sum::<f64>()
+            })
+            .collect();
+        let voi = if deltas.is_empty() {
+            0.0
+        } else {
+            let max = deltas.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+            let min = deltas.iter().copied().fold(f64::INFINITY, f64::min);
+            max - min
+        };
+        uncertainties.push(UncertaintyReport {
+            marker_id: marker.id,
+            conclusion: marker.conclusion.clone(),
+            domain: marker.domain.clone(),
+            if_observed_logit_delta: deltas,
+            voi_logit_range: voi,
+        });
+    }
+
+    // Step 5: package the proof.
     via_facts.sort();
     via_facts.dedup();
     let posterior = sigmoid(running_logit);
@@ -420,6 +759,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
         posterior,
         posterior_logit: running_logit,
         warnings,
+        uncertainties,
     }
 }
 

@@ -2,6 +2,119 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-06-02
+
+### Added
+
+- `counterfactual(query, kb, &[Term])` — clones the KB, adds the
+  given Facts as Certain, and reruns `lr_aggregate`. Lets the
+  caller answer "what would the posterior be if X were true?"
+  without disturbing the original KB. Cloning the whole KB makes
+  the contract obvious; cost is linear and small.
+- `LRAggregateResult::suggest_kickback(decision_threshold)` —
+  computes a worst-case / best-case posterior band by reducing
+  each active uncertainty marker to its min/max contribution,
+  summing the shifts independently across markers, and applying
+  to the current `posterior_logit`. Returns `Some(KickbackReport)`
+  iff the band straddles `decision_threshold`. Includes
+  `recommended_resolutions` sorted by individual VOI.
+- `source_disagreements(kb, conclusion)` /
+  `source_disagreements_with_threshold(kb, conclusion, min_spread)`
+  — scans contributions on `conclusion`, groups by `evidence_term`,
+  flags groups where the `logit_delta`s have spread > threshold.
+  Per-source records include the clause id and provenance so the
+  audit reader can render "AHA 2021 says LR=2.5; ESC 2023 says
+  LR=4.0; sources disagree by 0.47 logits."
+- New types: `KickbackReport`, `SourceDisagreementReport`,
+  `SourceLogitDelta`.
+- `KnowledgeBase: Clone`.
+- 7 new tests covering counterfactual upward shift, KB
+  non-mutation invariant, kickback firing inside the band, no
+  kickback outside the band, source-disagreement detection on two
+  conflicting sources, no-disagreement when only one source, and
+  no-disagreement when sources agree.
+
+Total tests: 69 (was 62 in 0.5.0).
+
+### ADJ46 awkwardness items dissolved by 0.6.0
+
+- **A7** (no kickback search variant) — addressed via
+  `suggest_kickback` method on the result rather than a separate
+  search mode. Lower-friction API and the same diagnostic power.
+- **A8** (counterfactuals require KB clone + rerun) — `counterfactual`
+  function does the clone + rerun once, atomically; caller's KB
+  is invariant.
+- **A9** (source-disagreement aggregation) — detector +
+  per-source records surface conflicting LRs from the rulebook.
+
+### Status of the original 10 ADJ46 awkwardness items
+
+| Item | Status |
+|---|---|
+| A1 (LR magnitudes) | ✅ 0.3.0 |
+| A2 (provenance) | ✅ 0.4.0 |
+| A3 (prior) | ✅ 0.3.0 |
+| A4 (joint contributions syntax) | ✅ 0.1.0 (adj-lang) |
+| A5 (uncertainty markers) | ✅ 0.5.0 |
+| A6 (WMC vs LR) | ✅ 0.3.0 |
+| A7 (kickback) | ✅ 0.6.0 |
+| A8 (counterfactuals) | ✅ 0.6.0 |
+| A9 (source disagreement) | ✅ 0.6.0 |
+| A10 (surface syntax) | ✅ 0.1.0 (adj-lang) |
+
+All ten items dissolved as of logic-engine 0.6.0 +
+adj-lang 0.2.0.
+
+## [0.5.0] - 2026-06-02
+
+### Added
+
+- `UncertaintyMarker` clause type + `UncertaintyMarkerId`. Attached
+  to a conclusion with a `domain: Vec<Term>` of candidate evidence
+  terms. Represents "the IR pipeline knows the conclusion is the
+  target of an LR query, and knows the patient (or source) did not
+  specify one of these candidate values."
+- `UncertaintyReport` — the user-facing VOI summary the engine
+  emits when a marker's domain is entirely unobserved. Contains the
+  domain, the log-odds delta each value would have contributed if
+  observed, and a v0.1 VOI proxy (`voi_logit_range` = max − min of
+  the deltas). The framework's user-facing layer can rank these to
+  produce "if you can determine X, the posterior could swing by up
+  to Y" guidance.
+- `LRAggregateResult.uncertainties: Vec<UncertaintyReport>` +
+  `SearchResult::LRAggregateResult { ..., uncertainties }`.
+- `KnowledgeBase::add_uncertainty_marker` /
+  `uncertainty_markers_for`. Markers do not promote a query to
+  LR-aggregation — they're only meaningful relative to contribution
+  clauses already on the conclusion.
+- 3 new integration tests in `tests/test_lr_aggregation.rs`:
+  uncertainty report with no observation shows full domain + VOI,
+  one-domain-observation suppresses the report, marker over a
+  domain with no matching contributions has zero VOI but still
+  appears in the report.
+
+Total tests: 62 (was 59 in 0.4.0).
+
+### ADJ46 awkwardness items dissolved by 0.5.0
+
+- **A5** — uncertainty markers at the engine layer.
+  `add_uncertainty_marker` + `UncertaintyReport` give the IR
+  pipeline a way to losslessly hand off "the patient said nothing
+  about X over this domain" to the executor, and give the audit
+  reader a concrete VOI signal to act on.
+
+### Scope notes
+
+- VOI is the v0.1 proxy (max − min over candidate log-odds deltas)
+  — not the formal Bayesian decision-theoretic VOI. A richer
+  treatment that combines the candidate deltas with the prior over
+  the domain (and with the user's decision threshold, if any) is a
+  follow-up.
+- Still pending: A7 (kickback variant), A8 (counterfactuals), A9
+  (multi-source aggregation), and the surface-layer half of A5
+  (the `uncertain { ... } for ...` keyword — that ships in
+  `adj-lang` 0.2.0 simultaneously).
+
 ## [0.4.0] - 2026-06-02
 
 ### Added
