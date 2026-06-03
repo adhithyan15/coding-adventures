@@ -1,4 +1,20 @@
-//! # iir-to-intel4004 — IIR → Intel 4004 machine code backend (v0.1.0 skeleton).
+//! # iir-to-intel4004 — IIR → Intel 4004 machine code backend (v0.4.0).
+//!
+//! ## ⚠ DEPRECATED — use `intel4004-backend` instead
+//!
+//! As of Phase 4 of the historical-arch backend migration
+//! ([`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md)),
+//! this crate is deprecated.  Use:
+//!
+//! - **`intel4004-encoder`** — pure encoding tables (opcodes + `encode_*`).
+//! - **`intel4004-backend`** — implements `jit_core::backend::Backend`
+//!   over monomorphised CIR.
+//!
+//! `lang-aot --emit=intel4004` routes through the new pair as of
+//! Phase 4; existing public API of this crate continues to work
+//! for backward compatibility but emits deprecation warnings.
+//!
+//! ## Original module docs (still applicable to the lowering algorithm)
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 8-bit Intel 4004 opcodes, suitable to drop into any 4004
@@ -50,6 +66,7 @@
 //! ## Quick start
 //!
 //! ```
+//! #![allow(deprecated)]
 //! use interpreter_ir::IIRModule;
 //! use iir_to_intel4004::{validate_for_intel4004, lower_iir_to_intel4004, IIRIntel4004Config};
 //!
@@ -326,6 +343,10 @@ const SUPPORTED_OPS: &[&str] = &[
 /// `HALT_LOOP` so the simulator halts deterministically.  Once
 /// at least one function is lowered, the halt sentinel terminates
 /// the last function's instruction stream.
+#[deprecated(
+    since = "0.4.0",
+    note = "use `intel4004_backend::compile` over CIR — see code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md"
+)]
 pub fn lower_iir_to_intel4004(
     module: &IIRModule,
     _cfg: &IIRIntel4004Config,

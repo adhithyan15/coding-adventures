@@ -1,0 +1,11 @@
+[package]
+name = "intel4004-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Intel 4004 instruction encoder.  Covers the opcodes the LANG VM `intel4004-backend` uses to lower CIR to 4-bit-data Intel 4004 machine code.  No IR knowledge.  Consumed by `intel4004-backend` (and re-exported by the deprecated `iir-to-intel4004` for backwards compatibility).  The Intel 4004 (1971) was the world's first commercial microprocessor — see code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
+
+[lib]
+name = "intel4004_encoder"
+path = "src/lib.rs"
+
+[dependencies]
