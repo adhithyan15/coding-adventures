@@ -988,3 +988,31 @@ describe("edge cases", () => {
     expect(types).toContain("PIPE");
   });
 });
+
+// ============================================================================
+// Grammar version selection
+// ============================================================================
+//
+// tokenizeVhdl optionally takes a grammar version (default 2008).  These
+// tests cover every case in `loadVhdlGrammar`'s switch and the
+// SUPPORTED_VERSIONS guard.
+
+describe("grammar version selection", () => {
+  for (const version of ["1987", "1993", "2002", "2008", "2019"]) {
+    it(`accepts the ${version} grammar`, () => {
+      const tokens = tokenizeVhdl("entity foo is end;", version);
+      expect(tokens.length).toBeGreaterThan(0);
+    });
+  }
+
+  it("throws on an unknown version", () => {
+    expect(() => tokenizeVhdl("entity foo is end;", "1980")).toThrow(
+      /Unknown VHDL version/,
+    );
+  });
+
+  it("createVhdlLexer also honours the version parameter", () => {
+    const lexer = createVhdlLexer("entity foo is end;", "1993");
+    expect(lexer).toBeDefined();
+  });
+});
