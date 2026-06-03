@@ -3,6 +3,40 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 2: calibration fix did NOT win (framework 0/3)
+
+Re-ran the 3 perturbed cases with the coherent-differential softmax + exclusivity
+tags + rulebook/program separation. **Framework 0/3, plain Claude 3/3** (was
+1/3). Framework still reached the correct answer/family 2/3 (1 partial). Full
+writeup: `runs/run-2-calibration-fix.md`.
+
+**The proof (why it lost every time):**
+1. The softmax fix tempered MULTI-hypothesis incoherence but NOT
+   single-hypothesis saturation — the dominant hypothesis still hits ~100% and
+   now confidently excludes competitors at ~0%, which is WORSE when the top pick
+   is a wrong sibling (case-2: 100% Killian-Jamieson vs 0% Zenker, the correct
+   answer — actively argued against it).
+2. **"100% while recommending the confirmatory test" is the core incoherence.**
+   The framework asserts certainty AND says "get the smear/genetics to confirm."
+   A calibrated reasoner holds residual probability until the test returns. The
+   engine collapses to 100% because observed evidence dominates and nothing
+   discounts for the UNRESOLVED confirmatory uncertainty. This is the real
+   "uncertainty at the core" gap.
+3. Pseudo-precise logits + unverifiable citations are read as a NEGATIVE (false
+   rigor / hallucinated PMIDs), not a plus.
+4. The "plain" arm is frontier Claude reasoning fully — well-calibrated, names
+   exact mutations, includes the right answer in its lead. Out-diagnosing it on a
+   blind comparison is a very high bar; shared correctness doesn't win.
+
+**Implication:** against a strong base model, "win a blind diagnostic comparison"
+is the wrong metric — the framework is correct + auditable and still loses on
+calibration. Paths: (a) deep engine calibration — never ~100% while a confirmatory
+`uncertain` marker is open; temper LR magnitudes; stop displaying raw logits as if
+measured; (b) reposition — test the framework wrapping a SMALL answerer model (the
+ADJ17 regime where structure helps) and measure auditability + error-catching +
+thin-rulebook robustness, not out-diagnosing frontier Claude. The one framework
+WIN (run 1, case-2) was where the base model actually erred — that is its niche.
+
 ## 2026-06-03 — Batch 1: first FULLY HANDS-OFF run (3 perturbed cases)
 
 `pipeline.workflow.js` ran 3 published "masquerade" cases end-to-end with no
