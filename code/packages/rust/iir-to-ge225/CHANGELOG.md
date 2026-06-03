@@ -2,6 +2,45 @@
 
 All notable changes to this crate are documented here.
 
+## v0.10.0 — 2026-06-03 — Crate **DEPRECATED** — Phase 3 of historical-arch backend migration
+
+This crate is now deprecated.  It sits at the wrong layer in the
+compiler pipeline (consumes dynamically-typed IIR directly,
+bypasses the `jit_core::backend::Backend` trait that
+`aarch64-backend` and `x86_64-backend` use).
+
+### Replacement
+
+| Old | New |
+|-----|-----|
+| `iir_to_ge225::HALT_WORD`, `LDA_OPCODE_NIBBLE`, … | [`ge225_encoder::*`](../ge225-encoder) — same values, single source of truth |
+| `iir_to_ge225::lower_iir_to_ge225` | [`ge225_backend::compile`](../ge225-backend) — consumes monomorphised CIR via `aot_core::specialise` |
+| Direct caller from `lang-aot` `compile_file_to_ge225_bin` | now routes through `aot_core::infer` + `aot_core::specialise` + `ge225_backend::compile` |
+
+### What changed in this release
+
+- Marked `lower_iir_to_ge225` with `#[deprecated(since = "0.10.0",
+  note = "use ge225_backend::compile over CIR")]`.
+- Added deprecation banner to the module-level docs.
+- Test suite now carries `#![allow(deprecated)]` so it can keep
+  exercising the old API as a regression invariant.
+- `lang-aot` Cargo.toml dropped its `iir-to-ge225` path dep —
+  this crate is no longer used in the build graph.
+
+### What did NOT change
+
+- All public constants and functions still work — every existing
+  caller compiles, just with a deprecation warning.
+- All 33 unit tests + 1 doctest still pass.
+- Byte-for-byte output is unchanged (verified by the lang-aot
+  GE-225 + BASIC e2e smoke tests producing identical bytes
+  through the new pipeline).
+
+### Reference
+
+- Migration plan: [`code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md)
+- Replacement spec: [`code/specs/ge225-backend.md`](../../../specs/ge225-backend.md)
+
 ## v0.9.0 — 2026-06-02 — A5++++++++++ `neg` lowering (closes BASIC unary-minus gap)
 
 Eighth lowering increment.  Adds `neg dest, src` via the canonical

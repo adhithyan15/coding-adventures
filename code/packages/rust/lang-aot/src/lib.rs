@@ -601,9 +601,48 @@ pub fn compile_file_to_ge225_bin(
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
 
-    let cfg = iir_to_ge225::IIRGe225Config::new(stem);
-    let bytes = iir_to_ge225::lower_iir_to_ge225(&module, &cfg)
-        .map_err(|e| LangAotError::Ge225BackendError(format!("{e}")))?;
+    // Phase 3 of the historical-arch backend migration: route
+    // through `aot_core` + `ge225-backend` instead of the legacy
+    // `iir_to_ge225::lower_iir_to_ge225`.
+    //
+    // Pipeline per function:
+    //   1. `aot_core::infer::infer_types` — produce a name→type map.
+    //   2. `aot_core::specialise::aot_specialise` — lift IIR to
+    //      monomorphised CIR (`add_i64`, `cmp_lt_u32`, …).
+    //   3. `ge225_backend::compile` — lower CIR to GE-225 bytes.
+    //
+    // Per-function byte streams are concatenated in declaration
+    // order, mirroring `iir-to-ge225` v0.9.0's per-function layout
+    // (every function's last instruction is a HLT or RTS, so
+    // concatenation produces a well-formed program).  This matches
+    // what the e2e smoke tests pin byte-for-byte.
+    //
+    // Cross-function `call` is currently not resolved here —
+    // `ge225-backend` v0.1.0 returns `UnsupportedOp` for it and a
+    // future increment will add module-level relocations.  All
+    // existing tests (Twig literals, BASIC LET/PRINT/END,
+    // Brainfuck empty programs) only exercise intra-function
+    // control flow, so this is fine for v0.1.0.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = ge225_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Ge225BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+
+    // Empty-module guard — mirror `ge225_backend::compile` which
+    // emits a HLT for empty CIR.
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&ge225_encoder::HALT_WORD);
+    }
 
     std::fs::write(out, &bytes)?;
     Ok(())
