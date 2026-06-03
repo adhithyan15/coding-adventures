@@ -100,12 +100,20 @@ fn main() {
     }
     println!();
 
+    // ADJ52 calibration: mutually-exclusive conclusions declared by the deriver
+    // via `% @exclusive a, b, c` directive comments are normalized into a
+    // coherent differential after the per-query loop. Collect each query's
+    // posterior log-odds as we go.
+    let exclusive_groups = parse_exclusive_groups(&combined);
+    let mut query_logodds: Vec<(String, f64)> = Vec::new();
+
     for (i, query) in lowered.queries.iter().enumerate() {
         println!("================================================================");
         println!("Query {}/{}: {}", i + 1, lowered.queries.len(), format_term(query));
         println!("================================================================");
 
         let result = lr_aggregate(query, &lowered.kb);
+        query_logodds.push((format_term(query), result.posterior_logit));
 
         println!();
         println!(
@@ -304,6 +312,97 @@ fn main() {
         }
         println!();
     }
+
+    print_coherent_differential(&exclusive_groups, &query_logodds);
+}
+
+/// Whitespace-stripped key so directive members match `format_term` output even
+/// when one side has spaces (e.g. multi-arg compounds rendered as `f(a, b)`).
+fn ws_key(s: &str) -> String {
+    s.chars().filter(|c| !c.is_whitespace()).collect()
+}
+
+/// Parse `% @exclusive a, b, c` directive comment lines into groups of member
+/// term strings. adj-lang ignores `%` comments, so the runner reads them from
+/// the raw text to learn which conclusions the deriver declared mutually
+/// exclusive. A group needs >= 2 members to be meaningful.
+fn parse_exclusive_groups(text: &str) -> Vec<Vec<String>> {
+    let mut groups = Vec::new();
+    for line in text.lines() {
+        let t = line.trim();
+        let body = t
+            .strip_prefix("% @exclusive")
+            .or_else(|| t.strip_prefix("%@exclusive"));
+        if let Some(rest) = body {
+            let members: Vec<String> = rest
+                .split(',')
+                .map(|s| s.trim().to_string())
+                .filter(|s| !s.is_empty())
+                .collect();
+            if members.len() >= 2 {
+                groups.push(members);
+            }
+        }
+    }
+    groups
+}
+
+/// Softmax each exclusive group's member log-odds into a coherent distribution
+/// summing to 1. This competes the hypotheses and tempers the per-hypothesis
+/// saturation that made independent posteriors read as several simultaneous
+/// ~100%s. Conclusions in no group (e.g. "coexisting" hypotheses) are listed
+/// alongside with their raw independent posterior.
+fn print_coherent_differential(groups: &[Vec<String>], query_logodds: &[(String, f64)]) {
+    if groups.is_empty() {
+        return;
+    }
+    println!("================================================================");
+    println!("  Coherent differential (softmax-normalized within exclusive groups)");
+    println!("================================================================");
+
+    let mut grouped_keys: HashSet<String> = HashSet::new();
+    for (gi, group) in groups.iter().enumerate() {
+        let mut members: Vec<(String, f64)> = Vec::new();
+        for m in group {
+            grouped_keys.insert(ws_key(m));
+            if let Some((t, l)) = query_logodds.iter().find(|(t, _)| ws_key(t) == ws_key(m)) {
+                members.push((t.clone(), *l));
+            }
+        }
+        if members.is_empty() {
+            continue;
+        }
+        let max = members
+            .iter()
+            .map(|(_, l)| *l)
+            .fold(f64::NEG_INFINITY, f64::max);
+        let exps: Vec<f64> = members.iter().map(|(_, l)| (l - max).exp()).collect();
+        let sum: f64 = exps.iter().sum();
+        let mut ranked: Vec<(String, f64)> = members
+            .iter()
+            .zip(exps.iter())
+            .map(|((t, _), e)| (t.clone(), e / sum))
+            .collect();
+        ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        println!();
+        println!("  Exclusive group {}:", gi + 1);
+        for (t, p) in &ranked {
+            println!("    {:6.1}%  {}", p * 100.0, t);
+        }
+    }
+
+    let combinable: Vec<&(String, f64)> = query_logodds
+        .iter()
+        .filter(|(t, _)| !grouped_keys.contains(&ws_key(t)) && t.starts_with("diagnosis("))
+        .collect();
+    if !combinable.is_empty() {
+        println!();
+        println!("  Combinable / non-exclusive (raw independent posterior):");
+        for (t, l) in &combinable {
+            println!("    {:6.1}%  {}", sigmoid(*l) * 100.0, t);
+        }
+    }
+    println!();
 }
 
 fn format_term(t: &Term) -> String {
