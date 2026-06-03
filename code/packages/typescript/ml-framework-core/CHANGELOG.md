@@ -2,6 +2,133 @@
 
 ## Unreleased
 
+### Added — v1.7.0: safetensors read/write — FIRST HF INTEROP (Phase A.7) 🎉
+
+PR #7 of 7 in **Phase A** — the finale.  Reads and writes the
+Hugging Face `safetensors` format.  After this PR, the framework
+can load any HF checkpoint whose tensors are F32 (and Phase B will
+start using those weights to assemble actual transformer
+architectures).
+
+#### What works now
+
+```ts
+import {
+  Tensor, Sequential, Linear,
+  saveSafetensors, loadSafetensors,
+} from "@coding-adventures/ml-framework-core";
+
+// Save a trained model's parameters to disk.
+const model = new Sequential(new Linear(784, 128), new Linear(128, 10));
+const tensors: Record<string, Tensor> = {};
+model.parameters().forEach((p, i) => { tensors[`p${i}`] = p; });
+saveSafetensors(tensors, "./mymodel.safetensors", { format: "pt", version: "1.0" });
+
+// Later: load them back.
+const { tensors: loaded, metadata } = loadSafetensors("./mymodel.safetensors");
+// loaded["p0"], loaded["p1"], ... are Tensor instances with the saved values.
+
+// Or load an HF checkpoint:
+const hf = loadSafetensors("./bert-base-uncased/model.safetensors");
+// Access by HF's parameter names: hf.tensors["encoder.layer.0.attention.self.query.weight"]
+```
+
+#### Why safetensors
+
+It's the format every modern HF model checkpoint ships in.  It
+replaced pickle for security reasons — safetensors deliberately
+stores ONLY tensor bytes + a small JSON header, so loading can't
+execute arbitrary code the way `pickle.load` can.  Most HF model
+repos have shipped `model.safetensors` (alongside or instead of
+`pytorch_model.bin`) for the last two years.
+
+#### Format (canonical spec)
+
+```
+┌─────────────────────────┐
+│ 8 bytes: header length  │  little-endian u64
+├─────────────────────────┤
+│ JSON header (UTF-8)     │  exactly `header length` bytes
+├─────────────────────────┤
+│ Raw tensor bytes        │  rest of file, no alignment
+└─────────────────────────┘
+```
+
+JSON header schema:
+
+```json
+{
+  "weight":     { "dtype": "F32", "shape": [10, 20], "data_offsets": [0, 800] },
+  "bias":       { "dtype": "F32", "shape": [20],     "data_offsets": [800, 880] },
+  "__metadata__": { "format": "pt" }
+}
+```
+
+`data_offsets` are byte ranges relative to the payload (the bytes
+after the JSON header).  The optional `__metadata__` is preserved
+on round-trip.
+
+#### Implementation notes
+
+- **`src/safetensors.ts`** ships `saveSafetensors` and
+  `loadSafetensors`.  Pure TypeScript on top of `node:fs` —
+  synchronous I/O (sync is fine for v1.7; async is a one-line swap
+  to `fs/promises` later if needed).
+- **v1.7 supports F32 only**.  F16, BF16, I64, U8, BOOL, etc. all
+  throw a clear error at load time: `unsupported dtype "F16". v1.7
+  supports only F32.`  Storage in this framework is F32 anyway;
+  multi-dtype support is post-A.7 work.
+- **Defensive parsing.**  `loadSafetensors` reads untrusted bytes
+  (anyone can hand you a malicious .safetensors), so we validate:
+  - File ≥ 8 bytes
+  - Header length ≤ `MAX_HEADER_BYTES` (100 MB) to defend against a
+    pathological `headerLength = 2^60` causing giant allocation
+  - Header length doesn't extend past end of file
+  - Header JSON parses
+  - Each entry's dtype is recognized; F32 supported, others rejected
+  - Each `shape` is an array of non-negative integers
+  - Each `data_offsets` range is inside the payload, end ≥ start
+  - Byte length matches `shape × 4-bytes-per-f32`
+  - Top-level reserved name `__metadata__` rejected on save
+  - All `__metadata__` values are strings
+  - **Prototype-pollution protection**: tensor names `__proto__`,
+    `constructor`, `prototype` rejected on both save and load.  The
+    returned `tensors` and `metadata` records are built with
+    `Object.create(null)` for defense-in-depth.  A malicious
+    `.safetensors` file declaring a tensor named `__proto__` cannot
+    mutate the prototype of the returned record.
+  Failures throw `RangeError` / `SyntaxError` with messages naming
+  exactly what went wrong.
+- **Memory safety.**  The Tensor constructed at load time owns its
+  own `Float32Array` (copied via `Buffer.set` into a fresh
+  Float32Array's underlying ArrayBuffer) — independent of the file
+  Buffer's lifetime, no aliasing.
+
+#### Tests
+
+- 14 new vitest cases (`tests/safetensors.test.ts`):
+  - 4 round-trip (single tensor, multiple varied shapes, metadata, empty)
+  - 1 hand-computed byte layout (verifies the wire bytes match the spec)
+  - 8 validation errors (non-F32 dtype, unknown dtype tag, truncated
+    file, invalid JSON, OOB offsets, size mismatch, file < 8 bytes,
+    pathological header length)
+  - 1 save validation (reserved `__metadata__` name)
+- Total **277 tests pass** (was 263 in v1.6).
+- `tsc --noEmit` clean.
+
+#### What this unlocks
+
+**First cross-framework interop.**  At v1.7 this framework can
+read tensors that PyTorch / JAX / TensorFlow wrote.  That means:
+
+1. Train a model in this framework, save weights, reload in a
+   later session and continue training.
+2. Load an HF checkpoint's f32 weights into a `Sequential` model
+   defined here.  (You still have to MATCH the architecture by
+   hand — Phase C will add HF model architectures so you don't.)
+
+Phase A is complete — see release notes below.
+
 ### Added — v1.6.0: Adam optimizer + Linear / Sequential / Module (Phase A.6)
 
 PR #6 of 7 in **Phase A** — turns the framework from "a bag of ops"

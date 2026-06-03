@@ -76,3 +76,5 @@ export { getMode, setMode } from "./mode.js";
 export type { Mode } from "./mode.js";
 export { Optimizer, SGD, Adam } from "./optim.js";
 export { Module, Linear, Sequential, Fn } from "./nn.js";
+export { saveSafetensors, loadSafetensors } from "./safetensors.js";
+export type { LoadResult } from "./safetensors.js";
