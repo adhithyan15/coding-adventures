@@ -60,6 +60,8 @@ export {
   LayerNormOp,
   BatchNormOp,
   DropoutOp,
+  Conv2DOp,
+  MaxPool2DOp,
   BroadcastOp,
   DISPATCH_THRESHOLD,
   packF32Hex,
