@@ -1,0 +1,15 @@
+[package]
+name = "adj51-experiment"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ51 experiment runner — compiles a derived adj-lang rulebook + a generated vignette and prints per-query posteriors from the LR-aggregation engine."
+publish = false
+
+[dependencies]
+adj-lang = { path = "../../../packages/rust/adj-lang" }
+logic-core = { path = "../../../packages/rust/logic-core" }
+logic-engine = { path = "../../../packages/rust/logic-engine" }
+
+[[bin]]
+name = "adj51"
+path = "src/main.rs"

@@ -1,0 +1,8 @@
+GROUND TRUTH (not given to the ingester or deriver subagents — used only for final scoring):
+
+Catheterization the day after admission revealed a 100% occlusion of the proximal right coronary artery (pRCA) by an organized thrombus with left-to-right collaterals. A drug-eluting stent was placed at the pRCA via right femoral artery access.
+
+Diagnosis: ACS (acute coronary syndrome) — true positive.
+Correct ED decision: ADMIT.
+
+Source: PMC12750962 (Patel R, et al. 2025).

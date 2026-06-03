@@ -1,0 +1,390 @@
+   Compiling adj51-experiment v0.1.0 (/Users/adhithya/Documents/coding-adventures/.claude/worktrees/admiring-goldberg-a988f4/code/specs/data/adj51)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running `target/debug/adj51`
+================================================================
+  ADJ51 — domain-agnostic pipeline run
+================================================================
+
+Inputs:
+  rulebook: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/admiring-goldberg-a988f4/code/specs/data/adj51/experiment2/03-derived-rulebook.adj
+  vignette: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/admiring-goldberg-a988f4/code/specs/data/adj51/experiment2/04-vignette.adj
+Observed facts in vignette: 47
+
+Queries to answer: 6
+  ? diagnosis(underlying_pulmonary_pathology)
+  ? diagnosis(pulmonary_malignancy)
+  ? diagnosis(pulmonary_actinomycosis)
+  ? next_diagnostic_step(biopsy_or_advanced_workup)
+  ? diagnosis(pulmonary_tuberculosis)
+  ? diagnosis(hematologic_malignancy_myeloid)
+
+================================================================
+Query 1/6: diagnosis(underlying_pulmonary_pathology)
+================================================================
+
+  Posterior:  P = 0.8240  (82.4%)   logodds = +1.5436
+
+  Fired clauses:
+    prior  +0.4055                                source: Wahbah M, et al. Changing trends in the distribution of t...
+    +0.1823  symptom(productive_cough)                    src: Irwin RS, et al. Diagnosis and manage...
+    +0.2624  symptom(dyspnea)                             src: Parshall MB, et al. An official Ameri...
+    +0.5878  imaging_neck_ct(prevertebral_soft_tissu...   src: Vural FS, Girdler NM. Deep neck space...
+    -0.1054  denies(sick_contacts)                        src: Centers for Disease Control and Preve...
+    +0.2624  hemoglobin(moderately_low)                   src: Weiss G, Goodnough LT. Anemia of chro...
+    -0.0513  urinalysis(negative)                         src: Schmiemann G, et al. The diagnosis of...
+
+  Coverage: 6/47 observed terms matched a clause for this query.
+  Unmatched observations (41):
+    - age(young_adult)
+    - denies(fever)
+    - denies(recent_travel)
+    - denies(tuberculosis_exposure)
+    - dental_infection(absent)
+    - differential(left_shift_myelocyte_precursors)
+    - differential(monocytosis)
+    - differential(neutrophilia)
+    - disposition(admitted)
+    - encounter_setting(emergency_department)
+    - imaging_chest_ct(mediastinal_involvement)
+    - imaging_chest_ct(regional_lymphadenopathy)
+    - imaging_chest_ct(right_pleural_effusion)
+    - imaging_chest_ct(right_upper_lobe_mass)
+    - initial_antibiotic_therapy(augmentin_azithromycin)
+    - initial_disposition(discharged)
+    - inpatient_antibiotic(ceftriaxone)
+    - inpatient_antibiotic(piperacillin_tazobactam)
+    - inpatient_antibiotic(vancomycin)
+    - interval_since_initial(three_weeks)
+    - interval_since_initial(two_days)
+    - intervention(tooth_extraction)
+    - past_medical_history(asthma)
+    - platelet_count(elevated)
+    - race_ethnicity(african_american)
+    - referral_destination(dental_services)
+    - referral_source(primary_care_provider)
+    - response_to_inpatient_antibiotics(no_improvement)
+    - response_to_intervention(no_improvement)
+    - sex(female)
+    - sputum_culture(actinomyces)
+    - substance_use_history(none)
+    - symptom(facial_swelling_new_onset)
+    - symptom(hemoptysis)
+    - symptom(night_sweats)
+    - symptom(persistent_facial_swelling)
+    - symptom(weight_loss_self_attributed_intentional)
+    - symptom_course(persistent_neck_facial_swelling)
+    - symptom_progression(worsening_hemoptysis)
+    - white_blood_cell_count(markedly_elevated)
+    - white_blood_cell_count_trend(rising_markedly_elevated)
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 2/6: diagnosis(pulmonary_malignancy)
+================================================================
+
+  Posterior:  P = 1.0000  (100.0%)   logodds = +11.3606
+
+  Fired clauses:
+    prior  -1.7346                                source: Gould MK, et al. Evaluation of patients with pulmonary no...
+    -1.2040  age(young_adult)                             src: Siegel RL, Miller KD, Jemal A. Cancer...
+    +0.4055  race_ethnicity(african_american)             src: Thun MJ, et al. Lung cancer occurrenc...
+    +0.2624  sex(female)                                  src: Sun S, Schiller JH, Gazdar AF. Lung c...
+    +0.1823  past_medical_history(asthma)                 src: Rosenberger A, et al. Asthma and lung...
+    -0.9163  substance_use_history(none)                  src: Alberg AJ, et al. Epidemiology of lun...
+    +1.0986  symptom(hemoptysis)                          src: Hopstaken RM, et al. Clinical predict...
+    +1.3863  symptom(facial_swelling_new_onset)           src: Wilson LD, Detterbeck FC, Yahalom J. ...
+    +0.4055  imaging_neck_ct(prevertebral_soft_tissu...   src: Rivera MP, et al. Establishing the di...
+    +0.5878  symptom_course(persistent_neck_facial_s...   src: Detterbeck FC, et al. SVC syndrome wi...
+    +0.5878  response_to_intervention(no_improvement)     src: Rivera MP, et al. Establishing the di...
+    +0.2624  symptom(persistent_facial_swelling)          src: Wilson LD, Detterbeck FC, Yahalom J. ...
+    +0.5878  symptom_progression(worsening_hemoptysis)    src: Hopstaken RM, et al. Clinical predict...
+    +0.4055  symptom(night_sweats)                        src: Mold JW, et al. Night sweats: a syste...
+    +0.2624  symptom(weight_loss_self_attributed_int...   src: Nicholson BD, et al. The diagnosis of...
+    +0.5878  white_blood_cell_count(markedly_elevated)    src: Granger JM, Kontoyiannis DP. Cancer. ...
+    +0.3365  hemoglobin(moderately_low)                   src: Weiss G, Goodnough LT. Anemia of chro...
+    +0.3365  platelet_count(elevated)                     src: Bailey SE, et al. Clinical relevance ...
+    +1.6094  imaging_chest_ct(right_upper_lobe_mass)      src: Quekel LG, et al. Detection of lung c...
+    +1.2528  imaging_chest_ct(mediastinal_involvement)    src: Silvestri GA, et al. Methods for stag...
+    +0.9163  imaging_chest_ct(regional_lymphadenopathy)   src: Silvestri GA, et al. Methods for stag...
+    +0.9163  imaging_chest_ct(right_pleural_effusion)     src: Roberts ME, et al. BTS pleural diseas...
+    +0.4055  white_blood_cell_count_trend(rising_mar...   src: Chakraborty S, et al. Paraneoplastic ...
+    +0.4055  sputum_culture(actinomyces)                  src: Choi J, et al. Pulmonary actinomycosi...
+    +0.9163  response_to_inpatient_antibiotics(no_im...   src: Rivera MP, et al. Establishing the di...
+    +0.4055  [joint x3: imaging_chest_ct(right_upper_lobe_mass) + imaging_chest_ct(mediastinal_involv...]
+    +0.6931  [joint x2: symptom(facial_swelling_new_onset) + imaging_chest_ct(mediastinal_involvement)]
+
+  Coverage: 24/47 observed terms matched a clause for this query.
+  Unmatched observations (23):
+    - denies(fever)
+    - denies(recent_travel)
+    - denies(sick_contacts)
+    - denies(tuberculosis_exposure)
+    - dental_infection(absent)
+    - differential(left_shift_myelocyte_precursors)
+    - differential(monocytosis)
+    - differential(neutrophilia)
+    - disposition(admitted)
+    - encounter_setting(emergency_department)
+    - initial_antibiotic_therapy(augmentin_azithromycin)
+    - initial_disposition(discharged)
+    - inpatient_antibiotic(ceftriaxone)
+    - inpatient_antibiotic(piperacillin_tazobactam)
+    - inpatient_antibiotic(vancomycin)
+    - interval_since_initial(three_weeks)
+    - interval_since_initial(two_days)
+    - intervention(tooth_extraction)
+    - referral_destination(dental_services)
+    - referral_source(primary_care_provider)
+    - symptom(dyspnea)
+    - symptom(productive_cough)
+    - urinalysis(negative)
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 3/6: diagnosis(pulmonary_actinomycosis)
+================================================================
+
+  Posterior:  P = 0.1045  (10.5%)   logodds = -2.1480
+
+  Fired clauses:
+    prior  -3.4761                                source: Mabeza GF, Macfarlane J. Pulmonary actinomycosis. Eur Res...
+    +0.6931  symptom(hemoptysis)                          src: Kim TS, et al. Pulmonary actinomycosi...
+    +0.4055  symptom_course(persistent_neck_facial_s...   src: Wong VK, et al. Actinomycosis. BMJ. 2...
+    -0.3567  intervention(tooth_extraction)               src: Wong VK, et al. Actinomycosis. BMJ. 2...
+    -0.2231  denies(fever)                                src: Mabeza GF, Macfarlane J. Pulmonary ac...
+    -0.5108  dental_infection(absent)                     src: Wong VK, et al. Actinomycosis. BMJ. 2...
+    +0.5878  imaging_chest_ct(right_upper_lobe_mass)      src: Kim TS, et al. Pulmonary actinomycosi...
+    +0.6931  imaging_chest_ct(mediastinal_involvement)    src: Han JY, et al. Pulmonary actinomycosi...
+    +0.2624  imaging_chest_ct(right_pleural_effusion)     src: Kim TS, et al. Pulmonary actinomycosi...
+    +1.3863  sputum_culture(actinomyces)                  src: Russo TA. Agents of actinomycosis. In...
+    -0.6931  response_to_inpatient_antibiotics(no_im...   src: Wong VK, et al. Actinomycosis. BMJ. 2...
+    -0.9163  [joint x3: sputum_culture(actinomyces) + dental_infection(absent) + response_to_inpatien...]
+
+  Coverage: 10/47 observed terms matched a clause for this query.
+  Unmatched observations (37):
+    - age(young_adult)
+    - denies(recent_travel)
+    - denies(sick_contacts)
+    - denies(tuberculosis_exposure)
+    - differential(left_shift_myelocyte_precursors)
+    - differential(monocytosis)
+    - differential(neutrophilia)
+    - disposition(admitted)
+    - encounter_setting(emergency_department)
+    - hemoglobin(moderately_low)
+    - imaging_chest_ct(regional_lymphadenopathy)
+    - imaging_neck_ct(prevertebral_soft_tissue_swelling)
+    - initial_antibiotic_therapy(augmentin_azithromycin)
+    - initial_disposition(discharged)
+    - inpatient_antibiotic(ceftriaxone)
+    - inpatient_antibiotic(piperacillin_tazobactam)
+    - inpatient_antibiotic(vancomycin)
+    - interval_since_initial(three_weeks)
+    - interval_since_initial(two_days)
+    - past_medical_history(asthma)
+    - platelet_count(elevated)
+    - race_ethnicity(african_american)
+    - referral_destination(dental_services)
+    - referral_source(primary_care_provider)
+    - response_to_intervention(no_improvement)
+    - sex(female)
+    - substance_use_history(none)
+    - symptom(dyspnea)
+    - symptom(facial_swelling_new_onset)
+    - symptom(night_sweats)
+    - symptom(persistent_facial_swelling)
+    - symptom(productive_cough)
+    - symptom(weight_loss_self_attributed_intentional)
+    - symptom_progression(worsening_hemoptysis)
+    - urinalysis(negative)
+    - white_blood_cell_count(markedly_elevated)
+    - white_blood_cell_count_trend(rising_markedly_elevated)
+
+  Decision at 30%: BELOW threshold
+
+================================================================
+Query 4/6: next_diagnostic_step(biopsy_or_advanced_workup)
+================================================================
+
+  Posterior:  P = 0.9991  (99.9%)   logodds = +7.0031
+
+  Fired clauses:
+    prior  +0.2007                                source: Rivera MP, et al. Establishing the diagnosis of lung canc...
+    +0.9163  response_to_intervention(no_improvement)     src: Rivera MP, et al. Establishing the di...
+    +0.9163  white_blood_cell_count(markedly_elevated)    src: NCCN Guidelines: Chronic Myeloid Leuk...
+    +0.6931  differential(left_shift_myelocyte_precu...   src: NCCN Guidelines: Chronic Myeloid Leuk...
+    +1.0986  imaging_chest_ct(mediastinal_involvement)    src: Rivera MP, et al. Establishing the di...
+    +0.6931  white_blood_cell_count_trend(rising_mar...   src: NCCN Guidelines: Chronic Myeloid Leuk...
+    +1.0986  response_to_inpatient_antibiotics(no_im...   src: Rivera MP, et al. Establishing the di...
+    +0.6931  [joint x2: imaging_chest_ct(right_upper_lobe_mass) + response_to_inpatient_antibiotics(n...]
+    +0.6931  [joint x3: symptom(hemoptysis) + imaging_chest_ct(right_upper_lobe_mass) + symptom(night...]
+
+  Coverage: 9/47 observed terms matched a clause for this query.
+  Unmatched observations (38):
+    - age(young_adult)
+    - denies(fever)
+    - denies(recent_travel)
+    - denies(sick_contacts)
+    - denies(tuberculosis_exposure)
+    - dental_infection(absent)
+    - differential(monocytosis)
+    - differential(neutrophilia)
+    - disposition(admitted)
+    - encounter_setting(emergency_department)
+    - hemoglobin(moderately_low)
+    - imaging_chest_ct(regional_lymphadenopathy)
+    - imaging_chest_ct(right_pleural_effusion)
+    - imaging_neck_ct(prevertebral_soft_tissue_swelling)
+    - initial_antibiotic_therapy(augmentin_azithromycin)
+    - initial_disposition(discharged)
+    - inpatient_antibiotic(ceftriaxone)
+    - inpatient_antibiotic(piperacillin_tazobactam)
+    - inpatient_antibiotic(vancomycin)
+    - interval_since_initial(three_weeks)
+    - interval_since_initial(two_days)
+    - intervention(tooth_extraction)
+    - past_medical_history(asthma)
+    - platelet_count(elevated)
+    - race_ethnicity(african_american)
+    - referral_destination(dental_services)
+    - referral_source(primary_care_provider)
+    - sex(female)
+    - sputum_culture(actinomyces)
+    - substance_use_history(none)
+    - symptom(dyspnea)
+    - symptom(facial_swelling_new_onset)
+    - symptom(persistent_facial_swelling)
+    - symptom(productive_cough)
+    - symptom(weight_loss_self_attributed_intentional)
+    - symptom_course(persistent_neck_facial_swelling)
+    - symptom_progression(worsening_hemoptysis)
+    - urinalysis(negative)
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 5/6: diagnosis(pulmonary_tuberculosis)
+================================================================
+
+  Posterior:  P = 0.3501  (35.0%)   logodds = -0.6184
+
+  Fired clauses:
+    prior  -2.9444                                source: World Health Organization. Global Tuberculosis Report 202...
+    +0.9163  symptom(hemoptysis)                          src: World Health Organization. Treatment ...
+    +0.4055  symptom_progression(worsening_hemoptysis)    src: Bomanji JB, et al. Imaging in tubercu...
+    +0.6931  symptom(night_sweats)                        src: Lewinsohn DM, et al. Official ATS/IDS...
+    -0.3567  denies(recent_travel)                        src: Lewinsohn DM, et al. ATS/IDSA/CDC TB ...
+    -0.6931  denies(tuberculosis_exposure)                src: Lewinsohn DM, et al. ATS/IDSA/CDC TB ...
+    +0.2624  symptom(weight_loss_self_attributed_int...   src: Lewinsohn DM, et al. ATS/IDSA/CDC TB ...
+    +0.6931  imaging_chest_ct(right_upper_lobe_mass)      src: Bomanji JB, et al. Imaging in tubercu...
+    +0.6931  imaging_chest_ct(regional_lymphadenopathy)   src: Bomanji JB, et al. Imaging in tubercu...
+    +0.4055  imaging_chest_ct(right_pleural_effusion)     src: Light RW. Update on tuberculous pleur...
+    -0.6931  [joint x2: denies(tuberculosis_exposure) + denies(recent_travel)]
+
+  Coverage: 9/47 observed terms matched a clause for this query.
+  Unmatched observations (38):
+    - age(young_adult)
+    - denies(fever)
+    - denies(sick_contacts)
+    - dental_infection(absent)
+    - differential(left_shift_myelocyte_precursors)
+    - differential(monocytosis)
+    - differential(neutrophilia)
+    - disposition(admitted)
+    - encounter_setting(emergency_department)
+    - hemoglobin(moderately_low)
+    - imaging_chest_ct(mediastinal_involvement)
+    - imaging_neck_ct(prevertebral_soft_tissue_swelling)
+    - initial_antibiotic_therapy(augmentin_azithromycin)
+    - initial_disposition(discharged)
+    - inpatient_antibiotic(ceftriaxone)
+    - inpatient_antibiotic(piperacillin_tazobactam)
+    - inpatient_antibiotic(vancomycin)
+    - interval_since_initial(three_weeks)
+    - interval_since_initial(two_days)
+    - intervention(tooth_extraction)
+    - past_medical_history(asthma)
+    - platelet_count(elevated)
+    - race_ethnicity(african_american)
+    - referral_destination(dental_services)
+    - referral_source(primary_care_provider)
+    - response_to_inpatient_antibiotics(no_improvement)
+    - response_to_intervention(no_improvement)
+    - sex(female)
+    - sputum_culture(actinomyces)
+    - substance_use_history(none)
+    - symptom(dyspnea)
+    - symptom(facial_swelling_new_onset)
+    - symptom(persistent_facial_swelling)
+    - symptom(productive_cough)
+    - symptom_course(persistent_neck_facial_swelling)
+    - urinalysis(negative)
+    - white_blood_cell_count(markedly_elevated)
+    - white_blood_cell_count_trend(rising_markedly_elevated)
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 6/6: diagnosis(hematologic_malignancy_myeloid)
+================================================================
+
+  Posterior:  P = 0.9942  (99.4%)   logodds = +5.1469
+
+  Fired clauses:
+    prior  -2.9444                                source: Granger JM, Kontoyiannis DP. Etiology and outcome of extr...
+    +0.5878  age(young_adult)                             src: Jabbour E, Kantarjian H. Chronic myel...
+    +0.4055  symptom(night_sweats)                        src: Mold JW, et al. Night sweats: a syste...
+    +1.3863  white_blood_cell_count(markedly_elevated)    src: Granger JM, Kontoyiannis DP. Etiology...
+    +0.1823  differential(neutrophilia)                   src: George TI. Malignant or benign leukoc...
+    +1.2528  differential(left_shift_myelocyte_precu...   src: Arber DA, et al. International Consen...
+    +1.0986  differential(monocytosis)                    src: Arber DA, et al. International Consen...
+    +0.4700  platelet_count(elevated)                     src: Arber DA, et al. International Consen...
+    +0.9163  white_blood_cell_count_trend(rising_mar...   src: Granger JM, Kontoyiannis DP. Etiology...
+    +0.4055  response_to_inpatient_antibiotics(no_im...   src: Jabbour E, Kantarjian H. Chronic myel...
+    +1.3863  [joint x3: white_blood_cell_count(markedly_elevated) + differential(monocytosis) + diffe...]
+
+  Coverage: 9/47 observed terms matched a clause for this query.
+  Unmatched observations (38):
+    - denies(fever)
+    - denies(recent_travel)
+    - denies(sick_contacts)
+    - denies(tuberculosis_exposure)
+    - dental_infection(absent)
+    - disposition(admitted)
+    - encounter_setting(emergency_department)
+    - hemoglobin(moderately_low)
+    - imaging_chest_ct(mediastinal_involvement)
+    - imaging_chest_ct(regional_lymphadenopathy)
+    - imaging_chest_ct(right_pleural_effusion)
+    - imaging_chest_ct(right_upper_lobe_mass)
+    - imaging_neck_ct(prevertebral_soft_tissue_swelling)
+    - initial_antibiotic_therapy(augmentin_azithromycin)
+    - initial_disposition(discharged)
+    - inpatient_antibiotic(ceftriaxone)
+    - inpatient_antibiotic(piperacillin_tazobactam)
+    - inpatient_antibiotic(vancomycin)
+    - interval_since_initial(three_weeks)
+    - interval_since_initial(two_days)
+    - intervention(tooth_extraction)
+    - past_medical_history(asthma)
+    - race_ethnicity(african_american)
+    - referral_destination(dental_services)
+    - referral_source(primary_care_provider)
+    - response_to_intervention(no_improvement)
+    - sex(female)
+    - sputum_culture(actinomyces)
+    - substance_use_history(none)
+    - symptom(dyspnea)
+    - symptom(facial_swelling_new_onset)
+    - symptom(hemoptysis)
+    - symptom(persistent_facial_swelling)
+    - symptom(productive_cough)
+    - symptom(weight_loss_self_attributed_intentional)
+    - symptom_course(persistent_neck_facial_swelling)
+    - symptom_progression(worsening_hemoptysis)
+    - urinalysis(negative)
+
+  Decision at 30%: ABOVE threshold
+
