@@ -1,6 +1,6 @@
 # Historical-arch backend migration — `iir-to-*` → `*-encoder` + `*-backend`
 
-**Status:** Phases 1–5 done.  GE-225 + Intel 4004 + ARMv7 lanes migrated.  Phase 6 next (Intel 8008).
+**Status:** Phases 1–6 done.  GE-225 + Intel 4004 + ARMv7 + Intel 8008 lanes migrated.  Phase 7 next (RV32I — the original mistake from A1+ that started this whole pattern).
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) (which produced the A1–A5 lanes this migration corrects).
 
 ## The architectural mistake the A1–A5 cascades made
@@ -67,7 +67,7 @@ arches are mechanical applications (1 phase each).
 | ✅ **3** | `ge225-backend` wiring + `iir-to-ge225` deprecation | **this PR** — `lang-aot --emit=ge225` routes through `aot_core::infer` + `aot_core::specialise` + `ge225_backend::compile`.  `iir-to-ge225` marked `#[deprecated]` at the API level; existing callers keep working with warnings.  All 5 GE-225 + 3 BASIC e2e tests produce byte-for-byte-identical output. |
 | ✅ **4** | Intel 4004 migration | **this PR** — `intel4004-encoder` + `intel4004-backend` + lang-aot wiring + `iir-to-intel4004` marked `#[deprecated]`.  Byte-for-byte parity verified by the existing Intel 4004 e2e smoke test. |
 | ✅ **5** | ARMv7 migration | **this PR** — `armv7-encoder` + `armv7-backend` (minimal viable: `const_*` + `ret_*` only) + lang-aot wiring + `iir-to-armv7` marked `#[deprecated]`.  Byte-for-byte parity for the trivial `MOV r0, #N; BX LR` ROM verified by the e2e smoke test.  Full op coverage (add/sub/cmp/branches/calls) is intentionally NOT ported — future increments can add to `armv7-backend` as needed. |
-| 🔜 **6** | Intel 8008 migration | `intel8008-encoder` + `intel8008-backend` + wiring + deprecate `iir-to-intel8008`. |
+| ✅ **6** | Intel 8008 migration | **this PR** — `intel8008-encoder` + `intel8008-backend` (minimal viable: `const_*` + `ret_*`) + lang-aot wiring + `iir-to-intel8008` deprecated.  Byte-for-byte parity for `MVI A, 42; HLT` ROM verified. |
 | 🔜 **7** | RV32I migration | `riscv-encoder` + `riscv-backend` + wiring + deprecate `iir-to-riscv`. |
 
 Each phase = 1 PR + babysitter cron + auto-merge + next-phase

@@ -1,4 +1,15 @@
-//! # iir-to-intel8008 — IIR → Intel 8008 machine code backend (v0.1.0 skeleton).
+//! # iir-to-intel8008 — IIR → Intel 8008 machine code backend (v0.4.0).
+//!
+//! ## ⚠ DEPRECATED — use `intel8008-backend` instead
+//!
+//! As of Phase 6 of the historical-arch backend migration, this
+//! crate is deprecated.  Use `intel8008-encoder` for byte
+//! encoding and `intel8008-backend` for CIR lowering via the
+//! `Backend` trait.  `intel8008-backend` v0.1.0 is a minimal-
+//! viable port (just `const_*` + `ret_*`); the full op set this
+//! crate had can be ported in future increments.
+//!
+//! ## Original module docs (still applicable)
 //!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 8-bit Intel 8008 opcodes, suitable to drop into the in-tree
@@ -46,6 +57,7 @@
 //! ## Quick start
 //!
 //! ```
+//! #![allow(deprecated)]
 //! use interpreter_ir::IIRModule;
 //! use iir_to_intel8008::{validate_for_intel8008, lower_iir_to_intel8008, IIRIntel8008Config};
 //!
@@ -473,6 +485,10 @@ const SUPPORTED_OPS: &[&str] = &[
     "call",
 ];
 
+#[deprecated(
+    since = "0.4.0",
+    note = "use `intel8008_backend::compile` over CIR — see code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md"
+)]
 pub fn lower_iir_to_intel8008(
     module: &IIRModule,
     _cfg: &IIRIntel8008Config,
