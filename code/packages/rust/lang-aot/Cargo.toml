@@ -18,7 +18,10 @@ iir-to-riscv          = { path = "../iir-to-riscv" }
 iir-to-intel8008      = { path = "../iir-to-intel8008" }
 iir-to-armv7          = { path = "../iir-to-armv7" }
 iir-to-intel4004      = { path = "../iir-to-intel4004" }
-iir-to-ge225          = { path = "../iir-to-ge225" }
+ge225-backend         = { path = "../ge225-backend" }
+ge225-encoder         = { path = "../ge225-encoder" }
+aot-core              = { path = "../aot-core" }
+jit-core              = { path = "../jit-core" }
 
 [[bin]]
 name = "lang-aot"

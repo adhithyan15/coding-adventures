@@ -1,5 +1,34 @@
 //! # iir-to-ge225 — IIR → GE-225 machine code backend (v0.9.0, A5++++++++++).
 //!
+//! ## ⚠ DEPRECATED — use `ge225-backend` instead
+//!
+//! As of Phase 3 of the historical-arch backend migration
+//! ([`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md)),
+//! this crate is deprecated.  It sits at the wrong architectural
+//! layer in the compiler stack: it consumes dynamically-typed IIR
+//! directly and bypasses the `jit_core::backend::Backend` trait
+//! that `aot-core` and `jit-core` use to plug native-emit backends
+//! into both AOT and JIT in one shot.
+//!
+//! The replacement pair is:
+//!
+//! - **[`ge225-encoder`]** — the pure encoding tables (opcode
+//!   constants, `encode_*` helpers).  No IR knowledge.
+//! - **[`ge225-backend`]** — implements
+//!   `jit_core::backend::Backend` over **monomorphised CIR**
+//!   (`add_i64`, `cmp_lt_u32`, …) and emits the same bytes this
+//!   crate did.
+//!
+//! `lang-aot --emit=ge225` already routes through the new pair as
+//! of Phase 3; existing public API (constants and
+//! `lower_iir_to_ge225`) of this crate continues to work for
+//! backward compatibility but emits deprecation warnings.
+//!
+//! [`ge225-encoder`]: https://docs.rs/ge225-encoder
+//! [`ge225-backend`]: https://docs.rs/ge225-backend
+//!
+//! ## Original module docs (still applicable to the lowering algorithm)
+//!
 //! Lowers an [`interpreter_ir::IIRModule`] to a `Vec<u8>` of encoded
 //! 20-bit GE-225 instruction words (packed 3 bytes per word, big-
 //! endian, with the top 4 bits of byte 0 always zero).
@@ -101,6 +130,7 @@
 //! ## Quick start
 //!
 //! ```
+//! #![allow(deprecated)]
 //! use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 //! use iir_to_ge225::{validate_for_ge225, lower_iir_to_ge225, IIRGe225Config};
 //!
@@ -333,6 +363,16 @@ pub fn validate_for_ge225(_module: &IIRModule) -> Vec<String> {
 /// (20-bit words packed 3 bytes each, big-endian).
 ///
 /// See the module-level docs for the v0.3.0 per-op lowering table.
+///
+/// # ⚠ Deprecated
+///
+/// This entry point sits at the wrong layer in the compiler
+/// pipeline — see the module-level deprecation banner.  Use
+/// [`ge225_backend::compile`] over CIR instead.
+#[deprecated(
+    since = "0.10.0",
+    note = "use `ge225_backend::compile` over CIR — see code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md"
+)]
 pub fn lower_iir_to_ge225(
     module: &IIRModule,
     _cfg: &IIRGe225Config,

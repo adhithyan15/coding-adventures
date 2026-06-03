@@ -1,5 +1,13 @@
 // Tests for iir-to-ge225 v0.7.0 (A5+++++++ — comparison ops).
 //
+// Note: this crate is deprecated as of v0.10.0 (Phase 3 of the
+// historical-arch backend migration).  Tests still exercise the
+// deprecated `lower_iir_to_ge225` function to lock in the
+// regression invariant — the `#![allow(deprecated)]` below
+// suppresses the otherwise-noisy build warnings.
+#![allow(deprecated)]
+
+//
 // Mirrors iir-to-intel4004 v0.5.0 / iir-to-armv7 v0.4.x cmp slice
 // in spirit, adapted for GE-225's 20-bit-word / 3-bytes-per-word
 // packing.

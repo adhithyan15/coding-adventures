@@ -1,5 +1,15 @@
 # iir-to-ge225
 
+> ⚠ **DEPRECATED as of v0.10.0**.  Use [`ge225-backend`](../ge225-backend)
+> instead — it implements `jit_core::backend::Backend` over the
+> proper CIR layer.  Migration plan:
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+>
+> The crate still compiles and all existing callers continue to
+> work (each `pub fn` is marked `#[deprecated]` with a pointer to
+> the replacement).  `lang-aot` already routes through
+> `ge225-backend` as of Phase 3.
+
 IIR → GE-225 machine code backend.
 
 Lowers an `interpreter_ir::IIRModule` to a `Vec<u8>` of encoded
