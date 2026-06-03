@@ -1,0 +1,12 @@
+[package]
+name = "mccarthy-lisp-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for McCarthy's 1960 Lisp (Lisp 1.0) — turns the `mccarthy-lisp-lexer` token stream into an S-expression AST (Nil / Symbol / Int / Cons).  Expands `'X` to `(QUOTE X)` and `(A . B)` to dotted pairs.  L1 of the McCarthy Lisp implementation."
+
+[lib]
+name = "mccarthy_lisp_parser"
+path = "src/lib.rs"
+
+[dependencies]
+mccarthy-lisp-lexer = { path = "../mccarthy-lisp-lexer" }
