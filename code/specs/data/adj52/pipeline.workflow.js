@@ -10,9 +10,16 @@ export const meta = {
   ],
 }
 
-// args: { case_urls: ["https://pmc.ncbi.nlm.nih.gov/articles/PMCxxxxx/", ...] }
-const urls = (args && args.case_urls) || []
-if (!urls.length) { log('no case_urls provided in args'); return { error: 'no case_urls' } }
+// Cases to run. Override via args.case_urls; defaults below so the script is
+// self-contained. These are published "masquerade" cases the model has likely
+// seen — the Prepare stage perturbs them so neither arm can recall the text.
+const DEFAULT_URLS = [
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC11724029/', // McArdle disease mimicking polymyalgia rheumatica
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC12003113/', // Zenker diverticulum masquerading as a thyroid nodule
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC9097753/',  // Hansen's disease masquerading as rheumatoid arthritis
+]
+const urls = (args && args.case_urls && args.case_urls.length) ? args.case_urls : DEFAULT_URLS
+if (!urls.length) { log('no case_urls'); return { error: 'no case_urls' } }
 log(`pipeline over ${urls.length} case url(s)`)
 
 // ---- Schemas (force structured output; no parsing) ----
