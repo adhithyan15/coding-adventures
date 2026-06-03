@@ -1,0 +1,21 @@
+% Vignette 2 — same patient, but using the extended rulebook's
+% additional terms (hyperlipidemia, former_smoker, CACS, progressive
+% worsening). Same source case as vignette 1.
+%
+% See vignettes/01-pmc12750962-as-published.adj for the full case
+% description.
+
+observe symptom_quality(pressure_like)
+observe associated_symptom(dyspnea)
+observe precipitator(exertional)
+observe vital_signs(within_normal_limits)
+observe denied(ecg_acute_st_changes)
+observe biomarker(troponin_undetectable_serial)
+
+% ADJ50 additions — facts the original rulebook had no rule for.
+observe pmh(hyperlipidemia)
+observe pmh(former_smoker)
+observe imaging(cacs_above_100)
+observe history(progressive_worsening_over_weeks)
+
+? acs
