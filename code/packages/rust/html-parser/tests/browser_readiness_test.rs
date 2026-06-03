@@ -3,13 +3,14 @@ use coding_adventures_html_parser::{
     BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
     BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
     BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormOutput,
-    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -730,6 +731,8 @@ struct ExpectedForm {
     #[serde(default)]
     measurements: Vec<ExpectedFormMeasurement>,
     #[serde(default)]
+    object_controls: Vec<ExpectedFormObject>,
+    #[serde(default)]
     successful_controls: Vec<ExpectedFormSuccessfulControl>,
     #[serde(default)]
     validation_controls: Vec<ExpectedFormValidationControl>,
@@ -892,6 +895,44 @@ struct ExpectedFormMeasurement {
     #[serde(default)]
     indeterminate: bool,
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormObject {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    data: Option<String>,
+    #[serde(default)]
+    resolved_data: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    usemap: Option<String>,
+    #[serde(default)]
+    fallback_text: String,
+    #[serde(default)]
+    params: Vec<ExpectedFormObjectParam>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormObjectParam {
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1635,6 +1676,82 @@ fn browser_form_output_descriptor_metadata_tracks_for_references_and_labels() {
     assert_eq!(external.for_control_names, vec!["sum"]);
     assert_eq!(external.for_control_types, vec!["output"]);
     assert_eq!(external.value.as_deref(), Some("External"));
+}
+
+#[test]
+fn browser_form_object_descriptor_metadata_tracks_embedded_controls_and_params() {
+    let document = parse_browser_document(
+        "<base href=\"https://example.test/media/\">\
+         <form id=player>\
+         <p id=movie-help>Legacy plugin fallback</p>\
+         <fieldset id=plugins><legend>Plugins</legend>\
+         <object id=movie name=movie data=movie.swf type=\"application/x-shockwave-flash\" \
+             width=400 height=300 usemap=#movie-map aria-label=\"Movie plugin\" aria-describedby=movie-help>\
+             <param name=autoplay value=false><param name=quality value=high>Fallback player\
+         </object>\
+         </fieldset>\
+         <input id=token name=token value=ok>\
+         </form>\
+         <object id=external name=external form=player data=/external.bin type=\"application/octet-stream\" aria-label=External>External fallback</object>\
+         <object id=outside name=outside data=outside.bin>Outside fallback</object>",
+    )
+    .expect("form object descriptor fixture should parse");
+
+    let form = document
+        .forms
+        .first()
+        .expect("player form should be summarized");
+
+    let object_ids: Vec<&str> = form
+        .object_controls
+        .iter()
+        .filter_map(|object| object.id.as_deref())
+        .collect();
+    assert_eq!(object_ids, vec!["movie", "external"]);
+
+    let movie = &form.object_controls[0];
+    assert_eq!(movie.name.as_deref(), Some("movie"));
+    assert_eq!(movie.accessible_name.as_deref(), Some("Movie plugin"));
+    assert_eq!(
+        movie.accessible_description.as_deref(),
+        Some("Legacy plugin fallback")
+    );
+    assert_eq!(movie.data.as_deref(), Some("movie.swf"));
+    assert_eq!(
+        movie.resolved_data.as_deref(),
+        Some("https://example.test/media/movie.swf")
+    );
+    assert_eq!(
+        movie.type_hint.as_deref(),
+        Some("application/x-shockwave-flash")
+    );
+    assert_eq!(movie.width.as_deref(), Some("400"));
+    assert_eq!(movie.height.as_deref(), Some("300"));
+    assert_eq!(movie.usemap.as_deref(), Some("#movie-map"));
+    assert_eq!(movie.fallback_text, "Fallback player");
+    assert_eq!(movie.params.len(), 2);
+    assert_eq!(movie.params[0].name.as_deref(), Some("autoplay"));
+    assert_eq!(movie.params[0].value.as_deref(), Some("false"));
+    assert_eq!(movie.params[1].name.as_deref(), Some("quality"));
+    assert_eq!(movie.params[1].value.as_deref(), Some("high"));
+
+    let external = &form.object_controls[1];
+    assert_eq!(external.form_owner.as_deref(), Some("player"));
+    assert_eq!(external.name.as_deref(), Some("external"));
+    assert_eq!(external.accessible_name.as_deref(), Some("External"));
+    assert_eq!(
+        external.resolved_data.as_deref(),
+        Some("https://example.test/external.bin")
+    );
+
+    assert_eq!(form.fieldsets[0].control_ids, vec!["movie"]);
+    assert_eq!(form.fieldsets[0].control_names, vec!["movie"]);
+    assert_eq!(form.controls.len(), 1);
+    assert_eq!(form.controls[0].id.as_deref(), Some("token"));
+    assert_eq!(form.successful_controls.len(), 1);
+    assert_eq!(form.successful_controls[0].name, "token");
+    assert_eq!(form.validation_controls.len(), 1);
+    assert_eq!(form.validation_controls[0].id.as_deref(), Some("token"));
 }
 
 #[test]
@@ -3087,6 +3204,11 @@ impl ExpectedForm {
                 .into_iter()
                 .map(ExpectedFormMeasurement::into_browser_form_measurement)
                 .collect(),
+            object_controls: self
+                .object_controls
+                .into_iter()
+                .map(ExpectedFormObject::into_browser_form_object)
+                .collect(),
             successful_controls: self
                 .successful_controls
                 .into_iter()
@@ -3232,6 +3354,39 @@ impl ExpectedFormMeasurement {
             optimum: self.optimum,
             indeterminate: self.indeterminate,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedFormObject {
+    fn into_browser_form_object(self) -> BrowserFormObject {
+        BrowserFormObject {
+            id: self.id,
+            name: self.name,
+            form_owner: self.form_owner,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            data: self.data,
+            resolved_data: self.resolved_data,
+            type_hint: self.type_hint,
+            width: self.width,
+            height: self.height,
+            usemap: self.usemap,
+            fallback_text: self.fallback_text,
+            params: self
+                .params
+                .into_iter()
+                .map(ExpectedFormObjectParam::into_browser_form_object_param)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedFormObjectParam {
+    fn into_browser_form_object_param(self) -> BrowserFormObjectParam {
+        BrowserFormObjectParam {
+            name: self.name,
+            value: self.value,
         }
     }
 }

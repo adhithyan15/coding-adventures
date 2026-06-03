@@ -1616,6 +1616,7 @@ pub struct BrowserForm {
     pub selects: Vec<BrowserFormSelect>,
     pub outputs: Vec<BrowserFormOutput>,
     pub measurements: Vec<BrowserFormMeasurement>,
+    pub object_controls: Vec<BrowserFormObject>,
     pub successful_controls: Vec<BrowserFormSuccessfulControl>,
     pub validation_controls: Vec<BrowserFormValidationControl>,
     pub buttons: Vec<BrowserFormButton>,
@@ -1716,6 +1717,29 @@ pub struct BrowserFormMeasurement {
     pub optimum: Option<String>,
     pub indeterminate: bool,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormObject {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub data: Option<String>,
+    pub resolved_data: Option<String>,
+    pub type_hint: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub usemap: Option<String>,
+    pub fallback_text: String,
+    pub params: Vec<BrowserFormObjectParam>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormObjectParam {
+    pub name: Option<String>,
+    pub value: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -11516,6 +11540,10 @@ fn is_browser_form_control_element(name: &str) -> bool {
     matches!(name, "button" | "input" | "output" | "select" | "textarea")
 }
 
+fn is_browser_form_grouped_element(name: &str) -> bool {
+    is_browser_form_control_element(name) || name == "object"
+}
+
 fn is_browser_form_measurement_element(name: &str) -> bool {
     matches!(name, "meter" | "progress")
 }
@@ -12866,6 +12894,71 @@ fn collect_form_measurements_for_form(
     measurements
 }
 
+fn collect_form_objects_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+) -> Vec<BrowserFormObject> {
+    let mut objects = Vec::new();
+    collect_form_objects_for_form_into(
+        body_root,
+        &mut objects,
+        id_texts,
+        base_href,
+        target_form as *const Element,
+        target_form.attribute("id"),
+        None,
+    );
+    objects
+}
+
+fn collect_form_objects_for_form_into(
+    nodes: &[Node],
+    objects: &mut Vec<BrowserFormObject>,
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+
+        if element.name == "object" {
+            let form_owner = browser_form_owner(element);
+            let associated_with_target = match form_owner.as_deref() {
+                Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+                None => current_form.is_some_and(|form| form == target_form),
+            };
+
+            if associated_with_target {
+                objects.push(browser_form_object(element, id_texts, base_href));
+            }
+        }
+
+        for child in &element.children {
+            collect_form_objects_for_form_into(
+                std::slice::from_ref(child),
+                objects,
+                id_texts,
+                base_href,
+                target_form,
+                target_form_id,
+                element_form,
+            );
+        }
+    }
+}
+
 fn collect_form_measurements_for_form_into(
     nodes: &[Node],
     measurements: &mut Vec<BrowserFormMeasurement>,
@@ -13011,6 +13104,7 @@ fn browser_form(
     let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
     let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
     let measurements = collect_form_measurements_for_form(body_root, element, labels, id_texts);
+    let object_controls = collect_form_objects_for_form(body_root, element, id_texts, base_href);
     let form_labels = collect_form_labels_for_form(
         body_root,
         element,
@@ -13089,6 +13183,7 @@ fn browser_form(
         selects,
         outputs,
         measurements,
+        object_controls,
         successful_controls,
         validation_controls,
         buttons,
@@ -13346,7 +13441,7 @@ fn collect_fieldset_control_attribute_values(
             continue;
         };
 
-        if is_browser_form_control_element(&child_element.name)
+        if is_browser_form_grouped_element(&child_element.name)
             && child_element
                 .attribute("form")
                 .is_none_or(|form| target_form_id.is_some_and(|id| id == form))
@@ -13509,6 +13604,47 @@ fn browser_form_measurement(
         value,
         text: visible_text_for_nodes(&element.children),
     }
+}
+
+fn browser_form_object(
+    element: &Element,
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+) -> BrowserFormObject {
+    let data = element.attribute("data").map(ToOwned::to_owned);
+    BrowserFormObject {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        form_owner: browser_form_owner(element),
+        accessible_name: browser_accessible_name(element, "object", &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        resolved_data: data
+            .as_deref()
+            .and_then(|data| resolve_browser_url(data, base_href)),
+        data,
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        usemap: element.attribute("usemap").map(ToOwned::to_owned),
+        fallback_text: visible_text_for_nodes(&element.children),
+        params: browser_form_object_params(element),
+    }
+}
+
+fn browser_form_object_params(element: &Element) -> Vec<BrowserFormObjectParam> {
+    element
+        .children
+        .iter()
+        .filter_map(|child| {
+            let Node::Element(child_element) = child else {
+                return None;
+            };
+            (child_element.name == "param").then(|| BrowserFormObjectParam {
+                name: child_element.attribute("name").map(ToOwned::to_owned),
+                value: child_element.attribute("value").map(ToOwned::to_owned),
+            })
+        })
+        .collect()
 }
 
 fn browser_form_selects(controls: &[BrowserFormControl]) -> Vec<BrowserFormSelect> {
