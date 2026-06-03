@@ -3,6 +3,31 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 3: first-principles redesign (ADJ53) — latent mechanism
+
+Reverted the softmax patch (it normalized already-inflated scores — a symptom
+fix). Root cause: the engine sums independent log-LRs (Naive Bayes), but findings
+are correlated (manifestations of one cause), so it double-counts and saturates.
+Spec: `ADJ53-latent-mechanism-and-recursive-source-trees.md`.
+
+**Phase A shipped + verified — the `mechanism` construct.** A `% mechanism <M>
+for <C> lr <L> : <m1>, <m2>, ...` directive groups correlated findings under one
+latent cause. If >=1 manifestation is observed, it contributes its LR ONCE
+(realized by generating a single `contributes` on a synthetic `mechanism_present(M)`
+atom that the normal engine handles — no shared-crate change). Demo
+(`fixtures/mechanism-demo/`): four correlated McArdle findings that would saturate
+to ~0.98 encoded flat now fire once → **P = 0.64**. The over-counting is fixed.
+
+**Phase B (next):** promote the surface syntax into the adj-lang CORE grammar
+(`adj_lang.tokens` + `.grammar` + grammar-tools regen + adapter + ast + lower),
+done as a dedicated change — NOT rushed, because adj-lang has no build.rs (manual
+grammar regen) and a botched regen cascades across the workspace.
+
+**Also reframed (ADJ53):** the goal is NOT to beat frontier Claude — it's the
+TOP-DOWN descent. Establish the machinery works at the top, then step the model
+down and find the breaking point; the framework's value is how far down it raises
+the floor. "Framework loses to frontier" was the top of the descent, not a failure.
+
 ## 2026-06-03 — Batch 2: calibration fix did NOT win (framework 0/3)
 
 Re-ran the 3 perturbed cases with the coherent-differential softmax + exclusivity

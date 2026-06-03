@@ -67,7 +67,7 @@ fn main() {
         .unwrap_or_else(|e| panic!("reading rulebook {}: {e}", rulebook_path.display()));
     let vignette = fs::read_to_string(&vignette_path)
         .unwrap_or_else(|e| panic!("reading vignette {}: {e}", vignette_path.display()));
-    let combined = format!("{rulebook}\n{vignette}");
+    let mut combined = format!("{rulebook}\n{vignette}");
 
     // Mechanical parse of observe lines for the coverage check.
     let observed_terms: HashSet<String> = vignette
@@ -75,6 +75,44 @@ fn main() {
         .filter_map(|l| l.trim().strip_prefix("observe "))
         .map(|t| t.trim().to_string())
         .collect();
+
+    // ---- ADJ53: latent-mechanism construct (fixes Naive-Bayes over-counting) ----
+    // A `% mechanism <M> for <C> lr <L> : <m1>, <m2>, ...` directive declares that
+    // the manifestations m1..mk are correlated effects of ONE latent cause M.
+    // Rather than summing an independent `contributes` for each (which double-counts
+    // correlated evidence and saturates the posterior), the mechanism fires ONCE:
+    // if >=1 manifestation is observed, a single synthetic
+    // `contributes L from mechanism_present(M) to C` updates the conclusion. We
+    // realize it by generating adj-lang that the normal compiler/engine then
+    // handles — no engine change. (Phase A home of the ADJ53 `mechanism` construct,
+    // ahead of promoting the surface syntax into the adj-lang core grammar.)
+    let mechanisms = parse_mechanisms(&combined);
+    let mut fired_note: Vec<String> = Vec::new();
+    for m in &mechanisms {
+        combined.push_str(&format!(
+            "\ncontributes {} from mechanism_present({}) to {}\n  source \"ADJ53 latent mechanism\" trust inferred\n",
+            m.lr, m.name, m.conclusion
+        ));
+        let fired = m
+            .manifestations
+            .iter()
+            .any(|man| observed_terms.iter().any(|o| ws_strip(o) == ws_strip(man)));
+        if fired {
+            combined.push_str(&format!("observe mechanism_present({})\n", m.name));
+        }
+        fired_note.push(format!(
+            "  {} -> {}  (lr {}, {} of {} manifestations observed -> {})",
+            m.name,
+            m.conclusion,
+            m.lr,
+            m.manifestations
+                .iter()
+                .filter(|man| observed_terms.iter().any(|o| ws_strip(o) == ws_strip(man)))
+                .count(),
+            m.manifestations.len(),
+            if fired { "FIRES ONCE" } else { "silent" }
+        ));
+    }
 
     println!("================================================================");
     println!("  ADJ52 — counterfactual / VOI / kickback pipeline run");
@@ -84,6 +122,12 @@ fn main() {
     println!("  rulebook: {}", rulebook_path.display());
     println!("  vignette: {}", vignette_path.display());
     println!("Observed facts in vignette: {}", observed_terms.len());
+    if !fired_note.is_empty() {
+        println!("Latent mechanisms (ADJ53 — correlated findings counted once):");
+        for n in &fired_note {
+            println!("{n}");
+        }
+    }
     println!();
 
     let lowered = match compile(&combined) {
@@ -304,6 +348,65 @@ fn main() {
         }
         println!();
     }
+}
+
+/// One `% mechanism …` directive: a latent cause `name` bearing on `conclusion`
+/// with a single likelihood ratio `lr`, whose `manifestations` are its correlated
+/// observable effects.
+struct MechanismDecl {
+    name: String,
+    conclusion: String,
+    lr: f64,
+    manifestations: Vec<String>,
+}
+
+fn ws_strip(s: &str) -> String {
+    s.chars().filter(|c| !c.is_whitespace()).collect()
+}
+
+/// Parse `% mechanism <M> for <conclusion> lr <L> : <m1>, <m2>, ...` directives.
+/// adj-lang ignores `%` comments, so the runner reads them and realizes the
+/// latent-node semantics by generating synthetic adj-lang. This is the ADJ52-
+/// runner home of the ADJ53 `mechanism` construct ahead of promoting the surface
+/// syntax into the adj-lang core grammar.
+fn parse_mechanisms(text: &str) -> Vec<MechanismDecl> {
+    let mut out = Vec::new();
+    for line in text.lines() {
+        let t = line.trim();
+        let Some(rest) = t
+            .strip_prefix("% mechanism")
+            .or_else(|| t.strip_prefix("%mechanism"))
+        else {
+            continue;
+        };
+        let Some((name, after_for)) = rest.split_once(" for ") else {
+            continue;
+        };
+        let Some((conclusion, after_lr)) = after_for.split_once(" lr ") else {
+            continue;
+        };
+        let Some((lr_s, mani)) = after_lr.split_once(':') else {
+            continue;
+        };
+        let Ok(lr) = lr_s.trim().parse::<f64>() else {
+            continue;
+        };
+        let manifestations: Vec<String> = mani
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect();
+        if manifestations.is_empty() {
+            continue;
+        }
+        out.push(MechanismDecl {
+            name: name.trim().to_string(),
+            conclusion: conclusion.trim().to_string(),
+            lr,
+            manifestations,
+        });
+    }
+    out
 }
 
 fn format_term(t: &Term) -> String {

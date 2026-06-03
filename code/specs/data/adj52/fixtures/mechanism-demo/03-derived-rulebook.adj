@@ -1,0 +1,16 @@
+% ADJ53 latent-mechanism demo. Four correlated findings (markedly elevated CK,
+% exertional CK rise, exertional cramps, second wind) are NOT independent — they
+% are one glycogenolytic block seen four ways. Encoded flat as four `contributes`
+% edges they would each add ~ln(LR), summing to a saturated ~0.98+ posterior
+% (Naive-Bayes over-counting). Here they are grouped under ONE mechanism that
+% fires once.
+
+prior 0.10 for diagnosis(mcardle)
+  source "demo" trust inferred
+
+% The mechanism: any of its manifestations being observed contributes lr 8.0 ONCE.
+% mechanism glycogenolytic_block for diagnosis(mcardle) lr 8.0 : creatine_kinase(markedly_elevated), ck_rise(post_exertion), symptom(exertional_cramps), symptom(second_wind)
+
+% A genuinely independent finding still contributes on its own.
+contributes 2.0 from family_history(positive) to diagnosis(mcardle)
+  source "demo" trust inferred
