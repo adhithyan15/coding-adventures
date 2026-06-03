@@ -3,6 +3,43 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] — 2026-06-03 — **DEPRECATED** (Phase 7, FINAL lane of historical-arch backend migration)
+
+This crate is now deprecated.  Use `riscv-encoder` for byte
+encoding and `riscv-backend` for CIR lowering via the
+`jit_core::backend::Backend` trait.
+
+### What changed
+
+* `lower_iir_to_riscv` is marked `#[deprecated]` at the API
+  level.  Existing call sites continue to compile (lang-aot has
+  already migrated off it; downstream consumers can take their
+  time).
+* Tests get `#![allow(deprecated)]` so the deprecation warning
+  doesn't break the build.
+* The module-level docstring now opens with the deprecation
+  notice and a pointer to the new crates.
+
+### Why
+
+The architectural correctness migration documented in
+`code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md` moves every
+arch backend from the IIR (dynamic-typed) layer to the CIR
+(monomorphised, typed) layer behind a single `Backend` trait.
+RV32I was the original mistake from the A1+ cascade that started
+this whole pattern — Phase 7 closes the loop and completes the
+migration.
+
+### Compatibility
+
+No behavioural change.  `lower_iir_to_riscv` still produces the
+same `Vec<u32>` it produced in v0.3.3.  The new
+`riscv-backend::compile` produces byte-for-byte-identical output
+for the ops it covers (`const_*` + `ret_*` + `ret_void`), and
+returns `BackendError::UnsupportedOp` for the rest — which the
+lang-aot e2e tests treat as expected gaps with their
+`UnsupportedOp` fallback.
+
 ## [0.3.3] — 2026-06-02 (A1++.5.5.5 — call args + non-void returns)
 
 ### Added — full call ABI (up to 8 args, non-void returns)

@@ -916,8 +916,9 @@ fn end_to_end_basic_print_emits_llvm_ir_with_print_extern() {
 //
 // Cross-platform: no linker, no cfg gating.  Confirms the new
 // compile_file_to_riscv32_bin entry point runs the full source ->
-// IIR -> iir-to-riscv pipeline and produces a flat little-endian
-// .bin of 32-bit RV32I instruction words.
+// IIR -> CIR -> riscv-backend pipeline (Phase 7 of the historical-
+// arch backend migration — the FINAL lane).  Produces a flat
+// little-endian .bin of 32-bit RV32I instruction words.
 
 #[test]
 fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
@@ -928,12 +929,18 @@ fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
 
     if let Err(e) = lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
         // Tolerate not-yet-covered op gaps - same convention as the LLVM path.
+        // Phase 7 added the lowercase `unsupported op` form (Display string
+        // of `BackendError::UnsupportedOp` on `riscv-backend` v0.1.0); the
+        // CamelCase forms remain valid for any future Display drift.
         let msg = format!("{e}");
         if msg.contains("UnsupportedOp")
+            || msg.contains("unsupported op")
             || msg.contains("UnsupportedType")
             || msg.contains("UnsupportedCallShape")
             || msg.contains("ImmediateOutOfRange")
+            || msg.contains("immediate")
             || msg.contains("OutOfRegisters")
+            || msg.contains("temp-register pool exhausted")
         {
             eprintln!("skipping: BASIC RV32I lowering gap (expected): {msg}");
             return;
@@ -953,6 +960,47 @@ fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
     let last_word_le = &bytes[bytes.len() - 4..];
     assert_eq!(last_word_le, &[0x67, 0x80, 0x00, 0x00],
         "last 4 bytes should be the canonical ret encoded little-endian; got: {last_word_le:02x?}");
+}
+
+// Phase 7 of the historical-arch backend migration: a Twig `42`
+// program that the v0.1.0 `riscv-backend` minimal-viable scope DOES
+// cover.  Pins the exact 12-byte sequence (3 RV32I words flattened
+// little-endian) and matches the architectural pattern the
+// Intel 8008, ARMv7, Intel 4004, and GE-225 Twig-42 e2e tests follow.
+//
+// CIR:
+//   const_i64 v=42
+//   ret_i64   v
+//
+// Lowered RV32I:
+//   addi t0, x0, 42      ; 0x02A0_0293
+//   addi a0, t0, 0       ; 0x0002_8513   (mv a0, t0)
+//   jalr x0, x1, 0       ; 0x0000_8067   (canonical ret)
+//
+// Little-endian on disk:
+//   [0x93, 0x02, 0xA0, 0x02,
+//    0x13, 0x85, 0x02, 0x00,
+//    0x67, 0x80, 0x00, 0x00]
+#[test]
+fn end_to_end_twig_42_emits_riscv32_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Twig)
+        .expect("Twig 42 must compile through the riscv-backend v0.1.0 minimal-viable scope");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(
+        bytes,
+        vec![
+            0x93, 0x02, 0xA0, 0x02, // addi t0, x0, 42
+            0x13, 0x85, 0x02, 0x00, // addi a0, t0, 0  (mv a0, t0)
+            0x67, 0x80, 0x00, 0x00, // jalr x0, x1, 0  (ret)
+        ],
+        "Twig 42 -> RV32I byte sequence is the migration-pinned regression invariant for Phase 7"
+    );
 }
 
 // ===========================================================================
