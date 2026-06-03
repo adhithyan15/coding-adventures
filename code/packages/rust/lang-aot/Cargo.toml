@@ -15,7 +15,8 @@ interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
 iir-to-riscv          = { path = "../iir-to-riscv" }
-iir-to-intel8008      = { path = "../iir-to-intel8008" }
+intel8008-backend     = { path = "../intel8008-backend" }
+intel8008-encoder     = { path = "../intel8008-encoder" }
 armv7-backend         = { path = "../armv7-backend" }
 armv7-encoder         = { path = "../armv7-encoder" }
 intel4004-backend     = { path = "../intel4004-backend" }

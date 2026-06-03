@@ -398,9 +398,28 @@ pub fn compile_file_to_intel8008_bin(
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
 
-    let cfg = iir_to_intel8008::IIRIntel8008Config::new(stem);
-    let bytes = iir_to_intel8008::lower_iir_to_intel8008(&module, &cfg)
-        .map_err(|e| LangAotError::Intel8008BackendError(format!("{e}")))?;
+    // Phase 6 of the historical-arch backend migration: route
+    // through aot_core::infer + aot_core::specialise +
+    // intel8008_backend::compile per function, same pattern as
+    // Phases 3-5.
+    let _ = stem;
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = intel8008_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Intel8008BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.push(intel8008_encoder::HLT);
+    }
 
     std::fs::write(out, &bytes)?;
     Ok(())
