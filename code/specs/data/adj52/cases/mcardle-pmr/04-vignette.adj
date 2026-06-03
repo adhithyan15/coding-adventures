@@ -57,7 +57,3 @@ observe childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint)
 ? next_step(pygm_molecular_genetic_testing)
 ? next_step(nonischemic_forearm_exercise_test)
 ? next_step(muscle_biopsy_myophosphorylase_stain)
-
-% Mutually-exclusive single diagnoses compete in one coherent differential;
-% the "coexisting" hypothesis is combinable and listed separately.
-% @exclusive diagnosis(mcardle_disease_gsd_v), diagnosis(polymyalgia_rheumatica), diagnosis(seronegative_inflammatory_myopathy), diagnosis(other_metabolic_myopathy_lipid_storage), diagnosis(diabetic_amyotrophy)
