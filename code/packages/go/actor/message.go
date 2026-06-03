@@ -364,8 +364,17 @@ func (m *Message) ToBytes() []byte {
 	envBytes, _ := json.Marshal(env)
 
 	// Step 2: Calculate total size.
-	maxBufferSize := int(^uint(0) >> 1)
-	if len(envBytes) > maxBufferSize-headerSize-len(m.payload) {
+	//
+	// Three staged overflow checks instead of one combined expression: the
+	// combined form (max - header - payload) can itself wrap negative when
+	// payload is huge, and CodeQL's allocation-size-overflow analysis can't
+	// prove the precondition.  Staging keeps each subtraction non-negative.
+	const maxBufferSize = int(^uint(0) >> 1)
+	if len(envBytes) > maxBufferSize-headerSize {
+		panic("actor: message too large to serialize")
+	}
+	remaining := maxBufferSize - headerSize - len(envBytes)
+	if len(m.payload) > remaining {
 		panic("actor: message too large to serialize")
 	}
 	totalSize := headerSize + len(envBytes) + len(m.payload)

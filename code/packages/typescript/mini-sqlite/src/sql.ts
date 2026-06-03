@@ -47,26 +47,37 @@ export function firstKeyword(sql: string): string {
   return match ? match[0].toUpperCase() : "";
 }
 
+// stripStatementTerminator trims leading whitespace and one trailing semicolon
+// plus surrounding whitespace.  We do this imperatively rather than with a
+// `\s*;?\s*$` regex tail because that pattern triggers polynomial backtracking
+// (codeql js/polynomial-redos) on adversarial whitespace-heavy inputs.
+function stripStatementTerminator(sql: string): string {
+  let s = sql.trim();
+  if (s.endsWith(";")) s = s.slice(0, -1).trimEnd();
+  return s;
+}
+
 export function parseMutatingStatement(sql: string): MutatingStatement {
-  const keyword = firstKeyword(sql);
+  const trimmed = stripStatementTerminator(sql);
+  const keyword = firstKeyword(trimmed);
   switch (keyword) {
     case "CREATE":
-      return parseCreate(sql);
+      return parseCreate(trimmed);
     case "DROP":
-      return parseDrop(sql);
+      return parseDrop(trimmed);
     case "INSERT":
-      return parseInsert(sql);
+      return parseInsert(trimmed);
     case "UPDATE":
-      return parseUpdate(sql);
+      return parseUpdate(trimmed);
     case "DELETE":
-      return parseDelete(sql);
+      return parseDelete(trimmed);
     default:
       throw new ProgrammingError(`unsupported SQL statement: ${keyword || sql}`);
   }
 }
 
 function parseCreate(sql: string): CreateTableStatement {
-  const match = /^\s*CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*\(([\s\S]*)\)\s*;?\s*$/i.exec(sql);
+  const match = /^CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*\(([\s\S]*)\)$/i.exec(sql);
   if (!match) throw new ProgrammingError("invalid CREATE TABLE statement");
   const columns = splitTopLevel(match[3], ",")
     .map((part) => identifierAtStart(part.trim()))
@@ -83,7 +94,7 @@ function parseCreate(sql: string): CreateTableStatement {
 }
 
 function parseDrop(sql: string): DropTableStatement {
-  const match = /^\s*DROP\s+TABLE\s+(IF\s+EXISTS\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*;?\s*$/i.exec(sql);
+  const match = /^DROP\s+TABLE\s+(IF\s+EXISTS\s+)?([A-Za-z_][A-Za-z0-9_]*)$/i.exec(sql);
   if (!match) throw new ProgrammingError("invalid DROP TABLE statement");
   return {
     kind: "drop",
@@ -93,7 +104,7 @@ function parseDrop(sql: string): DropTableStatement {
 }
 
 function parseInsert(sql: string): InsertStatement {
-  const match = /^\s*INSERT\s+INTO\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*\(([^)]*)\))?\s+VALUES\s+([\s\S]*?)\s*;?\s*$/i.exec(sql);
+  const match = /^INSERT\s+INTO\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*\(([^)]*)\))?\s+VALUES\s+([\s\S]*)$/i.exec(sql);
   if (!match) throw new ProgrammingError("invalid INSERT statement");
   const columns = match[2]
     ? splitTopLevel(match[2], ",").map((part) => normalizeIdentifier(part.trim()))
@@ -107,7 +118,7 @@ function parseInsert(sql: string): InsertStatement {
 }
 
 function parseUpdate(sql: string): UpdateStatement {
-  const match = /^\s*UPDATE\s+([A-Za-z_][A-Za-z0-9_]*)\s+SET\s+([\s\S]*?)\s*;?\s*$/i.exec(sql);
+  const match = /^UPDATE\s+([A-Za-z_][A-Za-z0-9_]*)\s+SET\s+([\s\S]*)$/i.exec(sql);
   if (!match) throw new ProgrammingError("invalid UPDATE statement");
   const [assignmentSql, whereSql] = splitTopLevelKeyword(match[2], "WHERE");
   const assignments = new Map<string, SqlValue>();
@@ -130,7 +141,7 @@ function parseUpdate(sql: string): UpdateStatement {
 }
 
 function parseDelete(sql: string): DeleteStatement {
-  const match = /^\s*DELETE\s+FROM\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s+WHERE\s+([\s\S]*?))?\s*;?\s*$/i.exec(sql);
+  const match = /^DELETE\s+FROM\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s+WHERE\s+([\s\S]*))?$/i.exec(sql);
   if (!match) throw new ProgrammingError("invalid DELETE statement");
   return {
     kind: "delete",

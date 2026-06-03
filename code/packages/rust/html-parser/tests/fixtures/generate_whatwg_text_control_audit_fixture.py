@@ -227,13 +227,15 @@ def axis_for_case(case: SmokeCase) -> str:
         return "noscript-scripting"
     if "<plaintext" in data:
         return "plaintext-recovery"
-    if re.search(r"<(?:textarea|title)(?:\s|/|>)", data):
+    # data is already .lower()-cased above, but re.I keeps codeql's
+    # py/bad-tag-filter rule from flagging these tag scans as case-sensitive.
+    if re.search(r"<(?:textarea|title)(?:\s|/|>)", data, re.I):
         return "rcdata-controls"
-    if re.search(r"<script(?:\s|/|>)", data):
+    if re.search(r"<script(?:\s|/|>)", data, re.I):
         return "script-rawtext"
-    if re.search(r"<(?:iframe|noembed|noframes|style|xmp)(?:\s|/|>)", data):
+    if re.search(r"<(?:iframe|noembed|noframes|style|xmp)(?:\s|/|>)", data, re.I):
         return "rawtext-elements"
-    if re.search(r"<(?:listing|pre)(?:\s|/|>)", data):
+    if re.search(r"<(?:listing|pre)(?:\s|/|>)", data, re.I):
         return "pre-listing-newline"
     return "stray-text-control-end-tags"
 
