@@ -334,6 +334,10 @@ pub enum SearchMode {
     FindFirst,
     EnumerateAll,
     AutoDetect,
+    /// LP19e likelihood-ratio aggregation, added in logic-engine 0.3.0.
+    /// Recorded here so the audit trail can reflect the engine variant
+    /// the framework actually used; the serialised form is `"LRAggregate"`.
+    LRAggregate,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

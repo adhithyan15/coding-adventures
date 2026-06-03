@@ -144,6 +144,11 @@ impl QueryRun {
         match &self.result {
             SearchResult::FindFirstResult(opt) => opt.is_some(),
             SearchResult::EnumerateAllResult { probability, .. } => *probability > 0.0,
+            // LP19e LR aggregation always produces exactly one proof
+            // (prior + active contributions), so "succeeded" means
+            // the posterior is non-zero — the rulebook produced an
+            // answer for the query.
+            SearchResult::LRAggregateResult { posterior, .. } => *posterior > 0.0,
         }
     }
 
@@ -162,6 +167,11 @@ impl QueryRun {
                 }
             }
             SearchResult::EnumerateAllResult { probability, .. } => *probability,
+            // LP19e LR aggregation reports the Bayesian posterior
+            // P(query | observed). Returning this here gives prolog-loader
+            // callers the same "probability of the conclusion" semantics
+            // as the WMC path.
+            SearchResult::LRAggregateResult { posterior, .. } => *posterior,
         }
     }
 }

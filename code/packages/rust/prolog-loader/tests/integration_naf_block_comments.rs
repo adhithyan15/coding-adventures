@@ -46,6 +46,9 @@ fn run_queries(src: &str) -> Vec<bool> {
         let succeeded = match r {
             SearchResult::FindFirstResult(opt) => opt.is_some(),
             SearchResult::EnumerateAllResult { probability, .. } => probability > 0.0,
+            // LP19e adds LRAggregateResult; success means the
+            // posterior is non-zero.
+            SearchResult::LRAggregateResult { posterior, .. } => posterior > 0.0,
         };
         outcomes.push(succeeded);
     }

@@ -33,6 +33,7 @@
 //! mode implementations, weighted model counting.
 
 pub mod enumerate;
+pub mod lr_aggregate;
 pub mod proof_dag;
 pub mod wmc;
 
@@ -41,6 +42,10 @@ use std::collections::HashMap;
 use logic_core::{LogicVar, Substitution, Term, unify};
 
 pub use enumerate::enumerate_all;
+pub use lr_aggregate::{
+    lr_aggregate, sigmoid, ContributionClause, JointContributionClause, KbError,
+    LRAggregateResult, LrAggregateWarning, PriorClause,
+};
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 pub use wmc::weighted_model_count;
 
@@ -55,6 +60,23 @@ pub struct FactId(pub u64);
 /// Stable identifier for a Rule within a KnowledgeBase.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct RuleId(pub u64);
+
+/// Stable identifier for a [`PriorClause`] within a KnowledgeBase.
+///
+/// Distinct id type from `FactId` / `RuleId` so the proof DAG and
+/// the `DerivationOrigin` enum can statically distinguish what kind
+/// of clause a step came from. The lowering map (ADJ15) joins these
+/// ids back to the user-facing rulebook line.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct PriorClauseId(pub u64);
+
+/// Stable identifier for a [`ContributionClause`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ContributionClauseId(pub u64);
+
+/// Stable identifier for a [`JointContributionClause`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct JointContributionClauseId(pub u64);
 
 /// Probability annotation on a clause.
 ///
@@ -199,13 +221,30 @@ impl ClauseIndex {
 }
 
 /// A collection of Facts and Rules, indexed for clause selection by
-/// the head's functor/arity.
+/// the head's functor/arity. Per LP19e, also stores prior /
+/// contribution / joint-contribution clauses in parallel maps; the
+/// SLD-resolution / WMC paths ignore these and the LR-aggregation
+/// path ignores `facts` and `rules` except via the `observed_evidence`
+/// query — the two inference shapes coexist without interference.
 #[derive(Debug, Default)]
 pub struct KnowledgeBase {
     facts: HashMap<ClauseIndex, Vec<Fact>>,
     rules: HashMap<ClauseIndex, Vec<Rule>>,
+    /// LP19e: at most one PriorClause per conclusion. Stored as a
+    /// flat `Vec` rather than a `HashMap<Term, _>` because `Term` does
+    /// not implement `Hash + Eq` (it embeds `LogicVar` and `f64`s
+    /// nowhere yet, but the contract may grow). Linear scan is fine
+    /// at the scale we use today (≤ ~50 priors per KB even for a
+    /// medical rulebook); switching to an indexed map later is purely
+    /// additive once `Term: Hash + Eq` is available.
+    priors: Vec<PriorClause>,
+    contributions: Vec<ContributionClause>,
+    joint_contributions: Vec<JointContributionClause>,
     next_fact_id: u64,
     next_rule_id: u64,
+    next_prior_id: u64,
+    next_contribution_id: u64,
+    next_joint_contribution_id: u64,
 }
 
 impl KnowledgeBase {
@@ -277,27 +316,152 @@ impl KnowledgeBase {
             .all(|r| r.probability == Probability::Certain);
         fact_certain && rule_certain
     }
+
+    // -----------------------------------------------------------------
+    // LP19e — prior / contribution / joint-contribution storage
+    // -----------------------------------------------------------------
+
+    /// Insert a [`PriorClause`], assigning it a fresh
+    /// [`PriorClauseId`]. Fails with [`KbError::ConflictingPriors`]
+    /// if a prior for the same conclusion already exists.
+    pub fn add_prior(&mut self, mut clause: PriorClause) -> Result<PriorClauseId, KbError> {
+        if let Some(existing) = self.priors.iter().find(|p| p.conclusion == clause.conclusion) {
+            return Err(KbError::ConflictingPriors {
+                conclusion: clause.conclusion,
+                existing: existing.id,
+            });
+        }
+        let id = PriorClauseId(self.next_prior_id);
+        self.next_prior_id += 1;
+        clause.id = id;
+        self.priors.push(clause);
+        Ok(id)
+    }
+
+    /// Insert a [`ContributionClause`], assigning a fresh id. Multiple
+    /// contributions per `(conclusion, evidence_term)` are permitted
+    /// and sum in log-odds at aggregation time.
+    pub fn add_contribution(
+        &mut self,
+        mut clause: ContributionClause,
+    ) -> ContributionClauseId {
+        let id = ContributionClauseId(self.next_contribution_id);
+        self.next_contribution_id += 1;
+        clause.id = id;
+        self.contributions.push(clause);
+        id
+    }
+
+    /// Insert a [`JointContributionClause`].
+    pub fn add_joint_contribution(
+        &mut self,
+        mut clause: JointContributionClause,
+    ) -> JointContributionClauseId {
+        let id = JointContributionClauseId(self.next_joint_contribution_id);
+        self.next_joint_contribution_id += 1;
+        clause.id = id;
+        self.joint_contributions.push(clause);
+        id
+    }
+
+    /// Look up the unique prior on `conclusion`, if any. O(N) over
+    /// all priors in the KB; see the `priors` field doc for why the
+    /// flat-Vec representation is fine at current scale.
+    pub fn prior_for(&self, conclusion: &Term) -> Option<&PriorClause> {
+        self.priors.iter().find(|p| &p.conclusion == conclusion)
+    }
+
+    /// Iterate the single-source contributions naming `conclusion`.
+    /// O(N) filter — small in practice.
+    pub fn contributions_for(&self, conclusion: &Term) -> Vec<&ContributionClause> {
+        self.contributions
+            .iter()
+            .filter(|c| &c.conclusion == conclusion)
+            .collect()
+    }
+
+    /// Iterate the joint contributions naming `conclusion`.
+    pub fn joint_contributions_for(&self, conclusion: &Term) -> Vec<&JointContributionClause> {
+        self.joint_contributions
+            .iter()
+            .filter(|c| &c.conclusion == conclusion)
+            .collect()
+    }
+
+    /// True iff at least one contribution (single or joint) names
+    /// `conclusion`. This is the discriminator that `AutoDetect` uses
+    /// to route to LR aggregation rather than SLD / WMC.
+    pub fn participates_in_lr_aggregation(&self, conclusion: &Term) -> bool {
+        self.contributions
+            .iter()
+            .any(|c| &c.conclusion == conclusion)
+            || self
+                .joint_contributions
+                .iter()
+                .any(|c| &c.conclusion == conclusion)
+    }
+
+    /// LP19e "observation gate." If `evidence_term` is asserted in
+    /// the KB as a `Certain` Fact (one or more), return the
+    /// `FactId`s; otherwise `None`.
+    ///
+    /// **Current scope** (LP19e v0.1): only `Certain` Facts gate
+    /// contributions. Probabilistic Facts and Rule-derived evidence
+    /// are deliberately not yet routed here — the spec defers their
+    /// careful treatment to v0.2 because each interacts non-trivially
+    /// with the "probability of observation vs probability of truth"
+    /// distinction in ADJ14.
+    pub fn observed_evidence(&self, evidence_term: &Term) -> Option<Vec<FactId>> {
+        let matched: Vec<FactId> = self
+            .facts_for(evidence_term)
+            .iter()
+            .filter(|f| f.probability == Probability::Certain && &f.term == evidence_term)
+            .map(|f| f.id)
+            .collect();
+        if matched.is_empty() {
+            None
+        } else {
+            Some(matched)
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
 // Search modes (only FindFirst is implemented in this slice)
 // ---------------------------------------------------------------------------
 
-/// Per LP19, three search modes are defined. `FindFirst` stops at the
-/// first successful derivation; `EnumerateAll` traverses every branch
-/// and returns the complete proof DAG; `AutoDetect` chooses between
-/// them based on whether the knowledge base is all-`Certain`.
+/// Per LP19 and LP19e, four search modes are defined.
+/// - [`FindFirst`](Self::FindFirst) stops at the first successful
+///   derivation.
+/// - [`EnumerateAll`](Self::EnumerateAll) traverses every branch
+///   and returns the complete proof DAG together with the
+///   weighted-model-counting posterior.
+/// - [`LRAggregate`](Self::LRAggregate) computes a likelihood-ratio
+///   Bayesian posterior over a `prior + Σ contributes` rulebook.
+/// - [`AutoDetect`](Self::AutoDetect) chooses among the three above
+///   per query, using `kb.participates_in_lr_aggregation(query)` to
+///   pick LR aggregation, then `kb.is_all_certain()` to pick between
+///   FindFirst and EnumerateAll. See the LP19e §"AutoDetect: extended
+///   routing" decision tree.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SearchMode {
     FindFirst,
     EnumerateAll,
+    LRAggregate,
     AutoDetect,
 }
 
-/// What a search call returns. `FindFirstResult` is the cheap path —
-/// at most one substitution. `EnumerateAllResult` carries the full proof
-/// DAG along with the engine's computed probability for probabilistic
-/// queries.
+/// What a search call returns.
+///
+/// - [`FindFirstResult`](Self::FindFirstResult) — at most one
+///   substitution, no DAG. Returned by `FindFirst`.
+/// - [`EnumerateAllResult`](Self::EnumerateAllResult) — full proof
+///   DAG plus the WMC posterior. Returned by `EnumerateAll`.
+/// - [`LRAggregateResult`](Self::LRAggregateResult) — single-proof
+///   DAG whose steps enumerate the prior and every active LR
+///   contribution in evaluation order, with the posterior and its
+///   log-odds. Returned by `LRAggregate`. Carries any
+///   [`LrAggregateWarning`]s the algorithm raised.
 #[derive(Debug, Clone, PartialEq)]
 pub enum SearchResult {
     /// Deterministic find-first: at most one binding, no DAG.
@@ -309,6 +473,16 @@ pub enum SearchResult {
         /// and at least one proof exists; equals 0.0 if no proof.
         probability: f64,
     },
+    /// LP19e likelihood-ratio aggregation. The DAG has exactly one
+    /// `Proof` whose steps enumerate the prior and every active
+    /// contribution; `posterior_logit` is the final running log-odds
+    /// and `posterior` is its sigmoid.
+    LRAggregateResult {
+        dag: ProofDAG,
+        posterior: f64,
+        posterior_logit: f64,
+        warnings: Vec<LrAggregateWarning>,
+    },
 }
 
 /// Run a query against the KB under the chosen search mode. When mode
@@ -316,11 +490,19 @@ pub enum SearchResult {
 /// `FindFirst` if every clause is `Certain`, otherwise `EnumerateAll`
 /// — this is the LP19 short-circuit theorem made explicit.
 pub fn search(query: &Term, kb: &KnowledgeBase, mode: SearchMode) -> SearchResult {
+    // LP19e §"AutoDetect: extended routing": LR aggregation takes
+    // priority over the WMC short-circuit, because if a conclusion
+    // is the target of `contributes` clauses, the user has declared
+    // the Bayesian shape and we should honour it even if every
+    // other clause in the KB is Certain.
     let effective = match mode {
         SearchMode::FindFirst => SearchMode::FindFirst,
         SearchMode::EnumerateAll => SearchMode::EnumerateAll,
+        SearchMode::LRAggregate => SearchMode::LRAggregate,
         SearchMode::AutoDetect => {
-            if kb.is_all_certain() {
+            if kb.participates_in_lr_aggregation(query) {
+                SearchMode::LRAggregate
+            } else if kb.is_all_certain() {
                 SearchMode::FindFirst
             } else {
                 SearchMode::EnumerateAll
@@ -334,6 +516,15 @@ pub fn search(query: &Term, kb: &KnowledgeBase, mode: SearchMode) -> SearchResul
             let dag = enumerate_all(query, kb);
             let probability = weighted_model_count(&dag, kb);
             SearchResult::EnumerateAllResult { dag, probability }
+        }
+        SearchMode::LRAggregate => {
+            let result = lr_aggregate(query, kb);
+            SearchResult::LRAggregateResult {
+                dag: result.dag,
+                posterior: result.posterior,
+                posterior_logit: result.posterior_logit,
+                warnings: result.warnings,
+            }
         }
         // AutoDetect was rewritten above.
         SearchMode::AutoDetect => unreachable!(),
