@@ -58,6 +58,10 @@ All notable changes to this package will be documented in this file.
 - Scheduler-action labels and intent helpers on supervisor drain outcomes.
 - Outcome status helpers on supervisor drain reports and summaries.
 - Flattened outcome status flags for supervisor drain run summaries.
+- Stable supervisor drain outcome key, digest, action, and route rollups on
+  reports and flattened run summaries.
+- Report-level host-run escalation label-drift helpers avoid duplicate
+  recursive label-chain walks.
 - Flattened supervisor drain run summaries for host logs and scheduler loops.
 - Typed classifier accessors for supervisor drain run summaries.
 - Workload accessors for supervisor drain run reports.
