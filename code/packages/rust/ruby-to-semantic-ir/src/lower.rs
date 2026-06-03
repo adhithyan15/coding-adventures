@@ -1704,8 +1704,22 @@ impl Lowerer {
                 // whole pattern fall back to the v0 `__pattern_match__`
                 // marker (kept per the Tier-3 marker-replacement
                 // convention).
-                if self.array_pattern_is_lowerable(inner) {
-                    self.lower_array_pattern(inner, scrutinee, span)
+                //
+                // Phase FC — splat elements: a SINGLE splat (`[a, *mid, b]`)
+                // lowers structurally (relaxed `>=` length check + front/
+                // back indexing + optional `__seq_slice__` binding of the
+                // middle).  TWO splats (the *find* pattern `[*, x, *]`)
+                // would need a contiguous-window search the IR can't
+                // express inline, so it falls back to the marker.
+                let splats = self.array_pattern_splat_count(inner);
+                if splats == 0 {
+                    if self.array_pattern_is_lowerable(inner) {
+                        self.lower_array_pattern(inner, scrutinee, span)
+                    } else {
+                        Ok(self.pattern_match_marker(inner, scrutinee, span))
+                    }
+                } else if splats == 1 && self.array_pattern_is_lowerable(inner) {
+                    self.lower_array_pattern_one_splat(inner, scrutinee, span)
                 } else {
                     Ok(self.pattern_match_marker(inner, scrutinee, span))
                 }
@@ -2217,6 +2231,186 @@ impl Lowerer {
                 }
             }
         }
+        Ok((cond, prefix))
+    }
+
+    /// Phase FC — count `splat_pattern` children of an `array_pattern`.
+    fn array_pattern_splat_count(&self, array_inner: &GrammarASTNode) -> usize {
+        array_inner
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "splat_pattern"))
+            .count()
+    }
+
+    /// Phase FC — lower a single-splat array pattern `[pre…, *mid, post…]`
+    /// against `target`.
+    ///
+    /// `in [a, *mid, b]` against `s` produces:
+    ///
+    /// ```text
+    /// cond   = (len(s) >= 2) && (<match a vs s[0]>) && (<match b vs s[len-1]>)
+    /// prefix = [ let a = s[0], let mid = __seq_slice__(s, 1, len(s)-1), let b = s[len-1] ]
+    /// ```
+    ///
+    /// Fixed (non-splat) elements before the splat index from the front
+    /// (`s[i]`); those after the splat index from the back
+    /// (`s[len - (post-j)]`).  A named splat binds the middle slice via a
+    /// `__seq_slice__(seq, from, to)` marker `BuiltinCall` (SIR has no
+    /// sequence-slice primitive); a bare `*` binds nothing.  Each fixed
+    /// element is matched by recursing through `lower_in_clause_pattern`,
+    /// so literal / binding / nested sub-patterns compose.  The relaxed
+    /// `len >= fixed_count` check (vs the exact `==` of the no-splat path)
+    /// is what the splat buys.  Requests `Feature::Sequences` +
+    /// `Feature::ShortCircuit`.  Assumes exactly one splat (caller checked).
+    fn lower_array_pattern_one_splat(
+        &mut self,
+        array_inner: &GrammarASTNode,
+        target: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        self.features_used.insert(Feature::Sequences);
+        self.features_used.insert(Feature::ShortCircuit);
+
+        // Walk children in source order, splitting fixed `pattern` nodes
+        // into those before vs after the single `splat_pattern`.
+        let mut pre: Vec<&GrammarASTNode> = Vec::new();
+        let mut post: Vec<&GrammarASTNode> = Vec::new();
+        let mut splat_name: Option<String> = None;
+        let mut seen_splat = false;
+        for c in &array_inner.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                match n.rule_name.as_str() {
+                    "pattern" => {
+                        if seen_splat {
+                            post.push(n);
+                        } else {
+                            pre.push(n);
+                        }
+                    }
+                    "splat_pattern" => {
+                        seen_splat = true;
+                        // The splat's optional rest name (the Name token
+                        // that isn't the `*` operator token).
+                        splat_name = n.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t)
+                                if matches!(t.type_, TokenType::Name) && t.value != "*" =>
+                            {
+                                Some(t.value.clone())
+                            }
+                            _ => None,
+                        });
+                    }
+                    _ => {}
+                }
+            }
+        }
+
+        let fixed = pre.len() + post.len();
+        let seq_len = || Expr::SeqLen {
+            seq: Box::new(target.clone()),
+            span: span.clone(),
+        };
+
+        // Relaxed length check: `len(target) >= fixed`.
+        let mut cond = Expr::BuiltinCall {
+            name: ">=".to_string(),
+            args: vec![
+                seq_len(),
+                Expr::IntLit {
+                    value: fixed as i64,
+                    span: span.clone(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let mut prefix: Vec<Stmt> = Vec::new();
+
+        // Front-anchored fixed elements: target[i] for i in 0..pre.len().
+        for (i, p) in pre.iter().enumerate() {
+            let index = Expr::SeqIndex {
+                seq: Box::new(target.clone()),
+                index: Box::new(Expr::IntLit {
+                    value: i as i64,
+                    span: span.clone(),
+                }),
+                span: span.clone(),
+            };
+            let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &index)?;
+            cond = Expr::LogicalAnd {
+                lhs: Box::new(cond),
+                rhs: Box::new(sub_cond),
+                span: span.clone(),
+            };
+            prefix.extend(sub_prefix);
+        }
+
+        // Back-anchored fixed elements: target[len - (post.len() - j)].
+        for (j, p) in post.iter().enumerate() {
+            let from_back = (post.len() - j) as i64;
+            let index = Expr::SeqIndex {
+                seq: Box::new(target.clone()),
+                index: Box::new(Expr::BuiltinCall {
+                    name: "-".to_string(),
+                    args: vec![
+                        seq_len(),
+                        Expr::IntLit {
+                            value: from_back,
+                            span: span.clone(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                }),
+                span: span.clone(),
+            };
+            let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &index)?;
+            cond = Expr::LogicalAnd {
+                lhs: Box::new(cond),
+                rhs: Box::new(sub_cond),
+                span: span.clone(),
+            };
+            prefix.extend(sub_prefix);
+        }
+
+        // Named splat → bind the middle slice `target[pre .. len-post]`
+        // via a `__seq_slice__` marker (no first-class slice in SIR).
+        if let Some(name) = splat_name {
+            self.declared_locals.insert(name.clone());
+            let to = Expr::BuiltinCall {
+                name: "-".to_string(),
+                args: vec![
+                    seq_len(),
+                    Expr::IntLit {
+                        value: post.len() as i64,
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            let slice = Expr::BuiltinCall {
+                name: "__seq_slice__".to_string(),
+                args: vec![
+                    target.clone(),
+                    Expr::IntLit {
+                        value: pre.len() as i64,
+                        span: span.clone(),
+                    },
+                    to,
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            prefix.push(Stmt::LetBinding {
+                name,
+                sir_type: None,
+                value: slice,
+                span: span.clone(),
+            });
+        }
+
         Ok((cond, prefix))
     }
 

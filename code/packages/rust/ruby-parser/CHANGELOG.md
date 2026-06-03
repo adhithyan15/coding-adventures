@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.78.0] - 2026-06-03
+
+### Added (FC — array splat and find patterns)
+
+The `array_pattern` grammar rule now admits splat elements (`_grammar.rs`
+regenerated):
+
+- `array_pattern = LBRACKET [ ( splat_pattern | pattern ) { COMMA
+  ( splat_pattern | pattern ) } ] RBRACKET` — every position may now be a
+  fixed sub-pattern **or** a splat.
+- `splat_pattern = "*" [ NAME ]` — a named (`*rest`) or anonymous (`*`)
+  rest element. One splat is the standard `[a, *mid, b]` form; two splats
+  (`[*, x, *]`) is the *find* pattern.
+
+New parser pins: `test_parse_array_pattern_with_named_splat`,
+`test_parse_array_find_pattern_two_splats`,
+`test_parse_array_anonymous_splat`. (Lowering lives in
+`ruby-to-semantic-ir` 0.89.0.)
+
 ## [0.77.0] - 2026-06-03
 
 ### Added (FC — pin `^x` and class `Foo(x)` patterns)
