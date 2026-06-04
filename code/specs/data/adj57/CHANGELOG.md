@@ -1,5 +1,30 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.4.0] — 2026-06-04
+
+### Added
+
+- **ADJ60 — the output-grounding gate (bidirectional byte provenance).** The dual of
+  input coverage: every output claim must trace back to input bytes (*nothing
+  invented*), completing the invariant ADJ57/58 only half-enforced.
+  - **`pipeline/output_gate.py`** — a claim is grounded iff a citation is a *verbatim*
+    span of the allowed input (case text + used-fact terms); ungrounded claims (no
+    retrievable citation) are rejected for kick-back. 6 unit tests
+    (`pipeline/test_output_gate.py`).
+  - **`pipeline/grounded.workflow.js`** — ingest with byte coverage → derive answer as
+    grounded claims → inline output-grounding gate with a **kickback loop** (re-derive
+    any ungrounded claim until every claim cites verbatim input bytes).
+  - **`pipeline/run_grounded.py`** — verifies BOTH gates and prints the bidirectional
+    trail + each claim mapped to its input span.
+  - **Run (neurobrucellosis, PMC2769393):** INPUT 100% covered (25 facts + 1 discard =
+    1812 bytes); OUTPUT 20/20 claims grounded → bidirectional provenance complete.
+  - **Finding:** the strict gate made the framework *refuse to name neurobrucellosis*
+    (the answer name isn't a byte; the serology was held aside) — revealing the gate
+    conflates **evidence claims** (must be byte-grounded — rejects geology's
+    "tremolitized") with the **conclusion** (an inference from grounded evidence —
+    should be allowed as a flagged hypothesis). Next: ADJ61 splits the two. Spec:
+    [ADJ60](../../ADJ60-output-grounding-gate.md).
+
 ## [0.3.0] — 2026-06-04
 
 ### Added
