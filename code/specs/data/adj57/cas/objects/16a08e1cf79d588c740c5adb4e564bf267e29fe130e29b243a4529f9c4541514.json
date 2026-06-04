@@ -16,9 +16,19 @@
       "end": 282,
       "quote": "Ellis had located the speaker to the Wearside area by comparing his speech with that of a recording made whilst studying the dialect of Washington.",
       "used_for": "LIKELIHOOD RATIO 1 \u2014 best_match(wearside_survey_recordings_washington): P(questioned sample best-matches the Wearside/Washington SED comparison recording | speaker truly from Wearside/Sunderland) vs P(same | speaker from elsewhere). DIRECTION strongly positive and root-validated as a DIRECTIONAL fact: Stanley Ellis localized the speaker by comparing the tape against his own SED fieldwork, specifically a recording of the Washington dialect, and the Castletown/Southwick comparison speaker's 'segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker', while similarities FELL OFF moving north \u2014 a positive co-localization gradient. GROUND TRUTH confirms direction: John Humble (DNA-identified 2005/2006) had 'spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton' \u2014 the exact region Ellis named. BUT no source publishes a numeric P(match|hypothesis) or a quantified false-match rate; the judgment was auditory/comparative, not a measured likelihood ratio. Hence direction_only for the NUMBER even though the direction traces to root primary observation.->wearside_sunderland_castletown"
+    },
+    {
+      "start": 135,
+      "end": 282,
+      "quote": "Ellis had located the speaker to the Wearside area by comparing his speech with that of a recording made whilst studying the dialect of Washington.",
+      "used_for": "LIKELIHOOD RATIO 1 \u2014 best_match(wearside_survey_recordings_washington): P(questioned sample best-matches the Wearside/Washington SED comparison recording | speaker truly from Wearside/Sunderland) vs P(same | speaker from elsewhere). DIRECTION strongly positive and root-validated as a DIRECTIONAL fact: Stanley Ellis localized the speaker by comparing the tape against his own SED fieldwork, specifically a recording of the Washington dialect, and the Castletown/Southwick comparison speaker's 'segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker', while similarities FELL OFF moving north \u2014 a positive co-localization gradient. GROUND TRUTH confirms direction: John Humble (DNA-identified 2005/2006) had 'spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton' \u2014 the exact region Ellis named. BUT no source publishes a numeric P(match|hypothesis) or a quantified false-match rate; the judgment was auditory/comparative, not a measured likelihood ratio. Hence direction_only for the NUMBER even though the direction traces to root primary observation.->wearside_sunderland_castletown"
     }
   ],
   "onward_citations": [
+    {
+      "citation": "https://wp.lancs.ac.uk/enclair/2019/06/30/case-notes-s01e09-the-yorkshire-ripper-part-3-of-5/",
+      "interned_hash": ""
+    },
     {
       "citation": "https://wp.lancs.ac.uk/enclair/2019/06/30/case-notes-s01e09-the-yorkshire-ripper-part-3-of-5/",
       "interned_hash": ""
