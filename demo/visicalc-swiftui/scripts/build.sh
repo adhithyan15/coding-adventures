@@ -8,12 +8,12 @@
 # file declaring `FormulaBarView: View`; ContentView.swift imports
 # the package and mounts the view inside a VStack.
 #
-# Today we only compile FormulaBar through the pipeline. The Grid
-# is hand-written in `Sources/VisiCalc/Generated/Grid.swift`
-# (mosaic-emit-swiftui doesn't yet support the `Grid` built-in
-# primitive — only the React emitter does). When the SwiftUI Grid
-# emitter lands, this script gains a second `mosaic-compile
-# --backend swiftui` line for Grid.
+# UI34 rewire — Grid is now also generated through the pipeline
+# from the shared `demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl}`
+# triple.  Grid.desktop.mll is a UI34 `pkg::mosaic-pkg-grid::Grid`
+# one-liner; we pass --package-search-path so the resolver
+# substitutes the package's full composition before the SwiftUI
+# emitter runs.
 #
 # Usage:
 #   cd demo/visicalc-swiftui
@@ -53,6 +53,14 @@ echo "Compiling FormulaBar (SwiftUI)..."
   --layout    "$SRC/FormulaBar.desktop.mll" \
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.swift"
+
+echo "Compiling Grid (SwiftUI)..."
+"$MOSAIC_COMPILE" --backend swiftui \
+  --interface           "$SRC/Grid.mil" \
+  --layout              "$SRC/Grid.desktop.mll" \
+  --style               "$SRC/Grid.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
+  -o "$OUT_DIR/Grid.swift"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"
