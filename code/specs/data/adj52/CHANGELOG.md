@@ -2,6 +2,30 @@
 
 All notable changes to the ADJ52 experiment runner.
 
+## [0.4.0] — 2026-06-04
+
+### Added
+
+- **ADJ56 — cross-domain stress test + two honest failure modes.**
+  - **Generic, domain-agnostic tooling:** `corpus/build.py` (assembler) and
+    `corpus/eval.py` (deterministic evaluator) — adding a domain is now ground →
+    build → eval, no per-domain code.
+  - **Two new grounded corpora** built case-blind by the forward spider:
+    `streptococcal_pharyngitis` (9/9 — Centor/McIsaac + RADT) and
+    `bacterial_meningitis` (9/9 — CSF parameters). With PE (12/12) the method now
+    spans three sub-domains.
+  - **PE stress test (n=4):** the framework's *correctness* edge appeared in 1/4
+    cases (the Wells-0 trap); on clear cases all three arms agreed and its value
+    reverts to auditability. PMC11999957 was robust but not representative.
+  - **Two named failure modes:** (1) *population extrapolation* — the strep corpus
+    over-applied a child prior + age LR to a 62-day-old infant; (2) *correlated
+    over-saturation* — the meningitis CSF parameters, all grounded individually,
+    multiply to P=1.0000 because they are manifestations of one process (the
+    ADJ53/ADJ54 `mechanism` problem). Grounding magnitudes (ADJ55) is necessary but
+    not sufficient; correlation-aware combination (ADJ54) is still required.
+  - Spec: [ADJ56](../../ADJ56-cross-domain-stress-test.md). Artifacts in `corpus/`
+    and `provenance/{strep,meningitis,pe}/`.
+
 ## [0.3.1] — 2026-06-04
 
 ### Added

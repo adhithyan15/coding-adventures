@@ -1,0 +1,14 @@
+{
+  "name": "PE-stress-confirm (https://pmc.ncbi.nlm.nih.gov/articles/PMC12623081/)",
+  "ground_truth": "CONFIRMED PULMONARY EMBOLISM (true positive). A 76-year-old woman who had undergone two sequential bioprosthetic aortic valve replacements within one month (the second 14 days before admission) presen",
+  "pe_confirmed": "pe_present",
+  "observations": [
+    "heart_rate(over_100)",
+    "recent_immobilization_or_surgery(present)",
+    "ctpa(filling_defect_positive)"
+  ],
+  "observations_pretest": [
+    "heart_rate(over_100)",
+    "recent_immobilization_or_surgery(present)"
+  ]
+}

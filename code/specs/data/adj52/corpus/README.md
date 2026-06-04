@@ -76,4 +76,13 @@ Each domain is a directory with a `corpus.json` (the grounded rulebook) and a
 
 | domain | links grounded | notes |
 |---|---|---|
-| [`pulmonary_embolism`](pulmonary_embolism/) | 12/12 | the first fully-grounded corpus; validated end-to-end on PMC11999957 |
+| [`pulmonary_embolism`](pulmonary_embolism/) | 12/12 | first fully-grounded corpus; validated end-to-end on PMC11999957 ([ADJ55](../../ADJ55-provenance-first-corpus.md)) + n=4 stress test ([ADJ56](../../ADJ56-cross-domain-stress-test.md)) |
+| [`streptococcal_pharyngitis`](streptococcal_pharyngitis/) | 9/9 | Centor/McIsaac + RADT; ADJ56. Caveat: prior is the *child* prevalence — see the infant-extrapolation failure mode in ADJ56 §3.1 |
+| [`bacterial_meningitis`](bacterial_meningitis/) | 9/9 | CSF parameters; ADJ56. Caveat: the CSF findings are correlated — naive multiplication over-saturates (ADJ56 §3.2); needs the ADJ53 `mechanism` grouping |
+
+## Generic tooling
+
+- [`build.py`](build.py) — domain-agnostic assembler: `python build.py <domain> <grounding-results.json> <skeleton.json>`.
+- [`eval.py`](eval.py) — domain-agnostic deterministic evaluator: `python eval.py <corpus.json> <case.json> [grounded|all]`.
+
+Adding a domain is: a forward-grounding workflow (copy a `provenance/<domain>/ground.workflow.js`) + a `findings.json` skeleton → `build.py` → `eval.py`.
