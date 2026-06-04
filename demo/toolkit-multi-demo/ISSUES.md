@@ -147,7 +147,7 @@ Non-color setters (`FontSize`, `FontWeight`, `Padding`, …) are unaffected; the
 
 ## Issue X5 — `Icon[part]` lowers to `<FontIcon Glyph="…"/>` even when the named glyph doesn't exist in Segoe Fluent Icons
 
-**Status.** **Open.** Surfaced by Spinner.xaml during the X4 audit.
+**Status.** **Fixed via Path A** in [PR #5005](https://github.com/adhithyan15/coding-adventures/pull/5005) (XAML) and [PR #5007](https://github.com/adhithyan15/coding-adventures/pull/5007) (Flutter). Both emitters now recognise the literal glyph name `"spinner"` and lower it to the backend-native progress indicator (`<ProgressRing IsActive="True"/>` on XAML, `CircularProgressIndicator()` on Flutter) before falling through to the standard `<FontIcon Glyph="…"/>` / `Icon(Icons.<name>)` path. Surfaced by Spinner.xaml during the X4 audit.
 
 **Symptom.** The toolkit's Spinner.mll declares:
 
@@ -174,4 +174,4 @@ The XAML emitter lowers this to `<FontIcon Glyph="spinner" Foreground="#0d6efd" 
 
 **Recommendation.** Ship Path A as a one-shot fix for `"spinner"` so the toolkit demo regenerates cleanly. Open a UI-spec issue to formalize Path B at the next vocabulary-revisit cycle.
 
-**Patch applied in this demo.** Hand-rewrote `Spinner.xaml`'s `<Grid Width="24" Height="24"><FontIcon Glyph="spinner".../></Grid>` to `<ProgressRing IsActive="True" Width="24" Height="24" Foreground="#0d6efd"/>`. Once Path A or B lands, the hand-patch is regenerated cleanly.
+**Patch applied in this demo.** Originally hand-rewrote `Spinner.xaml`'s `<Grid Width="24" Height="24"><FontIcon Glyph="spinner".../></Grid>` to `<ProgressRing IsActive="True" Width="24" Height="24" Foreground="#0d6efd"/>`. With #5005 merged, the regenerated `Spinner.xaml` emits `<Grid Width="24" Height="24"><ProgressRing IsActive="True" Foreground="#0d6efd" FontSize="24"/></Grid>` (sizing on the outer `Stack`-as-`Grid`, brush + size on the inner `ProgressRing` — `FontSize` is inherited from `Control` and harmless on `ProgressRing` since it draws no text). Hand-patch removed; the regen is now the committed file.
