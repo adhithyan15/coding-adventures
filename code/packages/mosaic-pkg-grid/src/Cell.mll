@@ -37,12 +37,31 @@ layout Cell {
   // ADDITION to the structural If branch that swaps Text for
   // HostInput.
   Box [ cell ] (
-    state-when-selected: ( is-selected ) ,
-    state-when-editing:  ( is-editing )
+    // Use the `slot:` form (not the `( name )` expression form) so
+    // the UI34 package resolver's `rewrite_bindings` step
+    // substitutes the call-site's bound value at compile time.
+    // With the expression form, identifiers inside the parentheses
+    // pass through as raw text and would land in the emitter as
+    // invalid JS identifiers (`is-selected` has a hyphen).  The
+    // slot-ref form goes through the resolver's existing
+    // SlotRef-rewrite path, so the call-site predicate
+    // (`r == selectedRow && c == selectedCol`) ends up inlined
+    // here verbatim.
+    state-when-selected: slot: is-selected ,
+    state-when-editing:  slot: is-editing
   ) {
     If ( when: slot: is-editing ) {
+      // value: slot: edit-content — the host's live edit buffer,
+      // not the underlying cell value.  A controlled HostInput
+      // pointed at `slot: value` without an `onChange` companion
+      // would freeze (React rejects keystrokes); pairing
+      // edit-content with onChange lets the host's reducer track
+      // the in-flight edit and the input accepts characters
+      // normally.  When the user hits Enter, onCommit carries
+      // the final value to the host's persistence layer.
       HostInput (
-        value:    slot: value ,
+        value:    slot: edit-content ,
+        onChange: emit: onChange ,
         onCommit: emit: onCommit ,
         onCancel: emit: onCancel
       )
