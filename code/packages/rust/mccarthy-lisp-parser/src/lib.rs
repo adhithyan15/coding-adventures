@@ -1,36 +1,46 @@
 //! # `mccarthy-lisp-parser` — S-expression parser for McCarthy Lisp 1.0.
 //!
-//! Turns the token stream from
-//! [`mccarthy_lisp_lexer::tokenize`] into an [`LispExpr`] AST that
+//! Turns McCarthy 1960 Lisp source into a typed [`LispExpr`] AST that
 //! matches McCarthy's 1960 paper definition exactly:
 //!
 //! ```text
-//! e ::= NIL                            ; the empty list
+//! e ::= NIL                            ; the empty list  ()
 //!     | Symbol                         ; FOO, CAR, X
 //!     | Integer                        ; 42, -1, 0
 //!     | (e . e)                        ; dotted pair (cons cell)
 //! ```
 //!
-//! A "list" in McCarthy's paper is a *nested cons cell terminated
-//! by NIL*: the sequence `(A B C)` is sugar for
-//! `(A . (B . (C . NIL)))`.  Our parser performs that desugaring at
-//! parse time — every list literal materialises as `Cons` cells
-//! with a NIL terminator.
+//! A "list" in McCarthy's paper is a *nested cons cell terminated by
+//! NIL*: `(A B C)` is sugar for `(A . (B . (C . NIL)))`.  The
+//! extractor performs that desugaring — every list literal materialises
+//! as [`LispExpr::Cons`] cells with a [`LispExpr::Nil`] terminator.
 //!
-//! Two more sugar expansions happen here:
+//! ## This crate is a *thin wrapper*, not a hand-written parser
 //!
-//! 1. **`'X` → `(QUOTE X)`** — McCarthy 1960 §3 introduces `QUOTE`
-//!    as the way to write a literal S-expression; the apostrophe
-//!    is the standard reader macro since.
-//! 2. **Dotted pair `(A . B)`** parses as `Cons(A, B)` directly,
-//!    *without* a NIL terminator — that's the whole point of the
-//!    dot notation.
+//! The S-expression grammar lives in
+//! [`code/grammars/mccarthy_lisp.grammar`](../../../grammars/mccarthy_lisp.grammar),
+//! which `build.rs` compiles to Rust at build time.  Parsing happens in
+//! two stages — exactly the `twig-parser` pattern (see
+//! [`feedback_no_handwritten_lexers_parsers`]):
 //!
-//! ## A program is a sequence of forms
+//! 1. **Grammar parse** — the shared [`parser::grammar_parser::GrammarParser`]
+//!    turns the token stream into a generic concrete syntax tree
+//!    ([`GrammarASTNode`]).  All the structural rules — balanced parens,
+//!    at-most-one dotted tail, "dot must follow an element" — are
+//!    enforced *here, by the grammar*, so there is no hand-written
+//!    validation to drift out of sync.
+//! 2. **AST extraction** — [`extract_program`] lowers that CST to the
+//!    typed [`LispExpr`] tree, applying the two sugar expansions:
+//!      * `'X` → `(QUOTE X)`
+//!      * `(A B C)` → `(A . (B . (C . NIL)))`
 //!
-//! Like Scheme `(define …) (define …) (main)`, a McCarthy program
-//! is a `Vec<LispExpr>` — top-level forms evaluated in order.  The
-//! parser returns that vector.
+//! ## NIL vs ()
+//!
+//! Like the v0.1 hand-written parser, the *symbol* `NIL` and the empty
+//! list `()` are kept distinct at this layer: `()` extracts to
+//! [`LispExpr::Nil`], while a literal `NIL` token extracts to
+//! `Symbol("NIL")`.  Unifying them (as real Lisp does) is a semantic
+//! decision left to the L2 `mccarthy-lisp-iir-compiler`.
 //!
 //! ## Quick start
 //!
@@ -52,9 +62,15 @@
 //! assert_eq!(prog[0], expected);
 //! ```
 
-use std::fmt;
+#![warn(missing_docs)]
 
-use mccarthy_lisp_lexer::{tokenize, LexError, Loc, Token, TokenWithLoc};
+use std::fmt;
+use std::sync::OnceLock;
+
+use grammar_tools::parser_grammar::ParserGrammar;
+use lexer::token::{Token, TokenType};
+use mccarthy_lisp_lexer::{tokenize_mccarthy, LexerError};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
 
 // ===========================================================================
 // AST
@@ -62,16 +78,16 @@ use mccarthy_lisp_lexer::{tokenize, LexError, Loc, Token, TokenWithLoc};
 
 /// McCarthy 1960 Lisp S-expression.
 ///
-/// Four cases — matches the abstract grammar of the 1960 paper
-/// exactly.  Modern Lisps add strings, vectors, hash tables, etc.;
-/// McCarthy 1.0 has only these four.
+/// Four cases — matches the abstract grammar of the 1960 paper exactly.
+/// Modern Lisps add strings, vectors, hash tables, etc.; McCarthy 1.0
+/// has only these four.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LispExpr {
-    /// `()` — the empty list, also the false value (any other
-    /// value is true under McCarthy's `COND`).
+    /// `()` — the empty list, also the false value (any other value is
+    /// true under McCarthy's `COND`).
     Nil,
-    /// `FOO` — an all-uppercase identifier (interned later as a
-    /// symbol pointer at runtime).
+    /// `FOO` — an all-uppercase identifier (interned later as a symbol
+    /// pointer at runtime).
     Symbol(String),
     /// `42` — a signed 64-bit integer.
     Int(i64),
@@ -96,8 +112,8 @@ impl LispExpr {
         acc
     }
 
-    /// Wrap an expression in `(QUOTE …)` — the standard
-    /// expansion of the `'` reader macro.
+    /// Wrap an expression in `(QUOTE …)` — the standard expansion of the
+    /// `'` reader macro.
     pub fn quote(inner: LispExpr) -> Self {
         LispExpr::list([LispExpr::sym("QUOTE"), inner])
     }
@@ -109,7 +125,7 @@ impl fmt::Display for LispExpr {
             LispExpr::Nil => write!(f, "NIL"),
             LispExpr::Symbol(s) => write!(f, "{s}"),
             LispExpr::Int(n) => write!(f, "{n}"),
-            LispExpr::Cons(car, cdr) => write!(f, "({} . {})", car, cdr),
+            LispExpr::Cons(car, cdr) => write!(f, "({car} . {cdr})"),
         }
     }
 }
@@ -118,278 +134,581 @@ impl fmt::Display for LispExpr {
 // Errors
 // ===========================================================================
 
-/// Errors the parser can report.
+/// A parse-time error.
+///
+/// Wraps any of:
+/// - a lexer failure (invalid character — e.g. lowercase, a bare `-`),
+/// - a [`GrammarParser`] failure (unbalanced paren, stray dot, …),
+/// - an extractor-detected shape problem (integer overflow, depth
+///   limit).
+///
+/// Source positions are 1-indexed and point at the offending token.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ParseError {
-    /// The lexer rejected the source.
-    Lex(LexError),
-    /// Hit end-of-input mid-form (unbalanced open paren).
-    UnexpectedEof {
-        /// Where the open paren started.
-        opened_at: Loc,
-        /// What we were looking for next.
-        expected: &'static str,
-    },
-    /// Saw a token where it doesn't belong.
-    UnexpectedToken {
-        /// The offending token.
-        token: Token,
-        /// Where it appeared.
-        loc: Loc,
-        /// What we expected instead.
-        expected: &'static str,
-    },
-    /// A `.` outside a `(A . B)` form.
-    StrayDot {
-        /// Where the dot appeared.
-        loc: Loc,
-    },
-    /// More than one `.` in a single list — McCarthy 1960 only
-    /// allows one dotted-tail per list.
-    MultipleDotsInList {
-        /// Where the second dot appeared.
-        loc: Loc,
-    },
-    /// `(A . )` — dot without a cdr term.
-    DotWithoutCdr {
-        /// Where the dot appeared.
-        loc: Loc,
-    },
-    /// `(A . B C)` — dotted-tail followed by extra elements.
-    ExtraAfterDottedTail {
-        /// Where the extra token appeared.
-        loc: Loc,
-    },
-    /// Recursive-descent depth exceeded [`MAX_NESTING`].
-    ///
-    /// Guards against a stack overflow on pathological inputs like
-    /// `((((((((((…))))))))))` with thousands of nested parens, or
-    /// `'''''…X` quote chains.  In practice McCarthy 1960 programs
-    /// never approach this depth; the guard is purely a DoS
-    /// hardening for untrusted source.
-    NestingTooDeep {
-        /// Where the parser tipped over the depth limit.
-        loc: Loc,
-    },
+pub struct ParseError {
+    /// Human-readable explanation.
+    pub message: String,
+    /// 1-based line number of the offending token.
+    pub line: usize,
+    /// 1-based column number of the offending token.
+    pub column: usize,
 }
-
-/// Maximum recursive-descent depth.
-///
-/// Picked to be:
-///
-/// 1. **Far above** anything a hand-written McCarthy program would
-///    reach (the deepest example in the 1960 paper is ~10 levels —
-///    256 leaves a 25× headroom for generated code and nested
-///    macros).
-/// 2. **Far below** the Windows 1 MB default test-thread stack
-///    ceiling.  Each `(` requires *two* stack frames
-///    (`parse_list` + the inner `parse_expr`), so 256 levels =
-///    ~512 frames of recursive parser code, well inside even the
-///    most constrained Rust thread stack.
-///
-/// Matches `serde-json`'s default nesting limit, which has the
-/// same trade-off.
-pub const MAX_NESTING: usize = 256;
 
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            ParseError::Lex(e) => write!(f, "parse error: {e}"),
-            ParseError::UnexpectedEof { opened_at, expected } => write!(
-                f,
-                "parse error: unexpected end of input (expected {expected}); \
-                 form opened at {opened_at}"
-            ),
-            ParseError::UnexpectedToken { token, loc, expected } => write!(
-                f,
-                "parse error at {loc}: unexpected {token:?} (expected {expected})"
-            ),
-            ParseError::StrayDot { loc } => write!(
-                f,
-                "parse error at {loc}: stray `.` outside a (A . B) form"
-            ),
-            ParseError::MultipleDotsInList { loc } => write!(
-                f,
-                "parse error at {loc}: more than one `.` in a list; \
-                 McCarthy 1960 allows only one dotted-tail per list"
-            ),
-            ParseError::DotWithoutCdr { loc } => write!(
-                f,
-                "parse error at {loc}: `.` must be followed by exactly one expression (the cdr)"
-            ),
-            ParseError::ExtraAfterDottedTail { loc } => write!(
-                f,
-                "parse error at {loc}: extra tokens after dotted tail; \
-                 `(A . B C)` is not a valid Lisp 1.0 form"
-            ),
-            ParseError::NestingTooDeep { loc } => write!(
-                f,
-                "parse error at {loc}: nesting depth exceeds {} \
-                 (stack-overflow DoS guard)",
-                MAX_NESTING
-            ),
-        }
+        write!(f, "parse error at {}:{}: {}", self.line, self.column, self.message)
     }
 }
 
 impl std::error::Error for ParseError {}
 
-impl From<LexError> for ParseError {
-    fn from(e: LexError) -> Self {
-        ParseError::Lex(e)
+impl From<LexerError> for ParseError {
+    fn from(e: LexerError) -> Self {
+        ParseError { message: format!("lexer error: {}", e.message), line: e.line, column: e.column }
     }
+}
+
+impl From<parser::grammar_parser::GrammarParseError> for ParseError {
+    fn from(e: parser::grammar_parser::GrammarParseError) -> Self {
+        ParseError { message: e.message, line: e.token.line, column: e.token.column }
+    }
+}
+
+// ===========================================================================
+// DoS-hardening depth guards
+// ===========================================================================
+
+/// Maximum *structural nesting* depth permitted before the grammar
+/// parser runs.
+///
+/// The downstream [`GrammarParser`] is recursive and has **no** internal
+/// recursion-depth limit, so a deeply-nested input drives it into
+/// native call-stack recursion — one frame per nesting level — until
+/// the OS thread stack overflows.  That overflow is a `SIGABRT` Rust
+/// cannot catch: it crashes the whole process.  We therefore reject
+/// over-deep sources up front by scanning the token stream.
+///
+/// **Two token shapes add nesting depth, not just parens:**
+///
+/// - `LPAREN` — `((((…))))`, via the `list` rule.
+/// - `QUOTE`  — `''''…X`, via the `quoted = QUOTE sexpr` rule, which
+///   recurses *without consuming a paren*.  A long run of `'` has
+///   paren-depth 0 yet unbounded parser-recursion depth — a ~5 KB
+///   all-`'` file is enough to abort the process if only parens are
+///   counted.  [`check_nesting_depth`] therefore bounds the *combined*
+///   paren + pending-quote depth.
+///
+/// The cap is **64**, matching `twig-parser`'s `MAX_PAREN_DEPTH`.  The
+/// generic `GrammarParser` spends several recursion frames per nesting
+/// level (`program → sexpr → list → list_body → sexpr → …`), so a
+/// default 2 MiB Rust test-thread stack overflows somewhere around ~80
+/// levels — 64 leaves a comfortable margin while still admitting any
+/// realistic McCarthy program (the deepest example in the 1960 paper is
+/// ~10 levels deep).  Note this is necessarily lower than the v0.1
+/// hand-written parser's 256: that recursive-descent parser used far
+/// less stack per level than the shared grammar engine does.
+pub const MAX_PAREN_DEPTH: usize = 64;
+
+/// Maximum AST-extraction recursion depth.
+///
+/// A second guard, applied while lowering the CST to [`LispExpr`], in
+/// case a future grammar change lets a deeply-nested tree through the
+/// paren check (e.g. long `'''''…X` quote chains, which add depth
+/// without parens).
+pub const MAX_AST_DEPTH: usize = 256;
+
+/// Reject a source whose maximum *structural nesting* (parens **and**
+/// pending quotes) exceeds [`MAX_PAREN_DEPTH`], pointing at the token
+/// that tipped it over.
+///
+/// This runs **before** [`GrammarParser::parse`], which has no internal
+/// recursion guard, so it is the only thing standing between untrusted
+/// input and a stack-overflow `SIGABRT`.  It must therefore account for
+/// *every* token shape that adds parser-recursion depth — both `LPAREN`
+/// (the `list` rule) and `QUOTE` (the `quoted` rule, which recurses
+/// without a paren).
+///
+/// We track an explicit stack of open contexts.  A `QUOTE` opens a
+/// pending-quote context that is *discharged* as soon as its single
+/// operand sexpr completes (an atom, or a list closed by `RPAREN`); an
+/// `LPAREN` opens a list context closed by its `RPAREN`.  The high-water
+/// mark of the stack is the maximum live recursion depth the grammar
+/// parser will reach.  (Slight miscounting on *malformed* input is
+/// harmless — such input is rejected by the grammar anyway; what matters
+/// is that we never *under*-count a well-formed deep nest.)
+fn check_nesting_depth(tokens: &[Token]) -> Result<(), ParseError> {
+    // 'p' = open paren (list), 'q' = pending quote.
+    let mut stack: Vec<u8> = Vec::new();
+
+    // Discharge every pending quote sitting on top of the stack: a
+    // completed sexpr satisfies all quotes directly wrapping it.
+    fn discharge_quotes(stack: &mut Vec<u8>) {
+        while matches!(stack.last(), Some(b'q')) {
+            stack.pop();
+        }
+    }
+
+    for t in tokens {
+        match t.type_ {
+            TokenType::LParen => stack.push(b'p'),
+            TokenType::RParen => {
+                // The list just closed is itself a completed sexpr: pop
+                // its paren, then discharge any quotes wrapping the list.
+                // Pop down to and including the nearest paren (tolerating
+                // stray pending quotes on malformed input).
+                while matches!(stack.last(), Some(b'q')) {
+                    stack.pop();
+                }
+                if matches!(stack.last(), Some(b'p')) {
+                    stack.pop();
+                }
+                discharge_quotes(&mut stack);
+            }
+            // A bare quote token: only QUOTE maps to type_name "QUOTE".
+            _ if t.effective_type_name() == "QUOTE" => stack.push(b'q'),
+            // An atom (SYMBOL / INTEGER) completes a sexpr.
+            _ if matches!(t.effective_type_name(), "SYMBOL" | "INTEGER") => {
+                discharge_quotes(&mut stack);
+            }
+            _ => {}
+        }
+
+        if stack.len() > MAX_PAREN_DEPTH {
+            return Err(ParseError {
+                message: format!(
+                    "structural nesting (parens + quotes) exceeds MAX_PAREN_DEPTH \
+                     ({MAX_PAREN_DEPTH}) — refusing to invoke the parser to avoid \
+                     stack overflow"
+                ),
+                line: t.line,
+                column: t.column,
+            });
+        }
+    }
+    Ok(())
+}
+
+fn check_depth(depth: usize, line: usize, column: usize) -> Result<(), ParseError> {
+    if depth > MAX_AST_DEPTH {
+        Err(ParseError {
+            message: format!(
+                "AST nesting exceeds MAX_AST_DEPTH ({MAX_AST_DEPTH}) — \
+                 refusing to recurse further to avoid stack overflow"
+            ),
+            line,
+            column,
+        })
+    } else {
+        Ok(())
+    }
+}
+
+// ===========================================================================
+// Build-time-compiled parser grammar
+// ===========================================================================
+
+mod generated_grammar {
+    include!(concat!(env!("OUT_DIR"), "/mccarthy_lisp_parser_grammar.rs"));
+}
+
+static MCCARTHY_PARSER_GRAMMAR: OnceLock<ParserGrammar> = OnceLock::new();
+
+fn mccarthy_parser_grammar() -> &'static ParserGrammar {
+    MCCARTHY_PARSER_GRAMMAR.get_or_init(generated_grammar::parser_grammar)
+}
+
+/// Borrow the build-time-compiled McCarthy Lisp [`ParserGrammar`].
+///
+/// Re-exported for tooling that needs to inspect the rules without
+/// re-parsing the canonical `.grammar` file.
+pub fn mccarthy_grammar() -> &'static ParserGrammar {
+    mccarthy_parser_grammar()
 }
 
 // ===========================================================================
 // Public API
 // ===========================================================================
 
-/// Tokenize and parse a McCarthy 1960 Lisp source string.
+/// Build a [`GrammarParser`] from a pre-tokenized stream.
 ///
-/// Returns the top-level form sequence (a program is zero-or-more
-/// S-expressions).
-pub fn parse(src: &str) -> Result<Vec<LispExpr>, ParseError> {
-    let toks = tokenize(src)?;
-    parse_tokens(&toks)
+/// Useful for editor / LSP integrations that already hold a
+/// `Vec<Token>` (e.g. from `mccarthy_lisp_lexer::create_mccarthy_lexer`).
+pub fn create_mccarthy_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
+    GrammarParser::new(tokens, mccarthy_parser_grammar().clone())
 }
 
-/// Parse a pre-tokenized stream into the top-level form sequence.
-pub fn parse_tokens(toks: &[TokenWithLoc]) -> Result<Vec<LispExpr>, ParseError> {
-    let mut p = Parser { toks, pos: 0 };
-    let mut forms = Vec::new();
-    while p.pos < p.toks.len() {
-        forms.push(p.parse_expr(0)?);
-    }
-    Ok(forms)
+/// Parse McCarthy Lisp source into the generic [`GrammarASTNode`] CST.
+///
+/// The lower-level entry point — most callers want [`parse`], which
+/// goes one step further and returns a typed `Vec<LispExpr>`.
+///
+/// # Errors
+///
+/// Returns a [`ParseError`] for any lex failure, paren-depth-limit
+/// breach, or grammar mismatch (unbalanced paren, stray dot, …).
+pub fn parse_to_cst(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mccarthy(source)?;
+    check_nesting_depth(&tokens)?;
+    let mut p = create_mccarthy_parser_from_tokens(tokens);
+    p.parse().map_err(Into::into)
+}
+
+/// Parse McCarthy 1960 Lisp source into the top-level form sequence.
+///
+/// A program is zero-or-more S-expressions (McCarthy's "program =
+/// sequence of forms" reading).
+///
+/// # Errors
+///
+/// Returns a [`ParseError`] for lex/grammar mismatches *or*
+/// extractor-detected shape problems (integer overflow, depth limit).
+pub fn parse(source: &str) -> Result<Vec<LispExpr>, ParseError> {
+    let cst = parse_to_cst(source)?;
+    extract_program(&cst)
 }
 
 // ===========================================================================
-// Recursive-descent parser
+// CST → typed AST extraction
 // ===========================================================================
 
-struct Parser<'a> {
-    toks: &'a [TokenWithLoc],
-    pos: usize,
+/// Best-effort source position of a CST node (falls back to 1:1).
+fn pos(node: &GrammarASTNode) -> (usize, usize) {
+    (node.start_line.unwrap_or(1), node.start_column.unwrap_or(1))
 }
 
-impl<'a> Parser<'a> {
-    /// Parse one expression at the current position.
-    ///
-    /// `depth` is the current recursion level; we trip
-    /// [`ParseError::NestingTooDeep`] before any pathological input
-    /// can blow the stack.
-    fn parse_expr(&mut self, depth: usize) -> Result<LispExpr, ParseError> {
-        let twl = self.peek_or_eof("an expression")?;
-        if depth >= MAX_NESTING {
-            return Err(ParseError::NestingTooDeep { loc: twl.loc });
-        }
-        match &twl.tok {
-            Token::LParen => self.parse_list(twl.loc, depth + 1),
-            Token::Quote => self.parse_quote(twl.loc, depth + 1),
-            Token::Symbol(name) => {
-                let n = name.clone();
-                self.pos += 1;
-                Ok(LispExpr::Symbol(n))
-            }
-            Token::Int(n) => {
-                let v = *n;
-                self.pos += 1;
-                Ok(LispExpr::Int(v))
-            }
-            Token::Dot => Err(ParseError::StrayDot { loc: twl.loc }),
-            Token::RParen => Err(ParseError::UnexpectedToken {
-                token: Token::RParen,
-                loc: twl.loc,
-                expected: "an expression",
-            }),
-        }
-    }
-
-    /// Parse a `(…)` form.  Caller has already peeked the `(`; we
-    /// consume it here.
-    fn parse_list(&mut self, opened_at: Loc, depth: usize) -> Result<LispExpr, ParseError> {
-        // Consume `(`.
-        self.pos += 1;
-
-        let mut items: Vec<LispExpr> = Vec::new();
-        let mut dotted_tail: Option<LispExpr> = None;
-
-        loop {
-            let twl = self.peek().ok_or(ParseError::UnexpectedEof {
-                opened_at,
-                expected: "`)` or another expression",
-            })?;
-
-            match &twl.tok {
-                Token::RParen => {
-                    self.pos += 1;
-                    return Ok(build_list(items, dotted_tail));
-                }
-                Token::Dot => {
-                    if dotted_tail.is_some() {
-                        return Err(ParseError::MultipleDotsInList { loc: twl.loc });
-                    }
-                    if items.is_empty() {
-                        // `(. X)` — dot must come after at least one car.
-                        return Err(ParseError::UnexpectedToken {
-                            token: Token::Dot,
-                            loc: twl.loc,
-                            expected: "the head of a dotted pair before `.`",
-                        });
-                    }
-                    let dot_loc = twl.loc;
-                    self.pos += 1; // consume `.`
-
-                    // Must be followed by EXACTLY one expression, then `)`.
-                    let after = self.peek_or_eof("the cdr of the dotted pair")?;
-                    if matches!(after.tok, Token::RParen) {
-                        return Err(ParseError::DotWithoutCdr { loc: dot_loc });
-                    }
-                    let cdr = self.parse_expr(depth)?;
-                    dotted_tail = Some(cdr);
-
-                    // Anything other than `)` next is a parse error.
-                    let nxt = self.peek_or_eof("`)` after dotted tail")?;
-                    if !matches!(nxt.tok, Token::RParen) {
-                        return Err(ParseError::ExtraAfterDottedTail { loc: nxt.loc });
-                    }
-                    // Loop iterates once more and consumes `)`.
-                }
-                _ => {
-                    items.push(self.parse_expr(depth)?);
-                }
-            }
-        }
-    }
-
-    /// Parse `'X` — sugar for `(QUOTE X)`.
-    fn parse_quote(&mut self, _quote_loc: Loc, depth: usize) -> Result<LispExpr, ParseError> {
-        // Consume `'`.
-        self.pos += 1;
-        let inner = self.parse_expr(depth)?;
-        Ok(LispExpr::quote(inner))
-    }
-
-    fn peek(&self) -> Option<&'a TokenWithLoc> {
-        self.toks.get(self.pos)
-    }
-
-    fn peek_or_eof(&self, expected: &'static str) -> Result<&'a TokenWithLoc, ParseError> {
-        self.peek().ok_or(ParseError::UnexpectedEof {
-            opened_at: Loc::START,
-            expected,
+/// The nested-node children of `node`, dropping bare punctuation tokens.
+fn ast_children(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            ASTNodeOrToken::Token(_) => None,
         })
+        .collect()
+}
+
+/// Lower a parsed `program` CST node into the typed form sequence.
+///
+/// Expects `root.rule_name == "program"` (the grammar's start symbol).
+///
+/// # Errors
+///
+/// Returns a [`ParseError`] if the tree shape is unexpected (should not
+/// happen for output of [`parse_to_cst`]) or an integer literal
+/// overflows `i64`.
+pub fn extract_program(root: &GrammarASTNode) -> Result<Vec<LispExpr>, ParseError> {
+    if root.rule_name != "program" {
+        let (line, column) = pos(root);
+        return Err(ParseError {
+            message: format!("expected 'program' root, got {:?}", root.rule_name),
+            line,
+            column,
+        });
+    }
+    ast_children(root).into_iter().map(|c| extract_sexpr(c, 0)).collect()
+}
+
+/// `sexpr = atom | list | quoted` — dispatch on the single child rule.
+fn extract_sexpr(node: &GrammarASTNode, depth: usize) -> Result<LispExpr, ParseError> {
+    let (line, column) = pos(node);
+    check_depth(depth, line, column)?;
+    if node.rule_name != "sexpr" {
+        return Err(ParseError {
+            message: format!("expected 'sexpr', got {:?}", node.rule_name),
+            line,
+            column,
+        });
+    }
+    let inner = ast_children(node).into_iter().next().ok_or_else(|| ParseError {
+        message: "empty sexpr node".into(),
+        line,
+        column,
+    })?;
+    match inner.rule_name.as_str() {
+        "atom" => extract_atom(inner),
+        "list" => extract_list(inner, depth + 1),
+        "quoted" => extract_quoted(inner, depth + 1),
+        other => Err(ParseError {
+            message: format!("unexpected sexpr child: {other:?}"),
+            line,
+            column,
+        }),
     }
 }
 
-/// Build a McCarthy-style list from collected items + optional dotted tail.
+/// `atom = SYMBOL | INTEGER` — a single bare token.
+fn extract_atom(node: &GrammarASTNode) -> Result<LispExpr, ParseError> {
+    let (line, column) = pos(node);
+    let tok = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t),
+            ASTNodeOrToken::Node(_) => None,
+        })
+        .ok_or_else(|| ParseError { message: "empty atom node".into(), line, column })?;
+    let (l, c) = (tok.line, tok.column);
+    match tok.effective_type_name() {
+        "SYMBOL" => Ok(LispExpr::Symbol(tok.value.clone())),
+        "INTEGER" => {
+            let value: i64 = tok.value.parse().map_err(|_| ParseError {
+                message: format!("integer literal {:?} does not fit in i64", tok.value),
+                line: l,
+                column: c,
+            })?;
+            Ok(LispExpr::Int(value))
+        }
+        other => Err(ParseError {
+            message: format!("unexpected atom token: type={other:?} value={:?}", tok.value),
+            line: l,
+            column: c,
+        }),
+    }
+}
+
+/// `list = LPAREN list_body RPAREN`, where
+/// `list_body = [ sexpr { sexpr } [ DOT sexpr ] ]`.
 ///
-/// `(A B C)` → `Cons(A, Cons(B, Cons(C, Nil)))`.
-/// `(A B . C)` → `Cons(A, Cons(B, C))`.
-fn build_list(items: Vec<LispExpr>, dotted_tail: Option<LispExpr>) -> LispExpr {
-    let mut acc = dotted_tail.unwrap_or(LispExpr::Nil);
-    for x in items.into_iter().rev() {
+/// Builds the nested-`Cons` encoding.  A list with no dotted tail is
+/// `NIL`-terminated; an explicit `DOT` tail becomes the final `cdr`.
+fn extract_list(node: &GrammarASTNode, depth: usize) -> Result<LispExpr, ParseError> {
+    let (line, column) = pos(node);
+    check_depth(depth, line, column)?;
+
+    // The single nested child is `list_body` (the LPAREN/RPAREN are bare
+    // tokens, dropped by `ast_children`).  An empty list `()` may yield a
+    // list_body node with no children — treat a missing/empty body as NIL.
+    let body = match ast_children(node).into_iter().next() {
+        Some(b) => b,
+        None => return Ok(LispExpr::Nil),
+    };
+
+    let mut elems: Vec<LispExpr> = Vec::new();
+    let mut tail: Option<LispExpr> = None;
+    let mut after_dot = false;
+
+    for child in &body.children {
+        match child {
+            ASTNodeOrToken::Token(t) if t.effective_type_name() == "DOT" => {
+                after_dot = true;
+            }
+            ASTNodeOrToken::Node(n) if n.rule_name == "sexpr" => {
+                let expr = extract_sexpr(n, depth + 1)?;
+                if after_dot {
+                    tail = Some(expr);
+                } else {
+                    elems.push(expr);
+                }
+            }
+            // Any other token (none expected from this grammar) is ignored.
+            _ => {}
+        }
+    }
+
+    let mut acc = tail.unwrap_or(LispExpr::Nil);
+    for x in elems.into_iter().rev() {
         acc = LispExpr::Cons(Box::new(x), Box::new(acc));
     }
-    acc
+    Ok(acc)
+}
+
+/// `quoted = QUOTE sexpr` — rewrite `'X` to `(QUOTE X)`.
+fn extract_quoted(node: &GrammarASTNode, depth: usize) -> Result<LispExpr, ParseError> {
+    let (line, column) = pos(node);
+    check_depth(depth, line, column)?;
+    let inner = ast_children(node).into_iter().next().ok_or_else(|| ParseError {
+        message: "expected an expression after '".into(),
+        line,
+        column,
+    })?;
+    Ok(LispExpr::quote(extract_sexpr(inner, depth + 1)?))
+}
+
+// ===========================================================================
+// Tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn one(src: &str) -> LispExpr {
+        let mut p = parse(src).unwrap_or_else(|e| panic!("parse failed: {e}"));
+        assert_eq!(p.len(), 1, "expected exactly one top-level form");
+        p.pop().unwrap()
+    }
+
+    #[test]
+    fn empty_program() {
+        assert!(parse("").unwrap().is_empty());
+        assert!(parse("  ; just a comment\n").unwrap().is_empty());
+    }
+
+    #[test]
+    fn atoms() {
+        assert_eq!(one("CAR"), LispExpr::Symbol("CAR".into()));
+        assert_eq!(one("42"), LispExpr::Int(42));
+        assert_eq!(one("-1"), LispExpr::Int(-1));
+    }
+
+    #[test]
+    fn empty_list_is_nil() {
+        assert_eq!(one("()"), LispExpr::Nil);
+    }
+
+    #[test]
+    fn nil_symbol_is_distinct_from_empty_list() {
+        assert_eq!(one("NIL"), LispExpr::Symbol("NIL".into()));
+    }
+
+    #[test]
+    fn proper_list_desugars_to_nested_cons() {
+        assert_eq!(
+            one("(A B C)"),
+            LispExpr::list([LispExpr::sym("A"), LispExpr::sym("B"), LispExpr::sym("C")])
+        );
+    }
+
+    #[test]
+    fn dotted_pair() {
+        assert_eq!(
+            one("(A . B)"),
+            LispExpr::Cons(Box::new(LispExpr::sym("A")), Box::new(LispExpr::sym("B")))
+        );
+    }
+
+    #[test]
+    fn dotted_tail_after_elements() {
+        // (A B . C) → (A . (B . C))
+        assert_eq!(
+            one("(A B . C)"),
+            LispExpr::Cons(
+                Box::new(LispExpr::sym("A")),
+                Box::new(LispExpr::Cons(
+                    Box::new(LispExpr::sym("B")),
+                    Box::new(LispExpr::sym("C"))
+                ))
+            )
+        );
+    }
+
+    #[test]
+    fn quote_sugar_expands() {
+        assert_eq!(one("'X"), LispExpr::quote(LispExpr::sym("X")));
+        assert_eq!(
+            one("'(A B)"),
+            LispExpr::quote(LispExpr::list([LispExpr::sym("A"), LispExpr::sym("B")]))
+        );
+    }
+
+    #[test]
+    fn the_canonical_car_example() {
+        assert_eq!(
+            one("(CAR '(A B C))"),
+            LispExpr::list([
+                LispExpr::sym("CAR"),
+                LispExpr::quote(LispExpr::list([
+                    LispExpr::sym("A"),
+                    LispExpr::sym("B"),
+                    LispExpr::sym("C"),
+                ])),
+            ])
+        );
+    }
+
+    #[test]
+    fn the_identity_lambda() {
+        assert_eq!(
+            one("(LAMBDA (X) X)"),
+            LispExpr::list([
+                LispExpr::sym("LAMBDA"),
+                LispExpr::list([LispExpr::sym("X")]),
+                LispExpr::sym("X"),
+            ])
+        );
+    }
+
+    #[test]
+    fn multiple_top_level_forms() {
+        let forms = parse("(CAR X) (CDR X)").unwrap();
+        assert_eq!(forms.len(), 2);
+    }
+
+    #[test]
+    fn display_round_trips_dotted_form() {
+        // Display always prints the fully-dotted cons form.
+        assert_eq!(one("(A B)").to_string(), "(A . (B . NIL))");
+        assert_eq!(one("(A . B)").to_string(), "(A . B)");
+    }
+
+    // ---- error paths ----
+
+    #[test]
+    fn unbalanced_paren_is_an_error() {
+        assert!(parse("(CAR").is_err());
+        assert!(parse("CAR)").is_err());
+    }
+
+    #[test]
+    fn stray_dot_forms_are_grammar_errors() {
+        assert!(parse("(. X)").is_err()); // dot with no head
+        assert!(parse("(A . B C)").is_err()); // extra after dotted tail
+        assert!(parse("(A . . B)").is_err()); // two dots
+    }
+
+    #[test]
+    fn lexer_errors_propagate() {
+        assert!(parse("car").is_err()); // lowercase
+        assert!(parse("(- A B)").is_err()); // operator symbol
+    }
+
+    #[test]
+    fn integer_overflow_is_an_error() {
+        let err = parse("99999999999999999999").unwrap_err();
+        assert!(err.message.contains("does not fit in i64"));
+    }
+
+    #[test]
+    fn deeply_nested_parens_are_rejected() {
+        let deep = format!("{}{}", "(".repeat(MAX_PAREN_DEPTH + 5), ")".repeat(MAX_PAREN_DEPTH + 5));
+        let err = parse(&deep).unwrap_err();
+        assert!(err.message.contains("MAX_PAREN_DEPTH"));
+    }
+
+    #[test]
+    fn deeply_nested_quotes_are_rejected() {
+        // Regression for the quote-chain stack-overflow DoS: a long run
+        // of `'` has paren-depth 0 but unbounded parser recursion.  It
+        // must be rejected *before* the GrammarParser runs, not abort
+        // the process.  MAX+5_000 is far past the cap and well into
+        // crash territory if the guard regresses.
+        let deep = format!("{}X", "'".repeat(MAX_PAREN_DEPTH + 5_000));
+        let err = parse(&deep).unwrap_err();
+        assert!(err.message.contains("MAX_PAREN_DEPTH"));
+    }
+
+    #[test]
+    fn quote_then_deep_parens_rejected() {
+        // A quote wrapping a deep list — the quote adds one level on top
+        // of the parens, so the combined depth must be what trips.
+        let deep = format!("'{}A{}", "(".repeat(MAX_PAREN_DEPTH), ")".repeat(MAX_PAREN_DEPTH));
+        assert!(parse(&deep).is_err());
+    }
+
+    #[test]
+    fn legal_moderate_nesting_is_accepted() {
+        // Comfortably under MAX_PAREN_DEPTH (64) — must parse cleanly.
+        let n = 40;
+        let src = format!("{}A{}", "(".repeat(n), ")".repeat(n));
+        assert!(parse(&src).is_ok());
+    }
+
+    #[test]
+    fn legal_moderate_quote_chain_is_accepted() {
+        // A quote chain just under the cap parses fine (and does not
+        // overflow): '''...'X with 40 quotes → 40 nested QUOTE forms.
+        let n = 40;
+        let src = format!("{}X", "'".repeat(n));
+        let forms = parse(&src).expect("should parse");
+        assert_eq!(forms.len(), 1);
+    }
 }

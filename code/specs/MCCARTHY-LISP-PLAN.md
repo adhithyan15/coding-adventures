@@ -1,6 +1,6 @@
 # McCarthy Lisp on the LANG VM chain — plan
 
-**Status:** Active.  L1 in progress as of 2026-06-03.  Confirmed decisions: **Lisp 1.0** (1960 paper), **IBM 704** as historical arch target, **no-CONS at runtime** on the historical-arch backends in v0.1.0.  Crate naming follows the existing `*-lexer` / `*-parser` / `*-iir-compiler` pattern.
+**Status:** Active.  **L1 complete and grammar-driven as of 2026-06-03** (the lexer/parser were initially merged hand-written in #4967 and then rewritten to wrap the shared `GrammarLexer`/`GrammarParser` — see the "L1 divergence" note below).  L2 next.  Confirmed decisions: **Lisp 1.0** (1960 paper), **IBM 704** as historical arch target, **no-CONS at runtime** on the historical-arch backends in v0.1.0.  Crate naming follows the existing `*-lexer` / `*-parser` / `*-iir-compiler` pattern.
 **Predecessors:** [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md), [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md).
 
 ## Goal
@@ -35,16 +35,22 @@ So the work splits into three buckets: **frontend**, **runtime support**, **IBM 
 
 ## Bucket 1 — Frontend crates
 
-Three new crates, mirroring the structure of the existing language frontends:
+Three crates, mirroring the structure of the existing language frontends — and, critically, **grammar-driven**: the lexer and parser are thin wrappers over the shared `GrammarLexer`/`GrammarParser`, exactly like `twig-lexer`/`twig-parser` and `nib`/`oct`.  Per the repo rule (`feedback_no_handwritten_lexers_parsers`), new language frontends MUST NOT hand-write lexers/parsers.
+
+### Grammar files (the single source of truth)
+
+Two files in `code/grammars/` encode the entire Lisp 1.0 surface syntax:
+
+- **`mccarthy_lisp.tokens`** — six token kinds: `LPAREN` `RPAREN` `QUOTE` `DOT`, `SYMBOL = /[A-Z][A-Z0-9-]*/` (all-uppercase), `INTEGER = /-?[0-9]+/`; skips whitespace and `;` comments.  The dialect restrictions are enforced *here*: no lowercase, no operator symbols (a bare `-` matches nothing), no strings.
+- **`mccarthy_lisp.grammar`** — six rules: `program / sexpr / atom / list / list_body / quoted`.  All structural rules — balanced parens, at-most-one dotted tail, "a dot must follow an element" — live in the grammar, so there is no hand-written validation to drift.
+
+Both files are deliberately distinct from the existing `lisp.tokens` / `lisp.grammar`, which target a modern Scheme-ish dialect (lowercase symbols, strings, operator symbols).
 
 ### `mccarthy-lisp-lexer`
-S-expression tokenizer.  Recognises:
-- `(`, `)`, `'` (quote sugar), `.` (dotted pair separator)
-- Atoms: symbols `[A-Z][A-Z0-9-]*` (original Lisp was all-uppercase) and integers
-- Whitespace, comments (`;` to end of line — added in Lisp 1.5; original 704 Lisp had no comments)
+Thin wrapper over `GrammarLexer`.  `build.rs` compiles `mccarthy_lisp.tokens` to Rust at build time (the `twig-lexer` pattern: no runtime file I/O, Miri-safe, `OnceLock`-cached).  Public API: `tokenize_mccarthy(src) -> Result<Vec<lexer::token::Token>, LexerError>`, `create_mccarthy_lexer`, `mccarthy_token_grammar_spec`.
 
 ### `mccarthy-lisp-parser`
-S-expression AST.  Tree shape:
+Thin wrapper over `GrammarParser` plus a CST → typed-AST extractor.  `build.rs` compiles `mccarthy_lisp.grammar` at build time.  The extractor lowers the generic `GrammarASTNode` CST into the typed AST:
 
 ```rust
 enum LispExpr {
@@ -55,7 +61,9 @@ enum LispExpr {
 }
 ```
 
-The parser also expands `'X` → `(QUOTE X)` and `(a . b)` → `Cons(a, b)`.
+Sugar expansions happen in the extractor: `'X` → `(QUOTE X)`, `(A B C)` → `(A . (B . (C . NIL)))`, and `(a . b)` → `Cons(a, b)`.  Public API: `parse(src) -> Result<Vec<LispExpr>, ParseError>`, plus `parse_to_cst` / `extract_program` for tooling.  DoS hardening: `MAX_PAREN_DEPTH = 64` (pre-parse) + `MAX_AST_DEPTH = 64` (extractor).
+
+> **L1 divergence note.** #4967 first merged this frontend as a *hand-written* lexer (bespoke `Token`/`Loc`/`LexError` enums, a byte-at-a-time tokenizer) and a *hand-written* recursive-descent parser (with bespoke `ParseError` variants `StrayDot`, `MultipleDotsInList`, …).  That violated `feedback_no_handwritten_lexers_parsers`.  The follow-up rewrite (this spec revision) deleted both hand-written implementations in favour of the grammar-driven wrappers above and authored the two `code/grammars/mccarthy_lisp.*` files.  The `LispExpr` AST shape is unchanged, so L2 is unaffected.  `MAX_PAREN_DEPTH` dropped from 256 → 64 because the shared `GrammarParser` uses much more stack per paren than the old hand-written descent did.
 
 ### `mccarthy-lisp-iir-compiler`
 Source → `IIRModule`.  Lowering shape:
@@ -132,13 +140,76 @@ Add `--emit=ibm704` (aliases `704`, `ibm-704`) routing through the standard `aot
 
 ---
 
+## The backend pipeline (L3 detail) — every target from one IIR module
+
+This is the heart of the user-facing ask: *get Lisp all the way through AOT, VM, JIT, CLR, JVM, WASM, BEAM, and the historical backends.*  The key insight is that **all of this is downstream of a single artifact** — the `IIRModule` that L2's `mccarthy-lisp-iir-compiler` produces.  Once that module exists, every backend is a fan-out, not new frontend work.
+
+### Flow
+
+```text
+McCarthy source
+   │  mccarthy-lisp-lexer  (GrammarLexer)        ← L1 ✓ grammar-driven
+   ▼  mccarthy-lisp-parser (GrammarParser → LispExpr)
+LispExpr AST
+   │  mccarthy-lisp-iir-compiler                  ← L2
+   ▼
+IIRModule  ──────────────────────────────────────────────────┐
+   │                                                          │
+   │  aot_core::infer → aot_core::specialise → CIR            │  (typed/optimised)
+   ▼                                                          ▼
+ ┌─ vm-core ............... interpret IIR directly  → VM result
+ ├─ jit-core::GenericCirJit  CIR → host machine code → JIT result
+ ├─ x86_64-backend / aarch64-backend (via lang-aot) → native object
+ ├─ iir-to-wasm ........... → .wasm module
+ ├─ iir-to-jvm-class-file . → .class file
+ ├─ iir-to-cil-bytecode ... → CLR assembly
+ ├─ iir-to-beam ........... → BEAM .beam (classic AtU8 atoms — see lessons)
+ ├─ iir-to-llvm ........... → LLVM IR text
+ ├─ ge225 / intel4004 / intel8008 / armv7 / rv32i backends → historical byte code
+ └─ ibm704-backend ........ → IBM 704 byte code (L4/L5, the birthplace round-trip)
+```
+
+Nothing in that fan-out is McCarthy-specific — it is the same IIR→CIR→Backend-trait layer the historical-arch migration (predecessor spec) already shipped.  L3 is therefore mostly *wiring*: adding a `Language::McCarthyLisp` variant to `lang-aot` and routing the existing `--emit` flags through `mccarthy_lisp_iir_compiler::compile`.
+
+### `lang-aot --emit` matrix + per-target acceptance
+
+L3 is "done" when each of these emits a non-trivial artifact for the worked example `(CAR '(A B C))` (expected value `A`) and the listed acceptance test passes.  CONS-using programs are in scope for every modern target; the historical/small-machine targets are restricted to no-CONS programs in v0.1.0 (decision 3).
+
+| `--emit` | Backend crate | Artifact | Acceptance test | CONS in v0.1.0 |
+|----------|---------------|----------|-----------------|----------------|
+| `vm` (default) | `vm-core` | in-process value | interpreter returns `A` | ✓ |
+| `jit` | `jit-core::GenericCirJit` | host code | JIT-run returns `A` | ✓ |
+| `native` / `x86_64` / `aarch64` | `*-backend` via `lang-aot` | object/exe | run exits `0`, prints `A` | ✓ |
+| `wasm` | `iir-to-wasm` | `.wasm` | `wasmtime`/in-repo runner returns `A` | ✓ |
+| `jvm` | `iir-to-jvm-class-file` | `.class` | class verifies; `main` returns `A` | ✓ |
+| `clr` | `iir-to-cil-bytecode` | CLR asm | bytecode validates; returns `A` | ✓ |
+| `beam` | `iir-to-beam` | `.beam` | OTP 27 loads module (classic AtU8); returns `A` | ✓ |
+| `llvm` | `iir-to-llvm` | `.ll` text | `llc`/FileCheck pins IR shape | ✓ |
+| `ge225` / `intel4004` / `intel8008` / `armv7` / `rv32i` | `*-backend` | byte code | e2e smoke test pins byte sequence | ✗ (no-CONS only) |
+| `ibm704` (aliases `704`, `ibm-704`) | `ibm704-backend` (L4) | byte code | e2e smoke test pins byte sequence | ✗ (no-CONS only) |
+
+> **BEAM caveat (carried from lessons):** `iir-to-beam` must emit the classic `AtU8` atom-table format; the nibble-packed form breaks OTP 27 in CI.  See `project_beam_atom_format_otp27`.
+
+### Worked end-to-end example (the L6 demo)
+
+One source file, eleven+ artifacts:
+
+```lisp
+(CAR '(A B C))   ; → A   (no CONS needed → emittable on every target incl. IBM 704)
+(CDR '(A B C))   ; → (B C)  (needs CONS → modern targets only in v0.1.0)
+```
+
+L6 pins, per backend, either the runtime result (`A`) or the exact emitted byte sequence, in a single table-driven e2e test.  That test is the proof that "Lisp runs everywhere in the chain."
+
+---
+
 ## Phases
 
 Same single-PR-per-phase cadence the historical-arch migration used.
 
 | Phase | Scope |
 |-------|-------|
-| **L1** | `mccarthy-lisp-lexer` + `mccarthy-lisp-parser` — tokenize + AST.  Tests pin S-expression round-trips. |
+| **L1** ✓ | `mccarthy-lisp-lexer` + `mccarthy-lisp-parser` — **grammar-driven** (wrap `GrammarLexer`/`GrammarParser`; grammar in `code/grammars/mccarthy_lisp.tokens`+`.grammar`).  Tests pin S-expression round-trips + dialect errors.  *Done; rewritten from the hand-written #4967 merge — see L1 divergence note.* |
 | **L2** | `mccarthy-lisp-iir-compiler` v0.1.0 — handles the 7 primitives + `LAMBDA` + `LABEL` + literal symbols/ints.  Compiles small examples (`(CAR '(A B C))` → `A`, etc.) end-to-end via the existing `vm-core` interpreter. |
 | **L3** | Wire `mccarthy-lisp` into `lang-aot` as a new `Language` variant.  All 10 existing backends light up automatically (CARSON the migration architecture). |
 | **L4** | `ibm704-encoder` + `ibm704-backend` v0.1.0 (minimal viable: `const_*` + `ret_*`, just like the Phase 5/6 minimal-viable backends). |
