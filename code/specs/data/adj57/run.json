@@ -1,0 +1,429 @@
+{
+  "leading_diagnosis": "kikuchi_fujimoto_disease",
+  "posterior": null,
+  "trail_ok": true,
+  "holes": [],
+  "trail": [
+    {
+      "stage": "decompose",
+      "kind": "text",
+      "covered": true,
+      "clean": true,
+      "n_input": 1788,
+      "n_used": 46,
+      "n_discard": 47,
+      "discards": [
+        {
+          "reason": "article and whitespace, no diagnostic content",
+          "bytes": 2
+        },
+        {
+          "reason": "whitespace",
+          "bytes": 1
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 32
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 16
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 17
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation and conjunction",
+          "bytes": 6
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 19
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 24
+        },
+        {
+          "reason": "conjunction",
+          "bytes": 5
+        },
+        {
+          "reason": "connective phrasing introducing negatives",
+          "bytes": 47
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 12
+        },
+        {
+          "reason": "punctuation and conjunction",
+          "bytes": 5
+        },
+        {
+          "reason": "connective phrasing introducing negatives",
+          "bytes": 26
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 49
+        },
+        {
+          "reason": "connective phrasing introducing negatives",
+          "bytes": 20
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation and conjunction",
+          "bytes": 5
+        },
+        {
+          "reason": "paragraph break and connective phrasing",
+          "bytes": 45
+        },
+        {
+          "reason": "conjunction",
+          "bytes": 5
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 9
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 12
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 25
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 22
+        },
+        {
+          "reason": "connective phrasing introducing negatives",
+          "bytes": 15
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation and conjunction",
+          "bytes": 5
+        },
+        {
+          "reason": "paragraph break and connective phrasing",
+          "bytes": 38
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 8
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 49
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 7
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 14
+        },
+        {
+          "reason": "connective phrasing introducing negative",
+          "bytes": 20
+        },
+        {
+          "reason": "conjunction",
+          "bytes": 4
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "paragraph break and connective phrasing",
+          "bytes": 42
+        },
+        {
+          "reason": "punctuation",
+          "bytes": 2
+        },
+        {
+          "reason": "punctuation and conjunction",
+          "bytes": 6
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 53
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 6
+        },
+        {
+          "reason": "connective phrasing",
+          "bytes": 8
+        },
+        {
+          "reason": "terminal punctuation",
+          "bytes": 1
+        }
+      ],
+      "detail": {}
+    },
+    {
+      "stage": "derive",
+      "kind": "elements",
+      "covered": true,
+      "clean": true,
+      "n_input": 46,
+      "n_used": 24,
+      "n_discard": 22,
+      "discards": [
+        {
+          "reason": "remote childhood-type renal comorbidity; no current renal findings (no edema, normal BP), does not bear on KFD",
+          "id": "past_history(post_streptococcal_glomerulonephritis)"
+        },
+        {
+          "reason": "nonspecific constitutional symptom, no discriminating value among candidates",
+          "id": "fatigue(increased)"
+        },
+        {
+          "reason": "nonspecific constitutional symptom, no discriminating value",
+          "id": "malaise(present)"
+        },
+        {
+          "reason": "nonspecific constitutional symptom",
+          "id": "appetite_loss(present)"
+        },
+        {
+          "reason": "nonspecific B-symptom; present across multiple candidates, low discrimination for KFD",
+          "id": "weight_loss(present)"
+        },
+        {
+          "reason": "travel/exposure context; argues against geographically-acquired infection but not specific to KFD discrimination",
+          "id": "recent_travel(absent)"
+        },
+        {
+          "reason": "lowers HIV/STI prior but not discriminating between remaining candidates",
+          "id": "risky_sexual_exposure(absent)"
+        },
+        {
+          "reason": "lowers blood-borne infection prior; not discriminating for KFD",
+          "id": "iv_drug_use(absent)"
+        },
+        {
+          "reason": "lowers transfusion-borne infection prior; not discriminating",
+          "id": "blood_transfusion(absent)"
+        },
+        {
+          "reason": "duplicate of fever(high_grade) already counted; avoid double-counting",
+          "id": "febrile(present)"
+        },
+        {
+          "reason": "physical correlate of anemia already captured by hemoglobin(10_anemia)",
+          "id": "pallor(present)"
+        },
+        {
+          "reason": "normal body habitus, no diagnostic bearing",
+          "id": "bmi(23)"
+        },
+        {
+          "reason": "duplicate of alopecia(absent) already counted; avoid double-counting",
+          "id": "alopecia(absent_on_exam)"
+        },
+        {
+          "reason": "absence of renal/nephrotic sign; no current bearing given remote PSGN excluded",
+          "id": "periorbital_puffiness(absent)"
+        },
+        {
+          "reason": "absence of renal/fluid-overload sign; no bearing on KFD",
+          "id": "ankle_edema(absent)"
+        },
+        {
+          "reason": "normal vital sign, no diagnostic discrimination",
+          "id": "blood_pressure(110_70)"
+        },
+        {
+          "reason": "mild tachycardia expected with fever; nonspecific",
+          "id": "pulse(100_bpm)"
+        },
+        {
+          "reason": "normal; argues against pulmonary process but already covered by clear lung exam",
+          "id": "oxygen_saturation(98_room_air)"
+        },
+        {
+          "reason": "absence; low discriminating value among candidates",
+          "id": "hepatomegaly(absent)"
+        },
+        {
+          "reason": "absence of serositis/fluid; nonspecific here",
+          "id": "ascites(absent)"
+        },
+        {
+          "reason": "normal exam, no diagnostic bearing",
+          "id": "neuro_exam(normal)"
+        },
+        {
+          "reason": "nonspecific acute-phase elevation; redundant with ESR and present across all inflammatory candidates",
+          "id": "crp(35_elevated)"
+        }
+      ],
+      "detail": {
+        "missing": [],
+        "extra": [],
+        "overlap": []
+      }
+    },
+    {
+      "stage": "ground:prior",
+      "kind": "text",
+      "covered": true,
+      "clean": true,
+      "n_input": 220,
+      "n_used": 1,
+      "n_discard": 1,
+      "discards": [
+        {
+          "reason": "surrounding source context; the load-bearing figure is the cited span",
+          "bytes": 70
+        }
+      ],
+      "detail": {}
+    },
+    {
+      "stage": "ground:cervical_lymphaden",
+      "kind": "text",
+      "covered": true,
+      "clean": true,
+      "n_input": 311,
+      "n_used": 1,
+      "n_discard": 1,
+      "discards": [
+        {
+          "reason": "surrounding source context; the load-bearing figure is the cited span",
+          "bytes": 194
+        }
+      ],
+      "detail": {}
+    },
+    {
+      "stage": "ground:largest_node(2cm, ",
+      "kind": "text",
+      "covered": true,
+      "clean": true,
+      "n_input": 313,
+      "n_used": 1,
+      "n_discard": 1,
+      "discards": [
+        {
+          "reason": "surrounding source context; the load-bearing figure is the cited span",
+          "bytes": 194
+        }
+      ],
+      "detail": {}
+    },
+    {
+      "stage": "ground:wbc(1.35, leukopen",
+      "kind": "text",
+      "covered": true,
+      "clean": true,
+      "n_input": 164,
+      "n_used": 1,
+      "n_discard": 1,
+      "discards": [
+        {
+          "reason": "surrounding source context; the load-bearing figure is the cited span",
+          "bytes": 114
+        }
+      ],
+      "detail": {}
+    },
+    {
+      "stage": "ground:wbc(1.35, leukopen",
+      "kind": "text",
+      "covered": true,
+      "clean": true,
+      "n_input": 321,
+      "n_used": 1,
+      "n_discard": 2,
+      "discards": [
+        {
+          "reason": "surrounding source context; the load-bearing figure is the cited span",
+          "bytes": 203
+        },
+        {
+          "reason": "surrounding source context; the load-bearing figure is the cited span",
+          "bytes": 61
+        }
+      ],
+      "detail": {}
+    },
+    {
+      "stage": "aggregate",
+      "kind": "elements",
+      "covered": true,
+      "clean": true,
+      "n_input": 4,
+      "n_used": 0,
+      "n_discard": 4,
+      "discards": [
+        {
+          "reason": "prior not grounded (direction_only)",
+          "id": "prior:kikuchi_fujimoto_disease"
+        },
+        {
+          "reason": "direction_only: no root LR \u2014 abstained",
+          "id": "cervical_lymphadenopathy(non_tender) LR+ for Kikuchi-Fujimoto disease"
+        },
+        {
+          "reason": "direction_only: no root LR \u2014 abstained",
+          "id": "largest_node(2cm, left, level V / posterior cervical) LR+ for Kikuchi-Fujimoto disease"
+        },
+        {
+          "reason": "direction_only: no root LR \u2014 abstained",
+          "id": "wbc(1.35, leukopenia) LR+ for Kikuchi-Fujimoto disease"
+        }
+      ],
+      "detail": {
+        "missing": [],
+        "extra": [],
+        "overlap": []
+      }
+    }
+  ],
+  "verdict_steps": []
+}

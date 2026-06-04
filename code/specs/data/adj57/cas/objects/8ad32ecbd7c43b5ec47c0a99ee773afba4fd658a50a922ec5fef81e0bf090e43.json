@@ -1,0 +1,16 @@
+{
+  "hash": "8ad32ecbd7c43b5ec47c0a99ee773afba4fd658a50a922ec5fef81e0bf090e43",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8854556/",
+  "title": "Kikuchi-Fujimoto disease in the Eastern Mediterranean zone (Scientific Reports 2022)",
+  "interned_at": "",
+  "content": "Between 2006 and 2021, 1968 lymph node biopsies were submitted to the histopathology laboratory, with eleven cases (0.6%) having the diagnosis of KFD. The mean patient age was 32 years (range 4-59), and 73% were females.",
+  "citations": [
+    {
+      "start": 0,
+      "end": 150,
+      "quote": "Between 2006 and 2021, 1968 lymph node biopsies were submitted to the histopathology laboratory, with eleven cases (0.6%) having the diagnosis of KFD.",
+      "used_for": "prior:kikuchi_fujimoto_disease"
+    }
+  ],
+  "onward_citations": []
+}

@@ -1,5 +1,25 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.2.0] — 2026-06-04
+
+### Added
+
+- **ADJ58 — the universal stage contract.** Byte provenance enforced at EVERY
+  pipeline arrow, not just case→IR.
+  - **`pipeline/stage.py`** — a generic `Stage` gate + composed `Trail`. Two input
+    shapes, one contract: TEXT inputs partition byte-for-byte; ELEMENT inputs
+    partition the id set. `clean` = covered + every used cites a `produced` + every
+    discard a `reason`. `Trail.ok()` = unbroken byte-trail end to end. 9 unit tests
+    (`pipeline/test_stage.py`).
+  - **`pipeline/run.py`** — drives a full-run result through EVERY stage's gate
+    (decompose / derive / ground:\* / aggregate), composing the trail, interning
+    sources into the CAS, computing the verdict. A stage that fails to cover its
+    input shows up as a HOLE — the framework stops claiming auditability it lacks.
+  - **`derive` retrofit** — the workflow now emits `fact_dispositions`: every fact
+    is USED (with a role) or DISCARDED (with a reason). Closes the silent-drop hole
+    (comorbidities like glaucoma must be discarded-with-reason, not ignored).
+  - Spec: [ADJ58](../../ADJ58-universal-stage-contract.md).
+
 ## [0.1.0] — 2026-06-04
 
 ### Added
