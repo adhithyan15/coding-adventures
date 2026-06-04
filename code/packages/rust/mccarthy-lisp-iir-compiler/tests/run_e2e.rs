@@ -427,3 +427,73 @@ fn shadowing_param_is_not_captured() {
     //   ((LAMBDA (X) ((LAMBDA (X) X) 'INNER)) 'OUTER) ⇒ INNER
     assert_eq!(sym_name(eval("((LAMBDA (X) ((LAMBDA (X) X) 'INNER)) 'OUTER)")), "INNER");
 }
+
+// ============================================================
+// LABEL capture + LABEL-as-value: recursive closures (L2c-3c)
+// ============================================================
+
+#[test]
+fn label_body_captures_enclosing_variable() {
+    // The recursive `F` returns the captured `N` at its base case.
+    //   ((LAMBDA (N) ((LABEL F (LAMBDA (X)
+    //       (COND ((ATOM X) N) ('T (F (CAR X)))))) '((A) B))) 'Z) ⇒ Z
+    let src = "((LAMBDA (N) ((LABEL F (LAMBDA (X) \
+                 (COND ((ATOM X) N) ('T (F (CAR X)))))) '((A) B))) 'Z)";
+    assert_eq!(sym_name(eval(src)), "Z");
+}
+
+#[test]
+fn recursive_label_passed_as_a_value_and_applied() {
+    // Pass a recursive LABEL (last) as a value to a higher-order function,
+    // which applies it.
+    //   ((LAMBDA (G) (G '(A B C)))
+    //    (LABEL LAST (LAMBDA (L)
+    //        (COND ((ATOM (CDR L)) (CAR L)) ('T (LAST (CDR L))))))) ⇒ C
+    let src = "((LAMBDA (G) (G '(A B C))) \
+                (LABEL LAST (LAMBDA (L) \
+                    (COND ((ATOM (CDR L)) (CAR L)) ('T (LAST (CDR L)))))))";
+    assert_eq!(sym_name(eval(src)), "C");
+}
+
+#[test]
+fn recursive_label_value_with_capture() {
+    // A recursive LABEL that *captures* an enclosing var, used as a value:
+    // descends to the first atom and returns the captured STOP.
+    //   ((LAMBDA (STOP) ((LAMBDA (G) (G '(A B)))
+    //       (LABEL F (LAMBDA (X)
+    //           (COND ((ATOM X) STOP) ('T (F (CAR X)))))))) 'DONE) ⇒ DONE
+    let src = "((LAMBDA (STOP) ((LAMBDA (G) (G '(A B))) \
+                 (LABEL F (LAMBDA (X) \
+                     (COND ((ATOM X) STOP) ('T (F (CAR X)))))))) 'DONE)";
+    assert_eq!(sym_name(eval(src)), "DONE");
+}
+
+#[test]
+fn nonterminating_label_value_hits_depth_guard() {
+    // A non-terminating recursive LABEL used as a value must still hit the
+    // call-depth guard when applied — never a native stack overflow.
+    //   ((LAMBDA (G) (G 'A)) (LABEL LOOP (LAMBDA (X) (LOOP X))))
+    let src = "((LAMBDA (G) (G 'A)) (LABEL LOOP (LAMBDA (X) (LOOP X))))";
+    let module = compile_source(src, "e2e").expect("compile");
+    let err = run(&module).expect_err("must not terminate");
+    let msg = err.to_string();
+    assert!(
+        msg.contains("call depth") || msg.contains("instruction budget"),
+        "unexpected error: {msg}"
+    );
+}
+
+#[test]
+fn nested_label_calls_outer_captured_label() {
+    // Regression: an inner LABEL `G` calls an outer LABEL `F` that captured
+    // an enclosing `N`, but `G`'s own body doesn't mention `N`.  `F`'s
+    // recursive-call forwarding needs `N` live inside `G`, so `G` must
+    // transitively capture it.  Descends ((A) B) → atom → returns N=Z.
+    let src = "((LAMBDA (N) \
+                  ((LABEL F (LAMBDA (X) \
+                     (COND ((ATOM X) N) \
+                           ('T ((LABEL G (LAMBDA (Y) (F Y))) (CAR X)))))) \
+                   '((A) B))) \
+                'Z)";
+    assert_eq!(sym_name(eval(src)), "Z");
+}

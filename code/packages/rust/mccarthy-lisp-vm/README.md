@@ -28,7 +28,7 @@ What both languages genuinely share is the **value model**:
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
 cousin. Same value model, separate VMs.)
 
-## Instruction set (through L2c-3b)
+## Instruction set (through L2c-3c)
 
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
@@ -72,6 +72,13 @@ leading call arguments (the lifted function's parameters are
 `captured ∪ own`, captured first), so a closure built in one scope and
 applied in another still sees the values it closed over —
 `(((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) 'B)` ⇒ `(A . B)`.
+
+**Recursive closures (L2c-3c) need no VM change.** A `LABEL` used as a
+value is a closure whose body recurses through an ordinary static `call`
+to its own name, with the captured `env` supplied as leading `apply` args.
+So `((LAMBDA (G) (G '(A B C))) (LABEL LAST (LAMBDA (L) (COND ((ATOM (CDR L))
+(CAR L)) ('T (LAST (CDR L)))))))` ⇒ `C`, and a non-terminating recursive
+closure still hits `CallDepthExceeded`.
 
 ## Usage
 

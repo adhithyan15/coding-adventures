@@ -1,5 +1,54 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.7.0 — 2026-06-04 — LABEL capture + LABEL-as-value: recursive closures (L2c-3c)
+
+Completes closures: `LABEL` now captures free variables and can be used as
+a first-class **recursive** closure value.
+
+```lisp
+;; pass a recursive LABEL as a value, then apply it
+((LAMBDA (G) (G '(A B C)))
+ (LABEL LAST (LAMBDA (L)
+     (COND ((ATOM (CDR L)) (CAR L)) ('T (LAST (CDR L)))))))   ; ⇒ C
+```
+
+* **`lift_label`** mirrors `lift_lambda` (precise free-variable capture,
+  captured-as-leading-parameters) with two `LABEL` specifics: (1) the label
+  name `F` is **bound for recursion** while the body is lowered, and (2) `F`
+  is **excluded from the captured set** — it denotes the function itself
+  (resolved statically), not a value to close over.  `lower_label_application`
+  and `lower_label_value` now both go through it.
+* **Recursive calls forward captures.**  `functions_in_scope` entries carry
+  the captured names; a call `(F …)` to a labelled name lowers to
+  `call label_n [captured_regs…, arg_regs…]` (via `lower_call_with_captures`),
+  so a recursive body that closes over an enclosing variable threads it
+  through every self-call.
+* **Transitive capture.**  Because a `(F …)` call forwards `F`'s captured
+  registers, those registers must be live at the call site — so
+  `collect_free_symbols` now treats a called labelled function's captures as
+  free symbols of the caller.  This fixes a nested-`LABEL` gap (an inner
+  `LABEL` calling an outer captured `LABEL` whose captures it doesn't itself
+  mention).  Each labelled function's capture set is finalised before its
+  body — hence any nested caller — is lowered, so one pass handles
+  arbitrarily nested `LABEL`s; IIR stays linear in source.
+* **`LABEL` as a value** (a bare `(LABEL F (LAMBDA …))` in value position)
+  and **a labelled name `F` used as a value** inside its own body both
+  lower to a recursive closure `(*CLOSURE* label-fn . env)`, applied through
+  the same `apply` opcode.  Both were errors before; the stale
+  "needs closures" / "→ L2c-3b" messages are gone.
+* **No `lispy-runtime` / VM change** — a self-call is an ordinary `call`,
+  and a captured `env` is leading `apply` args, so a non-terminating
+  recursive closure still errors cleanly (`CallDepthExceeded`).
+* Internal: removed the now-unused `lower_call_to` (both label paths use the
+  capture-aware `lower_call_with_captures`).
+* 2 new compiler unit tests (label captures enclosing param as a leading
+  param + forwards it on the recursive call; labelled name in value position
+  is a recursive closure) + 2 updated (bare `LABEL` value / labelled-name
+  value now lower to closures) + 4 new end-to-end tests on `mccarthy-lisp-vm`
+  (LABEL body captures an enclosing variable; recursive LABEL passed as a
+  value and applied; recursive LABEL value *with* capture; non-terminating
+  LABEL value → call-depth guard).
+
 ## v0.6.0 — 2026-06-04 — free-variable capture for LAMBDA (L2c-3b)
 
 Closures can now **capture** — a lambda body may reference variables from
