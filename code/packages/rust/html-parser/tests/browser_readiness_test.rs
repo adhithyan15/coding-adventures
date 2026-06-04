@@ -9,9 +9,10 @@ use coding_adventures_html_parser::{
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate,
+    BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -65,6 +66,8 @@ struct ExpectedBrowserDocument {
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
     text_semantics: Vec<ExpectedTextSemantic>,
+    #[serde(default)]
+    navigation_groups: Vec<ExpectedNavigationGroup>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -463,6 +466,32 @@ struct ExpectedTextSemantic {
     ruby_kind: Option<String>,
     #[serde(default)]
     bidi_kind: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedNavigationGroup {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    landmark_kind: Option<String>,
+    #[serde(default)]
+    list_kind: Option<String>,
+    item_count: usize,
+    #[serde(default)]
+    list_start: Option<String>,
+    #[serde(default)]
+    list_marker_type: Option<String>,
+    #[serde(default)]
+    list_reversed: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1701,6 +1730,26 @@ fn browser_text_semantic_descriptor_metadata_tracks_inline_annotations() {
 }
 
 #[test]
+fn browser_navigation_group_descriptor_metadata_tracks_lists_and_landmarks() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "navigation-menu-descriptor-page")
+        .expect("navigation menu fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("navigation menu fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.navigation_groups, expected.navigation_groups,
+        "navigation groups should preserve list/menu landmark names, item counts, and ordered list metadata",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -2844,6 +2893,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedTextSemantic::into_browser_text_semantic)
                 .collect(),
+            navigation_groups: self
+                .navigation_groups
+                .into_iter()
+                .map(ExpectedNavigationGroup::into_browser_navigation_group)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3250,6 +3304,26 @@ impl ExpectedTextSemantic {
             edit_datetime: self.edit_datetime,
             ruby_kind: self.ruby_kind,
             bidi_kind: self.bidi_kind,
+        }
+    }
+}
+
+impl ExpectedNavigationGroup {
+    fn into_browser_navigation_group(self) -> BrowserNavigationGroup {
+        BrowserNavigationGroup {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            landmark_kind: self.landmark_kind,
+            list_kind: self.list_kind,
+            item_count: self.item_count,
+            list_start: self.list_start,
+            list_marker_type: self.list_marker_type,
+            list_reversed: self.list_reversed,
         }
     }
 }
