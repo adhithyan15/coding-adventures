@@ -1,9 +1,16 @@
 // main.qml — VisiCalc Qt host (VC2-qt).
 //
-// Mounts the auto-generated `FormulaBar` from build/ and a
-// hand-written grid block below it. Hard-coded 5×5 sample
-// spreadsheet matches the data in VC2-html / VC2-webcomp /
-// VC2-flutter so all four demos look visually identical.
+// Mounts the auto-generated `FormulaBar` and `Grid` components from
+// build/.  Both come from `bash scripts/build.sh` which runs
+// `mosaic-compile --backend qt` against the shared
+// `demo/visicalc/mosaic/{FormulaBar,Grid}.{mil,desktop.mll,dark.msl}`
+// triples.  Grid.desktop.mll is a UI34 `pkg::mosaic-pkg-grid::Grid`
+// one-liner — the QML component you see below is the package's
+// authoritative Grid composition lowered to QtQuick by the Qt
+// emitter.  No hand-written widgets in this file.
+//
+// Hard-coded 5×5 sample spreadsheet matches the data in every other
+// VC2-* demo so all five renders look visually identical.
 //
 // Run:
 //   qml main.qml          # one-shot QML viewer (Qt 6)
@@ -85,106 +92,45 @@ Window {
             onCancel: { root.formulaText = root.sampleRows[root.selectedRow][root.selectedCol] }
         }
 
-        // Grid — HAND-WRITTEN placeholder (mosaic-emit-qt's pipeline
-        // doesn't yet support the `Grid` built-in primitive; only the
-        // React emitter does). Visual contract matches Grid.dark.msl.
-        Rectangle {
-            id: gridContainer
+        // Grid — AUTO-GENERATED from
+        // demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl} via
+        // `mosaic-compile --backend qt`.  Grid.desktop.mll is a UI34
+        // `pkg::mosaic-pkg-grid::Grid` one-liner; the QML component
+        // you see here is the package's authoritative Grid +
+        // Cell composition lowered to QtQuick by mosaic-emit-qt.
+        //
+        // List-typed slots (columnHeaders / viewportRows /
+        // columnWidths) are passed as JS arrays through the
+        // property bindings; the Qt emitter declares them as
+        // `property var`.  The four signals (`navigate`,
+        // `formulaChange`, `editCommit`, `editCancel`) are wired
+        // back into the host's selection state.
+        Grid {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.margins: 16
-            color: "#1E1E1E"
-            border.color: "#3F3F46"
-            border.width: 1
 
-            ColumnLayout {
-                anchors.fill: parent
-                spacing: 0
+            columnHeaders: ["A", "B", "C", "D", "E"]
+            // 6 widths: row-label column + 5 data columns.
+            columnWidths: [48, 96, 96, 96, 96, 96]
+            viewportRows: root.sampleRows
+            selectedRow: root.selectedRow
+            selectedCol: root.selectedCol
+            // Negative coordinates ⇒ no cell is editing — matches
+            // every other VC2-* demo's default state.
+            editRow: -1
+            editCol: -1
+            editContent: ""
+            totalHeight: 0
 
-                // Header row: row-label cell + column-letter cells.
-                RowLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 24
-                    spacing: 0
-                    Repeater {
-                        model: ["", "A", "B", "C", "D", "E"]
-                        Rectangle {
-                            Layout.preferredWidth: 96
-                            Layout.preferredHeight: 24
-                            color: "#2D2D30"
-                            border.color: "#3F3F46"
-                            border.width: 1
-                            Text {
-                                anchors.centerIn: parent
-                                text: modelData
-                                color: "#9D9D9D"
-                                font.family: "monospace"
-                                font.pixelSize: 12
-                            }
-                        }
-                    }
-                }
-
-                // Data rows. We loop 5×5 with nested Repeaters.
-                Repeater {
-                    model: root.sampleRows.length
-                    RowLayout {
-                        property int rowIdx: index
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 22
-                        spacing: 0
-
-                        // Leading row-label cell.
-                        Rectangle {
-                            Layout.preferredWidth: 96
-                            Layout.preferredHeight: 22
-                            color: "#2D2D30"
-                            border.color: "#3F3F46"
-                            border.width: 1
-                            Text {
-                                anchors.centerIn: parent
-                                text: (rowIdx + 1).toString()
-                                color: "#9D9D9D"
-                                font.family: "monospace"
-                                font.pixelSize: 12
-                            }
-                        }
-
-                        // Data cells for this row.
-                        Repeater {
-                            model: root.sampleRows[rowIdx]
-                            Rectangle {
-                                property int colIdx: index
-                                property bool isSelected:
-                                    rowIdx === root.selectedRow &&
-                                    colIdx === root.selectedCol
-                                Layout.preferredWidth: 96
-                                Layout.preferredHeight: 22
-                                color: isSelected ? "#264F78" : (rowIdx % 2 === 0 ? "#1E1E1E" : "#252526")
-                                border.color: isSelected ? "#007ACC" : "#3F3F46"
-                                border.width: 1
-                                Text {
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 4
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: modelData
-                                    color: isSelected ? "white" : "#CCCCCC"
-                                    font.family: "monospace"
-                                    font.pixelSize: 12
-                                }
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        root.selectedRow = rowIdx;
-                                        root.selectedCol = colIdx;
-                                        root.formulaText = root.sampleRows[rowIdx][colIdx];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            onNavigate: (row, col) => {
+                root.selectedRow = row;
+                root.selectedCol = col;
+                root.formulaText = root.sampleRows[row][col];
             }
+            onFormulaChange: (_value) => { /* live-edit deferred */ }
+            onEditCommit:    () => { /* live-edit deferred */ }
+            onEditCancel:    () => { /* live-edit deferred */ }
         }
     }
 }
