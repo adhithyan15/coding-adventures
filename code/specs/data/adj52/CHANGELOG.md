@@ -2,6 +2,18 @@
 
 All notable changes to the ADJ52 experiment runner.
 
+## [0.3.1] — 2026-06-04
+
+### Added
+
+- **ADJ55 three-arm comparison (the control arm §5 owed).** Ran plain frontier Claude
+  (no framework) on the PMC11999957 PE case alongside the grounded corpus and the
+  ungrounded deriver. Result: plain Claude put PE at **3–5%** and was "comfortable not
+  imaging" a patient who had a PE — the same Wells-0/D-dimer trap; only the grounded
+  corpus (0.28 → 0.89) caught it. On this case the framework's edge was **correctness**,
+  not merely auditability. Writeup + verbatim run in `provenance/pe/arms/`; ADJ55 §5/§6
+  updated. **n = 1 — existence proof, not a rate** (rule-out + high-Wells cases still owed).
+
 ## [0.3.0] — 2026-06-04
 
 ### Added

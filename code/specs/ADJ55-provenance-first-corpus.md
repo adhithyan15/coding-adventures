@@ -99,17 +99,25 @@ provenance is the variable that flips one to the other.**
 - The grounded vs ungrounded contrast isolates *grounding the numbers* — but the arms did
   not get perfectly matched inputs (the ungrounded arm also misread the prose). Both are
   failure modes the provenance-first pipeline structurally prevents.
-- **Not yet tested: grounded corpus vs *plain* frontier Claude** (no framework). Plain
-  Claude is a strong diagnostician and may also reach the right disposition here; if so,
-  the grounded corpus's edge is *auditability*, not a different answer. That clean 3-arm
-  comparison is the next experiment.
+- **Plain frontier Claude was tested (the third arm) — and it was wrong too.** Given the
+  same case with no framework, plain Claude put PE at **3–5%** and was "comfortable not
+  doing CTPA" on a patient who had a PE — the same Wells-0/D-dimer-distractor trap the
+  ungrounded deriver fell into. Only the grounded corpus (0.28 → image → 0.89) caught it.
+  So on this case the framework's edge was **correctness, not merely auditability**: the
+  grounded base rate (0.192, vs Claude's ~3–5% gestalt) and mechanical LR application kept
+  the real PE on the table where unconstrained reasoning let a better-fitting narrative
+  exclude it. Full three-arm writeup + verbatim plain-Claude run:
+  [`provenance/pe/arms/`](data/adj52/provenance/pe/arms/three-arm-comparison.md).
+  **Caveat: n = 1** — an existence proof, not a rate; the rule-out and high-Wells cases are
+  still owed (see §6).
 - The corpus grounds *present*-finding LRs; LR-for-absence is not yet grounded (it is why
   the corpus correctly does not over-weight Wells-0, but a fuller corpus would ground both).
 
 ## 6. Next
 
-- The clean 3-arm comparison (plain Claude / grounded corpus / ungrounded framework) over
-  several PE cases (a true rule-out, a high-Wells confirm).
+- **Extend the three-arm comparison to n > 1** — a true rule-out (low Wells + *negative*
+  D-dimer) and a high-Wells confirm — to learn whether PMC11999957 flattered the framework
+  or the pattern holds. (The first three-arm run is done; see §5.)
 - LR-for-absence grounding.
 - A second grounded domain, to show the construction generalizes.
 - Wire the deterministic evaluator into the adj52 engine path so a grounded `corpus.json`
