@@ -398,12 +398,19 @@ fn test_if_with_constant_test_collapse() {
 ///   fold("var x = a ? true : true", "var x = (a, true)");
 ///   ... (ConditionalExpression cleanup) ...
 ///
-/// ConditionalExpression (ternary) cleanup is constant-fold's
-/// responsibility, not DCE's.
+/// **gap-012 routed in CLOC12.27**: ConditionalExpression cleanup is
+/// constant-fold's responsibility. The routing test stub lives at
+/// `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs::test_hook_ternary_cleanup_sequence_dependent`.
+/// The literal-test ternary cases are already covered by
+/// `fold_conditional` + `literal_truthy` (inline tests in the
+/// constant-fold crate). The SequenceExpression-dependent rewrites
+/// (`a ? X : X` → `(a, X)`) are deferred until `javascript-ast`
+/// grows a `SequenceExpression` variant.
 #[test]
-#[ignore = "blocked on gap-012: ConditionalExpression cleanup lives in constant-fold, not DCE"]
+#[ignore = "routed in CLOC12.27 to closure-pass-constant-fold (gap-012); SequenceExpression-dependent shapes deferred to Phase 1.x AST work"]
 fn test_hook_cleanup() {
-    // Belongs in constant-fold's tests/upstream/, not here.
+    // Routed. See doc comment above for the new home in
+    // constant-fold's port file.
 }
 
 /// Upstream `testFoldUselessFor`:
