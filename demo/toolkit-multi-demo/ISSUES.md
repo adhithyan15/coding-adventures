@@ -127,3 +127,51 @@ lookup" emitter gap — the .msl doesn't say *which* glyph, so the
 emitter shouldn't be guessing one. A follow-up could introduce a
 `glyph: text` slot on the toolkit Spinner that drives Symbol or
 Glyph emission across backends.
+
+---
+
+## Issue X4 — `background: "transparent"` emits lowercase, but WinUI 3 needs `Transparent`
+
+**Status.** **Fixed in [PR #5002](https://github.com/adhithyan15/coding-adventures/pull/5002).** Surfaced by Alert.xaml's close-button while auditing the hand-patches in this demo. The mosstyle `.msl` writes CSS-style lowercase color names (`background : "transparent"`), and the XAML emitter passed them through verbatim. WinUI 3's XAML markup compiler rejects `Background="transparent"` — the named-color table is PascalCase only, and the silent-exit-1 failure mode (no diagnostic on stderr) makes it hard to debug downstream.
+
+**Fix.** `normalize_xaml_color_value(s)` in `build_style_fragment`, gated on `is_color_setter(key)`:
+
+- Hex literals (`#…`) and markup extensions (`{x:Bind …}`) pass through.
+- Already-PascalCased names (first char uppercase) pass through.
+- All-lowercase ASCII names get their first letter uppercased (`transparent` → `Transparent`, `red` → `Red`).
+- Anything else passes through verbatim — better to surface a stale value the markup compiler can flag than to silently mangle a user identifier.
+
+Non-color setters (`FontSize`, `FontWeight`, `Padding`, …) are unaffected; the gate is by XAML setter name, not raw `.msl` property. `"normal"` for font-weight passes through (XAML accepts the lowercase form for non-color setters).
+
+**Why this got past X1–X3.** X1–X3 were *property-name* issues (`BorderRadius` → `CornerRadius`, `Foreground` on `Border`). X4 is a *value-shape* issue. The emitter has always had a property-name translation table (`css_property_to_xaml_setter`); the X4 fix introduces the parallel value-normalization step.
+
+## Issue X5 — `Icon[part]` lowers to `<FontIcon Glyph="…"/>` even when the named glyph doesn't exist in Segoe Fluent Icons
+
+**Status.** **Open.** Surfaced by Spinner.xaml during the X4 audit.
+
+**Symptom.** The toolkit's Spinner.mll declares:
+
+```
+layout Spinner {
+  Stack [ spinner ] {
+    Icon [ spinner-glyph ] ( glyph : "spinner" )
+  }
+}
+```
+
+The XAML emitter lowers this to `<FontIcon Glyph="spinner" Foreground="#0d6efd" FontSize="24"/>`. WinUI 3's default `FontIcon` uses Segoe Fluent Icons, which has no glyph literally named `"spinner"` — the `<FontIcon/>` renders as an empty square, not a spinner. The hand-patch in this demo replaced it with `<ProgressRing IsActive="True" Width="24" Height="24" Foreground="#0d6efd"/>`, the WinUI-native animated spinner.
+
+**Root cause.** Two layered issues:
+
+1. **Mosaic kernel has no "spinner" concept.** The toolkit author wrote `Icon (glyph: "spinner")` as a semantic name, expecting backends to translate. The emitter has no translation table — it just emits the literal string as a font glyph.
+2. **Even with the right glyph name, `FontIcon` would only render a static character, not the animated spinning ring that `ProgressRing` provides.** A glyph-name lookup table isn't enough; the toolkit's Spinner specifically wants an *animated* progress indicator.
+
+**Two fix paths.**
+
+**Path A (smaller, less general): `Icon (glyph: "spinner")` lowers to backend-native progress indicator.** The emitter recognizes a small set of semantic glyph names (`"spinner"`, `"loader"`, …) and lowers them to backend-native widgets instead of `<FontIcon/>`. On XAML: `<ProgressRing IsActive="True"/>` (with size from `width`/`height` style). On SwiftUI: `ProgressView()`. On Compose: `CircularProgressIndicator()`. On Flutter: `CircularProgressIndicator()`. On Qt: `BusyIndicator { running: true }`. On WebComponent/HTML: an animated SVG or `<progress>` element. **Drawback**: the semantic-name list grows over time as toolkit authors invent more names. Risks coupling the kernel emitter to userland naming conventions.
+
+**Path B (cleaner, larger): `Spinner` becomes a kernel primitive (or a userland Mosaic package).** Either UI29 grows a `Spinner` primitive that backends know how to lower natively — analogous to `HostInput` / `HostTable` — or the toolkit ships a `Spinner.mil/.mll` whose Mosaic source decomposes into a `Box [ ring ] {}` shape with `style` keyword `is-spinner: true`, and a per-backend lowering rule recognizes that keyword and emits the native widget. **Drawback**: bigger design, touches the kernel primitive vocabulary. Right place to make the decision is during UI34 or UI35 (whichever cycle revisits primitive-vocabulary growth).
+
+**Recommendation.** Ship Path A as a one-shot fix for `"spinner"` so the toolkit demo regenerates cleanly. Open a UI-spec issue to formalize Path B at the next vocabulary-revisit cycle.
+
+**Patch applied in this demo.** Hand-rewrote `Spinner.xaml`'s `<Grid Width="24" Height="24"><FontIcon Glyph="spinner".../></Grid>` to `<ProgressRing IsActive="True" Width="24" Height="24" Foreground="#0d6efd"/>`. Once Path A or B lands, the hand-patch is regenerated cleanly.
