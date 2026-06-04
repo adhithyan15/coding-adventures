@@ -132,11 +132,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-016 — `if (x) S` → `x && S` rewrite not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.24 — `fold_if_statement` now has a third (after the literal-truthy/falsy and gap-017 if-else→ternary branches): when `alternate.is_none()` AND the consequent reduces to a single `ExpressionStatement` (directly or via `single_expr_stmt`'s BlockStatement unwrap), the IfStatement is rewritten to `ExpressionStatement { LogicalExpression { left: test, op: And, right: consequent_expr } }`. Side-effect semantics are preserved: `&&` evaluates `test` first and the right operand only when `test` is truthy — exactly matching `if (test) S`'s observable behaviour. The rule does NOT fire when an alternate is present (preventing silent loss of the else branch) and does NOT fire when the consequent is multi-statement (no single right-hand expression to lower into). `test_fold_one_child_blocks_if_to_logical_and` is un-ignored. Two pre-existing inline tests were updated to reflect the new behaviour: `if_non_literal_test_with_no_alternate_passes_through` → `..._with_multi_statement_consequent_passes_through` (uses a 2-statement block that still can't fold), and `if_with_unresolved_comparison_doesnt_fold_alone` → `..._folds_via_gap016` (now expects the `(1<2) && A` shape and asserts the inner `1 < 2` survived as a BinaryExpression — confirming fold-control-flow still doesn't fold binary comparisons).
 - **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldOneChildBlocks` (`if(x) foo()` → `x&&foo()` lines)
 - **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
-- **Why it fails:** Upstream compacts a one-statement `if (test) consequent` (no alternate) into a `LogicalExpression { left: test, op: And, right: consequent }` wrapped in an `ExpressionStatement`. Our pass leaves `IfStatement` shapes alone when the test isn't a literal.
-- **What it needs:** A rewrite rule in `fold_if_statement`: when `alternate.is_none()`, the consequent is exactly one `ExpressionStatement`, and the test isn't a literal, replace the `IfStatement` with an `ExpressionStatement` wrapping `test && consequent_expr`. Must preserve side-effect semantics — only fire when both sides are observably safe to reorder.
 
 ### gap-017 — `if (x) C else A` → `x ? C : A` rewrite not implemented
 

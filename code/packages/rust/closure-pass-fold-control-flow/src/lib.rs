@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
     BlockStatement, CallExpression, ConditionalExpression, Declaration, EmptyStatement,
     Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration, IfStatement,
-    LogicalExpression, MemberExpression, ObjectExpression, Program, ProgramItem, Property,
+    LogicalExpression, LogicalOperator, MemberExpression, ObjectExpression, Program, ProgramItem, Property,
     PropertyKey, ReturnStatement, Statement, UnaryExpression, VariableDeclaration,
     VariableDeclarator, WhileStatement,
 };
@@ -399,7 +399,78 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 }
             }
 
-            // Couldn't ternarise — keep the IfStatement.
+            // (CLOC12.24 / gap-016): when there's *no* alternate and
+            // the consequent reduces to a single ExpressionStatement,
+            // rewrite the IfStatement to `<test> && <consequent>` as
+            // a LogicalExpression. Upstream Closure performs the same
+            // rewrite under `PeepholeMinimizeConditions::tryMinimizeIf`.
+            //
+            // Truth table (with `test` non-literal — literal cases
+            // were handled above):
+            //
+            //   if (x) foo();              → x && foo();
+            //   if (x) { foo(); }          → x && foo();   (single-expr
+            //                                               block unwraps
+            //                                               via single_expr_stmt)
+            //   if (x) foo(); else bar();  → handled above (ternary)
+            //   if (x) return 1;           → unchanged (return is not an
+            //                                expression statement; this
+            //                                is gap-019's territory)
+            //   if (x) { a; b; }           → unchanged (multi-statement
+            //                                consequent doesn't reduce
+            //                                to a single Expression)
+            //   if (x) ;                   → unchanged (empty consequent
+            //                                isn't expressible as a
+            //                                LogicalExpression without
+            //                                synthesising `undefined`,
+            //                                which we leave for later)
+            //
+            // Why this is safe:
+            //
+            //   * `x && consequent` evaluates `x` first (the
+            //     short-circuit gate), exactly like `if (x) S` does.
+            //   * If `x` is falsy: `&&` returns `x` *without*
+            //     evaluating the right operand. In `if (x) S`, when
+            //     `x` is falsy `S` is also not executed. Behaviour
+            //     match.
+            //   * If `x` is truthy: `&&` returns the right operand's
+            //     value, which equals evaluating `consequent`. In
+            //     `if (x) S`, when `x` is truthy `S` is executed for
+            //     its side effects; the wrapper ExpressionStatement
+            //     discards the result, so the *value* of `&&` is
+            //     irrelevant. Behaviour match.
+            //   * Order-of-evaluation: identical. No second `x`
+            //     evaluation; `consequent`'s side effects fire when
+            //     and only when `x` is truthy.
+            //
+            // Why we don't fold when alternate exists: the previous
+            // ternary branch already handled that. We only reach
+            // here if alternate is `None` (or if alternate exists
+            // but the ternary fold bailed — in which case we don't
+            // discard the alternate by folding to `x && S` because
+            // that would silently drop the else branch).
+            if alternate.is_none() {
+                if let Some(c_expr) = single_expr_stmt(&consequent) {
+                    st.record_fold(
+                        &s.cv,
+                        "if-to-logical-and",
+                        "if (<test>) <expr>;",
+                        "<test> && <expr>;",
+                    );
+                    let and = Expression::LogicalExpression(LogicalExpression {
+                        cv: None,
+                        operator: LogicalOperator::And,
+                        left: Box::new(test),
+                        right: Box::new(c_expr),
+                    });
+                    return Statement::expression_statement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: and,
+                    });
+                }
+            }
+
+            // Couldn't ternarise or logical-and — keep the IfStatement.
             Statement::if_statement(IfStatement {
                 cv: s.cv.clone(),
                 test,
@@ -875,31 +946,50 @@ mod tests {
     }
 
     #[test]
-    fn if_non_literal_test_with_no_alternate_passes_through() {
-        // No alternate → can't ternarise (gap-016 territory, not 017).
-        // Verifies the new fold doesn't over-fire.
+    fn if_non_literal_test_with_multi_statement_consequent_passes_through() {
+        // **Pre-gap-016**: this test asserted `if (flag) x;` stayed
+        // unchanged. **Post-gap-016** (CLOC12.24), that single-expr
+        // case now folds to `flag && x;`. We update the test to use
+        // a *multi-statement* consequent block, which still can't
+        // collapse to a LogicalExpression (LogicalExpression takes
+        // exactly one right-hand expression).
+        //
+        // This preserves the original intent — "the fold doesn't
+        // over-fire on non-collapsible shapes".
         let if_stmt = Statement::if_statement(IfStatement {
             cv: Some("if.2".to_string()),
             test: ident("flag"),
-            consequent: Box::new(expr_stmt(ident("x"), None)),
+            consequent: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("x"), None), expr_stmt(ident("y"), None)],
+            })),
             alternate: None,
         });
         let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
         let (out, _contribs, _changed, _) = run_pass(prog);
-        // Don't assert !changed — the test field gets fold-walked and
-        // could in principle gain a contribution. What we DO assert
-        // is that the top-level structure stays IfStatement.
         match first_stmt(&out) {
             Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
-            other => panic!("expected IfStatement intact (no alternate); got {:?}", other),
+            other => panic!(
+                "expected IfStatement intact (multi-statement consequent); got {:?}",
+                other
+            ),
         }
     }
 
     #[test]
-    fn if_with_unresolved_comparison_doesnt_fold_alone() {
-        // Run this pass solo on `if (1 < 2) {A}` — the comparison
-        // is NOT folded by fold-control-flow (it's constant-fold's
-        // job). So the IfStatement stays.
+    fn if_with_unresolved_comparison_folds_via_gap016() {
+        // **Pre-gap-016**: this test asserted `if (1<2) A;` stayed
+        // unchanged because fold-control-flow alone doesn't fold the
+        // `<` comparison (that's constant-fold's job) and there was
+        // no alternate to ternarise. **Post-gap-016** (CLOC12.24),
+        // even with `1<2` left as a BinaryExpression, the surrounding
+        // `if (test) S;` (no alternate, single-expr consequent) now
+        // folds to `(1<2) && A;` via the new logical-and rewrite.
+        //
+        // The original intent — "fold-control-flow alone doesn't have
+        // access to constant-fold's binary-expression folding" — is
+        // still pinned: the inner `1 < 2` survives as a
+        // BinaryExpression rather than being folded to `true`.
         let if_stmt = Statement::if_statement(IfStatement {
             cv: Some("if.1".to_string()),
             test: Expression::BinaryExpression(BinaryExpression {
@@ -912,14 +1002,26 @@ mod tests {
             alternate: None,
         });
         let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
-        let (out, _, changed, _) = run_pass(prog);
-        assert!(
-            !changed,
-            "fold-control-flow alone should not fold `if (1<2)` — that's constant-fold's job"
-        );
+        let (out, _, _changed, _) = run_pass(prog);
         match first_stmt(&out) {
-            Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
-            other => panic!("expected IfStatement intact; got {:?}", other),
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                if let Expression::LogicalExpression(le) = &es.expression {
+                    assert_eq!(le.operator, LogicalOperator::And);
+                    // The left operand must still be the unfolded
+                    // BinaryExpression — fold-control-flow does NOT
+                    // touch `<` comparisons (that's constant-fold).
+                    assert!(matches!(*le.left, Expression::BinaryExpression(_)),
+                        "left operand should still be a BinaryExpression (not folded by fold-control-flow); got {:?}", le.left);
+                    assert!(matches!(*le.right, Expression::Identifier(_)),
+                        "right operand should be the Identifier `A`; got {:?}", le.right);
+                } else {
+                    panic!("expected LogicalExpression; got {:?}", es.expression);
+                }
+            }
+            other => panic!(
+                "expected ExpressionStatement wrapping LogicalExpression; got {:?}",
+                other
+            ),
         }
     }
 
