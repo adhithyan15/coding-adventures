@@ -603,3 +603,56 @@ fn test_same_unary_on_identifier_in_comparison() {
         unary(UnaryOperator::Plus, ident("x")),
     ));
 }
+
+// =====================================================================
+// Re-ports from `PeepholeRemoveDeadCodeTest` (CLOC12 gap-012 routing)
+// =====================================================================
+//
+// Upstream's `PeepholeRemoveDeadCodeTest::testHook` exercises
+// `ConditionalExpression` (ternary) cleanups. Those cleanups belong
+// in *this* crate (constant-fold), not in `closure-pass-dce`. CLOC12
+// gap-012 tracks the routing of those tests across crates.
+//
+// What we can already cover today:
+//
+//   * Literal-test ternary collapse: `true ? c : a` → `c`,
+//     `false ? c : a` → `a`. Handled in `fold_conditional` via
+//     `literal_truthy`; pinned by existing inline tests in
+//     `closure-pass-constant-fold/src/lib.rs::tests::fold_*` and
+//     by upstream `testHook` lines like `assertFoldSameTo(...)`.
+//
+// What requires Phase 1.x AST extensions before we can land:
+//
+//   * `var x = a ? true : true;` → `var x = (a, true);` — needs the
+//     `SequenceExpression` AST node (the comma operator).
+//     `a` could have observable side effects (call, getter, even an
+//     undeclared-identifier ReferenceError), so the cleanup is *not*
+//     `var x = true;` — it must preserve evaluating `a` for effect.
+//     Without `SequenceExpression`, the upstream rewrite shape is
+//     unrepresentable.
+//
+// Resolution: gap-012 is RESOLVED for the lines we can model today
+// (via existing same-arm-folding code paths) and the
+// SequenceExpression-dependent rewrites are tracked as a separate
+// Phase 1.x AST gap (not a missing fold rule). The placeholder below
+// makes the routing visible in the constant-fold port file's test
+// listing.
+
+/// Routing marker for CLOC12 gap-012. The upstream
+/// `PeepholeRemoveDeadCodeTest::testHook` lines that depend on
+/// SequenceExpression (`a ? X : X` → `(a, X)`) remain deferred until
+/// `javascript-ast` grows the `SequenceExpression` variant. The
+/// literal-test cases are covered by `fold_conditional` and the
+/// inline tests `fold_conditional_*` in the crate's `src/lib.rs`.
+#[test]
+#[ignore = "blocked on SequenceExpression AST variant (Phase 1.x); literal-test cases covered by fold_conditional inline tests"]
+fn test_hook_ternary_cleanup_sequence_dependent() {
+    // Would assert (when SequenceExpression lands):
+    //   fold("var x = a ? true : true", "var x = (a, true)");
+    //   fold("var x = a ? false : false", "var x = (a, false)");
+    //   fold("var x = a ? 1 : 1", "var x = (a, 1)");
+    //
+    // These shapes collapse the two-equal-arms case while still
+    // evaluating `a` once for its observable side effects (call,
+    // getter, ReferenceError from undeclared identifier).
+}

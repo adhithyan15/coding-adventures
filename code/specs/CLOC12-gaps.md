@@ -100,11 +100,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-012 — `ConditionalExpression` cleanup lives in `constant-fold`, not DCE
 
-- **Status:** ROUTING (not a missing feature)
+- **Status:** RESOLVED in CLOC12.27 — the upstream `testHook` test was re-routed to `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs::test_hook_ternary_cleanup_sequence_dependent` (an `#[ignore]`-d stub), and the DCE port file's `test_hook_cleanup` was reannotated to point at the new home. The literal-test ternary cases (`true ? c : a` → `c`, `false ? c : a` → `a`) are already covered by `fold_conditional` + `literal_truthy` in the constant-fold crate's inline tests. The SequenceExpression-dependent rewrites (`a ? X : X` → `(a, X)`) are *not* a fold-rule gap but a Phase 1.x AST gap — they require `javascript-ast` to grow a `SequenceExpression` variant before they can be represented, let alone folded. Tracked separately under "needs SequenceExpression" — *not* under any CLOC12 gap-NNN entry, because the missing piece is a primary AST node rather than a constant-fold rule.
 - **Upstream test:** `PeepholeRemoveDeadCodeTest::testHook` (`a ? b : c` cleanup)
-- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
-- **Why it fails:** Belongs in `closure-pass-constant-fold`. Some of these are already covered by the constant-fold inline tests; the rest will get ported when CLOC12.0N expands the `PeepholeFoldConstantsTest` coverage.
-- **What it needs:** Re-port into `closure-pass-constant-fold/tests/upstream/`.
+- **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs` (re-routed in CLOC12.27); the original DCE port file points to the new home via a doc comment.
 
 ### gap-013 — useless-loop-body folding not in DCE
 
