@@ -1,5 +1,64 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.6.0] — 2026-06-04
+
+### Added
+
+- **ADJ62 — input justification (extract/infer → which bytes → why).** Applies the
+  ADJ61 justification gate to the **input** side. Coverage (ADJ57/58) proved nothing was
+  *dropped*; this proves nothing was *mis-extracted*: after decomposing, the framework
+  asks the agent *"what did you extract or infer, from which bytes, and why do those
+  bytes prove it?"* and runs the two-layer gate on the answer.
+  - **`pipeline/justify_gate.py`** generalized to be **stage-symmetric** — kinds
+    `extracted` (strict, ≙ evidence) / `inferred` (hedged, ≙ conclusion) alongside the
+    output kinds; `by_kind`/`n_strict`/`n_inference` counts; reads either `claim` (output)
+    or `fact` (input) as the assertion text. Output-stage driver back-compat preserved.
+  - **`pipeline/justify_input.workflow.js`** — decompose (coverage) → "account for what
+    you took" → adversarial extraction verifier → two-layer gate + kickback.
+  - **`pipeline/run_justify_input.py`** — reports BOTH input gates (coverage +
+    extraction justification) and the extracted/inferred split.
+  - 5 new gate tests (15 total) covering the input kinds.
+  - **Run (neurobrucellosis bytes):** coverage 100% (27 fact-segments + 3 discards =
+    1812 bytes); extraction 49/49 grounded — **41 extracted + 8 inferred**, 0 rejected.
+    The gate forced 8 readings into the *inferred* column that coverage would have let
+    pass as fact — incl. **"the patient is male"** (the case says only *"He"*, never
+    "male"), "East African" countries (text says only "Africa"), "hepatosplenomegaly"
+    (a composite), "albuminocytologic dissociation" (a label) — while correctly keeping
+    "tachycardia" as *extracted* (the word appears verbatim). Separates what the text
+    *says* from what the reader *infers*, byte by byte. Spec:
+    [ADJ62](../../ADJ62-input-justification.md).
+  - **Honest limitations (unchanged):** layer 2 is an LLM verdict (multi-verifier vote
+    still pending); the live reject/kickback path was not exercised (clean first pass).
+
+## [0.5.0] — 2026-06-04
+
+### Added
+
+- **ADJ61 — the justification gate (combine bytes → justified fact).** Replaces
+  ADJ60's *substring* output gate, which was both too tight (an honest fact built from
+  several bytes has no single verbatim span; the conclusion name is never a byte) and
+  too loose (it checked a citation *exists*, never that it *supports* the claim).
+  - **`pipeline/justify_gate.py`** — two layers: (1) **byte-anchor** (deterministic) —
+    *every* cited span must be verbatim (no fabricated citations; strictly stronger than
+    ADJ60); (2) **justification** (an adversarial verifier verdict) — the cited bytes,
+    *combined*, must justify the claim. Claims are typed **evidence** (statement about
+    the input — strict) vs **conclusion** (inference from the evidence — allowed as a
+    hedged hypothesis). 10 unit tests (`pipeline/test_justify_gate.py`).
+  - **`pipeline/justified.workflow.js`** — derive typed claims → adversarial
+    justification verifier → two-layer gate with kickback loop.
+  - **`pipeline/run_justified.py`** — reports the gate, the evidence/conclusion split,
+    and each claim's combined cited bytes.
+  - **Run (same neurobrucellosis bytes as ADJ60):** 20/20 grounded (16 evidence + 4
+    conclusion), 0 rejected, clean first pass. The framework now **names the diagnosis**
+    — *"most likely … disseminated brucellosis (neurobrucellosis)"* — as a hedged
+    inference grounded by **combining seven bytes**, with rickettsial/atypical-mycobacterial
+    held as alternatives, **without inventing a single evidence byte**. ADJ60 refused to
+    name it and drifted to a "vector-borne" red herring.
+  - **Honest limitations:** layer 2 is an LLM verdict (only as strict as the verifier —
+    it flagged-but-passed one mild evidence overstatement); the live reject/kickback path
+    was not exercised (clean first pass — covered by unit tests only). Spec:
+    [ADJ61](../../ADJ61-justification-gate.md).
+
 ## [0.4.0] — 2026-06-04
 
 ### Added

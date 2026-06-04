@@ -65,6 +65,12 @@ but also gags the legitimate **conclusion**.
 
 ## 4. Next — ADJ61: split evidence from conclusion
 
+> **Delivered (2026-06-04):** [ADJ61](ADJ61-justification-gate.md) replaces this
+> substring gate with a **justification** gate (combine bytes → justified fact, claims
+> typed evidence vs conclusion). Re-running this exact case, the framework now *names*
+> neurobrucellosis as a hedged, byte-grounded inference. The plan below is what it built.
+
+
 The output-grounding gate should classify each output element:
 - **Evidence claim** (a statement about the input) → must trace to input bytes
   (strict; rejects "tremolitized").
