@@ -2,6 +2,96 @@
 
 All notable changes to the `coding-adventures-closure-source-map` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-04
+
+### Added — CLOC12.31: `SourceMapBuilder::build()` VLQ integration (gap-028 step 2/2)
+
+Closes `gap-028` at the crate-implementation level. The
+`build()` step no longer produces `mappings: String::new()` —
+it now resolves each pending mapping's `cv_id` against the
+supplied `CVLog` and emits the source-map v3 delta-encoded
+mappings string per spec.
+
+**Resolution policy (new, documented in module-level docs):**
+
+1. Look up `cv_id` in the `CVLog`.
+2. If the entry has its own `Origin`, use it.
+3. Otherwise walk `parent_ids` depth-first (with a visited-set
+   cycle guard) looking for the nearest ancestor `Origin`.
+4. Parse `Origin.location` as `"line:column"` (decimal `u32`
+   pair). Anything else (`"row_id:8472"`, `"byte:4096"`, etc.)
+   falls through to the 1-field segment shape.
+5. Index `Origin.source` into `sources` in first-seen order.
+
+**Encoding details:**
+
+- `;` separates lines; `,` separates segments on the same line.
+- `generated_column` delta resets to 0 at each `;`.
+- `source_index` / `original_line` / `original_column` deltas
+  carry across lines.
+- Mappings on lines beyond line 0 with no prior content get
+  leading `;`s (e.g. first mapping at line 3 → `";;;..."`).
+- Resolved mappings use the 4-field segment shape `[gen_col,
+  src_idx, orig_line, orig_col]`. Unresolved mappings use the
+  1-field shape `[gen_col]`.
+- `names` is still emitted as an empty array — the 5-field
+  segment shape needs a per-mapping name hint that the emitter
+  doesn't currently surface. Wires in a follow-up.
+
+**Defensive behaviour:**
+
+- Mappings sorted by `(generated_line, generated_column)`
+  before encoding; the emitter usually feeds in order but the
+  builder is safe against out-of-order input.
+- Cycles in `parent_ids` (which the public CV API can't
+  produce but tests can synthesize) are bounded by a visited
+  set — `build()` never loops.
+- Empty builder → empty `mappings` and empty `sources` (no
+  spurious VLQ output).
+
+### Tests (37 inline total, +12 net new)
+
+| Test | Pins |
+|------|------|
+| `add_mapping_accumulates` | 3 unresolved mappings → `"A,K;A"` |
+| `build_with_single_resolved_mapping_emits_4_field_segment` | `"AAAA"` canonical |
+| `build_with_two_resolved_mappings_same_line_delta_encodes` | Same-line `,` separator, `[3,0,0,5]` deltas |
+| `build_with_mappings_on_different_lines_uses_semicolon_separators` | Two `;`s for line gap of 2 |
+| `build_with_two_sources_indexes_them_in_first_seen_order` | Source-list order, `source_index` delta |
+| `build_with_unresolvable_cv_emits_1_field_segment` | Missing-cv fallback |
+| `build_mixes_resolved_and_unresolved_segments` | 4-field + 1-field on same line |
+| `build_walks_parents_to_find_origin` | `derive`-style chain resolution |
+| `build_sorts_out_of_order_input` | Defensive sort |
+| `build_skips_unparseable_location_string` | Free-form `location` fallback |
+| `build_first_mapping_on_later_line_prefixes_with_semicolons` | Leading `;` prefix |
+| `build_with_empty_mappings_returns_empty_string` | Empty-builder identity |
+| `build_ignores_self_referential_cycles` | Cycle guard |
+
+### Upstream port
+
+The 7 `#[ignore]`-d tests in
+`tests/upstream/source_map_generator_v3_test.rs` stay ignored
+but their ignore reasons now reflect the actual remaining
+blocker: full-pipeline `compileAndCheck` harness + upstream
+Closure-byte-identical golden VLQ capture, tracked under
+**CLOC14.1**. The encoder itself is no longer the blocker.
+
+### Public API change
+
+`SourceMapBuilder::build(self, cv: &CVLog) -> SourceMap` — the
+`cv` parameter (previously named `_cv` and unused) now drives
+resolution. Callers that were passing a real `CVLog` get
+populated `mappings` and `sources` automatically. Callers that
+were passing an empty `CVLog::new(true)` keep the same
+output shape, just with the 1-field segment encoding instead
+of empty (because the cv_ids don't resolve to anything).
+
+No source-incompatible change to the type signatures.
+
+### Version bump
+
+`0.3.0` → `0.4.0`.
+
 ## [0.3.0] - 2026-06-04
 
 ### Added — CLOC12.29: base64-VLQ encoding primitive (gap-028 step 1/2)

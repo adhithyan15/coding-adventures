@@ -49,7 +49,7 @@ fn empty_map_json() -> String {
 /// closurec-level end-to-end port once the source-map sidecar emits
 /// real VLQ mappings.
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented; full-pipeline compileAndCheck path doesn't exist in this crate"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is full-pipeline compileAndCheck harness + upstream golden capture (CLOC14.1)"]
 fn test_basic_mapping_1() {
     // Would compile `function __BASIC__() {}` and check the generated
     // mappings string matches upstream's golden output.
@@ -62,7 +62,7 @@ fn test_basic_mapping_1() {
 ///
 /// Pin the exact VLQ string. Blocked on gap-028.
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is closurec full-pipeline harness + upstream Closure golden VLQ capture (CLOC14.1)"]
 fn test_basic_mapping_golden_output() {}
 
 /// Upstream `testLiteralMappings`:
@@ -72,7 +72,7 @@ fn test_basic_mapping_golden_output() {}
 ///
 /// Same shape, more identifiers.
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is closurec full-pipeline harness + upstream Closure golden VLQ capture (CLOC14.1)"]
 fn test_literal_mappings() {}
 
 /// Upstream `testLiteralMappingsGoldenOutput`:
@@ -80,7 +80,7 @@ fn test_literal_mappings() {}
 ///   checkSourceMap(...) with VLQ
 ///   `"A,aAAAA,QAASA,UAAS,CAACC,UAAD,CAAaC,UAAb,CAAyB,CAAE,IAAIC,QAAU,SAAhB;"`
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is closurec full-pipeline harness + upstream Closure golden VLQ capture (CLOC14.1)"]
 fn test_literal_mappings_golden_output() {}
 
 /// Upstream `testMultilineMapping`:
@@ -89,14 +89,14 @@ fn test_literal_mappings_golden_output() {}
 ///
 /// Multi-line case — VLQ deltas track line advances. Blocked on gap-028.
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is closurec full-pipeline harness + upstream Closure golden VLQ capture (CLOC14.1)"]
 fn test_multiline_mapping() {}
 
 /// Upstream `testMultiFunctionMapping`:
 ///
 ///   compileAndCheck("function __BASIC__() {} function __OTHER__() {}");
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is closurec full-pipeline harness + upstream Closure golden VLQ capture (CLOC14.1)"]
 fn test_multi_function_mapping() {}
 
 /// Upstream `testGoldenOutput0`:
@@ -104,7 +104,7 @@ fn test_multi_function_mapping() {}
 ///   checkSourceMap with a specific function source and expected JSON.
 ///   Tests the full JSON shape plus the VLQ mappings field.
 #[test]
-#[ignore = "blocked on gap-028: VLQ encoder not implemented"]
+#[ignore = "gap-028 encoder shipped (CLOC12.31); remaining blocker is closurec full-pipeline harness + upstream Closure golden VLQ capture (CLOC14.1)"]
 fn test_golden_output_0() {}
 
 // =====================================================================
