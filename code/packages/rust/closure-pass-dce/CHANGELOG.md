@@ -2,6 +2,70 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-04
+
+### Added — CLOC12.35: drop-after-break in case consequents (gap-014 step 3/N)
+
+Second peephole on top of the SwitchStatement AST. Inside a
+`SwitchCase.consequent` list, after the recursive walk, find the
+first **case-terminator** (`BreakStatement`, `ReturnStatement`,
+`ThrowStatement`) and truncate everything after it. Per-case,
+independent across cases.
+
+### Helper
+
+`fn is_case_terminator(stmt: &Statement) -> bool` — three
+match-arms: `BreakStatement`, `ReturnStatement`, `ThrowStatement`.
+Documented inline.
+
+### Why distinct from `is_terminator`
+
+The existing `is_terminator` only matches `ReturnStatement`
+because it's used by the block walker (`dce_block_statement`),
+and at function-body block level a bare `break;` is a
+SyntaxError. Broadening `is_terminator` would silently
+mishandle that. Case consequents are the one statement
+context where bare `break` is both legal and terminating.
+
+`ContinueStatement` is intentionally NOT a case terminator —
+it refers to an enclosing loop (`switch` is not a loop), not
+the switch itself. Whether the enclosing loop body continues
+or terminates depends on outer-context analysis we don't do
+here, so we bail conservatively.
+
+### Tests (7 new, 20 → 27 inline)
+
+| Test | Pins |
+|------|------|
+| `drop_after_break_in_case_consequent` | `case 1: a; break; dead;` → drop `dead;` |
+| `drop_after_return_in_case_consequent` | `case 1: return; dead;` → drop |
+| `drop_after_throw_in_case_consequent` | `case 1: throw 1; dead;` → drop |
+| `drop_after_break_in_default_consequent` | `default: a; break; dead;` → drop |
+| `drop_after_break_applies_per_case` | Two cases, only the one with `break;dead;` truncates |
+| `continue_in_case_consequent_keeps_following_statements` | `case 1: continue; y;` → unchanged (conservative) |
+| `case_with_no_terminator_unchanged` | `case 1: a; b;` → unchanged |
+
+closurec's e2e suites stay green — no existing fixture exercises
+the shape, so behaviour is purely additive.
+
+### Composition with step 2 (empty-switch elimination)
+
+Step 2 (CLOC12.34) drops `switch(<pure>){}` when every
+consequent is empty. Step 3 truncates consequents after a
+terminator. The two compose naturally: a case body that's
+ENTIRELY dead after a terminator at index 0 (e.g.
+`case 1: break; …;` → `case 1: break;` is the limit of
+step 3 — the `break;` itself stays because it's the
+terminator, not after it). Further collapse to actually-
+empty would require recognising that a `break;` alone in a
+case body is equivalent to no body (since fallthrough
+through an empty case is the same), which is a future
+slice.
+
+### Version bump
+
+`0.6.0` → `0.7.0`.
+
 ## [0.6.0] - 2026-06-04
 
 ### Added — CLOC12.34: empty-switch elimination (gap-014 step 2/N)
