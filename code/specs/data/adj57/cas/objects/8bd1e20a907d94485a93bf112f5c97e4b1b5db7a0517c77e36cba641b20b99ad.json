@@ -10,27 +10,9 @@
       "end": 135,
       "quote": "We assess with medium-confidence that there are developmental similarities between AcidRain and a VPNFilter stage 3 destructive plugin.",
       "used_for": "prior:acidrain_sandworm_gru"
-    },
-    {
-      "start": 0,
-      "end": 135,
-      "quote": "We assess with medium-confidence that there are developmental similarities between AcidRain and a VPNFilter stage 3 destructive plugin.",
-      "used_for": "prior:acidrain_sandworm_gru"
     }
   ],
   "onward_citations": [
-    {
-      "citation": "FBI/DOJ 2018 VPNFilter attribution; EU + Five Eyes May 10 2022 attribution",
-      "interned_hash": ""
-    },
-    {
-      "citation": "(root: SentinelLabs primary TLSH measurement on VT corpus \u2014 no onward citation needed)",
-      "interned_hash": ""
-    },
-    {
-      "citation": "(root: SentinelLabs primary VirusTotal sample metadata \u2014 no onward citation needed)",
-      "interned_hash": ""
-    },
     {
       "citation": "FBI/DOJ 2018 VPNFilter attribution; EU + Five Eyes May 10 2022 attribution",
       "interned_hash": ""

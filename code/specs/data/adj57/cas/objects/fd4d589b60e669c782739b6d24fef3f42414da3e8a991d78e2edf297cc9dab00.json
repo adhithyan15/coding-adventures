@@ -10,12 +10,6 @@
       "end": 190,
       "quote": "We usually discard correlations with rlap < 5",
       "used_for": "snid_best_type(type_iib, few_days_past_max): SNID best-fit type = IIb at appropriate epoch. SNID determines the SN type as the type of the best-match template(s) above a reliability cutoff (rlap > 5), and determines spectral age to within ~3 days. This is the expected signature for a IIb and not for a IIP/Ib best fit. ROOT METHODOLOGY is grounded (Blondin & Tonry 2007), but no published numeric likelihood ratio P(SNID best=IIb | IIb)/P(SNID best=IIb | not) exists. Direction strongly favors IIb. LR set to placeholder; honest verdict is direction_only.->type_iib_supernova"
-    },
-    {
-      "start": 145,
-      "end": 190,
-      "quote": "We usually discard correlations with rlap < 5",
-      "used_for": "snid_best_type(type_iib, few_days_past_max): SNID best-fit type = IIb at appropriate epoch. SNID determines the SN type as the type of the best-match template(s) above a reliability cutoff (rlap > 5), and determines spectral age to within ~3 days. This is the expected signature for a IIb and not for a IIP/Ib best fit. ROOT METHODOLOGY is grounded (Blondin & Tonry 2007), but no published numeric likelihood ratio P(SNID best=IIb | IIb)/P(SNID best=IIb | not) exists. Direction strongly favors IIb. LR set to placeholder; honest verdict is direction_only.->type_iib_supernova"
     }
   ],
   "onward_citations": []
