@@ -54,6 +54,8 @@ struct GridView: View {
                         }
                             .frame(height: 22)
                             .padding(2)
+                            .background(((( r == editRow && c == editCol )) ? Color(red: 0.122, green: 0.31, blue: 0.247) : ((( r == selectedRow && c == selectedCol )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color.clear)))
+                            .foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color.primary))
                             .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
                     }
                 }

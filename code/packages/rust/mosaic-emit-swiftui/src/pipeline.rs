@@ -377,28 +377,41 @@ fn build_swiftui_readme(component_name: &str) -> String {
 // =====================================================================
 // Part-style lowering — `.msl` `part` blocks → SwiftUI view modifiers.
 //
-// First cut covers BASE styles only.  State blocks (`state hover {...}`,
-// `state selected {...}`) need the `state-when-<name>` predicate from the
-// .mll threaded through alongside the style map, which is a separate PR.
+// Covers BASE styles AND state-block lowering (`state hover {...}`,
+// `state selected {...}`).  When a layout node carries one or more
+// `state-when-<name>: ( expr )` props (UI28-1 / Task #35), each state
+// block's overriding properties are folded into the SwiftUI modifier
+// chain as nested ternaries.  Author surface mirrors the React
+// emitter's `state-when-X` mechanism (`mosaic_emit_react::pipeline`
+// lines 895–960).
 //
-// The shape is identical to the React emitter's `build_part_style_map`
-// (`HashMap<String, …>` keyed by part name) so the two backends can share
-// downstream tooling that walks "which parts have author-declared styles?".
-// React stores the per-part lowering as a pre-rendered TSX-style string;
-// SwiftUI stores it as the raw `Vec<StyleProp>` so we can re-lower per
-// node with the right indentation, since SwiftUI's modifier chain is
-// indent-sensitive whereas TSX's `style={{ ... }}` is not.
+// The map shape is identical to the React emitter's
+// `build_part_style_map` (`HashMap<String, …>` keyed by part name OR a
+// composite `{part}:{state}` key) so the two backends can share
+// downstream tooling that walks "which parts have author-declared
+// styles?".  React stores the per-part lowering as a pre-rendered
+// TSX-style string; SwiftUI stores it as the raw `Vec<StyleProp>` so
+// we can re-lower per node with the right indentation, since SwiftUI's
+// modifier chain is indent-sensitive whereas TSX's `style={{ ... }}` is
+// not.
 // =====================================================================
 
-/// Map from `part` name to its base-state style props.
+/// Map from `part` name (or composite `{part}:{state}` key) to its
+/// style props.
 ///
 /// Built once in [`from_pipeline`] and threaded through the view-tree
-/// walker.  Keyed by the part name verbatim (e.g. `cell`, `header`,
-/// `row`).  Empty when the `.msl` declares no parts — every lookup
-/// returns `None` and emission proceeds unchanged.
+/// walker.  The base-state entries are keyed by the part name verbatim
+/// (e.g. `cell`, `header`, `row`).  State-block entries are keyed under
+/// a composite `{part}:{state}` key — `cell:selected`, `cell:editing`,
+/// etc — mirroring the React emitter's `build_part_style_map` shape so
+/// downstream tooling that walks "which parts have author-declared
+/// styles?" can share the same data structure across backends.
+///
+/// Empty when the `.msl` declares no parts — every lookup returns
+/// `None` and emission proceeds unchanged.
 type PartStyleMap = HashMap<String, Vec<StyleProp>>;
 
-/// Build a `part_name → base props` map from a [`StyleDef`].
+/// Build a `part_name → props` map from a [`StyleDef`].
 ///
 /// Mirrors `mosaic_emit_react::pipeline::build_part_style_map` in shape
 /// but keeps the props as `Vec<StyleProp>` (not a pre-rendered string)
@@ -406,18 +419,113 @@ type PartStyleMap = HashMap<String, Vec<StyleProp>>;
 /// per-call-site with the right `pad`, the React backend can splice a
 /// flat `style={{ ... }}` fragment at any indent.
 ///
-/// **State blocks are intentionally ignored in v1.**  Lowering them needs
-/// the `.mll`'s `state-when-<state>: ( expr )` predicate threaded through
-/// (so we know what `cond` to test in the `.modifier(cond ? .x : .y)`
-/// pattern); that's a separate PR.  For now we only key the base props.
+/// Two key shapes populate the map:
+///   * Bare part name (`cell`) → that part's `base` props.
+///   * Composite `{part}:{state}` (`cell:selected`) → that state
+///     block's overriding props.  Looked up by [`collect_state_layers`]
+///     when a node carries a matching `state-when-<state>` prop.
+///
+/// Empty `base` / `state` blocks are skipped so callers can rely on
+/// `map.get(key).is_some()` as "the author wrote SOMETHING under this
+/// key".
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap::with_capacity(style.parts.len());
     for part in &style.parts {
         if !part.base.is_empty() {
             out.insert(part.name.clone(), part.base.clone());
         }
+        // State blocks (`state selected { ... }`) are surfaced under a
+        // composite key `{part}:{state}` so [`collect_state_layers`]
+        // can look up the matching state-when prop without having to
+        // walk `style.parts` again.  Matches the React emitter's
+        // shape (`build_part_style_map` in `mosaic-emit-react`).
+        for state in &part.states {
+            if !state.props.is_empty() {
+                let key = format!("{}:{}", part.name, state.state);
+                out.insert(key, state.props.clone());
+            }
+        }
     }
     out
+}
+
+/// One state layer collected from a node's `state-when-<X>: ( expr )` props.
+///
+/// `cond_expr` is the Swift expression for the predicate (already
+/// camel-cased / Expr-lowered by [`collect_state_layers`]); `props` is
+/// the matching `state X { ... }` block's overriding props from the
+/// `.msl`.
+///
+/// Order in `Vec<StateLayer>` is declaration order on the node, which
+/// is also the order React emits state-when spreads in — so when we
+/// fold these into a nested ternary in [`swiftui_modifier_chain`], the
+/// LAST layer becomes the OUTERMOST condition (highest precedence).
+struct StateLayer<'a> {
+    /// The Swift conditional expression text, e.g.
+    /// `( r == selectedRow && c == selectedCol )`.
+    cond_expr: String,
+    /// The state block's overriding properties.
+    props: &'a [StyleProp],
+}
+
+/// Walk a layout node's props for `state-when-<X>: ( expr )` entries
+/// and produce a list of [`StateLayer`] values that the modifier-chain
+/// builder can fold into nested ternaries.
+///
+/// The author surface:
+///
+/// ```text
+/// Box [ cell ] (
+///   state-when-selected: slot: is-selected ,
+///   state-when-editing:  slot: is-editing
+/// ) { ... }
+/// ```
+///
+/// After UI34 package-resolver substitution, the slot refs typically
+/// become `LayoutPropValue::Expr` values like
+/// `( r == selectedRow && c == selectedCol )`.
+///
+/// **Trust model.**  The `cond_expr` text comes from the developer-
+/// supplied `.msl` / `.mll` source and is interpolated verbatim into
+/// the generated Swift inside a parenthesised position.  The moslayout
+/// parser already wraps `Expr` values in `( ... )`, so balanced
+/// parentheses keep the expression contained.  This mirrors what the
+/// React emitter does — we don't add new escaping (see
+/// `mosaic_emit_react::pipeline` lines 895–960).
+fn collect_state_layers<'a>(
+    node: &LayoutNode,
+    part_name: &str,
+    part_styles: &'a PartStyleMap,
+) -> Vec<StateLayer<'a>> {
+    let mut layers = Vec::new();
+    for prop in &node.props {
+        let Some(state_name) = prop.name.strip_prefix("state-when-") else {
+            continue;
+        };
+        let state_key = format!("{part_name}:{state_name}");
+        let Some(state_props) = part_styles.get(&state_key) else {
+            // `state-when-X` declared without a matching `state X { }`
+            // block — silently skip (matches React's posture).
+            continue;
+        };
+        if state_props.is_empty() {
+            continue;
+        }
+        let cond_expr = match &prop.value {
+            LayoutPropValue::Expr(t) => t.clone(),
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Keyword(k) => k.clone(),
+            // EmitRef / Number / String don't make sense as boolean
+            // predicates — drop the whole layer rather than emit a
+            // condition that won't compile.
+            _ => continue,
+        };
+        layers.push(StateLayer {
+            cond_expr,
+            props: state_props.as_slice(),
+        });
+    }
+    layers
 }
 
 /// Strip a trailing `px` suffix from a CSS length value.
@@ -539,22 +647,12 @@ fn round3(x: f64) -> f64 {
 /// `border-style: solid` is silently ignored — SwiftUI's `.border` is
 /// always a solid stroke.  `border-color` without `border-width` is also
 /// dropped (the modifier needs the width).
-fn swiftui_modifier_chain(props: &[StyleProp], indent: usize) -> String {
+fn swiftui_modifier_chain(
+    base_props: &[StyleProp],
+    state_layers: &[StateLayer],
+    indent: usize,
+) -> String {
     let pad = " ".repeat(indent);
-
-    // First pass: collect the properties we care about.  This lets us
-    // combine related properties (width+height into a single .frame,
-    // font-size+font-family into a single .font) before rendering.
-    let mut width: Option<String> = None;
-    let mut height: Option<String> = None;
-    let mut padding: Option<String> = None;
-    let mut background: Option<String> = None;
-    let mut foreground: Option<String> = None;
-    let mut font_size: Option<String> = None;
-    let mut font_family_mono = false;
-    let mut font_weight: Option<&'static str> = None;
-    let mut border_width: Option<String> = None;
-    let mut border_color: Option<String> = None;
 
     // Only accept `Npx` (or unitless `N`) for numeric length values.
     // `100%`, `auto`, `calc(...)` and other CSS forms have no clean
@@ -568,94 +666,253 @@ fn swiftui_modifier_chain(props: &[StyleProp], indent: usize) -> String {
         }
     }
 
-    for p in props {
+    fn font_weight_swift(v: &str) -> Option<&'static str> {
+        match v.trim() {
+            "bold" | "700" => Some(".bold"),
+            "semibold" | "SemiBold" | "600" => Some(".semibold"),
+            "medium" | "500" => Some(".medium"),
+            _ => None,
+        }
+    }
+
+    let layer_count = state_layers.len();
+
+    // One bucket per logical property.  We collect base values first,
+    // then walk each state layer's props with the same matcher.  Each
+    // bucket tracks an `Option<String>` per layer index so
+    // [`layer_value`] can fold them into a nested ternary.
+    let mut width = PropBucket::new(layer_count);
+    let mut height = PropBucket::new(layer_count);
+    let mut padding = PropBucket::new(layer_count);
+    let mut background = PropBucket::new(layer_count);
+    let mut foreground = PropBucket::new(layer_count);
+    let mut font_size = PropBucket::new(layer_count);
+    let mut font_family_mono = PropBucket::new(layer_count);
+    let mut font_weight = PropBucket::new(layer_count);
+    let mut border_width = PropBucket::new(layer_count);
+    let mut border_color = PropBucket::new(layer_count);
+
+    // Helper closure: dispatch one StyleProp into the right bucket.
+    // `layer_idx == None` means "base"; `Some(i)` means "state layer i".
+    let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
+        let set = |bucket: &mut PropBucket, v: String| match layer_idx {
+            None => bucket.base = Some(v),
+            Some(i) => bucket.set_state(i, v),
+        };
         match p.name.as_str() {
-            "width" => width = px_or_none(&p.value),
-            "height" => height = px_or_none(&p.value),
-            "padding" => padding = px_or_none(&p.value),
-            "background" | "background-color" => {
-                background = Some(swiftui_color_value(&p.value));
+            "width" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut width, v);
+                }
             }
-            "color" => foreground = Some(swiftui_color_value(&p.value)),
-            "font-size" => font_size = px_or_none(&p.value),
+            "height" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut height, v);
+                }
+            }
+            "padding" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding, v);
+                }
+            }
+            "background" | "background-color" => {
+                set(&mut background, swiftui_color_value(&p.value));
+            }
+            "color" => set(&mut foreground, swiftui_color_value(&p.value)),
+            "font-size" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut font_size, v);
+                }
+            }
             "font-family" => {
                 // We only recognise `monospace`; other font families
                 // need a Swift `Font` lookup by name which is a v2
                 // feature (the CSS family list `'Menlo, monospace'`
                 // doesn't map cleanly without a font-resolution pass).
+                // Marker value is the literal `"true"`.
                 if p.value.trim() == "monospace" {
-                    font_family_mono = true;
+                    set(&mut font_family_mono, "true".to_string());
                 }
             }
             "font-weight" => {
-                let v = p.value.trim();
-                font_weight = match v {
-                    "bold" | "700" => Some(".bold"),
-                    "semibold" | "SemiBold" | "600" => Some(".semibold"),
-                    "medium" | "500" => Some(".medium"),
-                    _ => font_weight,
-                };
+                if let Some(w) = font_weight_swift(&p.value) {
+                    set(&mut font_weight, w.to_string());
+                }
             }
-            "border-width" => border_width = px_or_none(&p.value),
-            "border-color" => border_color = Some(swiftui_color_value(&p.value)),
+            "border-width" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut border_width, v);
+                }
+            }
+            "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
             // border-style, border-collapse, outline, etc. — silently
             // skipped.  Matches the React emitter's v1 posture.
             _ => {}
+        }
+    };
+
+    for p in base_props {
+        absorb(p, None);
+    }
+    for (i, layer) in state_layers.iter().enumerate() {
+        for p in layer.props {
+            absorb(p, Some(i));
         }
     }
 
     let mut out = String::new();
 
-    // .frame — combine width+height into one call when both present.
-    match (width.as_deref(), height.as_deref()) {
-        (Some(w), Some(h)) => {
+    // .frame — combine width+height into one call when either is
+    // present.  Each argument is independently layered, so a state
+    // that changes only `background` leaves `.frame` at the base
+    // value (the ternary collapses).
+    match (!width.empty(), !height.empty()) {
+        (true, true) => {
+            let w = layer_value(&width, state_layers, "0");
+            let h = layer_value(&height, state_layers, "0");
             out.push_str(&format!("\n{pad}.frame(width: {w}, height: {h})"));
         }
-        (Some(w), None) => out.push_str(&format!("\n{pad}.frame(width: {w})")),
-        (None, Some(h)) => out.push_str(&format!("\n{pad}.frame(height: {h})")),
-        (None, None) => {}
+        (true, false) => {
+            let w = layer_value(&width, state_layers, "0");
+            out.push_str(&format!("\n{pad}.frame(width: {w})"));
+        }
+        (false, true) => {
+            let h = layer_value(&height, state_layers, "0");
+            out.push_str(&format!("\n{pad}.frame(height: {h})"));
+        }
+        (false, false) => {}
     }
 
-    if let Some(p) = padding {
-        out.push_str(&format!("\n{pad}.padding({p})"));
+    if !padding.empty() {
+        let expr = layer_value(&padding, state_layers, "0");
+        out.push_str(&format!("\n{pad}.padding({expr})"));
     }
 
-    if let Some(c) = background {
-        out.push_str(&format!("\n{pad}.background({c})"));
+    if !background.empty() {
+        // A state that overrides background where there's NO base value
+        // gets `Color.clear` in the "no value" branch — matches the
+        // SwiftUI default for an unstyled view.
+        let expr = layer_value(&background, state_layers, "Color.clear");
+        out.push_str(&format!("\n{pad}.background({expr})"));
     }
 
-    if let Some(c) = foreground {
-        out.push_str(&format!("\n{pad}.foregroundColor({c})"));
+    if !foreground.empty() {
+        let expr = layer_value(&foreground, state_layers, "Color.primary");
+        out.push_str(&format!("\n{pad}.foregroundColor({expr})"));
     }
 
-    // .font — combine size + monospaced family into one call when both
-    // present.  Standalone family lowers to `.system(.body, design: ...)`
-    // because `.font(.system(size:))` requires the size; we use `.body`
-    // as the implicit textstyle when only the family is set.
-    match (font_size.as_deref(), font_family_mono) {
-        (Some(sz), true) => out.push_str(&format!(
-            "\n{pad}.font(.system(size: {sz}, design: .monospaced))"
-        )),
-        (Some(sz), false) => out.push_str(&format!("\n{pad}.font(.system(size: {sz}))")),
-        (None, true) => out.push_str(&format!(
+    // .font — combine size + monospaced family into one call when
+    // either is present.  Standalone family lowers to
+    // `.system(.body, design: ...)` because `.font(.system(size:))`
+    // requires the size; we use `.body` as the implicit textstyle
+    // when only the family is set.
+    match (!font_size.empty(), !font_family_mono.empty()) {
+        (true, true) => {
+            let sz = layer_value(&font_size, state_layers, "0");
+            out.push_str(&format!(
+                "\n{pad}.font(.system(size: {sz}, design: .monospaced))"
+            ));
+        }
+        (true, false) => {
+            let sz = layer_value(&font_size, state_layers, "0");
+            out.push_str(&format!("\n{pad}.font(.system(size: {sz}))"));
+        }
+        (false, true) => out.push_str(&format!(
             "\n{pad}.font(.system(.body, design: .monospaced))"
         )),
-        (None, false) => {}
+        (false, false) => {}
     }
 
-    if let Some(w) = font_weight {
-        out.push_str(&format!("\n{pad}.fontWeight({w})"));
+    if !font_weight.empty() {
+        let expr = layer_value(&font_weight, state_layers, ".regular");
+        out.push_str(&format!("\n{pad}.fontWeight({expr})"));
     }
 
-    // .border — needs at least the width.  If color is unset, default to
-    // `Color.gray` so the modifier emits a visible (and predictable)
-    // stroke rather than nothing.
-    if let Some(w) = border_width {
-        let c = border_color.unwrap_or_else(|| "Color.gray".to_string());
-        out.push_str(&format!("\n{pad}.border({c}, width: {w})"));
+    // .border — needs at least the width.  If color is unset, default
+    // to `Color.gray` so the modifier emits a visible (and
+    // predictable) stroke rather than nothing.  Each argument is
+    // layered independently.
+    if !border_width.empty() {
+        let w_expr = layer_value(&border_width, state_layers, "0");
+        let c_expr = if border_color.empty() {
+            "Color.gray".to_string()
+        } else {
+            layer_value(&border_color, state_layers, "Color.gray")
+        };
+        out.push_str(&format!("\n{pad}.border({c_expr}, width: {w_expr})"));
     }
 
     out
+}
+
+/// Per-property "bucket" — collects the base value and per-state
+/// overrides for one logical mosstyle property.
+///
+/// Used internally by [`swiftui_modifier_chain`] to layer state
+/// overrides on top of the base value.  `state_values` is parallel to
+/// the input `state_layers` slice: index `i` of `state_values` holds
+/// the lowered Swift value (or `None`) for `state_layers[i]`.
+///
+/// `any_state_set` is a quick predicate: "does at least one state in
+/// this chain override this property?"  When it's false, the chain is
+/// just the base — no ternary, no parens.
+struct PropBucket {
+    base: Option<String>,
+    state_values: Vec<Option<String>>,
+    any_state_set: bool,
+}
+
+impl PropBucket {
+    fn new(layer_count: usize) -> Self {
+        Self {
+            base: None,
+            state_values: vec![None; layer_count],
+            any_state_set: false,
+        }
+    }
+    fn set_state(&mut self, idx: usize, v: String) {
+        self.state_values[idx] = Some(v);
+        self.any_state_set = true;
+    }
+    /// True if no base AND no state has this property — caller should
+    /// emit no modifier line at all.
+    fn empty(&self) -> bool {
+        self.base.is_none() && !self.any_state_set
+    }
+}
+
+/// Fold a [`PropBucket`] into a Swift expression string.
+///
+/// * Base-only → returns the raw base value.
+/// * State-only or state+base → returns a nested ternary, with the
+///   LAST state layer as the OUTERMOST condition.  Shape:
+///   `((condN) ? valN : ((condN-1) ? valN-1 : ... : base_or_default))`.
+///
+/// `default_when_unset` is the fallback used when there's no base
+/// value AND a state-override fires — typically `Color.clear` for
+/// background, `Color.primary` for foreground, `"0"` for numerics.
+///
+/// When a layer doesn't override this property, its branch collapses
+/// into the next layer down (or the base) — no `cond ? base : base`
+/// noise.
+fn layer_value(bucket: &PropBucket, state_layers: &[StateLayer], default_when_unset: &str) -> String {
+    let mut inner = bucket
+        .base
+        .clone()
+        .unwrap_or_else(|| default_when_unset.to_string());
+    // Iterate from FIRST to LAST so the last layer ends up wrapping
+    // all the earlier ones — that's how it becomes the outermost
+    // (highest-precedence) condition.
+    for (i, layer) in state_layers.iter().enumerate() {
+        let v = bucket.state_values[i]
+            .clone()
+            .unwrap_or_else(|| inner.clone());
+        if v == inner {
+            continue;
+        }
+        inner = format!("(({}) ? {} : {})", layer.cond_expr, v, inner);
+    }
+    inner
 }
 
 /// Compile a three-file Mosaic pipeline triple to a SwiftUI source file.
@@ -663,8 +920,10 @@ fn swiftui_modifier_chain(props: &[StyleProp], indent: usize) -> String {
 /// The `style` argument's `part` blocks are inlined as SwiftUI view-
 /// modifier chains attached to layout nodes whose `part_name` matches.
 /// See [`swiftui_modifier_chain`] for the property→modifier table.
-/// State blocks are not yet lowered (they need the `.mll`'s
-/// `state-when-<state>` predicate threaded through; a follow-up PR).
+/// State blocks (`state X { ... }`) are folded into the chain as
+/// nested ternaries when the matching node carries a
+/// `state-when-X: ( expr )` prop — see [`collect_state_layers`] for
+/// the predicate-extraction rules.
 ///
 /// # Errors
 ///
@@ -978,8 +1237,13 @@ fn emit_view_tree(
     // empty `chain` is the no-op path (the inner emission renders
     // identically to a styleless node).
     if let Some(part) = &node.part_name {
-        if let Some(props) = part_styles.get(part) {
-            let chain = swiftui_modifier_chain(props, indent + 4);
+        let base_props = part_styles
+            .get(part)
+            .map(|v| v.as_slice())
+            .unwrap_or(&[]);
+        let state_layers = collect_state_layers(node, part, part_styles);
+        if !base_props.is_empty() || !state_layers.is_empty() {
+            let chain = swiftui_modifier_chain(base_props, &state_layers, indent + 4);
             if !chain.is_empty() {
                 let mut spliced = inner.trim_end_matches('\n').to_string();
                 spliced.push_str(&chain);
@@ -2581,7 +2845,7 @@ mod tests {
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;
-    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
 
     // ---------------------------------------------------------------------
     // Test helpers — keep tests short by hiding the construction noise.
@@ -5707,7 +5971,7 @@ mod tests {
             sp("outline", "none"),
             sp("cursor", "pointer"),
         ];
-        let chain = swiftui_modifier_chain(&props, 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0);
         assert_eq!(chain, "");
     }
 
@@ -5718,13 +5982,13 @@ mod tests {
     #[test]
     fn part_style_width_height_collapses_to_single_frame_call() {
         let props = vec![sp("width", "80px"), sp("height", "22px")];
-        let chain = swiftui_modifier_chain(&props, 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0);
         assert_eq!(chain, "\n.frame(width: 80, height: 22)");
         // Singletons render as the one-side form so the user gets
         // SwiftUI's "intrinsic on the other axis" default.
-        let only_w = swiftui_modifier_chain(&[sp("width", "80px")], 0);
+        let only_w = swiftui_modifier_chain(&[sp("width", "80px")], &[], 0);
         assert_eq!(only_w, "\n.frame(width: 80)");
-        let only_h = swiftui_modifier_chain(&[sp("height", "22px")], 0);
+        let only_h = swiftui_modifier_chain(&[sp("height", "22px")], &[], 0);
         assert_eq!(only_h, "\n.frame(height: 22)");
     }
 
@@ -5759,7 +6023,7 @@ mod tests {
         assert_eq!(swiftui_color_value("rebeccapurple"), "Color.clear");
 
         // Confirm the .background modifier line is emitted end-to-end.
-        let chain = swiftui_modifier_chain(&[sp("background", "#1e1e1e")], 0);
+        let chain = swiftui_modifier_chain(&[sp("background", "#1e1e1e")], &[], 0);
         assert_eq!(
             chain,
             "\n.background(Color(red: 0.118, green: 0.118, blue: 0.118))"
@@ -5773,15 +6037,15 @@ mod tests {
     #[test]
     fn part_style_font_size_and_monospace_combine_to_single_font_call() {
         let props = vec![sp("font-size", "12px"), sp("font-family", "monospace")];
-        let chain = swiftui_modifier_chain(&props, 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0);
         assert_eq!(chain, "\n.font(.system(size: 12, design: .monospaced))");
 
         // Standalone font-size emits the size-only form.
-        let only_size = swiftui_modifier_chain(&[sp("font-size", "14px")], 0);
+        let only_size = swiftui_modifier_chain(&[sp("font-size", "14px")], &[], 0);
         assert_eq!(only_size, "\n.font(.system(size: 14))");
 
         // Standalone monospace family emits the .body shape.
-        let only_mono = swiftui_modifier_chain(&[sp("font-family", "monospace")], 0);
+        let only_mono = swiftui_modifier_chain(&[sp("font-family", "monospace")], &[], 0);
         assert_eq!(only_mono, "\n.font(.system(.body, design: .monospaced))");
     }
 
@@ -5792,7 +6056,7 @@ mod tests {
     #[test]
     fn part_style_border_width_and_color_emit_border_modifier() {
         let props = vec![sp("border-width", "1px"), sp("border-color", "#3f3f46")];
-        let chain = swiftui_modifier_chain(&props, 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0);
         assert_eq!(
             chain,
             "\n.border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)"
@@ -5800,7 +6064,7 @@ mod tests {
 
         // border-width alone defaults to Color.gray so the modifier
         // still emits something predictable.
-        let only_w = swiftui_modifier_chain(&[sp("border-width", "2px")], 0);
+        let only_w = swiftui_modifier_chain(&[sp("border-width", "2px")], &[], 0);
         assert_eq!(only_w, "\n.border(Color.gray, width: 2)");
 
         // border-color WITHOUT border-width emits nothing (no width to
@@ -5808,6 +6072,7 @@ mod tests {
         // skipped — SwiftUI's .border is always a solid stroke.
         let only_color = swiftui_modifier_chain(
             &[sp("border-color", "#aaa"), sp("border-style", "solid")],
+            &[],
             0,
         );
         assert_eq!(only_color, "");
@@ -5896,38 +6161,38 @@ mod tests {
     fn part_style_font_weight_variants_all_lower_to_swiftui_weight() {
         // semibold synonyms.
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "600")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "600")], &[], 0),
             "\n.fontWeight(.semibold)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "SemiBold")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "SemiBold")], &[], 0),
             "\n.fontWeight(.semibold)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "semibold")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "semibold")], &[], 0),
             "\n.fontWeight(.semibold)"
         );
         // bold synonyms.
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "700")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "700")], &[], 0),
             "\n.fontWeight(.bold)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "bold")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "bold")], &[], 0),
             "\n.fontWeight(.bold)"
         );
         // medium synonyms.
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "500")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "500")], &[], 0),
             "\n.fontWeight(.medium)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "medium")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "medium")], &[], 0),
             "\n.fontWeight(.medium)"
         );
         // Unknown weight — silently skipped (matches React emitter posture).
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "ultraheavy")], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "ultraheavy")], &[], 0),
             ""
         );
     }
@@ -5953,7 +6218,435 @@ mod tests {
 
     #[test]
     fn part_style_chain_respects_indent_argument() {
-        let chain = swiftui_modifier_chain(&[sp("padding", "4px")], 12);
+        let chain = swiftui_modifier_chain(&[sp("padding", "4px")], &[], 12);
         assert_eq!(chain, "\n            .padding(4)");
+    }
+
+    // =====================================================================
+    // State-block lowering tests (UI33 style-inlining v2)
+    //
+    // Cover the `collect_state_layers` helper, the composite-key shape of
+    // `build_part_style_map`, and the nested-ternary layering in
+    // `swiftui_modifier_chain`.  Mirror the React emitter's `state-when-X`
+    // mechanism — see `mosaic_emit_react::pipeline` lines 895–960.
+    // =====================================================================
+
+    /// Build a `StyleDef` with a single `part` containing both `base`
+    /// props and one or more named state blocks.
+    fn style_with_part_and_states(
+        component: &str,
+        part_name: &str,
+        base: Vec<StyleProp>,
+        states: Vec<(&str, Vec<StyleProp>)>,
+    ) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![PartStyle {
+                name: part_name.to_string(),
+                base,
+                states: states
+                    .into_iter()
+                    .map(|(name, props)| StateStyle {
+                        state: name.to_string(),
+                        props,
+                    })
+                    .collect(),
+            }],
+        }
+    }
+
+    /// Build a Box node with a `part_name` and a list of layout props
+    /// (typically `state-when-*: <Expr/SlotRef>`).
+    fn box_node_with_part_and_props(part: &str, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // T13 — `build_part_style_map` now includes `{part}:{state}` keys for
+    //       each non-empty state block.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_part_style_map_includes_composite_keys() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![sp("background", "#1e1e1e")],
+            vec![
+                ("selected", vec![sp("background", "#264f78")]),
+                ("editing", vec![sp("background", "#1f4f3f")]),
+            ],
+        );
+        let map = build_part_style_map(&s);
+        assert!(map.contains_key("cell"), "base key missing: {map:?}");
+        assert!(
+            map.contains_key("cell:selected"),
+            "selected composite missing: {map:?}"
+        );
+        assert!(
+            map.contains_key("cell:editing"),
+            "editing composite missing: {map:?}"
+        );
+        // Empty state block (`state hover { }`) is skipped — saves
+        // downstream code from having to check `.is_empty()` again.
+        let s2 = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![],
+            vec![("hover", vec![])],
+        );
+        let map2 = build_part_style_map(&s2);
+        assert!(!map2.contains_key("cell:hover"));
+    }
+
+    // ---------------------------------------------------------------------
+    // T14 — `collect_state_layers` returns layers in declaration order
+    //       (so the LAST `state-when` wins as the outermost ternary).
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_collect_layers_returns_declaration_order() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![],
+            vec![
+                ("selected", vec![sp("background", "#264f78")]),
+                ("editing", vec![sp("background", "#1f4f3f")]),
+            ],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![
+                prop_expr("state-when-selected", "( isSel )"),
+                prop_expr("state-when-editing", "( isEdit )"),
+            ],
+        );
+        let layers = collect_state_layers(&node, "cell", &map);
+        assert_eq!(layers.len(), 2);
+        assert_eq!(layers[0].cond_expr, "( isSel )");
+        assert_eq!(layers[1].cond_expr, "( isEdit )");
+    }
+
+    // ---------------------------------------------------------------------
+    // T15 — A node with a `state-when-selected` Expr prop and base+state
+    //       `background` produces `.background((expr) ? state : base)`.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_single_state_emits_ternary_background() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![sp("background", "#1e1e1e")],
+            vec![("selected", vec![sp("background", "#264f78")])],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_expr(
+                "state-when-selected",
+                "( r == selectedRow && c == selectedCol )",
+            )],
+        );
+        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        // Modifier wraps the bucket value in `(...)`; the bucket value
+        // is itself a parenthesised ternary `((cond) ? v : base)` where
+        // `cond` is the moslayout-parser-supplied Expr text (already
+        // wrapped in its own `( ... )`).  Final shape:
+        // `.background(((( r == ... )) ? v : base))`.
+        assert!(
+            chain.contains(".background(((( r == selectedRow && c == selectedCol )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color(red: 0.118, green: 0.118, blue: 0.118)))"),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T16 — A state that overrides a property with NO base value uses
+    //       `Color.clear` (background) in the "no value" branch.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_no_base_falls_back_to_color_clear() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![],
+            vec![("selected", vec![sp("background", "#264f78")])],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_expr("state-when-selected", "( isSel )")],
+        );
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain(&[], &layers, 0);
+        assert!(
+            chain.contains(".background(((( isSel )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color.clear))"),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T17 — Two states layered: the LATER `state-when-X` becomes the
+    //       OUTERMOST condition.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_two_states_last_is_outermost_ternary() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![sp("background", "#1e1e1e")],
+            vec![
+                ("selected", vec![sp("background", "#264f78")]),
+                ("editing", vec![sp("background", "#1f4f3f")]),
+            ],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![
+                prop_expr("state-when-selected", "( sel )"),
+                prop_expr("state-when-editing", "( edit )"),
+            ],
+        );
+        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        // editing wraps selected; selected wraps base.  The modifier
+        // adds one outer `(...)` and each layer_value wraps in
+        // `((cond) ? v : inner)`.
+        let inner_sel = "((( sel )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color(red: 0.118, green: 0.118, blue: 0.118))";
+        let expected = format!(
+            ".background(((( edit )) ? Color(red: 0.122, green: 0.31, blue: 0.247) : {inner_sel}))"
+        );
+        assert!(chain.contains(&expected), "chain = {chain}");
+        // And `edit` (the later one) is the OUTER condition — it appears
+        // before `sel` in the modifier text.
+        let edit_pos = chain.find("( edit )").expect("edit cond present");
+        let sel_pos = chain.find("( sel )").expect("sel cond present");
+        assert!(edit_pos < sel_pos, "expected edit outside sel, chain = {chain}");
+    }
+
+    // ---------------------------------------------------------------------
+    // T18 — A SlotRef state-when cond resolves to a camelCased identifier.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_slot_ref_cond_resolves_to_camel_case() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![],
+            vec![("selected", vec![sp("background", "#264f78")])],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_slot_ref("state-when-selected", "is-selected")],
+        );
+        let layers = collect_state_layers(&node, "cell", &map);
+        assert_eq!(layers.len(), 1);
+        assert_eq!(layers[0].cond_expr, "isSelected");
+    }
+
+    // ---------------------------------------------------------------------
+    // T19 — An Expr state-when cond passes through verbatim.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_expr_cond_passes_through_verbatim() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![],
+            vec![("selected", vec![sp("background", "#264f78")])],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_expr(
+                "state-when-selected",
+                "( r == selectedRow && c == selectedCol )",
+            )],
+        );
+        let layers = collect_state_layers(&node, "cell", &map);
+        assert_eq!(layers.len(), 1);
+        assert_eq!(
+            layers[0].cond_expr,
+            "( r == selectedRow && c == selectedCol )"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T20 — A state that overrides `color` but NOT `background` leaves
+    //       `.background` at the base value (no ternary).
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_partial_override_leaves_other_props_alone() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![sp("background", "#1e1e1e"), sp("color", "#cccccc")],
+            vec![("selected", vec![sp("color", "#ffffff")])],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_expr("state-when-selected", "( sel )")],
+        );
+        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        // .background stays at the base value — no ternary.
+        assert!(
+            chain.contains(".background(Color(red: 0.118, green: 0.118, blue: 0.118))"),
+            "background should NOT be a ternary, chain = {chain}"
+        );
+        assert!(
+            !chain.contains(".background((( sel ))"),
+            "background should NOT layer, chain = {chain}"
+        );
+        // .foregroundColor IS a ternary (4 opening parens: modifier
+        // wrap + layer_value wrap + cond_expr's own parens).
+        assert!(
+            chain.contains(".foregroundColor(((( sel )) ? Color(red: 1, green: 1, blue: 1) : Color(red: 0.8, green: 0.8, blue: 0.8)))"),
+            "chain = {chain}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T21 — A state block whose props are all unrecognised (e.g. only
+    //       `outline`) produces no extra modifiers and no extra parens.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_with_only_unrecognised_props_emits_no_extra_modifier() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![sp("padding", "4px")],
+            vec![(
+                "selected",
+                vec![sp("outline", "1px solid #007acc")],
+            )],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_expr("state-when-selected", "( sel )")],
+        );
+        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let layers = collect_state_layers(&node, "cell", &map);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        // Only `.padding(4)` — no ternary, no `( sel )`, no extra parens.
+        assert_eq!(chain, "\n.padding(4)", "chain = {chain}");
+    }
+
+    // ---------------------------------------------------------------------
+    // T22 — `state-when-X` without a matching `state X { }` block in the
+    //       `.msl` is silently ignored (matches React posture).
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_state_when_without_matching_state_block_is_ignored() {
+        let s = style_with_part_and_states(
+            "Demo",
+            "cell",
+            vec![sp("background", "#1e1e1e")],
+            // No "selected" state block at all.
+            vec![],
+        );
+        let map = build_part_style_map(&s);
+        let node = box_node_with_part_and_props(
+            "cell",
+            vec![prop_expr("state-when-selected", "( sel )")],
+        );
+        let layers = collect_state_layers(&node, "cell", &map);
+        assert!(layers.is_empty());
+        let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        // No ternary, just the base background.
+        assert!(
+            chain.contains(".background(Color(red: 0.118, green: 0.118, blue: 0.118))"),
+            "chain = {chain}"
+        );
+        assert!(!chain.contains("( sel )"), "chain = {chain}");
+    }
+
+    // ---------------------------------------------------------------------
+    // T23 — End-to-end: a small Box+cell triple with selected+editing
+    //       state-when props produces the full conditional modifier chain
+    //       through `from_pipeline`.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn state_block_end_to_end_from_pipeline_emits_layered_modifiers() {
+        let m = component("Cell", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Cell".to_string(),
+            root: box_node_with_part_and_props(
+                "cell",
+                vec![
+                    prop_expr(
+                        "state-when-selected",
+                        "( r == selectedRow && c == selectedCol )",
+                    ),
+                    prop_expr(
+                        "state-when-editing",
+                        "( r == editRow && c == editCol )",
+                    ),
+                ],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "Cell",
+            "cell",
+            vec![
+                sp("padding", "4px"),
+                sp("background", "#1e1e1e"),
+                sp("color", "#cccccc"),
+            ],
+            vec![
+                (
+                    "selected",
+                    vec![sp("background", "#264f78"), sp("color", "#ffffff")],
+                ),
+                ("editing", vec![sp("background", "#1f4f3f")]),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        // Padding (no state override) stays a plain modifier.
+        assert!(out.contains(".padding(4)"), "out = {out}");
+        // Background carries both layers; editing wraps selected.
+        assert!(
+            out.contains(
+                "(( r == editRow && c == editCol )) ? Color(red: 0.122, green: 0.31, blue: 0.247)"
+            ),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(
+                "(( r == selectedRow && c == selectedCol )) ? Color(red: 0.149, green: 0.31, blue: 0.471)"
+            ),
+            "out = {out}"
+        );
+        // Foreground only has the selected layer (editing didn't touch it).
+        assert!(
+            out.contains(
+                ".foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color(red: 0.8, green: 0.8, blue: 0.8)))"
+            ),
+            "out = {out}"
+        );
     }
 }
