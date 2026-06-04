@@ -314,7 +314,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             // bodies *became* empty after constant-fold +
             // fold-control-flow ran earlier in the pipeline.
             let new_disc = dce_expression(&s.discriminant, st);
-            let new_cases: Vec<_> = s
+            let mut new_cases: Vec<_> = s
                 .cases
                 .iter()
                 .map(|c| coding_adventures_javascript_ast::SwitchCase {
@@ -327,6 +327,48 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                         .collect(),
                 })
                 .collect();
+
+            // gap-014 step 3 / CLOC12.35 — drop-after-break inside
+            // case consequents.
+            //
+            // Inside a switch case, `break;` exits the switch
+            // entirely; `return;` / `throw e;` exit the enclosing
+            // function. Everything after such a terminator in the
+            // SAME case's consequent is unreachable.
+            //
+            // We do NOT generalise into `is_terminator` (which
+            // handles block-level `ReturnStatement`-only dropping)
+            // because `BreakStatement` at function-body block
+            // level is a SyntaxError — broadening the block walker
+            // would mishandle that. Case consequents are a special
+            // context where Break is legal and terminating.
+            //
+            // `Continue` is intentionally NOT a terminator here:
+            // it could refer to an enclosing loop, in which case
+            // it's a real cross-scope control-flow jump we don't
+            // model statically. Conservative bail.
+            for case in new_cases.iter_mut() {
+                if let Some(term_idx) = case
+                    .consequent
+                    .iter()
+                    .position(is_case_terminator)
+                {
+                    let original_len = case.consequent.len();
+                    let dropped = original_len - (term_idx + 1);
+                    if dropped > 0 {
+                        case.consequent.truncate(term_idx + 1);
+                        st.record(
+                            &case.cv,
+                            "removed-dead-code-in-case",
+                            &format!("case with {} statements", original_len),
+                            &format!(
+                                "dropped {} statements after terminator at index {}",
+                                dropped, term_idx
+                            ),
+                        );
+                    }
+                }
+            }
 
             // gap-014 step 2 / CLOC12.34 — empty-switch elimination.
             //
@@ -483,6 +525,34 @@ fn is_terminator(stmt: &Statement) -> bool {
     matches!(
         stmt,
         Statement::Tagged(TaggedStatement::ReturnStatement(_))
+    )
+}
+
+/// Inside a switch case's consequent, these statements end the
+/// case's execution and make everything that follows unreachable:
+///
+/// - `break;` exits the switch
+/// - `return ...;` exits the enclosing function
+/// - `throw ...;` raises out of the function (and switch)
+///
+/// `continue` is excluded because it refers to an *enclosing
+/// loop* (`switch` is not a loop), not the switch itself. Whether
+/// the surrounding loop's body continues or terminates depends on
+/// outer-context analysis we don't do here, so we bail.
+///
+/// Used by gap-014 step 3 / CLOC12.35: per-case dead-after-break
+/// dropping. Distinct from `is_terminator` (block-level
+/// ReturnStatement only) because `BreakStatement` at function-body
+/// block level would be a SyntaxError — broadening
+/// `is_terminator` would mishandle that. Case consequents are the
+/// one statement context where bare `break` is legal AND
+/// terminates flow.
+fn is_case_terminator(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::ReturnStatement(_))
+            | Statement::Tagged(TaggedStatement::BreakStatement(_))
+            | Statement::Tagged(TaggedStatement::ThrowStatement(_))
     )
 }
 
@@ -1191,5 +1261,170 @@ mod tests {
         let (out, _, _, _) = run_pass(prog);
         let block = extract_function_body(&out);
         assert!(block.body.is_empty());
+    }
+
+    // =====================================================================
+    // gap-014 step 3 / CLOC12.35 — drop-after-break in case consequents
+    // =====================================================================
+
+    fn break_stmt() -> Statement {
+        Statement::break_statement(
+            coding_adventures_javascript_ast::BreakStatement { cv: None, label: None },
+        )
+    }
+
+    fn throw_stmt(arg: Expression) -> Statement {
+        Statement::throw_statement(
+            coding_adventures_javascript_ast::ThrowStatement { cv: None, argument: arg },
+        )
+    }
+
+    /// Helper — extract the unique SwitchStatement from a function
+    /// body so we can pattern-match on it.
+    fn extract_switch<'a>(prog: &'a Program) -> &'a SwitchStatement {
+        let block = extract_function_body(prog);
+        match &block.body[0] {
+            Statement::Tagged(TaggedStatement::SwitchStatement(s)) => s,
+            other => panic!("expected SwitchStatement; got {:?}", other),
+        }
+    }
+
+    /// `switch (x) { case 1: a; break; dead; }` →
+    /// `switch (x) { case 1: a; break; }`. The case keeps `a` and
+    /// `break;`; the trailing `dead;` is dropped.
+    #[test]
+    fn drop_after_break_in_case_consequent() {
+        let cases = vec![SwitchCase {
+            cv: Some("c.1".to_string()),
+            test: Some(num(1.0)),
+            consequent: vec![
+                expr_stmt(ident("a")),
+                break_stmt(),
+                expr_stmt(ident("dead")),
+            ],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        let cs = &sw.cases[0];
+        assert_eq!(cs.consequent.len(), 2, "expected 2 stmts; got {:?}", cs.consequent);
+        assert!(matches!(
+            &cs.consequent[1],
+            Statement::Tagged(TaggedStatement::BreakStatement(_))
+        ));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "removed-dead-code-in-case"));
+    }
+
+    /// `return` inside a case body is also a terminator.
+    #[test]
+    fn drop_after_return_in_case_consequent() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![return_stmt(), expr_stmt(ident("dead"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 1);
+    }
+
+    /// `throw e;` inside a case body is also a terminator.
+    #[test]
+    fn drop_after_throw_in_case_consequent() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![throw_stmt(num(1.0)), expr_stmt(ident("dead"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 1);
+    }
+
+    /// Default case also gets the truncate treatment.
+    #[test]
+    fn drop_after_break_in_default_consequent() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: None,
+            consequent: vec![
+                expr_stmt(ident("a")),
+                break_stmt(),
+                expr_stmt(ident("dead")),
+            ],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2);
+    }
+
+    /// Per-case truncation is independent — one case has dead code,
+    /// the other doesn't.
+    #[test]
+    fn drop_after_break_applies_per_case() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![
+                    expr_stmt(ident("a")),
+                    break_stmt(),
+                    expr_stmt(ident("dead")),
+                ],
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("b"))],
+            },
+        ];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2); // truncated
+        assert_eq!(sw.cases[1].consequent.len(), 1); // untouched
+    }
+
+    /// `continue` is NOT a case terminator — it refers to an
+    /// enclosing loop, not the switch. Conservative bail.
+    #[test]
+    fn continue_in_case_consequent_keeps_following_statements() {
+        let cont = Statement::continue_statement(
+            coding_adventures_javascript_ast::ContinueStatement { cv: None, label: None },
+        );
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![cont, expr_stmt(ident("y"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2);
+    }
+
+    /// Case with no terminator is left alone.
+    #[test]
+    fn case_with_no_terminator_unchanged() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), expr_stmt(ident("b"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2);
     }
 }
