@@ -318,12 +318,30 @@ when_clause    = "when" expression { COMMA expression } { !"when" !"in" !"else" 
 # the literal/binding forms; literal comes before binding so concrete
 # constants don't get swallowed as bindings.
 in_clause      = "in" pattern { !"when" !"in" !"else" !"end" statement } ;
-pattern        = array_pattern | hash_pattern | literal_pattern | binding_pattern ;
+pattern        = array_pattern | hash_pattern | class_pattern | pin_pattern | literal_pattern | binding_pattern ;
 literal_pattern   = NUMBER | STRING | symbol_literal | KEYWORD ;
 binding_pattern   = NAME ;
-array_pattern     = LBRACKET [ pattern { COMMA pattern } ] RBRACKET ;
+array_pattern     = LBRACKET [ ( splat_pattern | pattern ) { COMMA ( splat_pattern | pattern ) } ] RBRACKET ;
 hash_pattern      = LBRACE [ hash_pattern_pair { COMMA hash_pattern_pair } ] RBRACE ;
 hash_pattern_pair = NAME COLON [ pattern ] ;
+# Phase FC — splat element inside an array pattern.  `*rest` binds the
+# "rest" of the sequence; bare `*` matches it anonymously.  An array
+# pattern with a single splat (`[a, *mid, b]`) lowers structurally; the
+# two-splat *find* form (`[*, x, *]`) parses here but is lowered via the
+# `__pattern_match__` marker (a correct contiguous-window search is not
+# expressible inline without a new SIR search primitive).
+splat_pattern     = "*" [ NAME ] ;
+# Phase FC — pin pattern `^x`: matches when the scrutinee equals the
+# value of the already-bound local `x` (no new binding).  The `^` is the
+# unique opener, so placement among the literal/binding alternatives is
+# unambiguous.
+pin_pattern       = "^" NAME ;
+# Phase FC — class pattern `Foo(p, …)`: matches when the scrutinee is an
+# instance of `Foo` and its deconstructed positional elements match the
+# inner patterns.  Listed in `pattern` BEFORE `binding_pattern` so the
+# `NAME LPAREN` form wins; a bare constant `Foo` (no parens) still falls
+# through to `binding_pattern`.
+class_pattern     = NAME LPAREN [ pattern { COMMA pattern } ] RPAREN ;
 # Phase 6v — `begin … rescue … ensure … end`.
 #
 # Shape:

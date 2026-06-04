@@ -1,5 +1,10 @@
 //! Integration tests for `iir-to-intel8008` v0.1.0 (A2 skeleton).
 //!
+//! Note: this crate is deprecated as of v0.4.0 (Phase 6 of the
+//! historical-arch backend migration).  Tests still exercise the
+//! deprecated API as a regression invariant.
+#![allow(deprecated)]
+//!
 //! Smoke-level — confirms the validator stub, the emitter shape, and
 //! the exact encoded `HLT` byte (`0x76`).
 

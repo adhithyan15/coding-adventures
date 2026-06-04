@@ -1,0 +1,17 @@
+[package]
+name = "mccarthy-lisp-lexer"
+version = "0.2.0"
+edition = "2021"
+description = "Tokenizer for McCarthy's 1960 Lisp (Lisp 1.0) — a thin wrapper over the shared grammar-driven GrammarLexer.  The dialect (all-uppercase atoms, integers only, no strings, no operator symbols) is defined entirely in `code/grammars/mccarthy_lisp.tokens`, which is compiled to Rust at build time.  Distinct from the generic `lisp-lexer` crate (which targets Scheme-ish modern Lisp).  L1 of the McCarthy Lisp implementation."
+build = "build.rs"
+
+[lib]
+name = "mccarthy_lisp_lexer"
+path = "src/lib.rs"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer         = { path = "../lexer" }
+
+[build-dependencies]
+grammar-tools = { path = "../grammar-tools" }

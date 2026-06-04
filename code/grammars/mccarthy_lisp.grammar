@@ -1,0 +1,45 @@
+# Parser grammar for McCarthy's 1960 Lisp (Lisp 1.0)
+# @version 1
+#
+# Token names (UPPERCASE) match the types defined in
+# `mccarthy_lisp.tokens`.  The whole grammar fits in six rules — Lisp's
+# syntax is famously a single recursive shape, the S-expression.
+#
+# An S-expression is one of:
+#   * an atom          — a SYMBOL (CAR, X) or an INTEGER (42, -1)
+#   * a list           — `( ... )`, possibly with a dotted tail
+#   * a quoted form    — `'X`, sugar the extractor rewrites to (QUOTE X)
+#
+# A program is a sequence of top-level S-expressions, evaluated in
+# order — exactly McCarthy's "program = sequence of forms" reading.
+#
+# How lists desugar (handled by the AST extractor, not the grammar):
+#
+#   (A B C)    →  Cons(A, Cons(B, Cons(C, Nil)))   ; NIL-terminated
+#   (A B . C)  →  Cons(A, Cons(B, C))              ; explicit dotted tail
+#   ()         →  Nil                              ; the empty list
+#   'X         →  Cons(QUOTE, Cons(X, Nil))        ; = (QUOTE X)
+#
+# Note the optional `[ DOT sexpr ]` tail in `list_body`: the grammar
+# accepts at most one dotted tail per list and only after at least one
+# element, so `(. X)`, `(A . B C)`, and `(A . . B)` are all grammar
+# errors — no hand-written validation needed.
+
+# A program is zero or more S-expressions.  An empty file is a valid
+# (empty) program.
+program = { sexpr } ;
+
+# The single recursive shape.  Order of alternatives is irrelevant here
+# because each begins with a distinct token (SYMBOL/INTEGER, LPAREN,
+# QUOTE), so the PEG never has to backtrack.
+sexpr = atom | list | quoted ;
+
+# An atom is a bare symbol or integer literal.
+atom = SYMBOL | INTEGER ;
+
+# A parenthesised list with an optional dotted tail.
+list      = LPAREN list_body RPAREN ;
+list_body = [ sexpr { sexpr } [ DOT sexpr ] ] ;
+
+# `'X` — quote sugar.  The extractor rewrites it to `(QUOTE X)`.
+quoted = QUOTE sexpr ;

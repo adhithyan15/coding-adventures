@@ -2,6 +2,57 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-02
+
+### Added — CLOC12.21: gap-003 `null == <primitive>` cross-type loose-equality fold
+
+Closes `gap-003` from the CLOC12 gap tracker. `try_fold_binary_op` now
+implements the `null`-side branch of the ECMAScript abstract-equality
+algorithm (§IsLooselyEqual) for compile-time-known partner literals.
+
+What's folded:
+
+* `null == X` and `X == null` where `X` is any non-null primitive
+  literal (`number`, `string`, `boolean`, `bigint`, or `undefined`).
+* The result is `true` iff the partner is `undefined` (the spec
+  hard-codes `null == undefined → true`); every other partner is `false`.
+* `null != X` and `X != null` fold to the boolean negation.
+
+Truth table:
+
+```
+partner          ==     !=
+---------------+------+------
+null           | true | false   (already covered by gap-007 path)
+undefined      | true | false
+number         | false| true
+string         | false| true
+boolean        | false| true
+bigint         | false| true
+```
+
+Unsoundness guard: if the partner side is an `Identifier` (or anything
+non-literal we can't statically classify), the fold bails out. The
+identifier's runtime value could itself be `null`/`undefined`, and
+folding to a concrete boolean would change observable behaviour.
+
+Ordering: the new branch runs *after* the existing null/null branch
+(gap-007) — so by the time we reach it, at most one side is a
+NullLiteral — and *before* the cross-type strict-equality branch
+(gap-008), which is unaffected because that branch only fires on
+`===`/`!==`. A regression test in the inline tests pins gap-008's
+behaviour for `null === 0` / `null !== 0`.
+
+Tests:
+
+* `peephole_fold_constants_test::test_null_comparison_1_loose_against_other_types`
+  is un-ignored (was `#[ignore = "blocked on gap-003"]`).
+* 6 new inline unit tests cover both directions, the `!=` complement,
+  the `null == undefined → true` special case, the identifier
+  unsoundness guard, and the gap-008 regression check.
+
+No changes to public API or AST surface.
+
 ## [0.8.0] - 2026-06-02
 
 ### Added — CLOC12.20: gap-002 `void <pure-literal>` → `undefined` fold

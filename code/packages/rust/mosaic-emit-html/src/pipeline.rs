@@ -567,12 +567,19 @@ fn emit_html_tree(
         return Ok(out);
     }
 
-    // UI29 §3.2 — `If ( when: <expr> ) { ... } Else { ... }`. We emit one
-    // wrapper covering the `If` and its (optional) sibling `Else`. The
-    // `Else` itself is handled by the parent's child-walk loop — it never
-    // reaches `emit_html_tree` directly because of the sibling-context.
+    // UI29 §3.2 — `If ( when: <expr> ) { ... } Else { ... }`.
+    //
+    // The parent walker `emit_children` is the authoritative entry
+    // point for If/Else because it has the sibling context — it
+    // peeks ahead for a paired `Else` and passes both branches
+    // together.  Reaching `emit_html_tree` here means the caller
+    // walked a single `If` without going through `emit_children`
+    // (a test fixture, for example).  We emit the If branch only
+    // and pass `None` for the else branch so the resulting markup
+    // is structurally valid.  The intra-sibling case is handled by
+    // `emit_children` directly.
     if node.tag == "If" {
-        out.push_str(&emit_if_node(node, indent, part_styles)?);
+        out.push_str(&emit_if_node(node, None, indent, part_styles)?);
         return Ok(out);
     }
 
@@ -755,33 +762,45 @@ fn emit_html_tree(
     Ok(out)
 }
 
-/// Walk a list of sibling children, *consuming* the `Else` that follows
-/// an `If` (the `If` handler picks up its sibling explicitly). All other
-/// nodes flow through `emit_html_tree` unchanged.
+/// Walk a list of sibling children with explicit If/Else pairing.
 ///
-/// This lifts the if/else pairing out of `emit_html_tree` so the walker
-/// is the only place that knows about the sibling-context. Without this
-/// helper, a parent like `Box { If(...){} Else {} Box {} }` would emit
-/// the `Else` twice (once as part of the `If` wrapper, once as a
-/// standalone sibling).
+/// When the walker encounters an `If`, it peeks at the next sibling.
+/// If that sibling is `Else`, both branches are handed to
+/// [`emit_if_node`] (the `else_node` argument), which emits a
+/// `<!-- mosaic-if … --> … <!-- mosaic-else --> … <!-- /mosaic-if -->`
+/// triple.  Previously the `Else` branch was silently dropped —
+/// `emit_if_node` only knew about the `If`, and the parent walker
+/// "consumed" the `Else` after it had already been lost.  That made
+/// the HTML emitter's static-template output unusable for layouts
+/// like the spreadsheet grid (UI28-1), where the `If/Else` carries
+/// the "edit vs display" Cell branch.
+///
+/// Orphan `Else` (an `Else` not preceded by an `If`) flows through
+/// `emit_html_tree`, which emits a `<!-- mosaic-else (orphan) -->`
+/// diagnostic marker.
 fn emit_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
-    let mut skip_next_else = false;
-    for child in children {
-        // An `Else` immediately after an `If` was already consumed by
-        // the `If`'s lowering (compile-time fold or comment wrapper);
-        // skip it here. An orphan `Else` falls through to
-        // `emit_html_tree`, which emits a diagnostic comment marker.
-        if child.tag == "Else" && skip_next_else {
-            skip_next_else = false;
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            // Look ahead for a sibling Else.  If present, hand both
+            // branches to `emit_if_node` and advance past both.
+            let next_is_else =
+                children.get(i + 1).map(|n| n.tag == "Else").unwrap_or(false);
+            let else_node = if next_is_else { Some(&children[i + 1]) } else { None };
+            out.push_str(&emit_if_node(child, else_node, indent, part_styles)?);
+            i += if next_is_else { 2 } else { 1 };
             continue;
         }
-        skip_next_else = child.tag == "If";
+        // Bare Else (no preceding If sibling) falls through to
+        // `emit_html_tree`'s orphan-diagnostic path.
         out.push_str(&emit_html_tree(child, indent, part_styles)?);
+        i += 1;
     }
     Ok(out)
 }
@@ -1861,6 +1880,7 @@ fn try_emit_table_for_cell_html(
 /// and is dropped; revisit when If/Else gets first-class support.
 fn emit_if_node(
     node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
@@ -1875,6 +1895,10 @@ fn emit_if_node(
     // (per U29-G3 only SlotRef/Expr are allowed for `when:`), but the
     // emitter is downstream of validation and we still want to do the
     // right thing if a test builder ever produces one.
+    //
+    // With the `else_node` argument now flowing through, the literal
+    // fold also handles the else side: `when: true` drops the else,
+    // `when: false` emits the else (or nothing if absent).
     if let Some(LayoutPropValue::Keyword(k)) = when {
         match k.as_str() {
             "true" => {
@@ -1882,7 +1906,9 @@ fn emit_if_node(
                 return Ok(out);
             }
             "false" => {
-                // Then-branch is dropped; nothing to emit.
+                if let Some(e) = else_node {
+                    out.push_str(&emit_children(&e.children, indent, part_styles)?);
+                }
                 return Ok(out);
             }
             _ => {}
@@ -1907,6 +1933,14 @@ fn emit_if_node(
     )
     .unwrap();
     out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    if let Some(e) = else_node {
+        // The `mosaic-else` marker mirrors `mosaic-if` — a
+        // runtime template engine (or the JS shim a static demo
+        // ships) inverts the `when` predicate to pick this branch
+        // when the if predicate is false.
+        writeln!(out, "{pad}<!-- mosaic-else -->").unwrap();
+        out.push_str(&emit_children(&e.children, indent + 2, part_styles)?);
+    }
     writeln!(out, "{pad}<!-- /mosaic-if -->").unwrap();
     Ok(out)
 }
@@ -4119,6 +4153,244 @@ mod tests {
         assert!(
             proj.readme.contains("MyComponent.html"),
             "README.md must reference {{name}}.html"
+        );
+    }
+
+    // ── Else-branch emission (bug fix) ─────────────────────────────
+
+    /// A `Box { If (...) { Text } Else { Box } }` parent has both
+    /// branches rendered into the static HTML, separated by a
+    /// `<!-- mosaic-else -->` marker.  Before this fix, the Else
+    /// children were silently dropped.
+    fn if_node_with_when_expr(expr: &str, then_children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            }],
+            children: then_children,
+        }
+    }
+
+    fn else_node(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: vec![],
+            children,
+        }
+    }
+
+    fn box_node_with_children(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: vec![],
+            children,
+        }
+    }
+
+    #[test]
+    fn if_else_pair_emits_both_branches_with_markers() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                if_node_with_when_expr(
+                    "( a == 1 )",
+                    vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"yes\"".to_string()),
+                        }],
+                    )],
+                ),
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"no\"".to_string()),
+                    }],
+                )]),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<!-- mosaic-if when=\"( a == 1 )\" -->"),
+            "expected mosaic-if marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("<!-- mosaic-else -->"),
+            "expected mosaic-else marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("<!-- /mosaic-if -->"),
+            "expected /mosaic-if closer, got:\n{out}"
+        );
+        // Both branches' content must appear — `yes` for the then-
+        // branch and `no` for the else-branch.  Before the fix, only
+        // `yes` was present and the else children were dropped.
+        assert!(out.contains("yes"), "then-branch content missing:\n{out}");
+        assert!(out.contains("no"), "else-branch content missing:\n{out}");
+    }
+
+    /// `when: true` literal folds at compile time — the Else branch
+    /// is dropped, only the then-branch survives.
+    #[test]
+    fn if_else_compile_time_fold_when_true_drops_else() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                LayoutNode {
+                    tag: "If".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "when".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    }],
+                    children: vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"then\"".to_string()),
+                        }],
+                    )],
+                },
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"never\"".to_string()),
+                    }],
+                )]),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("then"), "then-branch must render:\n{out}");
+        assert!(!out.contains("never"), "else-branch must be dropped:\n{out}");
+        assert!(
+            !out.contains("mosaic-if"),
+            "literal fold must skip the marker:\n{out}"
+        );
+    }
+
+    /// `when: false` literal folds the other way — the then-branch
+    /// is dropped and the Else branch renders inline.
+    #[test]
+    fn if_else_compile_time_fold_when_false_emits_else() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                LayoutNode {
+                    tag: "If".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "when".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    }],
+                    children: vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"never\"".to_string()),
+                        }],
+                    )],
+                },
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"yes\"".to_string()),
+                    }],
+                )]),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("yes"), "else-branch must render:\n{out}");
+        assert!(!out.contains("never"), "then-branch must be dropped:\n{out}");
+        assert!(
+            !out.contains("mosaic-if"),
+            "literal fold must skip the marker:\n{out}"
+        );
+    }
+
+    /// An `If/Else` pair followed by a non-Else sibling: the trailing
+    /// sibling must render normally — the index walk must not
+    /// accidentally consume it as part of the if/else fusion.
+    #[test]
+    fn if_else_pair_does_not_consume_trailing_sibling() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                if_node_with_when_expr(
+                    "( a )",
+                    vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"then\"".to_string()),
+                        }],
+                    )],
+                ),
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"else\"".to_string()),
+                    }],
+                )]),
+                // The trailing sibling — must end up in the output
+                // as a normal child of the parent Box, not be
+                // accidentally consumed by the if/else lookahead.
+                node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"after\"".to_string()),
+                    }],
+                ),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("then"));
+        assert!(out.contains("else"));
+        assert!(
+            out.contains("after"),
+            "trailing sibling must render — the if/else pair must \
+             not swallow it. Got:\n{out}"
+        );
+    }
+
+    /// A bare `If` without an Else sibling still works — the
+    /// emitter writes the if branch and the closing marker, with
+    /// no `mosaic-else` line.
+    #[test]
+    fn if_alone_without_else_still_works() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![if_node_with_when_expr(
+                "( ready )",
+                vec![node("Box")],
+            )]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("<!-- mosaic-if when=\"( ready )\" -->"));
+        assert!(out.contains("<!-- /mosaic-if -->"));
+        assert!(
+            !out.contains("<!-- mosaic-else -->"),
+            "lone If must not emit a phantom else marker:\n{out}"
         );
     }
 }

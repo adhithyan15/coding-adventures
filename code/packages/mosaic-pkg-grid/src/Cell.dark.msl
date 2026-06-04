@@ -1,21 +1,36 @@
 // Cell.dark.msl — dark theme style for the Cell component.
 //
 // Targets exactly one part: `cell` (the Box wrapping the Text/HostInput).
-// State `editing` is appended via class suffix at render time — when the
-// host promotes a Cell to editing, the React/SwiftUI/Qt emitter adds the
-// `editing` state class so this block's rules apply.
+// States `selected` and `editing` apply via the Box's `state-when-*`
+// predicates declared in Cell.mll — when the host (typically Grid)
+// passes the matching boolean slot, the React / SwiftUI / Qt
+// emitters fold the corresponding state block into the cell's
+// rendered style attribute.
 //
 // Colour palette:
 //   #1e1e1e   — VS Code dark surface, matches Grid sheet background
 //   #cccccc   — VS Code dark foreground text
-//   #007acc   — VS Code accent blue, used for editing outline
+//   #007acc   — VS Code accent blue, used for editing outline + selection ring
+//   #264f78   — VS Code accent dark-blue, used for selected-cell background
 //   #1f4f3f   — desaturated green tint signalling an active edit field
+//   #ffffff   — pure white for selected-cell foreground
 
 style Cell {
   part cell {
     padding:    4px ;
     background: #1e1e1e ;
     color:      #cccccc ;
+
+    // Selected cell — host's currently-focused cell.  The visicalc
+    // Grid.dark.msl palette uses the same colour shape for
+    // selection; pinning it here means a consumer that styles the
+    // grid via `pkg::mosaic-pkg-grid::Cell` gets a sensible default
+    // without re-declaring it at every call site.
+    state selected {
+      background: #264f78 ;
+      color:      #ffffff ;
+      outline:    1px solid #007acc ;
+    }
 
     state editing {
       outline:    1px solid #007acc ;

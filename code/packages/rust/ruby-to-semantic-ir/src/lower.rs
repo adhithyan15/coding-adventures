@@ -1618,21 +1618,22 @@ impl Lowerer {
     /// | literal `1`    | `scrutinee == 1`                               | `[]`                    |
     /// | literal `nil`  | `scrutinee == nil`                             | `[]`                    |
     /// | binding `x`    | `BoolLit(true)`                                | `[LetBinding(x, scrut)]`|
-    /// | array `[…]`    | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                  |
-    /// | hash `{…}`     | `BuiltinCall("__pattern_match__", [scrut, raw])` | `[]`                  |
+    /// | array `[…]`    | structural (`SeqLen`/`SeqIndex` + `&&`)        | per-element bindings    |
+    /// | hash `{…}`     | structural (`MapGet` + `&&`, see `lower_hash_pattern`) | per-key bindings |
     ///
     /// ## v0 deferred limitations
     ///
-    /// - Array / hash patterns lower as a `__pattern_match__` marker
-    ///   builtin carrying the verbatim raw text of the pattern.  No
-    ///   structural decomposition or sub-bindings are emitted yet —
-    ///   downstream emitters can re-derive the pattern from the raw
-    ///   text.  Same marker-builtin pattern as Phase 6v rescue/ensure,
-    ///   Phase 6y `__interp__`, and Phase 7a `backtick`.
+    /// - Array patterns with non-lowerable elements (hash sub-patterns)
+    ///   fall back to a `__pattern_match__` marker builtin carrying the
+    ///   verbatim raw text of the pattern — downstream emitters can
+    ///   re-derive the pattern from the raw text.  Same marker-builtin
+    ///   pattern as Phase 6v rescue/ensure, Phase 6y `__interp__`, and
+    ///   Phase 7a `backtick`.
     /// - Pin operators (`^x`), find patterns (`[…, *, …]`), and class
     ///   patterns (`SomeClass(x)`) are not yet parsed.
-    /// - Hash pattern's shorthand `{name:}` doesn't bind `name` at SIR
-    ///   level (deferred along with structural decomposition).
+    /// - Hash patterns can't enforce key *presence* (SIR has no map
+    ///   has-key primitive); see `lower_hash_pattern` for the precise v0
+    ///   semantics.
     fn lower_in_clause_pattern(
         &mut self,
         pattern_node: &GrammarASTNode,
@@ -1703,23 +1704,190 @@ impl Lowerer {
                 // whole pattern fall back to the v0 `__pattern_match__`
                 // marker (kept per the Tier-3 marker-replacement
                 // convention).
-                if self.array_pattern_is_lowerable(inner) {
-                    self.lower_array_pattern(inner, scrutinee, span)
+                //
+                // Phase FC — splat elements: a SINGLE splat (`[a, *mid, b]`)
+                // lowers structurally (relaxed `>=` length check + front/
+                // back indexing + optional `__seq_slice__` binding of the
+                // middle).  TWO splats (the *find* pattern `[*, x, *]`)
+                // would need a contiguous-window search the IR can't
+                // express inline, so it falls back to the marker.
+                let splats = self.array_pattern_splat_count(inner);
+                if splats == 0 {
+                    if self.array_pattern_is_lowerable(inner) {
+                        self.lower_array_pattern(inner, scrutinee, span)
+                    } else {
+                        Ok(self.pattern_match_marker(inner, scrutinee, span))
+                    }
+                } else if splats == 1 && self.array_pattern_is_lowerable(inner) {
+                    self.lower_array_pattern_one_splat(inner, scrutinee, span)
                 } else {
                     Ok(self.pattern_match_marker(inner, scrutinee, span))
                 }
             }
             "hash_pattern" => {
-                // v0 marker (unchanged): hash patterns keep the
-                // `__pattern_match__` marker pending a future phase.
-                Ok(self.pattern_match_marker(inner, scrutinee, span))
+                // Phase FC — hash patterns now lower to a real structural
+                // match keyed by symbol (`MapGet`), mirroring the array
+                // path.  Every pair's sub-pattern is fed back through
+                // `lower_in_clause_pattern` (against `target[:key]`), so
+                // literal / binding / nested array / nested hash
+                // sub-patterns all compose; the `{name:}` shorthand binds
+                // `name = target[:name]`.
+                self.lower_hash_pattern(inner, scrutinee, span)
             }
+            "pin_pattern" => {
+                // Phase FC — `^x` matches iff the scrutinee equals the
+                // value of the already-bound local `x`.  Lowers to
+                // `scrutinee == x` (an equality `BuiltinCall` over a
+                // `VarRef`), with no new binding.  The pinned name is read
+                // as a `Scope::Local` (the validator verifies it was
+                // bound earlier in scope).
+                // The lexer classifies the leading `^` as a `Name` token
+                // (value "^"), so skip it and take the pinned identifier.
+                let name_tok = inner
+                    .children
+                    .iter()
+                    .find_map(|c| match c {
+                        ASTNodeOrToken::Token(t)
+                            if matches!(t.type_, TokenType::Name) && t.value != "^" =>
+                        {
+                            Some(t)
+                        }
+                        _ => None,
+                    })
+                    .ok_or_else(|| RubyLowerError {
+                        message: "pin_pattern missing Name token".to_string(),
+                        line: inner.start_line.unwrap_or(0),
+                        column: inner.start_column.unwrap_or(0),
+                    })?;
+                let var = Expr::VarRef {
+                    name: name_tok.value.clone(),
+                    scope: Scope::Local,
+                    span: self.span_of_token(name_tok),
+                };
+                Ok((
+                    Expr::BuiltinCall {
+                        name: "==".to_string(),
+                        args: vec![scrutinee.clone(), var],
+                        effects: EffectSet::PURE,
+                        span,
+                    },
+                    Vec::new(),
+                ))
+            }
+            "class_pattern" => Ok(self.lower_class_pattern(inner, scrutinee, span)?),
             other => Err(RubyLowerError {
                 message: format!("unknown pattern kind `{}` in in_clause", other),
                 line: inner.start_line.unwrap_or(0),
                 column: inner.start_column.unwrap_or(0),
             }),
         }
+    }
+
+    /// Phase FC — lower a `class_pattern` (`Foo(p, …)`) against `target`.
+    ///
+    /// Produces `is_a?(target, "Foo") && <positional deconstruction>`:
+    ///
+    /// - A class check `BuiltinCall("is_a?", [target, StrLit("Foo")])`.
+    ///   The class is surfaced as a `StrLit` of its name (not a `Const`
+    ///   `VarRef`) so no constant declaration is required and no
+    ///   `Constants` feature is pulled in — the name round-trips for a
+    ///   Ruby emitter, same convention as `alias`/`undef`.
+    /// - When the pattern lists positional sub-patterns `Foo(a, b)`, they
+    ///   match the target's deconstructed elements: a `len(target) == N`
+    ///   check plus a recursive match of each inner pattern against
+    ///   `target[i]` (reusing `lower_in_clause_pattern` via `SeqIndex`),
+    ///   all ANDed after the `is_a?` guard.
+    ///
+    /// v0 simplification: Ruby calls `#deconstruct` to obtain the array;
+    /// here we index `target` directly (assuming it is array-like), the
+    /// same modelling `lower_array_pattern` uses.  Requests
+    /// `Feature::Strings` (the class-name literal) and, when there are
+    /// positional sub-patterns, `Feature::Sequences` + `Feature::ShortCircuit`.
+    fn lower_class_pattern(
+        &mut self,
+        class_inner: &GrammarASTNode,
+        target: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        let class_tok = class_inner
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| RubyLowerError {
+                message: "class_pattern missing class Name token".to_string(),
+                line: class_inner.start_line.unwrap_or(0),
+                column: class_inner.start_column.unwrap_or(0),
+            })?;
+        self.features_used.insert(Feature::Strings);
+        let mut cond = Expr::BuiltinCall {
+            name: "is_a?".to_string(),
+            args: vec![
+                target.clone(),
+                Expr::StrLit {
+                    value: class_tok.value.clone(),
+                    span: self.span_of_token(class_tok),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let mut prefix: Vec<Stmt> = Vec::new();
+
+        // Positional sub-patterns (the `pattern` children).
+        let inners: Vec<&GrammarASTNode> = class_inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                _ => None,
+            })
+            .collect();
+        if !inners.is_empty() {
+            self.features_used.insert(Feature::Sequences);
+            self.features_used.insert(Feature::ShortCircuit);
+            // `len(target) == N`.
+            let len_check = Expr::BuiltinCall {
+                name: "==".to_string(),
+                args: vec![
+                    Expr::SeqLen {
+                        seq: Box::new(target.clone()),
+                        span: span.clone(),
+                    },
+                    Expr::IntLit {
+                        value: inners.len() as i64,
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            cond = Expr::LogicalAnd {
+                lhs: Box::new(cond),
+                rhs: Box::new(len_check),
+                span: span.clone(),
+            };
+            for (i, p) in inners.iter().enumerate() {
+                let index = Expr::SeqIndex {
+                    seq: Box::new(target.clone()),
+                    index: Box::new(Expr::IntLit {
+                        value: i as i64,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                };
+                let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &index)?;
+                cond = Expr::LogicalAnd {
+                    lhs: Box::new(cond),
+                    rhs: Box::new(sub_cond),
+                    span: span.clone(),
+                };
+                prefix.extend(sub_prefix);
+            }
+        }
+        Ok((cond, prefix))
     }
 
     /// Phase 13a (FC) — the v0 `__pattern_match__` marker for patterns
@@ -1780,6 +1948,12 @@ impl Lowerer {
                 Some(elem) => match elem.rule_name.as_str() {
                     "literal_pattern" | "binding_pattern" => true,
                     "array_pattern" => self.array_pattern_is_lowerable(elem),
+                    // Hash sub-patterns now lower structurally too (a
+                    // hash pattern is always lowerable — non-lowerable
+                    // leaves inside it marker themselves), so an array
+                    // containing one no longer forces a whole-pattern
+                    // marker fallback.
+                    "hash_pattern" => true,
                     _ => false,
                 },
                 None => false,
@@ -1911,6 +2085,21 @@ impl Lowerer {
                     };
                     prefix.extend(sub_prefix);
                 }
+                "hash_pattern" => {
+                    // Phase FC — a hash sub-pattern at array element `i`
+                    // matches `target[i]` against the hash pattern (keyed
+                    // by symbol via `MapGet`).  Same AND-after-length-check
+                    // discipline as the nested-array case.
+                    let (sub_cond, sub_prefix) =
+                        self.lower_hash_pattern(elem_inner, &index, span.clone())?;
+                    self.features_used.insert(Feature::ShortCircuit);
+                    cond = Expr::LogicalAnd {
+                        lhs: Box::new(cond),
+                        rhs: Box::new(sub_cond),
+                        span: span.clone(),
+                    };
+                    prefix.extend(sub_prefix);
+                }
                 other => {
                     return Err(RubyLowerError {
                         message: format!(
@@ -1923,6 +2112,305 @@ impl Lowerer {
                 }
             }
         }
+        Ok((cond, prefix))
+    }
+
+    /// Phase FC — lower a `hash_pattern` node into a real structural
+    /// match of `target`, keyed by symbol.  The hash analogue of
+    /// [`lower_array_pattern`].
+    ///
+    /// `in {name: "ann", age: a}` against `s` produces:
+    ///
+    /// ```text
+    /// cond   = ((true && (s[:name] == "ann")) && true)
+    /// prefix = [ let a = s[:age] ]
+    /// ```
+    ///
+    /// Each `hash_pattern_pair` `key: <subpat>` builds a `MapGet(target,
+    /// :key)` sub-scrutinee and feeds it back through
+    /// [`lower_in_clause_pattern`], so literal, binding, nested array, and
+    /// nested hash sub-patterns all compose recursively (no separate
+    /// lowerability guard is needed — a non-lowerable nested array simply
+    /// markers itself).  The Ruby 3.1 shorthand `{key:}` (no sub-pattern)
+    /// binds `key = target[:key]` — fixing the prior "shorthand doesn't
+    /// bind" limitation.
+    ///
+    /// ## v0 limitation
+    ///
+    /// Ruby hash patterns additionally require each listed key to be
+    /// *present* in the scrutinee.  SIR has no map has-key primitive, so
+    /// presence is only enforced indirectly: a `key: <literal>` pair
+    /// contributes a `target[:key] == literal` check (which fails for a
+    /// missing key in every target language whose missing-key value isn't
+    /// that literal), while a pure binding/shorthand pair contributes no
+    /// guard.  A hash pattern consisting solely of bindings therefore
+    /// matches on shape alone.  Requests `Feature::Maps` (for `MapGet`),
+    /// `Feature::Symbols` (for the symbol keys), and — when any pair adds
+    /// a condition — `Feature::ShortCircuit` (for the `&&` chain).
+    fn lower_hash_pattern(
+        &mut self,
+        hash_inner: &GrammarASTNode,
+        target: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        self.features_used.insert(Feature::Maps);
+        let pairs: Vec<&GrammarASTNode> = hash_inner
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "hash_pattern_pair" => Some(n),
+                _ => None,
+            })
+            .collect();
+
+        // Base condition is trivially true; each pair ANDs in its check
+        // (literal pairs) or contributes only a binding (binding pairs),
+        // exactly mirroring how `binding_pattern` is "trivially true".
+        let mut cond = Expr::BoolLit {
+            value: true,
+            span: span.clone(),
+        };
+        let mut prefix: Vec<Stmt> = Vec::new();
+
+        for pair in pairs {
+            // The key is the leading NAME token; the symbol `:key` is the
+            // map key (matching how hash *literals* key their entries —
+            // `a:` is sugar for `:a =>`, see `lower_hash_entry`).
+            let key_tok = pair
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                    _ => None,
+                })
+                .ok_or_else(|| RubyLowerError {
+                    message: "hash_pattern_pair missing key Name token".to_string(),
+                    line: pair.start_line.unwrap_or(0),
+                    column: pair.start_column.unwrap_or(0),
+                })?;
+            let key_name = key_tok.value.clone();
+            let key_span = self.span_of_token(key_tok);
+            self.features_used.insert(Feature::Symbols);
+            // `target[:key]` — reused as the sub-scrutinee / binding value.
+            let value = Expr::MapGet {
+                map: Box::new(target.clone()),
+                key: Box::new(Expr::SymLit {
+                    name: key_name.clone(),
+                    span: key_span.clone(),
+                }),
+                span: span.clone(),
+            };
+
+            // Optional sub-pattern: `key: <pattern>`.  Absent ⇒ shorthand.
+            let subpat = pair.children.iter().find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "pattern" => Some(n),
+                _ => None,
+            });
+            match subpat {
+                Some(p) => {
+                    // Recurse: match `target[:key]` against the sub-pattern.
+                    let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &value)?;
+                    self.features_used.insert(Feature::ShortCircuit);
+                    cond = Expr::LogicalAnd {
+                        lhs: Box::new(cond),
+                        rhs: Box::new(sub_cond),
+                        span: span.clone(),
+                    };
+                    prefix.extend(sub_prefix);
+                }
+                None => {
+                    // Shorthand `{key:}` — bind `key = target[:key]`
+                    // (runs in the match body only).
+                    self.declared_locals.insert(key_name.clone());
+                    prefix.push(Stmt::LetBinding {
+                        name: key_name,
+                        sir_type: None,
+                        value,
+                        span: key_span,
+                    });
+                }
+            }
+        }
+        Ok((cond, prefix))
+    }
+
+    /// Phase FC — count `splat_pattern` children of an `array_pattern`.
+    fn array_pattern_splat_count(&self, array_inner: &GrammarASTNode) -> usize {
+        array_inner
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "splat_pattern"))
+            .count()
+    }
+
+    /// Phase FC — lower a single-splat array pattern `[pre…, *mid, post…]`
+    /// against `target`.
+    ///
+    /// `in [a, *mid, b]` against `s` produces:
+    ///
+    /// ```text
+    /// cond   = (len(s) >= 2) && (<match a vs s[0]>) && (<match b vs s[len-1]>)
+    /// prefix = [ let a = s[0], let mid = __seq_slice__(s, 1, len(s)-1), let b = s[len-1] ]
+    /// ```
+    ///
+    /// Fixed (non-splat) elements before the splat index from the front
+    /// (`s[i]`); those after the splat index from the back
+    /// (`s[len - (post-j)]`).  A named splat binds the middle slice via a
+    /// `__seq_slice__(seq, from, to)` marker `BuiltinCall` (SIR has no
+    /// sequence-slice primitive); a bare `*` binds nothing.  Each fixed
+    /// element is matched by recursing through `lower_in_clause_pattern`,
+    /// so literal / binding / nested sub-patterns compose.  The relaxed
+    /// `len >= fixed_count` check (vs the exact `==` of the no-splat path)
+    /// is what the splat buys.  Requests `Feature::Sequences` +
+    /// `Feature::ShortCircuit`.  Assumes exactly one splat (caller checked).
+    fn lower_array_pattern_one_splat(
+        &mut self,
+        array_inner: &GrammarASTNode,
+        target: &Expr,
+        span: Span,
+    ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
+        self.features_used.insert(Feature::Sequences);
+        self.features_used.insert(Feature::ShortCircuit);
+
+        // Walk children in source order, splitting fixed `pattern` nodes
+        // into those before vs after the single `splat_pattern`.
+        let mut pre: Vec<&GrammarASTNode> = Vec::new();
+        let mut post: Vec<&GrammarASTNode> = Vec::new();
+        let mut splat_name: Option<String> = None;
+        let mut seen_splat = false;
+        for c in &array_inner.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                match n.rule_name.as_str() {
+                    "pattern" => {
+                        if seen_splat {
+                            post.push(n);
+                        } else {
+                            pre.push(n);
+                        }
+                    }
+                    "splat_pattern" => {
+                        seen_splat = true;
+                        // The splat's optional rest name (the Name token
+                        // that isn't the `*` operator token).
+                        splat_name = n.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t)
+                                if matches!(t.type_, TokenType::Name) && t.value != "*" =>
+                            {
+                                Some(t.value.clone())
+                            }
+                            _ => None,
+                        });
+                    }
+                    _ => {}
+                }
+            }
+        }
+
+        let fixed = pre.len() + post.len();
+        let seq_len = || Expr::SeqLen {
+            seq: Box::new(target.clone()),
+            span: span.clone(),
+        };
+
+        // Relaxed length check: `len(target) >= fixed`.
+        let mut cond = Expr::BuiltinCall {
+            name: ">=".to_string(),
+            args: vec![
+                seq_len(),
+                Expr::IntLit {
+                    value: fixed as i64,
+                    span: span.clone(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let mut prefix: Vec<Stmt> = Vec::new();
+
+        // Front-anchored fixed elements: target[i] for i in 0..pre.len().
+        for (i, p) in pre.iter().enumerate() {
+            let index = Expr::SeqIndex {
+                seq: Box::new(target.clone()),
+                index: Box::new(Expr::IntLit {
+                    value: i as i64,
+                    span: span.clone(),
+                }),
+                span: span.clone(),
+            };
+            let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &index)?;
+            cond = Expr::LogicalAnd {
+                lhs: Box::new(cond),
+                rhs: Box::new(sub_cond),
+                span: span.clone(),
+            };
+            prefix.extend(sub_prefix);
+        }
+
+        // Back-anchored fixed elements: target[len - (post.len() - j)].
+        for (j, p) in post.iter().enumerate() {
+            let from_back = (post.len() - j) as i64;
+            let index = Expr::SeqIndex {
+                seq: Box::new(target.clone()),
+                index: Box::new(Expr::BuiltinCall {
+                    name: "-".to_string(),
+                    args: vec![
+                        seq_len(),
+                        Expr::IntLit {
+                            value: from_back,
+                            span: span.clone(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                }),
+                span: span.clone(),
+            };
+            let (sub_cond, sub_prefix) = self.lower_in_clause_pattern(p, &index)?;
+            cond = Expr::LogicalAnd {
+                lhs: Box::new(cond),
+                rhs: Box::new(sub_cond),
+                span: span.clone(),
+            };
+            prefix.extend(sub_prefix);
+        }
+
+        // Named splat → bind the middle slice `target[pre .. len-post]`
+        // via a `__seq_slice__` marker (no first-class slice in SIR).
+        if let Some(name) = splat_name {
+            self.declared_locals.insert(name.clone());
+            let to = Expr::BuiltinCall {
+                name: "-".to_string(),
+                args: vec![
+                    seq_len(),
+                    Expr::IntLit {
+                        value: post.len() as i64,
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            let slice = Expr::BuiltinCall {
+                name: "__seq_slice__".to_string(),
+                args: vec![
+                    target.clone(),
+                    Expr::IntLit {
+                        value: pre.len() as i64,
+                        span: span.clone(),
+                    },
+                    to,
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            };
+            prefix.push(Stmt::LetBinding {
+                name,
+                sir_type: None,
+                value: slice,
+                span: span.clone(),
+            });
+        }
+
         Ok((cond, prefix))
     }
 

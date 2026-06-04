@@ -1,6 +1,6 @@
 # Historical-arch backend migration — `iir-to-*` → `*-encoder` + `*-backend`
 
-**Status:** Phases 1–5 done.  GE-225 + Intel 4004 + ARMv7 lanes migrated.  Phase 6 next (Intel 8008).
+**Status:** ✅ **MIGRATION COMPLETE** (Phases 1–7 done, 2026-06-03).  All five historical-arch lanes (GE-225, Intel 4004, ARMv7, Intel 8008, RV32I) now consume typed CIR via the `Backend` trait.  The architectural correctness win — every arch backend uses the same `aot_core::infer` + `aot_core::specialise` + `Backend::compile` pipeline as `aarch64-backend` and `x86_64-backend` — is delivered.
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) (which produced the A1–A5 lanes this migration corrects).
 
 ## The architectural mistake the A1–A5 cascades made
@@ -67,8 +67,37 @@ arches are mechanical applications (1 phase each).
 | ✅ **3** | `ge225-backend` wiring + `iir-to-ge225` deprecation | **this PR** — `lang-aot --emit=ge225` routes through `aot_core::infer` + `aot_core::specialise` + `ge225_backend::compile`.  `iir-to-ge225` marked `#[deprecated]` at the API level; existing callers keep working with warnings.  All 5 GE-225 + 3 BASIC e2e tests produce byte-for-byte-identical output. |
 | ✅ **4** | Intel 4004 migration | **this PR** — `intel4004-encoder` + `intel4004-backend` + lang-aot wiring + `iir-to-intel4004` marked `#[deprecated]`.  Byte-for-byte parity verified by the existing Intel 4004 e2e smoke test. |
 | ✅ **5** | ARMv7 migration | **this PR** — `armv7-encoder` + `armv7-backend` (minimal viable: `const_*` + `ret_*` only) + lang-aot wiring + `iir-to-armv7` marked `#[deprecated]`.  Byte-for-byte parity for the trivial `MOV r0, #N; BX LR` ROM verified by the e2e smoke test.  Full op coverage (add/sub/cmp/branches/calls) is intentionally NOT ported — future increments can add to `armv7-backend` as needed. |
-| 🔜 **6** | Intel 8008 migration | `intel8008-encoder` + `intel8008-backend` + wiring + deprecate `iir-to-intel8008`. |
-| 🔜 **7** | RV32I migration | `riscv-encoder` + `riscv-backend` + wiring + deprecate `iir-to-riscv`. |
+| ✅ **6** | Intel 8008 migration | **this PR** — `intel8008-encoder` + `intel8008-backend` (minimal viable: `const_*` + `ret_*`) + lang-aot wiring + `iir-to-intel8008` deprecated.  Byte-for-byte parity for `MVI A, 42; HLT` ROM verified. |
+| ✅ **7** | RV32I migration (FINAL lane) | **this PR** — `riscv-encoder` + `riscv-backend` (minimal viable: `const_*` + `ret_*`) + lang-aot wiring + `iir-to-riscv` deprecated.  Byte-for-byte parity for the canonical `addi t0, x0, n; addi a0, t0, 0; jalr x0, x1, 0` sequence verified by unit tests, e2e RV32I smoke test still ends with the canonical `[0x67, 0x80, 0x00, 0x00]` (`jalr x0, x1, 0`) tail.  Full op coverage (add/sub/cmp/branches/calls/ecall print_i64) intentionally NOT ported — future increments can add to `riscv-backend` as needed.  This was the **original mistake from A1+** that started the IIR-level pattern this entire migration corrects. |
+
+## ✅ Migration complete
+
+All seven phases are merged.  The historical-arch lane now matches
+the `aarch64-backend` / `x86_64-backend` shape exactly:
+
+```text
+IIR  ─▶  aot_core::infer  ─▶  aot_core::specialise  ─▶  CIR
+                                                         │
+                                                         ▼  Backend::compile
+                                                       bytes
+```
+
+Per-arch end state:
+
+| Arch | Encoder crate | Backend crate | Deprecated IIR crate |
+|------|---------------|---------------|----------------------|
+| GE-225      | `ge225-encoder`      | `ge225-backend`      | `iir-to-ge225` v0.10.0 |
+| Intel 4004  | `intel4004-encoder`  | `intel4004-backend`  | `iir-to-intel4004` v0.4.0 |
+| ARMv7       | `armv7-encoder`      | `armv7-backend`      | `iir-to-armv7` v0.5.0 |
+| Intel 8008  | `intel8008-encoder`  | `intel8008-backend`  | `iir-to-intel8008` v0.4.0 |
+| RV32I       | `riscv-encoder`      | `riscv-backend`      | `iir-to-riscv` v0.4.0 |
+
+`lang-aot` v0.12.0 routes every `--emit=<arch>` flag through the
+new `Backend`-trait path.  The deprecated `iir-to-*` crates stay
+in the workspace (with `#[deprecated]` attributes on their public
+APIs) so existing downstream test invariants keep regressing
+against the old byte sequences — a belt-and-braces guarantee
+that the new path produces compatible output.
 
 Each phase = 1 PR + babysitter cron + auto-merge + next-phase
 kickoff.  Same cadence as the A5 cascade.

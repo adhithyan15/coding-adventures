@@ -2,6 +2,87 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.89.0] - 2026-06-03
+
+### Added (FC — array splat pattern lowering)
+
+- **One-splat** `in [a, *rest, b]` now lowers structurally via the new
+  `lower_array_pattern_one_splat`: a relaxed `len(target) >= fixed_count`
+  check (vs the exact `==` of the no-splat path), front-anchored fixed
+  elements indexed from the head (`target[i]`), back-anchored fixed
+  elements indexed from the tail (`target[len - k]`), and — for a named
+  splat — the middle slice bound via a `__seq_slice__(target, pre, len -
+  post)` marker `BuiltinCall` (SIR has no first-class sequence slice). A
+  bare `*` binds nothing. Each fixed element recurses through
+  `lower_in_clause_pattern`, so literal / binding / nested sub-patterns
+  compose. Requests `Feature::Sequences` + `Feature::ShortCircuit`.
+- **Find** patterns (two splats, `[*, x, *]`) remain a documented v0
+  limitation and fall back to the `__pattern_match__` marker — a
+  contiguous-window search can't be expressed inline in the current IR.
+
+New `array_pattern_splat_count` helper dispatches: 0 splats → existing
+`lower_array_pattern`; 1 splat → `lower_array_pattern_one_splat`; ≥2 →
+marker.
+
+New tests: `case_in_array_one_splat_lowers_structurally`,
+`case_in_array_one_splat_validates`,
+`case_in_array_anonymous_splat_binds_nothing`,
+`case_in_array_find_pattern_falls_back_to_marker`.
+
+## [0.88.0] - 2026-06-03
+
+### Added (FC — pin `^x` and class `Foo(x)` pattern lowering)
+
+- **Pin** `in ^x` lowers to `scrutinee == x` (an equality `BuiltinCall`
+  over a `Scope::Local` `VarRef`), no binding. The leading `^` lexes as a
+  `Name` token (value "^"), so the lowerer skips it to find the pinned
+  identifier.
+- **Class** `in Foo(p, …)` lowers via new `lower_class_pattern` to
+  `is_a?(scrutinee, "Foo") && <positional deconstruction>`: the class is
+  a `StrLit` of its name (no `Const` decl / `Constants` feature needed),
+  and positional sub-patterns match `scrutinee[i]` (a `len == N` check
+  plus recursion through `lower_in_clause_pattern` via `SeqIndex`). v0
+  simplification: indexes the scrutinee directly rather than calling
+  `#deconstruct`. Requests `Feature::Strings` (+ `Sequences` /
+  `ShortCircuit` when positional sub-patterns are present).
+
+New tests: `case_in_pin_pattern_lowers_to_equality_with_local`,
+`case_in_class_pattern_lowers_to_is_a_check`,
+`case_in_pin_and_class_patterns_validate_e2e`.
+
+## [0.87.0] - 2026-06-03
+
+### Added (FC — `case/in` hash-pattern structural lowering)
+
+Hash patterns in `case/in` (`in {name: n, age: 30}`) now lower to a real
+structural match instead of the `__pattern_match__` marker. New
+`lower_hash_pattern` mirrors `lower_array_pattern` but keys by symbol:
+
+- Each `hash_pattern_pair` `key: <subpat>` builds a `MapGet(target, :key)`
+  sub-scrutinee and recurses through `lower_in_clause_pattern`, so
+  literal, binding, nested array, and nested hash sub-patterns all
+  compose. Literal pairs AND a `target[:key] == lit` check into the
+  condition; binding pairs add a `LetBinding` to the match-arm prefix.
+- The Ruby 3.1 shorthand `{name:}` now **binds** `name = target[:name]`
+  (previously a documented no-op).
+- Array patterns containing hash sub-patterns (`[{a: 1}, 2]`) now lower
+  structurally too (the lowerability guard and element loop gained a
+  `hash_pattern` arm) instead of falling back to the whole-pattern marker.
+- Declares `Feature::Maps` (for `MapGet`), `Feature::Symbols` (symbol
+  keys), and `Feature::ShortCircuit` (the `&&` chain).
+
+**v0 limitation:** Ruby hash patterns require each listed key to be
+*present*; SIR has no map has-key primitive, so presence is only enforced
+indirectly (via literal `==` checks) — a hash pattern of pure bindings
+matches on shape alone. Documented on `lower_hash_pattern`.
+
+New tests: `case_in_hash_pattern_binding_emits_mapget_letbinding`,
+`case_in_hash_pattern_literal_emits_equality_on_mapget`,
+`case_in_hash_pattern_shorthand_binds`,
+`case_in_hash_pattern_validates_e2e`,
+`case_in_array_with_hash_element_lowers_structurally` (replaces the prior
+marker-fallback test). Full lexer+parser+lowerer suites green (338
+lowerer tests).
 ## [0.86.0] - 2026-06-03
 
 ### Added (FC — `__END__` end-to-end coverage; tests only)
@@ -11,9 +92,6 @@ lowers cleanly from just the code above it (the lexer strips the data
 section — see `coding-adventures-ruby-lexer` 0.25.0).  No lowerer code
 change: `program_with_end_marker_lowers_only_the_code` pins the
 behaviour and round-trips the SIR validator.
-
-(0.85.0 is the concurrent hash-pattern PR; this entry is 0.86.0 to avoid
-a version collision.)
 
 ## [0.84.0] - 2026-06-01
 

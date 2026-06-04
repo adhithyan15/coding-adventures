@@ -94,6 +94,16 @@ describe("DirectedGraph", () => {
     });
   });
 
+  describe("successors / predecessors on unknown nodes", () => {
+    // Exercises the `?? []` branches in successors() and predecessors()
+    // when the requested node has never been seen by the graph.
+    it("returns [] for an unknown node", () => {
+      const g = new DirectedGraph();
+      expect(g.successors("ghost")).toEqual([]);
+      expect(g.predecessors("ghost")).toEqual([]);
+    });
+  });
+
   describe("transitiveClosure", () => {
     it("should find all reachable nodes", () => {
       const g = new DirectedGraph();
@@ -495,5 +505,52 @@ describe("resolveDependencies", () => {
     const graph = resolveDependencies([pkg]);
     expect(graph.hasNode("python/no-metadata")).toBe(true);
     expect(graph.successors("python/no-metadata")).toEqual([]);
+  });
+
+  // ── Coverage for the "dep is external / not in known names" branch in
+  //    each language-specific parser.  These tests don't add new dep edges;
+  //    they just exercise the `if (pkgName) { ... }` false branch where the
+  //    looked-up name isn't part of the workspace's known packages.
+
+  it("Go parser ignores external require entries", () => {
+    const pkgDir = path.join(tmpDir, "go-external");
+    writeFile(path.join(pkgDir, "go.mod"), "module example.com/me\n\nrequire (\n  github.com/external/lib v1.2.3\n)\n");
+    const pkg = makePkg("go/me", pkgDir, "go");
+    const graph = resolveDependencies([pkg]);
+    expect(graph.successors("go/me")).toEqual([]);
+  });
+
+  it("TypeScript parser ignores external package.json entries", () => {
+    const pkgDir = path.join(tmpDir, "ts-external");
+    writeFile(path.join(pkgDir, "package.json"), JSON.stringify({
+      name: "@coding-adventures/ts-external",
+      dependencies: { "lodash": "^4.0.0", "react": "^18.0.0" },
+    }));
+    const pkg = makePkg("typescript/ts-external", pkgDir, "typescript");
+    const graph = resolveDependencies([pkg]);
+    expect(graph.successors("typescript/ts-external")).toEqual([]);
+  });
+
+  it("Rust parser ignores external Cargo.toml deps without `path =`", () => {
+    const pkgDir = path.join(tmpDir, "rs-external");
+    writeFile(path.join(pkgDir, "Cargo.toml"), `[package]\nname = "rs-external"\n\n[dependencies]\nserde = "1"\nrand = { version = "0.8" }\n`);
+    const pkg = makePkg("rust/rs-external", pkgDir, "rust");
+    const graph = resolveDependencies([pkg]);
+    expect(graph.successors("rust/rs-external")).toEqual([]);
+  });
+
+  it("Elixir parser ignores external atom dependencies", () => {
+    const pkgDir = path.join(tmpDir, "ex-external");
+    writeFile(path.join(pkgDir, "mix.exs"), `defmodule Foo do\n  def deps do\n    [{:jason, "~> 1.0"}]\n  end\nend\n`);
+    const pkg = makePkg("elixir/ex-external", pkgDir, "elixir");
+    const graph = resolveDependencies([pkg]);
+    expect(graph.successors("elixir/ex-external")).toEqual([]);
+  });
+
+  it("Go parser handles missing go.mod gracefully", () => {
+    const pkgDir = path.join(tmpDir, "go-no-mod");
+    fs.mkdirSync(pkgDir, { recursive: true });
+    const pkg = makePkg("go/no-mod", pkgDir, "go");
+    expect(() => resolveDependencies([pkg])).not.toThrow();
   });
 });

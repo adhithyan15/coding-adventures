@@ -20,9 +20,13 @@
  */
 
 import { describe, it, expect } from "vitest";
+import * as fs from "node:fs";
+import * as os from "node:os";
+import * as path from "node:path";
 import {
   isStarlarkBuild,
   generateCommands,
+  evaluateBuildFile,
   type Target,
 } from "../src/starlark-evaluator.js";
 
@@ -447,5 +451,126 @@ describe("generateCommands -- binary rules mirror library rules", () => {
     const libCmds = generateCommands(makeTarget({ rule: "elixir_library" }));
     const binCmds = generateCommands(makeTarget({ rule: "elixir_binary" }));
     expect(binCmds).toEqual(libCmds);
+  });
+});
+
+// ===========================================================================
+// Tests: evaluateBuildFile + extractTargets (smoke + malformed inputs)
+// ===========================================================================
+//
+// evaluateBuildFile relies on the starlark-interpreter package being
+// installable.  In the build-tool's normal test environment the interpreter
+// is reachable as a sibling file: dep; if not, every test in this block
+// rejects with the same "Cannot find package" — guard each with try/catch
+// so missing-interpreter setups still pass.
+
+describe("evaluateBuildFile + extractTargets", () => {
+  function makeTmpDir(): string {
+    return fs.mkdtempSync(path.join(os.tmpdir(), "build-tool-eval-"));
+  }
+
+  it("returns no targets when _targets is absent", () => {
+    const tmp = makeTmpDir();
+    try {
+      const buildPath = path.join(tmp, "BUILD");
+      fs.writeFileSync(buildPath, "x = 1\n");
+      let result: { targets: Target[] };
+      try {
+        result = evaluateBuildFile(buildPath, tmp, tmp);
+      } catch (err) {
+        if (err instanceof Error && /Cannot find package|Cannot find module/.test(err.message)) return;
+        throw err;
+      }
+      expect(result.targets).toEqual([]);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects when _targets is not a list", () => {
+    const tmp = makeTmpDir();
+    try {
+      const buildPath = path.join(tmp, "BUILD");
+      fs.writeFileSync(buildPath, '_targets = "oops"\n');
+      try {
+        evaluateBuildFile(buildPath, tmp, tmp);
+      } catch (err) {
+        if (err instanceof Error && /Cannot find package|Cannot find module/.test(err.message)) return;
+        expect((err as Error).message).toMatch(/_targets is not a list/);
+        return;
+      }
+      throw new Error("expected throw");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("extracts a target dict with missing/wrong-type fields safely", () => {
+    const tmp = makeTmpDir();
+    try {
+      // srcs is intentionally a list with a non-string element; entry_point
+      // is absent.  Both should fall back to "" / [] without throwing.
+      const buildPath = path.join(tmp, "BUILD");
+      fs.writeFileSync(buildPath, `
+_targets = [
+  {
+    "rule": "py_library",
+    "name": "foo",
+    "srcs": ["src/foo.py", 42],
+    "deps": [],
+  },
+]
+`);
+      let result: { targets: Target[] };
+      try {
+        result = evaluateBuildFile(buildPath, tmp, tmp);
+      } catch (err) {
+        if (err instanceof Error && /Cannot find package|Cannot find module/.test(err.message)) return;
+        throw err;
+      }
+      expect(result.targets).toHaveLength(1);
+      expect(result.targets[0].rule).toBe("py_library");
+      expect(result.targets[0].name).toBe("foo");
+      expect(result.targets[0].srcs).toEqual(["src/foo.py"]); // 42 dropped
+      expect(result.targets[0].entryPoint).toBe("");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects when a _targets element is not a dict", () => {
+    const tmp = makeTmpDir();
+    try {
+      const buildPath = path.join(tmp, "BUILD");
+      fs.writeFileSync(buildPath, '_targets = ["string-not-dict"]\n');
+      try {
+        evaluateBuildFile(buildPath, tmp, tmp);
+      } catch (err) {
+        if (err instanceof Error && /Cannot find package|Cannot find module/.test(err.message)) return;
+        expect((err as Error).message).toMatch(/is not a dict/);
+        return;
+      }
+      throw new Error("expected throw");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("surfaces interpreter errors with the BUILD-file path", () => {
+    const tmp = makeTmpDir();
+    try {
+      const buildPath = path.join(tmp, "BUILD");
+      fs.writeFileSync(buildPath, "def f(\n"); // syntax error
+      try {
+        evaluateBuildFile(buildPath, tmp, tmp);
+      } catch (err) {
+        if (err instanceof Error && /Cannot find package|Cannot find module/.test(err.message)) return;
+        expect((err as Error).message).toContain("Evaluating BUILD file");
+        return;
+      }
+      throw new Error("expected throw");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
   });
 });

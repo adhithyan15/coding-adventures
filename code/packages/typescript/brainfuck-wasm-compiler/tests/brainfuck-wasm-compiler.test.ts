@@ -7,6 +7,7 @@ import { WasiStub, WasmRuntime } from "@coding-adventures/wasm-runtime";
 
 import {
   BrainfuckWasmCompiler,
+  PackageError,
   compileSource,
   packSource,
   writeWasmFile,
@@ -94,5 +95,39 @@ describe("brainfuck-wasm-compiler", () => {
   it("honors a custom filename", () => {
     const result = new BrainfuckWasmCompiler({ filename: "hello.bf" }).compileSource("+");
     expect(result.filename).toBe("hello.bf");
+  });
+
+  it("compiles with optimization disabled", () => {
+    const result = new BrainfuckWasmCompiler({ optimize: false }).compileSource("+.");
+    expect(result.binary.length).toBeGreaterThan(0);
+    expect(result.optimization).toBeDefined();
+  });
+
+  it("PackageError stores stage, message, and cause", () => {
+    const cause = new Error("inner");
+    const err = new PackageError("stage-name", "test message", cause);
+    expect(err.name).toBe("PackageError");
+    expect(err.stage).toBe("stage-name");
+    expect(err.message).toBe("test message");
+    expect(err.cause).toBe(cause);
+    expect(err).toBeInstanceOf(Error);
+  });
+
+  it("PackageError works without a cause", () => {
+    const err = new PackageError("encode", "encoding failed");
+    expect(err.stage).toBe("encode");
+    expect(err.cause).toBeUndefined();
+  });
+
+  it("writeWasmFile wraps filesystem errors in PackageError", () => {
+    // Parent directory does not exist → writeFileSync throws ENOENT
+    const badPath = join(tmpdir(), "bf-nonexistent-xyz9999abc", "out.wasm");
+    expect(() => writeWasmFile("+.", badPath)).toThrow(PackageError);
+    try {
+      writeWasmFile("+.", badPath);
+    } catch (err) {
+      expect(err).toBeInstanceOf(PackageError);
+      expect((err as PackageError).stage).toBe("write");
+    }
   });
 });

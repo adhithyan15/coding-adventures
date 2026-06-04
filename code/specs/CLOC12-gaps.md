@@ -41,11 +41,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-003 — cross-type `null == x` fold not implemented
 
-- **Status:** OPEN
-- **Upstream test:** `PeepholeFoldConstantsTest::testNullComparison1` (cross-type loose-equality lines)
-- **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** Our `==` fold rule only fires when both literals are the same JS type (sound default per crate docs). The JS abstract-equality algorithm says `null == 0` is `false`, `null == "hi"` is `false`, etc., but folding that requires implementing the actual algorithm.
-- **What it needs:** Implement the abstract-equality algorithm for the cases where both sides are compile-time constants. Mirror upstream's `PeepholeFoldConstants.tryFoldComparison`.
+- **Status:** RESOLVED in CLOC12.21 — `try_fold_binary_op` now implements the `null`-side branch of ECMAScript §IsLooselyEqual for compile-time-known partner literals. `null == X` (or `X == null`) folds to `true` iff `X` is `null` (the existing gap-007 branch, untouched) or `undefined`; every other primitive-literal partner (`number`, `string`, `boolean`, `bigint`) folds to `false`. `!=` is the boolean negation. Identifier-on-other-side bails out — the runtime value could itself be null/undefined, and folding to a concrete boolean would be unsound. `test_null_comparison_1_loose_against_other_types` is un-ignored. Inline tests cover both directions (left/right swap of null), the `!=` complement, the `null == undefined → true` special case (both directions), the unsoundness guard against identifiers, and a regression check that gap-008's strict-equality cross-type branch still fires.
 
 ### gap-004 — abstract-equality and abstract-comparison folds across Number/String
 

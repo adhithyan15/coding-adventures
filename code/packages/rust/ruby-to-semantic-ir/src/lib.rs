@@ -5943,11 +5943,13 @@ b = "y"
     // Patterns covered here:
     //   literal_pattern  → `==` comparison cond, no bindings
     //   binding_pattern  → `BoolLit(true)` cond + LetBinding prefix
-    //   array_pattern    → Phase 13a: fixed-arity literal/binding
-    //                      elements lower structurally (`len(s)==N &&
-    //                      s[i]==lit …` + element LetBindings); nested
-    //                      sub-patterns keep the `__pattern_match__` marker
-    //   hash_pattern     → `__pattern_match__` marker, no bindings
+    //   array_pattern    → Phase 13a/13b: fixed-arity elements lower
+    //                      structurally (`len(s)==N && s[i]==lit …` +
+    //                      element LetBindings), recursing into nested
+    //                      array AND hash sub-patterns
+    //   hash_pattern     → Phase FC: structural match keyed by symbol
+    //                      (`MapGet(s,:k)` + `&&` + per-key LetBindings),
+    //                      shorthand `{k:}` binds `k = s[:k]`
     // -----------------------------------------------------------------------
 
     /// Helper: extract the `Expr::If` from a top-level `case` statement
@@ -6032,6 +6034,76 @@ b = "y"
     }
 
     #[test]
+    fn case_in_pin_pattern_lowers_to_equality_with_local() {
+        // Phase FC — `in ^expected` lowers to `scrutinee == expected`
+        // (equality BuiltinCall over a VarRef to the pinned local), no
+        // binding prefix.
+        let m = lower("expected = 1\nv = 2\ncase v\nin ^expected\n  puts(1)\nend\n");
+        let b = main_body(&m);
+        // stmts: [let expected, let v, case]; the case is the last stmt.
+        let if_expr = match b.stmts.last() {
+            Some(Stmt::ExprStmt { expr, .. }) => expr,
+            other => panic!("expected trailing case ExprStmt, got {:?}", other),
+        };
+        let cond = match if_expr {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "==");
+                assert!(
+                    matches!(&args[1], Expr::VarRef { name, .. } if name == "expected"),
+                    "expected RHS VarRef(expected), got {:?}",
+                    args[1]
+                );
+            }
+            other => panic!("expected ==-BuiltinCall cond, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn case_in_class_pattern_lowers_to_is_a_check() {
+        // Phase FC — `in Integer(n)` lowers to
+        // `is_a?(x, "Integer") && len(x)==1 && …` with `n = x[0]` bound.
+        let m = lower("x = 1\ncase x\nin Integer(n)\n  puts(n)\nend\n");
+        let b = main_body(&m);
+        let (cond, then_branch) = match extract_case_if(b) {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            printed.contains("is_a?") && printed.contains("Integer"),
+            "expected an is_a?(_, \"Integer\") check, got {}",
+            printed
+        );
+        // `n = x[0]` binding present in the body.
+        let has_n = then_branch.stmts.iter().any(|s| {
+            matches!(s, Stmt::LetBinding { name, value, .. }
+                if name == "n" && matches!(value, Expr::SeqIndex { .. }))
+        });
+        assert!(has_n, "expected `let n = x[0]` binding in body");
+    }
+
+    #[test]
+    fn case_in_pin_and_class_patterns_validate_e2e() {
+        // End-to-end: both new pattern forms round-trip the SIR validator.
+        let pin = lower("e = 1\nv = 2\ncase v\nin ^e\n  puts(1)\nend\n");
+        assert!(
+            semantic_ir::validate(&pin).is_ok(),
+            "validator rejected pin-pattern module: {:?}",
+            semantic_ir::validate(&pin)
+        );
+        let class = lower("x = 1\ncase x\nin Integer(n)\n  puts(n)\nend\n");
+        assert!(
+            semantic_ir::validate(&class).is_ok(),
+            "validator rejected class-pattern module: {:?}",
+            semantic_ir::validate(&class)
+        );
+    }
+
+    #[test]
     fn case_in_literal_array_pattern_lowers_to_structural_match() {
         // Phase 13a (FC) — `case x; in [1, 2]; "pair"; end` — a
         // fixed-arity all-literal array pattern lowers structurally to
@@ -6074,6 +6146,99 @@ b = "y"
             matches!(first.as_ref(), Expr::BuiltinCall { name, .. } if name == "=="),
             "expected `x[0] == 1`, got {:?}", first
         );
+    }
+
+    #[test]
+    fn case_in_array_one_splat_lowers_structurally() {
+        // Phase FC — `in [a, *rest, b]` desugars to a relaxed length check
+        // (`len(x) >= 2`) plus front/back element bindings and a middle
+        // slice bind via `__seq_slice__`.  No `__pattern_match__` marker.
+        let m = lower("x = 1\ncase x\nin [a, *rest, b]\n  puts(a)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let (cond, then_branch) = match if_expr {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            !printed.contains("__pattern_match__"),
+            "expected no marker in one-splat cond, got {}",
+            printed
+        );
+        // Relaxed length check `len(x) >= 2` lives at the root of the AND chain.
+        assert!(
+            printed.contains("\">=\""),
+            "expected a `>=` length check, got {}",
+            printed
+        );
+        // Body binds front `a = x[0]`, back `b = x[len-1]`, and the middle
+        // slice `rest = __seq_slice__(x, 1, len-1)`.
+        let names: Vec<&str> = then_branch
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::LetBinding { name, .. } => Some(name.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert!(names.contains(&"a"), "expected front binding a, got {:?}", names);
+        assert!(names.contains(&"b"), "expected back binding b, got {:?}", names);
+        assert!(names.contains(&"rest"), "expected splat binding rest, got {:?}", names);
+        let has_slice = then_branch.stmts.iter().any(|s| matches!(s,
+            Stmt::LetBinding { name, value, .. }
+                if name == "rest"
+                && matches!(value, Expr::BuiltinCall { name, .. } if name == "__seq_slice__")));
+        assert!(has_slice, "expected `rest = __seq_slice__(..)` binding");
+    }
+
+    #[test]
+    fn case_in_array_one_splat_validates() {
+        // Phase FC — the desugared one-splat pattern produces well-formed
+        // SIR: the module validates end-to-end.
+        let m = lower("x = 1\ncase x\nin [a, *rest, b]\n  puts(a)\nend\n");
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "expected one-splat pattern module to validate: {:?}",
+            semantic_ir::validate(&m)
+        );
+    }
+
+    #[test]
+    fn case_in_array_anonymous_splat_binds_nothing() {
+        // Phase FC — a bare `*` (anonymous splat) binds no slice name; only
+        // the fixed front element `a` is bound, and the cond is `len(x) >= 1`.
+        let m = lower("x = 1\ncase x\nin [a, *]\n  puts(a)\nend\n");
+        let b = main_body(&m);
+        let if_expr = extract_case_if(b);
+        let then_branch = match if_expr {
+            Expr::If { then_branch, .. } => then_branch,
+            other => panic!("expected If, got {:?}", other),
+        };
+        let has_slice = then_branch.stmts.iter().any(|s| matches!(s,
+            Stmt::LetBinding { value, .. }
+                if matches!(value, Expr::BuiltinCall { name, .. } if name == "__seq_slice__")));
+        assert!(!has_slice, "anonymous splat must not bind a slice");
+    }
+
+    #[test]
+    fn case_in_array_find_pattern_falls_back_to_marker() {
+        // Phase FC — a two-splat *find* pattern `[*, x, *]` is not yet a
+        // first-class desugaring; it falls back to the `__pattern_match__`
+        // marker (documented v0 limitation), which still validates.
+        let m = lower("x = 1\ncase x\nin [*, 1, *]\n  \"h\"\nend\n");
+        let b = main_body(&m);
+        let cond = match extract_case_if(b) {
+            Expr::If { cond, .. } => cond,
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            printed.contains("__pattern_match__"),
+            "expected find pattern to fall back to marker, got {}",
+            printed
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "marker module must validate");
     }
 
     #[test]
@@ -6148,21 +6313,28 @@ b = "y"
     }
 
     #[test]
-    fn case_in_array_with_hash_element_keeps_marker_fallback() {
-        // Phase 13b (FC) — a hash sub-pattern is still unsupported, so an
-        // array pattern containing one (`[{a: 1}, 2]`) falls back to the
-        // whole-pattern `__pattern_match__` marker.
+    fn case_in_array_with_hash_element_lowers_structurally() {
+        // Phase FC — a hash sub-pattern inside an array (`[{a: 1}, 2]`)
+        // now lowers structurally rather than falling back to the
+        // whole-pattern `__pattern_match__` marker: the cond contains both
+        // the array `SeqLen`/`SeqIndex` machinery AND a `MapGet` from the
+        // nested hash, and no marker remains.
         let m = lower("x = 1\ncase x\nin [{a: 1}, 2]\n  \"h\"\nend\n");
         let b = main_body(&m);
-        let if_expr = extract_case_if(b);
-        let cond = match if_expr {
+        let cond = match extract_case_if(b) {
             Expr::If { cond, .. } => cond,
             other => panic!("expected If, got {:?}", other),
         };
+        let printed = format!("{:?}", cond);
         assert!(
-            matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == "__pattern_match__"),
-            "expected __pattern_match__ marker for hash-in-array pattern, got {:?}",
-            cond
+            !printed.contains("__pattern_match__"),
+            "expected no marker (hash-in-array now lowers), got {}",
+            printed
+        );
+        assert!(
+            printed.contains("SeqLen") && printed.contains("MapGet"),
+            "expected both array (SeqLen) and hash (MapGet) machinery, got {}",
+            printed
         );
     }
 
@@ -6775,24 +6947,89 @@ b = "y"
     }
 
     #[test]
-    fn case_in_hash_pattern_lowers_to_pattern_match_marker() {
-        // `case x; in {name: y}; "match"; end` — hash pattern uses the
-        // same `__pattern_match__` marker as array.
-        let m = lower("x = 1\ncase x\nin {name: y}\n  \"match\"\nend\n");
+    fn case_in_hash_pattern_binding_emits_mapget_letbinding() {
+        // Phase FC — `in {name: y}` lowers structurally: the body binds
+        // `y = x[:name]` via `MapGet`, and no `__pattern_match__` marker
+        // remains in the condition.
+        let m = lower("x = {name: 1}\ncase x\nin {name: y}\n  puts(y)\nend\n");
         let b = main_body(&m);
-        let if_expr = extract_case_if(b);
-        let cond = match if_expr {
+        let (cond, then_branch) = match extract_case_if(b) {
+            Expr::If { cond, then_branch, .. } => (cond, then_branch),
+            other => panic!("expected If, got {:?}", other),
+        };
+        let printed = format!("{:?}", cond);
+        assert!(
+            !printed.contains("__pattern_match__"),
+            "expected no marker in hash-pattern cond, got {}",
+            printed
+        );
+        let has_y = then_branch.stmts.iter().any(|s| {
+            matches!(s, Stmt::LetBinding { name, value, .. }
+                if name == "y" && matches!(value, Expr::MapGet { .. }))
+        });
+        assert!(has_y, "expected `let y = x[:name]` (MapGet) binding in body");
+    }
+
+    #[test]
+    fn case_in_hash_pattern_literal_emits_equality_on_mapget() {
+        // `in {age: 30}` → the cond ANDs in `x[:age] == 30` (an equality
+        // BuiltinCall over a MapGet), with no marker.
+        let m = lower("x = {age: 1}\ncase x\nin {age: 30}\n  \"m\"\nend\n");
+        let b = main_body(&m);
+        let cond = match extract_case_if(b) {
             Expr::If { cond, .. } => cond,
             other => panic!("expected If, got {:?}", other),
         };
-        match cond.as_ref() {
-            Expr::BuiltinCall { name, args, .. } => {
-                assert_eq!(name, "__pattern_match__");
-                assert_eq!(args.len(), 2);
-                assert!(matches!(&args[1], Expr::StrLit { .. }));
-            }
-            other => panic!("expected __pattern_match__ BuiltinCall, got {:?}", other),
-        }
+        let printed = format!("{:?}", cond);
+        assert!(
+            printed.contains("MapGet"),
+            "expected MapGet in cond, got {}",
+            printed
+        );
+        assert!(
+            printed.contains("\"==\""),
+            "expected an equality check in cond, got {}",
+            printed
+        );
+        assert!(!printed.contains("__pattern_match__"));
+    }
+
+    #[test]
+    fn case_in_hash_pattern_shorthand_binds() {
+        // Ruby 3.1 shorthand `{name:}` now binds `name = x[:name]`
+        // (previously a deferred no-op).
+        let m = lower("x = {name: 1}\ncase x\nin {name:}\n  puts(name)\nend\n");
+        let b = main_body(&m);
+        let then_branch = match extract_case_if(b) {
+            Expr::If { then_branch, .. } => then_branch,
+            other => panic!("expected If, got {:?}", other),
+        };
+        let has_name = then_branch.stmts.iter().any(|s| {
+            matches!(s, Stmt::LetBinding { name, value, .. }
+                if name == "name" && matches!(value, Expr::MapGet { .. }))
+        });
+        assert!(
+            has_name,
+            "expected shorthand `{{name:}}` to bind name = x[:name]"
+        );
+    }
+
+    #[test]
+    fn case_in_hash_pattern_validates_e2e() {
+        // End-to-end: a hash-pattern module declares `Feature::Maps` and
+        // round-trips the SIR validator.
+        let m = lower("x = {name: 1}\ncase x\nin {name: y}\n  puts(y)\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::Maps),
+            "expected Maps feature for hash pattern; got {:?}",
+            m.manifest
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected hash-pattern module: {:?}",
+            result
+        );
     }
 
     #[test]

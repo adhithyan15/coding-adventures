@@ -26,6 +26,12 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process;
 
+// UI34 PR-3 — package-reference resolver.  Wired into the
+// `run_pipeline` path between `moslayout_compiler::compile()` and the
+// backend emitter so every `pkg::P::C` reference in the consumer's
+// layout is substituted before any emitter sees it.
+mod resolver;
+
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
@@ -205,6 +211,14 @@ fn run(result: cli_builder::types::ParseResult) {
         .get("package-manifest")
         .and_then(|v| v.as_str())
         .map(str::to_string);
+    // UI34 --package-search-path: colon-separated list of directories
+    // to search for `mosaic-package.toml` manifests.  Used by the
+    // package-reference resolver (resolver.rs) to locate packages
+    // named in `pkg::P::C` references inside the consumer's layout.
+    let package_search_path = flags
+        .get("package-search-path")
+        .and_then(|v| v.as_str())
+        .map(str::to_string);
 
     let pipeline_any =
         interface_path.is_some() || layout_path.is_some() || style_path.is_some();
@@ -231,6 +245,7 @@ fn run(result: cli_builder::types::ParseResult) {
             output_path,
             emit_project,
             package_manifest_path.as_deref(),
+            package_search_path.as_deref(),
         );
         return;
     }
@@ -587,6 +602,7 @@ fn run_pipeline(
     output_path: Option<&str>,
     emit_project: bool,
     package_manifest_path: Option<&str>,
+    package_search_path: Option<&str>,
 ) {
     // Pipeline mode supports every backend with a `pipeline::from_pipeline`
     // entry point. The mosaic-package-artifact-builder crate calls each
@@ -634,7 +650,7 @@ fn run_pipeline(
     // every `@slot` and `emit onX` reference resolves correctly.
     let layout_path = resolved_layout_path.as_str();
     let layout_src = read_file_or_die(layout_path);
-    let layout_out =
+    let mut layout_out =
         moslayout_compiler::compile(&layout_src, Some(&mosmodel_out.descriptor_json))
             .unwrap_or_else(|errs| {
                 eprintln!("mosaic-compile: moslayout error(s) in {layout_path}:");
@@ -643,6 +659,71 @@ fn run_pipeline(
                 }
                 process::exit(1);
             });
+
+    // -- 2b. UI34 — resolve `pkg::P::C` qualified references -------------
+    //
+    // Walk the freshly-parsed `LayoutDef` and substitute every qualified
+    // reference with the package's resolved sub-tree.  After this pass
+    // the layout contains only kernel primitives and same-file local
+    // references — exactly the surface every backend emitter already
+    // handles.  The resolver is a no-op when the consumer's layout
+    // contains zero `pkg::` references, so unqualified-only builds
+    // (every pre-UI34 demo) are byte-identical to before.
+    //
+    // Search paths: explicit `--package-search-path` wins; otherwise
+    // we default to `code/packages/` relative to the cwd, which makes
+    // monorepo builds work out of the box.  The default is empty (no
+    // search) only when `code/packages/` does not exist, so single-file
+    // projects without any packages do not pay an I/O cost.
+    let search_paths: Vec<PathBuf> = match package_search_path {
+        Some(s) => s.split(':').map(PathBuf::from).collect(),
+        None => {
+            let default = PathBuf::from("code/packages");
+            if default.is_dir() { vec![default] } else { Vec::new() }
+        }
+    };
+    let resolver = resolver::PackageResolver::new(search_paths);
+    if let Err(e) = resolver.resolve(&mut layout_out.def) {
+        eprintln!("mosaic-compile: package-resolver error in {layout_path}:");
+        eprintln!("  {e:?}");
+        process::exit(1);
+    }
+    if let Some(t) = resolver::first_qualified_tag(&layout_out.def.root) {
+        // Defensive — the resolver should leave no qualified tags
+        // behind.  If one slips through we exit cleanly rather than
+        // letting it confuse the backend emitter.
+        eprintln!(
+            "mosaic-compile: internal error: package-resolver left \
+             qualified tag `{t}` in the layout"
+        );
+        process::exit(1);
+    }
+    // Re-run `validate()` on the resolved tree so the part-map JSON
+    // reflects the package's inlined parts.  Without this, the
+    // consumer's `.msl` would reject the package's part names as
+    // unknown — they came from the package's `.mll`, not the
+    // consumer's.  Resolution is also a chance for the validator to
+    // catch any slot/emit mismatches that survived the package call,
+    // surfacing them with the same UnknownSlot / UnknownEmit
+    // diagnostics that pre-UI34 builds get.
+    let resolved_parts = moslayout_compiler::validate(
+        &layout_out.def,
+        Some(&mosmodel_out.descriptor_json),
+    )
+    .unwrap_or_else(|errs| {
+        eprintln!(
+            "mosaic-compile: moslayout post-resolver validation error(s) in {layout_path}:"
+        );
+        for e in errs {
+            eprintln!("  {e:?}");
+        }
+        process::exit(1);
+    });
+    layout_out.parts = resolved_parts;
+    layout_out.part_map_json = moslayout_compiler::emit_part_map_json(
+        &layout_out.def.component_name,
+        &layout_out.parts,
+    );
 
     // -- 3. Compile the mosstyle file ---------------------------------------
     //
