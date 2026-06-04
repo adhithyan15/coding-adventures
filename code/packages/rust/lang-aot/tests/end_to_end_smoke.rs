@@ -1572,3 +1572,54 @@ fn end_to_end_mccarthy_returns_42_via_lang_aot() {
     let out = Command::new(&exe).output().expect("launch");
     assert_eq!(out.status.code(), Some(42));
 }
+
+// ---------------------------------------------------------------------------
+// McCarthy Lisp cons cells (L3b) — a heap data structure compiled to native.
+//
+// `lower_heap_builtins` (run in twig-aot) rewrites `cons`/`car`/`cdr` into
+// `alloc`/`field_store`/`field_load`, which the native backends now lower to
+// a `__twig_alloc_bytes` cell + word loads/stores.  Values are raw words (no
+// NaN-boxing), so a cons-of-integers program round-trips: `(CAR (CONS 7 9))`
+// allocates a pair, stores 7/9, loads field 0, and the program exits 7.
+//
+// Gated to Linux/Windows like the other native smoke tests — the macOS-exe
+// runtime archive does not currently provide `__twig_alloc_bytes` (a
+// pre-existing limitation shared with Brainfuck's tape; see lessons.md).
+// ---------------------------------------------------------------------------
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_mccarthy_cons_car_returns_7_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("cons.mcl");
+    let exe = dir.path().join("cons");
+    std::fs::write(&src, "(CAR (CONS 7 9))").unwrap();
+
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+        .unwrap_or_else(|e| panic!("McCarthy cons compile failed: {e}"));
+
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(7),
+        "(CAR (CONS 7 9)) should exit 7; got {:?}", out.status.code(),
+    );
+}
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_mccarthy_cons_car_returns_7_via_lang_aot() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("cons.mcl");
+    let exe = dir.path().join("cons.exe");
+    std::fs::write(&src, "(CAR (CONS 7 9))").unwrap();
+
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+        .unwrap_or_else(|e| panic!("McCarthy cons compile failed: {e}"));
+
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(7));
+}

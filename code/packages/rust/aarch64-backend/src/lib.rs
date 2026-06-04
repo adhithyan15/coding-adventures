@@ -954,8 +954,110 @@ fn emit_instr(
         return Ok(());
     }
 
+    // ---- Heap cons cells (lispy `ref<LispyPair>`) — L3b -------------------
+    //
+    // `iir_builtin_lowering::lower_heap_builtins` rewrites a Lisp frontend's
+    // `call_builtin "cons"/"car"/"cdr"/"null?"` into these word-granular heap
+    // ops.  A pair is a **2-word (16-byte) cell**: field 0 = car/head,
+    // field 1 = cdr/tail.  We allocate it with the same `__twig_alloc_bytes`
+    // runtime helper `alloc_bytes` uses, and read/write fields with plain
+    // 64-bit loads/stores at byte offset `idx*8`.  Values are **raw 64-bit
+    // words** — no NaN-boxing — so a cons-of-integers program round-trips
+    // exactly: `(CAR (CONS 7 9))` allocates a cell, stores 7/9, loads field
+    // 0, and returns the raw `7`.  (V1 leaks like `alloc_bytes`; no GC.)
+
+    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.  No size operand:
+    // the `ref<LispyPair>` is implicitly 2 fields.
+    if op == "alloc" {
+        let dest = require_dest(instr)?;
+        asm.mov_imm64(Reg::X0, 16); // 2 fields × 8 bytes
+        asm.bl_external("__twig_alloc_bytes");
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `field_store <ptr>, <idx>, <value>` — `[ptr + idx*8] = value`.  No dest.
+    if op == "field_store" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "field_store: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[0]=ptr".into())
+        })?;
+        let off = field_offset(instr, 1)?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::X0, ptr_src)?;
+        load_operand(asm, alloc, Reg::X1, val_src)?;
+        asm.str_(Reg::X1, Reg::X0, off)?;
+        return Ok(());
+    }
+
+    // `field_load <ptr>, <idx> -> <dest>` — `dest = [ptr + idx*8]`.
+    if op == "field_load" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_load: needs srcs[0]=ptr".into())
+        })?;
+        let off = field_offset(instr, 1)?;
+        load_operand(asm, alloc, Reg::X0, ptr_src)?;
+        asm.ldr(Reg::X0, Reg::X0, off)?;
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `is_null <x> -> <dest>` — `dest = (x == 0)` (nil is the 0 word).
+    if op == "is_null" {
+        let dest = require_dest(instr)?;
+        let x_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("is_null: needs srcs[0]".into())
+        })?;
+        load_operand(asm, alloc, Reg::X0, x_src)?;
+        asm.mov_imm64(Reg::X1, 0);
+        asm.cmp(Reg::X0, Reg::X1);
+        asm.cset(Reg::X0, Cond::Eq);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
     // Anything else is unsupported — caller should fall back.
     Err(BackendError::UnsupportedOp(op.to_string()))
+}
+
+/// Largest field byte-offset the heap ops accept.  Matches the LDR/STR
+/// unsigned-immediate ceiling (`0x7FF8`, a multiple of 8), so the bound is
+/// enforced **here** rather than relying on the lowering pass only ever
+/// emitting field index 0/1 — a future producer with a larger index gets a
+/// clean `MalformedInstr`, never a wrapped offset or out-of-bounds access.
+const MAX_FIELD_OFFSET: u64 = 0x7FF8;
+
+/// Read a `field_load`/`field_store` field-index operand — a compile-time
+/// `Int` — and convert it to a byte offset (`idx * 8`).  Pair fields are
+/// word-sized, so index 0 → offset 0 (car), index 1 → offset 8 (cdr).  A
+/// negative, non-literal, or out-of-range index is a `MalformedInstr`.
+fn field_offset(instr: &CIRInstr, i: usize) -> Result<u32, BackendError> {
+    match instr.srcs.get(i) {
+        Some(CIROperand::Int(n)) if *n >= 0 => (*n as u64)
+            .checked_mul(8)
+            .filter(|off| *off <= MAX_FIELD_OFFSET)
+            .map(|off| off as u32)
+            .ok_or_else(|| {
+                BackendError::MalformedInstr(format!(
+                    "{}: field index {n} is out of range",
+                    instr.op
+                ))
+            }),
+        _ => Err(BackendError::MalformedInstr(format!(
+            "{}: field index at srcs[{i}] must be a non-negative integer literal",
+            instr.op
+        ))),
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -1225,6 +1327,62 @@ mod tests {
     fn ret_u64(src: &str) -> CIRInstr {
         CIRInstr { op: "ret_u64".into(), dest: None,
                    srcs: vec![CIROperand::Var(src.into())], ty: "void".into(), deopt_to: None }
+    }
+
+    fn heap(op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str) -> CIRInstr {
+        CIRInstr { op: op.into(), dest: dest.map(Into::into), srcs, ty: ty.into(), deopt_to: None }
+    }
+
+    // L3b: the cons heap ops (`alloc`/`field_store`/`field_load`/`is_null`)
+    // that `lower_heap_builtins` produces from `cons`/`car`/`cdr`/`null?`.
+
+    #[test]
+    fn cons_car_heap_ops_lower() {
+        // The CIR for `(CAR (CONS 7 9))`: allocate a 2-word cell, store 7
+        // and 9 into fields 0 and 1, load field 0 back.
+        let cir = vec![
+            const_u64("h", 7),
+            const_u64("t", 9),
+            heap("alloc", Some("cell"), vec![], "any"),
+            heap("field_store", None,
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(0), CIROperand::Var("h".into())], "void"),
+            heap("field_store", None,
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(1), CIROperand::Var("t".into())], "void"),
+            heap("field_load", Some("r"),
+                 vec![CIROperand::Var("cell".into()), CIROperand::Int(0)], "any"),
+            ret_u64("r"),
+        ];
+        let bytes = compile(&ctx("cons_car", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("cons/car heap ops must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn is_null_lowers() {
+        let cir = vec![
+            const_u64("x", 0),
+            heap("is_null", Some("r"), vec![CIROperand::Var("x".into())], "bool"),
+            ret_u64("r"),
+        ];
+        let bytes = compile(&ctx("isnull", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("is_null must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+    }
+
+    #[test]
+    fn field_store_rejects_dest_and_non_literal_index() {
+        // field_store must not carry a dest.
+        let bad_dest = vec![heap("field_store", Some("oops"),
+            vec![CIROperand::Var("cell".into()), CIROperand::Int(0), CIROperand::Var("h".into())], "void")];
+        assert!(compile(&ctx("bad", &[], "u64"), &bad_dest).is_err());
+        // a non-literal field index is rejected.
+        let bad_idx = vec![heap("field_load", Some("r"),
+            vec![CIROperand::Var("cell".into()), CIROperand::Var("i".into())], "any")];
+        assert!(compile(&ctx("bad2", &[], "u64"), &bad_idx).is_err());
+        // an out-of-range field index is rejected (no wrap, no OOB).
+        let huge = vec![heap("field_load", Some("r"),
+            vec![CIROperand::Var("cell".into()), CIROperand::Int(1 << 40)], "any")];
+        assert!(compile(&ctx("bad3", &[], "u64"), &huge).is_err());
     }
 
     #[test]
