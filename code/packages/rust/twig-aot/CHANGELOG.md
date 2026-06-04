@@ -1,5 +1,26 @@
 # Changelog — `twig-aot`
 
+## 0.10.0 — 2026-06-04 — route native cons through the lisp runtime (LANG77 / McCarthy L3b-2b)
+
+`prepare_module_for_aot` now calls
+`iir_builtin_lowering::lower_heap_builtins_runtime` instead of
+`lower_heap_builtins`, so a lisp frontend's `call_builtin
+"cons"/"car"/"cdr"` is routed to the LANG77 C runtime
+(`__twig_lispy_cons`/`car`/`cdr`, shipped in the runtime archive since
+0.9.0) rather than expanded to a raw-word `alloc`/`field_*` cell. Cons
+cells are now proper NaN-box **tagged** `LispyValue`s — the prerequisite for
+`pair?`/`ATOM`/`EQ`/symbols (L3b-2c).
+
+`(CAR (CONS 7 9))` still compiles to a native executable that exits 7 (Linux/
+Windows; the macOS AOT-exe runtime-helper gap is unchanged) — now through
+the tagged runtime instead of raw words. Integer payloads inside cells stay
+raw in this slice; boxing lands with the predicates in L3b-2c, where the tag
+is first inspected.
+
+The change only touches the cons/car/cdr builtin names, so every
+Twig/Nib/Brainfuck program is unaffected. The L3b-1 `alloc`/`field_*`
+backend emitters remain available as general-purpose heap ops.
+
 ## 0.9.0 — 2026-06-04 — the shared lisp-native runtime (LANG77 / McCarthy L3b-2a)
 
 Adds `runtime/lispy_runtime.c` — a portable C implementation of

@@ -292,6 +292,14 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
+    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__twig_lispy_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
+    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
+    // logic — the generic `call_builtin` path marshals args + emits the CALL.
+    BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
+    BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
+    BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1305,6 +1313,45 @@ mod tests {
         let bytes = compile_function(&fn_ctx("cons_car", &[], "u64"), &ir, X86_64Abi::SysV)
             .expect("cons/car heap ops must lower");
         assert!(!bytes.is_empty());
+    }
+
+    // ---- L3b-2b (LANG77): cons/car via the runtime-call path ----
+
+    fn call_builtin(dest: Option<&str>, name: &str, args: &[&str]) -> CIRInstr {
+        let mut srcs = vec![Op::Var(name.into())];
+        srcs.extend(args.iter().map(|a| Op::Var((*a).into())));
+        instr("call_builtin", dest, srcs)
+    }
+
+    #[test]
+    fn lispy_runtime_cons_car_emit_external_calls() {
+        // `(CAR (CONS 7 9))` through the runtime path: two CALLs to the C
+        // lisp runtime, surfaced as external relocations.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("r"), "lispy_car", &["cell"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("lispy", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("lispy runtime calls must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_lispy_cons"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__twig_lispy_car"), "missing car call: {symbols:?}");
+    }
+
+    #[test]
+    fn lispy_cons_wrong_arity_is_rejected() {
+        // lispy_cons takes exactly 2 args; one arg is a soft refusal.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h"]),
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        assert!(compile_function(&fn_ctx("bad_cons", &[], "u64"), &ir, X86_64Abi::SysV).is_err());
     }
 
     #[test]

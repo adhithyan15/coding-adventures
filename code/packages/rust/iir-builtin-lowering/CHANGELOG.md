@@ -4,6 +4,30 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.4.0] — 2026-06-04
+
+### Added (LANG77 — native runtime-call heap lowering, McCarthy L3b-2b)
+
+- **`heap::lower_heap_builtins_runtime`** (+ `lower_heap_function_runtime`),
+  re-exported at the crate root. The **target-aware** counterpart of
+  `lower_heap_builtins`: instead of expanding `cons` to `alloc` + two
+  `field_store`s (the structural form the managed wasm/jvm/clr/beam backends
+  consume), it **renames** `cons`/`car`/`cdr` → `call_builtin
+  "lispy_cons"/"lispy_car"/"lispy_cdr"`, which the native aarch64/x86_64
+  backends dispatch to `__twig_lispy_*` in the linked C lisp runtime
+  (`twig-aot/runtime/lispy_runtime.c`, LANG77). This keeps the value
+  NaN-box **tagged** (a heap-tagged pointer), the prerequisite for
+  `pair?`/`ATOM`/`EQ`/symbols (L3b-2c).
+- The transform is a pure in-place rename (arg order already matches the C
+  ABI), allocation-free, and a no-op for any module without those builtins —
+  so every non-lisp program is unchanged. Nothing here is language-specific:
+  any lisp-family frontend (McCarthy Lisp, Twig, future lisps) reaches both
+  the managed (structural) and native (runtime-call) worlds from the same
+  `call_builtin "cons"` IIR. `null?`/`make_nil`/`pair?`/`not`/`equal?`/
+  `make_symbol` are intentionally left for L3b-2c.
+- 5 new unit tests covering the rename, dest/arg preservation, the
+  left-unchanged builtins, and the non-lisp no-op.
+
 ## [0.3.0] — 2026-05-12
 
 ### Added (LANG34 — Phase 4 Closure Builtin Lowering)

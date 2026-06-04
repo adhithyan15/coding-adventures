@@ -78,6 +78,26 @@ let (lowered, errors) = lower_builtins_cloned(&module);
 lower_builtins_checked(&mut module)?;
 ```
 
+### Heap builtins: structural vs. runtime-call lowering (LANG77)
+
+Cons cells (`cons`/`car`/`cdr`) have two **target-aware** lowerings:
+
+```rust
+use iir_builtin_lowering::{lower_heap_builtins, lower_heap_builtins_runtime};
+
+// Managed backends (wasm/jvm/clr/beam): expand to host GC objects —
+// `cons` → `alloc` + 2×`field_store`, `car`/`cdr` → `field_load`.
+lower_heap_builtins(&mut module);
+
+// Native backends (twig-aot → aarch64/x86_64): route to the linked C lisp
+// runtime — `cons`/`car`/`cdr` → `call_builtin "lispy_cons"/"lispy_car"/
+// "lispy_cdr"` → `__twig_lispy_*`, keeping the value NaN-box tagged.
+lower_heap_builtins_runtime(&mut module);
+```
+
+Both are driven by the *same* frontend IIR, so every lisp-family frontend
+reaches both worlds with no language-specific code.
+
 ### Error types
 
 ```rust

@@ -46,6 +46,13 @@ are two implementations of one documented ABI. The `lispy_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
 
+As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
+`cdr` to **calls into this runtime** (via
+`iir_builtin_lowering::lower_heap_builtins_runtime`), so a McCarthy program
+like `(CAR (CONS 7 9))` compiles to a native binary that calls
+`__twig_lispy_cons`/`__twig_lispy_car` and exits 7 — with the cons cell as a
+tagged `LispyValue`.
+
 ## Requirements
 
 - Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)
