@@ -1,5 +1,30 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.3.0 — 2026-06-04 — direct LAMBDA application (L2c-1)
+
+* Lowers direct lambda application `((LAMBDA (p1 … pn) body) a1 … an)`:
+  the lambda becomes a fresh top-level `IIRFunction` (gensym
+  `lambda_<n>`) with parameters `p1…pn`, and the application emits a
+  `call` to it with the lowered argument registers.
+* The compiler now produces **multiple functions** (the lambdas + `main`)
+  and tracks the **parameter scope** of the function being lowered. A
+  bare symbol resolves to a register read **only** if it is a parameter
+  of the enclosing lambda; the VM binds each parameter to a register
+  named after it.
+* **No closures yet (deferred):** a lambda body may reference only its
+  own parameters — a free variable is an unbound-variable error, and an
+  unapplied `LAMBDA` (lambda-as-value) is rejected with a clear message.
+  `LABEL` (named/recursive functions) is deferred to **L2c-2**.
+* Validation: malformed lambdas (wrong shape, non-symbol or duplicate
+  parameters, arity mismatch) are `CompileError`s; the emitted multi-
+  function module passes `IIRModule::validate`.
+* 7 new unit tests (function+call shape, param-in-scope, free-variable
+  unbound, arity, duplicate param, bare-lambda rejected, LABEL deferred)
+  + 8 new end-to-end tests on `mccarthy-lisp-vm` (identity on
+  symbol/int, `CAR` of arg, two-param `CONS`, param used twice, body
+  using `COND`, argument that is itself a lambda application, lambda
+  result feeding a primitive).
+
 ## v0.2.0 — 2026-06-04 — COND (L2b)
 
 * Lowers `(COND (p1 e1) … (pn en))` to a chain of `jmp_if_false` +

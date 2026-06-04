@@ -200,3 +200,57 @@ fn cond_returns_a_list_value() {
     assert_eq!(sym_name(car(v)), "A");
     assert_eq!(sym_name(cdr(v)), "B");
 }
+
+// ============================================================
+// LAMBDA application (L2c-1)
+// ============================================================
+
+#[test]
+fn identity_lambda_on_a_symbol() {
+    assert_eq!(sym_name(eval("((LAMBDA (X) X) 'A)")), "A");
+}
+
+#[test]
+fn identity_lambda_on_an_int() {
+    assert_eq!(eval("((LAMBDA (N) N) 42)").as_int(), Some(42));
+}
+
+#[test]
+fn lambda_takes_car_of_its_argument() {
+    assert_eq!(sym_name(eval("((LAMBDA (X) (CAR X)) '(A B))")), "A");
+}
+
+#[test]
+fn two_parameter_lambda() {
+    // ((LAMBDA (X Y) (CONS X Y)) 'A 'B) → (A . B)
+    let p = eval("((LAMBDA (X Y) (CONS X Y)) 'A 'B)");
+    assert_eq!(sym_name(car(p)), "A");
+    assert_eq!(sym_name(cdr(p)), "B");
+}
+
+#[test]
+fn lambda_uses_its_param_twice() {
+    // ((LAMBDA (X) (CONS X X)) 'A) → (A . A)
+    let p = eval("((LAMBDA (X) (CONS X X)) 'A)");
+    assert_eq!(sym_name(car(p)), "A");
+    assert_eq!(sym_name(cdr(p)), "A");
+}
+
+#[test]
+fn lambda_body_can_use_cond() {
+    assert_eq!(sym_name(eval("((LAMBDA (X) (COND ((ATOM X) 'YES) ('T 'NO))) 'Q)")), "YES");
+    assert_eq!(sym_name(eval("((LAMBDA (X) (COND ((ATOM X) 'YES) ('T 'NO))) '(Q))")), "NO");
+}
+
+#[test]
+fn argument_is_itself_a_lambda_application() {
+    // Outer identity applied to the result of an inner lambda.
+    // ((LAMBDA (X) X) ((LAMBDA (Y) (CAR Y)) '(P Q))) → P
+    assert_eq!(sym_name(eval("((LAMBDA (X) X) ((LAMBDA (Y) (CAR Y)) '(P Q)))")), "P");
+}
+
+#[test]
+fn lambda_result_feeds_a_primitive() {
+    // (CDR ((LAMBDA (X) X) '(A B C))) → (B C); car of that → B
+    assert_eq!(sym_name(eval("(CAR (CDR ((LAMBDA (X) X) '(A B C))))")), "B");
+}
