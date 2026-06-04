@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `tf_corners_parallel` for order-preserving parallel Rust `.TF`
+  transfer-function evaluation across named PVT corners.
 - Add `ac_sweep_corners_parallel` for order-preserving parallel Rust `.AC`
   frequency-sweep evaluation across named PVT corners.
 - Add `dc_sweep_corners_parallel` for order-preserving parallel Rust `.DC`

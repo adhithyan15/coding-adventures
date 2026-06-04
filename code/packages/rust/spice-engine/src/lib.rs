@@ -6234,6 +6234,48 @@ pub fn tf_corners(
     })
 }
 
+pub fn tf_corners_parallel(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+    corners: &[CornerSpec],
+) -> Result<CornerTfResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let output_node = output_node.to_string();
+                let input_source = input_source.to_string();
+                scope.spawn(move || -> Result<CornerTfPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerTfPoint {
+                        corner_name: corner.name,
+                        result: tf(&corner_circuit, &output_node, &input_source)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "tf_corners_parallel".to_string(),
+                reason: "parallel transfer-function corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerTfResult {
+        input_source: input_source.to_string(),
+        output_node: output_node.to_string(),
+        points,
+    })
+}
+
 pub fn sens_dc(circuit: &Circuit, output_node: &str) -> Result<SensResult, SpiceError> {
     let node_indices = collect_node_indices(circuit);
     if !is_ground(output_node) && !node_indices.contains_key(output_node) {

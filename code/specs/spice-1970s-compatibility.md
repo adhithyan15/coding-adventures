@@ -406,6 +406,9 @@ Status:
 - `.AC` frequency-sweep named-corner runs can now be evaluated with an
   order-preserving parallel helper in the live Rust SPICE package, preserving
   frequency traces and selected complex-probe table compatibility.
+- `.TF` transfer-function named-corner runs can now be evaluated with an
+  order-preserving parallel helper in the live Rust SPICE package, preserving
+  transfer ratio, input impedance, and output impedance table compatibility.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

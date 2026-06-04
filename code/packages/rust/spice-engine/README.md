@@ -18,7 +18,7 @@ The initial slices implement:
   PSD, and named corner sweeps.
 - AC frequency sweeps, including order-preserving parallel named corner sweeps.
 - DC small-signal transfer-function (`.tf`) analysis with input and output
-  impedance estimates, including named corner sweeps.
+  impedance estimates, including order-preserving parallel named corner sweeps.
 - AC small-signal frequency sweeps for linear RC/RL circuits and explicit AC
   source phasors with DC-bias operating-point linearization for nonlinear
   devices.
