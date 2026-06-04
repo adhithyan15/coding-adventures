@@ -94,13 +94,14 @@
 //!
 //! This PR ships option (a). Option (b) is a future enhancement.
 
+use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
 // Public API
@@ -373,11 +374,297 @@ fn build_swiftui_readme(component_name: &str) -> String {
     )
 }
 
+// =====================================================================
+// Part-style lowering — `.msl` `part` blocks → SwiftUI view modifiers.
+//
+// First cut covers BASE styles only.  State blocks (`state hover {...}`,
+// `state selected {...}`) need the `state-when-<name>` predicate from the
+// .mll threaded through alongside the style map, which is a separate PR.
+//
+// The shape is identical to the React emitter's `build_part_style_map`
+// (`HashMap<String, …>` keyed by part name) so the two backends can share
+// downstream tooling that walks "which parts have author-declared styles?".
+// React stores the per-part lowering as a pre-rendered TSX-style string;
+// SwiftUI stores it as the raw `Vec<StyleProp>` so we can re-lower per
+// node with the right indentation, since SwiftUI's modifier chain is
+// indent-sensitive whereas TSX's `style={{ ... }}` is not.
+// =====================================================================
+
+/// Map from `part` name to its base-state style props.
+///
+/// Built once in [`from_pipeline`] and threaded through the view-tree
+/// walker.  Keyed by the part name verbatim (e.g. `cell`, `header`,
+/// `row`).  Empty when the `.msl` declares no parts — every lookup
+/// returns `None` and emission proceeds unchanged.
+type PartStyleMap = HashMap<String, Vec<StyleProp>>;
+
+/// Build a `part_name → base props` map from a [`StyleDef`].
+///
+/// Mirrors `mosaic_emit_react::pipeline::build_part_style_map` in shape
+/// but keeps the props as `Vec<StyleProp>` (not a pre-rendered string)
+/// because SwiftUI modifier chains are indent-sensitive — we render
+/// per-call-site with the right `pad`, the React backend can splice a
+/// flat `style={{ ... }}` fragment at any indent.
+///
+/// **State blocks are intentionally ignored in v1.**  Lowering them needs
+/// the `.mll`'s `state-when-<state>: ( expr )` predicate threaded through
+/// (so we know what `cond` to test in the `.modifier(cond ? .x : .y)`
+/// pattern); that's a separate PR.  For now we only key the base props.
+fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
+    let mut out = PartStyleMap::with_capacity(style.parts.len());
+    for part in &style.parts {
+        if !part.base.is_empty() {
+            out.insert(part.name.clone(), part.base.clone());
+        }
+    }
+    out
+}
+
+/// Strip a trailing `px` suffix from a CSS length value.
+///
+/// `strip_css_px("12px")` → `"12"`; `strip_css_px("auto")` → `"auto"`.
+/// We're permissive: anything that doesn't end in `px` falls through
+/// unchanged.  SwiftUI's modifier vocabulary treats numeric lengths as
+/// device-independent points (the same magnitude as CSS `px` at 1×), so
+/// dropping the suffix is the right lowering — no unit conversion.
+fn strip_css_px(v: &str) -> &str {
+    v.strip_suffix("px").unwrap_or(v)
+}
+
+/// Convert a CSS color value to a Swift `Color(...)` expression.
+///
+/// Recognised forms:
+///
+/// | input            | output                                                 |
+/// |------------------|--------------------------------------------------------|
+/// | `#rrggbb`        | `Color(red: R, green: G, blue: B)` (each / 255, 3 dp)  |
+/// | `#rgb`           | as above, after expanding each nibble (`#abc` → `#aabbcc`) |
+/// | named CSS color  | `Color.white` / `Color.black` / `Color.clear` etc.     |
+/// | anything else    | `Color.clear` (safe fall-through, file still compiles) |
+///
+/// The 3-decimal-place rounding is load-bearing for the unit tests:
+/// `0x1e / 255` is `0.117647…`, which we round to `0.118` so the
+/// expected-string assertions stay short and stable.  3 dp is also
+/// well below the precision SwiftUI ultimately renders at (its color
+/// pipeline quantises to 8-bit per channel before display), so the
+/// rounding is lossless in practice.
+fn swiftui_color_value(v: &str) -> String {
+    let trimmed = v.trim();
+
+    // Hex shorthand (`#rgb`) — expand each nibble to a byte (`#a` →
+    // `#aa`) and fall into the 6-digit path.
+    let expanded: String;
+    let hex_body: Option<&str> = if let Some(body) = trimmed.strip_prefix('#') {
+        if body.len() == 3 && body.chars().all(|c| c.is_ascii_hexdigit()) {
+            expanded = body
+                .chars()
+                .flat_map(|c| [c, c])
+                .collect::<String>();
+            Some(expanded.as_str())
+        } else if body.len() == 6 && body.chars().all(|c| c.is_ascii_hexdigit()) {
+            Some(body)
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    if let Some(hex) = hex_body {
+        let r = u8::from_str_radix(&hex[0..2], 16).unwrap_or(0);
+        let g = u8::from_str_radix(&hex[2..4], 16).unwrap_or(0);
+        let b = u8::from_str_radix(&hex[4..6], 16).unwrap_or(0);
+        let rf = round3(f64::from(r) / 255.0);
+        let gf = round3(f64::from(g) / 255.0);
+        let bf = round3(f64::from(b) / 255.0);
+        return format!("Color(red: {rf}, green: {gf}, blue: {bf})");
+    }
+
+    // Named CSS colors that SwiftUI has a direct enum case for.  Unknown
+    // names fall through to `Color.clear` so the generated file still
+    // compiles even if the author wrote something exotic.
+    match trimmed {
+        "white" => "Color.white".to_string(),
+        "black" => "Color.black".to_string(),
+        "clear" | "transparent" => "Color.clear".to_string(),
+        "red" => "Color.red".to_string(),
+        "green" => "Color.green".to_string(),
+        "blue" => "Color.blue".to_string(),
+        "yellow" => "Color.yellow".to_string(),
+        "orange" => "Color.orange".to_string(),
+        "pink" => "Color.pink".to_string(),
+        "purple" => "Color.purple".to_string(),
+        "gray" | "grey" => "Color.gray".to_string(),
+        _ => "Color.clear".to_string(),
+    }
+}
+
+/// Round a float to three decimal places.
+///
+/// SwiftUI `Color(red:green:blue:)` takes `Double`s in the `[0, 1]`
+/// range; rounding to 3 dp keeps the emitted source short and the
+/// unit-test expected strings stable.  See [`swiftui_color_value`] for
+/// why 3 dp is enough precision.
+fn round3(x: f64) -> f64 {
+    (x * 1000.0).round() / 1000.0
+}
+
+/// Build a SwiftUI view-modifier chain from a slice of [`StyleProp`].
+///
+/// Each modifier renders on its own line, prefixed by `\n` + an indent of
+/// `indent` spaces.  When no property in `props` maps to a recognised
+/// modifier the returned string is empty — callers MUST treat empty as
+/// "do not splice anything" so a node with only unknown styles renders
+/// identically to a node with no part_name at all.
+///
+/// ## Property → modifier table (v1 coverage)
+///
+/// | Mosstyle property                              | SwiftUI                                                          |
+/// |------------------------------------------------|------------------------------------------------------------------|
+/// | `width: Npx` + `height: Npx`                   | `.frame(width: N, height: N)` (single call)                      |
+/// | `width: Npx` alone                             | `.frame(width: N)`                                               |
+/// | `height: Npx` alone                            | `.frame(height: N)`                                              |
+/// | `padding: Npx`                                 | `.padding(N)`                                                    |
+/// | `background: <color>`                          | `.background(<color>)`                                           |
+/// | `color: <color>`                               | `.foregroundColor(<color>)`                                      |
+/// | `font-size: Npx` + `font-family: monospace`    | `.font(.system(size: N, design: .monospaced))`                   |
+/// | `font-size: Npx` alone                         | `.font(.system(size: N))`                                        |
+/// | `font-family: monospace` alone                 | `.font(.system(.body, design: .monospaced))`                     |
+/// | `font-weight: bold` / `700`                    | `.fontWeight(.bold)`                                             |
+/// | `font-weight: semibold` / `SemiBold` / `600`   | `.fontWeight(.semibold)`                                         |
+/// | `font-weight: medium` / `500`                  | `.fontWeight(.medium)`                                           |
+/// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
+/// | anything else                                  | silently skipped (React emitter does the same for v1)            |
+///
+/// `border-style: solid` is silently ignored — SwiftUI's `.border` is
+/// always a solid stroke.  `border-color` without `border-width` is also
+/// dropped (the modifier needs the width).
+fn swiftui_modifier_chain(props: &[StyleProp], indent: usize) -> String {
+    let pad = " ".repeat(indent);
+
+    // First pass: collect the properties we care about.  This lets us
+    // combine related properties (width+height into a single .frame,
+    // font-size+font-family into a single .font) before rendering.
+    let mut width: Option<String> = None;
+    let mut height: Option<String> = None;
+    let mut padding: Option<String> = None;
+    let mut background: Option<String> = None;
+    let mut foreground: Option<String> = None;
+    let mut font_size: Option<String> = None;
+    let mut font_family_mono = false;
+    let mut font_weight: Option<&'static str> = None;
+    let mut border_width: Option<String> = None;
+    let mut border_color: Option<String> = None;
+
+    // Only accept `Npx` (or unitless `N`) for numeric length values.
+    // `100%`, `auto`, `calc(...)` and other CSS forms have no clean
+    // SwiftUI analog at this level — silently skip per the v1 cut.
+    fn px_or_none(v: &str) -> Option<String> {
+        let stripped = strip_css_px(v);
+        if stripped.chars().all(|c| c.is_ascii_digit() || c == '.' || c == '-') && !stripped.is_empty() {
+            Some(stripped.to_string())
+        } else {
+            None
+        }
+    }
+
+    for p in props {
+        match p.name.as_str() {
+            "width" => width = px_or_none(&p.value),
+            "height" => height = px_or_none(&p.value),
+            "padding" => padding = px_or_none(&p.value),
+            "background" | "background-color" => {
+                background = Some(swiftui_color_value(&p.value));
+            }
+            "color" => foreground = Some(swiftui_color_value(&p.value)),
+            "font-size" => font_size = px_or_none(&p.value),
+            "font-family" => {
+                // We only recognise `monospace`; other font families
+                // need a Swift `Font` lookup by name which is a v2
+                // feature (the CSS family list `'Menlo, monospace'`
+                // doesn't map cleanly without a font-resolution pass).
+                if p.value.trim() == "monospace" {
+                    font_family_mono = true;
+                }
+            }
+            "font-weight" => {
+                let v = p.value.trim();
+                font_weight = match v {
+                    "bold" | "700" => Some(".bold"),
+                    "semibold" | "SemiBold" | "600" => Some(".semibold"),
+                    "medium" | "500" => Some(".medium"),
+                    _ => font_weight,
+                };
+            }
+            "border-width" => border_width = px_or_none(&p.value),
+            "border-color" => border_color = Some(swiftui_color_value(&p.value)),
+            // border-style, border-collapse, outline, etc. — silently
+            // skipped.  Matches the React emitter's v1 posture.
+            _ => {}
+        }
+    }
+
+    let mut out = String::new();
+
+    // .frame — combine width+height into one call when both present.
+    match (width.as_deref(), height.as_deref()) {
+        (Some(w), Some(h)) => {
+            out.push_str(&format!("\n{pad}.frame(width: {w}, height: {h})"));
+        }
+        (Some(w), None) => out.push_str(&format!("\n{pad}.frame(width: {w})")),
+        (None, Some(h)) => out.push_str(&format!("\n{pad}.frame(height: {h})")),
+        (None, None) => {}
+    }
+
+    if let Some(p) = padding {
+        out.push_str(&format!("\n{pad}.padding({p})"));
+    }
+
+    if let Some(c) = background {
+        out.push_str(&format!("\n{pad}.background({c})"));
+    }
+
+    if let Some(c) = foreground {
+        out.push_str(&format!("\n{pad}.foregroundColor({c})"));
+    }
+
+    // .font — combine size + monospaced family into one call when both
+    // present.  Standalone family lowers to `.system(.body, design: ...)`
+    // because `.font(.system(size:))` requires the size; we use `.body`
+    // as the implicit textstyle when only the family is set.
+    match (font_size.as_deref(), font_family_mono) {
+        (Some(sz), true) => out.push_str(&format!(
+            "\n{pad}.font(.system(size: {sz}, design: .monospaced))"
+        )),
+        (Some(sz), false) => out.push_str(&format!("\n{pad}.font(.system(size: {sz}))")),
+        (None, true) => out.push_str(&format!(
+            "\n{pad}.font(.system(.body, design: .monospaced))"
+        )),
+        (None, false) => {}
+    }
+
+    if let Some(w) = font_weight {
+        out.push_str(&format!("\n{pad}.fontWeight({w})"));
+    }
+
+    // .border — needs at least the width.  If color is unset, default to
+    // `Color.gray` so the modifier emits a visible (and predictable)
+    // stroke rather than nothing.
+    if let Some(w) = border_width {
+        let c = border_color.unwrap_or_else(|| "Color.gray".to_string());
+        out.push_str(&format!("\n{pad}.border({c}, width: {w})"));
+    }
+
+    out
+}
+
 /// Compile a three-file Mosaic pipeline triple to a SwiftUI source file.
 ///
-/// The `style` argument is accepted to lock the signature (callers and the
-/// generic pipeline driver build against it today); style inlining lands in
-/// a follow-up PR.
+/// The `style` argument's `part` blocks are inlined as SwiftUI view-
+/// modifier chains attached to layout nodes whose `part_name` matches.
+/// See [`swiftui_modifier_chain`] for the property→modifier table.
+/// State blocks are not yet lowered (they need the `.mll`'s
+/// `state-when-<state>` predicate threaded through; a follow-up PR).
 ///
 /// # Errors
 ///
@@ -397,8 +684,12 @@ pub fn from_pipeline(
             moslayout: layout.component_name.clone(),
         });
     }
-    // `style` is accepted to lock the signature; not yet inlined.
-    let _ = style;
+
+    // Build the part-style map ONCE per emission and thread it through
+    // the view-tree walker.  Empty when the `.msl` declares no parts,
+    // which is the no-op path — every modifier-chain lookup returns
+    // None and emission proceeds identically to a styleless pipeline.
+    let part_styles = build_part_style_map(style);
 
     let name = &interface.component;
     let mut out = String::new();
@@ -415,7 +706,12 @@ pub fn from_pipeline(
     writeln!(out).unwrap();
 
     // 4. View struct: properties + body computed property.
-    out.push_str(&emit_view_struct(name, &interface.slots, &layout.root)?);
+    out.push_str(&emit_view_struct(
+        name,
+        &interface.slots,
+        &layout.root,
+        &part_styles,
+    )?);
 
     Ok(PipelineEmitResult {
         output: out,
@@ -495,6 +791,7 @@ fn emit_view_struct(
     component: &str,
     slots: &[SlotDecl],
     layout_root: &LayoutNode,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     writeln!(out, "struct {component}View: View {{").unwrap();
@@ -511,7 +808,7 @@ fn emit_view_struct(
 
     // body computed property.
     writeln!(out, "    var body: some View {{").unwrap();
-    let body = emit_view_tree(layout_root, 8)?;
+    let body = emit_view_tree(layout_root, 8, part_styles)?;
     if body.trim().is_empty() {
         // Empty layout — emit an EmptyView so the file still type-checks.
         // Swift's `some View` cannot resolve to "nothing"; EmptyView is the
@@ -547,40 +844,44 @@ fn emit_view_struct(
 /// first cut keeps the legacy UI14 `Column → VStack` lowering so existing
 /// demos still compile. The UI28 Cell/Column-as-metadata/Grid v3 lowering
 /// (`Grid → SwiftUI.Table { TableColumn(...) }`) is a separate follow-up.
-fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_view_tree(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    match node.tag.as_str() {
+    let mut inner = match node.tag.as_str() {
         // -----------------------------------------------------------------
         // Containers — open a SwiftUI view-builder block, recurse into
         // children at +4 indentation, then close.
         // -----------------------------------------------------------------
-        "Box" => container("Group", node, indent),
-        "Row" => container("HStack", node, indent),
+        "Box" => container("Group", node, indent, part_styles)?,
+        "Row" => container("HStack", node, indent, part_styles)?,
         // TODO(UI28 §2.2): Column is being repurposed as Grid-metadata
         // (carries a header label + sort key + width + per-cell template,
         // discarded as a SwiftUI view). For now we keep the legacy UI14
         // semantics: `Column → VStack`. The Cell/Column/Grid v3 SwiftUI
         // lowering lands in a separate follow-up PR.
-        "Column" => container("VStack", node, indent),
+        "Column" => container("VStack", node, indent, part_styles)?,
         // UI29 kernel partial — Stack is the z-axis / overlay container.
         // It is *not* a synonym for VStack: SwiftUI's `ZStack` overlays
         // children along the depth axis, which is the UI29 semantics.
-        "Stack" => container("ZStack", node, indent),
+        "Stack" => container("ZStack", node, indent, part_styles)?,
         // UI29 kernel partial — `HostScroll` is the kernel form of a
         // scrollable region. SwiftUI's `ScrollView` is the direct analog;
         // it implicitly handles its own scroll-state and viewport, so we
         // do not need to thread offset/extent slots through here.
-        "HostScroll" => container("ScrollView", node, indent),
+        "HostScroll" => container("ScrollView", node, indent, part_styles)?,
 
         // -----------------------------------------------------------------
         // Leaf primitives — emit a single line, no children.
         // -----------------------------------------------------------------
         "Text" => {
             let expr = swift_text_expression(node);
-            Ok(format!("{pad}{expr}\n"))
+            format!("{pad}{expr}\n")
         }
-        "Spacer" => Ok(format!("{pad}Spacer()\n")),
+        "Spacer" => format!("{pad}Spacer()\n"),
         "Image" => {
             // SwiftUI's `Image(systemName:)` takes an SF Symbols name. We use
             // the moslayout `source` prop if it's a string literal; if it's a
@@ -589,16 +890,16 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
             // from URLs, bundle resources, etc.) is a follow-up.
             let symbol = find_string_prop(node, "source").unwrap_or("photo");
             let escaped = escape_swift_string(symbol);
-            Ok(format!("{pad}Image(systemName: \"{escaped}\")\n"))
+            format!("{pad}Image(systemName: \"{escaped}\")\n")
         }
-        "Divider" => Ok(format!("{pad}Divider()\n")),
+        "Divider" => format!("{pad}Divider()\n"),
 
         // UI29 kernel partial — `HostInput` and `HostButton` are leaf
         // primitives backed by SwiftUI's `TextField` and `Button`
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
-        "HostInput" => emit_host_input(node, indent),
-        "HostButton" => emit_host_button(node, indent),
+        "HostInput" => emit_host_input(node, indent)?,
+        "HostButton" => emit_host_button(node, indent)?,
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` both lower to
         // SwiftUI `Toggle` with the platform's default toggle style.
@@ -608,22 +909,22 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         // Style choice (`.checkbox` macOS / `.switch` cross-platform) is
         // left to a userland modifier or a follow-up that adds
         // platform-conditional emission; for v1 the default style ships.
-        "HostCheckbox" => emit_host_checkbox(node, indent),
-        "HostRadio" => emit_host_radio(node, indent),
+        "HostCheckbox" => emit_host_checkbox(node, indent)?,
+        "HostRadio" => emit_host_radio(node, indent)?,
 
         // UI29-4 kernel — `HostLink` lowers to SwiftUI's `Link`
         // (iOS 14+/macOS 11+), `HostTooltip` to the `.help(...)`
         // view modifier on the wrapped child (macOS / iOS 16+), and
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
-        "HostLink" => emit_host_link(node, indent),
-        "HostTooltip" => emit_host_tooltip(node, indent),
-        "HostNumberInput" => emit_host_number_input(node, indent),
+        "HostLink" => emit_host_link(node, indent)?,
+        "HostTooltip" => emit_host_tooltip(node, indent, part_styles)?,
+        "HostNumberInput" => emit_host_number_input(node, indent)?,
 
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
         // See [`emit_host_table`] for the lowering rationale (VStack +
         // HStack rows, not SwiftUI.Table — for now).
-        "HostTable" => emit_host_table(node, indent),
+        "HostTable" => emit_host_table(node, indent, part_styles)?,
 
         // UI29-1 kernel — `HostDialog` is the modal/popover primitive.
         // It lowers to a `Color.clear` anchor view carrying a
@@ -631,7 +932,7 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         // modifier. See [`emit_host_dialog`] for the lowering rationale
         // (SwiftUI exposes dialogs as view modifiers, not standalone
         // views).
-        "HostDialog" => emit_host_dialog(node, indent),
+        "HostDialog" => emit_host_dialog(node, indent, part_styles)?,
 
         // UI29 kernel — table sub-tags. When they appear OUTSIDE of a
         // HostTable parent they have nothing to attach to in SwiftUI;
@@ -641,10 +942,10 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         "HostTableHead"
         | "HostTableBody"
         | "HostTableFoot"
-        | "HostTableColGroup" => Ok(format!(
+        | "HostTableColGroup" => format!(
             "{pad}// {} outside HostTable — ignored\n",
             node.tag
-        )),
+        ),
 
         // `Row` outside a HostTable (and outside the normal Row container
         // path handled above) cannot appear here because `Row` is matched
@@ -657,16 +958,38 @@ fn emit_view_tree(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
         // not visible — we lower as an if-only. The sibling-aware
         // pairing happens in [`emit_children`], which container-shaped
         // parents call instead of looping `emit_view_tree` directly.
-        "For" => emit_for_swift(node, indent),
-        "If" => emit_if_swift(node, None, indent),
+        "For" => emit_for_swift(node, indent, part_styles)?,
+        "If" => emit_if_swift(node, None, indent, part_styles)?,
         // An orphan `Else` (Else not preceded by If) is rejected by the
         // moslayout analyzer, but the emitter is defensive: rather than
         // erroring at the Swift level we emit a self-documenting Swift
         // comment so the generated file still type-checks.
-        "Else" => Ok(format!("{}// orphan Else — ignored\n", " ".repeat(indent))),
+        "Else" => format!("{}// orphan Else — ignored\n", " ".repeat(indent)),
 
-        other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
+        other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
+    };
+
+    // Apply the part-style modifier chain.  Each branch above produces
+    // `inner` with exactly one trailing newline; we splice the modifier
+    // chain right before that newline so SwiftUI sees the chain as
+    // continuation of the expression on the line(s) above.
+    //
+    // The lookup is `part_styles.get(part)`; an absent part_name OR an
+    // empty `chain` is the no-op path (the inner emission renders
+    // identically to a styleless node).
+    if let Some(part) = &node.part_name {
+        if let Some(props) = part_styles.get(part) {
+            let chain = swiftui_modifier_chain(props, indent + 4);
+            if !chain.is_empty() {
+                let mut spliced = inner.trim_end_matches('\n').to_string();
+                spliced.push_str(&chain);
+                spliced.push('\n');
+                inner = spliced;
+            }
+        }
     }
+
+    Ok(inner)
 }
 
 /// Emit a SwiftUI container (`Group`, `HStack`, `VStack`) wrapping `node`'s
@@ -680,6 +1003,7 @@ fn container(
     swiftui_view: &str,
     node: &LayoutNode,
     indent: usize,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
@@ -688,7 +1012,7 @@ fn container(
         return Ok(format!("{pad}{swiftui_view} {{ }}\n"));
     }
     let mut out = format!("{pad}{swiftui_view} {{\n");
-    out.push_str(&emit_children(&node.children, indent + 4)?);
+    out.push_str(&emit_children(&node.children, indent + 4, part_styles)?);
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
 }
@@ -708,6 +1032,7 @@ fn container(
 fn emit_children(
     children: &[LayoutNode],
     indent: usize,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -717,7 +1042,7 @@ fn emit_children(
             // Peek: if the next sibling is `Else`, consume both into a
             // paired emission and advance past the Else.
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            out.push_str(&emit_if_swift(child, else_node, indent)?);
+            out.push_str(&emit_if_swift(child, else_node, indent, part_styles)?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
@@ -731,7 +1056,7 @@ fn emit_children(
             i += 1;
             continue;
         }
-        out.push_str(&emit_view_tree(child, indent)?);
+        out.push_str(&emit_view_tree(child, indent, part_styles)?);
         i += 1;
     }
     Ok(out)
@@ -1369,6 +1694,7 @@ fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
 fn emit_host_tooltip(
     node: &LayoutNode,
     indent: usize,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -1379,7 +1705,7 @@ fn emit_host_tooltip(
     let mut out = String::new();
     writeln!(out, "{pad}VStack {{").unwrap();
     if !node.children.is_empty() {
-        out.push_str(&emit_children(&node.children, indent + 4)?);
+        out.push_str(&emit_children(&node.children, indent + 4, part_styles)?);
     }
     writeln!(out, "{pad}}}").unwrap();
     writeln!(out, "{mod_pad}.help(\"{escaped}\")").unwrap();
@@ -1510,7 +1836,11 @@ fn emit_host_number_input(
 /// metadata survives in the generated source for downstream tooling.
 /// A future PR can swap this for a SwiftUI modifier once the style
 /// inlining lands.
-fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_table(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
@@ -1535,7 +1865,7 @@ fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     for section in &node.children {
         match section.tag.as_str() {
             "HostTableHead" => {
-                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ true)?;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ true, part_styles)?;
                 head_just_emitted = true;
             }
             "HostTableBody" => {
@@ -1543,7 +1873,7 @@ fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
                     writeln!(out, "{inner_pad}Divider()").unwrap();
                     head_just_emitted = false;
                 }
-                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false)?;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false, part_styles)?;
             }
             "HostTableFoot" => {
                 // Per the brief, HostTableFoot is preceded by a Divider
@@ -1551,7 +1881,7 @@ fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
                 // rows from the body above.
                 writeln!(out, "{inner_pad}Divider()").unwrap();
                 head_just_emitted = false;
-                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false)?;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false, part_styles)?;
             }
             "HostTableColGroup" => {
                 // No SwiftUI analog — column-width metadata is part of
@@ -1698,7 +2028,11 @@ fn emit_host_table(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 ///         .interactiveDismissDisabled(true)
 ///     }
 /// ```
-fn emit_host_dialog(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_dialog(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
     let inner_pad = " ".repeat(indent + 8);
@@ -1752,7 +2086,7 @@ fn emit_host_dialog(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     // children we emit the VStack so the modifier signature is correct.
     writeln!(out, "{inner_pad}VStack {{").unwrap();
     if !node.children.is_empty() {
-        out.push_str(&emit_children(&node.children, indent + 12)?);
+        out.push_str(&emit_children(&node.children, indent + 12, part_styles)?);
     }
     writeln!(out, "{inner_pad}}}").unwrap();
 
@@ -1792,6 +2126,7 @@ fn emit_table_section_rows(
     section: &LayoutNode,
     indent: usize,
     bold: bool,
+    part_styles: &PartStyleMap,
 ) -> Result<(), PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1803,7 +2138,7 @@ fn emit_table_section_rows(
             }
             writeln!(out, "{pad}HStack {{").unwrap();
             for cell in &child.children {
-                let emitted = emit_view_tree(cell, indent + 4)?;
+                let emitted = emit_view_tree(cell, indent + 4, part_styles)?;
                 if bold {
                     // Apply `.bold()` to every `Text(...)` line we just
                     // produced. We do this by string-rewriting the
@@ -1833,7 +2168,7 @@ fn emit_table_section_rows(
             // walker so e.g. a stray Divider still compiles, and prepend
             // a comment so the unusual nesting is visible.
             writeln!(out, "{pad}// non-Row child '{}' in table section", child.tag).unwrap();
-            let emitted = emit_view_tree(child, indent)?;
+            let emitted = emit_view_tree(child, indent, part_styles)?;
             out.push_str(&emitted);
         }
     }
@@ -1873,6 +2208,7 @@ fn emit_table_section_rows(
 fn emit_for_swift(
     node: &LayoutNode,
     indent: usize,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1968,7 +2304,7 @@ fn emit_for_swift(
         // the closure. `EmptyView()` is the canonical no-op.
         out.push_str(&format!("{}EmptyView()\n", " ".repeat(body_indent)));
     } else {
-        out.push_str(&emit_children(&node.children, body_indent)?);
+        out.push_str(&emit_children(&node.children, body_indent, part_styles)?);
     }
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
@@ -1994,6 +2330,7 @@ fn emit_if_swift(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     indent: usize,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2013,7 +2350,7 @@ fn emit_if_swift(
     if if_node.children.is_empty() {
         out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
     } else {
-        out.push_str(&emit_children(&if_node.children, indent + 4)?);
+        out.push_str(&emit_children(&if_node.children, indent + 4, part_styles)?);
     }
 
     if let Some(en) = else_node {
@@ -2021,7 +2358,7 @@ fn emit_if_swift(
         if en.children.is_empty() {
             out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
         } else {
-            out.push_str(&emit_children(&en.children, indent + 4)?);
+            out.push_str(&emit_children(&en.children, indent + 4, part_styles)?);
         }
         out.push_str(&format!("{pad}}}\n"));
     } else {
@@ -2244,7 +2581,7 @@ mod tests {
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;
-    use mosstyle_compiler::StyleDef;
+    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
 
     // ---------------------------------------------------------------------
     // Test helpers — keep tests short by hiding the construction noise.
@@ -5286,5 +5623,337 @@ mod tests {
         // The check is case-sensitive; lowercase variants would never
         // pass the upstream validator anyway (PascalCase required).
         assert!(!is_swift_keyword("class")); // not in our PascalCase set
+    }
+
+    // =====================================================================
+    // Part-style lowering tests (UI33 style-inlining v1)
+    //
+    // Cover the new `build_part_style_map` / `swiftui_color_value` /
+    // `swiftui_modifier_chain` helpers and confirm the modifier chain is
+    // spliced onto the right node by `emit_view_tree`.
+    // =====================================================================
+
+    /// Small helper to build a `StyleProp` quickly.
+    fn sp(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    /// Build a `StyleDef` with a single `part name { base props }`.
+    fn style_with_part(component: &str, part_name: &str, props: Vec<StyleProp>) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![PartStyle {
+                name: part_name.to_string(),
+                base: props,
+                states: Vec::new(),
+            }],
+        }
+    }
+
+    /// Build a Box layout whose root carries a `part_name`.
+    fn box_layout_with_part(component: &str, part: &str) -> LayoutDef {
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some(part.to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // T1 — `build_part_style_map` returns a map keyed by part name.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_map_keys_by_part_name() {
+        let s = StyleDef {
+            component_name: "Demo".to_string(),
+            parts: vec![
+                PartStyle {
+                    name: "cell".to_string(),
+                    base: vec![sp("padding", "2px")],
+                    states: Vec::new(),
+                },
+                PartStyle {
+                    name: "header".to_string(),
+                    base: vec![sp("font-weight", "bold")],
+                    states: Vec::new(),
+                },
+            ],
+        };
+        let map = build_part_style_map(&s);
+        assert_eq!(map.len(), 2);
+        assert!(map.contains_key("cell"));
+        assert!(map.contains_key("header"));
+        // Empty StyleDef → empty map (the `empty_style` helper path).
+        assert!(build_part_style_map(&empty_style("Demo")).is_empty());
+    }
+
+    // ---------------------------------------------------------------------
+    // T2 — Unknown / unsupported properties are silently skipped.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_unknown_properties_skipped_silently() {
+        // border-collapse, outline, cursor — none map to a SwiftUI modifier.
+        let props = vec![
+            sp("border-collapse", "collapse"),
+            sp("outline", "none"),
+            sp("cursor", "pointer"),
+        ];
+        let chain = swiftui_modifier_chain(&props, 0);
+        assert_eq!(chain, "");
+    }
+
+    // ---------------------------------------------------------------------
+    // T3 — width+height collapse to a single `.frame(width: N, height: N)`.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_width_height_collapses_to_single_frame_call() {
+        let props = vec![sp("width", "80px"), sp("height", "22px")];
+        let chain = swiftui_modifier_chain(&props, 0);
+        assert_eq!(chain, "\n.frame(width: 80, height: 22)");
+        // Singletons render as the one-side form so the user gets
+        // SwiftUI's "intrinsic on the other axis" default.
+        let only_w = swiftui_modifier_chain(&[sp("width", "80px")], 0);
+        assert_eq!(only_w, "\n.frame(width: 80)");
+        let only_h = swiftui_modifier_chain(&[sp("height", "22px")], 0);
+        assert_eq!(only_h, "\n.frame(height: 22)");
+    }
+
+    // ---------------------------------------------------------------------
+    // T4 — `#1e1e1e` → `Color(red: 0.118, green: 0.118, blue: 0.118)`.
+    //
+    // The 3-decimal-place rounding is load-bearing: `0x1e/255` is
+    // `0.11764…`; we round to 3 dp so the generated source stays short
+    // and unit-test assertions stay stable.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_hex_background_converts_to_color_init() {
+        assert_eq!(
+            swiftui_color_value("#1e1e1e"),
+            "Color(red: 0.118, green: 0.118, blue: 0.118)"
+        );
+        // 3-char shorthand `#abc` → `#aabbcc`.
+        assert_eq!(
+            swiftui_color_value("#fff"),
+            "Color(red: 1, green: 1, blue: 1)"
+        );
+        // Pure black / pure white round to integers (the trailing `.0`
+        // is dropped by Rust's float formatting).
+        assert_eq!(
+            swiftui_color_value("#000000"),
+            "Color(red: 0, green: 0, blue: 0)"
+        );
+        // Named keyword passes through.
+        assert_eq!(swiftui_color_value("white"), "Color.white");
+        // Unknown name falls back to clear so the file still compiles.
+        assert_eq!(swiftui_color_value("rebeccapurple"), "Color.clear");
+
+        // Confirm the .background modifier line is emitted end-to-end.
+        let chain = swiftui_modifier_chain(&[sp("background", "#1e1e1e")], 0);
+        assert_eq!(
+            chain,
+            "\n.background(Color(red: 0.118, green: 0.118, blue: 0.118))"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T5 — font-size + font-family monospace combine to a single .font().
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_font_size_and_monospace_combine_to_single_font_call() {
+        let props = vec![sp("font-size", "12px"), sp("font-family", "monospace")];
+        let chain = swiftui_modifier_chain(&props, 0);
+        assert_eq!(chain, "\n.font(.system(size: 12, design: .monospaced))");
+
+        // Standalone font-size emits the size-only form.
+        let only_size = swiftui_modifier_chain(&[sp("font-size", "14px")], 0);
+        assert_eq!(only_size, "\n.font(.system(size: 14))");
+
+        // Standalone monospace family emits the .body shape.
+        let only_mono = swiftui_modifier_chain(&[sp("font-family", "monospace")], 0);
+        assert_eq!(only_mono, "\n.font(.system(.body, design: .monospaced))");
+    }
+
+    // ---------------------------------------------------------------------
+    // T6 — border-width + border-color → `.border(Color(...), width: N)`.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_border_width_and_color_emit_border_modifier() {
+        let props = vec![sp("border-width", "1px"), sp("border-color", "#3f3f46")];
+        let chain = swiftui_modifier_chain(&props, 0);
+        assert_eq!(
+            chain,
+            "\n.border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)"
+        );
+
+        // border-width alone defaults to Color.gray so the modifier
+        // still emits something predictable.
+        let only_w = swiftui_modifier_chain(&[sp("border-width", "2px")], 0);
+        assert_eq!(only_w, "\n.border(Color.gray, width: 2)");
+
+        // border-color WITHOUT border-width emits nothing (no width to
+        // anchor the modifier to). `border-style: solid` is silently
+        // skipped — SwiftUI's .border is always a solid stroke.
+        let only_color = swiftui_modifier_chain(
+            &[sp("border-color", "#aaa"), sp("border-style", "solid")],
+            0,
+        );
+        assert_eq!(only_color, "");
+    }
+
+    // ---------------------------------------------------------------------
+    // T7 — End-to-end: Box with `[ cell ]` part_name + cell styles
+    //                 produces the expected modifier chain in from_pipeline.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_cell_styles_appear_in_from_pipeline_output() {
+        let m = component("Grid", vec![], vec![]);
+        let l = box_layout_with_part("Grid", "cell");
+        let s = style_with_part(
+            "Grid",
+            "cell",
+            vec![
+                sp("border-width", "1px"),
+                sp("border-color", "#3f3f46"),
+                sp("padding", "2px"),
+                sp("height", "22px"),
+                sp("background", "#1e1e1e"),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(out.contains(".frame(height: 22)"), "out = {out}");
+        assert!(out.contains(".padding(2)"), "out = {out}");
+        assert!(
+            out.contains(".background(Color(red: 0.118, green: 0.118, blue: 0.118))"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(".border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)"),
+            "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T8 — A node with NO part_name produces NO modifier chain.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_node_without_part_name_emits_no_modifier_chain() {
+        let m = component("Plain", vec![], vec![]);
+        let l = box_layout("Plain"); // root has part_name: None
+        // Style declares a `cell` part — but the root isn't named `cell`,
+        // so no chain should be spliced.
+        let s = style_with_part(
+            "Plain",
+            "cell",
+            vec![sp("padding", "8px"), sp("background", "#fff")],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(!out.contains(".padding"), "out = {out}");
+        assert!(!out.contains(".background"), "out = {out}");
+    }
+
+    // ---------------------------------------------------------------------
+    // T9 — An empty PartStyleMap produces NO modifier chain even when the
+    //      node has a part_name.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_empty_map_emits_no_modifier_chain() {
+        let m = component("Bare", vec![], vec![]);
+        // Root carries part_name "cell" but style is empty — the
+        // map.get("cell") returns None, no chain emitted.
+        let l = box_layout_with_part("Bare", "cell");
+        let s = empty_style("Bare");
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(!out.contains(".padding"));
+        assert!(!out.contains(".background"));
+        assert!(!out.contains(".border"));
+        assert!(!out.contains(".frame"));
+    }
+
+    // ---------------------------------------------------------------------
+    // T10 — `font-weight: 600` and `font-weight: SemiBold` both lower to
+    //       `.fontWeight(.semibold)`. Same for the bold (700) and medium
+    //       (500) variants — covers numeric + CamelCase + lowercase
+    //       spellings in one go.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_font_weight_variants_all_lower_to_swiftui_weight() {
+        // semibold synonyms.
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "600")], 0),
+            "\n.fontWeight(.semibold)"
+        );
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "SemiBold")], 0),
+            "\n.fontWeight(.semibold)"
+        );
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "semibold")], 0),
+            "\n.fontWeight(.semibold)"
+        );
+        // bold synonyms.
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "700")], 0),
+            "\n.fontWeight(.bold)"
+        );
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "bold")], 0),
+            "\n.fontWeight(.bold)"
+        );
+        // medium synonyms.
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "500")], 0),
+            "\n.fontWeight(.medium)"
+        );
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "medium")], 0),
+            "\n.fontWeight(.medium)"
+        );
+        // Unknown weight — silently skipped (matches React emitter posture).
+        assert_eq!(
+            swiftui_modifier_chain(&[sp("font-weight", "ultraheavy")], 0),
+            ""
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T11 — `strip_css_px` strips `px` suffix; falls through unchanged
+    //       for non-px values (sanity check the helper).
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_strip_css_px_helper_behaviour() {
+        assert_eq!(strip_css_px("12px"), "12");
+        assert_eq!(strip_css_px("0px"), "0");
+        // No suffix → passes through.
+        assert_eq!(strip_css_px("auto"), "auto");
+        assert_eq!(strip_css_px("12"), "12");
+    }
+
+    // ---------------------------------------------------------------------
+    // T12 — Indentation: the chain renders with the requested `indent`
+    //       spaces in front of each modifier line.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn part_style_chain_respects_indent_argument() {
+        let chain = swiftui_modifier_chain(&[sp("padding", "4px")], 12);
+        assert_eq!(chain, "\n            .padding(4)");
     }
 }

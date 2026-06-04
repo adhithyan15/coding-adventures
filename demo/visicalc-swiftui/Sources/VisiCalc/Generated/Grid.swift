@@ -30,6 +30,9 @@ struct GridView: View {
                     Group {
                         Text(( h )).bold()
                     }
+                        .background(Color(red: 0.176, green: 0.176, blue: 0.188))
+                        .foregroundColor(Color(red: 0.616, green: 0.616, blue: 0.616))
+                        .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
                 }
             }
             Divider()
@@ -49,9 +52,16 @@ struct GridView: View {
                                 Text(( v ))
                             }
                         }
+                            .frame(height: 22)
+                            .padding(2)
+                            .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
                     }
                 }
+                    .frame(height: 22)
             }
         }
+            .background(Color(red: 0.118, green: 0.118, blue: 0.118))
+            .foregroundColor(Color(red: 0.8, green: 0.8, blue: 0.8))
+            .font(.system(size: 12, design: .monospaced))
     }
 }
