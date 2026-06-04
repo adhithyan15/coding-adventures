@@ -114,6 +114,7 @@
 pub mod error;
 pub mod numeric;
 pub mod heap;
+pub mod lisp_repr;
 pub mod global_io;
 pub mod closure;
 
@@ -132,6 +133,11 @@ pub use heap::lower_heap_builtins;
 // C lisp runtime (`__twig_lispy_*`) instead of inline `alloc`/`field_*`.
 // Used by `twig-aot` for the native backends.
 pub use heap::lower_heap_builtins_runtime;
+// Re-export the type-directed lisp-value representation pass (LANG77 / L3b-2c):
+// boxes integer atoms that flow into `lispy_*` calls and unboxes the program
+// result, so native lisp values carry their NaN-box tag.  Runs after
+// `lower_heap_builtins_runtime`; a no-op for non-lisp modules.
+pub use lisp_repr::lower_lisp_repr;
 // Re-export the global/IO lowering entry point (LANG32).
 pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).

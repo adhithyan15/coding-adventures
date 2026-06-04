@@ -203,6 +203,9 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
     BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
     BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
+    // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
+    // program-exit boundary.  `int64_t __twig_lispy_unbox_int(uint64_t)`.
+    BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1409,6 +1412,27 @@ mod tests {
             ret_u64("cell"),
         ];
         assert!(compile(&ctx("bad_cons", &[], "u64"), &cir).is_err());
+    }
+
+    #[test]
+    fn lispy_full_boxed_cons_car_unbox_lowers() {
+        // The complete L3b-2c-1 CIR for `(CAR (CONS 7 9))`: boxed atoms
+        // (7<<3, 9<<3), cons, car, then unbox the result for the exit code.
+        let cir = vec![
+            const_u64("h", 7 << 3),
+            const_u64("t", 9 << 3),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("boxed"), "lispy_car", &["cell"]),
+            call_builtin(Some("r"), "lispy_unbox_int", &["boxed"]),
+            ret_u64("r"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("full", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("boxed cons/car/unbox must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        for want in ["__twig_lispy_cons", "__twig_lispy_car", "__twig_lispy_unbox_int"] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
     }
 
     #[test]

@@ -4,6 +4,30 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.5.0] — 2026-06-04
+
+### Added (LANG77 — type-directed lisp-value representation, McCarthy L3b-2c-1)
+
+- **`src/lisp_repr.rs`** + `lower_lisp_repr` (re-exported at the crate root):
+  a **gate-free, type-directed** pass that gives native lisp values their
+  NaN-box tag. A raw integer's low 3 bits (`111` for `7`) collide with the
+  heap tag, so `pair?`/`ATOM` would misread it as a pointer — integers
+  destined for lisp positions must be boxed (`n << 3`, tag `000`).
+- The rule is **use-site directed, not per-language**: a `const Int(n) : i64`
+  is boxed iff its register feeds a `lispy_*` call (`lispy_cons`/`car`/`cdr`);
+  the nil sentinel (`Int(0) : ref<LispyPair>`) becomes `TAG_NIL` (`0b001`); a
+  register holding a lisp-builtin result is tagged. At the machine boundary —
+  the **entry function's** `ret` of a boxed value — an unbox is inserted
+  (`lispy_unbox_int`), so the process exit code is the raw integer. McCarthy
+  (no arithmetic) boxes every atom; a Twig/Nib program whose integers feed
+  `add`/`print_i64` (never a `lispy_*` call) is left byte-for-byte unchanged.
+  Out-of-range ints (beyond ±2⁶⁰) are left raw rather than truncated.
+- 7 unit tests: boxed cons/car round-trip + unbox, scalar-int untouched,
+  machine arithmetic untouched, nil-tag, non-entry not unboxed, out-of-range,
+  and end-to-end composition with `lower_heap_builtins_runtime`.
+
+---
+
 ## [0.4.0] — 2026-06-04
 
 ### Added (LANG77 — native runtime-call heap lowering, McCarthy L3b-2b)

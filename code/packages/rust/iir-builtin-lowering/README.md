@@ -98,6 +98,18 @@ lower_heap_builtins_runtime(&mut module);
 Both are driven by the *same* frontend IIR, so every lisp-family frontend
 reaches both worlds with no language-specific code.
 
+For the native runtime path, follow the rename with **`lower_lisp_repr`** —
+a type-directed pass that gives lisp values their NaN-box tag: it boxes the
+integer atoms that flow into `lispy_*` calls (`n << 3`), tags the nil
+sentinel, and unboxes the program result at the exit boundary. It keys on
+use-sites, not the language, so a non-lisp arithmetic program is untouched:
+
+```rust
+use iir_builtin_lowering::{lower_heap_builtins_runtime, lower_lisp_repr};
+lower_heap_builtins_runtime(&mut module); // cons/car/cdr → lispy_*
+lower_lisp_repr(&mut module);             // box atoms, tag nil, unbox result
+```
+
 ### Error types
 
 ```rust

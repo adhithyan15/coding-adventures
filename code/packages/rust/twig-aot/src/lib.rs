@@ -102,7 +102,7 @@ static RUNTIME_WINDOWS_X86_64: &[u8] =
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
-use iir_builtin_lowering::{lower_global_io, lower_heap_builtins_runtime};
+use iir_builtin_lowering::{lower_global_io, lower_heap_builtins_runtime, lower_lisp_repr};
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
 
@@ -1497,6 +1497,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // touches those exact builtin names, so a module without them — every
     // Twig/Nib/Brainfuck program today — is left unchanged.
     lower_heap_builtins_runtime(module);
+
+    // Phase 0a′: type-directed lisp-value representation (LANG77 / L3b-2c).
+    // After cons/car/cdr are `lispy_*` calls, box the integer atoms that flow
+    // into them (so their NaN-box tag is `000`, not the heap tag a raw int's
+    // low bits would collide with) and unbox the program result at the exit
+    // boundary.  Gate-free and type-directed: a module with no `lispy_*` calls
+    // (every Twig/Nib/Brainfuck program) has nothing to box and is unchanged.
+    lower_lisp_repr(module);
 
     for func in &mut module.functions {
         // Phase 0b: remove dead name-register `const` instructions.

@@ -53,6 +53,14 @@ like `(CAR (CONS 7 9))` compiles to a native binary that calls
 `__twig_lispy_cons`/`__twig_lispy_car` and exits 7 — with the cons cell as a
 tagged `LispyValue`.
 
+As of 0.11.0 it also runs `lower_lisp_repr`, a type-directed pass that boxes
+the integer atoms feeding those calls (`n << 3`, so their tag is `000`
+instead of the heap tag a raw int's low bits collide with) and unboxes the
+program result for the exit code. So `(CAR (CONS 7 9))` now round-trips
+through fully **tagged** values — the representation the `pair?`/`ATOM`/`EQ`
+predicates build on. It keys on use-sites, so non-lisp programs are
+untouched.
+
 ## Requirements
 
 - Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)
