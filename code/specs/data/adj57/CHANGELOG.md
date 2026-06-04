@@ -1,5 +1,33 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.9.0] — 2026-06-04
+
+### Added
+
+- **ADJ66 — the spider: grounding the rulebook in source bytes.** ADJ65 flagged that the
+  decision rested on `assumed` weights; the spider grounds them. The principle: *nothing
+  may be asserted that is not grounded to bytes — input OR the rulebook we derive for it.*
+  A weight (a likelihood ratio) is a rulebook claim, so the spider
+  (`pipeline/spider.workflow.js`) runs **live web search + fetch** per discriminating fact,
+  copies a **verbatim passage** from an authoritative source (MSD/NCBI/WHO/PMC) for each
+  fact→hypothesis link, derives the weight from it, and records URL + quote (a weight with
+  no source is set to 0 and flagged, never invented). **74 web fetches** produced a fully
+  cited weight matrix — the rulebook. `pipeline/run_spider.py` re-runs the decision on
+  grounded weights, before/after.
+  - **Run (neurobrucellosis):** grounding did **not** flip the answer — and that is the
+    finding. BEFORE: East African trypanosomiasis 99.7% on assumed weights. AFTER: still
+    trypanosomiasis 99.2%, but **8/12 facts grounded and `margin rests on assumed = False`**
+    — the chancre-at-bite-site (+11 dB, MSD/NCBI) and East-Africa-restricted *T. b.
+    rhodesiense* (+12 dB) genuinely support HAT *from the case bytes*. The spider satisfied
+    the principle (rulebook byte-cited), **refused to launder** the answer into "correct,"
+    and isolated the residual to the right place: the datum that overturns it (**Brucella
+    serology**) is a missing **input** byte — an ADJ64 named hole — not a rulebook gap.
+    Same lesson as the axle case (faithfulness ≠ completeness), now on both grounding axes.
+  - **Honest limits:** passage→decibans is still the model's mapping (next: a verifier that
+    the passage supports the magnitude); 6/12 facts grounded (load-bearing first); source
+    authority not yet graded / not recursed to primary studies. Spec:
+    [ADJ66](../../ADJ66-spider-rulebook-grounding.md).
+
 ## [0.8.0] — 2026-06-04
 
 ### Added
