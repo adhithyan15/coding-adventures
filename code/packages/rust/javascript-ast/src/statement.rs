@@ -16,14 +16,17 @@
 //!   the DCE port's `testRemoveNoOpLabelledStatement` case)
 //! - [`ThrowStatement`] (Phase 1.x — added in CLOC12.14 to unblock
 //!   the fold-control-flow port's `testMinimizeIfWithThrow` case)
+//! - [`SwitchStatement`] + [`SwitchCase`] (Phase 1.x — added in
+//!   CLOC12.33 to unblock the DCE / fold-control-flow ports'
+//!   switch-related cases, gap-014)
 //! - [`EmptyStatement`]
 //! - `Statement::Declaration(Declaration)` — untagged wrap so JSON
 //!   collapses to the inner `{"type": "VariableDeclaration", ...}`
 //!   shape directly.
 //!
-//! Phase 2 will add `SwitchStatement`, `TryStatement`,
-//! `DoWhileStatement`, `ForInStatement`, `ForOfStatement`,
-//! `DebuggerStatement`, and `WithStatement`.
+//! Phase 2 will add `TryStatement`, `DoWhileStatement`,
+//! `ForInStatement`, `ForOfStatement`, `DebuggerStatement`, and
+//! `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
 use crate::expression::{Expression, Identifier};
@@ -66,6 +69,7 @@ pub enum TaggedStatement {
     ContinueStatement(ContinueStatement),
     LabeledStatement(LabeledStatement),
     ThrowStatement(ThrowStatement),
+    SwitchStatement(SwitchStatement),
     EmptyStatement(EmptyStatement),
 }
 
@@ -101,6 +105,9 @@ impl Statement {
     }
     pub fn throw_statement(s: ThrowStatement) -> Self {
         Self::Tagged(TaggedStatement::ThrowStatement(s))
+    }
+    pub fn switch_statement(s: SwitchStatement) -> Self {
+        Self::Tagged(TaggedStatement::SwitchStatement(s))
     }
     pub fn empty_statement(s: EmptyStatement) -> Self {
         Self::Tagged(TaggedStatement::EmptyStatement(s))
@@ -244,6 +251,59 @@ pub struct ThrowStatement {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub argument: Expression,
+}
+
+/// `switch (discriminant) { case test1: ...; case test2: ...; default: ...; }`.
+///
+/// Per ECMAScript §13.12:
+///
+/// - The `discriminant` is evaluated once.
+/// - Each `case` is compared against it with strict equality (`===`).
+/// - Execution falls through from one case to the next unless an
+///   explicit `break` (or `return`/`throw`) ends the case body.
+/// - At most one `default` clause is allowed. Its position in the
+///   `cases` array matters for fallthrough.
+///
+/// Added in Phase 1.x (CLOC12.33) to unblock the DCE port's
+/// `testRemoveSwitch*` cases and the fold-control-flow port's
+/// `testRemoveEmptySwitch` case (gap-014). The optimisation passes
+/// that consume this node — eliminating empty switches, folding
+/// switches with a constant discriminant down to the matching
+/// case body — are a separate follow-up; modelling the node first
+/// is the structural prerequisite.
+///
+/// # ESTree compatibility
+///
+/// ESTree shape `{ type: "SwitchStatement", discriminant, cases }`,
+/// where each `cases[i]` is `{ type: "SwitchCase", test, consequent }`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SwitchStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub discriminant: Expression,
+    pub cases: Vec<SwitchCase>,
+}
+
+/// One arm of a [`SwitchStatement`].
+///
+/// - `test: Some(expr)` — the `case expr:` form. Matched against
+///   the discriminant with strict equality (`===`).
+/// - `test: None` — the `default:` clause. Per the spec, a switch
+///   may have at most one `default` (semantically; we don't
+///   enforce this at the AST level — it's the parser's job).
+/// - `consequent` — the list of statements making up the body of
+///   the case. Fallthrough to the next case happens implicitly if
+///   none of these terminate with a `break`/`return`/`throw`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type", rename = "SwitchCase", rename_all = "camelCase")]
+pub struct SwitchCase {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// `None` means the `default:` clause. `Some(expr)` is the
+    /// `case expr:` form.
+    pub test: Option<Expression>,
+    pub consequent: Vec<Statement>,
 }
 
 /// A lone semicolon `;`. Rare in user code but legal everywhere a
@@ -543,6 +603,65 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "EmptyStatement");
+    }
+
+    #[test]
+    fn switch_statement_empty_cases_roundtrips() {
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: Some("sw.1".to_string()),
+            discriminant: lit(1.0),
+            cases: vec![],
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "SwitchStatement");
+    }
+
+    #[test]
+    fn switch_statement_with_case_and_default_roundtrips() {
+        // switch (1) { case 2: ; default: ; }
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: Some("sw.2".to_string()),
+            discriminant: lit(1.0),
+            cases: vec![
+                SwitchCase {
+                    cv: Some("sc.case.1".to_string()),
+                    test: Some(lit(2.0)),
+                    consequent: vec![Statement::empty_statement(EmptyStatement {
+                        cv: None,
+                    })],
+                },
+                SwitchCase {
+                    cv: Some("sc.default".to_string()),
+                    test: None,
+                    consequent: vec![Statement::empty_statement(EmptyStatement {
+                        cv: None,
+                    })],
+                },
+            ],
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "SwitchStatement");
+        // Verify inner case type tags too — they should be
+        // "SwitchCase" per the ESTree wire format.
+        let json: serde_json::Value =
+            serde_json::from_str(&serde_json::to_string(&s).unwrap()).unwrap();
+        let cases = json["cases"].as_array().unwrap();
+        assert_eq!(cases[0]["type"], "SwitchCase");
+        assert_eq!(cases[1]["type"], "SwitchCase");
+        // The default case has `test: null` (None serialises that way).
+        assert!(cases[1]["test"].is_null());
+    }
+
+    #[test]
+    fn switch_statement_untraced_omits_cv() {
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: lit(0.0),
+            cases: vec![],
+        });
+        let json = serde_json::to_string(&s).unwrap();
+        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(s.clone(), roundtrip(s));
     }
 
     #[test]

@@ -308,6 +308,29 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
                 argument: fold_expression(&s.argument, st),
             })
         }
+        TaggedStatement::SwitchStatement(s) => {
+            // Fold the discriminant and each case's test + consequent.
+            // No structural peephole here — constant-fold doesn't
+            // rewrite control flow; the matching-case-only collapse
+            // belongs in fold-control-flow as a follow-up.
+            TaggedStatement::SwitchStatement(coding_adventures_javascript_ast::SwitchStatement {
+                cv: s.cv.clone(),
+                discriminant: fold_expression(&s.discriminant, st),
+                cases: s
+                    .cases
+                    .iter()
+                    .map(|c| coding_adventures_javascript_ast::SwitchCase {
+                        cv: c.cv.clone(),
+                        test: c.test.as_ref().map(|e| fold_expression(e, st)),
+                        consequent: c
+                            .consequent
+                            .iter()
+                            .map(|s| fold_statement(s, st))
+                            .collect(),
+                    })
+                    .collect(),
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),

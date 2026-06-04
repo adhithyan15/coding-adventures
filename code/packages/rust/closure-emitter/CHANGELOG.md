@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-04
+
+### Added — CLOC12.33: `SwitchStatement` emitter rule (gap-014)
+
+Adds `emit_switch` + `emit_switch_case` covering the new
+`SwitchStatement` / `SwitchCase` variants shipped in
+`javascript-ast` 0.7.0.
+
+Output shape (compact mode):
+
+```
+switch(<discriminant>){case <test>:<consequent>...case <test>:<consequent>...default:<consequent>...}
+```
+
+- `case <test>:` is emitted with a single space between `case`
+  and the test expression (required to avoid `case1:` ambiguity).
+- `default:` has no space (no expression follows the colon).
+- Empty consequent emits just `case <test>:` / `default:` with
+  nothing after the colon.
+- Multiple cases concatenate in source order. The trailing `}`
+  closes the switch directly — no separating semicolons.
+
+Pretty mode (`opts.pretty = true`) lays each case on its own
+indented line and each consequent statement on its own
+double-indented line under the case header. Same trailing-comma
+discipline as block: no separator before the closing brace.
+
+Six new inline tests pin: empty switch, single `case 1:` with
+expression-statement body, `default:` with body, `case 1:` with
+empty body, full `case/case/default` triple in order, and
+`case 1: break;` (break-in-consequent invariant).
+
 ## [Unreleased] — CLOC12.32: trailing-comma ports (gap-022)
 
 Test-only. Closes `gap-022`.

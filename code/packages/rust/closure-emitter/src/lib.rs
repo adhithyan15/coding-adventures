@@ -71,8 +71,8 @@ use coding_adventures_javascript_ast::{
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
-    ThrowStatement, UnaryExpression, UnaryOperator, UndefinedLiteral, VarKind,
-    VariableDeclaration, VariableDeclarator, WhileStatement,
+    SwitchCase, SwitchStatement, ThrowStatement, UnaryExpression, UnaryOperator, UndefinedLiteral,
+    VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -296,6 +296,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::ContinueStatement(c) => self.emit_continue(c),
             TaggedStatement::LabeledStatement(l) => self.emit_labeled(l),
             TaggedStatement::ThrowStatement(t) => self.emit_throw(t),
+            TaggedStatement::SwitchStatement(s) => self.emit_switch(s),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
         }
     }
@@ -473,6 +474,80 @@ impl<'a> Emitter<'a> {
         self.required_ws();
         self.emit_expression(&t.argument);
         self.write_str(";");
+    }
+
+    /// `switch (discriminant) { case test: <consequent>; default: <consequent>; }`.
+    ///
+    /// Lays out as `switch(<expr>){case <test>:<stmts>case <test>:<stmts>default:<stmts>}`
+    /// in compact mode. The closing `}` is emitted directly — no
+    /// trailing `;` because a switch is itself a statement
+    /// (the block-form, not the expression-form), and the inner
+    /// statements terminate themselves.
+    ///
+    /// Per ECMAScript §13.12, each case clause's consequent is a
+    /// list of statements (not a single statement), so we
+    /// emit each one in order. Fallthrough is the default; an
+    /// explicit `break` inside the consequent terminates the case.
+    fn emit_switch(&mut self, s: &SwitchStatement) {
+        self.maybe_map(&s.cv);
+        self.write_str("switch");
+        self.pretty_ws();
+        self.write_str("(");
+        self.emit_expression(&s.discriminant);
+        self.write_str(")");
+        self.pretty_ws();
+        self.write_str("{");
+        if self.opts.pretty && !s.cases.is_empty() {
+            self.newline();
+            self.indent += 1;
+        }
+        for (i, case) in s.cases.iter().enumerate() {
+            if self.opts.pretty {
+                if i > 0 {
+                    self.newline();
+                }
+                self.indent_str();
+            }
+            self.emit_switch_case(case);
+        }
+        if self.opts.pretty && !s.cases.is_empty() {
+            self.indent -= 1;
+            self.newline();
+            self.indent_str();
+        }
+        self.write_str("}");
+    }
+
+    fn emit_switch_case(&mut self, c: &SwitchCase) {
+        self.maybe_map(&c.cv);
+        match &c.test {
+            Some(test) => {
+                self.write_str("case");
+                self.required_ws();
+                self.emit_expression(test);
+                self.write_str(":");
+            }
+            None => self.write_str("default:"),
+        }
+        if c.consequent.is_empty() {
+            return;
+        }
+        if self.opts.pretty {
+            self.newline();
+            self.indent += 1;
+            for (i, s) in c.consequent.iter().enumerate() {
+                if i > 0 {
+                    self.newline();
+                }
+                self.indent_str();
+                self.emit_statement(s);
+            }
+            self.indent -= 1;
+        } else {
+            for s in &c.consequent {
+                self.emit_statement(s);
+            }
+        }
     }
 
     // ---- Declarations --------------------------------------------
@@ -1791,6 +1866,125 @@ mod tests {
         });
         // quote-choice picks double quotes by default for plain strings
         assert_eq!(emit_stmt(s), "throw \"oops\";");
+    }
+
+    // ---- SwitchStatement (gap-014, CLOC12.33) ----------------
+
+    #[test]
+    fn switch_empty_emits_braces() {
+        // switch (x) {}
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){}");
+    }
+
+    #[test]
+    fn switch_with_single_case_emits_case_test_colon_body() {
+        // switch (x) { case 1: y; }
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![Statement::expression_statement(ExpressionStatement {
+                    cv: None,
+                    expression: ident("y"),
+                })],
+            }],
+        });
+        // `case 1:` then `y;` (the ExpressionStatement adds the `;`).
+        assert_eq!(emit_stmt(s), "switch(x){case 1:y;}");
+    }
+
+    #[test]
+    fn switch_with_default_emits_default_colon_body() {
+        // switch (x) { default: y; }
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: None,
+                consequent: vec![Statement::expression_statement(ExpressionStatement {
+                    cv: None,
+                    expression: ident("y"),
+                })],
+            }],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){default:y;}");
+    }
+
+    #[test]
+    fn switch_case_with_empty_consequent_emits_colon_only() {
+        // switch (x) { case 1: }
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![],
+            }],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:}");
+    }
+
+    #[test]
+    fn switch_with_two_cases_and_default_concatenates_in_order() {
+        // switch (x) { case 1: a; case 2: b; default: c; }
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![
+                SwitchCase {
+                    cv: None,
+                    test: Some(num(1.0)),
+                    consequent: vec![Statement::expression_statement(ExpressionStatement {
+                        cv: None,
+                        expression: ident("a"),
+                    })],
+                },
+                SwitchCase {
+                    cv: None,
+                    test: Some(num(2.0)),
+                    consequent: vec![Statement::expression_statement(ExpressionStatement {
+                        cv: None,
+                        expression: ident("b"),
+                    })],
+                },
+                SwitchCase {
+                    cv: None,
+                    test: None,
+                    consequent: vec![Statement::expression_statement(ExpressionStatement {
+                        cv: None,
+                        expression: ident("c"),
+                    })],
+                },
+            ],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:b;default:c;}");
+    }
+
+    #[test]
+    fn switch_with_break_in_consequent_emits_break_semicolon() {
+        // switch (x) { case 1: break; }
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![Statement::break_statement(BreakStatement {
+                    cv: None,
+                    label: None,
+                })],
+            }],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:break;}");
     }
 
     // ---- BigIntLiteral (gap-021, CLOC12.15) -----------------

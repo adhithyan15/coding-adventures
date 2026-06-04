@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-04
+
+### Added — CLOC12.33: `SwitchStatement` + `SwitchCase` (Phase 1.x, closes gap-014)
+
+Adds `SwitchStatement { cv, discriminant, cases: Vec<SwitchCase> }`
+and `SwitchCase { cv, test: Option<Expression>, consequent: Vec<Statement> }`.
+A new `TaggedStatement::SwitchStatement` variant and a
+`Statement::switch_statement` convenience constructor round out
+the surface.
+
+ESTree wire format:
+
+```json
+{
+  "type": "SwitchStatement",
+  "discriminant": <Expression>,
+  "cases": [
+    { "type": "SwitchCase", "test": <Expression> | null, "consequent": [<Statement>...] },
+    ...
+  ]
+}
+```
+
+`SwitchCase.test` is `None` (serialised as `null`) for the
+`default:` clause; the parser is responsible for the at-most-one-
+default invariant per ECMAScript §13.12, the AST doesn't enforce
+it.
+
+Three new roundtrip tests cover empty / case+default / untraced
+cases plus inner `"type": "SwitchCase"` tag verification.
+
+This unblocks the DCE port's `testRemoveSwitch*` cases and the
+fold-control-flow port's `testRemoveEmptySwitch` case. The
+peephole optimisations that consume this node — empty-switch
+elimination, constant-discriminant collapse — are gap-014
+follow-ups.
+
 ## [0.6.0] - 2026-06-01
 
 ### Added — CLOC12.16: `UndefinedLiteral` Expression variant (Phase 1.x, closes gap-001)

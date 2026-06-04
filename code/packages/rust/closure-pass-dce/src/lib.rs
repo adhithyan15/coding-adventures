@@ -282,6 +282,31 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 argument: dce_expression(&s.argument, st),
             })
         }
+        TaggedStatement::SwitchStatement(s) => {
+            // Recurse into discriminant, each case's test, and each
+            // statement in each consequent. No peephole rule yet —
+            // the "empty switch removal" and "constant-discriminant
+            // → single matching case body" optimisations are gap-014
+            // follow-ups; this PR ships the structural walk so they
+            // have a place to land.
+            TaggedStatement::SwitchStatement(coding_adventures_javascript_ast::SwitchStatement {
+                cv: s.cv.clone(),
+                discriminant: dce_expression(&s.discriminant, st),
+                cases: s
+                    .cases
+                    .iter()
+                    .map(|c| coding_adventures_javascript_ast::SwitchCase {
+                        cv: c.cv.clone(),
+                        test: c.test.as_ref().map(|e| dce_expression(e, st)),
+                        consequent: c
+                            .consequent
+                            .iter()
+                            .map(|s| dce_statement(s, st))
+                            .collect(),
+                    })
+                    .collect(),
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),
