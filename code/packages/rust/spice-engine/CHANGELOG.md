@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `mc_dc_corners_parallel` for order-preserving parallel Rust Monte Carlo
+  DC evaluation across named PVT corners.
 - Add `tf_corners_parallel` for order-preserving parallel Rust `.TF`
   transfer-function evaluation across named PVT corners.
 - Add `ac_sweep_corners_parallel` for order-preserving parallel Rust `.AC`

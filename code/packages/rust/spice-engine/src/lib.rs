@@ -6131,6 +6131,47 @@ pub fn mc_dc_corners(
     })
 }
 
+pub fn mc_dc_corners_parallel(
+    circuit: &Circuit,
+    output_node: &str,
+    n_trials: usize,
+    options: McOptions,
+    corners: &[CornerSpec],
+) -> Result<CornerMcResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let output_node = output_node.to_string();
+                scope.spawn(move || -> Result<CornerMcPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerMcPoint {
+                        corner_name: corner.name,
+                        result: mc_dc(&corner_circuit, &output_node, n_trials, options)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "mc_dc_corners_parallel".to_string(),
+                reason: "parallel Monte Carlo DC corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerMcResult {
+        output_node: output_node.to_string(),
+        points,
+    })
+}
+
 pub fn tf(
     circuit: &Circuit,
     output_node: &str,

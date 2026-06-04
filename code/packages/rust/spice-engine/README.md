@@ -13,7 +13,8 @@ The initial slices implement:
 - DC sensitivity analysis for output-node voltage changes with respect to
   resistor and independent source parameters, including named corner sweeps.
 - Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian
-  and uniform distributions, including named corner sweeps.
+  and uniform distributions, including order-preserving parallel named corner
+  sweeps.
 - AC noise analysis with resistor thermal-noise contributions, input-referred
   PSD, and named corner sweeps.
 - AC frequency sweeps, including order-preserving parallel named corner sweeps.
