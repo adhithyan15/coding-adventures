@@ -23,8 +23,8 @@ struct GridView: View {
     var body: some View {
         // part: sheet
         VStack(alignment: .leading, spacing: 0) {
-            // HostTableColGroup ignored in SwiftUI
-            HStack {
+            // HostTableColGroup — column widths threaded into cell .frame(width:)
+            HStack(spacing: 0) {
                 ForEach(Array(columnHeaders.enumerated()), id: \.offset) { (_swiftIdxch, h) in
                     let ch: Double = Double(_swiftIdxch)
                     Group {
@@ -33,13 +33,14 @@ struct GridView: View {
                         .background(Color(red: 0.176, green: 0.176, blue: 0.188))
                         .foregroundColor(Color(red: 0.616, green: 0.616, blue: 0.616))
                         .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
+                        .frame(width: columnWidths[Int(ch)])
                 }
             }
             Divider()
             // non-Row child 'For' in table section
             ForEach(Array(viewportRows.enumerated()), id: \.offset) { (_swiftIdxr, row) in
                 let r: Double = Double(_swiftIdxr)
-                HStack {
+                HStack(spacing: 0) {
                     ForEach(Array(row.enumerated()), id: \.offset) { (_swiftIdxc, v) in
                         let c: Double = Double(_swiftIdxc)
                         Group {
@@ -57,6 +58,7 @@ struct GridView: View {
                             .background(((( r == editRow && c == editCol )) ? Color(red: 0.122, green: 0.31, blue: 0.247) : ((( r == selectedRow && c == selectedCol )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color.clear)))
                             .foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color.primary))
                             .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
+                            .frame(width: columnWidths[Int(c)])
                     }
                 }
                     .frame(height: 22)

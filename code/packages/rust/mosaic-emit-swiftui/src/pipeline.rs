@@ -411,6 +411,101 @@ fn build_swiftui_readme(component_name: &str) -> String {
 /// `None` and emission proceeds unchanged.
 type PartStyleMap = HashMap<String, Vec<StyleProp>>;
 
+// =====================================================================
+// HostTable column-widths threading — TableContext
+// =====================================================================
+
+/// Per-`HostTable` discovered context for column-width threading.
+///
+/// SwiftUI has no direct analog of HTML's `<colgroup><col width>` — the
+/// kernel's `HostTableColGroup` block carries per-column widths via a
+/// slot which the .mll's `For ( each: slot: column-widths, as: w,
+/// index: cw ) { Col [col] ( width: ( w ) ) }` shape lifts to a list.
+/// To render those widths in SwiftUI we attach `.frame(width:
+/// columnWidths[Int(<idx>)])` to each cell view, where `<idx>` is the
+/// column index from the enclosing cell-emitting `For`.
+///
+/// `column_widths_slot` is the Swift identifier (post-camel-case) for
+/// the column-widths array.  It is `None` when the HostTable has no
+/// `HostTableColGroup`, when the ColGroup does not contain a `For`
+/// whose body is a `Col`, or when the For's `each:` is not a `SlotRef`.
+/// In any of those cases the emitter falls back to today's
+/// auto-sized-cell behaviour and the visible diff is just
+/// `HStack(spacing: 0)` (still applied because the HostTable itself
+/// signals border-collapse semantics).
+///
+/// The context is set only at HostTable entry and threaded down
+/// through `emit_view_tree`/`emit_children`/`container`/`emit_for_swift`
+/// /`emit_if_swift` so deeply-nested Rows inside e.g. a
+/// `For (each: viewport-rows)` body still see it.  Width threading
+/// itself fires only for Fors in *cell-position* (a direct child of a
+/// Row inside the HostTable) — gated by [`emit_table_cell`] and the
+/// `width_thread` flag on `emit_for_swift`.
+struct TableContext {
+    /// Swift identifier (e.g. `columnWidths`) referring to the
+    /// column-widths array.  `None` when no addressable column-widths
+    /// slot was discovered; cells render unchanged in that case.
+    column_widths_slot: Option<String>,
+}
+
+/// Scan a `HostTable` node's immediate children for a
+/// `HostTableColGroup > For (each: slot: <name>) { Col ... }` shape and
+/// extract the column-widths slot name (camel-cased).
+///
+/// This is a structural match — the For's `each:` must be a `SlotRef`
+/// (not an Expr or Keyword), it must have an `as:` binding, the body
+/// must contain a `Col` primitive (the standard col-group cell tag
+/// from UI31 §3.2).  When the match fails, returns a [`TableContext`]
+/// with `column_widths_slot: None` — cells then render at their
+/// natural text-content width, and only the `HStack(spacing: 0)`
+/// edit applies.
+///
+/// The returned identifier is the camelCased slot name passed through
+/// [`is_safe_swift_identifier`]: a `column-widths` slot becomes
+/// `columnWidths`.  Authors who name their slot something the
+/// identifier check rejects (which today's NAME grammar cannot
+/// produce, but the gate is defense-in-depth) silently fall back to
+/// `None`.
+fn extract_table_context(host_table: &LayoutNode) -> TableContext {
+    for child in &host_table.children {
+        if child.tag != "HostTableColGroup" {
+            continue;
+        }
+        // The col-group's first For child is the column-widths iterator.
+        // Authors may add comments / annotations between elements, but
+        // structurally the For is what we need; we accept the first one
+        // we find rather than insisting on it being the only child.
+        for cg_child in &child.children {
+            if cg_child.tag != "For" {
+                continue;
+            }
+            // The For body must be a `Col`.  We don't require it to be
+            // the ONLY child of the For (the .mll grammar guarantees a
+            // single child today, but the check is permissive — any
+            // `Col` in the body is enough).
+            let has_col = cg_child.children.iter().any(|n| n.tag == "Col");
+            if !has_col {
+                continue;
+            }
+            // Extract the `each:` slot.  An Expr- or Keyword-valued
+            // `each:` cannot be threaded as an indexed Swift array here
+            // (the index lookup requires a Swift identifier), so we
+            // skip those and return `None`.
+            if let Some(slot) = find_slot_ref_prop(cg_child, "each") {
+                let camel = to_camel_case_first_lower(slot);
+                if is_safe_swift_identifier(&camel) {
+                    return TableContext {
+                        column_widths_slot: Some(camel),
+                    };
+                }
+            }
+        }
+    }
+    TableContext {
+        column_widths_slot: None,
+    }
+}
+
 /// Build a `part_name → props` map from a [`StyleDef`].
 ///
 /// Mirrors `mosaic_emit_react::pipeline::build_part_style_map` in shape
@@ -1067,7 +1162,7 @@ fn emit_view_struct(
 
     // body computed property.
     writeln!(out, "    var body: some View {{").unwrap();
-    let body = emit_view_tree(layout_root, 8, part_styles)?;
+    let body = emit_view_tree(layout_root, 8, part_styles, None)?;
     if body.trim().is_empty() {
         // Empty layout — emit an EmptyView so the file still type-checks.
         // Swift's `some View` cannot resolve to "nothing"; EmptyView is the
@@ -1107,6 +1202,7 @@ fn emit_view_tree(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1115,23 +1211,34 @@ fn emit_view_tree(
         // Containers — open a SwiftUI view-builder block, recurse into
         // children at +4 indentation, then close.
         // -----------------------------------------------------------------
-        "Box" => container("Group", node, indent, part_styles)?,
-        "Row" => container("HStack", node, indent, part_styles)?,
+        "Box" => container("Group", node, indent, part_styles, table_ctx)?,
+        // `Row` inside a HostTable lowers to `HStack(spacing: 0)` so cells
+        // sit flush (matching `border-collapse: collapse` semantics in the
+        // companion .msl).  Outside a HostTable we keep the default
+        // 8pt SwiftUI spacing so existing `Row` users render unchanged.
+        // See [`TableContext`] for the discovery path.
+        "Row" => {
+            if table_ctx.is_some() {
+                container_table_row(node, indent, part_styles, table_ctx)?
+            } else {
+                container("HStack", node, indent, part_styles, table_ctx)?
+            }
+        }
         // TODO(UI28 §2.2): Column is being repurposed as Grid-metadata
         // (carries a header label + sort key + width + per-cell template,
         // discarded as a SwiftUI view). For now we keep the legacy UI14
         // semantics: `Column → VStack`. The Cell/Column/Grid v3 SwiftUI
         // lowering lands in a separate follow-up PR.
-        "Column" => container("VStack", node, indent, part_styles)?,
+        "Column" => container("VStack", node, indent, part_styles, table_ctx)?,
         // UI29 kernel partial — Stack is the z-axis / overlay container.
         // It is *not* a synonym for VStack: SwiftUI's `ZStack` overlays
         // children along the depth axis, which is the UI29 semantics.
-        "Stack" => container("ZStack", node, indent, part_styles)?,
+        "Stack" => container("ZStack", node, indent, part_styles, table_ctx)?,
         // UI29 kernel partial — `HostScroll` is the kernel form of a
         // scrollable region. SwiftUI's `ScrollView` is the direct analog;
         // it implicitly handles its own scroll-state and viewport, so we
         // do not need to thread offset/extent slots through here.
-        "HostScroll" => container("ScrollView", node, indent, part_styles)?,
+        "HostScroll" => container("ScrollView", node, indent, part_styles, table_ctx)?,
 
         // -----------------------------------------------------------------
         // Leaf primitives — emit a single line, no children.
@@ -1183,6 +1290,14 @@ fn emit_view_tree(
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
         // See [`emit_host_table`] for the lowering rationale (VStack +
         // HStack rows, not SwiftUI.Table — for now).
+        //
+        // `HostTable` is an entry point for [`TableContext`]: it discovers
+        // a nested `HostTableColGroup`'s `For ( each: slot: column-widths
+        // ) { Col }` shape and threads a column-widths slot down through
+        // the section walker into every `Row` cell, so each cell can
+        // apply `.frame(width: columnWidths[Int(<idx>)])`.  Any inherited
+        // `table_ctx` from a HostTable-inside-HostTable would be confusing
+        // anyway, so we start a fresh context here rather than chaining.
         "HostTable" => emit_host_table(node, indent, part_styles)?,
 
         // UI29-1 kernel — `HostDialog` is the modal/popover primitive.
@@ -1217,8 +1332,8 @@ fn emit_view_tree(
         // not visible — we lower as an if-only. The sibling-aware
         // pairing happens in [`emit_children`], which container-shaped
         // parents call instead of looping `emit_view_tree` directly.
-        "For" => emit_for_swift(node, indent, part_styles)?,
-        "If" => emit_if_swift(node, None, indent, part_styles)?,
+        "For" => emit_for_swift(node, indent, part_styles, table_ctx, false)?,
+        "If" => emit_if_swift(node, None, indent, part_styles, table_ctx)?,
         // An orphan `Else` (Else not preceded by If) is rejected by the
         // moslayout analyzer, but the emitter is defensive: rather than
         // erroring at the Swift level we emit a self-documenting Swift
@@ -1268,6 +1383,7 @@ fn container(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
@@ -1276,9 +1392,74 @@ fn container(
         return Ok(format!("{pad}{swiftui_view} {{ }}\n"));
     }
     let mut out = format!("{pad}{swiftui_view} {{\n");
-    out.push_str(&emit_children(&node.children, indent + 4, part_styles)?);
+    out.push_str(&emit_children(&node.children, indent + 4, part_styles, table_ctx)?);
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
+}
+
+/// Emit a `Row` container that lives inside a `HostTable`.
+///
+/// Differs from the generic [`container`] helper in two ways:
+///
+/// 1. The opener is `HStack(spacing: 0) {` instead of `HStack {`.
+///    Zero spacing matches the `border-collapse: collapse` semantics
+///    that VisiCalc-style .msl files declare on the sheet part — cells
+///    sit flush against each other so overlapping 1pt borders read as
+///    a single grid line, not as a stack of disconnected boxes.
+///
+/// 2. Each child is dispatched through [`emit_table_cell`] rather than
+///    [`emit_view_tree`] directly, so a child `For` with an `index:`
+///    binding can pick up `.frame(width: <slot>[Int(<idx>)])` from the
+///    surrounding [`TableContext`].
+///
+/// Empty `Row`s collapse to `HStack(spacing: 0) { }` so the generated
+/// source still type-checks and the spacing convention is uniform.
+fn container_table_row(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    if node.children.is_empty() {
+        return Ok(format!("{pad}HStack(spacing: 0) {{ }}\n"));
+    }
+    let mut out = format!("{pad}HStack(spacing: 0) {{\n");
+    for cell in &node.children {
+        out.push_str(&emit_table_cell(cell, indent + 4, part_styles, table_ctx)?);
+    }
+    out.push_str(&format!("{pad}}}\n"));
+    Ok(out)
+}
+
+/// Emit a single cell of a `Row` inside a `HostTable`.
+///
+/// When the cell is a `For` with both an `index:` binding AND a live
+/// `column_widths_slot` in the surrounding [`TableContext`], we route
+/// through [`emit_for_swift`]'s width-threading mode: each iteration's
+/// view picks up a trailing `.frame(width: <slot>[Int(<idx>)])`
+/// modifier so columns get explicit widths rather than auto-sizing to
+/// content.
+///
+/// Anything else (a `Box` literal cell, an inline `Text`, a non-indexed
+/// `For`, a `HostTable` context with no `HostTableColGroup`, etc.)
+/// falls through to the normal [`emit_view_tree`] walker — the cell
+/// still renders, just without explicit width threading.
+fn emit_table_cell(
+    cell: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+) -> Result<String, PipelineEmitError> {
+    if let Some(ctx) = table_ctx {
+        if ctx.column_widths_slot.is_some()
+            && cell.tag == "For"
+            && find_keyword_prop(cell, "index").is_some()
+        {
+            return emit_for_swift(cell, indent, part_styles, table_ctx, /*width_thread=*/ true);
+        }
+    }
+    emit_view_tree(cell, indent, part_styles, table_ctx)
 }
 
 /// Walk a flat list of sibling layout nodes at `indent`, with two
@@ -1297,6 +1478,7 @@ fn emit_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -1306,7 +1488,7 @@ fn emit_children(
             // Peek: if the next sibling is `Else`, consume both into a
             // paired emission and advance past the Else.
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            out.push_str(&emit_if_swift(child, else_node, indent, part_styles)?);
+            out.push_str(&emit_if_swift(child, else_node, indent, part_styles, table_ctx)?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
@@ -1320,7 +1502,7 @@ fn emit_children(
             i += 1;
             continue;
         }
-        out.push_str(&emit_view_tree(child, indent, part_styles)?);
+        out.push_str(&emit_view_tree(child, indent, part_styles, table_ctx)?);
         i += 1;
     }
     Ok(out)
@@ -1969,7 +2151,7 @@ fn emit_host_tooltip(
     let mut out = String::new();
     writeln!(out, "{pad}VStack {{").unwrap();
     if !node.children.is_empty() {
-        out.push_str(&emit_children(&node.children, indent + 4, part_styles)?);
+        out.push_str(&emit_children(&node.children, indent + 4, part_styles, None)?);
     }
     writeln!(out, "{pad}}}").unwrap();
     writeln!(out, "{mod_pad}.help(\"{escaped}\")").unwrap();
@@ -2122,6 +2304,14 @@ fn emit_host_table(
     }
     writeln!(out, "{pad}VStack(alignment: .leading, spacing: 0) {{").unwrap();
 
+    // Discover the column-widths slot from a nested `HostTableColGroup`
+    // (if any).  When the For-Col shape isn't there, `ctx.column_widths_slot`
+    // stays None and width threading is a no-op — only the
+    // `HStack(spacing: 0)` rewrite kicks in (which still matches the
+    // border-collapse semantics .msl declares on the sheet part).
+    let ctx = extract_table_context(node);
+    let table_ctx = Some(&ctx);
+
     // Walk sections in source order. We track whether we just emitted a
     // head section so we can insert a Divider before the first non-head
     // section that follows.
@@ -2129,7 +2319,7 @@ fn emit_host_table(
     for section in &node.children {
         match section.tag.as_str() {
             "HostTableHead" => {
-                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ true, part_styles)?;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ true, part_styles, table_ctx)?;
                 head_just_emitted = true;
             }
             "HostTableBody" => {
@@ -2137,7 +2327,7 @@ fn emit_host_table(
                     writeln!(out, "{inner_pad}Divider()").unwrap();
                     head_just_emitted = false;
                 }
-                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false, part_styles)?;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false, part_styles, table_ctx)?;
             }
             "HostTableFoot" => {
                 // Per the brief, HostTableFoot is preceded by a Divider
@@ -2145,16 +2335,17 @@ fn emit_host_table(
                 // rows from the body above.
                 writeln!(out, "{inner_pad}Divider()").unwrap();
                 head_just_emitted = false;
-                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false, part_styles)?;
+                emit_table_section_rows(&mut out, section, indent + 4, /*bold=*/ false, part_styles, table_ctx)?;
             }
             "HostTableColGroup" => {
-                // No SwiftUI analog — column-width metadata is part of
-                // the host's data model in SwiftUI.Table-land, but here
-                // there's no column-width hook to attach it to. Emit a
-                // comment so the IR's intent is visible in the output.
+                // The col-group itself emits no SwiftUI view — column
+                // widths reach the cells via [`TableContext`] threading
+                // discovered above.  The comment makes the intent
+                // visible in the output for downstream tooling and
+                // tracks the shape of the .mll source.
                 writeln!(
                     out,
-                    "{inner_pad}// HostTableColGroup ignored in SwiftUI"
+                    "{inner_pad}// HostTableColGroup — column widths threaded into cell .frame(width:)"
                 )
                 .unwrap();
                 head_just_emitted = false;
@@ -2350,7 +2541,7 @@ fn emit_host_dialog(
     // children we emit the VStack so the modifier signature is correct.
     writeln!(out, "{inner_pad}VStack {{").unwrap();
     if !node.children.is_empty() {
-        out.push_str(&emit_children(&node.children, indent + 12, part_styles)?);
+        out.push_str(&emit_children(&node.children, indent + 12, part_styles, None)?);
     }
     writeln!(out, "{inner_pad}}}").unwrap();
 
@@ -2391,18 +2582,29 @@ fn emit_table_section_rows(
     indent: usize,
     bold: bool,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
 ) -> Result<(), PipelineEmitError> {
     let pad = " ".repeat(indent);
 
     for child in &section.children {
         if child.tag == "Row" {
+            // Inside a HostTable every row is `HStack(spacing: 0)` so
+            // cells sit flush — matching `border-collapse: collapse`
+            // semantics from .msl.  Outside HostTable, `Row` keeps
+            // SwiftUI's default 8pt HStack spacing (see [`emit_view_tree`]
+            // and the regression test guarding that path).
             if child.children.is_empty() {
-                writeln!(out, "{pad}HStack {{ }}").unwrap();
+                writeln!(out, "{pad}HStack(spacing: 0) {{ }}").unwrap();
                 continue;
             }
-            writeln!(out, "{pad}HStack {{").unwrap();
+            writeln!(out, "{pad}HStack(spacing: 0) {{").unwrap();
             for cell in &child.children {
-                let emitted = emit_view_tree(cell, indent + 4, part_styles)?;
+                // `emit_table_cell` dispatches to width-threading
+                // [`emit_for_swift`] when the cell is a For with an
+                // `index:` binding AND the table has a discovered
+                // column-widths slot.  Other cells go through
+                // [`emit_view_tree`] unchanged.
+                let emitted = emit_table_cell(cell, indent + 4, part_styles, table_ctx)?;
                 if bold {
                     // Apply `.bold()` to every `Text(...)` line we just
                     // produced. We do this by string-rewriting the
@@ -2430,9 +2632,13 @@ fn emit_table_section_rows(
         } else {
             // Non-Row child inside a table section. Pass through the
             // walker so e.g. a stray Divider still compiles, and prepend
-            // a comment so the unusual nesting is visible.
+            // a comment so the unusual nesting is visible.  We still
+            // thread `table_ctx` so nested Rows (e.g. a `For
+            // (each: viewport-rows) { Row [data-row] { For { Cell } } }`
+            // body) can pick up `HStack(spacing: 0)` and width
+            // threading on the inner cell Fors.
             writeln!(out, "{pad}// non-Row child '{}' in table section", child.tag).unwrap();
-            let emitted = emit_view_tree(child, indent, part_styles)?;
+            let emitted = emit_view_tree(child, indent, part_styles, table_ctx)?;
             out.push_str(&emitted);
         }
     }
@@ -2469,10 +2675,20 @@ fn emit_table_section_rows(
 /// the expression's source text verbatim (for `Expr`). The body is
 /// recursed through [`emit_children`] so nested `If`/`Else` pairing
 /// still works one level down.
+/// `width_thread`: when true AND a [`TableContext::column_widths_slot`]
+/// is live AND the For node has an `index:` binding, each iteration's
+/// body gets a trailing `.frame(width: <slot>[Int(<idx>)])` modifier so
+/// the generated SwiftUI cells take the column widths from the host's
+/// `columnWidths` slot.  Callers set this flag only when the For is in
+/// cell-position inside a HostTable Row; nested / outer Fors (e.g. the
+/// `viewport-rows` iterator that produces rows, not cells) do not get
+/// width threading.  See [`emit_table_cell`].
 fn emit_for_swift(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    width_thread: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2568,8 +2784,54 @@ fn emit_for_swift(
         // the closure. `EmptyView()` is the canonical no-op.
         out.push_str(&format!("{}EmptyView()\n", " ".repeat(body_indent)));
     } else {
-        out.push_str(&emit_children(&node.children, body_indent, part_styles)?);
+        out.push_str(&emit_children(&node.children, body_indent, part_styles, table_ctx)?);
     }
+
+    // -----------------------------------------------------------------
+    // HostTable column-width threading.
+    //
+    // When this For sits in cell-position inside a HostTable Row AND
+    // the enclosing TableContext carries a `column_widths_slot` AND we
+    // have an `index:` binding, the SwiftUI cell view inside each
+    // iteration picks up `.frame(width: <slot>[Int(<idx>)])` so each
+    // column gets an explicit pixel width rather than auto-sizing to
+    // its text content.
+    //
+    // The modifier is appended to the body content as a continuation
+    // line, indented one extra level past the body so SwiftUI parses it
+    // as a chained modifier on the cell view (i.e. the last expression
+    // in the closure).  For cells whose body already has a modifier
+    // chain via [`emit_view_tree`]'s part-styles splice, this lands at
+    // the end of that chain — exactly the cleanest splice point.
+    //
+    // Discoverability gates (all must hold; otherwise existing
+    // behaviour is preserved unchanged):
+    //
+    //   1. `width_thread` true (caller is [`emit_table_cell`]).
+    //   2. `table_ctx` carries a `column_widths_slot`.
+    //   3. The For has an `index:` binding (an `as:`-only For has no
+    //      column index to address).
+    //
+    // The slot name has already been camel-cased and identifier-checked
+    // when the TableContext was extracted in [`extract_table_context`].
+    if width_thread {
+        if let Some(idx) = &index_name {
+            if let Some(slot) = table_ctx.and_then(|c| c.column_widths_slot.as_deref()) {
+                let frame_pad = " ".repeat(body_indent + 4);
+                // Strip the body's trailing newline so the `.frame(...)`
+                // line attaches to the last view as a modifier
+                // continuation, then restore the newline after.
+                if out.ends_with('\n') {
+                    out.pop();
+                }
+                out.push('\n');
+                out.push_str(&format!(
+                    "{frame_pad}.frame(width: {slot}[Int({idx})])\n",
+                ));
+            }
+        }
+    }
+
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
 }
@@ -2595,6 +2857,7 @@ fn emit_if_swift(
     else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2614,7 +2877,7 @@ fn emit_if_swift(
     if if_node.children.is_empty() {
         out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
     } else {
-        out.push_str(&emit_children(&if_node.children, indent + 4, part_styles)?);
+        out.push_str(&emit_children(&if_node.children, indent + 4, part_styles, table_ctx)?);
     }
 
     if let Some(en) = else_node {
@@ -2622,7 +2885,7 @@ fn emit_if_swift(
         if en.children.is_empty() {
             out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
         } else {
-            out.push_str(&emit_children(&en.children, indent + 4, part_styles)?);
+            out.push_str(&emit_children(&en.children, indent + 4, part_styles, table_ctx)?);
         }
         out.push_str(&format!("{pad}}}\n"));
     } else {
@@ -3857,7 +4120,11 @@ mod tests {
         )
         .unwrap()
         .output;
-        assert!(out.contains("HStack {"), "expected HStack opener, got:\n{out}");
+        // HostTable rows now lower to `HStack(spacing: 0)` so cells sit
+        // flush — matches the `border-collapse: collapse` semantics .msl
+        // declares on the sheet part.  See the section walker for the
+        // rationale.
+        assert!(out.contains("HStack(spacing: 0) {"), "expected HStack(spacing: 0) opener, got:\n{out}");
         assert!(
             out.contains(r#"Text("A")"#) && out.contains(".bold()"),
             "expected bold header text, got:\n{out}"
@@ -3902,7 +4169,9 @@ mod tests {
         .unwrap()
         .output;
         // Two HStacks (one per Row), four Texts total, no .bold().
-        let hstack_count = out.matches("HStack {").count();
+        // HostTable rows use `HStack(spacing: 0)` per border-collapse
+        // semantics — see [`emit_table_section_rows`].
+        let hstack_count = out.matches("HStack(spacing: 0) {").count();
         assert_eq!(hstack_count, 2, "expected 2 HStacks, got {hstack_count}:\n{out}");
         assert!(out.contains(r#"Text("r1c1")"#));
         assert!(out.contains(r#"Text("r2c2")"#));
@@ -4022,8 +4291,11 @@ mod tests {
         )
         .unwrap()
         .output;
+        // ColGroup is now part of the column-widths threading pipeline;
+        // the inline comment documents that intent (and that an empty
+        // ColGroup falls back to no width threading).
         assert!(
-            out.contains("// HostTableColGroup ignored in SwiftUI"),
+            out.contains("// HostTableColGroup"),
             "expected ColGroup comment, got:\n{out}"
         );
         assert!(out.contains(r#"Text("x")"#));
@@ -6647,6 +6919,476 @@ mod tests {
                 ".foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color(red: 0.8, green: 0.8, blue: 0.8)))"
             ),
             "out = {out}"
+        );
+    }
+
+    // =====================================================================
+    // HostTable column-widths threading tests
+    //
+    // These tests pin down the contract of [`TableContext`] +
+    // [`extract_table_context`] + the cell-position width threading in
+    // [`emit_for_swift`]:
+    //
+    //   1. HostTable without a HostTableColGroup → no width threading,
+    //      cells stay text-sized (but rows still use spacing: 0).
+    //   2. HostTableColGroup with the canonical `For (each: slot:
+    //      column-widths) { Col }` shape → context captured, body Fors
+    //      with `index:` get `.frame(width: columnWidths[Int(<idx>)])`.
+    //   3. Body For with NO index binding → no width modifier (the
+    //      index is what indexes into the slot).
+    //   4. Header For inside HostTableHead → cells get the width
+    //      modifier too (header's `ch` is the column index).
+    //   5. End-to-end smoke against the Grid.mll shape → both
+    //      `HStack(spacing: 0)` AND `.frame(width: columnWidths[...])`
+    //      appear in the output.
+    //   6. HStack outside HostTable (i.e. a `Row` container) still uses
+    //      default spacing (regression guard).
+    //   7. Variable spacing inside non-table Rows is unaffected by the
+    //      threading change (regression guard).
+    //   8. A HostTableColGroup with a non-canonical For body (no `Col`)
+    //      falls back to no threading.
+    // =====================================================================
+
+    /// Helper: build a `HostTableColGroup { For (each: slot: <widths>,
+    /// as: w, index: cw) { Col [col] (width: (w)) } }` block matching
+    /// the `mosaic-pkg-grid::Grid.mll` shape.
+    fn col_group_widths(slot: &str) -> LayoutNode {
+        let col_node = LayoutNode {
+            tag: "Col".to_string(),
+            part_name: Some("col".to_string()),
+            props: vec![prop_expr("width", "w")],
+            children: Vec::new(),
+        };
+        let for_node = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", slot),
+                prop_keyword("as", "w"),
+                prop_keyword("index", "cw"),
+            ],
+            vec![col_node],
+        );
+        container_node("HostTableColGroup", vec![for_node])
+    }
+
+    /// Helper: build a HostTableBody whose only child is a For over a
+    /// slot, with the given index binding name.  Each iteration emits a
+    /// `Row [data-row]` whose only child is a For over the row binding
+    /// — i.e. the canonical Grid.mll shape but with a configurable
+    /// inner-index name and a configurable body leaf (so we can drop
+    /// out the inner For to exercise the no-index path).
+    fn body_for_rows_then_inner_for(
+        outer_index: &str,
+        inner_index: Option<&str>,
+    ) -> LayoutNode {
+        let leaf = leaf("Text", vec![prop_slot_ref("content", "v")]);
+        let inner_for_props = match inner_index {
+            Some(idx) => vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                prop_keyword("as", "v"),
+                prop_keyword("index", idx),
+            ],
+            None => vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                prop_keyword("as", "v"),
+            ],
+        };
+        let inner_for = node_with_props("For", inner_for_props, vec![leaf]);
+        let row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: Some("data-row".to_string()),
+            props: Vec::new(),
+            children: vec![inner_for],
+        };
+        let outer_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "viewport-rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", outer_index),
+            ],
+            vec![row],
+        );
+        container_node("HostTableBody", vec![outer_for])
+    }
+
+    // -----------------------------------------------------------------
+    // Test W1 — HostTable WITHOUT a HostTableColGroup: no column-width
+    // threading, but rows still use `HStack(spacing: 0)`.
+    //
+    // The fall-back path: cells render at their natural text-content
+    // width and the visible diff vs pre-PR is only the row spacing.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_table_without_col_group_does_not_thread_widths() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![table_section("HostTableBody", vec![vec!["a", "b"]])],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // spacing: 0 still applies (HostTable always uses it).
+        assert!(
+            out.contains("HStack(spacing: 0) {"),
+            "expected spacing: 0 even without ColGroup, got:\n{out}"
+        );
+        // No `.frame(width:` modifier anywhere — there's no slot to
+        // address.
+        assert!(
+            !out.contains(".frame(width:"),
+            "expected NO width threading without ColGroup, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W2 — HostTableColGroup with the canonical For-Col shape is
+    // detected by [`extract_table_context`] and the slot name flows
+    // into a body cell's `.frame(width: columnWidths[Int(c)])`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_table_col_group_canonical_shape_threads_widths_into_body_cells() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        col_group_widths("column-widths"),
+                        body_for_rows_then_inner_for("r", Some("c")),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // The inner For (`index: c`) emits `.frame(width:
+        // columnWidths[Int(c)])` after its body.
+        assert!(
+            out.contains(".frame(width: columnWidths[Int(c)])"),
+            "expected width threading on body inner For, got:\n{out}"
+        );
+        // The OUTER For (`index: r`, iterates rows) must NOT get a
+        // width modifier — `r` is a row index, not a column index.
+        // Only the inner-For (cell-position) variant of `.frame(width:
+        // ...)` may appear.
+        assert!(
+            !out.contains(".frame(width: columnWidths[Int(r)])"),
+            "expected NO width threading on outer row For, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W3 — Body For WITHOUT an `index:` binding falls through to
+    // no-width threading.  The slot indexer needs an index expression;
+    // an as-only For has no column index to feed it.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn body_for_without_index_skips_width_threading() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        col_group_widths("column-widths"),
+                        // Inner For has no `index:` binding.
+                        body_for_rows_then_inner_for("r", None),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // ColGroup is present and the slot was extracted, but the body
+        // For lacks `index:` so no width modifier fires.
+        assert!(
+            !out.contains(".frame(width: columnWidths"),
+            "expected NO width threading when For lacks `index:`, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W4 — Header For inside HostTableHead also gets width
+    // threading.  The header's `ch` binding IS a column index
+    // (mosaic-pkg-grid::Grid.mll convention), so column-widths[Int(ch)]
+    // is the right address.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn header_for_with_index_threads_width_into_header_cells() {
+        let header_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "column-headers"),
+                prop_keyword("as", "h"),
+                prop_keyword("index", "ch"),
+            ],
+            vec![leaf("Text", vec![prop_slot_ref("content", "h")])],
+        );
+        let header_row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: Some("header-row".to_string()),
+            props: Vec::new(),
+            children: vec![header_for],
+        };
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        col_group_widths("column-widths"),
+                        container_node("HostTableHead", vec![header_row]),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".frame(width: columnWidths[Int(ch)])"),
+            "expected width threading on header For, got:\n{out}"
+        );
+        // The header text still gets `.bold()` — width threading does
+        // not interfere with the existing bolding path.
+        assert!(
+            out.contains(".bold()"),
+            "expected header bold still applied, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W5 — End-to-end smoke: the full Grid.mll shape (header For +
+    // col-group For-Col + body For-Row-For) produces BOTH
+    // `HStack(spacing: 0)` AND `.frame(width: columnWidths[Int(<idx>)])`
+    // in the output.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn host_table_full_grid_shape_emits_spacing_zero_and_width_threading() {
+        let header_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "column-headers"),
+                prop_keyword("as", "h"),
+                prop_keyword("index", "ch"),
+            ],
+            vec![leaf("Text", vec![prop_slot_ref("content", "h")])],
+        );
+        let header_row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: Some("header-row".to_string()),
+            props: Vec::new(),
+            children: vec![header_for],
+        };
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        col_group_widths("column-widths"),
+                        container_node("HostTableHead", vec![header_row]),
+                        body_for_rows_then_inner_for("r", Some("c")),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // Spacing-zero on every HostTable row.
+        assert!(
+            out.contains("HStack(spacing: 0) {"),
+            "expected spacing: 0 HStack, got:\n{out}"
+        );
+        // Width threading on both header and body cells.
+        assert!(
+            out.contains(".frame(width: columnWidths[Int(ch)])"),
+            "expected header width threading, got:\n{out}"
+        );
+        assert!(
+            out.contains(".frame(width: columnWidths[Int(c)])"),
+            "expected body width threading, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W6 — Regression guard: an `Row` container OUTSIDE any
+    // HostTable still lowers to a plain `HStack {` with SwiftUI's
+    // default 8pt spacing.  The spacing: 0 edit must NOT leak into
+    // ordinary Row users (a freestanding toolbar, a Box-of-Rows, etc.).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn row_outside_host_table_keeps_default_spacing() {
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "Row",
+                    vec![
+                        leaf("Text", vec![prop_string("content", "left")]),
+                        leaf("Text", vec![prop_string("content", "right")]),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // A plain `HStack {` (default spacing) must appear; a
+        // `HStack(spacing: 0)` opener must NOT appear (there's no
+        // HostTable in scope to trigger the override).
+        assert!(
+            out.contains("HStack {\n"),
+            "expected default-spacing HStack opener, got:\n{out}"
+        );
+        assert!(
+            !out.contains("HStack(spacing: 0)"),
+            "spacing: 0 must NOT leak into non-HostTable Rows, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W7 — Regression guard: a `Row` nested inside a `Box` that
+    // is itself NOT under any HostTable must also keep default
+    // spacing.  Exercises the recursion path — the absence of
+    // `table_ctx` should propagate down through container nesting.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn nested_row_outside_host_table_keeps_default_spacing() {
+        let inner_row = container_node(
+            "Row",
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node("Box", vec![inner_row])],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("HStack {\n"),
+            "expected default-spacing HStack opener, got:\n{out}"
+        );
+        assert!(
+            !out.contains("HStack(spacing: 0)"),
+            "nested non-table Row must keep default spacing, got:\n{out}"
+        );
+        assert!(
+            !out.contains(".frame(width:"),
+            "no HostTable in scope → no width threading, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W8 — HostTableColGroup with a malformed For body (no `Col`)
+    // falls back to no width threading.  The structural match is
+    // permissive (any Col counts) but we require *some* Col to be
+    // present; absent that, `column_widths_slot` stays None and only
+    // the spacing: 0 edit takes effect.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn col_group_without_col_body_falls_back_to_no_threading() {
+        // ColGroup contains a For whose body is a Text (not Col).
+        // The structural match should reject this.
+        let malformed_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "column-widths"),
+                prop_keyword("as", "w"),
+                prop_keyword("index", "cw"),
+            ],
+            vec![leaf("Text", vec![prop_string("content", "x")])],
+        );
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![
+                        container_node("HostTableColGroup", vec![malformed_for]),
+                        body_for_rows_then_inner_for("r", Some("c")),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout,
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // No width threading — the ColGroup's For did not contain a Col.
+        assert!(
+            !out.contains(".frame(width: columnWidths"),
+            "expected NO width threading with malformed ColGroup, got:\n{out}"
+        );
+        // Spacing: 0 still fires (HostTable is present).
+        assert!(
+            out.contains("HStack(spacing: 0) {"),
+            "expected spacing: 0 HStack even with malformed ColGroup, got:\n{out}"
         );
     }
 }
