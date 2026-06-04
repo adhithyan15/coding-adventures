@@ -97,6 +97,10 @@ neurobrucellosis — reached without inventing a single evidence byte.
 
 ## 5. Where this leaves the framework
 
+> **Extended (2026-06-04):** [ADJ62](ADJ62-input-justification.md) applies this exact
+> gate to the **input** side (`extracted` ≙ evidence, `inferred` ≙ conclusion), so every
+> fact — pulled in *or* pushed out — is anchored to the bytes that justify it.
+
 Both directions of byte provenance now hold *and* the framework can answer under them:
 every input byte accounted for (ADJ57/58), every evidence claim traced to input bytes,
 and the conclusion stated as a justified, hedged inference over **combined** bytes —

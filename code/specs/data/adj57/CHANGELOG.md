@@ -1,5 +1,35 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.6.0] — 2026-06-04
+
+### Added
+
+- **ADJ62 — input justification (extract/infer → which bytes → why).** Applies the
+  ADJ61 justification gate to the **input** side. Coverage (ADJ57/58) proved nothing was
+  *dropped*; this proves nothing was *mis-extracted*: after decomposing, the framework
+  asks the agent *"what did you extract or infer, from which bytes, and why do those
+  bytes prove it?"* and runs the two-layer gate on the answer.
+  - **`pipeline/justify_gate.py`** generalized to be **stage-symmetric** — kinds
+    `extracted` (strict, ≙ evidence) / `inferred` (hedged, ≙ conclusion) alongside the
+    output kinds; `by_kind`/`n_strict`/`n_inference` counts; reads either `claim` (output)
+    or `fact` (input) as the assertion text. Output-stage driver back-compat preserved.
+  - **`pipeline/justify_input.workflow.js`** — decompose (coverage) → "account for what
+    you took" → adversarial extraction verifier → two-layer gate + kickback.
+  - **`pipeline/run_justify_input.py`** — reports BOTH input gates (coverage +
+    extraction justification) and the extracted/inferred split.
+  - 5 new gate tests (15 total) covering the input kinds.
+  - **Run (neurobrucellosis bytes):** coverage 100% (27 fact-segments + 3 discards =
+    1812 bytes); extraction 49/49 grounded — **41 extracted + 8 inferred**, 0 rejected.
+    The gate forced 8 readings into the *inferred* column that coverage would have let
+    pass as fact — incl. **"the patient is male"** (the case says only *"He"*, never
+    "male"), "East African" countries (text says only "Africa"), "hepatosplenomegaly"
+    (a composite), "albuminocytologic dissociation" (a label) — while correctly keeping
+    "tachycardia" as *extracted* (the word appears verbatim). Separates what the text
+    *says* from what the reader *infers*, byte by byte. Spec:
+    [ADJ62](../../ADJ62-input-justification.md).
+  - **Honest limitations (unchanged):** layer 2 is an LLM verdict (multi-verifier vote
+    still pending); the live reject/kickback path was not exercised (clean first pass).
+
 ## [0.5.0] — 2026-06-04
 
 ### Added

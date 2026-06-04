@@ -48,7 +48,19 @@ import json
 import sys
 from pathlib import Path
 
-KINDS = ("evidence", "conclusion")
+# The gate is STAGE-SYMMETRIC. Every kind is either STRICT (the claim is a statement
+# directly supported by its cited bytes) or an INFERENCE (it is derived from them, and is
+# allowed only as a hedged hypothesis). The same two-layer test then applies to both ends
+# of the pipeline:
+#   OUTPUT stage (ADJ61): evidence (strict)  / conclusion (inference)
+#   INPUT  stage (ADJ62): extracted (strict) / inferred   (inference)
+# The input split answers the question ADJ62 asks the decomposer: "what did you extract or
+# infer from these bytes, which bytes, and why do those bytes PROVE your extraction?" An
+# *extracted* fact must be stated by its cited bytes; an *inferred* fact must be warranted
+# by them and flagged as an inference — exactly mirroring evidence vs conclusion.
+STRICT_KINDS = ("evidence", "extracted")
+INFERENCE_KINDS = ("conclusion", "inferred")
+KINDS = STRICT_KINDS + INFERENCE_KINDS
 
 
 def anchor(input_units: list[str], grounded_by: list[str]) -> dict:
@@ -78,8 +90,10 @@ def grade(input_units: list[str], graded_claims: list[dict]) -> dict:
         kind = c.get("kind", "evidence")
         a = anchor(input_units, c.get("grounded_by"))
         justified = bool(c.get("justified"))
+        # stage-symmetric: the output stage labels the assertion "claim", the input stage
+        # labels it "fact" — accept either as the assertion text.
         rec = {
-            "claim": c.get("claim", ""),
+            "claim": c.get("claim") or c.get("fact") or "",
             "kind": kind,
             "anchored": a["anchored"],
             "justified": justified,
@@ -93,24 +107,28 @@ def grade(input_units: list[str], graded_claims: list[dict]) -> dict:
                 reason = ("NO citation at all" if a["n_spans"] == 0
                           else f"fabricated citation(s) — not verbatim in input: {a['missing']!r}")
             elif kind not in KINDS:
-                reason = f"unknown claim kind {kind!r} (must be evidence|conclusion)"
+                reason = f"unknown claim kind {kind!r} (must be one of {KINDS})"
             else:  # anchored but not justified
-                reason = ("cited bytes do NOT justify this claim — "
-                          + ("evidence not supported by the cited spans"
-                             if kind == "evidence"
-                             else "conclusion not warranted by the cited evidence, or over-asserted (not hedged)"))
+                detail = (f"{kind} not supported by the cited spans" if kind in STRICT_KINDS
+                          else f"{kind} not warranted by the cited bytes, or over-asserted (not hedged)")
+                reason = "cited bytes do NOT justify this claim — " + detail
             rec["reason"] = reason
             rejected.append(rec)
 
     n = len(graded_claims)
-    ev = [g for g in grounded if g["kind"] == "evidence"]
-    con = [g for g in grounded if g["kind"] == "conclusion"]
+    by_kind: dict[str, int] = {}
+    for g in grounded:
+        by_kind[g["kind"]] = by_kind.get(g["kind"], 0) + 1
     return {
         "n_claims": n,
         "n_grounded": len(grounded),
         "n_rejected": len(rejected),
-        "n_evidence": len(ev),
-        "n_conclusion": len(con),
+        "by_kind": by_kind,
+        "n_strict": sum(v for k, v in by_kind.items() if k in STRICT_KINDS),
+        "n_inference": sum(v for k, v in by_kind.items() if k in INFERENCE_KINDS),
+        # back-compat aliases for the output-stage driver (ADJ61)
+        "n_evidence": by_kind.get("evidence", 0),
+        "n_conclusion": by_kind.get("conclusion", 0),
         "fully_grounded": n > 0 and not rejected,
         "grounded": grounded,
         "rejected": rejected,
@@ -124,9 +142,9 @@ def main() -> None:
     r = grade(input_units, claims)
     print(json.dumps({k: v for k, v in r.items() if k not in ("grounded", "rejected")}, indent=2))
     if r["fully_grounded"]:
+        breakdown = " + ".join(f"{v} {k}" for k, v in r["by_kind"].items()) or "0"
         print(f"\n>>> ALL {r['n_claims']} claims grounded "
-              f"({r['n_evidence']} evidence + {r['n_conclusion']} conclusion) — "
-              "byte-anchored AND justified by the cited bytes.")
+              f"({breakdown}) — byte-anchored AND justified by the cited bytes.")
         sys.exit(0)
     print(f"\n>>> JUSTIFICATION-GATE VIOLATION: {r['n_rejected']}/{r['n_claims']} rejected — "
           "kick back (cite real bytes that justify it, hedge an over-asserted conclusion, or drop):")

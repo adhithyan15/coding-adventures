@@ -82,6 +82,46 @@ def test_mixed_evidence_and_conclusion_counts():
     assert not r["fully_grounded"]
 
 
+# ---- ADJ62: the SAME gate on the input stage (extracted / inferred) ----
+def test_extracted_fact_is_grounded():
+    r = justify_gate.grade(INPUT, [g(
+        claim="organomegaly present", kind="extracted",
+        grounded_by=["hepatomegaly of 3 cm and splenomegaly of 3 cm"], justified=True)])
+    assert r["fully_grounded"] and r["by_kind"]["extracted"] == 1 and r["n_strict"] == 1
+
+
+def test_inferred_fact_grounded_by_combination():
+    r = justify_gate.grade(INPUT, [g(
+        claim="reticuloendothelial involvement", kind="inferred",
+        grounded_by=["hepatomegaly of 3 cm and splenomegaly of 3 cm", "sterile"], justified=True)])
+    assert r["fully_grounded"] and r["n_inference"] == 1
+
+
+def test_extracted_but_unsupported_is_rejected():
+    # a fact the decomposer claims to have EXTRACTED, but the cited bytes do not state it
+    r = justify_gate.grade(INPUT, [g(
+        claim="patient is immunocompromised", kind="extracted",
+        grounded_by=["sterile"], justified=False)])
+    assert not r["fully_grounded"] and "extracted not supported" in r["rejected"][0]["reason"]
+
+
+def test_inferred_unwarranted_is_rejected():
+    r = justify_gate.grade(INPUT, [g(
+        claim="definitely brucellosis", kind="inferred",
+        grounded_by=["travel through Uganda"], justified=False)])
+    assert not r["fully_grounded"] and "not warranted" in r["rejected"][0]["reason"]
+
+
+def test_by_kind_counts_all_four_kinds():
+    r = justify_gate.grade(INPUT, [
+        g(claim="a", kind="extracted", grounded_by=["sterile"], justified=True),
+        g(claim="b", kind="inferred", grounded_by=["sterile"], justified=True),
+        g(claim="c", kind="evidence", grounded_by=["sterile"], justified=True),
+        g(claim="d", kind="conclusion", grounded_by=["sterile"], justified=True)])
+    assert r["by_kind"] == {"extracted": 1, "inferred": 1, "evidence": 1, "conclusion": 1}
+    assert r["n_strict"] == 2 and r["n_inference"] == 2
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for fn in fns:
