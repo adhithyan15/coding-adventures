@@ -1758,6 +1758,14 @@ fn compile_one_with_globals(
 // Tests
 // ===========================================================================
 
+// LANG77 golden divergence guard for the native lisp runtime.  Lives as a
+// lib unit-test module (not an integration test) so the build-script's
+// `cargo:rustc-link-lib=static=twig_aot_runtime` directive reliably places
+// the runtime archive on this binary's link line — letting the test call the
+// `__twig_lispy_*` C functions directly.
+#[cfg(test)]
+mod lispy_runtime_golden;
+
 #[cfg(test)]
 mod tests {
     use super::*;
