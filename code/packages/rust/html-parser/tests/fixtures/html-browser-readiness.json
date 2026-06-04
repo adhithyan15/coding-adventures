@@ -29,6 +29,9 @@
         "headings": [
           { "level": 1, "text": "Example Directory" }
         ],
+        "navigation_groups": [
+          { "element": "ul", "role": "list", "text": "One Two", "list_kind": "unordered", "item_count": 2 }
+        ],
         "links": [
           { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "effective_target": "main", "rel": "next external noreferrer", "rel_tokens": ["next", "external", "noreferrer"], "rel_external": true, "rel_noreferrer": true, "title": "Intro", "download": "intro.html", "ping": ["track.html", "https://metrics.example/p"], "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"], "attributionsrc": ["attr/register", "https://ad.example/register"], "resolved_attributionsrc": ["https://example.test/docs/attr/register", "https://ad.example/register"], "hreflang": "en", "type_hint": "text/html", "referrerpolicy": "no-referrer", "text": "Venture HTML" }
         ],
@@ -683,6 +686,41 @@
       }
     },
     {
+      "id": "navigation-menu-descriptor-page",
+      "description": "Browser document summaries expose navigation landmarks, menus, and ordered/unordered lists as a flat group inventory.",
+      "input": "<body><h2 id=nav-title>Site</h2><nav id=site-nav aria-labelledby=nav-title><a href=/home>Home</a><ul id=primary><li>Docs<li>API</ul></nav><menu id=actions aria-label=\"Actions\"><li value=3>Open<li>Save</menu><ol id=steps start=2 reversed type=A><li value=4>Review<li>Ship</ol>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Site Home Docs API Open Save Review Ship",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "nav-title", "name": null, "text": "Site" },
+          { "id": "site-nav", "name": null, "text": "Home Docs API" },
+          { "id": "primary", "name": null, "text": "Docs API" },
+          { "id": "actions", "name": null, "text": "Open Save" },
+          { "id": "steps", "name": null, "text": "Review Ship" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Site" }
+        ],
+        "navigation_groups": [
+          { "element": "nav", "id": "site-nav", "role": "navigation", "text": "Home Docs API", "accessible_name": "Site", "aria_labelledby": ["nav-title"], "landmark_kind": "navigation", "item_count": 0 },
+          { "element": "ul", "id": "primary", "role": "list", "text": "Docs API", "list_kind": "unordered", "item_count": 2 },
+          { "element": "menu", "id": "actions", "role": "list", "text": "Open Save", "accessible_name": "Actions", "aria_label": "Actions", "list_kind": "menu", "item_count": 2 },
+          { "element": "ol", "id": "steps", "role": "list", "text": "Review Ship", "list_kind": "ordered", "item_count": 2, "list_start": "2", "list_marker_type": "A", "list_reversed": true }
+        ],
+        "links": [
+          { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
+        ],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "document-outline-landmark-page",
       "description": "Browser document summaries keep heading order across sectioning and landmark elements.",
       "input": "<body><header><h1>Site</h1></header><nav><h2>Nav</h2><a href=/home>Home</a></nav><main><article id=post><h2>Post</h2><section aria-label=Chapter><h3>Chapter</h3></section></article><aside><h2>Related</h2></aside></main><footer>Fine print</footer>",
@@ -702,6 +740,9 @@
           { "level": 2, "text": "Post" },
           { "level": 3, "text": "Chapter" },
           { "level": 2, "text": "Related" }
+        ],
+        "navigation_groups": [
+          { "element": "nav", "role": "navigation", "text": "Nav Home", "landmark_kind": "navigation", "item_count": 0 }
         ],
         "links": [
           { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
@@ -792,6 +833,9 @@
         "text_semantics": [
           { "element": "blockquote", "role": "quote_block", "text": "Quote part", "quote_cite": "notes/ref.html", "resolved_quote_cite": "https://example.test/docs/notes/ref.html" },
           { "element": "q", "role": "quote", "text": "part", "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part" }
+        ],
+        "navigation_groups": [
+          { "element": "ol", "role": "list", "text": "Seven Eight", "list_kind": "ordered", "item_count": 2, "list_start": "3", "list_marker_type": "A", "list_reversed": true }
         ],
         "links": [],
         "images": [],

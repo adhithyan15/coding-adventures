@@ -835,6 +835,7 @@ pub struct BrowserDocument {
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
+    pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1461,6 +1462,23 @@ pub struct BrowserTextSemantic {
     pub edit_datetime: Option<String>,
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserNavigationGroup {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub landmark_kind: Option<String>,
+    pub list_kind: Option<String>,
+    pub item_count: usize,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9332,6 +9350,9 @@ fn collect_browser_facts(
         {
             summary.text_semantics.push(text_semantic);
         }
+        if let Some(navigation_group) = browser_navigation_group_element(element, id_texts) {
+            summary.navigation_groups.push(navigation_group);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -10941,6 +10962,42 @@ fn browser_content_role(name: &str) -> Option<&'static str> {
         name if is_browser_block_element(name) => Some("block"),
         _ => Some("inline"),
     }
+}
+
+fn browser_navigation_group_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserNavigationGroup> {
+    if !matches!(element.name.as_str(), "nav" | "ul" | "ol" | "menu" | "dir") {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let aria_labelledby = browser_aria_idrefs(element, "aria-labelledby");
+
+    Some(BrowserNavigationGroup {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby,
+        landmark_kind: browser_landmark_kind(element),
+        list_kind: browser_list_kind(element),
+        item_count: browser_direct_list_item_count(element),
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+    })
+}
+
+fn browser_direct_list_item_count(element: &Element) -> usize {
+    element
+        .children
+        .iter()
+        .filter(|node| matches!(node, Node::Element(child) if child.name == "li"))
+        .count()
 }
 
 fn should_collect_browser_content_children(name: &str) -> bool {

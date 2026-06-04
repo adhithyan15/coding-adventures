@@ -243,6 +243,7 @@ def check_browser_readiness_case(
     require_object_list(f"{case_path}.expected", expected, "anchors", errors)
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "text_semantics", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "navigation_groups", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
@@ -479,6 +480,28 @@ def check_browser_expected_lists(
             "bidi_kind",
         ):
             require_optional_nullable_string(semantic_path, semantic, field, errors)
+
+    for index, group in enumerate(object_list_items(expected, "navigation_groups")):
+        group_path = f"{case_path}.expected.navigation_groups[{index}]"
+        for field in (
+            "element",
+            "role",
+            "text",
+        ):
+            require_string(group_path, group, field, errors)
+        for field in (
+            "id",
+            "accessible_name",
+            "aria_label",
+            "landmark_kind",
+            "list_kind",
+            "list_start",
+            "list_marker_type",
+        ):
+            require_optional_nullable_string(group_path, group, field, errors)
+        require_optional_string_list(group_path, group, "aria_labelledby", errors)
+        require_integer(group_path, group, "item_count", errors)
+        require_optional_boolean(group_path, group, "list_reversed", errors)
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
