@@ -1554,6 +1554,21 @@ fn emit_divider(
 
 /// `Icon [name] (glyph: "...")` → `<FontIcon Glyph="..."/>` against
 /// Segoe Fluent Icons (the WinUI 3 default icon font).
+///
+/// Exception: when the `glyph` value is a *semantic* name (today only
+/// `"spinner"`) the lowering switches to the WinUI-native widget that
+/// expresses that semantic — `<ProgressRing IsActive="True"/>` for
+/// `"spinner"`.  This is X5 Path A from
+/// `demo/toolkit-multi-demo/ISSUES.md`: Segoe Fluent has no glyph
+/// literally named `"spinner"`, and even if it did, `FontIcon` only
+/// renders a static character — the toolkit's `Spinner` component
+/// wants the animated spinning ring that `ProgressRing` provides.
+///
+/// The semantic-name list is intentionally tiny (start with `spinner`,
+/// grow case-by-case as toolkit authors invent new ones).  A future
+/// kernel-vocabulary cycle (UI34 / UI35) may promote `Spinner` to a
+/// first-class primitive; until then, this targeted lowering is the
+/// minimum-coupling fix.
 fn emit_icon(
     node: &LayoutNode,
     indent: usize,
@@ -1562,6 +1577,18 @@ fn emit_icon(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = part_style_attr(node, part_styles);
+
+    // X5: semantic-glyph lowering.  Only fires for literal string
+    // values — slot-bound glyphs (`{x:Bind GlyphProp}`) stay on the
+    // FontIcon path because we can't statically tell what the runtime
+    // value will be.
+    if let Some(LayoutPropValue::String(s)) =
+        find_prop_value(node, "glyph").or_else(|| find_prop_value(node, "name"))
+    {
+        if let Some(replacement) = semantic_glyph_xaml_element(&s) {
+            return Ok(format!("{pad}<{replacement}{style}/>\n"));
+        }
+    }
 
     let glyph_attr = match find_prop_value(node, "glyph").or_else(|| find_prop_value(node, "name")) {
         Some(LayoutPropValue::String(s)) => format!(" Glyph=\"{}\"", escape_xaml_attr(s)),
@@ -1572,6 +1599,25 @@ fn emit_icon(
         _ => String::new(),
     };
     Ok(format!("{pad}<FontIcon{glyph_attr}{style}/>\n"))
+}
+
+/// Map a semantic glyph name to a WinUI 3 element name + attribute
+/// fragment that expresses that semantic natively.  Returns `None`
+/// for any name not in the table — the caller then falls back to
+/// the standard `<FontIcon Glyph="..."/>` lowering.
+///
+/// Currently recognized:
+///
+/// | semantic name | XAML element                  |
+/// |---|---|
+/// | `"spinner"`   | `ProgressRing IsActive="True"`|
+///
+/// New entries land case-by-case as the toolkit demo surfaces them.
+fn semantic_glyph_xaml_element(name: &str) -> Option<&'static str> {
+    match name {
+        "spinner" => Some("ProgressRing IsActive=\"True\""),
+        _ => None,
+    }
 }
 
 // =====================================================================
@@ -5434,6 +5480,97 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(r.xaml.contains("<FontIcon"), "got:\n{}", r.xaml);
         assert!(r.xaml.contains("Glyph="));
+    }
+
+    /// X5 Path A: `Icon (glyph: "spinner")` lowers to
+    /// `<ProgressRing IsActive="True"/>` instead of the would-be
+    /// `<FontIcon Glyph="spinner"/>` — Segoe Fluent has no glyph
+    /// literally named `spinner`, and the toolkit's `Spinner`
+    /// component wants the animated ring anyway.
+    #[test]
+    fn x5_icon_with_glyph_spinner_lowers_to_progress_ring() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("spinner".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<ProgressRing IsActive=\"True\""),
+            "expected ProgressRing lowering for `spinner`, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("<FontIcon"),
+            "FontIcon must NOT appear for the semantic `spinner` lowering, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Glyph=\"spinner\""),
+            "literal Glyph=\"spinner\" must NOT survive — it's the bug, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// X5 scope: non-semantic glyph names still lower to
+    /// `<FontIcon Glyph="..."/>`.  `spinner` is special; `Save`,
+    /// `Refresh`, hex codepoints stay on the FontIcon path.
+    #[test]
+    fn x5_icon_with_non_semantic_glyph_still_emits_fonticon() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("Save".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<FontIcon"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Glyph=\"Save\""), "got:\n{}", r.xaml);
+    }
+
+    /// X5 scope: slot-bound glyphs (`{x:Bind GlyphProp}`) stay on
+    /// the FontIcon path even if the runtime value happens to be
+    /// `"spinner"` — the lowering decision is static, by the
+    /// layout's literal string, so a slot-bound glyph never enters
+    /// the semantic table.  Future cycles could push the check to
+    /// runtime via a binding converter, but PR-1 keeps it static.
+    #[test]
+    fn x5_icon_with_slot_bound_glyph_stays_on_fonticon_path() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::SlotRef("glyph-name".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<FontIcon"), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("Glyph=\"{x:Bind GlyphName}\""),
+            "expected x:Bind passthrough, got:\n{}",
+            r.xaml
+        );
     }
 
     // ── unsupported primitives surface clearly ──
