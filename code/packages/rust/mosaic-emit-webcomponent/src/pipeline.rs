@@ -520,16 +520,42 @@ fn emit_render(
         // `JSON.parse` succeeds when the host has not yet set the
         // attribute.
         //
-        // `text` / `number` / `bool` and the singular forms fall
-        // through to the legacy string-default — JS loose equality
-        // (`==`) handles the runtime comparisons the layout produces
-        // (`3 == "3"` is `true`), and `${var}` template interpolation
-        // strings-coerces uniformly.  A future PR can tighten those
-        // to typed parses for clarity, but the string default does not
-        // produce visible bugs today.
+        // `number` slots parse the attribute as `Number(...)` with a
+        // `NaN` sentinel for "no value set" instead of the legacy
+        // `?? ""` default.  Without the sentinel, every loop-index
+        // comparison like `r == editRow` renders `true` when
+        // `edit-row` is unset — JS treats `0 == "" === true` (`""`
+        // coerces to `0`).  The visicalc grid's per-cell editing
+        // predicate hits exactly this case: with a default-unset
+        // `edit-row`, the cell at (0, 0) would render its `<input>`
+        // editor by mistake.  Demos used to work around this by
+        // explicitly setting `edit-row="-1"`; moving the sentinel
+        // into the emitter means every host gets the safety net
+        // automatically.  `NaN`'s `==` is always `false`, including
+        // against itself — exactly what's wanted for the marker.
+        //
+        // `bool` slots parse as `attr === "true"` so attribute
+        // presence + the literal `"true"` both fire while an absent
+        // attribute reads as `false`.  Matches HTML's built-in
+        // boolean-attribute behaviour and avoids the same `"" == 0`
+        // coercion trap the number path is guarding against.
+        //
+        // `text` / `image` / `color` keep the legacy string-default
+        // — those slots are never compared numerically and
+        // `${var}` template interpolation strings-coerces the
+        // empty default uniformly.
         let initializer = match slot.r#type {
             SlotType::List(_) => {
                 format!("JSON.parse(this.getAttribute(\"{}\") ?? \"[]\")", slot.name)
+            }
+            SlotType::Number => {
+                format!(
+                    "this.getAttribute(\"{}\") !== null ? Number(this.getAttribute(\"{}\")) : NaN",
+                    slot.name, slot.name
+                )
+            }
+            SlotType::Bool => {
+                format!("this.getAttribute(\"{}\") === \"true\"", slot.name)
             }
             _ => format!("this.getAttribute(\"{}\") ?? \"\"", slot.name),
         };
@@ -4600,5 +4626,76 @@ mod tests {
         assert_eq!(strip_outer_parens("a + b"), "a + b");
         assert_eq!(strip_outer_parens(""), "");
         assert_eq!(strip_outer_parens("("), "(");
+    }
+
+    // ── number / bool slot default-value sentinels ───────────────
+
+    /// A `number`-typed slot's default reads as `NaN`, not the
+    /// legacy `""` empty string.  Without this, `r == editRow`
+    /// would coerce `""` to `0` and falsely match cell (0, 0)
+    /// whenever `edit-row` is unset.  `NaN`'s `==` is always
+    /// `false`, so the predicate fails safely.
+    #[test]
+    fn number_slot_default_is_nan_sentinel() {
+        let m = component(
+            "X",
+            vec![slot("edit-row", SlotType::Number, true)],
+            vec![],
+        );
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(
+                "const editRow = this.getAttribute(\"edit-row\") !== null ? Number(this.getAttribute(\"edit-row\")) : NaN;"
+            ),
+            "expected NaN sentinel for number slot, got:\n{out}"
+        );
+        // The legacy `?? ""` default must not appear for the number
+        // slot — it's the bug we're guarding against.
+        assert!(
+            !out.contains("const editRow = this.getAttribute(\"edit-row\") ?? \"\";"),
+            "number slot must NOT fall back to empty-string default:\n{out}"
+        );
+    }
+
+    /// A `bool`-typed slot's default is `false`, parsed as
+    /// `attr === "true"`.  Absent attribute reads as `false`;
+    /// `<el flag>` (presence) or `flag="true"` reads as `true`.
+    #[test]
+    fn bool_slot_default_is_string_equality_against_true() {
+        let m = component(
+            "X",
+            vec![slot("disabled", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(
+                "const disabled = this.getAttribute(\"disabled\") === \"true\";"
+            ),
+            "expected string-equality check for bool slot, got:\n{out}"
+        );
+    }
+
+    /// `text` / `image` / `color` keep the legacy string-default —
+    /// they're never compared numerically and the empty-string
+    /// fallback strings-coerces uniformly inside template literals.
+    #[test]
+    fn text_slot_keeps_string_default() {
+        let m = component(
+            "X",
+            vec![slot("label", SlotType::Text, true)],
+            vec![],
+        );
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains("const label = this.getAttribute(\"label\") ?? \"\";"),
+            "text slot must keep the string default:\n{out}"
+        );
     }
 }
