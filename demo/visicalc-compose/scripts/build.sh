@@ -59,9 +59,32 @@ TMP="$OUT_DIR/FormulaBar.kt.tmp"
 } > "$TMP"
 mv "$TMP" "$OUT_DIR/FormulaBar.kt"
 
-# TODO(grid-emit-compose): wire the Grid emitter here once the
-# `Grid` built-in primitive is supported by mosaic-emit-compose.
-# Until then, Grid.kt under src/main/kotlin/ stays hand-written.
+echo "Compiling Grid (Compose / Kotlin)..."
+# UI34 — Grid is now generated from the shared visicalc/mosaic/
+# Grid.{mil,desktop.mll,dark.msl} triple, same source the other six
+# VC2-* demos consume.  Grid.desktop.mll is a UI34
+# `pkg::mosaic-pkg-grid::Grid` one-liner; we pass --package-search-path
+# so the resolver substitutes the package's full composition before
+# the Compose emitter runs.
+"$MOSAIC_COMPILE" --backend compose \
+  --interface           "$SRC/Grid.mil" \
+  --layout              "$SRC"   --variant desktop \
+  --style               "$SRC/Grid.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
+  -o "$OUT_DIR/Grid.kt"
+
+# Match the FormulaBar package-prefix shim — mosaic-emit-compose
+# emits no `package` declaration so the host inserts one matching
+# the generated/ directory layout.
+TMP="$OUT_DIR/Grid.kt.tmp"
+{
+  echo "// THIS FILE IS GENERATED.  Edit Grid.{mil,desktop.mll,dark.msl}"
+  echo "// and re-run scripts/build.sh to regenerate."
+  echo
+  printf 'package generated\n\n'
+  cat "$OUT_DIR/Grid.kt"
+} > "$TMP"
+mv "$TMP" "$OUT_DIR/Grid.kt"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"
