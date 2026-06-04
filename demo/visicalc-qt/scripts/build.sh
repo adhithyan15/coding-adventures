@@ -49,9 +49,22 @@ echo "Compiling FormulaBar (Qt / QML)..."
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.qml"
 
-# TODO(VC2-qt-grid): wire Grid once the Qt pipeline emitter
-# supports the `Grid` built-in primitive. Until then, main.qml
-# inlines a hand-written QtQuick.Controls TableView placeholder.
+echo "Compiling Grid (Qt / QML)..."
+# UI34 — Grid is now generated from the shared visicalc/mosaic/
+# Grid.{mil,desktop.mll,dark.msl} triple (same source the React +
+# HTML + WebComponent + SwiftUI demos consume).  Grid.desktop.mll
+# is a UI34 `pkg::mosaic-pkg-grid::Grid` one-liner; we pass
+# --package-search-path so the resolver substitutes the package's
+# full composition before the Qt emitter runs.  The output is a
+# QML Item with `Repeater` loops, `Loader` if/else gates, and
+# typed signals — exposed to main.qml through the local `qml/`
+# module by adding a `Grid 1.0 ../build/Grid.qml` line to qmldir.
+"$MOSAIC_COMPILE" --backend qt \
+  --interface           "$SRC/Grid.mil" \
+  --layout              "$SRC/Grid.desktop.mll" \
+  --style               "$SRC/Grid.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
+  -o "$OUT_DIR/Grid.qml"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"
