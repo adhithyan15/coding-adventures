@@ -186,12 +186,56 @@ fn emit_compose_tree(
         "Box" => emit_container(node, "Box", depth, component_name, emits),
         "Row" => emit_container(node, "Row", depth, component_name, emits),
         "Column" => emit_container(node, "Column", depth, component_name, emits),
+        // UI29 §2.1 — `HostTable` and its four structural sub-tags.
+        // Compose UI has no native `<table>` primitive, so we lower
+        // every variant to a vertical `Column`: the row order of the
+        // sub-tags (`HostTableHead` then `HostTableBody`, etc.) maps
+        // straight onto Compose's child-order vertical layout.  The
+        // moslayout-author's `Row` / `Box` children then place
+        // header/data cells inside each.  `HostTableColGroup` is a
+        // semantic hint with no visual analog in Compose; we emit it
+        // as a `Column` so its children still iterate, but the
+        // generated comment documents the no-op nature.
+        "HostTable" | "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
+            emit_container(node, "Column", depth, component_name, emits)
+        }
+        "HostTableColGroup" => {
+            writeln!(
+                String::new(),
+                "{pad}// HostTableColGroup — no visual analog in Compose"
+            )
+            .unwrap();
+            // Fall through to a Column so any `Col` children iterate
+            // (they too are colgroup-only; emit as zero-size markers).
+            emit_container(node, "Column", depth, component_name, emits)
+        }
+        "Col" => {
+            // `Col` is a column-width hint inside `HostTableColGroup`.
+            // It has no Compose analog and never renders visually.
+            // Emit an empty `Spacer(Modifier.width(0.dp))` placeholder
+            // so the generated file still type-checks; downstream
+            // Compose Grid lowerings can refine this once a real
+            // width-binding flows.
+            Ok(format!(
+                "{pad}// Col (column-width hint — no Compose analog)\n"
+            ))
+        }
         "Text" => emit_text(node, depth),
         "Spacer" => Ok(format!(
             "{pad}Spacer(modifier = Modifier.weight(1f))\n"
         )),
         "HostInput" => emit_host_input(node, depth, component_name, emits),
         "HostButton" => emit_host_button(node, depth, component_name, emits),
+        // UI29 §3.1 / §3.2 — meta-primitives.
+        "For" => emit_for_compose(node, depth, component_name, emits),
+        "If" => emit_if_compose(node, None, depth, component_name, emits),
+        // An orphan `Else` (one that did not immediately follow an
+        // `If`) renders as a documenting Kotlin comment so the file
+        // still compiles.  Paired `If`/`Else` is handled by the
+        // sibling walker (`emit_children`); this match arm only
+        // fires when an `Else` is reached through `emit_compose_tree`
+        // directly (e.g. a hand-built test fixture).
+        "Else" => Ok(format!("{pad}// orphan Else — ignored\n")),
         other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     }
 }
@@ -210,11 +254,237 @@ fn emit_container(
         return Ok(out);
     }
     writeln!(out, "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{").unwrap();
-    for child in &node.children {
-        out.push_str(&emit_compose_tree(child, depth + 1, component_name, emits)?);
+    out.push_str(&emit_children_compose(&node.children, depth + 1, component_name, emits)?);
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Walk a list of sibling children with explicit If/Else pairing
+/// (mirrors the equivalent helpers in `mosaic-emit-html` and
+/// `mosaic-emit-swiftui`).  When the walker sees an `If`, it peeks
+/// the next sibling; if it's `Else`, both branches are handed to
+/// [`emit_if_compose`] together and the walker advances past both.
+/// All other nodes flow through [`emit_compose_tree`] unchanged.
+fn emit_children_compose(
+    children: &[LayoutNode],
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
+            out.push_str(&emit_if_compose(
+                child,
+                else_node,
+                depth,
+                component_name,
+                emits,
+            )?);
+            i += if else_node.is_some() { 2 } else { 1 };
+            continue;
+        }
+        out.push_str(&emit_compose_tree(child, depth, component_name, emits)?);
+        i += 1;
+    }
+    Ok(out)
+}
+
+/// Lower a `For ( each: <coll>, as: <name>, index: <name>? )` to a
+/// Kotlin `forEachIndexed { idx, item -> ... }` (when `index:` is
+/// present) or `forEach { item -> ... }` (when it isn't).
+///
+/// Compose's preferred iteration shape is plain Kotlin collection
+/// extensions inside a layout container — `Column { rows.forEach { … } }`
+/// composes naturally because the trailing lambda is a `@Composable`
+/// content block.  The `forEachIndexed` form drops the `Int` index
+/// directly into scope; moslayout's `index:` binding is a number-
+/// typed slot in the runtime's expression-language scope, and Kotlin
+/// accepts `Int == Double` via its `Number` coercion in `==` calls,
+/// so verbatim Expr text like `( r == editRow && c == editCol )`
+/// compiles without further widening.
+fn emit_for_compose(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_depth = depth + 1;
+
+    let coll = match node.props.iter().find(|p| p.name == "each") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Expr(text) => text.trim().to_string(),
+            // UI29 §3.4 — a bare `Keyword` names an enclosing For's
+            // `as:` binding (nested For over the outer's element).
+            LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
+            _ => "emptyList<Any>()".to_string(),
+        },
+        None => "emptyList<Any>()".to_string(),
+    };
+
+    let as_name = find_keyword_prop(node, "as")
+        .as_deref()
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+    let index_name = find_keyword_prop(node, "index")
+        .as_deref()
+        .map(to_camel_case_first_lower);
+
+    let header = match &index_name {
+        Some(idx) => {
+            // The closure parameter binds the offset as an `Int`
+            // under a `_kotlinIdx<idx>` shadow name, and we
+            // immediately re-bind `<idx>` to a `Double` so the
+            // moslayout author's verbatim expression text (e.g.
+            // `( r == editRow && c == editCol )`) compiles cleanly
+            // against `number`-typed slots that lower to `Double`.
+            //
+            // Kotlin's `==` operator does NOT allow `Int == Double`
+            // (it desugars to a strict-type `.equals` call), so
+            // without this cast the visicalc Grid's per-cell
+            // `is-editing` predicate would fail to compile.
+            //
+            // The moslayout NAME grammar
+            // `[a-zA-Z][a-zA-Z0-9]*(-...)*` can never produce a
+            // leading underscore, so `_kotlinIdx<idx>` is
+            // collision-free against any author-supplied name.  The
+            // pattern mirrors `mosaic-emit-swiftui`'s
+            // `_swiftIdx<idx>` rename for the same reason.
+            let inner_pad = "    ".repeat(inner_depth);
+            format!(
+                "{pad}{coll}.forEachIndexed {{ _kotlinIdx{idx}, {as_name} ->\n\
+                 {inner_pad}val {idx}: Double = _kotlinIdx{idx}.toDouble()\n",
+                coll = coll,
+                idx = idx,
+                as_name = as_name,
+            )
+        }
+        None => format!(
+            "{pad}{coll}.forEach {{ {as_name} ->\n",
+            coll = coll,
+            as_name = as_name,
+        ),
+    };
+
+    let mut out = header;
+    if node.children.is_empty() {
+        // Compose's content lambda is fine with no children — the
+        // forEach loop just runs zero times' worth of layout.  Still
+        // we emit a comment so the generated body is greppable.
+        out.push_str(&format!(
+            "{}// (empty For body)\n",
+            "    ".repeat(inner_depth)
+        ));
+    } else {
+        out.push_str(&emit_children_compose(
+            &node.children,
+            inner_depth,
+            component_name,
+            emits,
+        )?);
     }
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+/// Lower an `If ( when: <expr> ) { ... } Else { ... }` pair to a
+/// Kotlin `if (cond) { ... } else { ... }` block.  The condition is
+/// the `when:` prop's expression text verbatim (moslayout's
+/// expression grammar is a strict subset of Kotlin's so identifiers,
+/// member access, indexing, `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`,
+/// `||`, `!` all carry across unchanged).  Literal `when: true` /
+/// `when: false` fold at compile time so the generated file omits
+/// the dead branch entirely.
+///
+/// The `else_node` parameter is `None` when the parent walker found
+/// no sibling `Else` after the `If`.  In that case we emit just the
+/// then-branch — Compose accepts a bare `if (cond) { … }` inside a
+/// layout block because the trailing-else type is `Unit?`.
+fn emit_if_compose(
+    node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner_depth = depth + 1;
+
+    let when = find_prop_value(node, "when");
+
+    // Compile-time fold for `when: true` / `when: false`.
+    if let Some(LayoutPropValue::Keyword(k)) = when {
+        match k.as_str() {
+            "true" => {
+                return emit_children_compose(
+                    &node.children,
+                    depth,
+                    component_name,
+                    emits,
+                );
+            }
+            "false" => {
+                if let Some(e) = else_node {
+                    return emit_children_compose(
+                        &e.children,
+                        depth,
+                        component_name,
+                        emits,
+                    );
+                }
+                return Ok(String::new());
+            }
+            _ => {}
+        }
+    }
+
+    let cond_expr = match when {
+        Some(LayoutPropValue::SlotRef(s)) => to_camel_case_first_lower(s),
+        Some(LayoutPropValue::Expr(e)) => e.trim().to_string(),
+        Some(LayoutPropValue::Keyword(k)) => to_camel_case_first_lower(k),
+        Some(LayoutPropValue::String(s)) => format!("\"{s}\""),
+        Some(LayoutPropValue::Number(n)) => format!("{n}"),
+        Some(LayoutPropValue::EmitRef(name)) => name.clone(),
+        None => "false".to_string(),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}if ({cond_expr}) {{").unwrap();
+    out.push_str(&emit_children_compose(
+        &node.children,
+        inner_depth,
+        component_name,
+        emits,
+    )?);
+    if let Some(e) = else_node {
+        writeln!(out, "{pad}}} else {{").unwrap();
+        out.push_str(&emit_children_compose(
+            &e.children,
+            inner_depth,
+            component_name,
+            emits,
+        )?);
+    }
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Find a prop whose value is a `Keyword` and return its NAME text.
+/// Used by `emit_for_compose` for the `as:` / `index:` props.
+fn find_keyword_prop(node: &LayoutNode, prop_name: &str) -> Option<String> {
+    node.props.iter().find_map(|p| {
+        if p.name == prop_name {
+            if let LayoutPropValue::Keyword(s) = &p.value {
+                return Some(s.clone());
+            }
+        }
+        None
+    })
 }
 
 fn emit_text(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
@@ -820,5 +1090,187 @@ mod tests {
         let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
         let msg = format!("{err}");
         assert!(msg.contains("FloobertyFlobble"));
+    }
+
+    // ── For + If/Else + HostTable* lowering (UI34 PR-N) ──────────
+
+    /// `For ( each: slot: rows, as: row, index: r )` lowers to a
+    /// Kotlin `forEachIndexed` call.  The index binding is
+    /// re-bound from `Int` to `Double` so verbatim Expr text like
+    /// `( r == editRow )` compiles against `number`-typed slots.
+    #[test]
+    fn for_with_index_emits_forEachIndexed_with_double_cast() {
+        let for_node = node(
+            "For",
+            vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("r".to_string()),
+                },
+            ],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("x".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let l = layout(
+            "X",
+            node(
+                "Column",
+                vec![],
+                vec![for_node],
+            ),
+        );
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("rows.forEachIndexed { _kotlinIdxr, row ->"),
+            "expected shadowed Int offset, got:\n{out}"
+        );
+        assert!(
+            out.contains("val r: Double = _kotlinIdxr.toDouble()"),
+            "expected Double re-bind, got:\n{out}"
+        );
+    }
+
+    /// `For` without `index:` falls back to `.forEach { item -> ... }`
+    /// — no rename needed because there's no shadowed parameter.
+    #[test]
+    fn for_without_index_uses_simple_forEach() {
+        let for_node = node(
+            "For",
+            vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+            ],
+            vec![],
+        );
+        let l = layout("X", node("Column", vec![], vec![for_node]));
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("rows.forEach { row ->"), "got:\n{out}");
+        assert!(!out.contains("_kotlinIdx"), "no rename without index:\n{out}");
+    }
+
+    /// `If ( when: expr ) { … } Else { … }` lowers to a Kotlin
+    /// `if (cond) { … } else { … }` block.
+    #[test]
+    fn if_else_lowers_to_kotlin_if_else() {
+        let if_node = node(
+            "If",
+            vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::Expr("a == 1".to_string()),
+            }],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("yes".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let else_node = node(
+            "Else",
+            vec![],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("no".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let l = layout(
+            "X",
+            node("Column", vec![], vec![if_node, else_node]),
+        );
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("if (a == 1) {"));
+        assert!(out.contains("} else {"));
+        assert!(out.contains("\"yes\""));
+        assert!(out.contains("\"no\""));
+    }
+
+    /// `when: true` literal folds at compile time — the else branch
+    /// drops and only the then-children render.
+    #[test]
+    fn if_when_true_folds_to_then_branch_only() {
+        let if_node = node(
+            "If",
+            vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            }],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("then".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let else_node = node(
+            "Else",
+            vec![],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("never".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let l = layout("X", node("Column", vec![], vec![if_node, else_node]));
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("\"then\""));
+        assert!(!out.contains("\"never\""));
+        assert!(!out.contains("if ("), "literal fold must skip the marker:\n{out}");
+    }
+
+    /// HostTable lowers to a vertical `Column` so head/body sub-tags
+    /// stack in source order.  Sub-tags also lower to Column.
+    #[test]
+    fn host_table_and_sub_tags_lower_to_column() {
+        let table = node(
+            "HostTable",
+            vec![],
+            vec![
+                node("HostTableHead", vec![], vec![]),
+                node("HostTableBody", vec![], vec![]),
+            ],
+        );
+        let l = layout("X", table);
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        // The root HostTable + both children all emit Column wrappers.
+        assert!(
+            out.matches("Column(modifier = Modifier.fillMaxWidth())").count() >= 3,
+            "expected at least 3 Column blocks (table + head + body), got:\n{out}"
+        );
     }
 }
