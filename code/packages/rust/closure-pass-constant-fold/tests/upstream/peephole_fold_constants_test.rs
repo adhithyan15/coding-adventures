@@ -252,8 +252,14 @@ fn test_null_comparison_1_self_relations() {
 /// `false`. Our pass folds `==` only when both sides are the *same* JS
 /// type (sound default — see crate-level docs); these are blocked
 /// pending a richer fold rule.
+///
+/// **gap-003 closed in CLOC12.21** — the constant-fold pass now
+/// implements the `null`-side branch of the ECMAScript abstract
+/// equality algorithm for compile-time-known partners. `null == X` is
+/// `true` iff `X` is `null` or `undefined`; every other literal partner
+/// yields `false`. `!=` is the negation. See `try_fold_binary_op` for
+/// the truth table and unsoundness guard.
 #[test]
-#[ignore = "blocked on gap-003: cross-type `null == x` fold not implemented"]
 fn test_null_comparison_1_loose_against_other_types() {
     assert_fold(b(null_(), BinaryOperator::Eq, n(0.0)), bool_(false));
     assert_fold(b(null_(), BinaryOperator::Eq, n(1.0)), bool_(false));

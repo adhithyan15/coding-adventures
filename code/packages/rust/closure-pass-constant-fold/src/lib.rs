@@ -579,6 +579,69 @@ fn try_fold_binary_op(
         };
     }
 
+    // Cross-type LOOSE equality involving `null` (closes CLOC12 gap-003).
+    //
+    // The ECMAScript abstract-equality algorithm (§IsLooselyEqual) has
+    // exactly two ways for `null == x` (or `x == null`) to be `true`:
+    //
+    //   1. `x` is also `null` (same primitive value).            ← gap-007 above
+    //   2. `x` is `undefined`. The spec hard-codes that
+    //      `null == undefined → true` (and symmetrically).
+    //
+    // Every other case — `null == 0`, `null == ""`, `null == true`,
+    // `null == 1n` — falls through the algorithm and produces `false`.
+    // None of the type-coercion clauses (Number↔String, Boolean → Number,
+    // Object → primitive) apply when one side is `null`: `null` is its
+    // own ECMAScript "Null" type, and the coercion clauses are written
+    // against Number/String/Boolean/BigInt/Object operands.
+    //
+    // Truth table once `null` is on one side and a *literal* of known JS
+    // type sits on the other:
+    //
+    //     other side          ==     !=
+    //     -------------------+------+------
+    //     null               | true | false   ← gap-007 (already returned above)
+    //     undefined          | true | false
+    //     number             | false| true
+    //     string             | false| true
+    //     boolean            | false| true
+    //     bigint             | false| true
+    //
+    // We deliberately bail out when the non-null side is *not* a literal
+    // we recognise (e.g. an Identifier, a function call): a runtime
+    // value could itself be `null` or `undefined`, and folding to a
+    // concrete boolean would be unsound.
+    //
+    // Why this runs after the null/null branch above: that branch
+    // already settled `null == null`, so by the time we get here we
+    // know at most one side is a NullLiteral. We pick whichever side it
+    // is and inspect the *other* side.
+    if matches!(op, Eq | NotEq) {
+        let other = match (left, right) {
+            (Expression::NullLiteral(_), other) if !matches!(other, Expression::NullLiteral(_)) => {
+                Some(other)
+            }
+            (other, Expression::NullLiteral(_)) if !matches!(other, Expression::NullLiteral(_)) => {
+                Some(other)
+            }
+            _ => None,
+        };
+        if let Some(other) = other {
+            if let Some(other_type) = js_literal_type(other) {
+                // `other_type` ∈ {"number", "string", "boolean",
+                // "bigint", "undefined"} here — "null" is excluded by
+                // the `other` filter above, so the only `true` case is
+                // when the partner is the undefined literal.
+                let eq = other_type == "undefined";
+                return match op {
+                    Eq => Some(FoldedLiteral::Boolean(eq)),
+                    NotEq => Some(FoldedLiteral::Boolean(!eq)),
+                    _ => unreachable!(),
+                };
+            }
+        }
+    }
+
     // Cross-type strict equality (closes CLOC12 gap-008).
     //
     // Per ECMAScript §IsStrictlyEqual, `===` between two values
@@ -1285,6 +1348,146 @@ mod tests {
                 other => panic!("expected BooleanLiteral; got {:?}", other),
             }
         }
+    }
+
+    // ------------------- null cross-type equality (gap-003) ----------
+    //
+    // These tests pin the behaviour added when CLOC12 gap-003 was
+    // closed: the abstract-equality algorithm's `null`-side branch is
+    // implemented for compile-time-known partner literals.
+
+    fn undefined_(cv: Option<&str>) -> Expression {
+        Expression::UndefinedLiteral(UndefinedLiteral {
+            cv: cv.map(|s| s.to_string()),
+        })
+    }
+
+    fn binary_with(op: BinaryOperator, left: Expression, right: Expression) -> Expression {
+        Expression::BinaryExpression(BinaryExpression {
+            cv: Some("bin.1".to_string()),
+            operator: op,
+            left: Box::new(left),
+            right: Box::new(right),
+        })
+    }
+
+    fn run_and_extract_bool(expr: Expression) -> Option<bool> {
+        let (out, _, _, _) = run_pass(program_with_expr(expr, true));
+        if let Expression::BooleanLiteral(bl) = extract_expr(&out) {
+            Some(bl.value)
+        } else {
+            None
+        }
+    }
+
+    #[test]
+    fn gap003_null_loose_eq_other_primitives_folds_false() {
+        // Left-side null vs every non-null/non-undefined literal kind.
+        for partner in [
+            num(0.0, None),
+            num(42.0, None),
+            string("hi", None),
+            string("", None),
+            boolean(true, None),
+            boolean(false, None),
+        ] {
+            let folded = run_and_extract_bool(binary_with(
+                BinaryOperator::Eq,
+                null(None),
+                partner.clone(),
+            ));
+            assert_eq!(folded, Some(false), "null == {:?} should fold to false", partner);
+        }
+    }
+
+    #[test]
+    fn gap003_null_loose_eq_other_primitives_is_symmetric() {
+        // Same as above but with `null` on the right — fold must still fire.
+        for partner in [num(0.0, None), string("hi", None), boolean(true, None)] {
+            let folded = run_and_extract_bool(binary_with(
+                BinaryOperator::Eq,
+                partner.clone(),
+                null(None),
+            ));
+            assert_eq!(folded, Some(false), "{:?} == null should fold to false", partner);
+        }
+    }
+
+    #[test]
+    fn gap003_null_loose_neq_other_primitives_folds_true() {
+        // `!=` is the boolean negation of `==`.
+        for partner in [num(0.0, None), string("hi", None), boolean(true, None)] {
+            let folded = run_and_extract_bool(binary_with(
+                BinaryOperator::NotEq,
+                null(None),
+                partner.clone(),
+            ));
+            assert_eq!(folded, Some(true), "null != {:?} should fold to true", partner);
+        }
+    }
+
+    #[test]
+    fn gap003_null_loose_eq_undefined_folds_true() {
+        // The one cross-type partner that's NOT false: `null == undefined`.
+        // Per ES §IsLooselyEqual, the spec hard-codes this case.
+        let folded = run_and_extract_bool(binary_with(
+            BinaryOperator::Eq,
+            null(None),
+            undefined_(None),
+        ));
+        assert_eq!(folded, Some(true), "null == undefined must fold to true");
+
+        // Symmetric.
+        let folded = run_and_extract_bool(binary_with(
+            BinaryOperator::Eq,
+            undefined_(None),
+            null(None),
+        ));
+        assert_eq!(folded, Some(true), "undefined == null must fold to true");
+
+        // And the `!=` complement.
+        let folded = run_and_extract_bool(binary_with(
+            BinaryOperator::NotEq,
+            null(None),
+            undefined_(None),
+        ));
+        assert_eq!(folded, Some(false), "null != undefined must fold to false");
+    }
+
+    #[test]
+    fn gap003_null_loose_eq_identifier_does_not_fold() {
+        // Critical unsoundness guard: an Identifier's runtime value
+        // could itself be null/undefined. Folding `null == someVar` to
+        // a concrete boolean would change observable behaviour.
+        let expr = binary_with(BinaryOperator::Eq, null(None), ident("x"));
+        let (out, _, _, _) = run_pass(program_with_expr(expr, true));
+        // Output should still be a BinaryExpression — i.e., NOT a
+        // BooleanLiteral.
+        assert!(
+            matches!(extract_expr(&out), Expression::BinaryExpression(_)),
+            "null == identifier must NOT fold"
+        );
+    }
+
+    #[test]
+    fn gap003_null_strict_eq_is_handled_by_gap008_not_this_branch() {
+        // Sanity check that we didn't accidentally break gap-008's
+        // strict-equality cross-type fold by adding the loose branch
+        // ahead of it. `null === 0` should still fold to false (via
+        // gap-008's StrictEq/StrictNotEq branch).
+        let folded = run_and_extract_bool(binary_with(
+            BinaryOperator::StrictEq,
+            null(None),
+            num(0.0, None),
+        ));
+        assert_eq!(folded, Some(false), "null === 0 (gap-008) must still fold to false");
+
+        let folded = run_and_extract_bool(binary_with(
+            BinaryOperator::StrictNotEq,
+            null(None),
+            num(0.0, None),
+        ));
+        assert_eq!(folded, Some(true), "null !== 0 (gap-008) must still fold to true");
     }
 
     // ------------------- string ops ----------------------------------
