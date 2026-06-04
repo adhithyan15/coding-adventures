@@ -563,12 +563,37 @@ fn emit_widget_tree(
         return Ok(format!("{pad}const Divider()\n"));
     }
     if node.tag == "Icon" {
+        // X5 (Flutter analog): semantic-glyph lowering before the
+        // default `Icon(Icons.<source>)` path.  When the glyph is a
+        // *semantic* name (currently only `"spinner"`), emit the
+        // Material widget that natively expresses that semantic —
+        // `CircularProgressIndicator()` for `"spinner"`.  Without
+        // this, the toolkit's `Icon (glyph: "spinner")` would render
+        // as a static star (the `unwrap_or("star")` default, because
+        // the Flutter emitter looks for `source` not `glyph` —
+        // see the prop-name compatibility note below).
+        //
+        // The semantic table mirrors mosaic-emit-xaml's X5 fix.  Each
+        // backend ships its own native-widget map for the same
+        // semantic names so the kernel layout stays backend-agnostic.
+        let semantic_name = find_string_prop(node, "glyph")
+            .or_else(|| find_string_prop(node, "source"));
+        if let Some(name) = semantic_name {
+            if let Some(widget) = semantic_glyph_flutter_widget(name) {
+                return Ok(format!("{pad}{widget}\n"));
+            }
+        }
         // Default to a placeholder symbol if no `source` keyword is
         // supplied. Authors can override via the source prop pointing
         // at a `Icons.<name>` identifier (we pass it through verbatim,
         // assuming the host imports `material.dart` which provides
-        // the `Icons` constants).
-        let source = find_string_prop(node, "source").unwrap_or("star");
+        // the `Icons` constants).  For prop-name compatibility we
+        // also accept `glyph` (the toolkit's preferred name) — keeps
+        // the same .mll source working on both XAML and Flutter
+        // without duplicating Icon declarations.
+        let source = find_string_prop(node, "source")
+            .or_else(|| find_string_prop(node, "glyph"))
+            .unwrap_or("star");
         let safe = sanitize_dart_identifier(source);
         return Ok(format!("{pad}Icon(Icons.{safe})\n"));
     }
@@ -2065,6 +2090,32 @@ fn escape_dart_string(s: &str) -> String {
 // =====================================================================
 // LayoutProp lookup helpers (same shape as React/Swift backends)
 // =====================================================================
+
+/// Map a semantic glyph name to a Material widget that natively
+/// expresses that semantic.  Returns `None` for any name not in the
+/// table — the caller falls back to the standard
+/// `Icon(Icons.<name>)` lowering.
+///
+/// Currently recognized:
+///
+/// | semantic name | Flutter widget                  |
+/// |---|---|
+/// | `"spinner"`   | `CircularProgressIndicator()`   |
+///
+/// Mirrors `mosaic-emit-xaml::semantic_glyph_xaml_element` so the
+/// same toolkit `.mll` source (`Icon (glyph: "spinner")`) renders as
+/// the correct native widget on every backend that has one.  New
+/// entries land case-by-case as the toolkit demo surfaces them.
+///
+/// **Security:** values are `&'static str` literals only.  The table
+/// must NEVER accept runtime input — that would be how a user-
+/// controlled glyph name leaks into the lowering-decision space.
+fn semantic_glyph_flutter_widget(name: &str) -> Option<&'static str> {
+    match name {
+        "spinner" => Some("CircularProgressIndicator()"),
+        _ => None,
+    }
+}
 
 fn find_string_prop<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
     node.props.iter().find_map(|p| {
@@ -3910,6 +3961,121 @@ mod tests {
     // bindings until UI29 §3.4 lands). The Expr-as-each form
     // sidesteps §3.4 — useful as a sanity check that the inner
     // emit_for_dart recursion works.
+
+    // ── X5 Flutter analog: semantic-glyph lowering ──────────────
+
+    /// `Icon (glyph: "spinner")` lowers to
+    /// `CircularProgressIndicator()` — Material's `Icons.spinner`
+    /// doesn't exist (would compile to `Icons.star` via the
+    /// `unwrap_or("star")` default, which is the wrong visual
+    /// semantic for a spinner).  The semantic table fires before
+    /// the `Icons.<name>` path.
+    #[test]
+    fn x5_icon_with_glyph_spinner_lowers_to_circular_progress_indicator() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Icon",
+                vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("spinner".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        assert!(
+            out.contains("CircularProgressIndicator()"),
+            "expected CircularProgressIndicator for `spinner`, got:\n{out}"
+        );
+        assert!(
+            !out.contains("Icons.spinner"),
+            "Icons.spinner doesn't exist in Material — must NOT appear, got:\n{out}"
+        );
+        assert!(
+            !out.contains("Icons.star"),
+            "default fallback Icons.star must NOT fire when semantic match succeeds, got:\n{out}"
+        );
+    }
+
+    /// X5 Flutter analog: `source` prop also flows through the
+    /// semantic table.  `Icon (source: "spinner")` is the same
+    /// declaration in mosaic-pkg-toolkit's idiom for emitters that
+    /// historically expected `source` instead of `glyph`.
+    #[test]
+    fn x5_icon_with_source_spinner_also_lowers_to_circular_progress_indicator() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Icon",
+                vec![LayoutProp {
+                    name: "source".to_string(),
+                    value: LayoutPropValue::String("spinner".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output.contains("CircularProgressIndicator()"),
+            "got:\n{}",
+            r.output
+        );
+    }
+
+    /// X5 scope: non-semantic glyph names still lower to
+    /// `Icon(Icons.<name>)`.  `Save`, `home`, `settings` all stay
+    /// on the FontIcon-equivalent (Icons.x) path.
+    #[test]
+    fn x5_icon_with_non_semantic_glyph_still_emits_icons_dot_name() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Icon",
+                vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("home".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output.contains("Icon(Icons.home)"),
+            "non-semantic glyph must lower to Icons.<name>, got:\n{}",
+            r.output
+        );
+    }
+
+    /// X5 Flutter analog: prop-name compatibility — the toolkit's
+    /// preferred `glyph` name flows through the legacy `source`
+    /// path so the same `.mll` source renders correctly on both
+    /// XAML and Flutter.
+    #[test]
+    fn icon_glyph_prop_is_accepted_as_synonym_for_source() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Icon",
+                vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("settings".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output.contains("Icon(Icons.settings)"),
+            "glyph prop must be accepted as a synonym for source, got:\n{}",
+            r.output
+        );
+    }
 
     #[test]
     fn nested_for_inside_row_compiles_with_expr_inner_each() {
