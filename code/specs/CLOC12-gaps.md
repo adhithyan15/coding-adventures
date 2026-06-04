@@ -145,11 +145,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-018 — De Morgan / negation-swap rewrites not implemented
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.25 — both `fold_if_statement` and `fold_conditional` now strip a top-level `!` from the test and swap consequent / alternate. The IfStatement case is gated on `alternate.is_some()` (when no alternate is present, gap-016's `!x && S` form is the better rewrite); the ConditionalExpression case has no guard because ternaries always have both arms. The unary's argument is moved (not cloned) into the new test position, so no second runtime evaluation of `<inner>` is introduced. Position: runs BEFORE `literal_truthy` resolution so the swapped tests can pick up literal folds in the same iteration. `test_fold_conditional_de_morgan` is un-ignored — input `if (!a) { foo() } else { bar() }` now folds through gap-018 swap → gap-017 ternary to `a ? bar() : foo();`.
 - **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldConditionalDeMorgan`
 - **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
-- **Why it fails:** Upstream rewrites `if (!a) foo() else bar()` → `if (a) bar() else foo()` to push the negation out. We don't do this.
-- **What it needs:** Detect a top-level `UnaryExpression { op: Not, .. }` test on an `IfStatement` (and on `ConditionalExpression`), strip the `Not`, and swap consequent / alternate.
 
 ### gap-019 — return-then-return through `if-else` → ternary return
 

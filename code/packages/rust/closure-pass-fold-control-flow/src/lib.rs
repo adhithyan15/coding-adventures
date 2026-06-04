@@ -59,7 +59,7 @@ use coding_adventures_javascript_ast::{
     BlockStatement, CallExpression, ConditionalExpression, Declaration, EmptyStatement,
     Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration, IfStatement,
     LogicalExpression, LogicalOperator, MemberExpression, ObjectExpression, Program, ProgramItem, Property,
-    PropertyKey, ReturnStatement, Statement, UnaryExpression, VariableDeclaration,
+    PropertyKey, ReturnStatement, Statement, UnaryExpression, UnaryOperator, VariableDeclaration,
     VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -319,6 +319,64 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
     let test = fold_expression(&s.test, st);
     let consequent = fold_statement(&s.consequent, st);
     let alternate = s.alternate.as_ref().map(|a| fold_statement(a, st));
+
+    // (CLOC12.25 / gap-018): De Morgan's negation-swap.
+    //
+    // When the test is exactly `!<inner>` AND an alternate exists,
+    // strip the unary `!` and swap consequent ↔ alternate:
+    //
+    //   if (!x) C; else A;     →   if (x) A; else C;
+    //   if (!flag) foo(); else bar();
+    //                          →   if (flag) bar(); else foo();
+    //
+    // Why this is safe:
+    //
+    //   * `!x` and `x` evaluate `x` the same number of times (once
+    //     each) and produce the same `ToBoolean(x)` decision flipped
+    //     bit-wise. After the rewrite, the swapped branches make the
+    //     overall control-flow observationally identical.
+    //   * No additional evaluations of the operand are introduced.
+    //   * No side effects in `x` are re-ordered relative to the
+    //     consequent / alternate, because they originally ran before
+    //     the branch was selected and they still do after the rewrite.
+    //
+    // Why we require alternate.is_some(): without an alternate, the
+    // rewrite would have to synthesise an empty branch
+    // (`if (x) ; else C;`) which actively adds an empty statement
+    // node — the wrong shape for output minification, and the
+    // gap-016 `if (!x) C;` → `!x && C;` rewrite already handles
+    // that case better.
+    //
+    // Why this runs before literal_truthy: if the inner expression
+    // (`<inner>` after stripping `!`) is itself a literal, the next
+    // step's literal_truthy resolution will produce the correct
+    // chosen branch. Equivalent to letting the pipeline converge:
+    // doing the swap first means fewer iterations.
+    //
+    // We do NOT chain into multiple `!!...!<inner>` peels here —
+    // a single peel per fixed-point iteration is enough; the
+    // scheduler will re-call us until the expression stabilises.
+    let (test, consequent, alternate) = if alternate.is_some() {
+        if let Expression::UnaryExpression(u) = test {
+            if u.operator == UnaryOperator::Not {
+                let inner = *u.argument;
+                st.record_fold(
+                    &s.cv,
+                    "de-morgan-swap-not",
+                    "if (!<inner>) <c>; else <a>;",
+                    "if (<inner>) <a>; else <c>;",
+                );
+                let alt = alternate.expect("alternate.is_some() checked above");
+                (inner, alt, Some(consequent))
+            } else {
+                (Expression::UnaryExpression(u), consequent, alternate)
+            }
+        } else {
+            (test, consequent, alternate)
+        }
+    } else {
+        (test, consequent, alternate)
+    };
 
     match literal_truthy(&test) {
         Some(true) => {
@@ -672,6 +730,34 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     let test = fold_expression(&c.test, st);
     let consequent = fold_expression(&c.consequent, st);
     let alternate = fold_expression(&c.alternate, st);
+
+    // (CLOC12.25 / gap-018): De Morgan negation-swap for ternary.
+    //
+    //   !x ? c : a    →    x ? a : c
+    //
+    // Mirrors the IfStatement case in `fold_if_statement` — same
+    // semantic justification: `!x` and `x` make the same single
+    // ToBoolean(x) decision, just flipped; swapping the branches
+    // preserves observable behaviour. Unlike the IfStatement case,
+    // a ConditionalExpression always has both arms (`alternate`
+    // is not Optional), so no `is_some()` guard is needed.
+    let (test, consequent, alternate) = if let Expression::UnaryExpression(u) = test {
+        if u.operator == UnaryOperator::Not {
+            let inner = *u.argument;
+            st.record_fold(
+                &c.cv,
+                "de-morgan-swap-not-ternary",
+                "!<inner> ? <c> : <a>",
+                "<inner> ? <a> : <c>",
+            );
+            (inner, alternate, consequent)
+        } else {
+            (Expression::UnaryExpression(u), consequent, alternate)
+        }
+    } else {
+        (test, consequent, alternate)
+    };
+
     match literal_truthy(&test) {
         Some(true) => {
             st.record_fold(
