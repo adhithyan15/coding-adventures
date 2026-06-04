@@ -1,5 +1,21 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.5.1 — 2026-06-04 — recursive closures (L2c-3c): no new opcode, docs + test
+
+* **`LABEL` recursive closures need no VM change.**  A `LABEL` used as a
+  value compiles to a closure `(*CLOSURE* label-fn . env)` whose body
+  recurses through an ordinary static `call` to its own (compiler-assigned)
+  name; the captured `env` is just the leading `apply` args (L2c-3b
+  machinery).  So a recursive `LABEL` value runs, and a non-terminating one
+  still terminates with `CallDepthExceeded` rather than a stack overflow.
+* Docs: the module-level `apply` notes now state that capture (L2c-3b) and
+  recursive closures (L2c-3c) require no further VM machinery.
+* Test: added `recursive_closure_value_applied` — a hand-built recursive
+  `last` (the shape a recursive `LABEL` lowers to) invoked through a closure
+  value via `apply`, returning the right result.
+* No source/behaviour change; `lispy-runtime` / `lang-runtime-core` remain
+  untouched, so the per-PR Miri obligation still does not apply.
+
 ## v0.5.0 — 2026-06-04 — `apply` binds the captured environment (L2c-3b)
 
 * **`apply` now binds the closure's captured environment.**  A closure

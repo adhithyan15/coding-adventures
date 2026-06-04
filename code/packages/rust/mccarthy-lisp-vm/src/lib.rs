@@ -58,6 +58,12 @@
 //! instead of a stack overflow.  Applying a non-closure value is a clean
 //! [`VmError::NotAClosure`].
 //!
+//! Capture (L2c-3b) and recursive closures (L2c-3c) need **no further VM
+//! change**: a captured `env` is just leading arguments `apply` prepends,
+//! and a recursive closure's body recurses through an ordinary static
+//! `call` to its own (compiler-assigned) name — so a `LABEL` used as a
+//! value runs, and a non-terminating one still hits `CallDepthExceeded`.
+//!
 //! ## Quick start
 //!
 //! ```
@@ -1110,6 +1116,44 @@ mod tests {
             ret("r"),
         ];
         assert!(matches!(run(&module_with(vec![id], main)), Err(VmError::NotAClosure(_))));
+    }
+
+    #[test]
+    fn recursive_closure_value_applied() {
+        // L2c-3c shape: a recursive function invoked through a closure value.
+        // `last` recurses via a static `call last` (just like a compiled
+        // LABEL body), but the *outer* invocation is an `apply` on a closure
+        // value `(*CLOSURE* last)`.  Proves a recursive closure works when
+        // applied — no new VM machinery beyond `apply` + `call`.
+        let last = func(
+            "last",
+            &["L"],
+            vec![
+                builtin_instr("t", "cdr", &["L"]),
+                builtin_instr("ip", "pair?", &["t"]),
+                builtin_instr("isatom", "not", &["ip"]),
+                jmp_if_false("isatom", "recur"),
+                builtin_instr("h", "car", &["L"]),
+                ret("h"),
+                label("recur"),
+                builtin_instr("t2", "cdr", &["L"]),
+                call("r", "last", &["t2"]),
+                ret("r"),
+            ],
+        );
+        // main: build (A B), wrap `last` in a closure, apply it → B.
+        let mut main = vec![
+            konst("a", Operand::Var("A".into()), "symbol"),
+            konst("b", Operand::Var("B".into()), "symbol"),
+            konst("nil", Operand::Int(0), "ref<LispyPair>"),
+            builtin_instr("inner", "cons", &["b", "nil"]),
+            builtin_instr("lst", "cons", &["a", "inner"]),
+        ];
+        main.extend(build_closure("cl", "last"));
+        main.push(apply("r", "cl", &["lst"]));
+        main.push(ret("r"));
+        let v = run(&module_with(vec![last], main)).unwrap();
+        assert_eq!(name_of(v.as_symbol().unwrap()).as_deref(), Some("B"));
     }
 
     // ---- error paths ----

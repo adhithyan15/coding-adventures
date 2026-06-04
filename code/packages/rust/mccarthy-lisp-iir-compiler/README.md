@@ -30,7 +30,7 @@ use mccarthy_lisp_vm::run;
 let value = run(&module).unwrap();   // → the symbol A
 ```
 
-## Lowering (through L2c-3a)
+## Lowering (through L2c-3c)
 
 | Form               | IIR                                                     |
 |--------------------|---------------------------------------------------------|
@@ -44,8 +44,9 @@ let value = run(&module).unwrap();   // → the symbol A
 | `(EQ A B)`         | `call_builtin "equal?" [A, B]` (identity on atoms)      |
 | `(COND (p e) …)`   | chained `jmp_if_false` + `label`s; each clause's value funnels into one register via `mov`; no match → `nil` |
 | `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it; **captured free variables** are forwarded as leading args (L2c-3b lambda lifting) |
-| `((LABEL F (LAMBDA (p…) body)) a…)` | like the lambda case, but `F` is bound to the new function while `body` is lowered — so a call `(F …)` inside `body` becomes a `call` back into it, i.e. **recursion**.  No new VM opcode: a self-call is an ordinary `call`, bounded by `MAX_CALL_DEPTH`. |
+| `((LABEL F (LAMBDA (p…) body)) a…)` | like the lambda case, but `F` is bound while `body` is lowered, so a call `(F …)` inside `body` is a `call` back into it (**recursion**); captured free variables are forwarded as leading args (L2c-3c).  No new VM opcode: a self-call is an ordinary `call`, bounded by `MAX_CALL_DEPTH`. |
 | `(LAMBDA (p…) body)` *as a value* | lift the lambda + materialise a **closure value** `(*CLOSURE* fn-name v1 … vk)` — a tagged cons whose `env` holds the captured free-variable values (empty when nothing is captured; the tag is un-forgeable since `*CLOSURE*` isn't a lexable symbol) |
+| `(LABEL F (LAMBDA (p…) body))` *as a value* | a **recursive closure value** — lifted like the direct `LABEL` (so the body can recurse), then wrapped as `(*CLOSURE* label-fn . env)` (L2c-3c) |
 | `(F a…)` (`F` a parameter) / `((g…) a…)` | **dynamic apply**: evaluate the head to a closure, then the `apply` opcode binds its captured `env` + the args and runs it (arity checked at run time) |
 
 ### Recursion example (L2c-2)
@@ -75,6 +76,17 @@ A lambda passed as a value, then applied via the parameter:
 ((LAMBDA (F) (F 'A)) (LAMBDA (X) X))   ; ⇒ A
 ```
 
+### Recursive closure example (L2c-3c)
+
+A recursive `LABEL` passed as a value and applied — `last` walks to the
+final element of a list:
+
+```lisp
+((LAMBDA (G) (G '(A B C)))
+ (LABEL LAST (LAMBDA (L)
+     (COND ((ATOM (CDR L)) (CAR L)) ('T (LAST (CDR L)))))))   ; ⇒ C
+```
+
 These are the conventions of the shared `lispy-runtime` value model
 (tagged-`i64` symbols, cons cells, nil) — so the same IIR runs on
 `mccarthy-lisp-vm` *and* feeds every IIR backend, with no new runtime
@@ -92,19 +104,18 @@ McCarthy Lisp gets its **own** small VM on that foundation:
 LispyValue` executes the module against the `lispy-runtime` heap. This
 crate dev-depends on it only to run the end-to-end tests.
 
-## Not yet (later phases)
+## Closures are complete (L2c done)
 
-- **`LABEL` capture + `LABEL`-as-value (L2c-3c)** — a `LABEL` body still
-  sees only its own params (it does not capture enclosing free variables
-  the way a `LAMBDA` now does), and a `LABEL` used as a *value* (a
-  recursive closure) is still rejected. Both land in L2c-3c.
+As of **L2c-3c**, the full closure story is implemented: `LAMBDA` and
+`LABEL` both capture free variables (precise capture / lambda lifting),
+both can be used as first-class values, and a `LABEL` value is a *recursive*
+closure. A bare (unquoted) symbol in value position is an *unbound variable*
+unless it is a parameter of the enclosing function **or captured from an
+enclosing scope** — a clean `CompileError`, never a silent mis-lowering.
 
-`LAMBDA` free-variable capture works as of L2c-3b (precise capture /
-lambda lifting). A bare (unquoted) symbol in value position is still an *unbound
-variable* unless it is a parameter of the enclosing lambda **or captured
-from an enclosing scope**; a labelled function name used in value position
-is reported as needing L2c-3c. Either way it is a `CompileError` rather
-than silently mis-lowered.
+The next phase (**L3**, tracked in the plan) wires `mccarthy-lisp` into
+`lang-aot` so the same IIR lights up all 10 backends (AOT / VM / JIT /
+WASM / JVM / CLR / BEAM / LLVM / historical archs).
 
 ## API
 

@@ -252,13 +252,15 @@ struct Compiler {
     /// unbound-variable error.
     params: HashSet<String>,
     /// `LABEL`-bound function names in lexical scope: source name →
-    /// (internal IIR function name, parameter count).  When a call
-    /// `(F a…)` has a head `F` in this map, it lowers to a `call` to the
-    /// internal function — this is exactly what lets a `LABEL` body
-    /// recurse (`F` calls itself).  Cloned/restored around each `LABEL`
-    /// body so the binding is visible only inside that body (plus any
-    /// nested forms), matching lexical scope.
-    functions_in_scope: HashMap<String, (String, usize)>,
+    /// (internal IIR function name, declared parameter count, captured
+    /// free-variable names).  When a call `(F a…)` has a head `F` in this
+    /// map, it lowers to a `call` to the internal function with the
+    /// **captured registers forwarded as leading arguments** — this is what
+    /// lets a `LABEL` body recurse (`F` calls itself) *and* close over
+    /// enclosing free variables (L2c-3c).  Cloned/restored around each
+    /// `LABEL` body so the binding is visible only inside that body (plus
+    /// any nested forms), matching lexical scope.
+    functions_in_scope: HashMap<String, (String, usize, Vec<String>)>,
 }
 
 impl Compiler {
@@ -324,15 +326,16 @@ impl Compiler {
             // parameter name.
             LispExpr::Symbol(name) if self.params.contains(name) => Ok(name.clone()),
             // A labelled function name used in *value* position (not
-            // called) would be a first-class function value — that needs
-            // closures (L2c-3).  Calls `(F …)` are handled in
+            // called) — e.g. returning `F` from inside `(LABEL F …)` — is a
+            // first-class **recursive closure value** (L2c-3c): materialise
+            // `(*CLOSURE* label-fn . env)` with the function's captured
+            // values (which are in scope here, bound as registers).  Calls
+            // `(F …)` are still handled as static `call`s in
             // `lower_application`, which consults the same scope.
             LispExpr::Symbol(name) if self.functions_in_scope.contains_key(name) => {
-                Err(CompileError::new(format!(
-                    "`{name}` is a function (a LABEL-bound name); using it as a value — \
-                     passing or returning it — needs closures, which are a later phase. \
-                     You can only *call* it: `({name} …)`."
-                )))
+                let (internal, _arity, captured) =
+                    self.functions_in_scope.get(name).cloned().unwrap();
+                Ok(self.emit_closure(&internal, &captured))
             }
             LispExpr::Symbol(name) => Err(CompileError::new(format!(
                 "unbound variable `{name}`: it is not a parameter in scope. \
@@ -377,17 +380,20 @@ impl Compiler {
 
                 // A call whose head is a `LABEL`-bound name in scope is a
                 // (possibly recursive) user-function call — lower it to a
-                // `call`.  Checked *before* the parameter check and the
-                // primitive table so a labelled name lexically shadows both
-                // (and so a body can refer to its own `F`).
-                if let Some((internal, arity)) = self.functions_in_scope.get(name).cloned() {
+                // `call`, forwarding the labelled function's captured
+                // registers as leading arguments (L2c-3c).  Checked *before*
+                // the parameter check and the primitive table so a labelled
+                // name lexically shadows both (and so a body can refer to
+                // its own `F`).
+                if let Some((internal, arity, captured)) = self.functions_in_scope.get(name).cloned()
+                {
                     if args.len() != arity {
                         return Err(CompileError::new(format!(
                             "function `{name}` expects {arity} argument(s), got {}",
                             args.len()
                         )));
                     }
-                    return self.lower_call_to(&internal, args);
+                    return self.lower_call_with_captures(&internal, &captured, args);
                 }
 
                 // A parameter in scope holds a runtime *value* (possibly a
@@ -446,15 +452,13 @@ impl Compiler {
                     // above and stays a static `call`.)
                     "LAMBDA" => self.lower_lambda_value(expr),
                     // A bare `LABEL` in value position is a *recursive*
-                    // closure value — that needs free-variable capture
-                    // machinery, so it lands in L2c-3b.  Applied directly —
-                    // `((LABEL F (LAMBDA …)) a…)` — it is intercepted by
-                    // `is_label_form` above and works.
-                    "LABEL" => Err(CompileError::new(
-                        "a LABEL must be applied directly — \
-                         `((LABEL name (LAMBDA (params) body)) args …)`. Using a labelled \
-                         function as a value (a recursive closure) lands in L2c-3b.",
-                    )),
+                    // closure value (L2c-3c) — lower it to `(*CLOSURE*
+                    // label-fn . env)` just like a lambda value, but the
+                    // lifted function has `F` bound for recursion.  (A
+                    // *directly applied* `LABEL` — `((LABEL F (LAMBDA …))
+                    // a…)` — is intercepted by `is_label_form` above and
+                    // stays a static `call`.)
+                    "LABEL" => self.lower_label_value(expr),
                     other => Err(CompileError::new(format!(
                         "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, \
                          EQ, COND, LAMBDA, and direct LAMBDA / LABEL application"
@@ -548,10 +552,11 @@ impl Compiler {
     ) -> Result<(String, Vec<String>), CompileError> {
         let own: HashSet<String> = params.iter().map(|p| p.to_string()).collect();
         // Precise capture: the body's free symbols (respecting own params +
-        // nested binders + quote) that are actually in the enclosing scope.
-        // `BTreeSet` keeps `free` — and hence `captured` — sorted.
+        // nested binders + quote, and the transitive captures of any
+        // labelled function it calls) that are actually in the enclosing
+        // scope.  `BTreeSet` keeps `free` — and hence `captured` — sorted.
         let mut free: BTreeSet<String> = BTreeSet::new();
-        collect_free_symbols(body, &own, &mut free);
+        collect_free_symbols(body, &own, &self.functions_in_scope, &mut free);
         let captured: Vec<String> =
             free.into_iter().filter(|s| self.params.contains(s)).collect();
 
@@ -673,50 +678,62 @@ impl Compiler {
     // LABEL application (L2c-2) — named / recursive functions
     // -----------------------------------------------------------------------
 
-    /// Lower a direct application of a *named* lambda
-    /// `((LABEL F (LAMBDA (p1 … pn) body)) a1 … an)`.
+    /// Lift a `(LABEL name (LAMBDA (params) body))` to a fresh top-level
+    /// [`IIRFunction`] (gensym `label_<n>`) and return its name + captured
+    /// free variables (sorted).
     ///
-    /// This is exactly [`lower_lambda_application`], with one addition: the
-    /// name `F` is bound to the new function in `functions_in_scope`
-    /// **before** the body is lowered, so a call `(F …)` inside `body`
-    /// resolves to a `call` back into the same function — i.e. `F` can
-    /// recurse (or call itself indirectly through nested forms).  The
-    /// binding is scoped to the body: we save the previously-bound entry
-    /// (if any) and restore it afterwards, so `F` is invisible outside.
+    /// Like [`lift_lambda`] (precise capture + captured-as-leading-params),
+    /// with two `LABEL` additions:
+    /// 1. `name` is **bound for recursion**: while the body is lowered, the
+    ///    function scope maps `name` → (this function, arity, its captured
+    ///    names), so a call `(F …)` inside `body` lowers to a `call` back
+    ///    into it, forwarding the captured registers.  The binding is saved
+    ///    and restored, so `name` is invisible outside the `LABEL`.
+    /// 2. `name` is excluded from the captured set — it denotes the function
+    ///    itself (resolved statically), not a value to close over.
     ///
-    /// No new VM machinery is needed — a self-call is an ordinary `call`,
-    /// and the VM bounds call nesting with `MAX_CALL_DEPTH` + the shared
-    /// instruction budget, so even a non-terminating recursion errors
-    /// cleanly instead of overflowing the native stack.
+    /// The captured *values* are supplied by the caller: leading `call` args
+    /// for a direct application ([`lower_label_application`]) or the
+    /// closure's `env` for a `LABEL` used as a value
+    /// ([`lower_label_value`]).  No new VM machinery — a self-call is an
+    /// ordinary `call`, bounded by `MAX_CALL_DEPTH` + the instruction
+    /// budget, so a non-terminating recursive closure errors cleanly.
     ///
-    /// [`lower_lambda_application`]: Self::lower_lambda_application
-    fn lower_label_application(
+    /// [`lift_lambda`]: Self::lift_lambda
+    /// [`lower_label_application`]: Self::lower_label_application
+    /// [`lower_label_value`]: Self::lower_label_value
+    fn lift_label(
         &mut self,
-        label: &LispExpr,
-        args: &[&LispExpr],
-    ) -> Result<String, CompileError> {
-        let (name, lambda) = label_parts(label)?;
-        let (params, body) = lambda_parts(lambda)?;
-        if args.len() != params.len() {
-            return Err(CompileError::new(format!(
-                "labelled function `{name}` expects {} argument(s), got {}",
-                params.len(),
-                args.len()
-            )));
-        }
+        name: &str,
+        params: &[&str],
+        body: &LispExpr,
+    ) -> Result<(String, Vec<String>), CompileError> {
+        // Precise capture, excluding own params AND the label name itself.
+        // (`name` is not yet in `functions_in_scope` here, so a self-call
+        // does not add its own captures — those are already free via the
+        // body's direct references; the transitive rule applies to *nested*
+        // callers of already-recorded labels.)
+        let mut bound: HashSet<String> = params.iter().map(|p| p.to_string()).collect();
+        bound.insert(name.to_string());
+        let mut free: BTreeSet<String> = BTreeSet::new();
+        collect_free_symbols(body, &bound, &self.functions_in_scope, &mut free);
+        let captured: Vec<String> =
+            free.into_iter().filter(|s| self.params.contains(s)).collect();
 
         let fn_name = format!("label_{}", self.fn_ctr);
         self.fn_ctr += 1;
 
-        // Build the body in a fresh instruction buffer + parameter scope,
-        // with `F` bound to this function so the body can recurse.  Save
-        // and restore all three pieces of mutable state.
+        // Lower the body with scope = captured ∪ own and `F` bound for
+        // recursion.  Save/restore the instruction buffer, parameter scope,
+        // and the function-scope binding.
+        let mut scope: HashSet<String> = params.iter().map(|p| p.to_string()).collect();
+        scope.extend(captured.iter().cloned());
         let saved_instrs = std::mem::take(&mut self.instrs);
-        let saved_params =
-            std::mem::replace(&mut self.params, params.iter().map(|p| p.to_string()).collect());
-        let shadowed = self
-            .functions_in_scope
-            .insert(name.to_string(), (fn_name.clone(), params.len()));
+        let saved_params = std::mem::replace(&mut self.params, scope);
+        let shadowed = self.functions_in_scope.insert(
+            name.to_string(),
+            (fn_name.clone(), params.len(), captured.clone()),
+        );
 
         let body_reg = self.lower_expr(body)?;
         self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "any"));
@@ -732,39 +749,54 @@ impl Compiler {
             }
         }
 
-        let mut f = IIRFunction::new(
-            fn_name.clone(),
-            params.iter().map(|p| (p.to_string(), "any".to_string())).collect(),
-            "any",
-            body_instrs,
-        );
+        // Parameter order: captured (sorted) first, then own.
+        let mut param_pairs: Vec<(String, String)> =
+            Vec::with_capacity(captured.len() + params.len());
+        for c in &captured {
+            param_pairs.push((c.clone(), "any".to_string()));
+        }
+        for p in params {
+            param_pairs.push((p.to_string(), "any".to_string()));
+        }
+        let mut f = IIRFunction::new(fn_name.clone(), param_pairs, "any", body_instrs);
         f.register_count = self.tmp;
         self.functions.push(f);
-
-        // Back in the caller: lower the arguments, then emit the call.
-        self.lower_call_to(&fn_name, args)
+        Ok((fn_name, captured))
     }
 
-    /// Lower a call to an already-registered IIR function `fn_name`:
-    /// evaluate `args` in the *current* scope and emit
-    /// `call dest, [Var(fn_name), arg_regs…]`.  Shared by direct `LAMBDA`
-    /// application, `LABEL` application, and in-body calls to a labelled
-    /// name (recursion).
-    fn lower_call_to(
+    /// Lower a direct application of a *named* lambda
+    /// `((LABEL F (LAMBDA (p1 … pn) body)) a1 … an)`: lift it, then emit a
+    /// `call` forwarding the captured registers as leading args.
+    fn lower_label_application(
         &mut self,
-        fn_name: &str,
+        label: &LispExpr,
         args: &[&LispExpr],
     ) -> Result<String, CompileError> {
-        let mut arg_regs = Vec::with_capacity(args.len());
-        for a in args {
-            arg_regs.push(self.lower_expr(a)?);
+        let (name, lambda) = label_parts(label)?;
+        let (params, body) = lambda_parts(lambda)?;
+        if args.len() != params.len() {
+            return Err(CompileError::new(format!(
+                "labelled function `{name}` expects {} argument(s), got {}",
+                params.len(),
+                args.len()
+            )));
         }
-        let dest = self.fresh();
-        let mut srcs = Vec::with_capacity(arg_regs.len() + 1);
-        srcs.push(Operand::Var(fn_name.to_string()));
-        srcs.extend(arg_regs.into_iter().map(Operand::Var));
-        self.emit(IIRInstr::new("call", Some(dest.clone()), srcs, "any"));
-        Ok(dest)
+        let (fn_name, captured) = self.lift_label(name, &params, body)?;
+        self.lower_call_with_captures(&fn_name, &captured, args)
+    }
+
+    /// Lower a `LABEL` used in **value** position into a *recursive closure
+    /// value* `(*CLOSURE* label-fn . env)` (L2c-3c): lift it (so the body
+    /// can recurse), then materialise the closure with the captured values
+    /// in `env` — exactly like [`lower_lambda_value`], on the labelled
+    /// function.
+    ///
+    /// [`lower_lambda_value`]: Self::lower_lambda_value
+    fn lower_label_value(&mut self, label: &LispExpr) -> Result<String, CompileError> {
+        let (name, lambda) = label_parts(label)?;
+        let (params, body) = lambda_parts(lambda)?;
+        let (fn_name, captured) = self.lift_label(name, &params, body)?;
+        Ok(self.emit_closure(&fn_name, &captured))
     }
 
     // -----------------------------------------------------------------------
@@ -1068,9 +1100,16 @@ fn proper_list(expr: &LispExpr) -> Option<Vec<&LispExpr>> {
     }
 }
 
+/// A function scope: source name → (internal IIR name, arity, captured
+/// free-variable names).  Same shape as [`Compiler::functions_in_scope`];
+/// [`collect_free_symbols`] consults it so that calling a labelled function
+/// transitively pulls in *its* captures (see below).
+type FnScope = HashMap<String, (String, usize, Vec<String>)>;
+
 /// Collect the **free symbols** of `expr` — every symbol referenced in a
 /// variable position that is not in `bound` — into `out`.  Used to compute
-/// a lambda's captured free variables (see [`Compiler::lift_lambda`]).
+/// a lambda's / labelled function's captured free variables (see
+/// [`Compiler::lift_lambda`] / [`Compiler::lift_label`]).
 ///
 /// Binders are respected: a nested `(LAMBDA (p…) body)` adds `p…` to the
 /// bound set for `body`; a `(LABEL F (LAMBDA …))` adds `F`; a `QUOTE`
@@ -1079,10 +1118,24 @@ fn proper_list(expr: &LispExpr) -> Option<Vec<&LispExpr>> {
 /// intersects with the enclosing scope, so a primitive (never an enclosing
 /// variable) is naturally filtered out.
 ///
+/// **Transitive captures.** A call `(F …)` to a `LABEL`-bound function `F`
+/// in `fns` lowers to a `call` that *forwards `F`'s captured registers* as
+/// leading arguments.  For those registers to be live at the call site, the
+/// enclosing function must itself capture them — so `F`'s captured names
+/// count as free symbols of `expr`.  (Each labelled function's capture set
+/// is finalised and recorded in `fns` before its body — hence any nested
+/// caller — is lowered, so a single pass suffices for arbitrarily nested
+/// `LABEL`s.)
+///
 /// Traversal depth follows the AST nesting, which the parser caps
 /// (`MAX_PAREN_DEPTH`); the cdr-spine of an improper list is walked
 /// **iteratively** so a long dotted tail cannot recurse the native stack.
-fn collect_free_symbols(expr: &LispExpr, bound: &HashSet<String>, out: &mut BTreeSet<String>) {
+fn collect_free_symbols(
+    expr: &LispExpr,
+    bound: &HashSet<String>,
+    fns: &FnScope,
+    out: &mut BTreeSet<String>,
+) {
     match expr {
         LispExpr::Int(_) | LispExpr::Nil => {}
         LispExpr::Symbol(s) => {
@@ -1096,10 +1149,10 @@ fn collect_free_symbols(expr: &LispExpr, bound: &HashSet<String>, out: &mut BTre
                 // `car` is paren-bounded, the spine itself is the loop.
                 let mut cur = expr;
                 while let LispExpr::Cons(car, cdr) = cur {
-                    collect_free_symbols(car, bound, out);
+                    collect_free_symbols(car, bound, fns, out);
                     cur = cdr;
                 }
-                collect_free_symbols(cur, bound, out);
+                collect_free_symbols(cur, bound, fns, out);
                 return;
             };
             // Recognise the binding / quoting forms by their head symbol.
@@ -1115,7 +1168,7 @@ fn collect_free_symbols(expr: &LispExpr, bound: &HashSet<String>, out: &mut BTre
                                 }
                             }
                         }
-                        collect_free_symbols(items[2], &inner, out);
+                        collect_free_symbols(items[2], &inner, fns, out);
                         return;
                     }
                     "LABEL" if items.len() == 3 => {
@@ -1123,16 +1176,26 @@ fn collect_free_symbols(expr: &LispExpr, bound: &HashSet<String>, out: &mut BTre
                         if let LispExpr::Symbol(n) = items[1] {
                             inner.insert(n.clone());
                         }
-                        collect_free_symbols(items[2], &inner, out);
+                        collect_free_symbols(items[2], &inner, fns, out);
                         return;
                     }
-                    _ => {}
+                    // Calling a labelled function forwards its captures, so
+                    // those names are free here too.
+                    _ => {
+                        if let Some((_, _, captured)) = fns.get(head.as_str()) {
+                            for c in captured {
+                                if !bound.contains(c) {
+                                    out.insert(c.clone());
+                                }
+                            }
+                        }
+                    }
                 }
             }
             // Generic form (application, COND, primitive call, clause list):
             // every element is a subexpression to scan.
             for it in items {
-                collect_free_symbols(it, bound, out);
+                collect_free_symbols(it, bound, fns, out);
             }
         }
     }
@@ -1467,12 +1530,18 @@ mod tests {
     }
 
     #[test]
-    fn bare_label_value_is_rejected() {
-        // An unapplied LABEL (a *recursive* closure) needs capture → L2c-3b.
-        assert!(compile_source("(LABEL F (LAMBDA (X) X))", "t")
-            .unwrap_err()
-            .message
-            .contains("L2c-3b"));
+    fn bare_label_value_lowers_to_a_closure() {
+        // As of L2c-3c, an unapplied LABEL in value position is a recursive
+        // closure value: it lifts a `label_0` function and emits the closure
+        // cons `(*CLOSURE* label_0)`.
+        let m = compile_source("(LABEL F (LAMBDA (X) X))", "t").unwrap();
+        assert!(m.functions.iter().any(|f| f.name == "label_0"));
+        let main = m.get_function("main").unwrap();
+        assert!(main.instructions.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "*CLOSURE*")));
+        assert!(main.instructions.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "label_0")));
+        assert!(m.validate().is_empty());
     }
 
     #[test]
@@ -1508,11 +1577,43 @@ mod tests {
     }
 
     #[test]
-    fn label_name_in_value_position_needs_closures() {
-        // Using `F` as a value (not calling it) is a first-class function
-        // value → closures error, with a clear message.
-        let e = compile_source("((LABEL F (LAMBDA (X) F)) 'A)", "t").unwrap_err();
-        assert!(e.message.contains("needs closures"));
+    fn label_captures_enclosing_param_as_leading_param() {
+        // The labelled body references the enclosing `N` (free) — it must be
+        // captured as a leading parameter of `label_0` (before its own `X`),
+        // so the lifted function is `[N, X]`.
+        let src = "((LAMBDA (N) ((LABEL F (LAMBDA (X) \
+                     (COND ((ATOM X) N) ('T (F (CAR X)))))) '(A))) 'Z)";
+        let m = compile_source(src, "t").unwrap();
+        // The labelled function gensym shares the counter with lambdas, so
+        // find it by prefix rather than assuming an index.
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("label_"))
+            .expect("label fn");
+        assert_eq!(f.param_names(), vec!["N", "X"]);
+        // The recursive self-call forwards the captured `N` register.
+        let self_call = f
+            .instructions
+            .iter()
+            .find(|i| i.op == "call"
+                && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == &f.name))
+            .expect("recursive call");
+        assert!(matches!(self_call.srcs.get(1), Some(Operand::Var(s)) if s == "N"));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn label_name_in_value_position_is_a_recursive_closure() {
+        // As of L2c-3c, returning `F` from inside its own body is a
+        // first-class recursive closure value: `((LABEL F (LAMBDA (X) F))
+        // 'A)` compiles, builds `label_0`, and the body emits the closure
+        // tag for `F`.
+        let m = compile_source("((LABEL F (LAMBDA (X) F)) 'A)", "t").unwrap();
+        let body = m.get_function("label_0").expect("label fn");
+        assert!(body.instructions.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "*CLOSURE*")));
+        assert!(m.validate().is_empty());
     }
 
     #[test]
