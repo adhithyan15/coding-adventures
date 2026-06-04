@@ -85,12 +85,11 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // closurec today emits a single `\n` for empty input. We
-    // don't have a captured upstream golden to confirm vs.
-    // diverge from yet — see tests/diff/minify_empty/README.md.
-    // First contributor to capture the upstream behaviour should
-    // remove this entry and update the expected.stdout if needed.
-    ("empty", "pending upstream golden capture"),
+    // Empty. The list shrinks as gaps close and as upstream
+    // captures land. `minify_empty` was un-ignored in CLOC14.1 —
+    // upstream Closure v20240317 emits a single `\n` for empty
+    // input, which is what closurec emits today; the fixture
+    // flipped from IGNORED to PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

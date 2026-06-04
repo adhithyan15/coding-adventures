@@ -15,8 +15,24 @@ If this test ever fails the regression is likely in the emitter
 (adding/removing whitespace or trailing bytes) or the trailing-
 newline policy in the closurec main loop.
 
-Captured by hand-tracing the WHITESPACE_ONLY contract (no real
-transformation runs; the emitter just rewrites the AST verbatim).
-A real upstream-Closure-captured golden should replace this when
-a fresh capture run lands — but the byte sequence is so
-constrained here that the hand-traced version is correct.
+## Provenance
+
+Captured from upstream Google Closure Compiler **v20240317**
+(downloaded from Maven Central
+`com.google.javascript:closure-compiler:v20240317`).
+
+Capture command:
+
+```
+java -jar closure-compiler-v20240317.jar \
+  --compilation_level WHITESPACE_ONLY \
+  --js tests/diff/minify_minimal_var/input/a.js
+```
+
+Captured by CLOC14.1 (PR pending). The previous hand-traced
+golden was confirmed byte-identical to the real upstream
+capture — the WHITESPACE_ONLY contract on this minimal input
+is constrained enough that hand-tracing produced the right
+bytes. This commit replaces the provenance note with the real
+capture details so the test no longer needs the "hand-traced"
+caveat.
