@@ -17,10 +17,12 @@
     4. Typing into the input fires `mosaic:formulaChange` events the
        page handler logs to the console (proof the wiring works).
 
-  The Grid below is still a hand-written <table> because the
-  WebComponent emitter doesn't yet support the `Grid` built-in
-  primitive (only the React emitter does). When `<mos-grid>` lands
-  via the same pipeline, this hand-written block gets replaced.
+  The Grid below is ALSO a Custom Element — `<mos-grid>`, registered
+  by `build/Grid.js`, compiled from demo/visicalc/mosaic/Grid.* via
+  the same `mosaic-compile --backend webcomponent` pipeline.
+  Grid.desktop.mll itself is a UI34 `pkg::mosaic-pkg-grid::Grid`
+  one-liner, so the element's structure comes from the authoritative
+  package composition.  No hand-written widgets in this file.
 
   To regenerate: cd demo/visicalc-webcomp && bash scripts/build.sh
   To view:       open demo/visicalc-webcomp/index.html in any browser.
@@ -97,74 +99,24 @@
     </mos-formula-bar>
 
     <!--
-      ===== Grid (hand-written placeholder) =====
-      Same gap as VC2-html — the WebComponent pipeline emitter
-      doesn't yet support the `Grid` built-in primitive. Visual
-      contract matches Grid.dark.msl (#1e1e1e bg, #3f3f46 gridlines,
-      #264f78 selected cell). Once `<mos-grid>` lands, this block
-      becomes `<mos-grid column-headers="A,B,C,D,E" ...>`.
+      ===== Grid (compiled Custom Element) =====
+      `<mos-grid>` is registered by `build/Grid.js`, compiled from
+      demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl} via
+      `mosaic-compile --backend webcomponent`.  Grid.desktop.mll
+      itself is a UI34 `pkg::mosaic-pkg-grid::Grid` one-liner, so the
+      element's structure comes from `mosaic-pkg-grid`'s authoritative
+      Grid + Cell composition.  No hand-written widget in this file.
+
+      The element reads its slots via observed attributes; list-typed
+      slots (`column-headers`, `viewport-rows`, `column-widths`) are
+      JSON.parsed at render time (the WebComponent emitter detects
+      `SlotType::List(_)` and emits `JSON.parse(getAttribute(...))`).
+      The small inline script below sets the attributes after the
+      element is created so the JSON payloads don't have to be
+      hand-escaped into raw HTML attributes.
     -->
-    <div data-mosaic-component="Grid">
-      <div style="overflow: auto; max-height: 400px; margin-top: 4px;">
-        <table style="font-family: monospace; font-size: 12px; color: #cccccc; background: #1e1e1e; border-collapse: collapse; width: 100%">
-          <colgroup>
-            <col style="width: 48px"><col style="width: 96px"><col style="width: 96px">
-            <col style="width: 96px"><col style="width: 96px"><col style="width: 96px">
-          </colgroup>
-          <thead style="position: sticky; top: 0; z-index: 1;">
-            <tr style="height: 24px">
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46"></th>
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">A</th>
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">B</th>
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">C</th>
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">D</th>
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">E</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="height: 22px; background: #1e1e1e">
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">1</th>
-              <td style="border: 1px solid #3f3f46; padding: 2px; background: #264f78; color: #ffffff; outline: 1px solid #007acc">15</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">3</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">12</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">8</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">5</td>
-            </tr>
-            <tr style="height: 22px; background: #252526">
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">2</th>
-              <td style="border: 1px solid #3f3f46; padding: 2px">8</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">14</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">7</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">22</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">11</td>
-            </tr>
-            <tr style="height: 22px; background: #1e1e1e">
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">3</th>
-              <td style="border: 1px solid #3f3f46; padding: 2px">12</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">9</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">18</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">6</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">25</td>
-            </tr>
-            <tr style="height: 22px; background: #252526">
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">4</th>
-              <td style="border: 1px solid #3f3f46; padding: 2px">4</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">11</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">3</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">17</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">9</td>
-            </tr>
-            <tr style="height: 22px; background: #1e1e1e">
-              <th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border: 1px solid #3f3f46">5</th>
-              <td style="border: 1px solid #3f3f46; padding: 2px">7</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">5</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">13</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">10</td>
-              <td style="border: 1px solid #3f3f46; padding: 2px">19</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div data-mosaic-component="Grid" style="overflow: auto; max-height: 400px; margin-top: 4px;">
+      <mos-grid id="grid"></mos-grid>
     </div>
 
     <h1 style="margin-top: 24px;">Events from &lt;mos-formula-bar&gt;</h1>
@@ -179,25 +131,83 @@
       shadow DOM, observed attributes, and fires
       <code>mosaic:formulaChange</code> / <code>mosaic:commit</code> /
       <code>mosaic:cancel</code> CustomEvents on user input — visible
-      in the log above. The Grid is still hand-written until the
-      WebComponent emitter learns the <code>Grid</code> primitive.
+      in the log above.  The Grid is also a Custom Element
+      (<code>&lt;mos-grid&gt;</code>), compiled from
+      <code>demo/visicalc/mosaic/Grid.*</code> — the same source
+      the React + HTML demos consume.
     </div>
   </div>
 
   <script type="module">
-    // Import the compiled bundle — defines the <mos-formula-bar>
-    // element. The bundle is a plain script (not an ES module) so it
-    // self-registers via `customElements.define` on load. Using
-    // type="module" here is just a convenience for the small event-
-    // logging glue below; the FormulaBar bundle works in plain
-    // <script src="..."> too.
+    // Import the compiled bundles — defines `<mos-formula-bar>` and
+    // `<mos-grid>` as Custom Elements.  Both bundles are plain
+    // scripts (not ES modules); they self-register via
+    // `customElements.define` on load.  Using type="module" here is
+    // just a convenience for the inline glue below.
     import "./build/FormulaBar.js";
+    import "./build/Grid.js";
 
-    // Listen for the FormulaBar's custom events and log them. The
-    // events bubble + cross the shadow boundary because the emitter
-    // sets `bubbles: true, composed: true`. Listening on the host
-    // element rather than `document` keeps the log scoped to this
-    // FormulaBar instance.
+    // ── Grid wiring ─────────────────────────────────────────────
+    // `<mos-grid>` reads list-typed slots via JSON.parse, so the
+    // attribute values are JSON literals.  Setting them via
+    // setAttribute after the element is mounted avoids the need to
+    // escape `[`/`]`/`"` inside raw HTML.
+    const SAMPLE = {
+      columnHeaders: ["", "A", "B", "C", "D", "E"],
+      columnWidths:  [48, 96, 96, 96, 96, 96],
+      viewportRows: [
+        ["1", "15", "3",  "12", "8",  "5"],
+        ["2", "8",  "14", "7",  "22", "11"],
+        ["3", "12", "9",  "18", "6",  "25"],
+        ["4", "4",  "11", "3",  "17", "9"],
+        ["5", "7",  "5",  "13", "10", "19"],
+      ],
+      selectedRow: 1,
+      selectedCol: 1,
+      editRow:    -1,
+      editCol:    -1,
+      editContent: "",
+    };
+    const grid = document.getElementById("grid");
+    grid.setAttribute("column-headers", JSON.stringify(SAMPLE.columnHeaders));
+    grid.setAttribute("column-widths",  JSON.stringify(SAMPLE.columnWidths));
+    grid.setAttribute("viewport-rows",  JSON.stringify(SAMPLE.viewportRows));
+    grid.setAttribute("selected-row",   String(SAMPLE.selectedRow));
+    grid.setAttribute("selected-col",   String(SAMPLE.selectedCol));
+    grid.setAttribute("edit-row",       String(SAMPLE.editRow));
+    grid.setAttribute("edit-col",       String(SAMPLE.editCol));
+    grid.setAttribute("edit-content",   SAMPLE.editContent);
+
+    // Post-process: paint the selected-cell highlight.  The
+    // WebComponent emitter's static template lowering does not yet
+    // fold `state-when-*` predicates into the shadow-DOM render
+    // (sub-part state needs runtime evaluation in the shadow DOM,
+    // and that's a follow-up); we add the highlight via a style
+    // injection into the shadow root so the demo's selected cell
+    // carries the same VS Code-blue accent as the React / SwiftUI
+    // / HTML renders.
+    //
+    // We retry briefly to handle the connectedCallback race — if
+    // the bundle hasn't registered the element yet, shadowRoot is
+    // null on the first frame.
+    function paintHighlight() {
+      const root = grid.shadowRoot;
+      if (!root) return false;
+      const tds = root.querySelectorAll("tbody td");
+      const cols = SAMPLE.viewportRows[0].length;
+      const sel = SAMPLE.selectedRow * cols + SAMPLE.selectedCol;
+      const td = tds[sel];
+      if (!td) return false;
+      td.style.background = "#264f78";
+      td.style.color      = "#ffffff";
+      td.style.outline    = "1px solid #007acc";
+      return true;
+    }
+    if (!paintHighlight()) {
+      requestAnimationFrame(() => paintHighlight() || setTimeout(paintHighlight, 50));
+    }
+
+    // ── FormulaBar event log (preserved from pre-rewire demo) ───
     const fb = document.querySelector("mos-formula-bar");
     const log = document.getElementById("event-log");
     for (const evt of ["formulaChange", "commit", "cancel"]) {
