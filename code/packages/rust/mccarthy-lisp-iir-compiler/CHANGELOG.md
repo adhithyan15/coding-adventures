@@ -1,5 +1,50 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.6.0 — 2026-06-04 — free-variable capture for LAMBDA (L2c-3b)
+
+Closures can now **capture** — a lambda body may reference variables from
+the enclosing scope:
+
+```lisp
+(((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) 'B)   ; ⇒ (A . B)
+```
+
+* **Lambda lifting with captured leading parameters.**  `lift_lambda` now
+  computes the lambda's captured free variables and makes them **extra
+  leading parameters** of the lifted `IIRFunction` (parameter order:
+  `captured` (sorted) then the declared params).  The body lowers with
+  `captured ∪ own` in scope.
+* **Precise capture.**  A lambda captures exactly the free variables its
+  body actually references (the body's free symbols — respecting own
+  params, nested `LAMBDA`/`LABEL` binders, and `QUOTE` — intersected with
+  the enclosing scope; a `BTreeSet` keeps them sorted for deterministic
+  IIR).  Capturing only what's used keeps the emitted IIR **linear in the
+  source**: a "capture the whole frame" strategy makes a flat fan-out of
+  `k` lambdas over `m` enclosing variables emit `O(m·k)` IIR — a
+  compile-time algorithmic-complexity DoS — which precise analysis avoids.
+* **Two supply paths for the captured values:**
+  - A **direct application** (`((LAMBDA …) a…)`) emits
+    `call lambda_n [captured_regs…, arg_regs…]` — the captured registers
+    (live in the caller's scope) are forwarded as leading arguments
+    (`lower_call_with_captures`).
+  - A **lambda used as a value** builds the closure
+    `(*CLOSURE* fn-name v1 … vk)` where `env = (v1 … vk)` are the captured
+    *values*; the VM's `apply` flattens `env` and prepends it to the call
+    arguments on entry.  (`emit_closure` now takes the captured names.)
+* The user-facing **arity check is unchanged** — against the declared
+  params only; captured leading arguments are supplied implicitly.
+* **No `lispy-runtime` change.**  Scoped to `LAMBDA`; `LABEL` capture +
+  `LABEL`-as-value (recursive closures) are **L2c-3c** — `LABEL` keeps its
+  L2c-2 own-params-only behaviour, so nothing regresses.
+* 4 new compiler unit tests (inner lambda captures enclosing param as a
+  leading param; direct inner application forwards the captured register;
+  top-level lambda captures nothing; **capture is precise** — an inner
+  lambda that doesn't reference the outer var captures nothing) + 5 new
+  end-to-end tests on
+  `mccarthy-lisp-vm` (curry / capture-then-apply-later, direct-application
+  capture, transitive 2-level capture, captured closure passed to a
+  higher-order function, shadowing param is not captured).
+
 ## v0.5.0 — 2026-06-04 — closures as values + dynamic apply (L2c-3a)
 
 First half of closures (L2c-3 is split into 3a/3b).  A `LAMBDA` is now a

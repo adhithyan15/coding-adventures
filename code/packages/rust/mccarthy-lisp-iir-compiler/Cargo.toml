@@ -1,8 +1,8 @@
 [package]
 name = "mccarthy-lisp-iir-compiler"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "Lowers a McCarthy 1960 Lisp (Lisp 1.0) AST into an IIRModule. Through L2c-3a: integer/nil literals, QUOTE, the primitives CONS/CAR/CDR/ATOM/EQ, COND, direct LAMBDA application, LABEL (named/recursive functions), and LAMBDA-as-a-value (closures with the dynamic `apply` opcode; no free-variable capture yet). Emits IIR over the `lispy-runtime` value model so the module runs end-to-end on `mccarthy-lisp-vm` and feeds every IIR backend. Free-variable capture lands in L2c-3b."
+description = "Lowers a McCarthy 1960 Lisp (Lisp 1.0) AST into an IIRModule. Through L2c-3b: integer/nil literals, QUOTE, the primitives CONS/CAR/CDR/ATOM/EQ, COND, direct LAMBDA application, LABEL (named/recursive functions), and full LAMBDA closures (lambda-as-value via the dynamic `apply` opcode + free-variable capture by lambda lifting). Emits IIR over the `lispy-runtime` value model so the module runs end-to-end on `mccarthy-lisp-vm` and feeds every IIR backend. LABEL closures land in L2c-3c."
 
 [lib]
 name = "mccarthy_lisp_iir_compiler"

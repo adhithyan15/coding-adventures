@@ -368,18 +368,19 @@ fn run_function(
             // `apply CLOSURE, args…` — invoke a *closure value*.  Unlike
             // `call` (whose `srcs[0]` is a static function name), here
             // `srcs[0]` is a register holding a closure value
-            // `(*CLOSURE* fn-name . env)`.  We destructure it, look the
-            // function up by name, and run it in a fresh frame — same
+            // `(*CLOSURE* fn-name . env)`.  We destructure it, flatten the
+            // captured environment `env = (v1 … vk)` into the **leading**
+            // call arguments (the lifted function's parameters are
+            // `captured ∪ own`, captured first), append the supplied
+            // arguments, then run the callee in a fresh frame.  Same
             // depth/budget guards as `call`, so a self-applying closure (the
-            // Ω combinator) hits `CallDepthExceeded`, never a stack
-            // overflow.  In L2c-3a the captured env is empty and unused;
-            // L2c-3b will bind it.
+            // Ω combinator) hits `CallDepthExceeded`, never a stack overflow.
             "apply" => {
                 let cl_src = instr.srcs.first().ok_or_else(|| {
                     VmError::Malformed("`apply` requires srcs[0] (the closure register)".into())
                 })?;
                 let closure = read_operand(cl_src, &frame)?;
-                let (callee_name, _env) = destructure_closure(closure)?;
+                let (callee_name, env) = destructure_closure(closure)?;
                 if instr.srcs.len() > MAX_CALL_ARGS + 1 {
                     return Err(VmError::Malformed(format!(
                         "`apply` has too many arguments ({})",
@@ -389,7 +390,11 @@ fn run_function(
                 let callee = module
                     .get_function(&callee_name)
                     .ok_or(VmError::UnknownFunction(callee_name))?;
-                let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 1);
+                // Leading args: the captured environment, in order.  The
+                // env is a compiler-built finite acyclic list, but we still
+                // cap its length (defensively) so a hand-crafted module
+                // can't make `apply` allocate without bound.
+                let mut call_args = flatten_env(env)?;
                 for src in &instr.srcs[1..] {
                     call_args.push(read_operand(src, &frame)?);
                 }
@@ -545,6 +550,32 @@ fn destructure_closure(v: LispyValue) -> Result<(String, LispyValue), VmError> {
         .ok_or_else(|| not("closure function slot is not a symbol"))?;
     let name = name_of(id).ok_or_else(|| not("closure names an un-interned function"))?;
     Ok((name, env))
+}
+
+/// Flatten a closure environment `(v1 v2 … vk)` — a proper list of the
+/// captured values — into a `Vec`, in order.  These become the leading
+/// arguments of an `apply` (the lifted function's captured parameters).
+///
+/// The list is built by the compiler and is always finite and acyclic
+/// (McCarthy source has no mutation, so no cycles), but we still bound its
+/// length by [`MAX_CALL_ARGS`] so a hand-crafted module can't make `apply`
+/// allocate without limit.  A non-list `env` (anything but a proper list)
+/// is a malformed closure → [`VmError::NotAClosure`].
+fn flatten_env(env: LispyValue) -> Result<Vec<LispyValue>, VmError> {
+    let not = |what: &str| VmError::NotAClosure(what.to_string());
+    let mut out = Vec::new();
+    let mut cur = env;
+    while !cur.is_nil() {
+        if out.len() >= MAX_CALL_ARGS {
+            return Err(VmError::Malformed(
+                "closure environment is too large".into(),
+            ));
+        }
+        let v = builtins::car(&[cur]).map_err(|_| not("closure env is not a proper list"))?;
+        out.push(v);
+        cur = builtins::cdr(&[cur]).map_err(|_| not("closure env is not a proper list"))?;
+    }
+    Ok(out)
 }
 
 /// Build a tagged integer, rejecting values outside `lispy-runtime`'s
@@ -821,13 +852,25 @@ mod tests {
     /// Instructions that build a closure value `(*CLOSURE* fn_name)` into
     /// register `dest` (empty env — the L2c-3a shape the compiler emits).
     fn build_closure(dest: &str, fn_name: &str) -> Vec<IIRInstr> {
-        vec![
+        build_closure_env(dest, fn_name, &[])
+    }
+
+    /// Instructions that build a closure value `(*CLOSURE* fn_name v…)` into
+    /// `dest`, where `env_regs` are the captured-value registers (the
+    /// L2c-3b shape: `cons(tag, cons(fn, env))`, `env = (v1 … vk)`).
+    fn build_closure_env(dest: &str, fn_name: &str, env_regs: &[&str]) -> Vec<IIRInstr> {
+        let mut out = vec![
             konst("_ctag", Operand::Var("*CLOSURE*".into()), "symbol"),
             konst("_cfn", Operand::Var(fn_name.into()), "symbol"),
-            konst("_cnil", Operand::Int(0), "ref<LispyPair>"),
-            builtin_instr("_cinner", "cons", &["_cfn", "_cnil"]),
-            builtin_instr(dest, "cons", &["_ctag", "_cinner"]),
-        ]
+            konst("_cenv", Operand::Int(0), "ref<LispyPair>"),
+        ];
+        // Build env = (v1 … vk) tail-first into `_cenv`.
+        for r in env_regs.iter().rev() {
+            out.push(builtin_instr("_cenv", "cons", &[r, "_cenv"]));
+        }
+        out.push(builtin_instr("_cinner", "cons", &["_cfn", "_cenv"]));
+        out.push(builtin_instr(dest, "cons", &["_ctag", "_cinner"]));
+        out
     }
 
     #[test]
@@ -1028,6 +1071,45 @@ mod tests {
         main.push(ret("r"));
         let m = module_with(vec![omega], main);
         assert!(matches!(run(&m), Err(VmError::CallDepthExceeded(_))));
+    }
+
+    #[test]
+    fn apply_binds_captured_env_then_args() {
+        // L2c-3b: a closure with a non-empty env.  pair(X, Y) = (CONS X Y);
+        // the closure captures X='A (env = (A)); applying it to 'B binds the
+        // env value to the leading param X and 'B to Y → (A . B).
+        let pair = func("pair", &["X", "Y"], vec![builtin_instr("p", "cons", &["X", "Y"]), ret("p")]);
+        let mut main = vec![konst("cap", Operand::Var("A".into()), "symbol")];
+        main.extend(build_closure_env("cl", "pair", &["cap"])); // env = (A)
+        main.extend(vec![
+            konst("b", Operand::Var("B".into()), "symbol"),
+            apply("r", "cl", &["b"]), // supply only Y; X comes from env
+            ret("r"),
+        ]);
+        let v = run(&module_with(vec![pair], main)).unwrap();
+        let head = builtins::car(&[v]).unwrap();
+        let tail = builtins::cdr(&[v]).unwrap();
+        assert_eq!(name_of(head.as_symbol().unwrap()).as_deref(), Some("A"));
+        assert_eq!(name_of(tail.as_symbol().unwrap()).as_deref(), Some("B"));
+    }
+
+    #[test]
+    fn apply_with_malformed_env_is_not_a_closure() {
+        // A closure whose env slot is a non-list atom (here a symbol) is
+        // malformed — `flatten_env` rejects it cleanly, never loops/panics.
+        // Shape: cons(*CLOSURE*, cons(fn-name, ENV)) with ENV = a symbol.
+        let id = func("id", &["X"], vec![ret("X")]);
+        let main = vec![
+            konst("tag", Operand::Var("*CLOSURE*".into()), "symbol"),
+            konst("fn", Operand::Var("id".into()), "symbol"),
+            konst("badenv", Operand::Var("OOPS".into()), "symbol"), // not a list
+            builtin_instr("inner", "cons", &["fn", "badenv"]),
+            builtin_instr("cl", "cons", &["tag", "inner"]),
+            konst("a", Operand::Int(1), "i64"),
+            apply("r", "cl", &["a"]),
+            ret("r"),
+        ];
+        assert!(matches!(run(&module_with(vec![id], main)), Err(VmError::NotAClosure(_))));
     }
 
     // ---- error paths ----
