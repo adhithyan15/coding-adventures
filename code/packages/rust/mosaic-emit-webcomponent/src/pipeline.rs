@@ -510,12 +510,30 @@ fn emit_render(
     for slot in slots {
         let camel = to_camel_case_first_lower(&slot.name);
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(
-            out,
-            "    const {camel} = this.getAttribute(\"{}\") ?? \"\";",
-            slot.name
-        )
-        .unwrap();
+        // List-typed slots get JSON.parse so the rendered template can
+        // call `.map(...)` on them.  Without this step the generated
+        // `_render()` would read the raw attribute string and call
+        // `.map` on it — JS strings have a `.map` method but it
+        // iterates characters, not the intended list elements, so the
+        // output would be silently wrong for any layout that uses a
+        // `For each: slot: X` over a list slot.  Default `"[]"` so
+        // `JSON.parse` succeeds when the host has not yet set the
+        // attribute.
+        //
+        // `text` / `number` / `bool` and the singular forms fall
+        // through to the legacy string-default — JS loose equality
+        // (`==`) handles the runtime comparisons the layout produces
+        // (`3 == "3"` is `true`), and `${var}` template interpolation
+        // strings-coerces uniformly.  A future PR can tighten those
+        // to typed parses for clarity, but the string default does not
+        // produce visible bugs today.
+        let initializer = match slot.r#type {
+            SlotType::List(_) => {
+                format!("JSON.parse(this.getAttribute(\"{}\") ?? \"[]\")", slot.name)
+            }
+            _ => format!("this.getAttribute(\"{}\") ?? \"\"", slot.name),
+        };
+        writeln!(out, "    const {camel} = {initializer};").unwrap();
     }
 
     // The HTML walker also accumulates "post-render" snippets — small
@@ -1814,10 +1832,35 @@ fn build_text_content(node: &LayoutNode) -> Option<String> {
         LayoutPropValue::Keyword(k) => escape_html_text(k),
         LayoutPropValue::Number(n) => format!("{n}"),
         LayoutPropValue::EmitRef(_) => String::new(),
-        // An `Expr` shouldn't appear as a `content:` prop today (the
-        // grammar only produces it for `when:` / `each:` arguments),
-        // but defensively render it as empty rather than crashing.
-        LayoutPropValue::Expr(_) => String::new(),
+        // UI29 §3.4 — `Expr` DOES appear as a `Text` content prop when
+        // the layout author writes a parenthesised loop-binding
+        // reference such as `Text ( content: ( v ) )`.  The
+        // expression text is interpolated inside the surrounding
+        // template literal so the JS engine picks up the in-scope
+        // loop binding (the inner-most `as:` name from a `For`
+        // lowering).  Without this case the cell would render an
+        // empty `<span></span>` and the visicalc-style spreadsheet
+        // demo would show empty cells.
+        //
+        // One outer layer of parens is stripped via
+        // `strip_outer_parens` so `( v )` reduces to `v` in the
+        // interpolation; a complex expression like `( row.cells )`
+        // survives the strip and becomes `${row.cells}` so the V8
+        // JS engine evaluates the member access against the current
+        // loop scope.  The interpolated text is *not* re-escaped
+        // here because the surrounding template literal places the
+        // result directly into `shadowRoot.innerHTML` — the same
+        // surface the legitimate `SlotRef` content path already
+        // uses (`${displayName}`).  Host code is responsible for
+        // sanitising attribute values before setting them.
+        LayoutPropValue::Expr(e) => {
+            let trimmed = strip_outer_parens(e.trim());
+            if trimmed.is_empty() {
+                String::new()
+            } else {
+                format!("${{{trimmed}}}")
+            }
+        }
     })
 }
 
@@ -1948,6 +1991,44 @@ fn insert_attrs_before_close(open_tag: &str, attrs: &str) -> String {
 /// Convert `kebab-case` (and `lowerCamelCase` / `PascalCase`) to
 /// `lowerCamelCase`. The first character of the output is lowered so
 /// PascalCase inputs still produce a JS-style identifier.
+/// Strip a single layer of surrounding parentheses + interior
+/// whitespace from an expression text.
+///
+/// `( v )`     → `v`
+/// `(a + b)`   → `a + b`
+/// `(a) + (b)` → `(a) + (b)` (outer chars are parens but NOT a
+///   matching pair — depth check guards against this)
+/// `a + b`    → `a + b` (no change when there is no outer pair)
+///
+/// Used by `build_text_content` so a parenthesised loop-binding
+/// reference (`Text ( content: ( v ) )`) reaches the template
+/// literal as a clean `${v}` rather than the literal text `${ v }`.
+/// Mirrors the helper of the same name in `mosaic-emit-html` for
+/// consistency.
+fn strip_outer_parens(s: &str) -> &str {
+    let bytes = s.as_bytes();
+    if bytes.len() < 2 || bytes[0] != b'(' || bytes[bytes.len() - 1] != b')' {
+        return s;
+    }
+    let mut depth = 0i32;
+    for (i, &b) in bytes.iter().enumerate() {
+        match b {
+            b'(' => depth += 1,
+            b')' => {
+                depth -= 1;
+                if depth == 0 && i + 1 < bytes.len() {
+                    return s;
+                }
+            }
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return s;
+    }
+    s[1..s.len() - 1].trim()
+}
+
 fn to_camel_case_first_lower(s: &str) -> String {
     let mut out = String::new();
     let mut cap_next = false;
@@ -4422,5 +4503,102 @@ mod tests {
             !proj.index_html.contains("http://"),
             "shell must not reference an absolute HTTP URL"
         );
+    }
+
+    // ── List-typed slot JSON.parse + Text Expr interpolation ──────
+
+    /// A `list<text>` slot's `_render()` initializer must wrap the
+    /// `getAttribute` call in `JSON.parse(... ?? "[]")`.  Without
+    /// this, downstream `.map(...)` calls in the rendered template
+    /// would run against a JS string and iterate characters, not
+    /// list elements — silently wrong for any layout that uses
+    /// `For each: slot: X` over a list-typed slot.
+    #[test]
+    fn list_typed_slot_uses_json_parse_initializer() {
+        let m = component(
+            "X",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(
+                "const rows = JSON.parse(this.getAttribute(\"rows\") ?? \"[]\");"
+            ),
+            "expected JSON.parse initializer for list-typed slot, got:\n{out}"
+        );
+    }
+
+    /// A non-list slot keeps the legacy string-default initializer
+    /// shape — `getAttribute(...) ?? ""`.  Pins the back-compat
+    /// guarantee for `text` / `number` / `bool` slots.
+    #[test]
+    fn scalar_slot_keeps_string_default_initializer() {
+        let m = component(
+            "X",
+            vec![slot("label", SlotType::Text, true)],
+            vec![],
+        );
+        let l = single_box_layout("X");
+        let s = empty_style("X");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains("const label = this.getAttribute(\"label\") ?? \"\";"),
+            "expected string-default initializer, got:\n{out}"
+        );
+        assert!(
+            !out.contains("JSON.parse(this.getAttribute(\"label\")"),
+            "scalar slot must NOT be JSON.parsed:\n{out}"
+        );
+    }
+
+    /// `Text ( content: ( v ) )` — where `v` is a `For`-loop binding —
+    /// interpolates as `${v}` inside the surrounding template literal.
+    /// Before this fix the cell rendered an empty `<span></span>` and
+    /// the visicalc-style grid demo would show empty cells.
+    #[test]
+    fn text_with_paren_expr_content_emits_template_literal_interpolation() {
+        let root = LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::Expr("( v )".to_string()),
+            }],
+            children: Vec::new(),
+        };
+        let l = root_layout("X", root);
+        let out = from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("${v}"),
+            "expected `${{v}}` interpolation, got:\n{out}"
+        );
+        // Empty-span regression — fail loudly if it ever returns.
+        assert!(
+            !out.contains("<span></span>"),
+            "Text with Expr content must NOT emit empty <span></span>:\n{out}"
+        );
+    }
+
+    /// `strip_outer_parens` — the helper that drives the Expr
+    /// interpolation — has the same shape as the HTML emitter's
+    /// version.  Pinning the contract here keeps the two backends
+    /// from drifting.
+    #[test]
+    fn strip_outer_parens_unit_cases() {
+        assert_eq!(strip_outer_parens("( v )"), "v");
+        assert_eq!(strip_outer_parens("(a + b)"), "a + b");
+        assert_eq!(strip_outer_parens("(a) + (b)"), "(a) + (b)");
+        assert_eq!(strip_outer_parens("a + b"), "a + b");
+        assert_eq!(strip_outer_parens(""), "");
+        assert_eq!(strip_outer_parens("("), "(");
     }
 }
