@@ -315,8 +315,13 @@ fn test_string_string_comparison_literal_lines() {
 /// number and string is `false` by definition though, which we *can*
 /// fold today (literal types differ, strict equality short-circuits to
 /// false).
+///
+/// **gap-004 closed in CLOC12.22** — `try_fold_binary_op` now coerces a
+/// String operand against a Number operand via a conservative subset of
+/// §StringToNumber (`js_string_to_number_strict`), then evaluates the
+/// resulting Number-vs-Number comparison. See the helper's doc comment
+/// for which string forms are recognised.
 #[test]
-#[ignore = "blocked on gap-004: mixed Number/String comparison fold (cross-type Eq, abstract Lt) not implemented"]
 fn test_number_string_comparison_literal_lines() {
     assert_fold(b(n(1.0), BinaryOperator::Lt, s("2")), bool_(true));
     assert_fold(b(n(1.0), BinaryOperator::Eq, s("2")), bool_(false));

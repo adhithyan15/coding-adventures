@@ -676,6 +676,76 @@ fn try_fold_binary_op(
         }
     }
 
+    // Cross-type Number ↔ String comparisons (closes CLOC12 gap-004).
+    //
+    // The ECMAScript abstract-equality (§IsLooselyEqual) and
+    // abstract-relational-comparison (§IsLessThan) algorithms both
+    // coerce a String operand against a Number operand by calling
+    // §StringToNumber on the string and then doing a Number-vs-Number
+    // comparison. So:
+    //
+    //   1 < '2'   →  1 < 2     →  true
+    //   1 == '2'  →  1 == 2    →  false
+    //   2 < '1'   →  2 < 1     →  false
+    //   1 <= '1'  →  1 <= 1    →  true
+    //
+    // We deliberately bail when the string can't be losslessly mapped
+    // to a number we're sure JS would produce — this keeps the fold
+    // sound under unusual whitespace, hex / binary / octal prefixes,
+    // or stray non-numeric content. See `js_string_to_number_strict`
+    // for the conservative subset of §StringToNumber we implement.
+    //
+    // Strict equality on Number/String is gap-008: already returns
+    // `false` / `true` above, regardless of the string's content. So
+    // this branch only fires on loose `==` / `!=` / `< > <= >=`.
+    //
+    // Why bail rather than fold to NaN: JS's StringToNumber maps
+    // unrecognised inputs to NaN, and `1 == NaN` is `false`, `1 < NaN`
+    // is `false`, etc. We *could* fold those, but distinguishing
+    // "NaN" from "we don't know" at the fold-rule level requires
+    // committing to a complete StringToNumber implementation. The
+    // conservative `Option<f64>` helper returns `None` for ambiguous
+    // input; the fold then bails and runtime handles it.
+    if matches!(op, Eq | NotEq | Lt | LtEq | Gt | GtEq) {
+        let (num_val, str_lit, num_on_left) = match (left, right) {
+            (Expression::NumericLiteral(n), Expression::StringLiteral(s)) => {
+                (n.value, &s.value, true)
+            }
+            (Expression::StringLiteral(s), Expression::NumericLiteral(n)) => {
+                (n.value, &s.value, false)
+            }
+            _ => (0.0, &String::new(), false), // sentinel; flag below
+        };
+        let applies = matches!(
+            (left, right),
+            (Expression::NumericLiteral(_), Expression::StringLiteral(_))
+                | (Expression::StringLiteral(_), Expression::NumericLiteral(_))
+        );
+        if applies {
+            if let Some(coerced) = js_string_to_number_strict(str_lit) {
+                // After coercion both sides are JS Numbers. The
+                // operation must be evaluated in the *original* lexical
+                // order (`num_on_left = true` means the Number was the
+                // left-hand operand pre-coercion), because `<` and `>`
+                // are not symmetric.
+                let (a, b) = if num_on_left {
+                    (num_val, coerced)
+                } else {
+                    (coerced, num_val)
+                };
+                return match op {
+                    Eq => Some(FoldedLiteral::Boolean(a == b)),
+                    NotEq => Some(FoldedLiteral::Boolean(a != b)),
+                    Lt => Some(FoldedLiteral::Boolean(a < b)),
+                    LtEq => Some(FoldedLiteral::Boolean(a <= b)),
+                    Gt => Some(FoldedLiteral::Boolean(a > b)),
+                    GtEq => Some(FoldedLiteral::Boolean(a >= b)),
+                    _ => unreachable!("op guarded by outer matches!"),
+                };
+            }
+        }
+    }
+
     // typeof-identity fold (closes CLOC12 gap-029).
     //
     // `typeof x === typeof x` → true
@@ -748,6 +818,89 @@ fn js_literal_type(expr: &Expression) -> Option<&'static str> {
         Expression::UndefinedLiteral(_) => Some("undefined"),
         _ => None,
     }
+}
+
+/// Conservative subset of ECMAScript §StringToNumber used for cross-type
+/// Number/String comparison folding (gap-004).
+///
+/// Returns `Some(f64)` only when the input is *unambiguously* convertible
+/// to a JS Number under the spec rules; returns `None` for anything else.
+/// Bailing on the ambiguous cases is sound — the fold simply doesn't fire
+/// and the runtime handles the comparison.
+///
+/// What we recognise (mirroring §StringToNumber's StrNumericLiteral grammar):
+///
+/// 1. **Empty / whitespace-only** → `0.0`. JS treats `""`, `"   "`, `"\t\n"`
+///    as `0` per §StringNumericValue. Our whitespace recogniser matches
+///    ASCII whitespace which is a strict subset of JS WhiteSpace and
+///    LineTerminator, so we may reject some exotic-whitespace strings
+///    JS would accept — but we never accept what JS would reject.
+///
+/// 2. **`"Infinity"`, `"+Infinity"`, `"-Infinity"`** (case-sensitive,
+///    after trim) → ±∞. JS is case-sensitive here; we reject `"inf"`,
+///    `"INFINITY"`, etc., even though Rust's `f64::from_str` accepts them.
+///
+/// 3. **Decimal-style numeric literals** matching the JS grammar:
+///    optional sign, then a sequence of digits with optional `.` and
+///    optional `[eE][+-]?digits` exponent. Examples: `"1"`, `"1.5"`,
+///    `"-2"`, `".5"`, `"1e3"`, `"1.5e-10"`.
+///
+/// What we **don't** handle (deliberate follow-ups; returning `None` is sound):
+///
+/// - Hex / binary / octal prefixes (`0x...`, `0b...`, `0o...`). These
+///   are valid JS NumericLiteralStrings; we'd just need to parse via
+///   the relevant radix.
+/// - Non-ASCII JS WhiteSpace (NBSP, ZWNBSP, BOM, various Unicode space
+///   separators) and LineTerminator chars (LS U+2028, PS U+2029).
+/// - Underscore numeric separators (`"1_000_000"`) — those aren't
+///   actually accepted by StringToNumber (JS only allows separators
+///   in source-level NumericLiterals, not StringNumericLiteral) so this
+///   is intentional.
+/// - The empty-or-whitespace `+` `-` sign-only forms (`"+"`, `"-"`) →
+///   JS gives `NaN`. We reject (return `None`) rather than fold to NaN.
+///
+/// Why a separate helper (vs inlining): it's small, but the spec
+/// reasoning is dense and benefits from a single named entry point that
+/// future gap-fixes can extend (e.g. hex support) without re-deriving
+/// the rules.
+fn js_string_to_number_strict(s: &str) -> Option<f64> {
+    let t = s.trim_matches(|c: char| c.is_ascii_whitespace());
+
+    // Rule 1: empty trimmed input → 0 (spec §StringNumericValue).
+    if t.is_empty() {
+        return Some(0.0);
+    }
+
+    // Rule 2: explicit Infinity (case-sensitive).
+    match t {
+        "Infinity" | "+Infinity" => return Some(f64::INFINITY),
+        "-Infinity" => return Some(f64::NEG_INFINITY),
+        _ => {}
+    }
+
+    // Rule 3: decimal-style numeric literal.
+    //
+    // We need to gate Rust's `f64::from_str` on a character set check,
+    // because:
+    //   - `f64::from_str("inf")` → `Ok(∞)` (Rust accepts case-insensitive
+    //     "inf" / "infinity"); JS rejects these → NaN.
+    //   - `f64::from_str("nan")` → `Ok(NaN)`; JS rejects these → NaN
+    //     (different return path; observable as fold suppression).
+    //
+    // Quick rejection: if any character outside the JS decimal grammar
+    // appears, bail. The grammar is: optional `+`/`-`, then digits / `.` /
+    // `e` / `E` / `+` / `-` (where the second sign can only appear after
+    // an exponent). We over-approximate by accepting the union character
+    // class — Rust's parser will reject malformed orderings.
+    let allowed = |c: char| c.is_ascii_digit() || matches!(c, '.' | 'e' | 'E' | '+' | '-');
+    if !t.chars().all(allowed) {
+        return None;
+    }
+    // Disallow lone sign / lone dot / lone exponent marker.
+    if matches!(t, "+" | "-" | "." | "e" | "E" | "+e" | "-e" | "+." | "-." | ".e" | ".E") {
+        return None;
+    }
+    t.parse::<f64>().ok().filter(|f| f.is_finite() || t.contains(['e', 'E']))
 }
 
 /// Best-effort static string rendering of a literal expression. Used
@@ -1350,6 +1503,173 @@ mod tests {
         }
     }
 
+    // ------------------- Number/String cross-type (gap-004) ----------
+    //
+    // These tests pin the gap-004 behaviour: §IsLooselyEqual and
+    // §IsLessThan now coerce a string operand against a numeric one
+    // for compile-time-known string literals that fall in the strict
+    // recognised subset (see `js_string_to_number_strict`'s doc).
+
+    #[test]
+    fn gap004_jstr2num_simple_decimal_cases() {
+        // Pin the helper's behaviour directly — the doc comment lists
+        // these as recognised cases.
+        assert_eq!(js_string_to_number_strict(""), Some(0.0));
+        assert_eq!(js_string_to_number_strict("   "), Some(0.0));
+        assert_eq!(js_string_to_number_strict("\t\n"), Some(0.0));
+        assert_eq!(js_string_to_number_strict("0"), Some(0.0));
+        assert_eq!(js_string_to_number_strict("1"), Some(1.0));
+        assert_eq!(js_string_to_number_strict("-2"), Some(-2.0));
+        assert_eq!(js_string_to_number_strict("1.5"), Some(1.5));
+        assert_eq!(js_string_to_number_strict(".5"), Some(0.5));
+        assert_eq!(js_string_to_number_strict("1e3"), Some(1000.0));
+        assert_eq!(js_string_to_number_strict("1.5e-1"), Some(0.15));
+        assert_eq!(js_string_to_number_strict("  42  "), Some(42.0)); // trim
+    }
+
+    #[test]
+    fn gap004_jstr2num_explicit_infinity() {
+        assert_eq!(js_string_to_number_strict("Infinity"), Some(f64::INFINITY));
+        assert_eq!(js_string_to_number_strict("+Infinity"), Some(f64::INFINITY));
+        assert_eq!(js_string_to_number_strict("-Infinity"), Some(f64::NEG_INFINITY));
+        // JS is case-sensitive — these must NOT match Infinity.
+        assert_eq!(js_string_to_number_strict("infinity"), None);
+        assert_eq!(js_string_to_number_strict("INFINITY"), None);
+        assert_eq!(js_string_to_number_strict("inf"), None); // Rust accepts; JS doesn't.
+    }
+
+    #[test]
+    fn gap004_jstr2num_rejects_ambiguous_or_unsupported() {
+        // Hex/binary/octal — JS accepts but we bail (follow-up).
+        assert_eq!(js_string_to_number_strict("0x1A"), None);
+        assert_eq!(js_string_to_number_strict("0b101"), None);
+        assert_eq!(js_string_to_number_strict("0o17"), None);
+        // Non-numeric strings.
+        assert_eq!(js_string_to_number_strict("hello"), None);
+        assert_eq!(js_string_to_number_strict("1abc"), None);
+        // Lone signs / dots.
+        assert_eq!(js_string_to_number_strict("+"), None);
+        assert_eq!(js_string_to_number_strict("-"), None);
+        assert_eq!(js_string_to_number_strict("."), None);
+        assert_eq!(js_string_to_number_strict("e"), None);
+        // Malformed exponent — Rust's parser rejects.
+        assert_eq!(js_string_to_number_strict("1e"), None);
+        assert_eq!(js_string_to_number_strict("e5"), None);
+    }
+
+    #[test]
+    fn gap004_number_string_equality_upstream_cases() {
+        // Direct pin of upstream's test_number_string_comparison lines.
+        assert_eq!(
+            run_and_extract_bool(binary_with(BinaryOperator::Lt, num(1.0, None), string("2", None))),
+            Some(true),
+            "1 < '2' should fold to true"
+        );
+        assert_eq!(
+            run_and_extract_bool(binary_with(BinaryOperator::Eq, num(1.0, None), string("2", None))),
+            Some(false),
+            "1 == '2' should fold to false"
+        );
+    }
+
+    #[test]
+    fn gap004_number_string_is_symmetric_and_order_preserving() {
+        // String-on-left must yield the correct ordering: '2' < 1 is false
+        // (2 < 1), not true (the left-side coercion preserves operand order).
+        assert_eq!(
+            run_and_extract_bool(binary_with(BinaryOperator::Lt, string("2", None), num(1.0, None))),
+            Some(false),
+            "'2' < 1 must fold to false (NOT swap to 1 < 2)"
+        );
+        assert_eq!(
+            run_and_extract_bool(binary_with(BinaryOperator::Gt, string("2", None), num(1.0, None))),
+            Some(true),
+            "'2' > 1 must fold to true"
+        );
+        assert_eq!(
+            run_and_extract_bool(binary_with(BinaryOperator::Eq, string("1", None), num(1.0, None))),
+            Some(true),
+            "'1' == 1 must fold to true (loose equality coerces)"
+        );
+    }
+
+    #[test]
+    fn gap004_number_string_relational_full_truth_table() {
+        // For two values that disagree numerically, each of the 6 relations
+        // gives a determined result.
+        for (op, expected) in [
+            (BinaryOperator::Lt, true),
+            (BinaryOperator::LtEq, true),
+            (BinaryOperator::Gt, false),
+            (BinaryOperator::GtEq, false),
+            (BinaryOperator::Eq, false),
+            (BinaryOperator::NotEq, true),
+        ] {
+            // 1 OP '2'
+            assert_eq!(
+                run_and_extract_bool(binary_with(op, num(1.0, None), string("2", None))),
+                Some(expected),
+                "1 {:?} '2' wrong",
+                op
+            );
+        }
+        // Equal-after-coercion: '1.5' vs 1.5 — both 1.5.
+        for (op, expected) in [
+            (BinaryOperator::Eq, true),
+            (BinaryOperator::NotEq, false),
+            (BinaryOperator::Lt, false),
+            (BinaryOperator::Gt, false),
+            (BinaryOperator::LtEq, true),
+            (BinaryOperator::GtEq, true),
+        ] {
+            assert_eq!(
+                run_and_extract_bool(binary_with(op, num(1.5, None), string("1.5", None))),
+                Some(expected),
+                "1.5 {:?} '1.5' wrong",
+                op
+            );
+        }
+    }
+
+    #[test]
+    fn gap004_strict_equality_path_still_uses_gap008_not_this_branch() {
+        // Sanity: `1 === '1'` should fold to false (gap-008), and `1 !== '1'`
+        // to true. The new gap-004 branch is gated on Eq/NotEq/Lt/LtEq/Gt/GtEq
+        // so it doesn't fire on StrictEq/StrictNotEq.
+        assert_eq!(
+            run_and_extract_bool(binary_with(
+                BinaryOperator::StrictEq,
+                num(1.0, None),
+                string("1", None)
+            )),
+            Some(false),
+            "gap-008: 1 === '1' must stay false"
+        );
+        assert_eq!(
+            run_and_extract_bool(binary_with(
+                BinaryOperator::StrictNotEq,
+                num(1.0, None),
+                string("1", None)
+            )),
+            Some(true),
+            "gap-008: 1 !== '1' must stay true"
+        );
+    }
+
+    #[test]
+    fn gap004_bails_when_string_is_unrecognised() {
+        // `1 == 'hi'` is `false` per spec (ToNumber('hi') = NaN, then
+        // 1 == NaN is false). But our conservative helper returns None
+        // for unrecognised strings, so the fold doesn't fire — output
+        // is the original BinaryExpression unchanged.
+        let expr = binary_with(BinaryOperator::Eq, num(1.0, None), string("hi", None));
+        let (out, _, _, _) = run_pass(program_with_expr(expr, true));
+        assert!(
+            matches!(extract_expr(&out), Expression::BinaryExpression(_)),
+            "1 == 'hi' must not fold (conservative bail)"
+        );
+    }
+
     // ------------------- null cross-type equality (gap-003) ----------
     //
     // These tests pin the behaviour added when CLOC12 gap-003 was
@@ -1742,14 +2062,23 @@ mod tests {
     }
 
     #[test]
-    fn mixed_type_loose_equality_not_folded() {
-        // 1 == "1" is true in JS but we don't fold mixed-type
-        // comparisons — sound default.
+    fn mixed_type_loose_equality_with_unrecognised_string_not_folded() {
+        // **Pre-gap-004**: this test asserted that `1 == "1"` was NOT
+        // folded (sound default). **Post-gap-004** (CLOC12.22), `1 == "1"`
+        // *does* fold to `true` because `"1"` is in the strict recognised
+        // §StringToNumber subset.
+        //
+        // The original intent — "don't fold mixed-type comparisons we
+        // can't soundly evaluate" — is still pinned, but now the
+        // canonical example is a string that the conservative helper
+        // bails on. `"hi"` triggers `js_string_to_number_strict` to
+        // return `None`, so the fold doesn't fire and the BinaryExpression
+        // survives.
         let expr = Expression::BinaryExpression(BinaryExpression {
             cv: Some("bin.1".to_string()),
             operator: BinaryOperator::Eq,
             left: Box::new(num(1.0, None)),
-            right: Box::new(string("1", None)),
+            right: Box::new(string("hi", None)),
         });
         let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
         assert!(!changed);

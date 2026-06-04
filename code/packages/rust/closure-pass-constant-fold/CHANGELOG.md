@@ -2,6 +2,63 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-04
+
+### Added — CLOC12.22: gap-004 Number/String cross-type abstract equality + relational comparison
+
+Closes `gap-004` from the CLOC12 gap tracker. `try_fold_binary_op` now
+coerces a String operand against a Number operand by calling a new
+conservative subset of ECMAScript §StringToNumber and evaluating the
+resulting Number-vs-Number comparison for the loose equality
+operators (`==` / `!=`) and the abstract relational operators
+(`<` / `<=` / `>` / `>=`).
+
+Worked examples (upstream-pinned):
+
+* `1 < '2'`  → `true`   (string coerced to 2, then 1 < 2)
+* `1 == '2'` → `false`  (loose equality: ToNumber('2') === 2)
+* `'2' < 1`  → `false`  (order preserved — NOT swapped to `1 < 2`)
+* `'1' == 1` → `true`   (symmetric, string-on-left)
+* `1.5 == '1.5'` → `true`
+
+What the new `js_string_to_number_strict` helper recognises:
+
+1. **Empty / ASCII-whitespace-only** → `0.0` (per §StringNumericValue).
+2. **`Infinity` / `+Infinity` / `-Infinity`** (case-sensitive, after trim).
+3. **Decimal-style numeric literals** — `[+-]?\d*(\.\d*)?([eE][+-]?\d+)?` with at least one digit, lone signs/dots rejected.
+
+What it **does not** handle (deliberate follow-ups; returning `None` bails the fold soundly):
+
+* Hex / binary / octal prefixes (`0x...`, `0b...`, `0o...`).
+* Non-ASCII JS WhiteSpace (NBSP, ZWNBSP, U+2028, U+2029, ...).
+* Strings that evaluate to NaN per spec (e.g. `"hi"`) — folding these
+  to `false` for `==` (or `true` for `!=`) is a future optimisation.
+
+Strict equality on Number/String is untouched — gap-008's branch
+already returns `false` / `true` and runs after this one is gated out
+by `matches!(op, Eq | NotEq | Lt | LtEq | Gt | GtEq)`.
+
+Tests:
+
+* upstream test `test_number_string_comparison_literal_lines`
+  un-ignored — was the canonical pin for this gap.
+* 8 new inline unit tests cover: (1) the helper's recognised decimal
+  cases, (2) explicit Infinity, (3) the conservative-bail set (hex,
+  non-numeric, lone-sign, malformed exponent), (4) the upstream
+  cases, (5) order-preservation and symmetry, (6) a full truth table
+  for both `1 OP '2'` and `1.5 OP '1.5'`, (7) the gap-008 strict
+  regression, and (8) the conservative-bail behaviour on `'hi'`.
+
+Touched pre-existing test: `mixed_type_loose_equality_not_folded`
+was asserting the old "don't fold mixed-type comparisons" sound
+default, which gap-004 has now narrowed to "don't fold when the
+string is unrecognisable". The test was renamed to
+`mixed_type_loose_equality_with_unrecognised_string_not_folded` and
+its example changed from `1 == "1"` (now folds to `true`) to
+`1 == "hi"` (still bails, original intent preserved).
+
+No changes to public API or AST surface.
+
 ## [0.9.0] - 2026-06-02
 
 ### Added — CLOC12.21: gap-003 `null == <primitive>` cross-type loose-equality fold

@@ -45,11 +45,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-004 — abstract-equality and abstract-comparison folds across Number/String
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.22 — `try_fold_binary_op` now coerces a String operand against a Number operand via a conservative subset of §StringToNumber (`js_string_to_number_strict`) and evaluates the resulting Number-vs-Number comparison for `==` / `!=` / `<` / `<=` / `>` / `>=`. Order is preserved: `'2' < 1` still folds to `false` (NOT swapped to `1 < 2`). Operates on both directions (Number-on-left and String-on-left). Strict `===` / `!==` is unaffected — gap-008's cross-type branch already handles those and is statically unreachable from this branch's operator guard. The string→number helper recognises the empty/whitespace string, decimal literals (with optional sign, `.`, and `[eE][+-]?` exponent), and the explicit `Infinity` / `+Infinity` / `-Infinity` forms; it deliberately *bails* on hex/binary/octal prefixes, lone signs/dots, non-ASCII whitespace, and unrecognised text — those are sound follow-ups that can be added without re-deriving the rules. `test_number_string_comparison_literal_lines` is un-ignored.
 - **Upstream test:** `PeepholeFoldConstantsTest::testNumberStringComparison`, `PeepholeFoldConstantsTest::testStringNumberComparison`
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
-- **Why it fails:** Upstream folds `1 < '2'` to `true` (string `'2'` coerced via `ToNumber`) and `1 == '2'` to `false` (loose equality, per ES spec §IsLooselyEqual). Our pass leaves mixed-type `==`/`<`/`>` alone.
-- **What it needs:** Same shape as gap-003 — implement abstract-equality and abstract-relational-comparison for compile-time constants.
 
 ### gap-005 — `typeof` operator constant-fold not implemented
 
