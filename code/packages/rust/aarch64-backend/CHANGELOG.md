@@ -1,5 +1,25 @@
 # Changelog — `aarch64-backend`
 
+## 0.6.0 — 2026-06-04 — lisp runtime calls (LANG77 / McCarthy L3b-2b)
+
+Adds three rows to the `V1_BUILTINS` helper table — `lispy_cons` (2 args),
+`lispy_car` (1), `lispy_cdr` (1), all returning a value — so `call_builtin
+"lispy_cons"` etc. dispatch to `BL __twig_lispy_cons` in the linked C lisp
+runtime (`twig-aot/runtime/lispy_runtime.c`). These are the runtime-call
+form of cons/car/cdr (produced by
+`iir_builtin_lowering::lower_heap_builtins_runtime`), keeping lisp values
+NaN-box tagged rather than raw words.
+
+**No new opcodes or emitter logic** — the existing generic `call_builtin`
+dispatch marshals the args into x0/x1 per AAPCS64 and emits the BL with an
+external relocation; the table rows are the entire change. The L3b-1
+`alloc`/`field_*` emitters remain as general-purpose heap ops (no longer on
+the McCarthy cons path).
+
+Two new host-independent tests: `(CAR (CONS 7 9))` via the runtime path
+emits external relocations to `__twig_lispy_cons`/`__twig_lispy_car`, and a
+wrong-arity `lispy_cons` call is softly refused.
+
 ## 0.5.0 — 2026-06-04 — heap cons cells (McCarthy Lisp L3b)
 
 Lower the four word-granular heap ops that

@@ -228,7 +228,7 @@ limitation on linking runtime helpers into AOT-*produced* executables.
 | Slice | Scope | Verification |
 |---|---|---|
 | **L3b-2a** (this PR) | `lispy_runtime.c` (full runtime), `build.rs` `.file()`, golden test, `twig-aot` dev-dep on `lispy-runtime`, spec. **No lowering/backend changes** → no regression risk. | Golden test green on host + CI; existing smoke tests unchanged. |
-| **L3b-2b** | Target-aware native lowering of `cons`/`car`/`cdr` → `lispy_*`; box int literals + unbox at exit; `V1_BUILTINS` rows in both backends. | `(CAR (CONS 7 9))` → native exe exits `7` **via tagged values** (Linux/Windows CI; macOS AOT-exe gap pre-existing). Backend codegen unit tests host-independently. |
+| **L3b-2b ✓** | Target-aware native lowering of `cons`/`car`/`cdr` → `lispy_*` (`lower_heap_builtins_runtime`); `V1_BUILTINS` rows in both backends. (Int boxing + unbox-at-exit deferred to L3b-2c, where the tag is first inspected — for the pure cons/car/cdr data path, raw payloads round-trip identically through the runtime.) | `(CAR (CONS 7 9))` → native exe exits `7` **through the linked runtime** (Linux/Windows CI; macOS AOT-exe gap pre-existing). Backends emit external relocs to `__twig_lispy_cons`/`__twig_lispy_car` — verified host-independently in `aarch64-backend`/`x86_64-backend` unit tests. |
 | **L3b-2c** | `pair?`/`not`/`equal?` (`ATOM`/`EQ`) + `make_symbol` lowering; `COND` truthiness on tagged booleans. | `(ATOM (CONS 1 2))` → `#f`-driven branch; `(CAR '(A B C))` → symbol `A`; `(EQ 'A 'A)` → true. |
 | **L3b-3** | Wire the managed backends (wasm/jvm/clr/beam) + the per-`--emit` acceptance matrix for symbols (they already lower cons). | The worked example emits a non-trivial artifact on every target. |
 

@@ -127,6 +127,11 @@ pub use error::BuiltinLoweringError;
 // Re-export the heap lowering entry point for callers that want to invoke
 // Phase 2 directly (e.g. the LANG31 pipeline driver).
 pub use heap::lower_heap_builtins;
+// Re-export the native runtime-call heap lowering (LANG77) — the target-aware
+// counterpart of `lower_heap_builtins` that routes cons/car/cdr to the linked
+// C lisp runtime (`__twig_lispy_*`) instead of inline `alloc`/`field_*`.
+// Used by `twig-aot` for the native backends.
+pub use heap::lower_heap_builtins_runtime;
 // Re-export the global/IO lowering entry point (LANG32).
 pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).

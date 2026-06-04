@@ -174,6 +174,10 @@ impl RegAlloc {
 // | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
 // | `input_i64`   | `int64_t __twig_input_i64(void)`              | yes     |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
+// | `alloc_bytes` | `int64_t __twig_alloc_bytes(int64_t n)`       | yes     |
+// | `lispy_cons`  | `uint64_t __twig_lispy_cons(uint64_t, uint64_t)` | yes  |
+// | `lispy_car`   | `uint64_t __twig_lispy_car(uint64_t)`         | yes     |
+// | `lispy_cdr`   | `uint64_t __twig_lispy_cdr(uint64_t)`         | yes     |
 
 #[derive(Debug, Clone, Copy)]
 struct BuiltinSig {
@@ -191,6 +195,14 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
+    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__twig_lispy_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
+    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
+    // logic — the generic `call_builtin` path marshals args + emits the BL.
+    BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
+    BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
+    BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1355,6 +1367,48 @@ mod tests {
         let bytes = compile(&ctx("cons_car", &[], "u64"), &cir)
             .unwrap_or_else(|e| panic!("cons/car heap ops must lower: {e}"));
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+    }
+
+    // L3b-2b (LANG77): the *runtime-call* form of `(CAR (CONS 7 9))` —
+    // cons/car are `call_builtin "lispy_*"` dispatching to `__twig_lispy_*`,
+    // the alternative to the structural ops above (see `RUNTIME_RENAMES`).
+
+    fn call_builtin(dest: Option<&str>, name: &str, args: &[&str]) -> CIRInstr {
+        let mut srcs = vec![CIROperand::Var(name.into())];
+        srcs.extend(args.iter().map(|a| CIROperand::Var((*a).into())));
+        CIRInstr { op: "call_builtin".into(), dest: dest.map(Into::into),
+                   srcs, ty: "any".into(), deopt_to: None }
+    }
+
+    #[test]
+    fn lispy_runtime_cons_car_emit_external_calls() {
+        // `(CAR (CONS 7 9))` via the runtime path: two BLs to the C lisp
+        // runtime, recorded as external relocations the linker resolves from
+        // the runtime archive.
+        let cir = vec![
+            const_u64("h", 7),
+            const_u64("t", 9),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("r"), "lispy_car", &["cell"]),
+            ret_u64("r"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("lispy", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("lispy runtime calls must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_lispy_cons"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__twig_lispy_car"), "missing car call: {symbols:?}");
+    }
+
+    #[test]
+    fn lispy_cons_wrong_arity_is_rejected() {
+        // lispy_cons takes exactly 2 args — one arg must be a soft refusal.
+        let cir = vec![
+            const_u64("h", 7),
+            call_builtin(Some("cell"), "lispy_cons", &["h"]),
+            ret_u64("cell"),
+        ];
+        assert!(compile(&ctx("bad_cons", &[], "u64"), &cir).is_err());
     }
 
     #[test]
