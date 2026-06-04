@@ -44,6 +44,7 @@ extern "C" {
     fn __twig_lispy_cdr(pair: u64) -> u64;
     fn __twig_lispy_pair_p(v: u64) -> u64;
     fn __twig_lispy_not(v: u64) -> u64;
+    fn __twig_lispy_truthy(v: u64) -> i64;
     fn __twig_lispy_equal(a: u64, b: u64) -> u64;
     fn __twig_lispy_make_symbol(name: *const u8, len: i64) -> u64;
 
@@ -161,6 +162,21 @@ fn c_not_follows_lispy_truthiness() {
     assert_eq!(unsafe { __twig_lispy_not(t) }, f, "not(#t) = #f");
     // 0 is a *truthy* integer in lispy — not(0) = #f.
     assert_eq!(unsafe { __twig_lispy_not(__twig_lispy_box_int(0)) }, f, "not(0) = #f");
+}
+
+/// `lispy_truthy` returns a RAW machine 0/1 (for `jmp_if_false`): false iff
+/// `#f` or nil, true for everything else (including the integer 0 and pairs).
+#[test]
+fn c_truthy_returns_raw_bool() {
+    let nil = unsafe { __twig_lispy_nil() };
+    assert_eq!(unsafe { __twig_lispy_truthy(LispyValue::FALSE.bits()) }, 0, "truthy(#f) = 0");
+    assert_eq!(unsafe { __twig_lispy_truthy(nil) }, 0, "truthy(nil) = 0");
+    assert_eq!(unsafe { __twig_lispy_truthy(LispyValue::TRUE.bits()) }, 1, "truthy(#t) = 1");
+    // A boxed integer 0 is truthy (only #f and nil are false).
+    assert_eq!(unsafe { __twig_lispy_truthy(__twig_lispy_box_int(0)) }, 1, "truthy(0) = 1");
+    // A cons cell (pair) is truthy.
+    let pair = unsafe { __twig_lispy_cons(__twig_lispy_box_int(1), nil) };
+    assert_eq!(unsafe { __twig_lispy_truthy(pair) }, 1, "truthy(pair) = 1");
 }
 
 // ---------------------------------------------------------------------------

@@ -145,6 +145,25 @@ uint64_t __twig_lispy_not(uint64_t v) {
     return is_falsey ? LISPY_TRUE : LISPY_FALSE;
 }
 
+/* __twig_lispy_truthy — normalise a tagged value to a RAW machine boolean
+ * (0 or 1) for a conditional branch.
+ *
+ * Unlike `not`, this does NOT return a tagged `LispyValue` — it returns a
+ * plain `int64_t` 0/1 so the backend's `jmp_if_false` (which tests a raw
+ * machine word against zero) branches correctly on a `LispyValue` condition.
+ * It is the bridge `COND` needs: a McCarthy predicate evaluates to a tagged
+ * value (#t/#f, a symbol, a pair, …), and lisp truthiness is "false iff #f
+ * or nil, true otherwise" — including the integer 0 and the empty… no, nil
+ * is false, but a *boxed* integer 0 (whole word 0b000 = 0) is truthy.
+ *
+ *   truthy(#f)  = 0      truthy(nil)      = 0
+ *   truthy(#t)  = 1      truthy(box_int 0)= 1   (0 is a truthy atom)
+ *   truthy('A)  = 1      truthy(pair)     = 1
+ */
+int64_t __twig_lispy_truthy(uint64_t v) {
+    return (v == LISPY_FALSE || v == LISPY_NIL) ? 0 : 1;
+}
+
 /* `equal?` — structural deep equality, returning a tagged boolean.
  *
  *   - Two atoms (neither is a pair) are equal iff their bits are equal.

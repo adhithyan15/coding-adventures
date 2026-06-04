@@ -369,16 +369,31 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 // `BL/CALL __twig_lispy_cons` via their generic `call_builtin` dispatch +
 // the `V1_BUILTINS` table; no new backend opcodes are needed.
 //
-// `null?` / `make_nil` / `pair?` / `not` / `equal?` / `make_symbol` are
-// intentionally **not** renamed here — those need the boxed-integer / nil-tag
-// value representation that lands together in L3b-2c.  L3b-2b is the
-// cons/car/cdr data path only.
+// `null?` / `make_nil` / `make_symbol` are intentionally **not** renamed
+// here — `make_symbol` needs string-literal emission (L3b-2c-3) and the
+// `null?`/`make_nil` nil-handling rides along with it.
+//
+// `pair?` / `not` / `equal?` (the `ATOM`/`EQ` predicates) ARE renamed as of
+// L3b-2c-2 — they consume/produce tagged `LispyValue`s, which the
+// representation pass (`lower_lisp_repr`) has set up by the time the native
+// backend runs.
 
-/// The frontend→native-runtime builtin renames (LANG77 / L3b-2b).
+/// The frontend→native-runtime builtin renames (LANG77 / L3b-2b, L3b-2c-2).
 const RUNTIME_RENAMES: &[(&str, &str)] = &[
+    // L3b-2b — the cons data path.
     ("cons", "lispy_cons"),
     ("car", "lispy_car"),
     ("cdr", "lispy_cdr"),
+    // L3b-2c-2 — the predicates (ATOM = pair? + not; EQ = equal?).
+    //
+    // `pair?` and `equal?` are unambiguous lisp builtins (no machine meaning),
+    // so the rename is safe here. `not` is NOT renamed here: it is also a
+    // *numeric* builtin (machine boolean-not, used by Twig), so renaming it
+    // unconditionally would hijack Twig's `not`. McCarthy's `not` (the second
+    // half of `ATOM` = `not(pair?)`) is renamed *type-directed* in
+    // `lisp_repr` — only when its argument is a `lispy_*` result.
+    ("pair?", "lispy_pair_p"),
+    ("equal?", "lispy_equal"),
 ];
 
 /// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `lispy_*`
@@ -817,10 +832,51 @@ mod tests {
     }
 
     #[test]
-    fn runtime_leaves_other_builtins_unchanged() {
-        // null?, make_nil, pair?, equal? etc. are NOT renamed by L3b-2b —
-        // they land with the boxed value representation in L3b-2c.
-        for name in ["null?", "make_nil", "pair?", "not", "equal?", "make_symbol"] {
+    fn runtime_renames_atom_eq_predicates() {
+        // L3b-2c-2: pair?/equal? are renamed here (unambiguous lisp builtins).
+        // `not` is renamed type-directed in lisp_repr (it is also a numeric
+        // builtin), so it is NOT renamed by this pass — see
+        // `runtime_leaves_not_for_type_directed_rename`.
+        for (name, renamed) in [
+            ("pair?", "lispy_pair_p"),
+            ("equal?", "lispy_equal"),
+        ] {
+            let instr = IIRInstr::new(
+                "call_builtin",
+                Some("%r".into()),
+                vec![Operand::Var(name.into()), Operand::Var("%x".into())],
+                "any",
+            );
+            let mut m = make_module(vec![instr]);
+            lower_heap_builtins_runtime(&mut m);
+            assert_eq!(
+                builtin_name(&m.functions[0].instructions[0]), renamed,
+                "{name} must be renamed to {renamed}",
+            );
+        }
+    }
+
+    #[test]
+    fn runtime_leaves_not_for_type_directed_rename() {
+        // `not` is a numeric builtin too (machine boolean-not), so this pass
+        // must NOT rename it — lisp_repr renames it only when its arg is a
+        // lispy_* result (ATOM = not(pair?)). Renaming here would hijack Twig.
+        let instr = IIRInstr::new(
+            "call_builtin",
+            Some("%r".into()),
+            vec![Operand::Var("not".into()), Operand::Var("%x".into())],
+            "bool",
+        );
+        let mut m = make_module(vec![instr]);
+        lower_heap_builtins_runtime(&mut m);
+        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "not");
+    }
+
+    #[test]
+    fn runtime_leaves_symbol_and_nil_builtins_unchanged() {
+        // null?/make_nil/make_symbol are NOT renamed yet — make_symbol needs
+        // string-literal emission (L3b-2c-3).
+        for name in ["null?", "make_nil", "make_symbol"] {
             let instr = IIRInstr::new(
                 "call_builtin",
                 Some("%r".into()),
@@ -831,7 +887,7 @@ mod tests {
             lower_heap_builtins_runtime(&mut m);
             assert_eq!(
                 builtin_name(&m.functions[0].instructions[0]), name,
-                "{name} must be left for L3b-2c, not renamed",
+                "{name} must be left for L3b-2c-3, not renamed",
             );
         }
     }

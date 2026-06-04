@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.13.1 — 2026-06-04 — McCarthy ATOM/EQ + COND e2e (L3b-2c-2)
+
+Adds Linux/Windows end-to-end smoke tests exercising McCarthy `ATOM`/`COND`
+through the native pipeline: `(COND ((ATOM 5) 7) (5 9))` → exits 7 and
+`(COND ((ATOM (CONS 1 2)) 7) (5 9))` → exits 9 (ATOM of an int is true; ATOM
+of a pair is false). Test-only; no library change.
+
 ## 0.13.0 — 2026-06-04 — McCarthy Lisp frontend (L3a)
 
 ### What changed

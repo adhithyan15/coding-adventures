@@ -1,5 +1,15 @@
 # Changelog — `x86_64-backend`
 
+## 0.10.0 — 2026-06-04 — ATOM/EQ predicate + truthy helpers (LANG77 / McCarthy L3b-2c-2)
+
+Adds four `V1_BUILTINS` rows — `lispy_pair_p` (1), `lispy_not` (1),
+`lispy_equal` (2), `lispy_truthy` (1), all returning a value → `CALL
+__twig_lispy_*`. These back `ATOM` (`not(pair?)`), `EQ` (`equal?`) and the
+`COND` truthiness normaliser the `lower_lisp_repr` pass inserts before
+`jmp_if_false`. No new opcodes — the generic `call_builtin` dispatch handles
+them. New host-independent test: the ATOM/EQ predicate + truthy sequence
+lowers and emits the four external relocs.
+
 ## 0.9.0 — 2026-06-04 — lisp int unbox helper (LANG77 / McCarthy L3b-2c-1)
 
 Adds one `V1_BUILTINS` row — `lispy_unbox_int` (1 arg, returns) → `CALL

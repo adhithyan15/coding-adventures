@@ -1,5 +1,18 @@
 # Changelog — `twig-aot`
 
+## 0.12.0 — 2026-06-04 — ATOM/EQ + COND truthiness (LANG77 / McCarthy L3b-2c-2)
+
+Adds `__twig_lispy_truthy` to `runtime/lispy_runtime.c` — normalises a tagged
+`LispyValue` to a **raw** machine `0`/`1` (false iff `#f` or nil) so the
+backend's `jmp_if_false` branches correctly on a `COND` predicate that
+produced a tagged boolean. A golden-test assertion pins its truth table.
+
+With the lowering changes in `iir-builtin-lowering` 0.6.0 (predicate renames +
+`COND` truthiness wrapping + bidirectional `mov` boxing), McCarthy `ATOM`/`EQ`
+now drive a native branch: `(COND ((ATOM 5) 7) (5 9))` → 7, and
+`(COND ((ATOM (CONS 1 2)) 7) (5 9))` → 9. No changes to `prepare_module_for_aot`
+beyond what 0.11.0 already wired.
+
 ## 0.11.0 — 2026-06-04 — tag native lisp integers (LANG77 / McCarthy L3b-2c-1)
 
 `prepare_module_for_aot` now runs `iir_builtin_lowering::lower_lisp_repr`
