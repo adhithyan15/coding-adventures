@@ -2,6 +2,130 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-04
+
+### Added — CLOC12.36: constant-discriminant switch collapse (gap-014 step 4/N)
+
+Third (and last simple-to-frame) peephole on top of the
+SwitchStatement AST. **Closes gap-014's substantive
+optimisation work.**
+
+When a `SwitchStatement`'s discriminant is a pure leaf literal
+AND every case `test` is `None` (the default clause) or also a
+pure leaf literal, the pass compile-time evaluates which case
+runs and replaces the entire switch with a `BlockStatement`
+holding the matched case's consequent.
+
+### The rule
+
+1. Find the first case whose `test` is strict-equal to the
+   discriminant (per ECMAScript §IsStrictlyEqual, restricted to
+   the literal subset).
+2. If no case matches, fall back to the `default:` case if one
+   exists.
+3. Replace the switch with `BlockStatement(matched.consequent)`
+   with any trailing `BreakStatement` stripped (it's spurious
+   — there's no switch to exit). `ReturnStatement` /
+   `ThrowStatement` at the end stay (they have observable
+   behaviour beyond just exiting the switch).
+4. No match AND no default → switch runs nothing; replace with
+   `EmptyStatement`. Discriminant is pure, so dropping is safe.
+
+### Conservative bail
+
+- Matched case's consequent doesn't end with a case-terminator
+  (Break / Return / Throw). Without one, control would
+  fall through to the next case, and we don't model
+  fall-through here. Future slice could concatenate
+  consequents through the next terminator.
+- Discriminant is `NaN`. Per §IsStrictlyEqual, `NaN !== NaN`,
+  so NaN matches nothing — but rather than emit subtle no-
+  match semantics on a surprising literal, `strict_equal_leaves`
+  bails to `false` for NaN comparisons. The
+  `pick_matching_case` walk returns `None`, default is used if
+  present, otherwise `EmptyStatement` runs. Same observable
+  behaviour as spec-correct NaN handling, just routed through
+  the "no match" path.
+- Anything non-leaf (Identifier discriminant or test, member
+  access, call, binary, etc.) — bail.
+
+### Cross-type strictness
+
+`strict_equal_leaves` enforces strict-equality:
+`NumericLiteral(1)` !== `StringLiteral("1")` even though they
+`==` in JS. So `switch(1){case "1": ...; default: ...;}`
+correctly skips the string case and uses default.
+
+### New helpers
+
+- `fn strict_equal_leaves(a: &Expression, b: &Expression) -> bool`
+  — six match-arms for the literal subset that `is_pure_leaf`
+  recognises plus the NaN guard.
+- `fn pick_matching_case(disc, &[SwitchCase]) -> Option<&SwitchCase>`
+  — walks cases looking for a strict-equal match, falls back
+  to default.
+- `fn strip_trailing_break(consequent) -> Vec<Statement>` —
+  removes a trailing `BreakStatement`; leaves Return/Throw.
+
+### Tests (11 new, 27 → 38 inline)
+
+| Test | Pins |
+|------|------|
+| `switch_with_literal_disc_matching_case_collapses` | `switch(1){case 1:a;break;}` → `a;` |
+| `switch_with_literal_disc_no_match_uses_default` | `switch(1){case 2:...; default:b;break;}` → `b;` |
+| `switch_with_literal_disc_no_match_no_default_drops` | `switch(1){case 2:a;break;}` → `;` |
+| `switch_collapse_with_return_terminator_preserves_return` | `switch(1){case 1:a;return;}` → `a; return;` (return stays) |
+| `switch_collapse_string_discriminant` | `switch("b"){case "a":...; case "b":bx;break;}` → `bx;` |
+| `switch_with_literal_disc_no_terminator_keeps_switch` | Conservative: no trailing break → keep switch |
+| `switch_collapse_cross_type_test_does_not_match` | `switch(1){case "1":...; default:b;}` → `b;` (strict !==) |
+| `switch_collapse_identifier_discriminant_keeps_switch` | Conservative: Identifier discriminant → keep |
+| `switch_collapse_nan_discriminant_keeps_switch` | NaN routes through "no match" → empty (correct per spec) |
+| `switch_collapse_empty_matched_case_keeps_switch_due_to_fallthrough` | `case 1: case 2: body; break;` with disc 1 → bail (fall-through) |
+| `switch_collapse_preserves_trailing_labeled_break` | `case 1: a; break outer;` → labeled break stays |
+
+closurec's e2e suites stay green — no existing fixture exercises
+the shape, so behaviour is purely additive.
+
+### Composition with steps 2 and 3
+
+- Step 2 (empty-switch elimination) still catches the all-cases-
+  empty branch with the same conditions; it runs first.
+- Step 3 (drop-after-break) truncates case consequents BEFORE
+  step 4 looks at them. So `case 1: body; break; dead;` is
+  step-3'd to `case 1: body; break;` and then step-4'd to
+  `body;`. The composition is clean: each step strictly
+  reduces the AST size on success.
+- The composition produces no surprises. **A matched case with
+  an empty consequent does NOT collapse** — that case shape
+  (`case 1: case 2: body; break;`) is the standard "share a
+  case body" pattern, where execution falls through from the
+  empty case to the next one. Step 4 conservatively bails on
+  empty matched consequents to preserve fall-through behaviour.
+
+### Security-review fixes folded in
+
+The initial implementation had two correctness bugs the
+security-review subagent caught before push:
+
+1. **`strip_trailing_break` stripped labeled breaks too.**
+   `case 1: a; break outer;` → original code dropped
+   `break outer;` and silently kept an enclosing labeled
+   loop running. Fixed: only strip when `b.label.is_none()`.
+   Test `switch_collapse_preserves_trailing_labeled_break`
+   pins this.
+2. **Empty matched consequent collapsed to `{}`, dropping
+   fall-through body.** The classic `case 1: case 2: body;
+   break;` with discriminant `1` had `case 1` with empty
+   consequent — the original `terminates || empty` condition
+   collapsed it to `{}` and dropped `body`. Fixed: require
+   `terminates && !empty` (no fall-through collapse). Test
+   `switch_collapse_empty_matched_case_keeps_switch_due_to_fallthrough`
+   pins this.
+
+### Version bump
+
+`0.7.0` → `0.8.0`.
+
 ## [0.7.0] - 2026-06-04
 
 ### Added — CLOC12.35: drop-after-break in case consequents (gap-014 step 3/N)

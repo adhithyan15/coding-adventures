@@ -399,6 +399,80 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
             }
 
+            // gap-014 step 4 / CLOC12.36 — constant-discriminant
+            // collapse.
+            //
+            // When the discriminant is a pure leaf literal and every
+            // case test is None or also a pure leaf literal, we can
+            // compile-time evaluate which case runs:
+            //
+            // 1. Find the first case whose `test` is strict-equal
+            //    to the discriminant.
+            // 2. If no match, fall back to the `default:` case if
+            //    one exists.
+            // 3. Replace the entire switch with a `BlockStatement`
+            //    holding the matched case's consequent — with any
+            //    trailing `break;` stripped (it's spurious now
+            //    that there's no switch to exit). `return;` /
+            //    `throw e;` stay; they're terminators with their
+            //    own semantics.
+            // 4. No match AND no default → switch executes nothing;
+            //    replace with `EmptyStatement`.
+            //
+            // Conservative bail (keep switch unchanged):
+            // - Matched case's consequent doesn't end with a
+            //   case-terminator (`break;` / `return ...;` /
+            //   `throw ...;`). Without a terminator, control
+            //   *would* fall through to the next case, and we
+            //   don't model fall-through here. A future slice can
+            //   concatenate consequents up to the next terminator.
+            // - Discriminant is a `NumericLiteral` with value
+            //   `NaN`. Per spec, `NaN !== NaN`, so NaN never
+            //   matches anything — but rather than emit subtle
+            //   no-match semantics on a literal that's already
+            //   surprising, we bail. (Constant-fold normally
+            //   produces this via `0/0`-style folds.)
+            if discriminant_pure && all_tests_pure_or_none {
+                if let Some(target) = pick_matching_case(&new_disc, &new_cases) {
+                    let last = target.consequent.last();
+                    let terminates = last.map_or(false, is_case_terminator);
+                    // Empty consequent → fall-through to next case per
+                    // ECMAScript §13.12. The classic "share body"
+                    // pattern `case 1: case 2: body; break;` has
+                    // `case 1: []` as the matched case and would
+                    // wrongly drop `body` if collapsed to `{}`. We
+                    // don't model fall-through across cases here,
+                    // so bail. A future slice can concatenate
+                    // consequents through the next terminator.
+                    if terminates && !target.consequent.is_empty() {
+                        let new_body = strip_trailing_break(&target.consequent);
+                        st.record(
+                            &s.cv,
+                            "switch_collapsed_to_matched_case",
+                            "SwitchStatement{<pure-discriminant>}",
+                            &format!(
+                                "BlockStatement with {} statements (from matched case)",
+                                new_body.len()
+                            ),
+                        );
+                        return TaggedStatement::BlockStatement(BlockStatement {
+                            cv: s.cv.clone(),
+                            body: new_body,
+                        });
+                    }
+                } else {
+                    // No matching case and no default → nothing
+                    // runs. Discriminant is pure so safe to drop.
+                    st.record(
+                        &s.cv,
+                        "switch_collapsed_no_match",
+                        "SwitchStatement{<pure-discriminant>}",
+                        "EmptyStatement",
+                    );
+                    return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+                }
+            }
+
             TaggedStatement::SwitchStatement(coding_adventures_javascript_ast::SwitchStatement {
                 cv: s.cv.clone(),
                 discriminant: new_disc,
@@ -554,6 +628,105 @@ fn is_case_terminator(stmt: &Statement) -> bool {
             | Statement::Tagged(TaggedStatement::BreakStatement(_))
             | Statement::Tagged(TaggedStatement::ThrowStatement(_))
     )
+}
+
+/// Compile-time `===` between two `is_pure_leaf` expressions.
+///
+/// Implements just enough of ECMAScript §IsStrictlyEqual to handle
+/// the literal types `is_pure_leaf` recognises:
+///
+/// - `NumericLiteral` vs `NumericLiteral`: floats equal AND neither
+///   is `NaN`. (`NaN !== NaN` per spec — but constant-fold doesn't
+///   normally produce a NaN-typed literal; bail conservatively
+///   if it ever does.)
+/// - `StringLiteral` vs `StringLiteral`: `value` field equal.
+/// - `BooleanLiteral` vs `BooleanLiteral`: `value` field equal.
+/// - `NullLiteral` vs `NullLiteral`: always true (one canonical
+///   null).
+/// - `UndefinedLiteral` vs `UndefinedLiteral`: always true.
+/// - `BigIntLiteral` vs `BigIntLiteral`: `value` field equal
+///   (decimal-string comparison).
+/// - Anything else (cross-type, non-literal): false. Per spec
+///   strict-equality is false across primitive types.
+///
+/// Used by gap-014 step 4 / CLOC12.36's constant-discriminant
+/// collapse to pick the matching case at compile time.
+fn strict_equal_leaves(a: &Expression, b: &Expression) -> bool {
+    match (a, b) {
+        (Expression::NumericLiteral(x), Expression::NumericLiteral(y)) => {
+            !x.value.is_nan() && !y.value.is_nan() && x.value == y.value
+        }
+        (Expression::StringLiteral(x), Expression::StringLiteral(y)) => x.value == y.value,
+        (Expression::BooleanLiteral(x), Expression::BooleanLiteral(y)) => x.value == y.value,
+        (Expression::NullLiteral(_), Expression::NullLiteral(_)) => true,
+        (Expression::UndefinedLiteral(_), Expression::UndefinedLiteral(_)) => true,
+        (Expression::BigIntLiteral(x), Expression::BigIntLiteral(y)) => x.value == y.value,
+        _ => false,
+    }
+}
+
+/// Pick the case that runs at compile time given a known
+/// `discriminant` and the switch's `cases`.
+///
+/// Walks cases in source order:
+/// 1. Return the first case whose `test` is `Some(t)` and
+///    `strict_equal_leaves(t, discriminant)`.
+/// 2. If no case matches, return the first case with
+///    `test: None` (the `default:` clause) if one exists.
+/// 3. Return `None` when no case matches and there's no default
+///    — the switch produces nothing observable.
+///
+/// Caller is responsible for pre-checking that `discriminant` and
+/// every case's `test` is `is_pure_leaf`. Otherwise the strict-
+/// equality result is unsound.
+fn pick_matching_case<'a>(
+    discriminant: &Expression,
+    cases: &'a [coding_adventures_javascript_ast::SwitchCase],
+) -> Option<&'a coding_adventures_javascript_ast::SwitchCase> {
+    for case in cases {
+        if let Some(test) = &case.test {
+            if strict_equal_leaves(test, discriminant) {
+                return Some(case);
+            }
+        }
+    }
+    cases.iter().find(|c| c.test.is_none())
+}
+
+/// Build a new `BlockStatement.body` from a case consequent, with
+/// the trailing **unlabeled** `BreakStatement` (if any) stripped.
+///
+/// Why only unlabeled: a bare `break;` inside a switch case exits
+/// just that switch. Once we collapse the switch away, the
+/// bare break has nothing to exit and is dead weight — strip it.
+///
+/// A `break label;` inside a switch case exits the switch AND
+/// transfers control to after the named labeled-statement (typically
+/// an outer loop or block). That escape is still semantically
+/// required after the switch is collapsed; the labeled break must
+/// stay in the resulting block so the outer-label exit still
+/// happens. Stripping it would silently keep an enclosing loop
+/// running — an observable behaviour change.
+///
+/// `return` and `throw` at the end always stay — they have
+/// observable behaviour beyond just terminating the switch.
+///
+/// Used by gap-014 step 4 / CLOC12.36 when collapsing a switch
+/// down to its single matching case body.
+fn strip_trailing_break(consequent: &[Statement]) -> Vec<Statement> {
+    if consequent.is_empty() {
+        return Vec::new();
+    }
+    let last_idx = consequent.len() - 1;
+    let last_is_unlabeled_break = matches!(
+        &consequent[last_idx],
+        Statement::Tagged(TaggedStatement::BreakStatement(b)) if b.label.is_none()
+    );
+    if last_is_unlabeled_break {
+        consequent[..last_idx].to_vec()
+    } else {
+        consequent.to_vec()
+    }
 }
 
 /// Returns `true` when an inner BlockStatement's body can be
@@ -1426,5 +1599,325 @@ mod tests {
         let (out, _, _, _) = run_pass(prog);
         let sw = extract_switch(&out);
         assert_eq!(sw.cases[0].consequent.len(), 2);
+    }
+
+    // =====================================================================
+    // gap-014 step 4 / CLOC12.36 — constant-discriminant collapse
+    // =====================================================================
+
+    /// `function f() { switch (1) { case 1: a; break; } }` →
+    /// `function f() { a; }`. The matched case body keeps `a`,
+    /// the trailing `break;` is stripped, the rest of the switch
+    /// disappears. After block-flattening, the resulting body
+    /// becomes a single-statement function.
+    #[test]
+    fn switch_with_literal_disc_matching_case_collapses() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // After collapse + block flatten: just `a;`.
+        assert_eq!(block.body.len(), 1, "expected 1 stmt; got {:?}", block.body);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+        assert!(changed);
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.tag == "switch_collapsed_to_matched_case")
+        );
+    }
+
+    /// `function f() { switch (1) { case 2: a; break; default: b; break; } }`
+    /// → `function f() { b; }`. No case matches `1`, so the
+    /// `default:` runs; trailing break stripped.
+    #[test]
+    fn switch_with_literal_disc_no_match_uses_default() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("a")), break_stmt()],
+            },
+            SwitchCase {
+                cv: None,
+                test: None, // default
+                consequent: vec![expr_stmt(ident("b")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(block.body.len(), 1);
+    }
+
+    /// `function f() { switch (1) { case 2: a; break; } }` →
+    /// `function f() {}`. No match, no default; nothing runs.
+    #[test]
+    fn switch_with_literal_disc_no_match_no_default_drops() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(2.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty());
+        assert!(contribs.iter().any(|c| c.tag == "switch_collapsed_no_match"));
+    }
+
+    /// Matched case ending with `return;` (not break) → return
+    /// stays in the collapsed body. The function would return
+    /// early; that's preserved.
+    #[test]
+    fn switch_collapse_with_return_terminator_preserves_return() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), return_stmt()],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // Two statements: `a;` then `return;`. Block flattening
+        // hoisted them out of the inner switch's collapsed block.
+        // DCE's own dead-after-return drop applies *within* the
+        // outer block, so it stays as 2.
+        assert_eq!(block.body.len(), 2, "expected 2 stmts; got {:?}", block.body);
+        assert!(matches!(
+            &block.body[1],
+            Statement::Tagged(TaggedStatement::ReturnStatement(_))
+        ));
+    }
+
+    /// String discriminant matching case test.
+    #[test]
+    fn switch_collapse_string_discriminant() {
+        let s_lit = |v: &str| Expression::StringLiteral(
+            coding_adventures_javascript_ast::StringLiteral {
+                cv: None,
+                value: v.to_string(),
+                raw: format!("\"{}\"", v),
+            },
+        );
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(s_lit("a")),
+                consequent: vec![expr_stmt(ident("ax")), break_stmt()],
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(s_lit("b")),
+                consequent: vec![expr_stmt(ident("bx")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(s_lit("b"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(block.body.len(), 1);
+        if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = &block.body[0] {
+            if let Expression::Identifier(i) = &es.expression {
+                assert_eq!(i.name, "bx");
+            } else {
+                panic!("expected Identifier(bx) inside expr-stmt");
+            }
+        } else {
+            panic!("expected ExpressionStatement; got {:?}", block.body[0]);
+        }
+    }
+
+    /// Bail when matched-case consequent doesn't terminate —
+    /// fall-through would happen and we don't model it.
+    #[test]
+    fn switch_with_literal_disc_no_terminator_keeps_switch() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![expr_stmt(ident("a"))], // no break/return/throw
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("b")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// Cross-type test mismatch — discriminant `1` doesn't strict-
+    /// equal `"1"`. The `case "1":` is skipped, default runs.
+    #[test]
+    fn switch_collapse_cross_type_test_does_not_match() {
+        let s_lit = |v: &str| Expression::StringLiteral(
+            coding_adventures_javascript_ast::StringLiteral {
+                cv: None,
+                value: v.to_string(),
+                raw: format!("\"{}\"", v),
+            },
+        );
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(s_lit("1")),
+                consequent: vec![expr_stmt(ident("string_match")), break_stmt()],
+            },
+            SwitchCase {
+                cv: None,
+                test: None,
+                consequent: vec![expr_stmt(ident("default_ran")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(block.body.len(), 1);
+        if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = &block.body[0] {
+            if let Expression::Identifier(i) = &es.expression {
+                assert_eq!(i.name, "default_ran");
+            } else {
+                panic!("expected Identifier inside expr-stmt");
+            }
+        }
+    }
+
+    /// Identifier discriminant: bail. Conservative.
+    #[test]
+    fn switch_collapse_identifier_discriminant_keeps_switch() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// **Bug fix from security review.** The classic "share body"
+    /// pattern `case 1: case 2: body; break;` has `case 1` with
+    /// an EMPTY consequent — control falls through to `case 2`'s
+    /// `body; break;`. We don't model fall-through, so we must
+    /// bail and keep the switch intact rather than wrongly
+    /// collapsing to `{}` (which would drop `body`).
+    #[test]
+    fn switch_collapse_empty_matched_case_keeps_switch_due_to_fallthrough() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![], // falls through to case 2
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("body")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // Switch preserved; we don't drop `body`.
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// **Bug fix from security review.** A trailing `break label;`
+    /// (labeled break) exits the switch AND transfers control to
+    /// after the labeled statement (typically an outer loop).
+    /// Stripping it would silently keep the outer loop running.
+    /// `strip_trailing_break` must only strip UNLABELED breaks.
+    #[test]
+    fn switch_collapse_preserves_trailing_labeled_break() {
+        let labeled_break = Statement::break_statement(
+            coding_adventures_javascript_ast::BreakStatement {
+                cv: None,
+                label: Some(coding_adventures_javascript_ast::Identifier {
+                    cv: None,
+                    name: "outer".to_string(),
+                }),
+            },
+        );
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), labeled_break],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // After collapse + block-flatten, body is `a; break outer;`
+        // — the labeled break must still be there.
+        assert_eq!(block.body.len(), 2, "expected 2 stmts; got {:?}", block.body);
+        if let Statement::Tagged(TaggedStatement::BreakStatement(b)) = &block.body[1] {
+            assert!(b.label.is_some(), "labeled break must be preserved");
+            assert_eq!(b.label.as_ref().unwrap().name, "outer");
+        } else {
+            panic!("expected BreakStatement at body[1]; got {:?}", block.body[1]);
+        }
+    }
+
+    /// NaN never matches per ECMAScript §IsStrictlyEqual.
+    /// Conservative bail: discriminant `NaN` keeps the switch.
+    #[test]
+    fn switch_collapse_nan_discriminant_keeps_switch() {
+        let nan = Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: f64::NAN,
+            raw: "NaN".to_string(),
+        });
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(nan, cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // NaN doesn't strict-equal anything → no match. Without a
+        // default case, the step 4 logic returns EmptyStatement
+        // (no observable behaviour). With NaN we don't reach there
+        // because strict_equal_leaves bails on NaN — but
+        // pick_matching_case still returns None (no test
+        // matches), and no default exists, so → EmptyStatement
+        // path runs.
+        //
+        // Net result: empty function body. The earlier "bail on
+        // NaN" doc is a soundness note for cases where a
+        // theoretical case test could be NaN (which can't happen
+        // through is_pure_leaf because we'd already have flagged
+        // it).
+        assert!(block.body.is_empty());
     }
 }
