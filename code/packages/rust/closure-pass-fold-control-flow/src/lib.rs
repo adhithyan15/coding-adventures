@@ -55,11 +55,12 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
-    BlockStatement, CallExpression, ConditionalExpression, Declaration, EmptyStatement,
-    Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration, IfStatement,
-    LogicalExpression, LogicalOperator, MemberExpression, ObjectExpression, Program, ProgramItem, Property,
-    PropertyKey, ReturnStatement, Statement, UnaryExpression, UnaryOperator, VariableDeclaration,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
+    AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression,
+    ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
+    ForStatement, FunctionDeclaration, Identifier, IfStatement, LogicalExpression, LogicalOperator,
+    MemberExpression, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
+    ReturnStatement, Statement, UnaryExpression, UnaryOperator, VarKind, VariableDeclaration,
     VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -707,15 +708,287 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
             Declaration::VariableDeclaration(fold_variable_declaration(v, st))
         }
         Declaration::FunctionDeclaration(f) => {
+            let folded_body = fold_block_statement(&f.body, st);
+            // gap-015 / CLOC12.37 — var hoisting. Lift `var x = expr;`
+            // declarations from inside nested blocks (`if`, `while`,
+            // `for-body`, plain blocks) up to the function-body top.
+            // The split form is the canonical hoisted shape upstream
+            // Closure emits and lets downstream passes see all
+            // function-scoped bindings at the top.
+            let hoisted_body = hoist_function_body_vars(&folded_body, st);
             Declaration::FunctionDeclaration(FunctionDeclaration {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
                 params: f.params.clone(),
-                body: fold_block_statement(&f.body, st),
+                body: hoisted_body,
                 generator: f.generator,
                 is_async: f.is_async,
             })
         }
+    }
+}
+
+// =====================================================================
+// gap-015 / CLOC12.37 — var hoisting
+//
+// JavaScript `var` declarations are function-scoped, not
+// block-scoped: the binding hoists to the enclosing function (or
+// to the script top level if not inside a function). Per
+// ECMAScript §13.3.2, every `var x;` inside a function body is
+// semantically equivalent to declaring `x` at the top of that
+// body and leaving any initializer as an assignment at the
+// original site.
+//
+// Upstream Closure makes this hoist *syntactically* visible:
+//
+//     function f() {
+//       if (cond) { var y = 1; }
+//     }
+//   ↓
+//     function f() {
+//       var y;
+//       if (cond) y = 1;
+//     }
+//
+// The shape change is observable in byte-output comparisons and
+// makes downstream rename / dce see all function-scoped bindings
+// at the body's top.
+//
+// # Scope of this implementation
+//
+// - **Recurses into**: nested `BlockStatement`, `IfStatement`
+//   consequent/alternate, `WhileStatement` body, `ForStatement`
+//   body, `LabeledStatement` body, `SwitchStatement` case
+//   consequents.
+// - **Does NOT recurse into**: nested `FunctionDeclaration` /
+//   `FunctionExpression` bodies — they have their own
+//   function-scope and own hoisting.
+// - **Does NOT touch**: `for(var x = 0; ...; ...)` init slots
+//   (they're already at a single-statement position that fold-
+//   control-flow's wider work covers); `let` / `const` (block-
+//   scoped, hoisting doesn't apply).
+// - **Conservative bail**: if the function body is a no-op
+//   (no var declarations inside nested blocks), the body is
+//   returned verbatim — no allocations, no `changed` signal.
+
+/// Lift `var x = expr;` declarations from inside nested blocks
+/// of `body` to the top, leaving `x = expr;` assignment-
+/// statements behind at the original site (or nothing if there
+/// was no initializer).
+fn hoist_function_body_vars(body: &BlockStatement, st: &mut FoldState) -> BlockStatement {
+    let mut collected: Vec<Identifier> = Vec::new();
+    let new_stmts: Vec<Statement> = body
+        .body
+        .iter()
+        .map(|s| hoist_visit_stmt(s, &mut collected))
+        .collect();
+
+    if collected.is_empty() {
+        // Pure passthrough — keep original allocation.
+        return BlockStatement {
+            cv: body.cv.clone(),
+            body: new_stmts,
+        };
+    }
+
+    // Record one Contribution per hoist for the whole function
+    // body (not per identifier — same shape as block-flatten).
+    st.record_fold(
+        &body.cv,
+        "var-hoisted",
+        &format!("function body with {} statement(s)", body.body.len()),
+        &format!("hoisted {} `var` binding(s) to top", collected.len()),
+    );
+
+    // Build the single `var x, y, z;` declaration to prepend.
+    let hoist_decl = VariableDeclaration {
+        cv: None,
+        kind: VarKind::Var,
+        declarations: collected
+            .into_iter()
+            .map(|id| VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id),
+                init: None,
+            })
+            .collect(),
+    };
+    let mut out = Vec::with_capacity(new_stmts.len() + 1);
+    out.push(Statement::Declaration(Declaration::VariableDeclaration(
+        hoist_decl,
+    )));
+    out.extend(new_stmts);
+    BlockStatement {
+        cv: body.cv.clone(),
+        body: out,
+    }
+}
+
+/// Rewrite one statement, collecting any hoistable `var` names
+/// and emitting replacement statements (assignment-expression-
+/// statements where there was an initializer; nothing where the
+/// declaration was bare).
+fn hoist_visit_stmt(stmt: &Statement, collected: &mut Vec<Identifier>) -> Statement {
+    match stmt {
+        // Plain `var ...;` declaration — the core rewrite.
+        Statement::Declaration(Declaration::VariableDeclaration(v)) if v.kind == VarKind::Var => {
+            hoist_rewrite_var_decl(v, collected)
+        }
+
+        // Compound statements with nested bodies — recurse.
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => Statement::Tagged(
+            TaggedStatement::BlockStatement(hoist_visit_block(b, collected)),
+        ),
+        Statement::Tagged(TaggedStatement::IfStatement(i)) => Statement::Tagged(
+            TaggedStatement::IfStatement(IfStatement {
+                cv: i.cv.clone(),
+                test: i.test.clone(),
+                consequent: Box::new(hoist_visit_stmt(&i.consequent, collected)),
+                alternate: i
+                    .alternate
+                    .as_ref()
+                    .map(|alt| Box::new(hoist_visit_stmt(alt, collected))),
+            }),
+        ),
+        Statement::Tagged(TaggedStatement::WhileStatement(w)) => Statement::Tagged(
+            TaggedStatement::WhileStatement(WhileStatement {
+                cv: w.cv.clone(),
+                test: w.test.clone(),
+                body: Box::new(hoist_visit_stmt(&w.body, collected)),
+            }),
+        ),
+        Statement::Tagged(TaggedStatement::ForStatement(f)) => {
+            // Recurse into body only — leave init slot alone
+            // (per the scope note above).
+            Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
+                cv: f.cv.clone(),
+                init: f.init.clone(),
+                test: f.test.clone(),
+                update: f.update.clone(),
+                body: Box::new(hoist_visit_stmt(&f.body, collected)),
+            }))
+        }
+        Statement::Tagged(TaggedStatement::LabeledStatement(l)) => Statement::Tagged(
+            TaggedStatement::LabeledStatement(
+                coding_adventures_javascript_ast::LabeledStatement {
+                    cv: l.cv.clone(),
+                    label: l.label.clone(),
+                    body: Box::new(hoist_visit_stmt(&l.body, collected)),
+                },
+            ),
+        ),
+        Statement::Tagged(TaggedStatement::SwitchStatement(s)) => Statement::Tagged(
+            TaggedStatement::SwitchStatement(
+                coding_adventures_javascript_ast::SwitchStatement {
+                    cv: s.cv.clone(),
+                    discriminant: s.discriminant.clone(),
+                    cases: s
+                        .cases
+                        .iter()
+                        .map(|c| coding_adventures_javascript_ast::SwitchCase {
+                            cv: c.cv.clone(),
+                            test: c.test.clone(),
+                            consequent: c
+                                .consequent
+                                .iter()
+                                .map(|s| hoist_visit_stmt(s, collected))
+                                .collect(),
+                        })
+                        .collect(),
+                },
+            ),
+        ),
+
+        // **Inner function bodies are their own scope.** Do NOT
+        // recurse into a nested `FunctionDeclaration`'s body
+        // here — its own `var` declarations belong to *that*
+        // function's hoist set, which fold-control-flow's
+        // dispatch on `Declaration::FunctionDeclaration` already
+        // handles before this collector ever sees the
+        // declaration. (FunctionExpression bodies are similarly
+        // self-contained; we leave them untouched.)
+        Statement::Declaration(_) | Statement::Tagged(_) => stmt.clone(),
+    }
+}
+
+/// Helper: recurse into a `BlockStatement.body` while collecting
+/// hoistable vars. Used by the BlockStatement arm.
+fn hoist_visit_block(b: &BlockStatement, collected: &mut Vec<Identifier>) -> BlockStatement {
+    BlockStatement {
+        cv: b.cv.clone(),
+        body: b
+            .body
+            .iter()
+            .map(|s| hoist_visit_stmt(s, collected))
+            .collect(),
+    }
+}
+
+/// Rewrite a `var ...;` declaration into: collect each
+/// `Identifier` binding into `collected`, return either an
+/// `EmptyStatement` (if no declarators had initializers) or an
+/// `ExpressionStatement` with a comma-separated assignment chain
+/// (if any did).
+///
+/// Why a single statement back: we can't return zero or many
+/// statements from a `Vec<_>::map` cleanly without changing the
+/// shape. So:
+///
+/// - All-bare `var x, y;` → `EmptyStatement` (no observable
+///   work — the binding moved to the hoisted-declaration prefix).
+/// - Any-init `var x = e;` / `var x, y = e;` → a single
+///   `ExpressionStatement` whose `expression` is either one
+///   `AssignmentExpression` (single init) or a
+///   `SequenceExpression`-shaped binary chain of assignments
+///   threaded with `,` — we don't have `SequenceExpression`
+///   in Phase 1 yet, so for multiple inits we emit ONE
+///   `ExpressionStatement` per init expanded into a
+///   `BlockStatement` wrapper. Simpler: just emit a
+///   `BlockStatement` containing one assignment-statement per
+///   declarator-with-init.
+fn hoist_rewrite_var_decl(
+    v: &VariableDeclaration,
+    collected: &mut Vec<Identifier>,
+) -> Statement {
+    let mut assignments: Vec<Statement> = Vec::new();
+    for decl in &v.declarations {
+        // We currently only model `BindingTarget::Identifier`
+        // here. Patterns (`var [a, b] = ...;`) are Phase 2 work
+        // — for those, treat as identity (don't hoist) by
+        // bailing on the whole declaration.
+        let id = match &decl.id {
+            BindingTarget::Identifier(i) => i.clone(),
+        };
+        collected.push(id.clone());
+        if let Some(init) = &decl.init {
+            assignments.push(Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: Expression::AssignmentExpression(AssignmentExpression {
+                    cv: None,
+                    operator: AssignmentOperator::Eq,
+                    left: AssignmentTarget::Identifier(id),
+                    right: Box::new(init.clone()),
+                }),
+            }));
+        }
+    }
+    if assignments.is_empty() {
+        // Pure declaration, no init: site collapses to nothing
+        // observable. Emit an EmptyStatement that the DCE block
+        // walker will sweep up.
+        Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement { cv: None }))
+    } else if assignments.len() == 1 {
+        // Single init: emit just the assignment-expression-
+        // statement at the original site.
+        assignments.into_iter().next().unwrap()
+    } else {
+        // Multiple inits: wrap in a BlockStatement (the
+        // block-flatten step of DCE will splice it into the
+        // parent if it's safe to do so).
+        Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: assignments,
+        }))
     }
 }
 
@@ -1428,6 +1701,215 @@ mod tests {
                 other => panic!("expected ident(A); got {:?}", other),
             },
             other => panic!("expected ExpressionStatement holding A; got {:?}", other),
+        }
+    }
+
+    // =====================================================================
+    // gap-015 / CLOC12.37 — var-hoisting tests
+    // =====================================================================
+
+    use coding_adventures_javascript_ast::{BindingTarget, VarKind, VariableDeclarator};
+
+    fn fdecl_with_body(body: Vec<Statement>) -> Program {
+        let block = BlockStatement {
+            cv: Some("fn.body".to_string()),
+            body,
+        };
+        let fdecl = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: block,
+            generator: false,
+            is_async: false,
+        });
+        program().with_body(vec![ProgramItem::Declaration(fdecl)])
+    }
+
+    fn extract_fn_body(prog: &Program) -> &BlockStatement {
+        match &prog.body[0] {
+            ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) => &f.body,
+            other => panic!("expected FunctionDeclaration; got {:?}", other),
+        }
+    }
+
+    fn make_var_decl(name: &str, init: Option<Expression>) -> Statement {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init,
+            }],
+        }))
+    }
+
+    fn make_let_decl(name: &str, init: Option<Expression>) -> Statement {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init,
+            }],
+        }))
+    }
+
+    /// `function f() { if (cond) { var y = 1; } }` →
+    /// `function f() { var y; if (cond) y = 1; }`.
+    #[test]
+    fn var_inside_if_consequent_block_hoists() {
+        let inner_block = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![make_var_decl("y", Some(num(1.0, None)))],
+        }));
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("cond"),
+            consequent: Box::new(inner_block),
+            alternate: None,
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        let body = extract_fn_body(&out);
+        // Body should be: [var y;, if (cond) { y = 1; }]
+        assert_eq!(body.body.len(), 2, "expected 2 stmts; got {:?}", body.body);
+        assert!(matches!(
+            &body.body[0],
+            Statement::Declaration(Declaration::VariableDeclaration(_))
+        ));
+        if let Statement::Declaration(Declaration::VariableDeclaration(v)) = &body.body[0] {
+            assert_eq!(v.kind, VarKind::Var);
+            assert_eq!(v.declarations.len(), 1);
+            assert!(v.declarations[0].init.is_none());
+        }
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "var-hoisted"));
+    }
+
+    /// `function f() { var x = 1; }` — already at the top, no
+    /// nested hoist target. The var declaration is still
+    /// collected (the hoist treats every `var` in the function
+    /// body uniformly), but the result is the same shape:
+    /// declaration moves to a prepended `var x;` and assignment
+    /// stays as `x = 1;`.
+    #[test]
+    fn var_at_top_of_function_body_is_split() {
+        let prog = fdecl_with_body(vec![make_var_decl("x", Some(num(1.0, None)))]);
+        let (out, _, changed, _) = run_pass(prog);
+        let body = extract_fn_body(&out);
+        assert_eq!(body.body.len(), 2);
+        assert!(changed);
+    }
+
+    /// `let` is block-scoped — must NOT be hoisted.
+    #[test]
+    fn let_declaration_is_not_hoisted() {
+        let inner = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![make_let_decl("y", Some(num(1.0, None)))],
+        }));
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("cond"),
+            consequent: Box::new(inner),
+            alternate: None,
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, contribs, _, _) = run_pass(prog);
+        let body = extract_fn_body(&out);
+        // Body still has just the if-statement.
+        assert_eq!(body.body.len(), 1);
+        assert!(matches!(
+            &body.body[0],
+            Statement::Tagged(TaggedStatement::IfStatement(_))
+        ));
+        assert!(!contribs.iter().any(|c| c.tag == "var-hoisted"));
+    }
+
+    /// `function f() { function g() { var y = 1; } }` — outer
+    /// hoister must NOT touch the inner function's body. `g`'s
+    /// var hoist runs at *its own* FunctionDeclaration dispatch.
+    #[test]
+    fn nested_function_body_vars_are_isolated() {
+        let inner_fn = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![make_var_decl("y", Some(num(1.0, None)))],
+            },
+            generator: false,
+            is_async: false,
+        });
+        let prog = fdecl_with_body(vec![Statement::Declaration(inner_fn)]);
+        let (out, _, _, _) = run_pass(prog);
+        let outer_body = extract_fn_body(&out);
+        // Outer body has just the inner FunctionDeclaration — no
+        // hoisted `var y;` at the outer top.
+        assert_eq!(outer_body.body.len(), 1);
+        if let Statement::Declaration(Declaration::FunctionDeclaration(g)) = &outer_body.body[0] {
+            // The inner function's body should itself have been
+            // split (var y; then y = 1;).
+            assert_eq!(g.body.body.len(), 2);
+        } else {
+            panic!("expected nested FunctionDeclaration; got {:?}", outer_body.body[0]);
+        }
+    }
+
+    /// `function f() {}` — empty body, no hoist work, no
+    /// `var-hoisted` contribution.
+    #[test]
+    fn empty_function_body_does_nothing() {
+        let prog = fdecl_with_body(vec![]);
+        let (out, contribs, _, _) = run_pass(prog);
+        let body = extract_fn_body(&out);
+        assert!(body.body.is_empty());
+        assert!(!contribs.iter().any(|c| c.tag == "var-hoisted"));
+    }
+
+    /// Bare `var x;` (no init) inside a block: name is hoisted,
+    /// site collapses to `EmptyStatement`.
+    #[test]
+    fn bare_var_no_init_collapses_to_empty_at_site() {
+        let inner_block = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![make_var_decl("y", None)],
+        }));
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("cond"),
+            consequent: Box::new(inner_block),
+            alternate: None,
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, _, _, _) = run_pass(prog);
+        let body = extract_fn_body(&out);
+        // [var y;, if (cond) { ; }]
+        assert_eq!(body.body.len(), 2);
+        if let Statement::Tagged(TaggedStatement::IfStatement(i)) = &body.body[1] {
+            if let Statement::Tagged(TaggedStatement::BlockStatement(b)) = &*i.consequent {
+                assert_eq!(b.body.len(), 1);
+                assert!(matches!(
+                    &b.body[0],
+                    Statement::Tagged(TaggedStatement::EmptyStatement(_))
+                ));
+            }
         }
     }
 }
