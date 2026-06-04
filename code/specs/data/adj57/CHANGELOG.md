@@ -1,5 +1,29 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.8.0] — 2026-06-04
+
+### Added
+
+- **ADJ65 — uncertainty as a first-class primitive (weight of evidence + sensitivity).**
+  Makes the hypothesis competition first-class and answers *"if we make some probability
+  shift, how would the decision shift?"*
+  - **`pipeline/sensitivity.py`** — Good's weight of evidence (the math behind MYCIN
+    certainty factors): each fact contributes **decibans** (10·log10 LR) toward each
+    hypothesis; the **decision is argmax of the summed log-odds** (deterministic — softmax
+    is a display *view* only, no temperature knob). Reports the **margin** (robustness),
+    load-bearing evidence, one-out flips, per-weight tipping points, and — the honest part
+    — whether the margin **rests on `assumed` (ungrounded) weights**. 10 unit tests
+    (`pipeline/test_sensitivity.py`).
+  - **`pipeline/sensitivity.workflow.js`** — the model proposes hypotheses + a weight
+    matrix, each weight tagged grounded (cites a real LR) or assumed.
+    **`pipeline/run_sensitivity.py`** runs the engine + reports.
+  - **Run (neurobrucellosis):** the engine picked **East African trypanosomiasis at 99.7%
+    (+26 dB margin)** — **wrong** (truth neurobrucellosis, 4th). But it flagged that **every
+    load-bearing weight is `assumed`**; the only grounded weights contribute ~0 dB. The
+    99.7% is an artifact of four made-up numbers. ADJ65 doesn't make the model right — it
+    makes its **confidence auditable**, converting overconfidence into a prioritized
+    fetch-list. Spec: [ADJ65](../../ADJ65-uncertainty-primitive.md).
+
 ## [0.7.0] — 2026-06-04
 
 ### Added
