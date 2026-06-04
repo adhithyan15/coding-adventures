@@ -545,3 +545,60 @@ fn test_fold_returns_into_ternary() {
 fn test_minimize_if_with_throw() {
     // Needs ThrowStatement AST variant + the rearrangement rule.
 }
+
+// =====================================================================
+// Re-ports from `PeepholeRemoveDeadCodeTest` (CLOC12 gap-013 routing)
+// =====================================================================
+//
+// Upstream's `PeepholeRemoveDeadCodeTest::testFoldUselessFor`,
+// `testFoldUselessDo`, `testFoldEmptyDo`, and `testMinimizeLoop_*`
+// exercise body-pruning for `while` / `do-while` / `for` loops:
+// when the loop body provably has no observable effects, replace it
+// with an empty statement (or fold the surrounding loop). This is
+// `closure-pass-fold-control-flow`'s territory — DCE only handles
+// post-`return`/`throw` unreachability and block-flattening, not
+// effect analysis on loop bodies.
+//
+// What we can already cover today:
+//
+//   * `while(<falsy literal>) { ... }` → `;`. Handled by
+//     `fold_while_statement::literal_truthy(Some(false))` and pinned
+//     by inline tests in `closure-pass-fold-control-flow/src/lib.rs`.
+//
+// What requires future work before we can land:
+//
+//   * `while(x) {}` → `while(x);` (body-already-empty canonicalisation).
+//     Mostly a cosmetic emit-side difference; the AST is already
+//     `WhileStatement { body: BlockStatement { body: [] } }` and the
+//     emitter could be taught to render the empty-body form as `;`.
+//   * `do {} while(x)` → `x;` (drop the do-while when body is empty
+//     and discard the loop's iteration count, since the condition
+//     can never re-execute). Requires the rule plus emitter cooperation.
+//   * `while(x) { S }` where `S` is provably pure → `while(x);`.
+//     **Requires effect analysis** that we don't have. Same blocker
+//     as several other gap-NNN entries that want to know "does this
+//     expression / statement have observable effects?". Tracked
+//     separately under a future "effect analysis" gap, not under any
+//     CLOC12 gap-NNN entry — the missing piece is a primary
+//     analysis, not a fold rule.
+
+/// Routing marker for CLOC12 gap-013. The upstream
+/// `PeepholeRemoveDeadCodeTest::testFoldUselessFor` /
+/// `testFoldUselessDo` / `testFoldEmptyDo` / `testMinimizeLoop_*`
+/// tests live here logically. The fold rules they exercise depend on
+/// effect analysis we don't yet have (see the module-level comment
+/// above). The literal-test loop-collapse cases are covered by
+/// `fold_while_statement`'s inline tests in the crate's `src/lib.rs`.
+#[test]
+#[ignore = "blocked on effect-analysis machinery (separate future gap); literal-test cases covered by fold_while_statement inline tests"]
+fn test_fold_useless_loop_body_routing() {
+    // Would assert (when effect analysis lands):
+    //   fold("while(x()){x}", "while(x());");
+    //   fold("do{}while(x)", "x;");
+    //   fold("for(;;){pure(...)}", "for(;;);");
+    //
+    // Each requires proving the body has no observable side effects
+    // (no calls into unknown functions, no assignments, no
+    // identifier evaluations that could throw ReferenceError, no
+    // getter access).
+}
