@@ -1,17 +1,27 @@
 # mosaic-emit-xaml gaps caught by the toolkit demo
 
 Building `mosaic-pkg-toolkit` components through `mosaic-emit-xaml`
-turned up three real code-gen bugs that the simpler hello-dialog
-demo (#3925) didn't exercise. Each is one localised fix in
+turned up four real code-gen bugs that the simpler hello-dialog
+demo (#3925) didn't exercise. Each was one localised fix in
 `code/packages/rust/mosaic-emit-xaml/src/pipeline.rs`.
 
-The `winui/` directory in this demo applies hand-patches for each
-of the three so the WinUI 3 build succeeds. The patches are tiny
-(under 20 lines total) and are documented inline as
-`<!-- hand-patched for WinUI 3 attribute validity -->`. When the
-fixes land in the emitter, this directory will regenerate cleanly
-from the `mosaic/` sources via `mosaic-compile --backend xaml
---emit-project` with no patches required.
+**Status (2026-06-04):** all four emitter bugs (X1, X2, X3, X4)
+have landed and `Alert.xaml` now regenerates cleanly with no
+hand-patches required.  The remaining widget XAMLs
+(`Badge.xaml`, `Button.xaml`, `Spinner.xaml`) still carry
+hand-tweaks for layout preferences that aren't representable in
+mosstyle yet (asymmetric padding, `HorizontalAlignment`,
+`VerticalAlignment`, `Margin`); those are tracked as
+**mosstyle gaps**, not emitter gaps — see the per-issue notes
+below.  See also Issue X5 (`Spinner.xaml`'s nonexistent glyph)
+which is open and tracked in [PR #5005](https://github.com/adhithyan15/coding-adventures/pull/5005).
+
+The original hand-patches were tiny (under 20 lines total) and
+were documented inline as
+`<!-- hand-patched for WinUI 3 attribute validity -->`.  As the
+emitter fixes land, each `.xaml` regenerates cleanly from the
+`mosaic/` sources via `mosaic-compile --backend xaml
+--emit-project`.
 
 ---
 
