@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `sens_dc_corners_parallel` for order-preserving parallel Rust DC
+  sensitivity evaluation across named PVT corners.
 - Add `mc_dc_corners_parallel` for order-preserving parallel Rust Monte Carlo
   DC evaluation across named PVT corners.
 - Add `tf_corners_parallel` for order-preserving parallel Rust `.TF`

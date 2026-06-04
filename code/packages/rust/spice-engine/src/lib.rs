@@ -6390,6 +6390,45 @@ pub fn sens_dc_corners(
     })
 }
 
+pub fn sens_dc_corners_parallel(
+    circuit: &Circuit,
+    output_node: &str,
+    corners: &[CornerSpec],
+) -> Result<CornerSensResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let output_node = output_node.to_string();
+                scope.spawn(move || -> Result<CornerSensPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerSensPoint {
+                        corner_name: corner.name,
+                        result: sens_dc(&corner_circuit, &output_node)?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "sens_dc_corners_parallel".to_string(),
+                reason: "parallel DC sensitivity corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerSensResult {
+        output_node: output_node.to_string(),
+        points,
+    })
+}
+
 pub fn ac_sweep(
     circuit: &Circuit,
     start_hz: f64,
