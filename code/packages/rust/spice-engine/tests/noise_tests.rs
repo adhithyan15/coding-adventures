@@ -1,7 +1,8 @@
 use spice_engine::{
-    format_corner_noise_table, format_noise_table, noise_ac, noise_ac_corners, noise_ac_default,
-    Capacitor, Circuit, CornerOverride, CornerSpec, CurrentSource, Element, Mosfet,
-    MosfetLevel1Params, MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
+    format_corner_noise_table, format_noise_table, noise_ac, noise_ac_corners,
+    noise_ac_corners_parallel, noise_ac_default, Capacitor, Circuit, CornerOverride, CornerSpec,
+    CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType, NoiseType, Resistor,
+    SpiceError, VoltageSource,
 };
 
 const BOLTZMANN: f64 = 1.380_649e-23;
@@ -184,6 +185,132 @@ fn corner_noise_text_output_table_is_stable() {
 nominal\t0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\tRload\tthermal\t1.656779e-23\t1.656779e-17\n\
 rload-high\t0\t1.000000e+03\tout\tIin\t3.313558e-17\t8.283894e-24\tRload\tthermal\t8.283894e-24\t3.313558e-17\n"
     );
+}
+
+#[test]
+fn noise_ac_corners_parallel_matches_ordered_sequential_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rsource", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 2_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", Vec::new()),
+        CornerSpec::new(
+            "rload-high",
+            vec![CornerOverride::new("Rload", "resistance", 4_000.0)],
+        ),
+        CornerSpec::new(
+            "rsource-fast",
+            vec![CornerOverride::new("Rsource", "resistance", 500.0)],
+        ),
+    ];
+
+    let frequencies_hz = [10.0, 1_000.0];
+    let sequential =
+        noise_ac_corners(&circuit, "out", "Vin", &frequencies_hz, 300.0, &corners).unwrap();
+    let parallel =
+        noise_ac_corners_parallel(&circuit, "out", "Vin", &frequencies_hz, 300.0, &corners)
+            .unwrap();
+
+    assert_eq!(parallel.output_node, sequential.output_node);
+    assert_eq!(parallel.input_source, sequential.input_source);
+    assert_eq!(parallel.points.len(), sequential.points.len());
+    for (parallel_corner, sequential_corner) in parallel.points.iter().zip(sequential.points.iter())
+    {
+        assert_eq!(parallel_corner.corner_name, sequential_corner.corner_name);
+        assert_eq!(
+            parallel_corner.result.temperature_kelvin,
+            sequential_corner.result.temperature_kelvin
+        );
+        assert_eq!(
+            parallel_corner.result.points.len(),
+            sequential_corner.result.points.len()
+        );
+        for (parallel_point, sequential_point) in parallel_corner
+            .result
+            .points
+            .iter()
+            .zip(sequential_corner.result.points.iter())
+        {
+            assert_close(
+                parallel_point.frequency_hz,
+                sequential_point.frequency_hz,
+                1.0e-12,
+            );
+            assert_close(
+                parallel_point.output_psd,
+                sequential_point.output_psd,
+                1.0e-30,
+            );
+            assert_close(
+                parallel_point.input_referred_psd,
+                sequential_point.input_referred_psd,
+                1.0e-30,
+            );
+            assert_eq!(parallel_point.entries.len(), sequential_point.entries.len());
+            for (parallel_entry, sequential_entry) in parallel_point
+                .entries
+                .iter()
+                .zip(sequential_point.entries.iter())
+            {
+                assert_eq!(parallel_entry.element_name, sequential_entry.element_name);
+                assert_eq!(parallel_entry.noise_type, sequential_entry.noise_type);
+                assert_close(
+                    parallel_entry.source_psd,
+                    sequential_entry.source_psd,
+                    1.0e-32,
+                );
+                assert_close(
+                    parallel_entry.output_psd,
+                    sequential_entry.output_psd,
+                    1.0e-30,
+                );
+            }
+        }
+    }
+    assert_eq!(
+        format_corner_noise_table(&parallel),
+        "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n\
+nominal\t0\t1.000000e+01\tout\tVin\t1.104519e-17\t2.485168e-17\tRsource\tthermal\t1.656779e-23\t7.363461e-18\n\
+nominal\t0\t1.000000e+01\tout\tVin\t1.104519e-17\t2.485168e-17\tRload\tthermal\t8.283894e-24\t3.681731e-18\n\
+nominal\t1\t1.000000e+03\tout\tVin\t1.104519e-17\t2.485168e-17\tRsource\tthermal\t1.656779e-23\t7.363461e-18\n\
+nominal\t1\t1.000000e+03\tout\tVin\t1.104519e-17\t2.485168e-17\tRload\tthermal\t8.283894e-24\t3.681731e-18\n\
+rload-high\t0\t1.000000e+01\tout\tVin\t1.325423e-17\t2.070973e-17\tRsource\tthermal\t1.656779e-23\t1.060338e-17\n\
+rload-high\t0\t1.000000e+01\tout\tVin\t1.325423e-17\t2.070973e-17\tRload\tthermal\t4.141947e-24\t2.650846e-18\n\
+rload-high\t1\t1.000000e+03\tout\tVin\t1.325423e-17\t2.070973e-17\tRsource\tthermal\t1.656779e-23\t1.060338e-17\n\
+rload-high\t1\t1.000000e+03\tout\tVin\t1.325423e-17\t2.070973e-17\tRload\tthermal\t4.141947e-24\t2.650846e-18\n\
+rsource-fast\t0\t1.000000e+01\tout\tVin\t6.627115e-18\t1.035487e-17\tRsource\tthermal\t3.313558e-23\t5.301692e-18\n\
+rsource-fast\t0\t1.000000e+01\tout\tVin\t6.627115e-18\t1.035487e-17\tRload\tthermal\t8.283894e-24\t1.325423e-18\n\
+rsource-fast\t1\t1.000000e+03\tout\tVin\t6.627115e-18\t1.035487e-17\tRsource\tthermal\t3.313558e-23\t5.301692e-18\n\
+rsource-fast\t1\t1.000000e+03\tout\tVin\t6.627115e-18\t1.035487e-17\tRload\tthermal\t8.283894e-24\t1.325423e-18\n"
+    );
+}
+
+#[test]
+fn noise_ac_corners_parallel_reports_corner_override_errors() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::CurrentSource(CurrentSource::new(
+        "Iin", "0", "out", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "out", "0", 1_000.0,
+    )));
+    let corners = [CornerSpec::new(
+        "missing",
+        vec![CornerOverride::new("Rmissing", "resistance", 500.0)],
+    )];
+
+    assert!(matches!(
+        noise_ac_corners_parallel(&circuit, "out", "Iin", &[1_000.0], 300.0, &corners),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_corners" && reason.contains("Rmissing")
+    ));
 }
 
 #[test]
