@@ -1680,3 +1680,62 @@ fn end_to_end_mccarthy_atom_cond_via_lang_aot() {
         assert_eq!(out.status.code(), Some(*expected), "{program}");
     }
 }
+
+// ---------------------------------------------------------------------------
+// McCarthy Lisp symbols (L3b-2c-3) — the worked example `(CAR '(A B C))` → A.
+//
+// Symbols are interned at compile time (`intern_symbols`) into the tagged
+// immediate `(id << 32) | TAG_SYMBOL`; the same name gets the same id, so `EQ`
+// (= `equal?`) on symbols is word equality. A native program observes a symbol
+// *value* via `EQ` + `COND` exit codes (no symbol-name printing — that needs
+// string-literal emission, deferred):
+//   (COND ((EQ (CAR '(A B C)) 'A) 7) ('T 9))  → CAR is A, equals 'A   → 7
+//   (COND ((EQ (CAR '(A B C)) 'B) 7) ('T 9))  → CAR is A, ≠ 'B → else → 9
+// The `'T` else also exercises a symbol-as-COND-predicate (truthy).
+// Gated to Linux/Windows like the other native smoke tests (macOS-exe gap).
+// ---------------------------------------------------------------------------
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_mccarthy_symbols_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let cases = [
+        ("(COND ((EQ (CAR (QUOTE (A B C))) (QUOTE A)) 7) ((QUOTE T) 9))", 7i32),
+        ("(COND ((EQ (CAR (QUOTE (A B C))) (QUOTE B)) 7) ((QUOTE T) 9))", 9),
+    ];
+    for (i, (program, expected)) in cases.iter().enumerate() {
+        let src = dir.path().join(format!("sym_{i}.mcl"));
+        let exe = dir.path().join(format!("sym_{i}"));
+        std::fs::write(&src, program).unwrap();
+        lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+            .unwrap_or_else(|e| panic!("McCarthy symbol compile failed for {program:?}: {e}"));
+        let out = Command::new(&exe).output().expect("launch");
+        assert_eq!(
+            out.status.code(), Some(*expected),
+            "{program} should exit {expected}; got {:?}", out.status.code(),
+        );
+    }
+}
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_mccarthy_symbols_via_lang_aot() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let cases = [
+        ("(COND ((EQ (CAR (QUOTE (A B C))) (QUOTE A)) 7) ((QUOTE T) 9))", 7i32),
+        ("(COND ((EQ (CAR (QUOTE (A B C))) (QUOTE B)) 7) ((QUOTE T) 9))", 9),
+    ];
+    for (i, (program, expected)) in cases.iter().enumerate() {
+        let src = dir.path().join(format!("sym_{i}.mcl"));
+        let exe = dir.path().join(format!("sym_{i}.exe"));
+        std::fs::write(&src, program).unwrap();
+        lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+            .unwrap_or_else(|e| panic!("McCarthy symbol compile failed for {program:?}: {e}"));
+        let out = Command::new(&exe).output().expect("launch");
+        assert_eq!(out.status.code(), Some(*expected), "{program}");
+    }
+}

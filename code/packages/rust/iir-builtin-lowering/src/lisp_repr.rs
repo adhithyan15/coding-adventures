@@ -69,6 +69,12 @@ use std::collections::HashSet;
 /// sentinel). Mirrors `mccarthy-lisp-iir-compiler`'s `REF_PAIR`.
 const REF_PAIR: &str = "ref<LispyPair>";
 
+/// The type hint for a symbol literal. After `intern_symbols` runs, such a
+/// const already holds the finished tagged immediate `(id<<32)|TAG_SYMBOL` —
+/// it is a `LispyValue` (so it joins `boxed_regs`) but must NOT be boxed again
+/// (shifting it would corrupt the id/tag).
+const SYMBOL_HINT: &str = "symbol";
+
 /// The nil singleton's whole-word value (`lispy-runtime` `TAG_NIL = 0b001`).
 const TAG_NIL: i64 = 1;
 
@@ -208,7 +214,8 @@ fn lower_lisp_repr_function(func: &mut IIRFunction, is_entry: bool) {
         } else if instr.op == "const" {
             if let (Some(dest), Some(Operand::Int(n))) = (&instr.dest, instr.srcs.first()) {
                 let is_nil = instr.type_hint == REF_PAIR && *n == 0;
-                if is_nil || lisp_arg_regs.contains(dest) {
+                let is_symbol = instr.type_hint == SYMBOL_HINT;
+                if is_nil || is_symbol || lisp_arg_regs.contains(dest) {
                     boxed_regs.insert(dest.clone());
                 }
             }
@@ -247,7 +254,10 @@ fn lower_lisp_repr_function(func: &mut IIRFunction, is_entry: bool) {
             Some(Operand::Int(n)) => *n,
             _ => continue,
         };
-        if instr.type_hint == REF_PAIR && n == 0 {
+        if instr.type_hint == SYMBOL_HINT {
+            // Already a finished tagged symbol immediate from `intern_symbols`
+            // — leave it; boxing (`<< 3`) would corrupt the id and tag.
+        } else if instr.type_hint == REF_PAIR && n == 0 {
             // The nil sentinel: 0 → TAG_NIL (0b001).
             instr.srcs[0] = Operand::Int(TAG_NIL);
         } else if (INT_MIN_BOXABLE..=INT_MAX_BOXABLE).contains(&n) {
@@ -708,6 +718,22 @@ mod tests {
         lower_lisp_repr(&mut m);
         assert_eq!(count_builtin(&m, "not"), 1, "Twig's machine not must be left alone");
         assert_eq!(count_builtin(&m, "lispy_not"), 0);
+    }
+
+    /// A symbol immediate (`const Int(id<<32|2):symbol`, from `intern_symbols`)
+    /// is treated as a tagged value but must NOT be boxed — shifting it would
+    /// corrupt the id/tag. Here `'A` feeds `lispy_equal`, so it would be a box
+    /// candidate but for the symbol guard.
+    #[test]
+    fn symbol_immediate_is_tagged_but_not_boxed() {
+        let sym_bits = (1_i64 << 32) | 0b010; // id 1, symbol tag
+        let mut m = module(vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Int(sym_bits)], "symbol"),
+            call_builtin(Some("e"), "lispy_equal", &["s", "s"], "bool"),
+            ret("e"),
+        ]);
+        lower_lisp_repr(&mut m);
+        assert_eq!(find_const(&m, "s"), sym_bits, "symbol immediate must be left unboxed");
     }
 
     /// Out-of-range integers (beyond ±2⁶⁰) are left unboxed rather than

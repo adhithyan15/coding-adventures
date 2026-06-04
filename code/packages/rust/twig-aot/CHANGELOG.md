@@ -1,5 +1,18 @@
 # Changelog — `twig-aot`
 
+## 0.13.0 — 2026-06-04 — native symbols (LANG77 / McCarthy L3b-2c-3)
+
+`prepare_module_for_aot` now runs `iir_builtin_lowering::intern_symbols`
+(between the heap-builtin rename and `lower_lisp_repr`): each
+`const Var(name):symbol` becomes the tagged immediate `(id << 32) | TAG_SYMBOL`,
+with module-wide ids. So a McCarthy program's symbols compile to native and
+`EQ` on them is word equality — `(CAR '(A B C))` produces the symbol `A`,
+observable via `(EQ … 'A)` driving a `COND` branch. No backend change (a
+symbol is just a tagged `const_i64`; `EQ` reuses `lispy_equal`).
+
+No symbol-name *printing* yet (that needs string-literal emission, deferred) —
+static programs observe symbol identity via `EQ`.
+
 ## 0.12.0 — 2026-06-04 — ATOM/EQ + COND truthiness (LANG77 / McCarthy L3b-2c-2)
 
 Adds `__twig_lispy_truthy` to `runtime/lispy_runtime.c` — normalises a tagged

@@ -1,5 +1,12 @@
 # Changelog — `lang-aot`
 
+## 0.13.2 — 2026-06-04 — McCarthy symbols e2e (L3b-2c-3)
+
+Adds Linux/Windows end-to-end smoke tests for native McCarthy symbols — the
+worked example `(CAR '(A B C))` → `A`, observed via `EQ` + `COND`:
+`(COND ((EQ (CAR (QUOTE (A B C))) (QUOTE A)) 7) ((QUOTE T) 9))` → exits 7 and
+the `(QUOTE B)` variant → exits 9. Test-only; no library change.
+
 ## 0.13.1 — 2026-06-04 — McCarthy ATOM/EQ + COND e2e (L3b-2c-2)
 
 Adds Linux/Windows end-to-end smoke tests exercising McCarthy `ATOM`/`COND`

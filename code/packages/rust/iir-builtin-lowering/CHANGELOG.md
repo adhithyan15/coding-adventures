@@ -4,6 +4,33 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.7.0] — 2026-06-04
+
+### Added (LANG77 — compile-time symbol interning, McCarthy L3b-2c-3)
+
+- **`src/symbol_intern.rs`** + `intern_symbols` (re-exported at the crate
+  root): rewrites each `const Var(name) : symbol` to the finished **tagged
+  immediate** `(id << 32) | TAG_SYMBOL`, assigning ids in first-seen order
+  **module-wide** (so the same name → the same id across functions). This is
+  what makes `EQ`/`equal?` on symbols word equality on native — without any
+  runtime interning or string-constant machinery (the native backend has
+  none). General and language-agnostic: any lisp frontend's symbol literals
+  intern the same way; the ids are module-local and need not match the VM's.
+- **`lisp_repr`** now recognises a symbol immediate (`type_hint == "symbol"`)
+  as a tagged `LispyValue` — it joins `boxed_regs` (so it propagates through
+  `mov`, drives `COND` truthiness, etc.) but is **never boxed** (a `<< 3`
+  would corrupt the id/tag).
+- 5 new tests: same-name→same-id, the `(id<<32)|tag` encoding, module-wide
+  ids, non-symbol consts untouched, and the `lisp_repr` "tagged-but-not-boxed"
+  guard.
+
+> Runtime `make_symbol` + string-literal emission (needed only to *print* a
+> symbol's name or create symbols dynamically) remains deferred — static
+> programs observe a symbol *value* via `EQ`, which compile-time interning
+> fully supports.
+
+---
+
 ## [0.6.0] — 2026-06-04
 
 ### Added (LANG77 — ATOM/EQ predicates + COND truthiness, McCarthy L3b-2c-2)
