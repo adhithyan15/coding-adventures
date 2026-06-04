@@ -244,6 +244,7 @@ def check_browser_readiness_case(
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "text_semantics", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "navigation_groups", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "section_landmarks", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
@@ -502,6 +503,27 @@ def check_browser_expected_lists(
         require_optional_string_list(group_path, group, "aria_labelledby", errors)
         require_integer(group_path, group, "item_count", errors)
         require_optional_boolean(group_path, group, "list_reversed", errors)
+
+    for index, section in enumerate(object_list_items(expected, "section_landmarks")):
+        section_path = f"{case_path}.expected.section_landmarks[{index}]"
+        for field in (
+            "element",
+            "role",
+            "text",
+        ):
+            require_string(section_path, section, field, errors)
+        for field in (
+            "id",
+            "authored_role",
+            "accessible_name",
+            "aria_label",
+            "section_kind",
+            "landmark_kind",
+            "heading_text",
+        ):
+            require_optional_nullable_string(section_path, section, field, errors)
+        require_optional_string_list(section_path, section, "aria_labelledby", errors)
+        require_optional_integer(section_path, section, "heading_level", errors)
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"

@@ -10,9 +10,9 @@ use coding_adventures_html_parser::{
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
     BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate,
-    BrowserTextSemantic, BrowserThemeColor,
+    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -68,6 +68,8 @@ struct ExpectedBrowserDocument {
     text_semantics: Vec<ExpectedTextSemantic>,
     #[serde(default)]
     navigation_groups: Vec<ExpectedNavigationGroup>,
+    #[serde(default)]
+    section_landmarks: Vec<ExpectedSectionLandmark>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -492,6 +494,31 @@ struct ExpectedNavigationGroup {
     list_marker_type: Option<String>,
     #[serde(default)]
     list_reversed: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedSectionLandmark {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    #[serde(default)]
+    authored_role: Option<String>,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    section_kind: Option<String>,
+    #[serde(default)]
+    landmark_kind: Option<String>,
+    #[serde(default)]
+    heading_level: Option<u8>,
+    #[serde(default)]
+    heading_text: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1750,6 +1777,26 @@ fn browser_navigation_group_descriptor_metadata_tracks_lists_and_landmarks() {
 }
 
 #[test]
+fn browser_section_landmark_descriptor_metadata_tracks_outline_roles_and_names() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "document-outline-landmark-page")
+        .expect("document outline fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("document outline fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.section_landmarks, expected.section_landmarks,
+        "section landmarks should preserve roles, accessible names, landmark kinds, and first headings",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -2898,6 +2945,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedNavigationGroup::into_browser_navigation_group)
                 .collect(),
+            section_landmarks: self
+                .section_landmarks
+                .into_iter()
+                .map(ExpectedSectionLandmark::into_browser_section_landmark)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3324,6 +3376,25 @@ impl ExpectedNavigationGroup {
             list_start: self.list_start,
             list_marker_type: self.list_marker_type,
             list_reversed: self.list_reversed,
+        }
+    }
+}
+
+impl ExpectedSectionLandmark {
+    fn into_browser_section_landmark(self) -> BrowserSectionLandmark {
+        BrowserSectionLandmark {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            section_kind: self.section_kind,
+            landmark_kind: self.landmark_kind,
+            heading_level: self.heading_level,
+            heading_text: self.heading_text,
         }
     }
 }
