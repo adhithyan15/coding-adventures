@@ -416,6 +416,9 @@ Status:
   order-preserving parallel helper in the live Rust SPICE package, preserving
   per-corner nominal values, sensitivity entries, and relative sensitivity
   ordering.
+- AC noise named-corner runs can now be evaluated with an order-preserving
+  parallel helper in the live Rust SPICE package, preserving total output PSD,
+  input-referred PSD, and per-source contribution ordering.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.

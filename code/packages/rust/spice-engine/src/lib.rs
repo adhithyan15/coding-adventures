@@ -6888,6 +6888,57 @@ pub fn noise_ac_corners(
     })
 }
 
+pub fn noise_ac_corners_parallel(
+    circuit: &Circuit,
+    output_node: &str,
+    input_source: &str,
+    frequencies_hz: &[f64],
+    temperature_kelvin: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerNoiseResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let output_node = output_node.to_string();
+                let input_source = input_source.to_string();
+                let frequencies_hz = frequencies_hz.to_vec();
+                scope.spawn(move || -> Result<CornerNoisePoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerNoisePoint {
+                        corner_name: corner.name,
+                        result: noise_ac(
+                            &corner_circuit,
+                            &output_node,
+                            &input_source,
+                            &frequencies_hz,
+                            temperature_kelvin,
+                        )?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "noise_ac_corners_parallel".to_string(),
+                reason: "parallel AC noise corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerNoiseResult {
+        output_node: output_node.to_string(),
+        input_source: input_source.to_string(),
+        points,
+    })
+}
+
 pub fn noise_ac_default(
     circuit: &Circuit,
     output_node: &str,
