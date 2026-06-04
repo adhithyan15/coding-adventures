@@ -151,6 +151,39 @@ fn main() {
 
         let result = lr_aggregate(query, &lowered.kb);
 
+        // ---- ADJ54 H2: open-question discounting (hold residual uncertainty) ----
+        // The engine should not report saturated certainty while a decision-relevant
+        // confirmatory test bearing on THIS conclusion is still unobserved — the test
+        // could still go either way. We build a VOI band over the open uncertainty's
+        // outcomes and report a tempered "could-go-either-way" midpoint as the
+        // *calibrated* confidence.
+        //
+        // ANTI-ENTROPY GUARANTEE: this NEVER reorders the differential. The RAW
+        // posterior (`P = …`, evidence as observed) is what callers rank on; the
+        // tempered value is reporting-only. So H2 can improve calibration but cannot
+        // flip a top-1 — by construction it introduces zero correctness regression.
+        // (The companion scorer ranks on RAW, calibrates on REPORTED.)
+        let open_on_conclusion: Vec<&_> = result
+            .uncertainties
+            .iter()
+            .filter(|u| &u.conclusion == query)
+            .collect();
+        let (reported_posterior, band) = if open_on_conclusion.is_empty() {
+            (result.posterior, None)
+        } else {
+            // candidate posteriors: the current (evidence-as-observed) one, plus what
+            // each unobserved outcome of the bearing uncertainty would move us to.
+            let mut ps = vec![result.posterior];
+            for u in &open_on_conclusion {
+                for delta in &u.if_observed_logit_delta {
+                    ps.push(sigmoid(result.posterior_logit + delta));
+                }
+            }
+            let lo = ps.iter().cloned().fold(f64::INFINITY, f64::min);
+            let hi = ps.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+            (0.5 * (lo + hi), Some((lo, hi))) // midpoint = "the test could go either way"
+        };
+
         println!();
         println!(
             "  Posterior:  P = {:.4}  ({:.1}%)   logodds = {:+.4}",
@@ -158,6 +191,16 @@ fn main() {
             result.posterior * 100.0,
             result.posterior_logit
         );
+        match band {
+            Some((lo, hi)) => println!(
+                "  Reported (H2 open-question discounted):  P = {:.4}   band [{:.4}, {:.4}]   <- residual held: a recommended confirmatory test for this conclusion is still open",
+                reported_posterior, lo, hi
+            ),
+            None => println!(
+                "  Reported (H2 open-question discounted):  P = {:.4}   (no open confirmatory uncertainty bears on this conclusion)",
+                reported_posterior
+            ),
+        }
 
         // ---- Fired clauses + coverage (carried over from ADJ51) ----
         let proof = &result.dag.proofs[0];

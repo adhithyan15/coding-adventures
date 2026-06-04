@@ -1,0 +1,253 @@
+% ============================================================================
+% ADJ52 case-10 derived rulebook (deriver subagent output).
+% Clinical area: hereditary autoinflammatory / periodic-fever syndromes.
+% Differential built from the IR alone (no answer given). Recurses into
+% subcategories (CAPS spectrum FCAS/MWS/NOMID; acquired mimics; vasculitis;
+% myositis red herring). Every clause carries a % rationale + source + trust.
+% Magnitudes are qualitative atoms (adj-lang IDENT grammar: lowercase, no
+% leading digit, no uppercase).
+%
+% ANTI-OVERFIT NOTE: clauses are added ONLY where a citable source supports the
+% direction of the likelihood ratio, never to force a verdict. Discriminators
+% that fire AGAINST the tempting wrong answers (the prior "urticarial vasculitis"
+% label; the borderline anti-Jo-1 / ANA myositis trap; Schnitzler's required
+% paraprotein; acquired cold urticaria's pruritus) are encoded symmetrically.
+%
+% CORRELATED EVIDENCE: the NLRP3->IL-1beta inflammasome drives one syndrome whose
+% manifestations (non-pruritic urticaria-like rash, recurrent fever, arthralgia,
+% sensorineural hearing loss, ocular inflammation) co-segregate; and one acute-
+% phase response (raised IL-6, hs-CRP, ESR) is a single readout. Each is grouped
+% under ONE % mechanism directive so the combined LR fires ONCE (no double-count).
+% ============================================================================
+
+% ===== PRIORS (base rates for an adult with a lifelong cold-triggered, non-
+%        pruritic urticaria-like rash + fever + arthralgia + hearing loss) =====
+
+% rationale: CAPS is THE hereditary autoinflammatory syndrome unifying urticaria-
+% like rash, fever, arthralgia, sensorineural hearing loss and ocular signs with
+% autosomal-dominant inheritance; cold-triggered + hearing loss spans the FCAS->
+% Muckle-Wells end of the NLRP3 spectrum.
+prior 0.22 for diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "Orphanet Muckle-Wells (CAPS, AD, NLRP3); DermNet CAPS; MedlinePlus CAPS genetics" trust authoritative
+
+% rationale: Schnitzler is the leading acquired mimic (chronic urticaria + fever +
+% arthralgia + raised inflammatory markers) and must stay on the differential.
+prior 0.10 for diagnosis(schnitzler_syndrome)
+  source "Schnitzler syndrome review PMC10201218; Medscape Schnitzler differential" trust authoritative
+
+% rationale: urticarial vasculitis is the patient's PRIOR label and a real entity
+% with overlapping urticaria-like lesions; kept as a candidate to be tested.
+prior 0.12 for diagnosis(urticarial_vasculitis)
+  source "Urticarial vasculitis review PMC8243153; JACI 2022 UV differential" trust authoritative
+
+% rationale: acquired cold urticaria is the simplest cold-triggered explanation
+% and a sibling subcategory of cold-induced dermatoses.
+prior 0.08 for diagnosis(acquired_cold_urticaria)
+  source "DermNet Cold urticaria; ScienceDirect Acquired Cold Urticaria overview" trust authoritative
+
+% rationale: a borderline anti-Jo-1 + weak ANA invites an inflammatory-myopathy/
+% connective-tissue read; low prior, kept to let the data argue it down.
+prior 0.05 for diagnosis(idiopathic_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies; anti-Jo-1 antisynthetase context" trust authoritative
+
+% ===== CRYOPYRIN-ASSOCIATED PERIODIC SYNDROME (CAPS / Muckle-Wells) =====
+
+% --- MECHANISM 1: the NLRP3->IL-1beta autoinflammatory phenotype. Non-pruritic
+% urticaria-like rash, recurrent fever, arthralgia, sensorineural hearing loss
+% and ocular inflammation are correlated manifestations of ONE inflammasome
+% syndrome -> fire the combined LR ONCE (anti double-count). ---
+% mechanism nlrp3_inflammasome_phenotype for diagnosis(cryopyrin_associated_periodic_syndrome) lr 9.0 : familial_phenotype(non_itchy_urticaria_like_rash), associated_symptom(low_grade_fever), exam_audiometry(bilateral_sensorineural_hearing_loss), familial_phenotype(eye_problems), associated_symptom(aching_joints)
+%   source "Orphanet/DermNet CAPS (urticaria-like rash + fever + SNHL + ocular + arthralgia = one IL-1beta syndrome)" trust authoritative
+
+% --- MECHANISM 2: one systemic acute-phase response. Raised IL-6, hs-CRP and ESR
+% are a single readout of the same inflammasome drive -> fire ONCE. ---
+% mechanism acute_phase_response for diagnosis(cryopyrin_associated_periodic_syndrome) lr 2.2 : lab(il_6, markedly_elevated), lab(hs_crp, markedly_elevated), lab(esr, elevated), inflammatory_markers_persistently_raised
+%   source "MWS clinical perspectives PMC5513904 (IL-1beta drives CRP/SAA/IL-6); persistent interflare inflammation" trust authoritative
+
+% rationale: childhood onset (age ~7) is characteristic of hereditary CAPS and
+% argues against acquired adult-onset mimics.
+contributes 3.0 from symptom_onset_age(early_childhood) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "DermNet FCAS / Orphanet MWS (onset in infancy/childhood)" trust authoritative
+
+% rationale: cold / air-conditioning provocation with warmth relief is the FCAS-
+% end cardinal trigger of the NLRP3 spectrum.
+contributes 4.0 from trigger(cold_exposure) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "DermNet FCAS (cold-induced urticarial eruptions, NLRP3, AD)" trust authoritative
+
+% rationale: multigenerational autosomal-dominant inheritance (both sexes, every
+% generation, >a dozen relatives) is near-specific for a Mendelian autoinflammatory
+% disease and is the single strongest pointer to CAPS over acquired mimics.
+contributes 8.0 from inheritance_pattern(autosomal_dominant) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "Orphanet MWS / MedlinePlus CAPS (autosomal-dominant NLRP3)" trust authoritative
+
+% rationale: the rash being NON-pruritic fits neutrophilic urticaria-like CAPS
+% lesions rather than mast-cell/histaminergic hives.
+contributes 2.0 from rash_non_pruritic(true) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "DermNet CAPS (neutrophilic urticaria, characteristically non-itchy)" trust authoritative
+
+% rationale: failure of antihistamines AND corticosteroids over years is typical
+% of an IL-1-driven autoinflammatory disease (not a histaminergic urticaria).
+contributes 1.8 from treatment_failure(antihistamines_and_steroids) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "DermNet/Sobi CAPS (responds to IL-1 blockade, not antihistamines/steroids)" trust authoritative
+
+% rationale: biopsy showing a perivascular infiltrate WITHOUT fibrinoid necrosis or
+% vessel-wall destruction (a neutrophilic urticarial dermatosis, not vasculitis)
+% is exactly the CAPS skin histology.
+contributes 1.6 from biopsy_pattern(perivascular_infiltrate_no_vasculitis) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "JACI 2022 UV differential; neutrophilic urticarial dermatosis in CAPS/Schnitzler" trust authoritative
+
+% rationale: a coronary event in the setting of decades of untreated systemic
+% inflammation is consistent with inflammation-driven atherosclerosis in CAPS.
+contributes 1.3 from cardiac_event(coronary_disease) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "Sobi CAPS (untreated chronic inflammation -> cardiovascular complications); IL-6/atherosclerosis" trust empirical
+
+% rationale: SYNERGY — cold trigger PLUS autosomal-dominant inheritance together is
+% the FCAS/CAPS gestalt that no acquired mimic reproduces.
+interacts 3.0 when trigger(cold_exposure) and inheritance_pattern(autosomal_dominant) for diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "JACI 2001 FCAS phenotype/genotype (AD cold-triggered periodic fever)" trust authoritative
+
+% ===== SCHNITZLER SYNDROME (leading acquired mimic) =====
+
+% rationale: chronic non-pruritic urticarial rash + recurrent fever + arthralgia +
+% raised inflammatory markers overlaps heavily with Schnitzler.
+contributes 3.0 from familial_phenotype(non_itchy_urticaria_like_rash) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC11202231 (chronic urticarial rash, fever, raised CRP)" trust authoritative
+contributes 1.8 from associated_symptom(aching_joints) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC10201218 (arthralgia/bone pain)" trust authoritative
+
+% rationale: DISCRIMINATOR — childhood onset argues strongly AGAINST Schnitzler,
+% which is a late-onset (≈adult, ~40s+) acquired disease.
+contributes 0.20 from symptom_onset_age(early_childhood) to diagnosis(schnitzler_syndrome)
+  source "ASH Clinical News Schnitzler; Medscape (adult/late onset, non-hereditary)" trust authoritative
+
+% rationale: DISCRIMINATOR — a striking multigenerational AD inheritance argues
+% strongly AGAINST Schnitzler, which is acquired and non-familial.
+contributes 0.15 from inheritance_pattern(autosomal_dominant) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC10201218 (sporadic, acquired, no Mendelian inheritance)" trust authoritative
+
+% rationale: DISCRIMINATOR — Schnitzler REQUIRES a monoclonal IgM (or IgG)
+% gammopathy; serology here is unrevealing with no paraprotein -> AGAINST.
+contributes 0.30 from connective_tissue_serology(no_paraprotein) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC11202231 (monoclonal IgM is an obligate criterion)" trust authoritative
+
+% rationale: sensorineural hearing loss is NOT a defining Schnitzler feature; its
+% presence mildly favours CAPS over Schnitzler.
+contributes 0.6 from exam_audiometry(bilateral_sensorineural_hearing_loss) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC10201218 (deafness atypical; characteristic of MWS)" trust authoritative
+
+% ===== URTICARIAL VASCULITIS (the patient's PRIOR label) =====
+
+% rationale: urticaria-like lesions with systemic features can be urticarial
+% vasculitis; this is why the mid-forties biopsy was read that way.
+contributes 2.0 from familial_phenotype(non_itchy_urticaria_like_rash) to diagnosis(urticarial_vasculitis)
+  source "Urticarial vasculitis review PMC8243153 (urticarial lesions)" trust authoritative
+
+% rationale: DISCRIMINATOR — true urticarial vasculitis REQUIRES leukocytoclastic
+% vasculitis with fibrinoid necrosis / vessel-wall destruction on biopsy; the
+% current biopsy explicitly LACKS both -> strong AGAINST (reclassifies the prior
+% label as a mislabel; encodes u1).
+contributes 0.12 from biopsy_pattern(perivascular_infiltrate_no_vasculitis) to diagnosis(urticarial_vasculitis)
+  source "Urticarial vasculitis review PMC8243153; JACI 2022 (fibrinoid necrosis/vessel destruction required)" trust authoritative
+
+% rationale: a lifelong multigenerational AD pattern is not a feature of acquired
+% urticarial vasculitis -> AGAINST.
+contributes 0.4 from inheritance_pattern(autosomal_dominant) to diagnosis(urticarial_vasculitis)
+  source "Urticarial vasculitis review PMC8243153 (acquired, not Mendelian)" trust authoritative
+
+% rationale: progressive sensorineural hearing loss is not part of urticarial
+% vasculitis -> mild AGAINST.
+contributes 0.6 from exam_audiometry(bilateral_sensorineural_hearing_loss) to diagnosis(urticarial_vasculitis)
+  source "Urticarial vasculitis review PMC8243153 (no characteristic SNHL)" trust inferred
+
+% ===== ACQUIRED COLD URTICARIA (simplest cold-triggered mimic) =====
+
+% rationale: reliable cold/air-conditioning provocation is the defining trigger of
+% cold urticaria.
+contributes 2.5 from trigger(cold_exposure) to diagnosis(acquired_cold_urticaria)
+  source "DermNet Cold urticaria (cold-evoked wheals)" trust authoritative
+
+% rationale: DISCRIMINATOR — acquired cold urticaria lesions are PRURITIC and
+% localized; a non-pruritic rash argues AGAINST.
+contributes 0.4 from rash_non_pruritic(true) to diagnosis(acquired_cold_urticaria)
+  source "DermNet Cold urticaria (itchy localized wheals)" trust authoritative
+
+% rationale: DISCRIMINATOR — systemic fever + arthralgia + raised acute-phase
+% markers do NOT occur in acquired cold urticaria -> strong AGAINST.
+contributes 0.25 from associated_symptom(low_grade_fever) to diagnosis(acquired_cold_urticaria)
+  source "ScienceDirect Acquired Cold Urticaria (no systemic inflammatory response)" trust authoritative
+
+% rationale: DISCRIMINATOR — multigenerational AD inheritance is incompatible with
+% sporadic acquired cold urticaria -> AGAINST.
+contributes 0.2 from inheritance_pattern(autosomal_dominant) to diagnosis(acquired_cold_urticaria)
+  source "ScienceDirect Acquired Cold Urticaria (sporadic, not genetic)" trust authoritative
+
+% rationale: sensorineural hearing loss is unrelated to cold urticaria -> AGAINST.
+contributes 0.5 from exam_audiometry(bilateral_sensorineural_hearing_loss) to diagnosis(acquired_cold_urticaria)
+  source "DermNet Cold urticaria (no deafness association)" trust inferred
+
+% ===== IDIOPATHIC INFLAMMATORY MYOPATHY (anti-Jo-1 / ANA red herring) =====
+
+% rationale: a borderline anti-Jo-1 and weak ANA can suggest an antisynthetase /
+% connective-tissue process.
+contributes 1.5 from lab(anti_jo_1, borderline) to diagnosis(idiopathic_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (anti-Jo-1 antisynthetase syndrome)" trust authoritative
+contributes 1.2 from lab(ana, weakly_positive) to diagnosis(idiopathic_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (ANA may be positive)" trust authoritative
+
+% rationale: DISCRIMINATOR — a cold-triggered non-pruritic urticaria-like rash is
+% not a feature of inflammatory myopathy -> AGAINST.
+contributes 0.4 from familial_phenotype(non_itchy_urticaria_like_rash) to diagnosis(idiopathic_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (no cold-triggered urticarial rash)" trust inferred
+
+% rationale: DISCRIMINATOR — progressive sensorineural hearing loss + Mendelian
+% multigenerational pattern is not the myositis phenotype -> AGAINST.
+contributes 0.3 from exam_audiometry(bilateral_sensorineural_hearing_loss) to diagnosis(idiopathic_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (no SNHL)" trust inferred
+contributes 0.5 from inheritance_pattern(autosomal_dominant) to diagnosis(idiopathic_inflammatory_myopathy)
+  source "AMBOSS Inflammatory Myopathies (typically sporadic autoimmune)" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation / targeted therapy) =====
+
+% rationale: NLRP3 molecular genetic testing is the confirmatory gold standard for
+% CAPS and directly settles the unifying-diagnosis question.
+prior 0.25 for next_step(nlrp3_genetic_testing)
+  source "Eurofever CAPS cohort (NLRP3 sequencing = gold-standard confirmation)" trust authoritative
+contributes 6.0 from inheritance_pattern(autosomal_dominant) to next_step(nlrp3_genetic_testing)
+  source "Eurofever CAPS cohort (heterozygous germline NLRP3 confirms)" trust authoritative
+contributes 3.0 from exam_audiometry(bilateral_sensorineural_hearing_loss) to next_step(nlrp3_genetic_testing)
+  source "Orphanet MWS (SNHL + urticaria + fever phenotype prompts NLRP3 testing)" trust authoritative
+
+% rationale: an IL-1 inhibitor trial (anakinra/canakinumab) is both confirmatory-
+% by-response and the definitive therapy after the failed antihistamine/steroid/
+% methotrexate/JAK ladder.
+prior 0.15 for next_step(il1_inhibitor_trial)
+  source "NEJM 2009 canakinumab in CAPS; Frontiers 2025 anakinra in CAPS" trust authoritative
+contributes 4.0 from treatment_failure(antihistamines_and_steroids) to next_step(il1_inhibitor_trial)
+  source "DermNet/Sobi CAPS (IL-1 blockade is the effective targeted treatment)" trust authoritative
+contributes 2.0 from inflammatory_markers_persistently_raised to next_step(il1_inhibitor_trial)
+  source "French CAPS amyloidosis study PMC4597258 (treat persistent inflammation to prevent AA amyloidosis)" trust authoritative
+
+% rationale: serum/urine immunofixation for a monoclonal protein is the cheap test
+% that adjudicates Schnitzler vs CAPS.
+prior 0.10 for next_step(serum_immunofixation_for_paraprotein)
+  source "Schnitzler review PMC11202231 (monoclonal IgM is obligate; immunofixation diagnostic)" trust authoritative
+contributes 2.5 from familial_phenotype(non_itchy_urticaria_like_rash) to next_step(serum_immunofixation_for_paraprotein)
+  source "Schnitzler review PMC10201218 (rule in/out paraprotein-driven urticaria)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u1/u3: the confirmatory genetic result settles CAPS vs the acquired mimics.
+uncertain { test(nlrp3_pathogenic_variant), test(nlrp3_no_variant) } for diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "Eurofever CAPS cohort (NLRP3 sequencing resolves the diagnosis)"
+contributes 9.0 from test(nlrp3_pathogenic_variant) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "Eurofever CAPS cohort (confirmatory germline NLRP3 variant)" trust authoritative
+contributes 0.10 from test(nlrp3_no_variant) to diagnosis(cryopyrin_associated_periodic_syndrome)
+  source "Eurofever CAPS cohort (absent variant lowers, functional assay may still apply)" trust empirical
+
+% u4/u5: whether a monoclonal paraprotein exists adjudicates Schnitzler vs CAPS.
+uncertain { test(monoclonal_igm_present), test(no_monoclonal_protein) } for diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC11202231 (monoclonal IgM obligate criterion)"
+contributes 6.0 from test(monoclonal_igm_present) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC11202231 (paraprotein confirms Schnitzler)" trust authoritative
+contributes 0.20 from test(no_monoclonal_protein) to diagnosis(schnitzler_syndrome)
+  source "Schnitzler review PMC11202231 (absent paraprotein argues against Schnitzler)" trust authoritative

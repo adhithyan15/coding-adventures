@@ -1,0 +1,54 @@
+% ADJ52 case-20 program (this patient's observations + queries only; no rules).
+% 29-year-old man referred to a behavioral-health clinic by his employer for adult
+% ADHD assessment. Over ~3 years: progressive forgetfulness/disorganization (losing
+% keys and documents, lapses in judgment jeopardizing his job) on a LIFELONG
+% scattered/inattentive baseline that had not been disabling until recently. Past
+% hyperthyroidism on a daily antithyroid tablet. Years of intermittent low energy,
+% itchy skin, restlessness, and longstanding intermittent loose stools. Full-scale
+% IQ ~67 (borderline-to-mild); positive items on a standardized adult inattention
+% self-report screen; MMSE 27 (near-normal), later falling to the low 20s.
+% Exam: generalized hyperreflexia, BILATERAL extensor plantar responses, mild gait
+% unsteadiness; later a stiff/dragging spastic gait with bilateral leg tremor. EEG
+% non-epileptiform; nerve conduction normal. Thyroid antibody panel: elevated
+% antithyroid / antimicrosomal / antithyroglobulin titres -> an autoimmune thyroid
+% encephalopathy was considered and high-dose corticosteroid PULSE therapy given:
+% NO benefit, then worsening over months. Then noted: firm painless BILATERAL
+% ACHILLES TENDON swellings, BILATERAL early CATARACTS, reduced bone mineral density.
+% MRI: symmetric T2/FLAIR high signal in the cerebellar white matter and DENTATE
+% NUCLEI, cerebral peduncles, posterior limbs of internal capsules, and hypothalamus.
+% CSF unremarkable for infection/inflammation/malignancy.
+
+% --- the correlated multisystem xanthomatosis signature (one mechanism; fires once) ---
+observe exam_finding(bilateral_achilles_tendon_swellings)
+observe exam_finding(bilateral_early_cataracts)
+observe symptom(chronic_intermittent_diarrhea)
+observe test_result(reduced_bone_mineral_density)
+
+% --- the specific dentate-centered MRI signature ---
+observe mri_finding(symmetric_dentate_t2_flair_hyperintensity)
+
+% --- neurologic course + signs ---
+observe course(progressive_cognitive_decline)
+observe exam_finding(pyramidal_signs_with_bilateral_extensor_plantars)
+observe exam_finding(cerebellar_spastic_gait)
+
+% --- the referral / attentional framing ---
+observe presenting_request(adhd_type_inattention)
+observe premorbid_trait(lifelong_inattentive)
+observe test_result(positive_adult_inattention_screen)
+observe test_result(full_scale_iq_borderline_mild)
+
+% --- the considered (thyroid-autoimmune) workup + its failure ---
+observe test_result(elevated_antithyroid_antibodies)
+observe steroid_trial(no_benefit_then_worsening)
+observe test_result(csf_bland_noninflammatory)
+
+% NOT observed (open, decision-relevant): serum_cholestanol(...) and cyp27a1_testing(...)
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(cerebrotendinous_xanthomatosis)
+? diagnosis(hashimoto_encephalopathy_sreat)
+? diagnosis(adult_adhd)
+? diagnosis(static_intellectual_disability)
+? diagnosis(multiple_sclerosis)
+? next_step(serum_cholestanol_then_cyp27a1_and_cdca)

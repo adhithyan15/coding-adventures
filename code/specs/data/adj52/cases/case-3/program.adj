@@ -1,0 +1,52 @@
+% ADJ52 case-3 — patient observations + queries ONLY (no rules).
+% 61-year-old man referred as a biopsy-negative, steroid-refractory cranial
+% (giant-cell) arteritis mimic; picture remained unexplained.
+%
+% Numeric magnitudes mapped to the rulebook's qualitative atoms:
+%   age(61)                       -> age(over_50)
+%   serum_calcium(11.6 mg/dL)     -> serum_calcium(elevated)
+%   alkaline_phosphatase(360 U/L) -> alkaline_phosphatase(raised)
+%   haemoglobin(near 11 g/dL)     -> haemoglobin(mildly_low)
+%   platelet_count(110 x10e9/L)   -> platelet_count(low)
+%   esr(72)/crp(53)               -> inflammatory_markers(markedly_elevated)
+
+observe age(over_50)
+observe sex(male)
+
+% --- skull-base / cranial syndrome (ONE mass, grouped by mechanism) ---
+observe symptom(headache_frontal)
+observe symptom(jaw_pain_bilateral)
+observe symptom(facial_numbness_v2_v3)
+observe symptom(diplopia_lateral_gaze)
+
+% --- constitutional ---
+observe symptom(constitutional_weight_loss)
+
+% --- laboratory ---
+observe inflammatory_markers(markedly_elevated)
+observe haemoglobin(mildly_low)
+observe platelet_count(low)
+observe serum_calcium(elevated)
+observe alkaline_phosphatase(raised)
+
+% --- imaging ---
+observe imaging(bilateral_meckels_cave_enhancing_soft_tissue)
+observe imaging(widespread_active_skeletal_lesions)
+observe imaging(lymphadenopathy_above_and_below_diaphragm)
+
+% --- prior workup that refutes the arteritis hypothesis ---
+observe biopsy(bilateral_temporal_artery_no_arteritis)
+observe treatment_response(steroid_refractory_progression)
+
+% ===== q1 — unifying diagnosis (candidate differential) =====
+? unifying_diagnosis(lymphoma)
+? unifying_diagnosis(plasma_cell_myeloma)
+? unifying_diagnosis(metastatic_carcinoma)
+? unifying_diagnosis(sarcoidosis)
+? unifying_diagnosis(erdheim_chester_histiocytosis)
+? unifying_diagnosis(giant_cell_arteritis)
+
+% ===== q6 — recommended next diagnostic step (tissue) =====
+? next_step(excisional_lymph_node_biopsy)
+? next_step(bone_lesion_biopsy)
+? next_step(meckels_cave_skull_base_biopsy)

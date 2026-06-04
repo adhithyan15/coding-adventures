@@ -1,0 +1,269 @@
+% ============================================================================
+% ADJ52 case-27 derived rulebook.
+% Clinical area: non_resolving pulmonary consolidation workup
+%   (the diagnostic approach to a lobar/segmental consolidative opacity that
+%   persists essentially unchanged over months despite full antibacterial AND
+%   anti-tuberculous therapy in a lifelong non-smoker), NOT a single diagnosis.
+%
+% The central diagnostic puzzle the IR poses (q1-q4): a 52-year-old lifelong
+% non-smoking woman with a right-lower-lobe DENSE CONSOLIDATION + an exudative,
+% LYMPHOCYTE-RICH, LOW-GLUCOSE pleural effusion, NEGATIVE cultures (fluid,
+% blood, sputum, bronchial washings), a pleural ADA of 18.6 U/L (BELOW the
+% conventional 40 U/L TB cutoff), NO cavitation, and a band of consolidative
+% opacity that does NOT change on serial CT at 2 and 6 months and does NOT
+% respond to EITHER antibiotics OR a 6-month empirical anti-TB regimen. A
+% transbronchial biopsy then yields ATYPICAL LYMPHOID CELLS, prompting a
+% CT-guided core biopsy plus staging-style upper-GI endoscopy with gastric
+% biopsies and a bone-marrow trephine.
+%
+% That conjunction -- an indolent non-resolving consolidation in a non-smoker,
+% a lymphocyte-rich exudate, atypical lymphoid cells on lung tissue, and a
+% staging workup reaching for OTHER mucosal sites (stomach) and marrow -- is the
+% textbook picture of PRIMARY PULMONARY MALT LYMPHOMA (extranodal marginal-zone
+% lymphoma of bronchus-associated lymphoid tissue, "BALToma"), the classic
+% great mimic of non-resolving pneumonia.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (no leading digit,
+% no uppercase identifiers). E.g. pleural_ada(below_tb_cutoff),
+% consolidation_course(unchanged_over_months).
+%
+% Anti-overfit note: every clause is added because a cited source supports the
+% DIRECTION of the likelihood ratio for that finding in that disease, NOT to make
+% this case land on a chosen answer. Discriminators that argue AGAINST the
+% tempting wrong answers (presumed TB; pneumonic-type adenocarcinoma, which is
+% ALSO classic in non-smoking women) carry LR<1 where a source supports them.
+% Correlated findings that are ONE mechanism (the indolent-lymphoid gestalt; the
+% non-resolution-despite-therapy gestalt) are grouped under a single mechanism
+% directive so the combined likelihood ratio fires ONCE and does not double-count.
+% ============================================================================
+
+% ===== PRIORS (base rates among non-resolving-consolidation workups) =====
+
+% rationale: among non-resolving consolidations driven to tissue biopsy, an
+% indolent primary pulmonary lymphoma (overwhelmingly low-grade MALT type) is a
+% recognized, classically under-considered cause; given the lymphoid biopsy and
+% multi-site staging it carries a substantial pretest probability here.
+prior 0.26 for diagnosis(pulmonary_malt_lymphoma)
+  source "ERS Eur Respir J 2016;47:1244 (Pulmonary MALT lymphoma revisited: indolent, mimics non-resolving pneumonia)" trust authoritative
+
+% rationale: pneumonic-type / mucinous lung adenocarcinoma is THE other neoplastic
+% great-mimic of non-resolving consolidation and, like this patient, classically
+% occurs in non-smokers and women -- so it must be argued down on tissue, not prior.
+prior 0.22 for diagnosis(pneumonic_type_adenocarcinoma)
+  source "Frontiers Oncol 2023;13:1234291 (consolidation pattern of MALT vs pneumonic-type lung adenocarcinoma)" trust authoritative
+
+% rationale: TB was the presumed (and treated) diagnosis; in a lymphocyte-rich
+% exudate TB is the canonical concern, which is exactly why empirical anti-TB was
+% started -- high enough prior that the engine must EARN the move away from it.
+prior 0.20 for diagnosis(tuberculous_pleuropulmonary_disease)
+  source "ERS Eur Respir J 2003;21:220 (ADA in lymphocytic effusions; TB the default lymphocytic-exudate concern)" trust authoritative
+
+% rationale: organizing pneumonia is a standard non-infectious cause of a
+% consolidation unresponsive to antibiotics and belongs on the differential.
+prior 0.10 for diagnosis(organizing_pneumonia)
+  source "Merck Manual Prof, Cryptogenic Organizing Pneumonia (consolidation unresponsive to antibiotics)" trust authoritative
+
+% rationale: ordinary severe community-acquired pneumonia with a parapneumonic
+% effusion was the initial working diagnosis; kept low because the defining feature
+% of this case is FAILURE to resolve, which an ordinary bacterial pneumonia does not do.
+prior 0.08 for diagnosis(community_acquired_pneumonia)
+  source "Radiology Assistant, Chest X-Ray Lung Disease (CAP consolidation resolves with treatment)" trust authoritative
+
+% ===== SHARED INDOLENT-LYMPHOID SIGNATURE (ONE mechanism, lymphoma) =====
+% rationale: the constellation -- atypical lymphoid cells on lung tissue, a
+% LYMPHOCYTE-RICH exudate, an indolent course with the patient remaining
+% relatively well, and a staging reach toward OTHER mucosal sites (stomach) and
+% marrow -- is ONE correlated syndrome (the clinicopathologic phenotype of an
+% indolent B-cell / MALT lymphoma), NOT several independent facts. Counting each
+% separately would double-count correlated evidence and saturate the posterior, so
+% it fires ONCE as a single combined likelihood ratio.
+% mechanism indolent_lymphoid_phenotype for diagnosis(pulmonary_malt_lymphoma) lr 9.0 : histology(atypical_lymphoid_cells_on_lung_tissue), pleural_fluid(lymphocyte_rich), clinical_course(indolent_relatively_well), staging_workup(other_mucosal_and_marrow_sites)
+
+% ===== SHARED NON-RESOLUTION-DESPITE-THERAPY SIGNATURE (ONE mechanism) =====
+% rationale: the SAME stubborn opacity -- unchanged on serial CT over months and
+% failing BOTH antibacterial AND anti-TB therapy -- is ONE correlated "this is not
+% an ordinary treatable infection" gestalt. It raises any indolent neoplastic
+% explanation (here the MALT lymphoma) once, rather than once per failed therapy.
+% mechanism non_resolution_despite_therapy for diagnosis(pulmonary_malt_lymphoma) lr 3.5 : consolidation_course(unchanged_over_months), treatment_response(no_response_to_antibiotics), treatment_response(no_response_to_anti_tb)
+
+% ===== PRIMARY PULMONARY MALT LYMPHOMA (the unifying answer) =====
+
+% rationale: KEY DISCRIMINATOR -- atypical lymphoid cells on lung tissue is the
+% pivotal finding that reframes the whole case from infection toward a lymphoid
+% neoplasm; in the right context it points specifically at primary pulmonary
+% lymphoma (MALT type). Kept as an independent edge ON TOP of the shared mechanism
+% because sources single it out as the decisive morphologic clue.
+contributes 5.0 from histology(atypical_lymphoid_cells_on_lung_tissue) to diagnosis(pulmonary_malt_lymphoma)
+  source "PMC12209244 (pulmonary MALT lymphoma: atypical lymphoid infiltrate; tissue with lymphoepithelial lesions/light-chain restriction)" trust authoritative
+
+% rationale: a staging-style reach to upper-GI endoscopy with gastric biopsies and
+% a bone-marrow trephine is precisely the workup for a suspected MALT lymphoma --
+% concomitant disease at other mucosal sites occurs in ~25-35% and marrow
+% involvement in ~13-30%, so this multi-site staging is near-specific for it.
+contributes 4.0 from staging_workup(other_mucosal_and_marrow_sites) to diagnosis(pulmonary_malt_lymphoma)
+  source "ERS Eur Respir J 2016;47:1244 (MALT lymphoma: other-site mucosal involvement 25-35%, marrow 13-30%; stage with GI/marrow)" trust authoritative
+
+% rationale: an indolent course -- the patient remains relatively well with only
+% low-grade intermittent symptoms despite a persisting opacity -- is characteristic
+% of low-grade pulmonary MALT lymphoma and atypical for an aggressive infection or
+% high-grade tumor.
+contributes 2.5 from clinical_course(indolent_relatively_well) to diagnosis(pulmonary_malt_lymphoma)
+  source "ERS Eur Respir J 2009;34:1408 (pulmonary MALT lymphoma: indolent, often mildly symptomatic)" trust authoritative
+
+% rationale: a lymphocyte-rich exudate accompanying the consolidation is consistent
+% with lymphomatous pleural involvement and supports a lymphoid process over a
+% pyogenic one.
+contributes 1.8 from pleural_fluid(lymphocyte_rich) to diagnosis(pulmonary_malt_lymphoma)
+  source "ERS Eur Respir J 2003;21:220 (lymphoma among non-TB causes of a lymphocyte-rich exudate)" trust authoritative
+
+% rationale: an exudate by Light's criteria with a high pleural LDH is consistent
+% with malignant/lymphomatous pleural involvement (a non-specific but supportive edge).
+contributes 1.3 from pleural_fluid(exudate_high_ldh) to diagnosis(pulmonary_malt_lymphoma)
+  source "ScienceDirect, Pulmonary Consolidation overview (exudative effusion in pulmonary lymphoma)" trust authoritative
+
+% rationale: persistent culture-negativity across fluid, blood, sputum AND
+% bronchial washings argues against an ongoing pyogenic/mycobacterial infection and
+% is the expected microbiology of a neoplastic consolidation.
+contributes 1.6 from microbiology(persistently_culture_negative) to diagnosis(pulmonary_malt_lymphoma)
+  source "MDPI 2025;85:202 (pulmonary MALT lymphoma as non-resolving pneumonia: repeatedly negative microbiology)" trust authoritative
+
+% ===== PNEUMONIC-TYPE ADENOCARCINOMA (the OTHER non-smoker great-mimic) =====
+
+% rationale: pneumonic-type mucinous adenocarcinoma classically presents as a
+% non-resolving consolidation in non-smokers/women and fails to respond to
+% antibiotics -- a real positive edge for the non-resolution picture.
+contributes 1.8 from treatment_response(no_response_to_antibiotics) to diagnosis(pneumonic_type_adenocarcinoma)
+  source "PMC8203063 (pneumonic-type adenocarcinoma: non-resolving consolidation, poor antibiotic response)" trust authoritative
+
+% rationale: a persisting unchanged opacity is compatible with an indolent
+% pneumonic-type adenocarcinoma.
+contributes 1.5 from consolidation_course(unchanged_over_months) to diagnosis(pneumonic_type_adenocarcinoma)
+  source "Springer Insights Imaging 2021;12 (pneumonic-type lung adenocarcinoma: persistent consolidation)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- the diagnostic lung tissue contained
+% ATYPICAL LYMPHOID cells, not malignant glandular/epithelial cells; lymphoid
+% morphology argues specifically AWAY from an adenocarcinoma.
+contributes 0.2 from histology(atypical_lymphoid_cells_on_lung_tissue) to diagnosis(pneumonic_type_adenocarcinoma)
+  source "Frontiers Oncol 2023;13:1234291 (adenocarcinoma is glandular/epithelial; lymphoid infiltrate distinguishes MALT lymphoma)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- a staging reach to OTHER mucosal
+% sites (gastric) and marrow is a lymphoma-staging strategy, not the workup of a
+% lung adenocarcinoma, and points away from a primary epithelial lung cancer.
+contributes 0.5 from staging_workup(other_mucosal_and_marrow_sites) to diagnosis(pneumonic_type_adenocarcinoma)
+  source "ERS Eur Respir J 2016;47:1244 (multi-mucosal-site + marrow staging is the MALT-lymphoma pathway)" trust inferred
+
+% ===== TUBERCULOUS PLEUROPULMONARY DISEASE (the presumed-and-treated answer) =====
+
+% rationale: a lymphocyte-rich exudate is the classic profile of tuberculous
+% pleurisy, the reason TB was presumed and empirically treated. Real positive edge,
+% but non-specific -- lymphoma and other causes share it.
+contributes 1.6 from pleural_fluid(lymphocyte_rich) to diagnosis(tuberculous_pleuropulmonary_disease)
+  source "ERS Eur Respir J 2003;21:220 (TB the leading cause of lymphocyte-predominant exudates)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- the pleural ADA of 18.6 U/L is BELOW
+% the conventional 40 U/L cutoff for tuberculous pleurisy; a sub-threshold ADA in a
+% lymphocytic effusion has a ~99% negative predictive value for TB, so it argues
+% strongly AGAINST the presumed TB despite the "modestly raised" framing.
+contributes 0.15 from pleural_ada(below_tb_cutoff) to diagnosis(tuberculous_pleuropulmonary_disease)
+  source "ERS Eur Respir J 2003;21:220 (ADA <40 U/L in lymphocytic effusion: NPV ~99% for TB)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- ABSENCE of cavitation over months on
+% serial imaging is atypical for the kind of progressive pulmonary TB that would
+% explain a fixed parenchymal opacity, weakly arguing against active TB.
+contributes 0.6 from imaging(no_cavitation) to diagnosis(tuberculous_pleuropulmonary_disease)
+  source "Radiology Assistant, Chest X-Ray Lung Disease (cavitation typical of post-primary pulmonary TB)" trust inferred
+
+% rationale: DISCRIMINATOR (fires negative) -- failure of a FULL 6-month empirical
+% anti-TB regimen to change the opacity at all is strong evidence the process is not
+% treatment-responsive tuberculosis.
+contributes 0.25 from treatment_response(no_response_to_anti_tb) to diagnosis(tuberculous_pleuropulmonary_disease)
+  source "MDPI 2025;85:202 (non-response to anti-TB therapy argues against occult TB; reconsider lymphoma)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- atypical lymphoid cells on lung
+% tissue are not the granulomatous picture of TB and point at a lymphoid neoplasm.
+contributes 0.4 from histology(atypical_lymphoid_cells_on_lung_tissue) to diagnosis(tuberculous_pleuropulmonary_disease)
+  source "PMC12209244 (atypical lymphoid infiltrate is not caseating granuloma; favors lymphoma over TB)" trust inferred
+
+% ===== ORGANIZING PNEUMONIA =====
+
+% rationale: organizing pneumonia characteristically does NOT respond to
+% antibiotics, so a consolidation unresponsive to antibacterials fits it.
+contributes 1.7 from treatment_response(no_response_to_antibiotics) to diagnosis(organizing_pneumonia)
+  source "Merck Manual Prof, Cryptogenic Organizing Pneumonia (does not respond to antibiotics)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- an opacity FIXED and unchanged over
+% months is against organizing pneumonia, whose hallmark is migratory/waxing-waning
+% opacities (and which characteristically responds to corticosteroids).
+contributes 0.4 from consolidation_course(unchanged_over_months) to diagnosis(organizing_pneumonia)
+  source "Merck Manual Prof, COP (migratory opacities; corticosteroid-responsive, not fixed for months)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- atypical lymphoid cells are not the
+% organizing fibroblastic plugs of organizing pneumonia and point away from it.
+contributes 0.5 from histology(atypical_lymphoid_cells_on_lung_tissue) to diagnosis(organizing_pneumonia)
+  source "Merck Manual Prof, COP (intraluminal organizing connective tissue, not atypical lymphoid cells)" trust inferred
+
+% ===== ORDINARY COMMUNITY-ACQUIRED PNEUMONIA (the initial working diagnosis) =====
+
+% rationale: the acute febrile presentation with neutrophilic leucocytosis, markedly
+% raised CRP and lobar consolidation is the textbook entry picture of CAP -- which is
+% exactly why it was the initial working diagnosis.
+contributes 1.5 from presentation(acute_febrile_neutrophilic_lobar) to diagnosis(community_acquired_pneumonia)
+  source "Radiology Assistant, Chest X-Ray Lung Disease (lobar consolidation + acute febrile illness = typical CAP)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- a consolidation that fails to clear
+% after a FULL antibiotic course is the defining argument against ordinary bacterial
+% CAP, which resolves with appropriate therapy.
+contributes 0.2 from treatment_response(no_response_to_antibiotics) to diagnosis(community_acquired_pneumonia)
+  source "MDPI 2025;85:202 (CAP resolves with antibiotics; non-resolution mandates a search for a mimic)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- persistent negativity of all cultures
+% argues against a treatable pyogenic pneumonia.
+contributes 0.5 from microbiology(persistently_culture_negative) to diagnosis(community_acquired_pneumonia)
+  source "ScienceDirect, Pulmonary Consolidation overview (negative microbiology argues against pyogenic CAP)" trust inferred
+
+% ===== NEXT STEP (definitive lymphoid tissue diagnosis) =====
+
+% rationale: the decisive next step is to obtain ADEQUATE lung tissue with
+% lymphoma-specific studies -- immunohistochemistry/flow for B-cell markers, light-
+% chain restriction and immunoglobulin clonality -- on the core biopsy (or a
+% cryobiopsy if needed), since a small transbronchial sample showing only "atypical
+% lymphoid cells" cannot establish or exclude clonal MALT lymphoma.
+prior 0.30 for next_step(core_or_cryo_biopsy_with_lymphoma_immunophenotyping)
+  source "PMC12209244 (definitive MALT diagnosis needs larger tissue + immunophenotype/clonality; cryobiopsy after failed TBLB)" trust authoritative
+contributes 5.0 from histology(atypical_lymphoid_cells_on_lung_tissue) to next_step(core_or_cryo_biopsy_with_lymphoma_immunophenotyping)
+  source "PMC12209244 (atypical lymphoid cells -> obtain more tissue for immunophenotyping/clonality)" trust authoritative
+contributes 3.0 from microbiology(persistently_culture_negative) to next_step(core_or_cryo_biopsy_with_lymphoma_immunophenotyping)
+  source "MDPI 2025;85:202 (culture-negative non-resolving consolidation -> biopsy for tissue diagnosis)" trust authoritative
+contributes 2.5 from consolidation_course(unchanged_over_months) to next_step(core_or_cryo_biopsy_with_lymphoma_immunophenotyping)
+  source "ERS Eur Respir J 2016;47:1244 (persistent unexplained opacity -> definitive histology)" trust authoritative
+
+% rationale: the alternative arm if a clonal lymphoid process is confirmed -- full
+% lymphoma staging (the gastric biopsies + marrow trephine already arranged, plus
+% PET/CT) -- to define extent. Lower prior because tissue confirmation comes first.
+prior 0.12 for next_step(complete_lymphoma_staging)
+  source "ERS Eur Respir J 2016;47:1244 (stage confirmed MALT lymphoma with GI, marrow, PET/CT)" trust authoritative
+contributes 2.0 from staging_workup(other_mucosal_and_marrow_sites) to next_step(complete_lymphoma_staging)
+  source "ERS Eur Respir J 2016;47:1244 (multi-site involvement -> complete staging)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved -- pending pathology) =====
+
+% u-clonality: immunophenotyping / clonality on adequate tissue has not yet been
+% reported. A MONOCLONAL B-cell result (light-chain restriction / Ig clonality) is
+% near-dispositive for MALT lymphoma; a REACTIVE/polyclonal result argues strongly
+% against and back toward a benign lymphoid hyperplasia or other cause. Highest VOI.
+contributes 12.0 from immunophenotype(monoclonal_b_cell) to diagnosis(pulmonary_malt_lymphoma)
+  source "PMC12209244 (light-chain restriction / monoclonal Ig rearrangement confirms MALT lymphoma)" trust authoritative
+contributes 0.15 from immunophenotype(reactive_polyclonal) to diagnosis(pulmonary_malt_lymphoma)
+  source "ERS Eur Respir J 2016;47:1244 (polyclonal/reactive lymphoid infiltrate argues against MALT lymphoma)" trust authoritative
+uncertain { immunophenotype(monoclonal_b_cell), immunophenotype(reactive_polyclonal) } for diagnosis(pulmonary_malt_lymphoma)
+  source "PMC12209244 (clonality/immunophenotype on adequate tissue not yet reported; decisive discriminator)"
+
+% u-clonality vs adenocarcinoma: the same tissue result swings adenocarcinoma the
+% other way -- a monoclonal B-cell result essentially excludes an epithelial tumor;
+% a non-lymphoid/reactive result reopens the epithelial differential.
+contributes 0.1 from immunophenotype(monoclonal_b_cell) to diagnosis(pneumonic_type_adenocarcinoma)
+  source "Frontiers Oncol 2023;13:1234291 (a clonal B-cell infiltrate is not an adenocarcinoma)" trust authoritative
+contributes 1.5 from immunophenotype(reactive_polyclonal) to diagnosis(pneumonic_type_adenocarcinoma)
+  source "Frontiers Oncol 2023;13:1234291 (no clonal lymphoid population -> reconsider an epithelial malignancy)" trust inferred
+uncertain { immunophenotype(monoclonal_b_cell), immunophenotype(reactive_polyclonal) } for diagnosis(pneumonic_type_adenocarcinoma)
+  source "PMC12209244 (tissue immunophenotype pending; result reclassifies lymphoid vs epithelial)"

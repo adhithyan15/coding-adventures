@@ -1,0 +1,209 @@
+% ============================================================================
+% ADJ52 case-4 derived rulebook.
+% Clinical area: workup of an unexplained multisystem inflammatory illness in
+% an older adult whose initial "polymyalgia rheumatica" working diagnosis
+% failed on steroids. Differential built from the IR alone (no answer given),
+% recursing into subcategories (infection / autoimmune / haematological /
+% solid-organ malignancy). Every clause carries a % rationale + source + trust.
+%
+% adj-lang grammar note: identifiers are /[a-z_][a-z0-9_]*/ (lowercase, no
+% leading digit). Magnitudes are encoded QUALITATIVELY (esr(markedly_elevated),
+% age(over_50)). LRs are multiplicative (>1 raises, <1 lowers a conclusion).
+%
+% CORRELATED-EVIDENCE DESIGN: the systemic findings of infective endocarditis
+% (new regurgitant murmur, microscopic haematuria from infection-associated
+% glomerulonephritis, normocytic anaemia of chronic infection, hypoalbuminaemia,
+% low-grade pyrexia, tachycardia, leucocytosis, low-titre ANCA, raised acute-
+% phase reactants) are correlated manifestations of ONE bacteraemic immune-
+% complex syndrome. They are grouped under a single mechanism directive so the
+% combined likelihood ratio fires ONCE and does not double-count / saturate.
+% Genuinely orthogonal discriminators (steroid non-response, CT finding,
+% absence of fever/night-sweats) are kept as separate contributes.
+% ============================================================================
+
+% ===== PRIORS (base rates for a 63yo man with a failed-PMR multisystem illness) =====
+
+% rationale: infective endocarditis is a classic mimic of PMR/vasculitis and is
+% the unifying account when a new regurgitant murmur appears with persistent
+% inflammation and steroid failure.
+prior 0.18 for diagnosis(infective_endocarditis)
+  source "Archives of Rheumatology 2011;26(2): IE presenting as PMR; Merck Manual, Infective Endocarditis" trust authoritative
+
+% rationale: ANCA-associated small-vessel vasculitis is the autoimmune sibling
+% raised by haematuria + ANCA + multisystem inflammation.
+prior 0.12 for diagnosis(anca_associated_vasculitis)
+  source "The Rheumatologist, Classification & Diagnosis of GPA; PMC3573492 (ANCA in IE)" trust authoritative
+
+% rationale: PMR is common >50 with girdle pain + raised acute-phase reactants,
+% and was the working diagnosis; it remains on the differential.
+prior 0.20 for diagnosis(polymyalgia_rheumatica)
+  source "CCJM 2020;87(9):549; EULAR/ACR 2012 PMR criteria" trust authoritative
+
+% rationale: multiple myeloma is a textbook cause of an older adult with back
+% pain, very high ESR, normocytic anaemia and weight loss.
+prior 0.10 for diagnosis(multiple_myeloma)
+  source "bpac.org.nz PMR 2023 (ESR>100 -> consider myeloma); Geeky Medics PMR differentials" trust authoritative
+
+% rationale: occult solid-organ malignancy can drive constitutional symptoms and
+% raised inflammatory markers; a CT was performed to look for it.
+prior 0.08 for diagnosis(occult_solid_malignancy)
+  source "Medscape, PMR Differential Diagnoses (malignancy mimics)" trust authoritative
+
+% ===== INFECTIVE ENDOCARDITIS =====
+% rationale: a NEW loud apical pansystolic murmur radiating to the axilla
+% (mitral regurgitation) is the single most specific finding for IE and the
+% strongest standalone discriminator here. Kept SEPARATE (not folded into the
+% mechanism) because it is the cardinal structural sign.
+contributes 8.0 from exam(new_apical_pansystolic_murmur_radiating_axilla) to diagnosis(infective_endocarditis)
+  source "Merck Manual, Infective Endocarditis (new/changed regurgitant murmur is a major Duke clue); AMBOSS, IE" trust authoritative
+
+% rationale: failure to respond to (and deterioration ON) corticosteroids is a
+% key red flag that the illness is infective, not isolated PMR. Orthogonal to
+% the bacteraemic-syndrome mechanism, so kept separate.
+contributes 3.0 from treatment_response(deterioration_on_steroids) to diagnosis(infective_endocarditis)
+  source "Archives of Rheumatology 2011;26(2) (lack of steroid response signals IE not PMR)" trust authoritative
+
+% rationale: subacute weight loss / constitutional decline fits the indolent
+% bacteraemic course of subacute IE.
+contributes 1.6 from symptom(constitutional_weight_loss) to diagnosis(infective_endocarditis)
+  source "Merck Manual, Infective Endocarditis (constitutional symptoms in subacute IE)" trust authoritative
+
+% rationale: a normal contrast CT with NO malignancy makes occult cancer less
+% likely and indirectly supports a non-neoplastic systemic cause such as IE.
+contributes 1.3 from imaging(ct_no_malignancy) to diagnosis(infective_endocarditis)
+  source "Medscape, PMR Differential Diagnoses (negative cross-sectional imaging lowers malignancy)" trust inferred
+
+% mechanism bacteraemic_immune_complex_syndrome for diagnosis(infective_endocarditis) lr 6.0 : lab(esr_markedly_elevated), lab(crp_markedly_elevated), lab(normocytic_anaemia), lab(hypoalbuminaemia), lab(microscopic_haematuria), lab(anca_low_titre), vital(low_grade_pyrexia), vital(tachycardia), lab(leucocytosis_upper)
+%   source "Merck Manual + AMBOSS, IE (anaemia, raised ESR/CRP, haematuria/GN, low albumin, fever); PMC3573492 (ANCA positive in 18% of IE)" trust authoritative
+
+% ===== ANCA-ASSOCIATED VASCULITIS (autoimmune sibling) =====
+% rationale: microscopic haematuria is a cardinal sign of pauci-immune
+% glomerulonephritis in AAV.
+contributes 2.5 from lab(microscopic_haematuria) to diagnosis(anca_associated_vasculitis)
+  source "The Rheumatologist, Diagnosis of GPA (glomerulonephritis with haematuria)" trust authoritative
+
+% rationale: a WEAKLY positive, LOW-titre ANCA only mildly supports AAV — and is
+% well described as a false positive in infective endocarditis. This is the
+% discriminator that keeps AAV from running away on the ANCA result alone.
+contributes 1.4 from lab(anca_low_titre) to diagnosis(anca_associated_vasculitis)
+  source "PMC3573492; PMC4706874 (low-titre ANCA in IE; non-specific at 1:20)" trust authoritative
+
+% rationale: a NEW mitral-regurgitation murmur is NOT a feature of AAV and points
+% away from a primary vasculitis toward a structural valvular/infective cause.
+contributes 0.4 from exam(new_apical_pansystolic_murmur_radiating_axilla) to diagnosis(anca_associated_vasculitis)
+  source "Merck Manual, Infective Endocarditis (valvular murmur is structural/infective, not vasculitic)" trust inferred
+
+% rationale: deterioration ON steroids argues against AAV, which characteristically
+% responds to immunosuppression.
+contributes 0.5 from treatment_response(deterioration_on_steroids) to diagnosis(anca_associated_vasculitis)
+  source "The Rheumatologist, GPA (AAV responds to corticosteroid/immunosuppression)" trust inferred
+
+% ===== POLYMYALGIA RHEUMATICA (the failed working diagnosis) =====
+% rationale: shoulder + pelvic girdle pain with stiffness is the cardinal PMR
+% distribution.
+contributes 3.0 from symptom(girdle_pain_and_stiffness) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria; CCJM 2020;87(9):549" trust authoritative
+
+% rationale: age >=50 is a mandatory PMR entry criterion.
+contributes 1.6 from age(over_50) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria (age>=50 required)" trust authoritative
+
+% rationale: raised acute-phase reactants are required laboratory support for PMR.
+contributes 1.8 from lab(crp_markedly_elevated) to diagnosis(polymyalgia_rheumatica)
+  source "EULAR/ACR 2012 PMR criteria; CCJM 2020;87(9):549" trust authoritative
+
+% rationale: PMR responds RAPIDLY and dramatically to low-dose steroids; failure
+% to respond (let alone deterioration) is a strong argument AGAINST isolated PMR.
+contributes 0.12 from treatment_response(deterioration_on_steroids) to diagnosis(polymyalgia_rheumatica)
+  source "CCJM 2020;87(9):549; bpac.org.nz PMR 2023 (dramatic steroid response expected; reconsider diagnosis if absent)" trust authoritative
+
+% rationale: a NEW regurgitant murmur is not part of PMR and argues against it
+% being the whole story.
+contributes 0.5 from exam(new_apical_pansystolic_murmur_radiating_axilla) to diagnosis(polymyalgia_rheumatica)
+  source "CCJM 2020;87(9):549 (PMR is non-structural; new murmur unexplained by PMR)" trust inferred
+
+% rationale: ESR/CRP that climb DESPITE steroids are incompatible with controlled PMR.
+contributes 0.3 from lab(crp_rising_on_steroids) to diagnosis(polymyalgia_rheumatica)
+  source "What Is Polymyalgia, High CRP in PMR (rising markers on steroids = steroid failure / alternative dx)" trust empirical
+
+% ===== MULTIPLE MYELOMA (haematological mimic) =====
+% rationale: an older adult with lower back pain, very high ESR, normocytic
+% anaemia and weight loss is a classic myeloma trigger.
+contributes 2.2 from symptom(severe_lower_back_pain) to diagnosis(multiple_myeloma)
+  source "bpac.org.nz PMR 2023 (ESR>100 -> myeloma); WebMD Multiple Myeloma (back/rib bone pain)" trust authoritative
+contributes 1.8 from lab(esr_markedly_elevated) to diagnosis(multiple_myeloma)
+  source "bpac.org.nz PMR 2023 (very high ESR -> consider myeloma)" trust authoritative
+contributes 1.6 from lab(normocytic_anaemia) to diagnosis(multiple_myeloma)
+  source "PMC4668413 (normocytic normochromic anaemia in myeloma)" trust authoritative
+
+% rationale: a NEW mitral-regurgitation murmur is NOT explained by myeloma; it
+% is the discriminator that prevents myeloma from capturing this case on the
+% back-pain/ESR/anaemia triad alone.
+contributes 0.3 from exam(new_apical_pansystolic_murmur_radiating_axilla) to diagnosis(multiple_myeloma)
+  source "WebMD Multiple Myeloma (no valvular murmur in myeloma; murmur unexplained)" trust inferred
+
+% rationale: microscopic haematuria is not a typical myeloma feature (myeloma
+% renal disease is cast nephropathy/proteinuria, not haematuria) and renal
+% function here is preserved -> mild argument against.
+contributes 0.6 from lab(microscopic_haematuria) to diagnosis(multiple_myeloma)
+  source "WebMD Multiple Myeloma (myeloma renal disease is proteinuric cast nephropathy, not haematuria)" trust inferred
+
+% ===== OCCULT SOLID MALIGNANCY =====
+% rationale: weight loss + constitutional symptoms + raised markers can reflect
+% an occult cancer.
+contributes 2.0 from symptom(constitutional_weight_loss) to diagnosis(occult_solid_malignancy)
+  source "Medscape, PMR Differential Diagnoses (malignancy with constitutional symptoms)" trust authoritative
+
+% rationale: a contrast CT of chest/abdomen/pelvis showing NO malignancy is a
+% strong argument AGAINST an occult solid tumour as the cause.
+contributes 0.2 from imaging(ct_no_malignancy) to diagnosis(occult_solid_malignancy)
+  source "Medscape, PMR Differential Diagnoses (negative CT CAP substantially lowers occult solid cancer)" trust authoritative
+
+% rationale: a new regurgitant murmur is not a generic malignancy feature.
+contributes 0.6 from exam(new_apical_pansystolic_murmur_radiating_axilla) to diagnosis(occult_solid_malignancy)
+  source "Merck Manual (new murmur is structural/infective, not paraneoplastic by default)" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation) =====
+% rationale: blood cultures (3 sets) + echocardiography are the Duke-criteria
+% backbone and the first investigations when a new murmur, fever and embolic /
+% immune features appear. This is the recommended next step.
+prior 0.25 for next_step(blood_cultures_and_echocardiography)
+  source "Merck Manual + AMBOSS, IE (modified Duke criteria: blood cultures + echocardiography first); ESC IE guideline" trust authoritative
+contributes 6.0 from exam(new_apical_pansystolic_murmur_radiating_axilla) to next_step(blood_cultures_and_echocardiography)
+  source "AMBOSS, IE (new murmur -> TTE within 12h + cultures)" trust authoritative
+contributes 2.5 from treatment_response(deterioration_on_steroids) to next_step(blood_cultures_and_echocardiography)
+  source "Archives of Rheumatology 2011;26(2) (steroid failure -> hunt for infection / IE)" trust authoritative
+
+% rationale: serum/urine protein electrophoresis + free light chains is the
+% confirmatory test if myeloma is being pursued — a competing next step.
+prior 0.12 for next_step(serum_protein_electrophoresis_free_light_chains)
+  source "bpac.org.nz PMR 2023 (ESR>100 -> SPEP/free light chains for myeloma)" trust authoritative
+contributes 2.5 from lab(esr_markedly_elevated) to next_step(serum_protein_electrophoresis_free_light_chains)
+  source "bpac.org.nz PMR 2023 (very high ESR triggers myeloma screen)" trust authoritative
+
+% rationale: ANCA antigen-specificity (PR3/MPO ELISA) + complement is the test if
+% AAV is being pursued — another competing next step.
+prior 0.10 for next_step(anca_antigen_specificity_and_complement)
+  source "The Rheumatologist, Diagnosis of GPA (PR3/MPO ELISA confirmation)" trust authoritative
+contributes 2.0 from lab(microscopic_haematuria) to next_step(anca_antigen_specificity_and_complement)
+  source "The Rheumatologist, GPA (haematuria -> confirm vasculitis serology)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+% u3/u4: the ANCA result is the pivotal ambiguity (true small-vessel vasculitis vs
+% non-specific low-titre false positive of infective endocarditis). Resolving the
+% echo/cultures vs the antigen-specific serology disambiguates IE from AAV.
+uncertain { test(echo_vegetation_present), test(blood_cultures_positive), test(echo_no_vegetation_cultures_negative) } for diagnosis(infective_endocarditis)
+  source "Merck Manual, IE (echocardiography + blood cultures adjudicate the diagnosis)"
+contributes 9.0 from test(echo_vegetation_present) to diagnosis(infective_endocarditis)
+  source "Merck Manual, IE (valve vegetation is a major Duke criterion)" trust authoritative
+contributes 6.0 from test(blood_cultures_positive) to diagnosis(infective_endocarditis)
+  source "Merck Manual, IE (typical organism on persistent bacteraemia is a major Duke criterion)" trust authoritative
+contributes 0.15 from test(echo_no_vegetation_cultures_negative) to diagnosis(infective_endocarditis)
+  source "Merck Manual, IE (negative echo + cultures argues strongly against)" trust authoritative
+
+uncertain { test(anca_high_titre_pr3_mpo_specific), test(anca_remains_low_titre_nonspecific) } for diagnosis(anca_associated_vasculitis)
+  source "PMC3573492 (antigen-specific high-titre ANCA distinguishes true AAV from IE-associated low-titre ANCA)"
+contributes 5.0 from test(anca_high_titre_pr3_mpo_specific) to diagnosis(anca_associated_vasculitis)
+  source "The Rheumatologist, GPA (high-titre PR3/MPO-specific ANCA supports AAV)" trust authoritative
+contributes 0.5 from test(anca_remains_low_titre_nonspecific) to diagnosis(anca_associated_vasculitis)
+  source "PMC4706874 (persistently low-titre non-specific ANCA favours infective cause)" trust authoritative

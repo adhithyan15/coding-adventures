@@ -1,0 +1,267 @@
+% ============================================================================
+% ADJ52 case-13 derived rulebook.
+% Clinical area: pericardial disease with constrictive physiology (right-sided
+%   venous-congestion heart failure with a PRESERVED ejection fraction).
+%
+% The diagnostic puzzle the IR poses (q1-q6): a 53yo man with progressive,
+% refractory, reaccumulating RIGHT-SIDED fluid overload (bilateral leg oedema,
+% recurrent bilateral transudative pleural effusions, dilated IVC, enlarged right
+% chambers) BUT a vigorous, NORMAL/HYPERDYNAMIC left ventricle (EF ~70%, CO
+% ~11 L/min). A thickened pericardium (>4.5 mm) with effusion was repeatedly
+% under-emphasized and only seen on re-review once the effusion was accounted for;
+% the mitral inflow E velocity varies >25% with respiration. A tight diagonal-LAD
+% stenosis is explicitly framed as an INCIDENTAL lesion that did NOT respond to
+% anti-ischaemic therapy.
+%
+% The reconciling conclusion the summary foregrounds: systemic venous congestion
+% with normal systolic function + thickened pericardium + ventricular
+% interdependence (respiratory E variation) = constrictive pericarditis, and
+% specifically the EFFUSIVE-CONSTRICTIVE variant, because a thickened, constricting
+% pericardium coexists with a persistent effusion that MASKED the classic
+% septal bounce / Kussmaul sign.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (lowercase only, no
+% leading digits, no uppercase). E.g. ejection_fraction(preserved_hyperdynamic),
+% pericardium_thickness(over_four_mm), pericardial_thickness measured as a band.
+%
+% Anti-overfit note: every clause is added because a CITED source supports the
+% DIRECTION of its likelihood ratio for that finding in that disease, NOT to make
+% this case land on a chosen answer. The discriminators that fire AGAINST the
+% tempting mimics (restrictive cardiomyopathy; tuberculous aetiology; the
+% incidental coronary lesion) are included with LR<1 wherever a source supports
+% the negative direction.
+% ============================================================================
+
+% ===== PRIORS (base rates among "right-sided congestion + preserved EF" referrals) =====
+
+% rationale: constrictive pericarditis is the prototypical CURABLE cause of a
+% right-sided venous-congestion heart-failure syndrome with preserved systolic
+% function; uncommon but the unifying lesion this vignette is built around.
+prior 0.22 for diagnosis(constrictive_pericarditis)
+  source "StatPearls NBK459314 (Constrictive Pericarditis); Nature Rev Cardiol 2014 nrcardio.2014.100 (curable diastolic HF)" trust authoritative
+
+% rationale: effusive-constrictive pericarditis is the SUBCATEGORY in which a
+% constricting (often thickened) pericardium coexists with a tense effusion that
+% masks classic constrictive signs — exactly the "effusion obscured the thickened
+% pericardium / no clear septal bounce / no Kussmaul" picture here.
+prior 0.20 for diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579 (Constrictive-Effusive Pericarditis); MDPI Hearts 2024 18/1/32 (Kussmaul in effusive-constrictive)" trust authoritative
+
+% rationale: restrictive cardiomyopathy is the single most important MIMIC of
+% constriction (same venous congestion + preserved EF) and must be argued down on
+% the discriminating data; moderate prior so the engine must EARN the separation.
+prior 0.18 for diagnosis(restrictive_cardiomyopathy)
+  source "AHA Circ Cardiovasc Imaging 2014 circimaging.113.001613 (CP vs RCM differentiation)" trust authoritative
+
+% rationale: tuberculous pericarditis is a leading WORLD cause of constriction and a
+% standing differential whenever a thickened pericardium + serositis is found; on
+% the list but testable by effusion ADA.
+prior 0.10 for diagnosis(tuberculous_pericarditis)
+  source "ScienceDirect (Tuberculous Pericarditis overview); PubMed 8665976 (ADA in TB pericarditis)" trust authoritative
+
+% rationale: a primary high-output heart-failure state (obesity, liver disease, AV
+% shunt, myeloproliferative) is on the differential because CO ~11 L/min is frankly
+% high; competing explanation for the congestion that does NOT need a pericardium.
+prior 0.08 for diagnosis(high_output_heart_failure)
+  source "PMC11307472 Danger High Output; PMC3833917 Living with high output (causes of high-output HF)" trust authoritative
+
+% rationale: coronary artery disease was the PRIOR working diagnosis (treated as
+% presumed coronary disease); high-ish prior so the engine must demote it on the
+% data that it is incidental and therapy-unresponsive.
+prior 0.12 for diagnosis(coronary_artery_disease)
+  source "IR: presumed coronary disease treated with antiplatelet/statin/beta-blocker (prior working dx)" trust inferred
+
+% ===== SHARED RIGHT-SIDED VENOUS-CONGESTION SIGNATURE =====
+% rationale: marked pitting lower-limb oedema, recurrent bilateral pleural effusions,
+% a dilated IVC and enlarged right chambers are NOT four independent facts — they are
+% ONE correlated syndrome of elevated systemic venous / right-atrial pressure. It is
+% the shared final common path of BOTH constriction and restriction, so it fires
+% ONCE per such conclusion rather than summing four edges (anti-saturation). It does
+% NOT by itself separate constriction from restriction — the discriminators below do.
+% mechanism systemic_venous_congestion for diagnosis(constrictive_pericarditis) lr 4.0 : symptom(marked_pitting_oedema_lower_limbs), symptom(recurrent_bilateral_pleural_effusions), ivc_dilated(over_twenty_mm), right_chambers_enlarged
+% mechanism systemic_venous_congestion for diagnosis(effusive_constrictive_pericarditis) lr 4.0 : symptom(marked_pitting_oedema_lower_limbs), symptom(recurrent_bilateral_pleural_effusions), ivc_dilated(over_twenty_mm), right_chambers_enlarged
+% mechanism systemic_venous_congestion for diagnosis(restrictive_cardiomyopathy) lr 3.5 : symptom(marked_pitting_oedema_lower_limbs), symptom(recurrent_bilateral_pleural_effusions), ivc_dilated(over_twenty_mm), right_chambers_enlarged
+% mechanism systemic_venous_congestion for diagnosis(high_output_heart_failure) lr 2.5 : symptom(marked_pitting_oedema_lower_limbs), symptom(recurrent_bilateral_pleural_effusions), ivc_dilated(over_twenty_mm), right_chambers_enlarged
+
+% ===== CONSTRICTIVE PERICARDITIS (and its effusive-constrictive variant) =====
+
+% rationale: the defining PARADOX — right-sided congestion with a NORMAL/hyperdynamic
+% EF — is the cardinal presentation of constriction (venous congestion dominates;
+% systolic function is preserved). This is the discriminator that demotes ordinary
+% systolic heart failure.
+contributes 3.5 from ejection_fraction(preserved_hyperdynamic) to diagnosis(constrictive_pericarditis)
+  source "PMC4008396 Chronic Constrictive Pericarditis; PMC7282374 (treatable diastolic HF, preserved EF)" trust authoritative
+contributes 3.0 from ejection_fraction(preserved_hyperdynamic) to diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK459314 (constriction: venous congestion with preserved systolic function)" trust authoritative
+
+% rationale: a THICKENED pericardium (>4 mm on CT/MRI) is strongly supportive of
+% constriction; on CT >2 mm and on MRI >4 mm are the abnormal thresholds, and a
+% measured >4.5 mm clears both.
+contributes 3.5 from pericardium_thickness(over_four_mm) to diagnosis(constrictive_pericarditis)
+  source "PMC4929280; RSNA Radiology 13121059 (CT >2mm / MRI >4mm pericardial thickening in CP)" trust authoritative
+% rationale: thickened pericardium that COEXISTS with a persistent effusion is the
+% structural hallmark of the EFFUSIVE-constrictive variant specifically.
+contributes 4.0 from pericardium_thickness(over_four_mm) to diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579 (effusive-constrictive: thickened/adherent pericardium WITH effusion)" trust authoritative
+
+% rationale: respiratory variation of mitral inflow E velocity >25% is a classic
+% sign of ventricular interdependence and is used to distinguish constriction from
+% restriction; a well-recognised positive discriminator FOR constriction.
+contributes 3.0 from mitral_e_respiratory_variation(over_twenty_five_percent) to diagnosis(constrictive_pericarditis)
+  source "AHA Circ Cardiovasc Imaging 2014 (>=25% respiratory mitral E variation in CP); PubMed 24633783 Mayo criteria" trust authoritative
+contributes 2.5 from mitral_e_respiratory_variation(over_twenty_five_percent) to diagnosis(effusive_constrictive_pericarditis)
+  source "AHA Circ Cardiovasc Imaging 2014 (respiratory mitral E variation, ventricular interdependence)" trust authoritative
+
+% rationale: KEY for the EFFUSIVE-CONSTRICTIVE variant — a persistent / reaccumulating
+% effusion can MASK the septal bounce and Kussmaul sign; so their ABSENCE does NOT
+% argue against effusive-constrictive disease and is, if anything, consistent with a
+% tense effusion overlying constriction (LR mildly >1 here).
+contributes 1.5 from septal_bounce(not_clearly_seen) to diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579; MDPI Hearts 2024 18/1/32 (effusion masks constrictive signs)" trust authoritative
+contributes 1.5 from kussmaul_sign(absent) to diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579 (tense effusion can obscure Kussmaul in effusive-constrictive)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — for PURE/classic constriction, a clear
+% septal bounce is one of the most sensitive/specific signs; its absence argues
+% modestly AGAINST simple non-effusive constriction (and toward the effusive variant).
+contributes 0.6 from septal_bounce(not_clearly_seen) to diagnosis(constrictive_pericarditis)
+  source "AHA Circ Cardiovasc Imaging 2014 (septal shift/bounce sensitive+specific for constriction)" trust authoritative
+
+% rationale: low pleural-fluid LDH consistent with a TRANSUDATIVE effusion is the
+% expected character of a cardiac/venous-congestion effusion, supporting a pericardial
+% constrictive (haemodynamic) cause over an inflammatory/exudative one.
+contributes 1.6 from pleural_fluid_ldh(low) to diagnosis(constrictive_pericarditis)
+  source "JTD Wijayaratne (cardiac pleural effusions are typically transudative, low LDH)" trust authoritative
+
+% ===== RESTRICTIVE CARDIOMYOPATHY (the principal MIMIC — must be argued DOWN) =====
+
+% rationale: RCM shares the right-sided congestion + preserved EF picture, so the
+% congestion mechanism and a preserved EF are mildly supportive of it too.
+contributes 1.8 from ejection_fraction(preserved_hyperdynamic) to diagnosis(restrictive_cardiomyopathy)
+  source "AHA Circ Cardiovasc Imaging 2014 (RCM: preserved EF, venous congestion — mimics CP)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — a THICKENED pericardium points to a
+% PERICARDIAL process; RCM is a MYOCARDIAL disease with a normal pericardium, so
+% pericardial thickening argues against RCM.
+contributes 0.25 from pericardium_thickness(over_four_mm) to diagnosis(restrictive_cardiomyopathy)
+  source "RSNA Radiology 13121059; AHA Circ Cardiovasc Imaging 2014 (pericardial thickening favours CP over RCM)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — marked respiratory variation of
+% mitral inflow E velocity reflects pericardial ventricular interdependence and is
+% characteristically ABSENT/blunted in RCM; >25% variation argues against RCM.
+contributes 0.3 from mitral_e_respiratory_variation(over_twenty_five_percent) to diagnosis(restrictive_cardiomyopathy)
+  source "AHA Circ 1989 79.2.357; Circ Cardiovasc Imaging 2014 (respiratory E variation favours CP, not RCM)" trust authoritative
+
+% ===== TUBERCULOUS PERICARDITIS (testable mimic — argued down by effusion ADA) =====
+
+% rationale: a thickened pericardium with effusion is compatible with a tuberculous
+% aetiology, the leading infective cause of constriction worldwide.
+contributes 1.6 from pericardium_thickness(over_four_mm) to diagnosis(tuberculous_pericarditis)
+  source "ScienceDirect Tuberculous Pericarditis overview (TB: leading cause of pericardial constriction)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — a LOW adenosine deaminase in the
+% serous fluid (~4 U/L, well below the ~40 U/L TB threshold) argues strongly AGAINST
+% a tuberculous aetiology (ADA has ~90% sensitivity for TB pericarditis).
+contributes 0.15 from pleural_fluid_adenosine_deaminase(low) to diagnosis(tuberculous_pericarditis)
+  source "PubMed 8665976; AHA Circ 1994 89.6.2728 (ADA >=40 U/L in ~75-90% of TB; low ADA argues against TB)" trust authoritative
+
+% rationale: a low-LDH TRANSUDATIVE effusion is atypical for the lymphocytic EXUDATE
+% expected in tuberculous serositis — mildly against TB.
+contributes 0.6 from pleural_fluid_ldh(low) to diagnosis(tuberculous_pericarditis)
+  source "ScienceDirect Tuberculous Pericarditis (TB effusions are exudative, lymphocyte-rich)" trust authoritative
+
+% ===== HIGH-OUTPUT HEART FAILURE (explains high CO but NOT the pericardium) =====
+
+% rationale: a calculated cardiac output ~11 L/min with a large stroke volume is the
+% defining feature of a high-output state and is what makes this differential live.
+contributes 3.0 from cardiac_output(markedly_elevated) to diagnosis(high_output_heart_failure)
+  source "PMC11307472 (high-output HF defined by elevated cardiac output >8 L/min)" trust authoritative
+% rationale: mild anaemia is a recognised contributor to / cause of a high-output
+% state; supportive but non-specific.
+contributes 1.4 from lab(mild_anaemia) to diagnosis(high_output_heart_failure)
+  source "PMC3833917 Living with high output (anaemia among high-output drivers)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — a primary high-output state does NOT
+% produce a thickened, constricting pericardium; pericardial thickening argues against
+% high-output HF being the UNIFYING lesion (it cannot explain the structural finding).
+contributes 0.4 from pericardium_thickness(over_four_mm) to diagnosis(high_output_heart_failure)
+  source "PMC4929280 (pericardial thickening is a pericardial-disease finding, not a high-output one)" trust inferred
+
+% rationale: in constriction a raised output with preserved EF can accompany chronic
+% volume overload/anaemia; a high CO is therefore NOT incompatible with constriction
+% and is weakly consistent with the volume-overloaded constrictive state.
+contributes 1.2 from cardiac_output(markedly_elevated) to diagnosis(constrictive_pericarditis)
+  source "PMC4008396 Chronic Constrictive Pericarditis (chronic volume overload, preserved systolic function)" trust inferred
+
+% ===== CORONARY ARTERY DISEASE (the explicit RED HERRING — argued DOWN) =====
+
+% rationale: a CT-angiographic tight diagonal-LAD stenosis is real coronary disease
+% and was the basis for the prior working diagnosis; supportive on its face.
+contributes 2.0 from cta_finding(tight_stenosis_diagonal_lad) to diagnosis(coronary_artery_disease)
+  source "IR: CT coronary angiography reported a tight diagonal-LAD stenosis" trust inferred
+
+% rationale: KEY DISCRIMINATOR (fires negative) — chest tightness NOT clearly related
+% to exertion is atypical for ischaemic angina and argues against the symptom being
+% coronary in origin.
+contributes 0.6 from chest_tightness_exertion_relation(not_related) to diagnosis(coronary_artery_disease)
+  source "IR/clinical: non-exertional, come-and-go chest tightness is atypical for ischaemia" trust inferred
+
+% rationale: KEY DISCRIMINATOR (fires negative) — full anti-ischaemic therapy
+% (antiplatelet + statin + beta-blocker) with NO meaningful benefit argues that the
+% coronary lesion is incidental rather than the driver of the syndrome.
+contributes 0.3 from coronary_treatment_response(no_benefit) to diagnosis(coronary_artery_disease)
+  source "IR: presumed-coronary therapy gave no meaningful benefit (lesion behaves as incidental)" trust inferred
+
+% rationale: DISCRIMINATOR (fires negative) — bilateral right-sided fluid overload with
+% recurrent transudative effusions is not a presentation of stable coronary disease;
+% it argues against CAD being the unifying cause.
+contributes 0.4 from symptom(recurrent_bilateral_pleural_effusions) to diagnosis(coronary_artery_disease)
+  source "JTD Wijayaratne (recurrent transudative polyserositis is a congestive, not ischaemic, picture)" trust inferred
+
+% ===== NEXT STEP (confirmatory pathway) =====
+
+% rationale: invasive simultaneous LV/RV catheterisation is the haemodynamic gold
+% standard — demonstrating discordant respiratory LV/RV systolic pressure variation
+% (ventricular interdependence) and equalised diastolic pressures confirms constriction
+% AND distinguishes it from restriction; it also separates effusive-constrictive (where
+% pressures persist after pericardiocentesis) from simple tamponade.
+prior 0.30 for next_step(invasive_haemodynamic_catheterisation)
+  source "Circ Cardiovasc Imaging 2014; StatPearls NBK519579 (cath: ventricular interdependence confirms constriction)" trust authoritative
+contributes 3.5 from mitral_e_respiratory_variation(over_twenty_five_percent) to next_step(invasive_haemodynamic_catheterisation)
+  source "AHA Circ Cardiovasc Imaging 2014 (echo interdependence -> confirm with invasive interdependence on cath)" trust authoritative
+contributes 3.0 from pericardium_thickness(over_four_mm) to next_step(invasive_haemodynamic_catheterisation)
+  source "RSNA Radiology 13121059 (thickened pericardium + congestion -> confirm constriction haemodynamically)" trust authoritative
+contributes 2.5 from ejection_fraction(preserved_hyperdynamic) to next_step(invasive_haemodynamic_catheterisation)
+  source "PMC7282374 (preserved-EF congestion is the constriction phenotype warranting confirmation)" trust authoritative
+
+% rationale: dedicated cardiac MRI with late gadolinium enhancement / real-time cine is
+% the alternative confirmatory arm — it grades pericardial thickening, shows real-time
+% septal interdependence, and LGE flags reversible (inflammatory) constriction that may
+% respond to anti-inflammatory therapy before pericardiectomy.
+prior 0.18 for next_step(cardiac_mri_with_late_gadolinium)
+  source "PMC12985800; Methodist DeBakey CVJ mdcvj.1779 (MRI: thickness, real-time interdependence, LGE reversibility)" trust authoritative
+contributes 2.0 from pericardium_thickness(over_four_mm) to next_step(cardiac_mri_with_late_gadolinium)
+  source "RSNA RadioGraphics rg.23si035504 (MRI characterises pericardial thickening + inflammation)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u-cath: simultaneous LV/RV catheterisation has not been done; demonstrating (or
+% failing to demonstrate) ventricular interdependence is the decisive discriminator
+% between constriction and restriction. Each result moves the constriction posterior.
+contributes 8.0 from cath_interdependence(present) to diagnosis(constrictive_pericarditis)
+  source "Circ Cardiovasc Imaging 2014 (discordant RV/LV systolic pressures = ventricular interdependence, confirms CP)" trust authoritative
+contributes 0.12 from cath_interdependence(absent) to diagnosis(constrictive_pericarditis)
+  source "Circ Cardiovasc Imaging 2014 (absence of interdependence argues against constriction, toward RCM)" trust authoritative
+uncertain { cath_interdependence(present), cath_interdependence(absent) } for diagnosis(constrictive_pericarditis)
+  source "Circ Cardiovasc Imaging 2014; StatPearls NBK459314 (cath interdependence not yet obtained; decisive)"
+
+% u-effusion-persist: whether right-heart filling pressures PERSIST after the effusion
+% is drained is the test that defines the EFFUSIVE-CONSTRICTIVE variant (vs simple
+% tamponade); the rapid reaccumulation + only transient relief on thoracentesis hints
+% at it but the pericardial pressure response is untested.
+contributes 6.0 from post_drainage_filling(persistently_elevated) to diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579 (persistent elevated RA pressure after pericardiocentesis defines effusive-constrictive)" trust authoritative
+contributes 0.2 from post_drainage_filling(normalises) to diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579 (normalisation after drainage = simple effusion/tamponade, not constriction)" trust authoritative
+uncertain { post_drainage_filling(persistently_elevated), post_drainage_filling(normalises) } for diagnosis(effusive_constrictive_pericarditis)
+  source "StatPearls NBK519579 (post-pericardiocentesis filling-pressure response not yet measured; defines the variant)"

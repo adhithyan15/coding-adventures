@@ -1,0 +1,43 @@
+% ADJ52 case-12 program (this patient's observations + queries only; no rules).
+% 33yo woman: resistant HTN since late teens, decade of hypokalemia, metabolic
+% alkalosis, suppressed renin, but aldosterone now BELOW the assay lower limit;
+% disease unaffected by an aldosterone-antagonist (MR antagonist) diuretic AND by
+% adrenalectomy; prior workup had been read as primary aldosteronism (ARR>30,
+% non-suppressing captopril). Mother died young of a brain hemorrhage (AD pattern).
+% Cortisol diurnal pattern, 24h urinary free cortisol, ACTH, 17-OHP, sex steroids
+% all normal. Current admission: acute pontine infarct (hypertensive stroke).
+
+% --- core electrolyte / hormonal signature (the pseudohyperaldosteronism gestalt) ---
+observe renin(suppressed)
+observe aldosterone(below_lower_limit)
+observe acid_base(metabolic_alkalosis)
+observe serum_potassium(critically_low)
+
+% --- onset, inheritance, vascular family history ---
+observe age_of_onset(adolescence)
+observe family_pattern(autosomal_dominant)
+observe family_history(premature_fatal_stroke)
+
+% --- therapeutic discriminators (both failed) ---
+observe treatment_response(no_response_to_mr_antagonist)
+observe treatment_response(no_response_to_adrenalectomy)
+observe prior_course(misdiagnosed_as_primary_aldosteronism)
+
+% --- prior workup that had pointed at primary aldosteronism ---
+observe prior_arr(above_threshold)
+observe prior_captopril_challenge(non_suppression)
+
+% --- normal adrenal-steroid axis (argues against CAH; expected-normal in AME) ---
+observe cortisol_axis(normal)
+observe steroid_precursors(normal)
+
+% NOT observed (open, decision-relevant): amiloride_response(...) and scnn1_genetics(...)
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(liddle_syndrome)
+? diagnosis(apparent_mineralocorticoid_excess)
+? diagnosis(primary_aldosteronism)
+? diagnosis(congenital_adrenal_hyperplasia_11b)
+? diagnosis(geller_syndrome)
+? next_step(amiloride_trial_and_scnn1b_genetic_testing)
+? next_step(urinary_cortisol_cortisone_metabolite_ratio)

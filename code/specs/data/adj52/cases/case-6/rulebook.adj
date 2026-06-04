@@ -1,0 +1,258 @@
+% ============================================================================
+% ADJ52 case-6 derived rulebook.
+% Clinical area: hepatology — non-cirrhotic portal hypertension with a
+% cholestatic profile and multi-compartment (hepatic / splenic / marrow)
+% infiltration. Differential built from the IR alone (no answer given).
+%
+% The syndrome to unify (from the IR): high-SAAG portal-hypertensive ascites
+% WITHOUT cirrhosis risk factors and with imaging steered AWAY from cirrhosis
+% and from chronic venous-outflow obstruction; a markedly elevated alkaline
+% phosphatase (cholestatic-predominant) liver-chemistry profile; splenomegaly
+% with discrete splenic lesions; anemia + thrombocytopenia; and DIFFUSE FDG
+% avidity across liver, spleen, and bone marrow — with a bone-marrow aspirate
+% and peripheral flow cytometry that were both unrevealing.
+%
+% Candidate differential (each entered only because a cited source supports it):
+%   - hepatosplenic_infiltrative_lymphoma  (intravascular large B-cell /
+%       hepatosplenic lymphoma — the multi-compartment FDG-avid unifier)
+%   - hepatic_systemic_amyloidosis
+%   - hepatic_sarcoidosis  (granulomatous; note the Coxiella/Bartonella/
+%       Brucella granulomatous-hepatitis serology screen in the IR)
+%   - myelofibrosis_extramedullary_hematopoiesis
+%   - nodular_regenerative_hyperplasia
+%   - decompensated_cirrhosis  (the tempting wrong answer the case explicitly
+%       steers away from — kept on the differential so the discriminators can
+%       fire NEGATIVE against it)
+%
+% Magnitudes are encoded QUALITATIVELY to satisfy the adj-lang IDENT grammar
+% (lowercase, no leading digit). e.g. alkaline_phosphatase(markedly_elevated).
+% ============================================================================
+
+% ===== PRIORS (base rates for a 76yo man with non-cirrhotic portal HTN + =====
+% ===== cholestasis + hepatosplenic-marrow infiltration) =====
+
+% rationale: lymphomatous sinusoidal/intravascular infiltration of liver+spleen
+% +marrow is a recognized cause of non-cirrhotic portal HTN; intravascular large
+% B-cell lymphoma has a median age of 75 and presents with hepatosplenomegaly,
+% cytopenias, and diffuse hepatosplenic-marrow FDG avidity — matching this case.
+prior 0.22 for diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Intravascular Large B-Cell Lymphoma, NCBI PMC10516690 (median age 75; hepatosplenomegaly + marrow + diffuse FDG uptake); Hepatosplenic lymphoma masquerading as cirrhosis, JGO 1006" trust authoritative
+
+% rationale: hepatic AL amyloidosis is a classic infiltrative cause of marked
+% alkaline-phosphatase elevation, hepatosplenomegaly, and sinusoidal (high-SAAG)
+% portal hypertension.
+prior 0.14 for diagnosis(hepatic_systemic_amyloidosis)
+  source "Hepatic amyloidosis, NCBI PMC3304630; Sinusoidal portal hypertension in hepatic amyloidosis, PMC1378815" trust authoritative
+
+% rationale: hepatic sarcoidosis causes cholestatic liver chemistry and
+% granulomatous non-cirrhotic portal hypertension; the zoonotic serology screen
+% (Coxiella/Bartonella/Brucella) in the IR signals a granulomatous-hepatitis hunt.
+prior 0.12 for diagnosis(hepatic_sarcoidosis)
+  source "Hepatic sarcoidosis, Annals of Hepatology S1665268119319830; Sarcoidosis-lymphoma syndrome with portal hypertension, PMC8213984" trust authoritative
+
+% rationale: myelofibrosis with extramedullary hematopoiesis gives splenomegaly,
+% cytopenias, and portal hypertension and can show marrow FDG signal.
+prior 0.10 for diagnosis(myelofibrosis_extramedullary_hematopoiesis)
+  source "Idiopathic myelofibrosis with disseminated extramedullary haematopoiesis and portal hypertension, PMC5237793" trust authoritative
+
+% rationale: nodular regenerative hyperplasia is the commonest cause of
+% non-cirrhotic portal hypertension in the West (splenomegaly, thrombocytopenia).
+prior 0.10 for diagnosis(nodular_regenerative_hyperplasia)
+  source "Systemic disease associated with noncirrhotic portal hypertension, PMC6490659; Pathological differential diagnosis of portal hypertension, PMC6467111" trust authoritative
+
+% rationale: decompensated cirrhosis is the default reading of high-SAAG ascites +
+% splenomegaly + cytopenias; kept on the differential so the discriminators that
+% argue against it (no risk factors, imaging away from cirrhosis) can fire.
+prior 0.20 for diagnosis(decompensated_cirrhosis)
+  source "Non-cirrhotic portal hypertension - Diagnosis and management, Journal of Hepatology S0168-8278(13)00607-7 (cirrhosis is the first hypothesis for high-SAAG ascites)" trust authoritative
+
+% ===== CORRELATED EVIDENCE: the multi-compartment FDG-avid infiltration =====
+% The diffuse FDG avidity in liver, spleen, AND marrow are correlated
+% manifestations of ONE underlying tumour-infiltration syndrome, NOT three
+% independent findings — grouping them prevents triple-counting / saturation.
+% Fires ONCE if any compartment is FDG-avid.
+% mechanism diffuse_hepatosplenic_marrow_fdg_avidity for diagnosis(hepatosplenic_infiltrative_lymphoma) lr 6.0 : pet_fdg_avidity(liver), pet_fdg_avidity(spleen), pet_fdg_avidity(bone_marrow)
+%   source "IVLBCL diffuse hepatosplenic + marrow FDG uptake, PMC10516690 + PMC4937713; T-cell lymphoma FDG PET, AJR 09.3665" trust authoritative
+
+% ===== HEPATOSPLENIC INFILTRATIVE LYMPHOMA =====
+
+% rationale: discrete splenic lesions on CT favour focal lymphomatous deposits.
+contributes 2.5 from imaging(splenic_lesions_present) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Hepatosplenic lymphoma, JGO 1006; lymphoma splenic deposits, AJR 09.3665" trust authoritative
+
+% rationale: cytopenias (anemia + thrombocytopenia) reflect marrow/splenic tumour
+% infiltration and hypersplenism — independent of the FDG mechanism above.
+contributes 1.8 from finding(bicytopenia) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "IVLBCL cytopenias from intravascular infiltration, PMC10516690" trust authoritative
+
+% rationale: B-symptom-like constitutional decline (months of weight loss,
+% fatigue, failing functional status) fits an aggressive lymphoma.
+contributes 1.6 from syndrome(constitutional_decline_weight_loss_fatigue) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Hepatosplenic gamma-delta T-cell lymphoma constitutional symptoms, PMC5944829" trust authoritative
+
+% rationale: an UNREVEALING marrow aspirate / flow does NOT exclude infiltrative
+% lymphoma — IVLBCL marrow flow is frequently non-diagnostic (sampling/intravascular
+% pattern). Mildly supportive of an occult infiltrative process over overt leukemia.
+contributes 1.4 from test(marrow_aspirate_and_flow, unrevealing) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "IVLBCL flow cytometry on marrow aspirate non-diagnostic, PMC10516690" trust authoritative
+
+% rationale: cholestatic-predominant chemistry fits sinusoidal lymphomatous
+% infiltration of the liver.
+contributes 1.5 from lab_pattern(cholestatic_predominant) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Hepatic lymphoma cholestatic pattern, JGO 1006" trust authoritative
+
+% rationale: high-SAAG (portal-hypertensive) ascites WITHOUT cirrhosis risk
+% factors fits sinusoidal tumour infiltration as a non-cirrhotic mechanism.
+contributes 1.6 from ascites(high_saag_portal_hypertensive) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Tumour sinusoidal infiltration causing portal hypertension, PMC6467111" trust authoritative
+
+% rationale: SYNERGY — diffuse multi-organ FDG avidity together with a NEGATIVE
+% marrow biopsy is the IVLBCL gestalt (avid disease that the aspirate misses).
+interacts 2.0 when pet_fdg_avidity(bone_marrow) and test(marrow_aspirate_and_flow, unrevealing) for diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "IVLBCL: FDG-avid marrow with non-diagnostic aspirate, PMC10516690 + PMC4937713" trust empirical
+
+% ===== HEPATIC / SYSTEMIC AMYLOIDOSIS =====
+
+% rationale: markedly elevated alkaline phosphatase (cholestatic) is the classic
+% hepatic-amyloidosis liver-chemistry signature.
+contributes 2.6 from alkaline_phosphatase(markedly_elevated) to diagnosis(hepatic_systemic_amyloidosis)
+  source "Hepatic amyloidosis: ALP >1.5x ULN characteristic, PMC10115552; A Case of Severe Cholestasis due to Hepatic AL Amyloidosis, PMC6876644" trust authoritative
+
+% rationale: sinusoidal (high-SAAG) portal hypertension from perisinusoidal
+% amyloid deposits.
+contributes 2.0 from ascites(high_saag_portal_hypertensive) to diagnosis(hepatic_systemic_amyloidosis)
+  source "Sinusoidal portal hypertension in hepatic amyloidosis, PMC1378815" trust authoritative
+
+% rationale: hepatosplenomegaly / organ enlargement is typical of infiltrative
+% amyloid.
+contributes 1.5 from exam(splenomegaly) to diagnosis(hepatic_systemic_amyloidosis)
+  source "Hepatic amyloidosis with multiorgan involvement, PMC10115552" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — amyloid deposits are characteristically NOT
+% FDG-avid; diffuse intense hepatosplenic + marrow FDG uptake argues AGAINST
+% amyloidosis (LR < 1).
+contributes 0.30 from pet_fdg_avidity(bone_marrow) to diagnosis(hepatic_systemic_amyloidosis)
+  source "Amyloid deposits are generally non-FDG-avid (contrast with FDG-avid lymphoma), PMC4937713 / amyloidosis imaging" trust inferred
+
+% ===== HEPATIC SARCOIDOSIS (granulomatous) =====
+
+% rationale: cholestatic liver chemistry with marked ALP elevation is typical of
+% granulomatous hepatic sarcoidosis.
+contributes 2.0 from alkaline_phosphatase(markedly_elevated) to diagnosis(hepatic_sarcoidosis)
+  source "Hepatic sarcoidosis cholestatic ALP elevation, Annals of Hepatology S1665268119319830" trust authoritative
+
+% rationale: splenic lesions (granulomas) and splenomegaly occur in sarcoidosis.
+contributes 1.8 from imaging(splenic_lesions_present) to diagnosis(hepatic_sarcoidosis)
+  source "Sarcoidosis splenic granulomas / sarcoidosis-lymphoma syndrome, PMC8213984" trust authoritative
+
+% rationale: granulomatous non-cirrhotic portal hypertension is a recognized
+% sarcoid complication.
+contributes 1.6 from ascites(high_saag_portal_hypertensive) to diagnosis(hepatic_sarcoidosis)
+  source "Hepatic sarcoidosis causing non-cirrhotic portal hypertension, S1665268119319830" trust authoritative
+
+% rationale: sarcoid granulomas can be modestly FDG-avid (supports, weaker than
+% lymphoma).
+contributes 1.4 from pet_fdg_avidity(liver) to diagnosis(hepatic_sarcoidosis)
+  source "Active sarcoid granulomas are FDG-avid, PMC8213984" trust empirical
+
+% ===== MYELOFIBROSIS / EXTRAMEDULLARY HEMATOPOIESIS =====
+
+% rationale: splenomegaly + cytopenias + portal hypertension is the classic
+% myelofibrosis triad.
+contributes 2.2 from finding(bicytopenia) to diagnosis(myelofibrosis_extramedullary_hematopoiesis)
+  source "Myelofibrosis with EMH, splenomegaly, cytopenias, portal HTN, PMC5237793" trust authoritative
+contributes 1.6 from exam(splenomegaly) to diagnosis(myelofibrosis_extramedullary_hematopoiesis)
+  source "Myelofibrosis massive splenomegaly, PMC5237793" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — a cholestatic (markedly elevated ALP) liver
+% profile is NOT a feature of myelofibrosis/EMH and argues AGAINST it.
+contributes 0.5 from alkaline_phosphatase(markedly_elevated) to diagnosis(myelofibrosis_extramedullary_hematopoiesis)
+  source "Myelofibrosis does not cause cholestatic-predominant liver chemistry, PMC6467111" trust inferred
+
+% ===== NODULAR REGENERATIVE HYPERPLASIA =====
+
+% rationale: NRH is the commonest cause of non-cirrhotic portal HTN; splenomegaly
+% + thrombocytopenia + high-SAAG ascites without cirrhosis risk factors fit.
+contributes 2.2 from ascites(high_saag_portal_hypertensive) to diagnosis(nodular_regenerative_hyperplasia)
+  source "NRH commonest cause of non-cirrhotic portal hypertension, PMC6490659" trust authoritative
+contributes 1.5 from finding(bicytopenia) to diagnosis(nodular_regenerative_hyperplasia)
+  source "NRH: splenomegaly, thrombocytopenia, varices, PMC6490659" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — NRH does NOT produce splenic mass lesions,
+% marked cholestasis, or diffuse FDG avidity; FDG-avid marrow argues AGAINST NRH.
+contributes 0.35 from pet_fdg_avidity(bone_marrow) to diagnosis(nodular_regenerative_hyperplasia)
+  source "NRH is a bland regenerative process, not FDG-avid, PMC6467111" trust inferred
+contributes 0.5 from imaging(splenic_lesions_present) to diagnosis(nodular_regenerative_hyperplasia)
+  source "NRH does not cause discrete splenic lesions, PMC6467111" trust inferred
+
+% ===== DECOMPENSATED CIRRHOSIS (the tempting wrong answer) =====
+
+% rationale: high-SAAG ascites + splenomegaly + cytopenias is the textbook
+% cirrhosis picture — why it is the default first hypothesis.
+contributes 2.0 from ascites(high_saag_portal_hypertensive) to diagnosis(decompensated_cirrhosis)
+  source "High-SAAG ascites is classically cirrhotic portal hypertension, S0168-8278(13)00607-7" trust authoritative
+contributes 1.3 from finding(bicytopenia) to diagnosis(decompensated_cirrhosis)
+  source "Hypersplenism cytopenias in cirrhosis, S0168-8278(13)00607-7" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — NO cirrhosis risk factors (no alcohol, negative
+% viral/metabolic/autoimmune workup) argues strongly AGAINST cirrhosis.
+contributes 0.20 from history(no_cirrhosis_risk_factors) to diagnosis(decompensated_cirrhosis)
+  source "Cirrhosis requires an aetiology; negative full work-up lowers probability, S0168-8278(13)00607-7" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — cross-sectional + functional imaging steered the
+% picture AWAY from bland cirrhosis (no morphologic cirrhosis, FDG-avid instead).
+contributes 0.25 from imaging(features_away_from_cirrhosis) to diagnosis(decompensated_cirrhosis)
+  source "Imaging without cirrhotic morphology argues against cirrhosis, PMC6467111" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — diffuse FDG avidity is not a feature of bland
+% cirrhosis and argues against it.
+contributes 0.30 from pet_fdg_avidity(liver) to diagnosis(decompensated_cirrhosis)
+  source "Bland cirrhosis is not diffusely FDG-avid, PMC6467111" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: with marrow + serologic + viral + metabolic + autoimmune workup all
+% negative, multi-compartment FDG-avid infiltration of undefined cause requires
+% TISSUE — image-/PET-guided biopsy of an FDG-avid target (liver or splenic
+% lesion), or random skin biopsy for IVLBCL — as the definitive next step.
+prior 0.22 for next_step(tissue_biopsy_fdg_avid_target)
+  source "Tissue biopsy of an FDG-avid site is definitive for infiltrative hepatosplenic disease / IVLBCL, PMC10516690; liver biopsy diagnostic for amyloid/sarcoid/NRH, PMC3304630 + S1665268119319830" trust authoritative
+contributes 4.0 from pet_fdg_avidity(liver) to next_step(tissue_biopsy_fdg_avid_target)
+  source "PET-guided biopsy of FDG-avid liver, PMC10516690" trust authoritative
+contributes 3.5 from imaging(splenic_lesions_present) to next_step(tissue_biopsy_fdg_avid_target)
+  source "Biopsy of discrete splenic lesion to obtain tissue, JGO 1006" trust authoritative
+contributes 2.5 from lab_pattern(cholestatic_predominant) to next_step(tissue_biopsy_fdg_avid_target)
+  source "Liver biopsy adjudicates infiltrative cholestasis (amyloid/sarcoid/lymphoma/NRH), PMC3304630" trust authoritative
+
+% rationale: because the first marrow aspirate was unrevealing while marrow is
+% FDG-avid, a REPEAT / targeted marrow core biopsy is a reasonable parallel step
+% (IVLBCL aspirate often misses; core trephine + IHC raises yield).
+prior 0.12 for next_step(repeat_marrow_core_biopsy)
+  source "Repeat marrow core/trephine when aspirate non-diagnostic but marrow FDG-avid in IVLBCL, PMC10516690" trust authoritative
+contributes 3.0 from pet_fdg_avidity(bone_marrow) to next_step(repeat_marrow_core_biopsy)
+  source "FDG-avid marrow with negative aspirate warrants core biopsy, PMC4937713" trust empirical
+contributes 2.0 from test(marrow_aspirate_and_flow, unrevealing) to next_step(repeat_marrow_core_biopsy)
+  source "Non-diagnostic aspirate does not exclude marrow infiltration, PMC10516690" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u3/u4: the nature of the splenic lesions and the meaning of the negative marrow
+% are unresolved until tissue is obtained. Tissue histology adjudicates the whole
+% differential, so it moves the lymphoma posterior.
+uncertain { biopsy(infiltrative_lymphoma_cells), biopsy(amyloid_deposits), biopsy(noncaseating_granulomas), biopsy(marrow_fibrosis), biopsy(nodular_regenerative_hyperplasia) } for diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Tissue biopsy of an FDG-avid target adjudicates the infiltrative differential, PMC10516690 + PMC3304630 + S1665268119319830"
+
+% Candidate test-result terms wired so that RESOLVING the biopsy moves the
+% posterior (each is the histology that would confirm / refute the unifier).
+% rationale: lymphoma cells on biopsy confirm the infiltrative-lymphoma unifier.
+contributes 12.0 from biopsy(infiltrative_lymphoma_cells) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Histologic demonstration of intravascular/sinusoidal lymphoma cells is diagnostic, PMC10516690" trust authoritative
+% rationale: amyloid / granulomas / fibrosis / NRH on biopsy each argue AGAINST lymphoma.
+contributes 0.15 from biopsy(amyloid_deposits) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Congo-red-positive amyloid explains the syndrome instead, PMC3304630" trust authoritative
+contributes 0.15 from biopsy(noncaseating_granulomas) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Non-caseating granulomas indicate sarcoidosis instead, S1665268119319830" trust authoritative
+contributes 0.20 from biopsy(marrow_fibrosis) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Reticulin fibrosis indicates myelofibrosis instead, PMC5237793" trust authoritative
+contributes 0.25 from biopsy(nodular_regenerative_hyperplasia) to diagnosis(hepatosplenic_infiltrative_lymphoma)
+  source "Micronodular regeneration without fibrosis indicates NRH instead, PMC6490659" trust authoritative
