@@ -1,9 +1,10 @@
 use spice_engine::{
     ac_sweep, ac_sweep_corners, ac_sweep_corners_parallel, format_ac_table, format_corner_ac_table,
     format_corner_s_parameter_table, format_s_parameter_table, s_parameters, s_parameters_corners,
-    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource,
-    Diode, Element, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
-    MutualInductor, Resistor, SpiceError, TransmissionLine, Vcvs, VoltageSource,
+    s_parameters_corners_parallel, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity,
+    Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine,
+    Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -981,4 +982,97 @@ fn corner_s_parameter_text_output_table_is_stable() {
         format_corner_s_parameter_table(&result),
         "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\nnominal\t0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
     );
+}
+
+#[test]
+fn s_parameters_corners_parallel_matches_ordered_sequential_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P1", "p1", "0", 0.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P2", "p2", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rseries", "p1", "p2", 50.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", Vec::new()),
+        CornerSpec::new(
+            "series-high",
+            vec![CornerOverride::new("Rseries", "resistance", 100.0)],
+        ),
+        CornerSpec::new(
+            "series-low",
+            vec![CornerOverride::new("Rseries", "resistance", 25.0)],
+        ),
+    ];
+    let frequencies_hz = [1.0e6, 2.0e6];
+
+    let sequential =
+        s_parameters_corners(&circuit, "P1", "P2", &frequencies_hz, 50.0, &corners).unwrap();
+    let parallel =
+        s_parameters_corners_parallel(&circuit, "P1", "P2", &frequencies_hz, 50.0, &corners)
+            .unwrap();
+
+    assert_eq!(parallel.port1_source, sequential.port1_source);
+    assert_eq!(parallel.port2_source, sequential.port2_source);
+    assert_close(
+        parallel.reference_impedance_ohms,
+        sequential.reference_impedance_ohms,
+    );
+    assert_eq!(parallel.points.len(), sequential.points.len());
+    for (parallel_corner, sequential_corner) in parallel.points.iter().zip(sequential.points.iter())
+    {
+        assert_eq!(parallel_corner.corner_name, sequential_corner.corner_name);
+        assert_eq!(
+            parallel_corner.result.points.len(),
+            sequential_corner.result.points.len()
+        );
+        for (parallel_point, sequential_point) in parallel_corner
+            .result
+            .points
+            .iter()
+            .zip(sequential_corner.result.points.iter())
+        {
+            assert_close(parallel_point.frequency_hz, sequential_point.frequency_hz);
+            for (parallel_value, sequential_value) in [
+                (parallel_point.s11, sequential_point.s11),
+                (parallel_point.s21, sequential_point.s21),
+                (parallel_point.s12, sequential_point.s12),
+                (parallel_point.s22, sequential_point.s22),
+            ] {
+                assert_close(parallel_value.real, sequential_value.real);
+                assert_close(parallel_value.imag, sequential_value.imag);
+            }
+        }
+    }
+    assert_eq!(
+        format_corner_s_parameter_table(&parallel),
+        "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\nnominal\t0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nnominal\t1\t2.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nnominal\t1\t2.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t1\t2.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\nnominal\t1\t2.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t1\t2.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t1\t2.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t1\t2.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-high\t1\t2.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\nseries-low\t0\t1.000000e+06\tP1\tP2\tS11\t2.000000e-01\t0.000000e+00\t2.000000e-01\t0.000000e+00\nseries-low\t0\t1.000000e+06\tP1\tP2\tS21\t8.000000e-01\t0.000000e+00\t8.000000e-01\t0.000000e+00\nseries-low\t0\t1.000000e+06\tP1\tP2\tS12\t8.000000e-01\t0.000000e+00\t8.000000e-01\t0.000000e+00\nseries-low\t0\t1.000000e+06\tP1\tP2\tS22\t2.000000e-01\t0.000000e+00\t2.000000e-01\t0.000000e+00\nseries-low\t1\t2.000000e+06\tP1\tP2\tS11\t2.000000e-01\t0.000000e+00\t2.000000e-01\t0.000000e+00\nseries-low\t1\t2.000000e+06\tP1\tP2\tS21\t8.000000e-01\t0.000000e+00\t8.000000e-01\t0.000000e+00\nseries-low\t1\t2.000000e+06\tP1\tP2\tS12\t8.000000e-01\t0.000000e+00\t8.000000e-01\t0.000000e+00\nseries-low\t1\t2.000000e+06\tP1\tP2\tS22\t2.000000e-01\t0.000000e+00\t2.000000e-01\t0.000000e+00\n"
+    );
+}
+
+#[test]
+fn s_parameters_corners_parallel_reports_corner_override_errors() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P1", "p1", "0", 0.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "P2", "p2", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rseries", "p1", "p2", 50.0,
+    )));
+    let corners = [CornerSpec::new(
+        "missing",
+        vec![CornerOverride::new("Rmissing", "resistance", 100.0)],
+    )];
+
+    assert!(matches!(
+        s_parameters_corners_parallel(&circuit, "P1", "P2", &[1.0e6], 50.0, &corners),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_corners" && reason.contains("Rmissing")
+    ));
 }
