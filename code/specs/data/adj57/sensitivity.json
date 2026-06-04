@@ -1,0 +1,141 @@
+{
+  "decision": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+  "runner_up": "Visceral leishmaniasis (kala-azar)",
+  "margin_db": 26.0,
+  "margin_odds": 398.1,
+  "posteriors": {
+    "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 0.9973,
+    "Malaria": 0.0,
+    "Enteric (typhoid) fever": 0.0,
+    "Visceral leishmaniasis (kala-azar)": 0.0025,
+    "Tuberculosis (disseminated / CNS)": 0.0001,
+    "Brucellosis": 0.0001,
+    "Arboviral / other viral encephalitis": 0.0
+  },
+  "ranked": [
+    {
+      "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+      "score_db": 58.0
+    },
+    {
+      "hypothesis": "Visceral leishmaniasis (kala-azar)",
+      "score_db": 32.0
+    },
+    {
+      "hypothesis": "Tuberculosis (disseminated / CNS)",
+      "score_db": 18.0
+    },
+    {
+      "hypothesis": "Brucellosis",
+      "score_db": 16.0
+    },
+    {
+      "hypothesis": "Malaria",
+      "score_db": 6.0
+    },
+    {
+      "hypothesis": "Arboviral / other viral encephalitis",
+      "score_db": 6.0
+    },
+    {
+      "hypothesis": "Enteric (typhoid) fever",
+      "score_db": -6.0
+    }
+  ],
+  "load_bearing": [
+    {
+      "name": "pontine_t2_flair_lesions_meningeal_enhancement",
+      "push_for_leader": 10.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "ankle_swelling_after_insect_bite",
+      "push_for_leader": 9.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "travel_to_east_africa",
+      "push_for_leader": 7.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "csf_acellular_normal_glucose_raised_protein",
+      "push_for_leader": 6.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "high_grade_fever_with_chills_rigors",
+      "push_for_leader": 0.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "partial_response_to_empirical_antibiotics",
+      "push_for_leader": 0.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "malaria_smear_negative",
+      "push_for_leader": 0.0,
+      "decisive_alone": false,
+      "source": "grounded",
+      "citation": "Thick blood film sensitivity for malaria ~90-95% per exam at standard parasitemia (WHO microscopy QA); a single negative reduces malaria odds ~10x"
+    },
+    {
+      "name": "blood_urine_cultures_sterile",
+      "push_for_leader": 0.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "widal_negative",
+      "push_for_leader": 0.0,
+      "decisive_alone": false,
+      "source": "grounded",
+      "citation": "Widal test sensitivity for typhoid ~60-80% (variable, poor); a negative modestly lowers typhoid odds. Olopoenia & King, Postgrad Med J 2000 review of Widal performance"
+    },
+    {
+      "name": "viral_markers_negative",
+      "push_for_leader": 0.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "hepatosplenomegaly",
+      "push_for_leader": -3.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    },
+    {
+      "name": "bone_granuloma",
+      "push_for_leader": -3.0,
+      "decisive_alone": false,
+      "source": "assumed",
+      "citation": ""
+    }
+  ],
+  "one_out_flips": [],
+  "min_facts_to_flip": 4,
+  "margin_rests_on_assumed": true,
+  "assumed_load_bearing": [
+    "pontine_t2_flair_lesions_meningeal_enhancement",
+    "ankle_swelling_after_insect_bite",
+    "travel_to_east_africa",
+    "csf_acellular_normal_glucose_raised_protein"
+  ],
+  "ground_truth": "Neurobrucellosis (confirmed by Brucella serology + culture, held aside from the weighting)."
+}

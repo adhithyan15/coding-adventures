@@ -1,0 +1,202 @@
+{
+  "summary": "ADJ65 — uncertainty as a first-class primitive. Given a case and its grounded facts, the model proposes the competing hypotheses and a weight-of-evidence matrix (each fact contributes decibans toward each hypothesis, tagged grounded=cites a real likelihood ratio, or assumed=an estimate). The deterministic sensitivity engine then computes the decision, its margin, the load-bearing evidence, what would flip it, and — the honest part — whether the margin rests on ungrounded weights. Demonstrates \"if we make some probability shift, how would the decision shift\" on the neurobrucellosis case.",
+  "agentCount": 1,
+  "logs": [],
+  "result": {
+    "case_text": "A forty-year Indian traveled through Uganda, Tanzania and Kenya. He developed a swelling over the left ankle after an insect bite, then high grade fever with chills and rigors after 3-4 days. He took empirical antibiotics with only minor relief. He was febrile (102 F). Abdomen revealed hepatomegaly of 3 cm and splenomegaly of 3 cm. Blood smear for malaria parasite was negative. Cultures from blood and urine were sterile. Widal test showed normal titers. Testing for viral markers were negative. CSF was acellular with normal glucose; the proteins were raised. Bone biopsy showed a single ill defined granuloma. MRI of brain showed mild meningeal enhancement; few small lesions in pons, hyperintense on T2/FLAIR.",
+    "facts": [
+      "travel_to_east_africa",
+      "ankle_swelling_after_insect_bite",
+      "high_grade_fever_with_chills_rigors",
+      "partial_response_to_empirical_antibiotics",
+      "hepatosplenomegaly",
+      "malaria_smear_negative",
+      "blood_urine_cultures_sterile",
+      "widal_negative",
+      "viral_markers_negative",
+      "csf_acellular_normal_glucose_raised_protein",
+      "bone_granuloma",
+      "pontine_t2_flair_lesions_meningeal_enhancement"
+    ],
+    "hypotheses": [
+      "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+      "Malaria",
+      "Enteric (typhoid) fever",
+      "Visceral leishmaniasis (kala-azar)",
+      "Tuberculosis (disseminated / CNS)",
+      "Brucellosis",
+      "Arboviral / other viral encephalitis"
+    ],
+    "evidence": [
+      {
+        "name": "travel_to_east_africa",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 12,
+          "Malaria": 6,
+          "Enteric (typhoid) fever": 2,
+          "Visceral leishmaniasis (kala-azar)": 5,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": 3,
+          "Arboviral / other viral encephalitis": 4
+        }
+      },
+      {
+        "name": "ankle_swelling_after_insect_bite",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 13,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": -3,
+          "Visceral leishmaniasis (kala-azar)": 4,
+          "Tuberculosis (disseminated / CNS)": -2,
+          "Brucellosis": -2,
+          "Arboviral / other viral encephalitis": 3
+        }
+      },
+      {
+        "name": "high_grade_fever_with_chills_rigors",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 4,
+          "Malaria": 6,
+          "Enteric (typhoid) fever": 4,
+          "Visceral leishmaniasis (kala-azar)": 4,
+          "Tuberculosis (disseminated / CNS)": 2,
+          "Brucellosis": 4,
+          "Arboviral / other viral encephalitis": 2
+        }
+      },
+      {
+        "name": "partial_response_to_empirical_antibiotics",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": -2,
+          "Visceral leishmaniasis (kala-azar)": 2,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": -1,
+          "Arboviral / other viral encephalitis": 2
+        }
+      },
+      {
+        "name": "hepatosplenomegaly",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 5,
+          "Malaria": 4,
+          "Enteric (typhoid) fever": 4,
+          "Visceral leishmaniasis (kala-azar)": 8,
+          "Tuberculosis (disseminated / CNS)": 3,
+          "Brucellosis": 4,
+          "Arboviral / other viral encephalitis": -1
+        }
+      },
+      {
+        "name": "malaria_smear_negative",
+        "source": "grounded",
+        "citation": "Thick blood film sensitivity for malaria ~90-95% per exam at standard parasitemia (WHO microscopy QA); a single negative reduces malaria odds ~10x",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 1,
+          "Malaria": -10,
+          "Enteric (typhoid) fever": 1,
+          "Visceral leishmaniasis (kala-azar)": 1,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": 1,
+          "Arboviral / other viral encephalitis": 1
+        }
+      },
+      {
+        "name": "blood_urine_cultures_sterile",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": -6,
+          "Visceral leishmaniasis (kala-azar)": 2,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": -3,
+          "Arboviral / other viral encephalitis": 2
+        }
+      },
+      {
+        "name": "widal_negative",
+        "source": "grounded",
+        "citation": "Widal test sensitivity for typhoid ~60-80% (variable, poor); a negative modestly lowers typhoid odds. Olopoenia & King, Postgrad Med J 2000 review of Widal performance",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 1,
+          "Malaria": 0,
+          "Enteric (typhoid) fever": -5,
+          "Visceral leishmaniasis (kala-azar)": 1,
+          "Tuberculosis (disseminated / CNS)": 0,
+          "Brucellosis": 0,
+          "Arboviral / other viral encephalitis": 1
+        }
+      },
+      {
+        "name": "viral_markers_negative",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": 1,
+          "Visceral leishmaniasis (kala-azar)": 2,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": 1,
+          "Arboviral / other viral encephalitis": -7
+        }
+      },
+      {
+        "name": "csf_acellular_normal_glucose_raised_protein",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 6,
+          "Malaria": -2,
+          "Enteric (typhoid) fever": -1,
+          "Visceral leishmaniasis (kala-azar)": 0,
+          "Tuberculosis (disseminated / CNS)": -2,
+          "Brucellosis": 1,
+          "Arboviral / other viral encephalitis": -3
+        }
+      },
+      {
+        "name": "bone_granuloma",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 1,
+          "Malaria": -2,
+          "Enteric (typhoid) fever": 0,
+          "Visceral leishmaniasis (kala-azar)": 4,
+          "Tuberculosis (disseminated / CNS)": 7,
+          "Brucellosis": 5,
+          "Arboviral / other viral encephalitis": -3
+        }
+      },
+      {
+        "name": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "source": "assumed",
+        "citation": "",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 9,
+          "Malaria": 0,
+          "Enteric (typhoid) fever": -1,
+          "Visceral leishmaniasis (kala-azar)": -1,
+          "Tuberculosis (disseminated / CNS)": 5,
+          "Brucellosis": 3,
+          "Arboviral / other viral encephalitis": 5
+        }
+      }
+    ],
+    "ground_truth": "Neurobrucellosis (confirmed by Brucella serology + culture, held aside from the weighting)."
+  }
+}
