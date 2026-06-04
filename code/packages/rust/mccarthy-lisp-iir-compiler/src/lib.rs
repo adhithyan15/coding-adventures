@@ -4,7 +4,7 @@
 //! [`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md)).  It
 //! lowers the [`LispExpr`] AST produced by `mccarthy-lisp-parser` into
 //! an [`IIRModule`] — the architecture-independent intermediate
-//! representation that every backend in the chain (vm-core, twig-vm,
+//! representation that every backend in the chain (the McCarthy VM,
 //! the JIT, wasm/jvm/clr/beam, the historical-arch encoders) consumes.
 //!
 //! ## What "compile" means here
@@ -36,11 +36,15 @@
 //!
 //! ## Why these exact opcodes
 //!
-//! They are the conventions `twig-ir-compiler` already emits and
-//! `twig-vm` / the IIR backends already execute.  Reusing them means
-//! the McCarthy frontend gets a cons-capable interpreter (twig-vm) and
-//! every backend for free — McCarthy Lisp is just Twig's untyped
-//! cousin sharing the same `lispy-runtime` value model.
+//! They are the conventions of the shared `lispy-runtime` value model:
+//! `const Var(name)` interns a symbol, `const 0 : ref<LispyPair>` is the
+//! nil sentinel, and `call_builtin "cons"/"car"/"cdr"/…` dispatch to
+//! `lispy-runtime` builtins.  Emitting them means the McCarthy frontend
+//! runs on its own `mccarthy-lisp-vm` (a small interpreter over
+//! `lispy-runtime`) *and* feeds every IIR backend, with no new runtime
+//! code.  (Twig happens to use the same `lispy-runtime` conventions —
+//! McCarthy Lisp is its untyped cousin — but the two share only that
+//! foundation, not a VM.)
 //!
 //! `ATOM` and `EQ` are *derived*: McCarthy's `(ATOM x)` is "x is not a
 //! cons", i.e. `(not (pair? x))`; `(EQ a b)` is atom identity, which
@@ -160,9 +164,10 @@ pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule,
 // Compiler
 // ===========================================================================
 
-/// IIR type-hint string for the nil / cons reference type.  twig-vm and
-/// the wasm/jvm/clr/beam backends special-case `const 0 : ref<LispyPair>`
-/// into the nil sentinel and `call_builtin "cons"` into a fresh pair.
+/// IIR type-hint string for the nil / cons reference type.  The
+/// McCarthy VM and the wasm/jvm/clr/beam backends special-case
+/// `const 0 : ref<LispyPair>` into the nil sentinel and
+/// `call_builtin "cons"` into a fresh pair.
 const REF_PAIR: &str = "ref<LispyPair>";
 
 /// Accumulates the instruction stream for the `main` function.
@@ -529,7 +534,7 @@ mod tests {
     #[test]
     fn symbol_const_uses_var_operand() {
         // A quoted symbol must be `const Var(name)`, not Str (which would
-        // make a heap string), so twig-vm interns it as a symbol.
+        // make a heap string), so the VM interns it as a symbol.
         let m = compile_source("'FOO", "t").unwrap();
         let c = &m.functions[0].instructions[0];
         assert_eq!(c.op, "const");

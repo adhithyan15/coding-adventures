@@ -1,16 +1,18 @@
-//! End-to-end execution tests: McCarthy source → IIR → run on `twig-vm`.
+//! End-to-end execution tests: McCarthy source → IIR → run on
+//! `mccarthy-lisp-vm`.
 //!
 //! These prove the headline L2a claim — that the emitted IIR actually
-//! *runs* and produces the right Lisp value — using `twig-vm`, the
-//! cons-capable reference interpreter (`vm-core` is scalar-only and
-//! cannot represent symbols / cons cells).
+//! *runs* and produces the right Lisp value — using McCarthy Lisp's own
+//! VM, which is built on the `lispy-runtime` value model (`vm-core` is
+//! scalar-only and cannot represent symbols / cons cells; `twig-vm` is
+//! Twig-specific and deliberately not used here).
 //!
 //! Results are inspected through `lispy-runtime`: symbols via the intern
 //! table (`name_of`), cons cells via the `car` / `cdr` builtins.
 
 use lispy_runtime::{name_of, LispyValue};
 use mccarthy_lisp_iir_compiler::compile_source;
-use twig_vm::dispatch::run;
+use mccarthy_lisp_vm::run;
 
 /// Compile + run a McCarthy program, returning the result value.
 fn eval(src: &str) -> LispyValue {
