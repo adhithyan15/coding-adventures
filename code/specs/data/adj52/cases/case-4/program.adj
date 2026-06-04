@@ -1,0 +1,53 @@
+% ADJ52 case-4 — patient observations + queries.
+% 63yo retired carpenter, 3 months of severe lower back pain + vague four-limb
+% weakness, fatigue, poor appetite, ~4 kg weight loss; girdle pain + stiffness;
+% raised ESR/CRP, normocytic anaemia, low albumin, microscopic haematuria,
+% weakly positive low-titre ANCA; CT no malignancy. Working dx PMR -> failed on
+% steroids with falling Hb/albumin and rising CRP/WCC. At month 6: tachycardic,
+% low-grade pyrexia, and a NEW loud apical pansystolic murmur radiating to the
+% axilla. Numeric magnitudes normalized to qualitative atoms to satisfy the
+% adj-lang IDENT grammar (esr 96 -> esr_markedly_elevated; crp 79->108 ->
+% crp_markedly_elevated/crp_rising_on_steroids; temp 37.7 -> low_grade_pyrexia;
+% HR 116 -> tachycardia; WCC 14.5 -> leucocytosis_upper).
+
+% --- demographics / presentation ---
+observe age(over_50)
+observe symptom(severe_lower_back_pain)
+observe symptom(girdle_pain_and_stiffness)
+observe symptom(constitutional_weight_loss)
+
+% --- inflammatory / haematological / renal labs (IE bacteraemic syndrome) ---
+observe lab(esr_markedly_elevated)
+observe lab(crp_markedly_elevated)
+observe lab(normocytic_anaemia)
+observe lab(hypoalbuminaemia)
+observe lab(microscopic_haematuria)
+observe lab(anca_low_titre)
+observe lab(leucocytosis_upper)
+
+% --- vitals at admission ---
+observe vital(low_grade_pyrexia)
+observe vital(tachycardia)
+
+% --- cardiac exam (the new discriminator) ---
+observe exam(new_apical_pansystolic_murmur_radiating_axilla)
+
+% --- imaging ---
+observe imaging(ct_no_malignancy)
+
+% --- treatment course ---
+observe treatment_response(deterioration_on_steroids)
+observe lab(crp_rising_on_steroids)
+
+% ===== queries =====
+% q1 — unifying diagnosis
+? diagnosis(infective_endocarditis)
+? diagnosis(anca_associated_vasculitis)
+? diagnosis(polymyalgia_rheumatica)
+? diagnosis(multiple_myeloma)
+? diagnosis(occult_solid_malignancy)
+
+% q5 — recommended next investigation
+? next_step(blood_cultures_and_echocardiography)
+? next_step(serum_protein_electrophoresis_free_light_chains)
+? next_step(anca_antigen_specificity_and_complement)

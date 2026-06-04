@@ -1,0 +1,176 @@
+[
+  {
+    "kind": "prior",
+    "magnitude": 0.18,
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "evidence": null,
+    "source": "StatPearls NBK557558 Genitourinary Tuberculosis; F1000Research 9:1345",
+    "trust": "authoritative",
+    "claim_id": "c1"
+  },
+  {
+    "kind": "prior",
+    "magnitude": 0.15,
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "evidence": null,
+    "source": "PMC9411696 Etiology/Epidemiology of Bladder Cancer; Cleveland Clinic Bladder Cancer",
+    "trust": "authoritative",
+    "claim_id": "c2"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 3.0,
+    "evidence": "tb_igra(low_positive)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "StatPearls NBK557558 (IGRA helpful as initial screen; positive does not confirm active)",
+    "trust": "authoritative",
+    "claim_id": "c3"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 4.0,
+    "evidence": "course(refractory_relapsing_despite_fluoroquinolone)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "StatPearls NBK557558 (chronic prostatitis not resolving with standard antibiotics should raise suspicion of GU-TB); PMC4549703 sterile pyuria",
+    "trust": "authoritative",
+    "claim_id": "c4"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 2.0,
+    "evidence": "urine_leukocytes(mildly_elevated)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "StatPearls NBK557558 (persistent sterile pyuria); NEJM Sterile Pyuria review",
+    "trust": "authoritative",
+    "claim_id": "c5"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 2.5,
+    "evidence": "renal_finding(calcified_foci)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "ScienceDirect Kidney Tuberculosis overview (calcification 40-70%); RadioGraphics 2021 GU-TB imaging",
+    "trust": "authoritative",
+    "claim_id": "c6"
+  },
+  {
+    "kind": "mechanism",
+    "name": "tb_bladder_lesion",
+    "magnitude": 4.5,
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "evidence": "cystoscopy_finding(diffuse_superficial_ulceration), cystoscopy_finding(mucosal_congestion_and_edema), bladder_histology(inflammatory_granulation_tissue), bladder_histology(proliferating_fibrovascular_polypoid_change)",
+    "source": "StatPearls NBK557558 (urothelial erosions, ulcers, granulomas on cystoscopy); Pathology Outlines granulomatous cystitis (ulceration, granulation tissue)",
+    "trust": "authoritative",
+    "claim_id": "c7"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 3.0,
+    "evidence": "cytology(atypical_clusters_worrisome_for_malignancy)",
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "source": "NYU Urology CIS case (suspicious cytology); PMID 3856982 urinary cytology of bladder TB",
+    "trust": "authoritative",
+    "claim_id": "c8"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 0.4,
+    "evidence": "cystoscopy_finding(no_discrete_tumor)",
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "source": "PMC8000909 Imaging of bladder cancer (papillary tumors are discrete masses); Pathology Outlines bladder CIS (CIS flat, not always visible)",
+    "trust": "authoritative",
+    "claim_id": "c9"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 0.4,
+    "evidence": "ct_finding(no_mass_no_wall_thickening_no_nodes)",
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "source": "PMC8000909 / MDPI Cancers 13:1396 (bladder cancer shows wall thickening / mass / nodal disease on CT)",
+    "trust": "authoritative",
+    "claim_id": "c10"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 0.6,
+    "evidence": "smoking_status(lifelong_non_smoker)",
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "source": "Cleveland Clinic Bladder Cancer (smoking >2x risk, ~50% of cases); PMC9411696 epidemiology",
+    "trust": "authoritative",
+    "claim_id": "c11"
+  },
+  {
+    "kind": "mechanism",
+    "name": "reactive_inflammatory_atypia",
+    "magnitude": 2.2,
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "evidence": "cytology(atypical_clusters_worrisome_for_malignancy), bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)",
+    "source": "PMID 3856982 (urinary cytology of bladder TB: atypical urothelial cells correlate to benign reversible hyperplasia, reactive to inflammation)",
+    "trust": "authoritative",
+    "claim_id": "c12"
+  },
+  {
+    "kind": "mechanism",
+    "name": "reactive_inflammatory_atypia_against_ca",
+    "magnitude": 0.5,
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "evidence": "cytology(atypical_clusters_worrisome_for_malignancy), bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)",
+    "source": "PMID 3856982 (type I/II atypia in TB are benign reversible hyperplasia / reactive potential of urothelium); PMID 11186722 (post-TB cystitis follow-up)",
+    "trust": "authoritative",
+    "claim_id": "c13"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 9.0,
+    "evidence": "urine_tb(afb_or_culture_or_naat_positive)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "StatPearls NBK557558 (urine culture/NAAT positive confirms GU-TB)",
+    "trust": "authoritative",
+    "claim_id": "c14"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 0.2,
+    "evidence": "urine_tb(afb_and_culture_and_naat_negative)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "StatPearls NBK557558 (repeatedly negative urine TB testing lowers GU-TB; sensitivity imperfect)",
+    "trust": "authoritative",
+    "claim_id": "c15"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 8.0,
+    "evidence": "tissue_tb(granuloma_afb_or_pcr_positive)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "PMID 40176973 (caseating granuloma + AFB/PCR on bladder tissue confirms TB cystitis)",
+    "trust": "authoritative",
+    "claim_id": "c16"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 0.15,
+    "evidence": "tissue_tb(carcinoma_confirmed)",
+    "target": "diagnosis(genitourinary_tuberculosis)",
+    "source": "PMID 11186722 (confirmed carcinoma reclassifies the lesion away from pure TB)",
+    "trust": "authoritative",
+    "claim_id": "c17"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 9.0,
+    "evidence": "tissue_tb(carcinoma_confirmed)",
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "source": "Pathology Outlines bladder CIS (tissue confirmation of carcinoma)",
+    "trust": "authoritative",
+    "claim_id": "c18"
+  },
+  {
+    "kind": "contributes",
+    "magnitude": 0.2,
+    "evidence": "tissue_tb(granuloma_afb_or_pcr_positive)",
+    "target": "diagnosis(bladder_urothelial_carcinoma)",
+    "source": "PMID 3856982 (granulomatous TB with reactive atypia is not carcinoma)",
+    "trust": "authoritative",
+    "claim_id": "c19"
+  }
+]

@@ -1,0 +1,236 @@
+% ============================================================================
+% ADJ52 case-14 derived rulebook.
+% Clinical area: workup of a progressive DIFFUSE CYSTIC + NODULAR LUNG DISEASE
+% in a middle-aged nonsmoker with chronic productive cough, intermittent
+% hemoptysis, frothy white sputum, biopsy showing only chronic inflammation +
+% focal alveolar epithelial hyperplasia, multiple failed empiric antimicrobials,
+% and a STRIKING dissociation: markedly elevated serum tumor markers
+% (CA 19-9, CEA, CYFRA 21-1, NSE, pro-GRP) against ENTIRELY NORMAL infection /
+% systemic-inflammation markers (WBC, CRP, procalcitonin, ESR).
+%
+% Differential built from the IR alone (no answer given), recursing into the
+% diffuse-cystic-lung-disease subcategories (neoplastic / lymphoproliferative-
+% autoimmune / smooth-muscle (LAM) / deposition (amyloid) / infective). Every
+% clause carries a % rationale + source + trust.
+%
+% adj-lang grammar note: identifiers are /[a-z_][a-z0-9_]*/ (lowercase, no
+% leading digit). Magnitudes are encoded QUALITATIVELY
+% (lab(ca_19_9_markedly_elevated), age(over_50)). LRs are multiplicative
+% (>1 raises, <1 lowers a conclusion).
+%
+% CORRELATED-EVIDENCE DESIGN: the serum tumor-marker panel is NOT five
+% independent facts. CA 19-9, CEA, CYFRA 21-1, NSE and pro-GRP are correlated
+% manifestations of ONE underlying process — tumour-cell mucin/epithelial
+% antigen shedding from a multifocal epithelial lung neoplasm. They are grouped
+% under a SINGLE mechanism directive so the combined likelihood ratio fires ONCE
+% and does not double-count / saturate the posterior. Likewise the cyst+nodule
+% radiologic gestalt and its inexorable progression-despite-antibiotics are
+% kept as genuinely orthogonal discriminators.
+% ============================================================================
+
+% ===== PRIORS (base rates over the diffuse cystic+nodular lung disease differential) =====
+
+% rationale: invasive mucinous adenocarcinoma (pneumonic / multifocal type) is a
+% recognised, frequently-MISSED cause of progressive diffuse thin-walled cysts +
+% nodules in a nonsmoker, classically mislabelled as infection or LIP.
+prior 0.20 for diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC10843309 (lung carcinoma w/ diffuse cysts repeatedly misdiagnosed as infection and LIP); PMC5403370 (IMA presenting as thin-walled cyst)" trust authoritative
+
+% rationale: LIP in Sjogren syndrome is the team's explicit working diagnosis,
+% supported by perivascular thin-walled cysts + nodules and the autoimmune hints
+% (anti-Ro-52 positive, mildly raised RF). It remains on the differential.
+prior 0.18 for diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "PMC7810538 / Wiley 6693031 (LIP HRCT: peribronchovascular thin-walled cysts + nodules in Sjogren)" trust authoritative
+
+% rationale: LAM is the prototypical diffuse thin-walled cystic lung disease and
+% must be on any cyst differential.
+prior 0.10 for diagnosis(lymphangioleiomyomatosis)
+  source "PMC5474378 (diffuse cystic lung disease differential: LAM); ATS Diffuse Cystic Lung Disease Part I" trust authoritative
+
+% rationale: pulmonary (nodular/cystic) amyloidosis is a deposition cause of
+% combined cysts + nodules, classically with Sjogren overlap.
+prior 0.08 for diagnosis(pulmonary_amyloidosis)
+  source "PMC7007054 (LIP and pulmonary amyloidosis in Sjogren); PMC5474378 (amyloidosis in cystic lung differential)" trust authoritative
+
+% rationale: chronic / opportunistic pulmonary infection (the metagenomic reads
+% of S. pneumoniae, Pneumocystis, Aspergillus raised this) is the infective
+% sibling and the hypothesis already empirically treated.
+prior 0.12 for diagnosis(chronic_pulmonary_infection)
+  source "PMC5474378 (infectious causes of cystic lung disease, e.g. PCP); IR uncertainty u4 (reads = pathogen vs colonizer)" trust authoritative
+
+% ===== INVASIVE MUCINOUS ADENOCARCINOMA (top candidate) =====
+
+% rationale: frothy white / watery sputum = BRONCHORRHEA, a hallmark of mucin-
+% secreting (mucinous) lung adenocarcinoma; it is one of the most specific
+% standalone discriminators here. Kept SEPARATE from the tumour-marker mechanism
+% as it reflects a different (secretory) manifestation of the tumour.
+contributes 4.0 from sputum(frothy_white_bronchorrhea) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PubMed 38298453 (IMA of the lung with bronchorrhea); Spandidos mco.2017.1143 (mucinous adenocarcinoma, copious mucoid sputum)" trust authoritative
+
+% rationale: inexorable radiologic progression (cysts + nodules multiply and
+% enlarge) DESPITE multiple targeted antimicrobial courses is incompatible with
+% infection and characteristic of an indolent multifocal neoplasm.
+contributes 3.5 from imaging_course(progression_despite_antimicrobials) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC10843309 (diffuse-cyst lung carcinoma progressed through repeated antibiotic courses)" trust authoritative
+
+% rationale: a transbronchial biopsy showing only bland chronic inflammation +
+% focal alveolar epithelial hyperplasia is the CLASSIC false-negative of
+% mucinous adenocarcinoma — bland mucinous cells / mucin pools are routinely
+% under-called; a non-diagnostic small biopsy does NOT exclude IMA.
+contributes 1.8 from biopsy(chronic_inflammation_with_alveolar_epithelial_hyperplasia) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC5653530 (IMA biopsy pitfall: bland mucinous cells / mucin pools under-diagnosed); CAP Lung protocol" trust authoritative
+
+% rationale: persistent intermittent hemoptysis with a chronic cough fits an
+% endobronchial / lepidic-spreading neoplasm.
+contributes 1.5 from symptom(intermittent_hemoptysis) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "Spandidos mco.2017.1143 (mucinous adenocarcinoma presenting with cough and blood-streaked sputum)" trust empirical
+
+% rationale: lifelong nonsmoker status does not argue against IMA — IMA and
+% nonsmoking adenocarcinoma are well associated, unlike PLCH/smoking cysts.
+contributes 1.3 from lifelong_nonsmoker to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC8027958 (IMA in nonsmoker); PMC5653530 (IMA biology)" trust empirical
+
+% mechanism epithelial_tumour_antigen_shedding for diagnosis(invasive_mucinous_adenocarcinoma) lr 7.0 : lab(ca_19_9_markedly_elevated), lab(carcinoembryonic_antigen_elevated), lab(cyfra_21_1_elevated), lab(neuron_specific_enolase_elevated), lab(pro_gastrin_releasing_peptide_elevated)
+%   source "WJG 2020 v12 CA19-9 tumor marker review; PMC5648153 (CA19-9 + CEA in lung adenocarcinoma); PMC11841819 (lung adenocarcinoma w/ markedly elevated CA19-9). Mucin-antigen panel = ONE tumour process, fired once." trust authoritative
+
+% rationale: normal WBC/CRP/procalcitonin/ESR alongside markedly elevated tumour
+% markers is the case's signature dissociation — it argues AGAINST an infective/
+% inflammatory cyst cause and FOR a neoplastic one (markers are tumour-, not
+% inflammation-derived). Orthogonal to the antigen-shedding mechanism.
+contributes 2.0 from labs(infection_inflammation_markers_normal) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC11841819 / WJG 2020 (tumour markers track tumour burden, not systemic inflammation)" trust inferred
+
+% ===== LYMPHOID INTERSTITIAL PNEUMONIA / SJOGREN (the team's working diagnosis) =====
+
+% rationale: peribronchovascular thin-walled cysts intermixed with small nodules
+% bilaterally is the textbook LIP HRCT pattern and the radiologic basis for the
+% team's proposal.
+contributes 2.2 from finding(diffuse_thin_walled_cysts_and_nodules) to diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "PMC7810538 / Wiley 6693031 (LIP: peribronchovascular thin-walled cysts + nodules)" trust authoritative
+
+% rationale: positive anti-Ro-52 + mildly elevated rheumatoid factor are the
+% autoimmune signals that put Sjogren-related LIP on the table. Kept as MILD
+% support — anti-Ro-52 is a NON-SPECIFIC ILD antibody, frequently present
+% without established connective-tissue disease.
+contributes 1.6 from serology(anti_ro_52_positive_rf_mildly_elevated) to diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "PMC9249750 / PMC10689422 (anti-Ro52 associates with ILD but is non-specific; often no defined CTD)" trust authoritative
+
+% rationale: a biopsy showing only chronic inflammation is COMPATIBLE with LIP
+% (a lymphocytic infiltrate) but is non-specific and far from diagnostic.
+contributes 1.2 from biopsy(chronic_inflammation_with_alveolar_epithelial_hyperplasia) to diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "Wiley 6693031 (LIP = diffuse lymphocytic interstitial infiltrate; needs adequate tissue)" trust inferred
+
+% rationale: KEY DISCRIMINATOR. Markedly elevated EPITHELIAL tumour markers
+% (CA 19-9, CEA, CYFRA, NSE, pro-GRP) are NOT a feature of a benign lymphocytic
+% interstitial pneumonia; this panel points AWAY from LIP toward a neoplasm and
+% is what should stop the team settling on LIP. Fired here as the single mucin/
+% epithelial-antigen mechanism with LR < 1.
+% mechanism epithelial_tumour_antigen_shedding for diagnosis(lymphoid_interstitial_pneumonia_sjogren) lr 0.35 : lab(ca_19_9_markedly_elevated), lab(carcinoembryonic_antigen_elevated), lab(cyfra_21_1_elevated), lab(neuron_specific_enolase_elevated), lab(pro_gastrin_releasing_peptide_elevated)
+%   source "PMC11841819 / WJG 2020 (epithelial/mucin tumour markers are neoplastic, not features of lymphocytic interstitial pneumonia)" trust inferred
+
+% rationale: relentless progression with cyst+nodule enlargement is atypical for
+% bland LIP and should raise concern for neoplasm/lymphoma transformation.
+contributes 0.7 from imaging_course(progression_despite_antimicrobials) to diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "Springer s13019-022-01826-6 (enlarging nodules in LIP raise lymphoma/malignant transformation)" trust inferred
+
+% ===== LYMPHANGIOLEIOMYOMATOSIS =====
+
+% rationale: diffuse uniform thin-walled cysts are the LAM signature, so the
+% radiologic gestalt gives mild support.
+contributes 1.5 from finding(diffuse_thin_walled_cysts_and_nodules) to diagnosis(lymphangioleiomyomatosis)
+  source "PMC5474378 / ATS DCLD Part I (LAM: diffuse thin-walled cysts)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR. LAM occurs essentially exclusively in women
+% (premenopausal, or TSC); it is exceptional in a man without tuberous sclerosis.
+% Male sex is a strong argument AGAINST LAM.
+contributes 0.1 from patient_sex(male) to diagnosis(lymphangioleiomyomatosis)
+  source "PMC9803497 (male LAM extremely rare); ScienceDirect S2213007120303634 (LAM in male essentially only with TSC)" trust authoritative
+
+% rationale: markedly elevated epithelial tumour markers are not a LAM feature.
+% mechanism epithelial_tumour_antigen_shedding for diagnosis(lymphangioleiomyomatosis) lr 0.5 : lab(ca_19_9_markedly_elevated), lab(carcinoembryonic_antigen_elevated), lab(cyfra_21_1_elevated), lab(neuron_specific_enolase_elevated), lab(pro_gastrin_releasing_peptide_elevated)
+%   source "PMC5474378 (LAM driven by smooth-muscle/PEC proliferation, not epithelial antigen shedding)" trust inferred
+
+% ===== PULMONARY AMYLOIDOSIS =====
+
+% rationale: nodular + cystic deposition disease, often Sjogren-associated, fits
+% the cyst+nodule pattern.
+contributes 1.5 from finding(diffuse_thin_walled_cysts_and_nodules) to diagnosis(pulmonary_amyloidosis)
+  source "PMC7007054 (LIP and pulmonary amyloidosis in Sjogren, cystic+nodular); PMC5474378" trust authoritative
+
+% rationale: the Sjogren-leaning serology (anti-Ro-52 / RF) is shared context.
+contributes 1.2 from serology(anti_ro_52_positive_rf_mildly_elevated) to diagnosis(pulmonary_amyloidosis)
+  source "PMC7007054 (nodular pulmonary amyloidosis arising in Sjogren)" trust inferred
+
+% rationale: amyloid is typically slowly indolent — relentless multiplication of
+% new cysts/nodules over months is atypical, mild argument against.
+contributes 0.8 from imaging_course(progression_despite_antimicrobials) to diagnosis(pulmonary_amyloidosis)
+  source "PMC5474378 (nodular pulmonary amyloidosis usually indolent/stable)" trust inferred
+
+% rationale: markedly elevated epithelial tumour markers are not an amyloid feature.
+% mechanism epithelial_tumour_antigen_shedding for diagnosis(pulmonary_amyloidosis) lr 0.5 : lab(ca_19_9_markedly_elevated), lab(carcinoembryonic_antigen_elevated), lab(cyfra_21_1_elevated), lab(neuron_specific_enolase_elevated), lab(pro_gastrin_releasing_peptide_elevated)
+%   source "PMC7007054 (amyloid = extracellular protein deposition, not epithelial antigen secretion)" trust inferred
+
+% ===== CHRONIC PULMONARY INFECTION (the empirically-treated sibling) =====
+
+% rationale: lavage metagenomic reads for S. pneumoniae, Pneumocystis jirovecii
+% and Aspergillus flavus raised infection; cystic change can follow PCP.
+contributes 1.6 from lavage(metagenomic_reads_multiple_organisms) to diagnosis(chronic_pulmonary_infection)
+  source "PMC5474378 (PCP-related cystic lung disease); IR f22-f24 (metagenomic reads)" trust empirical
+
+% rationale: KEY DISCRIMINATOR. Failure of TARGETED therapy (levofloxacin,
+% anti-Pneumocystis TMP-SMX, fluoroquinolone, cephalosporin+macrolide) with NO
+% radiologic improvement argues strongly AGAINST true infection — favouring
+% colonization/contamination of the reads (IR u4).
+contributes 0.2 from treatment_response(no_response_to_targeted_antimicrobials) to diagnosis(chronic_pulmonary_infection)
+  source "PMC10843309 (carcinoma misread as infection; multiple antibiotic courses failed); IR u4" trust authoritative
+
+% rationale: ENTIRELY NORMAL WBC/CRP/procalcitonin/ESR is highly atypical for an
+% active, progressive multilobar infection — a strong argument against infection.
+contributes 0.3 from labs(infection_inflammation_markers_normal) to diagnosis(chronic_pulmonary_infection)
+  source "IR f45-f49 (normal infection/inflammation markers); standard sepsis-marker reasoning" trust inferred
+
+% rationale: the host is immunocompetent (nonsmoker, no notable PMH), making
+% true Pneumocystis/invasive Aspergillus disease unlikely -> reads are colonizers.
+contributes 0.5 from no_immunocompromise to diagnosis(chronic_pulmonary_infection)
+  source "PMC5474378 (PCP/invasive fungal disease expected in immunocompromised hosts)" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation) =====
+% rationale: a SURGICAL / large-core lung biopsy (VATS wedge, or rEBUS-guided
+% transbronchial cryobiopsy) after a NON-DIAGNOSTIC transbronchial biopsy is the
+% definitive next step to obtain adequate tissue for histology + molecular
+% testing in diffuse cystic/nodular lung disease. This is the recommended step.
+prior 0.25 for next_step(surgical_or_cryobiopsy_lung_biopsy)
+  source "PMC10843309 / Cleveland Clinic ConsultQD (non-diagnostic TBLB -> VATS / rEBUS-cryobiopsy for definitive tissue + molecular)" trust authoritative
+contributes 4.0 from biopsy(chronic_inflammation_with_alveolar_epithelial_hyperplasia) to next_step(surgical_or_cryobiopsy_lung_biopsy)
+  source "PMC5653530 (small/bland biopsy under-calls IMA -> need adequate tissue)" trust authoritative
+contributes 2.5 from imaging_course(progression_despite_antimicrobials) to next_step(surgical_or_cryobiopsy_lung_biopsy)
+  source "PMC10843309 (progression through empiric therapy mandates definitive histology)" trust authoritative
+contributes 2.0 from sputum(frothy_white_bronchorrhea) to next_step(surgical_or_cryobiopsy_lung_biopsy)
+  source "PubMed 38298453 (bronchorrhea -> suspect mucinous adenocarcinoma, biopsy to confirm)" trust inferred
+
+% rationale: a lip/salivary gland biopsy + full Sjogren serology (anti-SSA/SSB)
+% would be the competing next step IF LIP/Sjogren were being pursued.
+prior 0.10 for next_step(sjogren_serology_and_minor_salivary_gland_biopsy)
+  source "Wiley 6693031 (Sjogren workup: anti-SSA/SSB + minor salivary gland biopsy)" trust authoritative
+contributes 2.0 from serology(anti_ro_52_positive_rf_mildly_elevated) to next_step(sjogren_serology_and_minor_salivary_gland_biopsy)
+  source "PMC9249750 (anti-Ro52 -> complete Sjogren serology + salivary biopsy)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+% u_dx: the pivotal ambiguity is histology on ADEQUATE tissue — does the larger
+% biopsy show mucinous adenocarcinoma cells, or a benign lymphocytic LIP
+% infiltrate? Resolving it disambiguates IMA from the team's LIP proposal.
+uncertain { test(adequate_biopsy_shows_mucinous_adenocarcinoma), test(adequate_biopsy_shows_lymphocytic_lip_infiltrate), test(adequate_biopsy_shows_amyloid_deposition) } for diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC10843309 / PMC5653530 (definitive histology adjudicates carcinoma vs LIP vs amyloid)"
+contributes 9.0 from test(adequate_biopsy_shows_mucinous_adenocarcinoma) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC5653530 (mucinous tumour cells on adequate tissue confirm IMA)" trust authoritative
+contributes 0.15 from test(adequate_biopsy_shows_lymphocytic_lip_infiltrate) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "Wiley 6693031 (a confirmed lymphocytic LIP infiltrate argues strongly against carcinoma)" trust authoritative
+contributes 0.2 from test(adequate_biopsy_shows_amyloid_deposition) to diagnosis(invasive_mucinous_adenocarcinoma)
+  source "PMC7007054 (amyloid deposition on biopsy points away from carcinoma)" trust authoritative
+
+uncertain { test(adequate_biopsy_shows_lymphocytic_lip_infiltrate), test(adequate_biopsy_shows_mucinous_adenocarcinoma) } for diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "Wiley 6693031 (histology adjudicates LIP vs neoplasm)"
+contributes 7.0 from test(adequate_biopsy_shows_lymphocytic_lip_infiltrate) to diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "Wiley 6693031 (dense polyclonal lymphocytic interstitial infiltrate confirms LIP)" trust authoritative
+contributes 0.1 from test(adequate_biopsy_shows_mucinous_adenocarcinoma) to diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+  source "PMC10843309 (mucinous carcinoma on biopsy excludes a benign LIP reading)" trust authoritative

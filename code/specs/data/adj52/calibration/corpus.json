@@ -1,0 +1,212 @@
+[
+  {
+    "id": "case-1",
+    "rulebook": "cases/case-1/rulebook.adj",
+    "program": "cases/case-1/program.adj",
+    "correct_term": "diagnosis(pulmonary_artery_sarcoma)",
+    "engine_top": "diagnosis(pulmonary_artery_sarcoma)"
+  },
+  {
+    "id": "case-2",
+    "rulebook": "cases/case-2/rulebook.adj",
+    "program": "cases/case-2/program.adj",
+    "correct_term": "diagnosis(cerebrotendinous_xanthomatosis)",
+    "engine_top": "diagnosis(cerebrotendinous_xanthomatosis)"
+  },
+  {
+    "id": "case-3",
+    "rulebook": "cases/case-3/rulebook.adj",
+    "program": "cases/case-3/program.adj",
+    "correct_term": "unifying_diagnosis(lymphoma)",
+    "engine_top": "unifying_diagnosis(lymphoma)"
+  },
+  {
+    "id": "case-4",
+    "rulebook": "cases/case-4/rulebook.adj",
+    "program": "cases/case-4/program.adj",
+    "correct_term": "diagnosis(infective_endocarditis)",
+    "engine_top": "diagnosis(infective_endocarditis)"
+  },
+  {
+    "id": "case-5",
+    "rulebook": "cases/case-5/rulebook.adj",
+    "program": "cases/case-5/program.adj",
+    "correct_term": "diagnosis(bladder_urothelial_carcinoma)",
+    "engine_top": "diagnosis(genitourinary_tuberculosis)"
+  },
+  {
+    "id": "case-6",
+    "rulebook": "cases/case-6/rulebook.adj",
+    "program": "cases/case-6/program.adj",
+    "correct_term": "diagnosis(infiltrative_hepatic_angiosarcoma)",
+    "engine_top": "diagnosis(hepatosplenic_infiltrative_lymphoma)"
+  },
+  {
+    "id": "case-7",
+    "rulebook": "cases/case-7/rulebook.adj",
+    "program": "cases/case-7/program.adj",
+    "correct_term": "diagnosis(hairy_cell_leukemia)",
+    "engine_top": "diagnosis(splenic_marginal_zone_lymphoma)"
+  },
+  {
+    "id": "case-8",
+    "rulebook": "cases/case-8/rulebook.adj",
+    "program": "cases/case-8/program.adj",
+    "correct_term": "diagnosis(bronchial_carcinoid_tumor)",
+    "engine_top": "diagnosis(bronchial_carcinoid_tumor)"
+  },
+  {
+    "id": "case-9",
+    "rulebook": "cases/case-9/rulebook.adj",
+    "program": "cases/case-9/program.adj",
+    "correct_term": "diagnosis(kimura_disease)",
+    "engine_top": "diagnosis(kimura_disease)"
+  },
+  {
+    "id": "case-10",
+    "rulebook": "cases/case-10/rulebook.adj",
+    "program": "cases/case-10/program.adj",
+    "correct_term": "diagnosis(cryopyrin_associated_periodic_syndrome)",
+    "engine_top": "diagnosis(cryopyrin_associated_periodic_syndrome)"
+  },
+  {
+    "id": "case-11",
+    "rulebook": "cases/case-11/rulebook.adj",
+    "program": "cases/case-11/program.adj",
+    "correct_term": "diagnosis(hairy_cell_leukemia)",
+    "engine_top": "diagnosis(hairy_cell_leukemia)"
+  },
+  {
+    "id": "case-12",
+    "rulebook": "cases/case-12/rulebook.adj",
+    "program": "cases/case-12/program.adj",
+    "correct_term": "diagnosis(liddle_syndrome)",
+    "engine_top": "diagnosis(liddle_syndrome)"
+  },
+  {
+    "id": "case-13",
+    "rulebook": "cases/case-13/rulebook.adj",
+    "program": "cases/case-13/program.adj",
+    "correct_term": "diagnosis(effusive_constrictive_pericarditis)",
+    "engine_top": "diagnosis(effusive_constrictive_pericarditis)"
+  },
+  {
+    "id": "case-14",
+    "rulebook": "cases/case-14/rulebook.adj",
+    "program": "cases/case-14/program.adj",
+    "correct_term": "diagnosis(invasive_mucinous_adenocarcinoma)",
+    "engine_top": "diagnosis(invasive_mucinous_adenocarcinoma)"
+  },
+  {
+    "id": "case-15",
+    "rulebook": "cases/case-15/rulebook.adj",
+    "program": "cases/case-15/program.adj",
+    "correct_term": "diagnosis(primary_membranous_nephropathy_pla2r)",
+    "engine_top": "diagnosis(primary_membranous_nephropathy_pla2r)"
+  },
+  {
+    "id": "case-16",
+    "rulebook": "cases/case-16/rulebook.adj",
+    "program": "cases/case-16/program.adj",
+    "correct_term": "diagnosis(primary_cutaneous_dlbcl_leg_type)",
+    "engine_top": "diagnosis(primary_cutaneous_dlbcl_leg_type)"
+  },
+  {
+    "id": "case-17",
+    "rulebook": "cases/case-17/rulebook.adj",
+    "program": "cases/case-17/program.adj",
+    "correct_term": "unifying_diagnosis(mngie)",
+    "engine_top": "unifying_diagnosis(mngie)"
+  },
+  {
+    "id": "case-18",
+    "rulebook": "cases/case-18/rulebook.adj",
+    "program": "cases/case-18/program.adj",
+    "correct_term": "diagnosis(sporadic_hemiplegic_migraine)",
+    "engine_top": "diagnosis(mitochondrial_stroke_like_episode)"
+  },
+  {
+    "id": "case-19",
+    "rulebook": "cases/case-19/rulebook.adj",
+    "program": "cases/case-19/program.adj",
+    "correct_term": "diagnosis(pulmonary_paragonimiasis)",
+    "engine_top": "diagnosis(pulmonary_paragonimiasis)"
+  },
+  {
+    "id": "case-20",
+    "rulebook": "cases/case-20/rulebook.adj",
+    "program": "cases/case-20/program.adj",
+    "correct_term": "diagnosis(cerebrotendinous_xanthomatosis)",
+    "engine_top": "diagnosis(cerebrotendinous_xanthomatosis)"
+  },
+  {
+    "id": "case-21",
+    "rulebook": "cases/case-21/rulebook.adj",
+    "program": "cases/case-21/program.adj",
+    "correct_term": "diagnosis(bladder_paraganglioma)",
+    "engine_top": "diagnosis(bladder_paraganglioma)"
+  },
+  {
+    "id": "case-22",
+    "rulebook": "cases/case-22/rulebook.adj",
+    "program": "cases/case-22/program.adj",
+    "correct_term": "diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)",
+    "engine_top": "diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)"
+  },
+  {
+    "id": "case-23",
+    "rulebook": "cases/case-23/rulebook.adj",
+    "program": "cases/case-23/program.adj",
+    "correct_term": "diagnosis(intravascular_large_b_cell_lymphoma)",
+    "engine_top": "diagnosis(intravascular_large_b_cell_lymphoma)"
+  },
+  {
+    "id": "case-24",
+    "rulebook": "cases/case-24/rulebook.adj",
+    "program": "cases/case-24/program.adj",
+    "correct_term": "diagnosis(copper_deficiency_myeloneuropathy)",
+    "engine_top": "diagnosis(copper_deficiency_myeloneuropathy)"
+  },
+  {
+    "id": "case-25",
+    "rulebook": "cases/case-25/rulebook.adj",
+    "program": "cases/case-25/program.adj",
+    "correct_term": "diagnosis(pulmonary_siderosis)",
+    "engine_top": "diagnosis(pulmonary_siderosis)"
+  },
+  {
+    "id": "case-26",
+    "rulebook": "cases/case-26/rulebook.adj",
+    "program": "cases/case-26/program.adj",
+    "correct_term": "etiology(autoimmune_adrenalitis)",
+    "engine_top": "etiology(autoimmune_adrenalitis)"
+  },
+  {
+    "id": "case-27",
+    "rulebook": "cases/case-27/rulebook.adj",
+    "program": "cases/case-27/program.adj",
+    "correct_term": "diagnosis(pulmonary_malt_lymphoma)",
+    "engine_top": "diagnosis(pulmonary_malt_lymphoma)"
+  },
+  {
+    "id": "case-28",
+    "rulebook": "cases/case-28/rulebook.adj",
+    "program": "cases/case-28/program.adj",
+    "correct_term": "amyloid_type(aa_amyloidosis)",
+    "engine_top": "amyloid_type(aa_amyloidosis)"
+  },
+  {
+    "id": "case-29",
+    "rulebook": "cases/case-29/rulebook.adj",
+    "program": "cases/case-29/program.adj",
+    "correct_term": "diagnosis(cardiac_hibernoma)",
+    "engine_top": "diagnosis(lipomatous_hypertrophy_interatrial_septum)"
+  },
+  {
+    "id": "case-30",
+    "rulebook": "cases/case-30/rulebook.adj",
+    "program": "cases/case-30/program.adj",
+    "correct_term": "diagnosis(whipple_disease)",
+    "engine_top": "diagnosis(whipple_disease)"
+  }
+]

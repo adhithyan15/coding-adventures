@@ -1,0 +1,232 @@
+% ============================================================================
+% ADJ52 case-28 derived rulebook.
+% Clinical area: systemic_amyloidosis (the AREA — the differential of systemic
+% amyloid fibril TYPE / etiology in a multisystem infiltrative illness — NOT a
+% specific named subtype).
+%
+% The diagnostic puzzle the IR poses (q1-q4): a 59-year-old man with ~10 weeks of
+% crampy lower abdominal pain, bloating, borborygmi, loose pale (steatorrhoeic)
+% stools 4x/day and ~18 kg weight loss (a MALABSORPTION picture); new
+% length-dependent NUMBNESS of hands and feet with electrodiagnostically confirmed
+% active peripheral NEUROPATHY; spontaneous BRUISE-LIKE PATCHES + petechiae over
+% forearms/shins with no trauma (amyloid/vascular-fragility purpura); MACROGLOSSIA
+% on exam; diffuse small-bowel wall thickening with a firm, GRANULAR, edematous
+% cecum-to-ileum at laparotomy (mimicking peritonitis/IBD but NO perforation);
+% profound HYPOALBUMINEMIA (22) and anemia (Hb 86); sub-nephrotic PROTEINURIA
+% (910 mg/24h) with renal impairment (creatinine 205); a strongly INFLAMMATORY
+% profile (CRP 188, IL-6 47, ESR 52); cardiac signal change on MRI with a small
+% troponin/NT-proBNP rise; and primary hypothyroidism. Pivotally, the monoclonal /
+% clonal workup is THOROUGHLY NEGATIVE: serum AND urine immunofixation negative,
+% Bence-Jones absent, serum free light chains normal, immunoglobulins/CTD panel
+% unremarkable, serum VEGF normal, and a NON-clonal marrow with only mild (7%)
+% plasmacytosis.
+%
+% Unifying lesion: SYSTEMIC AMYLOIDOSIS. The firm/granular infiltrated bowel,
+% macroglossia, vascular-fragility purpura, proteinuric nephropathy, peripheral
+% neuropathy and patchy myocardial signal change are correlated manifestations of
+% ONE infiltrative deposition process. The decision the case forces is the FIBRIL
+% TYPE, because management diverges radically by type and because the negative
+% clonal workup must be reconciled (q3).
+%
+% Candidates: aa_amyloidosis (reactive / inflammatory, SAA-driven),
+% al_amyloidosis (immunoglobulin light chain — the TEMPTING answer because of the
+% macroglossia + purpura gestalt), attr_amyloidosis (transthyretin — hereditary or
+% wild-type, clonal-workup-negative), and poems_syndrome (a non-amyloid
+% neuropathy/organ/skin mimic kept on the differential to be excluded).
+%
+% Magnitudes encoded QUALITATIVELY per adj-lang grammar (lowercase identifiers,
+% no uppercase, no leading digit): crp(markedly_elevated), il6(elevated),
+% proteinuria(sub_nephrotic), albumin(markedly_low), etc.
+%
+% Anti-overfit note: each clause is added because a cited source supports the
+% DIRECTION of its likelihood ratio for that type, NOT to steer this case onto a
+% chosen answer. The discriminators that argue AGAINST the tempting wrong answer
+% (AL) — namely the COMPLETELY negative monoclonal/clonal workup, which makes AL
+% a ~0.2% event in the Mayo series — fire with LR<1 because the sources support
+% it, not because we want AA to win.
+%
+% CORRELATED EVIDENCE (anti-saturation): three distinct latent mechanisms.
+%  (1) The amyloid infiltrative tissue syndrome (granular bowel, macroglossia,
+%      purpura, proteinuria, neuropathy, cardiac signal) is ONE deposition process
+%      shared by ALL amyloid types — grouped under a single mechanism that fires
+%      ONCE per amyloid conclusion rather than summing one edge per organ.
+%  (2) The acute-phase INFLAMMATORY signature (CRP markedly high, IL-6 high, ESR
+%      high) is ONE SAA-driving mechanism specific to AA — grouped once for AA.
+%  (3) The AL bleeding/soft-tissue gestalt (macroglossia + spontaneous purpura,
+%      the classic factor-X / vascular-fragility AL picture) is grouped once for
+%      AL as a (modest) AL-supportive mechanism, so the tongue+bruising is not
+%      counted twice across both the shared-amyloid and AL-specific lines.
+% What remain as independent `contributes` are the TYPE discriminators that
+% actually separate the candidates (the clonal workup, the inflammatory driver as
+% an AA-specific edge, VEGF, demographics, and the pending typing/genetic tests).
+% ============================================================================
+
+% ===== PRIORS (base rates among new systemic amyloidosis diagnoses) =====
+
+% rationale: AL (immunoglobulin light-chain) amyloidosis is the single commonest
+% type of systemic amyloidosis in the developed world and the one most associated
+% with macroglossia + amyloid purpura, so it carries the largest prior BEFORE the
+% clonal workup is taken into account.
+prior 0.42 for amyloid_type(al_amyloidosis)
+  source "Wiley AJH 2024 update on AL amyloidosis diagnosis (AL is the commonest systemic amyloidosis)" trust authoritative
+
+% rationale: AA (reactive / inflammatory) amyloidosis is the next commonest
+% systemic type, driven by sustained serum amyloid A under chronic inflammation;
+% renal involvement is near-universal.
+prior 0.28 for amyloid_type(aa_amyloidosis)
+  source "Medscape 335559 AA (Inflammatory) Amyloidosis; PMC11219434 AA: A Contemporary View (renal involvement ~97%)" trust authoritative
+
+% rationale: ATTR (transthyretin — hereditary variant or wild-type) is a major
+% non-clonal systemic amyloidosis with a neuropathy + cardiac + GI phenotype;
+% lower prior than AL/AA overall.
+prior 0.22 for amyloid_type(attr_amyloidosis)
+  source "Frontiers Neurol 2023;14:1242815 hereditary ATTR review (neuropathy, nephropathy, cardiomyopathy, GI)" trust authoritative
+
+% rationale: POEMS is a non-amyloid plasma-cell mimic (polyneuropathy,
+% organomegaly, endocrinopathy, skin changes) kept on the differential because the
+% neuropathy + skin + endocrine + multisystem picture superficially fits; modest
+% prior, must be EARNED away on VEGF + paraprotein.
+prior 0.08 for diagnosis(poems_syndrome)
+  source "Springer J Neurol 2018 POEMS clinical update; Orphanet POEMS diagnostic criteria" trust authoritative
+
+% ===== SHARED AMYLOID INFILTRATIVE SYNDROME (count once per amyloid type) =====
+% rationale: a firm/granular infiltrated small bowel, macroglossia, spontaneous
+% vascular-fragility purpura, proteinuric nephropathy, peripheral neuropathy and
+% patchy non-thickening myocardial signal change are correlated effects of ONE
+% mechanism — extracellular amyloid fibril deposition in multiple organs. Fire
+% ONCE per amyloid conclusion rather than summing six organ edges (anti-double-
+% count). The magnitude is the same across amyloid types because this gestalt
+% confirms AMYLOID, not its TYPE; typing is done by the discriminators below.
+% mechanism amyloid_infiltration for amyloid_type(al_amyloidosis) lr 8.0 : bowel_infiltration(firm_granular), macroglossia(present), purpura(spontaneous_nontraumatic), proteinuria(sub_nephrotic), peripheral_neuropathy(active), cardiac_signal_change(present)
+% mechanism amyloid_infiltration for amyloid_type(aa_amyloidosis) lr 8.0 : bowel_infiltration(firm_granular), macroglossia(present), purpura(spontaneous_nontraumatic), proteinuria(sub_nephrotic), peripheral_neuropathy(active), cardiac_signal_change(present)
+% mechanism amyloid_infiltration for amyloid_type(attr_amyloidosis) lr 8.0 : bowel_infiltration(firm_granular), macroglossia(present), purpura(spontaneous_nontraumatic), proteinuria(sub_nephrotic), peripheral_neuropathy(active), cardiac_signal_change(present)
+
+% ===== AA-SPECIFIC ACUTE-PHASE / SAA-DRIVING MECHANISM (count once for AA) =====
+% rationale: a markedly elevated CRP, high IL-6 and high ESR are correlated
+% acute-phase manifestations of ONE upstream process — sustained inflammatory
+% (IL-6 -> hepatic SAA) drive, which is the PREREQUISITE for AA fibrillogenesis.
+% Group them so the inflammatory burst fires the AA-supporting LR ONCE rather than
+% three times. This same signature is the strongest argument that the amyloid here
+% is REACTIVE (AA) rather than light-chain.
+% mechanism saa_acute_phase_drive for amyloid_type(aa_amyloidosis) lr 5.5 : crp(markedly_elevated), il6(elevated), esr(elevated)
+
+% rationale (AA discriminator, NEGATIVE for AL): AL amyloidosis is a plasma-cell /
+% light-chain disease, NOT an inflammatory one; a markedly elevated acute-phase
+% response is not its mechanism and points away from AL toward a reactive process.
+contributes 0.6 from crp(markedly_elevated) to amyloid_type(al_amyloidosis)
+  source "CrackMedicine AL vs AA (AL is light-chain driven, not acute-phase/inflammatory)" trust empirical
+
+% ===== AL-SPECIFIC BLEEDING / SOFT-TISSUE GESTALT (count once for AL) =====
+% rationale: macroglossia together with spontaneous bruising/purpura is the
+% classic AL soft-tissue + vascular-fragility (factor-X adsorption / amyloid
+% angiopathy) picture; tongue amyloid is "almost always" AL. Grouped as ONE
+% modest AL-supporting mechanism so the tongue+bruising findings are not also
+% re-summed on top of the shared-amyloid line (which already credits them to all
+% types). LR kept modest because macroglossia is suggestive of AL but not
+% type-defining on its own, and ATTR can also enlarge the tongue.
+% mechanism al_soft_tissue_bleeding for amyloid_type(al_amyloidosis) lr 2.2 : macroglossia(present), purpura(spontaneous_nontraumatic)
+%   source "ASH Blood 116:5007 Macroglossia not always AL; Blood 97:1885 acquired factor X deficiency in AL"
+
+% ===== MONOCLONAL / CLONAL WORKUP — THE KEY TYPE DISCRIMINATOR =====
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE against the tempting AL answer) — a
+% COMPLETELY negative monoclonal screen (serum AND urine immunofixation negative,
+% Bence-Jones absent, serum free light chains normal) makes AL extremely unlikely:
+% in the Mayo series only ~0.2% of AL patients had ALL monoclonal-protein studies
+% normal. This is the single strongest argument the amyloid here is NON-AL.
+contributes 0.05 from clonal_workup(fully_negative) to amyloid_type(al_amyloidosis)
+  source "Mayo / PMC10164359 & Haematologica SFLC eval (only ~0.2% of AL have all monoclonal studies normal)" trust authoritative
+
+% rationale: a fully negative monoclonal/clonal screen is exactly what is EXPECTED
+% in reactive AA amyloidosis (polyclonal, inflammation-driven, no paraprotein),
+% so it is consistent-to-supportive rather than against.
+contributes 1.4 from clonal_workup(fully_negative) to amyloid_type(aa_amyloidosis)
+  source "Medscape 335559 AA workup; Wikipedia AA amyloidosis (polyclonal, no monoclonal protein)" trust authoritative
+
+% rationale: ATTR is a transthyretin (non-immunoglobulin) amyloid; a negative
+% monoclonal/clonal workup is fully consistent with ATTR and is in fact required
+% before attributing neuropathy to a paraprotein — supportive of a non-clonal type.
+contributes 1.3 from clonal_workup(fully_negative) to amyloid_type(attr_amyloidosis)
+  source "Frontiers Neurol 2023;14:1242815; Springer J Neurol 2019 ATTR-PN consensus (exclude paraprotein; TTR sequencing)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE against POEMS) — POEMS REQUIRES a
+% monoclonal plasma-cell disorder (mandatory criterion, almost always lambda); a
+% thoroughly negative paraprotein workup with a non-clonal marrow argues strongly
+% against POEMS.
+contributes 0.1 from clonal_workup(fully_negative) to diagnosis(poems_syndrome)
+  source "Springer J Neurol 2018 POEMS update; Orphanet POEMS criteria (monoclonal plasma-cell disorder mandatory)" trust authoritative
+
+% ===== VEGF — POEMS DISCRIMINATOR =====
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE against POEMS) — a NORMAL serum
+% VEGF argues against POEMS, in which VEGF (a major criterion) is characteristically
+% elevated; combined with the absent paraprotein this effectively excludes POEMS.
+contributes 0.2 from vegf(normal) to diagnosis(poems_syndrome)
+  source "Springer J Neurol 2018 POEMS update; HemaSphere 2022 POEMS dx (elevated VEGF is a major criterion)" trust authoritative
+
+% ===== INDEPENDENT AA-vs-AL / TYPE EDGES =====
+
+% rationale: heavy / progressive proteinuric renal involvement is near-universal in
+% AA (~97%) and is its dominant clinical mode; supports AA modestly. (Kept small
+% and SEPARATE from the shared amyloid-infiltration line, which credited the renal
+% deposition to all types equally; this edge captures the AA-specific renal
+% PREDOMINANCE, not the mere presence of proteinuria.)
+contributes 1.6 from renal_predominant(present) to amyloid_type(aa_amyloidosis)
+  source "PMC11219434 AA: A Contemporary View; Medscape 335559 (renal involvement ~97% in AA)" trust authoritative
+
+% rationale: macroglossia is reported "almost always" with AL (and ATTR) and is
+% atypical for AA; so the presence of macroglossia is a mild edge AGAINST a purely
+% reactive AA type. Kept modest (LR<1 but near 1) because idiopathic/reactive AA
+% can rarely involve the tongue and the inflammatory data still dominate.
+contributes 0.8 from macroglossia(present) to amyloid_type(aa_amyloidosis)
+  source "ASH Blood 116:5007 Macroglossia - Not Always AL; MyAmyloidosisTeam (tongue amyloid usually AL/ATTR)" trust empirical
+
+% rationale: an older male with a neuropathy + cardiac phenotype is the typical
+% ATTR demographic; mildly supportive of ATTR.
+contributes 1.3 from demographic(older_male) to amyloid_type(attr_amyloidosis)
+  source "Frontiers Neurol 2023;14:1242815 hereditary ATTR review (adult-onset, male-predominant in many series)" trust empirical
+
+% rationale: a markedly inflammatory acute-phase state is NOT a feature of ATTR
+% (a non-inflammatory deposition disease); the strong CRP/IL-6/ESR profile argues
+% mildly against ATTR being the unifying type. LR<1.
+contributes 0.7 from crp(markedly_elevated) to amyloid_type(attr_amyloidosis)
+  source "Frontiers Neurol 2023;14:1242815 (ATTR is non-inflammatory; no acute-phase signature)" trust inferred
+
+% ===== SYNERGY =====
+
+% rationale: KEY SYNERGY — a markedly elevated acute-phase response TOGETHER with a
+% fully negative monoclonal workup is the defining combination of REACTIVE (AA)
+% amyloidosis: sustained inflammation drives SAA fibrillogenesis with NO paraprotein.
+% The two independent lines (inflammation present + clonality absent) reinforce.
+interacts 2.0 when crp(markedly_elevated) and clonal_workup(fully_negative) for amyloid_type(aa_amyloidosis)
+  source "CrackMedicine AL vs AA; PMC11219434 AA (chronic inflammation + no monoclonal protein -> AA)" trust authoritative
+
+% ===== DECISION-RELEVANT UNCERTAINTIES =====
+% The unresolved tests that move the TYPE posterior are (a) amyloid TYPING on tissue
+% biopsy (mass-spectrometry / immunohistochemistry of the Congo-red-positive
+% deposit) and (b) TTR gene sequencing. Each candidate result has a contributes
+% edge below, so resolving the uncertainty shifts the posterior.
+
+% rationale: amyloid typing that identifies SERUM AMYLOID A protein in the deposit
+% is confirmatory for AA — near-decisive when present.
+contributes 7.0 from amyloid_typing(serum_amyloid_a) to amyloid_type(aa_amyloidosis)
+  source "Mayo Clin Proc 2020 amyloid typing by mass spectrometry (subtype identified by deposit protein)" trust authoritative
+
+% rationale: amyloid typing identifying immunoglobulin LIGHT CHAIN in the deposit
+% would confirm AL despite a negative serum screen (rare AL with normal monoclonal
+% studies typed on tissue); strong edge for AL.
+contributes 7.0 from amyloid_typing(immunoglobulin_light_chain) to amyloid_type(al_amyloidosis)
+  source "ASH Blood 120:3206 How I treat amyloidosis (tissue typing by mass spec is decisive for subtype)" trust authoritative
+
+% rationale: amyloid typing identifying TRANSTHYRETIN protein in the deposit, or a
+% pathogenic TTR variant on sequencing, confirms ATTR; strong edge for ATTR.
+contributes 7.0 from amyloid_typing(transthyretin) to amyloid_type(attr_amyloidosis)
+  source "ARUP TTR sequencing; Mayo Clin Proc 2020 amyloid typing (TTR fibril identifies ATTR)" trust authoritative
+
+contributes 5.0 from ttr_gene(pathogenic_variant) to amyloid_type(attr_amyloidosis)
+  source "ARUP Familial Transthyretin Amyloidosis TTR Sequencing (pathogenic variant confirms hereditary ATTR)" trust authoritative
+
+uncertain { amyloid_typing(serum_amyloid_a), amyloid_typing(immunoglobulin_light_chain), amyloid_typing(transthyretin) } for amyloid_type(aa_amyloidosis)
+uncertain { amyloid_typing(immunoglobulin_light_chain), amyloid_typing(serum_amyloid_a), amyloid_typing(transthyretin) } for amyloid_type(al_amyloidosis)
+uncertain { amyloid_typing(transthyretin), amyloid_typing(serum_amyloid_a), amyloid_typing(immunoglobulin_light_chain) } for amyloid_type(attr_amyloidosis)
+uncertain { ttr_gene(pathogenic_variant), ttr_gene(no_variant) } for amyloid_type(attr_amyloidosis)

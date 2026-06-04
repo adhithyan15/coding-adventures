@@ -1,6 +1,6 @@
 export const meta = {
-  name: 'adj52-case-pipeline',
-  description: 'Hands-off adjudication pipeline over published clinical cases: fetch + diagnosis-invariant PERTURB (defeat training-data recall) -> domain-blind ingest -> recursive byte-provenanced rulebook derive into an ACCUMULATING domain rulebook store + engine run on a swappable per-case program -> plain-Claude control -> blind judge -> aggregate. No human in the loop; read the aggregate, not each case.',
+  name: 'adj52-diagnostic-pipeline',
+  description: 'FAILURE-ENRICHED diagnostic re-run of the ADJ52 hands-off adjudication pipeline. Same five arms (prepare+perturb -> domain-blind ingest -> recursive rulebook derive + engine run -> plain-Claude control -> blind judge) but seeded toward the specialties/angles that failed in run-3, and PERSISTS every per-case artifact (rulebook, program, engine output, ground truth, judge rationale) so each wrong case can be root-caused. macOS paths.',
   phases: [
     { title: 'Prepare' },
     { title: 'Ingest' },
@@ -10,30 +10,57 @@ export const meta = {
   ],
 }
 
-// Batch of 100: each Prepare agent FINDS its own published case report from a
-// diversified specialty+angle seed (so we don't hand-curate 100 URLs), holds the
-// ground truth aside, and emits a perturbed, sanitised vignette. A seed with no
-// cleanly-documented case is skipped (tracked in the aggregate).
-const SPECIALTIES = [
-  'cardiology', 'pulmonology', 'nephrology', 'endocrinology', 'infectious disease',
-  'hematology', 'medical oncology', 'rheumatology', 'neurology', 'gastroenterology',
-  'dermatology', 'hepatology', 'clinical immunology', 'emergency medicine',
-  'geriatric medicine', 'vascular medicine', 'otolaryngology', 'urology',
-  'allergy and immunology', 'general internal medicine',
+// ---- Failure-enriched seeds (30) ----
+// run-3 failures were spread across these specialties under the misleading-
+// presentation angles. We reuse the proven generic seed phrasing (specialty x
+// angle, which found 100/100 cases) but curate the 30 combos toward the areas
+// that produced `incorrect`/`partial` framework verdicts, so this batch is
+// dense in exactly the cases we want to root-cause. Each case writes its OWN
+// per-case-id rulebook dir, so concurrent cases never race on a file.
+const A1 = 'where the initial working diagnosis turned out to be wrong'
+const A2 = 'where the presentation mimicked a far more common condition'
+const A3 = 'with an unexpected final diagnosis after an initially misleading workup'
+const A4 = 'initially misattributed to a benign or unrelated cause'
+const A5 = 'where a rare disease masqueraded as a common one'
+const DIAG_SEEDS = [
+  `an adult clinical case report in vascular medicine ${A1}`,
+  `an adult clinical case report in neurology ${A5}`,
+  `an adult clinical case report in rheumatology ${A3}`,
+  `an adult clinical case report in infectious disease ${A2}`,
+  `an adult clinical case report in urology ${A4}`,
+  `an adult clinical case report in gastroenterology ${A3}`,
+  `an adult clinical case report in hepatology ${A5}`,
+  `an adult clinical case report in pulmonology ${A1}`,
+  `an adult clinical case report in otolaryngology ${A4}`,
+  `an adult clinical case report in clinical immunology ${A2}`,
+  `an adult clinical case report in hematology ${A3}`,
+  `an adult clinical case report in endocrinology ${A5}`,
+  `an adult clinical case report in cardiology ${A1}`,
+  `an adult clinical case report in medical oncology ${A4}`,
+  `an adult clinical case report in nephrology ${A2}`,
+  `an adult clinical case report in dermatology ${A5}`,
+  `an adult clinical case report in gastroenterology ${A3}`,
+  `an adult clinical case report in neurology ${A5}`,
+  `an adult clinical case report in infectious disease ${A1}`,
+  `an adult clinical case report in general internal medicine ${A4}`,
+  `an adult clinical case report in urology ${A2}`,
+  `an adult clinical case report in otolaryngology ${A5}`,
+  `an adult clinical case report in rheumatology ${A3}`,
+  `an adult clinical case report in hematology ${A4}`,
+  `an adult clinical case report in pulmonology ${A1}`,
+  `an adult clinical case report in endocrinology ${A2}`,
+  `an adult clinical case report in medical oncology ${A5}`,
+  `an adult clinical case report in gastroenterology ${A3}`,
+  `an adult clinical case report in cardiology ${A4}`,
+  `an adult clinical case report in infectious disease ${A2}`,
 ]
-const ANGLES = [
-  'where the initial working diagnosis turned out to be wrong',
-  'where the presentation mimicked a far more common condition',
-  'with an unexpected final diagnosis after an initially misleading workup',
-  'initially misattributed to a benign or unrelated cause',
-  'where a rare disease masqueraded as a common one',
-]
-const SEEDS = []
-for (const s of SPECIALTIES) for (const a of ANGLES) SEEDS.push(`an adult clinical case report in ${s} ${a}`)
-// Full batch of 100 (20 specialties x 5 angles). Smoke-validated on 3 first (0 skips, 0 compile failures).
-const seeds = (args && args.seeds && args.seeds.length) ? args.seeds : SEEDS
+const seeds = (args && args.seeds && args.seeds.length) ? args.seeds : DIAG_SEEDS
 if (!seeds.length) { log('no seeds'); return { error: 'no seeds' } }
-log(`pipeline over ${seeds.length} case seed(s)`)
+log(`diagnostic pipeline over ${seeds.length} failure-enriched seed(s)`)
+
+const ROOT = '/Users/adhithya/Downloads/coding-adventures/code/specs/data/adj52'
+const CASE_DIR = `${ROOT}/cases`
+const MANIFEST = `${ROOT}/Cargo.toml`
 
 // ---- Schemas (force structured output; no parsing) ----
 const PREPARE_SCHEMA = {
@@ -63,14 +90,15 @@ const FW_SCHEMA = {
   type: 'object',
   required: ['domain_key', 'rules_added', 'compiled_ok', 'top_conclusion', 'top_posterior', 'recommended_next_step', 'framework_answer_text'],
   properties: {
-    domain_key: { type: 'string', description: 'canonical lowercase_snake clinical-AREA key for the accumulating rulebook (the area, NOT the diagnosis)' },
-    rules_added: { type: 'number', description: 'number of NEW clauses this case added to the accumulating rulebook' },
+    domain_key: { type: 'string', description: 'canonical lowercase_snake clinical-AREA key (the area, NOT the diagnosis)' },
+    rules_added: { type: 'number', description: 'number of NEW clauses this case added' },
     compiled_ok: { type: 'boolean' },
     top_conclusion: { type: 'string' },
     top_posterior: { type: 'number' },
+    second_conclusion: { type: 'string', description: 'the runner-up diagnosis and its posterior, if any (for differential-coherence analysis)' },
     recommended_next_step: { type: 'string' },
     framework_answer_text: { type: 'string', description: 'neutral rendering for the judge: ranked posteriors + key fired clauses WITH citations + next step + open uncertainties' },
-    engine_output_excerpt: { type: 'string' },
+    engine_output_excerpt: { type: 'string', description: 'the FULL stdout of the cargo run (posteriors, fired clauses, mechanism lines, kickback panel)' },
   },
 }
 const PLAIN_SCHEMA = {
@@ -85,7 +113,7 @@ const VERDICT_SCHEMA = {
     winner: { type: 'string', enum: ['A', 'B', 'tie'] },
     a_correct: { type: 'string', enum: ['correct', 'partial', 'incorrect'] },
     b_correct: { type: 'string', enum: ['correct', 'partial', 'incorrect'] },
-    rationale: { type: 'string' },
+    rationale: { type: 'string', description: 'detailed: what each output got right/wrong vs ground truth, calibration, defensibility' },
   },
 }
 
@@ -108,8 +136,6 @@ Return inferred_domain, facts [{id,term,source_span}], uncertainties [{id,about,
 ${prose}
 === END ===`
 
-const RB_DIR = 'C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/rulebooks'
-const CASE_DIR = 'C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/cases'
 const deriveRunPrompt = (id, irJson) => `You derive a rulebook for a deterministic Bayesian logic engine and RUN one case against it. You are given an ingested IR (no answer). Use your tools for every step.
 
 1. Choose a canonical domain key: a stable lowercase_snake_case name for the CLINICAL AREA (the AREA, never a specific diagnosis) — for reporting only.
@@ -118,8 +144,8 @@ const deriveRunPrompt = (id, irJson) => `You derive a rulebook for a determinist
 4. CORRELATED EVIDENCE (important): when several findings are correlated manifestations of ONE underlying mechanism (the sources describe them as a syndrome / shared cause), do NOT write an independent contributes for each — that double-counts and saturates the posterior. Instead group them under ONE directive comment line: "% mechanism <m> for <conclusion> lr <L> : <finding1>, <finding2>, ..." which fires the combined likelihood ratio L ONCE if any manifestation is observed. <m> is a lowercase_snake mechanism name. Keep only genuinely independent findings as separate contributes.
 5. Write the rulebook (Write tool, ABSOLUTE path): ${CASE_DIR}/${id}/rulebook.adj — clauses + mechanism directives ONLY, no observe/query lines.
 6. Write this case's PROGRAM (Write tool, ABSOLUTE path): ${CASE_DIR}/${id}/program.adj — ONLY observe <term> lines for THIS patient (same vocabulary as the rulebook) and ? <conclusion> query lines for each candidate + the next step. NO rules in the program.
-7. Run via the Bash tool (exact): ADJ52_RULEBOOK=cases/${id}/rulebook.adj ADJ52_PROGRAM=cases/${id}/program.adj cargo run --quiet --manifest-path "C:/Users/adhit/Downloads/coding-adventures/code/specs/data/adj52/Cargo.toml" . If the output contains "COMPILE ERROR", fix the offending term (usually an identifier with uppercase or a leading digit) and re-run until it compiles.
-8. Return: domain_key, rules_added (number of clauses you wrote), compiled_ok, top_conclusion + top_posterior, recommended_next_step, engine_output_excerpt (per-query posteriors + any mechanism-fired lines), and framework_answer_text — a neutral judge-facing rendering with the ranked posteriors, the KEY fired clauses WITH citations (especially any discriminator that fired negative against a tempting wrong answer), the recommended next step, and any open uncertainties.
+7. Run via the Bash tool (exact): ADJ52_RULEBOOK=cases/${id}/rulebook.adj ADJ52_PROGRAM=cases/${id}/program.adj cargo run --quiet --manifest-path "${MANIFEST}" --bin adj52 . If the output contains "COMPILE ERROR", fix the offending term (usually an identifier with uppercase or a leading digit) and re-run until it compiles.
+8. Return: domain_key, rules_added (number of clauses you wrote), compiled_ok, top_conclusion + top_posterior, second_conclusion (runner-up + its posterior), recommended_next_step, engine_output_excerpt (the FULL stdout of the successful run), and framework_answer_text — a neutral judge-facing rendering with the ranked posteriors, the KEY fired clauses WITH citations (especially any discriminator that fired negative against a tempting wrong answer), the recommended next step, and any open uncertainties.
 
 IR:
 ${irJson}`
@@ -130,7 +156,7 @@ const plainPrompt = (prose) => `Read this problem statement and answer the quest
 ${prose}
 === END ===`
 
-const judgePrompt = (gt, a, b) => `You are an impartial judge. Score two responses (OUTPUT A, OUTPUT B) from systems whose identities are hidden, against the ground truth. Judge only content; do not guess which system is which. Assess correctness vs ground truth, hallucination, calibration (appropriate confidence + right confirmatory step), and defensibility (traceable/verifiable reasoning). Pick a winner.
+const judgePrompt = (gt, a, b) => `You are an impartial judge. Score two responses (OUTPUT A, OUTPUT B) from systems whose identities are hidden, against the ground truth. Judge only content; do not guess which system is which. Assess correctness vs ground truth, hallucination, calibration (appropriate confidence + right confirmatory step), and defensibility (traceable/verifiable reasoning). In your rationale, be SPECIFIC about what each output got right and wrong relative to ground truth and how its confidence compared to its correctness. Pick a winner.
 
 === GROUND TRUTH ===
 ${gt}
@@ -142,12 +168,6 @@ ${a}
 ${b}`
 
 // ---- Pipeline: each case flows through all stages independently ----
-// Accumulation note: cases sharing a domain_key grow the SAME rulebook file.
-// pipeline() runs cases concurrently, so genuine same-domain accumulation must
-// be run SEQUENTIALLY (or with a lock) to avoid read-modify-write races on the
-// shared rulebook. The default cases here are different clinical areas (so they
-// seed separate rulebooks and don't race); a same-domain accumulation run
-// should pass a single-area url list and be processed sequentially.
 const results = await pipeline(
   seeds,
   (seed, _orig, idx) => agent(preparePrompt(seed), { phase: 'Prepare', label: `prepare:case-${idx + 1}`, agentType: 'general-purpose', schema: PREPARE_SCHEMA })
@@ -162,21 +182,28 @@ const results = await pipeline(
   (o) => agent(plainPrompt(o.prose), { phase: 'Control', label: `plain:${o.id}`, agentType: 'general-purpose', schema: PLAIN_SCHEMA })
     .then((plain) => ({ ...o, plain })),
   (o, _orig, idx) => {
-    // Deterministic A/B blinding (Math.random is unavailable in workflow scripts):
-    // even index -> framework is A; odd -> framework is B.
+    // Deterministic A/B blinding: even index -> framework is A; odd -> framework is B.
     const fwIsA = (idx % 2) === 0
     const A = fwIsA ? o.fw.framework_answer_text : o.plain.answer_text
     const B = fwIsA ? o.plain.answer_text : o.fw.framework_answer_text
     return agent(judgePrompt(o.ground_truth, A, B), { phase: 'Judge', label: `judge:${o.id}`, agentType: 'general-purpose', schema: VERDICT_SCHEMA })
       .then((v) => ({
         id: o.id,
+        seed: o.seed,
+        source_url: o.source_url,
         diagnosis_unchanged: o.diagnosis_unchanged,
         perturbations: o.perturbations,
+        // DIAGNOSTIC: keep ground truth + full texts so wrong cases can be root-caused.
+        ground_truth: o.ground_truth,
         fw_domain: o.fw.domain_key,
         fw_rules_added: o.fw.rules_added,
         fw_compiled: o.fw.compiled_ok,
         fw_top: `${o.fw.top_conclusion} @ ${o.fw.top_posterior}`,
+        fw_second: o.fw.second_conclusion || '',
         fw_next_step: o.fw.recommended_next_step,
+        fw_answer_text: o.fw.framework_answer_text,
+        fw_engine_output: o.fw.engine_output_excerpt || '',
+        plain_answer_text: o.plain.answer_text,
         fw_is: fwIsA ? 'A' : 'B',
         winner: v.winner,
         framework_correct: fwIsA ? v.a_correct : v.b_correct,
@@ -198,8 +225,12 @@ const tally = {
   plain_won: done.filter((r) => r.plain_won).length,
   tie: done.filter((r) => r.winner === 'tie').length,
   framework_correct: done.filter((r) => r.framework_correct === 'correct').length,
+  framework_partial: done.filter((r) => r.framework_correct === 'partial').length,
+  framework_incorrect: done.filter((r) => r.framework_correct === 'incorrect').length,
   plain_correct: done.filter((r) => r.plain_correct === 'correct').length,
   fw_compile_failures: done.filter((r) => !r.fw_compiled).length,
 }
-log(`AGGREGATE: ${tally.cases_completed}/${tally.seeds_attempted} completed (${tally.skipped_or_failed} skipped/failed); framework won ${tally.framework_won}, plain ${tally.plain_won}, tie ${tally.tie}; framework correct ${tally.framework_correct}, plain correct ${tally.plain_correct}; compile failures ${tally.fw_compile_failures}`)
-return { tally, per_case: done }
+// The wrong cases — the whole point of this diagnostic run.
+const wrong = done.filter((r) => r.framework_correct !== 'correct').map((r) => r.id)
+log(`AGGREGATE: ${tally.cases_completed}/${tally.seeds_attempted} completed; fw correct ${tally.framework_correct} / partial ${tally.framework_partial} / incorrect ${tally.framework_incorrect}; compile failures ${tally.fw_compile_failures}; WRONG cases to root-cause: ${wrong.join(', ')}`)
+return { tally, wrong, per_case: done }

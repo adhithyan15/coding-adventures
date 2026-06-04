@@ -3,6 +3,75 @@
 Per-batch learnings from building and running the autonomous blind
 cross-arm experiment loop. Newest first.
 
+## 2026-06-03 — Batch 5: ADJ54 — calibration-regression harness + H2 (anti-entropy)
+
+The lesson from the softmax regression (Batch 2) was methodological, not
+tactical: a fix judged on the noisy n=3 blind-judge loop can regress
+individual cases while the aggregate improves, invisibly. **Fix the
+instrument, not the patch.** Built a deterministic, offline, per-case gate
+(`calibration/score.py`): freeze a corpus of (rulebook, program, label),
+score any engine change in ms/case, and FAIL on any per-case regression
+regardless of the aggregate. Validated it both ways (passes identical; flags
+a synthetic regression even with the aggregate left unchanged — the exact
+softmax failure mode).
+
+**Root-cause, not guess.** A failure-enriched 30-case diagnostic re-run
+(persisting per-case artifacts, which run-3 discarded) gave 7 wrong cases;
+each root-caused from its actual rulebook + deterministic trace + judge
+rationale + ground truth. Universal finding: ALL 9 cases (incl. both correct
+controls) assert ~99% while recommending the confirmatory test. The wrong
+cases split into three levers: **H1** correlation de-stacking (true sibling
+suppressed by over-stacking — case-5,7), **H2** open-question discounting
+(saturated while a bearing uncertainty is open — 6/9), **H3** residual
+hypothesis (true answer not in the differential at all — case-6,18,29).
+
+**H2 shipped + gated.** Runner-level VOI-band tempering with the key
+anti-entropy property: **rank on RAW posterior, calibrate on the tempered
+REPORTED posterior** — so H2 cannot reorder the differential (zero
+correctness regression by construction; the property softmax lacked). Gate:
+baseline→H2 = **0 regressions**, accuracy unchanged (0.833), saturation
+17→12, log-loss −13%. BUT confidently-wrong stayed at 5 — the instrument
+proved H2 insufficient AND said why: bands are narrow because saturation is
+H1-driven (over-stacked OBSERVED evidence), not the pending test.
+
+**Takeaways:** (1) aggregate Brier lies at high accuracy (0.0006 on
+correct-only vs 0.16 with the wrong cases) — the corpus MUST include the
+failures. (2) Reporting must be decoupled from ranking; only
+correctness-targeted levers (H1/H3) may reorder, and only under the gate.
+(3) Do calibration fixes in the runner first (zero blast radius, like the
+ADJ53 mechanism construct), not the Miri-checked logic-engine crate. Next:
+H1 runner-level same-sign-contribution shrinkage (frozen-corpus testable),
+then H3 deriver residual hypothesis (needs re-derivation). Spec:
+`ADJ54-calibration-regression-harness.md`.
+
+## 2026-06-03 — Batch 4: 100-case hands-off run (the scaled descent data point)
+
+Workflow `wuja6iixk`: **100/100 completed, 0 skipped, 0 compile failures**; 500
+agents, 17.7M tokens, ~60 min. Each seed self-found + perturbed its own case.
+Full writeup + cross-tabs: `runs/run-3-100case.md`; data: `run-3-100case-summary.json`.
+
+**Result:** framework correct **62**, plain correct **61** (parity); blind-judge
+wins framework **39** / plain **60** / tie 1.
+
+**The cross-tabs are the finding:**
+- Correctness is essentially tied and symmetric (both 54; only-fw 8; only-plain 7;
+  neither 31). The framework is NOT a worse diagnostician than frontier Claude.
+- **28 of plain's 60 wins are cases the framework ALSO got right but lost on
+  calibration/defensibility** (saturated posteriors + pseudo-precise logits +
+  unverifiable citations). That is the entire competitive gap.
+- The framework's genuine niche — won AND correct where plain was wrong — is **8/100**
+  (real but small; should grow as the base model weakens, per the descent).
+- **Saturation persists: 51/100 top posteriors >= 0.99, median 0.9907.** The
+  `mechanism` construct was available but the deriver didn't lean on it enough to
+  temper the headline — availability != use.
+
+**Takeaways:** (1) the machinery scales hands-off; (2) correctness parity with
+frontier is established; (3) the only thing between co-equal and ahead is
+CALIBRATION — the most fixable place to lose; the addressable pool is the 28
+right-but-overconfident losses. Next: make the deriver actually route correlated
+findings through mechanisms, and cap/hold the posterior so it never reads ~99%
+while a confirmatory `uncertain` marker is open.
+
 ## 2026-06-03 — Batch 3: first-principles redesign (ADJ53) — latent mechanism
 
 Reverted the softmax patch (it normalized already-inflated scores — a symptom

@@ -1,0 +1,48 @@
+% ADJ52 case-15 program — THIS patient's observations + queries only.
+% Same vocabulary as cases/case-15/rulebook.adj. Numeric/unit facts from the IR
+% are mapped to the rulebook's qualitative atoms:
+%   patient_age(years(64))                       -> age(over_60)
+%   anti_pla2r 590 RU/mL (ref <14)               -> anti_pla2r(markedly_elevated)
+%   serum_albumin 22 g/L                          -> serum_albumin(low)
+%   urine_albumin >3500 mg/L + albumin 22 + edema -> nephrotic_range(present)
+%   granular IgG and C3 along capillary walls      -> immunofluorescence(granular_igg_c3_capillary_walls)
+%   widespread podocyte foot-process effacement    -> podocyte(foot_process_effacement)
+%   subepithelial "hump"-shaped EM deposits        -> electron_microscopy(subepithelial_humps)
+%   C3 1.10 / C4 0.21 within reference range        -> complement(normal)
+%   completed oral co-amoxiclav for UTI ~10d prior -> antecedent(recent_treated_infection)
+%   18-month 16 kg unintentional weight loss        -> weight_loss(unintentional)
+%   long-standing smoker                            -> history(long_standing_smoker)
+%   remote calf deep vein thrombosis                -> history(venous_thromboembolism)
+%   weakly reactive ANA, anti-Ro specificity        -> autoantibody(ana_anti_ro_weak)
+%   bland nephrotic (heavy proteinuria, no nephritic features) -> presentation(nephrotic_not_nephritic)
+%   poor diuretic response                          -> diuretic_response(poor)
+%   edema/proteinuria persisted, no expected improvement -> course(persistent_no_improvement)
+% PLA2R tissue staining / IgG-subclass and the malignancy screen are deliberately
+% NOT observed: they are the open uncertainties driving the next-step decision.
+
+observe age(over_60)
+observe anti_pla2r(markedly_elevated)
+observe serum_albumin(low)
+observe nephrotic_range(present)
+observe immunofluorescence(granular_igg_c3_capillary_walls)
+observe podocyte(foot_process_effacement)
+observe electron_microscopy(subepithelial_humps)
+observe complement(normal)
+observe antecedent(recent_treated_infection)
+observe weight_loss(unintentional)
+observe history(long_standing_smoker)
+observe history(venous_thromboembolism)
+observe autoantibody(ana_anti_ro_weak)
+observe presentation(nephrotic_not_nephritic)
+observe diuretic_response(poor)
+observe course(persistent_no_improvement)
+
+% q1/q2 — unifying diagnosis across the nephrotic-syndrome MN-pattern differential
+? diagnosis(primary_membranous_nephropathy_pla2r)
+? diagnosis(post_infectious_glomerulonephritis)
+? diagnosis(secondary_membranous_malignancy)
+? diagnosis(secondary_membranous_autoimmune)
+
+% q4 — definitive next step that reconciles serology with tissue
+? next_step(pla2r_tissue_staining_and_igg_subclass)
+? next_step(age_appropriate_malignancy_screen)

@@ -1,0 +1,79 @@
+{
+  "prep": {
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11999957/",
+    "pe_confirmed": "pe_present",
+    "observations": [
+      "d_dimer(elevated)",
+      "ctpa(filling_defect_positive)"
+    ],
+    "observations_excluded_pretest": [
+      "d_dimer(elevated)"
+    ],
+    "findings_not_in_vocab": [
+      "echo RV strain with PASP 56",
+      "ECG mimics ACS",
+      "high NT-proBNP",
+      "angiography excluded ACS",
+      "DVT found on ultrasound but Wells clinical-DVT exam sign absent",
+      "pretest scores low despite true PE"
+    ],
+    "ground_truth": "PE confirmed by CTPA, DVT present, ACS excluded, pretest scores were low but PE was real",
+    "prose": "A 55-year-old man presented with exertional chest pain palpitations and dyspnea, HR 80 with no leg edema, ECG showed ST-elevation mimicking ACS, D-dimer elevated, Wells 0 low probability, angiography clean</prose>\n</invoke>\n"
+  },
+  "ungrounded": {
+    "p_pe": 0.01,
+    "cites_primary_numbers": false,
+    "invented_lrs": [
+      {
+        "finding": "Wells score 0 (low clinical probability)",
+        "lr": 0.15,
+        "role": "rule-out anchor (sets pretest)",
+        "citation": "Recalled from Wells/Christopher-study ranges (PE prevalence <2% in 'PE unlikely'); NOT extracted from a fetched source",
+        "primary_number_extracted": false
+      },
+      {
+        "finding": "Clean CT pulmonary angiography",
+        "lr": 0.05,
+        "role": "near gold-standard negative",
+        "citation": "Recalled PIOPED II-style CTA performance (sens ~83%, spec ~96%, NPV ~96-99% at low pretest); value assigned by judgement, not extracted",
+        "primary_number_extracted": false
+      },
+      {
+        "finding": "Elevated D-dimer (positive)",
+        "lr": 1.5,
+        "role": "weak/near-useless rule-in (distractor)",
+        "citation": "Recalled positive-D-dimer LR range ~1.0-1.7; non-specific; assigned by judgement",
+        "primary_number_extracted": false
+      },
+      {
+        "finding": "ST-elevation on ECG mimicking ACS",
+        "lr": 0.8,
+        "role": "points toward ACS/myopericarditis, not PE",
+        "citation": "No specific source; judgement (ST-elevation is not a discriminating PE feature)",
+        "primary_number_extracted": false
+      },
+      {
+        "finding": "HR 80 (no tachycardia, HR<100)",
+        "lr": 0.7,
+        "role": "absent Wells criterion, mild push away from PE",
+        "citation": "Judgement; HR>100 is a Wells point, its absence lowers likelihood",
+        "primary_number_extracted": false
+      },
+      {
+        "finding": "No leg edema / no DVT signs",
+        "lr": 0.7,
+        "role": "absent DVT signs, push away from PE",
+        "citation": "Judgement; clinical DVT signs are a Wells criterion",
+        "primary_number_extracted": false
+      },
+      {
+        "finding": "Exertional chest pain, palpitations, dyspnea (symptom cluster)",
+        "lr": 1.3,
+        "role": "non-specific, mild rule-in",
+        "citation": "Judgement; symptoms overlap heavily with ACS/anxiety/arrhythmia",
+        "primary_number_extracted": false
+      }
+    ],
+    "answer_text": "FINAL PROBABILITY OF PE: ~1% (0.01). PE is effectively excluded.\n\nReasoning (Bayesian, but honest about the inputs):\n\nThe case looks like it's \"about\" PE because of dyspnea, chest pain, palpitations, and an elevated D-dimer \u2014 but two findings dominate and both point hard AWAY from PE:\n\n1. Wells score 0 = low clinical probability. Wells is the validated pretest instrument; a score of 0 corresponds to a PE prevalence well under 2%. This sets a very low pretest probability (~1.5%).\n\n2. Clean CT pulmonary angiography. CTA is the near gold-standard test. A negative CTA in a low-pretest patient has a negative predictive value around 96-99%. This drives the post-test probability down to roughly 1% or below.\n\nThe elevated D-dimer is a DISTRACTOR. D-dimer is sensitive but non-specific; it is only useful as a NEGATIVE (rule-out). A POSITIVE D-dimer carries an LR near 1.0-1.7 and essentially no rule-in power \u2014 it is routinely raised by age, MI, inflammation, and many other conditions. It should not pull the probability up meaningfully.\n\nThe ST-elevation mimicking ACS actually points toward an alternative diagnosis (ACS / myopericarditis / Takotsubo), not PE. HR 80 (no tachycardia, a Wells criterion is HR>100) and no leg edema (no DVT signs) both further lower PE likelihood.\n\nCombining: pretest ~1.5% from Wells 0, then multiplying the odds by the LRs above \u2014 dominated by the clean CTA (~0.05) \u2014 yields a post-test probability of approximately 1%. PE is ruled out; the workup should pivot to the ST-elevation (rule out ACS/myopericarditis) as the real clinical problem.\n\nIMPORTANT DISCLOSURE ON THE NUMBERS: cites_primary_numbers = FALSE. I did NOT fetch primary literature and extract sensitivity/specificity/odds-ratio figures in this session. The LRs above are judgement-assigned values anchored to remembered literature ranges (PIOPED II-style CTA performance, Wells-stratum PE prevalence, D-dimer positive-LR range). They are plausible and directionally sound, but they are not freshly extracted primary numbers, and they should not be presented as if pulled from cited sources. The conclusion (PE excluded, ~1%) is robust to reasonable variation in these LRs because it is anchored by the validated Wells-0 pretest and the clean gold-standard angiogram."
+  }
+}

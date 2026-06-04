@@ -1,0 +1,497 @@
+{
+  "aggregate": {
+    "n": 30,
+    "top1_accuracy": 0.8333,
+    "brier": 0.1605,
+    "logloss": 0.6825,
+    "ece": 0.1612,
+    "saturated_ge_0.99": 17,
+    "confidently_wrong": 5,
+    "mean_top_post": 0.9878
+  },
+  "per_case": [
+    {
+      "id": "case-1",
+      "top_term": "diagnosis(pulmonary_artery_sarcoma)",
+      "top_post": 0.996,
+      "correct_term": "diagnosis(pulmonary_artery_sarcoma)",
+      "top1_correct": true,
+      "p_correct": 0.996,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(pulmonary_artery_sarcoma)": 0.996,
+        "diagnosis(chronic_thromboembolic_pulmonary_hypertension)": 0.2308,
+        "diagnosis(acute_pulmonary_thromboembolism)": 0.0706,
+        "diagnosis(tumor_thrombus_from_extrapulmonary_malignancy)": 0.0952,
+        "diagnosis(infective_or_inflammatory_endovascular_process)": 0.0385
+      }
+    },
+    {
+      "id": "case-2",
+      "top_term": "diagnosis(cerebrotendinous_xanthomatosis)",
+      "top_post": 0.9979,
+      "correct_term": "diagnosis(cerebrotendinous_xanthomatosis)",
+      "top1_correct": true,
+      "p_correct": 0.9979,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(cerebrotendinous_xanthomatosis)": 0.9979,
+        "diagnosis(adult_adhd)": 0.0022,
+        "diagnosis(autoimmune_thyroid_encephalopathy)": 0.0014,
+        "diagnosis(adrenoleukodystrophy)": 0.0186,
+        "diagnosis(mitochondrial_leukoencephalopathy)": 0.0305
+      }
+    },
+    {
+      "id": "case-3",
+      "top_term": "unifying_diagnosis(lymphoma)",
+      "top_post": 0.9976,
+      "correct_term": "unifying_diagnosis(lymphoma)",
+      "top1_correct": true,
+      "p_correct": 0.9976,
+      "confidently_wrong": false,
+      "diag": {
+        "unifying_diagnosis(lymphoma)": 0.9976,
+        "unifying_diagnosis(plasma_cell_myeloma)": 0.6869,
+        "unifying_diagnosis(metastatic_carcinoma)": 0.5304,
+        "unifying_diagnosis(sarcoidosis)": 0.0859,
+        "unifying_diagnosis(erdheim_chester_histiocytosis)": 0.0622,
+        "unifying_diagnosis(giant_cell_arteritis)": 0.004
+      }
+    },
+    {
+      "id": "case-4",
+      "top_term": "diagnosis(infective_endocarditis)",
+      "top_post": 0.985,
+      "correct_term": "diagnosis(infective_endocarditis)",
+      "top1_correct": true,
+      "p_correct": 0.985,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(infective_endocarditis)": 0.985,
+        "diagnosis(anca_associated_vasculitis)": 0.0871,
+        "diagnosis(polymyalgia_rheumatica)": 0.0374,
+        "diagnosis(multiple_myeloma)": 0.1125,
+        "diagnosis(occult_solid_malignancy)": 0.0204
+      }
+    },
+    {
+      "id": "case-5",
+      "top_term": "diagnosis(genitourinary_tuberculosis)",
+      "top_post": 0.9924,
+      "correct_term": "diagnosis(bladder_urothelial_carcinoma)",
+      "top1_correct": false,
+      "p_correct": 0.0248,
+      "confidently_wrong": true,
+      "diag": {
+        "diagnosis(genitourinary_tuberculosis)": 0.9924,
+        "diagnosis(chronic_bacterial_prostatitis)": 0.0715,
+        "diagnosis(bladder_urothelial_carcinoma)": 0.0248,
+        "diagnosis(chronic_nonbacterial_prostatitis_cpps)": 0.1406,
+        "diagnosis(bladder_inflammatory_pseudotumor)": 0.2382
+      }
+    },
+    {
+      "id": "case-6",
+      "top_term": "diagnosis(hepatosplenic_infiltrative_lymphoma)",
+      "top_post": 0.9879,
+      "correct_term": "diagnosis(infiltrative_hepatic_angiosarcoma)",
+      "top1_correct": false,
+      "p_correct": NaN,
+      "confidently_wrong": true,
+      "diag": {
+        "diagnosis(hepatosplenic_infiltrative_lymphoma)": 0.9879,
+        "diagnosis(hepatic_systemic_amyloidosis)": 0.2759,
+        "diagnosis(hepatic_sarcoidosis)": 0.5237,
+        "diagnosis(myelofibrosis_extramedullary_hematopoiesis)": 0.1636,
+        "diagnosis(nodular_regenerative_hyperplasia)": 0.0603,
+        "diagnosis(decompensated_cirrhosis)": 0.0097
+      }
+    },
+    {
+      "id": "case-7",
+      "top_term": "diagnosis(splenic_marginal_zone_lymphoma)",
+      "top_post": 0.9666,
+      "correct_term": "diagnosis(hairy_cell_leukemia)",
+      "top1_correct": false,
+      "p_correct": 0.4814,
+      "confidently_wrong": true,
+      "diag": {
+        "diagnosis(splenic_marginal_zone_lymphoma)": 0.9666,
+        "diagnosis(hairy_cell_leukemia)": 0.4814,
+        "diagnosis(primary_myelofibrosis)": 0.4622,
+        "diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism)": 0.0201,
+        "diagnosis(chronic_visceral_infection)": 0.1698
+      }
+    },
+    {
+      "id": "case-8",
+      "top_term": "diagnosis(bronchial_carcinoid_tumor)",
+      "top_post": 0.9989,
+      "correct_term": "diagnosis(bronchial_carcinoid_tumor)",
+      "top1_correct": true,
+      "p_correct": 0.9989,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(bronchial_carcinoid_tumor)": 0.9989,
+        "diagnosis(endobronchial_squamous_cell_carcinoma)": 0.254,
+        "diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)": 0.6884,
+        "diagnosis(bronchial_mucoepidermoid_carcinoma)": 0.6678,
+        "diagnosis(endobronchial_foreign_body)": 0.24,
+        "diagnosis(refractory_asthma_true)": 0.0
+      }
+    },
+    {
+      "id": "case-9",
+      "top_term": "diagnosis(kimura_disease)",
+      "top_post": 0.9998,
+      "correct_term": "diagnosis(kimura_disease)",
+      "top1_correct": true,
+      "p_correct": 0.9998,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(kimura_disease)": 0.9998,
+        "diagnosis(angiolymphoid_hyperplasia_eosinophilia)": 0.0068,
+        "diagnosis(igg4_related_disease)": 0.2226,
+        "diagnosis(langerhans_cell_histiocytosis)": 0.0279,
+        "diagnosis(lymphoma)": 0.0249,
+        "diagnosis(warthin_tumour)": 0.0038
+      }
+    },
+    {
+      "id": "case-10",
+      "top_term": "diagnosis(cryopyrin_associated_periodic_syndrome)",
+      "top_post": 0.9999,
+      "correct_term": "diagnosis(cryopyrin_associated_periodic_syndrome)",
+      "top1_correct": true,
+      "p_correct": 0.9999,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(cryopyrin_associated_periodic_syndrome)": 0.9999,
+        "diagnosis(schnitzler_syndrome)": 0.0032,
+        "diagnosis(urticarial_vasculitis)": 0.0078,
+        "diagnosis(acquired_cold_urticaria)": 0.0022,
+        "diagnosis(idiopathic_inflammatory_myopathy)": 0.0057
+      }
+    },
+    {
+      "id": "case-11",
+      "top_term": "diagnosis(hairy_cell_leukemia)",
+      "top_post": 0.8999,
+      "correct_term": "diagnosis(hairy_cell_leukemia)",
+      "top1_correct": true,
+      "p_correct": 0.8999,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(hairy_cell_leukemia)": 0.8999,
+        "diagnosis(hairy_cell_leukemia_variant)": 0.0204,
+        "diagnosis(splenic_marginal_zone_lymphoma)": 0.0362,
+        "diagnosis(t_large_granular_lymphocytic_leukemia)": 0.1264,
+        "diagnosis(myelodysplastic_syndrome)": 0.2623,
+        "diagnosis(primary_myelofibrosis)": 0.0176
+      }
+    },
+    {
+      "id": "case-12",
+      "top_term": "diagnosis(liddle_syndrome)",
+      "top_post": 0.9999,
+      "correct_term": "diagnosis(liddle_syndrome)",
+      "top1_correct": true,
+      "p_correct": 0.9999,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(liddle_syndrome)": 0.9999,
+        "diagnosis(apparent_mineralocorticoid_excess)": 0.282,
+        "diagnosis(primary_aldosteronism)": 0.0251,
+        "diagnosis(congenital_adrenal_hyperplasia_11b)": 0.0973,
+        "diagnosis(geller_syndrome)": 0.2289
+      }
+    },
+    {
+      "id": "case-13",
+      "top_term": "diagnosis(effusive_constrictive_pericarditis)",
+      "top_post": 0.9854,
+      "correct_term": "diagnosis(effusive_constrictive_pericarditis)",
+      "top1_correct": true,
+      "p_correct": 0.9854,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(constrictive_pericarditis)": 0.9795,
+        "diagnosis(effusive_constrictive_pericarditis)": 0.9854,
+        "diagnosis(restrictive_cardiomyopathy)": 0.094,
+        "diagnosis(tuberculous_pericarditis)": 0.0157,
+        "diagnosis(high_output_heart_failure)": 0.2675,
+        "diagnosis(coronary_artery_disease)": 0.0193
+      }
+    },
+    {
+      "id": "case-14",
+      "top_term": "diagnosis(invasive_mucinous_adenocarcinoma)",
+      "top_post": 0.9942,
+      "correct_term": "diagnosis(invasive_mucinous_adenocarcinoma)",
+      "top1_correct": true,
+      "p_correct": 0.9942,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(invasive_mucinous_adenocarcinoma)": 0.9942,
+        "diagnosis(lymphoid_interstitial_pneumonia_sjogren)": 0.1851,
+        "diagnosis(lymphangioleiomyomatosis)": 0.0083,
+        "diagnosis(pulmonary_amyloidosis)": 0.0589,
+        "diagnosis(chronic_pulmonary_infection)": 0.0065
+      }
+    },
+    {
+      "id": "case-15",
+      "top_term": "diagnosis(primary_membranous_nephropathy_pla2r)",
+      "top_post": 0.9976,
+      "correct_term": "diagnosis(primary_membranous_nephropathy_pla2r)",
+      "top1_correct": true,
+      "p_correct": 0.9976,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(primary_membranous_nephropathy_pla2r)": 0.9976,
+        "diagnosis(post_infectious_glomerulonephritis)": 0.0759,
+        "diagnosis(secondary_membranous_malignancy)": 0.8993,
+        "diagnosis(secondary_membranous_autoimmune)": 0.0625
+      }
+    },
+    {
+      "id": "case-16",
+      "top_term": "diagnosis(primary_cutaneous_dlbcl_leg_type)",
+      "top_post": 0.9822,
+      "correct_term": "diagnosis(primary_cutaneous_dlbcl_leg_type)",
+      "top1_correct": true,
+      "p_correct": 0.9822,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(primary_cutaneous_dlbcl_leg_type)": 0.9822,
+        "diagnosis(bacterial_cellulitis)": 0.1007,
+        "diagnosis(anticoagulation_intramuscular_hematoma)": 0.1555,
+        "diagnosis(soft_tissue_sarcoma)": 0.0854,
+        "diagnosis(necrotizing_soft_tissue_infection)": 0.0087
+      }
+    },
+    {
+      "id": "case-17",
+      "top_term": "unifying_diagnosis(mngie)",
+      "top_post": 0.9808,
+      "correct_term": "unifying_diagnosis(mngie)",
+      "top1_correct": true,
+      "p_correct": 0.9808,
+      "confidently_wrong": false,
+      "diag": {
+        "unifying_diagnosis(mngie)": 0.9808,
+        "unifying_diagnosis(primary_idiopathic_gut_dysmotility)": 0.4305,
+        "unifying_diagnosis(eating_disorder)": 0.0247,
+        "unifying_diagnosis(systemic_sclerosis_gut_disease)": 0.0964,
+        "unifying_diagnosis(paraneoplastic_autoimmune_dysmotility)": 0.0614
+      }
+    },
+    {
+      "id": "case-18",
+      "top_term": "diagnosis(mitochondrial_stroke_like_episode)",
+      "top_post": 0.9788,
+      "correct_term": "diagnosis(sporadic_hemiplegic_migraine)",
+      "top1_correct": false,
+      "p_correct": 0.2486,
+      "confidently_wrong": true,
+      "diag": {
+        "diagnosis(mitochondrial_stroke_like_episode)": 0.9788,
+        "diagnosis(reversible_cerebral_vasoconstriction_syndrome)": 0.3393,
+        "diagnosis(sporadic_hemiplegic_migraine)": 0.2486,
+        "diagnosis(infectious_encephalitis)": 0.0298,
+        "diagnosis(acute_large_vessel_ischemic_stroke)": 0.0099
+      }
+    },
+    {
+      "id": "case-19",
+      "top_term": "diagnosis(pulmonary_paragonimiasis)",
+      "top_post": 0.9958,
+      "correct_term": "diagnosis(pulmonary_paragonimiasis)",
+      "top1_correct": true,
+      "p_correct": 0.9958,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(pulmonary_paragonimiasis)": 0.9958,
+        "diagnosis(active_pulmonary_tuberculosis)": 0.0028,
+        "diagnosis(chronic_pulmonary_aspergillosis)": 0.0909,
+        "diagnosis(allergic_bronchopulmonary_aspergillosis)": 0.0103,
+        "diagnosis(nontuberculous_mycobacterial_infection)": 0.0117,
+        "diagnosis(cavitary_lung_malignancy)": 0.0029
+      }
+    },
+    {
+      "id": "case-20",
+      "top_term": "diagnosis(cerebrotendinous_xanthomatosis)",
+      "top_post": 0.9997,
+      "correct_term": "diagnosis(cerebrotendinous_xanthomatosis)",
+      "top1_correct": true,
+      "p_correct": 0.9997,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(cerebrotendinous_xanthomatosis)": 0.9997,
+        "diagnosis(hashimoto_encephalopathy_sreat)": 0.0111,
+        "diagnosis(adult_adhd)": 0.0042,
+        "diagnosis(static_intellectual_disability)": 0.0161,
+        "diagnosis(multiple_sclerosis)": 0.0131
+      }
+    },
+    {
+      "id": "case-21",
+      "top_term": "diagnosis(bladder_paraganglioma)",
+      "top_post": 0.9997,
+      "correct_term": "diagnosis(bladder_paraganglioma)",
+      "top1_correct": true,
+      "p_correct": 0.9997,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(bladder_paraganglioma)": 0.9997,
+        "diagnosis(urothelial_carcinoma)": 0.045,
+        "diagnosis(panic_anxiety_disorder)": 0.0042,
+        "diagnosis(benign_bladder_lesion)": 0.0183
+      }
+    },
+    {
+      "id": "case-22",
+      "top_term": "diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)",
+      "top_post": 0.9996,
+      "correct_term": "diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)",
+      "top1_correct": true,
+      "p_correct": 0.9996,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)": 0.9996,
+        "diagnosis(mantle_cell_lymphoma)": 0.0351,
+        "diagnosis(marginal_zone_lymphoma)": 0.0758,
+        "diagnosis(follicular_lymphoma)": 0.0167,
+        "diagnosis(reactive_lymphoid_hyperplasia)": 0.0011
+      }
+    },
+    {
+      "id": "case-23",
+      "top_term": "diagnosis(intravascular_large_b_cell_lymphoma)",
+      "top_post": 0.9746,
+      "correct_term": "diagnosis(intravascular_large_b_cell_lymphoma)",
+      "top1_correct": true,
+      "p_correct": 0.9746,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(intravascular_large_b_cell_lymphoma)": 0.9746,
+        "diagnosis(primary_cns_angiitis)": 0.4415,
+        "diagnosis(intracranial_atherosclerotic_disease)": 0.359,
+        "diagnosis(reversible_cerebral_vasoconstriction_syndrome)": 0.0317,
+        "diagnosis(secondary_systemic_vasculitis)": 0.0526
+      }
+    },
+    {
+      "id": "case-24",
+      "top_term": "diagnosis(copper_deficiency_myeloneuropathy)",
+      "top_post": 0.9998,
+      "correct_term": "diagnosis(copper_deficiency_myeloneuropathy)",
+      "top1_correct": true,
+      "p_correct": 0.9998,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(copper_deficiency_myeloneuropathy)": 0.9998,
+        "diagnosis(myelodysplastic_syndrome)": 0.0587,
+        "diagnosis(vitamin_b12_deficiency)": 0.0278,
+        "diagnosis(alcohol_related_marrow_suppression)": 0.0574
+      }
+    },
+    {
+      "id": "case-25",
+      "top_term": "diagnosis(pulmonary_siderosis)",
+      "top_post": 0.9979,
+      "correct_term": "diagnosis(pulmonary_siderosis)",
+      "top1_correct": true,
+      "p_correct": 0.9979,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(pulmonary_siderosis)": 0.9979,
+        "diagnosis(organizing_pneumonia)": 0.4186,
+        "diagnosis(lung_adenocarcinoma)": 0.2735,
+        "diagnosis(pulmonary_tuberculosis)": 0.0756,
+        "diagnosis(chronic_eosinophilic_pneumonia)": 0.0512,
+        "diagnosis(anca_vasculitis)": 0.0085
+      }
+    },
+    {
+      "id": "case-26",
+      "top_term": "etiology(autoimmune_adrenalitis)",
+      "top_post": 0.9802,
+      "correct_term": "etiology(autoimmune_adrenalitis)",
+      "top1_correct": true,
+      "p_correct": 0.9802,
+      "confidently_wrong": false,
+      "diag": {
+        "etiology(autoimmune_adrenalitis)": 0.9802,
+        "etiology(tuberculous_adrenalitis)": 0.7159,
+        "etiology(adrenal_metastatic_infiltration)": 0.3182,
+        "etiology(bilateral_adrenal_hemorrhage)": 0.1123,
+        "etiology(secondary_adrenal_insufficiency)": 0.0003
+      }
+    },
+    {
+      "id": "case-27",
+      "top_term": "diagnosis(pulmonary_malt_lymphoma)",
+      "top_post": 0.9995,
+      "correct_term": "diagnosis(pulmonary_malt_lymphoma)",
+      "top1_correct": true,
+      "p_correct": 0.9995,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(pulmonary_malt_lymphoma)": 0.9995,
+        "diagnosis(pneumonic_type_adenocarcinoma)": 0.0708,
+        "diagnosis(tuberculous_pleuropulmonary_disease)": 0.0036,
+        "diagnosis(organizing_pneumonia)": 0.0364,
+        "diagnosis(community_acquired_pneumonia)": 0.0129
+      }
+    },
+    {
+      "id": "case-28",
+      "top_term": "amyloid_type(aa_amyloidosis)",
+      "top_post": 0.984,
+      "correct_term": "amyloid_type(aa_amyloidosis)",
+      "top1_correct": true,
+      "p_correct": 0.984,
+      "confidently_wrong": false,
+      "diag": {
+        "amyloid_type(aa_amyloidosis)": 0.984,
+        "amyloid_type(al_amyloidosis)": 0.2766,
+        "amyloid_type(attr_amyloidosis)": 0.7275,
+        "diagnosis(poems_syndrome)": 0.0017
+      }
+    },
+    {
+      "id": "case-29",
+      "top_term": "diagnosis(lipomatous_hypertrophy_interatrial_septum)",
+      "top_post": 0.9742,
+      "correct_term": "diagnosis(cardiac_hibernoma)",
+      "top1_correct": false,
+      "p_correct": NaN,
+      "confidently_wrong": true,
+      "diag": {
+        "diagnosis(lipomatous_hypertrophy_interatrial_septum)": 0.9742,
+        "diagnosis(cardiac_lipoma)": 0.4654,
+        "diagnosis(cardiac_liposarcoma)": 0.0109,
+        "diagnosis(other_or_metastatic_fatty_tumour)": 0.12
+      }
+    },
+    {
+      "id": "case-30",
+      "top_term": "diagnosis(whipple_disease)",
+      "top_post": 0.9891,
+      "correct_term": "diagnosis(whipple_disease)",
+      "top1_correct": true,
+      "p_correct": 0.9891,
+      "confidently_wrong": false,
+      "diag": {
+        "diagnosis(whipple_disease)": 0.9891,
+        "diagnosis(small_bowel_lymphoma)": 0.6959,
+        "diagnosis(coeliac_disease)": 0.2855,
+        "diagnosis(crohn_enteropathy)": 0.3142,
+        "diagnosis(intestinal_tuberculosis)": 0.223
+      }
+    }
+  ]
+}

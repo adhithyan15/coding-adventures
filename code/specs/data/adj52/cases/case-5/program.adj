@@ -1,0 +1,48 @@
+% ADJ52 case-5 — patient observations + queries (this case only).
+% 51yo man, ~2.5y refractory LUTS labeled chronic prostatitis. Same vocabulary
+% as cases/case-5/rulebook.adj. Numeric/unit findings normalized to qualitative
+% atoms (see rulebook header).
+
+% --- demographics / risk ---
+observe patient_age(over_50)
+observe patient_sex(male)
+observe smoking_status(lifelong_non_smoker)
+
+% --- course ---
+observe course(refractory_relapsing_despite_fluoroquinolone)
+
+% --- prostate / urine labs ---
+observe eps_white_cells(below_prostatitis_threshold)
+observe urine_leukocytes(mildly_elevated)
+observe psep(marginally_elevated)
+observe prostate_finding(mildly_enlarged)
+
+% --- TB host evidence ---
+observe tb_igra(low_positive)
+
+% --- imaging ---
+observe renal_finding(calcified_foci)
+observe ct_finding(no_mass_no_wall_thickening_no_nodes)
+
+% --- cystoscopy / bladder lesion ---
+observe cystoscopy_finding(no_discrete_tumor)
+observe cystoscopy_finding(mucosal_congestion_and_edema)
+observe cystoscopy_finding(diffuse_superficial_ulceration)
+
+% --- cytology / histology ---
+observe cytology(atypical_clusters_worrisome_for_malignancy)
+observe bladder_histology(inflammatory_granulation_tissue)
+observe bladder_histology(proliferating_fibrovascular_polypoid_change)
+observe bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)
+
+% q1/q2/q3/q4 — unifying diagnosis differential
+? diagnosis(genitourinary_tuberculosis)
+? diagnosis(chronic_bacterial_prostatitis)
+? diagnosis(bladder_urothelial_carcinoma)
+? diagnosis(chronic_nonbacterial_prostatitis_cpps)
+? diagnosis(bladder_inflammatory_pseudotumor)
+
+% q5 — recommended next step
+? next_step(urine_afb_culture_and_tb_naat)
+? next_step(targeted_bladder_biopsy_with_afb_stain_and_tb_pcr)
+? next_step(transurethral_resection_for_malignancy)

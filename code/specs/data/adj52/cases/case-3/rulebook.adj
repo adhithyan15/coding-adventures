@@ -1,0 +1,287 @@
+% ============================================================================
+% ADJ52 case-3 derived rulebook.
+% Clinical area: skull-base / multisystem inflammatory-vs-malignant problem
+% solving in an older adult presenting as a biopsy-negative, steroid-refractory
+% giant-cell / cranial arteritis mimic.
+%
+% Differential built from the IR ALONE (no answer was given). It recurses into
+% subcategories: the unifying process is decided between (a) a haematological
+% malignancy (lymphoma; plasma-cell / myeloma), (b) metastatic carcinoma to the
+% skull base + skeleton, (c) a granulomatous / histiocytic infiltrative disorder
+% (sarcoidosis; Erdheim-Chester non-Langerhans histiocytosis), and (d) the
+% original primary large-vessel / giant-cell arteritis hypothesis.
+%
+% Anti-overfit note: every clause is here because a citable source supports the
+% direction of the likelihood ratio, NOT because it makes this case land on any
+% particular answer. Discriminators that fire AGAINST tempting wrong answers
+% (steroid-refractoriness vs sarcoidosis; negative bilateral temporal artery
+% biopsy + cytopenias vs giant-cell arteritis; lymphadenopathy vs myeloma) are
+% encoded with the same evidentiary discipline as the supporting clauses.
+%
+% Qualitative encoding: numeric magnitudes from the IR are mapped to qualitative
+% atoms to satisfy the adj-lang IDENT grammar (lowercase, no leading digit):
+%   serum_calcium(11.6 mg/dL)        -> serum_calcium(elevated)
+%   alkaline_phosphatase(360 U/L)    -> alkaline_phosphatase(raised)
+%   haemoglobin(near 11 g/dL)        -> haemoglobin(mildly_low)
+%   platelet_count(110 x10e9/L)      -> platelet_count(low)
+%   esr(72) / crp(53)                -> inflammatory_markers(markedly_elevated)
+%   age(61)                          -> age(over_50)
+%
+% CORRELATED EVIDENCE: the cranial findings (frontal headache, bilateral jaw
+% pain, V2/V3 facial numbness, lateral-gaze diplopia) are ONE syndrome produced
+% by the bilateral Meckel's-cave / skull-base foraminal mass; they are grouped
+% under a single mechanism directive so the combined LR fires ONCE rather than
+% multiplying four correlated effects. Likewise the systemic "marrow/skeletal +
+% B-symptom + hypercalcaemia" cluster of a malignant infiltrative process.
+% ============================================================================
+
+% ===== PRIORS (base rates for an older adult referred as a GCA mimic) =====
+
+% rationale: lymphoma is the classic occult malignancy that masquerades as a
+% biopsy-negative, steroid-refractory giant-cell arteritis with skull-base and
+% multisystem disease; a published DLBCL-in-Meckel's-cave case had this exact
+% gestalt, so it carries the highest pre-test weight among the malignancies.
+prior 0.18 for unifying_diagnosis(lymphoma)
+  source "Front Neurol / case report: DLBCL involving Meckel's cave masquerading as biopsy-negative GCA, PMC7211338" trust authoritative
+
+% rationale: plasma-cell neoplasm / multiple myeloma is the canonical cause of
+% hypercalcaemia + anaemia + lytic skull-base bone lesions with cranial-nerve
+% palsy in this age group.
+prior 0.12 for unifying_diagnosis(plasma_cell_myeloma)
+  source "J Hematol 2020 (intracranial myeloma presenting as cranial nerve palsy, PMC7153671)" trust authoritative
+
+% rationale: metastatic carcinoma (e.g. prostate) to the skull base + skeleton
+% is a leading cause of multifocal bone lesions with skull-base cranial
+% neuropathy and raised alkaline phosphatase in an older man.
+prior 0.10 for unifying_diagnosis(metastatic_carcinoma)
+  source "IJU Case Rep 2021 (skull-base metastasis cranial nerve palsy in CRPC, iju5.12255)" trust authoritative
+
+% rationale: systemic sarcoidosis can mimic malignancy with hypercalcaemia,
+% lymphadenopathy, cranial neuropathy and weight loss.
+prior 0.08 for unifying_diagnosis(sarcoidosis)
+  source "Cureus 2024 (systemic sarcoidosis with hypercalcaemia and diffuse lymphadenopathy, PMC12163199)" trust authoritative
+
+% rationale: Erdheim-Chester (non-Langerhans histiocytosis) is a rare
+% infiltrative GCA/skull-base mimic with widespread skeletal lesions.
+prior 0.05 for unifying_diagnosis(erdheim_chester_histiocytosis)
+  source "Orphanet ECD; PMC3849848 comprehensive review" trust authoritative
+
+% rationale: the original working diagnosis; retained as a candidate so the
+% engine must actively refute it on the evidence rather than by assumption.
+prior 0.10 for unifying_diagnosis(giant_cell_arteritis)
+  source "Iowa Head & Neck Protocols, temporal arteritis; Ann Med 2017 PMID 28485026" trust authoritative
+
+% ===== CORRELATED-EVIDENCE MECHANISMS (fire ONCE, not per-finding) =====
+
+% mechanism skull_base_mass_syndrome for unifying_diagnosis(lymphoma) lr 4.0 : symptom(headache_frontal), symptom(jaw_pain_bilateral), symptom(facial_numbness_v2_v3), symptom(diplopia_lateral_gaze)
+%   The frontal headache, bilateral jaw pain, V2/V3 cheek-and-perioral numbness
+%   and lateral-gaze (abducens-pattern) diplopia are ONE syndrome: bilateral
+%   enhancing Meckel's-cave soft tissue with skull-base foraminal extension
+%   compressing the trigeminal ganglion and adjacent abducens. Counting each
+%   symptom independently would quadruple-count one mass, so the combined LR
+%   fires once toward an infiltrative skull-base process (lymphoma leads).
+%   source "PMC7211338 (Meckel's cave DLBCL: trigeminal + abducens from one mass)" trust authoritative
+
+% mechanism skull_base_mass_syndrome_mm for unifying_diagnosis(plasma_cell_myeloma) lr 2.2 : symptom(headache_frontal), symptom(jaw_pain_bilateral), symptom(facial_numbness_v2_v3), symptom(diplopia_lateral_gaze)
+%   Same single skull-base syndrome, weaker pull toward myeloma (plasmacytoma of
+%   the skull base can compress cranial nerves) — fires once, not per nerve.
+%   source "J Hematol PMC7153671 (skull-base myeloma, cranial nerve palsy)" trust authoritative
+
+% mechanism skull_base_mass_syndrome_mets for unifying_diagnosis(metastatic_carcinoma) lr 2.2 : symptom(headache_frontal), symptom(jaw_pain_bilateral), symptom(facial_numbness_v2_v3), symptom(diplopia_lateral_gaze)
+%   Skull-base metastasis is a recognised cause of the same cranial-neuropathy
+%   syndrome; fires once for the shared mass effect.
+%   source "IJU Case Rep iju5.12255 (skull-base metastasis cranial neuropathy)" trust authoritative
+
+% ===== LYMPHOMA (leading haematological malignancy) =====
+
+% rationale: bilateral enhancing Meckel's-cave soft tissue with foraminal spread
+% is the radiological substrate of an infiltrative skull-base lymphoma.
+contributes 3.0 from imaging(bilateral_meckels_cave_enhancing_soft_tissue) to unifying_diagnosis(lymphoma)
+  source "PMC7211338 (Meckel's cave DLBCL); PMC4457609 (CNS lymphoma trigeminal)" trust authoritative
+
+% rationale: metabolically active lymph nodes BOTH above and below the diaphragm
+% is the defining nodal distribution of a systemic lymphoproliferative disorder.
+contributes 4.0 from imaging(lymphadenopathy_above_and_below_diaphragm) to unifying_diagnosis(lymphoma)
+  source "Blood ASH 2022 (nodal lymphoma staging); droracle excisional-biopsy review" trust authoritative
+
+% rationale: widespread metabolically active axial AND appendicular skeletal
+% lesions fit marrow/skeletal infiltration by lymphoma.
+contributes 2.0 from imaging(widespread_active_skeletal_lesions) to unifying_diagnosis(lymphoma)
+  source "PubMed 16680736 (NHL multiple bone lesions and hypercalcaemia)" trust authoritative
+
+% rationale: hypercalcaemia is a recognised paraneoplastic complication of
+% aggressive NHL (cytokine / PTHrP mediated).
+contributes 1.8 from serum_calcium(elevated) to unifying_diagnosis(lymphoma)
+  source "PMC11645462 (DLBCL with hypercalcaemia, ~20% of aggressive NHL)" trust authoritative
+
+% rationale: marrow involvement produces anaemia + thrombocytopenia, a cytopenic
+% picture typical of marrow-infiltrative lymphoma and atypical of arteritis.
+contributes 1.6 from platelet_count(low) to unifying_diagnosis(lymphoma)
+  source "PMC6082360 (lymphoblastic marrow infiltration cytopenias)" trust authoritative
+contributes 1.3 from haemoglobin(mildly_low) to unifying_diagnosis(lymphoma)
+  source "PubMed 16680736 (NHL marrow involvement anaemia)" trust empirical
+
+% rationale: constitutional weight loss / poor appetite are classic lymphoma
+% B-symptoms.
+contributes 1.5 from symptom(constitutional_weight_loss) to unifying_diagnosis(lymphoma)
+  source "PMC6082360 (B symptoms in lymphoma)" trust authoritative
+
+% rationale: progression THROUGH high-dose oral plus IV pulse glucocorticoids
+% (steroid-refractory) is the feature that broke the arteritis hypothesis and is
+% expected of an occult lymphoma needing definitive chemotherapy.
+contributes 2.2 from treatment_response(steroid_refractory_progression) to unifying_diagnosis(lymphoma)
+  source "PMC7211338 (steroid-refractory biopsy-negative GCA was DLBCL)" trust authoritative
+
+% rationale: negative BILATERAL temporal artery biopsy in a GCA-like picture is
+% the histological clue that the true process is not arteritis but an infiltrate.
+contributes 1.6 from biopsy(bilateral_temporal_artery_no_arteritis) to unifying_diagnosis(lymphoma)
+  source "PMC7211338 (negative TAB reframed as lymphoma); PMC9717615" trust authoritative
+
+% ===== PLASMA-CELL MYELOMA (subcategory: marrow plasma-cell neoplasm) =====
+
+% rationale: hypercalcaemia + anaemia + lytic bone lesions is the CRAB core of
+% myeloma.
+contributes 2.5 from serum_calcium(elevated) to unifying_diagnosis(plasma_cell_myeloma)
+  source "J Hematol PMC7153671; CRAB myeloma criteria" trust authoritative
+contributes 2.0 from haemoglobin(mildly_low) to unifying_diagnosis(plasma_cell_myeloma)
+  source "CRAB criteria (anaemia)" trust authoritative
+contributes 2.5 from imaging(widespread_active_skeletal_lesions) to unifying_diagnosis(plasma_cell_myeloma)
+  source "CRAB criteria (bone lesions); SAGE 2011 skull-base myeloma" trust authoritative
+
+% rationale: lymphadenopathy above and below the diaphragm is RARE in myeloma
+% (~1% of cases) and should redirect toward a lymphoproliferative disorder -> a
+% likelihood ratio < 1 (argues against myeloma).
+contributes 0.45 from imaging(lymphadenopathy_above_and_below_diaphragm) to unifying_diagnosis(plasma_cell_myeloma)
+  source "World J Oncol PMC5649893 (lymphadenopathy rare in MM; prompts alternative dx)" trust authoritative
+
+% rationale: thrombocytopenia from marrow replacement is consistent with
+% advanced myeloma.
+contributes 1.3 from platelet_count(low) to unifying_diagnosis(plasma_cell_myeloma)
+  source "J Hematol PMC7153671 (marrow infiltration)" trust empirical
+
+% ===== METASTATIC CARCINOMA (subcategory: skeletal-tropic solid tumour) =====
+
+% rationale: older male with raised alkaline phosphatase + widespread skeletal
+% lesions fits osteoblastic metastatic carcinoma (prostate prototype).
+contributes 2.2 from alkaline_phosphatase(raised) to unifying_diagnosis(metastatic_carcinoma)
+  source "IJU Case Rep iju5.12255; CancerNetwork base-of-skull mets in mCRPC" trust authoritative
+contributes 2.0 from imaging(widespread_active_skeletal_lesions) to unifying_diagnosis(metastatic_carcinoma)
+  source "Int Arch Urol Complic (skull metastasis prostate cancer)" trust authoritative
+contributes 1.5 from serum_calcium(elevated) to unifying_diagnosis(metastatic_carcinoma)
+  source "MSD Manual (malignant hypercalcaemia of solid tumours)" trust authoritative
+
+% rationale: widespread lymphadenopathy above AND below the diaphragm with
+% marrow cytopenias is more a lymphoma than a typical carcinoma pattern -> mild
+% argument against carcinoma as the unifying diagnosis.
+contributes 0.7 from imaging(lymphadenopathy_above_and_below_diaphragm) to unifying_diagnosis(metastatic_carcinoma)
+  source "Blood ASH 2022 (diffuse nodal disease favours lymphoma)" trust empirical
+
+% ===== SARCOIDOSIS (subcategory: granulomatous infiltrative mimic) =====
+
+% rationale: sarcoidosis causes 1,25-vitamin-D-mediated hypercalcaemia and
+% raised alkaline phosphatase.
+contributes 1.8 from serum_calcium(elevated) to unifying_diagnosis(sarcoidosis)
+  source "Cureus PMC12163199; PMC11270185 (sarcoid hypercalcaemia)" trust authoritative
+contributes 1.5 from alkaline_phosphatase(raised) to unifying_diagnosis(sarcoidosis)
+  source "Smarty PANCE sarcoidosis (raised ALP, ACE)" trust authoritative
+
+% rationale: diffuse lymphadenopathy and cranial neuropathy (neurosarcoid) are
+% recognised sarcoid features.
+contributes 2.0 from imaging(lymphadenopathy_above_and_below_diaphragm) to unifying_diagnosis(sarcoidosis)
+  source "Cureus PMC12163199 (sarcoid diffuse lymphadenopathy)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR. Sarcoidosis is characteristically corticosteroid
+% RESPONSIVE; progression through high-dose oral PLUS intravenous pulse steroids
+% argues strongly AGAINST sarcoidosis -> likelihood ratio << 1.
+contributes 0.20 from treatment_response(steroid_refractory_progression) to unifying_diagnosis(sarcoidosis)
+  source "PMC12242867 (sarcoid hypercalcaemia responds to glucocorticoids first-line)" trust authoritative
+
+% ===== ERDHEIM-CHESTER / HISTIOCYTOSIS (subcategory: non-Langerhans) =====
+
+% rationale: widespread skeletal lesions and perineural/skull-base infiltration
+% are core to ECD, a known GCA/large-vessel mimic.
+contributes 2.0 from imaging(widespread_active_skeletal_lesions) to unifying_diagnosis(erdheim_chester_histiocytosis)
+  source "PMC3849848 (ECD bilateral symmetric skeletal involvement)" trust authoritative
+contributes 1.5 from imaging(bilateral_meckels_cave_enhancing_soft_tissue) to unifying_diagnosis(erdheim_chester_histiocytosis)
+  source "PMC3849848 (ECD CNS / dural infiltration)" trust empirical
+
+% rationale: prominent hypercalcaemia, generalised lymphadenopathy and marrow
+% cytopenias are NOT typical of ECD's xanthogranulomatous infiltrate -> mild
+% arguments against.
+contributes 0.6 from imaging(lymphadenopathy_above_and_below_diaphragm) to unifying_diagnosis(erdheim_chester_histiocytosis)
+  source "Orphanet ECD (nodal disease atypical)" trust inferred
+contributes 0.7 from platelet_count(low) to unifying_diagnosis(erdheim_chester_histiocytosis)
+  source "PMC3849848 (cytopenias atypical unless marrow ECD)" trust inferred
+
+% ===== GIANT-CELL ARTERITIS (the original hypothesis — must be refuted) =====
+
+% rationale: age over 50, new frontal headache and markedly raised inflammatory
+% markers are the textbook GCA entry features (why it was the first call).
+contributes 2.5 from age(over_50) to unifying_diagnosis(giant_cell_arteritis)
+  source "Iowa Head & Neck Protocols, temporal arteritis (age>50, headache, raised ESR)" trust authoritative
+contributes 2.0 from inflammatory_markers(markedly_elevated) to unifying_diagnosis(giant_cell_arteritis)
+  source "Iowa Head & Neck Protocols (markedly raised ESR/CRP in GCA)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR. Negative BILATERAL temporal artery biopsy lowers
+% GCA probability; in a multisystem malignant picture it is strong evidence
+% against arteritis -> likelihood ratio << 1.
+contributes 0.30 from biopsy(bilateral_temporal_artery_no_arteritis) to unifying_diagnosis(giant_cell_arteritis)
+  source "PMC9717615; PMC7211338 (bilateral negative TAB reframes the diagnosis)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR. GCA responds to glucocorticoids within days;
+% progression through high-dose oral plus IV pulse steroids argues strongly
+% AGAINST active arteritis -> likelihood ratio << 1.
+contributes 0.20 from treatment_response(steroid_refractory_progression) to unifying_diagnosis(giant_cell_arteritis)
+  source "Ann Med 2017 PMID 28485026 (steroid response is near-diagnostic in GCA)" trust authoritative
+
+% rationale: widespread skeletal lesions, hypercalcaemia and lymphadenopathy are
+% NOT part of arteritis and point away from it.
+contributes 0.30 from imaging(widespread_active_skeletal_lesions) to unifying_diagnosis(giant_cell_arteritis)
+  source "Iowa Head & Neck Protocols (GCA is a vasculitis, not an osseous disease)" trust inferred
+contributes 0.40 from serum_calcium(elevated) to unifying_diagnosis(giant_cell_arteritis)
+  source "Iowa Head & Neck Protocols (hypercalcaemia not a GCA feature)" trust inferred
+
+% ===== NEXT STEP (tissue diagnosis) =====
+
+% rationale: with metabolically active lymph nodes above and below the diaphragm,
+% an EXCISIONAL lymph-node biopsy is the standard-of-care first tissue step for a
+% suspected lymphoma (architecture + immunophenotype that FNA cannot give).
+prior 0.20 for next_step(excisional_lymph_node_biopsy)
+  source "Blood ASH 2022 (excision > core for lymphoma); NCCN (FNA insufficient)" trust authoritative
+contributes 5.0 from imaging(lymphadenopathy_above_and_below_diaphragm) to next_step(excisional_lymph_node_biopsy)
+  source "droracle excisional-biopsy review (accessible node = first target)" trust authoritative
+contributes 2.0 from treatment_response(steroid_refractory_progression) to next_step(excisional_lymph_node_biopsy)
+  source "PMC7211338 (tissue needed once steroid-refractory mimic suspected)" trust authoritative
+
+% rationale: a metabolically active skeletal lesion is an alternative accessible
+% tissue target if no safe node is available.
+prior 0.12 for next_step(bone_lesion_biopsy)
+  source "PubMed 16680736 (bone biopsy diagnoses marrow-infiltrative malignancy)" trust authoritative
+contributes 3.0 from imaging(widespread_active_skeletal_lesions) to next_step(bone_lesion_biopsy)
+  source "PMC3849848 (bone biopsy for infiltrative skeletal disease)" trust authoritative
+
+% rationale: biopsy of the bilateral Meckel's-cave lesion is the most targeted
+% but highest-risk option; lower prior reflects the skull-base access risk when a
+% safer peripheral node exists.
+prior 0.08 for next_step(meckels_cave_skull_base_biopsy)
+  source "Neurosurg Rev 2020 (Meckel's cave biopsy access for indeterminate lesions)" trust authoritative
+contributes 2.0 from imaging(bilateral_meckels_cave_enhancing_soft_tissue) to next_step(meckels_cave_skull_base_biopsy)
+  source "Neurosurg Rev 2020 (targeted skull-base biopsy)" trust empirical
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u_tissue: the unifying diagnosis hinges on what the first tissue biopsy shows;
+% each candidate result moves the lymphoma posterior in a different direction.
+uncertain { tissue(lymphoid_clonal_b_cell_infiltrate), tissue(clonal_plasma_cells), tissue(metastatic_carcinoma_cells), tissue(noncaseating_granulomas), tissue(cd68_positive_cd1a_negative_histiocytes) } for unifying_diagnosis(lymphoma)
+  source "droracle / Blood ASH 2022 (excisional biopsy adjudicates the differential)"
+
+contributes 6.0 from tissue(lymphoid_clonal_b_cell_infiltrate) to unifying_diagnosis(lymphoma)
+  source "Blood ASH 2022 (clonal B-cell infiltrate is diagnostic of lymphoma)" trust authoritative
+contributes 0.15 from tissue(clonal_plasma_cells) to unifying_diagnosis(lymphoma)
+  source "CRAB / WHO (clonal plasma cells define myeloma, not lymphoma)" trust authoritative
+contributes 0.15 from tissue(metastatic_carcinoma_cells) to unifying_diagnosis(lymphoma)
+  source "WHO tumour classification (epithelial cells define carcinoma)" trust authoritative
+contributes 0.15 from tissue(noncaseating_granulomas) to unifying_diagnosis(lymphoma)
+  source "Cureus PMC12163199 (granulomas define sarcoidosis)" trust authoritative
+contributes 0.15 from tissue(cd68_positive_cd1a_negative_histiocytes) to unifying_diagnosis(lymphoma)
+  source "PMC3849848 (CD68+/CD1a- histiocytes define Erdheim-Chester)" trust authoritative
