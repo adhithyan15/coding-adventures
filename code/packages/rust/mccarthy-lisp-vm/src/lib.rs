@@ -20,7 +20,7 @@
 //! pair? / not / equal?` builtins.  So McCarthy Lisp gets its *own* small
 //! VM built directly on that foundation — exactly what this crate is.
 //!
-//! ## The instruction set it executes (through L2c-2)
+//! ## The instruction set it executes (through L2c-3a)
 //!
 //! `mccarthy-lisp-iir-compiler` emits a deliberately tiny IIR:
 //!
@@ -28,7 +28,8 @@
 //! |---------------|----------------------------------------------------------------|
 //! | `const`       | materialise a literal: `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 //! | `call_builtin`| `srcs[0]` is the builtin name (a `Var`), the rest are argument registers; dispatched to a `lispy-runtime` builtin |
-//! | `call`        | `srcs[0]` is the callee function name; the rest are arguments. Runs the callee in a fresh frame (params bound to args), returns into `dest` |
+//! | `call`        | `srcs[0]` is the callee function *name*; the rest are arguments. Runs the callee in a fresh frame (params bound to args), returns into `dest` |
+//! | `apply`       | `srcs[0]` is a register holding a *closure value* `(*CLOSURE* fn-name . env)`; the rest are arguments. Destructures the closure, looks the function up by name, runs it in a fresh frame — dynamic dispatch (L2c-3a) |
 //! | `mov`         | copy a register (`dest ← srcs[0]`)                             |
 //! | `jmp`         | unconditional branch to the label in `srcs[0]`                |
 //! | `jmp_if_false`| branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
@@ -46,6 +47,16 @@
 //! budget, even a *non-terminating* recursion errors cleanly
 //! ([`VmError::CallDepthExceeded`]) rather than overflowing the native
 //! stack.
+//!
+//! **`apply` (L2c-3a) is the one new opcode for closures.**  A `LAMBDA`
+//! used as a value compiles to a closure `(*CLOSURE* fn-name . env)`; a
+//! call whose head is such a value uses `apply` to dispatch *dynamically*
+//! (the callee isn't known until run time).  It shares `call`'s
+//! depth/budget guards, so the Ω combinator
+//! `((LAMBDA (X) (X X)) (LAMBDA (X) (X X)))` — which type-checks in this
+//! untyped Lisp and loops forever — terminates with `CallDepthExceeded`
+//! instead of a stack overflow.  Applying a non-closure value is a clean
+//! [`VmError::NotAClosure`].
 //!
 //! ## Quick start
 //!
@@ -78,7 +89,7 @@ use std::collections::HashMap;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lang_runtime_core::RuntimeError;
 use lispy_runtime::value::{INT_MAX, INT_MIN};
-use lispy_runtime::{builtins, intern, LispyValue};
+use lispy_runtime::{builtins, intern, name_of, LispyValue};
 
 // ===========================================================================
 // Errors
@@ -128,6 +139,10 @@ pub enum VmError {
     /// against a stack overflow from a self-calling (or mutually
     /// recursive) `IIRModule` on untrusted input.
     CallDepthExceeded(usize),
+    /// An `apply` was given a value that is not a closure
+    /// (`(*CLOSURE* fn-name . env)`).  Carries a short description of what
+    /// was found, e.g. applying a symbol or an integer.
+    NotAClosure(String),
 }
 
 impl std::fmt::Display for VmError {
@@ -156,6 +171,9 @@ impl std::fmt::Display for VmError {
             VmError::CallDepthExceeded(d) => {
                 write!(f, "call depth exceeded {d} — possible unbounded recursion")
             }
+            VmError::NotAClosure(what) => {
+                write!(f, "cannot apply a non-closure value ({what})")
+            }
         }
     }
 }
@@ -182,6 +200,15 @@ pub const MAX_CALL_DEPTH: usize = 256;
 /// up-front argument-vector allocation so a hand-crafted `call` with
 /// millions of operands can't OOM before the instruction budget fires.
 pub const MAX_CALL_ARGS: usize = 4096;
+
+/// The reserved tag symbol at the head of every closure value
+/// `(*CLOSURE* fn-name . env)` the `apply` opcode receives.  **Must match
+/// the same constant in `mccarthy-lisp-iir-compiler`**, which builds these
+/// values.  It is intentionally un-lexable McCarthy source (a symbol is
+/// `[A-Z][A-Z0-9-]*`; this starts with `*`), so a value the VM accepts as
+/// a closure can only have been emitted by the compiler — never forged by
+/// a user program via `QUOTE`.
+const CLOSURE_TAG: &str = "*CLOSURE*";
 
 /// Execute `module`'s entry-point function and return its result value.
 ///
@@ -338,6 +365,39 @@ fn run_function(
                 bind_dest(instr, result, &mut frame)?;
                 pc += 1;
             }
+            // `apply CLOSURE, args…` — invoke a *closure value*.  Unlike
+            // `call` (whose `srcs[0]` is a static function name), here
+            // `srcs[0]` is a register holding a closure value
+            // `(*CLOSURE* fn-name . env)`.  We destructure it, look the
+            // function up by name, and run it in a fresh frame — same
+            // depth/budget guards as `call`, so a self-applying closure (the
+            // Ω combinator) hits `CallDepthExceeded`, never a stack
+            // overflow.  In L2c-3a the captured env is empty and unused;
+            // L2c-3b will bind it.
+            "apply" => {
+                let cl_src = instr.srcs.first().ok_or_else(|| {
+                    VmError::Malformed("`apply` requires srcs[0] (the closure register)".into())
+                })?;
+                let closure = read_operand(cl_src, &frame)?;
+                let (callee_name, _env) = destructure_closure(closure)?;
+                if instr.srcs.len() > MAX_CALL_ARGS + 1 {
+                    return Err(VmError::Malformed(format!(
+                        "`apply` has too many arguments ({})",
+                        instr.srcs.len() - 1
+                    )));
+                }
+                let callee = module
+                    .get_function(&callee_name)
+                    .ok_or(VmError::UnknownFunction(callee_name))?;
+                let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 1);
+                for src in &instr.srcs[1..] {
+                    call_args.push(read_operand(src, &frame)?);
+                }
+                let result =
+                    run_function(module, callee, &call_args, steps, budget, depth + 1)?;
+                bind_dest(instr, result, &mut frame)?;
+                pc += 1;
+            }
             // `label` is a no-op marker; its only role is as a jump target.
             "label" => pc += 1,
             other => return Err(VmError::UnsupportedOp(other.to_string())),
@@ -458,6 +518,33 @@ fn resolve_label(labels: &HashMap<String, usize>, name: &str) -> Result<usize, V
         .get(name)
         .copied()
         .ok_or_else(|| VmError::UnknownLabel(name.to_string()))
+}
+
+/// Destructure a closure value `(*CLOSURE* fn-name . env)` into its callee
+/// function name and captured environment.
+///
+/// The value must be a pair whose `car` is the reserved `*CLOSURE*` symbol;
+/// then `cadr` is the function-name symbol and `cddr` is the environment
+/// (nil in L2c-3a).  Anything else — a symbol, an integer, nil, or a pair
+/// with the wrong head — is a [`VmError::NotAClosure`].  Because `*CLOSURE*`
+/// is not a lexable McCarthy symbol, only the compiler can have built a
+/// value that passes this check; a user program cannot forge one.  We walk
+/// the structure with the `lispy-runtime` `car`/`cdr` builtins (so the
+/// inspection goes through the same safe accessors as everything else).
+fn destructure_closure(v: LispyValue) -> Result<(String, LispyValue), VmError> {
+    let not = |what: &str| VmError::NotAClosure(what.to_string());
+    let head = builtins::car(&[v]).map_err(|_| not("not a pair"))?;
+    if head.as_symbol() != Some(intern(CLOSURE_TAG)) {
+        return Err(not("a pair, but not a closure (wrong tag)"));
+    }
+    let rest = builtins::cdr(&[v]).map_err(|_| not("malformed closure"))?;
+    let fn_sym = builtins::car(&[rest]).map_err(|_| not("closure missing its function name"))?;
+    let env = builtins::cdr(&[rest]).map_err(|_| not("closure missing its environment"))?;
+    let id = fn_sym
+        .as_symbol()
+        .ok_or_else(|| not("closure function slot is not a symbol"))?;
+    let name = name_of(id).ok_or_else(|| not("closure names an un-interned function"))?;
+    Ok((name, env))
 }
 
 /// Build a tagged integer, rejecting values outside `lispy-runtime`'s
@@ -718,6 +805,31 @@ mod tests {
         IIRInstr::new("call", Some(dest.into()), srcs, "any")
     }
 
+    fn builtin_instr(dest: &str, name: &str, args: &[&str]) -> IIRInstr {
+        let mut srcs = vec![Operand::Var(name.into())];
+        srcs.extend(args.iter().map(|a| Operand::Var((*a).into())));
+        IIRInstr::new("call_builtin", Some(dest.into()), srcs, "any")
+    }
+
+    /// `apply DEST, [closure_reg, arg_regs…]`.
+    fn apply(dest: &str, closure: &str, args: &[&str]) -> IIRInstr {
+        let mut srcs = vec![Operand::Var(closure.into())];
+        srcs.extend(args.iter().map(|a| Operand::Var((*a).into())));
+        IIRInstr::new("apply", Some(dest.into()), srcs, "any")
+    }
+
+    /// Instructions that build a closure value `(*CLOSURE* fn_name)` into
+    /// register `dest` (empty env — the L2c-3a shape the compiler emits).
+    fn build_closure(dest: &str, fn_name: &str) -> Vec<IIRInstr> {
+        vec![
+            konst("_ctag", Operand::Var("*CLOSURE*".into()), "symbol"),
+            konst("_cfn", Operand::Var(fn_name.into()), "symbol"),
+            konst("_cnil", Operand::Int(0), "ref<LispyPair>"),
+            builtin_instr("_cinner", "cons", &["_cfn", "_cnil"]),
+            builtin_instr(dest, "cons", &["_ctag", "_cinner"]),
+        ]
+    }
+
     #[test]
     fn call_binds_param_and_returns() {
         // f(X) = X ; main = f(42)
@@ -835,6 +947,87 @@ mod tests {
         ];
         let v = run(&module_with(vec![last], main)).unwrap();
         assert_eq!(name_of(v.as_symbol().unwrap()).as_deref(), Some("B"));
+    }
+
+    // ---- closures + dynamic apply (L2c-3a) ----
+
+    #[test]
+    fn apply_runs_a_closure() {
+        // id(X) = X ; main builds closure (*CLOSURE* id) and applies it to 42.
+        let id = func("id", &["X"], vec![ret("X")]);
+        let mut main = build_closure("cl", "id");
+        main.push(konst("a", Operand::Int(42), "i64"));
+        main.push(apply("r", "cl", &["a"]));
+        main.push(ret("r"));
+        let m = module_with(vec![id], main);
+        assert_eq!(run(&m).unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn apply_closure_runs_a_builtin_in_the_callee() {
+        // head(X) = (CAR X); apply the closure to (CONS 'A 'B) → A.
+        let head = func("head", &["X"], vec![builtin_instr("h", "car", &["X"]), ret("h")]);
+        let mut main = build_closure("cl", "head");
+        main.extend(vec![
+            konst("a", Operand::Var("A".into()), "symbol"),
+            konst("b", Operand::Var("B".into()), "symbol"),
+            builtin_instr("p", "cons", &["a", "b"]),
+            apply("r", "cl", &["p"]),
+            ret("r"),
+        ]);
+        let m = module_with(vec![head], main);
+        let v = run(&m).unwrap();
+        assert_eq!(name_of(v.as_symbol().unwrap()).as_deref(), Some("A"));
+    }
+
+    #[test]
+    fn apply_of_a_plain_symbol_is_not_a_closure() {
+        // Applying a bare symbol (not a *CLOSURE* pair) errors cleanly.
+        let m = module(vec![
+            konst("s", Operand::Var("FOO".into()), "symbol"),
+            konst("a", Operand::Int(1), "i64"),
+            apply("r", "s", &["a"]),
+            ret("r"),
+        ]);
+        assert!(matches!(run(&m), Err(VmError::NotAClosure(_))));
+    }
+
+    #[test]
+    fn apply_of_a_pair_without_the_tag_is_not_a_closure() {
+        // A pair whose car is not `*CLOSURE*` — e.g. (A . B) — is rejected.
+        let m = module(vec![
+            konst("a", Operand::Var("A".into()), "symbol"),
+            konst("b", Operand::Var("B".into()), "symbol"),
+            builtin_instr("p", "cons", &["a", "b"]),
+            apply("r", "p", &["a"]),
+            ret("r"),
+        ]);
+        assert!(matches!(run(&m), Err(VmError::NotAClosure(_))));
+    }
+
+    #[test]
+    fn apply_to_unknown_function_errors() {
+        // A well-formed closure naming a function the module lacks.
+        let mut main = build_closure("cl", "ghost");
+        main.push(konst("a", Operand::Int(1), "i64"));
+        main.push(apply("r", "cl", &["a"]));
+        main.push(ret("r"));
+        let m = module_with(vec![], main);
+        assert!(matches!(run(&m), Err(VmError::UnknownFunction(_))));
+    }
+
+    #[test]
+    fn self_applying_closure_hits_call_depth_guard() {
+        // The Ω combinator's shape: omega(F) = (apply F F).  main applies
+        // the omega closure to itself → unbounded dynamic self-application,
+        // which must hit the call-depth guard, never a native stack
+        // overflow.  (This is the DoS regression for the new `apply` op.)
+        let omega = func("omega", &["F"], vec![apply("r", "F", &["F"]), ret("r")]);
+        let mut main = build_closure("cl", "omega");
+        main.push(apply("r", "cl", &["cl"]));
+        main.push(ret("r"));
+        let m = module_with(vec![omega], main);
+        assert!(matches!(run(&m), Err(VmError::CallDepthExceeded(_))));
     }
 
     // ---- error paths ----

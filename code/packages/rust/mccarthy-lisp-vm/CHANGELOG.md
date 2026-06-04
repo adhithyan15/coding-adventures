@@ -1,5 +1,33 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.4.0 — 2026-06-04 — the `apply` opcode: dynamic dispatch on closures (L2c-3a)
+
+* Added the **`apply CLOSURE, args…`** opcode.  Unlike `call` (whose
+  `srcs[0]` is a static function *name*), `apply`'s `srcs[0]` is a register
+  holding a **closure value** `(*CLOSURE* fn-name . env)`.  It destructures
+  the closure, looks the function up by name, and runs it in a fresh frame
+  — *dynamic* dispatch (the callee isn't known until run time).  This is
+  what a call to a parameter or a returned lambda lowers to (L2c-3a).
+* New helper `destructure_closure` walks the value with the `lispy-runtime`
+  `car`/`cdr` builtins and validates the head against the reserved
+  `CLOSURE_TAG` (`*CLOSURE*`).  The tag is un-lexable McCarthy source, so
+  only the compiler can have produced a value that passes — a user program
+  cannot forge a closure via `QUOTE`.
+* New error `VmError::NotAClosure(String)` — applying anything that isn't a
+  `(*CLOSURE* …)` pair (a symbol, an integer, nil, or a wrong-tag pair) is
+  a clean error, never a panic.
+* **Same DoS guards as `call`:** `apply` recurses through `run_function`
+  bounded by `MAX_CALL_DEPTH` + the shared instruction budget and the
+  `MAX_CALL_ARGS` cap, so a self-applying closure — the Ω combinator
+  `((LAMBDA (X) (X X)) (LAMBDA (X) (X X)))` — terminates with
+  `CallDepthExceeded` instead of overflowing the native stack.
+* 6 new unit tests (apply runs a closure; apply runs a builtin in the
+  callee; apply of a plain symbol / of a wrong-tag pair → `NotAClosure`;
+  apply to an unknown function → `UnknownFunction`; self-applying closure →
+  call-depth guard, the DoS regression for the new op).
+* No `lispy-runtime` / `lang-runtime-core` source is modified, so the
+  per-PR Miri obligation still does not apply.
+
 ## v0.3.1 — 2026-06-04 — recursion (L2c-2): no new opcode, docs + tests
 
 * **`LABEL` recursion required no VM change.**  A named recursive function

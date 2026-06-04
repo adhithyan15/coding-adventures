@@ -312,3 +312,62 @@ fn label_nonterminating_recursion_errors_cleanly() {
         "unexpected error: {msg}"
     );
 }
+
+// ============================================================
+// Closures as values + dynamic apply (L2c-3a)
+// ============================================================
+
+#[test]
+fn higher_order_apply_identity() {
+    // Pass identity as a value, then apply the parameter to a datum.
+    //   ((LAMBDA (F) (F 'A)) (LAMBDA (X) X)) ⇒ A
+    assert_eq!(sym_name(eval("((LAMBDA (F) (F 'A)) (LAMBDA (X) X))")), "A");
+}
+
+#[test]
+fn higher_order_apply_a_primitive_closure() {
+    // The passed closure runs a primitive in its body.
+    //   ((LAMBDA (F) (F '(A B))) (LAMBDA (X) (CAR X))) ⇒ A
+    assert_eq!(sym_name(eval("((LAMBDA (F) (F '(A B))) (LAMBDA (X) (CAR X)))")), "A");
+}
+
+#[test]
+fn closure_returned_then_applied() {
+    // A lambda returns another lambda (no free vars), which is then applied:
+    //   (((LAMBDA (X) (LAMBDA (Y) Y)) 'Z) 'W) ⇒ W
+    // The head of the outer call is itself an application returning a
+    // closure, so it lowers to a dynamic `apply`.
+    assert_eq!(sym_name(eval("(((LAMBDA (X) (LAMBDA (Y) Y)) 'Z) 'W)")), "W");
+}
+
+#[test]
+fn bare_lambda_value_is_a_closure_pair() {
+    // A LAMBDA standing alone is now a value: a (*CLOSURE* …) pair, whose
+    // car is the un-forgeable tag symbol.
+    let v = eval("(LAMBDA (X) X)");
+    assert_eq!(sym_name(car(v)), "*CLOSURE*");
+}
+
+#[test]
+fn applying_a_non_closure_is_a_clean_runtime_error() {
+    // `('FOO 'A)` — the head evaluates to a symbol, not a closure.  It must
+    // be a clean NotAClosure error, never a panic.
+    let module = compile_source("('FOO 'A)", "e2e").expect("compile");
+    let err = run(&module).expect_err("applying a symbol must fail");
+    assert!(err.to_string().contains("non-closure"), "unexpected: {err}");
+}
+
+#[test]
+fn omega_combinator_terminates_with_a_depth_error() {
+    // ((LAMBDA (X) (X X)) (LAMBDA (X) (X X))) — the Ω combinator: it
+    // type-checks in untyped Lisp and self-applies forever.  Lowered with
+    // closures + `apply`, it must hit the call-depth guard (clean error),
+    // never overflow the native stack.
+    let module = compile_source("((LAMBDA (X) (X X)) (LAMBDA (X) (X X)))", "e2e").expect("compile");
+    let err = run(&module).expect_err("Ω must not terminate");
+    let msg = err.to_string();
+    assert!(
+        msg.contains("call depth") || msg.contains("instruction budget"),
+        "unexpected error: {msg}"
+    );
+}

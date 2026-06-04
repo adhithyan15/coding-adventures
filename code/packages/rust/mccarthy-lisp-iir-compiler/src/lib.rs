@@ -14,7 +14,7 @@
 //! the value of the **last** form (an empty program returns `nil`).
 //! The module's `entry_point` is `"main"`.
 //!
-//! ## Which Lisp we can lower *today* (through L2c-2)
+//! ## Which Lisp we can lower *today* (through L2c-3a)
 //!
 //! | Form                | Lowering                                             |
 //! |---------------------|------------------------------------------------------|
@@ -29,6 +29,8 @@
 //! | `(COND (p e) …)`    | chained `jmp_if_false` + `label`s; `mov` funnels each clause's value into one register; no match → nil |
 //! | `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args |
 //! | `((LABEL F (LAMBDA (p…) body)) a…)` | like a lambda, but `F` is bound — inside `body` a call `(F …)` lowers to a `call` to the same function, so `F` can **recurse** |
+//! | `(LAMBDA (p…) body)` *in value position* | lift the lambda + materialise a **closure value** `(*CLOSURE* fn-name)` (L2c-3a; empty env, no capture yet) |
+//! | `(F a…)` where `F` is a parameter, or `((g…) a…)` | **dynamic apply**: evaluate the head to a closure value, then the `apply` opcode runs it |
 //!
 //! `QUOTE` materialises a literal S-expression as runtime values:
 //! a symbol `A` becomes `const v, Var("A")` (the IIR convention the
@@ -76,18 +78,36 @@
 //!  '((A B) C))                       ;; ⇒ A
 //! ```
 //!
+//! ## Closures as values (L2c-3a)
+//!
+//! A `LAMBDA` in **value** position — passed as an argument, returned from
+//! a body, or standing alone — becomes a **closure value**: the tagged
+//! cons `(*CLOSURE* fn-name)` (a 2-element list; the captured environment
+//! is empty in L2c-3a).  The tag `*CLOSURE*` is **un-forgeable from
+//! source** — a McCarthy symbol is `[A-Z][A-Z0-9-]*`, so the lexer can
+//! never produce `*CLOSURE*` and no `QUOTE` can fabricate one.
+//!
+//! Applying such a value — a call `(F a…)` whose head `F` is a parameter,
+//! or `((g…) a…)` whose head is a nested application — lowers to the new
+//! VM `apply` opcode, which destructures the closure, looks the function
+//! up by name, and runs it.  Higher-order functions now work:
+//!
+//! ```text
+//! ((LAMBDA (F) (F (QUOTE A))) (LAMBDA (X) X))   ;; ⇒ A
+//! ```
+//!
 //! ## Not yet (later phases)
 //!
-//! - **Closures (L2c-3)** — a lambda or a labelled function used as a
-//!   *value* (passed / returned) and free-variable capture.  For now a
-//!   body sees only its own parameters (plus any labelled function names
-//!   in scope, which it may *call* but not use as values); an unapplied
-//!   `LAMBDA` / `LABEL` is rejected.
+//! - **Free-variable capture (L2c-3b)** — a lambda body still sees only
+//!   its own parameters; a reference to an enclosing binding is an
+//!   unbound-variable error until capture threads it through the closure's
+//!   environment.  **`LABEL` as a value** (a recursive closure) also lands
+//!   in L2c-3b.
 //!
 //! A bare (unquoted) symbol in value position is an *unbound variable*
 //! unless it is a parameter of the enclosing lambda; a labelled function
-//! name used in value position is reported as needing closures.  Either
-//! way it is a [`CompileError`] rather than silently mis-lowered.
+//! name used in value position is reported as needing L2c-3b.  Either way
+//! it is a [`CompileError`] rather than silently mis-lowered.
 //!
 //! ## Quick start
 //!
@@ -201,6 +221,14 @@ pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule,
 /// `const 0 : ref<LispyPair>` into the nil sentinel and
 /// `call_builtin "cons"` into a fresh pair.
 const REF_PAIR: &str = "ref<LispyPair>";
+
+/// The reserved tag symbol at the head of every closure value
+/// `(*CLOSURE* fn-name . env)`.  **Must stay in sync with the same
+/// constant in `mccarthy-lisp-vm`**, which destructures closures the
+/// `apply` opcode receives.  It is intentionally un-lexable McCarthy
+/// source (a symbol is `[A-Z][A-Z0-9-]*`; this starts with `*`), so no
+/// user program can forge a closure via `QUOTE`.
+const CLOSURE_TAG: &str = "*CLOSURE*";
 
 /// Accumulates the instruction stream of the function currently being
 /// lowered (the top-level `main` body, or — temporarily, while lowering
@@ -343,96 +371,106 @@ impl Compiler {
             return self.lower_label_application(head, args);
         }
 
-        let name = match head {
-            LispExpr::Symbol(s) => s.as_str(),
-            // Describe the head by *kind*, never via `Display` — a quoted
-            // head like `('(A A …) …)` could be an arbitrarily large
-            // structure, and `LispExpr`'s `Display` recurses on the
-            // cdr-spine (a huge flat list would overflow formatting it).
-            other => {
-                return Err(CompileError::new(format!(
-                    "the head of a call must be a primitive, a LAMBDA form, or (later) a \
-                     function name — got a {}",
-                    kind_of(other)
-                )))
-            }
-        };
+        match head {
+            LispExpr::Symbol(name) => {
+                let name = name.as_str();
 
-        // A call whose head is a `LABEL`-bound name in scope is a
-        // (possibly recursive) user-function call — lower it to a `call`.
-        // We check this *before* the primitive table so a labelled name
-        // lexically shadows a primitive of the same spelling, which is the
-        // correct scoping rule (and how a body refers to its own `F`).
-        if let Some((internal, arity)) = self.functions_in_scope.get(name).cloned() {
-            if args.len() != arity {
-                return Err(CompileError::new(format!(
-                    "function `{name}` expects {arity} argument(s), got {}",
-                    args.len()
-                )));
-            }
-            return self.lower_call_to(&internal, args);
-        }
+                // A call whose head is a `LABEL`-bound name in scope is a
+                // (possibly recursive) user-function call — lower it to a
+                // `call`.  Checked *before* the parameter check and the
+                // primitive table so a labelled name lexically shadows both
+                // (and so a body can refer to its own `F`).
+                if let Some((internal, arity)) = self.functions_in_scope.get(name).cloned() {
+                    if args.len() != arity {
+                        return Err(CompileError::new(format!(
+                            "function `{name}` expects {arity} argument(s), got {}",
+                            args.len()
+                        )));
+                    }
+                    return self.lower_call_to(&internal, args);
+                }
 
-        match name {
-            "QUOTE" => {
-                let datum = expect_arity(name, args, 1)?[0];
-                self.lower_quote(datum)
+                // A parameter in scope holds a runtime *value* (possibly a
+                // closure).  `(F a…)` where `F` is a parameter is a dynamic
+                // application — evaluate `F` and `apply` it.  Checked before
+                // the primitive table, so a parameter lexically shadows a
+                // primitive of the same spelling (correct scoping).
+                if self.params.contains(name) {
+                    return self.lower_dynamic_apply(head, args);
+                }
+
+                match name {
+                    "QUOTE" => {
+                        let datum = expect_arity(name, args, 1)?[0];
+                        self.lower_quote(datum)
+                    }
+                    "CONS" => {
+                        let a = expect_arity(name, args, 2)?;
+                        let va = self.lower_expr(a[0])?;
+                        let vb = self.lower_expr(a[1])?;
+                        Ok(self.emit_builtin("cons", &[va, vb], REF_PAIR))
+                    }
+                    "CAR" => {
+                        let a = expect_arity(name, args, 1)?;
+                        let vx = self.lower_expr(a[0])?;
+                        Ok(self.emit_builtin("car", &[vx], "any"))
+                    }
+                    "CDR" => {
+                        let a = expect_arity(name, args, 1)?;
+                        let vx = self.lower_expr(a[0])?;
+                        Ok(self.emit_builtin("cdr", &[vx], "any"))
+                    }
+                    "ATOM" => {
+                        // (ATOM x) ≡ (not (pair? x))
+                        let a = expect_arity(name, args, 1)?;
+                        let vx = self.lower_expr(a[0])?;
+                        let is_pair = self.emit_builtin("pair?", &[vx], "bool");
+                        Ok(self.emit_builtin("not", &[is_pair], "bool"))
+                    }
+                    "EQ" => {
+                        // (EQ a b) ≡ atom identity.  On McCarthy's domain
+                        // (atoms: symbols / integers) `lispy-runtime`'s
+                        // `equal?` *is* identity — `=` is numeric-only and
+                        // rejects symbols, so `equal?` is the right builtin.
+                        let a = expect_arity(name, args, 2)?;
+                        let va = self.lower_expr(a[0])?;
+                        let vb = self.lower_expr(a[1])?;
+                        Ok(self.emit_builtin("equal?", &[va, vb], "bool"))
+                    }
+                    "COND" => self.lower_cond(args),
+                    // A bare `LAMBDA` reached here is in *value* position
+                    // (not directly applied).  As of L2c-3a that is a
+                    // first-class **closure value** — lower it to
+                    // `(*CLOSURE* fn-name)`.  (A *directly applied* lambda
+                    // `((LAMBDA …) a…)` is intercepted by `is_lambda_form`
+                    // above and stays a static `call`.)
+                    "LAMBDA" => self.lower_lambda_value(expr),
+                    // A bare `LABEL` in value position is a *recursive*
+                    // closure value — that needs free-variable capture
+                    // machinery, so it lands in L2c-3b.  Applied directly —
+                    // `((LABEL F (LAMBDA …)) a…)` — it is intercepted by
+                    // `is_label_form` above and works.
+                    "LABEL" => Err(CompileError::new(
+                        "a LABEL must be applied directly — \
+                         `((LABEL name (LAMBDA (params) body)) args …)`. Using a labelled \
+                         function as a value (a recursive closure) lands in L2c-3b.",
+                    )),
+                    other => Err(CompileError::new(format!(
+                        "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, \
+                         EQ, COND, LAMBDA, and direct LAMBDA / LABEL application"
+                    ))),
+                }
             }
-            "CONS" => {
-                let a = expect_arity(name, args, 2)?;
-                let va = self.lower_expr(a[0])?;
-                let vb = self.lower_expr(a[1])?;
-                Ok(self.emit_builtin("cons", &[va, vb], REF_PAIR))
-            }
-            "CAR" => {
-                let a = expect_arity(name, args, 1)?;
-                let vx = self.lower_expr(a[0])?;
-                Ok(self.emit_builtin("car", &[vx], "any"))
-            }
-            "CDR" => {
-                let a = expect_arity(name, args, 1)?;
-                let vx = self.lower_expr(a[0])?;
-                Ok(self.emit_builtin("cdr", &[vx], "any"))
-            }
-            "ATOM" => {
-                // (ATOM x) ≡ (not (pair? x))
-                let a = expect_arity(name, args, 1)?;
-                let vx = self.lower_expr(a[0])?;
-                let is_pair = self.emit_builtin("pair?", &[vx], "bool");
-                Ok(self.emit_builtin("not", &[is_pair], "bool"))
-            }
-            "EQ" => {
-                // (EQ a b) ≡ atom identity.  On McCarthy's domain (atoms:
-                // symbols / integers) `lispy-runtime`'s `equal?` *is*
-                // identity — `=` is numeric-only and rejects symbols, so
-                // `equal?` is the correct builtin here.
-                let a = expect_arity(name, args, 2)?;
-                let va = self.lower_expr(a[0])?;
-                let vb = self.lower_expr(a[1])?;
-                Ok(self.emit_builtin("equal?", &[va, vb], "bool"))
-            }
-            "COND" => self.lower_cond(args),
-            // A bare `LAMBDA` reached here means it is in *value* position
-            // (not applied) — that requires first-class functions
-            // (closures), which L2c-1 does not have.
-            "LAMBDA" => Err(CompileError::new(
-                "a LAMBDA must be applied directly — `((LAMBDA (params) body) args …)`. \
-                 Using a lambda as a value (passing or returning it) needs closures, \
-                 which are a later phase.",
-            )),
-            // A bare `LABEL` reached here is in *value* position (not
-            // applied), e.g. `(LABEL F (LAMBDA …))` on its own.  Like a
-            // bare LAMBDA, using the labelled function as a value needs
-            // closures.  Applied directly — `((LABEL F (LAMBDA …)) a…)` —
-            // it is intercepted by `is_label_form` above and works.
-            "LABEL" => Err(CompileError::new(
-                "a LABEL must be applied directly — `((LABEL name (LAMBDA (params) body)) args …)`. \
-                 Using a labelled function as a value (passing or returning it) needs closures, \
-                 which are a later phase.",
-            )),
+            // The head is itself an application (it is not a bare `LAMBDA`/
+            // `LABEL` form — those were intercepted above).  Evaluate it; if
+            // it yields a closure, `apply` runs it, otherwise the VM raises a
+            // clean `NotAClosure` at runtime.  e.g. `((CAR FNS) 'A)`.
+            LispExpr::Cons(..) => self.lower_dynamic_apply(head, args),
+            // Integers and the empty list are not callable.
             other => Err(CompileError::new(format!(
-                "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, EQ, COND, \
-                 and direct LAMBDA / LABEL application"
+                "cannot apply a {} as a function (only a primitive, a LAMBDA/LABEL form, a \
+                 parameter holding a closure, or an expression that returns one)",
+                kind_of(other)
             ))),
         }
     }
@@ -465,7 +503,27 @@ impl Compiler {
                 args.len()
             )));
         }
+        // A direct application knows its target statically, so it can emit a
+        // plain `call` (no closure value needed).
+        let fn_name = self.lift_lambda(&params, body)?;
+        self.lower_call_to(&fn_name, args)
+    }
 
+    /// Lift a `(params, body)` lambda to a fresh top-level [`IIRFunction`]
+    /// (gensym `lambda_<n>`) and return its name.  The body is lowered in a
+    /// **fresh parameter scope** — only `params` are visible — so a
+    /// reference to anything else is an unbound-variable error (McCarthy
+    /// lambdas do not capture free variables until L2c-3b).  Shared by
+    /// direct application ([`lower_lambda_application`]) and lambda-as-value
+    /// ([`lower_lambda_value`]).
+    ///
+    /// [`lower_lambda_application`]: Self::lower_lambda_application
+    /// [`lower_lambda_value`]: Self::lower_lambda_value
+    fn lift_lambda(
+        &mut self,
+        params: &[&str],
+        body: &LispExpr,
+    ) -> Result<String, CompileError> {
         let fn_name = format!("lambda_{}", self.fn_ctr);
         self.fn_ctr += 1;
 
@@ -487,9 +545,63 @@ impl Compiler {
         );
         f.register_count = self.tmp;
         self.functions.push(f);
+        Ok(fn_name)
+    }
 
-        // Back in the caller: lower the arguments, then emit the call.
-        self.lower_call_to(&fn_name, args)
+    /// Lower a `LAMBDA` used in **value** position into a *closure value*:
+    /// `((LAMBDA (p…) body))` → `(*CLOSURE* fn-name)`.  The lambda is lifted
+    /// exactly as for a direct application, but instead of a `call` we
+    /// materialise a tagged cons that the VM's `apply` opcode can dispatch
+    /// on at runtime.  In L2c-3a the captured environment is empty (nil) —
+    /// the body still sees only its own parameters; free-variable capture is
+    /// L2c-3b.
+    fn lower_lambda_value(&mut self, lambda: &LispExpr) -> Result<String, CompileError> {
+        let (params, body) = lambda_parts(lambda)?;
+        let fn_name = self.lift_lambda(&params, body)?;
+        Ok(self.emit_closure(&fn_name))
+    }
+
+    /// Materialise a closure value `(*CLOSURE* fn-name . env)` for the
+    /// already-lifted function `fn_name`.  In L2c-3a `env` is nil, so the
+    /// value is the 2-element list `(*CLOSURE* fn-name)` =
+    /// `cons(*CLOSURE*, cons(fn-name, nil))`.
+    ///
+    /// The tag is the interned symbol `*CLOSURE*`.  It is deliberately
+    /// **un-forgeable from source**: a McCarthy symbol is `[A-Z][A-Z0-9-]*`,
+    /// so `*CLOSURE*` cannot be produced by the lexer — a user program can
+    /// never `QUOTE` one into existence, so a value the VM accepts as a
+    /// closure was always built here.
+    fn emit_closure(&mut self, fn_name: &str) -> String {
+        let tag = self.emit_symbol(CLOSURE_TAG);
+        let fnsym = self.emit_symbol(fn_name);
+        let nil = self.emit_nil();
+        let env_cell = self.emit_builtin("cons", &[fnsym, nil], REF_PAIR);
+        self.emit_builtin("cons", &[tag, env_cell], REF_PAIR)
+    }
+
+    /// Lower a *dynamic application* — a call whose head is an expression
+    /// that evaluates to a closure value (a parameter holding a closure, or
+    /// a nested application that returns one).  Unlike a static `call`
+    /// (which names its callee), this evaluates the head to a register and
+    /// emits the `apply` opcode; the VM destructures the closure at runtime.
+    /// Arity is therefore **not** known at compile time — the VM checks it
+    /// when it runs the callee.
+    fn lower_dynamic_apply(
+        &mut self,
+        head: &LispExpr,
+        args: &[&LispExpr],
+    ) -> Result<String, CompileError> {
+        let fn_reg = self.lower_expr(head)?;
+        let mut arg_regs = Vec::with_capacity(args.len());
+        for a in args {
+            arg_regs.push(self.lower_expr(a)?);
+        }
+        let dest = self.fresh();
+        let mut srcs = Vec::with_capacity(arg_regs.len() + 1);
+        srcs.push(Operand::Var(fn_reg));
+        srcs.extend(arg_regs.into_iter().map(Operand::Var));
+        self.emit(IIRInstr::new("apply", Some(dest.clone()), srcs, "any"));
+        Ok(dest)
     }
 
     // -----------------------------------------------------------------------
@@ -1073,6 +1185,49 @@ mod tests {
         assert!(compile_source("((LAMBDA (X) X) 'A)", "t").is_ok());
     }
 
+    // ---- L2c-3a: closures as values + dynamic apply ----
+
+    #[test]
+    fn applying_a_parameter_emits_apply_not_call() {
+        // ((LAMBDA (F) (F 'A)) (LAMBDA (X) X)) — inside the outer body, `F`
+        // is a parameter, so `(F 'A)` is a *dynamic* application → `apply`.
+        let m = compile_source("((LAMBDA (F) (F 'A)) (LAMBDA (X) X))", "t").unwrap();
+        // The outer lambda's body (lambda_0) contains an `apply` whose head
+        // operand is the parameter register `F` (not a function name).
+        let outer = m.get_function("lambda_0").unwrap();
+        let apply = outer.instructions.iter().find(|i| i.op == "apply").expect("an apply op");
+        assert!(matches!(apply.srcs.first(), Some(Operand::Var(s)) if s == "F"));
+        // The argument lambda is lifted + wrapped as a closure value in main.
+        let main = m.get_function("main").unwrap();
+        assert!(main.instructions.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "*CLOSURE*")));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn closure_value_has_unforgeable_tag() {
+        // The `*CLOSURE*` tag is not a lexable symbol, so a user program
+        // literally cannot type it — confirm the lexer rejects it as source
+        // even though the compiler emits it internally.
+        assert!(compile_source("'*CLOSURE*", "t").is_err());
+    }
+
+    #[test]
+    fn applying_a_nested_application_emits_apply() {
+        // ((CAR (CONS (LAMBDA (X) X) '())) 'A) — the head is a nested
+        // application returning a closure → dynamic apply.
+        let m = compile_source("((CAR (CONS (LAMBDA (X) X) '())) 'A)", "t").unwrap();
+        let main = m.get_function("main").unwrap();
+        assert!(main.instructions.iter().any(|i| i.op == "apply"));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn cannot_apply_an_integer() {
+        let e = compile_source("(5 'A)", "t").unwrap_err();
+        assert!(e.message.contains("cannot apply"));
+    }
+
     #[test]
     fn lambda_body_free_variable_is_unbound() {
         // `Y` is not a parameter — no closures yet, so it is unbound.
@@ -1091,18 +1246,32 @@ mod tests {
     }
 
     #[test]
-    fn bare_lambda_value_is_rejected() {
-        // An unapplied LAMBDA (lambda-as-value) needs closures — deferred.
-        assert!(compile_source("(LAMBDA (X) X)", "t").unwrap_err().message.contains("must be applied"));
+    fn bare_lambda_value_lowers_to_a_closure() {
+        // As of L2c-3a, a LAMBDA in value position is a first-class closure
+        // value, not an error: it lifts a `lambda_0` function and emits the
+        // closure cons `(*CLOSURE* lambda_0)`.
+        let m = compile_source("(LAMBDA (X) X)", "t").unwrap();
+        assert!(m.functions.iter().any(|f| f.name == "lambda_0"));
+        let main = m.get_function("main").unwrap();
+        // The tag symbol `*CLOSURE*` is emitted as a `const Var` and is not
+        // a lexable McCarthy symbol (so no source could forge it).
+        assert!(main.instructions.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "*CLOSURE*")));
+        // The function name is embedded as a symbol const too.
+        assert!(main.instructions.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "lambda_0")));
+        // No `call`/`apply` — it is a value, not an application.
+        assert!(main.instructions.iter().all(|i| i.op != "call" && i.op != "apply"));
+        assert!(m.validate().is_empty());
     }
 
     #[test]
     fn bare_label_value_is_rejected() {
-        // An unapplied LABEL (labelled-function-as-value) needs closures.
+        // An unapplied LABEL (a *recursive* closure) needs capture → L2c-3b.
         assert!(compile_source("(LABEL F (LAMBDA (X) X))", "t")
             .unwrap_err()
             .message
-            .contains("must be applied directly"));
+            .contains("L2c-3b"));
     }
 
     #[test]

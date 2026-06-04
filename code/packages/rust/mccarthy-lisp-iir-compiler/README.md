@@ -30,7 +30,7 @@ use mccarthy_lisp_vm::run;
 let value = run(&module).unwrap();   // → the symbol A
 ```
 
-## Lowering (through L2c-2)
+## Lowering (through L2c-3a)
 
 | Form               | IIR                                                     |
 |--------------------|---------------------------------------------------------|
@@ -45,6 +45,8 @@ let value = run(&module).unwrap();   // → the symbol A
 | `(COND (p e) …)`   | chained `jmp_if_false` + `label`s; each clause's value funnels into one register via `mov`; no match → `nil` |
 | `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args (params bound by name; no free-variable capture) |
 | `((LABEL F (LAMBDA (p…) body)) a…)` | like the lambda case, but `F` is bound to the new function while `body` is lowered — so a call `(F …)` inside `body` becomes a `call` back into it, i.e. **recursion**.  No new VM opcode: a self-call is an ordinary `call`, bounded by `MAX_CALL_DEPTH`. |
+| `(LAMBDA (p…) body)` *as a value* | lift the lambda + materialise a **closure value** `(*CLOSURE* fn-name)` — a tagged cons (empty env in L2c-3a; the tag is un-forgeable since `*CLOSURE*` isn't a lexable symbol) |
+| `(F a…)` (`F` a parameter) / `((g…) a…)` | **dynamic apply**: evaluate the head to a closure, then the `apply` opcode runs it (arity checked at run time) |
 
 ### Recursion example (L2c-2)
 
@@ -55,6 +57,14 @@ McCarthy's canonical `ff` — the first atom found by descending `car`s:
     (COND ((ATOM X) X)
           ('T (FF (CAR X))))))
  '((A B) C))                       ; ⇒ A
+```
+
+### Higher-order example (L2c-3a)
+
+A lambda passed as a value, then applied via the parameter:
+
+```lisp
+((LAMBDA (F) (F 'A)) (LAMBDA (X) X))   ; ⇒ A
 ```
 
 These are the conventions of the shared `lispy-runtime` value model
@@ -76,15 +86,15 @@ crate dev-depends on it only to run the end-to-end tests.
 
 ## Not yet (later phases)
 
-- **Closures (L2c-3)** — a lambda or a labelled function used as a *value*
-  (passed or returned) and free-variable capture. For now a body may
-  reference only its own parameters (plus any labelled function names in
-  scope, which it may *call* but not use as values); an unapplied `LAMBDA`
-  or `LABEL` is rejected.
+- **Free-variable capture (L2c-3b)** — a lambda body still sees only its
+  own parameters; a reference to an enclosing binding is an
+  unbound-variable error until capture threads it through the closure's
+  environment (the `env` slot, empty in L2c-3a). **`LABEL` as a value** (a
+  recursive closure) also lands in L2c-3b.
 
 A bare (unquoted) symbol in value position is an *unbound variable* unless
 it is a parameter of the enclosing lambda; a labelled function name used
-in value position is reported as needing closures. Either way it is a
+in value position is reported as needing L2c-3b. Either way it is a
 `CompileError` rather than silently mis-lowered.
 
 ## API
