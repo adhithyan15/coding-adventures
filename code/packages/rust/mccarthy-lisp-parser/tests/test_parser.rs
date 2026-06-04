@@ -225,6 +225,15 @@ fn integer_overflow_errors() {
     assert!(parse("123456789012345678901234567890").is_err());
 }
 
+#[test]
+fn pathological_nesting_does_not_crash() {
+    // DoS hardening: neither a deep paren nest nor a long quote chain
+    // (which has paren-depth 0 but unbounded parser recursion) may abort
+    // the process — both must return a clean Err.
+    assert!(parse(&"(".repeat(10_000)).is_err());
+    assert!(parse(&format!("{}X", "'".repeat(10_000))).is_err());
+}
+
 // ============================================================
 // 8. Multi-form programs
 // ============================================================

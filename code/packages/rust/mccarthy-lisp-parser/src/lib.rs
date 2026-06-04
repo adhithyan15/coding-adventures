@@ -177,21 +177,33 @@ impl From<parser::grammar_parser::GrammarParseError> for ParseError {
 // DoS-hardening depth guards
 // ===========================================================================
 
-/// Maximum LPAREN nesting depth permitted before the grammar parser
-/// runs.
+/// Maximum *structural nesting* depth permitted before the grammar
+/// parser runs.
 ///
-/// The downstream [`GrammarParser`] is recursive, and a pathological
-/// input like `((((((…))))))` with thousands of nested parens could
-/// blow the OS thread stack (an abort Rust cannot catch).  We reject
-/// such sources up front by counting paren depth in the token stream.
+/// The downstream [`GrammarParser`] is recursive and has **no** internal
+/// recursion-depth limit, so a deeply-nested input drives it into
+/// native call-stack recursion — one frame per nesting level — until
+/// the OS thread stack overflows.  That overflow is a `SIGABRT` Rust
+/// cannot catch: it crashes the whole process.  We therefore reject
+/// over-deep sources up front by scanning the token stream.
+///
+/// **Two token shapes add nesting depth, not just parens:**
+///
+/// - `LPAREN` — `((((…))))`, via the `list` rule.
+/// - `QUOTE`  — `''''…X`, via the `quoted = QUOTE sexpr` rule, which
+///   recurses *without consuming a paren*.  A long run of `'` has
+///   paren-depth 0 yet unbounded parser-recursion depth — a ~5 KB
+///   all-`'` file is enough to abort the process if only parens are
+///   counted.  [`check_nesting_depth`] therefore bounds the *combined*
+///   paren + pending-quote depth.
 ///
 /// The cap is **64**, matching `twig-parser`'s `MAX_PAREN_DEPTH`.  The
-/// generic `GrammarParser` spends several recursion frames per paren
-/// (`program → sexpr → list → list_body → sexpr → …`), so a default
-/// 2 MiB Rust test-thread stack overflows somewhere around ~80 levels —
-/// 64 leaves a comfortable margin while still admitting any realistic
-/// McCarthy program (the deepest example in the 1960 paper is ~10
-/// levels deep).  Note this is necessarily lower than the v0.1
+/// generic `GrammarParser` spends several recursion frames per nesting
+/// level (`program → sexpr → list → list_body → sexpr → …`), so a
+/// default 2 MiB Rust test-thread stack overflows somewhere around ~80
+/// levels — 64 leaves a comfortable margin while still admitting any
+/// realistic McCarthy program (the deepest example in the 1960 paper is
+/// ~10 levels deep).  Note this is necessarily lower than the v0.1
 /// hand-written parser's 256: that recursive-descent parser used far
 /// less stack per level than the shared grammar engine does.
 pub const MAX_PAREN_DEPTH: usize = 64;
@@ -204,27 +216,72 @@ pub const MAX_PAREN_DEPTH: usize = 64;
 /// without parens).
 pub const MAX_AST_DEPTH: usize = 256;
 
-/// Reject a source whose maximum LPAREN nesting exceeds
-/// [`MAX_PAREN_DEPTH`], pointing at the offending token.
-fn check_paren_depth(tokens: &[Token]) -> Result<(), ParseError> {
-    let mut depth: usize = 0;
+/// Reject a source whose maximum *structural nesting* (parens **and**
+/// pending quotes) exceeds [`MAX_PAREN_DEPTH`], pointing at the token
+/// that tipped it over.
+///
+/// This runs **before** [`GrammarParser::parse`], which has no internal
+/// recursion guard, so it is the only thing standing between untrusted
+/// input and a stack-overflow `SIGABRT`.  It must therefore account for
+/// *every* token shape that adds parser-recursion depth — both `LPAREN`
+/// (the `list` rule) and `QUOTE` (the `quoted` rule, which recurses
+/// without a paren).
+///
+/// We track an explicit stack of open contexts.  A `QUOTE` opens a
+/// pending-quote context that is *discharged* as soon as its single
+/// operand sexpr completes (an atom, or a list closed by `RPAREN`); an
+/// `LPAREN` opens a list context closed by its `RPAREN`.  The high-water
+/// mark of the stack is the maximum live recursion depth the grammar
+/// parser will reach.  (Slight miscounting on *malformed* input is
+/// harmless — such input is rejected by the grammar anyway; what matters
+/// is that we never *under*-count a well-formed deep nest.)
+fn check_nesting_depth(tokens: &[Token]) -> Result<(), ParseError> {
+    // 'p' = open paren (list), 'q' = pending quote.
+    let mut stack: Vec<u8> = Vec::new();
+
+    // Discharge every pending quote sitting on top of the stack: a
+    // completed sexpr satisfies all quotes directly wrapping it.
+    fn discharge_quotes(stack: &mut Vec<u8>) {
+        while matches!(stack.last(), Some(b'q')) {
+            stack.pop();
+        }
+    }
+
     for t in tokens {
         match t.type_ {
-            TokenType::LParen => {
-                depth += 1;
-                if depth > MAX_PAREN_DEPTH {
-                    return Err(ParseError {
-                        message: format!(
-                            "LPAREN nesting exceeds MAX_PAREN_DEPTH ({MAX_PAREN_DEPTH}) — \
-                             refusing to invoke the parser to avoid stack overflow"
-                        ),
-                        line: t.line,
-                        column: t.column,
-                    });
+            TokenType::LParen => stack.push(b'p'),
+            TokenType::RParen => {
+                // The list just closed is itself a completed sexpr: pop
+                // its paren, then discharge any quotes wrapping the list.
+                // Pop down to and including the nearest paren (tolerating
+                // stray pending quotes on malformed input).
+                while matches!(stack.last(), Some(b'q')) {
+                    stack.pop();
                 }
+                if matches!(stack.last(), Some(b'p')) {
+                    stack.pop();
+                }
+                discharge_quotes(&mut stack);
             }
-            TokenType::RParen => depth = depth.saturating_sub(1),
+            // A bare quote token: only QUOTE maps to type_name "QUOTE".
+            _ if t.effective_type_name() == "QUOTE" => stack.push(b'q'),
+            // An atom (SYMBOL / INTEGER) completes a sexpr.
+            _ if matches!(t.effective_type_name(), "SYMBOL" | "INTEGER") => {
+                discharge_quotes(&mut stack);
+            }
             _ => {}
+        }
+
+        if stack.len() > MAX_PAREN_DEPTH {
+            return Err(ParseError {
+                message: format!(
+                    "structural nesting (parens + quotes) exceeds MAX_PAREN_DEPTH \
+                     ({MAX_PAREN_DEPTH}) — refusing to invoke the parser to avoid \
+                     stack overflow"
+                ),
+                line: t.line,
+                column: t.column,
+            });
         }
     }
     Ok(())
@@ -290,7 +347,7 @@ pub fn create_mccarthy_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
 /// breach, or grammar mismatch (unbalanced paren, stray dot, …).
 pub fn parse_to_cst(source: &str) -> Result<GrammarASTNode, ParseError> {
     let tokens = tokenize_mccarthy(source)?;
-    check_paren_depth(&tokens)?;
+    check_nesting_depth(&tokens)?;
     let mut p = create_mccarthy_parser_from_tokens(tokens);
     p.parse().map_err(Into::into)
 }
@@ -618,10 +675,40 @@ mod tests {
     }
 
     #[test]
+    fn deeply_nested_quotes_are_rejected() {
+        // Regression for the quote-chain stack-overflow DoS: a long run
+        // of `'` has paren-depth 0 but unbounded parser recursion.  It
+        // must be rejected *before* the GrammarParser runs, not abort
+        // the process.  MAX+5_000 is far past the cap and well into
+        // crash territory if the guard regresses.
+        let deep = format!("{}X", "'".repeat(MAX_PAREN_DEPTH + 5_000));
+        let err = parse(&deep).unwrap_err();
+        assert!(err.message.contains("MAX_PAREN_DEPTH"));
+    }
+
+    #[test]
+    fn quote_then_deep_parens_rejected() {
+        // A quote wrapping a deep list — the quote adds one level on top
+        // of the parens, so the combined depth must be what trips.
+        let deep = format!("'{}A{}", "(".repeat(MAX_PAREN_DEPTH), ")".repeat(MAX_PAREN_DEPTH));
+        assert!(parse(&deep).is_err());
+    }
+
+    #[test]
     fn legal_moderate_nesting_is_accepted() {
         // Comfortably under MAX_PAREN_DEPTH (64) — must parse cleanly.
         let n = 40;
         let src = format!("{}A{}", "(".repeat(n), ")".repeat(n));
         assert!(parse(&src).is_ok());
+    }
+
+    #[test]
+    fn legal_moderate_quote_chain_is_accepted() {
+        // A quote chain just under the cap parses fine (and does not
+        // overflow): '''...'X with 40 quotes → 40 nested QUOTE forms.
+        let n = 40;
+        let src = format!("{}X", "'".repeat(n));
+        let forms = parse(&src).expect("should parse");
+        assert_eq!(forms.len(), 1);
     }
 }

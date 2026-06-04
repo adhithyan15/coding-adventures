@@ -28,11 +28,19 @@ via a `build.rs` (the `twig-parser` pattern).
     `create_mccarthy_parser_from_tokens`, `mccarthy_grammar`.
   * **Removed** `parse_tokens` (the lexer no longer produces the old
     `TokenWithLoc`; use `parse` or `create_mccarthy_parser_from_tokens`).
-* **DoS hardening retained:** `MAX_PAREN_DEPTH` is now **64** (down from
-  256) because the shared `GrammarParser` uses far more stack per paren
-  than the old hand-written descent did; sources deeper than that are
-  rejected before parsing.  A second `MAX_AST_DEPTH` guard bounds the
-  extractor.  Integer overflow remains a `ParseError`, not a panic.
+* **DoS hardening retained and corrected:** `MAX_PAREN_DEPTH` is now
+  **64** (down from 256) because the shared `GrammarParser` uses far
+  more stack per nesting level than the old hand-written descent did.
+  The pre-parse guard (`check_nesting_depth`) bounds the *combined*
+  paren **and** pending-quote nesting depth — an important fix over a
+  first draft of this rewrite, which counted only parens: a long quote
+  chain (`''''…X`) has paren-depth 0 but unbounded `quoted = QUOTE
+  sexpr` recursion, so a ~5 KB all-`'` input would overflow the stack
+  and abort the process (the shared `GrammarParser` has no internal
+  recursion limit).  Both deep-paren and quote-chain inputs are now
+  rejected with a clean `ParseError` (regression-tested).  A second
+  `MAX_AST_DEPTH` guard bounds the extractor.  Integer overflow remains
+  a `ParseError`, not a panic.
 * New deps: `grammar-tools`, `lexer`, `parser` (+ `grammar-tools`
   build-dep); still depends on `mccarthy-lisp-lexer`.
 
