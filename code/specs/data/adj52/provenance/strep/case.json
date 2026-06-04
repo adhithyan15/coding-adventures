@@ -1,0 +1,11 @@
+{
+  "name": "strep (https://pmc.ncbi.nlm.nih.gov/articles/PMC4976646/)",
+  "ground_truth": "Final diagnosis: Group A streptococcal (Streptococcus pyogenes) pharyngitis in a 62-day-old female infant. Established by throat swab culture on sheep blood aga",
+  "observations": [
+    "tonsillar_exudate(present)",
+    "history_of_fever(present)",
+    "cough(absent)",
+    "age(under_15)",
+    "throat_culture(positive)"
+  ]
+}

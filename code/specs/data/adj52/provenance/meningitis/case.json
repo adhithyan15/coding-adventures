@@ -1,0 +1,13 @@
+{
+  "name": "meningitis (https://pmc.ncbi.nlm.nih.gov/articles/PMC5562335/)",
+  "ground_truth": "Final diagnosis: Invasive pneumococcal meningoencephalitis (bacterial meningitis due to Streptococcus pneumoniae). HOW ESTABLISHED: Lumbar puncture CSF analysis",
+  "observations": [
+    "csf_gram_stain(positive)",
+    "csf_neutrophilic_pleocytosis(high)",
+    "csf_glucose(low)",
+    "csf_protein(elevated)",
+    "csf_lactate(elevated)",
+    "seizure(present)",
+    "csf_culture(positive)"
+  ]
+}
