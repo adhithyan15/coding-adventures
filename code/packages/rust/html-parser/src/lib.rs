@@ -1517,6 +1517,26 @@ pub struct BrowserMedia {
     pub controlslist_tokens: Vec<String>,
     pub disableremoteplayback: bool,
     pub disablepictureinpicture: bool,
+    pub sources: Vec<BrowserMediaSource>,
+    pub tracks: Vec<BrowserMediaTrack>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaSource {
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaTrack {
+    pub kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub srclang: Option<String>,
+    pub label: Option<String>,
+    pub default_track: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -11240,7 +11260,61 @@ fn browser_media_element(element: &Element, base_href: Option<&str>) -> BrowserM
         controlslist_tokens: browser_media_controlslist_tokens(element),
         disableremoteplayback: browser_media_disableremoteplayback(element),
         disablepictureinpicture: browser_media_disablepictureinpicture(element),
+        sources: browser_media_sources(element, base_href),
+        tracks: browser_media_tracks(element, base_href),
     }
+}
+
+fn browser_media_sources(element: &Element, base_href: Option<&str>) -> Vec<BrowserMediaSource> {
+    if !matches!(element.name.as_str(), "audio" | "video") {
+        return Vec::new();
+    }
+
+    element
+        .children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(child) if child.name == "source" => {
+                let src = child.attribute("src").map(ToOwned::to_owned);
+                Some(BrowserMediaSource {
+                    resolved_src: src
+                        .as_deref()
+                        .and_then(|src| resolve_browser_url(src, base_href)),
+                    src,
+                    type_hint: child.attribute("type").map(ToOwned::to_owned),
+                    media: child.attribute("media").map(ToOwned::to_owned),
+                })
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+fn browser_media_tracks(element: &Element, base_href: Option<&str>) -> Vec<BrowserMediaTrack> {
+    if !matches!(element.name.as_str(), "audio" | "video") {
+        return Vec::new();
+    }
+
+    element
+        .children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(child) if child.name == "track" => {
+                let src = child.attribute("src").map(ToOwned::to_owned);
+                Some(BrowserMediaTrack {
+                    kind: browser_track_kind(child).unwrap_or_else(|| "subtitles".to_string()),
+                    resolved_src: src
+                        .as_deref()
+                        .and_then(|src| resolve_browser_url(src, base_href)),
+                    src,
+                    srclang: browser_track_srclang(child),
+                    label: browser_track_label(child),
+                    default_track: browser_track_default(child),
+                })
+            }
+            _ => None,
+        })
+        .collect()
 }
 
 fn browser_media_poster(element: &Element) -> Option<String> {
@@ -16692,6 +16766,60 @@ mod tests {
         let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
         assert_eq!(render_tree.children[0].display, "inline-replaced");
         assert!(render_tree.children[0].controls);
+    }
+
+    #[test]
+    fn browser_media_descriptor_metadata_tracks_sources_and_tracks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\"><body>\
+             <video controls>\
+               <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+               <source src=movie.mp4 type=video/mp4>\
+               <track kind=captions src=captions.vtt srclang=en label=English default>\
+               <track src=descriptions.vtt label=Descriptions>\
+             </video>\
+             <audio controls>\
+               <source src=theme.ogg type=audio/ogg>\
+             </audio>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let video = &summary.media[0];
+        assert_eq!(video.sources.len(), 2);
+        assert_eq!(video.sources[0].src.as_deref(), Some("movie.webm"));
+        assert_eq!(
+            video.sources[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.webm")
+        );
+        assert_eq!(video.sources[0].type_hint.as_deref(), Some("video/webm"));
+        assert_eq!(
+            video.sources[0].media.as_deref(),
+            Some("(min-width: 700px)")
+        );
+        assert_eq!(video.sources[1].src.as_deref(), Some("movie.mp4"));
+        assert_eq!(video.tracks.len(), 2);
+        assert_eq!(video.tracks[0].kind, "captions");
+        assert_eq!(
+            video.tracks[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/captions.vtt")
+        );
+        assert_eq!(video.tracks[0].srclang.as_deref(), Some("en"));
+        assert_eq!(video.tracks[0].label.as_deref(), Some("English"));
+        assert!(video.tracks[0].default_track);
+        assert_eq!(video.tracks[1].kind, "subtitles");
+        assert_eq!(
+            video.tracks[1].resolved_src.as_deref(),
+            Some("https://example.test/watch/descriptions.vtt")
+        );
+        assert_eq!(video.tracks[1].label.as_deref(), Some("Descriptions"));
+        assert!(!video.tracks[1].default_track);
+
+        let audio = &summary.media[1];
+        assert_eq!(audio.sources.len(), 1);
+        assert_eq!(audio.sources[0].src.as_deref(), Some("theme.ogg"));
+        assert_eq!(audio.sources[0].type_hint.as_deref(), Some("audio/ogg"));
+        assert!(audio.tracks.is_empty());
     }
 
     #[test]
